@@ -52,9 +52,10 @@ import { AddSalesPartNumberComponent } from "../components/sales/shared/componen
 import { SalesAddressComponent } from "../components/sales/quotes/shared/components/sales-address/sales-address.component";
 import { CustomerDetailComponent } from "../components/sales/shared/components/add-sales-part-number/customer-details/customer-detail.component";
 import { PartNumberFilterComponent } from "../components/sales/shared/components/add-sales-part-number/part-number-filter/part-number-filter.component";
-import { ParetDetailsComponent } from "../components/sales/shared/components/add-sales-part-number/part-details/part-details.component";
+import { PartDetailsComponent } from "../components/sales/shared/components/add-sales-part-number/part-details/part-details.component";
 import { ItemMasterService } from "../services/itemMaster.service";
 import { SalesPartNumbersComponent } from "../components/sales/quotes/shared/components/sales-part-number/sales-part-numbers.component";
+import { StocklinePartDetailsComponent } from "../components/sales/shared/components/add-sales-part-number/stockline-part-details/stockline-part-details.component";
 
 @NgModule({
   imports: [
@@ -99,9 +100,9 @@ import { SalesPartNumbersComponent } from "../components/sales/quotes/shared/com
     AddSalesPartNumberComponent,
     CustomerDetailComponent,
     PartNumberFilterComponent,
-      ParetDetailsComponent,
-      SalesPartNumbersComponent
-
+    PartDetailsComponent,
+    SalesPartNumbersComponent,
+    StocklinePartDetailsComponent
   ],
   providers: [CustomerService, SalesQuoteService, SalesQuoteEndpointService, ItemMasterService],
   entryComponents: []

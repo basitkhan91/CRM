@@ -532,8 +532,8 @@
                 </div>
                 <div>
                   <button class="btn btn-primary-cstm pull-right" *ngIf="!showTableGrid && !isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Save</button>
-                  <button class="btn btn-primary-cstm pull-right" *ngIf="isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()" >Update</button>
-                <button  *ngIf="showTableGrid && workOrderGeneralInformation.isSinglePN " class="btn btn-success pull-right" [routerLink]="['/workordersmodule/workorderspages/app-work-order-quote']"  >Create Quote</button>
+                  <button class="btn btn-primary-cstm pull-right" *ngIf="isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Update</button>
+                  <button  *ngIf="showTableGrid && workOrderGeneralInformation.isSinglePN " class="btn btn-success pull-right" [routerLink]="['/workordersmodule/workorderspages/app-work-order-quote']"  >Create Quote</button>
                 </div>
             </form>
             </div>
@@ -547,19 +547,19 @@
                     <div class="col-md-12" [hidden]="workOrderGeneralInformation.isSinglePN">
                         <div class="col-md-2">
                             <label class="control-label col-sm-3">MPN </label>
-                            <div class="col-sm-7">
+                             <div class="col-sm-7">
 
                                 <p-dropdown [options]="mpnPartNumbersList" placeholder="Select Part Number" class="p-dropdown-custom-md" 
                                 (onChange)="changeofMPN($event.value)"
                                 >
-                                  </p-dropdown>
-                                <!-- <select class="mpn-select">
-                                    <option>Select</option>
-                                    <option>12548454-1</option>
-                                    <option>125487457-A</option>
-                                    <option>78546687-114F</option>
-                                </select> -->
-                            </div>
+                                  </p-dropdown> 
+                            </div> 
+
+                            <!-- <div class="col-sm-7">
+                              <select>
+                                <option *ngFor="let mpn of MPNList">{{mpn.partNumber}}</option>
+                              </select>
+                            </div> -->
                         </div>
                         <div class="col-md-10" style="background-color: white" [hidden]="workOrderGeneralInformation.isSinglePN">
                             <div class="col-md-2">
@@ -610,7 +610,7 @@
                                 <a id="pills-home-tab" role="tab" aria-controls="pills-home" aria-selected="true"
                                     [ngClass]="{active : gridActiveTab === 'labor'}"
                                 
-                                    (click)="gridTabChange('labor')">labor</a>
+                                    (click)="gridTabChange('labor'); getWorkFlowLaborList(); ">labor</a>
                             </li>
                             <li class="nav-item">
                                 <a id="pills-profile-tab" role="tab" aria-controls="pills-profile"
@@ -700,11 +700,12 @@
                             aria-expanded="false" [ngClass]="{active : gridActiveTab === 'otherOptions'}"
                             (click)="gridTabChange('otherOptions')">Other Options</a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item">Charges</a>
-                            <a class="dropdown-item">Freight</a>
-                            <a class="dropdown-item">Contact Grid</a>
-                            <a class="dropdown-item">Accounting</a>
-                            <a class="dropdown-item">Exclusion </a>
+              
+                            <a class="dropdown-item" (click)="otherOptionSelected('freight')" >Freight</a>
+                            <a class="dropdown-item" (click)="otherOptionSelected('contactGrid')">Contact Grid</a>
+                            <a class="dropdown-item" (click)="otherOptionSelected('accounting')" >Accounting</a>
+                            <a class="dropdown-item" (click)="otherOptionSelected('charges')">Charges</a>
+                            <a class="dropdown-item" (click)="otherOptionSelected('exclusion')" >Exclusion </a>
                         </div>
                     </li>
                     </ul>
@@ -720,14 +721,21 @@
                     <div *ngIf="workFlowId && subTabWorkFlow " class="wf-label-cstm" [ngClass]="{hidedata :  subTabWorkFlow !== 'viewworkFlow' }" >
                       <app-workflow-list [isWorkOrder]="isWorkOrder"  [workFlowType]="subTabWorkFlow" [workFlowId]="workFlowId" ></app-workflow-list>
                     </div>
+
+
                     <div *ngIf="labor" [ngClass]="{hidedata : gridActiveTab !== 'labor'}">
-                        <app-work-order-labor [laborForm]="labor" [workOrderWorkFlowOriginalData]="workOrderWorkFlowOriginalData" [savedWorkOrderData]="savedWorkOrderData"
-                        (saveworkOrderLabor)="saveWorkOrderLabor($event)"
+                        <app-work-order-labor [taskList]="taskList" [laborForm]="labor" [workOrderLaborList]="workOrderLaborList" [workOrderWorkFlowOriginalData]="workOrderWorkFlowOriginalData" [savedWorkOrderData]="savedWorkOrderData"
+                        (saveworkOrderLabor)="saveworkOrderLabor($event)"
                         ></app-work-order-labor>
                     </div>
 
                     <div [ngClass]="{hidedata : gridActiveTab !== 'equipment'}">
-                        <app-work-order-assets [employeesOriginalData]="employeesOriginalData"  [isWorkOrder]="isWorkOrder" [workOrderAssetList]="workOrderAssetList" [savedWorkOrderData]="savedWorkOrderData" ></app-work-order-assets>
+                        <app-work-order-assets (saveEquipmentListForWO)="saveWorkOrderEquipmentList($event)" 
+                         (getEquipmentData)="getEquipmentByWorkOrderId($event)" 
+                         [employeesOriginalData]="employeesOriginalData" 
+                          [isWorkOrder]="isWorkOrder" 
+                          [workFlowObject]="workFlowObject"
+                          [workOrderAssetList]="workOrderAssetList" [savedWorkOrderData]="savedWorkOrderData" ></app-work-order-assets>
                     </div>
 
                     <div  *ngIf="quote" [ngClass]="{hidedata : gridActiveTab !== 'quote' }" >
@@ -753,6 +761,13 @@
                     <div *ngIf="documents" [ngClass]="{hidedata: gridActiveTab !== 'documents'}">
                             <app-work-order-documents [documentForm]="documents"></app-work-order-documents>
                     </div>
+
+
+                    <div  class="wf-label-cstm" [ngClass]="{hidedataCharges :  subTabOtherOptions !== 'charges'} ">
+                        <app-work-order-charges [workOrderChargesList]="workOrderChargesList" ></app-work-order-charges>
+                    </div>
+
+
                 </div>
             </div>
         </div>
@@ -1126,6 +1141,16 @@
       </div>
     </div>
   </div> 
+  <div class="modal fade" id="quote-details" role="dialog">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- <app-work-order-quote></app-work-order-quote> -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
 
 

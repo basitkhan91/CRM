@@ -10,6 +10,8 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<IntegrationPortal> getIntegrationData (int id);
         IEnumerable<IntegrationPortal> GetIntegrationLite();
 
+        IEnumerable<DAL.Models.IntegrationPortalAudit> GetIntegrationPortalAuditDetails(long integrationPortalId);
+
         //  void CreateAction(DAL.Models.Action action);
 
     }

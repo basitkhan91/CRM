@@ -243,6 +243,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         if (this.editMode) {
 
             this.id = this.editGeneralInformationData.customerId
+         
             this.savedGeneralInformationData = this.editGeneralInformationData;
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
@@ -290,7 +291,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
         // })
     }
     getAllCurrency() {
+       
         this.currencyService.getCurrencyList().subscribe(res => {
+
             this.allCurrencyInfo = res[0];
         })
     }
@@ -610,7 +613,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 MessageSeverity.success
             );
             this.restDiscount();
-            this.savedGeneralInformationData.discountId = data.discountId;
+            this.savedGeneralInformationData.discountId = data.discontValue;
         })
 
     }
@@ -685,6 +688,15 @@ export class CustomerFinancialInformationComponent implements OnInit {
     }
 
 
+    deleteTaxTypeRate(i) {
+       
+     
+      //  this.partListForPMA = [{ label: rowData.partNumber, value: rowData }, ...this.partListForPMA];
+        this.taxTypeRateMapping.splice(i, 1);
+
+      
+
+    }
 
     // newAddDiscount
     //     this.itemQuantity = Array(100).fill(1).map((x, i) => i + 1);

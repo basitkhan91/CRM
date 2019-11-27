@@ -3,18 +3,30 @@
     <div class="col-2 column">
       <div class="form-group">
         <label>PN<span class="clr-red">*</span></label>
-        <input
-          type="text"
-          pInputText
-          name="partNumber"
-          [(ngModel)]="query.partSearchParamters.partNumber"
-        />
+        <p-autoComplete [suggestions]="this.partDetails" (completeMethod)="searchPartByPartNumber($event)"
+          name="partNumber" field="partNumber" [(ngModel)]="partDetail" (onSelect)="onPartNumberSelect($event)">
+          <ng-template let-value pTemplate="selectedItem">
+            <span>{{ value.partNumber }}</span>
+          </ng-template>
+          <ng-template let-brand pTemplate="item">
+            <div class="ui-helper-clearfix">
+              <div>{{ brand.partNumber }}</div>
+            </div>
+          </ng-template>
+        </p-autoComplete>
+      </div>
+    </div>
+    <div class="col-2 column">
+      <div class="form-group">
+        <label>PN Description</label>
+        <input type="text" pInputText name="partDescription" [(ngModel)]="query.partSearchParamters.partDescription"
+          [disabled]="true" />
       </div>
     </div>
     <div class="col-2 column">
       <div class="form-group">
         <label>Cond Type<span class="clr-red">*</span></label>
-        <select>
+        <select [disabled]="true">
           <option>--select--</option>
         </select>
       </div>
@@ -22,13 +34,13 @@
     <div class="col-1 column">
       <div class="form-group">
         <label>Qty Required</label>
-        <input type="text" pInputText name="qtyRequired" />
+        <input type="text" pInputText name="qtyRequired" [(ngModel)]="query.partSearchParamters.quantityRequired" />
       </div>
     </div>
     <div class="col-1 column">
       <div class="form-group">
         <label>Qty to Quote</label>
-        <input type="text" pInputText name="qtyRequired" />
+        <input type="text" pInputText name="qtyToQuote" [(ngModel)]="query.partSearchParamters.quantityToQuote" />
       </div>
     </div>
     <div class="col-1 column">
@@ -43,20 +55,6 @@
         <input type="text" pInputText name="qtyAvailable" disabled="true" />
       </div>
     </div>
-    <div class="col-1 column">
-      <div class="form-group">
-        <label>&nbsp;</label>
-        <button class="btn btn-primary" (click)="search($event)">
-          Search PN
-        </button>
-      </div>
-    </div>
-    <div class="col-1 column">
-      <div class="form-group">
-        <label>&nbsp;</label>
-        <button class="btn btn-primary">Historical</button>
-      </div>
-    </div>
   </div>
 </div>
 <div class="row filter-method">
@@ -64,24 +62,37 @@
     <label>Method</label>
   </div>
   <div>
-    <label><input type="radio" name="method" />&nbsp;Item Master</label>
+    <label><input type="radio" name="method" value="1" [(ngModel)]="query.partSearchParamters.itemSearchType"
+        (change)="onChangeSearchType($event)" />&nbsp;Item Master</label>
   </div>
   <div>
-    <label><input type="radio" name="method" />&nbsp;Stock Line</label>
+    <label><input type="radio" name="method" value="2" [(ngModel)]="query.partSearchParamters.itemSearchType"
+        (change)="onChangeSearchType($event)" />&nbsp;Stock Line</label>
   </div>
   <div>
-    <label
-      ><input type="checkbox" name="includeAlternalePN" />&nbsp;Include
-      Alternate PN</label
-    >
+    <label><input type="checkbox" name="includeAlternalePN" />&nbsp;Include
+      Alternate PN</label>
   </div>
   <div>
-    <label
-      ><input
-        type="checkbox"
-        name="method"
-        name="includeMultiplePN"
-      />&nbsp;Multiple PN's</label
-    >
+    <label><input type="checkbox" name="method" name="includeMultiplePN"
+        [(ngModel)]="query.partSearchParamters.includeAlternatePartNumber" />&nbsp;Multiple PN's</label>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-12">
+    <div class="col-1 column" style="margin-right: 8px;">
+      <div class="form-group">
+        <label>&nbsp;</label>
+        <button class="btn btn-primary" (click)="search($event)" [disabled]="searchDisabled">
+          Search PN
+        </button>
+      </div>
+    </div>
+    <div class="col-1 column" style="margin-right: 8px;">
+      <div class="form-group">
+        <label>&nbsp;</label>
+        <button class="btn btn-primary" [disabled]="historicalDisabled">Historical</button>
+      </div>
+    </div>
   </div>
 </div>

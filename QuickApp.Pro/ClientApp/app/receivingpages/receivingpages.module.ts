@@ -59,6 +59,7 @@ import { ShippingService } from "../services/shipping/shipping-service";
 import { ShippingEndpoint } from "../services/shipping/shipping-endpoint.service";
 import { POViewListComponent } from "../components/receiving/po-ro/po-view-list/po-view-list.component";
 import { CommonService } from "../services/common.service";
+import { ROViewListComponent } from "../components/receiving/repair-order/ro-view-list/ro-view-list.component";
 
 @NgModule({
     imports: [
@@ -90,7 +91,8 @@ import { CommonService } from "../services/common.service";
         RoComponent,
         ReceivingRoComponent,
         ViewRoComponent,
-		POViewListComponent
+		POViewListComponent,
+		ROViewListComponent
 
 	],
     providers: [ReceivingService,

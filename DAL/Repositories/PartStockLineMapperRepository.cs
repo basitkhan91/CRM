@@ -336,7 +336,9 @@ namespace DAL.Repositories
                 {
                     part.ItemMaster = _appContext.ItemMaster.Find(part.ItemMasterId);
 
-                    var stockLines = _appContext.StockLine.Where(x => x.RepairOrderPartRecordId != null && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId).ToList();
+                    var stockLines = _appContext.StockLine
+                        .Where(x => x.RepairOrderPartRecordId != null && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId)
+                        .ToList();
                     if (stockLines != null && stockLines.Count > 0)
                     {
                         part.StockLineCount = (long)stockLines.Sum(x => x.Quantity);
@@ -463,38 +465,36 @@ namespace DAL.Repositories
 
             if (repairOrder != null)
             {
-                /// Generate RepairOrder ///
+                /** Generate RepairOrder **/
                 repairOrderDto.RepairOrderId = repairOrder.RepairOrderId;
                 repairOrderDto.RepairOrderNumber = repairOrder.RepairOrderNumber;
                 repairOrderDto.StatusId = repairOrder.StatusId;
-                repairOrderDto.Status = repairOrder.StatusId == 1
-                    ? "Open"
-                    : (repairOrder.StatusId == 2 ? "Pending" : (repairOrder.StatusId == 3 ? "Fulfilling" : "Closed"));
-                repairOrderDto.VendorName = repairOrder.VendorName;
-                repairOrderDto.VendorCode = repairOrder.VendorCode;
-                // Need to grab from Vendor.ContactList
-                repairOrderDto.VendorContact = repairOrder.Vendor != null
+                repairOrderDto.Status = _getStatus(repairOrder.StatusId);
+                repairOrderDto.VendorName = repairOrder.Vendor != null
                     ? repairOrder.Vendor.VendorName
                     : string.Empty;
-                repairOrderDto.ContactPhone = repairOrder.VendorContactPhone;
+                repairOrderDto.VendorCode =  repairOrder.Vendor != null
+                    ? repairOrder.Vendor.VendorCode
+                    : string.Empty;
+                repairOrderDto.VendorContact = repairOrder.VendorContactPhone;
+                repairOrderDto.ContactPhone =  repairOrder.Vendor != null
+                    ? repairOrder.Vendor.VendorContractReference
+                    : string.Empty;
                 repairOrderDto.OpenDate = repairOrder.OpenDate;
                 repairOrderDto.ClosedDate = repairOrder.ClosedDate;
                 repairOrderDto.NeedByDate = repairOrder.NeedByDate;
                 repairOrderDto.DateApproved = repairOrder.ApprovedDate;
-                // TODO = Get from Employee table.
-                repairOrderDto.Approver = string.Empty;
+                repairOrderDto.Approver = _getApprovarName(repairOrder.RepairOrderId);
                 repairOrderDto.CreditLimit = repairOrder.CreditLimit;
-                repairOrderDto.Terms = repairOrder.Vendor?.CreditTerms != null
-                    ? repairOrder.Vendor.CreditTerms.Name
-                    : string.Empty;
-                // TODO: Get from Priority table
-                repairOrderDto.Priority = string.Empty;
+                repairOrderDto.Terms = _getCreditTerm(repairOrder.RepairOrderId);
+                repairOrderDto.Priority = _getPriority(repairOrder.RepairOrderId);
                 repairOrderDto.DeferredReceiver = repairOrder.DeferredReceiver;
                 repairOrderDto.Resale = repairOrder.Resale;
                 repairOrderDto.ManagementStructureId = repairOrder.ManagementStructureId;
                 repairOrderDto.Memo = repairOrder.RoMemo;
+                repairOrderDto.RequestedBy = repairOrder.RequestedBy.ToString();
 
-                /// Fill RepairOrderPart ///
+                /** Fill RepairOrderPart **/
                 if (repairOrder.RepairOrderPart != null && repairOrder.RepairOrderPart.Any())
                 {
                     repairOrderDto.RepairOrderPart = new List<RepairOrderPartsDto>();
@@ -505,12 +505,11 @@ namespace DAL.Repositories
                         if (roPart.IsParent == true)
                         {
                             repairOrderPartDto = new RepairOrderPartsDto();
-                            // Fill RepairOrderPartsDto
+                            /** Fill RepairOrderPartsDto **/
                             repairOrderPartDto.RepairOrderId = roPart.RepairOrderId;
                             repairOrderPartDto.RepairOrderPartRecordId = roPart.RepairOrderPartRecordId;
                             repairOrderPartDto.ItemMasterId = roPart.ItemMasterId;
-                            // TODO: Get IsActive
-                            repairOrderPartDto.IsActive = false;
+                            repairOrderPartDto.IsActive = roPart.IsActive;
                             repairOrderPartDto.IsParent = roPart.IsParent;
                             repairOrderPartDto.PartNumber = roPart.ItemMaster != null
                                 ? roPart.ItemMaster.PartNumber
@@ -519,38 +518,30 @@ namespace DAL.Repositories
                                 ? roPart.ItemMaster.PartDescription
                                 : string.Empty;
                             repairOrderPartDto.QuantityOrdered = roPart.QuantityOrdered;
-                            // TODO: WHERE TO GET THESE THREE?
-                            repairOrderPartDto.QuantityReceived = 0;
-                            repairOrderPartDto.QuantityBackOrdered = 0;
-                            repairOrderPartDto.QuantityRejected = 0;
-                            repairOrderPartDto.Status = roPart.StatusId == 1
-                                ? "Open"
-                                : (roPart.StatusId == 2 ? "Pending" : (roPart.StatusId == 3 ? "Fulfilling" : "Closed"));
-                            repairOrderPartDto.IsSerialized = roPart.ItemMaster != null
-                                ? roPart.ItemMaster.IsSerialized
-                                : null;
-                            repairOrderPartDto.IsTimeLife = roPart.ItemMaster != null
-                                ? roPart.ItemMaster.IsSerialized
-                                : null;
-                            repairOrderPartDto.GlAccountId = roPart.GlAccountId;
+                            repairOrderPartDto.QuantityReceived = _getStockLineInfo(roPart.RepairOrderPartRecordId).QuantityToReceive;
+                            repairOrderPartDto.QuantityBackOrdered = roPart.QuantityBackOrdered;
+                            repairOrderPartDto.QuantityRejected = _getStockLineInfo(roPart.RepairOrderPartRecordId).QuantityRejected;
+                            repairOrderPartDto.Status = _getStatus(roPart.StatusId);
+                            repairOrderPartDto.IsSerialized =_getStockLineInfo(roPart.RepairOrderPartRecordId).IsSerialized;
+                            repairOrderPartDto.IsTimeLife = roPart.ItemMaster?.IsTimeLife;
+                            repairOrderPartDto.ConditionId = roPart.ConditionId;
+                            repairOrderPartDto.GlAccountId = roPart.GlAccountId ?? roPart.ItemMaster?.GLAccountId;
                             repairOrderPartDto.ManagementStructureId = roPart.ManagementStructureId;
                             repairOrderPartDto.UnitCost = roPart.UnitCost;
                             repairOrderPartDto.ExtendedCost = roPart.ExtendedCost;
                             repairOrderPartDto.ManufacturerId = roPart.ManufacturerId;
-                            // TODO: Get from Manufacturer table
-                            repairOrderPartDto.ManufacturerName = string.Empty;
-                            // TODO: Get from StockLine table
-                            repairOrderPartDto.StockLineId = 0;
-                            repairOrderPartDto.StockLineNumber = string.Empty;
-                            // TODO: WHERE TO GET THIS?
-                            repairOrderPartDto.ControlId = string.Empty;
-                            repairOrderPartDto.ControlNumber = string.Empty;
+                            repairOrderPartDto.ManufacturerName = roPart?.ItemMaster?.Manufacturer?.Name;
+                            repairOrderPartDto.StockLineId = _getStockLineInfo(roPart.RepairOrderPartRecordId).StockLineId;
+                            repairOrderPartDto.StockLineNumber = _getStockLineInfo(roPart.RepairOrderPartRecordId).StockLineNumber;
+                            // TODO: Not sure about "ControlId"
+                            repairOrderPartDto.ControlId = _getStockLineInfo(roPart.RepairOrderPartRecordId).ConditionId.ToString();
+                            repairOrderPartDto.ControlNumber = _getStockLineInfo(roPart.RepairOrderPartRecordId).ControlNumber;
 
                             repairOrderDto.RepairOrderPart.Add(repairOrderPartDto);
                         }
                         else
                         {
-                            // Fill RepairOrderSplitPartsDto
+                            /** Fill RepairOrderSplitPartsDto **/
                             var roSplitPartDto = new RepairOrderSplitPartsDto
                             {
                                 ItemMasterId = roPart.ItemMasterId,
@@ -558,24 +549,19 @@ namespace DAL.Repositories
                                     ? roPart.ItemMaster.PartNumber
                                     : string.Empty,
                                 QuantityOrdered = roPart.QuantityOrdered,
-                                // TODO: WHERE TO GET THESE THREE?
-                                QuantityReceived = 0,
-                                QuantityBackOrdered = 0,
-                                QuantityRejected = 0,
-                                Status = roPart.StatusId == 1
-                                    ? "Open"
-                                    : (roPart.StatusId == 2 ? "Pending" : (roPart.StatusId == 3 ? "Fulfilling" : "Closed")),
+                                QuantityReceived =  _getStockLineInfo(roPart.RepairOrderPartRecordId).QuantityToReceive,
+                                QuantityBackOrdered = roPart.QuantityBackOrdered,
+                                QuantityRejected = _getStockLineInfo(roPart.RepairOrderPartRecordId).QuantityRejected,
+                                Status = _getStatus(roPart.StatusId),
                                 ManagementStructureId = roPart.ManagementStructureId,
                                 // TODO: WHERE TO GET THESE"?
                                 UserType = string.Empty,
                                 UserName = string.Empty,
                                 Address = string.Empty,
-                                // TODO: Get from StockLine table
-                                StockLineId = 0,
-                                StockLineNumber = string.Empty,
-                                // TODO: WHERE TO GET THIS?
-                                ControlId = string.Empty,
-                                ControlNumber = string.Empty,
+                                StockLineId = _getStockLineInfo(roPart.RepairOrderPartRecordId).StockLineId,
+                                StockLineNumber = _getStockLineInfo(roPart.RepairOrderPartRecordId).StockLineNumber,
+                                ControlId = _getStockLineInfo(roPart.RepairOrderPartRecordId).ConditionId.ToString(),
+                                ControlNumber = _getStockLineInfo(roPart.RepairOrderPartRecordId).ControlNumber,
                             };
 
                             if (repairOrderPartDto.RepairOrderSplitParts == null)
@@ -591,6 +577,58 @@ namespace DAL.Repositories
             return repairOrderDto;
         }
 
+        private string _getApprovarName(long repairOrderId)
+        {
+            var approver = (from ro in _appContext.RepairOrder
+                join emp in _appContext.Employee on ro.ApproverId equals emp.EmployeeId
+                where ro.RepairOrderId== repairOrderId
+                select new { Approvar = emp.FirstName }).FirstOrDefault();
+
+            return approver.Approvar;
+
+        }
+
+        private string _getCreditTerm(long repairOrderId)
+        {
+            var creditTerm = (from ro in _appContext.RepairOrder
+                join ct in _appContext.CreditTerms on ro.CreditTermsId equals ct.CreditTermsId
+                where ro.RepairOrderId== repairOrderId
+                select new { CreditTerm = ct.Name }).FirstOrDefault();
+
+            return creditTerm.CreditTerm;
+        }
+
+        private string _getPriority(long repairOrderId)
+        {
+            var priority = (from ro in _appContext.RepairOrder
+                join p in _appContext.Priority on ro.PriorityId equals p.PriorityId
+                where ro.RepairOrderId== repairOrderId
+                select new { Priority = p.Description }).FirstOrDefault();
+
+            return priority.Priority;
+        }
+
+        private string _getStatus(int? statusId)
+        {
+            var status = statusId == 1
+                ? "Open"
+                : (statusId == 2 
+                    ? "Pending" 
+                    : (statusId == 3 
+                        ? "Fulfilling" 
+                        : "Closed"));
+
+            return status;
+        }
+
+        private StockLine _getStockLineInfo(long repairOrderPartRecordId)
+        {
+            var stockLine = _appContext.StockLine
+                .Where(x => x.RepairOrderPartRecordId == repairOrderPartRecordId)
+                .FirstOrDefault();
+
+            return stockLine;
+        }
         #endregion PRIVATE METHODS
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

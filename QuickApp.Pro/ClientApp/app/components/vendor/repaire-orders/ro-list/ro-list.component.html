@@ -425,7 +425,7 @@
 																<td colspan="4">{{partList?.level1}},{{partList?.level2}},{{partList?.level3}},{{partList?.level4}}</td>
 																<td>{{partList?.memo}}</td>
 															</tr>
-															<tr class="child-header splitship-head" *ngIf="partList.purchaseOrderSplitParts.length > 0">
+															<tr class="child-header splitship-head" *ngIf="partList.repairOrderSplitParts.length > 0">
 																<th></th>
 																<th></th>
 																<th>PN</th>
@@ -439,7 +439,7 @@
 																<th colspan="4">Management Structure</th>
 																<th colspan="10"></th>
 															</tr>
-															<tr class="child-data" *ngFor="let partChild of partList.purchaseOrderSplitParts">
+															<tr class="child-data" *ngFor="let partChild of partList.repairOrderSplitParts">
 																<td></td>
 																<td></td>
 																<td>{{partList?.partNumber}}</td>

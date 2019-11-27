@@ -43,13 +43,13 @@
             [options]="headers"
             optionLabel="header"
             [(ngModel)]="selectedColumns"
-            [style]="{ minWidth: '200px' }"
+            [style]="{ minWidth: '220px' }"
             style="float:left"
             (onChange)="columnsChanges()"
           ></p-multiSelect>
 
           <div
-            class="inner-addon right-addon w200 inline-block  g-filter-search-cstm"
+            class="inner-addon right-addon w50 inline-block  g-filter-search-cstm"
           >
             <i class="fa fa-search"></i>
             <input
@@ -239,17 +239,25 @@
   <div class="modal-dialog modal-lg">
     <!-- Modal content-->
     <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">
-          &times;
-        </button>
-        <h4 class="modal-title">Details of Customer</h4>
-      </div>
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+                &times;
+            </button>
+            <h4 class="modal-title">Details of Customer</h4>
+            <div>
+                <button type="button" class="btn btn-success" (click)="ExpandAllCustomerDetailsModel()">Open All</button>
+                <button type="button" class="btn btn-info" (click)="CloseAllCustomerDetailsModel()">Close All</button>
+
+            </div>
+        </div>
       <div class="modal-body"  *ngIf="viewDataGeneralInformation">
         <div class="panel-group" id="accordion">
           <div class="panel panel-default">
             <div class="panel-heading">
               <h4 class="panel-title">
+                  <div>
+                    
+                  </div>
                 <a class="collapsed" data-toggle="collapse" href="#step1"
                   >General Info</a
                 >
@@ -329,7 +337,7 @@
                       <p>
                         <span class="label"><b>Country: </b></span
                         ><span class="value">{{
-                          viewDataGeneralInformation.country
+                          viewDataGeneralInformation.countryName
                         }}</span>
                       </p>
                       <p>
@@ -531,7 +539,7 @@
                           <p><span class="label"><b>EDI: </b></span><span class="value">{{viewDataGeneralInformation.ediDescription}}</span></p>
                           <!--<p><span class="label"><b>Deferred PO: </b></span><span class="value">{{customerVfinanceiewFeilds.customerCode}}</span></p>
                   <p><span class="label"><b>Deferred RO: </b></span><span class="value">{{customerViewFeilds.customerCode}}</span></p>-->
-                          <p><span class="label"><b>Currency: </b></span><span class="value">{{viewDataGeneralInformation.currencyId}}</span></p>
+                          <p><span class="label"><b>Currency: </b></span><span class="value">{{viewDataGeneralInformation.currency}}</span></p>
                       </div>
                   </div>
               </div>

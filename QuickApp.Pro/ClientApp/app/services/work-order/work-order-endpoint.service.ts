@@ -192,6 +192,12 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/createworkordermaterials`, JSON.stringify(data), this.getRequestHeaders())
     }
 
+    createWorkOrderEquipmentList(data){
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/createworkorderassets`, JSON.stringify(data), this.getRequestHeaders())
+        
+        
+    }
+
     getTasks() {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/Task/Get`, this.getRequestHeaders())
     }
@@ -216,15 +222,23 @@ export class WorkOrderEndpointService extends EndpointFactory {
     }
 
     getWorkOrderLaborList(workFlowWorkOrderId, workOrderId) {
-        return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkflowworkorderlabourlist?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`, this.getRequestHeaders())
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workorder/getworkflowworkorderlabourlist?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`, this.getRequestHeaders())
 
     }
+
+    getWorkOrderDirectionList(workFlowWorkOrderId, workOrderId){
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/workorderdirections?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`, this.getRequestHeaders())
+      
+        
+    }
+
 
     getWorkOrderWorkFlowByWorkFlowWorkOrderId(workFlowWorkOrderId) {
 
         return this.http.get(`${this.configurations.baseUrl}/api/workorder/workorderworkflowview?workFlowWorkOrderId=${workFlowWorkOrderId}`, this.getRequestHeaders())
 
     }
+
 
 
 

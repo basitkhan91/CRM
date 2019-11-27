@@ -30,7 +30,7 @@ namespace DAL.Models
         public long? ManufacturerId { get; set; }
         public long? ManagementStructureId { get; set; }
         public long? ItemMasterId { get; set; }
-        public long? AssetRecordId { get; set; }
+        public long AssetRecordId { get; set; }
 
         public virtual Asset Asset { get; set; }
         public virtual AircraftModel AircraftModel { get; set; }

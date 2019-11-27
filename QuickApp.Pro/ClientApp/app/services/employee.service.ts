@@ -36,6 +36,7 @@ export class EmployeeService {
     structureData: any[];
     legalEnityList = [];
     employeeStored: any;
+    workFlowIdData: any;
 
     public static readonly roleAddedOperation: RolesChangedOperation = "add";
     public static readonly roleDeletedOperation: RolesChangedOperation = "delete";
@@ -205,8 +206,14 @@ export class EmployeeService {
     storeEmployeeRoles(data: any){
         return this.employeeEndpoint.storeEmployeeRoles<any>(data);
     }
+    getStoredEmployeeRoles(employeeId: any){
+        return this.employeeEndpoint.getEmployeeRoles(employeeId);
+    }
     storeEmployeeManagementStructure(data: any){
         return this.employeeEndpoint.storeEmployeeManagementStructure<any>(data);
+    }
+    getStoredEmployeeManagementStructure(employeeId: any){
+        return this.employeeEndpoint.getStoredEmployeeManagementStructure(employeeId);
     }
 
 }

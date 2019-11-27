@@ -71,6 +71,8 @@ namespace DAL.Repositories.Interfaces
         void DeleteRestrictedParts(long id, string updatedBy);
 
         void CustomerShippingDetailsStatus(long id, bool status, string updatedBy);
+        void CustomerBillingStatus(long id, bool status, string updatedBy);
+
 
     }
 

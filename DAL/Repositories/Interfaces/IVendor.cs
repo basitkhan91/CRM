@@ -44,5 +44,9 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<Vendor> getVendorsForDropdown();
 
         IEnumerable<object> GetVendorBillingAddressAudit(long vendorId, long vendorBillingaddressId);
+
+        IEnumerable<object> GetVendorPOMemoList(long vendorId);
+        IEnumerable<object> GetVendorROMemoList(long vendorId);
+        void UpdateVendorMemoText(long id, string type, string memoText, string updatedBy);
     }
 }

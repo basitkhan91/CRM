@@ -81,7 +81,7 @@ export class WorkOrderCompleteMaterialListComponent {
             mandatory => {
                 this.materialMandatory = mandatory;
                 this.defaultMaterialMandatory = 'Mandatory';
-                if (this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') {
+                if ((this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') && this.workFlow.materialList[0]) {
                     this.workFlow.materialList[0].mandatoryOrSupplemental = this.defaultMaterialMandatory;
                 }
             },
@@ -208,8 +208,8 @@ export class WorkOrderCompleteMaterialListComponent {
     private loadConditionData() {
         this.conditionService.getConditionList().subscribe(data => {
             this.materialCondition = data[0];
-            this.defaultConditionId = this.materialCondition.filter(x => x.description.trim() == "NEW")[0].conditionId;
-            if (this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') {
+            this.defaultConditionId = this.materialCondition.filter(x => x.description.trim() == "NEW")[0]?this.materialCondition.filter(x => x.description.trim() == "NEW")[0].conditionId:'';
+            if ((this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') && this.workFlow.materialList[0]) {
                 this.workFlow.materialList[0].conditionCodeId = this.defaultConditionId;
             }
         })
@@ -222,8 +222,8 @@ export class WorkOrderCompleteMaterialListComponent {
     private loadUOMData() {
         this.unitofmeasureService.getUnitOfMeasureList().subscribe(uomdata => {
             this.materialUOM = uomdata[0];
-            this.defaultUOMId = this.materialUOM.filter(x => x.shortName.trim() == "Ea")[0].unitOfMeasureId;
-            if (this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') {
+            this.defaultUOMId = this.materialUOM.filter(x => x.shortName.trim() == "Ea")[0]?this.materialUOM.filter(x => x.shortName.trim() == "Ea")[0].unitOfMeasureId:'';
+            if ((this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') && this.workFlow.materialList[0]) {
                 this.workFlow.materialList[0].unitOfMeasureId = this.defaultUOMId;
             }
         });
@@ -396,7 +396,8 @@ export class WorkOrderCompleteMaterialListComponent {
         this.checkedParts = []
         const checkedData = this.reservedList.map(x => {
             if (x.isParentChecked) {
-                this.checkedParts.push({ ...x, partStatusId: this.statusId });
+                const {woReservedIssuedAltParts , ...rest} = x
+                this.checkedParts.push({  ...rest, partStatusId: this.statusId });
             }
             x.woReservedIssuedAltParts.map(c => {
                 if (c.isChildChecked) {

@@ -7,6 +7,13 @@ namespace QuickApp.Pro.ViewModels
 {
     public class PartSearchParamters
     {
+        public PartSearchParamters()
+        {
+            this.itemSearchType = ItemSearchType.ItemMaster;
+        }
+
+        public long? partId { get; set; }
+
         public string partNumber { get; set; }
 
         public string partDescription { get; set; }
@@ -17,5 +24,8 @@ namespace QuickApp.Pro.ViewModels
 
         public int? quantityToQuote { get; set;  }
 
+        public bool includeAlternatePartNumber { get; set; }
+
+        public ItemSearchType itemSearchType { get; set; }
     }
 }

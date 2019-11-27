@@ -1,6 +1,6 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
@@ -34,7 +34,7 @@ namespace DAL.Models
         public string SerialNumber { get; set; }
         public bool? ShelfLife { get; set; }
         public DateTime? ShelfLifeExpirationDate { get; set; }
-         [ForeignKey("WarehouseId")]
+        [ForeignKey("WarehouseId")]
         public long? WarehouseId { get; set; }
         [ForeignKey("LocationId")]
         public long? LocationId { get; set; }
@@ -104,10 +104,8 @@ namespace DAL.Models
         public string ShippingReference { get; set; }
         public long? TimeLifeCyclesId { get; set; }
         public bool TimeLifeDetailsNotProvided { get; set; }
-        [NotMapped]
         public long? RepairOrderPartRecordId { get; set; }
-        
-
+        public decimal? WorkOrderExtendedCost { get; set; }
         public virtual PurchaseOrder PurchaseOrder { get; set; }
         public virtual PurchaseOrderPart PurchaseOrderPartRecord { get; set; }
 

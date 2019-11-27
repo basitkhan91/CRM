@@ -12,6 +12,8 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<DAL.Models.Itemgroup> GetItemgroups();
         new IQueryable<Itemgroup> GetPaginationData();
 
+        IEnumerable<DAL.Models.ItemgroupAudit> GetItemGroupAuditDetails(long itemGroupId);
+
         //  void CreateAction(DAL.Models.Action action);
 
     }

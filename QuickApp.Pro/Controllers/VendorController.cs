@@ -1906,7 +1906,7 @@ namespace QuickApp.Pro.Controllers
                 addressObj.UpdatedBy = checkPaymentViewModel.UpdatedBy;
                 addressObj.CreatedDate = DateTime.Now;
                 addressObj.UpdatedDate = DateTime.Now;
-                _unitOfWork.Address.Update(address);
+                _unitOfWork.Address.Update(addressObj);
                 _unitOfWork.vendorPaymentRepository.Update(checkPaymentObj);
                 _unitOfWork.SaveChanges();
                 return Ok(checkPaymentObj);
@@ -3181,7 +3181,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("roPartsViewById")]
         public IActionResult GetRepairOrderPartsView(long repairOrderId)
         {
-            var list = _unitOfWork.repairOrder.GetRepairOrderPartsView(repairOrderId);
+            var list = _unitOfWork.repairOrder.GetRepairOrderPartsView2(repairOrderId);
             return Ok(list);
         }
 
@@ -3217,6 +3217,27 @@ namespace QuickApp.Pro.Controllers
         {
             var allVendorShippingDetails = _unitOfWork.ContactRepository.GetVendorContactsAudit(vendorId, vendorContactId);
             return Ok(allVendorShippingDetails);
+        }
+
+        [HttpGet("vendorpomemolist")]
+        public IActionResult GetVendorPOMemoList(long vendorId)
+        {
+            var result = _unitOfWork.Vendor.GetVendorPOMemoList(vendorId);
+            return Ok(result);
+        }
+
+        [HttpGet("vendorromemolist")]
+        public IActionResult GetVendorROMemoList(long vendorId)
+        {
+            var result = _unitOfWork.Vendor.GetVendorROMemoList(vendorId);
+            return Ok(result);
+        }
+
+        [HttpPut("updatevendormemotext")]
+        public IActionResult UpdateVendorMemoText(long id, string type, string memoText, string updatedBy)
+        {
+            _unitOfWork.Vendor.UpdateVendorMemoText(id, type, memoText, updatedBy);
+            return Ok();
         }
 
 
