@@ -2,7 +2,6 @@
 using DAL;
 using DAL.Common;
 using DAL.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -1057,21 +1056,20 @@ namespace QuickApp.Pro.Controllers
                                 var repairOrderPartObj = _context.RepairOrderPart
                                                                 .Where(a => a.RepairOrderPartRecordId == roPartSplit.RepairOrderPartRecordId)
                                                                 .SingleOrDefault();
-                                // TO DO = Do save
-                                if(repairOrderPartObj == null)
+                                if (repairOrderPartObj == null)
                                 {
                                     var roPartModel2 = new RepairOrderPart();
                                     roPartModel2 = FillRepairOrderSplitPart(roPartModel2, roPartSplit);
                                     SaveRepairOrderPart(roPartModel2);
-                                    if(roPartSplit.RepairOrderPartRecordId == 0)
+                                    if (roPartSplit.RepairOrderPartRecordId == 0)
                                     {
                                         roPartSplit.RepairOrderPartRecordId = roPartModel2.RepairOrderPartRecordId;
                                     }
                                 }
                                 else
                                 {
-                                   repairOrderPartObj = FillRepairOrderSplitPart(repairOrderPartObj, roPartSplit);
-                                   UpdateRepairOrderPart(repairOrderPartObj);
+                                    repairOrderPartObj = FillRepairOrderSplitPart(repairOrderPartObj, roPartSplit);
+                                    UpdateRepairOrderPart(repairOrderPartObj);
                                 }
                             }
                         }
