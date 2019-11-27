@@ -15,6 +15,10 @@ export class WorkOrderQuoteComponent implements OnInit {
 
   constructor() {}
   ngOnInit() {
+    if(this.quoteForm == undefined){
+      this.quoteForm = new WorkOrderQuote();
+    }
+    console.log(this.quoteForm);
   }
   saveQuoteDetails() {
     console.log(this.quoteForm);
