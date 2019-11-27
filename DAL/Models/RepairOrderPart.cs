@@ -88,6 +88,7 @@ namespace DAL.Models
         public int? ManagementStructureId { get; set; }
         public DateTime? NeedByDate { get; set; }
         public long RepairOrderPartRecordId { get; set; }
+         public long? StockLineId {get; set;}
     }
 
     [NotMapped]
@@ -122,6 +123,7 @@ namespace DAL.Models
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public long RepairOrderPartRecordId { get; set; }
+        public long? StockLineId {get; set;}
         public List<RoPartSplits> RoPartSplits { get; set; }
     }
 

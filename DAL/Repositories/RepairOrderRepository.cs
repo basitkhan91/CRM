@@ -397,6 +397,7 @@ namespace DAL.Repositories
                         repairOrderPartDto.UOMId = roPart.rop.UOMId;
                         repairOrderPartDto.UpdatedBy = roPart.rop.UpdatedBy;
                         repairOrderPartDto.WorkOrderId = roPart.rop.WorkOrderId;
+                        repairOrderPartDto.StockLineId = _getStockLine(roPart.rop.RepairOrderId, roPart.rop.RepairOrderPartRecordId).StockLineId;
 
                         repairOrderDtoList.Add(repairOrderPartDto);
                     }
@@ -422,8 +423,8 @@ namespace DAL.Repositories
                             RoPartSplitStateOrProvince = roPart.rop.RoPartSplitStateOrProvince,
                             RoPartSplitUserId = roPart.rop.RoPartSplitUserId,
                             RoPartSplitUserTypeId = roPart.rop.RoPartSplitUserTypeId,
-                            NeedByDate = roPart.rop.NeedByDate
-
+                            NeedByDate = roPart.rop.NeedByDate,
+                            StockLineId = _getStockLine(roPart.rop.RepairOrderId, roPart.rop.RepairOrderPartRecordId).StockLineId
                         };
                         if (repairOrderPartDto.RoPartSplits == null)
                         {
@@ -812,6 +813,15 @@ namespace DAL.Repositories
             }
 
             return user;
+        }
+
+        private StockLine _getStockLine(long repairOrderId, long repairOrderPartRecordId)
+        {
+            var stockLine = _appContext.StockLine
+               .Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == repairOrderPartRecordId)
+               .FirstOrDefault();
+
+            return stockLine;
         }
     }
 }
