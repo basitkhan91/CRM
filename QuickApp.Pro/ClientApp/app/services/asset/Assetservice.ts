@@ -91,6 +91,11 @@ export class AssetService {
         return this.assetEndpoint.saveAssetCapesInfo<any>(data);
     }
 
+    addNewAssetInfocapes(data) {
+        return this.assetEndpoint.addNewAssetCapesInfo<any>(data);
+    }
+    
+
     getcapabilityListData(assetRecordId) {
         return Observable.forkJoin(
             this.assetEndpoint.getCapabilityTypeListEndpoint<any[]>(assetRecordId));

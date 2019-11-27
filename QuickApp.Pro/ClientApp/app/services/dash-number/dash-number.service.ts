@@ -22,7 +22,15 @@ export class DashNumberService {
         DashNumberId
       )
     );
-  }
+    }
+
+    getByModelId(AircraftModelId: number) {
+        return Observable.forkJoin(
+            this.dashNumberEndpoint.getDashNumberByModelId<AircraftDashNumber>(
+                AircraftModelId
+            )
+        );
+    }
 
   add(DashNumber) {
     return this.dashNumberEndpoint.addDashNumber<AircraftDashNumber>(
