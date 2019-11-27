@@ -2644,9 +2644,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("searchGetCustomerATAMappedByMultiATAIDATASubID")]
-        public IActionResult CustomerATAMappedList(long contactId, string ATAChapterId, string ATASubChapterID)
+        public IActionResult CustomerATAMappedList(long customerId, string ATAChapterId, string ATASubChapterID)
         {
-            var result = _unitOfWork.Customer.searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(contactId, ATAChapterId, ATASubChapterID);
+            var result = _unitOfWork.Customer.searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(customerId, ATAChapterId, ATASubChapterID);
 
             if (result == null)
             {
@@ -2859,6 +2859,21 @@ namespace QuickApp.Pro.Controllers
             return Ok();
 
         }
+        [HttpGet("searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID")]
+        public IActionResult searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(long customerId, string AircraftTypeId, string AircraftModelId, string DashNumberId)
+        {
+            var result = _unitOfWork.Customer.searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(customerId, AircraftTypeId, AircraftModelId, DashNumberId);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        
     }
 
 }
