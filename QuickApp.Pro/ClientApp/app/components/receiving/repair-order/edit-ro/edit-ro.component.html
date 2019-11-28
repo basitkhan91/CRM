@@ -244,7 +244,7 @@
                             <td>
                                 <input class="form-control" type="text" disabled pInputText pKeyFilter="pnum"
                                        [(ngModel)]="part.extendedCost"
-                                       [disabled]="!part.isEnabled">
+                                       [disabled]="true">
 
                             </td>
                             <td>
@@ -386,12 +386,12 @@
                                 <th>Location</th>
                                 <th>Shelf</th>
                                 <th>Bin</th>
-                                <!--<th>Owner</th>
+                                <!-- <th>Owner</th>
                                 <th>Name</th>
                                 <th>Obtain From</th>
                                 <th>Name</th>
                                 <th>Traceable to</th>
-                                <th>Name</th>-->
+                                <th>Name</th> -->
                                 <th>Trace</th>
                                 <th>Mfg</th>
                                 <th>Mfg Lot Num</th>
@@ -453,6 +453,7 @@
                                 <td>
                                     <label style="width:90px;">Company:</label>
                                     <select class="form-control"
+                                            name="companyId{{stockline_row_index}}"
                                             [(ngModel)]="SL.companyId"
                                             #selects="ngModel"
                                             [ngModelOptions]="{standalone: true}"
@@ -465,6 +466,7 @@
                                 <td>
                                     <label style="width:90px;">BU:</label>
                                     <select class="form-control"
+                                            name="businessUnitId{{stockline_row_index}}"
                                             [(ngModel)]="SL.businessUnitId"
                                             #selects="ngModel"
                                             [ngModelOptions]="{standalone: true}"
@@ -477,6 +479,7 @@
                                 <td>
                                     <label style="width:90px;">Division:</label>
                                     <select class="form-control"
+                                            name="divisionId{{stockline_row_index}}"
                                             [(ngModel)]="SL.divisionId"
                                             #selects="ngModel"
                                             [ngModelOptions]="{standalone: true}"
@@ -489,6 +492,7 @@
                                 <td>
                                     <label style="width:90px;">Dept:</label>
                                     <select class="form-control"
+                                            name="departmentId{{stockline_row_index}}"
                                             [(ngModel)]="SL.departmentId"
                                             #selects="ngModel"
                                             [ngModelOptions]="{standalone: true}"
@@ -500,6 +504,7 @@
                                 </td>
                                 <td>
                                     <select class="form-control"
+                                            name="siteId{{stockline_row_index}}"
                                             [(ngModel)]="SL.siteId"
                                             #selects="ngModel"
                                             [ngModelOptions]="{standalone: true}"
@@ -511,6 +516,7 @@
                                 </td>
                                 <td>
                                     <select class="form-control"
+                                            name="warehouseId{{stockline_row_index}}"
                                             [(ngModel)]="SL.warehouseId"
                                             #selects="ngModel"
                                             [ngModelOptions]="{standalone: true}"
@@ -522,6 +528,7 @@
                                 </td>
                                 <td>
                                     <select class="form-control"
+                                            name="locationId{{stockline_row_index}}"
                                             [(ngModel)]="SL.locationId"
                                             #selects="ngModel"
                                             [disabled]="!SL.isEnabled"
@@ -533,6 +540,7 @@
                                 </td>
                                 <td>
                                     <select class="form-control"
+                                            name="shelfId{{stockline_row_index}}"
                                             [(ngModel)]="SL.shelfId"
                                             #selects="ngModel"
                                             [disabled]="!SL.isEnabled"
@@ -544,6 +552,7 @@
                                 </td>
                                 <td>
                                     <select class="form-control"
+                                            name="binId{{stockline_row_index}}"
                                             [(ngModel)]="SL.binId"
                                             #selects="ngModel"
                                             [disabled]="!SL.isEnabled"
@@ -552,6 +561,13 @@
                                         <option *ngFor="let bin of SL.BinList" [value]="bin.Key">{{bin.Value}}</option>
                                     </select>
                                 </td>
+                                <!-- <td>
+                                    <select name="ownerType{{stockline_row_index}}" [(ngModel)]="SL.ownerType">
+                                        <option value="1">Customer</option>
+                                        <option value="2">Vendor</option>
+                                        <option value="3">Company</option>
+                                    </select>
+                                </td> -->
                                 <!--<td>{{SL.ownerType}}</td>
                                 <td>{{SL.owner}}</td>
                                 <td>{{SL.obtainFromType}}</td>

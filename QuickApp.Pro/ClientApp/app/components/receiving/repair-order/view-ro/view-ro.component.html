@@ -192,8 +192,8 @@
                         <th>Alt PN</th>
                         <th>PN Description</th>
                         <th>Manufacturer</th>
-                        <th>Cond</th>
-                        <th>UOM</th>
+                        <!-- <th>Cond</th>
+                        <th>UOM</th> -->
                         <th>OEM, DER,PMA FLAG</th>
                         <th colspan="2">Qty to Repair</th>
                         <th>Discount</th>
@@ -203,11 +203,11 @@
                         <th>SO</th>
                         <th>Sub-WO</th>
                         <th colspan="4" style="text-align: center;">Management Structure</th>
-                        <th>Site</th>
+                        <!-- <th>Site</th>
                         <th>Warehouse</th>
                         <th>Location</th>
                         <th>Shelf</th>
-                        <th>Bin</th>
+                        <th>Bin</th> -->
                         <th colspan="43"></th>
                     </tr>
                 </thead>
@@ -220,8 +220,8 @@
                             <td>#######</td>
                             <td>{{part.itemMaster.partDescription}}</td>
                             <td>{{part.itemMaster.manufacturer?.name}}</td>
-                            <td>{{part.conditionText}}</td>
-                            <td>{{part.uomText}}</td>
+                            <!-- <td>{{part.conditionText}}</td>
+                            <td>{{part.uomText}}</td> -->
                             <td>{{part.itemMaster.isPma ? "PMA," : '' + part.itemMaster.isDer ? "DER" : ''}}</td>
                             <td colspan="2">{{part.quantityToRepair}}</td>
                             <td>{{part.discountPerUnit}}</td>
@@ -281,9 +281,9 @@
                                     <option value="0">Select</option>
                                     <option *ngFor="let department of part.DepartmentList" [value]="department.Key">{{department.Value}}</option>
                                 </select> -->
-                            </td>
+                            <!-- </td>
                             <td>
-                                <!-- <select class="form-control"
+                                <select class="form-control"
                                         [(ngModel)]="part.siteId"
                                         #selects="ngModel"
                                         [ngModelOptions]="{standalone: true}"
@@ -291,10 +291,10 @@
                                         (change)="getPartWareHouse(part)">
                                     <option value="0">Select</option>
                                     <option *ngFor="let site of part.SiteList" [value]="site.Key">{{site.Value}}</option>
-                                </select> -->
+                                </select>
                             </td>
                             <td>
-                                <!-- <select class="form-control"
+                                <select class="form-control"
                                         [(ngModel)]="part.warehouseId"
                                         #selects="ngModel"
                                         [ngModelOptions]="{standalone: true}"
@@ -302,10 +302,10 @@
                                         (change)="getPartLocation(part)">
                                     <option value="0">Select</option>
                                     <option *ngFor="let warehouse of part.WareHouseList" [value]="warehouse.Key">{{warehouse.Value}}</option>
-                                </select> -->
+                                </select>
                             </td>
                             <td>
-                                <!-- <select class="form-control"
+                                <select class="form-control"
                                         [(ngModel)]="part.locationId"
                                         #selects="ngModel"
                                         [ngModelOptions]="{standalone: true}"
@@ -313,10 +313,10 @@
                                         (change)="getPartShelf(part)">
                                     <option value="0">Select</option>
                                     <option *ngFor="let loc of part.LocationList" [value]="loc.Key">{{loc.Value}}</option>
-                                </select> -->
+                                </select>
                             </td>
                             <td>
-                                <!-- <select class="form-control"
+                                <select class="form-control"
                                         [(ngModel)]="part.shelfId"
                                         #selects="ngModel"
                                         [ngModelOptions]="{standalone: true}"
@@ -324,10 +324,10 @@
                                         (change)="getPartBin(part)">
                                     <option value="0">Select</option>
                                     <option *ngFor="let shelf of part.ShelfList" [value]="shelf.Key">{{shelf.Value}}</option>
-                                </select> -->
+                                </select>
                             </td>
                             <td>
-                                <!-- <select class="form-control"
+                                <select class="form-control"
                                         [(ngModel)]="part.binId"
                                         #selects="ngModel"
                                         [ngModelOptions]="{standalone: true}"
@@ -335,8 +335,8 @@
                                         (change)="setPartBinIdToStockline(part)">
                                     <option value="0">Select</option>
                                     <option *ngFor="let bin of part.BinList" [value]="bin.Key">{{bin.Value}}</option>
-                                </select> -->
-                            </td>
+                                </select>
+                            </td> -->
                             <th colspan="43"></th>
                         </tr>
 
@@ -364,12 +364,12 @@
                                 <th>Location</th>
                                 <th>Shelf</th>
                                 <th>Bin</th>
-                                <!--<th>Owner</th>
+                                <th>Owner</th>
                                 <th>Name</th>
                                 <th>Obtain From</th>
                                 <th>Name</th>
                                 <th>Traceable to</th>
-                                <th>Name</th>-->
+                                <th>Name</th>
                                 <th>Trace</th>
                                 <th>Mfg</th>
                                 <th>Mfg Lot Num</th>
@@ -463,6 +463,7 @@
                                     </select> -->
                                 </td>
                                 <td>
+                                    {{part.stockLine[stockline_row_index].siteText}}
                                     <!-- <select class="form-control"
                                             [(ngModel)]="SL.siteId"
                                             #selects="ngModel"
@@ -474,6 +475,7 @@
                                     </select> -->
                                 </td>
                                 <td>
+                                    {{part.stockLine[stockline_row_index].warehouseText}}
                                     <!-- <select class="form-control"
                                             [(ngModel)]="SL.warehouseId"
                                             #selects="ngModel"
@@ -485,6 +487,7 @@
                                     </select> -->
                                 </td>
                                 <td>
+                                        {{part.stockLine[stockline_row_index].locationText}}
                                     <!-- <select class="form-control"
                                             [(ngModel)]="SL.locationId"
                                             #selects="ngModel"
@@ -496,6 +499,7 @@
                                     </select> -->
                                 </td>
                                 <td>
+                                        {{part.stockLine[stockline_row_index].shelfText}}
                                     <!-- <select class="form-control"
                                             [(ngModel)]="SL.shelfId"
                                             #selects="ngModel"
@@ -507,6 +511,7 @@
                                     </select> -->
                                 </td>
                                 <td>
+                                        {{part.stockLine[stockline_row_index].binText}}
                                     <!-- <select class="form-control"
                                             [(ngModel)]="SL.binId"
                                             #selects="ngModel"
@@ -516,12 +521,12 @@
                                         <option *ngFor="let bin of SL.BinList" [value]="bin.Key">{{bin.Value}}</option>
                                     </select> -->
                                 </td>
-                                <!--<td>{{SL.ownerType}}</td>
-                                <td>{{SL.owner}}</td>
-                                <td>{{SL.obtainFromType}}</td>
-                                <td>{{SL.obtainFrom}}</td>
-                                <td>{{SL.traceableToType}}</td>
-                                <td>{{SL.traceableTo}}</td>-->
+                                <td>{{SL.ownerType == 3 ? 'Vendor' : SL.ownerType == 1 ? 'Customer' : 'Company' }}</td>
+                                <td>{{SL.ownerText}}</td>
+                                <td>{{SL.obtainFromType == 3 ? 'Vendor' : SL.obtainFromType == 1 ? 'Customer' : 'Company' }}</td>
+                                <td>{{SL.obtainFromText}}</td>
+                                <td>{{SL.traceableToType == 3 ? 'Vendor' : SL.traceableToType == 1 ? 'Customer' : 'Company' }}</td>
+                                <td>{{SL.traceableToText}}</td>
                                 <td>{{SL.manufacturingTrace}}</td>
                                 <td>{{SL.manufacturerName}}</td>                                
                                 <td>{{SL.manufacturerLotNumber}}</td> 

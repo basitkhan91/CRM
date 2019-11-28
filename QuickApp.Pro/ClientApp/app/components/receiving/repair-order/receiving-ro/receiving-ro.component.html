@@ -289,11 +289,11 @@
                                             </td>                                            
                                             <!-- <td>{{part.stockLine.controlNumber}}</td>
                                             <td>{{part.stockLine.purchaseOrderNumber}}</td> -->
-                                            <td>{{'NA'}}</td>
+                                            <td>{{part.roPartSplitUserTypeId == 3 ? 'Vendor' : part.roPartSplitUserTypeId == 1 ? 'Customer' : 'Company'}}</td>
                                             <td></td>
                                             <!-- <td>{{part?.userName}}</td> -->
-                                            <td></td>
-                                            <!-- <td>{{part.addressText}}</td> -->
+                                            <!-- <td></td> -->
+                                            <td>{{part?.roPartSplitAddress1}}, {{part?.roPartSplitCity}}, {{part?.roPartSplitCountry}}, {{part?.roPartSplitPostalCode}}</td>
                                             <td colspan="3" *ngIf="part.managementStructureName != undefined && part.managementStructureName.length > 0">{{part.managementStructureName[0]}}, {{part.managementStructureName[1]}}, {{part.managementStructureName[2]}}, {{part.managementStructureName[3]}}</td>
                                             <td colspan="3" *ngIf="part.managementStructureName == undefined || part.managementStructureName.length < 1"></td>
                                             <td><input type="text" *ngIf="part.quantityRepaired < part.quantityToRepair" [(ngModel)]="part.quantityActuallyReceived" (keyup)="addStockLine(part, false)" pInputText pKeyFilter="pnum" class="form-control" /></td>
