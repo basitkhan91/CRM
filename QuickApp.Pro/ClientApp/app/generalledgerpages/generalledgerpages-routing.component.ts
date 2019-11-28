@@ -21,7 +21,8 @@ import { GlaccountCreateComponent } from '../components/general-ledger/glaccount
 import { PoRoCategoryComponent } from '../components/general-ledger/po-ro-category/po-ro-category.component';
 import { InterCompanySetupComponent } from '../components/general-ledger/intercompany-setup/intercompany-setup.component';
 //import { GLAccountCategoryComponent } from '../components/gl-account-categories/gl-account-categories.component';
-
+import { AccountListingComponent } from '../components/general-ledger/account-listing/account-listing.component';
+import { AccountListingCreateComponent } from '../components/general-ledger/account-listing-create/account-listing-create.component';
 
 
 const generalledgerpageRoutes: Routes = [
@@ -45,7 +46,10 @@ const generalledgerpageRoutes: Routes = [
             { path: "app-glaccount-list", component: GlaccountListComponent, data: { title: "GlAccountList" } },
             { path: "app-glaccount-create", component: GlaccountCreateComponent, data: { title: "GlAccountCreate" } },
             { path: "app-po-ro-category", component: PoRoCategoryComponent, data: { title: "POROCategory" } },
-            { path: "app-intercompany-setup", component: InterCompanySetupComponent, data: { title: "InterCompanySetup" } }
+            { path: "app-intercompany-setup", component: InterCompanySetupComponent, data: { title: "InterCompanySetup" } },
+            { path: "app-account-listing", component: AccountListingComponent, data: { title: "AccountListing" } },
+            { path: "app-account-listing-create", component: AccountListingCreateComponent, data: { title: "AccountListingCreate" } },
+            { path: "app-account-listing-create/:id", component: AccountListingCreateComponent, data: { title: "AccountListingEdit" } }
         ]
     }
 ];
