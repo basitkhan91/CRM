@@ -767,7 +767,13 @@ export class AssetCapesComponent implements OnInit {
             capbilitiesObj.capabilityTypeId = capData.capabilityTypeId;
             capbilitiesObj.aircraftManufacturer = element1.label;
             capbilitiesObj.PartId = capData.selectedPartId;
-            capbilitiesObj.DashNumber = capData.selectedDashNumbers;
+            capbilitiesObj.itemMasterId = this.itemMasterId;
+            capbilitiesObj.AircraftDashNumberId = capData.selectedDashNumbers;
+
+            this.dashnumberservices.getById(capData.selectedDashNumbers).subscribe(dashnumbers => {
+                const responseData = dashnumbers[0];
+                capbilitiesObj.DashNumber = responseData[0].dashNumber;
+            });
             capData.selectedModel.forEach(element2 => {
                 if (element2.aircraftTypeId == element1.value) {
                     capbilitiesObj.aircraftModelName = element2.label;
@@ -976,10 +982,12 @@ export class AssetCapesComponent implements OnInit {
 
             this.cols = [
 
-                { field: 'assetId', header: 'PN' },
-                { field: 'aircraftTypeId', header: 'Aircraft Type' },
-                { field: 'aircraftModelId', header: ' Aircraft Model' },
-                { field: 'aircraftManufacturer', header: 'Aircraft Manufacturer' },
+                { field: 'partNumber', header: 'PN' },
+                { field: 'partDescription', header: 'PN Description' },
+                { field: 'captypedescription', header: 'Capability Type' },
+                { field: 'manufacturer', header: 'Aircraft Manufacturer' },
+                { field: 'modelname', header: 'Models' },
+                { field: 'dashnumber', header: 'Dash Number' }
             ];
             this.selectedColumns = this.cols;
         }
