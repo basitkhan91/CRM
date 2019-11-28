@@ -37,7 +37,7 @@ namespace QuickApp.Pro.ViewModels
         public long DiscountSalesPrice { get; set; }
         public long LotCostAdjustment { get; set; }
         public long RevalueStockCost { get; set; }
-        public long ManagementStructureEntityId { get; set;}
+        public long ManagementStructureId { get; set;}
         public Int32? UnitCostAdjustmentReasonTypeId { get; set; }
         public Int32? UnitSalePriceAdjustmentReasonTypeId { get; set; }
 
