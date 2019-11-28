@@ -8,39 +8,46 @@
         <div class="col-sm-6">
             <div class="col-sm-9">
                 <div class="col-sm-6 w400">
+                    <label class="form-group control-label col-sm-4" style="margin-left: 40%;"><span style="font-size:11px">Management Structure </span> </label>
+                    <br>
+                    <label class="form-group control-label col-sm-4" style="margin-left: 10%">Entity<span style="color:red">*</span></label>
+
                     <div class="form-group col-sm-12">
-                        <label class="form-group control-label col-sm-4">Legal Entity<span style="color:red">*</span></label>
+                        <label class="form-group control-label col-sm-4"></label>
                         <div class="col-sm-7">
-                            <select [(ngModel)]="sourceStockLineSetup.companyId" [ngModelOptions]="{standalone: true}" (change)="getBUList(sourceStockLineSetup.companyId)">
+                            <select [formControl]="stocklineCreationForm.controls['companyId']" (change)="getBUList($event.target.value)" required>
+                                <option value="0">Select Legal Entity</option>
                                 <option *ngFor="let managementStructure of maincompanylist" [ngValue]="managementStructure.managementStructureId">{{managementStructure.name}}</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">BU </label>
+                        <label class="form-group control-label col-sm-4"></label>
                         <div class="col-sm-7">
-                            <select [(ngModel)]="sourceStockLineSetup.businessUnitId" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(sourceStockLineSetup.businessUnitId)">
+                            <select [formControl]="stocklineCreationForm.controls['BusinessUnitId']" (change)="getDepartmentlist($event.target.value)">
+                                <option value="0">Select BU</option>
                                 <option *ngFor="let managementStructure of bulist" [ngValue]="managementStructure.managementStructureId">{{managementStructure.name}}</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">Dept</label>
+                        <label class="form-group control-label col-sm-4"></label>
                         <div class="col-sm-7">
-                            <select [(ngModel)]="sourceStockLineSetup.departmentId" [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(sourceStockLineSetup.departmentId)">
+                            <select [formControl]="stocklineCreationForm.controls['divisionId']" (change)="getDivisionlist($event.target.value)">
+                                <option value="0">Select Div</option>
                                 <option *ngFor="let managementStructure of departmentList " [ngValue]="managementStructure.managementStructureId">{{managementStructure.name}}</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">Div</label>
+                        <label class="form-group control-label col-sm-4"></label>
                         <div class="col-sm-7">
-                            <select [(ngModel)]="sourceStockLineSetup.divisionId" [ngModelOptions]="{standalone: true}" (change)="getDivisionChangeManagementCode(sourceStockLineSetup.divisionId)">
+                            <select [formControl]="stocklineCreationForm.controls['departmentId']" (change)="divisionChange(sourceStockLineSetup.divisionId)">
+                                <option value="0">Select Dept</option>
                                 <option *ngFor="let managementStructure of divisionlist " [ngValue]="managementStructure.managementStructureId">{{managementStructure.name}}</option>
                             </select>
                         </div>
                     </div>
-                    <div class="clear"></div>
                 </div>
 
                 <div class="form-group col-sm-12">
@@ -59,14 +66,14 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">PN DESCRIPTION</label>
                     <div class="col-sm-7">
-                        <input [disabled]="true" class="form-control" type="text" id=""  name="" autocomplete="off" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.partDescription">
+                        <input [disabled]="true" class="form-control" type="text" id="" name="" autocomplete="off" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.partDescription">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">STOCK LINE NUM</label>
                     <div class="col-sm-7">
-                        <input class="form-control" [disabled]=true type="text" id=""  value="Generating">
+                        <input class="form-control" [disabled]=true type="text" id="" value="Generating">
                     </div>
                 </div>
 
@@ -94,15 +101,15 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">QTY ON HAND <strong class="clr-red">*</strong></label>
                     <div class="col-sm-7">
-                        <input class="form-control qty-input"  *ngIf="showRestrictQuantity" type="number" maxlength="1" min="0" max="1"  (change)="calculateQtyAvailable($event)" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.QuantityOnHand">
-                        <input class="form-control qty-input"  *ngIf="showFreeQuantity" (keypress)="calculateQtyAvailable($event)" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.QuantityOnHand">
+                        <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" maxlength="1" min="0" max="1" (change)="calculateQtyAvailable($event)" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.QuantityOnHand">
+                        <input class="form-control qty-input" *ngIf="showFreeQuantity" (keypress)="calculateQtyAvailable($event)" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.QuantityOnHand">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">QTY RESERVED </label>
                     <div class="col-sm-7">
-                        <input class="form-control qty-input"  type="number" [ngModelOptions]="{standalone: true}" (change)="calculateQtyAvailable($event)" [(ngModel)]="sourceStockLineSetup.QuantityReserved">
+                        <input class="form-control qty-input" type="number" [ngModelOptions]="{standalone: true}" (change)="calculateQtyAvailable($event)" [(ngModel)]="sourceStockLineSetup.QuantityReserved">
                     </div>
                 </div>
 
