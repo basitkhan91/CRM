@@ -22,24 +22,24 @@
                                             <td>{{part.itemMaster?.partNumber}}</td>
                                             <td>{{part.quantityToRepair}}</td>
                                             <td>{{part.stockLine.length}}</td>
-                                            <td>{{part.quantityOrdered - part.stockLine.length}}</td>
+                                            <td>{{part.quantityToRepair - part.stockLine.length}}</td>
                                             <td class="details-control eachcol" style="padding: 4px 6px;">
-                                                <i class="fa fa-{{ toggleIcon ? 'minus':'plus'}} btn btn-success btn-cstm btn-xs margin0" (click)="toggleExpandIcon(part)">Show StockLine</i>
+                                                <i class="fa fa-{{ part.showStockLineGrid ? 'minus':'plus'}} btn btn-success btn-cstm btn-xs margin0 btn-receiving-toggle" (click)="toggleExpandIcon(part)"></i>
                                             </td>
                                         </tr>
 
                                         <tr class="more-info" *ngIf="part.showStockLineGrid">
                                             <td colspan="6">
                                                 <div class="label-value-row">
-                                                    <div class="col-sm-3">
+                                                    <div class="col-sm-4">
                                                         <p><span class="label"><b>PN: </b></span><span class="value"> {{part.itemMaster?.partNumber}}</span></p>
                                                         <p><span class="label"><b>Qty Actually Received: </b></span><span class="value">{{part.stockLine?.length}}</span></p>
                                                     </div>
-                                                    <div class="col-sm-3">
+                                                    <div class="col-sm-4">
                                                         <p><span class="label"><b>PN Description: </b></span><span class="value">{{part.itemMaster?.partDescription}}</span></p>
                                                         <p><span class="label"><b>Qty Rejected: </b></span><span class="value">{{part.itemMaster?.quantityRejected}}</span></p>
                                                     </div>
-                                                    <div class="col-sm-3">
+                                                    <div class="col-sm-4">
                                                         <p><span class="label"><b>Cond: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].conditionText}}</span></p>
                                                         <p><span class="label"><b>GL Account: </b></span><span class="value">{{part.stockLine[part.currentSLIndex].glAccountText}}</span></p>
                                                     </div>                                                   

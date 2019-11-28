@@ -70,7 +70,7 @@ export class CustomerContactsComponent implements OnInit {
 	id: number;
 	customerCode: any;
 	customerName: any;
-	emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}";
+	emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}";
 	urlPattern = "^((ht|f)tp(s?))\://([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(/\S*)?$";
 	sourceViewforContact: any;
 	add_SelectedId: any;
@@ -83,7 +83,7 @@ export class CustomerContactsComponent implements OnInit {
 	]
 	ataListDataValues = []
 	auditHistory: any[] = [];
-
+    @ViewChild('ATAADD') myModal;
 
 	constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService,
 		private dialog: MatDialog, private atasubchapter1service: AtaSubChapter1Service, private masterComapnyService: MasterComapnyService) {
@@ -104,7 +104,7 @@ export class CustomerContactsComponent implements OnInit {
 		}
 
 		this.getAllContacts();
-
+       // this.getATACustomerContactMapped();
 	}
 
 
@@ -265,7 +265,9 @@ export class CustomerContactsComponent implements OnInit {
 		})
 	}
 
-	addATAChapter(rowData) {
+    addATAChapter(rowData) {
+        this.sourceViewforContact = '';
+
 		this.selectedContact = rowData;
 		this.ataListDataValues = [];
 		this.getATACustomerContactMapped();
@@ -276,7 +278,8 @@ export class CustomerContactsComponent implements OnInit {
 
 
 	// get subchapter by Id in the add ATA Mapping
-	getATASubChapterByATAChapter() {
+    getATASubChapterByATAChapter() {
+
 		const selectedATAId = getValueFromObjectByKey('ataChapterId', this.add_SelectedId)
 		this.atasubchapter1service.getATASubChapterListByATAChapterId(selectedATAId).subscribe(atasubchapter => {
 			const responseData = atasubchapter[0];
@@ -307,19 +310,26 @@ export class CustomerContactsComponent implements OnInit {
 				UpdatedDate: new Date(),
 				IsDeleted: false,
 			}
-		})
-
+        })
+       
 		this.add_SelectedModels = undefined;
 		this.add_SelectedId = undefined;
+       	await this.saveCustomerContactATAMapped.emit(ataMappingData);
 
-		await this.saveCustomerContactATAMapped.emit(ataMappingData);
+ 
+
+     
+        this.openModel();
 
 
-		this.getATACustomerContactMapped();
 
+    }
+    openModel() {
+        this.myModal.nativeElement.className = 'modal fade show';
+        this.getATACustomerContactMapped();
 
-
-	}
+       
+    }
 
 	getATACustomerContactMapped() {
 		this.customerService.getATAMappedByContactId(this.selectedContact.contactId).subscribe(res => {

@@ -20,7 +20,8 @@ namespace DAL.Repositories
         public IEnumerable<object> RecevingRolist()
         {
             var roList = (from ro in _appContext.RepairOrder
-                          join emp in _appContext.Employee on ro.RequestedBy equals emp.EmployeeId
+                          join emp in _appContext.Employee on ro.RequestedBy equals emp.EmployeeId into empo
+                          from emp in empo.DefaultIfEmpty()
                           join v in _appContext.Vendor on ro.VendorId equals v.VendorId
                           join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
                           from appr in approver.DefaultIfEmpty()
@@ -397,6 +398,7 @@ namespace DAL.Repositories
                         repairOrderPartDto.UOMId = roPart.rop.UOMId;
                         repairOrderPartDto.UpdatedBy = roPart.rop.UpdatedBy;
                         repairOrderPartDto.WorkOrderId = roPart.rop.WorkOrderId;
+                        repairOrderPartDto.StockLineId = _getStockLine(roPart.rop.RepairOrderId, roPart.rop.RepairOrderPartRecordId)?.StockLineId;
 
                         repairOrderDtoList.Add(repairOrderPartDto);
                     }
@@ -422,8 +424,8 @@ namespace DAL.Repositories
                             RoPartSplitStateOrProvince = roPart.rop.RoPartSplitStateOrProvince,
                             RoPartSplitUserId = roPart.rop.RoPartSplitUserId,
                             RoPartSplitUserTypeId = roPart.rop.RoPartSplitUserTypeId,
-                            NeedByDate = roPart.rop.NeedByDate
-
+                            NeedByDate = roPart.rop.NeedByDate,
+                            StockLineId = _getStockLine(roPart.rop.RepairOrderId, roPart.rop.RepairOrderPartRecordId)?.StockLineId
                         };
                         if (repairOrderPartDto.RoPartSplits == null)
                         {
@@ -578,6 +580,16 @@ namespace DAL.Repositories
                   .Where(x => x.RepairOrderId == repairOrderId && x.IsDeleted == false)
                   .SelectMany(y => y.RepairOrderPart);
 
+                var repairOrder = _appContext.RepairOrder.Where(x => x.RepairOrderId == repairOrderId && x.IsDeleted == false).FirstOrDefault();
+                var roNumber = repairOrder?.RepairOrderNumber;
+
+                var purchaseOrderNumber = (from s in _appContext.StockLine
+                                           join po in _appContext.PurchaseOrder on s.PurchaseOrderId equals po.PurchaseOrderId
+                                           where s.RepairOrderId == repairOrderId
+                                           select new { PurchaseOrderNo = po.PurchaseOrderNumber }).FirstOrDefault();
+
+                var poNumber = purchaseOrderNumber?.PurchaseOrderNo;
+
                 if (repairOrderPartList != null && repairOrderPartList.Any())
                 {
                     foreach (var repairOrderPart in repairOrderPartList)
@@ -609,6 +621,12 @@ namespace DAL.Repositories
                             repairOrderPartViewDto.FunctionalCurrencyId = repairOrderPart.FunctionalCurrencyId;
                             repairOrderPartViewDto.ForeignExchangeRate = repairOrderPart.ForeignExchangeRate;
                             repairOrderPartViewDto.ManagementStructureId = repairOrderPart.ManagementStructureId;
+                            repairOrderPartViewDto.StockLineNumber = _getStockLine(repairOrderPart.RepairOrderId, repairOrderPart.RepairOrderPartRecordId)?.StockLineNumber;
+                            repairOrderPartViewDto.ControlId = _getStockLine(repairOrderPart.RepairOrderId, repairOrderPart.RepairOrderPartRecordId)?.IdNumber;
+                            repairOrderPartViewDto.ControlNumber = _getStockLine(repairOrderPart.RepairOrderId, repairOrderPart.RepairOrderPartRecordId)?.ControlNumber;
+                            repairOrderPartViewDto.RepairOrderNo = roNumber;
+                            repairOrderPartViewDto.Memo = repairOrderPart.Memo;
+                            repairOrderPartViewDto.PO = poNumber;
                             returnObjects.Add(repairOrderPartViewDto);
                         }
                         else
@@ -633,7 +651,11 @@ namespace DAL.Repositories
                                 UserType = repairOrderPart.RoPartSplitUserTypeId == 1
                                     ? "Customer"
                                     : (repairOrderPart.RoPartSplitUserTypeId == 2 ? "Vendor" : "Company"),
-                                User = _getUser(repairOrderPart.RoPartSplitUserTypeId, repairOrderPart.RepairOrderId)
+                                User = _getUser(repairOrderPart.RoPartSplitUserTypeId, repairOrderPart.RepairOrderId),
+                                StockLineNumber = _getStockLine(repairOrderPart.RepairOrderId, repairOrderPart.RepairOrderPartRecordId)?.StockLineNumber,
+                                ControlId = _getStockLine(repairOrderPart.RepairOrderId, repairOrderPart.RepairOrderPartRecordId)?.IdNumber,
+                                ControlNumber = _getStockLine(repairOrderPart.RepairOrderId, repairOrderPart.RepairOrderPartRecordId)?.ControlNumber,
+                                PO = poNumber
                             };
                             if (repairOrderPartViewDto.RepairOrderSplitParts == null)
                             {
@@ -812,6 +834,15 @@ namespace DAL.Repositories
             }
 
             return user;
+        }
+
+        private StockLine _getStockLine(long repairOrderId, long repairOrderPartRecordId)
+        {
+            var stockLine = _appContext.StockLine
+               .Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == repairOrderPartRecordId)
+               .FirstOrDefault();
+
+            return stockLine;
         }
     }
 }

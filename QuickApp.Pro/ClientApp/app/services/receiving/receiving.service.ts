@@ -99,4 +99,16 @@ export class ReceivingService {
         return this.receivingEndpoing.receiveParts<any>(receiveParts);
     }
 
+    getReceivingROPartsForViewById(repairOrderId){
+        return this.receivingEndpoing.getReceivingROPartsForViewById(repairOrderId);
+    }
+
+    getReceivingROPartsForEditById(repairOrderId){
+        return this.receivingEndpoing.getReceivingROPartsForEditById(repairOrderId);
+    }
+
+    updateStockLine(receiveParts: ReceiveParts[]) {
+        return this.receivingEndpoing.updateStockLine<any>(receiveParts);
+    }
+
 }

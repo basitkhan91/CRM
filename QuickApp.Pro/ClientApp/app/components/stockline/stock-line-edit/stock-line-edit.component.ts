@@ -230,7 +230,8 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 			this.sourceStockLineSetup.reconciliationNumber = this.sourceStockLine.reconciliationNumber;
 			this.sourceStockLineSetup.unitSalesPrice = this.sourceStockLine.unitSalesPrice;
 			this.sourceStockLineSetup.coreUnitCost = this.sourceStockLine.coreUnitCost;
-			this.sourceStockLineSetup.glAccountId = this.sourceStockLine.glAccountId;
+            this.sourceStockLineSetup.glAccountId = this.sourceStockLine.glAccountId;
+            this.sourceStockLineSetup.glAccountName = this.sourceStockLine.glAccountName;
 			this.sourceStockLineSetup.assetId = this.sourceStockLine.assetId;
 			this.sourceStockLineSetup.isHazardousMaterial = this.sourceStockLine.isHazardousMaterial;
 			this.sourceStockLineSetup.isPMA = this.sourceStockLine.isPMA;
@@ -262,7 +263,8 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
             this.sourceStockLineSetup.incidentReason = this.sourceStockLine.incidentReason;
             this.sourceStockLineSetup.accident = this.sourceStockLine.accident;
             this.sourceStockLineSetup.accidentReason = this.sourceStockLine.accidentReason;
-
+            this.sourceStockLineSetup.engineSerialNumber = this.sourceStockLine.engineSerialNumber;
+            this.sourceStockLineSetup.aircraftTailNumber = this.sourceStockLineSetup.aircraftTailNumber;
             this.sourceStockLineSetup.quantityOnHand = this.sourceStockLine.quantityOnHand
             this.sourceStockLineSetup.quantityReserved = this.sourceStockLine.quantityReserved
             this.sourceStockLineSetup.quantityIssued = this.sourceStockLine.quantityIssued

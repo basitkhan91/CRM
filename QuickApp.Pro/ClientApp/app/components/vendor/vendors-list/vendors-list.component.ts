@@ -633,4 +633,5 @@ export class VendorsListComponent implements OnInit {
         $('#step4').collapse('hide');
         $('#step5').collapse('hide');
     }
+
 }

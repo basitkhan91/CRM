@@ -552,11 +552,17 @@ export class CustomerService {
     deleteInternationalShipViaId(id, updatedBy) {
         return this.customerEndpoint.deleteInternationalShipViaId(id, updatedBy)
     }
+    deleteShipViaDetails(id, updatedBy) {
+        return this.customerEndpoint.deleteShipViaDetails(id, updatedBy)
+    }
     deleteRestrictedPartsById(id, updatedBy) {
         return this.customerEndpoint.deleteRestrictedPartsById(id, updatedBy)
     }
     updateStatusForShippingDetails(id, status, updatedBy) {
         return this.customerEndpoint.updateStatusForShippingDetails(id, status, updatedBy)
+    }
+    Shippingdetailsviastatus(id, status, updatedBy) {
+        return this.customerEndpoint.Shippingdetailsviastatus(id, status, updatedBy)
     }
 
     CustomersBillingUpdateforActive(id, status, updatedBy) {

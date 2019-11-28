@@ -342,12 +342,12 @@ namespace QuickApp.Pro.Controllers
                 }
                 _unitOfWork.Customer.Add(actionobject);
                 _unitOfWork.SaveChanges();
-                
+
                 //Added By Vijay on 12/11/2019 for IsAddressForShipping and IsAddressForBilling as selected as true condition
                 if (actionobject.CustomerId > 0)
                 {
                     if (Convert.ToBoolean(actionobject.IsAddressForShipping))
-                    {                       
+                    {
                         _unitOfWork.Customer.AddCustomerShippingAddress(actionobject);
                     }
 
@@ -461,6 +461,8 @@ namespace QuickApp.Pro.Controllers
             actionobject.CustomerTypeId = customerViewModel.CustomerTypeId;
             actionobject.CustomerType = customerViewModel.CustomerType;
             actionobject.IsCustomerAlsoVendor = customerViewModel.IsCustomerAlsoVendor;
+            actionobject.IsAddressForBilling = customerViewModel.IsAddressForBilling;
+            actionobject.IsAddressForShipping = customerViewModel.IsAddressForShipping;
             actionobject.IsPBHCustomer = customerViewModel.IsPBHCustomer;
             actionobject.CustomerCode = customerViewModel.CustomerCode;
             actionobject.ContractReference = customerViewModel.ContractReference;
@@ -750,6 +752,15 @@ namespace QuickApp.Pro.Controllers
                 contactObj.UpdatedDate = DateTime.Now;
                 contactObj.CreatedBy = CustomerContactViewModel.CreatedBy;
                 contactObj.UpdatedBy = CustomerContactViewModel.UpdatedBy;
+
+                if (CustomerContactViewModel.IsDefaultContact == true)
+                {
+                    var customerContact = _context.CustomerContact.Where(p => p.CustomerId == CustomerContactViewModel.CustomerId).ToList();
+                    customerContact.ForEach(p => p.IsDefaultContact = false);
+                    _unitOfWork.CustomerContact.UpdateRange(customerContact);
+                    _unitOfWork.SaveChanges();
+                }
+
                 _unitOfWork.CustomerContact.Add(contactObj);
                 _unitOfWork.SaveChanges();
             }
@@ -794,13 +805,34 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.SaveChanges();
                 /*Update Customer Contacts*/
 
+
                 var customerContact = _context.CustomerContact.Where(p => p.ContactId == id).FirstOrDefault();
+
+                if (contactViewModel.IsDefaultContact == true)
+                {
+                    var customerContacts = _context.CustomerContact.Where(p => p.CustomerId == customerContact.CustomerId).ToList();
+
+                    if(customerContacts!=null && customerContacts.Count>0)
+                    {
+                        foreach(var item in customerContacts)
+                        {
+                            item.IsDefaultContact = false;
+                            _context.CustomerContact.Update(item);
+                            _context.SaveChanges();
+                        }
+                    }
+
+                    //customerContacts.ForEach(p => p.IsDefaultContact = false);
+                    //_context.CustomerContact.UpdateRange(customerContacts);
+                    //_context.SaveChanges();
+                }
+
+               
                 if (customerContact != null)
                 {
                     customerContact.UpdatedDate = DateTime.Now;
                     customerContact.UpdatedBy = contactViewModel.UpdatedBy;
                     customerContact.IsDefaultContact = contactViewModel.IsDefaultContact;
-
                     _unitOfWork.CustomerContact.Update(customerContact);
                     _unitOfWork.SaveChanges();
                 }
@@ -1579,7 +1611,7 @@ namespace QuickApp.Pro.Controllers
                     return BadRequest($"{nameof(customerBillingAddressViewModel)} cannot be null");
                 var checkBillingObj = _unitOfWork.CustomerBillingInformation.GetSingleOrDefault(c => c.CustomerBillingAddressId == id);
                 var addressObj = _unitOfWork.Address.GetSingleOrDefault(c => c.AddressId == customerBillingAddressViewModel.AddressId);
-                checkBillingObj.IsPrimary = customerBillingAddressViewModel.IsPrimary;
+                
                 checkBillingObj.MasterCompanyId = 1;
                 checkBillingObj.IsActive = customerBillingAddressViewModel.IsActive;
                 checkBillingObj.SiteName = customerBillingAddressViewModel.SiteName;
@@ -1601,6 +1633,22 @@ namespace QuickApp.Pro.Controllers
                 addressObj.UpdatedBy = customerBillingAddressViewModel.UpdatedBy;
                 //addressObj.CreatedDate = DateTime.Now;
                 addressObj.UpdatedDate = DateTime.Now;
+
+                if (customerBillingAddressViewModel.IsPrimary == true)
+                {
+                    var billingAddress = _context.CustomerBillingAddress.Where(p => p.CustomerId == customerBillingAddressViewModel.CustomerId).ToList();
+                    if (billingAddress != null && billingAddress.Count > 0)
+                    {
+                        foreach (var item in billingAddress)
+                        {
+                            item.IsPrimary = false;
+                            _context.CustomerBillingAddress.Update(item);
+                            _context.SaveChanges();
+                        }
+                    }
+                }
+
+                checkBillingObj.IsPrimary = customerBillingAddressViewModel.IsPrimary;
                 _unitOfWork.Address.Update(addressObj);
                 _unitOfWork.CustomerBillingInformation.Update(checkBillingObj);
                 _unitOfWork.SaveChanges();
@@ -1680,6 +1728,20 @@ namespace QuickApp.Pro.Controllers
                 CustomerShippingAddressObj.UpdatedDate = DateTime.Now;
                 CustomerShippingAddressObj.CreatedBy = customerBillingAddressViewModel.CreatedBy;
                 CustomerShippingAddressObj.UpdatedBy = customerBillingAddressViewModel.UpdatedBy;
+
+                if (customerBillingAddressViewModel.IsPrimary == true)
+                {
+                    var billingAddress = _context.CustomerBillingAddress.Where(p => p.CustomerId == customerBillingAddressViewModel.CustomerId).ToList();
+                    if (billingAddress != null && billingAddress.Count > 0)
+                    {
+                        foreach (var item in billingAddress)
+                        {
+                            item.IsPrimary = false;
+                            _context.CustomerBillingAddress.Update(item);
+                            _context.SaveChanges();
+                        }
+                    }
+                }
 
                 if (customerBillingAddressViewModel.CustomerBillingAddressId > 0)
                 {
@@ -2644,9 +2706,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("searchGetCustomerATAMappedByMultiATAIDATASubID")]
-        public IActionResult CustomerATAMappedList(long contactId, string ATAChapterId, string ATASubChapterID)
+        public IActionResult CustomerATAMappedList(long customerId, string ATAChapterId, string ATASubChapterID)
         {
-            var result = _unitOfWork.Customer.searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(contactId, ATAChapterId, ATASubChapterID);
+            var result = _unitOfWork.Customer.searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(customerId, ATAChapterId, ATASubChapterID);
 
             if (result == null)
             {
@@ -2800,16 +2862,16 @@ namespace QuickApp.Pro.Controllers
 
 
 
-		[HttpGet("customernameandcodesbyId")]
-		public IActionResult GetCustomerNameAndCodesByCustomerId(long customerId)
-		{
-			var custmoerNameAndCodes = _unitOfWork.Customer.GetCustomerNameAndCodesByCustomerId(customerId);
-			return Ok(custmoerNameAndCodes);
+        [HttpGet("customernameandcodesbyId")]
+        public IActionResult GetCustomerNameAndCodesByCustomerId(long customerId)
+        {
+            var custmoerNameAndCodes = _unitOfWork.Customer.GetCustomerNameAndCodesByCustomerId(customerId);
+            return Ok(custmoerNameAndCodes);
 
-		}
+        }
 
 
-	
+
 
         /// <summary>
         /// Added By Vijay on 15-11-2019
@@ -2818,9 +2880,9 @@ namespace QuickApp.Pro.Controllers
         /// <param name="customerId"></param>
         /// <param name="customerBillingaddressId"></param>
         /// <returns></returns>
-        [HttpGet("getCustomerBillingHistory")]       
+        [HttpGet("getCustomerBillingHistory")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult GetAllCustomerBillingAddressAudit(long customerId,long customerBillingaddressId)
+        public IActionResult GetAllCustomerBillingAddressAudit(long customerId, long customerBillingaddressId)
         {
             var allCusBillingDetails = _unitOfWork.CustomerBillingInformation.GetAllCustomerBillingAddressAudit(customerId, customerBillingaddressId);
             return Ok(allCusBillingDetails);
@@ -2858,6 +2920,32 @@ namespace QuickApp.Pro.Controllers
             _unitOfWork.Customer.CustomerBillingStatus(id, status, updatedBy);
             return Ok();
 
+        }
+        [HttpGet("searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID")]
+        public IActionResult searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(long customerId, string AircraftTypeId, string AircraftModelId, string DashNumberId)
+        {
+            var result = _unitOfWork.Customer.searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(customerId, AircraftTypeId, AircraftModelId, DashNumberId);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+        [HttpGet("deleteshipviadetails")]
+        public IActionResult DeleteShipViaDetails(long id, string updatedBy)
+        {
+            _unitOfWork.Customer.DeleteShipViaDetails(id, updatedBy);
+            return Ok();
+        }
+        [HttpGet("shippingdetailsviastatus")]
+        public IActionResult CustomerShippingDetailsViaStatus(long id, bool status, string updatedBy)
+        {
+            _unitOfWork.Customer.CustomerShippingDetailsViaStatus(id, status, updatedBy);
+            return Ok();
         }
     }
 

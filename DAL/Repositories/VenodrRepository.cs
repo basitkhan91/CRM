@@ -44,7 +44,7 @@ namespace DAL.Repositories
                                 CurrencyId= cu.Code,
                                 CreditTermsId = ct.Name,
                                 DiscountLevel = di==null ? 0: di.DiscontValue
-                            }).OrderByDescending(c=>c.CreatedDate).ToList();
+                            }).Where(t=>t.IsActive==true).OrderByDescending(c=>c.CreatedDate).ToList();
                 return data;
 
                 //old query
@@ -791,8 +791,8 @@ namespace DAL.Repositories
                             select new
                             {
                                 Module = "PO",
-                                po.PurchaseOrderId,
-                                po.PurchaseOrderNumber,
+                                OrderNumberId=po.PurchaseOrderId,
+                                OrderNumber=po.PurchaseOrderNumber,
                                 po.Notes
                             }).Distinct().ToList();
                 return list;
@@ -813,9 +813,9 @@ namespace DAL.Repositories
                             select new
                             {
                                 Module = "RO",
-                                ro.RepairOrderId,
-                                ro.RepairOrderNumber,
-                                ro.RoMemo
+                                OrderNumberId = ro.RepairOrderId,
+                                OrderNumber = ro.RepairOrderNumber,
+                                Notes=ro.RoMemo
                             }).Distinct().ToList();
                 return list;
             }

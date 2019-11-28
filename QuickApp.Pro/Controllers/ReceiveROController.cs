@@ -48,7 +48,6 @@ namespace QuickApp.Pro.Controllers
             return Ok(repairOrderParts);
         }
 
-
         [HttpPost("receiveParts")]
         public IActionResult ReceiveParts([FromBody] List<ReceiveParts> receiveParts)
         {
@@ -159,9 +158,8 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
-
         [HttpGet("GetReceieveROPartsForView/{repairOrderId}")]
-        public IActionResult GetReceivingPurchaseOrderForViewId(long repairOrderId)
+        public IActionResult GetReceivingPurchaseOrderForView(long repairOrderId)
         {
             try
             {
@@ -174,6 +172,83 @@ namespace QuickApp.Pro.Controllers
             }
 
         }
+
+        [HttpGet("GetReceieveROPartsForEdit/{repairOrderId}")]
+        public IActionResult GetReceieveROPartsForEdit(long repairOrderId) {
+            var parts = unitOfWork.ReceiveRepairOrder.GetReceivingRepairOrderForEdit(repairOrderId);
+            return Ok(parts);
+        }
+
+        [HttpPost("UpdateStockLines")]
+        public IActionResult UpdateStockLines([FromBody] List<ReceiveParts> receiveParts)
+        {
+            try
+            {
+                if (receiveParts != null)
+                {
+                    foreach (var receivePart in receiveParts)
+                    {
+                        var stockLineIds = receivePart.StockLines.Select(s => s.StockLineId).ToArray();
+                        var stockLines = unitOfWork.stockLineList.getStockLinesByIds(stockLineIds);
+
+                        if (receivePart.TimeLife != null && receivePart.TimeLife.Count > 0)
+                        {
+                            unitOfWork.Repository<TimeLife>().UpdateRange(receivePart.TimeLife);
+                        }
+
+                        foreach (var dbStockLine in stockLines)
+                        {
+                            var stockLine = receivePart.StockLines.Where(x => x.StockLineId == dbStockLine.StockLineId).FirstOrDefault();
+                            dbStockLine.ManagementStructureEntityId = stockLine.ManagementStructureEntityId;
+                            dbStockLine.ShelfId = stockLine.ShelfId > 0 ? stockLine.ShelfId : null;
+                            dbStockLine.WarehouseId = stockLine.WarehouseId > 0 ? stockLine.WarehouseId : null;
+                            dbStockLine.BinId = stockLine.BinId > 0 ? stockLine.BinId : null;
+                            dbStockLine.RepairOrderUnitCost = stockLine.RepairOrderUnitCost;
+                            dbStockLine.RepairOrderExtendedCost = stockLine.RepairOrderExtendedCost;
+                            dbStockLine.LocationId = stockLine.LocationId > 0 ? stockLine.LocationId : null;
+                            dbStockLine.ConditionId = stockLine.ConditionId > 0 ? stockLine.ConditionId : null;
+                            dbStockLine.ManufacturingTrace = stockLine.ManufacturingTrace;
+                            dbStockLine.ManufacturerLotNumber = stockLine.ManufacturerLotNumber;
+                            dbStockLine.ManufacturingDate = stockLine.ManufacturingDate;
+                            dbStockLine.ManufacturingBatchNumber = stockLine.ManufacturingBatchNumber;
+                            dbStockLine.PartCertificationNumber = stockLine.PartCertificationNumber;
+                            dbStockLine.EngineSerialNumber = stockLine.EngineSerialNumber;
+                            dbStockLine.ShippingViaId = stockLine.ShippingViaId;
+                            dbStockLine.ShippingReference = stockLine.ShippingReference;
+                            dbStockLine.ShippingAccount = stockLine.ShippingAccount;
+                            dbStockLine.CertifiedDate = stockLine.CertifiedDate;
+                            dbStockLine.CertifiedBy = stockLine.CertifiedBy;
+                            dbStockLine.TagDate = stockLine.TagDate;
+                            dbStockLine.ExpirationDate = stockLine.ExpirationDate;
+                            dbStockLine.CertifiedDueDate = stockLine.CertifiedDueDate;
+                            dbStockLine.UpdatedBy = UserName;
+                            dbStockLine.OwnerType = stockLine.OwnerType;
+                            dbStockLine.ObtainFromType = stockLine.ObtainFromType;
+                            dbStockLine.TraceableToType = stockLine.TraceableToType;
+                            dbStockLine.Owner = stockLine.Owner;
+                            dbStockLine.ObtainFrom = stockLine.ObtainFrom;
+                            dbStockLine.TraceableTo = stockLine.TraceableTo;
+                            dbStockLine.UpdatedDate = DateTime.Now;
+                            receivePart.StockLines.Remove(stockLine);
+                            unitOfWork.Repository<StockLine>().Update(dbStockLine);
+                        }
+                    }
+
+                    unitOfWork.SaveChanges();
+                }
+                else
+                {
+                    return BadRequest("Unable to find any data to save. Please contact administrator");
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         #endregion Public Members
 
         #region Private Methods

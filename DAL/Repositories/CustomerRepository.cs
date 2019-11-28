@@ -70,6 +70,8 @@ namespace DAL.Repositories
 
             var data = (from t in _appContext.Customer
                         join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
+                        join AccountTyp in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals AccountTyp.CustomerAffiliationId
+
                         join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
                         join ad in _appContext.Address on t.AddressId equals ad.AddressId
                         join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
@@ -104,6 +106,7 @@ namespace DAL.Repositories
                             t.CreatedDate,
                             t.IsActive,
                             t.IsDeleted,
+                         AccountType=   AccountTyp.description,
                             TotalRecords = totalRecords
                         }).Distinct().OrderByDescending(p => p.CreatedDate)
                              .Skip(skip)
@@ -268,6 +271,9 @@ namespace DAL.Repositories
         public IEnumerable<object> GetAllCustomersData()
         {
             var data = (from t in _appContext.Customer
+                        join custType in _appContext.CustomerType on t.CustomerTypeId equals custType.CustomerTypeId into cust
+                        from custType in cust.DefaultIfEmpty()
+
                         join ad in _appContext.Address on t.AddressId equals ad.AddressId
                         join vt in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals vt.CustomerAffiliationId
                         join currency in _appContext.Currency on t.CurrencyId equals currency.CurrencyId into curr
@@ -310,13 +316,14 @@ namespace DAL.Repositories
                             t.CreatedBy,
                             t.UpdatedBy,
                             t.UpdatedDate,
+                     
                             ad.AddressId,
                             ad.Country,
                             ad.PostalCode,
                             vt.CustomerAffiliationId,
                             cc.CustomerClassificationId,
                             //cc.Description
-                        }).OrderByDescending(a => a.UpdatedDate).ToList();
+                        }).Where(t=>t.IsActive==true).OrderByDescending(a => a.UpdatedDate).ToList();
             return data;
         }
         public IEnumerable<object> GetCustomerBynameList(string name)
@@ -461,6 +468,16 @@ namespace DAL.Repositories
                             join ad in _appContext.Address on t.AddressId equals ad.AddressId into add
                             from ad in add.DefaultIfEmpty()
 
+                            join Emp in _appContext.Employee on Convert.ToInt32( t.PrimarySalesPersonId) equals Emp.EmployeeId into Emplyee
+                            from Emp in Emplyee.DefaultIfEmpty()
+
+                            join Empe in _appContext.Employee on Convert.ToInt32(t.SecondarySalesPersonId) equals Empe.EmployeeId into Empl
+                            from Empe in Empl.DefaultIfEmpty()
+
+
+                            join cont in _appContext.Countries on Convert.ToInt32(ad.Country) equals cont.countries_id into country
+                            from cont in country.DefaultIfEmpty()
+
                             join vt in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals vt.CustomerAffiliationId into vtt
                             from vt in vtt.DefaultIfEmpty()
 
@@ -491,6 +508,10 @@ namespace DAL.Repositories
                                 stateOrProvince = ad.StateOrProvince,
                                 postalCode = ad.PostalCode,
                                 country = ad.Country,
+                                CountryName= cont.countries_name,
+                                currency= currency.DisplayName,
+
+
                                 customerCode = t.CustomerCode,
                                 doingBuinessAsName = t.DoingBuinessAsName,
                                 parent = t.Parent,
@@ -530,10 +551,14 @@ namespace DAL.Repositories
                                 allowProformaBilling = t.AllowProformaBilling,
                                 customerId = t.CustomerId,
                                 primarySalesPersonId = t.PrimarySalesPersonId,
+                                primarySalesPersonFirstName = Emp.FirstName,
+
                                 csrName = t.CSRName,
                                 csrId = t.CsrId,
                                 saId = t.SaId,
                                 secondarySalesPersonId = t.SecondarySalesPersonId,
+                                secondarySalesPersonName = Empe.FirstName,
+
                                 annualQuota = t.AnnualQuota,
                                 annualRevenuePotential = t.AnnualRevenuePotential,
                                 AgentName = t.AgentName,
@@ -1349,7 +1374,7 @@ namespace DAL.Repositories
             if (ATAChapterId != null && ATASubChapterID != null)
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
-                            where cATA.CustomerContactId == contactId && myATAChapterId.Contains(cATA.ATAChapterId) && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
+                            where cATA.CustomerId == contactId && myATAChapterId.Contains(cATA.ATAChapterId) && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
                             select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1357,7 +1382,7 @@ namespace DAL.Repositories
             else if (ATAChapterId != null && ATASubChapterID == null)
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
-                            where cATA.CustomerContactId == contactId && myATAChapterId.Contains(cATA.ATAChapterId) && cATA.IsDeleted != true
+                            where cATA.CustomerId == contactId && myATAChapterId.Contains(cATA.ATAChapterId) && cATA.IsDeleted != true
                             select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1366,7 +1391,7 @@ namespace DAL.Repositories
             else if (ATAChapterId == null && ATASubChapterID != null)
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
-                            where cATA.CustomerContactId == contactId && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
+                            where cATA.CustomerId == contactId && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
                             select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1676,6 +1701,53 @@ namespace DAL.Repositories
                 model.IsActive = status;
 
                 _appContext.CustomerBillingAddress.Attach(model);
+
+                _appContext.Entry(model).Property(x => x.IsActive).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public void DeleteShipViaDetails(long id, string updatedBy)
+        {
+            try
+            {
+                CustomerShipping model = new CustomerShipping();
+                model.CustomerShippingId = id;
+                model.UpdatedDate = DateTime.Now;
+                model.IsDeleted = true;
+                model.UpdatedBy = updatedBy;
+
+                _appContext.CustomerShipping.Attach(model);
+
+                _appContext.Entry(model).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public void CustomerShippingDetailsViaStatus(long id, bool status, string updatedBy)
+        {
+            try
+            {
+                CustomerShipping model = new CustomerShipping();
+                model.CustomerShippingId = id;
+                model.UpdatedDate = DateTime.Now;
+                model.IsActive = status;
+
+                _appContext.CustomerShipping.Attach(model);
 
                 _appContext.Entry(model).Property(x => x.IsActive).IsModified = true;
                 _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;

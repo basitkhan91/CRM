@@ -208,7 +208,10 @@ import { AssetAttributeTypeService } from './services/asset-attribute-type/asset
 import { AssetAttributeTypeEndpointService } from './services/asset-attribute-type/asset-attribute-type-endpoint.service';
 import { AssetIntangibleAttributeTypeService } from './services/asset-intangible-attribute-type/asset-intangible-attribute-type.service';
 import { AssetIntangibleAttributeTypeEndpointService } from './services/asset-intangible-attribute-type/asset-intangible-attribute-type-endpoint.service';
+import { DashNumberService } from './services/dash-number/dash-number.service';
+import { DashNumberEndpointService } from './services/dash-number/dash-number-endpoint.service';
 //import { AuditComponent } from "./components/Audit/audit.component";
+import { AccountListingService } from './services/account-listing/account-listing.service'
 
 @NgModule({
     imports: [
@@ -274,6 +277,8 @@ import { AssetIntangibleAttributeTypeEndpointService } from './services/asset-in
         NotificationEndpoint,
         AccountService,
         AccountEndpoint,
+        DashNumberService,
+        DashNumberEndpointService,
         LocalStoreManager,
         EndpointFactory,
         WorkFlowtService,
@@ -422,7 +427,8 @@ import { AssetIntangibleAttributeTypeEndpointService } from './services/asset-in
         PurchaseOrderService,
         PurchaseOrderEndpoint,
         GLAccountService,
-        GLAccountEndpoint
+        GLAccountEndpoint,
+        AccountListingService
     ],
     entryComponents: [LoginDialogComponent, AddTaskDialogComponent],
     bootstrap: [AppComponent],

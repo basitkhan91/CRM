@@ -7,15 +7,15 @@ import { DataTable } from "primeng/datatable";
   templateUrl: "./part-details.component.html",
   styleUrls: ["./part-details.component.scss"]
 })
-export class ParetDetailsComponent implements OnChanges {
+export class PartDetailsComponent implements OnChanges {
   @Input() customer: any;
   @Input() parts: any[];
   selectedColumns: any[];
-  //@ViewChild('parts') partsComponent: DataTable;
-    columns: any[];
-    totalRecords: number = 0;
-    showPaginator: boolean = true;
-    pageLinks: number = 3;
+  showPaginator: boolean;
+  totalRecords: number;
+  pageLinks: any;
+
+  columns: any[];
   constructor() {
     this.parts = [];
     this.columns = [];
@@ -26,10 +26,6 @@ export class ParetDetailsComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     //this.partsComponent.reset();
   }
-
-    onPaging(event) {
-        console.log(event);
-    }
 
   initColumns() {
     this.columns = [
@@ -57,23 +53,9 @@ export class ParetDetailsComponent implements OnChanges {
       { field: 'eccn', header: 'ECCN', width: '200px' },
       { field: 'memo', header: 'Memo', width: '200px' },
     ]
-    /*
-    <th>Unit Cost</th>
-    <th>Unit List Price</th>
-    <th>Qty On Hand</th>
-    <th>Qty To Order</th>
-    <th>Qty On Order</th>
-    <th>Item Classification</th>
-    <th>Item Group</th>
-    <th>OEM/PMA/DER</th>
-    <th>MFG</th>
-    <th>Customer Ref</th>
-    <th>Currency</th>
-    <th>Core Unit Cost</th>
-    <th>GL Account</th>
-    <th>ITAR</th>
-    <th>ECCN</th>
-    <th>Memo</th>
-    */
+  }
+
+  onPaging(event) {
+
   }
 }

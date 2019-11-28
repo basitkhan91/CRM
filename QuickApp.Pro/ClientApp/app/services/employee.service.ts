@@ -206,8 +206,14 @@ export class EmployeeService {
     storeEmployeeRoles(data: any){
         return this.employeeEndpoint.storeEmployeeRoles<any>(data);
     }
+    getStoredEmployeeRoles(employeeId: any){
+        return this.employeeEndpoint.getEmployeeRoles(employeeId);
+    }
     storeEmployeeManagementStructure(data: any){
         return this.employeeEndpoint.storeEmployeeManagementStructure<any>(data);
+    }
+    getStoredEmployeeManagementStructure(employeeId: any){
+        return this.employeeEndpoint.getStoredEmployeeManagementStructure(employeeId);
     }
 
 }

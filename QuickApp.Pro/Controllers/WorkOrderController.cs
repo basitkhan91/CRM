@@ -146,21 +146,6 @@ namespace QuickApp.Pro.Controllers
             
         }
 
-        //[HttpPost("updateworkflowworkorder")]
-        //public IActionResult UpdateWorkFlowWorkOrder([FromBody]WorkOrderWorkFlow workFlowWorkOrder)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //         unitOfWork.WorkOrderRepository.UpdateWorkFlowWorkOrder(workFlowWorkOrder);
-        //        return Ok(workFlowWorkOrder);
-        //    }
-        //    else
-        //    {
-        //        return BadRequest(ModelState.Values.FirstOrDefault().Errors);
-        //    }
-
-        //}
-
         [HttpGet("workflowworkorderbyid")]
         public IActionResult GetWorkFlowWorkOrderById(long workFlowWorkOrderId)
         {

@@ -29,7 +29,7 @@ namespace DAL.Repositories
            
             try
             {
-                var result=_appContext.Currency.Where(c => c.IsDelete == null || c.IsDelete==false).OrderBy(c => c.Code).ToList();
+                var result=_appContext.Currency.Where(c => ((c.IsDelete == null || c.IsDelete==false) && (c.IsActive==true))).OrderBy(c => c.Code).ToList();
                 //var result = _appContext.Currency.Include("MasterCompany").Where(c => c.IsDelete == null).ToList();
                 //var result = _appContext.Currency.Include("MasterCompany").ToList();
                 return result;

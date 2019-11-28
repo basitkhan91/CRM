@@ -140,7 +140,7 @@
                                                         </div>
                                                         
                                                         <div class="col-md-4">
-                                                                <input type="text"  name="phoneExt" pInputText pKeyFilter="num" maxlength="3" [(ngModel)]="generalInformation.customerPhoneExt">
+                                                                <input type="text"  name="phoneExt" pInputText  maxlength="5" [(ngModel)]="generalInformation.customerPhoneExt">
                                                         </div>
 
                                                     </div>
@@ -235,7 +235,7 @@
                                                 <div class="form-group">
                                                     <label>
                                                         <span class="pull-left">Customer Classification</span> <span class="clr-red">*</span>
-                                                        <span style="margin-left:3px;cursor:pointer;"><a  class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClassification" ></a></span>
+                                                        <span style="margin-left:3px;cursor:pointer;"><a  class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClassification" (click)="addclassification()" ></a></span>
                                                     </label>
                                                    
                                                     <p-multiSelect [options]="allcustomerclassificationInfo" [(ngModel)]="generalInformation.customerClassificationIds"  name="customerClassificationId" required>
@@ -303,7 +303,7 @@
                                                 </div>
                                                 <div class="form-group" style="clear: both;">
                                                     <label>URL to Customer site</label>
-                                                    <input class="form-control " type="text" id="customerURL" #url="ngModel"  [pattern]="urlPattern" name="customerURL" [(ngModel)]="generalInformation.customerURL">
+                                                    <input class="form-control " type="text" id="customerURL" #url="ngModel"   name="customerURL" [(ngModel)]="generalInformation.customerURL">
                                                     <div *ngIf="url.errors" [ngClass]="'error'">
                                                             <div *ngIf="url.errors.pattern">
                                                                 <span style="color:red">URL not valid</span>
@@ -359,7 +359,7 @@
                                                                     <span style="margin-left:3px;cursor:pointer;"><a  class="fa fa-plus-circle fa-lg" (click)="addRestrictPMA()" ></a></span>
                                                                 </div>
                                                                 </div>
-                                                                    <div>
+                                                                    <div *ngIf="disableRestrictedPMA">
                                                                         <p-table class="table-responsive" [value]="generalInformation.restrictedPMAParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
                                                                             <ng-template pTemplate="header" let-columns>
                                                                                 <tr>
@@ -415,21 +415,20 @@
 
                                                             <div class="table-small" *ngIf="generalInformation.restrictBER">
 
-                                                                    <div class="col-sm-12">  
-                                                                            <div class="col-sm-9">    
-                                                                    <p-multiSelect 
-                                                                    name="isRestrict"
-                                                                     [(ngModel)]="restictDERtempList"
-                                                                     [options]="partListForDER" 
-                                                                     [filter]="true"
-                                                                     itemSize="30"
-                                                                    ></p-multiSelect>
+                                                                <div class="col-sm-12">
+                                                                    <div class="col-sm-9">
+                                                                        <p-multiSelect name="isRestrict"
+                                                                                       [(ngModel)]="restictDERtempList"
+                                                                                       [options]="partListForDER"
+                                                                                       [filter]="true"
+                                                                                       itemSize="30"></p-multiSelect>
                                                                     </div>
                                                                     <div class="col-sm-3">
-                                                                    <span style="margin-left:3px;cursor:pointer;"><a  class="fa fa-plus-circle fa-lg" (click)="addRestrictBER()" ></a></span>
-                                                                </div>  
+                                                                        <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" (click)="addRestrictBER()"></a></span>
+                                                                    </div>
                                                                 </div>
-                                                                    <p-table class="table-responsive" [value]="generalInformation.restrictedDERParts"  [paginator]="true" [rows]="3" [columns]="restrictHeaders">
+                                                                <div *ngIf="disableRestrictedDER">
+                                                                    <p-table class="table-responsive" [value]="generalInformation.restrictedDERParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
                                                                         <ng-template pTemplate="header" let-columns>
                                                                             <tr>
                                                                                 <th *ngFor="let col of columns">
@@ -438,19 +437,20 @@
                                                                                 <th>Actions</th>
                                                                             </tr>
                                                                         </ng-template>
-                                                                        <ng-template pTemplate="body" let-part let-rowData let-columns="columns"  let-i="rowIndex">
+                                                                        <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
                                                                             <tr>
                                                                                 <td *ngFor="let col of columns">
-                                                                                        {{part[col.field]}}
+                                                                                    {{part[col.field]}}
                                                                                 </td>
-                                                                                <button class="btn-delete"  (click)="deleteRestrictDER(i, rowData)" mat-icon-button matTooltip="Delete" >
+                                                                                <button class="btn-delete" (click)="deleteRestrictDER(i, rowData)" mat-icon-button matTooltip="Delete">
                                                                                     <mat-icon color="warn">delete</mat-icon>
                                                                                 </button>
                                                                             </tr>
                                                                         </ng-template>
                                                                     </p-table>
-        
-                                                        </div>
+                                                                </div>
+
+                                                            </div>
                                                             
                                                     </div>
                                                 <!-- <div class="form-group" style="margin-top: 15px;">
@@ -600,7 +600,7 @@
             <div class="form-group">
                 <label for="description" class="control-label">Memo</label>
                 <div class="control-data">
-                    <input #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
+                    <input #memo="ngModel" placeholder="Tool Bar" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
                     <div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
                         Memo required.
                     </div>
@@ -843,7 +843,7 @@
 
                     <div class="form-group">
                         <label>Memo</label>
-                        <input class="form-control" [(ngModel)]="addNewIntergation.memo" name="memo">
+                        <input class="form-control" [(ngModel)]="addNewIntergation.memo" name="memo" placeholder="Tool Bar">
                     </div>
 
                     <div class="form-group">

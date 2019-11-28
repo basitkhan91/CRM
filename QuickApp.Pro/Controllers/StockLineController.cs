@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DAL;
+﻿using DAL;
 using DAL.Common;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +6,10 @@ using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
 using QuickApp.Pro.Helpers;
 using QuickApp.Pro.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -75,7 +75,7 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
-        
+
         [HttpGet("GetCompanyData")]
         [Produces(typeof(List<StockLineViewModel>))]
         public IActionResult GetCompanyData()
@@ -274,6 +274,8 @@ namespace QuickApp.Pro.Controllers
             if (ModelState.IsValid)
             {
                 if (stockLineViewModel == null) return BadRequest($"{nameof(stockLineViewModel)} cannot be null");
+
+                var entityobject = _context.ManagementStructure.Where(a => a.ManagementStructureId == stockLineViewModel.ManagementStructureId).SingleOrDefault();
                 StockLine actionobject1 = new StockLine();
 
                 actionobject1.PartNumber = stockLineViewModel.PartNumber;
@@ -333,14 +335,18 @@ namespace QuickApp.Pro.Controllers
                 actionobject1.IsDER = stockLineViewModel.IsDER;
                 actionobject1.OEM = stockLineViewModel.OEM;
                 actionobject1.Memo = stockLineViewModel.Memo;
-                actionobject1.ManagementStructureEntityId = stockLineViewModel.ManagementStructureEntityId;
+                actionobject1.ManagementStructureEntityId = stockLineViewModel.ManagementStructureId;
                 actionobject1.TimeLifeCyclesId = stockLineViewModel.TimeLifeCyclesId == 0 ? null : stockLineViewModel.TimeLifeCyclesId;
                 actionobject1.MasterCompanyId = 1;
                 actionobject1.IsSerialized = stockLineViewModel.isSerialized;
                 actionobject1.ShelfId = stockLineViewModel.ShelfId == 0 ? null : stockLineViewModel.ShelfId;
                 actionobject1.BinId = stockLineViewModel.BinId == 0 ? null : stockLineViewModel.BinId;
                 actionobject1.SiteId = stockLineViewModel.SiteId == 0 ? null : stockLineViewModel.SiteId;
-                actionobject1.LegalEntityId = stockLineViewModel.LegalEntityId == 0 ? null : stockLineViewModel.LegalEntityId;
+                //actionobject1.LegalEntityId = stockLineViewModel.LegalEntityId == 0 ? null : stockLineViewModel.LegalEntityId;
+                if (entityobject != null && entityobject.LegalEntityId != null)
+                {
+                    actionobject1.LegalEntityId = entityobject.LegalEntityId;
+                }
                 actionobject1.ObtainFromType = stockLineViewModel.ObtainFromType;
                 actionobject1.OwnerType = stockLineViewModel.OwnerType;
                 actionobject1.TraceableToType = stockLineViewModel.TraceableToType;
@@ -383,7 +389,7 @@ namespace QuickApp.Pro.Controllers
         [HttpPut("stockLinepost/{id}")]
         public IActionResult UpdateStockline(long id, [FromBody] StockLineViewModel stockLineViewModel)
         {
-
+            var entityobject = _context.ManagementStructure.Where(a => a.ManagementStructureId == stockLineViewModel.ManagementStructureId).SingleOrDefault();
             var actionobject1 = _unitOfWork.stockLineList.GetSingleOrDefault(a => a.StockLineId == id);
             actionobject1.PartNumber = stockLineViewModel.PartNumber;
             actionobject1.StockLineNumber = stockLineViewModel.StockLineNumber;
@@ -442,14 +448,18 @@ namespace QuickApp.Pro.Controllers
             actionobject1.IsDER = stockLineViewModel.IsDER;
             actionobject1.OEM = stockLineViewModel.OEM;
             actionobject1.Memo = stockLineViewModel.Memo;
-            actionobject1.ManagementStructureEntityId = stockLineViewModel.ManagementStructureEntityId;
+            actionobject1.ManagementStructureEntityId = stockLineViewModel.ManagementStructureId;
             actionobject1.TimeLifeCyclesId = stockLineViewModel.TimeLifeCyclesId == 0 ? null : stockLineViewModel.TimeLifeCyclesId;
             actionobject1.MasterCompanyId = 1;
             actionobject1.IsSerialized = stockLineViewModel.isSerialized;
             actionobject1.ShelfId = stockLineViewModel.ShelfId == 0 ? null : stockLineViewModel.ShelfId;
             actionobject1.BinId = stockLineViewModel.BinId == 0 ? null : stockLineViewModel.BinId;
             actionobject1.SiteId = stockLineViewModel.SiteId == 0 ? null : stockLineViewModel.SiteId;
-            actionobject1.LegalEntityId = stockLineViewModel.LegalEntityId == 0 ? null : stockLineViewModel.LegalEntityId;
+            if (entityobject != null && entityobject.LegalEntityId != null)
+            {
+                actionobject1.LegalEntityId = entityobject.LegalEntityId;
+            }
+            //actionobject1.LegalEntityId = stockLineViewModel.LegalEntityId == 0 ? null : stockLineViewModel.LegalEntityId;
             actionobject1.ObtainFromType = stockLineViewModel.ObtainFromType;
             actionobject1.OwnerType = stockLineViewModel.OwnerType;
             actionobject1.TraceableToType = stockLineViewModel.TraceableToType;
@@ -538,7 +548,7 @@ namespace QuickApp.Pro.Controllers
         {
             if (stockLineViewModel != null)
             {
-
+                var entityobject = _context.ManagementStructure.Where(a => a.ManagementStructureId == stockLineViewModel.ManagementStructureId).SingleOrDefault();
                 var actionobject = _unitOfWork.stockLineList.GetSingleOrDefault(a => a.StockLineId == id);
 
                 //var address = _unitOfWork.Address.GetSingleOrDefault(a => a.AddressId == customerViewModel.Addressid);
@@ -612,9 +622,9 @@ namespace QuickApp.Pro.Controllers
                 {
                     actionobject.UnitSalesPrice = stockLineViewModel.UnitSalesPrice;
                 }
-                if (stockLineViewModel.ManagementStructureEntityId != 0)
+                if (stockLineViewModel.ManagementStructureId != 0)
                 {
-                    actionobject.ManagementStructureEntityId = stockLineViewModel.ManagementStructureEntityId;
+                    actionobject.ManagementStructureEntityId = stockLineViewModel.ManagementStructureId;
                 }
                 if (stockLineViewModel.UnitCostAdjustmentReasonTypeId != 0)
                 {
@@ -836,11 +846,11 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = (from pop in _context.PurchaseOrderPart
-                              where pop.PurchaseOrderId== POId
+                              where pop.PurchaseOrderId == POId
                               select new PurchaseOrderPart
                               {
-                                UnitCost=  pop.UnitCost,
-                                PurchaseOrderId=pop.PurchaseOrderId
+                                  UnitCost = pop.UnitCost,
+                                  PurchaseOrderId = pop.PurchaseOrderId
                               }).ToList();
                 return Ok(result);
             }
@@ -861,8 +871,8 @@ namespace QuickApp.Pro.Controllers
                               where rop.RepairOrderId == ROId
                               select new RepairOrderPart
                               {
-                                UnitCost =   rop.UnitCost,
-                                RepairOrderId=rop.RepairOrderId
+                                  UnitCost = rop.UnitCost,
+                                  RepairOrderId = rop.RepairOrderId
                               }).ToList();
                 return Ok(result);
             }
@@ -943,6 +953,95 @@ namespace QuickApp.Pro.Controllers
             stream.Position = 0;
             string excelName = $"StockLineReport-{DateTime.Now.ToString("ddMMMyyyy")}.xlsx";
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+        }
+
+        [HttpGet("getStocklineDetailsById/{stockLineId}")]
+        public IActionResult GetStockLineDetailsById(long stockLineId)
+        {
+            var result = (from s in _context.StockLine
+                          join ro in _context.RepairOrder on s.RepairOrderId equals ro.RepairOrderId
+                          where s.StockLineId == stockLineId
+                          select new
+                          {
+                              s.ControlNumber,
+                              ro.RepairOrderNumber,
+                              ControlId = s.IdNumber
+
+                          }).FirstOrDefault();
+
+            return Ok(result);
+        }
+
+        [HttpPost("search")]
+        public IActionResult SearchItemMaster([FromBody]ItemMasterSearchViewModel searchView)
+        {
+            if (searchView == null
+                   || searchView.partSearchParamters == null
+                   || !searchView.partSearchParamters.partId.HasValue)
+            {
+                return BadRequest(new Exception("Invalid request parameter, partId not passed"));
+            }
+
+            IEnumerable<object> result = null;
+
+            if (searchView.partSearchParamters.includeAlternatePartNumber)
+            {
+
+            }
+            else
+            {
+                result = GetPartDetails(searchView);
+            }
+
+
+            var pageCount = (searchView.first / searchView.rows) + 1;
+
+            var searchData = new GetSearchData<object>();
+
+            searchData.Data = DAL.Common.PaginatedList<object>.Create(result.AsQueryable<object>(), pageCount, searchView.rows);
+
+            return Ok(searchData);
+        }
+
+        private IEnumerable<object> GetPartDetails(ItemMasterSearchViewModel searchView)
+        {
+            var result = Enumerable.Empty<object>();
+
+            result = from item in _context.ItemMaster
+                     join sl in _context.StockLine on item.ItemMasterId equals sl.ItemMasterId
+                     join uom in _context.UnitOfMeasure on item.ConsumeUnitOfMeasureId equals uom.UnitOfMeasureId into iuom
+                     from iu in iuom.DefaultIfEmpty()
+                     join currency in _context.Currency on item.CurrencyId equals currency.CurrencyId into itemcurrecy
+                     from ic in itemcurrecy.DefaultIfEmpty()
+                     where item.IsActive.HasValue && item.IsActive.Value == true
+                            && (item.IsDeleted.HasValue && !item.IsDeleted == true || !item.IsDeleted.HasValue)
+                            && (item.MasterCompanyId.HasValue && item.MasterCompanyId.Value == 1)
+                            && item.ItemMasterId == searchView.partSearchParamters.partId
+
+                     select new
+                     {
+                         method = "Stock Line",
+                         itemId = item.ItemMasterId,
+                         partNumber = item.PartNumber,
+                         alternatePartId = item.PartAlternatePartId,
+                         alternateFor = string.Empty,
+                         description = item.PartDescription,
+                         conditionType = string.Empty,
+                         stockLineNumber = sl.StockLineNumber,
+                         uomDescription = iu.Description,
+                         qtyAvailable = sl.QuantityAvailable ?? 0,
+                         qtyOnHand = sl.QuantityOnHand ?? 0,
+                         qtyToOrder = 0,
+                         qtyOnOrder = sl.QuantityOnOrder ?? 0,
+                         itemClassification = item.ItemClassification,
+                         itemGroup = string.Empty,
+                         controlNumber = sl.ControlNumber,
+                         idNumber = sl.IdNumber,  
+                         serialNumber = sl.SerialNumber, 
+                     };
+
+
+            return result.ToList<object>();
         }
     }
 }

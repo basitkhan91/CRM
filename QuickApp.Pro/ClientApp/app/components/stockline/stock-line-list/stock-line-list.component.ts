@@ -51,6 +51,14 @@ export class StockLineListComponent implements OnInit {
     quantityReserved: any = "";
     quantityIssued: any = "";
     quantityAvailable: any = "";
+    engineSerialNumber: any = "";
+    aircraftTailNumber: any = "";
+    blackListed: boolean = false;
+    blackListedReason: any = "";
+    incident: boolean = false;
+    incidentReason:any=""
+    accident: boolean = false;
+    accicentReason: any = "";
     memo: any = "";
     //shelfLife: any = "";
     stockLineNumber: any = "";
@@ -63,6 +71,7 @@ export class StockLineListComponent implements OnInit {
     unitSalesPrice: any = "";
     coreUnitCost: any = "";
     glAccountId: any = "";
+    glAccountName: any = "";
     assetId: any = "";
     updatedBy: any = "";
     updatedDate: any = "";
@@ -153,14 +162,10 @@ export class StockLineListComponent implements OnInit {
             { field: 'itemGroup', header: 'ITEM GROUP' },
             { field: 'stockLineNumber', header: 'SL NUM' },
             { field: 'serialNumber', header: 'SERIAL NUM' },
-
-            { field: 'location', header: 'LOCATION' },
-            { field: 'partCertificationNumber', header: 'PART CERT NUM' },
-
             { field: 'condition', header: 'COND' },
             { field: 'quantityOnHand', header: 'QTY ON HAND' },
             { field: 'quantityAvailable', header: 'QTY AVAIL' },
-            { field: 'glAccountId', header: 'GL ACCT' }
+            { field: 'glAccountName', header: 'GL ACCT' }
 
         ];
         this.selectedColumns = this.cols;
@@ -260,6 +265,7 @@ export class StockLineListComponent implements OnInit {
         this.departmentName = row.departmentName;
         this.partNumber = row.partNumber;
         this.glAccountId = row.glAccountId;
+        this.glAccountName = row.glAccountName;
         this.partDescription = row.partDescription;
         this.stockLineNumber = row.stockLineNumber;
         if (row.isSerialized) {
@@ -274,6 +280,14 @@ export class StockLineListComponent implements OnInit {
         this.quantityReserved = row.quantityReserved;
         this.quantityIssued = row.quantityIssued;
         this.quantityAvailable = row.quantityAvailable;
+        this.blackListed = row.blackListed;
+        this.blackListedReason = row.blackListedReason;
+        this.incident = row.incident;
+        this.accident = row.accident;
+        this.incident = row.incident;
+        this.incidentReason = row.incidentReason;
+        this.engineSerialNumber = row.engineSerialNumber;
+        this.aircraftTailNumber = row.aircraftTailNumber;
         this.condition = row.condition;
         this.serialNumber = row.serialNumber;
         this.shelfLife = row.shelfLife;
@@ -315,6 +329,7 @@ export class StockLineListComponent implements OnInit {
         this.unitSalesPrice = row.unitSalesPrice;
         this.coreUnitCost = row.coreUnitCost;
         this.glAccountId = row.glAccountId;
+        this.glAccountName = row.glAccountName;
         this.assetId = row.assetId;
         if (row.isHazardousMaterial) {
             this.isHazardousMaterial = row.isHazardousMaterial;

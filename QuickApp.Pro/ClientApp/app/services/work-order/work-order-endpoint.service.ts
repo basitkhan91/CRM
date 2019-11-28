@@ -24,6 +24,7 @@ export class WorkOrderEndpointService extends EndpointFactory {
     private readonly getAllWorkOrderStatusURL: string = "/api/WorkOrder/workOrderStatus";
     private readonly getAllWorkScopesURL: string = "/api/WorkOrder/getAllworkScopes";
     private readonly getAllWorkOrderStagesURL: string = "/api/WorkOrder/getStages";
+    private readonly createQuote: string = "/api/workOrder/createworkorderquote"
 
     private readonly addLabourURL: string = "/api/WorkOrder/WorkOrderLabourPost";
 
@@ -267,6 +268,10 @@ export class WorkOrderEndpointService extends EndpointFactory {
 
     assetsCheckOutByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy){
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/saveassetcheckedout?WorkOrderAssetId=${workOrderAssetId}&checkedInById=${employeeId}&checkedInDate=${checkedInDate}&updatedBy=${updatedBy}`)  
+     }
+
+     createQuotation(data){
+        return this.http.post(`${this.configurations.baseUrl}/api/workOrder/createworkorderquote`, JSON.stringify(data), this.getRequestHeaders())
      }
 
 

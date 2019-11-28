@@ -1,6 +1,6 @@
 ﻿<div class="x_panel">
     <div class="x_content">
-        <div class="card">
+        <div class="card" *ngIf="repairOrderHeaderData">
             <div class="card-header">
                 <nav class="pull-left" aria-label="breadcrumb">
                     <ol class="breadcrumb rpo-bcrumb" style="background-color: transparent;">
@@ -37,7 +37,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>RO Num</label>
-                                <input class="form-control" type="text" name="repairOrderNumber" [(ngModel)]="repairOrderHeaderData.repairOrderNumber" disabled >
+                                <input class="form-control" type="text" name="repairOrderNum" [(ngModel)]="repairOrderHeaderData.repairOrderNumber" disabled >
                             </div>                        
                         </div>
                         <div class="col-md-3">
@@ -195,7 +195,7 @@
                         <th>Cond</th>
                         <th>UOM</th>
                         <th>OEM, DER,PMA FLAG</th>
-                        <th colspan="2">Qty Ordered</th>
+                        <th colspan="2">Qty to Repair</th>
                         <th>Discount</th>
                         <th>Unit Cost</th>
                         <th>Extended Cost</th>
@@ -232,8 +232,8 @@
                                 </select>
                             </td>
                             <td>{{part.uomText}}</td>
-                            <td>{{part.itemMaster.pma ? "PMA," : '' + part.itemMaster.der ? "DER" : ''}}</td>
-                            <td colspan="2">{{part.quantityOrdered}}</td>
+                            <td>{{part.itemMaster.isPma ? "PMA," : '' + part.itemMaster.isDer ? "DER" : ''}}</td>
+                            <td colspan="2">{{part.quantityToRepair}}</td>
                             <td>{{part.DiscountPerUnit}}</td>
                             <td>
                                 <input type="text" class="form-control" pInputText pKeyFilter="pnum"
@@ -372,7 +372,7 @@
                                 <th>ID</th>
                                 <th>Cond</th>
                                 <th colspan="2">Serial Num</th>
-                                <th>Qty Receieved</th>
+                                <th>Qty Received</th>
                                 <th>Qty BackOrdered</th>
                                 <th>Receiver No.</th>
                                 <th>Unit Cost</th>
@@ -434,20 +434,18 @@
                                 </td>
                                 <td colspan="2">{{SL.serialNumber}}</td>
                                 <td>{{SL.quantity}}</td>
-                                <td>{{part.quantityOrdered -  SL.quantity}}</td>
-                                <td>{{SL.ReceiverNumber}}</td>
+                                <td>{{part.quantityToRepair -  SL.quantity}}</td>
+                                <td>{{SL.receiverNumber}}</td>
                                 <td>
                                     <input type="text" class="form-control" pInputText pKeyFilter="pnum"
                                            (focusout)="calculateExtendedCost(part, SL)"
                                            [disabled]="!SL.isEnabled"
-                                           [(ngModel)]="SL.purchaseOrderUnitCost" />
+                                           [(ngModel)]="SL.repairOrderUnitCost" />
                                 </td>
                                 <td>
                                     <input class="form-control" type="text" disabled pInputText pKeyFilter="pnum"
-                                           [(ngModel)]="SL.purchaseOrderExtendedCost"
+                                           [(ngModel)]="SL.repairOrderExtendedCost"
                                            disabled="disabled" />
-
-
                                 </td>
                                 <td></td>
                                 <td></td>
@@ -485,7 +483,7 @@
                                             [disabled]="!SL.isEnabled"
                                             (change)="getStockLineDepartment(SL)">
                                         <option value="0">Select</option>
-                                        <option *ngFor="let division of part.DivisionList" [value]="division.Key">{{division.Value}}</option>
+                                        <option *ngFor="let division of SL.DivisionList" [value]="division.Key">{{division.Value}}</option>
                                     </select>
                                 </td>
                                 <td>

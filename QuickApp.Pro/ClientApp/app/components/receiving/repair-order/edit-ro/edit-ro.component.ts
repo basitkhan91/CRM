@@ -108,9 +108,10 @@ export class EditRoComponent implements OnInit {
                 
         });
 
-        this.receivingService.getPurchaseOrderDataForEditById(this.receivingService.purchaseOrderId).subscribe(
+        this.receivingService.getReceivingROPartsForEditById(this.repairOrderId).subscribe(
             results => {
-                this.repairOrderData = results[0];
+                console.log(results);                
+                this.repairOrderData = results;
                 // this.purchaseOrderData.openDate = new Date(results[0].openDate).toLocaleDateString();
                 // this.purchaseOrderData.needByDate = new Date(results[0].needByDate);
                 // this.purchaseOrderData.dateApproved = new Date(results[0].dateApproved).toLocaleDateString();
@@ -999,15 +1000,15 @@ export class EditRoComponent implements OnInit {
     }
 
     //remove once add dynamic content
-    // editPart(part: RepairOrderPart) {
-    //     part.isEnabled = !part.isEnabled;
-    //     if (part.stockLine) {
-    //         for (var sl of part.stockLine) {
-    //             sl.isEnabled = part.isEnabled;
-    //             sl.quantityRejected = 0;
-    //         }
-    //     }
-    // }
+    editPart(part: RepairOrderPart) {
+        part.isEnabled = !part.isEnabled;
+        if (part.stockLine) {
+            for (var sl of part.stockLine) {
+                sl.isEnabled = part.isEnabled;
+                sl.quantityRejected = 0;
+            }
+        }
+    }
 
     editStockLine(stockLine: StockLine) {
         stockLine.isEnabled = !stockLine.isEnabled;
@@ -1042,9 +1043,10 @@ export class EditRoComponent implements OnInit {
             }
         }
         if (receiveParts.length > 0) {
-            this.shippingService.updateStockLine(receiveParts).subscribe(data => {
+            this.receivingService.updateStockLine(receiveParts).subscribe(data => {
                 this.alertService.showMessage(this.pageTitle, 'Stock Line updated successfully.', MessageSeverity.success);
-                return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
+                this.route.navigateByUrl(`/receivingmodule/receivingpages/app-view-ro?repairOrderId=${this.repairOrderId}`);
+                //return this.route.navigate(['/receivingmodule/receivingpages/app-view-po']);
             },
                 error => {
                     var message = '';

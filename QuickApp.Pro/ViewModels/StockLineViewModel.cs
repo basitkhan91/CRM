@@ -99,7 +99,7 @@ namespace QuickApp.Pro.ViewModels
         public bool? IsDER { get; set; }
         public bool? OEM { get; set; }
         public string Memo { get; set; }
-        public long? ManagementStructureEntityId { get; set; }
+        public long? ManagementStructureId { get; set; }
         public long? TimeLifeCyclesId { get; set; }
         public bool? TimeLife { get; set; }
         public long? TimeLifeId { get; set; }
@@ -122,7 +122,6 @@ namespace QuickApp.Pro.ViewModels
         public bool? IsListed { get; set; }
         public long? StocklineIntegrationPortalId { get; set; }
         public string AircraftTailNumber { get; set; }
-        public string esn { get; set; }
         public string eccn { get; set; }
         public string itarNum { get; set; }
         public string nha { get; set; }

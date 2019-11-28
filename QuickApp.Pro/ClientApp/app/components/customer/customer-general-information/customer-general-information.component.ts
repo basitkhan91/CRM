@@ -38,6 +38,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
     @Output() editGeneralInformation = new EventEmitter<any>();
 
     generalInformation = new CustomerGeneralInformation();
+    generalInformation1 = new CustomerGeneralInformation();
+
     customertypes: any[];
     customerNames: { customerId: any; name: any; }[];
     //customerListOriginal: { customerId: any; name: any; }[];
@@ -48,7 +50,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     countrycollection: any[];
     allcustomerclassificationInfo;
     integrationOriginalList = [
-
+        
     ];
     allCurrencyInfo: Currency[];
     memoPopupContent: any;
@@ -89,6 +91,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     // restrictBERList: any;
     restictDERtempList: any = [];
     restictPMAtempList: any = [];
+  
     restrictedDERParts: any = [];
     restrictedPMAParts: any = [];
     restrictHeaders = [
@@ -414,6 +417,18 @@ export class CustomerGeneralInformationComponent implements OnInit {
                     country: getObjectById('countries_id', res.country, this.countryListOriginal),
                     customerParentName: getObjectByValue('name', res.customerParentName, this.customerListOriginal),
                     customerCode: getObjectByValue('customerCode', res.customerCode, this.customerListOriginal),
+
+                    isAddressForBilling: false,
+                    isAddressForShipping: false
+                };
+                this.generalInformation1 = {
+                    ...this.editData,
+                    name: getObjectByValue('name', res.name, this.customerListOriginal),
+                    country: getObjectById('countries_id', res.country, this.countryListOriginal),
+                    customerParentName: getObjectByValue('name', res.customerParentName, this.customerListOriginal),
+                    customerCode: getObjectByValue('customerCode', res.customerCode, this.customerListOriginal),
+
+                    
                 };
 
 
@@ -472,7 +487,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
     }
 
+   
     async  getCustomerClassificationByCustomerId() {
+       
         await this.customerService.getCustomerClassificationMapping(this.id).subscribe(res => {
             this.generalInformation.customerClassificationIds = res.map(x => x.customerClassificationId);
             // console.log(this.generalInformation.customerClassificationIds);
@@ -486,13 +503,16 @@ export class CustomerGeneralInformationComponent implements OnInit {
         });
     }
 
-    async getCustomerRestrictedPMAByCustomerId() {
-        await this.commonService.getRestrictedParts(1, this.id, 'PMA').subscribe(res => {
-            this.generalInformation.restrictedPMAParts = res;
-            //if (this.generalInformation.restrictedPMAParts.length > 0) {
-            //    this.disableRestrictedPMA = true;
-            //}
-            this.restictPMAtempList = res.map(x => x.itemMasterId);
+    async    getCustomerRestrictedPMAByCustomerId() {
+       
+     await    this.commonService.getRestrictedParts(1, this.id, 'PMA').subscribe(res => {
+           this.generalInformation.restrictedPMAParts = res;
+            if (this.generalInformation.restrictedPMAParts.length > 0) {
+                this.disableRestrictedPMA = true;
+            }
+            
+
+            this.restictPMAtempList = res.map(x => x.rescrictedPartId);
             // this.generalInformation.restrictedPMAParts = res.map(x => {
             //     return  { 
             //          masterPartId: x.itemMasterId,
@@ -504,13 +524,16 @@ export class CustomerGeneralInformationComponent implements OnInit {
             // });
 
         })
+        
     }
 
     async getCustomerRestrictedDERByCustomerId() {
         await this.commonService.getRestrictedParts(1, this.id, 'DER').subscribe(res => {
 
             this.generalInformation.restrictedDERParts = res;
-           
+            if (this.generalInformation.restrictedDERParts.length > 0) {
+                this.disableRestrictedDER = true;
+            }
             this.restictDERtempList = res.map(x => x.itemMasterId);
             // this.generalInformation.restrictedDERParts = res.map(x => {
             //     return  { 
@@ -569,6 +592,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
             this.customertypes = responseData;
         })
     }
+    addclassification() {
+        this.isClassificationAlreadyExists = false;
+        this.addNewclassification.description = '';
+    }
 
     // async getAllCustomers() {
     //     await this.customerService.getCustomers().subscribe(res => {
@@ -613,12 +640,21 @@ export class CustomerGeneralInformationComponent implements OnInit {
     // }
 
     addRestrictPMA() {
-       
-        //if (this.restictPMAtempList.length>0) {
-        //    this.disableRestrictedPMA = true;
-        //}
-        this.generalInformation.restrictedPMAParts = this.restictPMAtempList;
+      
+        if (this.restictPMAtempList.length>0) {
+            this.disableRestrictedPMA = true;
+        }
+        for (var i = 0; i < this.restictPMAtempList.length; i++) {
+            if (this.restictPMAtempList[i] == null || this.restictPMAtempList[i] == 'undefined') {
+              
+                this.restictPMAtempList.splice(i, 1);
+            }
+            
 
+        }
+     
+        this.generalInformation.restrictedPMAParts=this.restictPMAtempList;
+       
         this.partListForPMA = this.restictPMAtempList.reduce((acc, obj) => {
             return acc.filter(x => x.value.masterPartId !== obj.masterPartId)
         }, this.partListOriginal)
@@ -638,15 +674,21 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.partListForPMA = [{ label: rowData.partNumber, value: rowData }, ...this.partListForPMA];
         this.generalInformation.restrictedPMAParts.splice(i, 1);
        
-        //if (this.generalInformation.restrictedPMAParts.length == 0) {
-        //    this.disableRestrictedPMA = false;
-        //}
+        if (this.generalInformation.restrictedPMAParts.length == 0) {
+            this.disableRestrictedPMA = false;
+        }
        
     }
-
+    checkaddress() {
+       
+        this.generalInformation.isAddressForBilling= true;
+        this.generalInformation.isAddressForShipping= true;
+    }
     addRestrictBER() {
         
-
+        if (this.restictDERtempList.length > 0) {
+            this.disableRestrictedDER = true;
+        }
         this.generalInformation.restrictedDERParts = this.restictDERtempList;
         this.partListForDER = this.restictDERtempList.reduce((acc, obj) => {
             return acc.filter(x => x.value.masterPartId !== obj.masterPartId)
@@ -665,7 +707,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
         this.partListForDER = [{ label: rowData.partNumber, value: rowData }, ...this.partListForDER];
         this.generalInformation.restrictedDERParts.splice(i, 1);
-       
+        if (this.generalInformation.restrictedDERParts.length == 0) {
+            this.disableRestrictedDER = false;
+        }
 
     }
 
@@ -814,9 +858,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     }
     saveGeneralInformation() {
-
-
-
+        debugger
+      
         if (!this.isEdit) {
             this.customerService.newAction({
                 ...this.generalInformation,
@@ -839,6 +882,30 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 this.isEdit = true;
             })
         } else {
+
+
+            //if (this.generalInformation.isAddressForBilling == true) {
+            //    if (this.generalInformation1.address1 != this.generalInformation.address1 || this.generalInformation1.address2 != this.generalInformation.address2 || this.generalInformation1.city != this.generalInformation.city || this.generalInformation1.stateOrProvince != this.generalInformation.stateOrProvince || this.generalInformation1.country != this.generalInformation.country || this.generalInformation1.postalCode != this.generalInformation.postalCode) {
+
+            //        this.generalInformation.isAddressForBilling = true;
+            //    }
+            //    else {
+            //        this.generalInformation.isAddressForBilling = false;
+            //    }
+
+            //}
+            //if (this.generalInformation.isAddressForShipping == true) {
+            //    {
+            //        if (this.generalInformation1.address1 != this.generalInformation.address1 || this.generalInformation1.address2 != this.generalInformation.address2 || this.generalInformation1.city != this.generalInformation.city || this.generalInformation1.stateOrProvince != this.generalInformation.stateOrProvince || this.generalInformation1.country != this.generalInformation.country || this.generalInformation1.postalCode != this.generalInformation.postalCode) {
+
+            //            this.generalInformation.isAddressForShipping = true;
+            //        }
+            //        else {
+            //            this.generalInformation.isAddressForShipping = false;
+            //        }
+
+            //    }
+            //}
             this.customerService.updateAction({
                 ...this.generalInformation,
                 addressId: this.editData.addressId,
@@ -858,10 +925,13 @@ export class CustomerGeneralInformationComponent implements OnInit {
                     `Upated  Customer General Information Sucessfully `,
                     MessageSeverity.success
                 );
+                //this.generalInformation = new CustomerGeneralInformation();
+                //this.isEdit = true;
                 this.tab.emit('Contacts');
                 this.saveGeneralInformationData.emit(res);
                 this.id = res.customerId;
                 this.editData = res;
+
                 // this.isEdit = true;
             })
         }

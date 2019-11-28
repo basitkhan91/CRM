@@ -1,4 +1,5 @@
 export class WorkOrderLabor {
+    workOrderLaborHeaderId: number;
   workFlowWorkOrderId: number;
   dataEnteredBy: number;
   expertiseId: null;
@@ -8,7 +9,8 @@ export class WorkOrderLabor {
   hoursorClockorScan: 'labourHours';
   workOrderLaborList: any;
 
-  constructor() {
+    constructor() {
+        this.workOrderLaborHeaderId = null;
     this.workFlowWorkOrderId = null;
     this.dataEnteredBy = null;
     this.expertiseId = null;
@@ -20,6 +22,8 @@ export class WorkOrderLabor {
 }
 
 export class AllTasks {
+    workOrderLaborHeaderId: number;
+    workOrderLaborId: number;
   expertiseId: string;
   employeeId: number;
   billableId: number;
@@ -27,14 +31,17 @@ export class AllTasks {
   startDateandTimeIsEdit: boolean;
   endDateandTimeIsEdit: boolean;
   endDate: Date;
-  hours: string;
-  adjustments: string;
-  adjustedHours: string;
-  memo: string;
+  hours: number;
+    adjustments: number;
+    adjustedHours: number;
+    memo: string;
+    taskId: number;
 
 
 
-  constructor() {
+    constructor() {
+        this.workOrderLaborHeaderId = 0;
+        this.workOrderLaborId = 0;
     this.expertiseId = null;
     this.employeeId = null;
     this.billableId = 1;
@@ -42,9 +49,10 @@ export class AllTasks {
     this.startDateandTimeIsEdit = false;
     this.endDate = null;
     this.endDateandTimeIsEdit = false;
-    this.hours = '';
-    this.adjustments = '';
-    this.adjustedHours = '';
-    this.memo = '';
+    this.hours = 0;
+    this.adjustments = 0;
+    this.adjustedHours = 0;
+        this.memo = '';
+        this.taskId = 0;
   }
 }

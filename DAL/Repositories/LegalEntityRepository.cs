@@ -23,7 +23,8 @@ namespace DAL.Repositories
         public IEnumerable<object> GetAllLegalEntityData()
         {
             var data = (from legal in _appContext.LegalEntity
-                        join adress in _appContext.Address on legal.AddressId equals adress.AddressId
+                        join adress in _appContext.Address on legal.AddressId equals adress.AddressId into addd
+                        from adress in addd.DefaultIfEmpty()
                         join lockbox in _appContext.Address on legal.LockBoxAddressId equals lockbox.AddressId into loc
                         from lockbox in loc.DefaultIfEmpty()
                         join domestic in _appContext.DomesticWirePayment on legal.DomesticWirePaymentId equals domestic.DomesticWirePaymentId into domes
@@ -32,7 +33,8 @@ namespace DAL.Repositories
                         from international in inter.DefaultIfEmpty()
                         join ach in _appContext.ACH on legal.ACHId equals ach.ACHId into ac
                         from ach in ac.DefaultIfEmpty()
-                        where legal.IsDeleted == true || legal.IsDeleted == null
+                            //where legal.IsDeleted == true || legal.IsDeleted == null
+                        where legal.IsActive == true
                         select new
                         {
                             legal.LegalEntityId,
@@ -63,13 +65,13 @@ namespace DAL.Repositories
                             poBox = lockbox.PoBox,
                             bankStreetaddress1 = lockbox.Line1,
                             bankStreetaddress2 = lockbox.Line2,
-                            bankCity= lockbox.City,
-                            bankProvince= lockbox.StateOrProvince,
-                            bankcountry= lockbox.Country,
-                            bankpostalCode= lockbox.PostalCode,
+                            bankCity = lockbox.City,
+                            bankProvince = lockbox.StateOrProvince,
+                            bankcountry = lockbox.Country,
+                            bankpostalCode = lockbox.PostalCode,
 
                             domesticBankName = domestic.BankName,
-                            domesticIntermediateBank = domestic.IntermediaryBankName, 
+                            domesticIntermediateBank = domestic.IntermediaryBankName,
                             domesticBenficiaryBankName = domestic.BenificiaryBankName,
                             domesticBankAccountNumber = domestic.AccountNumber,
                             domesticABANumber = domestic.ABA,
@@ -92,7 +94,7 @@ namespace DAL.Repositories
                             legal.UpdatedBy,
                             legal.UpdatedDate
 
-                        }).ToList();
+                        }).OrderByDescending(p=>p.UpdatedDate).ToList();
             return data;
         }
 
@@ -118,7 +120,7 @@ namespace DAL.Repositories
                 address.CreatedBy = billingAddress.CreatedBy;
                 address.UpdatedBy = billingAddress.UpdatedBy;
 
-                if(billingAddress.AddressId>0)
+                if (billingAddress.AddressId > 0)
                 {
                     address.CreatedDate = billingAddress.CreatedDate;
                     address.AddressId = billingAddress.AddressId;
@@ -129,18 +131,18 @@ namespace DAL.Repositories
                     address.CreatedDate = DateTime.Now;
                     _appContext.Address.Add(address);
                 }
-                
+
                 _appContext.SaveChanges();
 
 
                 billingAddress.AddressId = Convert.ToInt64(address.AddressId);
 
-                 billingAddress.UpdatedDate = DateTime.Now;
+                billingAddress.UpdatedDate = DateTime.Now;
                 billingAddress.IsActive = true;
                 billingAddress.IsDeleted = false;
                 billingAddress.IsPrimary = false;
 
-                if(billingAddress.LegalEntityBillingAddressId>0)
+                if (billingAddress.LegalEntityBillingAddressId > 0)
                 {
                     _appContext.LegalEntityBillingAddress.Update(billingAddress);
                 }
@@ -149,7 +151,7 @@ namespace DAL.Repositories
                     billingAddress.CreatedDate = DateTime.Now;
                     _appContext.LegalEntityBillingAddress.Add(billingAddress);
                 }
-                
+
                 _appContext.SaveChanges();
                 return billingAddress.LegalEntityBillingAddressId;
             }
@@ -330,7 +332,7 @@ namespace DAL.Repositories
 
                 _appContext.SaveChanges();
 
-                
+
                 return shippingAddress.LegalEntityShippingAddressId;
             }
             catch (Exception ex)
@@ -523,49 +525,49 @@ namespace DAL.Repositories
         }
 
 
-		public IEnumerable<object> GetLegalEntityShippingSiteNames(long legalEntityId)
-		{
-			try
-			{
-				var list = (from lsa in _appContext.LegalEntityShippingAddress
-							where lsa.IsDeleted == false && lsa.LegalEntityId == legalEntityId
-							select new
-							{
-								lsa.LegalEntityShippingAddressId,
-								lsa.SiteName
-							}).OrderBy(p => p.SiteName).ToList();
-				return list;
-			}
-			catch (Exception ex)
+        public IEnumerable<object> GetLegalEntityShippingSiteNames(long legalEntityId)
+        {
+            try
+            {
+                var list = (from lsa in _appContext.LegalEntityShippingAddress
+                            where lsa.IsDeleted == false && lsa.LegalEntityId == legalEntityId
+                            select new
+                            {
+                                lsa.LegalEntityShippingAddressId,
+                                lsa.SiteName
+                            }).OrderBy(p => p.SiteName).ToList();
+                return list;
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
-		}
+        }
 
-		public object GetLegalEntityShippingAddress(long addressId)
-		{
-			try
-			{
-				var data = (from lsa in _appContext.LegalEntityShippingAddress
-							join ad in _appContext.Address on lsa.AddressId equals ad.AddressId
-							where lsa.LegalEntityShippingAddressId == addressId
-							select new
-							{
-								ad.Line1,
-								ad.Line2,
-								ad.Line3,
-								ad.City,
-								ad.StateOrProvince,
-								ad.PostalCode,
-								ad.Country
-							}).FirstOrDefault();
-				return data;
-			}
-			catch (Exception ex)
+        public object GetLegalEntityShippingAddress(long addressId)
+        {
+            try
+            {
+                var data = (from lsa in _appContext.LegalEntityShippingAddress
+                            join ad in _appContext.Address on lsa.AddressId equals ad.AddressId
+                            where lsa.LegalEntityShippingAddressId == addressId
+                            select new
+                            {
+                                ad.Line1,
+                                ad.Line2,
+                                ad.Line3,
+                                ad.City,
+                                ad.StateOrProvince,
+                                ad.PostalCode,
+                                ad.Country
+                            }).FirstOrDefault();
+                return data;
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
-		}
+        }
 
         public IEnumerable<object> GetLegalEntityAddressById(long legalEntityId)
         {
@@ -593,6 +595,7 @@ namespace DAL.Repositories
             }
         }
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
+                
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
