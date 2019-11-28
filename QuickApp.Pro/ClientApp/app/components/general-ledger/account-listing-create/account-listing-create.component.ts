@@ -54,6 +54,7 @@ export class AccountListingCreateComponent implements OnInit {
     accountData:any[];
     leafNodeNameObj:any[];
     accountTitle = "Create GL Accounts";
+    submitted: any;
 
     constructor(private route: ActivatedRoute, 
         private accountListingService: AccountListingService,

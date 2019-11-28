@@ -55,6 +55,7 @@ export class AccountListingComponent implements OnInit {
     @ViewChild('dt')
     private table: Table;
     lazyLoadEventData: any;
+    viewDataGeneralInformation: any;
     
     /*viewData: any[];
     viewDataGeneralInformation: any[];
