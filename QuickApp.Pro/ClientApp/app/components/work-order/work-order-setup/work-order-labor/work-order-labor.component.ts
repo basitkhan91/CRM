@@ -52,9 +52,10 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   ngOnInit() {
 
     
+    this.workOrderWorkFlowList = this.workOrderWorkFlowOriginalData;
 
     if(this.workOrderLaborList){
-      this.laborForm.workFlowWorkOrderId = this.workOrderLaborList['workFlowWorkOrderNo'];
+      this.laborForm.workFlowWorkOrderId = this.workOrderLaborList['workFlowWorkOrderId'];
       this.laborForm.dataEnteredBy = this.workOrderLaborList['dataEnteredBy'];
       this.laborForm.employeeId = this.workOrderLaborList['employeeId'];
       this.laborForm.isTaskCompletedByOne = this.workOrderLaborList['isTaskCompletedByOne'];
@@ -66,8 +67,9 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(){
+    this.workOrderWorkFlowList = this.workOrderWorkFlowOriginalData;
     if(this.workOrderLaborList){
-      this.laborForm.workFlowWorkOrderId = this.workOrderLaborList['workFlowWorkOrderNo'];
+      this.laborForm.workFlowWorkOrderId = this.workOrderLaborList['workFlowWorkOrderId'];
       this.laborForm.dataEnteredBy = this.workOrderLaborList['dataEnteredBy'];
       this.laborForm.employeeId = this.workOrderLaborList['employeeId'];
       this.laborForm.isTaskCompletedByOne = this.workOrderLaborList['isTaskCompletedByOne'];
@@ -254,7 +256,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
         return {
           ...x,
           ...excessParams,
-          taskId: 1,
+          taskId: this.getTaksId(tdata),
           employeeId: getValueFromObjectByKey('value', x.employeeId)
         }
       })
@@ -330,6 +332,14 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
     // console.log(taskId);
     // console.log(this.workOrderLaborList);
     // return expertiseTypeList;
+  }
+
+  getTaksId(taskName){
+    for(let t of this.taskList){
+      if(t['description'] == taskName){
+        return t['taskId']
+      }
+    }
   }
 
   isAllowedTask(taskId){

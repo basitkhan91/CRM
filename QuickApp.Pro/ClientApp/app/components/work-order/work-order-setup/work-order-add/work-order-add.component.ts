@@ -181,6 +181,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
   }
   async ngOnInit() {
     //  this.showTableGrid = true;
+    this.workOrderService.creditTerms = this.creditTerms;
+    this.workOrderService.employeesOriginalData = this.employeesOriginalData;
     this.mpnFlag = true;
     this.isDetailedView = true;
     this.selectedCustomer = new Customer();
@@ -645,7 +647,6 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
   }
 
   getWorkOrderWorkFlowNos() {
-debugger;
     if (this.workOrderId) {
       this.workOrderService.getWorkOrderWorkFlowNumbers(this.workOrderId).subscribe(res => {
         this.workOrderWorkFlowOriginalData = res;
