@@ -333,9 +333,10 @@ namespace DAL.Repositories
                                  LocationText = GetLocationText(SL.LocationId),
                                  ShelfText = GetShelfText(SL.ShelfId),
                                  BinText = GetBinText(SL.BinId),
-                                 ObtainFrom = SL.ObtainFromType == 2 ? SL.ObtainFrom : GetCustomerVendor(SL.ObtainFrom, SL.ObtainFromType),
-                                 Owner = SL.OwnerType == 2 ? SL.Owner : GetCustomerVendor(SL.Owner, SL.OwnerType),
-                                 TraceableTo = SL.TraceableToType == 2 ? SL.TraceableTo : GetCustomerVendor(SL.TraceableTo, SL.TraceableToType)
+                                 ObtainFrom = SL.ObtainFrom,
+                                 Owner = SL.Owner,
+                                 TraceableTo = SL.TraceableTo
+
                              }),
                              TimeLife = _appContext.TimeLife.Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId),
                              ItemMaster = new
