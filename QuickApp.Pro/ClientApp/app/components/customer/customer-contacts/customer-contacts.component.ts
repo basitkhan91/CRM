@@ -83,7 +83,7 @@ export class CustomerContactsComponent implements OnInit {
 	]
 	ataListDataValues = []
 	auditHistory: any[] = [];
-
+    @ViewChild('ATAADD') myModal;
 
 	constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService,
 		private dialog: MatDialog, private atasubchapter1service: AtaSubChapter1Service, private masterComapnyService: MasterComapnyService) {
@@ -104,7 +104,7 @@ export class CustomerContactsComponent implements OnInit {
 		}
 
 		this.getAllContacts();
-
+       // this.getATACustomerContactMapped();
 	}
 
 
@@ -314,16 +314,22 @@ export class CustomerContactsComponent implements OnInit {
        
 		this.add_SelectedModels = undefined;
 		this.add_SelectedId = undefined;
+       	await this.saveCustomerContactATAMapped.emit(ataMappingData);
 
-		await this.saveCustomerContactATAMapped.emit(ataMappingData);
+ 
 
+     
+        this.openModel();
+
+
+
+    }
+    openModel() {
+        this.myModal.nativeElement.className = 'modal fade show';
         this.getATACustomerContactMapped();
 
-		
-
-
-
-	}
+       
+    }
 
 	getATACustomerContactMapped() {
 		this.customerService.getATAMappedByContactId(this.selectedContact.contactId).subscribe(res => {
