@@ -211,6 +211,7 @@ import { AssetIntangibleAttributeTypeEndpointService } from './services/asset-in
 import { DashNumberService } from './services/dash-number/dash-number.service';
 import { DashNumberEndpointService } from './services/dash-number/dash-number-endpoint.service';
 //import { AuditComponent } from "./components/Audit/audit.component";
+import { AccountListingService } from './services/account-listing/account-listing.service'
 
 @NgModule({
     imports: [
@@ -426,7 +427,8 @@ import { DashNumberEndpointService } from './services/dash-number/dash-number-en
         PurchaseOrderService,
         PurchaseOrderEndpoint,
         GLAccountService,
-        GLAccountEndpoint
+        GLAccountEndpoint,
+        AccountListingService
     ],
     entryComponents: [LoginDialogComponent, AddTaskDialogComponent],
     bootstrap: [AppComponent],

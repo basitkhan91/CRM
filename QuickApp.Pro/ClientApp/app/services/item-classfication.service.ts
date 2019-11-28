@@ -72,5 +72,9 @@ export class ItemClassificationService {
         return Observable.forkJoin(
             this.itemclassificationEndpoint.getItemClassificationPagination<ItemClassificationModel[]>(serverSidePagesData));
     }
+    ItemClassCustomUpload(file) {
+        return this.itemclassificationEndpoint.ItemClassCustomUpload(file);
+    }
+
 
 }

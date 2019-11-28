@@ -128,7 +128,7 @@ namespace DAL.Repositories
                                t.UpdatedDate,
 
                                //cc.Description
-                           }).Distinct().ToList();
+                           }).Distinct().OrderByDescending(p=>p.UpdatedDate).ToList();
 
 
 

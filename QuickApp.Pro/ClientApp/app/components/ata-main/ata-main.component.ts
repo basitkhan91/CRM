@@ -23,6 +23,7 @@ import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { ATAChapter } from '../../models/atachapter.model';
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
+import { ConfigurationService } from '../../services/configuration.service';
 import { validateRecordExistsOrNot, selectedValueValidate, editValueAssignByCondition, getObjectByValue } from '../../generic/autocomplete';
 
 @Component({
@@ -37,6 +38,7 @@ export class AtaMainComponent implements OnInit {
     originalData: any;
     isEdit: boolean = false;
     totalRecords: any;
+    existingRecordsResponse: Object;
     pageIndex: number = 0;
     pageSize: number = 10;
     totalPages: number;
@@ -69,14 +71,13 @@ export class AtaMainComponent implements OnInit {
     selectedRecordForEdit: any;
     viewRowData: any;
     selectedRowforDelete: any;
-    existingRecordsResponse = []
     constructor(private breadCrumb: SingleScreenBreadcrumbService,
         private authService: AuthService,
         private modalService: NgbModal,
         private activeModal: NgbActiveModal,
         private _fb: FormBuilder,
         private alertService: AlertService,
-        public atamainService: AtaMainService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+        public atamainService: AtaMainService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
 
     }
 
@@ -106,32 +107,32 @@ export class AtaMainComponent implements OnInit {
     }
 
     customExcelUpload(event) {
-        // const file = event.target.files;
+         const file = event.target.files;
 
-        // console.log(file);
-        // if (file.length > 0) {
+         console.log(file);
+         if (file.length > 0) {
 
-        //     this.formData.append('file', file[0])
-        //     this.unitofmeasureService.UOMFileUpload(this.formData).subscribe(res => {
-        //         event.target.value = '';
+             this.formData.append('file', file[0])
+             this.atamainService.ataChapterCustomUpload(this.formData).subscribe(res => {
+                 event.target.value = '';
 
-        //         this.formData = new FormData();
-        //         this.existingRecordsResponse = res;
-        //         this.getList();
-        //         this.alertService.showMessage(
-        //             'Success',
-        //             `Successfully Uploaded  `,
-        //             MessageSeverity.success
-        //         );
+                 this.formData = new FormData();
+                 this.existingRecordsResponse = res;
+                 this.getList();
+                 this.alertService.showMessage(
+                     'Success',
+                     `Successfully Uploaded  `,
+                     MessageSeverity.success
+                 );
 
-        //     })
-        // }
+             })
+         }
 
     }
     sampleExcelDownload() {
-        // const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=UnitOfMeasure&fileName=uom.xlsx`;
+         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=ATAChapter&fileName=ATAChapter.xlsx`;
 
-        // window.location.assign(url);
+         window.location.assign(url);
     }
 
     getList() {
@@ -270,7 +271,7 @@ export class AtaMainComponent implements OnInit {
     }
 
     getAuditHistoryById(rowData) {
-        this.atamainService.getAtaChapterAudit(rowData.ataChapterId).subscribe(res => {
+        this.atamainService.historyATAMain(rowData.ataChapterId).subscribe(res => {
             this.auditHistory = res;
         })
     }

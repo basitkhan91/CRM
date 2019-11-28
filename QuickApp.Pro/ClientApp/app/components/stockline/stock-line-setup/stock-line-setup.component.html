@@ -210,7 +210,7 @@
                         <select [(ngModel)]="sourceStockLineSetup.obtainFrom" [ngModelOptions]="{standalone: true}">
                             <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
                         </select>
-                        <a routerLink="/customerpages/app-customer-create" class="add-icon"><i class="fa fa-plus"></i></a>
+                        <a routerLink="/customersmodule/customerpages/app-customer-create" class="add-icon"><i class="fa fa-plus"></i></a>
                     </div>
                     <div class="col-sm-7" *ngIf="sourceStockLineSetup.obtainFromType == 2">
                         <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.obtainFrom">
@@ -241,7 +241,7 @@
                         <select [(ngModel)]="sourceStockLineSetup.owner" [ngModelOptions]="{standalone: true}">
                             <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
                         </select>
-                        <a routerLink="/customerpages/app-customer-create" class="add-icon"><i class="fa fa-plus"></i></a>
+                        <a routerLink="/customersmodule/customerpages/app-customer-create" class="add-icon"><i class="fa fa-plus"></i></a>
                     </div>
                 </div>
 
@@ -277,7 +277,7 @@
                             <select [(ngModel)]="sourceStockLineSetup.traceableTo" [ngModelOptions]="{standalone: true}">
                                 <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
                             </select>
-                            <a routerLink="/customerpages/app-customer-create" class="add-icon"><i class="fa fa-plus"></i></a>
+                            <a routerLink="/customersmodule/customerpages/app-customer-create" class="add-icon"><i class="fa fa-plus"></i></a>
                         </div>
                     </div>
                     <div class="form-group col-sm-12">

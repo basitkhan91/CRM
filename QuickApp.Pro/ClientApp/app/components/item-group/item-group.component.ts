@@ -31,6 +31,7 @@ export class ItemGroupComponent implements OnInit {
     originalData: any;
     isEdit: boolean = false;
     totalRecords: any;
+    existingRecordsResponse: Object;
     pageIndex: number = 0;
     pageSize: number = 10;
     totalPages: number;
@@ -62,8 +63,7 @@ export class ItemGroupComponent implements OnInit {
     viewRowData: any;
     selectedRowforDelete: any;
     // originalData: any;
-    existingRecordsResponse = []
-    // existingRecordsResponse: Object;
+     // existingRecordsResponse: Object;
     // selectedRecordForEdit: any;
     // disableSaveForShortName: boolean = false;
     // shortNameList: any;
@@ -119,26 +119,26 @@ export class ItemGroupComponent implements OnInit {
     }
 
     customExcelUpload(event) {
-        // const file = event.target.files;
+         const file = event.target.files;
 
-        // console.log(file);
-        // if (file.length > 0) {
+         console.log(file);
+         if (file.length > 0) {
 
-        //     this.formData.append('file', file[0])
-        //     this.unitofmeasureService.UOMFileUpload(this.formData).subscribe(res => {
-        //         event.target.value = '';
+             this.formData.append('file', file[0])
+             this.itemGroupService.ItemGroupCustomUpload(this.formData).subscribe(res => {
+                 event.target.value = '';
 
-        //         this.formData = new FormData();
-        //         this.existingRecordsResponse = res;
-        //         this.getList();
-        //         this.alertService.showMessage(
-        //             'Success',
-        //             `Successfully Uploaded  `,
-        //             MessageSeverity.success
-        //         );
+                 this.formData = new FormData();
+                 this.existingRecordsResponse = res;
+                 this.getList();
+                 this.alertService.showMessage(
+                     'Success',
+                     `Successfully Uploaded  `,
+                     MessageSeverity.success
+                 );
 
-        //     })
-        // }
+             })
+         }
 
     }
     sampleExcelDownload() {

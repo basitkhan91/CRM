@@ -218,7 +218,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     { label: 'Asset Maintenance', routerLink: '/#' },
                     { label: 'Depreciation Forecast', routerLink: '/#' },
                     {
-                        label: 'Repeat and Forms', items: [{ label: 'List Report', routerLink: '/#' },
+                        label: 'Report and Forms', items: [{ label: 'List Report', routerLink: '/#' },
                         { label: 'Depreciation', routerLink: '/#' },
                         { label: 'Additons', routerLink: '/#' },
                         { label: 'Disposal', routerLink: '/#' },
@@ -396,6 +396,8 @@ export class AppComponent implements OnInit, AfterViewInit {
                     {
                         label: 'General Ledger', items: [
                             { label: 'GL Account List', routerLink: '/generalledgermodule/generalledgerpage/app-glaccount-list' },
+                            { label: 'Account Listing Page', routerLink: '/generalledgermodule/generalledgerpage/app-account-listing' },
+                            { label: 'Create Account', routerLink: '/generalledgermodule/generalledgerpage/app-account-listing-create' },
                             { label: 'Create GL Account', routerLink: '/generalledgermodule/generalledgerpage/app-glaccount-create' },
                             { label: 'Setup Accounting', routerLink: '/generalledgermodule/generalledgerpage/app-accounting-calendar' },
                             { label: 'Edit Accounting', routerLink: '/#' },

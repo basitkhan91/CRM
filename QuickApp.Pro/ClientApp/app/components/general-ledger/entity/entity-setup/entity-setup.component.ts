@@ -17,7 +17,10 @@ import { Currency } from '../../../../models/currency.model';
 //import { TreeTableModule } from 'primeng/treetable';
 import { TreeNode, MenuItem, MessageService } from 'primeng/api';
 import { forEach } from '@angular/router/src/utils/collection';
+import { CommonService } from '../../../../services/common.service';
 //import { TreeTableModule } from 'primeng/treetable';
+
+
 
 @Component({
     selector: 'app-managemententity-structure',
@@ -72,9 +75,11 @@ export class ManagementStructureComponent implements OnInit, AfterViewInit {
 	selectedFile3: TreeNode;
 	items: MenuItem[];
 	selectedNode: TreeNode;
-    managementViewData: any = {};
+	managementViewData: any = {};
+	dropDownLegalEntityList: any[];
+
 	
-	constructor(private messageService: MessageService,private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, public currency: CurrencyService, public workFlowtService: LegalEntityService, private modalService: NgbModal, private activeModal: NgbActiveModal, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+	constructor(private messageService: MessageService,private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, public currency: CurrencyService, public workFlowtService: LegalEntityService, private modalService: NgbModal, private activeModal: NgbActiveModal, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, public commonService: CommonService) {
 
 		this.dataSource = new MatTableDataSource();
 
@@ -85,6 +90,7 @@ export class ManagementStructureComponent implements OnInit, AfterViewInit {
 		this.CurrencyData();
 		this.loadData();
 		this.loadManagementdata();
+		this.getAllLegalEntityList();
 	}
 
 	modal: NgbModalRef;
@@ -140,6 +146,12 @@ export class ManagementStructureComponent implements OnInit, AfterViewInit {
 
 		this.selectedColumns = this.cols;
 	}
+
+	getAllLegalEntityList(): void {	
+        this.commonService.smartDropDownList('LegalEntity', 'LegalEntityId', 'Name').subscribe(res => {
+            this.dropDownLegalEntityList = res;            
+        })
+    }
 
 	private loadData() {
 		this.alertService.startLoadingMessage();
@@ -233,7 +245,7 @@ export class ManagementStructureComponent implements OnInit, AfterViewInit {
     }
 
     showViewData(viewContent, row) {
-
+		this.managementViewData.legalEntityId=row.legalEntityId;
         this.managementViewData.code = row.code;
         this.managementViewData.name = row.name;
         this.managementViewData.description = row.description;
@@ -339,6 +351,7 @@ export class ManagementStructureComponent implements OnInit, AfterViewInit {
 		if (row.isLastChild == true) {
 			this.sourceLegalEntity.isAssignable = true;
 		}
+		console.log(this.sourceLegalEntity);
 		this.modal1 = this.modalService.open(content, { size: 'sm' });
 		this.modal1.result.then(() => {
 			console.log('When user closes');
@@ -421,7 +434,7 @@ export class ManagementStructureComponent implements OnInit, AfterViewInit {
 	}
 	editItemAndCloseModel() {
 		
-			if (!(this.sourceLegalEntity.code && this.sourceLegalEntity.name)) {
+			if (!(this.sourceLegalEntity.code && this.sourceLegalEntity.name && this.sourceLegalEntity.legalEntityId)) {
 				this.display = true;
 				this.modelValue = true;
 			}
@@ -506,7 +519,7 @@ export class ManagementStructureComponent implements OnInit, AfterViewInit {
 			
 		}
 	}
-	openEdit(content, rowNode) {
+	openEdit(content, rowNode) {		
 		this.headerofMS = rowNode.node.data.code;
 		this.selectedNode1 = rowNode.node;
 		//this.isEditMode = true;
@@ -514,6 +527,7 @@ export class ManagementStructureComponent implements OnInit, AfterViewInit {
 		this.isSaving = true;
 		this.loadMasterCompanies();
 		//this.sourceAction = row;
+		this.sourceLegalEntity.legalEntityId=rowNode.node.data.legalEntityId;
 		this.sourceLegalEntity.parentId = rowNode.node.data.managementStructureId;
 		
 		//this.entityName = this.sourceLegalEntity.entityName;

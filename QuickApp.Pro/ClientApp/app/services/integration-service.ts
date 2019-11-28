@@ -67,4 +67,8 @@ export class IntegrationService {
     getAudit(integrationPortalId: number) {
         return this.integrationEndpointService.getAuditById<any[]>(integrationPortalId);
     }
+
+    IntegrationCustomUpload(file) {
+        return this.integrationEndpointService.IntegrationCustomUpload(file);
+    }
 }
