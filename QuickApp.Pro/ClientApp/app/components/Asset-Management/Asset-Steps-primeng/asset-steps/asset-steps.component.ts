@@ -45,6 +45,7 @@ export class AssetStepsComponent implements OnInit {
         }
         else if (this.currentUrl == '/assetmodule/assetpages/app-create-asset') {
             this.activeIndex = 0;
+            this.isDisabledSteps = true;
 
         }
         else if (this.currentUrl == '/assetmodule/assetpages/app-asset-capes') {
@@ -80,11 +81,14 @@ export class AssetStepsComponent implements OnInit {
             step:2,
             index:1,
             command: (event: any) => {
-                this.assetService.financial = true;
-                this.activeIndex = 1;
-                this.msgs.length = 0;
-                this.msgs.push({ severity: 'info', summary: 'Capes', detail: event.label });
-                this.route.navigateByUrl('/assetmodule/assetpages/app-asset-capes');
+                if(!this.isDisabledSteps){
+                    this.assetService.financial = true;
+                    this.activeIndex = 1;
+                    this.msgs.length = 0;
+                    this.msgs.push({ severity: 'info', summary: 'Capes', detail: event.label });
+                    this.route.navigateByUrl('/assetmodule/assetpages/app-asset-capes');
+                }
+                
             }
         },
         {
@@ -92,10 +96,12 @@ export class AssetStepsComponent implements OnInit {
             step:3,
             index:2,
             command: (event: any) => {
+                if(!this.isDisabledSteps){
                 this.activeIndex = 2;
                 this.msgs.length = 0;
                 this.msgs.push({ severity: 'info', summary: 'Calibration', detail: event.label });
                 this.route.navigateByUrl('/assetmodule/assetpages/app-asset-calibration');
+                }
             }
         },
         {
@@ -103,10 +109,12 @@ export class AssetStepsComponent implements OnInit {
             step:4,
             index:3,
             command: (event: any) => {
+                if(!this.isDisabledSteps){
                 this.activeIndex = 3;
                 this.msgs.length = 0;
                 this.msgs.push({ severity: 'info', summary: 'Maintance & Warrenty', detail: event.label });                
                 this.route.navigateByUrl('/assetmodule/assetpages/app-asset-maintenance-warranty');
+                }
             }
         },
         ];
