@@ -316,7 +316,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
       try{
         if(this.workOrderLaborList){
           for(let workOrdLList of this.workOrderLaborList['laborList']){
-            if (workOrdLList['wol']['taskId'] == taskId && workOrdLList['wol']['expertiseId'] == expertiseType['value']){
+            if (workOrdLList['taskId'] == taskId && workOrdLList['expertiseId'] == expertiseType['value']){
               return true;
             }
           }
@@ -346,7 +346,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
     try{
       if(this.workOrderLaborList){
         for(let workOrdLList of this.workOrderLaborList['laborList']){
-          if (workOrdLList['wol']['taskId'] == taskId){
+          if (workOrdLList['taskId'] == taskId){
             return true;
           }
         }
@@ -367,8 +367,8 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
         }
         else if (this.laborForm['workFloworSpecificTaskorWorkOrder'] == 'workFlow'){
           for(let workOrdLList of this.workOrderLaborList['laborList']){
-            if (workOrdLList['wol']['taskId'] == taskId && workOrdLList['wol']['expertiseId'] == record['expertiseId']){
-              record['hours'] = workOrdLList['wol']['hours'];
+            if (workOrdLList['taskId'] == taskId && workOrdLList['expertiseId'] == record['expertiseId']){
+              record['hours'] = workOrdLList['hours'];
               this.calculateHoursDifference(record);
             }
           }
