@@ -22,6 +22,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   @Input() workOrderLaborList: any;
   @Input() taskList: any;
 
+    totalHours: number;
   workOrderWorkFlowList: any;
   employeesOriginalData: any;
   employeeList: any;
@@ -34,21 +35,14 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   billableList = [
     { label: 'Billable', value: 1 },
     { label: 'Non-Billable', value: 2 }
-  ]
+    ]
+
 
   constructor(private workOrderService: WorkOrderService,
     private authService: AuthService,
-    private commonService: CommonService) { }
+      private commonService: CommonService) { }
+    
 
-  // expertiseDropdownMenu = [
-  //   { label: 'Technician', value: 'Technician' },
-  //   { label: 'Quality', value: 'Quality' },
-  //   { label: 'Mechanic', value: 'Mechanic' },
-  //   { label: 'Inspector', value: 'Inspector' },
-  //   { label: 'Receiver', value: 'Receiver' },
-  //   { label: 'Auditor', value: 'Auditor' },
-  //   { label: 'Engineer', value: 'Engineer' }
-  // ];
   ngOnInit() {
 
     
@@ -81,15 +75,6 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   get userName(): string {
     return this.authService.currentUser ? this.authService.currentUser.userName : "";
   }
-
-
-  // getWorkOrderWorkFlowNos(){
-  //   this.workOrderService.getWorkOrderWorkFlowNumbers().subscribe(res => {
-  //     this.workOrderWorkFlowOriginalData = res;
-  //   })
-  // }
-
-
 
   generateLaborForm() {
     const keysArray = Object.keys(this.laborForm.workOrderLaborList[0]);
@@ -125,7 +110,8 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
             // hoursArr = taskList['hours'].split(":");
             // if(hoursArr.length == 1){ hoursArr.push(0)}
             // hoursInSeconds = (+hoursArr[0]) * 60 * 60 + (+hoursArr[1]) * 60;
-            this.totalWorkHours += taskList['hours'];
+              this.totalWorkHours += taskList['hours'];
+              
           }
         }
       }
@@ -135,7 +121,8 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
       // this.totalWorkHours = `${(h.length ==1)?'0'+h:h}:${(m.length ==1)?'0'+m:m}:${(s.length ==1)?'0'+s:s}`;
       // this.totalWorkHours = totalHours;
     }
-  }
+    }
+
   filterWorkFlowNumbers(event): void {
 
     this.workOrderWorkFlowList = this.workOrderWorkFlowOriginalData;
@@ -167,7 +154,6 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
     }
   }
 
-
   filterEmployee(event): void {
 
     this.employeeList = this.employeesOriginalData;
@@ -188,7 +174,8 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
 
   addNewTask(taskName) {
     this.laborForm.workOrderLaborList[0][taskName].push(new AllTasks());
-  }
+    }
+
   startandStop(currentRecord) {
     if (currentRecord.startDate === null) {
       currentRecord.startDate = new Date();
@@ -197,7 +184,6 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
     }
     this.calculateWorkingHoursandMins(currentRecord)
   }
-
 
   resetEndDateandTime(currentRecord) {
     currentRecord.endDate = null;
@@ -213,7 +199,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
       console.log(ms);
       const days = moment.duration(ms)
       console.log(days);
-      currentRecord.hours = Math.floor(days.asHours()) + moment.utc(ms).format(":mm")
+      currentRecord.hours = Math.floor(days.asHours()) + moment.utc(ms).format(".mm")
       // currentRecord.hours = moment(moment(startTime, "hh:mm").diff(moment(endTime, "hh:mm"))).format("hh:mm");
     }
 
@@ -229,8 +215,13 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   }
 
   // moment(new Date()).format('DD/MM/YYYY, h:mm:ss a');
-  saveLabor() {
-    console.log(this.laborForm);
+    saveLabor() {
+        var wolHeaderId = 0;
+        if (this.workOrderLaborList !== undefined && this.workOrderLaborList !== null) {
+
+            wolHeaderId = this.workOrderLaborList.workOrderLaborHeaderId;
+        }
+      console.log(this.laborForm);
     const excessParams = {
       createdBy: this.userName,
       updatedBy: this.userName,
@@ -269,10 +260,10 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
       masterCompanyId: 1,
       ...excessParams,
       workOrderId: this.id,
-      workFlowWorkOrderId: getValueFromObjectByKey('value', this.laborForm.workFlowWorkOrderId),
-      workOrderLaborList: formedData
-
-
+        workFlowWorkOrderId: getValueFromObjectByKey('value', this.laborForm.workFlowWorkOrderId),
+        workOrderLaborHeaderId: wolHeaderId,
+        workOrderLaborList: formedData,
+        totalWorkHours:this.totalWorkHours
     }
 
 
@@ -336,7 +327,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
 
   getTaksId(taskName){
     for(let t of this.taskList){
-      if(t['description'] == taskName){
+        if (t['description'].toLowerCase() == taskName.toLowerCase()) {
         return t['taskId']
       }
     }

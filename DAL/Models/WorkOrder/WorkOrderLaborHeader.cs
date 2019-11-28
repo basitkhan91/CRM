@@ -24,9 +24,10 @@ namespace DAL.Models
         public bool IsTaskCompletedByOne { get; set; }
         public int WorkOrderHoursType { get; set; }
         public string LabourMemo { get; set; }
-
         public long? EmployeeId { get; set; }
         public long? ExpertiseId { get; set; }
+        public decimal? TotalWorkHours { get; set; }
+
         [ForeignKey("MasterCompanyId")]
         public int? MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
