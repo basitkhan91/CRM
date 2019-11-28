@@ -459,7 +459,7 @@ export class ReceivingRoComponent implements OnInit {
                                 error => this.onDataLoadFailed(error)
                             );
                         }
-                        part.userTypeName = this.getUserTypeById(part.roPartSplitUserTypeId.toLocaleString());
+                        part.userTypeName = part.roPartSplitUserTypeId ? this.getUserTypeById(part.roPartSplitUserTypeId.toLocaleString()) : '';
                         part.statusText = this.getStatusById(part.status);
                         part.managementStructureName = parentPart.managementStructureName;
                     }
@@ -643,7 +643,7 @@ export class ReceivingRoComponent implements OnInit {
     }
 
     private isSplitShipmentPart(itemMasterId: number): boolean {
-        return this.repairOrderData.filter(x => x.itemMaster.itemMasterId == itemMasterId && !x.isParent).length > 0;
+        return this.repairOrderData.filter(x => x.itemMasterId == itemMasterId && !x.isParent).length > 0;
     }
 
     private getAllPriority() {

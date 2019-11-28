@@ -85,7 +85,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Contact Phone</label>
-                                    <input class="form-control" type="text" name="contactPhone" [(ngModel)]="repairOrderHeaderData.contactPhone" disabled>
+                                    <input class="form-control" type="text" name="contactPhone" [(ngModel)]="repairOrderHeaderData.vendorPhone" disabled>
                                 </div>
                                 <div class="form-group">
                                     <label>Credit Limit &amp; Terms</label>
@@ -363,7 +363,7 @@
                         </tr>
 
                         <ng-container>
-                            <tr *ngIf="part.stockLine != null">
+                            <tr *ngIf="part.stockLine.length > 0"> <!--part.stockLine != null-->
                                 <th></th>
                                 <th>Stock Line</th>
                                 <th>PN</th>
@@ -407,8 +407,8 @@
                                 <th>Ship Via</th>
                                 <th>Shipping Account</th>
                                 <th>ESN</th>
-                                <th class="date">Core Due Date</th>
-                                <th class="date"> Core Returned Date</th>
+                                <!-- <th class="date">Core Due Date</th>
+                                <th class="date"> Core Returned Date</th> -->
                                 <th>GL Account</th>
                                 <th>Time Life</th>
                                 <th colspan="5">Cycles</th>
@@ -653,12 +653,12 @@
                                 <td>
                                     <input class="form-control" type="text" [disabled]="!SL.isEnabled" [(ngModel)]="SL.engineSerialNumber" pInputText [maxLength]="200">
                                 </td>
-                                <td>
+                                <!-- <td>
                                     <input type="text" class="form-control" disabled value="unknown field" />
                                 </td>
                                 <td>
                                     <input type="text" class="form-control" disabled value="unknown field" />
-                                </td>
+                                </td> -->
                                 <td>{{SL.glAccountText}}</td>
                                 <td>
                                     <input type="checkbox" disabled [checked]="part.itemMaster.isTimeLife != false" />
