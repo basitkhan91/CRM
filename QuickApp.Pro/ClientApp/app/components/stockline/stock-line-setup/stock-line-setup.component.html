@@ -219,7 +219,7 @@
                         <select [(ngModel)]="sourceStockLineSetup.obtainFrom" [ngModelOptions]="{standalone: true}">
                             <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                         </select>
-                        <a routerLink="/VendorPagesModule/vendorpages/app-vendor-setup" class="add-icon"><i class="fa fa-plus"></i></a>
+                        <a routerLink="/vendorsmodule/vendorpages/app-vendor-setup" class="add-icon"><i class="fa fa-plus"></i></a>
                     </div>
                 </div>
 
@@ -258,7 +258,7 @@
                         <select [(ngModel)]="sourceStockLineSetup.owner" [ngModelOptions]="{standalone: true}">
                             <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                         </select>
-                        <a routerLink="/VendorPagesModule/vendorpages/app-vendor-setup" class="add-icon"><i class="fa fa-plus"></i></a>
+                        <a routerLink="/vendorsmodule/vendorpages/app-vendor-setup" class="add-icon"><i class="fa fa-plus"></i></a>
                     </div>
                 </div>
 
@@ -292,7 +292,7 @@
                             <select [(ngModel)]="sourceStockLineSetup.traceableTo" [ngModelOptions]="{standalone: true}">
                                 <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                             </select>
-                            <a routerLink="/VendorPagesModule/vendorpages/app-vendor-setup" class="add-icon"><i class="fa fa-plus"></i></a>
+                            <a routerLink="/vendorsmodule/vendorpages/app-vendor-setup" class="add-icon"><i class="fa fa-plus"></i></a>
                         </div>
                     </div>
                 </div>
@@ -390,10 +390,11 @@
 
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">CERTIFY BY</label>
-                    <div class="col-sm-7">
+                    <div class="inner-addon col-sm-7 display-flex">
                         <select [(ngModel)]="sourceStockLineSetup.certifiedBy" [ngModelOptions]="{standalone: true}">
                             <option *ngFor="let employee of allEmployeeList" [ngValue]="employee.firstName">{{employee.firstName}}{{ employee.lastName}}</option>
                         </select>
+                        <a routerLink="/employeesmodule/employeepages/app-employee-general-information" class="add-icon"><i class="fa fa-plus"></i></a>
                     </div>
                 </div>
 

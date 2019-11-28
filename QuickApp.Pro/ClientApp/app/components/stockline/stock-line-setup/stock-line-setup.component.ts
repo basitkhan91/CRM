@@ -515,7 +515,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	{
         this.dataSource.data = allWorkFlows;
         this.sourceEmployee = allWorkFlows;
-
+        this.allEmployeeList = allWorkFlows;
         this.loadCompanyData();
 
 	}
