@@ -64,6 +64,7 @@ namespace DAL.Models
         public bool IsActive { get; set; }
 
         public List<StockLine> StockLine { get; set; }
+        public long? ParentId { get; set; }
     }
 
     [NotMapped]

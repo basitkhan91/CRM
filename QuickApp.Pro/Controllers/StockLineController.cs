@@ -949,12 +949,12 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetStockLineDetailsById(long stockLineId)
         {
             var result = (from s in _context.StockLine
-                          join ro in _context.RepairOrder on s.RepairOrderId equals ro.RepairOrderId
+                          join po in _context.PurchaseOrder on s.PurchaseOrderId equals po.PurchaseOrderId
                           where s.StockLineId == stockLineId
                           select new
                           {
                               s.ControlNumber,
-                              ro.RepairOrderNumber,
+                              po.PurchaseOrderNumber,
                               ControlId = s.IdNumber
 
                           }).FirstOrDefault();
@@ -1026,8 +1026,8 @@ namespace QuickApp.Pro.Controllers
                          itemClassification = item.ItemClassification,
                          itemGroup = string.Empty,
                          controlNumber = sl.ControlNumber,
-                         idNumber = sl.IdNumber,  
-                         serialNumber = sl.SerialNumber, 
+                         idNumber = sl.IdNumber,
+                         serialNumber = sl.SerialNumber,
                      };
 
 
