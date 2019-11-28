@@ -461,6 +461,8 @@ namespace QuickApp.Pro.Controllers
             actionobject.CustomerTypeId = customerViewModel.CustomerTypeId;
             actionobject.CustomerType = customerViewModel.CustomerType;
             actionobject.IsCustomerAlsoVendor = customerViewModel.IsCustomerAlsoVendor;
+            actionobject.IsAddressForBilling = customerViewModel.IsAddressForBilling;
+            actionobject.IsAddressForShipping = customerViewModel.IsAddressForShipping;
             actionobject.IsPBHCustomer = customerViewModel.IsPBHCustomer;
             actionobject.CustomerCode = customerViewModel.CustomerCode;
             actionobject.ContractReference = customerViewModel.ContractReference;
