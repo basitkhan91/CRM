@@ -161,6 +161,7 @@ namespace DAL.Models
         public string StockLineNumber { get; set; }
         public string ControlId { get; set; }
         public string ControlNumber { get; set; }
+        public string PO { get; set; }
     }
 
     [NotMapped]
@@ -186,6 +187,7 @@ namespace DAL.Models
         public string StockLineNumber { get; set; }
         public string ControlId { get; set; }
         public string ControlNumber { get; set; }
+        public string PO { get; set; }
 
     }
 }
