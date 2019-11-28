@@ -316,7 +316,7 @@ namespace DAL.Repositories
                             vt.CustomerAffiliationId,
                             cc.CustomerClassificationId,
                             //cc.Description
-                        }).OrderByDescending(a => a.UpdatedDate).ToList();
+                        }).Where(t=>t.IsActive==true).OrderByDescending(a => a.UpdatedDate).ToList();
             return data;
         }
         public IEnumerable<object> GetCustomerBynameList(string name)
