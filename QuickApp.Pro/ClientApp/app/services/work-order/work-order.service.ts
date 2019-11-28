@@ -17,6 +17,8 @@ import { WorkOrderEndpointService } from '../work-order/work-order-endpoint.serv
 @Injectable()
 export class WorkOrderService {
 
+    creditTerms: any;
+    employeesOriginalData: any[];
     constructor(private workOrderEndpointService: WorkOrderEndpointService) {
     }
 
@@ -177,6 +179,10 @@ export class WorkOrderService {
     }
     assetsCheckOutByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy){ 
         return this.workOrderEndpointService.assetsCheckOutByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy);
+    }
+
+    createQuote(data){
+        return this.workOrderEndpointService.createQuotation(data);
     }
 
 
