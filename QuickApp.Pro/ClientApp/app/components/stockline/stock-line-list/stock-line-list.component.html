@@ -20,7 +20,7 @@
                                            selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
                             <div class="inner-addon right-addon w200 inline-block">
                                 <i class="fa fa-search"></i>
-                                <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
+                                <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter">
                             </div>
                             <button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                             <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
@@ -163,7 +163,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-            <h4 class="modal-title">StockLine List Details</h4>
+            <h4 class="modal-title">Stock List Details</h4>
         </div>
         <div class="modal-body viewform">
             <div class="row">
@@ -178,7 +178,8 @@
                     <p><span class="label"><b>Control Num: </b></span><span class="value">{{controlNumber}}</span></p>
                     <p><span class="label"><b>ID Num: </b></span><span class="value">{{idNumber}}</span></p>
                     <p><span class="label"><b>Is Serialized: </b></span><input type="checkbox" [disabled]="true" [checked]="isSerialized" /></p>
-                    <p><span class="label"><b>Qty: </b></span><span class="value">{{quantity}}</span></p>
+                    <p><span class="label"><b>Qty On Hand </b></span><span class="value">{{quantityOnHand}}</span></p>
+                    <p><span class="label"><b>Quantity Available </b></span><span class="value">{{quantityAvailable}}</span></p>
                     <p><span class="label"><b>Condition: </b></span><span class="value">{{condition}}</span></p>
                     <p><span class="label"><b>Serial Num: </b></span><span class="value">{{serialNumber}}</span></p>
                     <!--<p><span class="label"><b>Shelf Life: </b></span><span class="value">{{shelfLife}}</span></p>-->

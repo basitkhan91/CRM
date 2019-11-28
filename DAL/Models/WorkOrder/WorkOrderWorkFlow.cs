@@ -83,11 +83,12 @@ namespace DAL.Models
         public virtual List<WorkOrderDirections> Directions { get; set; }
         public virtual List<WorkOrderPublications> Publication { get; set; }
 
-        [NotMapped]
-        public WorkOrderLaborHeader WorkOrderLaborHeader { get; set; }
-        [NotMapped]
-        public WorkOrderQuote WorkOrderQuote { get; set; }
+        //[NotMapped]
+        //public WorkOrderLaborHeader WorkOrderLaborHeader { get; set; }
+        //[NotMapped]
+        //public WorkOrderQuote WorkOrderQuote { get; set; }
         [NotMapped]
         public bool IsSaveToWorkFlow { get; set; }
+         
     }
 }

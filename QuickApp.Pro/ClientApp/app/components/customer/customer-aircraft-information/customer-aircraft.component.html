@@ -28,6 +28,7 @@
               class="p-dropdown-custom "
               [(ngModel)]="selectAircraftManfacturer"
               (onChange)="getAircraftModelByManfacturerType($event.value)"
+                      
             ></p-dropdown>
             <!-- <p-multiSelect
               [options]="manufacturerData"
@@ -78,6 +79,7 @@
             <button
               class="btn btn-primary mtop20"
               (click)="searchAircraftInformation()"
+                     matTooltip="Search"
             >
               <i class="pi pi-search pi-search"></i>
             </button>
@@ -125,7 +127,8 @@
             (click)="
               deleteAircraftMappedInventory(rowData.customerAircraftMappingId)
             "
-          >
+          matTooltip="Delete"
+                  >
             <i class="fa fa-trash"></i>
           </button>
         </td>

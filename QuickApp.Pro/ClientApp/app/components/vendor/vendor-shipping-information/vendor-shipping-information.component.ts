@@ -343,7 +343,8 @@ export class VendorShippingInformationComponent {
     openDelete(content, row) {
         this.isEditMode = false;
         this.isDeleteMode = true;
-        this.sourceVendor = row;
+        //this.sourceVendor = row;
+        this.localCollection = row;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -426,6 +427,7 @@ export class VendorShippingInformationComponent {
             }
             else {
                 this.sourceVendor.isActive = true;
+                this.sourceVendor.createdBy = this.userName;
                 this.sourceVendor.updatedBy = this.userName;
 
                 this.sourceVendor.masterCompanyId = 1;
@@ -438,30 +440,20 @@ export class VendorShippingInformationComponent {
 
         }
     }
-    saveVendorShipViaDetails() {
+    saveVendorShipViaDetails() {        
         this.isSaving = true;
-        if (!this.shipViaObj.vendorShippingId) {
+            if(this.shipViaObj.shipVia == null || this.shipViaObj.shipVia=="" )
+            {
+               this.alertService.showMessage("Empty", 'Cannot Submit Empty', MessageSeverity.warn);
+                return;
+            }
+
+        if (this.shipViaObj.vendorShippingId>0) {            
             this.shipViaObj.createdBy = this.userName;
             this.shipViaObj.updatedBy = this.userName;
             this.shipViaObj.masterCompanyId = 1;
             this.shipViaObj.isActive = true;
-            this.workFlowtService.newShippingViaAdd(this.shipViaObj).subscribe(data => {
-                this.shipViaCollection = data;
-                this.loadShipViaCollection(this.shipViaCollection);
-                if (this.shipViaCollection) {
-                    this.shipViaObj.shipVia = "";
-                    this.shipViaObj.shippingAccountinfo = "";
-                    this.shipViaObj.shippingURL = "";
-                    this.shipViaObj.shippingId = "";
-                    this.shipViaObj.memo = "";
-                }
-            })
-        }
-        else {
-
-            this.sourceVendor.updatedBy = this.userName;
-            this.sourceVendor.masterCompanyId = 1;
-            this.shipViaObj.isActive = true;
+           
             this.workFlowtService.updateshippingViainfo(this.shipViaObj).subscribe(data => {
                 this.shipViaCollection = data;
                 this.loadShipViaCollection(this.shipViaCollection);
@@ -471,8 +463,28 @@ export class VendorShippingInformationComponent {
                     this.shipViaObj.shippingURL = "";
                     this.shipViaObj.shippingId = "";
                     this.shipViaObj.memo = "";
+                    this.shipViaObj.vendorShippingId=0;
                 }
             })
+        }
+        else {
+            this.shipViaObj.createdBy = this.userName;
+            this.sourceVendor.updatedBy = this.userName;
+            this.sourceVendor.masterCompanyId = 1;
+            this.shipViaObj.isActive = true;
+
+            this.workFlowtService.newShippingViaAdd(this.shipViaObj).subscribe(data => {
+                this.shipViaCollection = data;
+                this.loadShipViaCollection(this.shipViaCollection);
+                if (this.shipViaCollection) {
+                    this.shipViaObj.shipVia = "";
+                    this.shipViaObj.shippingAccountinfo = "";
+                    this.shipViaObj.shippingURL = "";
+                    this.shipViaObj.shippingId = "";
+                    this.shipViaObj.memo = "";
+                    this.shipViaObj.vendorShippingId=0;
+                }
+            })            
         }
 
     }
@@ -503,7 +515,7 @@ export class VendorShippingInformationComponent {
     }
 
     updateVendorShippingAddress(updateObj: any) {
-        debugger;
+       
         this.workFlowtService.updateVendorShippingAddressDetails(updateObj, this.local.vendorId).subscribe(data => {
             this.vendorshippingAddressdetails = data;
             this.workFlowtService.newShippingAddWithAddress(this.sourceVendor, this.vendorshippingAddressdetails.vendorShippingAddressId).subscribe(data => {
@@ -525,32 +537,45 @@ export class VendorShippingInformationComponent {
             error => this.saveFailedHelper(error));
     }
 
-    deleteVendorShippingAddress(vendorShippingAddressId) {
-        this.isSaving = true;
-        this.sourceVendor.isActive = false;
-        this.sourceVendor.addressStatus = false;
-        this.sourceVendor.updatedBy = this.userName;
-        this.sourceVendor.vendorShippingAddressId = vendorShippingAddressId;
-        this.workFlowtService.deleteVendorShippingAddress(this.sourceVendor).subscribe(
+    deleteVendorShippingAddress() {             
+        this.isSaving = true;       
+        this.localCollection.isActive = false;
+        this.localCollection.addressStatus = false;
+        this.localCollection.updatedBy = this.userName;
+        //this.sourceVendor.vendorShippingAddressId = vendorShippingAddressId;
+        this.workFlowtService.deleteVendorShippingAddress(this.localCollection).subscribe(
             response => this.saveCompleted(this.sourceVendor),
             error => this.saveFailedHelper(error));
+      this.modal.close();
     }
 
-    deleteItemShippingCloseModel(vendorShippingId) {
+    deleteItemShippingCloseModel() {
         this.isSaving = true;
-        this.shipViaObj.isActive = true;
-        this.shipViaObj.updatedBy = this.userName;
-        this.shipViaObj.vendorShippingId = vendorShippingId;
-        this.workFlowtService.deleteVendorAcion(this.shipViaObj).subscribe(data => {
-            this.loadShipViaCollection(data);
+
+        this.localCollection.isActive = false;
+        this.localCollection.addressStatus = false;
+        this.localCollection.updatedBy = this.userName;
+        // this.shipViaObj=this.localCollection;
+        // this.shipViaObj.isActive = true;
+        // this.shipViaObj.updatedBy = this.userName;        
+        //this.shipViaObj.vendorShippingId = vendorShippingId;
+
+        this.workFlowtService.deleteVendorAcion(this.localCollection).subscribe(data => {
+            this.loadShipViaCollection(this.localCollection);
         })
+
+        // this.workFlowtService.deleteVendorAcion(this.localCollection).subscribe(
+        // response => this.saveCompleted(this.sourceVendor),
+        // error => this.saveFailedHelper(error));
+        //this.loadShipViaCollection(this.localCollection);
+        this.modal.close();
     }
     dismissShipViaModelModel() {
         this.isDeleteMode = false;
         this.isEditMode = false;
         this.modal.close();
     }
-    dismissModel() {
+    dismissModel() {      
         this.isDeleteMode = false;
         this.isEditMode = false;
         this.modal.close();

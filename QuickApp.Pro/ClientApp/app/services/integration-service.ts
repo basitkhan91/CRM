@@ -62,9 +62,13 @@ export class IntegrationService {
 
     }
     historyintegration(actionId: number) {
-        return Observable.forkJoin(this.integrationEndpointService.getHistoryintegrationEndpoint<AuditHistory[]>(actionId));
+        return this.integrationEndpointService.getHistoryintegrationEndpoint<any[]>(actionId);
     }
     getAudit(integrationPortalId: number) {
         return this.integrationEndpointService.getAuditById<any[]>(integrationPortalId);
+    }
+
+    IntegrationCustomUpload(file) {
+        return this.integrationEndpointService.IntegrationCustomUpload(file);
     }
 }

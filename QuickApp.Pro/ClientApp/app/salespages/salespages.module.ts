@@ -47,8 +47,15 @@ import { SalesQuoteService } from "../services/salesquote.service";
 import { SalesQuoteEndpointService } from "../services/salesquote-endpoint.service";
 import { TabViewModule } from "primeng/tabview";
 import { SalesApproveComponent } from "../components/sales/quotes/shared/components/sales-approve/sales-approve.component";
-import { SalesPartNumberComponent } from "../components/sales/quotes/shared/components/sales-part-number/sales-part-number.component";
+import { SalesPartNumberComponent } from "../components/sales/shared/components/sales-part-number/sales-part-number.component";
+import { AddSalesPartNumberComponent } from "../components/sales/shared/components/add-sales-part-number/add-sales-part-number.component";
 import { SalesAddressComponent } from "../components/sales/quotes/shared/components/sales-address/sales-address.component";
+import { CustomerDetailComponent } from "../components/sales/shared/components/add-sales-part-number/customer-details/customer-detail.component";
+import { PartNumberFilterComponent } from "../components/sales/shared/components/add-sales-part-number/part-number-filter/part-number-filter.component";
+import { PartDetailsComponent } from "../components/sales/shared/components/add-sales-part-number/part-details/part-details.component";
+import { ItemMasterService } from "../services/itemMaster.service";
+import { SalesPartNumbersComponent } from "../components/sales/quotes/shared/components/sales-part-number/sales-part-numbers.component";
+import { StocklinePartDetailsComponent } from "../components/sales/shared/components/add-sales-part-number/stockline-part-details/stockline-part-details.component";
 
 @NgModule({
   imports: [
@@ -89,9 +96,15 @@ import { SalesAddressComponent } from "../components/sales/quotes/shared/compone
     SalesQuoteComponent,
     SalesApproveComponent,
     SalesPartNumberComponent,
-    SalesAddressComponent
+    SalesAddressComponent,
+    AddSalesPartNumberComponent,
+    CustomerDetailComponent,
+    PartNumberFilterComponent,
+    PartDetailsComponent,
+    SalesPartNumbersComponent,
+    StocklinePartDetailsComponent
   ],
-  providers: [CustomerService, SalesQuoteService, SalesQuoteEndpointService],
+  providers: [CustomerService, SalesQuoteService, SalesQuoteEndpointService, ItemMasterService],
   entryComponents: []
 })
-export class SalesPagesModule {}
+export class SalesPagesModule { }

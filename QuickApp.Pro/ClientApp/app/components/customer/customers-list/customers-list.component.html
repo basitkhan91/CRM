@@ -20,9 +20,9 @@
       (onLazyLoad)="loadData($event)"
       [resizableColumns]="true"
       [reorderableColumns]="true"
-      [scrollable]="true"
+    
       [totalRecords]="totalRecords"
-      scrollHeight="450px"
+      
     >
       <!-- <ng-template pTemplate="caption">
              (onPage)="changePage($event)"
@@ -43,13 +43,13 @@
             [options]="headers"
             optionLabel="header"
             [(ngModel)]="selectedColumns"
-            [style]="{ minWidth: '200px' }"
+            [style]="{ minWidth: '220px' }"
             style="float:left"
             (onChange)="columnsChanges()"
           ></p-multiSelect>
 
           <div
-            class="inner-addon right-addon w200 inline-block  g-filter-search-cstm"
+            class="inner-addon right-addon w50 inline-block  g-filter-search-cstm"
           >
             <i class="fa fa-search"></i>
             <input
@@ -139,7 +139,7 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-rowData let-columns="columns">
-        <tr [pSelectableRow]="rowData" pReorderableRowHandle>
+        <tr [pSelectableRow]="rowData" pReorderableRowHandle (click)="viewSelectedRow(rowData)" data-target="#view">
           <td
             style="width:120px"
             *ngFor="let col of columns"
@@ -158,52 +158,47 @@
             }}
           </td>
           <td style="width:200px" *ngIf="selectedColumns.length > 0">
-            <p-inputSwitch
-              [(ngModel)]="rowData['isActive']"
-              name="isActive{{ rowIndex }}"
-              (onChange)="changeStatus(rowData)"
-            ></p-inputSwitch>
+              <!--<p-inputSwitch [(ngModel)]="rowData['isActive']"
+                             name="isActive{{ rowIndex }}"
+                             (onChange)="changeStatus(rowData)"></p-inputSwitch>-->
 
-            <span data-toggle="modal" data-target="#view">
-              <a
-                class="btn btn-info boxed-float-btn nobg"
-                data-toggle="tooltip"
-                (click)="viewSelectedRow(rowData)"
-                data-target="#view"
-                data-toggle="modal"
-              >
-                <i class="fa fa-eye"></i>
-              </a>
-            </span>
-            <button
-              class="btn-edit"
-              mat-icon-button
-              (click)="edit(rowData)"
-              matTooltip="Edit"
-            >
-              <mat-icon>edit</mat-icon>
-            </button>
+              <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+              <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+              <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 
-            <button
-              class="btn-delete"
-              mat-icon-button
-              matTooltip="Delete"
-              data-target="#delete"
-              data-toggle="modal"
-              (click)="delete(rowData)"
-            >
-              <mat-icon color="warn">delete</mat-icon>
-            </button>
-            <button
-              class="btn-history"
-              mat-icon-button
-              matTooltip="History"
-              data-target="#contentHist"
-              data-toggle="modal"
-              (click)="getAuditHistoryById(rowData)"
-            >
-              <mat-icon color="green">history</mat-icon>
-            </button>
+              <span data-toggle="modal" data-target="#view">
+                  <a class="btn btn-info boxed-float-btn nobg"
+                     data-toggle="tooltip"
+                     (click)="viewSelectedRow(rowData)"
+                     data-target="#view"
+                     
+                     matTooltip="View">
+                      <i class="fa fa-eye"></i>
+                  </a>
+              </span>
+              <button class="btn-edit"
+                      mat-icon-button
+                      (click)="edit(rowData)"
+                      matTooltip="Edit">
+                  <mat-icon>edit</mat-icon>
+              </button>
+
+              <button class="btn-delete"
+                      mat-icon-button
+                      matTooltip="Delete"
+                      data-target="#delete"
+                      data-toggle="modal"
+                      (click)="delete(rowData)">
+                  <mat-icon color="warn">delete</mat-icon>
+              </button>
+              <button class="btn-history"
+                      mat-icon-button
+                      matTooltip="History"
+                      data-target="#contentHist"
+                      data-toggle="modal"
+                      (click)="getAuditHistoryById(rowData)">
+                  <mat-icon color="green">history</mat-icon>
+              </button>
           </td>
         </tr>
       </ng-template>
@@ -244,19 +239,27 @@
   <div class="modal-dialog modal-lg">
     <!-- Modal content-->
     <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">
-          &times;
-        </button>
-        <h4 class="modal-title">Details of Customer</h4>
-      </div>
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+                &times;
+            </button>
+            <h4 class="modal-title">Details of Customer</h4>
+            <div>
+                <button type="button" class="btn btn-success" (click)="ExpandAllCustomerDetailsModel()">Open All</button>
+                <button type="button" class="btn btn-info" (click)="CloseAllCustomerDetailsModel()">Close All</button>
+
+            </div>
+        </div>
       <div class="modal-body"  *ngIf="viewDataGeneralInformation">
         <div class="panel-group" id="accordion">
           <div class="panel panel-default">
             <div class="panel-heading">
               <h4 class="panel-title">
+                  <div>
+                    
+                  </div>
                 <a class="collapsed" data-toggle="collapse" href="#step1"
-                  >General Information</a
+                  >General Info</a
                 >
               </h4>
             </div>
@@ -334,7 +337,7 @@
                       <p>
                         <span class="label"><b>Country: </b></span
                         ><span class="value">{{
-                          viewDataGeneralInformation.country
+                          viewDataGeneralInformation.countryName
                         }}</span>
                       </p>
                       <p>
@@ -430,7 +433,7 @@
 
           <div class="panel panel-default">
               <div class="panel-heading">
-                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step3">Aircraft Information</a> </h4>
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step3">Aircraft Info</a> </h4>
               </div>
               <div id="step3" class="panel-collapse  collapse">
                   <div class="panel-body">
@@ -474,7 +477,7 @@
 
           <div class="panel panel-default">
               <div class="panel-heading">
-                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step4">ATA Information</a> </h4>
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step4">ATA Info</a> </h4>
               </div>
               <div id="step4" class="panel-collapse  collapse">
                   <div class="panel-body">
@@ -519,7 +522,7 @@
 
             <div class="panel panel-default">
               <div class="panel-heading">
-                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step5">Financial Information</a> </h4>
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step5">Financial Info</a> </h4>
               </div>
               <div id="step5" class="panel-collapse collapse">
                   <div class="panel-body">
@@ -536,7 +539,7 @@
                           <p><span class="label"><b>EDI: </b></span><span class="value">{{viewDataGeneralInformation.ediDescription}}</span></p>
                           <!--<p><span class="label"><b>Deferred PO: </b></span><span class="value">{{customerVfinanceiewFeilds.customerCode}}</span></p>
                   <p><span class="label"><b>Deferred RO: </b></span><span class="value">{{customerViewFeilds.customerCode}}</span></p>-->
-                          <p><span class="label"><b>Currency: </b></span><span class="value">{{viewDataGeneralInformation.currencyId}}</span></p>
+                          <p><span class="label"><b>Currency: </b></span><span class="value">{{viewDataGeneralInformation.currency}}</span></p>
                       </div>
                   </div>
               </div>
@@ -595,7 +598,7 @@
               <div id="step7" class="panel-collapse  collapse">
                   <div class="panel-body">
                       <div class="col-sm-12">
-                          <h4> Shipping Site Information List </h4>
+                          <h4> Shipping Site Info List </h4>
                           <div class="shadow-Box">
                             <p-table
                               class="rpo-table-cstm"
@@ -673,7 +676,7 @@
 
           <div class="panel panel-default">
               <div class="panel-heading">
-                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step8">Sales Person/Agent Information</a> </h4>
+                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step8">Sales Person/Agent Info</a> </h4>
               </div>
               <div id="step8" class="panel-collapse collapse">
                   <div class="panel-body">

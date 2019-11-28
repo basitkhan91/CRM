@@ -343,6 +343,7 @@ export class CustomerService {
     }
 
     updateCustomerBillingAddressDetails(customercntct: any, customerId: any) {
+        debugger
         return this.customerEndpoint.updateCustomerBillingAddressDetails<any>(customercntct, customerId);
     }
     newBillingAddWithAddress(action: any, billingAddressId: any) {
@@ -548,6 +549,23 @@ export class CustomerService {
     getCustomerClassificationMapping(customerId) {
         return this.customerEndpoint.getCustomerClassificationMapping(customerId);
     }
+    deleteInternationalShipViaId(id, updatedBy) {
+        return this.customerEndpoint.deleteInternationalShipViaId(id, updatedBy)
+    }
+    deleteShipViaDetails(id, updatedBy) {
+        return this.customerEndpoint.deleteShipViaDetails(id, updatedBy)
+    }
+    deleteRestrictedPartsById(id, updatedBy) {
+        return this.customerEndpoint.deleteRestrictedPartsById(id, updatedBy)
+    }
+    updateStatusForShippingDetails(id, status, updatedBy) {
+        return this.customerEndpoint.updateStatusForShippingDetails(id, status, updatedBy)
+    }
+    Shippingdetailsviastatus(id, status, updatedBy) {
+        return this.customerEndpoint.Shippingdetailsviastatus(id, status, updatedBy)
+    }
 
-
+    CustomersBillingUpdateforActive(id, status, updatedBy) {
+        return this.customerEndpoint.CustomersBillingUpdateforActive(id, status, updatedBy)
+    }
 }

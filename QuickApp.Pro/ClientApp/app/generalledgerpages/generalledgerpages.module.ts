@@ -43,9 +43,13 @@ import { AuditModule } from "../audit/audit.module";
 import { InterCompanySetupComponent } from "../components/general-ledger/intercompany-setup/intercompany-setup.component";
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { TooltipModule } from "../../../node_modules/primeng/tooltip";
+
 import { AccountListingComponent } from "../components/general-ledger/account-listing/account-listing.component";
 import { AccountListingCreateComponent } from "../components/general-ledger/account-listing-create/account-listing-create.component";
 import {DropdownModule} from 'primeng/dropdown';
+
+import { CommonService } from "../services/common.service";
+
 
 @NgModule({
     imports: [
@@ -92,7 +96,8 @@ import {DropdownModule} from 'primeng/dropdown';
         NodeSetupService,
         NodeSetupEndpointService,
         POROCategoryEndpoint,
-        POROCategoryService
+        POROCategoryService,
+        CommonService
 
 
     ],

@@ -36,8 +36,8 @@ export class WorkOrderService {
         return this.workOrderEndpointService.createNewWorkOrder<any>(workOrder);
     }
 
-    update<T>(workOrder: WorkOrder) {
-        return this.workOrderEndpointService.updateWorkOrder<T>(workOrder);
+    updateNewWorkOrder(workOrder: WorkOrder) {
+        return this.workOrderEndpointService.updateNewWorkOrder<any>(workOrder);
     }
 
     remove(workOrderId: number) {
@@ -117,17 +117,67 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getWorkOrderWorkFlowNumbers(workOrderId);
     }
 
-    getWorkOrderAssetList(workFlowWorkOrderId) {
-        return this.workOrderEndpointService.getWorkOrderAssetList(workFlowWorkOrderId);
+    getWorkOrderAssetList(workFlowWorkOrderId, workOrderId) {
+        return this.workOrderEndpointService.getWorkOrderAssetList(workFlowWorkOrderId, workOrderId);
     }
     createWorkOrderLabor(data) {
         return this.workOrderEndpointService.createWorkOrderLabor(data);
     }
+
+    createWorkOrderMaterialList(data) {
+        return this.workOrderEndpointService.createWorkOrderMaterialList(data);
+    }
+    createWorkOrderEquipmentList(data){
+        return this.workOrderEndpointService.createWorkOrderEquipmentList(data);
+    }
     getAllTasks() {
         return this.workOrderEndpointService.getTasks();
     }
-    getMaterialList(workOrderWorkFlowId, workOrderId) {
-        return this.workOrderEndpointService.getMaterialList(workOrderWorkFlowId, workOrderId)
+    getWorkOrderMaterialList(workFlowWorkOrderId, workOrderId) {
+        return this.workOrderEndpointService.getWorkOrderMaterialList(workFlowWorkOrderId, workOrderId)
     }
+    getWorkOrderPublicationList(workFlowWorkOrderId, workOrderId) {
+        return this.workOrderEndpointService.getWorkOrderPublicationList(workFlowWorkOrderId, workOrderId)
+    }
+
+    getWorkOrderChargesList(workFlowWorkOrderId, workOrderId) {
+        return this.workOrderEndpointService.getWorkOrderChargesList(workFlowWorkOrderId, workOrderId)
+    }
+
+    getWorkOrderExclusionsList(workFlowWorkOrderId, workOrderId) {
+        return this.workOrderEndpointService.getWorkOrderExclusionsList(workFlowWorkOrderId, workOrderId)
+    }
+    getWorkOrderLaborList(workFlowWorkOrderId, workOrderId) {
+        return this.workOrderEndpointService.getWorkOrderLaborList(workFlowWorkOrderId, workOrderId)
+    }
+
+    getWorkOrderDirectionList(workFlowWorkOrderId, workOrderId){
+        return this.workOrderEndpointService.getWorkOrderDirectionList(workFlowWorkOrderId, workOrderId)
+    }
+
+    getWorkOrderWorkFlowByWorkFlowWorkOrderId(workFlowWorkOrderId) {
+        return this.workOrderEndpointService.getWorkOrderWorkFlowByWorkFlowWorkOrderId(workFlowWorkOrderId)
+    }
+
+    viewWorkOrderHeader(workOrderId) {
+        return this.workOrderEndpointService.viewWorkOrderHeader(workOrderId);
+    }
+    viewWorkOrderPartNumber(workOrderId) {
+        return this.workOrderEndpointService.viewWorkOrderPartNumber(workOrderId);
+    }
+
+    getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId) {
+        return this.workOrderEndpointService.getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId);
+    }
+    saveReservedPartorIssue(alternatePart){
+        return this.workOrderEndpointService.saveReservedPartorIssue(alternatePart)
+    }
+    assetsCheckInByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy){
+        return this.workOrderEndpointService.assetsCheckInByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy);
+    }
+    assetsCheckOutByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy){ 
+        return this.workOrderEndpointService.assetsCheckOutByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy);
+    }
+
 
 }

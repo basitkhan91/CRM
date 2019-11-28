@@ -32,6 +32,7 @@ namespace DAL.Models
         public DateTime UpdatedDate { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
+        public bool? IsFromWorkFlow { get; set; }
 
         [NotMapped]
         public string Epn { get; set; }
@@ -43,6 +44,8 @@ namespace DAL.Models
         public string EstOcuurance { get; set; }
         [NotMapped]
         public string MarkUpPercentage { get; set; }
+        [NotMapped]
+        public string Task { get; set; }
 
     }
 }

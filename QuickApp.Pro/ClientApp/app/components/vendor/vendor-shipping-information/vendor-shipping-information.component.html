@@ -48,7 +48,7 @@
 									<p-sortIcon [field]="col.field"></p-sortIcon>
 								</th>
 
-								<th></th>
+								<th class="headerList"></th>
 
 							</tr>
 						</ng-template>
@@ -61,7 +61,7 @@
 									{{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
 								</td>
 
-								<td>
+								<td class="headerList">
 									<p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 									<p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 									<p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
@@ -71,9 +71,15 @@
 										<mat-icon>edit</mat-icon>
 									</button>
 
-									<button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteVendorShippingAddress(rowData.vendorShippingAddressId)">
+									<button [validate] moduleName="app-vendor-contacts" requirePermission="canDelete"
+									class="btn-delete" mat-icon-button matTooltip="Delete"
+									(click)=" openDelete(deleteContent, rowData)">
+									<mat-icon color="warn">delete</mat-icon>
+								    </button>
+
+									<!-- <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteVendorShippingAddress(rowData.vendorShippingAddressId)">
 										<mat-icon color="warn">delete</mat-icon>
-									</button>
+									</button> -->
 
 									<button (click)="openShipVia(contentShipVia,rowData)" data-target="#VShipVia" class="btn btn-danger nobg" data-toggle="tooltip" matTooltip="Add Ship Via" data-original-title="View Shipping Via Information"><i class="fa fa-truck"></i></button>
 									<button class="btn-history" mat-icon-button matTooltip="history" (click)="openShipaddressHistory(contentHist,rowData)">
@@ -208,10 +214,38 @@
 	</div>
 </div>
 
+<ng-template #deleteContent let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="deleteVendorShippingAddress()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
+</ng-template>
+
+<ng-template #deleteContent1 let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="deleteItemShippingCloseModel()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
+</ng-template>
+
 <ng-template #contentShipVia let-c="close" let-d="dismiss" style="width:auto">
 	<div class="modal-header">
-		<h4 class="modal-title" *ngIf="isEditMode">Edit Ship Via Information</h4>
-		<h4 class="modal-title" *ngIf="!isEditMode">Add Ship Via Information</h4>
+        <h4 class="modal-title" *ngIf="isEditMode">Edit Ship Via Info</h4>
+        <h4 class="modal-title" *ngIf="!isEditMode">Add Ship Via Info</h4>
 		<!--<label>Vendor Name{{local?.vendorName}}</label>
 		<h4 class="modal-title">{{shipViaObj?.siteName}}</h4>-->
 		<button type="button" class="close" aria-label="Close" (click)="dismissShipViaModelModel()">
@@ -224,25 +258,33 @@
 		<form #userForm="ngForm" class="form-horizontal">
 			<div class="col-sm-4">
 				<div class="form-group">
-					<label for="classificationName" class="control-label w100">Ship Via<strong class="clr-red">*</strong></label>
+					<label for="description" class="control-label">Ship Via<span class="clr-red">*</span></label>
 					<div class="control-data">
 						<!--<input type="text" name="" id="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="shipViaObj.shipVia">-->
 						<p-autoComplete (onSelect)="onShipVia($event)" (onKeyUp)=eventShipviaHandler($event) [(ngModel)]="shipViaObj.shipVia" [ngModelOptions]="{standalone: true}" [suggestions]="shipviacollection" (completeMethod)="filterShipVia($event)" [size]="30"
-										[minLength]="1" [dropdown]="true">
+										[minLength]="1" [dropdown]="true" class="pautocomp-vendor-shipvia">
 							<ng-template let-shipName pTemplate="item">
 								<div class="ui-helper-clearfix">{{shipName}}</div>
 							</ng-template>
 						</p-autoComplete>
-					</div>
-
-
-					<div class="clear"></div>
+					</div>					
 				</div>
+			</div>
+				<div class="col-sm-4">
 				<div class="form-group">
-
-					<label for="description" class="control-label w100">Ship Account Info</label>
+					<label for="description" class="control-label">Ship Account Info</label>
 					<div class="control-data">
-						<input type="text" name="" id="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="shipViaObj.shippingAccountinfo">
+						<input type="text" name="" id="" class="form-control input-vendor-shipvia" [ngModelOptions]="{standalone: true}" [(ngModel)]="shipViaObj.shippingAccountinfo">
+
+					</div>
+					
+				</div>
+			</div>
+			<div class="col-sm-4">
+				<div class="form-group">
+					<label for="description" class="control-label w100">Shipping Url</label>
+					<div class="control-data">
+						<input type="text" name="" id="" class="form-control input-vendor-shipvia" [ngModelOptions]="{standalone: true}" [(ngModel)]="shipViaObj.shippingURL">
 
 					</div>
 					<div class="clear"></div>
@@ -250,17 +292,9 @@
 			</div>
 			<div class="col-sm-4">
 				<div class="form-group">
-					<label for="description" class="control-label w100">Shipping Url</label>
-					<div class="control-data">
-						<input type="text" name="" id="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="shipViaObj.shippingURL">
-
-					</div>
-					<div class="clear"></div>
-				</div>
-				<div class="form-group">
 					<label for="description" class="control-label w100">ShippingId</label>
 					<div class="control-data">
-						<input type="text" name="" id="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="shipViaObj.shippingId">
+						<input type="text" name="" id="" class="form-control input-vendor-shipvia" [ngModelOptions]="{standalone: true}" [(ngModel)]="shipViaObj.shippingId">
 
 					</div>
 					<div class="clear"></div>
@@ -270,19 +304,19 @@
 				<div class="form-group">
 					<label for="description" class="control-label w100">Memo</label>
 					<div class="control-data">
-						<input type="text" name="" id="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="shipViaObj.memo">
+						<input type="text" name="" id="" class="form-control input-vendor-shipvia" [ngModelOptions]="{standalone: true}" [(ngModel)]="shipViaObj.memo">
 
 					</div>
 					<div class="clear"></div>
 				</div>
-				<div class="form-group">
-					<!--<div class="col-sm-6">
+				<!-- <div class="form-group">
+					<div class="col-sm-6">
 						<label class="form-check-label" for="isActive">
 							<input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
 						</label>
-					</div>-->
+					</div>
 					<div class="clear"></div>
-				</div>
+				</div> -->
 
 				<div class="clear"></div>
 			</div>
@@ -367,9 +401,14 @@
 								<mat-icon>edit</mat-icon>
 							</button>
 
-							<button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteItemShippingCloseModel(rowData.vendorShippingId)">
+							<button [validate] moduleName="app-vendor-contacts" requirePermission="canDelete"
+									class="btn-delete" mat-icon-button matTooltip="Delete"
+									(click)=" openDelete(deleteContent1, rowData)">
+									<mat-icon color="warn">delete</mat-icon>
+								    </button>
+							<!-- <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteItemShippingCloseModel(rowData.vendorShippingId)">
 								<mat-icon color="warn">delete</mat-icon>
-							</button>
+							</button> -->
 
 							<!--<button (click)="openShipVia(contentShipVia,rowData)" data-target="#VShipVia" class="btn btn-danger nobg" data-toggle="tooltip" title="" data-original-title="View Shipping Via Information"><i class="fa fa-truck"></i></button>-->
 							<button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
@@ -383,8 +422,8 @@
 			</p-table>
 			<div class="clear"></div>
 			<div class="modal-footer">
-				<button class="btn btn-success" [disabled]="!userForm.valid" (click)="saveVendorShipViaDetails()">Submit</button>
-				<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+				<button class="btn btn-success" [disabled]="!userForm.valid" (click)="saveVendorShipViaDetails()">Save</button>
+				<button type="button" class="btn btn-danger"  (click)="dismissModel()">Close</button>
 			</div>
 		</form>
 	</div>

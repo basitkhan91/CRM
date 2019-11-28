@@ -65,7 +65,7 @@ namespace DAL.Repositories
 
 
 
-                           where t.IsDeleted == false || t.IsDeleted == null
+                           where (t.IsDeleted == false || t.IsDeleted == null) && t.IsActive==true
                            // select new { t, ad, vt }).ToList();
                            select new
                            {
@@ -128,7 +128,7 @@ namespace DAL.Repositories
                                t.UpdatedDate,
 
                                //cc.Description
-                           }).Distinct().ToList();
+                           }).Distinct().OrderByDescending(p=>p.UpdatedDate).ToList();
 
 
 
@@ -289,6 +289,10 @@ namespace DAL.Repositories
         {
             foreach (var obj in objEmployeeUserRoles)
             {
+                obj.IsActive = true;
+                obj.IsDeleted = false;
+                obj.CreatedDate = DateTime.Now;
+                obj.UpdatedDate = DateTime.Now;
                 if (obj.EmployeeUserRoleId > 0)
                 {
                     _appContext.EmployeeUserRole.Update(obj);
@@ -308,6 +312,33 @@ namespace DAL.Repositories
             var data = (from emr in _appContext.EmployeeUserRole
                         where emr.EmployeeId == employeeId && emr.IsActive == true
                         select emr).ToList();
+            return data;
+        }
+
+        public IEnumerable<object> EmpoyeeManagementStructure(List<EmployeeManagementStructure> objEmployeeManagementStructure)
+        {
+            foreach (var obj in objEmployeeManagementStructure)
+            {
+                if (obj.EmployeeManagementId > 0)
+                {
+                    _appContext.EmployeeManagementStructure.Update(obj);
+                }
+                else
+                {
+                    _appContext.EmployeeManagementStructure.Add(obj);
+                }
+
+                _appContext.SaveChanges();
+            }
+
+            return objEmployeeManagementStructure;
+        }
+
+        public IEnumerable<object> GetEmpoyeeManagementStructure(long employeeId)
+        {
+            var data = (from ems in _appContext.EmployeeManagementStructure
+                        where ems.EmployeeId == employeeId && ems.IsActive == true
+                        select ems).ToList();
             return data;
         }
 

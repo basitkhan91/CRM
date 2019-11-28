@@ -138,6 +138,12 @@ namespace DAL.Repositories
             return itemClassfications;
         }
 
+        public IEnumerable<ItemClassficationAudit> GetItemClassficationAuditDetails(long itemClassificationId)
+        {
+            return _appContext.ItemClassficationAudit.Where(c => c.ItemClassificationId == itemClassificationId).OrderByDescending(p => p.UpdatedDate).ToList();
+
+        }
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }

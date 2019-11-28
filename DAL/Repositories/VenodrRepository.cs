@@ -597,6 +597,32 @@ namespace DAL.Repositories
             }
         }
 
+        public bool DeleteVendorShippingViaAddress(long vendorShippingId, string updatedBy)
+        {
+            bool result = false;
+            try
+            {
+               
+                var vendorShippingDetails = _appContext.VendorShipping.Where(x => x.VendorShippingId == vendorShippingId).FirstOrDefault();
+                if (vendorShippingDetails != null)
+                {
+                    vendorShippingDetails.UpdatedBy = updatedBy;
+                    vendorShippingDetails.UpdatedDate = DateTime.Now;
+                    vendorShippingDetails.IsDelete = true;
+                    _appContext.VendorShipping.Update(vendorShippingDetails);
+                    _appContext.SaveChanges();
+                    result = true;
+                }
+                return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
+
         public void VendorBillingAddressStatus(long billingAddressId,bool status, string updatedBy)
         {
             try
@@ -753,6 +779,82 @@ namespace DAL.Repositories
             {
 
                 throw;
+            }
+        }
+
+        public IEnumerable<object> GetVendorPOMemoList(long vendorId)
+        {
+            try
+            {
+                var list = (from po in _appContext.PurchaseOrder
+                            where po.IsDeleted == false && po.IsActive == true && po.VendorId == vendorId
+                            select new
+                            {
+                                Module = "PO",
+                                OrderNumberId=po.PurchaseOrderId,
+                                OrderNumber=po.PurchaseOrderNumber,
+                                po.Notes
+                            }).Distinct().ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetVendorROMemoList(long vendorId)
+        {
+            try
+            {
+                var list = (from ro in _appContext.RepairOrder
+                            where ro.IsDeleted == false && ro.IsActive == true && ro.VendorId == vendorId
+                            select new
+                            {
+                                Module = "RO",
+                                OrderNumberId = ro.RepairOrderId,
+                                OrderNumber = ro.RepairOrderNumber,
+                                Notes=ro.RoMemo
+                            }).Distinct().ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateVendorMemoText(long id,string type,string memoText,string updatedBy)
+        {
+            if(type=="PO")
+            {
+                PurchaseOrder purchaseOrder = new PurchaseOrder();
+                purchaseOrder.PurchaseOrderId = id;
+                purchaseOrder.UpdatedDate = DateTime.Now;
+                purchaseOrder.UpdatedBy = updatedBy;
+                purchaseOrder.Notes = memoText;
+
+                _appContext.PurchaseOrder.Attach(purchaseOrder);
+                _appContext.Entry(purchaseOrder).Property(x => x.Notes).IsModified = true;
+                _appContext.Entry(purchaseOrder).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(purchaseOrder).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+            }
+            else if(type=="RO")
+            {
+                RepairOrder repairOrder = new RepairOrder();
+                repairOrder.RepairOrderId = id;
+                repairOrder.UpdatedDate = DateTime.Now;
+                repairOrder.UpdatedBy = updatedBy;
+                repairOrder.RoMemo = memoText;
+
+                _appContext.RepairOrder.Attach(repairOrder);
+                _appContext.Entry(repairOrder).Property(x => x.RoMemo).IsModified = true;
+                _appContext.Entry(repairOrder).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(repairOrder).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
             }
         }
 

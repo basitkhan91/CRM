@@ -245,7 +245,7 @@ namespace DAL.Repositories
                     restrictedParts.ForEach(p =>
                     {
                         p.ReferenceId = referenceId;
-                        p.PartNumber = GetRestrictedPartName(p.MasterPartId, moduleId);
+                      //  p.PartNumber = GetRestrictedPartName(p.MasterPartId, moduleId);
                         p.ModuleId = moduleId;
                         p.IsDeleted = false;
                         p.IsActive = true;
@@ -299,7 +299,7 @@ namespace DAL.Repositories
                 {
                     foreach (var item in restrictedParts)
                     {
-                        item.PartNumber = GetRestrictedPartName(item.MasterPartId, moduleId);
+                      // item.PartNumber = GetRestrictedPartName(item.MasterPartId, moduleId);
                         if (item.RestrictedPartId > 0)
                         {
 
@@ -312,6 +312,7 @@ namespace DAL.Repositories
                             item.IsActive = true;
                             item.IsDeleted = false;
                             item.CreatedDate = item.UpdatedDate = DateTime.Now;
+                           
                             _appContext.RestrictedParts.Add(item);
                         }
                         _appContext.SaveChanges();
@@ -328,7 +329,7 @@ namespace DAL.Repositories
         {
             try
             {
-                return _appContext.RestrictedParts.Where(p => p.IsDeleted == false && p.ModuleId == moduleId && p.ReferenceId == referenceId && p.PartType == partType)
+                return _appContext.RestrictedParts.Where(p => p.IsDeleted == false && p.ModuleId == moduleId && p.ReferenceId == referenceId && p.PartType == partType && p.PartNumber !=null)
                                                    .OrderBy(p => p.RestrictedPartId)
                                                    .ToList();
             }

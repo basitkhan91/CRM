@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DAL;
+﻿using DAL;
 using DAL.Common;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +6,10 @@ using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
 using QuickApp.Pro.Helpers;
 using QuickApp.Pro.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -75,7 +75,7 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
-        
+
         [HttpGet("GetCompanyData")]
         [Produces(typeof(List<StockLineViewModel>))]
         public IActionResult GetCompanyData()
@@ -282,9 +282,21 @@ namespace QuickApp.Pro.Controllers
                 actionobject1.ControlNumber = stockLineViewModel.ControlNumber;
                 actionobject1.ItemMasterId = stockLineViewModel.ItemMasterId;
                 actionobject1.Quantity = stockLineViewModel.Quantity;
+                actionobject1.QuantityOnOrder = stockLineViewModel.QuantityOnOrder;
+                actionobject1.QuantityAvailable = stockLineViewModel.QuantityAvailable;
+                actionobject1.QuantityOnHand = stockLineViewModel.QuantityOnHand;
+                actionobject1.QuantityIssued = stockLineViewModel.QuantityAvailable;
+                actionobject1.QuantityTurnIn = stockLineViewModel.QuantityTurnIn;
+                actionobject1.QuantityReserved = stockLineViewModel.QuantityReserved;
                 actionobject1.ConditionId = stockLineViewModel.ConditionId;
                 actionobject1.SerialNumber = stockLineViewModel.SerialNumber;
                 actionobject1.ShelfLife = stockLineViewModel.ShelfLife;
+                actionobject1.BlackListed = stockLineViewModel.BlackListed.HasValue ? stockLineViewModel.BlackListed.Value : false;
+                actionobject1.BlackListedReason = stockLineViewModel.BlackListedReason;
+                actionobject1.Incident = stockLineViewModel.Incident.HasValue ? stockLineViewModel.Incident.Value : false;
+                actionobject1.IncidentReason = stockLineViewModel.IncidentReason;
+                actionobject1.Accident = stockLineViewModel.Accident.HasValue ? stockLineViewModel.Accident.Value : false;
+                actionobject1.AccidentReason = stockLineViewModel.AccidentReason;
                 actionobject1.ShelfLifeExpirationDate = stockLineViewModel.ShelfLifeExpirationDate;
                 actionobject1.WarehouseId = stockLineViewModel.WarehouseId;
                 actionobject1.LocationId = stockLineViewModel.LocationId;
@@ -328,7 +340,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject1.ShelfId = stockLineViewModel.ShelfId == 0 ? null : stockLineViewModel.ShelfId;
                 actionobject1.BinId = stockLineViewModel.BinId == 0 ? null : stockLineViewModel.BinId;
                 actionobject1.SiteId = stockLineViewModel.SiteId == 0 ? null : stockLineViewModel.SiteId;
-                actionobject1.LegalEntityId = stockLineViewModel.LegalEntityId == 0?null:stockLineViewModel.LegalEntityId;
+                actionobject1.LegalEntityId = stockLineViewModel.LegalEntityId == 0 ? null : stockLineViewModel.LegalEntityId;
                 actionobject1.ObtainFromType = stockLineViewModel.ObtainFromType;
                 actionobject1.OwnerType = stockLineViewModel.OwnerType;
                 actionobject1.TraceableToType = stockLineViewModel.TraceableToType;
@@ -378,7 +390,19 @@ namespace QuickApp.Pro.Controllers
             actionobject1.StocklineMatchKey = stockLineViewModel.StocklineMatchKey;
             actionobject1.ControlNumber = stockLineViewModel.ControlNumber;
             actionobject1.ItemMasterId = stockLineViewModel.ItemMasterId;
+            actionobject1.BlackListed = stockLineViewModel.BlackListed.HasValue ? stockLineViewModel.BlackListed.Value : false;
+            actionobject1.BlackListedReason = stockLineViewModel.BlackListedReason;
+            actionobject1.Incident = stockLineViewModel.Incident.HasValue ? stockLineViewModel.Incident.Value : false;
+            actionobject1.IncidentReason = stockLineViewModel.IncidentReason;
+            actionobject1.Accident = stockLineViewModel.Accident.HasValue ? stockLineViewModel.Accident.Value : false;
+            actionobject1.AccidentReason = stockLineViewModel.AccidentReason;
             actionobject1.Quantity = stockLineViewModel.Quantity;
+            actionobject1.QuantityOnOrder = stockLineViewModel.QuantityOnOrder;
+            actionobject1.QuantityAvailable = stockLineViewModel.QuantityAvailable;
+            actionobject1.QuantityOnHand = stockLineViewModel.QuantityOnHand;
+            actionobject1.QuantityIssued = stockLineViewModel.QuantityAvailable;
+            actionobject1.QuantityTurnIn = stockLineViewModel.QuantityTurnIn;
+            actionobject1.QuantityReserved = stockLineViewModel.QuantityReserved;
             actionobject1.ConditionId = stockLineViewModel.ConditionId;
             actionobject1.SerialNumber = stockLineViewModel.SerialNumber;
             actionobject1.ShelfLife = stockLineViewModel.ShelfLife;
@@ -548,63 +572,16 @@ namespace QuickApp.Pro.Controllers
                     actionobject.ShelfId = null;
                     actionobject.BinId = null;
                 }
-
-
                 if (stockLineViewModel.shelftryChange == true)
                 {
                     actionobject.ShelfId = stockLineViewModel.ShelfId;
                     actionobject.BinId = null;
                 }
-
-
                 if (stockLineViewModel.bintryChnage == true)
                 {
                     actionobject.BinId = stockLineViewModel.BinId;
                 }
 
-
-
-                //if (stockLineViewModel.SiteId != 0)
-                //{
-
-                //}
-                //else
-                //{
-                //    actionobject.SiteId = null;
-                //}
-
-                //if (stockLineViewModel.WarehouseId != 0)
-                //{
-                //    actionobject.WarehouseId = stockLineViewModel.WarehouseId;
-                //}
-                //else
-                //{
-                //    actionobject.WarehouseId = null;
-                //}
-                //if (stockLineViewModel.LocationId != 0)
-                //{
-                //    actionobject.LocationId = stockLineViewModel.LocationId;
-                //}
-                //else
-                //{
-                //    actionobject.LocationId = null;
-                //}
-                //if (stockLineViewModel.ShelfId != 0)
-                //{
-                //    actionobject.ShelfId = stockLineViewModel.ShelfId;
-                //}
-                //else
-                //{
-                //    actionobject.ShelfId = null;
-                //}
-                //if (stockLineViewModel.BinId != 0)
-                //{
-                //    actionobject.BinId = stockLineViewModel.BinId;
-                //}
-                //else
-                //{
-                //    actionobject.BinId = null;
-                //}
                 if (stockLineViewModel.PartNumber != null)
                 {
                     actionobject.PartNumber = stockLineViewModel.PartNumber;
@@ -621,6 +598,12 @@ namespace QuickApp.Pro.Controllers
                 {
                     actionobject.Quantity = 0;
                 }
+                actionobject.QuantityOnOrder = stockLineViewModel.QuantityOnOrder;
+                actionobject.QuantityAvailable = stockLineViewModel.QuantityAvailable;
+                actionobject.QuantityOnHand = stockLineViewModel.QuantityOnHand;
+                actionobject.QuantityIssued = stockLineViewModel.QuantityAvailable;
+                actionobject.QuantityTurnIn = stockLineViewModel.QuantityTurnIn;
+                actionobject.QuantityReserved = stockLineViewModel.QuantityReserved;
                 if (stockLineViewModel.CoreUnitCost != 0)
                 {
                     actionobject.CoreUnitCost = stockLineViewModel.CoreUnitCost;
@@ -646,18 +629,16 @@ namespace QuickApp.Pro.Controllers
                 {
                     actionobject.SerialNumber = null;
                 }
-                //if (stockLineViewModel.DiscountSalesPrice != 0)
-                //{
-                //    actionobject. = stockLineViewModel.DiscountSalesPrice;
-                //}
-                //if (stockLineViewModel.LotCostAdjustment != 0)
-                //{
-                //    actionobject.ManufacturerLotNumber = stockLineViewModel.LotCostAdjustment;
-                //}
-                //if (stockLineViewModel.RevalueStockCost != 0)
-                //{
-                //    actionobject. = stockLineViewModel.RevalueStockCost;
-                //}
+                actionobject.BlackListed = stockLineViewModel.BlackListed;
+                actionobject.BlackListedReason = stockLineViewModel.BlackListedReason;
+                actionobject.Incident = stockLineViewModel.Incident;
+                actionobject.IncidentReason = stockLineViewModel.IncidentReason;
+                actionobject.Accident = stockLineViewModel.Accident;
+                actionobject.AccidentReason = stockLineViewModel.AccidentReason;
+                actionobject.QuantityOnHand = stockLineViewModel.QuantityOnHand;
+                actionobject.QuantityAvailable = stockLineViewModel.QuantityAvailable;
+                actionobject.QuantityIssued = stockLineViewModel.QuantityIssued;
+                actionobject.QuantityReserved = stockLineViewModel.QuantityReserved;
 
                 actionobject.CreatedDate = DateTime.Now;
                 actionobject.UpdatedDate = DateTime.Now;
@@ -722,7 +703,7 @@ namespace QuickApp.Pro.Controllers
             //actionobject.WarehouseId = managementStructureEntityViewModel.WarehouseId;
             //actionobject.LocationId = managementStructureEntityViewModel.LocationId;
             actionobject.InventoryUnitCost = managementStructureEntityViewModel.InventoryUnitCost;
-            actionobject.MasterCompanyId = managementStructureEntityViewModel.MasterCompanyId;
+            actionobject.MasterCompanyId = 1;
             actionobject.UnitSalesPrice = managementStructureEntityViewModel.UnitSalesPrice;
             //actionobject.CompanyId = managementStructureEntityViewModel.CompanyId;
             //actionobject.BusinessUnitId = managementStructureEntityViewModel.BusinessUnitId;
@@ -807,20 +788,8 @@ namespace QuickApp.Pro.Controllers
         {
 
             var actionobject = _unitOfWork.itemMaster.GetSingleOrDefault(a => a.ItemMasterId == id);
-            //var address = _unitOfWork.Address.GetSingleOrDefault(a => a.AddressId == customerViewModel.Addressid);
-
             actionobject.PartNumber = itemMasterViewModel.PartNumber;
             actionobject.PartDescription = itemMasterViewModel.Partdescription;
-
-            //if (itemMasterViewModel.PartId != null)
-            //{
-            //    actionobject.PartId = itemMasterViewModel.PartId;
-            //}
-
-
-
-
-
             actionobject.CreatedDate = DateTime.Now;
             actionobject.UpdatedDate = DateTime.Now;
             actionobject.CreatedBy = itemMasterViewModel.CreatedBy;
@@ -858,6 +827,50 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest(ex.Message);
             }
 
+        }
+
+        [HttpPost("PurchaseOrderUnitCost/{POId}")]
+        [Produces(typeof(List<PurchaseOrderPart>))]
+        public IActionResult PurchaseOrderUnitCost(long POId)
+        {
+            try
+            {
+                var result = (from pop in _context.PurchaseOrderPart
+                              where pop.PurchaseOrderId == POId
+                              select new PurchaseOrderPart
+                              {
+                                  UnitCost = pop.UnitCost,
+                                  PurchaseOrderId = pop.PurchaseOrderId
+                              }).ToList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        [HttpPost("RepairOrderUnitCost/{ROId}")]
+        [Produces(typeof(List<RepairOrderPart>))]
+        public IActionResult RepairOrderUnitCost(long ROId)
+        {
+            try
+            {
+                var result = (from rop in _context.RepairOrderPart
+                              where rop.RepairOrderId == ROId
+                              select new RepairOrderPart
+                              {
+                                  UnitCost = rop.UnitCost,
+                                  RepairOrderId = rop.RepairOrderId
+                              }).ToList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
         [HttpPost("stockLineROUnitCostGet")]
@@ -930,6 +943,95 @@ namespace QuickApp.Pro.Controllers
             stream.Position = 0;
             string excelName = $"StockLineReport-{DateTime.Now.ToString("ddMMMyyyy")}.xlsx";
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+        }
+
+        [HttpGet("getStocklineDetailsById/{stockLineId}")]
+        public IActionResult GetStockLineDetailsById(long stockLineId)
+        {
+            var result = (from s in _context.StockLine
+                          join ro in _context.RepairOrder on s.RepairOrderId equals ro.RepairOrderId
+                          where s.StockLineId == stockLineId
+                          select new
+                          {
+                              s.ControlNumber,
+                              ro.RepairOrderNumber,
+                              ControlId = s.IdNumber
+
+                          }).FirstOrDefault();
+
+            return Ok(result);
+        }
+
+        [HttpPost("search")]
+        public IActionResult SearchItemMaster([FromBody]ItemMasterSearchViewModel searchView)
+        {
+            if (searchView == null
+                   || searchView.partSearchParamters == null
+                   || !searchView.partSearchParamters.partId.HasValue)
+            {
+                return BadRequest(new Exception("Invalid request parameter, partId not passed"));
+            }
+
+            IEnumerable<object> result = null;
+
+            if (searchView.partSearchParamters.includeAlternatePartNumber)
+            {
+
+            }
+            else
+            {
+                result = GetPartDetails(searchView);
+            }
+
+
+            var pageCount = (searchView.first / searchView.rows) + 1;
+
+            var searchData = new GetSearchData<object>();
+
+            searchData.Data = DAL.Common.PaginatedList<object>.Create(result.AsQueryable<object>(), pageCount, searchView.rows);
+
+            return Ok(searchData);
+        }
+
+        private IEnumerable<object> GetPartDetails(ItemMasterSearchViewModel searchView)
+        {
+            var result = Enumerable.Empty<object>();
+
+            result = from item in _context.ItemMaster
+                     join sl in _context.StockLine on item.ItemMasterId equals sl.ItemMasterId
+                     join uom in _context.UnitOfMeasure on item.ConsumeUnitOfMeasureId equals uom.UnitOfMeasureId into iuom
+                     from iu in iuom.DefaultIfEmpty()
+                     join currency in _context.Currency on item.CurrencyId equals currency.CurrencyId into itemcurrecy
+                     from ic in itemcurrecy.DefaultIfEmpty()
+                     where item.IsActive.HasValue && item.IsActive.Value == true
+                            && (item.IsDeleted.HasValue && !item.IsDeleted == true || !item.IsDeleted.HasValue)
+                            && (item.MasterCompanyId.HasValue && item.MasterCompanyId.Value == 1)
+                            && item.ItemMasterId == searchView.partSearchParamters.partId
+
+                     select new
+                     {
+                         method = "Stock Line",
+                         itemId = item.ItemMasterId,
+                         partNumber = item.PartNumber,
+                         alternatePartId = item.PartAlternatePartId,
+                         alternateFor = string.Empty,
+                         description = item.PartDescription,
+                         conditionType = string.Empty,
+                         stockLineNumber = sl.StockLineNumber,
+                         uomDescription = iu.Description,
+                         qtyAvailable = sl.QuantityAvailable ?? 0,
+                         qtyOnHand = sl.QuantityOnHand ?? 0,
+                         qtyToOrder = 0,
+                         qtyOnOrder = sl.QuantityOnOrder ?? 0,
+                         itemClassification = item.ItemClassification,
+                         itemGroup = string.Empty,
+                         controlNumber = sl.ControlNumber,
+                         idNumber = sl.IdNumber,  
+                         serialNumber = sl.SerialNumber, 
+                     };
+
+
+            return result.ToList<object>();
         }
     }
 }

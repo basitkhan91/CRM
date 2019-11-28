@@ -46,9 +46,10 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Requisitioner</label>
-                            <p-autoComplete disabled="disabled" [size]="32" class="rpo-acomp-header"
+                            <input type="text" disabled="disabled"  class="form-control"  value="{{purchaseOrderData.requestedByText}}" />
+                            <!--<p-autoComplete disabled="disabled" [size]="32" class="rpo-acomp-header"
                                             [minLength]="1" [dropdown]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.requestedBy">
-                            </p-autoComplete>
+                            </p-autoComplete>-->
                         </div>
                     </div>
                     <!--<div class="col-md-3">
@@ -99,8 +100,6 @@
                         <div class="form-group">
                             <label>Need By</label>
                             <p-calendar disabled="disabled" class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateRequested" [required]="true"></p-calendar>
-
-
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -112,7 +111,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Approved Date</label>
-                            <p-calendar disabled="disabled" class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateApprovied" [required]="true"></p-calendar>
+                            <p-calendar disabled="disabled" class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateApproved" [required]="true"></p-calendar>
                         </div>
                     </div>
                     <!--<div class="col-md-3">
@@ -786,7 +785,7 @@
                                                         <div class="col-md-3">
                                                             <div class="form-group">
                                                                 <label>Serial Num</label>
-                                                                <input class="form-control" disabled="{{part.stocklineListObj[part.currentSERIndex].serialNumberNotProvided}}" [(ngModel)]="part.stocklineListObj[part.currentSERIndex].serialNumber" type="text" pInputText [maxLength]="25">
+                                                                <input class="form-control"  (keyup)="moveByKey($event, part)" disabled="{{part.stocklineListObj[part.currentSERIndex].serialNumberNotProvided}}" [(ngModel)]="part.stocklineListObj[part.currentSERIndex].serialNumber" type="text" pInputText [maxLength]="25">
                                                                 <div class="checkbox-cstm" style="margin-top: 4px">
                                                                     <label style="width: 200px;">
                                                                         <input type="checkbox" class="form-control" [(ngModel)]="part.stocklineListObj[part.currentSERIndex].serialNumberNotProvided" (click)="onSerialNumberNotProvided(part.stocklineListObj[part.currentSERIndex])">

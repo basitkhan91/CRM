@@ -63,7 +63,21 @@
 								</td>
 
 								<td>
-									<p-inputSwitch name="isActive{{i}}" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData, $event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+									<!-- <p-inputSwitch name="isActive{{i}}" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData, $event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch> -->
+
+									<p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
+									*ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off"
+									(onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']">
+								</p-inputSwitch>
+								<p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
+									*ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on"
+									offLabel="off" (onChange)="handleChanges(rowData,$event)"
+									[(ngModel)]="rowData['isActive']"></p-inputSwitch>
+								<p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
+									*ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off"
+									(onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']">
+								</p-inputSwitch>
+
 									<!-- <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 									<p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 									<p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch> -->
@@ -232,12 +246,12 @@
 														<input type="checkbox" value="" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.isPrimaryPayment">
 													</div>
 												</div>-->
-															<div class="form-group col-sm-12">
+															<!-- <div class="form-group col-sm-12">
 																<label class="control-label col-sm-4">&nbsp;</label>
 																<div class="checkbox col-sm-7">
 																	<button type="button" class="btn btn-warning map-check" (click)="getlatlng(sourceVendor.address1+sourceVendor.address2)">Check Address</button>
 																</div>
-															</div>
+															</div> -->
 														</div>
 													</div>
 													<div class="col-sm-6 page-2blocks">

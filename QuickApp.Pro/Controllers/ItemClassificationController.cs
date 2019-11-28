@@ -43,17 +43,28 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("auditHistoryById/{id}")]
-        [Produces(typeof(List<AuditHistory>))]
+        [Produces(typeof(List<ItemClassficationAudit>))]
         public IActionResult GetAuditHostoryById(long id)
         {
-            var result = _unitOfWork.AuditHistory.GetAllHistory("ItemClassification", id); //.GetAllCustomersData();
+            //var result = _unitOfWork.AuditHistory.GetAllHistory("ItemClassification", id); //.GetAllCustomersData();
 
+
+            //try
+            //{
+            //    var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
+
+            //    return Ok(resul1);
+            //}
+            //catch (Exception ex)
+            //{
+
+            //    throw;
+            //}
 
             try
             {
-                var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
-
-                return Ok(resul1);
+                var result = _unitOfWork.ItemClassification.GetItemClassficationAuditDetails(id);
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -289,11 +300,19 @@ namespace QuickApp.Pro.Controllers
             return Ok(dynamicGridData);
         }
 
-        [HttpPost("uploaditemclassificationcustomdata")]
-        public IActionResult UploadCustomData()
+        [HttpPost("UploadItemClassCustomData")]
+        public IActionResult UploadItemClassCustomData()
         {
-            var result = _unitOfWork.ItemClassification.UploadCustomData(Request.Form.Files[0]);
-            return Ok(result);
+
+            _unitOfWork.FileUploadRepository.UploadCustomFile(Convert.ToString("ItemClassification"), Request.Form.Files[0]);
+            return Ok();
         }
+
+        //[HttpPost("uploaditemclassificationcustomdata")]
+        //public IActionResult UploadCustomData()
+        //{
+        //    var result = _unitOfWork.ItemClassification.UploadCustomData(Request.Form.Files[0]);
+        //    return Ok(result);
+        //}
     }
 }

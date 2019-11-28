@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using DAL;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using QuickApp.Pro.Helpers;
 using QuickApp.Pro.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 namespace QuickApp.Pro.Controllers
 {
 
@@ -189,7 +188,12 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.WorkPhone = employeeViewModel.WorkPhone;
                 employeeobject.Fax = employeeViewModel.Fax;
                 employeeobject.ManagementStructureId = employeeViewModel.ManagementStructureId;
-                employeeobject.LegalEntityId = entityobject.LegalEntityId;
+                if(entityobject != null && entityobject.LegalEntityId != null)
+                {
+                    employeeobject.LegalEntityId = entityobject.LegalEntityId;
+                }
+               
+               
                 employeeobject.SSN = employeeViewModel.SSN;
                 employeeobject.Email = employeeViewModel.Email;
                 employeeobject.AllowDoubleTime = employeeViewModel.AllowDoubleTime;
@@ -420,6 +424,29 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.SaveChanges();
             }
             return Ok(ModelState);
+        }
+
+        [HttpPut("employeeupdatememo")]
+        public IActionResult EmployeeUpdateAction(long employyeId, string memo)
+        {
+            bool result = false;
+            if (!string.IsNullOrEmpty(memo))
+            {              
+                try
+                {                   
+                    var existingResult = _unitOfWork.employee.GetSingleOrDefault(c => c.EmployeeId == employyeId);
+                    existingResult.Memo = memo;
+                    _unitOfWork.employee.Update(existingResult);
+                    _unitOfWork.SaveChanges();
+                    result = true;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }                
+               
+            }
+            return Ok(result);
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
@@ -989,6 +1016,31 @@ namespace QuickApp.Pro.Controllers
             var result = _unitOfWork.employee.GetEmployeeUserRole(employeeId);
             return Ok(result);
         }
+
+        /// <summary>
+        /// To save Employee management structure
+        /// </summary>
+        /// <param name="objEmployeeManagementStructure"></param>
+        /// <returns></returns>
+        [HttpPost("employeeManagementStructure")]
+        public IActionResult EmpoyeeManagementStructure([FromBody]List<EmployeeManagementStructure> objEmployeeManagementStructure)
+        {
+            var result = _unitOfWork.employee.EmpoyeeManagementStructure(objEmployeeManagementStructure);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// To get management structure based on employeeid
+        /// </summary>
+        /// <param name="employeeId"></param>
+        /// <returns></returns>
+        [HttpGet("getemployeeManagementStructure")]
+        public IActionResult GetEmpoyeeManagementStructure(long employeeId)
+        {
+            var result = _unitOfWork.employee.GetEmpoyeeManagementStructure(employeeId);
+            return Ok(result);
+        }
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
 }

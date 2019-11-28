@@ -39,19 +39,17 @@ namespace QuickApp.Pro.Controllers
             return Ok(Mapper.Map<IEnumerable<ItemgroupViewModel>>(allitemgroupinfo));
 
         }
-        [HttpGet("auditHistoryById/{id}")]
-        [Produces(typeof(List<AuditHistory>))]
-        public IActionResult GetAuditHostoryById(long id)
+        [HttpGet("auditHistoryById/{itemGroupId}")]
+        [Produces(typeof(List<ItemgroupAudit>))]
+        public IActionResult GetAuditHostoryById(long itemGroupId)
         {
-            var result = _unitOfWork.AuditHistory.GetAllHistory("ItemGroup", id); //.GetAllCustomersData();
+            //var result = _unitOfWork.AuditHistory.GetAllHistory("ItemGroup", id); //.GetAllCustomersData();
 
-
-            try
-            {
-                var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
-
-                return Ok(resul1);
+            try { 
+                var result = _unitOfWork.Itemgroup.GetItemGroupAuditDetails(itemGroupId);
+                return Ok(result);
             }
+          
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
@@ -103,7 +101,7 @@ namespace QuickApp.Pro.Controllers
                 existingResult.Description = itemgroupViewModel.Description;
                 existingResult.IsActive = itemgroupViewModel.IsActive;
                 existingResult.MasterCompanyId = itemgroupViewModel.MasterCompanyId;
-                _unitOfWork.Itemgroup.Update(existingResult);
+                _unitOfWork.Repository<Itemgroup>().Update(existingResult);
                 _unitOfWork.SaveChanges();
 
             }
@@ -228,6 +226,14 @@ namespace QuickApp.Pro.Controllers
         {
             public int TotalRecordsCount { get; set; }
             public List<ItemGroupViewModel> ItemGroupList { get; set; }
+        }
+
+        [HttpPost("UploadItemGroupCustomData")]
+        public IActionResult UploadItemGroupCustomData()
+        {
+
+            _unitOfWork.FileUploadRepository.UploadCustomFile(Convert.ToString("ItemGroup"), Request.Form.Files[0]);
+            return Ok();
         }
 
 

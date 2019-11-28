@@ -6,6 +6,7 @@ import 'rxjs/add/operator/map';
 
 import { EndpointFactory } from './endpoint-factory.service';
 import { ConfigurationService } from './configuration.service';
+import { Itemgroup } from '../models/item-group.model';
 
 @Injectable()
 export class ItemgroupEndpointService extends EndpointFactory {
@@ -16,6 +17,7 @@ export class ItemgroupEndpointService extends EndpointFactory {
     private readonly _actionsUrlAuditHistory: string = "/api/Itemgroup/auditHistoryById";
     private readonly getItemGroupAuditDataById: string = "/api/Itemgroup/audits";
     private readonly getItemGroup: string = "/api/Itemgroup/pagination";
+    private readonly excelUpload: string = "/api/Itemgroup/UploadItemGroupCustomData";
 
     get paginate() { return this.configurations.baseUrl + this.getItemGroup; }
 
@@ -51,12 +53,12 @@ export class ItemgroupEndpointService extends EndpointFactory {
             });
     }
 
-    getUpdateActionEndpoint<T>(roleObject: any, actionId: number): Observable<T> {
+    getUpdateActionEndpoint<T>(roleObject: Itemgroup, actionId): Observable<T> {
         let endpointUrl = `${this._itemgroupUrlNew}/${actionId}`;
 
         return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getUpdateActionEndpoint(roleObject, actionId));
+                return this.handleError(error, () => this.getUpdateActionEndpoint(actionId, roleObject));
             });
     }
 
@@ -93,5 +95,9 @@ export class ItemgroupEndpointService extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getItemGroupPagination(pageSearch));
             });
+    }
+    ItemGroupCustomUpload(file) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}`, file)
+
     }
 }

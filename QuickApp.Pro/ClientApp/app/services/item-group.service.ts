@@ -63,7 +63,7 @@ export class ItemGroupService {
 
     }
     historyAcion(actionId: number) {
-        return Observable.forkJoin(this.ItemgroupEndpoint.getHistoryActionEndpoint<AuditHistory[]>(actionId));
+        return this.ItemgroupEndpoint.getHistoryActionEndpoint<any[]>(actionId);
     }
 
     getItemGroupAudit(itemGroupId: number) {
@@ -72,6 +72,9 @@ export class ItemGroupService {
     getServerPages(serverSidePagesData: any) {
         return Observable.forkJoin(
             this.ItemgroupEndpoint.getItemGroupPagination<Itemgroup[]>(serverSidePagesData));
+    }
+    ItemGroupCustomUpload(file) {
+        return this.ItemgroupEndpoint.ItemGroupCustomUpload(file);
     }
 
 }

@@ -19,10 +19,8 @@ namespace DAL.Repositories.Interfaces
         object WorkOrderHeaderView(long workOrderId);
         IEnumerable<object> WorkOrderPartsView(long workOrderId);
 
-
-
         long CreateWorkFlowWorkOrder(WorkOrderWorkFlow workFlowWorkOrder);
-        void UpdateWorkFlowWorkOrder(WorkOrderWorkFlow workFlowWorkOrder);
+        void UpdateWorkOrderWorkFlow(Workflow workflow);
         WorkOrderWorkFlow GetWorkFlowWorkOrderById(long workFlowWorkOrderId);
         IEnumerable<object> GetWorkOrderWorkFlowNos(long workOrderId);
         IEnumerable<object> GetWorkOrderTaskAttributes(long workOrderTaskId);
@@ -30,21 +28,26 @@ namespace DAL.Repositories.Interfaces
 
         long CreateWorkOrderLabor(WorkOrderLaborHeader workOrderLabor);
         void UpdateWorkOrderLabor(WorkOrderLaborHeader workOrderLabor);
-        WorkOrderLaborHeader GetWorkFlowWorkOrderLabourList(long wfwoId = 0, long workOrderId = 0);
+        object GetWorkFlowWorkOrderLabourList(long wfwoId = 0, long workOrderId = 0);
 
-        long CreateWorkOrderCharges(WorkOrderCharges workOrderCharges);
-        void UpdateWorkOrderCharges(WorkOrderCharges workOrderCharges);
-        IEnumerable<WorkOrderCharges> GetWorkFlowWorkOrderChargesList(long wfwoId = 0, long workOrderId = 0);
+        List<WorkOrderCharges> CreateWorkOrderCharges(List<WorkOrderCharges> workOrderCharges);
+        List<WorkOrderCharges> UpdateWorkOrderCharges(List<WorkOrderCharges> workOrderCharges);
+        IEnumerable<object> GetWorkFlowWorkOrderChargesList(long wfwoId = 0, long workOrderId = 0);
 
-        long CreateWorkOrderAssets(WorkOrderAssets workOrderAssets);
-        void UpdateWorkOrderAssets(WorkOrderAssets workOrderAssets);
+        List<WorkOrderAssets> CreateWorkOrderAssets(List<WorkOrderAssets> workOrderAssets);
+        List<WorkOrderAssets> UpdateWorkOrderAssets(List<WorkOrderAssets> workOrderAssets);
         IEnumerable<object> GetWorkOrderAssetList(long wfwoId, long workOrderId);
+        void SaveAssetCheckedIn(long WorkOrderAssetId, long checkedInById, DateTime checkedInDate, string updatedBy);
+        void SaveAssetCheckedOut(long WorkOrderAssetId, long checkedoutById, DateTime checkedoutDate, string updatedBy);
+        object GetAssetCheckedInandOutDetails(long assetRecordId, long workOrderAssetId);
+        object WorkOrderAssetView(long assetRecordId);
 
-        long CreateWorkOrderExclusions(WorkOrderExclusions workOrderExclusions);
-        void UpdateWorkOrderExclusions(WorkOrderExclusions workOrderExclusions);
-        IEnumerable<WorkOrderExclusions> GetWorkFlowWorkOrderExclusionsList(long wfwoId = 0, long workOrderId = 0);
 
-        long CreateWorkOrderDocuments(WorkOrderDocuments workOrderDocuments);
+        List<WorkOrderExclusions> CreateWorkOrderExclusions(List<WorkOrderExclusions> workOrderExclusions);
+        List<WorkOrderExclusions> UpdateWorkOrderExclusions(List<WorkOrderExclusions> workOrderExclusions);
+        IEnumerable<object> GetWorkFlowWorkOrderExclusionsList(long wfwoId = 0, long workOrderId = 0);
+
+        List<WorkOrderDocuments> CreateWorkOrderDocuments(List<WorkOrderDocuments> workOrderDocuments);
         void UpdateWorkOrderDocuments(WorkOrderDocuments workOrderDocuments);
         IEnumerable<WorkOrderDocuments> GetWorkFlowWorkOrderDocumentsList(long wfwoId = 0, long workOrderId = 0);
 
@@ -74,7 +77,7 @@ namespace DAL.Repositories.Interfaces
         List<WorkOrderPublications> UpdateWorkOrderPublications(List<WorkOrderPublications> workOrderPublications);
         void DeleteWorkOrderPublication(long workOrderPublicationId, string updatedBy);
         void WorkOrderPublicationStatus(long workOrderPublicationId, bool status, string updatedBy);
-        IEnumerable<object> GetWorkOrderPublications(long wfwoId, long workOrderId);
+        IEnumerable<WorkOrderPublicationList> GetWorkOrderPublications(long wfwoId, long workOrderId);
 
 
         List<WorkOrderMaterials> CreateWorkOrderMaterials(List<WorkOrderMaterials> workOrderMaterials);
@@ -83,6 +86,7 @@ namespace DAL.Repositories.Interfaces
         void DeleteWorkOrderMaterials(long workOrderMaterialsId, string updatedBy);
 
         IEnumerable<WorkOrderReserveIssuesParts> GetReservedIssuedParts(long WorkFlowWorkOrderId, long workOrderId);
-
+        List<WorkOrderReserveIssuesParts> SaveReserveIssuesParts(List<WorkOrderReserveIssuesParts> reserveIssuesParts);
+        IEnumerable<object> GetWorkOrderDirections(long wfwoId, long workOrderId);
     }
 }

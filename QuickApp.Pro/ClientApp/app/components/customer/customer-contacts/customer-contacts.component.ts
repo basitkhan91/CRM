@@ -50,7 +50,7 @@ export class CustomerContactsComponent implements OnInit {
 	contactInformation = new CustomerContactModel()
 	customerContacts: any = [];
 	customerContactsColumns = [
-		{ field: 'tag', header: 'TAG' },
+		{ field: 'tag', header: 'Tag' },
 		{ field: 'firstName', header: 'First Name' },
 		{ field: 'lastName', header: 'Last Name' },
 		{ field: 'contactTitle', header: 'Contact Title' },
@@ -70,7 +70,7 @@ export class CustomerContactsComponent implements OnInit {
 	id: number;
 	customerCode: any;
 	customerName: any;
-	emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{3,}";
+	emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}";
 	urlPattern = "^((ht|f)tp(s?))\://([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(/\S*)?$";
 	sourceViewforContact: any;
 	add_SelectedId: any;
@@ -177,7 +177,13 @@ export class CustomerContactsComponent implements OnInit {
 
 	viewSelectedRow(rowData) {
 		this.sourceViewforContact = rowData;
-	}
+    }
+    onAddContactInfo() {
+        this.isEditButton = false;
+        this.contactInformation = new CustomerContactModel()
+
+
+    }
 	editCustomerContact(rowData) {
 		this.ediData = { ...rowData };
 		this.isEditButton = true;
@@ -187,7 +193,8 @@ export class CustomerContactsComponent implements OnInit {
 			// middleName: getObjectByValue('middleName', this.ediData.middleName, this.contactsListOriginal),
 			// lastName: getObjectByValue('lastName', this.ediData.lastName, this.contactsListOriginal),
 		}
-		console.log(this.contactInformation);
+        console.log(this.contactInformation);
+        this.sourceViewforContact = '';
 
 	}
 
@@ -222,7 +229,9 @@ export class CustomerContactsComponent implements OnInit {
 		})
 	}
 
-	handleChange(rowData) {
+    handleChange(rowData) {
+        this.sourceViewforContact = '';
+
 		// if (e.checked == false) {
 		const data = { ...rowData, updatedBy: this.userName };
 
@@ -256,7 +265,9 @@ export class CustomerContactsComponent implements OnInit {
 		})
 	}
 
-	addATAChapter(rowData) {
+    addATAChapter(rowData) {
+        this.sourceViewforContact = '';
+
 		this.selectedContact = rowData;
 		this.ataListDataValues = [];
 		this.getATACustomerContactMapped();
@@ -267,7 +278,8 @@ export class CustomerContactsComponent implements OnInit {
 
 
 	// get subchapter by Id in the add ATA Mapping
-	getATASubChapterByATAChapter() {
+    getATASubChapterByATAChapter() {
+
 		const selectedATAId = getValueFromObjectByKey('ataChapterId', this.add_SelectedId)
 		this.atasubchapter1service.getATASubChapterListByATAChapterId(selectedATAId).subscribe(atasubchapter => {
 			const responseData = atasubchapter[0];
@@ -298,15 +310,16 @@ export class CustomerContactsComponent implements OnInit {
 				UpdatedDate: new Date(),
 				IsDeleted: false,
 			}
-		})
-
+        })
+       
 		this.add_SelectedModels = undefined;
 		this.add_SelectedId = undefined;
 
 		await this.saveCustomerContactATAMapped.emit(ataMappingData);
 
+        this.getATACustomerContactMapped();
 
-		this.getATACustomerContactMapped();
+		
 
 
 
@@ -336,7 +349,8 @@ export class CustomerContactsComponent implements OnInit {
 		this.customerService.getCustomerContactAuditDetails(rowData.customerContactId).subscribe(res => {
 			this.auditHistory = res;
 		})
-	}
+    }
+  
 	getColorCodeForHistory(i, field, value) {
 		const data = this.auditHistory;
 		const dataLength = data.length;
@@ -356,6 +370,7 @@ export class CustomerContactsComponent implements OnInit {
 	backClick() {
 		this.tab.emit('General');
 	}
+   
 
 
 

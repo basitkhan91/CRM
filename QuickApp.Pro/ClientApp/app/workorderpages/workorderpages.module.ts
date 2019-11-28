@@ -52,7 +52,16 @@ import { WorkOrderAddressesComponent } from '../components/work-order/work-order
 import { TooltipModule } from 'primeng/tooltip';
 import { CommonService } from '../services/common.service';
 import { MatIconModule } from "@angular/material/icon";
+import { TabViewModule } from 'primeng/tabview';
 import { WorkOrderSmartComponent } from '../components/work-order/work-order-setup/work-order-smart/work-order-smart.component';
+import { AccordionModule } from 'primeng/accordion';
+
+import { WorkFlowtService } from '../services/workflow.service';
+import { AssetmanagementModule } from '../assetmanagement/assetmanagement.module';
+import { WorkOrderChargessComponent } from '../components/work-order/work-order-setup/work-order-charges/work-order-charges.component';
+// import { MaterialListCreateComponent } from '../shared/Material-List-Create.component';
+// import { SharedModule } from '../shared/shared.module';
+// import { BrowserModule } from '@angular/platform-browser';
 
 @NgModule({
   imports: [
@@ -72,7 +81,11 @@ import { WorkOrderSmartComponent } from '../components/work-order/work-order-set
     CheckboxModule,
     RadioButtonModule,
     InputSwitchModule,
-    TooltipModule
+    TooltipModule,
+    TabViewModule,
+    AccordionModule,
+    AssetmanagementModule,
+    WorkFlowPagesModule
   ],
   declarations: [
     WorkOrderPagesComponent,
@@ -81,6 +94,7 @@ import { WorkOrderSmartComponent } from '../components/work-order/work-order-set
     SystemGeneratedLaborHoursComponent,
     BarCodeScannedLaborHoursComponent,
     WorkOrderEquipmentListComponent,
+    WorkOrderChargessComponent,
     WorkOrderEquipmentCheckInOutComponent,
     WorkOrderEquipmentCheckInOutComponent,
     WorkOrderCompleteMaterialListComponent,
@@ -99,10 +113,13 @@ import { WorkOrderSmartComponent } from '../components/work-order/work-order-set
     WorkOrderLaborComponent,
     WorkOrderAssetsComponent,
     WorkOrderAddressesComponent,
-    WorkOrderSmartComponent
+    WorkOrderSmartComponent,
+
+
   ],
   entryComponents: [],
   providers: [
+    WorkFlowtService,
     WorkOrderService,
     WorkOrderEndpointService,
     WorkOrderPartNumberService,

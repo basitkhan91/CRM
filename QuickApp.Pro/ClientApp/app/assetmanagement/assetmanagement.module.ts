@@ -58,12 +58,12 @@ import { ViewAssetComponent } from "../components/Asset-Management/Asset-pages/v
         AuditModule
     ],
     declarations: [
-       AssetmanagementComponent,
+        AssetmanagementComponent,
         AssetListingComponent,
-       AssetCalibrationComponent,
-       AssetCapesComponent,
-       AssetGeneralInformationComponent,
-       AssetMaintenanceWarrantyComponent,
+        AssetCalibrationComponent,
+        AssetCapesComponent,
+        AssetGeneralInformationComponent,
+        AssetMaintenanceWarrantyComponent,
         CreateAssetComponent,
         AssetStepsComponent,
         ViewAssetComponent
@@ -73,6 +73,7 @@ import { ViewAssetComponent } from "../components/Asset-Management/Asset-pages/v
 
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    exports: [AssetListingComponent],
     entryComponents: [
 
     ],

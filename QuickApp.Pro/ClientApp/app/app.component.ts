@@ -239,7 +239,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Item Aging', routerLink: '/#' },
                             { label: 'Slow Moving Stock', routerLink: '/#' },
                             { label: 'Hot List', routerLink: '/#' },
-                            { label: 'Stock Line Report', command: (event?: any) => { this.stockLineReport(); }}
+                            { label: 'Stock Line Report', command: (event?: any) => { this.stockLineReport(); } }
                         ]
                     }]
 
@@ -250,7 +250,8 @@ export class AppComponent implements OnInit, AfterViewInit {
                 items: [
 
                     { label: 'Vendor List', routerLink: '/vendorsmodule/vendorpages/app-vendors-list' },
-                    { label: 'Create Vendor', routerLink: '/vendorsmodule/vendorpages/app-vendor-general-information' },
+                     { label: 'Create Vendor', routerLink: '/vendorsmodule/vendorpages/app-vendor-general-information' },
+                    //{ label: 'Create Vendor',  command: (event?: any) => { this.newVendorClick(); } },
                     { label: 'Vendor Classification', routerLink: '/singlepages/singlepages/app-vendor-classification' },
                     { label: 'Process 1099', routerLink: '/#' },
                     {
@@ -519,7 +520,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                 items: [
                     { label: 'Employee List', routerLink: '/employeesmodule/employeepages/app-employees-list' },
                     { label: 'Create Employee', routerLink: '/employeesmodule/employeepages/app-employee-general-information' },
-                    
+
                     {
                         label: 'Expense Reports', items: [
                             { label: 'Expense List', routerLink: '/#' },
@@ -691,12 +692,12 @@ export class AppComponent implements OnInit, AfterViewInit {
         setTimeout(() => this.isAppLoaded = true, 1000);
         setTimeout(() => this.removePrebootScreen = true, 1500);
 
-        setTimeout(() => {
-            if (this.isUserLoggedIn) {
-                this.alertService.resetStickyMessage();
-                this.alertService.showMessage("Login", `Welcome back ${this.userName}!`, MessageSeverity.default);
-            }
-        }, 2000);
+        // setTimeout(() => {
+        //     if (this.isUserLoggedIn) {
+        //         this.alertService.resetStickyMessage();
+        //         this.alertService.showMessage("Login", `Welcome back ${this.userName}!`, MessageSeverity.default);
+        //     }
+        // }, 2000);
 
         this.alertService.getDialogEvent().subscribe(alert => this.dialog.open(AppDialogComponent,
             {
@@ -758,6 +759,12 @@ export class AppComponent implements OnInit, AfterViewInit {
         window.location.assign(url);
     }
 
+    newVendorClick() {
+       
+        const url = `${this.configurations.baseUrl}/vendorsmodule/vendorpages/app-vendor-general-information`;
+        location.assign(url);
+    }
+    
     initNotificationsLoading() {
         this.notificationsLoadingSubscription = this.notificationService.getNewNotificationsPeriodically()
             .subscribe(notifications => {

@@ -1,7 +1,7 @@
-﻿<ol class="breadcrumb">
-    <li class="breadcrumb-item" aria-current="page">Asset</li>
-    <li class="breadcrumb-item active" aria-current="page">Create Asset</li>
-</ol>
+﻿<div>
+        <h4 class="page-heading clr-green"> Create Asset</h4>
+        <div>
+<div class="card padding-10">
 <div class="row">
     <div class="col-sm-12">
         <div class="col-sm-4">
@@ -444,9 +444,13 @@
 
 
 </div>
+<div class="margintop">
+        <button type="submit" class="btn btn-primary-cstm submit-btn pull-right" [disabled]="disableSave" (click)="saveAsset()">Save & Next</button>
+    </div>
+</div>
 
 
-<button type="submit" class="btn btn-success pull-right submit-btn" [disabled]="disableSave" (click)="saveAsset()">Save & Next</button>
+
 <!--<button type="button" class="btn btn-success pull-right submit-btn" (click)="nextClick()">Next</button>-->
 
 <p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"

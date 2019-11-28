@@ -148,7 +148,7 @@
                             </label>
                         </div>
                         <div class="col-sm-5">
-                            <p-autoComplete field="description" [(ngModel)]="addNewUOM.unitName" (onSelect)="selectedUOM($event)" (onKeyUp)="checkUOMExists('description', $event.target.value)" name="uom"
+                            <p-autoComplete field="description" [(ngModel)]="addNewUOM.unitName" (onSelect)="selectedUOM($event)" (onKeyUp)="checkUOMExists('description', $event.target.value)"  name="uom"
                                 [suggestions]="uomList" (completeMethod)="filterUnitOfMeasures($event)" [size]="30" [minLength]="1"
                                 [dropdown]="true" class="p-autoComplete-ctsm" required>
            

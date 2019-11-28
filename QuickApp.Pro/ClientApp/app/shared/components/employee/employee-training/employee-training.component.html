@@ -127,11 +127,12 @@
                                             </div>
                                             <div class="clear"></div>
 
-                                            <button type="button" [disabled]="nextbuttonEnable == false"  class="btn btn-success pull-right submit-btn" (click)="savetrainigSection()">Save</button>
+                                            <button type="button" [disabled]="nextbuttonEnable == false"  class="btn btn-primary-cstm pull-right" (click)="savetrainigSection()">Save & Next</button>
+                                            <button type="button" class="btn btn-primary-cstm pull-right" (click)="previousClick()">Previous</button>
                                             <div class="clear"></div>
                                             <!--
          <hr class="hr-light-grey" />
-    <button type="button" class="btn btn-success pull-right submit-btn" (click)="editTrainAndCloseModel()">Save</button>
+    <button type="button" class="btn btn-primary-cstm pull-right" (click)="editTrainAndCloseModel()">Save</button>
     -->
 
 
@@ -163,7 +164,7 @@
 
 
 		</div>
-		<button type="button" class="btn btn-success pull-right submit-btn" (click)="previousClick()">Previous</button>
+		
 	</div>
 
 </div>

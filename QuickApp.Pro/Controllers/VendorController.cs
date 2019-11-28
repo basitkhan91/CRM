@@ -2,7 +2,6 @@
 using DAL;
 using DAL.Common;
 using DAL.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -246,7 +245,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<VendorViewModel>))]
         public IActionResult GetVendorDefault(long vendorId)
         {
-            var vendorDtails = _context.VendorPayment.Where(a => a.VendorId == vendorId).SingleOrDefault(); //.GetAllCustomersData();
+            var vendorDtails = _context.VendorPayment.Where(a => a.VendorId == vendorId).ToList(); //.GetAllCustomersData();
             return Ok(vendorDtails);
 
         }
@@ -1057,8 +1056,21 @@ namespace QuickApp.Pro.Controllers
                                 var repairOrderPartObj = _context.RepairOrderPart
                                                                 .Where(a => a.RepairOrderPartRecordId == roPartSplit.RepairOrderPartRecordId)
                                                                 .SingleOrDefault();
-                                repairOrderPartObj = FillRepairOrderSplitPart(repairOrderPartObj, roPartSplit);
-                                UpdateRepairOrderPart(repairOrderPartObj);
+                                if (repairOrderPartObj == null)
+                                {
+                                    var roPartModel2 = new RepairOrderPart();
+                                    roPartModel2 = FillRepairOrderSplitPart(roPartModel2, roPartSplit);
+                                    SaveRepairOrderPart(roPartModel2);
+                                    if (roPartSplit.RepairOrderPartRecordId == 0)
+                                    {
+                                        roPartSplit.RepairOrderPartRecordId = roPartModel2.RepairOrderPartRecordId;
+                                    }
+                                }
+                                else
+                                {
+                                    repairOrderPartObj = FillRepairOrderSplitPart(repairOrderPartObj, roPartSplit);
+                                    UpdateRepairOrderPart(repairOrderPartObj);
+                                }
                             }
                         }
                     }
@@ -1233,7 +1245,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("vendorPost")]
-        public IActionResult CreateAction([FromForm][FromBody] VendorViewModel vendorViewModel, Address address, VendorType vt)
+        public IActionResult CreateAction([FromBody][FromForm] VendorViewModel vendorViewModel, Address address, VendorType vt)
         {
             if (ModelState.IsValid)
             {
@@ -1273,10 +1285,10 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.SaveChanges();
 
 
-                if (Request.Form.Files.Count > 0)
-                {
-                    actionobject.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, actionobject.VendorId, Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), actionobject.UpdatedBy, actionobject.MasterCompanyId);
-                }
+                //if (Request.Form.Files.Count > 0)
+                //{
+                //    actionobject.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, actionobject.VendorId, Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), actionobject.UpdatedBy, actionobject.MasterCompanyId);
+                //}
 
 
                 return Ok(actionobject);
@@ -1338,7 +1350,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPut("vendorUpdate/{id}")]
-        public IActionResult UpdateVendorList(long id, [FromForm][FromBody] VendorViewModel vendorViewModel, VendorType vt)
+        public IActionResult UpdateVendorList(long id, [FromBody][FromForm] VendorViewModel vendorViewModel, VendorType vt)
         {
             if (ModelState.IsValid)
             {
@@ -1393,10 +1405,10 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.Vendor.Update(actionobject);
                 _unitOfWork.SaveChanges();
 
-                if (Request.Form.Files.Count > 0)
-                {
-                    actionobject.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, actionobject.VendorId, Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), actionobject.UpdatedBy, actionobject.MasterCompanyId);
-                }
+                //if (Request.Form.Files.Count > 0)
+                //{
+                //    actionobject.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, actionobject.VendorId, Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), actionobject.UpdatedBy, actionobject.MasterCompanyId);
+                //}
                 return Ok(actionobject);
             }
 
@@ -1654,6 +1666,10 @@ namespace QuickApp.Pro.Controllers
                 contactObj.WorkPhoneExtn = contactViewModel.WorkPhoneExtn;
                 _unitOfWork.ContactRepository.Update(contactObj);
                 _unitOfWork.SaveChanges();
+                var vendorContactObj = _unitOfWork.vendorContactRepository.GetVendorContactsbyContctId(id);
+                vendorContactObj.IsDefaultContact = Convert.ToBoolean(contactViewModel.IsDefaultContact);
+                _unitOfWork.vendorContactRepository.Update(vendorContactObj);
+                _unitOfWork.SaveChanges();
 
             }
 
@@ -1902,7 +1918,7 @@ namespace QuickApp.Pro.Controllers
                 addressObj.UpdatedBy = checkPaymentViewModel.UpdatedBy;
                 addressObj.CreatedDate = DateTime.Now;
                 addressObj.UpdatedDate = DateTime.Now;
-                _unitOfWork.Address.Update(address);
+                _unitOfWork.Address.Update(addressObj);
                 _unitOfWork.vendorPaymentRepository.Update(checkPaymentObj);
                 _unitOfWork.SaveChanges();
                 return Ok(checkPaymentObj);
@@ -2143,7 +2159,7 @@ namespace QuickApp.Pro.Controllers
                 VendorPayment defaultPaymentObj = new VendorPayment();
                 defaultPaymentObj.IsActive = true;
                 defaultPaymentObj.MasterCompanyId = 1;
-                defaultPaymentObj.IsActive = vendorPaymentViewModel.IsActive;
+                //defaultPaymentObj.IsActive = vendorPaymentViewModel.IsActive;
                 defaultPaymentObj.DefaultPaymentMethod = vendorPaymentViewModel.DefaultPaymentMethod;
                 defaultPaymentObj.VendorId = vendorPaymentViewModel.VendorId;
                 defaultPaymentObj.CreatedDate = DateTime.Now;
@@ -2350,7 +2366,7 @@ namespace QuickApp.Pro.Controllers
 
                 vendorShippingDetailsViewModel.MasterCompanyId = 1;
                 actionobject.VendorId = vendorShippingDetailsViewModel.VendorId;
-                //actionobject.VendorShippingAddressId = vendorShippingDetailsViewModel.VendorShippingAddressId;
+                actionobject.VendorShippingAddressId = vendorShippingDetailsViewModel.VendorShippingAddressId;
                 actionobject.ShipVia = vendorShippingDetailsViewModel.ShipVia;
                 actionobject.ShippingAccountinfo = vendorShippingDetailsViewModel.ShippingAccountinfo;
                 actionobject.ShippingId = vendorShippingDetailsViewModel.ShippingId;
@@ -3061,14 +3077,14 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("POListByMasterItemId")]
         public IActionResult POListByMasterItemId(int itemMasterId)
         {
-            var result = _unitOfWork.purchaseOrder.POListByMasterItemId(itemMasterId);
+            var result = _unitOfWork.purchaseOrder.POListByMasterItemId(itemMasterId).Distinct();
             return Ok(result);
         }
 
         [HttpGet("ROListByMasterItemId")]
         public IActionResult ROListByMasterItemId(int itemMasterId)
         {
-            var result = _unitOfWork.repairOrder.ROListByMasterItemId(itemMasterId);
+            var result = _unitOfWork.repairOrder.ROListByMasterItemId(itemMasterId).Distinct();
             return Ok(result);
         }
 
@@ -3177,7 +3193,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("roPartsViewById")]
         public IActionResult GetRepairOrderPartsView(long repairOrderId)
         {
-            var list = _unitOfWork.repairOrder.GetRepairOrderPartsView(repairOrderId);
+            var list = _unitOfWork.repairOrder.GetRepairOrderPartsView2(repairOrderId);
             return Ok(list);
         }
 
@@ -3213,6 +3229,27 @@ namespace QuickApp.Pro.Controllers
         {
             var allVendorShippingDetails = _unitOfWork.ContactRepository.GetVendorContactsAudit(vendorId, vendorContactId);
             return Ok(allVendorShippingDetails);
+        }
+
+        [HttpGet("vendorpomemolist")]
+        public IActionResult GetVendorPOMemoList(long vendorId)
+        {
+            var result = _unitOfWork.Vendor.GetVendorPOMemoList(vendorId);
+            return Ok(result);
+        }
+
+        [HttpGet("vendorromemolist")]
+        public IActionResult GetVendorROMemoList(long vendorId)
+        {
+            var result = _unitOfWork.Vendor.GetVendorROMemoList(vendorId);
+            return Ok(result);
+        }
+
+        [HttpPut("updatevendormemotext")]
+        public IActionResult UpdateVendorMemoText(long id, string type, string memoText, string updatedBy)
+        {
+            _unitOfWork.Vendor.UpdateVendorMemoText(id, type, memoText, updatedBy);
+            return Ok();
         }
 
 
@@ -3362,6 +3399,13 @@ namespace QuickApp.Pro.Controllers
         {
             _unitOfWork.Vendor.DeleteVendorShippingAddress(vendorShippingAddressId, "");
             return Ok();
+        }
+
+        [HttpDelete("deletevendorshippingviaaddress/{vendorShippingId}")]
+        public IActionResult DeleteVendorShippingViaAddress(long vendorShippingId, string updatedBy)
+        {
+            var response = _unitOfWork.Vendor.DeleteVendorShippingViaAddress(vendorShippingId, updatedBy);
+            return Ok(response);
         }
 
         [HttpGet("vendorbillingaddressstatus")]

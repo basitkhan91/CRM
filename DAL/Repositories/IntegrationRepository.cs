@@ -21,7 +21,7 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.IntegrationPortal> getIntegrationData(int id)
         {
-            return _appContext.IntegrationPortal.Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.IntegrationPortalId).ToList();
+            return _appContext.IntegrationPortal.Where(c => (c.IsDelete == false || c.IsDelete == null)&&c.IsActive==true).OrderByDescending(c => c.IntegrationPortalId).ToList();
 
            
         }
@@ -32,6 +32,11 @@ namespace DAL.Repositories
                 Description = v.Description }).OrderBy(c => c.Description).ToList();
         }
 
+        public IEnumerable<DAL.Models.IntegrationPortalAudit> GetIntegrationPortalAuditDetails(long integrationPortalId)
+        {
+            return _appContext.IntegrationPortalAudit.Where(c => c.IntegrationPortalId == integrationPortalId).OrderByDescending(p => p.UpdatedDate).ToList();
+
+        }
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 

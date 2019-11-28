@@ -283,6 +283,10 @@
 								<th>Functional CUR <span class="clr-red">*</span></th>
 								<th>FX Rate <span class="clr-red">*</span></th>
 								<th>Report CUR <span class="clr-red">*</span></th>
+								<th>Stockline Num</th>
+								<th>Control Id</th>
+								<th>Control Num</th>
+								<th>PO</th>
 								<th>WO</th>
 								<!-- <th>RO</th> -->
 								<th>SO</th>
@@ -399,11 +403,15 @@
 										> <!--[disabled]=true-->          
 										</p-autoComplete>
 									</td>
+									<td>
+										<p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="partList.stocklineId" name="stocklineNum{{row_index}}" [suggestions]="allStocklineDetails" (completeMethod)="filterStocklineNum($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
+									</td>
+									<td><input type="text" class="form-control" [(ngModel)]="partList.controlId" name="controlId{{row_index}}" disabled></td>
+									<td><input type="text" class="form-control" [(ngModel)]="partList.controlNumber" name="controlNumber{{row_index}}" disabled></td>
+									<td><input type="text" class="form-control" [(ngModel)]="partList.purchaseOrderId" name="purchaseOrderId{{row_index}}" disabled></td>
 									<td><input type="number" class="form-control" [(ngModel)]="partList.workOrderId" name="workOrderId{{row_index}}"></td>
-									<!-- <td><input type="number" class="form-control" [(ngModel)]="partList.repairOrderId" name="repairOrderId{{row_index}}"></td> -->
 									<td><input type="number" class="form-control" [(ngModel)]="partList.salesOrderId" name="salesOrderId{{row_index}}"></td>
-									<td style="min-width: 90px;">
-									
+									<td style="min-width: 90px;">									
 										<label style="width:90px;">Company:</label>
 										<select class="form-control" [(ngModel)]="partList.parentCompanyId" name="parentCompanyName{{row_index}}" (change)="getParentBUList(partList)" #pcompanyName required>
 											<option value="0">Select</option>
@@ -450,6 +458,10 @@
 									<th>UOM</th>
 									<th>Order Qty</th>
 									<th>Need By</th>
+									<th>Stockline Num</th>
+									<th>Control Id</th>
+									<th>Control Num</th>
+									<th>PO</th>
 									<th colspan="4">Management Structure <span class="clr-red">*</span></th>
 									<th colspan="10"></th>
 								</tr>
@@ -543,6 +555,12 @@
 									<td>{{partList.UOMShortName}}</td>
 									<td><input class="form-control" type="number" pKeyFilter="pint" [(ngModel)]="partChildList.quantityOrdered" name="childQtyOrdered{{row_index}}{{row_no}}" (keyup)="onChangeChildQtyOrdered(partList)" /></td> <!--[disabled]="!partList.quantityOrdered"-->
 									<td><p-calendar class="pcal-cpo-grid" [showIcon]="true" [minDate]="sourceRoApproval.openDate" [(ngModel)]="partChildList.needByDate" name="childNeedByDate{{row_index}}{{row_no}}"></p-calendar></td>
+									<td>
+										<p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="partChildList.stocklineId" name="stocklineNum{{row_index}}{{row_no}}" [suggestions]="allStocklineDetails" (completeMethod)="filterStocklineNum($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
+									</td>
+									<td><input type="text" class="form-control" [(ngModel)]="partChildList.controlId" name="controlId{{row_index}}{{row_no}}" disabled></td>
+									<td><input type="text" class="form-control" [(ngModel)]="partChildList.controlNumber" name="controlNumber{{row_index}}{{row_no}}" disabled></td>
+									<td><input type="text" class="form-control" [(ngModel)]="partChildList.purchaseOrderId" name="purchaseOrderId{{row_index}}{{row_no}}" disabled></td>
 									<td>
 										<label style="width:90px;">Company:</label>
 										<select class="inner-addon right-addon autosuggesions-add inline-block mw400"

@@ -129,6 +129,14 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
         }
     }
 
+    validateQuantity(event, exclusion): void {
+
+        event.target.value = event.target.value == '' ? '' : parseInt(exclusion.quantity);
+        if (event.target.value != '') {
+            exclusion.quantity = parseInt(exclusion.quantity);
+        }
+    }
+
     calculateExtendedCost(exclusion): void {
         var value = parseFloat((Number.parseInt(exclusion.quantity) * Number.parseFloat(exclusion.unitCost)).toFixed(2));
         if (value > 0) {

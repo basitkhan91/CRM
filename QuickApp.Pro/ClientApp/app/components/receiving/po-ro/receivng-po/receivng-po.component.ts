@@ -431,6 +431,7 @@ export class ReceivngPoComponent implements OnInit {
     private getManagementStructure() {
         return this.legalEntityService.getManagemententity();
     }
+
     private setStockLineManagementStructure(managementStructureId: number, stockLine: StockLine) {
         let stockLineManagementStructureHierarchy: ManagementStructure[][] = [[]];
         let stockLineSelectedManagementStructureHierarchy: ManagementStructure[] = [];
@@ -1479,6 +1480,17 @@ export class ReceivngPoComponent implements OnInit {
             part.stocklineListObj[this.currentSLIndex].purchaseOrderExtendedCost = part.stocklineListObj[this.currentSLIndex].purchaseOrderUnitCost * part.quantityActuallyReceived;
         }
         
+    }
+
+    private moveByKey(event, part) {
+;       // CTRL + Down Arrow
+        if (event.ctrlKey && event.keyCode == 40) {
+            this.moveStockLinePage('stockline', part.currentSERIndex + 1, part);
+        }
+        // CTRL + Up Arrow
+        if (event.ctrlKey && event.keyCode == 38) {
+            this.moveStockLinePage('stockline', part.currentSERIndex - 1, part);
+        }
     }
 }
 

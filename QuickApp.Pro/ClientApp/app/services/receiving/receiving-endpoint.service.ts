@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import { EndpointFactory } from '../endpoint-factory.service';
 import { ConfigurationService } from '../configuration.service';
-
+import { ReceiveParts, StockLine } from '../../components/receiving/repair-order/receiving-ro/RepairOrder.model';
 
 
 @Injectable()
@@ -19,13 +19,19 @@ export class ReceivingEndpointService extends EndpointFactory {
     private readonly itemMasterDataById: string = "/api/receivingPart/getById";
     private readonly receivingPurchaseOrderDataById: string = "/api/receivingPart/GetReceivingPurchaseList";
     private readonly receivingPurchaseOrderDataForEditById: string = "/api/receivingPart/GetReceivingPurchaseForEdit";
+    private readonly receivingPurchaseOrderDataForViewById: string = "/api/receivingPart/GetReceivingPurchaseForView";
     private readonly addStocklineMapperData: string = "/api/receivingPart/addStocklineMapperData";
+    private readonly _receivePartsUrl: string = "/api/receivingro/receiveParts";
+    private readonly _updateStockLinesUrl: string = "/api/receivingro/UpdateStockLines";
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
     get removeById() { return this.configurations.baseUrl + this.removeByIdURL; }
     get itemMasterDataGet() { return this.configurations.baseUrl + this.itemMasterDataById; }
     get receivingPurchaseOrderDataGet() { return this.configurations.baseUrl + this.receivingPurchaseOrderDataById; }
     get receivingPurchaseOrderForEditDataGet() { return this.configurations.baseUrl + this.receivingPurchaseOrderDataForEditById; }
+    get receivingPurchaseOrderForViewDataGet() { return this.configurations.baseUrl + this.receivingPurchaseOrderDataForViewById; }
+    get ReceivePartsURL() { return this.configurations.baseUrl + this._receivePartsUrl; }
+    get UpdateStockLinesURL() { return this.configurations.baseUrl + this._updateStockLinesUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -101,12 +107,121 @@ export class ReceivingEndpointService extends EndpointFactory {
             });
     }
 
+    getReceivingPurchaseForView<T>(receivingId: any): Observable<T> {
+
+        let url = `${this.receivingPurchaseOrderForViewDataGet}/${receivingId}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getReceivingPurchaseForView(receivingId));
+            });
+    }
+
     addPartStocklineMapper<T>(mapperObject: any): Observable<T>
     {
         debugger;
         return this.http.post<T>(this.addStocklineMapperData, JSON.stringify(mapperObject), this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.addPartStocklineMapper(mapperObject));
+            });
+    }
+
+    getReceivingRODataById(repairOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/receivingPart/GetReceivingRepairList/${repairOrderId}`)
+    }
+
+    getReceivingROHeaderById(repairOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/receivingRO/getRepairOrderHeaderById/${repairOrderId}`)
+    }
+
+    getReceivingROPartById(repairOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/receivingro/getRepairOrderPartById/${repairOrderId}`)
+    }
+
+    receiveParts<T>(receiveParts: ReceiveParts[]): Observable<T> {
+        var listObj = [];
+
+        for (let part of receiveParts) {
+            let Obj = {
+                'repairOrderPartRecordId': part.repairOrderPartRecordId,
+                'stockLines': part.stockLines,
+                'timeLife': part.timeLife
+            };
+
+            listObj.push(Obj);
+        }
+
+        return this.http.post<T>(this.ReceivePartsURL, JSON.parse(JSON.stringify(listObj)), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.receiveParts(receiveParts));
+            });
+
+    }
+
+    getReceivingROPartsForViewById(repairOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/receivingro/GetReceieveROPartsForView/${repairOrderId}`)
+    }
+
+    getReceivingROPartsForEditById(repairOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/receivingro/GetReceieveROPartsForEdit/${repairOrderId}`)
+    }
+
+    updateStockLine<T>(receiveParts: ReceiveParts[]): Observable<T> {
+        var listObj = [];
+
+        for (let part of receiveParts) {
+            let stockLines: StockLine[] = [];
+
+            part.stockLines.forEach(SL => {
+                var stockLine = new StockLine();
+
+                stockLine.stockLineNumber = SL.stockLineNumber;
+                //stockLine.owner = SL.owner;
+                //stockLine.ownerType = SL.ownerType;
+                //stockLine.obtainFrom = SL.obtainFrom;
+                //stockLine.obtainFromType = SL.obtainFromType;
+                //stockLine.traceableTo = SL.traceableTo;
+                //stockLine.traceableToType = SL.traceableToType;
+                stockLine.engineSerialNumber = SL.engineSerialNumber;
+                stockLine.shippingAccount = SL.shippingAccount;
+                stockLine.shippingReference = SL.shippingReference;
+                stockLine.shippingViaId = SL.shippingViaId;
+                stockLine.partCertificationNumber = SL.partCertificationNumber;
+                stockLine.stockLineId = SL.stockLineId;
+                stockLine.conditionId = SL.conditionId;
+                stockLine.quantityRejected = 0;
+                stockLine.repairOrderUnitCost = SL.repairOrderUnitCost;
+                stockLine.repairOrderExtendedCost = SL.repairOrderExtendedCost;
+                stockLine.manufacturingTrace = SL.manufacturingTrace;
+                stockLine.manufacturerLotNumber = SL.manufacturerLotNumber;
+                stockLine.manufacturingDate = SL.manufacturingDate;
+                stockLine.manufacturingBatchNumber = SL.manufacturingBatchNumber;
+
+                stockLine.certifiedDate = SL.certifiedDate;
+                stockLine.certifiedBy = SL.certifiedBy;
+                stockLine.tagDate = SL.tagDate;
+                stockLine.expirationDate = SL.expirationDate;
+                stockLine.certifiedDueDate = SL.certifiedDueDate;
+                stockLine.managementStructureEntityId = SL.managementStructureEntityId;
+                stockLine.siteId = SL.siteId;
+                stockLine.warehouseId = SL.warehouseId;
+                stockLine.locationId = SL.locationId;
+                stockLine.shelfId = SL.shelfId;
+                stockLine.binId = SL.binId;
+
+                stockLines.push(stockLine);
+            });
+            let Obj = {
+                'repairOrderPartRecordId': part.repairOrderPartRecordId,
+                'stockLines': stockLines,
+                'timeLife': part.timeLife,
+            };
+
+            listObj.push(Obj);
+        }
+
+        return this.http.post<T>(this.UpdateStockLinesURL, JSON.parse(JSON.stringify(listObj)), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.updateStockLine(receiveParts));
             });
     }
 

@@ -53,10 +53,16 @@ export class CustomerDocumentsComponent implements OnInit {
 
 	ngOnInit() {
 		if (this.editMode) {
-			this.id = this.editGeneralInformationData.customerId;
+            this.id = this.editGeneralInformationData.customerId;
+
+            this.customerCode = this.editGeneralInformationData.customerCode;
+            this.customerName = this.editGeneralInformationData.name;
+
 
 		} else {
 			this.id = this.savedGeneralInformationData.customerId;
+            this.customerCode = this.savedGeneralInformationData.customerCode;
+            this.customerName = this.savedGeneralInformationData.name;
 
 		}
 	}
