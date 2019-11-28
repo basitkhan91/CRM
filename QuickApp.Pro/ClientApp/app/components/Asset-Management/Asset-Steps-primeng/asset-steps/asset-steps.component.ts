@@ -87,17 +87,17 @@ export class AssetStepsComponent implements OnInit {
                 this.route.navigateByUrl('/assetmodule/assetpages/app-asset-capes');
             }
         },
-        {
-            label: 'Calibration',
-            step:3,
-            index:2,
-            command: (event: any) => {
-                this.activeIndex = 2;
-                this.msgs.length = 0;
-                this.msgs.push({ severity: 'info', summary: 'Calibration', detail: event.label });
-                this.route.navigateByUrl('/assetmodule/assetpages/app-asset-calibration');
-            }
-        },
+        //{
+        //    label: 'Calibration',
+        //    step:3,
+        //    index:2,
+        //    command: (event: any) => {
+        //        this.activeIndex = 2;
+        //        this.msgs.length = 0;
+        //        this.msgs.push({ severity: 'info', summary: 'Calibration', detail: event.label });
+        //        this.route.navigateByUrl('/assetmodule/assetpages/app-asset-calibration');
+        //    }
+        //},
         {
             label: 'Maintance & Warrenty',
             step:4,

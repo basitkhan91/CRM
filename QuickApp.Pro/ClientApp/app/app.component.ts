@@ -218,7 +218,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     { label: 'Asset Maintenance', routerLink: '/#' },
                     { label: 'Depreciation Forecast', routerLink: '/#' },
                     {
-                        label: 'Repeat and Forms', items: [{ label: 'List Report', routerLink: '/#' },
+                        label: 'Report and Forms', items: [{ label: 'List Report', routerLink: '/#' },
                         { label: 'Depreciation', routerLink: '/#' },
                         { label: 'Additons', routerLink: '/#' },
                         { label: 'Disposal', routerLink: '/#' },
