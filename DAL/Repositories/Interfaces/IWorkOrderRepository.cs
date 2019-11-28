@@ -49,7 +49,7 @@ namespace DAL.Repositories.Interfaces
 
         List<WorkOrderDocuments> CreateWorkOrderDocuments(List<WorkOrderDocuments> workOrderDocuments);
         void UpdateWorkOrderDocuments(WorkOrderDocuments workOrderDocuments);
-        IEnumerable<WorkOrderDocuments> GetWorkFlowWorkOrderDocumentsList(long wfwoId = 0, long workOrderId = 0);
+        IEnumerable<object> GetWorkFlowWorkOrderDocumentsList(long wfwoId = 0, long workOrderId = 0);
 
         long CreateWorkOrderAddress(WorkOrderAddress workOrderAddress);
         void UpdateWorkOrderAddress(WorkOrderAddress workOrderAddress);
@@ -57,11 +57,11 @@ namespace DAL.Repositories.Interfaces
 
         long CreateWorkOrderQuote(WorkOrderQuote workOrderQuote);
         void UpdateWorkOrderQuote(WorkOrderQuote workOrderQuote);
-        WorkOrderQuote GetWorkFlowWorkOrderQuote(long wfwoId = 0, long workOrderId = 0);
+        object GetWorkFlowWorkOrderQuote(long wfwoId = 0, long workOrderId = 0);
 
         long CreateWorkOrderFreight(WorkOrderFreight workOrderFreight);
         void UpdateWorkOrderFreight(WorkOrderFreight workOrderFreight);
-        IEnumerable<WorkOrderFreight> GetWorkFlowWorkOrderFreightList(long wfwoId = 0, long workOrderId = 0);
+        IEnumerable<object> GetWorkFlowWorkOrderFreightList(long wfwoId = 0, long workOrderId = 0);
 
         IEnumerable<object> GetWorkFlowNos(long partId, long workScopeId);
         IEnumerable<object> GetWorkOrderPartDetails();
@@ -77,7 +77,7 @@ namespace DAL.Repositories.Interfaces
         List<WorkOrderPublications> UpdateWorkOrderPublications(List<WorkOrderPublications> workOrderPublications);
         void DeleteWorkOrderPublication(long workOrderPublicationId, string updatedBy);
         void WorkOrderPublicationStatus(long workOrderPublicationId, bool status, string updatedBy);
-        IEnumerable<WorkOrderPublicationList> GetWorkOrderPublications(long wfwoId, long workOrderId);
+        IEnumerable<object> GetWorkOrderPublications(long wfwoId, long workOrderId);
 
 
         List<WorkOrderMaterials> CreateWorkOrderMaterials(List<WorkOrderMaterials> workOrderMaterials);
