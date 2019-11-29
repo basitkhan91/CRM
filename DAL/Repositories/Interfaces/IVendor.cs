@@ -48,5 +48,6 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetVendorPOMemoList(long vendorId);
         IEnumerable<object> GetVendorROMemoList(long vendorId);
         void UpdateVendorMemoText(long id, string type, string memoText, string updatedBy);
+        VendorDocumentDetails GetVendorDocumentDetailById(long id);
     }
 }

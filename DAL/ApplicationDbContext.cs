@@ -431,6 +431,7 @@ namespace DAL
         public DbSet<PurchaseOrderAddress> PurchaseOrderAddress { get; set; }
         public DbSet<VendorBillingAddress> VendorBillingAddress { get; set; }
         public DbSet<VendorBillingAddressAudit> VendorBillingAddressAudit { get; set; }
+        public DbSet<VendorDocumentDetails> VendorDocumentDetails { get; set; }
         public DbSet<PurchaseOrderShipVia> PurchaseOrderShipVia { get; set; }
         public DbSet<LegalEntityBillingAddress> LegalEntityBillingAddress { get; set; }
         public DbSet<LegalEntityShippingAddress> LegalEntityShippingAddress { get; set; }
