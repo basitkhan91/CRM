@@ -250,6 +250,13 @@ export class VendorpagesComponent {
 				];
 			}
 
+			else if (this.otherurl == '/vendorsmodule/vendorpages/app-vendor-documents') {
+				this.items = [
+					{ label: 'Vendor' },
+					{ label: 'Documents' }
+				];
+			}
+
 			else if (this.otherurl == '/vendorsmodule/vendorpages/app-vendor-emails') {
 				this.items = [
 					{ label: 'Vendor' },
