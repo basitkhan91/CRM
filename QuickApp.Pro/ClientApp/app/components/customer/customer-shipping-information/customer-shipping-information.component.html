@@ -567,7 +567,7 @@
                     <p><span class="label"><b>Site Name: </b></span><span class="value">{{sourceViewforShipping.siteName}}</span></p>
                     <p><span class="label"><b>Ship To Address 1: </b></span><span class="value">{{sourceViewforShipping.address1}}</span></p>
                     <p><span class="label"><b>Ship To Address 2: </b></span><span class="value">{{sourceViewforShipping.address2}}</span></p>
-                    <p><span class="label"><b>ship To Address 3: </b></span><span class="value">{{sourceViewforShipping.address3}}</span></p>
+                    <p style="display:none"><span class="label"><b>ship To Address 3: </b></span><span class="value">{{sourceViewforShipping.address3}}</span></p>
                     <p><span class="label"><b>Ship To City: </b></span><span class="value">{{sourceViewforShipping.city}}</span></p>
                     <p><span class="label"><b>Ship To State/Prov: </b></span><span class="value">{{sourceViewforShipping.stateOrProvince}}</span></p>
                     <p><span class="label"><b>Ship To Postal Code :</b></span><span class="value">{{sourceViewforShipping.postalCode}}</span></p>
@@ -646,7 +646,7 @@
                                 <label>Ship To Address 2</label>
                                 <input class="form-control" id="csaddress2" type="text" name="address2" [(ngModel)]="domesticShippingInfo.address2">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display:none">
                                 <label>Ship To Address 3</label>
                                 <input class="form-control" id="csaddress3" type="text" name="address3" [(ngModel)]="domesticShippingInfo.address3">
                             </div>
@@ -1157,16 +1157,17 @@
                             </td>
 
                             <td>
+                               
 
-                                <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActiveIS{{rowIndex}}" (onChange)="updateActiveorInActiveForIS(rowData)"></p-inputSwitch>
+
+                                <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActiveIS{{rowIndex}}" (onChange)="updateActiveorInActiveForS(rowData)"></p-inputSwitch>
                                 <span data-toggle="modal" data-target="#viewDomesticVia"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" matTooltip="View" (click)="openDomesticShippingViewVia(rowData)"><i class="fa fa-eye"></i></a> </span> <!-- (click)="openInterShippingView(rowData)" -->
 
-                                <button class="btn-edit" mat-icon-button data-toggle="modal" matTooltip="edit"  (click)="editDomesticShipVia(rowData)"
-                                   >
+                                <button class="btn-edit" mat-icon-button data-toggle="modal" matTooltip="edit" (click)="editDomesticShipVia(rowData)">
                                     <mat-icon>edit</mat-icon>
                                 </button>
 
-                                <button class="btn-delete" mat-icon-button matTooltip="delete">
+                                <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteShipVia(rowData)">
                                     <!--(click)="deleteInternationalShipping(rowData)"-->
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>

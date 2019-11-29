@@ -43,6 +43,8 @@ export class ConditionsComponent implements OnInit {
     private isSaving: boolean;
     modal: NgbModalRef;
     selectedColumn: Condition[];
+    formData = new FormData();
+    existingRecordsResponse: Object;
     filteredBrands: any[];
     localCollection: any[] = [];
     Active: string = "Active";
@@ -259,6 +261,33 @@ export class ConditionsComponent implements OnInit {
         // this.pageIndex = pageIndex;
         this.pageSize = event.rows;
         this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    }
+
+    customExcelUpload(event) {
+        const file = event.target.files;
+
+        console.log(file);
+        if (file.length > 0) {
+
+            this.formData.append('file', file[0])
+            this.conditionService.ConditionCustomUpload(this.formData).subscribe(res => {
+                event.target.value = '';
+
+                this.formData = new FormData();
+                this.existingRecordsResponse = res;
+                this.getConditionList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+
+                // $('#duplicateRecords').modal('show');
+                // document.getElementById('duplicateRecords').click();
+
+            })
+        }
+
     }
 
 }

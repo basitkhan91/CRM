@@ -346,7 +346,7 @@
                                 <div>
                                     <input class="form-control" type="number" pKeyFilter="pnum" name="workPhone" [(ngModel)]="contactInformation.workPhone" style="width: calc(100% - 63px) !important;" required>
                                     -
-                                    <input class="form-control w50" type="number"  name="workPhoneExtn" [(ngModel)]="contactInformation.workPhoneExtn">
+                                    <input class="form-control w50" type="text"  name="workPhoneExtn" [(ngModel)]="contactInformation.workPhoneExtn">
                                 </div>
                             </div>
                         </div>
@@ -364,7 +364,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Web Site</label>
-                                <input class="form-control" type="text" name="websiteURL" #url="ngModel" [pattern]="urlPattern" [(ngModel)]="contactInformation.websiteURL">
+                                <input class="form-control" type="text" name="websiteURL" #url="ngModel"  [(ngModel)]="contactInformation.websiteURL">
                                 <div *ngIf="url.errors" [ngClass]="'error'">
                                     <div *ngIf="url.errors.pattern">
                                         <span style="color:red">URL not valid</span>
@@ -454,7 +454,7 @@
 
 
 
-<div id="ATAADD" class="modal fade custom-popup" role="dialog">
+<div id="ATAADD" class="modal fade custom-popup" role="dialog" #ATAADD>
     <div class="modal-dialog modal-full">
     
       <div class="modal-content">
@@ -516,7 +516,7 @@
                   class="btn btn-primary-cstm"
                   (click)="addATAMapping()"
                 >
-                  Add
+                  Save
                 </button>
               </div>
             </div>

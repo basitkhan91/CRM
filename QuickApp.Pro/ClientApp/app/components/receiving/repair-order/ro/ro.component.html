@@ -76,9 +76,14 @@
                                                     <i class=" fa fa-chevron-down"></i>
                                                 </a>
                                             </span>
-                                            <span (click)="editStockLine(rowData)">
-                                                <a data-toggle="tooltip" pTooltip="Edit Stockline" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="" edit="">
+                                            <span *ngIf="rowData.statusId == 3" (click)="editStockLine(rowData)">
+                                                <a data-toggle="tooltip" pTooltip="Edit Received Parts" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="" edit="">
                                                     <i class="fa fa-edit"></i>
+                                                </a>
+                                            </span>
+                                            <span *ngIf="rowData.statusId == 4" (click)="viewSummary(rowData)">
+                                                <a data-toggle="tooltip" pTooltip="View Summary" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="" edit="">
+                                                    <i class="fa fa-external-link"></i>
                                                 </a>
                                             </span>
                                         </td>
@@ -326,7 +331,7 @@
                             </div>
                         </p-tabPanel>
 
-                        <p-tabPanel header="Receiving">
+                        <p-tabPanel header="Receiving" *ngIf="repairOrderData">
                             <app-ro-view-list [repairOrderData]="repairOrderData" ></app-ro-view-list>
                         </p-tabPanel>
                     </p-tabView>

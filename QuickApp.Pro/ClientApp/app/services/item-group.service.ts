@@ -73,5 +73,8 @@ export class ItemGroupService {
         return Observable.forkJoin(
             this.ItemgroupEndpoint.getItemGroupPagination<Itemgroup[]>(serverSidePagesData));
     }
+    ItemGroupCustomUpload(file) {
+        return this.ItemgroupEndpoint.ItemGroupCustomUpload(file);
+    }
 
 }

@@ -251,6 +251,15 @@ namespace DAL.Repositories
                 case "StocklineAdjustmentReason":
                     UploadStockAdjustmentReason(BindCustomData<StocklineAdjustmentReason>(file, "AdjustmentReasonId", moduleName));
                     break;
+
+                case "Condition":
+                    UploadCondition(BindCustomData<Condition>(file, "ConditionId", moduleName));
+                    break;
+
+                case "Integration":
+                    UploadIntegration(BindCustomData<IntegrationPortal>(file, "IntegrationPortalId", moduleName));
+                    break;
+
                 default:
                     break;
             }
@@ -696,6 +705,57 @@ namespace DAL.Repositories
                 if (!flag)
                 {
                     _appContext.stocklineAdjustmentReason.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadCondition(List<Condition> ConditionList)
+        {
+
+            foreach (var item in ConditionList)
+            {
+
+                var flag = _appContext.Condition.Any(p => p.IsDelete == false && !string.IsNullOrEmpty(p.Description)
+                && !string.IsNullOrEmpty(p.Description) &&
+                p.Description.ToLower() == item.Description.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.Condition.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadIntegration(List<IntegrationPortal> IntegrationList)
+        {
+
+            foreach (var item in IntegrationList)
+            {
+
+                var flag = _appContext.IntegrationPortal.Any(p => p.IsDelete == false && !string.IsNullOrEmpty(p.Description)
+                && !string.IsNullOrEmpty(p.Description) &&
+                p.Description.ToLower() == item.Description.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.IntegrationPortal.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadItemClass(List<ItemClassfication> ItemClassficationList)
+        {
+
+            foreach (var item in ItemClassficationList)
+            {
+
+                var flag = _appContext.ItemClassification.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.ItemClassificationCode)
+                && !string.IsNullOrEmpty(p.Description) &&
+                p.Description.ToLower() == item.ItemClassificationCode.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.ItemClassification.Add(item);
                     _appContext.SaveChanges();
                 }
             }

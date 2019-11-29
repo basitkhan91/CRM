@@ -5,19 +5,19 @@
         <div class="form-group marginr50" style="display: inline-block;margin: 10px 5px 0 5px;">
             <p class="fs10">
                 <label class="control-label" style="width: auto;">Asset ID :</label>
-                {{currentAsset.assetId}}
+                {{local?.assetId}}
             </p>
         </div>
         <div class="form-group marginr50" style="display: inline-block;margin: 10px 5px 0 5px;">
             <p class="fs10">
                 <label class="control-label" style="width: auto;">Alt Asset ID :</label>
-                {{currentAsset.alternateAssetId}}
+                {{local?.alternateAssetId}}
             </p>
         </div>
         <div class="form-group marginr50" style="display: inline-block;margin: 10px 5px 0 5px;">
             <p class="fs10">
                 <label class="control-label" style="width: auto;">Asset Name :</label>
-                {{currentAsset.name}}
+                {{local?.name}}
             </p>
         </div>
     </div>
@@ -164,6 +164,7 @@
             <th>Capability type</th>
             <th>Aircraft maufacturer</th>
             <th>Models</th>
+            <th>Dash Number</th>
             <th>Actions</th>
         </tr>
     </ng-template>
@@ -175,11 +176,12 @@
                 {{rowData[col.field]}}
 
             </td>
-            <td>{{assetCapes.asset?.assetId}}</td>
-            <td>{{assetCapes.asset?.description}}</td>
-            <td>{{assetCapes.capabilityType?.description}}</td>
-            <td>{{assetCapes.aircraftType?.description}}</td>
-            <td>{{assetCapes.aircraftModel?.modelName}}</td>
+            <td>{{assetCapes.partNumber}}</td>
+            <td>{{assetCapes.partDescription}}</td>
+            <td>{{assetCapes.captypedescription}}</td>
+            <td>{{assetCapes.manufacturer}}</td>
+            <td>{{assetCapes.modelname}}</td>
+            <td>{{assetCapes.dashnumber}}</td>
             <td>
                 <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                 <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
@@ -197,8 +199,8 @@
 
 
                 <!--<button class="btn-history" mat-icon-button matTooltip="History">
-                    <mat-icon color="green">history</mat-icon>
-                </button>-->
+            <mat-icon color="green">history</mat-icon>
+        </button>-->
             </td>
         </tr>
     </ng-template>

@@ -433,7 +433,7 @@ export class RoSetupComponent implements OnInit {
 						this.newPartsList = {
 							...x,
 							partNumberId: getObjectById('value', x.itemMasterId, this.allPartnumbersInfo),					
-							ifSplitShip: x.roPartSplits.length > 0 ? true : false,
+							ifSplitShip: x.roPartSplits ? true : false,
 							partNumber: x.partNumber,
 							partDescription: x.partDescription,
 							needByDate: new Date(x.needByDate),
@@ -890,6 +890,8 @@ export class RoSetupComponent implements OnInit {
 				if (childDataList.length > 0) {
 					console.log(childDataList);
 					for (let j = 0; j < childDataList.length; j++) {
+						this["splitAddressData"+i+j] = this["splitAddressData"+i+j] ? this["splitAddressData"+i+j] : [];
+						console.log(this["splitAddressData"+i+j]);
 						this.childObject = {
 							repairOrderId: repId,
 							//isParent: false,

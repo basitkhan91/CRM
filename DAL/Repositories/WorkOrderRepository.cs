@@ -360,7 +360,7 @@ namespace DAL.Repositories
                                            wo.CSR,
                                            wo.CustomerReference,
                                            workFlowWorkOrderId = wo.IsSinglePN == true ? wf.WorkFlowWorkOrderId : 0,
-                                           workFlowId = wo.IsSinglePN == true ? wf.WorkflowId:0,
+                                           workFlowId = wo.IsSinglePN == true ? wf.WorkflowId : 0,
                                        }).FirstOrDefault();
                 return workOrderHeader;
             }
@@ -668,7 +668,14 @@ namespace DAL.Repositories
                 workOrderLaborHeader.IsActive = true;
                 workOrderLaborHeader.IsDeleted = false;
 
-                _appContext.WorkOrderLaborHeader.Add(workOrderLaborHeader);
+                if (workOrderLaborHeader.WorkOrderLaborHeaderId > 0)
+                {
+                    _appContext.WorkOrderLaborHeader.Update(workOrderLaborHeader);
+                }
+                else
+                {
+                    _appContext.WorkOrderLaborHeader.Add(workOrderLaborHeader);
+                }
                 _appContext.SaveChanges();
                 return workOrderLaborHeader.WorkOrderLaborHeaderId;
             }
@@ -699,10 +706,6 @@ namespace DAL.Repositories
 
         public object GetWorkFlowWorkOrderLabourList(long wfwoId = 0, long workOrderId = 0)
         {
-            // WorkOrderLaborHeader workFlowLabourHeader = new WorkOrderLaborHeader();
-            //  WorkOrderLaborList workOrderLaborList = null;
-            //int count = 0;
-
             try
             {
                 var laborList = (from lh in _appContext.WorkOrderLaborHeader
@@ -714,7 +717,7 @@ namespace DAL.Repositories
                                  join emp in _appContext.Employee on lh.EmployeeId equals emp.EmployeeId into lhemp
                                  from emp in lhemp.DefaultIfEmpty()
                                  join wfwo in _appContext.WorkOrderWorkFlow on lh.WorkFlowWorkOrderId equals wfwo.WorkFlowWorkOrderId
-                                 where lh.IsDeleted == false && (lh.WorkFlowWorkOrderId == wfwoId || lh.WorkOrderId == workOrderId)
+                                 where lh.IsDeleted == false && lh.WorkFlowWorkOrderId == wfwoId
                                  select new
                                  {
                                      lh.CreatedBy,
@@ -734,6 +737,7 @@ namespace DAL.Repositories
                                      lh.WorkOrderId,
                                      lh.WorkOrderLaborHeaderId,
                                      lh.ExpertiseId,
+                                     lh.TotalWorkHours,
                                      wfwo.WorkFlowWorkOrderNo,
                                      DataEnteredByName = deby.FirstName,
                                      ExpertiseType = exp.Description,
@@ -743,9 +747,9 @@ namespace DAL.Repositories
                                                   from exp in wolexp.DefaultIfEmpty()
                                                   join emp in _appContext.Employee on wol.EmployeeId equals emp.EmployeeId into wolemp
                                                   from emp in wolemp.DefaultIfEmpty()
-                                                  where wol.WorkOrderLaborHeaderId == lh.WorkOrderLaborHeaderId
-                                                  join task in _appContext.Task on wol.TaskId equals task.TaskId into woltask
+                                                  join task in _appContext.Task.Where(p=>p.IsActive==true && p.IsDelete==false) on wol.TaskId equals task.TaskId into woltask
                                                   from task in woltask.DefaultIfEmpty()
+                                                  where wol.WorkOrderLaborHeaderId == lh.WorkOrderLaborHeaderId
                                                   select new
                                                   {
                                                       wol.AdjustedHours,
@@ -771,8 +775,7 @@ namespace DAL.Repositories
                                                       wol.WorkOrderLaborId,
                                                       EmployeeName = emp.FirstName
                                                   }
-                                                 ).ToList()
-                                     // _appContext.WorkOrderLabor.Where(p => p.WorkOrderLaborHeaderId == lh.WorkOrderLaborHeaderId).ToList()
+                                                 ).Distinct().ToList()
                                  }
 
                                ).FirstOrDefault();
@@ -862,7 +865,7 @@ namespace DAL.Repositories
                             join ct in _appContext.ChargesTypes on woc.ChargesTypeId equals ct.Id
                             join v in _appContext.Vendor on woc.VendorId equals v.VendorId into wocv
                             from v in wocv.DefaultIfEmpty()
-                            where woc.IsDeleted == false && (woc.WorkFlowWorkOrderId == wfwoId || woc.WorkOrderId == workOrderId)
+                            where woc.IsDeleted == false && woc.WorkFlowWorkOrderId == wfwoId
                             select new
                             {
                                 woc.ChargesTypeId,
@@ -982,7 +985,7 @@ namespace DAL.Repositories
                 var workOrderAssetsList = (from wa in _appContext.WorkOrderAssets
                                            join a in _appContext.Asset on wa.AssetRecordId equals a.AssetRecordId
                                            join at in _appContext.AssetType on a.AssetTypeId equals at.AssetTypeId
-                                           where wa.IsDeleted == false && (wa.WorkOrderId == workOrderId || wa.WorkFlowWorkOrderId == wfwoId)
+                                           where wa.IsDeleted == false && wa.WorkFlowWorkOrderId == wfwoId
                                            select new
                                            {
                                                wa.AssetRecordId,
@@ -1190,7 +1193,7 @@ namespace DAL.Repositories
                                                from eo in weeo.DefaultIfEmpty()
                                                join mp in _appContext.MarkUpPercentage on we.MarkUpPercentageId equals mp.MarkUpPercentageId into wemp
                                                from mp in wemp.DefaultIfEmpty()
-                                               where we.IsDeleted == false && (we.WorkFlowWorkOrderId == wfwoId || we.WorkOrderId == workOrderId)
+                                               where we.IsDeleted == false && we.WorkFlowWorkOrderId == wfwoId
                                                select new
                                                {
                                                    we.CostPlusAmount,
@@ -1199,7 +1202,7 @@ namespace DAL.Repositories
                                                    Epn = im.PartNumber,
                                                    EpnDescription = im.PartDescription,
                                                    we.EstOcuuranceId,
-                                                   EstOcuurance = eo.Name==null?"": eo.Name,
+                                                   EstOcuurance = eo.Name == null ? "" : eo.Name,
                                                    we.ExtendedCost,
                                                    we.FixedAmount,
                                                    we.IsActive,
@@ -1207,7 +1210,7 @@ namespace DAL.Repositories
                                                    we.IsFromWorkFlow,
                                                    we.ItemMasterId,
                                                    we.MarkUpPercentageId,
-                                                   MarkUpPercentage = mp.MarkUpValue==null?"": mp.MarkUpValue,
+                                                   MarkUpPercentage = mp.MarkUpValue == null ? "" : mp.MarkUpValue,
                                                    we.MasterCompanyId,
                                                    we.Memo,
                                                    we.Quantity,
@@ -1215,7 +1218,7 @@ namespace DAL.Repositories
                                                    we.SourceId,
                                                    Source = we.SourceId == 0 ? "" : (we.SourceId == 1 ? "Manual" : "Workflow"),
                                                    we.TaskId,
-                                                   Task = task.Description==null?"": task.Description,
+                                                   Task = task.Description == null ? "" : task.Description,
                                                    we.UnitCost,
                                                    we.UpdatedBy,
                                                    we.UpdatedDate,
@@ -1293,40 +1296,39 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<WorkOrderDocuments> GetWorkFlowWorkOrderDocumentsList(long wfwoId = 0, long workOrderId = 0)
+        public IEnumerable<object> GetWorkFlowWorkOrderDocumentsList(long wfwoId = 0, long workOrderId = 0)
         {
-            List<WorkOrderDocuments> workOrderDocumentsList = new List<WorkOrderDocuments>();
-            WorkOrderDocuments workOrderDocuments;
-
             try
             {
+                var workOrderDocuments = (from wd in _appContext.WorkOrderDocuments
 
-                var result = (from wd in _appContext.WorkOrderDocuments
-
-                              join doc in _appContext.Document on wd.DocumentId equals doc.DocumentId
-                              where wd.IsDeleted == false && (wd.WorkFlowWorkOrderId == wfwoId || wd.WorkOrderId == workOrderId)
-                              select new
-                              {
-                                  WorkOrderDocuments = wd,
-                                  DocumentCode = doc.DocumentCode
-                              })
+                                          join doc in _appContext.Document on wd.DocumentId equals doc.DocumentId
+                                          where wd.IsDeleted == false && wd.WorkFlowWorkOrderId == wfwoId
+                                          select new
+                                          {
+                                              wd.CompanyId,
+                                              wd.CreatedBy,
+                                              wd.CreatedDate,
+                                              wd.Description,
+                                              wd.DocumentId,
+                                              wd.DocumentLink,
+                                              wd.IsActive,
+                                              wd.IsDeleted,
+                                              wd.ManagementStructureId,
+                                              wd.MasterCompanyId,
+                                              wd.UpdatedBy,
+                                              wd.UpdatedDate,
+                                              wd.WorkFlowWorkOrderId,
+                                              wd.WorkOrderDocumentsId,
+                                              wd.WorkOrderId,
+                                              DocumentCode = doc.DocumentCode
+                                          }).Distinct()
                              .ToList();
 
 
-                if (result != null && result.Count > 0)
-                {
-                    foreach (var item in result)
-                    {
-                        workOrderDocuments = new WorkOrderDocuments();
-                        workOrderDocuments = item.WorkOrderDocuments;
-                        workOrderDocuments.DocumentCode = item.DocumentCode;
-
-                        workOrderDocumentsList.Add(workOrderDocuments);
-                    }
-                }
-
-                return workOrderDocumentsList;
+                return workOrderDocuments;
             }
+
             catch (Exception)
             {
 
@@ -1765,64 +1767,42 @@ namespace DAL.Repositories
             }
         }
 
-        public WorkOrderQuote GetWorkFlowWorkOrderQuote(long wfwoId = 0, long workOrderId = 0)
+        public object GetWorkFlowWorkOrderQuote(long wfwoId = 0, long workOrderId = 0)
         {
             try
             {
-                WorkOrderQuote workOrderQuote = new WorkOrderQuote();
-                var result = (from wq in _appContext.WorkOrderQuote
-                              join wo in _appContext.WorkOrder on wq.WorkOrderId equals wo.WorkOrderId
-                              join cust in _appContext.Customer on wq.CustomerId equals cust.CustomerId
-                              join cur in _appContext.Currency on wq.CurrencyId equals cur.CurrencyId
-                              join emp in _appContext.Employee on wq.EmployeeId equals emp.EmployeeId
-                              join sp in _appContext.Employee on wq.SalesPersonId equals sp.EmployeeId
-                              join cc in _appContext.CustomerContact on cust.CustomerId equals cc.CustomerId into custcc
-                              from cc in custcc.DefaultIfEmpty()
-                              join con in _appContext.Contact on cc.ContactId equals con.ContactId into cccon
-                              from con in cccon.DefaultIfEmpty()
-                              join ct in _appContext.CreditTerms on cust.CreditTermsId equals ct.CreditTermsId into custct
-                              from ct in custct.DefaultIfEmpty()
-                              where (wq.WorkFlowWorkOrderId == wfwoId || wq.WorkOrderId == workOrderId) && wq.IsDeleted == false
-                              select new
-                              {
-                                  WorkOrderQuote = wq,
-                                  WorkOrderNumber = wo.WorkOrderNum,
-                                  CurrencyName = cur.Symbol,
-                                  CurrencyCode = cur.Code,
-                                  CustomerName = cust.Name,
-                                  CustomerCode = cust.CustomerCode,
-                                  CustomerContact = con == null ? "" : con.WorkPhone,
-                                  CustomerEmail = cust.Email,
-                                  CustomerPhone = cust.CustomerPhone,
-                                  CustomerReference = cust.CSRName,
-                                  CreditLimit = cust.CreditLimit,
-                                  CreditTermId = ct == null ? 0 : ct.CreditTermsId,
-                                  CreditTerm = ct == null ? "" : ct.Name,
-                                  SalesPersonName = sp.FirstName + ' ' + sp.LastName,
-                                  EmployeeName = emp.FirstName + ' ' + emp.LastName
+                var workOrderQuote = (from wq in _appContext.WorkOrderQuote
+                                      join wo in _appContext.WorkOrder on wq.WorkOrderId equals wo.WorkOrderId
+                                      join cust in _appContext.Customer on wq.CustomerId equals cust.CustomerId
+                                      join cur in _appContext.Currency on wq.CurrencyId equals cur.CurrencyId
+                                      join emp in _appContext.Employee on wq.EmployeeId equals emp.EmployeeId
+                                      join sp in _appContext.Employee on wq.SalesPersonId equals sp.EmployeeId
+                                      join cc in _appContext.CustomerContact on cust.CustomerId equals cc.CustomerId into custcc
+                                      from cc in custcc.DefaultIfEmpty()
+                                      join con in _appContext.Contact on cc.ContactId equals con.ContactId into cccon
+                                      from con in cccon.DefaultIfEmpty()
+                                      join ct in _appContext.CreditTerms on cust.CreditTermsId equals ct.CreditTermsId into custct
+                                      from ct in custct.DefaultIfEmpty()
+                                      where wq.WorkFlowWorkOrderId == wfwoId && wq.IsDeleted == false
+                                      select new
+                                      {
+                                          WorkOrderQuote = wq,
+                                          WorkOrderNumber = wo.WorkOrderNum,
+                                          CurrencyName = cur.Symbol,
+                                          CurrencyCode = cur.Code,
+                                          CustomerName = cust.Name,
+                                          CustomerCode = cust.CustomerCode,
+                                          CustomerContact = con == null ? "" : con.WorkPhone,
+                                          CustomerEmail = cust.Email,
+                                          CustomerPhone = cust.CustomerPhone,
+                                          CustomerReference = cust.CSRName,
+                                          CreditLimit = cust.CreditLimit,
+                                          CreditTermId = ct == null ? 0 : ct.CreditTermsId,
+                                          CreditTerm = ct == null ? "" : ct.Name,
+                                          SalesPersonName = sp.FirstName + ' ' + sp.LastName,
+                                          EmployeeName = emp.FirstName + ' ' + emp.LastName
 
-                              })
-                                .FirstOrDefault();
-                if (result != null)
-                {
-                    workOrderQuote = result.WorkOrderQuote;
-                    workOrderQuote.workOrderNumber = result.WorkOrderNumber;
-                    workOrderQuote.CurrencyName = result.CurrencyName;
-                    workOrderQuote.CurrencyCode = result.CurrencyCode;
-                    workOrderQuote.CustomerName = result.CustomerName;
-                    workOrderQuote.CustomerCode = result.CustomerCode;
-                    workOrderQuote.CustomerContact = result.CustomerContact;
-                    workOrderQuote.CustomerEmail = result.CustomerEmail;
-                    workOrderQuote.CustomerPhone = result.CustomerPhone;
-                    workOrderQuote.CustomerReference = result.CustomerReference;
-                    workOrderQuote.CreditLimit = result.CreditLimit;
-                    workOrderQuote.CreditTermId = result.CreditTermId;
-                    workOrderQuote.CreditTerm = result.CreditTerm;
-                    workOrderQuote.SalesPersonName = result.SalesPersonName;
-                    workOrderQuote.EmployeeName = result.EmployeeName;
-
-                }
-
+                                      }).FirstOrDefault();
                 return workOrderQuote;
             }
             catch (Exception)
@@ -1874,37 +1854,40 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<WorkOrderFreight> GetWorkFlowWorkOrderFreightList(long wfwoId = 0, long workOrderId = 0)
+        public IEnumerable<object> GetWorkFlowWorkOrderFreightList(long wfwoId = 0, long workOrderId = 0)
         {
-            List<WorkOrderFreight> workOrderFreightList = new List<WorkOrderFreight>();
-            WorkOrderFreight workOrderFreight;
-
             try
             {
-                var result = (from wf in _appContext.WorkOrderFreight
-                              join car in _appContext.ShippingVia on wf.CarrierId equals car.ShippingViaId
-                              join sv in _appContext.ShippingVia on wf.ShipViaId equals sv.ShippingViaId
-                              where wf.IsDeleted == false && (wf.WorkFlowWorkOrderId == wfwoId || wf.WorkOrderId == workOrderId)
-                              select new
-                              {
-                                  WorkOrderFreight = wf,
-                                  ShipViaName = sv.Name,
-                                  CarrierName = car.Name
-                              }).ToList();
+                var workOrderFreightList = (from wf in _appContext.WorkOrderFreight
+                                            join car in _appContext.ShippingVia on wf.CarrierId equals car.ShippingViaId
+                                            join sv in _appContext.ShippingVia on wf.ShipViaId equals sv.ShippingViaId
+                                            where wf.IsDeleted == false && wf.WorkFlowWorkOrderId == wfwoId
+                                            select new
+                                            {
+                                                wf.Amount,
+                                                wf.CarrierId,
+                                                wf.CreatedBy,
+                                                wf.CreatedDate,
+                                                wf.FixedAmount,
+                                                wf.Height,
+                                                wf.IsActive,
+                                                wf.IsDeleted,
+                                                wf.IsFixedFreight,
+                                                wf.Length,
+                                                wf.MasterCompanyId,
+                                                wf.Memo,
+                                                wf.ShipViaId,
+                                                wf.UpdatedBy,
+                                                wf.UpdatedDate,
+                                                wf.Weight,
+                                                wf.Width,
+                                                wf.WorkFlowWorkOrderId,
+                                                wf.WorkOrderFreightId,
+                                                wf.WorkOrderId,
+                                                ShipViaName = sv.Name,
+                                                CarrierName = car.Name
+                                            }).Distinct().ToList();
 
-                if (result != null && result.Count > 0)
-                {
-                    foreach (var item in result)
-                    {
-                        workOrderFreight = new WorkOrderFreight();
-                        workOrderFreight = item.WorkOrderFreight;
-                        workOrderFreight.CarrierName = item.CarrierName;
-                        workOrderFreight.ShipViaName = item.ShipViaName;
-
-                        workOrderFreightList.Add(workOrderFreight);
-                    }
-
-                }
                 return workOrderFreightList;
             }
             catch (Exception)
@@ -2010,75 +1993,44 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<WorkOrderPublicationList> GetWorkOrderPublications(long wfwoId, long workOrderId)
+        public IEnumerable<object> GetWorkOrderPublications(long wfwoId, long workOrderId)
         {
             try
             {
-                List<WorkOrderPublicationList> workOrderPublicationList = new List<WorkOrderPublicationList>();
-                WorkOrderPublicationList workOrderPublication;
+                var workOrderPublicationList = (from wop in _appContext.WorkOrderPublications
+                                                join pub in _appContext.Publication on wop.PublicationId equals pub.PublicationRecordId
+                                                join act in _appContext.AircraftType on wop.AircraftManufacturerId equals act.AircraftTypeId into wopact
+                                                from act in wopact.DefaultIfEmpty()
+                                                join acm in _appContext.AircraftModel on wop.ModelId equals acm.AircraftModelId into wopacm
+                                                from acm in wopacm.DefaultIfEmpty()
+                                                join pt in _appContext.PublicationType on pub.PublicationTypeId equals pt.PublicationTypeId
+                                                join vfb in _appContext.Employee on pub.VerifiedBy equals vfb.EmployeeId into pubvfb
+                                                from vfb in pubvfb.DefaultIfEmpty()
+                                                where wop.IsDeleted == false && wop.WorkFlowWorkOrderId == wfwoId
+                                                select new
+                                                {
+                                                    wop.WorkOrderPublicationId,
+                                                    wop.WorkOrderId,
+                                                    wop.WorkFlowWorkOrderId,
+                                                    wop.PublicationId,
+                                                    wop.AircraftManufacturerId,
+                                                    wop.ModelId,
+                                                    PublicationDescription = pub.Description,
+                                                    PublicationType = pt.Description,
+                                                    pub.RevisionDate,
+                                                    pub.Sequence,
+                                                    Source = "",
+                                                    AirCraftManufacturer = act.Description,
+                                                    Model = acm.ModelName,
+                                                    pub.Location,
+                                                    VerifiedBy = vfb.FirstName,
+                                                    pub.VerifiedDate,
+                                                    Status = "",
+                                                    Image = "",
+                                                    PublicationName = pub.PublicationId,
+                                                    WorkOrderPublicationDashNumber = _appContext.WorkOrderPublicationDashNumber.Where(x => x.WorkOrderPublicationId == wop.WorkOrderPublicationId).ToList()
+                                                }).Distinct().ToList();
 
-                var list = (from wop in _appContext.WorkOrderPublications
-                            join pub in _appContext.Publication on wop.PublicationId equals pub.PublicationRecordId
-                            join act in _appContext.AircraftType on wop.AircraftManufacturerId equals act.AircraftTypeId into wopact
-                            from act in wopact.DefaultIfEmpty()
-                            join acm in _appContext.AircraftModel on wop.ModelId equals acm.AircraftModelId into wopacm
-                            from acm in wopacm.DefaultIfEmpty()
-                            join pt in _appContext.PublicationType on pub.PublicationTypeId equals pt.PublicationTypeId
-                            join vfb in _appContext.Employee on pub.VerifiedBy equals vfb.EmployeeId into pubvfb
-                            from vfb in pubvfb.DefaultIfEmpty()
-                            where wop.IsDeleted == false && (wop.WorkFlowWorkOrderId == wfwoId || wop.WorkOrderId == workOrderId)
-                            select new
-                            {
-                                wop.WorkOrderPublicationId,
-                                wop.WorkOrderId,
-                                wop.WorkFlowWorkOrderId,
-                                wop.PublicationId,
-                                wop.AircraftManufacturerId,
-                                wop.ModelId,
-                                PublicationDescription = pub.Description,
-                                PublicationType = pt.Description,
-                                pub.RevisionDate,
-                                pub.Sequence,
-                                Source = "",
-                                AirCraftManufacturer = act.Description,
-                                Model = acm.ModelName,
-                                pub.Location,
-                                VerifiedBy = vfb.FirstName,
-                                pub.VerifiedDate,
-                                Status = "",
-                                Image = "",
-								PublicationName = pub.PublicationId,
-							}).Distinct().ToList();
-
-                if (list != null && list.Count > 0)
-                {
-                    foreach (var item in list)
-                    {
-                        workOrderPublication = new WorkOrderPublicationList();
-                        workOrderPublication.AirCraftManufacturer = item.AirCraftManufacturer;
-                        workOrderPublication.AircraftManufacturerId = item.AircraftManufacturerId;
-                        workOrderPublication.Image = item.Image;
-                        workOrderPublication.Location = item.Location;
-                        workOrderPublication.Model = item.Model;
-                        workOrderPublication.ModelId = item.ModelId;
-                        workOrderPublication.PublicationDescription = item.PublicationDescription;
-                        workOrderPublication.PublicationId = item.PublicationId;
-                        workOrderPublication.PublicationType = item.PublicationType;
-                        workOrderPublication.RevisionDate = item.RevisionDate;
-                        workOrderPublication.Sequence = item.Sequence;
-                        workOrderPublication.Source = item.Source;
-                        workOrderPublication.Status = item.Status;
-                        workOrderPublication.VerifiedBy = item.VerifiedBy;
-                        workOrderPublication.VerifiedDate = item.VerifiedDate;
-                        workOrderPublication.WorkFlowWorkOrderId = item.WorkFlowWorkOrderId;
-                        workOrderPublication.WorkOrderId = item.WorkOrderId;
-                        workOrderPublication.WorkOrderPublicationId = item.WorkOrderPublicationId;
-						workOrderPublication.PublicationName = item.PublicationName;
-                        workOrderPublication.WorkOrderPublicationDashNumber = _appContext.WorkOrderPublicationDashNumber.Where(x => x.WorkOrderPublicationId == item.WorkOrderPublicationId).ToList();
-
-                        workOrderPublicationList.Add(workOrderPublication);
-                    }
-                }
 
                 return workOrderPublicationList;
             }
@@ -2100,7 +2052,7 @@ namespace DAL.Repositories
             try
             {
                 var list = (from wod in _appContext.WorkOrderDirections
-                            where wod.IsDeleted == false && (wod.WorkFlowWorkOrderId == wfwoId || wod.WorkOrderId == workOrderId)
+                            where wod.IsDeleted == false && wod.WorkFlowWorkOrderId == wfwoId
                             select new
                             {
 
@@ -3332,6 +3284,20 @@ namespace DAL.Repositories
 
                     var exDirections = _appContext.WorkOrderDirections.Where(p => p.WorkFlowWorkOrderId == workFlow.workFlowWorkOrderId && p.WorkOrderId == workFlow.workOrderId && p.IsFromWorkFlow == true).ToList();
                     _appContext.WorkOrderDirections.RemoveRange(exDirections);
+
+                    var woPublication = _appContext.WorkOrderPublications.Where(p => p.WorkFlowWorkOrderId == workFlow.workFlowWorkOrderId).ToList();
+
+                    if (woPublication != null && woPublication.Count > 0)
+                    {
+                        foreach (var pub in woPublication)
+                        {
+                            var exPublicationDashNumbers = _appContext.WorkOrderPublicationDashNumber.Where(p => p.WorkOrderPublicationId == pub.WorkOrderPublicationId).ToList();
+                            _appContext.WorkOrderPublicationDashNumber.RemoveRange(exPublicationDashNumbers);
+                            _appContext.SaveChanges();
+                        }
+
+                    }
+
 
                     var exPublication = _appContext.WorkOrderPublications.Where(p => p.WorkFlowWorkOrderId == workFlow.workFlowWorkOrderId && p.WorkOrderId == workFlow.workOrderId && p.IsFromWorkFlow == true).ToList();
                     _appContext.WorkOrderPublications.RemoveRange(exPublication);

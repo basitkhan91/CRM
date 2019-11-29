@@ -198,7 +198,8 @@ namespace QuickApp.Pro.Controllers
                         assetcapes.IsDelete = false;
                         assetcapes.AircraftTypeId = capabilities[i].AircraftTypeId;
                         assetcapes.AircraftModelId = capabilities[i].AircraftModelId;
-
+                        assetcapes.AircraftDashNumberId = capabilities[i].AircraftDashNumberId;
+                        assetcapes.ItemMasterId = capabilities[i].ItemMasterId;
                         _unitOfWork.Repository<AssetCapes>().Add(assetcapes);
                         _unitOfWork.SaveChanges();
                     }
@@ -398,9 +399,9 @@ namespace QuickApp.Pro.Controllers
                     newAssetCapes.AircraftTypeId = capes.AircraftTypeId;
                     newAssetCapes.AircraftModelId = capes.AircraftModelId;
                     newAssetCapes.AircraftDashNumberId = capes.AircraftDashNumberId;
-                    newAssetCapes.AircraftType = capes.AircraftType;
-                    newAssetCapes.AircraftModel = capes.AircraftModel;
-                    newAssetCapes.AircraftDashNumber = capes.AircraftDashNumber;
+                    //newAssetCapes.AircraftType = capes.AircraftType;
+                    //newAssetCapes.AircraftModel = capes.AircraftModel;
+                    //newAssetCapes.AircraftDashNumber = capes.AircraftDashNumber;
                     _unitOfWork.Repository<AssetCapes>().Update(newAssetCapes);
                     _unitOfWork.SaveChanges();
                 }

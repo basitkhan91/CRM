@@ -518,11 +518,11 @@ namespace DAL.Repositories
                                 ? roPart.ItemMaster.PartDescription
                                 : string.Empty;
                             repairOrderPartDto.QuantityOrdered = roPart.QuantityOrdered;
-                            repairOrderPartDto.QuantityReceived = _getStockLineInfo(roPart.RepairOrderPartRecordId).QuantityToReceive;
+                            repairOrderPartDto.QuantityReceived = _getStockLineInfo(roPart.RepairOrderPartRecordId)?.QuantityToReceive;
                             repairOrderPartDto.QuantityBackOrdered = roPart.QuantityBackOrdered;
-                            repairOrderPartDto.QuantityRejected = _getStockLineInfo(roPart.RepairOrderPartRecordId).QuantityRejected;
+                            repairOrderPartDto.QuantityRejected = _getStockLineInfo(roPart.RepairOrderPartRecordId)?.QuantityRejected;
                             repairOrderPartDto.Status = _getStatus(roPart.StatusId);
-                            repairOrderPartDto.IsSerialized =_getStockLineInfo(roPart.RepairOrderPartRecordId).IsSerialized;
+                            repairOrderPartDto.IsSerialized =_getStockLineInfo(roPart.RepairOrderPartRecordId)?.IsSerialized;
                             repairOrderPartDto.IsTimeLife = roPart.ItemMaster?.IsTimeLife;
                             repairOrderPartDto.ConditionId = roPart.ConditionId;
                             repairOrderPartDto.GlAccountId = roPart.GlAccountId ?? roPart.ItemMaster?.GLAccountId;
@@ -531,11 +531,10 @@ namespace DAL.Repositories
                             repairOrderPartDto.ExtendedCost = roPart.ExtendedCost;
                             repairOrderPartDto.ManufacturerId = roPart.ManufacturerId;
                             repairOrderPartDto.ManufacturerName = roPart?.ItemMaster?.Manufacturer?.Name;
-                            repairOrderPartDto.StockLineId = _getStockLineInfo(roPart.RepairOrderPartRecordId).StockLineId;
-                            repairOrderPartDto.StockLineNumber = _getStockLineInfo(roPart.RepairOrderPartRecordId).StockLineNumber;
-                            // TODO: Not sure about "ControlId"
-                            repairOrderPartDto.ControlId = _getStockLineInfo(roPart.RepairOrderPartRecordId).ConditionId.ToString();
-                            repairOrderPartDto.ControlNumber = _getStockLineInfo(roPart.RepairOrderPartRecordId).ControlNumber;
+                            repairOrderPartDto.StockLineId = _getStockLineInfo(roPart.RepairOrderPartRecordId)?.StockLineId;
+                            repairOrderPartDto.StockLineNumber = _getStockLineInfo(roPart.RepairOrderPartRecordId)?.StockLineNumber;
+                            repairOrderPartDto.ControlId = _getStockLineInfo(roPart.RepairOrderPartRecordId)?.IdNumber;
+                            repairOrderPartDto.ControlNumber = _getStockLineInfo(roPart.RepairOrderPartRecordId)?.ControlNumber;
 
                             repairOrderDto.RepairOrderPart.Add(repairOrderPartDto);
                         }
@@ -549,19 +548,19 @@ namespace DAL.Repositories
                                     ? roPart.ItemMaster.PartNumber
                                     : string.Empty,
                                 QuantityOrdered = roPart.QuantityOrdered,
-                                QuantityReceived =  _getStockLineInfo(roPart.RepairOrderPartRecordId).QuantityToReceive,
+                                QuantityReceived =  _getStockLineInfo(roPart.RepairOrderPartRecordId)?.QuantityToReceive,
                                 QuantityBackOrdered = roPart.QuantityBackOrdered,
-                                QuantityRejected = _getStockLineInfo(roPart.RepairOrderPartRecordId).QuantityRejected,
+                                QuantityRejected = _getStockLineInfo(roPart.RepairOrderPartRecordId)?.QuantityRejected,
                                 Status = _getStatus(roPart.StatusId),
                                 ManagementStructureId = roPart.ManagementStructureId,
                                 // TODO: WHERE TO GET THESE"?
                                 UserType = string.Empty,
                                 UserName = string.Empty,
                                 Address = string.Empty,
-                                StockLineId = _getStockLineInfo(roPart.RepairOrderPartRecordId).StockLineId,
-                                StockLineNumber = _getStockLineInfo(roPart.RepairOrderPartRecordId).StockLineNumber,
-                                ControlId = _getStockLineInfo(roPart.RepairOrderPartRecordId).ConditionId.ToString(),
-                                ControlNumber = _getStockLineInfo(roPart.RepairOrderPartRecordId).ControlNumber,
+                                StockLineId = _getStockLineInfo(roPart.RepairOrderPartRecordId)?.StockLineId,
+                                StockLineNumber = _getStockLineInfo(roPart.RepairOrderPartRecordId)?.StockLineNumber,
+                                ControlId = _getStockLineInfo(roPart.RepairOrderPartRecordId)?.IdNumber,
+                                ControlNumber = _getStockLineInfo(roPart.RepairOrderPartRecordId)?.ControlNumber,
                             };
 
                             if (repairOrderPartDto.RepairOrderSplitParts == null)

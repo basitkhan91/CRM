@@ -300,11 +300,19 @@ namespace QuickApp.Pro.Controllers
             return Ok(dynamicGridData);
         }
 
-        [HttpPost("uploaditemclassificationcustomdata")]
-        public IActionResult UploadCustomData()
+        [HttpPost("UploadItemClassCustomData")]
+        public IActionResult UploadItemClassCustomData()
         {
-            var result = _unitOfWork.ItemClassification.UploadCustomData(Request.Form.Files[0]);
-            return Ok(result);
+
+            _unitOfWork.FileUploadRepository.UploadCustomFile(Convert.ToString("ItemClassification"), Request.Form.Files[0]);
+            return Ok();
         }
+
+        //[HttpPost("uploaditemclassificationcustomdata")]
+        //public IActionResult UploadCustomData()
+        //{
+        //    var result = _unitOfWork.ItemClassification.UploadCustomData(Request.Form.Files[0]);
+        //    return Ok(result);
+        //}
     }
 }

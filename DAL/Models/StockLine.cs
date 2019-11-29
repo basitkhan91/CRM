@@ -61,6 +61,7 @@ namespace DAL.Models
         [ForeignKey("RepairOrderId")]
         public long? RepairOrderId { get; set; }
         public decimal? RepairOrderUnitCost { get; set; }
+        public decimal? RepairOrderExtendedCost { get; set; }
         public DateTime? ReceivedDate { get; set; }
         public string ReceiverNumber { get; set; }
         public string ReconciliationNumber { get; set; }

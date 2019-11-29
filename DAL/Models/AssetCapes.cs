@@ -19,10 +19,10 @@ namespace DAL.Models
         public int? AircraftTypeId { get; set; }
         public Nullable<long> AircraftModelId { get; set; }
         public Nullable<long> AircraftDashNumberId { get; set; }
-        public string AircraftType { get; set; }
-        public string AircraftModel { get; set; }
-        public string AircraftDashNumber { get; set; }
-        public long ItemMasterId { get; set; }
+        //public string AircraftType { get; set; }
+        //public string AircraftModel { get; set; }
+        //public string AircraftDashNumber { get; set; }
+        public long? ItemMasterId { get; set; }
         //public virtual Asset Asset { get; set; }
     }
 }

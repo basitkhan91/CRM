@@ -170,7 +170,7 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("uploadProvisionCustomdata")]
         public IActionResult uploadProvisionCustomdata()
         {
-            _unitOfWork.FileUploadRepository.UploadCustomFile(Convert.ToString("DepreciationConvention"), Request.Form.Files[0]);
+            _unitOfWork.FileUploadRepository.UploadCustomFile(Convert.ToString("Provision"), Request.Form.Files[0]);
             return Ok();
         }
 

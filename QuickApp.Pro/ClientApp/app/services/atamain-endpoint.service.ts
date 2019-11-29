@@ -18,6 +18,7 @@ export class ATAMainEndpoint extends EndpointFactory {
     private readonly getATAUrl: string = "/api/ATAMain/GetATASUBS_BY_ATAMain_ID";
     private readonly getMultiATAUrl: string = "/api/ATAMain/GetMultiATASUBSBYATAMainID";
     private readonly deleteATAURL: string = "/api/ATAMain/deleteATAMAIN";
+    private readonly excelUpload: string = "/api/ATAMain/UploadataChapterCustomData";
     
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 
@@ -101,6 +102,10 @@ export class ATAMainEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getMultiATASubByID(Chapterids));
             });
     }
-    
+
+    ataChapterCustomUpload(file) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}`, file)
+
+    }
    
 }

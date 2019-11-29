@@ -72,6 +72,8 @@ namespace DAL.Repositories.Interfaces
 
         void CustomerShippingDetailsStatus(long id, bool status, string updatedBy);
         void CustomerBillingStatus(long id, bool status, string updatedBy);
+        void DeleteShipViaDetails(long id, string updatedBy);
+        void CustomerShippingDetailsViaStatus(long id, bool status, string updatedBy);
 
 
     }

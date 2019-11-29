@@ -49,6 +49,7 @@ export class IntegrationComponent implements OnInit {
     private table: Table;
     auditHistory: any[] = [];
     disableSaveGroupId: boolean = false;
+    existingRecordsResponse: Object;
     PortalList: any;
     disableSaveForDescription: boolean = false;
     descriptionList: any;
@@ -64,7 +65,6 @@ export class IntegrationComponent implements OnInit {
     selectedRecordForEdit: any;
     viewRowData: any;
     selectedRowforDelete: any;  
-    existingRecordsResponse = []
     constructor(private breadCrumb: SingleScreenBreadcrumbService,
         private authService: AuthService,
         private modalService: NgbModal,
@@ -100,29 +100,29 @@ export class IntegrationComponent implements OnInit {
         this.getList();
     }
 
-    customExcelUpload(event) {
-        // const file = event.target.files;
+    //customExcelUpload(event) {
+    //    // const file = event.target.files;
 
-        // console.log(file);
-        // if (file.length > 0) {
+    //    // console.log(file);
+    //    // if (file.length > 0) {
 
-        //     this.formData.append('file', file[0])
-        //     this.unitofmeasureService.UOMFileUpload(this.formData).subscribe(res => {
-        //         event.target.value = '';
+    //    //     this.formData.append('file', file[0])
+    //    //     this.unitofmeasureService.UOMFileUpload(this.formData).subscribe(res => {
+    //    //         event.target.value = '';
 
-        //         this.formData = new FormData();
-        //         this.existingRecordsResponse = res;
-        //         this.getList();
-        //         this.alertService.showMessage(
-        //             'Success',
-        //             `Successfully Uploaded  `,
-        //             MessageSeverity.success
-        //         );
+    //    //         this.formData = new FormData();
+    //    //         this.existingRecordsResponse = res;
+    //    //         this.getList();
+    //    //         this.alertService.showMessage(
+    //    //             'Success',
+    //    //             `Successfully Uploaded  `,
+    //    //             MessageSeverity.success
+    //    //         );
 
-        //     })
-        // }
+    //    //     })
+    //    // }
 
-    }
+    //}
     //sampleExcelDownload() {
     //    // const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=UnitOfMeasure&fileName=uom.xlsx`;
 
@@ -284,5 +284,32 @@ export class IntegrationComponent implements OnInit {
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=IntegrationPortal&fileName=IntegrationPortal.xlsx`;
 
         window.location.assign(url);
+    }
+
+    customExcelUpload(event) {
+        const file = event.target.files;
+
+        console.log(file);
+        if (file.length > 0) {
+
+            this.formData.append('file', file[0])
+            this.integrationService.IntegrationCustomUpload(this.formData).subscribe(res => {
+                event.target.value = '';
+
+                this.formData = new FormData();
+                this.existingRecordsResponse = res;
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+
+                // $('#duplicateRecords').modal('show');
+                // document.getElementById('duplicateRecords').click();
+
+            })
+        }
+
     }
 }

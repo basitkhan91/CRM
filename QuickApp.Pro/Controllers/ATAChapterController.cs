@@ -62,17 +62,23 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("ataauditHistoryById/{id}")]
-        [Produces(typeof(List<AuditHistory>))]
+        [Produces(typeof(List<ATAChapterAudit>))]
         public IActionResult GetAuditHostoryById(long id)
         {
-            var result = _unitOfWork.AuditHistory.GetAllHistory("ATAMain", id); //.GetAllCustomersData();
+            //var result = _unitOfWork.AuditHistory.GetAllHistory("ATAMain", id); //.GetAllCustomersData();
 
+
+            //try
+            //{
+            //    var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
+
+            //    return Ok(resul1);
+            //}
 
             try
             {
-                var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
-
-                return Ok(resul1);
+                var result = _unitOfWork.ATAChapter.GetATAChapterHistory(id);
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -202,6 +208,14 @@ namespace QuickApp.Pro.Controllers
         {
             var result = _unitOfWork.ATAChapter.GetATAChapterHistory(ataChapterId);//getting List Here
             return Ok(result);
+        }
+
+        [HttpPost("UploadataChapterCustomData")]
+        public IActionResult UploadataChapterCustomData()
+        {
+
+            _unitOfWork.FileUploadRepository.UploadCustomFile(Convert.ToString("ATAChapter"), Request.Form.Files[0]);
+            return Ok();
         }
     }
 

@@ -2,7 +2,6 @@
 using DAL;
 using DAL.Common;
 using DAL.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -1057,8 +1056,23 @@ namespace QuickApp.Pro.Controllers
                                 var repairOrderPartObj = _context.RepairOrderPart
                                                                 .Where(a => a.RepairOrderPartRecordId == roPartSplit.RepairOrderPartRecordId)
                                                                 .SingleOrDefault();
-                                repairOrderPartObj = FillRepairOrderSplitPart(repairOrderPartObj, roPartSplit);
-                                UpdateRepairOrderPart(repairOrderPartObj);
+                                if (repairOrderPartObj == null)
+                                {
+                                    var roPartModel2 = new RepairOrderPart();
+                                    roPartModel2 = FillRepairOrderSplitPart(roPartModel2, roPartSplit);
+                                    roPartModel2.ParentId = roViewModel.RepairOrderPartRecordId;
+                                    SaveRepairOrderPart(roPartModel2);
+                                    if (roPartSplit.RepairOrderPartRecordId == 0)
+                                    {
+                                        roPartSplit.RepairOrderPartRecordId = roPartModel2.RepairOrderPartRecordId;
+                                    }
+                                }
+                                else
+                                {
+                                    repairOrderPartObj = FillRepairOrderSplitPart(repairOrderPartObj, roPartSplit);
+                                    repairOrderPartObj.ParentId = roPartModel.ParentId;
+                                    UpdateRepairOrderPart(repairOrderPartObj);
+                                }
                             }
                         }
                     }
@@ -1069,6 +1083,14 @@ namespace QuickApp.Pro.Controllers
                         SaveRepairOrderPart(roPartModel);
                         roViewModel.RepairOrderPartRecordId = roPartModel.RepairOrderPartRecordId;
 
+                        if (roPartModel.ParentId == null || roPartModel.ParentId == 0)
+                        {
+                            var exists = _context.RepairOrderPart.Where(rop => rop.RepairOrderPartRecordId == roPartModel.RepairOrderPartRecordId).SingleOrDefault();
+                            exists.ParentId = roPartModel.RepairOrderPartRecordId;
+                            _context.RepairOrderPart.Update(exists);
+                            _context.SaveChanges();
+                        }
+
                         if (roViewModel.RoPartSplits != null && roViewModel.RoPartSplits.Any())
                         {
                             for (int i = 0, roViewModelRoPartSplitsCount = roViewModel.RoPartSplits.Count; i < roViewModelRoPartSplitsCount; i++)
@@ -1076,6 +1098,7 @@ namespace QuickApp.Pro.Controllers
                                 var roPartSplit = roViewModel.RoPartSplits[i];
                                 var repairOrderPartObj = new RepairOrderPart();
                                 repairOrderPartObj = FillRepairOrderSplitPart(repairOrderPartObj, roPartSplit);
+                                repairOrderPartObj.ParentId = roPartModel.RepairOrderPartRecordId;
                                 SaveRepairOrderPart(repairOrderPartObj);
                                 roViewModel.RoPartSplits[i].RepairOrderPartRecordId = repairOrderPartObj.RepairOrderPartRecordId;
                             }
@@ -1120,6 +1143,7 @@ namespace QuickApp.Pro.Controllers
             roPartModel.Memo = roViewModel.Memo;
             roPartModel.CreatedBy = roViewModel.CreatedBy;
             roPartModel.UpdatedBy = roViewModel.UpdatedBy;
+            roPartModel.ParentId = roViewModel.RepairOrderPartRecordId;
 
 
             return roPartModel;
@@ -2147,7 +2171,7 @@ namespace QuickApp.Pro.Controllers
                 VendorPayment defaultPaymentObj = new VendorPayment();
                 defaultPaymentObj.IsActive = true;
                 defaultPaymentObj.MasterCompanyId = 1;
-                defaultPaymentObj.IsActive = vendorPaymentViewModel.IsActive;
+                //defaultPaymentObj.IsActive = vendorPaymentViewModel.IsActive;
                 defaultPaymentObj.DefaultPaymentMethod = vendorPaymentViewModel.DefaultPaymentMethod;
                 defaultPaymentObj.VendorId = vendorPaymentViewModel.VendorId;
                 defaultPaymentObj.CreatedDate = DateTime.Now;
