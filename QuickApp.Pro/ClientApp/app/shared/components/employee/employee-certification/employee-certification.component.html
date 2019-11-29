@@ -1,5 +1,5 @@
 ﻿<div [@fadeInOut] class="page-content">
-
+  <div class="card padding-10">
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_content">
@@ -125,7 +125,7 @@
 
                 </form>
                 <!--Form End-->
-                <div class="pull-right"> &copy; 2018 <a>PAS</a> </div>
+                
 
 
             </div>
@@ -137,7 +137,8 @@
         <button type="button" [disabled]="nextbuttonEnable == false" class="btn btn-primary-cstm pull-right" (click)="saveCertificateData()">Save & Next </button>
         <button type="button" class="btn btn-primary-cstm pull-right" (click)="previousClick()">Previous</button>
     </div>
-
+    </div>
+    <div class="pull-right"> &copy; 2018 <a>PAS</a> </div>
 </div>
 
 <ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
