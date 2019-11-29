@@ -12,10 +12,13 @@ import { AlertService, MessageSeverity } from "../services/alert.service";
     styleUrls: ['./Exclusions-Create.component.css']
 })
 export class ExclusionsCreateComponent implements OnInit, OnChanges {
+    @Input() isWorkOrder = false;
     @Input() workFlow: IWorkFlow;
     @Input() UpdateMode: boolean;
+    @Output() saveExclusionsListForWO = new EventEmitter();
     @Output() notify: EventEmitter<IWorkFlow> =
         new EventEmitter<IWorkFlow>();
+    
     exclusionEstimatedOccurances: any = [];
     row: any;
     allPartnumbersInfo: any[] = [];
@@ -33,11 +36,19 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
-        this.row = this.workFlow.exclusions[0];
-        if (this.row == undefined) {
-            this.row = {};
+
+
+        if(this.isWorkOrder){
+            this.row = this.workFlow.exclusions[0];
+            this.addRow();
+        }else{
+            this.row = this.workFlow.exclusions[0];
+            if (this.row == undefined) {
+                this.row = {};
+            }
+            this.row.taskId = this.workFlow.taskId;
         }
-        this.row.taskId = this.workFlow.taskId;
+
         this.ptnumberlistdata();
         if (this.UpdateMode) {
             this.reCalculate();
@@ -171,6 +182,10 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     }
     private onptnmbersSuccessful(allWorkFlows: any[]) {
         this.allPartnumbersInfo = allWorkFlows;
+    }
+
+    saveExclusionsWorkOrder(){
+        this.saveExclusionsListForWO.emit(this.workFlow)
     }
 
 }

@@ -705,7 +705,7 @@
                             <a class="dropdown-item" (click)="otherOptionSelected('contactGrid')">Contact Grid</a>
                             <a class="dropdown-item" (click)="otherOptionSelected('accounting')" >Accounting</a>
                             <a class="dropdown-item" (click)="otherOptionSelected('charges')">Charges</a>
-                            <a class="dropdown-item" (click)="otherOptionSelected('exclusion')" >Exclusion </a>
+                            <a class="dropdown-item" (click)="otherOptionSelected('exclusions')" >Exclusion </a>
                         </div>
                     </li>
                     </ul>
@@ -763,8 +763,23 @@
                     </div>
 
 
-                    <div  class="wf-label-cstm" [ngClass]="{hidedataCharges :  subTabOtherOptions !== 'charges'} ">
-                        <app-work-order-charges [workOrderChargesList]="workOrderChargesList" ></app-work-order-charges>
+                    <div *ngIf="workOrderId" class="wf-label-cstm" [ngClass]="{hidedataOthers :  subTabOtherOptions !== 'charges'} ">
+                      <app-work-order-charges [workFlowObject]="workFlowObject" 
+                          [isWorkOrder]="isWorkOrder"
+                           [workOrderChargesList]="workOrderChargesList" 
+                        (saveChargesListForWO)="saveWorkOrderChargesList($event)"
+                        
+                        ></app-work-order-charges> 
+                    </div>
+
+
+                    <div *ngIf="workOrderId" class="wf-label-cstm" [ngClass]="{hidedataOthers :  subTabOtherOptions !== 'exclusions'} ">
+                      <app-work-order-exclusions [workFlowObject]="workFlowObject" 
+                          [isWorkOrder]="isWorkOrder"
+                           [workOrderExclusionsList]="workOrderExclusionsList" 
+                        (saveExclusionsListForWO)="saveWorkOrderExclusionsList($event)"
+                        
+                        ></app-work-order-exclusions> 
                     </div>
 
 

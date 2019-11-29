@@ -43,6 +43,7 @@ export class EquipmentCreateComponent implements OnInit, OnChanges {
         if (this.isWorkOrder) {
             this.workFlow = this.workFlowObject;
             this.row = this.workFlow.equipments[0];
+            this.addRow();
         } else {
             this.row = this.workFlow.equipments[0];
             if (this.row == undefined) {

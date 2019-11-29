@@ -3,6 +3,7 @@ import { WorkOrderService } from '../../../../services/work-order/work-order.ser
 import { AuthService } from '../../../../services/auth.service';
 import { AlertService, MessageSeverity } from '../../../../services/alert.service';
 import { getValueFromObjectByKey } from '../../../../generic/autocomplete';
+import * as $ from 'jquery'
 @Component({
     selector: 'app-work-order-assets',
     templateUrl: './work-order-assets.component.html',
@@ -124,11 +125,18 @@ export class WorkOrderAssetsComponent implements OnInit {
     }
 
 
-    // getWorkOrderAssetList(): void {
-    //     this.workOrderService.getWorkOrderAssetList(7).subscribe(
-    //         result => {
-    //             this.workOrderAssetList = result;
-    //         }
-    //     );
-    // }
+  saveEquipmentList(event){
+    this.saveEquipmentListForWO.emit(event)
+    $('#addNewEquipments').modal('hide');
+  }
+
+
+  // getWorkOrderAssetList(): void {
+  //     this.workOrderService.getWorkOrderAssetList(7).subscribe(
+  //         result => {
+  //             this.workOrderAssetList = result;
+  //         }
+  //     );
+  // }
+
 }

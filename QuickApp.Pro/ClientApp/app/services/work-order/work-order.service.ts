@@ -132,6 +132,13 @@ export class WorkOrderService {
     createWorkOrderEquipmentList(data){
         return this.workOrderEndpointService.createWorkOrderEquipmentList(data);
     }
+    createWorkOrderChargesList(data){
+        return this.workOrderEndpointService.createWorkOrderChargesList(data);
+    }
+
+    createWorkOrderExclusionList(data){
+        return this.workOrderEndpointService.createWorkOrderExclusionList(data);
+    }
     getAllTasks() {
         return this.workOrderEndpointService.getTasks();
     }
