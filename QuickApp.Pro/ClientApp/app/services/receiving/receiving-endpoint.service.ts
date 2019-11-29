@@ -125,6 +125,14 @@ export class ReceivingEndpointService extends EndpointFactory {
             });
     }
 
+    getReceivingPOHeaderById(purchaseOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/receivingpart/getPurchaseOrderHeaderById/${purchaseOrderId}`)
+    }
+
+    getReceivingPOPartsForViewById(repairOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/receivingPart/GetReceivePOPartsForSummary/${repairOrderId}`)
+    }
+
     getReceivingRODataById(repairOrderId) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/receivingPart/GetReceivingRepairList/${repairOrderId}`)
     }
