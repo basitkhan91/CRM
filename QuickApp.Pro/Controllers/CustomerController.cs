@@ -441,7 +441,7 @@ namespace QuickApp.Pro.Controllers
 
             var actionobject = _unitOfWork.Customer.GetSingleOrDefault(a => a.CustomerId == id);
             var address = _unitOfWork.Address.GetSingleOrDefault(a => a.AddressId == customerViewModel.Addressid);
-
+           
             customerViewModel.MasterCompanyId = 1;
             actionobject.RestrictBERMemo = customerViewModel.RestrictBERMemo;
             actionobject.Name = customerViewModel.Name;
@@ -555,6 +555,16 @@ namespace QuickApp.Pro.Controllers
             {
                 if (Convert.ToBoolean(actionobject.IsAddressForShipping))
                 {
+                    long? shippingAddressId=0;
+                    //var shipping =    _context.CustomerShippingAddress
+                    //       .Where(p => p.AddressId == actionobject.AddressId && p.CustomerId == actionobject.CustomerId).FirstOrDefault();
+
+                 //   var shipping =_unitOfWork.Repository<CustomerShippingAddress>().GetAll().Where(p => p.AddressId == actionobject.AddressId && p.CustomerId == actionobject.CustomerId).FirstOrDefault();
+
+                    //if (shipping!=null)
+                    //{
+                    //    shippingAddressId = shipping.CustomerShippingAddressId;
+                    //}
                     _unitOfWork.Customer.AddCustomerShippingAddress(actionobject);
                 }
 

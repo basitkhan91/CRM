@@ -63,7 +63,9 @@ export class CommonService {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/Common/getrestrictedparts?moduleId=${moduleId}&referenceId=${referenceId}&partType=${partType}`)
     }
 
-
+    getDefaultCurrency(id) {
+        return this.http.get<any>(`${this.baseUrl}/api/Common/defaultcurrency?legalEntityId=${id}`, this.authService.getRequestHeaders())
+    }
 
 
 

@@ -38,6 +38,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     taxrateList: any;
     state_taxRateList: any;
     id: number;
+    legalEntityId :number;
     intergationNew = {
         allowPartialBilling: true,
         allowProformaBilling: true,
@@ -247,11 +248,16 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.savedGeneralInformationData = this.editGeneralInformationData;
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
+        
+            if (this.editGeneralInformationData.currency == null || this.editGeneralInformationData.currency == 0) {
+                this.getDefaultCurrency();
+            }
 
         } else {
             this.id = this.savedGeneralInformationData.customerId;
             this.customerCode = this.savedGeneralInformationData.customerCode;
             this.customerName = this.savedGeneralInformationData.name;
+            this.getDefaultCurrency();
         }
 
         // this.id = this.savedGeneralInformationData.customerId;
@@ -297,6 +303,16 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.allCurrencyInfo = res[0];
         })
     }
+    getDefaultCurrency() {
+        this.legalEntityId = 19;
+        this.commonservice.getDefaultCurrency(this.legalEntityId).subscribe(res => {
+            console.log(res);
+            this.savedGeneralInformationData.generalCurrencyId = res[0].currencyId;
+        })
+    }
+
+
+
     getAllPercentage() {
         this.commonservice.smartDropDownList('[Percent]', 'PercentId', 'PercentValue').subscribe(res => {
 

@@ -884,6 +884,30 @@ namespace DAL.Repositories
                 throw ex;
             }
         }
+        public IEnumerable<object> GetDefaultCurrency(long legalEntityId)
+        {
+            try
+            {
+
+                var defaultCurrency = (from le in _appContext.LegalEntity
+                                                 join c in _appContext.Currency on le.FunctionalCurrencyId equals c.CurrencyId
+                                                 where le.LegalEntityId == legalEntityId && c.IsActive == true  && (c.IsDelete==false ||c.IsDelete==null)
+                                                 select new
+                                                 {
+                                              currencyId=       le.FunctionalCurrencyId,
+                                                 currencyName=   c.DisplayName
+                                                 })
+                           .Distinct()
+                           .ToList();
+
+
+                return defaultCurrency;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }

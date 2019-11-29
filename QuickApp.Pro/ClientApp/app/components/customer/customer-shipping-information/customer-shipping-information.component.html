@@ -646,27 +646,29 @@
                                 <label>Ship To Address 2</label>
                                 <input class="form-control" id="csaddress2" type="text" name="address2" [(ngModel)]="domesticShippingInfo.address2">
                             </div>
-                            <div class="form-group" style="display:none">
-                                <label>Ship To Address 3</label>
-                                <input class="form-control" id="csaddress3" type="text" name="address3" [(ngModel)]="domesticShippingInfo.address3">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
                             <div class="form-group">
                                 <label>Ship To City <span class="clr-red">*</span></label>
                                 <input class="form-control" id="cscity" type="text" name="city" [(ngModel)]="domesticShippingInfo.city" required>
                             </div>
+                            <!--<div class="form-group" style="display:none">
+        <label>Ship To Address 3</label>
+        <input class="form-control" id="csaddress3" type="text" name="address3" [(ngModel)]="domesticShippingInfo.address3">
+    </div>-->
+                        </div>
+                        <div class="col-md-3">
+
                             <div class="form-group">
                                 <label>Ship To State/Prov <span class="clr-red">*</span></label>
                                 <input class="form-control" id="csstate" type="text" name="stateOrProvince" [(ngModel)]="domesticShippingInfo.stateOrProvince" required>
                             </div>
-                        </div>
-
-                        <div class="col-md-3">
                             <div class="form-group">
                                 <label>Ship To Postal Code <span class="clr-red">*</span></label>
                                 <input class="form-control" id="cspostal" type="text" name="postalCode" [(ngModel)]="domesticShippingInfo.postalCode" required>
                             </div>
+                        </div>
+
+                        <div class="col-md-3">
+                          
                             <div class="form-group">
                                 <label>Ship To Country <span class="clr-red">*</span></label>
                                 <div class="inner-addon right-addon inline-block">
