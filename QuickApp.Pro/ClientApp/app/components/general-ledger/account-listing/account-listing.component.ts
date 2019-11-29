@@ -40,12 +40,7 @@ export class AccountListingComponent implements OnInit {
         { field: 'prevAccountCode', header: 'Old GL Account Code' },
         { field: 'accountCode', header: 'GL Account Code' },
         { field: 'accountName', header: 'Account Name' },
-        { field: 'accountActive', header: 'Active' }
-        // { field: 'stateOrProvince', header: 'StateOrProvince' },
-        // { field: 'contact', header: 'Contact' },
-        // { field: 'salesPersonPrimary', header: 'Primary Sales Person' }
-
-
+        { field: 'accountActive', header: 'Active' }       
     ]
     selectedColumns = this.headers;
     data: any;
@@ -54,69 +49,8 @@ export class AccountListingComponent implements OnInit {
     first = 0;
     @ViewChild('dt')
     private table: Table;
-    lazyLoadEventData: any;
-    
-    /*viewData: any[];
-    viewDataGeneralInformation: any[];
-    customerContacts: any;
-    customerContactsColumns = [
-        { field: 'tag', header: 'TAG' },
-        { field: 'firstName', header: 'First Name' },
-        { field: 'lastName', header: 'Last Name' },
-        { field: 'contactTitle', header: 'Contact Title' },
-        { field: 'email', header: 'Email' },
-        { field: 'workPhone', header: 'Work Phone' },
-        { field: 'mobilePhone', header: 'Mobile Phone' },
-        { field: 'fax', header: 'Fax' },
-
-    ];
-    colsaircraftLD: any = [
-        { field: "aircraftType", header: "Aircraft" },
-        { field: "aircraftModel", header: "Model" },
-        { field: "dashNumber", header: "Dash Numbers" },
-        { field: "inventory", header: "Inventory" },
-        { field: "memo", header: "Memo" }
-
-    ]
-
-    ataHeaders = [
-        { field: 'ataChapterName', header: 'ATA Chapter' },
-        { field: 'ataSubChapterDescription', header: 'ATA Sub-Chapter' }
-    ]
-    billingInfoTableHeaders = [
-        { field: 'siteName', header: 'Site Name' },
-        { field: 'address1', header: 'Address1' },
-        { field: 'address2', header: 'Address2' },
-        { field: 'address3', header: 'Address3' },
-        { field: 'city', header: 'City' },
-        { field: 'stateOrProvince', header: 'State/Prov' },
-        { field: 'postalCode', header: 'Postal Code' },
-        { field: 'country', header: 'Country' }
-    ]
-    domesticShippingHeaders = [
-        { field: 'siteName', header: 'Site Name' },
-        { field: 'address1', header: 'Address1' },
-        { field: 'address2', header: 'Address2' },
-        { field: 'address3', header: 'Address3' },
-        { field: 'city', header: 'City' },
-        { field: 'stateOrProvince', header: 'State Or Province' },
-        { field: 'postalCode', header: 'Postal Code' },
-        { field: 'country', header: 'Country' }
-    ]
-    internationalShippingHeaders = [
-        { field: 'exportLicense', header: 'Export License' },
-        { field: 'description', header: 'Description' },
-        { field: 'isPrimary', header: 'IsDefault' },
-        { field: 'startDate', header: 'Start Date' },
-        { field: 'expirationDate', header: 'Expiration Date' },
-        { field: 'amount', header: 'Amount' }
-    ]
-    aircraftListDataValues: any;
-    ataListDataValues: any;
-    billingInfoList: any;
-    domesticShippingData: any[];
-    internationalShippingData: any;
-*/
+    lazyLoadEventData: any;    
+   
     filterKeysByValue: object = {};
 
 
@@ -138,18 +72,8 @@ export class AccountListingComponent implements OnInit {
 
     getList(data) {
         // this.filterObjectCreate(data.filters);
-        const PagingData = { ...data, filters: listSearchFilterObjectCreation(data.filters) }
-       
-        // this.customerService.getCustomerAll(PagingData).subscribe(res => {
-        //     this.data = res;
-        //     console.log('response :', this.data)
-        //     if (res.length > 0) {
-        //         this.totalRecords = res[0].totalRecords;
-        //         this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
-        //     }
-
-        // })
-
+        const PagingData = { ...data, filters: listSearchFilterObjectCreation(data.filters) }       
+      
         this.accountListingService.getAll().subscribe(
             datalist=> {
                 this.data = datalist.accountList;
@@ -167,11 +91,6 @@ export class AccountListingComponent implements OnInit {
 
     }
 
-
-
-
-
-
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
@@ -180,11 +99,8 @@ export class AccountListingComponent implements OnInit {
         this.refreshList();
     }
     refreshList() {
-        this.table.reset();
-        // this.getList();
-        // this.table.sortOrder = 0;
-        // this.table.sortField = '';
-
+        console.log('table :', this.table)
+        this.table.reset();       
 
     }
     loadData(event) {

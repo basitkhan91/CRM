@@ -12763,6 +12763,10 @@ body .ui-datepicker table td > a.ui-state-active {
         color: #9a9a9a;
     }
 
+    .accounttable .inner-addon .fa.fa-search {
+        right: 10px;
+    }
+
     .ui-calendar {
         display: flex;
         min-width: 100px;
@@ -13516,6 +13520,11 @@ button {
     p-dropdown .ui-dropdown-label {
         padding: 5px;
         margin-bottom: 0 !important;
+        text-align: left;
+    }
+
+    p-dropdown .accountdropdown .ui-widget label.ui-dropdown-label{
+        text-align: left;
     }
 
     p-multiselect {
@@ -14258,4 +14267,8 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 
 .audit-template-launcher{
     width: 650px !important;
+}
+
+.add-glaccount .invalid-feedback{
+    display: block;
 }
