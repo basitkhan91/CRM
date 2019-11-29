@@ -67,7 +67,12 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
       this.laborForm.dataEnteredBy = this.workOrderLaborList['dataEnteredBy'];
       this.laborForm.employeeId = this.workOrderLaborList['employeeId'];
       this.laborForm.isTaskCompletedByOne = this.workOrderLaborList['isTaskCompletedByOne'];
-      this.laborForm.expertiseId = this.workOrderLaborList['expertiseId'];
+        this.laborForm.expertiseId = this.workOrderLaborList['expertiseId'];
+        this.totalWorkHours = this.workOrderLaborList['expertiseId'];
+        if (this.workOrderLaborList !== undefined && this.workOrderLaborList !== null) {
+
+            this.totalWorkHours = this.workOrderLaborList.totalWorkHours;
+        }
     }
   }
 

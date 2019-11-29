@@ -286,6 +286,9 @@ namespace DAL.Repositories
                          join manf in _appContext.Manufacturer on itm.ManufacturerId equals manf.ManufacturerId
                          into leftManf
                          from manf in leftManf.DefaultIfEmpty()
+                         join emp in _appContext.Employee on part.RoPartSplitUserId equals emp.EmployeeId
+                         into leftEmp
+                         from emp in leftEmp.DefaultIfEmpty()
                          where part.RepairOrderId == repairOrderId
                          select new
                          {
@@ -294,7 +297,7 @@ namespace DAL.Repositories
                              PartDescription = itm.PartDescription,
                              QuantityToRepair = part.QuantityOrdered,
                              StockLineCount = _appContext.StockLine.Count(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId),
-
+                             RoPartSplitUserName = emp != null ? emp.FirstName + " " + emp.LastName : "",
                              StockLine = _appContext.StockLine.Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId).Select(SL => new
                              {
                                  RepairOrderId = SL.RepairOrderId,

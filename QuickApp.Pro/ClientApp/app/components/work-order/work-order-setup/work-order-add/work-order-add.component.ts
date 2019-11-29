@@ -824,6 +824,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 };
                 
                 if (res) {
+                    this.labor.workOrderLaborList[0].length  = 0;
                     for (let labList of res['laborList']) {
                         for (let task of this.taskList) {
                             if (task.taskId == labList['taskId']) {
