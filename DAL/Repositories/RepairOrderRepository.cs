@@ -115,7 +115,7 @@ namespace DAL.Repositories
             }
 
             var totalRecords = (from ro in _appContext.RepairOrder
-                                join emp in _appContext.Employee on ro.ApproverId equals emp.EmployeeId
+                                join emp in _appContext.Employee on ro.RequestedBy equals emp.EmployeeId
                                 join v in _appContext.Vendor on ro.VendorId equals v.VendorId
                                 join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
                                 from appr in approver.DefaultIfEmpty()
@@ -134,7 +134,7 @@ namespace DAL.Repositories
                 .Count();
 
             var repairOrderList = (from ro in _appContext.RepairOrder
-                                   join emp in _appContext.Employee on ro.ApproverId equals emp.EmployeeId
+                                   join emp in _appContext.Employee on ro.RequestedBy equals emp.EmployeeId
                                    join v in _appContext.Vendor on ro.VendorId equals v.VendorId
                                    join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
                                    from appr in approver.DefaultIfEmpty()
@@ -402,7 +402,7 @@ namespace DAL.Repositories
                                     UOMId = roPartObj.UOMId,
                                     UpdatedBy = roPartObj.UpdatedBy,
                                     WorkOrderId = roPartObj.WorkOrderId,
-                                    StockLineId = _getStockLine(roPartObj.RepairOrderId, roPartObj.RepairOrderPartRecordId)?.StockLineId
+                                    StockLineId = roPartObj.StockLineId,
                                 };
 
                                 repairOrderDtoList.Add(repairOrderPartDto);
@@ -430,7 +430,7 @@ namespace DAL.Repositories
                                     RoPartSplitUserId = roPartObj.RoPartSplitUserId,
                                     RoPartSplitUserTypeId = roPartObj.RoPartSplitUserTypeId,
                                     NeedByDate = roPartObj.NeedByDate,
-                                    StockLineId = _getStockLine(roPartObj.RepairOrderId, roPartObj.RepairOrderPartRecordId)?.StockLineId
+                                    StockLineId = roPartObj.StockLineId,
                                 };
                                 if (repairOrderPartDto.RoPartSplits == null)
                                 {
