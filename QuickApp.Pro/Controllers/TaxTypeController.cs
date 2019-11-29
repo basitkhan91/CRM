@@ -35,8 +35,7 @@ namespace QuickApp.Pro.Controllers
             var allTaxTypes = _unitOfWork.TaxType.GetAllTaxTypeData(); //.GetAllCustomersData();
             return Ok(Mapper.Map<IEnumerable<TaxTypeViewModel>>(allTaxTypes));
 
-
-        }
+		}
 
 
 
@@ -110,7 +109,7 @@ namespace QuickApp.Pro.Controllers
                 existingResult.Description = taxTypeViewModel.Description;
                 existingResult.Memo = taxTypeViewModel.Memo;
                 existingResult.IsActive = taxTypeViewModel.IsActive;
-				existingResult.IsDeleted = taxTypeViewModel.IsDelete;
+				existingResult.IsDeleted = taxTypeViewModel.IsDeleted;
 				existingResult.MasterCompanyId = taxTypeViewModel.MasterCompanyId;
 
                 _unitOfWork.TaxType.Update(existingResult);
