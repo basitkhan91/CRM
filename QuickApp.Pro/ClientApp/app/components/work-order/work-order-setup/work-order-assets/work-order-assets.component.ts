@@ -23,7 +23,9 @@ export class WorkOrderAssetsComponent implements OnInit {
     description: '',
     assetIdNumber: null,
     employeeId: null,
-    date: null
+      date: null,
+      assetId: null,
+    assetStatus:null
   }
   assetsform = { ...this.assets }
   status: any;
@@ -67,36 +69,51 @@ export class WorkOrderAssetsComponent implements OnInit {
   checkStatus(rowData, value) {
     this.assetsform = {
       ...this.assetsform, description: rowData.description,
-      assetIdNumber: rowData.rowData,
+        assetIdNumber: rowData.rowData, assetId: rowData.assetId, assetStatus: value,
     }
     this.currentRecord = rowData;
     this.status = value;
   }
 
   saveAssets() {
-
+      alert(this.status);
     const data = {
       ...this.assetsform,
       employeeId: getValueFromObjectByKey('value', this.assetsform.employeeId),
     }
+      
+    if (this.status === 'checkIn') {
 
-    if (this.status = 'checkIn') {
+        const assetcheckin = {
+            workOrderAssetId: this.currentRecord.workOrderAssetId,
+            checkedInById: data.employeeId,
+            checkedInDate: data.date,
+            updatedBy: this.userName
 
-      this.workOrderService.assetsCheckInByWorkOrderAssetsId(this.currentRecord.workOrderAssetId, data.employeeId, data.date, this.userName).subscribe(res => {
+        }
+
+        this.workOrderService.assetsCheckInByWorkOrderAssetsId(assetcheckin).subscribe(res => {
         this.assetsform = { ...this.assets };
         this.alertService.showMessage(
           '',
-          'Updated WorkOrder Asstes Status Successfully',
+          'Updated WorkOrder Asset Status Successfully',
           MessageSeverity.success
         );
       })
     } else {
+        
+       const assetcheckout = {
+            workOrderAssetId: this.currentRecord.workOrderAssetId,
+            checkedOutById: data.employeeId,
+            checkedOutDate: data.date,
+            updatedBy: this.userName
 
-      this.workOrderService.assetsCheckOutByWorkOrderAssetsId(this.currentRecord.workOrderAssetId, data.employeeId, data.date, this.userName).subscribe(res => {
+        }
+        this.workOrderService.assetsCheckOutByWorkOrderAssetsId(assetcheckout).subscribe(res => {
         this.assetsform = { ...this.assets };
         this.alertService.showMessage(
           '',
-          'Updated WorkOrder Asstes Status Successfully',
+          'Updated WorkOrder Asset Status Successfully',
           MessageSeverity.success
         );
       })

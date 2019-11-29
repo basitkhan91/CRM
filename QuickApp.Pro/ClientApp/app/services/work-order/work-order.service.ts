@@ -174,11 +174,11 @@ export class WorkOrderService {
     saveReservedPartorIssue(alternatePart){
         return this.workOrderEndpointService.saveReservedPartorIssue(alternatePart)
     }
-    assetsCheckInByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy){
-        return this.workOrderEndpointService.assetsCheckInByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy);
+    assetsCheckInByWorkOrderAssetsId(assetcheckin){
+        return this.workOrderEndpointService.assetsCheckInByWorkOrderAssetsId(assetcheckin);
     }
-    assetsCheckOutByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy){ 
-        return this.workOrderEndpointService.assetsCheckOutByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy);
+    assetsCheckOutByWorkOrderAssetsId(assetcheckout){ 
+        return this.workOrderEndpointService.assetsCheckOutByWorkOrderAssetsId(assetcheckout);
     }
 
     createQuote(data){

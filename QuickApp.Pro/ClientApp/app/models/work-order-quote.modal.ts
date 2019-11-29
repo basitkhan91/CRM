@@ -48,6 +48,8 @@ export class WorkOrderQuote {
     IsActive:boolean = true;
     IsDeleted:boolean = false;
     creditTermsandLimit: string;
+    quoteNumber: any;
+    expirationDateStatus: any;
   constructor() {
     this.WorkOrderId = 0;
   }
