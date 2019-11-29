@@ -199,6 +199,14 @@ export class WorkOrderEndpointService extends EndpointFactory {
         
     }
 
+    createWorkOrderChargesList(data){
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/createworkordercharges`, JSON.stringify(data), this.getRequestHeaders())
+    }
+
+
+    createWorkOrderExclusionList(data){
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/createworkorderexclusions`, JSON.stringify(data), this.getRequestHeaders());
+    }
     getTasks() {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/Task/Get`, this.getRequestHeaders())
     }

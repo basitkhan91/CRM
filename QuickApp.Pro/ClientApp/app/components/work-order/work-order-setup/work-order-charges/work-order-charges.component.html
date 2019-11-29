@@ -1,3 +1,49 @@
+
+
+
+
+<div>
+  <button
+    
+    data-target="#addNewCharges"
+    data-toggle="modal"
+    class="btn btn-primary btn-primary-cstm"
+    style="padding: 6px 12px !important;"
+  >
+    Add Charges
+  </button>
+</div>
+
+
+
+
+<div id="addNewCharges" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">Charges</h4>
+      </div>
+      <div class="modal-body">
+        <grd-charges  [workFlow]='workFlowObject' [isWorkOrder]="isWorkOrder" (saveChargesListForWO)="saveChargesList($event)"></grd-charges>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
 <div class="equipment-tab-content">
   <div class="x_panel" *ngIf="workOrderChargesList">
     <div class="tab-content">

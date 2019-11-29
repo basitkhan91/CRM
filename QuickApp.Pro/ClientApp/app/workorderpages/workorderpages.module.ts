@@ -58,7 +58,8 @@ import { AccordionModule } from 'primeng/accordion';
 
 import { WorkFlowtService } from '../services/workflow.service';
 import { AssetmanagementModule } from '../assetmanagement/assetmanagement.module';
-import { WorkOrderChargessComponent } from '../components/work-order/work-order-setup/work-order-charges/work-order-charges.component';
+import { WorkOrderChargesComponent } from '../components/work-order/work-order-setup/work-order-charges/work-order-charges.component';
+import { WorkOrderExclusionsComponent } from '../components/work-order/work-order-setup/work-order-exclusions/work-order-exclusions.component';
 // import { MaterialListCreateComponent } from '../shared/Material-List-Create.component';
 // import { SharedModule } from '../shared/shared.module';
 // import { BrowserModule } from '@angular/platform-browser';
@@ -94,7 +95,8 @@ import { WorkOrderChargessComponent } from '../components/work-order/work-order-
     SystemGeneratedLaborHoursComponent,
     BarCodeScannedLaborHoursComponent,
     WorkOrderEquipmentListComponent,
-    WorkOrderChargessComponent,
+    WorkOrderChargesComponent,
+    WorkOrderExclusionsComponent,
     WorkOrderEquipmentCheckInOutComponent,
     WorkOrderEquipmentCheckInOutComponent,
     WorkOrderCompleteMaterialListComponent,

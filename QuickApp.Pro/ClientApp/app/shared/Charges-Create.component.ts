@@ -20,6 +20,8 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     allVendors: any[] = [];
     @Input() workFlow: IWorkFlow;
     @Input() UpdateMode: boolean;
+    @Input() isWorkOrder: false;
+    @Output() saveChargesListForWO = new EventEmitter();
 
     @Output() notify: EventEmitter<IWorkFlow> =
         new EventEmitter<IWorkFlow>();
@@ -37,11 +39,17 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
-        this.row = this.workFlow.charges[0];
-        if (this.row == undefined) {
-            this.row = {};
-        }
-        this.row.taskId = this.workFlow.taskId;
+            if(this.isWorkOrder){
+                this.row = this.workFlow.charges[0];
+                this.addRow();
+            }else{
+                this.row = this.workFlow.charges[0];
+                if (this.row == undefined) {
+                    this.row = {};
+                }
+                this.row.taskId = this.workFlow.taskId;
+            }
+
         this.actionService.getChargesType().subscribe(
             chargesTypes => {
                 this.chargesTypes = chargesTypes;
@@ -143,6 +151,8 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         this.workFlow.charges.push(newRow);
     }
 
+
+
     // calculate row wise extended cost
     calculateExtendedCost(charge): void {
         var value = Number.parseFloat(charge.quantity) * Number.parseFloat(charge.unitCost);
@@ -215,4 +225,8 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         this.reCalculate();
     }
 
+
+    saveChargesWorkOrder(){
+        this.saveChargesListForWO.emit(this.workFlow)
+    }
 }

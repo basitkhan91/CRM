@@ -76,6 +76,7 @@ export class WorkOrderCompleteMaterialListComponent {
         console.log(this.materialStatus);
 
         this.workFlowWorkOrderId = this.savedWorkOrderData.workFlowWorkOrderId;
+        this.addRow();
 
         this.actionService.GetMaterialMandatory().subscribe(
             mandatory => {
@@ -412,5 +413,8 @@ export class WorkOrderCompleteMaterialListComponent {
 
 
     }
+
+
+
 
 }
