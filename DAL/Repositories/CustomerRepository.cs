@@ -13,7 +13,9 @@ using Microsoft.EntityFrameworkCore;
 using DAL.Models;
 using DAL.Repositories.Interfaces;
 using DAL.Common;
-using DAL.Models.Enums; 
+using DAL.Models.Enums;
+
+using System.Linq.Dynamic.Core;
 
 namespace DAL.Repositories
 {
@@ -468,13 +470,13 @@ namespace DAL.Repositories
                             join ad in _appContext.Address on t.AddressId equals ad.AddressId into add
                             from ad in add.DefaultIfEmpty()
 
+                           
                             join Emp in _appContext.Employee on Convert.ToInt32( t.PrimarySalesPersonId) equals Emp.EmployeeId into Emplyee
                             from Emp in Emplyee.DefaultIfEmpty()
 
                             join Empe in _appContext.Employee on Convert.ToInt32(t.SecondarySalesPersonId) equals Empe.EmployeeId into Empl
                             from Empe in Empl.DefaultIfEmpty()
-
-
+                           
                             join cont in _appContext.Countries on Convert.ToInt32(ad.Country) equals cont.countries_id into country
                             from cont in country.DefaultIfEmpty()
 
@@ -562,9 +564,9 @@ namespace DAL.Repositories
                                 annualQuota = t.AnnualQuota,
                                 annualRevenuePotential = t.AnnualRevenuePotential,
                                 AgentName = t.AgentName,
-								t.CustomerPhoneExt
+								t.CustomerPhoneExt,
 
-
+                              
 
 
 
@@ -1511,7 +1513,9 @@ namespace DAL.Repositories
         public void AddCustomerShippingAddress(Customer objCustomer)
         {
             CustomerShippingAddress objCustomerShippingAddress = new CustomerShippingAddress();
-                      
+           // var shippingaddress = _appContext.CustomerShippingAddress.GetSingleOrDefault(a => a.AddressId == objCustomer.AddressId && a.CustomerId == objCustomer.CustomerId);
+        //var shipping =    _appContext.CustomerShippingAddress
+          //       .Where(p => p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
             objCustomerShippingAddress.CustomerId = objCustomer.CustomerId;
             objCustomerShippingAddress.AddressId = objCustomer.AddressId;
             objCustomerShippingAddress.MasterCompanyId = objCustomer.MasterCompanyId;                  
@@ -1523,6 +1527,10 @@ namespace DAL.Repositories
             objCustomerShippingAddress.IsActive = objCustomer.IsActive;
             objCustomerShippingAddress.IsPrimary = true;
             objCustomerShippingAddress.IsDelete = false;
+            //if (shippingAddressId >0)
+            //{
+            //    objCustomerShippingAddress.CustomerShippingAddressId = shippingAddressId;//shipping.CustomerShippingAddressId;
+            //}
 
             if (objCustomerShippingAddress.CustomerShippingAddressId > 0)
             {

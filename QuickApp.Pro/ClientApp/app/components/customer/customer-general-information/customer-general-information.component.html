@@ -204,6 +204,8 @@
                                                     <div class="label-cstm">Is this Address For Billing</div>
                                                     <span class="checkbox-cstm">
                                                         <label style="width: 20px;">
+                                                            <input class="form-control" type="hidden" id="cmaddress3" name="cmaddress3" [(ngModel)]="generalInformation.customerBillingAddressId">
+
                                                             <input type="checkbox" name="isAddressForBilling" [(ngModel)]="generalInformation.isAddressForBilling">
                                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                         </label>
@@ -213,6 +215,8 @@
                                                     <div class="label-cstm">Is this Address For Shipping</div>
                                                     <span class="checkbox-cstm">
                                                         <label style="width: 20px;">
+                                                            <input class="form-control" type="hidden" id="cmaddress3" name="cmaddress3" [(ngModel)]="generalInformation.customerShippingAddressId">
+
                                                             <input type="checkbox" name="isAddressForShipping" [(ngModel)]="generalInformation.isAddressForShipping">
                                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                         </label>

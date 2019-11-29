@@ -858,7 +858,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     }
     saveGeneralInformation() {
-        debugger
+       
       
         if (!this.isEdit) {
             this.customerService.newAction({
