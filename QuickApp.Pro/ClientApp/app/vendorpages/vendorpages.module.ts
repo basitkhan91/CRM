@@ -28,8 +28,6 @@ import { VendorStepsPrimeNgComponent } from '../components/vendor/vendor-steps-p
 
 
 
-
-
 import { CommonModule } from '@angular/common'; //<-- This one
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -73,6 +71,7 @@ import { ValidateAccessModule } from "../validateaccess/validateaccess.module";
 import { KeyFilterModule } from "primeng/keyfilter";
 import { TooltipModule } from 'primeng/tooltip';
 import { CommonService } from "../services/common.service";
+import { VendorDocumentsComponent } from "../components/vendor/vendor-documents/vendor-documents.component";
 
 
 @NgModule({
@@ -132,7 +131,8 @@ import { CommonService } from "../services/common.service";
 
 		VendorCapabilitiesListComponent,
         AddVendorCapabilitiesComponent,
-        EditVendorCapabilitiesComponent
+		EditVendorCapabilitiesComponent,
+		VendorDocumentsComponent
         
 	],
 	providers: [

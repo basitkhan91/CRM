@@ -3469,6 +3469,113 @@ namespace QuickApp.Pro.Controllers
 
         #endregion
 
+
+        #region VendorDocument
+        [HttpPost("vendorDocumentUpload")]
+        [Produces("application/json")]
+        public IActionResult DocumentUploadAction()
+        {
+
+            try
+            {
+                VendorDocumentDetails objVendorDocumentDetail = new VendorDocumentDetails();
+                if (ModelState.IsValid)
+                {
+                    if (Request.Form == null)
+                        return BadRequest($"{nameof(objVendorDocumentDetail)} cannot be null");
+
+                    objVendorDocumentDetail.VendorId = Convert.ToInt64(Request.Form["VendorId"]);
+                    objVendorDocumentDetail.MasterCompanyId = 1;
+                    objVendorDocumentDetail.CreatedBy = Request.Form["CreatedBy"];
+                    objVendorDocumentDetail.UpdatedBy = Request.Form["UpdatedBy"];
+                    objVendorDocumentDetail.DocName = Request.Form["DocName"];
+                    objVendorDocumentDetail.DocMemo = Request.Form["DocMemo"];
+                    objVendorDocumentDetail.DocDescription = Request.Form["DocDescription"];
+                    objVendorDocumentDetail.IsActive = true;
+                    objVendorDocumentDetail.IsDeleted = false;
+                    objVendorDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
+                                                                        Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), objVendorDocumentDetail.UpdatedBy, objVendorDocumentDetail.MasterCompanyId);
+                    _unitOfWork.VendorDocumentDetails.Add(objVendorDocumentDetail);
+                    _unitOfWork.SaveChanges();
+
+                    return Ok(objVendorDocumentDetail);
+                }
+                return Ok(ModelState);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("vendorDocumentUpdate/{id}")]
+        public IActionResult VendorDocumentUpdate(long id)
+        {
+            VendorDocumentDetails objVendorDocumentDetail = new VendorDocumentDetails();
+            if (ModelState.IsValid)
+            {
+                if (Request.Form == null)
+                    return BadRequest($"{nameof(objVendorDocumentDetail)} cannot be null");
+                long VendorDocumentDetailId= Convert.ToInt64(Request.Form["VendorDocumentDetailId"]); 
+                objVendorDocumentDetail.VendorId = Convert.ToInt64(Request.Form["VendorId"]);
+                if(VendorDocumentDetailId >0)
+                {
+                    var vendorDocObj = _unitOfWork.Vendor.GetVendorDocumentDetailById(VendorDocumentDetailId);
+                    //objVendorDocumentDetail.MasterCompanyId = 1;               
+                    vendorDocObj.UpdatedBy = Request.Form["UpdatedBy"];
+                    vendorDocObj.DocName = Request.Form["DocName"];
+                    vendorDocObj.DocMemo = Request.Form["DocMemo"];
+                    vendorDocObj.DocDescription = Request.Form["DocDescription"];
+                    vendorDocObj.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
+                        Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), vendorDocObj.UpdatedBy, vendorDocObj.MasterCompanyId);
+                    _unitOfWork.VendorDocumentDetails.Update(objVendorDocumentDetail);
+                    _unitOfWork.SaveChanges();
+                }
+
+               
+
+                return Ok(objVendorDocumentDetail);
+            }
+            return Ok(ModelState);
+        }
+
+
+        [HttpGet("getVendorDocumentDetailList/{id}")]
+        [Produces(typeof(List<VendorDocumentDetails>))]
+        public IActionResult GetVendorDocumentDetail(long id, VendorDocumentDetails vendorDocumentDetail)
+        {
+            var allvendorsDoc = _unitOfWork.VendorDocumentDetails.GetAllDataById(id);
+            return Ok(allvendorsDoc);
+
+        }
+
+        [HttpGet("getVendorDocumentDetail/{id}")]
+        [Produces(typeof(VendorDocumentDetails))]
+        public IActionResult GetCustomerDocumentDetail(long id)
+        {
+            var allvendorsDoc = _unitOfWork.Vendor.GetVendorDocumentDetailById(id);
+            return Ok(allvendorsDoc);
+
+        }
+
+        [HttpDelete("vendorDocumentDelete/{id}")]
+        [Produces(typeof(VendorDocumentDetails))]
+        public IActionResult DeleteDocumentAction(long id)
+        {
+            var existingResult = _context.VendorDocumentDetails.ToList().Where(p=>p.VendorDocumentDetailId == id).FirstOrDefault();
+            if(existingResult!=null)
+            {
+                existingResult.IsDeleted = true;
+                _unitOfWork.VendorDocumentDetails.Update(existingResult);              
+                _unitOfWork.SaveChanges();
+            }
+           
+            return Ok(id);
+        }
+
+
+        #endregion
+
         #region Private Methods
 
         private void updateRanking(int rankId)
