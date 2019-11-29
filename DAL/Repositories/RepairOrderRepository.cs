@@ -635,9 +635,9 @@ namespace DAL.Repositories
                                     repairOrderPartViewDto.FunctionalCurrencyId = repairOrderPartObj.FunctionalCurrencyId;
                                     repairOrderPartViewDto.ForeignExchangeRate = repairOrderPartObj.ForeignExchangeRate;
                                     repairOrderPartViewDto.ManagementStructureId = repairOrderPartObj.ManagementStructureId;
-                                    repairOrderPartViewDto.StockLineNumber = _getStockLine(repairOrderPartObj.RepairOrderId, repairOrderPartObj.RepairOrderPartRecordId)?.StockLineNumber;
-                                    repairOrderPartViewDto.ControlId = _getStockLine(repairOrderPartObj.RepairOrderId, repairOrderPartObj.RepairOrderPartRecordId)?.IdNumber;
-                                    repairOrderPartViewDto.ControlNumber = _getStockLine(repairOrderPartObj.RepairOrderId, repairOrderPartObj.RepairOrderPartRecordId)?.ControlNumber;
+                                    repairOrderPartViewDto.StockLineNumber = _getStockLine(repairOrderPartObj.StockLineId)?.StockLineNumber;
+                                    repairOrderPartViewDto.ControlId = _getStockLine(repairOrderPartObj.StockLineId)?.IdNumber;
+                                    repairOrderPartViewDto.ControlNumber = _getStockLine(repairOrderPartObj.StockLineId)?.ControlNumber;
                                     repairOrderPartViewDto.RepairOrderNo = roNumber;
                                     repairOrderPartViewDto.Memo = repairOrderPartObj.Memo;
                                     repairOrderPartViewDto.PO = poNumber;
@@ -668,9 +668,9 @@ namespace DAL.Repositories
                                             ? "Customer"
                                             : (repairOrderPartObj.RoPartSplitUserTypeId == 2 ? "Vendor" : "Company"),
                                         User = _getUser(repairOrderPartObj.RoPartSplitUserTypeId, repairOrderPartObj.RepairOrderId),
-                                        StockLineNumber = _getStockLine(repairOrderPartObj.RepairOrderId, repairOrderPartObj.RepairOrderPartRecordId)?.StockLineNumber,
-                                        ControlId = _getStockLine(repairOrderPartObj.RepairOrderId, repairOrderPartObj.RepairOrderPartRecordId)?.IdNumber,
-                                        ControlNumber = _getStockLine(repairOrderPartObj.RepairOrderId, repairOrderPartObj.RepairOrderPartRecordId)?.ControlNumber,
+                                        StockLineNumber = _getStockLine(repairOrderPartObj.StockLineId)?.StockLineNumber,
+                                        ControlId = _getStockLine(repairOrderPartObj.StockLineId)?.IdNumber,
+                                        ControlNumber = _getStockLine(repairOrderPartObj.StockLineId)?.ControlNumber,
                                         PO = poNumber
                                     };
                                     if (repairOrderPartViewDto.RepairOrderSplitParts == null)
@@ -856,10 +856,10 @@ namespace DAL.Repositories
             return user;
         }
 
-        private StockLine _getStockLine(long repairOrderId, long repairOrderPartRecordId)
+        private StockLine _getStockLine(long? stockLineId)
         {
             var stockLine = _appContext.StockLine
-               .Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == repairOrderPartRecordId)
+               .Where(x => x.StockLineId == stockLineId)
                .FirstOrDefault();
 
             return stockLine;
