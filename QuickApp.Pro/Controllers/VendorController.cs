@@ -1060,6 +1060,7 @@ namespace QuickApp.Pro.Controllers
                                 {
                                     var roPartModel2 = new RepairOrderPart();
                                     roPartModel2 = FillRepairOrderSplitPart(roPartModel2, roPartSplit);
+                                    roPartModel2.ParentId = roViewModel.RepairOrderPartRecordId;
                                     SaveRepairOrderPart(roPartModel2);
                                     if (roPartSplit.RepairOrderPartRecordId == 0)
                                     {
@@ -1069,6 +1070,7 @@ namespace QuickApp.Pro.Controllers
                                 else
                                 {
                                     repairOrderPartObj = FillRepairOrderSplitPart(repairOrderPartObj, roPartSplit);
+                                    repairOrderPartObj.ParentId = roPartModel.ParentId;
                                     UpdateRepairOrderPart(repairOrderPartObj);
                                 }
                             }
@@ -1081,6 +1083,14 @@ namespace QuickApp.Pro.Controllers
                         SaveRepairOrderPart(roPartModel);
                         roViewModel.RepairOrderPartRecordId = roPartModel.RepairOrderPartRecordId;
 
+                        if (roPartModel.ParentId == null || roPartModel.ParentId == 0)
+                        {
+                            var exists = _context.RepairOrderPart.Where(rop => rop.RepairOrderPartRecordId == roPartModel.RepairOrderPartRecordId).SingleOrDefault();
+                            exists.ParentId = roPartModel.RepairOrderPartRecordId;
+                            _context.RepairOrderPart.Update(exists);
+                            _context.SaveChanges();
+                        }
+
                         if (roViewModel.RoPartSplits != null && roViewModel.RoPartSplits.Any())
                         {
                             for (int i = 0, roViewModelRoPartSplitsCount = roViewModel.RoPartSplits.Count; i < roViewModelRoPartSplitsCount; i++)
@@ -1088,6 +1098,7 @@ namespace QuickApp.Pro.Controllers
                                 var roPartSplit = roViewModel.RoPartSplits[i];
                                 var repairOrderPartObj = new RepairOrderPart();
                                 repairOrderPartObj = FillRepairOrderSplitPart(repairOrderPartObj, roPartSplit);
+                                repairOrderPartObj.ParentId = roPartModel.RepairOrderPartRecordId;
                                 SaveRepairOrderPart(repairOrderPartObj);
                                 roViewModel.RoPartSplits[i].RepairOrderPartRecordId = repairOrderPartObj.RepairOrderPartRecordId;
                             }
@@ -1132,6 +1143,7 @@ namespace QuickApp.Pro.Controllers
             roPartModel.Memo = roViewModel.Memo;
             roPartModel.CreatedBy = roViewModel.CreatedBy;
             roPartModel.UpdatedBy = roViewModel.UpdatedBy;
+            roPartModel.ParentId = roViewModel.RepairOrderPartRecordId;
 
 
             return roPartModel;
