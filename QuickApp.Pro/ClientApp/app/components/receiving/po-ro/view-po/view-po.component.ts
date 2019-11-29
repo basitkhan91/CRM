@@ -307,7 +307,7 @@ export class ViewPoComponent implements OnInit {
                 );
             },
             error => {
-                this.alertService.showMessage(this.pageTitle, "Something went wrong while loading the Repair Order detail", MessageSeverity.error);
+                this.alertService.showMessage(this.pageTitle, "Something went wrong while loading the Purchase Order detail", MessageSeverity.error);
                 //return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
             }
         );

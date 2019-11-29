@@ -6,7 +6,7 @@
                     <ol class="breadcrumb rpo-bcrumb" style="background-color: transparent;">
                         <li class="breadcrumb-item active" aria-current="page">Receiving</li>
                         <!-- <li class="breadcrumb-item " aria-current="page">PO-RO</li> -->
-                        <li class="breadcrumb-item " aria-current="page">Receiving RO Grid</li>
+                        <li class="breadcrumb-item " aria-current="page">Receiving PO Grid</li>
                     </ol>
                 </nav>
                 <button class="btn btn-primary-cstm pull-right" (click)="toggle_epo_header=!toggle_epo_header">
@@ -14,7 +14,7 @@
                 </button>
             </div>
             <div class="card-body">
-                <h4 class="po-head">Receiving - RO Grid (Single RO)</h4>
+                <h4 class="po-head">Receiving - PO Grid (Single PO)</h4>
                 <form id="" class="ro-grid-form" name="">
                     <div class="form-row">
                         <div class="col-md-8">
@@ -37,7 +37,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>RO Num</label>
-                                <input class="form-control" type="text" name="repairOrderNumber" [(ngModel)]="purchaseOrderHeaderData.repairOrderNumber" disabled >
+                                <input class="form-control" type="text" name="purchaseOrderNumber" [(ngModel)]="purchaseOrderHeaderData.purchaseOrderNumber" disabled >
                             </div>                        
                         </div>
                         <div class="col-md-3">
@@ -195,7 +195,7 @@
                         <!-- <th>Cond</th>
                         <th>UOM</th> -->
                         <th>OEM, DER,PMA FLAG</th>
-                        <th colspan="2">Qty to Repair</th>
+                        <th colspan="2">Qty Ordered</th>
                         <th>Discount</th>
                         <th>Unit Cost</th>
                         <th>Extended Cost</th>
@@ -223,7 +223,7 @@
                             <!-- <td>{{part.conditionText}}</td>
                             <td>{{part.uomText}}</td> -->
                             <td>{{part.itemMaster.isPma ? "PMA," : '' + part.itemMaster.isDer ? "DER" : ''}}</td>
-                            <td colspan="2">{{part.quantityToRepair}}</td>
+                            <td colspan="2">{{part.quantityOrdered}}</td>
                             <td>{{part.discountPerUnit}}</td>
                             <td>{{part.unitCost}}</td>
                             <td>{{part.extendedCost}}</td>
@@ -350,7 +350,7 @@
                                 <th>ID</th>
                                 <th>Cond</th>
                                 <th colspan="2">Serial Num</th>
-                                <th>Qty Receieved</th>
+                                <th>Qty Received</th>
                                 <th>Qty BackOrdered</th>
                                 <th>Receiver No.</th>
                                 <th>Unit Cost</th>
@@ -403,10 +403,10 @@
                                 <td>{{SL.conditionText}}</td>
                                 <td colspan="2">{{SL.serialNumber}}</td>
                                 <td>{{SL.quantity}}</td>
-                                <td>{{part.quantityToRepair -  SL.quantity}}</td>
+                                <td>{{part.quantityOrdered -  SL.quantity}}</td>
                                 <td>{{SL.receiverNumber}}</td>
-                                <td>{{SL.repairOrderUnitCost}}</td>
-                                <td>{{SL.repairOrderExtendedCost}}</td>
+                                <td>{{SL.purchaseOrderUnitCost}}</td>
+                                <td>{{SL.purchaseOrderExtendedCost}}</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
