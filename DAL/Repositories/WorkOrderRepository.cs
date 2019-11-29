@@ -937,6 +937,10 @@ namespace DAL.Repositories
         {
             try
             {
+                if (workOrderAssets != null && workOrderAssets.Count > 0)
+                {
+                    workOrderAssets.ForEach(p => p.AssetRecordId = Convert.ToInt64(p.AssetId));
+                }
                 _appContext.WorkOrderAssets.AddRange(workOrderAssets);
                 _appContext.SaveChanges();
                 return workOrderAssets;
@@ -990,7 +994,7 @@ namespace DAL.Repositories
                                            {
                                                wa.AssetRecordId,
                                                wa.WorkOrderAssetId,
-                                               Asset = a.Name,
+                                               AssetId = a.AssetId,
                                                a.Description,
                                                at.AssetTypeName,
                                                wa.Quantity,
@@ -1037,16 +1041,16 @@ namespace DAL.Repositories
             }
         }
 
-        public void SaveAssetCheckedIn(long WorkOrderAssetId, long checkedInById, DateTime checkedInDate, string updatedBy)
+        public void SaveAssetCheckedIn(WorkOrderAssetCheckInOut workOrderAssetCheckInOut)
         {
             try
             {
                 WorkOrderAssets workOrderAsset = new WorkOrderAssets();
-                workOrderAsset.WorkOrderAssetId = WorkOrderAssetId;
+                workOrderAsset.WorkOrderAssetId = workOrderAssetCheckInOut.WorkOrderAssetId;
                 workOrderAsset.UpdatedDate = DateTime.Now;
-                workOrderAsset.CheckedInById = checkedInById;
-                workOrderAsset.CheckedInDate = checkedInDate;
-                workOrderAsset.UpdatedBy = updatedBy;
+                workOrderAsset.CheckedInById = workOrderAssetCheckInOut.CheckedInById;
+                workOrderAsset.CheckedInDate = workOrderAssetCheckInOut.CheckedInDate;
+                workOrderAsset.UpdatedBy = workOrderAssetCheckInOut.UpdatedBy;
 
                 _appContext.WorkOrderAssets.Attach(workOrderAsset);
                 _appContext.Entry(workOrderAsset).Property(x => x.CheckedInById).IsModified = true;
@@ -1062,16 +1066,16 @@ namespace DAL.Repositories
             }
         }
 
-        public void SaveAssetCheckedOut(long WorkOrderAssetId, long checkedoutById, DateTime checkedoutDate, string updatedBy)
+        public void SaveAssetCheckedOut(WorkOrderAssetCheckInOut workOrderAssetCheckInOut)
         {
             try
             {
                 WorkOrderAssets workOrderAsset = new WorkOrderAssets();
-                workOrderAsset.WorkOrderAssetId = WorkOrderAssetId;
+                workOrderAsset.WorkOrderAssetId = workOrderAssetCheckInOut.WorkOrderAssetId;
                 workOrderAsset.UpdatedDate = DateTime.Now;
-                workOrderAsset.CheckedOutById = checkedoutById;
-                workOrderAsset.CheckedOutDate = checkedoutDate;
-                workOrderAsset.UpdatedBy = updatedBy;
+                workOrderAsset.CheckedOutById = workOrderAssetCheckInOut.CheckedOutById;
+                workOrderAsset.CheckedOutDate = workOrderAssetCheckInOut.CheckedOutDate;
+                workOrderAsset.UpdatedBy = workOrderAssetCheckInOut.UpdatedBy;
 
                 _appContext.WorkOrderAssets.Attach(workOrderAsset);
                 _appContext.Entry(workOrderAsset).Property(x => x.CheckedOutById).IsModified = true;

@@ -37,8 +37,8 @@ namespace DAL.Repositories.Interfaces
         List<WorkOrderAssets> CreateWorkOrderAssets(List<WorkOrderAssets> workOrderAssets);
         List<WorkOrderAssets> UpdateWorkOrderAssets(List<WorkOrderAssets> workOrderAssets);
         IEnumerable<object> GetWorkOrderAssetList(long wfwoId, long workOrderId);
-        void SaveAssetCheckedIn(long WorkOrderAssetId, long checkedInById, DateTime checkedInDate, string updatedBy);
-        void SaveAssetCheckedOut(long WorkOrderAssetId, long checkedoutById, DateTime checkedoutDate, string updatedBy);
+        void SaveAssetCheckedIn(WorkOrderAssetCheckInOut workOrderAssetCheckInOut);
+        void SaveAssetCheckedOut(WorkOrderAssetCheckInOut workOrderAssetCheckInOut);
         object GetAssetCheckedInandOutDetails(long assetRecordId, long workOrderAssetId);
         object WorkOrderAssetView(long assetRecordId);
 
