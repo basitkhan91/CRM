@@ -291,8 +291,8 @@ export class CustomerContactsComponent implements OnInit {
 			})
 		})
 	}
-	// post the ata Mapping 
-	async addATAMapping() {
+    // post the ata Mapping 
+    async addATAMapping() {
 		// const id = this.savedGeneralInformationData.customerId;
 		const ataMappingData = this.add_SelectedModels.map(x => {
 			return {
@@ -313,13 +313,20 @@ export class CustomerContactsComponent implements OnInit {
         })
        
 		this.add_SelectedModels = undefined;
-		this.add_SelectedId = undefined;
-       	await this.saveCustomerContactATAMapped.emit(ataMappingData);
+        this.add_SelectedId = undefined;
+        //debugger
 
- 
+        await this.saveCustomerContactATAMapped.emit(ataMappingData);
 
+        setTimeout(() => {  
+            this.getATACustomerContactMapped();
+        }, 1000);
+
+         
+       
+      
      
-        this.openModel();
+        //this.openModel();
 
 
 
@@ -331,7 +338,7 @@ export class CustomerContactsComponent implements OnInit {
        
     }
 
-	getATACustomerContactMapped() {
+    async getATACustomerContactMapped() {
 		this.customerService.getATAMappedByContactId(this.selectedContact.contactId).subscribe(res => {
 			console.log(res);
 			this.ataListDataValues = res;
