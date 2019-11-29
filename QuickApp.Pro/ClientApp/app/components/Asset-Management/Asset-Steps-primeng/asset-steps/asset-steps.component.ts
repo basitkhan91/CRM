@@ -22,6 +22,7 @@ export class AssetStepsComponent implements OnInit {
     activeIndex: number;
     showComponentPTab: boolean;
     isDisabledSteps: boolean = false;
+    isEditMode: boolean = false;
     constructor(private router: ActivatedRoute, private route: Router, private assetService: AssetService) {
        // debugger
         let currentUrl = this.route.url;
@@ -33,10 +34,14 @@ export class AssetStepsComponent implements OnInit {
             this.activeIndex = value;
 
         });
-    } ngOnInit() {
+    } 
+    ngOnInit() {
         //debugger
         this.showComponentPTab = this.assetService.ShowPtab;
         this.currentUrl = this.route.url;
+        if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
+            this.isEditMode = true;
+        }
         //
         if (this.currentUrl == '/assetmodule/assetpages/app-asset-listing') {
             this.showComponentPTab = false;
@@ -45,7 +50,8 @@ export class AssetStepsComponent implements OnInit {
         }
         else if (this.currentUrl == '/assetmodule/assetpages/app-create-asset') {
             this.activeIndex = 0;
-            this.isDisabledSteps = true;
+            if(!this.isEditMode)
+                this.isDisabledSteps = true;
 
         }
         else if (this.currentUrl == '/assetmodule/assetpages/app-asset-capes') {
