@@ -26,6 +26,7 @@ import { MatDialog } from '@angular/material';
 import { getObjectByValue, getObjectById, getValueFromObjectByKey, editValueAssignByCondition } from '../../../generic/autocomplete';
 import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service';
 
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 
 @Component({
 	selector: 'app-customer-contacts',
@@ -46,7 +47,9 @@ export class CustomerContactsComponent implements OnInit {
 	contactsListOriginal: any;
 	firstNamesList: any;
 	middleNamesList: any;
-	lastNamesList: any;
+    lastNamesList: any;
+    isDeleteMode: boolean = false;
+    public sourceCustomer: any = {}
 	contactInformation = new CustomerContactModel()
 	customerContacts: any = [];
 	customerContactsColumns = [
@@ -67,9 +70,12 @@ export class CustomerContactsComponent implements OnInit {
 
 	ediData: any;
 	isEditButton: boolean = false;
-	id: number;
+    id: number;
+    contactId: number;
 	customerCode: any;
-	customerName: any;
+    customerName: any;
+    modal: NgbModalRef;
+    localCollection: any;
 	emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}";
 	urlPattern = "^((ht|f)tp(s?))\://([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(/\S*)?$";
 	sourceViewforContact: any;
@@ -253,18 +259,39 @@ export class CustomerContactsComponent implements OnInit {
 		// }
 
 	}
-	deleteContact(id) {
-		this.customerService.deleteContact(id).subscribe(res => {
-			this.getAllCustomerContact()
+	//deleteContact(id) {
+	//	this.customerService.deleteContact(id).subscribe(res => {
+	//		this.getAllCustomerContact()
 
-			this.alertService.showMessage(
-				'Success',
-				`Sucessfully Deleted Customer Contact`,
-				MessageSeverity.success
-			);
-		})
-	}
+	//		this.alertService.showMessage(
+	//			'Success',
+	//			`Sucessfully Deleted Customer Contact`,
+	//			MessageSeverity.success
+	//		);
+	//	})
+	//}
+    openDelete(content, id) {
+        this.sourceViewforContact = '';
+        this.isDeleteMode = true;
+  
+     
+        this.contactId = id;
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+    deleteItemAndCloseModel() {
+        let contactId = this.contactId ;
+        if (contactId > 0) {
+      
+            this.customerService.deleteContact(contactId).subscribe(
+                response => this.saveCompleted(this.sourceCustomer),
+                error => this.saveFailedHelper(error));
+        }
 
+        this.modal.close();
+    }
     addATAChapter(rowData) {
         this.sourceViewforContact = '';
 
@@ -273,7 +300,9 @@ export class CustomerContactsComponent implements OnInit {
 		this.getATACustomerContactMapped();
 
 	}
-
+      dismissModel() {
+        this.modal.close();
+    }
 
 
 
@@ -291,8 +320,8 @@ export class CustomerContactsComponent implements OnInit {
 			})
 		})
 	}
-	// post the ata Mapping 
-	async addATAMapping() {
+    // post the ata Mapping 
+    async addATAMapping() {
 		// const id = this.savedGeneralInformationData.customerId;
 		const ataMappingData = this.add_SelectedModels.map(x => {
 			return {
@@ -313,13 +342,20 @@ export class CustomerContactsComponent implements OnInit {
         })
        
 		this.add_SelectedModels = undefined;
-		this.add_SelectedId = undefined;
-       	await this.saveCustomerContactATAMapped.emit(ataMappingData);
+        this.add_SelectedId = undefined;
+        //debugger
 
- 
+        await this.saveCustomerContactATAMapped.emit(ataMappingData);
 
+        setTimeout(() => {  
+            this.getATACustomerContactMapped();
+        }, 1000);
+
+         
+       
+      
      
-        this.openModel();
+        //this.openModel();
 
 
 
@@ -331,7 +367,7 @@ export class CustomerContactsComponent implements OnInit {
        
     }
 
-	getATACustomerContactMapped() {
+    async getATACustomerContactMapped() {
 		this.customerService.getATAMappedByContactId(this.selectedContact.contactId).subscribe(res => {
 			console.log(res);
 			this.ataListDataValues = res;
@@ -379,8 +415,24 @@ export class CustomerContactsComponent implements OnInit {
    
 
 
-
-
+    private saveCompleted(user?: any) {
+        
+        if (this.isDeleteMode == true) {
+            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
+            this.isDeleteMode = false;
+        }
+        else {
+            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+            this.saveCompleted
+        }
+        this.getAllCustomerContact();
+    }
+    private saveFailedHelper(error: any) {
+        
+        this.alertService.stopLoadingMessage();
+        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+    }
 
 
 
