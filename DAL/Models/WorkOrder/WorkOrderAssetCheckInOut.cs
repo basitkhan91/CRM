@@ -12,5 +12,6 @@ namespace DAL.Models
         public long? CheckedOutById { get; set; }
         public DateTime? CheckedOutDate { get; set; }
         public string UpdatedBy { get; set; }
+        public int? CheckInOutStatus { get; set; }
     }
 }

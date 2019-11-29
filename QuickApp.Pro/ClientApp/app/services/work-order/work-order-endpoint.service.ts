@@ -254,8 +254,8 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderpartsview?workOrderId=${workOrderId}`, this.getRequestHeaders())
     }
 
-    getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId) {
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/getreservedissuesparts?WorkFlowWorkOrderId=${WorkFlowWorkOrderId}`)
+    getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId, statusId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/getreservedissuesparts?WorkFlowWorkOrderId=${WorkFlowWorkOrderId}&statusId=${statusId }`)
     }
 
     saveReservedPartorIssue(alternatePart){

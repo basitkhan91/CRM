@@ -32,6 +32,7 @@ namespace DAL.Models
         public DateTime? CheckedInDate { get; set; }
         public long? CheckedOutById { get; set; }
         public DateTime? CheckedOutDate { get; set; }
+        public int? CheckInOutStatus { get; set; }
         [NotMapped]
         public string AssetId { get; set; }
         [NotMapped]

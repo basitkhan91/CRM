@@ -94,7 +94,7 @@
                   <i class="fa fa-eye"></i>
                 </a>
               </td>-->
-              <td *ngIf="asset.checkedInById === null">
+              <td *ngIf="asset.checkInOutStatus === 1">
                 <a
                   class="btn btn-info boxed-float-btn nobg"
                   (click)="checkStatus(asset, 'checkIn'); viewAsstes(asset)"
@@ -106,7 +106,7 @@
                   <i class="fa fa-sign-in clr-blue"></i>
                 </a>
               </td>
-              <td *ngIf="asset.checkedInById !== null && asset.checkedOutById === null">
+              <td *ngIf="asset.checkInOutStatus === 2">
                 <a
                   class="btn btn-info boxed-float-btn nobg"
                   (click)="checkStatus(asset, 'checkOut'); viewAsstes(asset)"
