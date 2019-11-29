@@ -168,8 +168,8 @@ export class WorkOrderService {
         return this.workOrderEndpointService.viewWorkOrderPartNumber(workOrderId);
     }
 
-    getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId) {
-        return this.workOrderEndpointService.getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId);
+    getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId, statusId) {
+        return this.workOrderEndpointService.getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId, statusId);
     }
     saveReservedPartorIssue(alternatePart){
         return this.workOrderEndpointService.saveReservedPartorIssue(alternatePart)

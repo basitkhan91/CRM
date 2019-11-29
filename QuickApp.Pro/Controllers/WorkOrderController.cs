@@ -634,9 +634,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("getreservedissuesparts")]
-        public IActionResult GetReservedIssuesParts(long WorkFlowWorkOrderId=0,long workOrderId=0)
+        public IActionResult GetReservedIssuesParts(long WorkFlowWorkOrderId=0,long workOrderId=0, int statusId=0)
         {
-            var result = unitOfWork.WorkOrderRepository.GetReservedIssuedParts(WorkFlowWorkOrderId, workOrderId);
+            var result = unitOfWork.WorkOrderRepository.GetReservedIssuedParts(WorkFlowWorkOrderId, workOrderId, statusId);
             return Ok(result);
         }
 
