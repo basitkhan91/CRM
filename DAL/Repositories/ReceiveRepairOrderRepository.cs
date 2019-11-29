@@ -164,10 +164,18 @@ namespace DAL.Repositories
         public object GetReceivingRepairOrderForView(long repairOrderId)
         {
             var parts = (from part in _appContext.RepairOrderPart
+
                          join itm in _appContext.ItemMaster on part.ItemMasterId equals itm.ItemMasterId
+
                          join glAcc in _appContext.GLAccount on itm.GLAccountId equals glAcc.GLAccountId
-                         join manf in _appContext.Manufacturer on itm.ManufacturerId equals manf.ManufacturerId
-                         into leftManf
+                         join uom in _appContext.UnitOfMeasure on part.UOMId equals uom.UnitOfMeasureId
+                         into leftUom
+                         from uom in leftUom.DefaultIfEmpty()
+
+                         join emp in _appContext.Employee on part.RoPartSplitUserId equals emp.EmployeeId
+                         into leftEmp
+                         from emp in leftEmp.DefaultIfEmpty()
+                         join manf in _appContext.Manufacturer on itm.ManufacturerId equals manf.ManufacturerId into leftManf
                          from manf in leftManf.DefaultIfEmpty()
 
                          where part.RepairOrderId == repairOrderId
@@ -176,6 +184,8 @@ namespace DAL.Repositories
                              RepairOrderId = part.RepairOrderId,
                              RepairOrderPartRecordId = part.RepairOrderPartRecordId,
                              UOMId = part.UOMId,
+                             uomText = uom != null ? uom.ShortName : "",
+                             RoPartSplitUserName = emp != null ? emp.FirstName + " " + emp.LastName : "",
                              ConditionId = part.ConditionId,
                              IsParent = part.IsParent,
                              ManagementStructureId = part.ManagementStructureId,
@@ -226,12 +236,14 @@ namespace DAL.Repositories
                                  LocationId = SL.LocationId,
                                  ShelfId = SL.ShelfId,
                                  BinId = SL.BinId,
+                                 ManufacturerText = manf != null ? manf.Name : "",
+                                 ShippingViaText = GetShippViaText(SL.ShippingViaId),
                                  SiteText = GetSiteText(SL.SiteId),
                                  WarehouseText = GetWarehouseText(SL.WarehouseId),
                                  LocationText = GetLocationText(SL.LocationId),
                                  ShelfText = GetShelfText(SL.ShelfId),
                                  BinText = GetBinText(SL.BinId),
-                                 ObtainFrom =  SL.ObtainFrom,
+                                 ObtainFrom = SL.ObtainFrom,
                                  Owner = SL.Owner,
                                  TraceableTo = SL.TraceableTo,
                                  ObtainFromText = SL.ObtainFromType == 2 ? SL.ObtainFrom : GetCustomerVendor(SL.ObtainFrom, SL.ObtainFromType),
@@ -389,7 +401,6 @@ namespace DAL.Repositories
             return "";
         }
 
-
         private string GetSiteText(long? siteId)
         {
             if (siteId != null)
@@ -454,6 +465,36 @@ namespace DAL.Repositories
             }
             return "";
         }
+
+        private string GetUOMText(long? uomId)
+        {
+            if (uomId != null)
+            {
+                var uom = _appContext.UnitOfMeasure.Where(u => u.UnitOfMeasureId == uomId).FirstOrDefault();
+                if (uom != null)
+                {
+                    return uom.ShortName;
+                }
+            }
+
+            return "";
+        }
+
+        private string GetShippViaText(long? shippViaId)
+        {
+            if (shippViaId != null)
+            {
+                var shipVia = _appContext.ShippingVia.Where(u => u.ShippingViaId == shippViaId).FirstOrDefault();
+                if (shipVia != null)
+                {
+                    return shipVia.Name;
+                }
+            }
+
+            return "";
+        }
+
+
 
         #endregion Private Methods
 

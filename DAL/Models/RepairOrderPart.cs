@@ -34,7 +34,7 @@ namespace DAL.Models
         public int? QuantityOrdered { get; set; }
         public int? SalesOrderId { get; set; }
         public int? UnitCost { get; set; }
-        public int? UOMId { get; set; }
+        public long? UOMId { get; set; }
         public string UpdatedBy { get; set; }
         public long? WorkOrderId { get; set; }
         public int? AltPartNumberId { get; set; }
@@ -85,7 +85,7 @@ namespace DAL.Models
         public string RoPartSplitPostalCode { get; set; }
         public string RoPartSplitStateOrProvince { get; set; }
         public int? QuantityOrdered { get; set; }
-        public int? UOMId { get; set; }
+        public long? UOMId { get; set; }
         public int? ManagementStructureId { get; set; }
         public DateTime? NeedByDate { get; set; }
         public long RepairOrderPartRecordId { get; set; }
@@ -104,7 +104,7 @@ namespace DAL.Models
         public int? ItemTypeId { get; set; }
         public int? ManufacturerId { get; set; }
         public int? GlAccountId { get; set; }
-        public int? UOMId { get; set; }
+        public long? UOMId { get; set; }
         public DateTime? NeedByDate { get; set; }
         public long? ConditionId { get; set; }
         public int? QuantityOrdered { get; set; }
