@@ -71,10 +71,15 @@ export class VendorStepsPrimeNgComponent implements OnInit {
             this.activeMenuItem = 7;
             this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
         }
-        else if (value == 'Documents') {
+        else if (value == 'Memos') {
 
             this.activeMenuItem = 8;
             this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-memo');
+		}
+		else if (value == 'Documents') {
+
+            this.activeMenuItem = 9;
+            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-documents');
 		}
 		else{
 				this.activeMenuItem = 1;

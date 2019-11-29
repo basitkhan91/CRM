@@ -102,11 +102,24 @@
          active: activeMenuItem >= 8,
         editable: activeMenuItem === 8
         }"
-        (click)="changeStep('Documents')"
+        (click)="changeStep('Memos')"
         [class.isDisabled]="!isDisabledSteps"
         >
         <div class="md-step-circle"><span>8</span></div>
         <div class="md-step-title">Memos</div>
+        <div class="md-step-bar-left"></div>
+        <div class="md-step-bar-right"></div>
+    </div>
+    <div class="md-step"
+         [ngClass]="{
+         active: activeMenuItem >= 9,
+        editable: activeMenuItem === 9
+        }"
+        (click)="changeStep('Documents')"
+        [class.isDisabled]="!isDisabledSteps"
+        >
+        <div class="md-step-circle"><span>9</span></div>
+        <div class="md-step-title">Documents</div>
         <div class="md-step-bar-left"></div>
         <div class="md-step-bar-right"></div>
     </div>

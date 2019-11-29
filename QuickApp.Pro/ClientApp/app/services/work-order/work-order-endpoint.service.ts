@@ -262,20 +262,22 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderpartsview?workOrderId=${workOrderId}`, this.getRequestHeaders())
     }
 
-    getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId) {
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/getreservedissuesparts?WorkFlowWorkOrderId=${WorkFlowWorkOrderId}`)
+    getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId, statusId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/getreservedissuesparts?WorkFlowWorkOrderId=${WorkFlowWorkOrderId}&statusId=${statusId }`)
     }
 
     saveReservedPartorIssue(alternatePart){
         return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/savereserveissuesparts` , JSON.stringify(alternatePart) , this.getRequestHeaders());
     }
 
-    assetsCheckInByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy){
-       return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/saveassetcheckedin?WorkOrderAssetId=${workOrderAssetId}&checkedInById=${employeeId}&checkedInDate=${checkedInDate}&updatedBy=${updatedBy}`)  
+    assetsCheckInByWorkOrderAssetsId(assetcheckin){
+       //return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/saveassetcheckedin?WorkOrderAssetId=${workOrderAssetId}&checkedInById=${employeeId}&checkedInDate=${checkedInDate}&updatedBy=${updatedBy}`)  
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/saveassetcheckedin`, JSON.stringify(assetcheckin), this.getRequestHeaders());
     }
 
-    assetsCheckOutByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy){
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/saveassetcheckedout?WorkOrderAssetId=${workOrderAssetId}&checkedInById=${employeeId}&checkedInDate=${checkedInDate}&updatedBy=${updatedBy}`)  
+    assetsCheckOutByWorkOrderAssetsId(assetcheckout){
+       // return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/saveassetcheckedout?WorkOrderAssetId=${workOrderAssetId}&checkedInById=${employeeId}&checkedInDate=${checkedInDate}&updatedBy=${updatedBy}`)  
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/saveassetcheckedout`, JSON.stringify(assetcheckout), this.getRequestHeaders());
      }
 
      createQuotation(data){

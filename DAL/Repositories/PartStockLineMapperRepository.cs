@@ -17,7 +17,7 @@ namespace DAL.Repositories
         {
             try
             {
-                
+
                 var purchaseOrder = _appContext.PurchaseOrder
                                    .Include("Vendor")
                                    .Where(x => x.PurchaseOrderId == id).FirstOrDefault();
@@ -64,7 +64,7 @@ namespace DAL.Repositories
                     DeferredReceiver = purchaseOrder.DeferredReceiver,
                     Resale = purchaseOrder.Resale,
                     Notes = purchaseOrder.Notes,
-                    PurchaseOderPart = purchaseOrder.PurchaseOderPart                    
+                    PurchaseOderPart = purchaseOrder.PurchaseOderPart
                 };
 
                 //return purchaseOrder;
@@ -76,119 +76,99 @@ namespace DAL.Repositories
 
         }
 
-        public object GetReceivingPurchaseOrderEdit(long id)
+        public object GetReceivingPurchaseOrderEdit(long purchaseOrderId)
         {
-            try
-            {
-                var purchaseOrder = _appContext.PurchaseOrder
-                                   .Include("Vendor")
-                                   .Include("StockLine")
-                                   .Include("TimeLife")
-                                   .Where(x => x.PurchaseOrderId == id).FirstOrDefault();
+            var parts = (from part in _appContext.PurchaseOrderPart
+                         join itm in _appContext.ItemMaster on part.ItemMasterId equals itm.ItemMasterId
+                         join manf in _appContext.Manufacturer on itm.ManufacturerId equals manf.ManufacturerId
+                         into leftManf
+                         from manf in leftManf.DefaultIfEmpty()
+                         join emp in _appContext.Employee on part.POPartSplitUserId equals emp.EmployeeId
+                         into leftEmp
+                         from emp in leftEmp.DefaultIfEmpty()
+                         where part.PurchaseOrderId == purchaseOrderId
+                         select new
+                         {
+                             ItemMasterId = itm.ItemMasterId,
+                             PartNumber = itm.PartNumber,
+                             PartDescription = itm.PartDescription,
+                             QuantityToRepair = part.QuantityOrdered,
+                             StockLineCount = _appContext.StockLine.Count(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId),
+                             PoPartSplitUserName = emp != null ? emp.FirstName + " " + emp.LastName : "",
+                             StockLine = _appContext.StockLine.Where(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId).Select(SL => new
+                             {
+                                 PurchaseOrderId = SL.PurchaseOrderId,
+                                 PurchaseOrderPartRecordId = SL.PurchaseOrderPartRecordId,
+                                 StockLineId = SL.StockLineId,
+                                 StockLineNumber = SL.StockLineNumber,
+                                 ControlNumber = SL.ControlNumber,
+                                 IdNumber = SL.IdNumber,
+                                 ConditionId = SL.ConditionId,
+                                 SerialNumber = SL.SerialNumber,
+                                 Quantity = SL.Quantity,
+                                 PurchaseOrderUnitCost = SL.PurchaseOrderUnitCost,
+                                 PurchaseOrderExtendedCost = SL.PurchaseOrderExtendedCost,
+                                 ReceiverNumber = SL.ReceiverNumber,
+                                 WorkOrder = 0,
+                                 SalesOrder = 0,
+                                 SubWorkOrder = 0,
+                                 OwnerType = SL.OwnerType,
+                                 ObtainFromType = SL.ObtainFromType,
+                                 TraceableToType = SL.TraceableToType,
+                                 ManufacturingTrace = SL.ManufacturingTrace,
+                                 ManufacturerId = SL.ManufacturerId,
+                                 ManufacturerLotNumber = SL.ManufacturerLotNumber,
+                                 ManufacturingDate = SL.ManufacturingDate != null ? Convert.ToDateTime(SL.ManufacturingDate).ToShortDateString() : null,
+                                 ManufacturingBatchNumber = SL.ManufacturingBatchNumber,
+                                 PartCertificationNumber = SL.PartCertificationNumber,
+                                 EngineSerialNumber = SL.EngineSerialNumber,
+                                 ShippingViaId = SL.ShippingViaId,
+                                 ShippingReference = SL.ShippingReference,
+                                 ShippingAccount = SL.ShippingAccount,
+                                 CertifiedDate = SL.CertifiedDate != null ? Convert.ToDateTime(SL.CertifiedDate).ToShortDateString() : null,
+                                 CertifiedBy = SL.CertifiedBy,
+                                 TagDate = SL.TagDate != null ? Convert.ToDateTime(SL.TagDate).ToShortDateString() : null,
+                                 ExpirationDate = SL.ExpirationDate != null ? Convert.ToDateTime(SL.ExpirationDate).ToShortDateString() : null,
+                                 CertifiedDueDate = SL.CertifiedDueDate != null ? Convert.ToDateTime(SL.CertifiedDueDate).ToShortDateString() : null,
+                                 AircraftTailNumber = SL.AircraftTailNumber,
+                                 GLAccountId = SL.GLAccountId,
+                                 GLAccountText = _appContext.GLAccount.Where(p => p.GLAccountId == SL.GLAccountId).FirstOrDefault().AccountName,
+                                 ConditionText = SL.ConditionId != null ? _appContext.Condition.Where(p => p.ConditionId == SL.ConditionId).FirstOrDefault().Description : "",
+                                 ManagementStructureEntityId = SL.ManagementStructureEntityId,
+                                 SiteId = SL.SiteId,
+                                 WarehouseId = SL.WarehouseId,
+                                 LocationId = SL.LocationId,
+                                 ShelfId = SL.ShelfId,
+                                 BinId = SL.BinId,
+                                 SiteText = GetSiteText(SL.SiteId),
+                                 WarehouseText = GetWarehouseText(SL.WarehouseId),
+                                 LocationText = GetLocationText(SL.LocationId),
+                                 ShelfText = GetShelfText(SL.ShelfId),
+                                 BinText = GetBinText(SL.BinId),
+                                 ObtainFrom = SL.ObtainFrom,
+                                 Owner = SL.Owner,
+                                 TraceableTo = SL.TraceableTo
+                             }),
+                             TimeLife = _appContext.TimeLife.Where(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId),
+                             ItemMaster = new
+                             {
+                                 PartNumber = itm.PartNumber,
+                                 PartDescription = itm.PartDescription,
+                                 GLAccountId = itm.GLAccountId,
+                                 IsTimeLife = itm.IsTimeLife,
+                                 IsSerialized = itm.IsSerialized,
+                                 ManufacturerId = itm.ManufacturerId,
+                                 IsPma = itm.isPma,
+                                 IsDer = itm.DER,
+                                 Manufacturer = manf != null ? new
+                                 {
+                                     ManufacturerId = manf.ManufacturerId,
+                                     Name = manf.Name,
+                                 } : null
+                             }
+                         }).ToList();
 
-                purchaseOrder.PurchaseOderPart = _appContext.PurchaseOrderPart
-                                        .Where(x => x.PurchaseOrderId == id)
-                                        .ToList();
-
-                purchaseOrder.PurchaseOderPart.ToList().ForEach(part =>
-                {
-                    part.ItemMaster = _appContext.ItemMaster.Include("Manufacturer").Where(x => x.ItemMasterId == part.ItemMasterId).FirstOrDefault();//.Find(part.ItemMasterId);
-                    if (part.StockLine != null && part.StockLine.Count > 0)
-                    {
-                        part.StockLine = part.StockLine.OrderBy(x => x.StockLineId).ToList();
-                        part.TimeLife = part.TimeLife.OrderBy(x => x.StockLineId).ToList();
-                        part.StockLineCount = (long)part.StockLine.Sum(x => x.Quantity);
-                    }
-
-                    if (!part.isParent)
-                    {
-                        part.POPartSplitAddress = _appContext.Address.Where(x => x.AddressId == part.POPartSplitAddressId).FirstOrDefault();
-                    }
-                });
-
-                var approver = purchaseOrder.ApproverId != null ? _appContext.Employee.Find(purchaseOrder.ApproverId) : null;
-                var requestedByObject = _appContext.Employee.Where(x => x.EmployeeId == purchaseOrder.RequestedBy).FirstOrDefault();
-                return new
-                {
-                    StatusId = purchaseOrder.StatusId,
-                    PurchaseOrderId = purchaseOrder.PurchaseOrderId,
-                    PurchaseOrderNumber = purchaseOrder.PurchaseOrderNumber,
-                    RequestedBy = purchaseOrder.RequestedBy,
-                    RequestedByText = requestedByObject.FirstName + " " + requestedByObject.LastName,
-                    Vendor = purchaseOrder.Vendor,
-                    OpenDate = purchaseOrder.OpenDate,
-                    Approver = approver != null ? approver.FirstName + " " + approver.LastName : "",
-                    NeedByDate = purchaseOrder.NeedByDate,
-                    DateApproved = purchaseOrder.DateApproved,
-                    DeferredReceiver = purchaseOrder.DeferredReceiver,
-                    Resale = purchaseOrder.Resale,
-                    Notes = purchaseOrder.Notes,
-                    PurchaseOderPart = purchaseOrder.PurchaseOderPart.Select(x => new
-                    {
-                        ItemMaster = x.ItemMaster,
-                        PurchaseOrderId = x.PurchaseOrderId,
-                        PurchaseOrderPartRecordId = x.PurchaseOrderPartRecordId,
-                        UOMId = x.UOMId,
-                        ConditionId = x.ConditionId,
-                        IsParent = x.isParent,
-                        ManagementStructureId = x.ManagementStructureId,
-                        QuantityOrdered = x.QuantityOrdered,
-                        DiscountPerUnit = x.DiscountPercent,
-                        ExtendedCost = x.ExtendedCost,
-                        UnitCost = x.UnitCost,
-                        StockLine = x.StockLine == null ? null : x.StockLine.Select(SL => new
-                        {
-                            StockLineId = SL.StockLineId,
-                            StockLineNumber = SL.StockLineNumber,
-                            ControlNumber = SL.ControlNumber,
-                            IdNumber = SL.IdNumber,
-                            ConditionId = SL.ConditionId,
-                            SerialNumber = SL.SerialNumber,
-                            Quantity = SL.Quantity,
-                            PurchaseOrderUnitCost = SL.PurchaseOrderUnitCost,
-                            PurchaseOrderExtendedCost = SL.PurchaseOrderExtendedCost,
-                            ReceiverNumber = SL.ReceiverNumber,
-                            WorkOrder = 0,
-                            SalesOrder = 0,
-                            SubWorkOrder = 0,
-                            Owner = SL.Owner,
-                            OwnerType = SL.OwnerType,
-                            ObtainFrom = SL.ObtainFrom,
-                            ObtainFromType = SL.ObtainFromType,
-                            TraceableTo = SL.TraceableTo,
-                            TraceableToType = SL.TraceableToType,
-                            ManufacturingTrace = SL.ManufacturingTrace,
-                            ManufacturerId = SL.ManufacturerId,
-                            ManufacturerLotNumber = SL.ManufacturerLotNumber,
-                            ManufacturingDate = SL.ManufacturingDate != null ? Convert.ToDateTime(SL.ManufacturingDate).ToShortDateString() : null,
-                            AircraftTailNumber = SL.AircraftTailNumber,
-                            ManufacturingBatchNumber = SL.ManufacturingBatchNumber,
-                            PartCertificationNumber = SL.PartCertificationNumber,
-                            EngineSerialNumber = SL.EngineSerialNumber,
-                            ShippingViaId = SL.ShippingViaId,
-                            ShippingReference = SL.ShippingReference,
-                            ShippingAccount = SL.ShippingAccount,
-                            CertifiedDate = SL.CertifiedDate != null ? Convert.ToDateTime(SL.CertifiedDate).ToShortDateString() : null,
-                            CertifiedBy = SL.CertifiedBy,
-                            TagDate = SL.TagDate != null ? Convert.ToDateTime(SL.TagDate).ToShortDateString() : null,
-                            ExpirationDate = SL.ExpirationDate != null ? Convert.ToDateTime(SL.ExpirationDate).ToShortDateString() : null,
-                            CertifiedDueDate = SL.CertifiedDueDate != null ? Convert.ToDateTime(SL.CertifiedDueDate).ToShortDateString() : null,
-                            GLAccountId = SL.GLAccountId,
-                            ManagementStructureEntityId = SL.ManagementStructureEntityId,
-                            SiteId = SL.SiteId,
-                            WarehouseId = SL.WarehouseId,
-                            LocationId = SL.LocationId,
-                            ShelfId = SL.ShelfId,
-                            BinId = SL.BinId
-                        }),
-                        TimeLife = x.TimeLife
-                    })
-                };
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return parts;
 
         }
 
@@ -253,7 +233,7 @@ namespace DAL.Repositories
                         IsParent = x.isParent,
                         ManagementStructureId = x.ManagementStructureId,
                         QuantityOrdered = x.QuantityOrdered,
-                        DiscountPerUnit = x.DiscountPercent,
+                        DiscountPerUnit = x.DiscountPerUnit,
                         ExtendedCost = x.ExtendedCost,
                         UnitCost = x.UnitCost,
                         StockLine = x.StockLine == null ? null : x.StockLine.Select(SL => new
@@ -318,6 +298,173 @@ namespace DAL.Repositories
             }
         }
 
+        public object GetPurchaseOrderHeader(long purchaseOrderId)
+        {
+            var purchaseOrderHeader = (from po in _appContext.PurchaseOrder
+                                       join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId
+                                       join term in _appContext.CreditTerms on po.CreditTermsId equals term.CreditTermsId
+                                       into leftTerm
+                                       from term in leftTerm.DefaultIfEmpty()
+                                       join prio in _appContext.Priority on po.PriorityId equals prio.PriorityId
+                                       into leftPrio
+                                       from prio in leftPrio.DefaultIfEmpty()
+                                       join apprEmp in _appContext.Employee on po.ApproverId equals apprEmp.EmployeeId
+                                       into leftAppEmp
+                                       from apprEmp in leftAppEmp.DefaultIfEmpty()
+                                       join vend in _appContext.Vendor on po.VendorId equals vend.VendorId
+                                       join vencont in _appContext.VendorContact on vend.VendorId equals vencont.VendorId
+                                       into leftVencont
+                                       from venCont in leftVencont.DefaultIfEmpty()
+                                       join cont in _appContext.Contact on venCont.ContactId equals cont.ContactId
+                                       into leftCont
+                                       from cont in leftCont.DefaultIfEmpty()
+                                       where po.PurchaseOrderId == purchaseOrderId
+                                       orderby venCont.IsDefaultContact descending
+                                       select new
+                                       {
+                                           PurchaseOrderId = po.PurchaseOrderId,
+                                           PurchaseOrderNumber = po.PurchaseOrderNumber,
+                                           StatusId = po.StatusId,
+                                           VendorName = vend.VendorName,
+                                           VendorCode = vend.VendorCode,
+                                           VendorContact = cont != null ? cont.FirstName + " " + cont.LastName : "",
+                                           VendorPhone = cont != null ? cont.MobilePhone : "",
+                                           RequestedBy = emp != null ? emp.FirstName + " " + emp.LastName : "",
+                                           OpenDate = po.OpenDate,
+                                           ClosedDate = po.ClosedDate,
+                                           NeedByDate = po.NeedByDate,
+                                           DateApproved = po.DateApproved,
+                                           Approver = apprEmp != null ? apprEmp.FirstName + " " + apprEmp.LastName : "",
+                                           CreditLimit = po.CreditLimit,
+                                           Terms = term != null ? term.Percentage : 0,
+                                           Priority = prio != null ? prio.Description : "",
+                                           DeferredReceiver = po.DeferredReceiver,
+                                           Resale = po.Resale,
+                                           ManagementStructureId = po.ManagementStructureId,
+                                           Memo = po.Notes
+                                       }).FirstOrDefault();
+
+            return purchaseOrderHeader;
+        }
+
+        public object GetPurchaseOrderPartsForSummary(long purchaseOrderId)
+        {
+            var parts = (from part in _appContext.PurchaseOrderPart
+
+                         join itm in _appContext.ItemMaster on part.ItemMasterId equals itm.ItemMasterId
+
+                         join glAcc in _appContext.GLAccount on itm.GLAccountId equals glAcc.GLAccountId
+                         join uom in _appContext.UnitOfMeasure on part.UOMId equals uom.UnitOfMeasureId
+                         into leftUom
+                         from uom in leftUom.DefaultIfEmpty()
+
+                         join emp in _appContext.Employee on part.POPartSplitUserId equals emp.EmployeeId
+                         into leftEmp
+                         from emp in leftEmp.DefaultIfEmpty()
+                         join manf in _appContext.Manufacturer on itm.ManufacturerId equals manf.ManufacturerId into leftManf
+                         from manf in leftManf.DefaultIfEmpty()
+
+                         where part.PurchaseOrderId == purchaseOrderId
+                         select new
+                         {
+                             PurchaseOrderId = part.PurchaseOrderId,
+                             PurchaseOrderPartRecordId = part.PurchaseOrderPartRecordId,
+                             UOMId = part.UOMId,
+                             uomText = uom != null ? uom.ShortName : "",
+                             PoPartSplitUserName = emp != null ? emp.FirstName + " " + emp.LastName : "",
+                             ConditionId = part.ConditionId,
+                             IsParent = part.isParent,
+                             ManagementStructureId = part.ManagementStructureId,
+                             QuantityOrdered = part.QuantityOrdered,
+                             DiscountPerUnit = part.DiscountPerUnit,
+                             ExtendedCost = part.ExtendedCost,
+                             UnitCost = part.UnitCost,
+                             StockLine = _appContext.StockLine.Where(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId).Select(SL => new
+                             {
+                                 StockLineId = SL.StockLineId,
+                                 StockLineNumber = SL.StockLineNumber,
+                                 ControlNumber = SL.ControlNumber,
+                                 IdNumber = SL.IdNumber,
+                                 SerialNumber = SL.SerialNumber,
+                                 Quantity = SL.Quantity,
+                                 PurchaseOrderUnitCost = SL.PurchaseOrderUnitCost,
+                                 PurchaseOrderExtendedCost = SL.PurchaseOrderExtendedCost,
+                                 ReceiverNumber = SL.ReceiverNumber,
+                                 WorkOrder = 0,
+                                 SalesOrder = 0,
+                                 SubWorkOrder = 0,
+                                 OwnerType = SL.OwnerType,
+                                 ObtainFromType = SL.ObtainFromType,
+                                 TraceableToType = SL.TraceableToType,
+                                 ManufacturingTrace = SL.ManufacturingTrace,
+                                 ManufacturerId = SL.ManufacturerId,
+                                 ManufacturerLotNumber = SL.ManufacturerLotNumber,
+                                 ManufacturingDate = SL.ManufacturingDate != null ? Convert.ToDateTime(SL.ManufacturingDate).ToShortDateString() : null,
+                                 ManufacturingBatchNumber = SL.ManufacturingBatchNumber,
+                                 PartCertificationNumber = SL.PartCertificationNumber,
+                                 EngineSerialNumber = SL.EngineSerialNumber,
+                                 ShippingViaId = SL.ShippingViaId,
+                                 ShippingReference = SL.ShippingReference,
+                                 ShippingAccount = SL.ShippingAccount,
+                                 CertifiedDate = SL.CertifiedDate != null ? Convert.ToDateTime(SL.CertifiedDate).ToShortDateString() : null,
+                                 CertifiedBy = SL.CertifiedBy,
+                                 TagDate = SL.TagDate != null ? Convert.ToDateTime(SL.TagDate).ToShortDateString() : null,
+                                 ExpirationDate = SL.ExpirationDate != null ? Convert.ToDateTime(SL.ExpirationDate).ToShortDateString() : null,
+                                 CertifiedDueDate = SL.CertifiedDueDate != null ? Convert.ToDateTime(SL.CertifiedDueDate).ToShortDateString() : null,
+                                 AircraftTailNumber = SL.AircraftTailNumber,
+                                 GLAccountId = SL.GLAccountId,
+                                 GLAccountText = _appContext.GLAccount.Where(p => p.GLAccountId == SL.GLAccountId).FirstOrDefault().AccountName,
+                                 ConditionId = SL.ConditionId,
+                                 ConditionText = SL.ConditionId != null ? _appContext.Condition.Where(p => p.ConditionId == SL.ConditionId).FirstOrDefault().Description : "",
+                                 ManagementStructureEntityId = SL.ManagementStructureEntityId,
+                                 SiteId = SL.SiteId,
+                                 WarehouseId = SL.WarehouseId,
+                                 LocationId = SL.LocationId,
+                                 ShelfId = SL.ShelfId,
+                                 BinId = SL.BinId,
+                                 ManufacturerText = manf != null ? manf.Name : "",
+                                 ShippingViaText = GetShippViaText(SL.ShippingViaId),
+                                 SiteText = GetSiteText(SL.SiteId),
+                                 WarehouseText = GetWarehouseText(SL.WarehouseId),
+                                 LocationText = GetLocationText(SL.LocationId),
+                                 ShelfText = GetShelfText(SL.ShelfId),
+                                 BinText = GetBinText(SL.BinId),
+                                 ObtainFrom = SL.ObtainFrom,
+                                 Owner = SL.Owner,
+                                 TraceableTo = SL.TraceableTo,
+                                 ObtainFromText = SL.ObtainFromType == 2 ? SL.ObtainFrom : GetCustomerVendor(SL.ObtainFrom, SL.ObtainFromType),
+                                 OwnerText = SL.OwnerType == 2 ? SL.Owner : GetCustomerVendor(SL.Owner, SL.OwnerType),
+                                 TraceableToText = SL.TraceableToType == 2 ? SL.TraceableTo : GetCustomerVendor(SL.TraceableTo, SL.TraceableToType)
+                             }),
+                             TimeLife = _appContext.TimeLife.Where(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId),
+                             ItemMaster = new
+                             {
+                                 PartNumber = itm.PartNumber,
+                                 PartDescription = itm.PartDescription,
+                                 GLAccountId = itm.GLAccountId,
+                                 GLAccount = new
+                                 {
+                                     GLAccountId = glAcc.GLAccountId,
+                                     AccountCode = glAcc.AccountCode,
+                                     AccountName = glAcc.AccountName,
+                                     AccountCodeDescription = glAcc.AccountCodeDescription
+                                 },
+                                 IsTimeLife = itm.IsTimeLife,
+                                 IsSerialized = itm.IsSerialized,
+                                 ManufacturerId = itm.ManufacturerId,
+                                 IsPma = itm.isPma,
+                                 IsDer = itm.DER,
+                                 Manufacturer = manf != null ? new
+                                 {
+                                     ManufacturerId = manf.ManufacturerId,
+                                     Name = manf.Name,
+                                 } : null
+                             }
+                         }).ToList();
+
+            return parts;
+        }
+        
         #region REPAIR ORDER
 
         public RepairOrderDto GetReceivingRepairOrderList(long id)
@@ -459,6 +606,20 @@ namespace DAL.Repositories
             return "";
         }
 
+        private string GetShippViaText(long? shippViaId)
+        {
+            if (shippViaId != null)
+            {
+                var shipVia = _appContext.ShippingVia.Where(u => u.ShippingViaId == shippViaId).FirstOrDefault();
+                if (shipVia != null)
+                {
+                    return shipVia.Name;
+                }
+            }
+
+            return "";
+        }
+
         private RepairOrderDto CreateRepairOrderPartDto(RepairOrder repairOrder)
         {
             var repairOrderDto = new RepairOrderDto();
@@ -473,11 +634,11 @@ namespace DAL.Repositories
                 repairOrderDto.VendorName = repairOrder.Vendor != null
                     ? repairOrder.Vendor.VendorName
                     : string.Empty;
-                repairOrderDto.VendorCode =  repairOrder.Vendor != null
+                repairOrderDto.VendorCode = repairOrder.Vendor != null
                     ? repairOrder.Vendor.VendorCode
                     : string.Empty;
                 repairOrderDto.VendorContact = repairOrder.VendorContactPhone;
-                repairOrderDto.ContactPhone =  repairOrder.Vendor != null
+                repairOrderDto.ContactPhone = repairOrder.Vendor != null
                     ? repairOrder.Vendor.VendorContractReference
                     : string.Empty;
                 repairOrderDto.OpenDate = repairOrder.OpenDate;
@@ -522,7 +683,7 @@ namespace DAL.Repositories
                             repairOrderPartDto.QuantityBackOrdered = roPart.QuantityBackOrdered;
                             repairOrderPartDto.QuantityRejected = _getStockLineInfo(roPart.RepairOrderPartRecordId)?.QuantityRejected;
                             repairOrderPartDto.Status = _getStatus(roPart.StatusId);
-                            repairOrderPartDto.IsSerialized =_getStockLineInfo(roPart.RepairOrderPartRecordId)?.IsSerialized;
+                            repairOrderPartDto.IsSerialized = _getStockLineInfo(roPart.RepairOrderPartRecordId)?.IsSerialized;
                             repairOrderPartDto.IsTimeLife = roPart.ItemMaster?.IsTimeLife;
                             repairOrderPartDto.ConditionId = roPart.ConditionId;
                             repairOrderPartDto.GlAccountId = roPart.GlAccountId ?? roPart.ItemMaster?.GLAccountId;
@@ -548,7 +709,7 @@ namespace DAL.Repositories
                                     ? roPart.ItemMaster.PartNumber
                                     : string.Empty,
                                 QuantityOrdered = roPart.QuantityOrdered,
-                                QuantityReceived =  _getStockLineInfo(roPart.RepairOrderPartRecordId)?.QuantityToReceive,
+                                QuantityReceived = _getStockLineInfo(roPart.RepairOrderPartRecordId)?.QuantityToReceive,
                                 QuantityBackOrdered = roPart.QuantityBackOrdered,
                                 QuantityRejected = _getStockLineInfo(roPart.RepairOrderPartRecordId)?.QuantityRejected,
                                 Status = _getStatus(roPart.StatusId),
@@ -579,9 +740,9 @@ namespace DAL.Repositories
         private string _getApprovarName(long repairOrderId)
         {
             var approver = (from ro in _appContext.RepairOrder
-                join emp in _appContext.Employee on ro.ApproverId equals emp.EmployeeId
-                where ro.RepairOrderId== repairOrderId
-                select new { Approvar = emp.FirstName }).FirstOrDefault();
+                            join emp in _appContext.Employee on ro.ApproverId equals emp.EmployeeId
+                            where ro.RepairOrderId == repairOrderId
+                            select new { Approvar = emp.FirstName }).FirstOrDefault();
 
             return approver.Approvar;
 
@@ -590,9 +751,9 @@ namespace DAL.Repositories
         private string _getCreditTerm(long repairOrderId)
         {
             var creditTerm = (from ro in _appContext.RepairOrder
-                join ct in _appContext.CreditTerms on ro.CreditTermsId equals ct.CreditTermsId
-                where ro.RepairOrderId== repairOrderId
-                select new { CreditTerm = ct.Name }).FirstOrDefault();
+                              join ct in _appContext.CreditTerms on ro.CreditTermsId equals ct.CreditTermsId
+                              where ro.RepairOrderId == repairOrderId
+                              select new { CreditTerm = ct.Name }).FirstOrDefault();
 
             return creditTerm.CreditTerm;
         }
@@ -600,9 +761,9 @@ namespace DAL.Repositories
         private string _getPriority(long repairOrderId)
         {
             var priority = (from ro in _appContext.RepairOrder
-                join p in _appContext.Priority on ro.PriorityId equals p.PriorityId
-                where ro.RepairOrderId== repairOrderId
-                select new { Priority = p.Description }).FirstOrDefault();
+                            join p in _appContext.Priority on ro.PriorityId equals p.PriorityId
+                            where ro.RepairOrderId == repairOrderId
+                            select new { Priority = p.Description }).FirstOrDefault();
 
             return priority.Priority;
         }
@@ -611,10 +772,10 @@ namespace DAL.Repositories
         {
             var status = statusId == 1
                 ? "Open"
-                : (statusId == 2 
-                    ? "Pending" 
-                    : (statusId == 3 
-                        ? "Fulfilling" 
+                : (statusId == 2
+                    ? "Pending"
+                    : (statusId == 3
+                        ? "Fulfilling"
                         : "Closed"));
 
             return status;

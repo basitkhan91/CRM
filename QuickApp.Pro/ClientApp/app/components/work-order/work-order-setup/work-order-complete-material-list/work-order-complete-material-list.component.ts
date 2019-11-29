@@ -364,7 +364,7 @@ export class WorkOrderCompleteMaterialListComponent {
         // workFlowWorkOrderId
         // 85
         if (this.workFlowWorkOrderId) {
-            this.workOrderService.getReservedPartsByWorkFlowWOId(this.workFlowWorkOrderId).subscribe(res => {
+            this.workOrderService.getReservedPartsByWorkFlowWOId(this.workFlowWorkOrderId, statusId).subscribe(res => {
                 this.reservedList = res.map(x => {
 
                     return {

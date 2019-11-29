@@ -36,6 +36,7 @@ import { AddVendorCapabilitiesComponent } from "../components/vendor/vendor-caps
 import { EditVendorCapabilitiesComponent } from '../components/vendor/vendor-caps/edit-vendor-capabilities/edit-vendor-capabilities.component';
 import { RolesGuardService } from '../services/roles-guard.service';
 import { CommonService } from '../services/common.service';
+import { VendorDocumentsComponent } from '../components/vendor/vendor-documents/vendor-documents.component';
 
 
 const vendorPagesRoutes: Routes = [
@@ -55,6 +56,7 @@ const vendorPagesRoutes: Routes = [
             { path: "app-vendor-shipping-information", component: VendorShippingInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-shipping-information'], title: "Vendor's Shipping Information" } },
             { path: "app-vendor-warnings", component: VendorWarningsComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-warnings'], title: "Vendor Warnings" } },
 			{ path: "app-vendor-memo", component: VendorMemoComponent, data: { title: "Vendor Memo" } },
+			{ path: "app-vendor-documents", component: VendorDocumentsComponent, data: { title: "Vendor Documents" } },
 			{ path: "app-vendor-emails", component: VendorEmailsComponent, data: { title: "Vendor Emails" } },
 			{ path: "app-vendor-conversations", component: VendorConversationsComponent, data: { title: "Vendor Conversations" } },
 			{ path: "app-polist", component: PolistComponent, data: { title: "PO List" } },

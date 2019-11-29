@@ -37,8 +37,8 @@ namespace DAL.Repositories.Interfaces
         List<WorkOrderAssets> CreateWorkOrderAssets(List<WorkOrderAssets> workOrderAssets);
         List<WorkOrderAssets> UpdateWorkOrderAssets(List<WorkOrderAssets> workOrderAssets);
         IEnumerable<object> GetWorkOrderAssetList(long wfwoId, long workOrderId);
-        void SaveAssetCheckedIn(long WorkOrderAssetId, long checkedInById, DateTime checkedInDate, string updatedBy);
-        void SaveAssetCheckedOut(long WorkOrderAssetId, long checkedoutById, DateTime checkedoutDate, string updatedBy);
+        void SaveAssetCheckedIn(WorkOrderAssetCheckInOut workOrderAssetCheckInOut);
+        void SaveAssetCheckedOut(WorkOrderAssetCheckInOut workOrderAssetCheckInOut);
         object GetAssetCheckedInandOutDetails(long assetRecordId, long workOrderAssetId);
         object WorkOrderAssetView(long assetRecordId);
 
@@ -85,7 +85,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetWorkOrderMaterialList(long wfwoId, long workOrderId);
         void DeleteWorkOrderMaterials(long workOrderMaterialsId, string updatedBy);
 
-        IEnumerable<WorkOrderReserveIssuesParts> GetReservedIssuedParts(long WorkFlowWorkOrderId, long workOrderId);
+        IEnumerable<WorkOrderReserveIssuesParts> GetReservedIssuedParts(long WorkFlowWorkOrderId, long workOrderId, int statusId);
         List<WorkOrderReserveIssuesParts> SaveReserveIssuesParts(List<WorkOrderReserveIssuesParts> reserveIssuesParts);
         IEnumerable<object> GetWorkOrderDirections(long wfwoId, long workOrderId);
     }

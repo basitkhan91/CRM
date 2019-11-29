@@ -54,7 +54,7 @@ export class VendorsListComponent implements OnInit {
     parent: any = "";
     address1: any = "";
     address2: any = "";
-    address3: any = "";
+    //address3: any = "";
     city: any = "";
     stateOrProvince: any = "";
     postal: any = "";
@@ -352,7 +352,7 @@ export class VendorsListComponent implements OnInit {
             { field: 'siteName', header: 'Site Name' },
             { field: 'address1', header: 'Address1' },
             { field: 'address2', header: 'Address2' },
-            { field: 'address3', header: 'Address3' },
+            //{ field: 'address3', header: 'Address3' },
             { field: 'city', header: 'City' },
             { field: 'stateOrProvince', header: 'State/Prov' },
             { field: 'postalCode', header: 'Postal Code' },
@@ -423,7 +423,7 @@ export class VendorsListComponent implements OnInit {
        
         this.address1 = row.address1;
         this.address2 = row.address2;
-        this.address3 = row.address3;
+       // this.address3 = row.address3;
         this.city = row.city;
         this.stateOrProvince = row.stateOrProvince;
         this.postalCode = row.postalCode;
