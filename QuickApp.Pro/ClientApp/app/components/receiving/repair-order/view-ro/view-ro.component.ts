@@ -142,102 +142,132 @@ export class ViewRoComponent {
                         for (let part of this.repairOrderData) {
                             part.isEnabled = false;
                             part.conditionId = 0;
-                            let managementHierarchy: ManagementStructure[][] = [];
-                            let selectedManagementStructure: ManagementStructure[] = [];
-                            this.getManagementStructureHierarchy(part.managementStructureId, managementHierarchy, selectedManagementStructure);
-                            managementHierarchy.reverse();
-                            selectedManagementStructure.reverse();
+                            this.commonService.getManagementStructureCodes(part.managementStructureId).subscribe(res => {
+                                if (res.Level1) {
+                                    part.companyText = res.Level1;
+                                }
+                                if (res.Level2) {
+                                    part.businessUnitText = res.Level2;
+                                }
+                                if (res.Level3) {
+                                    part.divisionText = res.Level3;
+                                }
+                                if (res.Level4) {
+                                    part.departmentText = res.Level4;
+                                }
+                            })
 
-                            if (managementHierarchy[0] != undefined && managementHierarchy[0].length > 0) {
-                                part.companyId = selectedManagementStructure[0].managementStructureId;
-                                part.CompanyList = [];
-                                for (let managementStruct of managementHierarchy[0]) {
-                                    var dropdown = new DropDownData();
-                                    dropdown.Key = managementStruct.managementStructureId.toLocaleString();
-                                    dropdown.Value = managementStruct.code;
-                                    part.CompanyList.push(dropdown);
-                                }
-                            }
-                            if (managementHierarchy[1] != undefined && managementHierarchy[1].length > 0) {
-                                part.businessUnitId = selectedManagementStructure[1].managementStructureId;
-                                part.BusinessUnitList = [];
-                                for (let managementStruct of managementHierarchy[1]) {
-                                    var dropdown = new DropDownData();
-                                    dropdown.Key = managementStruct.managementStructureId.toLocaleString();
-                                    dropdown.Value = managementStruct.code;
-                                    part.BusinessUnitList.push(dropdown);
-                                }
-                            }
-                            if (managementHierarchy[2] != undefined && managementHierarchy[2].length > 0) {
-                                part.divisionId = selectedManagementStructure[2].managementStructureId;
-                                part.DivisionList = [];
-                                for (let managementStruct of managementHierarchy[2]) {
-                                    var dropdown = new DropDownData();
-                                    dropdown.Key = managementStruct.managementStructureId.toLocaleString();
-                                    dropdown.Value = managementStruct.code;
-                                    part.DivisionList.push(dropdown);
-                                }
-                            }
-                            if (managementHierarchy[3] != undefined && managementHierarchy[3].length > 0) {
-                                part.departmentId = selectedManagementStructure[3].managementStructureId;
-                                part.DepartmentList = [];
-                                for (let managementStruct of managementHierarchy[3]) {
-                                    var dropdown = new DropDownData();
-                                    dropdown.Key = managementStruct.managementStructureId.toLocaleString();
-                                    dropdown.Value = managementStruct.code;
-                                    part.DepartmentList.push(dropdown);
-                                }
-                            }
+                            // let managementHierarchy: ManagementStructure[][] = [];
+                            // let selectedManagementStructure: ManagementStructure[] = [];
+                            // this.getManagementStructureHierarchy(part.managementStructureId, managementHierarchy, selectedManagementStructure);
+                            // managementHierarchy.reverse();
+                            // selectedManagementStructure.reverse();
+
+                            // if (managementHierarchy[0] != undefined && managementHierarchy[0].length > 0) {
+                            //     part.companyId = selectedManagementStructure[0].managementStructureId;
+                            //     part.CompanyList = [];
+                            //     for (let managementStruct of managementHierarchy[0]) {
+                            //         var dropdown = new DropDownData();
+                            //         dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                            //         dropdown.Value = managementStruct.code;
+                            //         part.CompanyList.push(dropdown);
+                            //     }
+                            // }
+                            // if (managementHierarchy[1] != undefined && managementHierarchy[1].length > 0) {
+                            //     part.businessUnitId = selectedManagementStructure[1].managementStructureId;
+                            //     part.BusinessUnitList = [];
+                            //     for (let managementStruct of managementHierarchy[1]) {
+                            //         var dropdown = new DropDownData();
+                            //         dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                            //         dropdown.Value = managementStruct.code;
+                            //         part.BusinessUnitList.push(dropdown);
+                            //     }
+                            // }
+                            // if (managementHierarchy[2] != undefined && managementHierarchy[2].length > 0) {
+                            //     part.divisionId = selectedManagementStructure[2].managementStructureId;
+                            //     part.DivisionList = [];
+                            //     for (let managementStruct of managementHierarchy[2]) {
+                            //         var dropdown = new DropDownData();
+                            //         dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                            //         dropdown.Value = managementStruct.code;
+                            //         part.DivisionList.push(dropdown);
+                            //     }
+                            // }
+                            // if (managementHierarchy[3] != undefined && managementHierarchy[3].length > 0) {
+                            //     part.departmentId = selectedManagementStructure[3].managementStructureId;
+                            //     part.DepartmentList = [];
+                            //     for (let managementStruct of managementHierarchy[3]) {
+                            //         var dropdown = new DropDownData();
+                            //         dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                            //         dropdown.Value = managementStruct.code;
+                            //         part.DepartmentList.push(dropdown);
+                            //     }
+                            // }
 
                             if (part.stockLine != null) {
                                 for (var SL of part.stockLine) {
-                                    SL.isEnabled = false;
-                                    let stockLinemanagementHierarchy: ManagementStructure[][] = [];
-                                    let stockLineSelectedManagementStructure: ManagementStructure[] = [];
-                                    this.getManagementStructureHierarchy(SL.managementStructureEntityId, stockLinemanagementHierarchy, stockLineSelectedManagementStructure);
-                                    stockLinemanagementHierarchy.reverse();
-                                    stockLineSelectedManagementStructure.reverse();
+                                    this.commonService.getManagementStructureCodes(SL.managementStructureEntityId).subscribe(res => {
+                                        if (res.Level1) {
+                                            SL.companyText = res.Level1;
+                                        }
+                                        if (res.Level2) {
+                                            SL.businessUnitText = res.Level2;
+                                        }
+                                        if (res.Level3) {
+                                            SL.divisionText = res.Level3;
+                                        }
+                                        if (res.Level4) {
+                                            SL.departmentText = res.Level4;
+                                        }
+                                    })
 
-                                    if (stockLinemanagementHierarchy[0] != undefined && stockLinemanagementHierarchy[0].length > 0) {
-                                        SL.companyId = stockLineSelectedManagementStructure[0].managementStructureId;
-                                        SL.CompanyList = [];
-                                        for (let managementStruct of stockLinemanagementHierarchy[0]) {
-                                            var dropdown = new DropDownData();
-                                            dropdown.Key = managementStruct.managementStructureId.toLocaleString();
-                                            dropdown.Value = managementStruct.code;
-                                            SL.CompanyList.push(dropdown);
-                                        }
-                                    }
-                                    if (stockLinemanagementHierarchy[1] != undefined && stockLinemanagementHierarchy[1].length > 0) {
-                                        SL.businessUnitId = stockLineSelectedManagementStructure[1].managementStructureId;
-                                        SL.BusinessUnitList = [];
-                                        for (let managementStruct of stockLinemanagementHierarchy[1]) {
-                                            var dropdown = new DropDownData();
-                                            dropdown.Key = managementStruct.managementStructureId.toLocaleString();
-                                            dropdown.Value = managementStruct.code;
-                                            SL.BusinessUnitList.push(dropdown);
-                                        }
-                                    }
-                                    if (stockLinemanagementHierarchy[2] != undefined && stockLinemanagementHierarchy[2].length > 0) {
-                                        SL.divisionId = stockLineSelectedManagementStructure[2].managementStructureId;
-                                        SL.DivisionList = [];
-                                        for (let managementStruct of stockLinemanagementHierarchy[2]) {
-                                            var dropdown = new DropDownData();
-                                            dropdown.Key = managementStruct.managementStructureId.toLocaleString();
-                                            dropdown.Value = managementStruct.code;
-                                            SL.DivisionList.push(dropdown);
-                                        }
-                                    }
-                                    if (stockLinemanagementHierarchy[3] != undefined && stockLinemanagementHierarchy[3].length > 0) {
-                                        SL.departmentId = stockLineSelectedManagementStructure[3].managementStructureId;
-                                        SL.DepartmentList = [];
-                                        for (let managementStruct of stockLinemanagementHierarchy[3]) {
-                                            var dropdown = new DropDownData();
-                                            dropdown.Key = managementStruct.managementStructureId.toLocaleString();
-                                            dropdown.Value = managementStruct.code;
-                                            SL.DepartmentList.push(dropdown);
-                                        }
-                                    }
+                                    // SL.isEnabled = false;
+                                    // let stockLinemanagementHierarchy: ManagementStructure[][] = [];
+                                    // let stockLineSelectedManagementStructure: ManagementStructure[] = [];
+                                    // this.getManagementStructureHierarchy(SL.managementStructureEntityId, stockLinemanagementHierarchy, stockLineSelectedManagementStructure);
+                                    // stockLinemanagementHierarchy.reverse();
+                                    // stockLineSelectedManagementStructure.reverse();
+
+                                    // if (stockLinemanagementHierarchy[0] != undefined && stockLinemanagementHierarchy[0].length > 0) {
+                                    //     SL.companyId = stockLineSelectedManagementStructure[0].managementStructureId;
+                                    //     SL.CompanyList = [];
+                                    //     for (let managementStruct of stockLinemanagementHierarchy[0]) {
+                                    //         var dropdown = new DropDownData();
+                                    //         dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                                    //         dropdown.Value = managementStruct.code;
+                                    //         SL.CompanyList.push(dropdown);
+                                    //     }
+                                    // }
+                                    // if (stockLinemanagementHierarchy[1] != undefined && stockLinemanagementHierarchy[1].length > 0) {
+                                    //     SL.businessUnitId = stockLineSelectedManagementStructure[1].managementStructureId;
+                                    //     SL.BusinessUnitList = [];
+                                    //     for (let managementStruct of stockLinemanagementHierarchy[1]) {
+                                    //         var dropdown = new DropDownData();
+                                    //         dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                                    //         dropdown.Value = managementStruct.code;
+                                    //         SL.BusinessUnitList.push(dropdown);
+                                    //     }
+                                    // }
+                                    // if (stockLinemanagementHierarchy[2] != undefined && stockLinemanagementHierarchy[2].length > 0) {
+                                    //     SL.divisionId = stockLineSelectedManagementStructure[2].managementStructureId;
+                                    //     SL.DivisionList = [];
+                                    //     for (let managementStruct of stockLinemanagementHierarchy[2]) {
+                                    //         var dropdown = new DropDownData();
+                                    //         dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                                    //         dropdown.Value = managementStruct.code;
+                                    //         SL.DivisionList.push(dropdown);
+                                    //     }
+                                    // }
+                                    // if (stockLinemanagementHierarchy[3] != undefined && stockLinemanagementHierarchy[3].length > 0) {
+                                    //     SL.departmentId = stockLineSelectedManagementStructure[3].managementStructureId;
+                                    //     SL.DepartmentList = [];
+                                    //     for (let managementStruct of stockLinemanagementHierarchy[3]) {
+                                    //         var dropdown = new DropDownData();
+                                    //         dropdown.Key = managementStruct.managementStructureId.toLocaleString();
+                                    //         dropdown.Value = managementStruct.code;
+                                    //         SL.DepartmentList.push(dropdown);
+                                    //     }
+                                    // }
 
                                     // TODO : Async call not setting proper values.
                                     //debugger;

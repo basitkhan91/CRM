@@ -921,7 +921,7 @@ export class RoSetupComponent implements OnInit {
 						this.childObjectArray.push(this.childObject)
 						this.childObjectArrayEdit.push({
 							...this.childObject, 
-							repairOrderPartRecordId: childDataList[j].repairOrderPartRecordId ? childDataList[j].repairOrderPartRecordId : null
+							repairOrderPartRecordId: childDataList[j].repairOrderPartRecordId ? childDataList[j].repairOrderPartRecordId : 0
 						})
 						console.log(this.childObjectArray);
 					}
@@ -973,7 +973,7 @@ export class RoSetupComponent implements OnInit {
 					this.parentObjectArray.push({
 						...this.parentObject,
 						roPartSplits: this.childObjectArrayEdit,
-						repairOrderPartRecordId: this.partListData[i].repairOrderPartRecordId ? this.partListData[i].repairOrderPartRecordId : null
+						repairOrderPartRecordId: this.partListData[i].repairOrderPartRecordId ? this.partListData[i].repairOrderPartRecordId : 0
 					})
 				}				
 				console.log(this.parentObjectArray);
