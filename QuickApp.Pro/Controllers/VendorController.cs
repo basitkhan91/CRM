@@ -1557,13 +1557,17 @@ namespace QuickApp.Pro.Controllers
             if (ModelState.IsValid)
             {
                 var VendorrObj = _unitOfWork.Vendor.GetSingleOrDefault(a => a.VendorId == id);
-                vendorViewModel.MasterCompanyId = 1;
-                VendorrObj.IsActive = vendorViewModel.IsActive;
-                VendorrObj.UpdatedDate = DateTime.Now;
-                VendorrObj.UpdatedBy = vendorViewModel.UpdatedBy;
-                VendorrObj.VendorId = vendorViewModel.VendorId;
-                _unitOfWork.Vendor.Update(VendorrObj);
-                _unitOfWork.SaveChanges();
+                if(VendorrObj != null)
+                {
+                    //vendorViewModel.MasterCompanyId = 1;
+                    VendorrObj.IsActive = vendorViewModel.IsActive;
+                    VendorrObj.UpdatedDate = DateTime.Now;
+                    VendorrObj.UpdatedBy = vendorViewModel.UpdatedBy;
+                    VendorrObj.VendorId = vendorViewModel.VendorId;
+                    _unitOfWork.Vendor.Update(VendorrObj);
+                    _unitOfWork.SaveChanges();
+                }
+                
                 return Ok(VendorrObj);
             }
 
