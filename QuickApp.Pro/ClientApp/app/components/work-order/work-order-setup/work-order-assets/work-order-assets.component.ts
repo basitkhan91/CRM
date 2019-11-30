@@ -4,6 +4,7 @@ import { AuthService } from '../../../../services/auth.service';
 import { AlertService, MessageSeverity } from '../../../../services/alert.service';
 import { getValueFromObjectByKey } from '../../../../generic/autocomplete';
 import * as $ from 'jquery'
+import { NgForm } from '@angular/forms';
 @Component({
     selector: 'app-work-order-assets',
     templateUrl: './work-order-assets.component.html',
@@ -32,6 +33,7 @@ export class WorkOrderAssetsComponent implements OnInit {
     status: any;
     currentRecord: any;
     employeeList: any;
+    generalInfoForm: NgForm;
 
     ngOnInit(): void {
         console.log(this.workFlowObject);
