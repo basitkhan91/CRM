@@ -300,7 +300,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
 
 
 
-    this.saveworkOrderLabor.emit(this.saveFormdata);
+    this.saveworkOrderLabor.emit(this.saveFormdata);  
 
   }
 
