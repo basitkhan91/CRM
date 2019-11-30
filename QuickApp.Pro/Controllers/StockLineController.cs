@@ -551,11 +551,6 @@ namespace QuickApp.Pro.Controllers
                 var entityobject = _context.ManagementStructure.Where(a => a.ManagementStructureId == stockLineViewModel.ManagementStructureId).SingleOrDefault();
                 var actionobject = _unitOfWork.stockLineList.GetSingleOrDefault(a => a.StockLineId == id);
 
-                //var address = _unitOfWork.Address.GetSingleOrDefault(a => a.AddressId == customerViewModel.Addressid);
-
-                //stockLineViewModel.MasterCompanyId = 1;
-                //actionobject.IsSerialized = true;
-
                 if (stockLineViewModel.sitetryChange == true)
                 {
                     actionobject.SiteId = stockLineViewModel.SiteId;
@@ -565,8 +560,6 @@ namespace QuickApp.Pro.Controllers
                     actionobject.BinId = null;
                 }
 
-
-
                 if (stockLineViewModel.warehousetryChange == true)
                 {
                     actionobject.WarehouseId = stockLineViewModel.WarehouseId;
@@ -574,7 +567,6 @@ namespace QuickApp.Pro.Controllers
                     actionobject.ShelfId = null;
                     actionobject.BinId = null;
                 }
-
 
                 if (stockLineViewModel.locationtryChange == true)
                 {
@@ -968,6 +960,24 @@ namespace QuickApp.Pro.Controllers
                               ControlId = s.IdNumber
 
                           }).FirstOrDefault();
+
+            return Ok(result);
+        }
+
+        [HttpGet("getStocklineDetailsByItemMasterId/{itemMasterId}")]
+        public IActionResult GetStocklineDetailsByItemMasterId(long itemMasterId)
+        {
+            var result = (from s in _context.StockLine
+                          join c in _context.Condition on s.ConditionId equals c.ConditionId
+                          join po in _context.PurchaseOrder on s.PurchaseOrderId equals po.PurchaseOrderId
+                          where s.ItemMasterId == itemMasterId
+                          select new
+                          {
+                              s.ControlNumber,
+                              po.PurchaseOrderNumber,
+                              ControlId = s.IdNumber
+
+                          }).ToList();
 
             return Ok(result);
         }

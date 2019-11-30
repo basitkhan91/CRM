@@ -50,6 +50,18 @@ namespace DAL.Repositories
                               join mana in _appContext.ManagementStructure on stl.ManagementStructureEntityId equals mana.ManagementStructureId into manage
                               from mana in manage.DefaultIfEmpty()
 
+                              join managmentLegalEntity in _appContext.ManagementStructure on mana.ManagementStructureId equals managmentLegalEntity.ManagementStructureId into mainCompanyTree
+                              from managmentLegalEntity in mainCompanyTree.DefaultIfEmpty()
+
+                              join divmanagmentLegalEntity in _appContext.ManagementStructure on managmentLegalEntity.ParentId equals divmanagmentLegalEntity.ManagementStructureId into mainDivCompany
+                              from divmanagmentLegalEntity in mainDivCompany.DefaultIfEmpty()
+
+                              join biumanagmentLegalEntity in _appContext.ManagementStructure on divmanagmentLegalEntity.ParentId equals biumanagmentLegalEntity.ManagementStructureId into BIUDivCompany
+                              from biumanagmentLegalEntity in BIUDivCompany.DefaultIfEmpty()
+
+                              join compmanagmentLegalEntity in _appContext.ManagementStructure on biumanagmentLegalEntity.ParentId equals compmanagmentLegalEntity.ManagementStructureId into comivCompany
+                              from compmanagmentLegalEntity in comivCompany.DefaultIfEmpty()
+
                               join ti in _appContext.TimeLife on stl.TimeLifeCyclesId equals ti.TimeLifeCyclesId into time
                               from ti in time.DefaultIfEmpty()
 
@@ -160,7 +172,11 @@ namespace DAL.Repositories
                                   ro,
                                   conditionType = co.Description,
                                   im.ItemTypeId,
-
+                                  managmentLegalEntity,
+                                  divmanagmentLegalEntity,
+                                  biumanagmentLegalEntity,
+                                  compmanagmentLegalEntity,
+                                  mana,
                               }).ToList();
                 return result;
             }

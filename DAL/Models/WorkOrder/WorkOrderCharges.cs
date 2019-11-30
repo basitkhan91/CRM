@@ -41,5 +41,7 @@ namespace DAL.Models
         public string VendorName { get; set; }
         [NotMapped]
         public string ChargeType { get; set; }
+        [NotMapped]
+        public long workflowChargeTypeId { get; set; }
     }
 }

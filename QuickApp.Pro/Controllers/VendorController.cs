@@ -1144,10 +1144,9 @@ namespace QuickApp.Pro.Controllers
             roPartModel.CreatedBy = roViewModel.CreatedBy;
             roPartModel.UpdatedBy = roViewModel.UpdatedBy;
             roPartModel.ParentId = roViewModel.RepairOrderPartRecordId;
-
+            roPartModel.StockLineId = roViewModel.StockLineId;
 
             return roPartModel;
-
         }
 
         private RepairOrderPart FillRepairOrderSplitPart(RepairOrderPart roPartModel, ViewModels.RoPartSplits roPartSplit)
@@ -1171,6 +1170,7 @@ namespace QuickApp.Pro.Controllers
             roPartModel.NeedByDate = roPartSplit.NeedByDate;
             roPartModel.ManagementStructureId = roPartSplit.ManagementStructureId;
             roPartModel.IsParent = false;
+            roPartModel.StockLineId = roPartSplit.StockLineId;
 
             return roPartModel;
         }
@@ -1219,7 +1219,8 @@ namespace QuickApp.Pro.Controllers
                 Memo = roViewModel.Memo,
                 MasterCompanyId = roViewModel.MasterCompanyId,
                 CreatedBy = roViewModel.CreatedBy,
-                UpdatedBy = roViewModel.UpdatedBy
+                UpdatedBy = roViewModel.UpdatedBy,
+                StockLineId = roViewModel.StockLineId
             };
 
             if (roViewModel.RoPartSplits != null && roViewModel.RoPartSplits.Any())
@@ -1248,6 +1249,7 @@ namespace QuickApp.Pro.Controllers
                         UOMId = roSplit.UOMId,
                         ManagementStructureId = roSplit.ManagementStructureId,
                         NeedByDate = roSplit.NeedByDate,
+                        StockLineId= roSplit.StockLineId,
                     };
                     roPartDto.RoPartSplits.Add(roPartSplitObj);
                 }

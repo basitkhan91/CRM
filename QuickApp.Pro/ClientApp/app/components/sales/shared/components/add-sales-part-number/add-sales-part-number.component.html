@@ -15,10 +15,10 @@
               (onSearchTypeChange)="onSearchTypeChange($event)">
             </app-part-number-filter>
             <ng-container *ngIf="searchType === '1'">
-              <app-part-details [parts]="parts"></app-part-details>
+              <app-part-details [parts]="parts" (onPartSelect)="onShowModalMargin($event)"></app-part-details>
             </ng-container>
             <ng-container *ngIf="searchType === '2'">
-              <app-stockline-part-details [parts]="parts"></app-stockline-part-details>
+              <app-stockline-part-details [parts]="parts" (select)="onSelect($event)"></app-stockline-part-details>
             </ng-container>
           </div>
           <div class="modal-footer">
@@ -34,3 +34,7 @@
     </div>
   </form>
 </div>
+<ng-container *ngIf="showModalMargin">
+  <app-sales-margin [part]="part"></app-sales-margin>
+</ng-container>
+<button id="btnMarginDetails" style='display:none' data-toggle="modal" data-target="#salesMargin"></button>

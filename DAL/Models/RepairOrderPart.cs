@@ -65,6 +65,7 @@ namespace DAL.Models
 
         public List<StockLine> StockLine { get; set; }
         public long? ParentId { get; set; }
+        public long? StockLineId {get; set;}
     }
 
     [NotMapped]
