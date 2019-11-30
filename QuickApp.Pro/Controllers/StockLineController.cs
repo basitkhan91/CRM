@@ -972,6 +972,24 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("getStocklineDetailsByItemMasterId/{itemMasterId}")]
+        public IActionResult GetStocklineDetailsByItemMasterId(long itemMasterId)
+        {
+            var result = (from s in _context.StockLine
+                          join c in _context.Condition on s.ConditionId equals c.ConditionId
+                          join po in _context.PurchaseOrder on s.PurchaseOrderId equals po.PurchaseOrderId
+                          where s.ItemMasterId == itemMasterId
+                          select new
+                          {
+                              s.ControlNumber,
+                              po.PurchaseOrderNumber,
+                              ControlId = s.IdNumber
+
+                          }).ToList();
+
+            return Ok(result);
+        }
+
         [HttpPost("search")]
         public IActionResult SearchItemMaster([FromBody]ItemMasterSearchViewModel searchView)
         {
