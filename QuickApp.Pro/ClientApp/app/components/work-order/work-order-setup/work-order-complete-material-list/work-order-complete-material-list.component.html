@@ -85,7 +85,7 @@
                                             <input rows="1" value="{{material.partDescription}}" [disabled]="true" [(ngModel)]="material.partDescription">
                                         </td>
                                         <td>
-                                            <select class="form-control custom-select wf-pub-id" id="ddlMaterialCondition" [(ngModel)]="material.conditionCodeId">
+                                            <select class="form-control wf-pub-id" id="ddlMaterialCondition" [(ngModel)]="material.conditionCodeId"> <!--custom-select-->
                                                 <option value="">Select</option>
                                                 <option *ngFor="let condition of materialCondition" value="{{condition.conditionId}}">
                                                     {{condition.description}}
@@ -93,7 +93,7 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <select class="form-control custom-select wf-pub-id" id="ddlMandatoryOrSupplemental" [(ngModel)]="material.mandatoryOrSupplemental" name="mandatoryOrSupplemental{{i}}" style="margin:auto;">
+                                            <select class="form-control wf-pub-id" id="ddlMandatoryOrSupplemental" [(ngModel)]="material.mandatoryOrSupplemental" name="mandatoryOrSupplemental{{i}}" style="margin:auto;">
                                                 <option value="">Select</option>
                                                 <option *ngFor="let mandatory of materialMandatory" value="{{mandatory.name}}">
                                                     {{mandatory.name}}
@@ -101,7 +101,7 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <select class="form-control custom-select dropdown-select wf-pub-id" [(ngModel)]="material.itemClassificationId" [disabled]="true">
+                                            <select class="form-control dropdown-select wf-pub-id" [(ngModel)]="material.itemClassificationId" [disabled]="true">
                                                 <option *ngFor="let item of itemClassInfo" value="{{item.itemClassificationId}}">
                                                     {{item.description}}
                                                 </option>
@@ -111,7 +111,7 @@
                                             <input type="text" maxlength="10" pInputText pKeyFilter="pnum" class="form-control" value="{{material.quantity}}"  (input)="validateQuantity($event, material);calculateQtySummation();calculateExtendedCost(material);calculateExtendedPrice(material);" [(ngModel)]="material.quantity" />
                                         </td>
                                         <td>
-                                            <select class="form-control custom-select wf-pub-id" id="ddlMaterialUOM" [(ngModel)]="material.unitOfMeasureId">
+                                            <select class="form-control wf-pub-id" id="ddlMaterialUOM" [(ngModel)]="material.unitOfMeasureId">
                                                 <option value="">Select</option>
                                                 <option *ngFor="let uom of materialUOM" value="{{uom.unitOfMeasureId}}">
                                                     {{uom.shortName}}

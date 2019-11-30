@@ -28,7 +28,7 @@
         ></grd-equipment>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">
+        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">
           Close
         </button>
       </div>
@@ -183,72 +183,74 @@
             <h4 class="modal-title" *ngIf="assetsform.assetStatus=='checkOut'"> Asstes Check-Out</h4>
         </div>
       <div class="modal-body" *ngIf="assetRecordId">
-        <div class="form-row" style="margin-top: 10px;">
-          <div class="col-md-2">
-            <div class="form-group">
-              <label>Asset Description</label>
-              <input
-                class="form-control"
-                type="text"
-                [(ngModel)]="assetsform.description"
-                name="assetDescription"
-                disabled
-              />
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div class="form-group">
-              <label>Asset ID Number</label>
-              <input
-                class="form-control"
-                type="text"
-                [(ngModel)]="assetsform.assetId"
-                name="assetIdNumber"
-                disabled
-              />
-            </div>
-          </div>
-          <div class="col-md-3">
-              <div class="form-group">
-                  <label *ngIf="assetsform.assetStatus=='checkIn'">Checked In By</label>
-                  <label *ngIf="assetsform.assetStatus=='checkOut'">Checked Out By</label>
-                  <p-autoComplete field="label"
-                                  class="pautocomp-cstm"
-                                  [(ngModel)]="assetsform.employeeId"
-                                  name="checkInBy"
-                                  [suggestions]="employeeList"
-                                  (completeMethod)="filterEmployee($event)"
-                                  [size]="30"
-                                  [minLength]="1"
-                                  [dropdown]="true"
-                                  errorMessage="Records not found"
-                                  [forceSelection]="true">
-                  </p-autoComplete>
+          <form #assetCheckForm="ngForm">
+            <div class="form-row" style="margin-top: 10px;">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label style="width: auto;">Asset Description</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    [(ngModel)]="assetsform.description"
+                    name="assetDescription"
+                    disabled
+                  />
+                </div>
               </div>
-          </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <label>Date</label>
-              <p-calendar
-                class="pas-clder"
-                [(ngModel)]="assetsform.date"
-                [showIcon]="true"
-                name="date"
-              ></p-calendar>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label style="width: auto;">Asset ID Number</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    [(ngModel)]="assetsform.assetId"
+                    name="assetIdNumber"
+                    disabled
+                  />
+                </div>
+              </div>
+              <div class="col-md-3">
+                  <div class="form-group">
+                      <label style="width: 100%;" *ngIf="assetsform.assetStatus=='checkIn'">Checked In By</label>
+                      <label style="width: 100%;" *ngIf="assetsform.assetStatus=='checkOut'">Checked Out By</label>
+                      <p-autoComplete field="label"
+                                      class="pautocomp-cstm"
+                                      [(ngModel)]="assetsform.employeeId"
+                                      name="checkInBy"
+                                      [suggestions]="employeeList"
+                                      (completeMethod)="filterEmployee($event)"
+                                      [size]="30"
+                                      [minLength]="1"
+                                      [dropdown]="true"
+                                      errorMessage="Records not found"
+                                      [forceSelection]="true">
+                      </p-autoComplete>
+                  </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label style="width: 100%;">Date</label>
+                  <p-calendar
+                    class="pas-clder"
+                    [(ngModel)]="assetsform.date"
+                    [showIcon]="true"
+                    name="date"
+                  ></p-calendar>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="text-right save-work-btn">
-          <button
-            class="btn btn-primary btn-primary-cstm"
-            (click)="saveAssets(); getEquipmentData.emit()"
-            style="padding: 6px 12px !important;"
-            data-dismiss="modal"
-          >
-            Save Assets
-          </button>
-        </div>
-
+            <div class="text-right save-work-btn">
+              <button
+                class="btn btn-primary btn-primary-cstm"
+                (click)="saveAssets(); getEquipmentData.emit()"
+                style="padding: 6px 12px !important;"
+                data-dismiss="modal"
+                [disabled]="!assetCheckForm.valid" type="submit"
+              >
+                Save Assets
+              </button>
+            </div>
+        </form>
         <app-asset-listing
           [assetsId]="assetRecordId"
           [isWorkOrder]="isWorkOrder"
@@ -256,7 +258,7 @@
         </app-asset-listing>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">
+        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">
           Close
         </button>
       </div>
