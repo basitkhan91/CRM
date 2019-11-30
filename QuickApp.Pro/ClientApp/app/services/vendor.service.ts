@@ -724,6 +724,15 @@ export class VendorService {
 	 documentUpdateUploadAction(action: any) {
         return this.actionEndpoint.getUpdateDocumentUploadEndpoint<any>(action);
     }
+
+    toGetUploadDocumentsList(attachmentId, vendorId,moduleId)
+    {
+        return this.actionEndpoint.GetUploadDocumentsList(attachmentId, vendorId,moduleId);
+    }
+
+    getDeleteDocumentListbyId(vendorDocumentId) {
+        return this.actionEndpoint.getdeleteDocumentListbyId(vendorDocumentId)
+    }
     
     
       

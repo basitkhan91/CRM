@@ -162,8 +162,10 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _addDocumentDetails: string = "/api/Vendor/vendorDocumentUpload";
 	private readonly _updateDocumentDetails: string = "/api/Vendor/vendorDocumentUpdate";
 	private readonly _getVendorDocsDetailsById: string = "/api/Vendor/getVendorDocumentDetail";
+	private readonly _getVendorDocumentAttachmentslist: string = "/api/FileUpload/getattachmentdetails";
+	private readonly _getVendorDeleteDocsDetailsById: string = "/api/Vendor/vendorDocumentDelete";
 	
-    
+	
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
 	get vendorlistsUrl() { return this.configurations.baseUrl + this._vendrUrl; }
 	get vendorBasicListUrl(){return this.configurations.baseUrl+ this._vendorLiteUrl}
@@ -1545,9 +1547,18 @@ getDocumentListbyId(vendorDocumentId) {
 }
 
 getUpdateDocumentUploadEndpoint<T>(file: any): Observable<T> {
+	debugger
 	const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
 	return this.http.put<T>(`${this._updateDocumentDetails}`, file);
 }
 
+GetUploadDocumentsList(attachmentId, vendorId,moduleId) {
+	return this.http.get(`${this._getVendorDocumentAttachmentslist}?attachmentId=${attachmentId}&referenceId=${vendorId}&moduleId=${moduleId}`,  this.getRequestHeaders())
+}
+
+
+getdeleteDocumentListbyId(vendorDocumentId) {
+	return this.http.delete(`${this._getVendorDeleteDocsDetailsById}/${vendorDocumentId}`, this.getRequestHeaders())
+}
 
 }

@@ -3482,21 +3482,52 @@ namespace QuickApp.Pro.Controllers
                 if (ModelState.IsValid)
                 {
                     if (Request.Form == null)
-                        return BadRequest($"{nameof(objVendorDocumentDetail)} cannot be null");
+                        return BadRequest($"{nameof(objVendorDocumentDetail)} cannot be null");                    
 
-                    objVendorDocumentDetail.VendorId = Convert.ToInt64(Request.Form["VendorId"]);
-                    objVendorDocumentDetail.MasterCompanyId = 1;
-                    objVendorDocumentDetail.CreatedBy = Request.Form["CreatedBy"];
-                    objVendorDocumentDetail.UpdatedBy = Request.Form["UpdatedBy"];
-                    objVendorDocumentDetail.DocName = Request.Form["DocName"];
-                    objVendorDocumentDetail.DocMemo = Request.Form["DocMemo"];
-                    objVendorDocumentDetail.DocDescription = Request.Form["DocDescription"];
-                    objVendorDocumentDetail.IsActive = true;
-                    objVendorDocumentDetail.IsDeleted = false;
-                    objVendorDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
-                                                                        Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), objVendorDocumentDetail.UpdatedBy, objVendorDocumentDetail.MasterCompanyId);
-                    _unitOfWork.VendorDocumentDetails.Add(objVendorDocumentDetail);
-                    _unitOfWork.SaveChanges();
+                    long VendorDocumentDetailId = Convert.ToInt64(Request.Form["VendorDocumentDetailId"]);
+
+                    if (VendorDocumentDetailId > 0)
+                    {
+                        var vendorDocObj = _unitOfWork.Vendor.GetVendorDocumentDetailById(VendorDocumentDetailId);
+                        //objVendorDocumentDetail.MasterCompanyId = 1;      
+                        vendorDocObj.VendorId = Convert.ToInt64(Request.Form["VendorId"]);
+                        vendorDocObj.UpdatedBy = Request.Form["UpdatedBy"];
+                        vendorDocObj.DocName = Request.Form["DocName"];
+                        vendorDocObj.DocMemo = Request.Form["DocMemo"];
+                        vendorDocObj.DocDescription = Request.Form["DocDescription"];
+                        if (vendorDocObj.AttachmentId > 0)
+                        {
+                            vendorDocObj.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
+                          Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), vendorDocObj.UpdatedBy, vendorDocObj.MasterCompanyId, vendorDocObj.AttachmentId);
+
+                        }
+                        else
+                        {
+                            vendorDocObj.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
+                             Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), vendorDocObj.UpdatedBy, vendorDocObj.MasterCompanyId);
+                        }
+
+                        _unitOfWork.VendorDocumentDetails.Update(vendorDocObj);
+                        _unitOfWork.SaveChanges();
+                    }
+                    else
+                    {
+                        objVendorDocumentDetail.VendorId = Convert.ToInt64(Request.Form["VendorId"]);
+                        objVendorDocumentDetail.MasterCompanyId = 1;
+                        objVendorDocumentDetail.CreatedBy = Request.Form["CreatedBy"];
+                        objVendorDocumentDetail.UpdatedBy = Request.Form["UpdatedBy"];
+                        objVendorDocumentDetail.DocName = Request.Form["DocName"];
+                        objVendorDocumentDetail.DocMemo = Request.Form["DocMemo"];
+                        objVendorDocumentDetail.DocDescription = Request.Form["DocDescription"];
+                        objVendorDocumentDetail.IsActive = true;
+                        objVendorDocumentDetail.IsDeleted = false;
+                        objVendorDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
+                                                                            Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), objVendorDocumentDetail.UpdatedBy, objVendorDocumentDetail.MasterCompanyId);
+                        _unitOfWork.VendorDocumentDetails.Add(objVendorDocumentDetail);
+                        _unitOfWork.SaveChanges();
+                    }
+
+
 
                     return Ok(objVendorDocumentDetail);
                 }
@@ -3516,9 +3547,9 @@ namespace QuickApp.Pro.Controllers
             {
                 if (Request.Form == null)
                     return BadRequest($"{nameof(objVendorDocumentDetail)} cannot be null");
-                long VendorDocumentDetailId= Convert.ToInt64(Request.Form["VendorDocumentDetailId"]); 
+                long VendorDocumentDetailId = Convert.ToInt64(Request.Form["VendorDocumentDetailId"]);
                 objVendorDocumentDetail.VendorId = Convert.ToInt64(Request.Form["VendorId"]);
-                if(VendorDocumentDetailId >0)
+                if (VendorDocumentDetailId > 0)
                 {
                     var vendorDocObj = _unitOfWork.Vendor.GetVendorDocumentDetailById(VendorDocumentDetailId);
                     //objVendorDocumentDetail.MasterCompanyId = 1;               
@@ -3532,7 +3563,7 @@ namespace QuickApp.Pro.Controllers
                     _unitOfWork.SaveChanges();
                 }
 
-               
+
 
                 return Ok(objVendorDocumentDetail);
             }
@@ -3558,18 +3589,20 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+
+
         [HttpDelete("vendorDocumentDelete/{id}")]
         [Produces(typeof(VendorDocumentDetails))]
         public IActionResult DeleteDocumentAction(long id)
         {
-            var existingResult = _context.VendorDocumentDetails.ToList().Where(p=>p.VendorDocumentDetailId == id).FirstOrDefault();
-            if(existingResult!=null)
+            var existingResult = _context.VendorDocumentDetails.ToList().Where(p => p.VendorDocumentDetailId == id).FirstOrDefault();
+            if (existingResult != null)
             {
                 existingResult.IsDeleted = true;
-                _unitOfWork.VendorDocumentDetails.Update(existingResult);              
+                _unitOfWork.VendorDocumentDetails.Update(existingResult);
                 _unitOfWork.SaveChanges();
             }
-           
+
             return Ok(id);
         }
 

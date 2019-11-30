@@ -20,7 +20,7 @@ namespace DAL.Repositories
 
             var data = (from v in _appContext.VendorDocumentDetails
                         //join x in _appContext.AttachmentDetails on v.AttachmentId equals x.AttachmentId
-                        where v.VendorId == Id
+                        where v.VendorId == Id && v.IsActive==true && v.IsDeleted==false
                         select new
                         {
                             v.VendorDocumentDetailId,
@@ -37,7 +37,7 @@ namespace DAL.Repositories
                             v.UpdatedDate,
                             v.IsActive,
                             v.IsDeleted
-                        }).ToList();
+                        }).OrderByDescending(p=>p.UpdatedDate).ToList();
             return data;
 
 
