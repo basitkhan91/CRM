@@ -54,11 +54,11 @@ namespace DAL.Repositories
                             join act in _appContext.AircraftType on ac.AircraftTypeId equals act.AircraftTypeId
                             join acm in _appContext.AircraftModel on ac.AircraftModelId equals acm.AircraftModelId
                             join dn in _appContext.AircraftDashNumber on ac.AircraftDashNumberId equals dn.DashNumberId
-                            where ac.AssetRecordId == id
+                            where ac.AssetRecordId == id && (ac.IsDelete == false || ac.IsDelete == null)
 
                             select new
                             {
-                                ac.ItemMasterId,im.PartNumber,im.PartDescription,captypedescription = captype.Description,
+                                ac.AssetCapesId,ac.ItemMasterId,im.PartNumber,im.PartDescription,captypedescription = captype.Description,
                                 manufacturer = act.Description,modelname = acm.ModelName,dashnumber= dn.DashNumber
 
                             }).ToList();
