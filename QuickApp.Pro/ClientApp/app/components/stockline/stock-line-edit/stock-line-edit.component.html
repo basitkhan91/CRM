@@ -42,7 +42,7 @@
                     <div class="form-group col-sm-12">
                         <label class="form-group control-label col-sm-4"></label>
                         <div class="col-sm-7">
-                            <select [formControl]="stocklineEditForm.controls['departmentId']" (change)="divisionChange(sourceEmployee.divisionId)">
+                            <select [formControl]="stocklineEditForm.controls['departmentId']" (change)="divisionChange(sourceStockLineSetup.divisionId)">
                                 <option value="0">Select Dept</option>
                                 <option *ngFor="let managementStructure of divisionlist " [ngValue]="managementStructure.managementStructureId">{{managementStructure.name}}</option>
                             </select>
