@@ -88,5 +88,6 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<WorkOrderReserveIssuesParts> GetReservedIssuedParts(long WorkFlowWorkOrderId, long workOrderId, int statusId);
         List<WorkOrderReserveIssuesParts> SaveReserveIssuesParts(List<WorkOrderReserveIssuesParts> reserveIssuesParts);
         IEnumerable<object> GetWorkOrderDirections(long wfwoId, long workOrderId);
+        object GetStockLineDetails(long stockLineId);
     }
 }
