@@ -157,22 +157,13 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 			//this.sourceStockLineSetup.purchaseOrderId = this.sourceStockLine.po.purchaseOrderId;
 			this.sourceStockLineSetup.stockLineId = this.sourceStockLine.stl.stockLineId;
 			this.sourceStockLineSetup.PartNumber = this.sourceStockLine.partNumber;
-			//this.sourceStockLineSetup.CompanyId = this.sourceStockLine.com.companyId;
-			//this.sourceStockLineSetup.businessUnitId = this.sourceStockLine.bu.businessUnitId;
-			//this.sourceStockLineSetup.departmentId = this.sourceStockLine.de.departmentId;
-			//this.sourceStockLineSetup.divisionId = this.sourceStockLine.di.divisionId;
-			this.sourceStockLineSetup.partId = this.sourceStockLine.partId;
+						this.sourceStockLineSetup.partId = this.sourceStockLine.partId;
 			this.selectedPartId = this.sourceStockLineSetup.partId //By Default Value
 			this.sourceStockLineSetup.partNumber = this.sourceStockLine.partNumber;
 			this.sourceStockLineSetup.partDescription = this.sourceStockLine.partDescription;
 			this.sourceStockLineSetup.stockLineNumber = this.sourceStockLine.stockLineNumber;
 			this.sourceStockLineSetup.controlNumber = this.sourceStockLine.controlNumber;
 			this.sourceStockLineSetup.isSerialized = this.sourceStockLine.isSerialized;
-			
-            this.sourceStockLineSetup.quantity = this.sourceStockLine.quantityOnHand;
-            this.sourceStockLineSetup.quantity = this.sourceStockLine.quantityReserved;
-            this.sourceStockLineSetup.quantity = this.sourceStockLine.quantityIssued;
-            this.sourceStockLineSetup.quantity = this.sourceStockLine.quantityAvailable;
 			this.sourceStockLineSetup.condition = this.sourceStockLine.condition;
 			this.sourceStockLineSetup.conditionId = this.sourceStockLine.conditionId;
 			this.sourceStockLineSetup.serialNumber = this.sourceStockLine.serialNumber;
