@@ -9,34 +9,30 @@
             <div class="col-sm-9">
                 <div class="col-sm-6 w400">
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">Legal Entity</label>
                         <div class="col-sm-7">
-                            <select [(ngModel)]="sourceStockLineSetup.companyId" [disabled]=true [ngModelOptions]="{standalone: true}" (change)="getBUList(sourceStockLineSetup.companyId)">
+                            <select [(ngModel)]="sourceStockLineSetup.companyId" [ngModelOptions]="{standalone: true}" (change)="getBUList(sourceStockLineSetup.companyId)">
                                 <option *ngFor="let ataName of allManagemtninfo" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">BU</label>
                         <div class="col-sm-7">
-                            <select [(ngModel)]="sourceStockLineSetup.businessUnitId" [disabled]=true [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(sourceStockLineSetup.businessUnitId)">
+                            <select [(ngModel)]="sourceStockLineSetup.businessUnitId"  [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(sourceStockLineSetup.businessUnitId)">
                                 <option *ngFor="let ataName of allManagemtninfo" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">Dept</label>
                         <div class="col-sm-7">
-                            <select [(ngModel)]="sourceStockLineSetup.departmentId" [disabled]=true [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(sourceStockLineSetup.departmentId)">
+                            <select [(ngModel)]="sourceStockLineSetup.departmentId"  [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(sourceStockLineSetup.departmentId)">
                                 <option *ngFor="let ataName of allManagemtninfo " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">Division</label>
                         <div class="col-sm-7">
                             <div>
-                                <select [(ngModel)]="sourceStockLineSetup.divisionId" [disabled]=true [ngModelOptions]="{standalone: true}" (change)="getDivisionChangeManagementCode(sourceStockLineSetup.divisionId)">
+                                <select [(ngModel)]="sourceStockLineSetup.divisionId"  [ngModelOptions]="{standalone: true}" (change)="getDivisionChangeManagementCode(sourceStockLineSetup.divisionId)">
                                     <option *ngFor="let ataName of allManagemtninfo " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
                                 </select>
                             </div>
@@ -119,7 +115,7 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">QTY AVAILABLE<strong style="color:red">*</strong></label>
                     <div class="col-sm-7">
-                        <input class="form-control qty-input" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityAvailable">
+                        <input class="form-control qty-input" type="number" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityAvailable">
                     </div>
                 </div>
 
@@ -217,7 +213,7 @@
                         <select [(ngModel)]="sourceStockLineSetup.obtainFrom" [ngModelOptions]="{standalone: true}">
                             <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
                         </select>
-                        <!--<a target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>-->
+                        <a routerLink="/customersmodule/customerpages/app-customer-create" class="add-icon"><i class="fa fa-plus"></i></a>
                     </div>
                     <div class="col-sm-7" *ngIf="sourceStockLineSetup.obtainFromType == 2">
                         <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.obtainFrom">
@@ -226,7 +222,7 @@
                         <select [(ngModel)]="sourceStockLineSetup.obtainFrom" [ngModelOptions]="{standalone: true}">
                             <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                         </select>
-                        <!--<a target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>-->
+                        <a routerLink="/vendorsmodule/vendorpages/app-vendor-setup" class="add-icon"><i class="fa fa-plus"></i></a>
                     </div>
                 </div>
 
@@ -247,7 +243,7 @@
                         <select [(ngModel)]="sourceStockLineSetup.owner" [ngModelOptions]="{standalone: true}">
                             <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
                         </select>
-                        <!--<a target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>-->
+                        <a routerLink="/customersmodule/customerpages/app-customer-create" class="add-icon"><i class="fa fa-plus"></i></a>
                     </div>
                 </div>
 
@@ -264,7 +260,7 @@
                         <select [(ngModel)]="sourceStockLineSetup.owner" [ngModelOptions]="{standalone: true}">
                             <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                         </select>
-                        <!--<a target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>-->
+                        <a routerLink="/vendorsmodule/vendorpages/app-vendor-setup" class="add-icon"><i class="fa fa-plus"></i></a>
                     </div>
                 </div>
 
@@ -284,7 +280,7 @@
                             <select [(ngModel)]="sourceStockLineSetup.traceableTo" [ngModelOptions]="{standalone: true}">
                                 <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
                             </select>
-                            <!--<a target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>-->
+                            <a routerLink="/customersmodule/customerpages/app-customer-create" class="add-icon"><i class="fa fa-plus"></i></a>
                         </div>
                     </div>
                     <div class="form-group col-sm-12">
@@ -299,7 +295,7 @@
                             <select [(ngModel)]="sourceStockLineSetup.traceableTo" [ngModelOptions]="{standalone: true}">
                                 <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                             </select>
-                            <!--<a target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>-->
+                            <a routerLink="/vendorsmodule/vendorpages/app-vendor-setup" class="add-icon"><i class="fa fa-plus"></i></a>
                         </div>
                     </div>
                 </div>
@@ -390,11 +386,12 @@
 
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">CERTIFY BY</label>
-                    <div class="col-sm-7">
+                    <div class="inner-addon col-sm-7 display-flex">
                         <!--<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.certifiedBy">-->
                         <select [(ngModel)]="sourceStockLineSetup.certifiedBy" [ngModelOptions]="{standalone: true}">
                             <option *ngFor="let employee of allEmployeeList" [ngValue]="employee.firstName">{{employee.firstName}}{{ employee.lastName}}</option>
                         </select>
+                        <a routerLink="/employeesmodule/employeepages/app-employee-general-information" class="add-icon"><i class="fa fa-plus"></i></a>
                     </div>
                 </div>
 
