@@ -131,9 +131,7 @@ export class VendorDocumentsComponent implements OnInit {
 		for (var key in data) {
 			this.formData.append(key, data[key]);
 		}
-		console.log(this.documentInformation);
-		debugger
-
+		
 		// if(this.documentInformation.vendorDocumentDetailId >0)
 		// {
 		// 	this.workFlowtService.documentUpdateUploadAction(this.formData).subscribe(res => {
@@ -184,9 +182,7 @@ export class VendorDocumentsComponent implements OnInit {
 		this.toGetUploadDocumentsList(row.attachmentId, row.vendorId,3);
 		
 		this.sourceViewforDocument = row;	
-	
-		debugger
-	
+		
 		//console.log(this.sourceViewforDocument);
 		//this.getListById(row.vendorDocumentDetailId);
 		
