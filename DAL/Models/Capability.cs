@@ -32,7 +32,7 @@ namespace DAL.Models
         public long? ItemMasterId { get; set; }
         public long AssetRecordId { get; set; }
 
-        public long AircraftDashNumberId { get; set; }
+        public int? AircraftDashNumberId { get; set; }
 
         public virtual Asset Asset { get; set; }
         public virtual AircraftModel AircraftModel { get; set; }
