@@ -291,6 +291,9 @@ namespace DAL.Repositories
                     workOrder.CustomerDetails.CreditTermsId = workOrder.CreditTermsId;
                     workOrder.CustomerDetails.CustomerId = workOrder.CustomerId;
                     workOrder.CustomerDetails.CustomerName = customer.Name;
+                    workOrder.CustomerDetails.CustomerEmail = customer.Email;
+                    workOrder.CustomerDetails.CustomerPhone = customer.CustomerPhone;
+
                     if (customerContact != null && customerContact.con != null)
                         workOrder.CustomerDetails.CustomerContact = customerContact.con.FirstName;
                     else
@@ -1457,7 +1460,7 @@ namespace DAL.Repositories
                                               from sh in shf.DefaultIfEmpty()
                                               join bi in _appContext.Bin on sl.BinId equals bi.BinId into bin
                                               from bi in bin.DefaultIfEmpty()
-                                              where wom.IsDeleted == false && (wom.WorkOrderId == workOrderId || wom.WorkFlowWorkOrderId == wfwoId)
+                                              where wom.IsDeleted == false && wom.WorkFlowWorkOrderId == wfwoId
                                               select new
                                               {
                                                   sl.StockLineNumber,
@@ -1583,7 +1586,7 @@ namespace DAL.Repositories
                             where wom.IsDeleted == false && wom.IsActive == true
                             && (wom.IsAltPart == null || wom.IsAltPart == false)
 
-                            && (wom.WorkFlowWorkOrderId == WorkFlowWorkOrderId || wom.WorkOrderId == workOrderId)
+                            && wom.WorkFlowWorkOrderId == WorkFlowWorkOrderId
                             select new
                             {
                                 wom.WorkOrderId,
@@ -2586,6 +2589,7 @@ namespace DAL.Repositories
                     workOrderAsset.Quantity = item.Quantity;
                     workOrderAsset.WorkOrderId = workOrderId;
                     workOrderAsset.TaskId = item.TaskId;
+                    workOrderAsset.CheckInOutStatus = 1;
                     WorkOrderAssetsList.Add(workOrderAsset);
                 }
 
