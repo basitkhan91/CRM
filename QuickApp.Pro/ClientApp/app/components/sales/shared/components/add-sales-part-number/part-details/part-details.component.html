@@ -38,7 +38,7 @@
       </ng-template>
       <ng-template pTemplate="body" let-part>
         <tr>
-          <td><input type="checkbox" /></td>
+          <td><input type="checkbox" (change)="onChange($event, part)" /></td>
           <td>{{ part.method}}</td>
           <td>{{ part.partNumber }}</td>
           <td>{{ part.alternatePartNumber }}</td>
