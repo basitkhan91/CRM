@@ -154,6 +154,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     subTabOtherOptions: any = '';
     workOrderChargesList: Object;
     workOrderExclusionsList: Object;
+    isEditLabor: boolean = false;
 
 
     constructor(
@@ -201,6 +202,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         // this.getStockLines();
         if (!this.isEdit) {
 
+            this.isEditLabor = true;
             this.addMPN();
             this.getAllGridModals();
         } else {
@@ -230,6 +232,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
                 })
             }
+            
             this.showTableGrid = true;
             this.workFlowWorkOrderId = data.workFlowWorkOrderId;
             if (data.isSinglePN) {
@@ -240,7 +243,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             this.workOrderId = data.workOrderId;
             this.savedWorkOrderData = this.workOrderGeneralInformation;
             this.getWorkOrderWorkFlowNos();
-
+            
 
         }
 
@@ -836,7 +839,11 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
     getWorkFlowLaborList() {
-        if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
+
+        
+
+
+        if (this.workFlowWorkOrderId !== 0 && this.workOrderId && this.labor.workOrderLaborList[0].length === 0 ) {
             this.workOrderService.getWorkOrderLaborList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
                 const data = res;
                 this.workOrderLaborList = {

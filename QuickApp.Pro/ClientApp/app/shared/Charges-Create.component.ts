@@ -20,7 +20,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     allVendors: any[] = [];
     @Input() workFlow: IWorkFlow;
     @Input() UpdateMode: boolean;
-    @Input() isWorkOrder: false;
+    @Input() isWorkOrder: boolean;
     @Output() saveChargesListForWO = new EventEmitter();
 
     @Output() notify: EventEmitter<IWorkFlow> =

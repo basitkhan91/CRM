@@ -796,7 +796,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-        
+        [HttpGet("stocklinedetails")]
+        public IActionResult GetStockLineDetails(long stockLineId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetStockLineDetails(stockLineId);
+            return Ok(result);
+        }
+
+
 
         [HttpGet("gettechnicians")]
         public IActionResult GetTechnicians()
