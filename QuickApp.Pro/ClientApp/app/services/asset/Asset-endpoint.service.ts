@@ -12,6 +12,7 @@ export class AssetEndpoint extends EndpointFactory {
     private readonly _allAssetlistUrl: string = "/api/AssetModule/GetAll";
     private readonly _addAssetUrlNew: string = "/api/AssetModule/addAsset";
     private readonly removeByIdURL: string = "/api/AssetModule/removeById";
+    private readonly removeCapByIdURL: string = "/api/AssetModule/removeCapesById";
     private readonly _updateAssetUrl: string = "/api/AssetModule/updateAsset";
     private readonly _capabilityListUrl: string = "/api/AssetModule/GetCapes";
     private readonly _getCapabilityUrl: string = "/api/AssetModule/capabilityGet";
@@ -22,6 +23,7 @@ export class AssetEndpoint extends EndpointFactory {
     get allAssetListURL() { return this.configurations.baseUrl + this._allAssetlistUrl; }
     get assetListurl() { return this.configurations.baseUrl + this._assetlistUrl; }
     get removeById() { return this.configurations.baseUrl + this.removeByIdURL; }
+    get removeCapesById() { return this.configurations.baseUrl + this.removeCapByIdURL; }
     get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
     get getCapabilityUrl() { return this.configurations.baseUrl + this._getCapabilityUrl; }
 
@@ -68,6 +70,16 @@ export class AssetEndpoint extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.removeAssetById(assetRecordId));
+            });
+    }
+
+
+    removeAssetCapesById<T>(assetCapesById: number): Observable<T> {
+        let endpointUrl = `${this.removeCapesById}/${assetCapesById}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.removeAssetCapesById(assetCapesById));
             });
     }
 

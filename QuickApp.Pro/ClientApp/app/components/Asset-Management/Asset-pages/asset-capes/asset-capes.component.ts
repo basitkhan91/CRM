@@ -63,6 +63,7 @@ export class AssetCapesComponent implements OnInit {
     selectedModel: any = [];//To Store selected Aircraft Modal Data
     capabilitiesForm: FormGroup;
     capabilityEditCollection: any[] = [];
+    AssetCapesId: number;
     modal: NgbModalRef;
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
@@ -90,8 +91,8 @@ export class AssetCapesComponent implements OnInit {
             this.currentAsset = this.assetServices.listCollection;
             if (this.assetServices.listCollection) {
                 this.local = this.assetServices.listCollection;
-                this.currentCapes = this.local;
             }
+            this.loadCapesData();
             this.aircraftManfacturerData();
             this.manufacturerdata();
         }
@@ -102,6 +103,7 @@ export class AssetCapesComponent implements OnInit {
                 this.local = this.assetServices.generalCollection;
                 this.currentCapes = this.local;
             }
+            this.loadCapesData();
             this.aircraftManfacturerData();
             this.manufacturerdata();
         }
@@ -778,6 +780,7 @@ export class AssetCapesComponent implements OnInit {
             capbilitiesObj.aircraftManufacturer = element1.label;
             capbilitiesObj.PartId = capData.selectedPartId;
             capbilitiesObj.itemMasterId = this.itemMasterId;
+            capbilitiesObj.AssetCapesId = this.AssetCapesId;
             capbilitiesObj.AircraftDashNumberId = capData.selectedDashNumbers;
 
             this.dashnumberservices.getById(capData.selectedDashNumbers).subscribe(dashnumbers => {
@@ -862,6 +865,29 @@ export class AssetCapesComponent implements OnInit {
                     }*/
                 }
 
+            });
+        });
+
+    }
+
+    
+    openDelete(content, row) {
+
+        this.isEditMode = false;
+        this.isDeleteMode = true;
+        this.assetServices.CapeslistCollection = row;
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+    
+    removeAsset(): void {
+        this.assetServices.removeCapesById(this.assetServices.CapeslistCollection.assetCapesId).subscribe(response => {
+            this.alertService.showMessage("Success", `Asset Cpaes removed successfully.`, MessageSeverity.success);
+            this.assetServices.getcapabilityListData(this.assetServices.listCollection.assetRecordId).subscribe(asset => {
+                this.allCapesInfo = asset[0];
+                this.modal.close();
             });
         });
 

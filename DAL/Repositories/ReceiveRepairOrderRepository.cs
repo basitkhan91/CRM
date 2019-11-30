@@ -47,7 +47,7 @@ namespace DAL.Repositories
                                          VendorName = vend.VendorName,
                                          VendorCode = vend.VendorCode,
                                          VendorContact = cont != null ? cont.FirstName + " " + cont.LastName : "",
-                                         VendorPhone = cont != null ? cont.MobilePhone : "",
+                                         VendorPhone = cont != null ?  (!string.IsNullOrWhiteSpace(cont.WorkPhone) ?  string.Format("{0}-({1})", cont.WorkPhone, cont.WorkPhoneExtn) : (!string.IsNullOrWhiteSpace(cont.MobilePhone) ? cont.MobilePhone : "")) : "",
                                          RequestedBy = emp != null ? emp.FirstName + " " + emp.LastName : "",
                                          OpenDate = ro.OpenDate,
                                          ClosedDate = ro.ClosedDate,
@@ -289,6 +289,10 @@ namespace DAL.Repositories
                          join emp in _appContext.Employee on part.RoPartSplitUserId equals emp.EmployeeId
                          into leftEmp
                          from emp in leftEmp.DefaultIfEmpty()
+                         join uom in _appContext.UnitOfMeasure on part.UOMId equals uom.UnitOfMeasureId
+                         into leftUom
+                         from uom in leftUom.DefaultIfEmpty()
+
                          where part.RepairOrderId == repairOrderId
                          select new
                          {
@@ -298,6 +302,7 @@ namespace DAL.Repositories
                              QuantityToRepair = part.QuantityOrdered,
                              StockLineCount = _appContext.StockLine.Count(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId),
                              RoPartSplitUserName = emp != null ? emp.FirstName + " " + emp.LastName : "",
+                             UomText = uom != null ? uom.ShortName : "",
                              StockLine = _appContext.StockLine.Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId).Select(SL => new
                              {
                                  RepairOrderId = SL.RepairOrderId,
@@ -469,20 +474,7 @@ namespace DAL.Repositories
             return "";
         }
 
-        private string GetUOMText(long? uomId)
-        {
-            if (uomId != null)
-            {
-                var uom = _appContext.UnitOfMeasure.Where(u => u.UnitOfMeasureId == uomId).FirstOrDefault();
-                if (uom != null)
-                {
-                    return uom.ShortName;
-                }
-            }
-
-            return "";
-        }
-
+       
         private string GetShippViaText(long? shippViaId)
         {
             if (shippViaId != null)

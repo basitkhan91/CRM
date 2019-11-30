@@ -7,6 +7,7 @@ namespace DAL.Repositories.Interfaces
     public interface IFileUploadRepository
     {
         long UploadFiles(IFormFileCollection files, long? referenceId, int moduleId, string moduleName, string uploadedBy, int? masterCompanyId);
+        long UploadFiles(IFormFileCollection files, long? referenceId, int moduleId, string moduleName, string uploadedBy, int? masterCompanyId,long attachmentId);
         List<AttachmentDetails> GetAttachmentDetails(long attachmentId, long? referenceId, int moduleId);
         void DeleteAttachement(List<long> attachmentDetailIds, string deletedBy);
 

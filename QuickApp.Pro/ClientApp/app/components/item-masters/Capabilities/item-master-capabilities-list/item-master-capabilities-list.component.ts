@@ -17,6 +17,9 @@ import { MessageSeverity, AlertService } from '../../../../services/alert.servic
 import { MasterComapnyService } from '../../../../services/mastercompany.service';
 import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
 import { ItemMasterService } from '../../../../services/itemMaster.service';
+import { ATAMain } from '../../../../models/atamain.model';
+import { DashNumberService } from '../../../../services/dash-number/dash-number.service';
+
 
 @Component({
     selector: 'app-item-master-capabilities-list',
@@ -43,21 +46,95 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
     allItemMasterCapsList: any[] = [];
     selectedColumn: any;
     getSelectedCollection: any;
+    
+    matSpinner: boolean;
+    local: any;
+    partCollection: any[];
+    itemclaColl: any[];
+    selectedActionName: any;
+    disableSavepartNumber: boolean;
+    sourceItemMasterCap: any = {};
+    disableSavepartDescription: boolean;
+    descriptionbyPart: any[] = [];
+    allPartnumbersInfo: any[];
+    alldashnumberinfo: any[];
+    allManagemtninfo: any[] = [];
+    maincompanylist: any[] = [];
+    bulist: any[];
+    departmentList: any[];
+    divisionlist: any[];
+    manufacturerData: any[] = [];
+    allAircraftinfo: any[];
+    completeAircraftManfacturerData: any[];
+    allaircraftInfo: any[];
+    selectedAircraftTypes: any;
+    selectedAircraftDataModels: any[] = [];
+    enablePopupData: boolean = false;
+    currentVendorModels: any[] = [];
+    selectedModels: any[] = [];
+    allManufacturerInfo: any[];
+    allDashnumberInfo: any[];
+    allATAMaininfo1: ATAMain[];
+    assetRecordId: number = 0;
+    selectedManufacturer: any = [];//To Store selected Aircraft Manufacturer Data
+    selectedModel: any = [];//To Store selected Aircraft Modal Data
+    search_AircraftDashNumberList: any;
+    capabilitiesForm: FormGroup;
     /** item-master-capabilities-list ctor */
-    constructor(private itemMasterService: ItemMasterService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService)
+    constructor(private itemMasterService: ItemMasterService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService,private dashnumberservices: DashNumberService,private formBuilder: FormBuilder)
     {
         this.dataSource = new MatTableDataSource();
         this.itemMasterService.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list';
         this.itemMasterService.bredcrumbObj.next(this.itemMasterService.currentUrl);//Bread Crumb
     }
 
+    capabilityForm: any ={
+        selectedCap:{},CapabilityTypeId: 0, selectedPartId: [], selectedAircraftDataModels: [],
+        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
+    };
+
+    capabilityTypeData: any = [{
+        CapabilityTypeId: 1, Description: 'Manufacturing', formArrayName: 'mfgForm', selectedPartId: [], selectedAircraftDataModels: [],
+        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
+    },
+    {
+        CapabilityTypeId: 2, Description: 'Overhaul', formArrayName: 'overhaulForm', selectedPartId: [], selectedAircraftDataModels: []
+        , selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
+    },
+    {
+        CapabilityTypeId: 3, Description: 'Distribution', formArrayName: 'distributionForm', selectedPartId: [], selectedAircraftDataModels: [],
+        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
+    },
+    {
+        CapabilityTypeId: 4, Description: 'Certification', formArrayName: 'certificationForm', selectedPartId: [], selectedAircraftDataModels: [],
+        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
+    },
+    {
+        CapabilityTypeId: 5, Description: 'Repair', formArrayName: 'repairForm', selectedPartId: [], selectedAircraftDataModels: [],
+        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
+    },
+    {
+        CapabilityTypeId: 6, Description: 'Exchange', formArrayName: 'exchangeForm', selectedPartId: [], selectedAircraftDataModels: [],
+        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
+    }];
+
     ngOnInit()
     {
+        this.capabilitiesForm = this.formBuilder.group({
+            mfgForm: this.formBuilder.array([])
+        });
         this.loadData();
         this.activeIndex = 0;
         this.itemMasterService.capabilityCollection = [];
         //this.workFlowtService.currentUrl = '/stocklinemodule/stocklinepages/app-stock-line-list';
         // this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
+
+        this.ptnumberlistdata();
+        this.aircraftManfacturerData();
+        //this.loadCapesData();
+        this.manufacturerdata();
+        this.getAllDashNumbers();
+
     }
 
     dataSource: MatTableDataSource<any>;
@@ -213,7 +290,150 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
         //this.workFlowtService.listCollection = [];
         this.itemMasterService.isCapsEditMode = false;
         this.itemMasterService.enableExternal = false;
-        this._route.navigateByUrl('stocklinemodule/stocklinepages/app-stock-line-setup');
+        //this._route.navigateByUrl('stocklinemodule/stocklinepages/app-stock-line-setup');
+        this._route.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-create-capabilities');
 
+    }
+
+    openCapes(content) {
+
+        this.isEditMode = false;
+        this.isDeleteMode = true;
+        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    private ptnumberlistdata() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+
+        this.itemMasterService.getPrtnumberslistList().subscribe(
+            results => this.onptnmbersSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private onptnmbersSuccessful(allWorkFlows: any[]) {
+
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        //this.dataSource.data = allWorkFlows;
+        this.allPartnumbersInfo = allWorkFlows;
+    }
+
+
+    private manufacturerdata() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+
+        this.itemMasterService.getManufacturerList().subscribe(
+            results => this.onmanufacturerSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private onmanufacturerSuccessful(allWorkFlows: any[]) {
+
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        //this.dataSource.data = allWorkFlows;
+        this.allManufacturerInfo = allWorkFlows;
+    }
+    private aircraftManfacturerData() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+
+        this.itemMasterService.getAircraft().subscribe(
+            results => this.onDataLoadaircraftManfacturerSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+
+    }
+
+    private onDataLoadaircraftManfacturerSuccessful(allWorkFlows: any[]) //While loading
+    {
+
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allaircraftInfo = allWorkFlows; //Complete Aircraft Data
+
+        this.completeAircraftManfacturerData = allWorkFlows;
+
+        if (this.allaircraftInfo) {
+            if (this.allaircraftInfo.length > 0) {
+                for (let i = 0; i < this.allaircraftInfo.length; i++)
+                    this.manufacturerData.push(
+                        { value: this.allaircraftInfo[i].aircraftTypeId, label: this.allaircraftInfo[i].description },
+
+                    );
+            }
+        }
+
+    }
+
+    
+
+    getAircraftDashNumber(event): any {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+
+        this.dashnumberservices.getByModelId(event).subscribe(
+            results => this.ondashnumberSuccessful(results),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+    private ondashnumberSuccessful(allWorkFlows: any[]) {
+
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allDashnumberInfo = allWorkFlows;
+    }
+
+    getAllDashNumbers() {
+        this.dashnumberservices.getAll().subscribe(dashnumbers => {
+            const responseData = dashnumbers[0];
+            const dashNumberList = responseData.map(dashnumbers => {
+                return {
+                    label: dashnumbers.dashNumber,
+                    value: dashnumbers.dashNumberId
+                };
+            });
+            this.search_AircraftDashNumberList = dashNumberList;
+            
+        });
+    }
+
+    aircraftModalChange(event, capData) {
+        let selectedData = event.value;
+        capData.selectedModel = [];
+        selectedData.forEach(element1 => {
+            capData.selectedAircraftDataModels.forEach(element2 => {
+                if (element1 == element2.value) {
+                    //this.getAircraftDashNumber(selectedData);
+
+
+                    capData.selectedDashNumbers = []
+                    // checks where multi select is empty or not and calls the service
+
+                    if (capData.selectedAircraftTypes !== '' && capData.selectedAircraftModelTypes !== '') {
+                        this.dashnumberservices.getDashNumberByModelTypeId(
+                            capData.selectedAircraftModelTypes,
+                            capData.selectedAircraftTypes
+                        ).subscribe(dashnumbers => {
+                            const responseData = dashnumbers;
+                            this.search_AircraftDashNumberList = responseData.map(dashnumbers => {
+                                return {
+                                    label: dashnumbers.dashNumber,
+                                    value: dashnumbers.dashNumberId
+                                };
+                            });
+                        });
+                    }
+                    capData.selectedModel.push(element2);
+                }
+            })
+        })
     }
 }

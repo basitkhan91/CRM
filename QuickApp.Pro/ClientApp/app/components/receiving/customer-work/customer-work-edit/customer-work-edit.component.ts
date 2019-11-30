@@ -77,7 +77,7 @@ export class CustomerWorkEditComponent {
     disableSaveCusName: boolean;
     showLable: boolean;
     sourcereceivingEdit: any = {};
-    sourceTimeLife: any;
+    sourceTimeLife: any = {};
     collectionofstockLineTimeLife: any;
     value: number;
     collectionofstockLine: any;
@@ -346,6 +346,7 @@ export class CustomerWorkEditComponent {
             this.sourcereceving.createdBy = this.userName;
             this.sourcereceving.updatedBy = this.userName;
             this.sourcereceving.masterCompanyId = 1;
+            console.log(this.sourceTimeLife);
             if ((this.sourceTimeLife != null) || (this.sourceTimeLife != "null")) {
                 if (this.sourceTimeLife.timeLife) {
                     this.receivingCustomerWorkService.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
@@ -646,7 +647,7 @@ export class CustomerWorkEditComponent {
 
         }
         
-        if (this.sourceTimeLife.timeLife == true) {
+        if (this.sourcereceving.isTimeLife == true) {
             this.sourceTimeLife.timeLife = true;
         }
 

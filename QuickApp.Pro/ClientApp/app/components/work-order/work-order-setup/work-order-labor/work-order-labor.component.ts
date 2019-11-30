@@ -244,18 +244,23 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
       hoursorClockorScan = 3;
     }
 
-    let tasksData = this.laborForm.workOrderLaborList[0];
+        let tasksData = this.laborForm.workOrderLaborList[0];
+        console.log(tasksData);
     let formedData = {}
-    for(let tdata in tasksData){
-      formedData[tdata] = tasksData[tdata].map(x=>{
-        console.log(x);
-        return {
-          ...x,
-          ...excessParams,
-          taskId: this.getTaksId(tdata),
-          employeeId: getValueFromObjectByKey('value', x.employeeId)
-        }
-      })
+        for (let tdata in tasksData) {
+            console.log('Suresh');
+            console.log(tdata);
+            if (tdata != 'length') {
+                formedData[tdata] = tasksData[tdata].map(x => {
+                    console.log(x);
+                    return {
+                        ...x,
+                        ...excessParams,
+                        taskId: this.getTaksId(tdata),
+                        employeeId: getValueFromObjectByKey('value', x.employeeId)
+                    }
+                })
+            }
     }
     this.saveFormdata = {
       ...this.laborForm,
@@ -295,7 +300,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
 
 
 
-    this.saveworkOrderLabor.emit(this.saveFormdata);
+    this.saveworkOrderLabor.emit(this.saveFormdata);  
 
   }
 
