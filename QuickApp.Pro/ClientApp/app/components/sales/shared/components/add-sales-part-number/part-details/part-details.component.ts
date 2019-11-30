@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, ViewChild, OnChanges, SimpleChanges } from "@angular/core";
 import { ISalesQuote } from "../../../../../../models/sales/ISalesQuote.model";
 import { DataTable } from "primeng/datatable";
+import { PartDetail } from "../../../models/part-detail";
 
 @Component({
   selector: "app-part-details",
@@ -10,16 +11,19 @@ import { DataTable } from "primeng/datatable";
 export class PartDetailsComponent implements OnChanges {
   @Input() customer: any;
   @Input() parts: any[];
+  @Output() onPartSelect: EventEmitter<any> = new EventEmitter<any>();
   selectedColumns: any[];
   showPaginator: boolean;
   totalRecords: number;
   pageLinks: any;
-
+  part: PartDetail;
+  show: boolean;
   columns: any[];
   constructor() {
     this.parts = [];
     this.columns = [];
     this.initColumns();
+    this.part = null;
   }
 
 
@@ -57,5 +61,10 @@ export class PartDetailsComponent implements OnChanges {
 
   onPaging(event) {
 
+  }
+
+  onChange(event, part) {
+    let checked: boolean = event.srcElement.checked;
+    this.onPartSelect.emit({ checked: checked, part: part });
   }
 }
