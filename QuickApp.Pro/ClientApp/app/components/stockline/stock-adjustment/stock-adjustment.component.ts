@@ -207,14 +207,6 @@ export class StockAdjustmentComponent implements OnInit {
 		this.disableSave = true;
 		this.loadManagementdata();
 		
-		
-		//this.loadWareHouseBeforeChange();
-		//this.loadLocationBeforeChange();
-		//this.loadShelfBeforeChange();
-		//this.loadWarehouseData();
-		//this.loadLocationData();
-		//this.loadShelfData();
-		//this.loadBinData();
 		this.ptnumberlistdata();
 		this.activeIndex = 0;
 		this.stocklineser.currentUrl = '/stocklinemodule/stocklinepages/app-stock-adjustment';
@@ -262,16 +254,11 @@ export class StockAdjustmentComponent implements OnInit {
 
 			if (this.sourceStockLineSetup.isSerialized == 'undefined' || this.sourceStockLineSetup.isSerialized == undefined) {
 				this.hideSerialNumber = true;
-				//this.showRestrictQuantity = false;
 				this.showFreeQuantity = true;
 			}
 			else { this.hideSerialNumber = false;}
 			this.sourceStockLineSetup.controlNumber = this.sourceStockAdjustment.controlNumber;
 			this.sourceStockLineSetup.stockLineId = this.sourceStockAdjustment.stockLineId;
-			//this.sourceStockLineSetup.BeforecompanyId = this.sourceStockAdjustment.com.companyId;
-			//this.sourceStockLineSetup.BeforebusinessUnitId = this.sourceStockAdjustment.bu.businessUnitId;
-			//this.sourceStockLineSetup.BeforedepartmentId = this.sourceStockAdjustment.de.departmentId;
-			//this.sourceStockLineSetup.BeforedivisionId = this.sourceStockAdjustment.di.divisionId;
 			this.sourceStockLineSetup.BeforepartId = this.sourceStockAdjustment.partId;
 			this.sourceStockLineSetup.BeforepartNumber = this.sourceStockAdjustment.partNumber;
 			this.sourceStockLineSetup.Beforequantity = this.sourceStockAdjustment.quantity;
@@ -389,8 +376,6 @@ export class StockAdjustmentComponent implements OnInit {
 		this.dataSource.data = allWorkFlows;
 		
 		this.allAdjustmentReasons = allWorkFlows;
-		//this.allAdjustmentReasons
-
 	}
 
 	makeNestedObj(arr, parent) {
@@ -403,10 +388,6 @@ export class StockAdjustmentComponent implements OnInit {
 				out1.push(arr[i]);
 				this.testManagementStructure.push(arr[i]);
 				this.makeNestedObj(arr, arr[i].parentId)
-				//arr[i] = { "data": arr[i] };
-				//if (children.length) {
-				//	arr[i].children = children
-				//}
 				out.push(arr[i])
 				k++;
 			}
@@ -426,20 +407,12 @@ export class StockAdjustmentComponent implements OnInit {
 
 		for (let i = 0; i < this.allManagemtninfo.length; i++)
 		{
-
 			if (this.allManagemtninfo[i].parentId == null) {
 				this.maincompanylist.push(this.allManagemtninfo[i]);
-
 			}
-
 		}
-
-		
-
 		//Implimention Management Structure Reverece
 		this.gridData = this.makeNestedObj(this.allManagemtninfo, this.sourceStockLineSetup.beforeManagementStructureEntityId);
-
-
 
 		switch (this.testManagementStructure.length)
 		{
@@ -471,29 +444,6 @@ export class StockAdjustmentComponent implements OnInit {
 
 	}
 
-	//private onManagemtntdataLoad(getAtaMainList: any[])
-	//{
-	//	// alert('success');
-	//	this.alertService.stopLoadingMessage();
-	//	this.loadingIndicator = false;
-	//	this.dataSource.data = getAtaMainList;
-	//	this.allManagemtninfo = getAtaMainList;
-		
-
-	//	if (this.allManagemtninfo)
-	//	{
-	//		for (let i = 0; i < this.allManagemtninfo.length; i++) {
-	//			this.copyOfAllManagemtninfo.push(JSON.parse(JSON.stringify(this.allManagemtninfo[i])));
-	//		}
-	//	}
-
-		
-	//	if (this.sourceStockLineSetup.managementStructureEntityId && this.allManagemtninfo)
-	//	{
-	//		this.getBUList(1, this.sourceStockLineSetup.managementStructureEntityId, this.sourceStockLineSetup.ManagementStructureReason);
-	//	}
-	//}
-
 	getBusUList(companyId) {
 		this.sourceStockLineSetup.managementStructureEntityId = companyId; //Saving Management Structure Id if there Company Id
 
@@ -508,11 +458,7 @@ export class StockAdjustmentComponent implements OnInit {
 				this.bulist.push(this.allManagemtninfo[i]);
 			}
 		}
-
 		this.sourceStockLineSetup.buId = null;
-
-		console.log(this.bulist);
-
 	}
 	getDepartmentlist(businessUnitId) {
 		this.sourceStockLineSetup.managementStructureEntityId = businessUnitId;
@@ -615,43 +561,6 @@ export class StockAdjustmentComponent implements OnInit {
 
 	getBUList(AdjustmentDataTypeId, companyId, AdjustmentMemo)
 	{
-		//this.bulist = [];
-		//this.departmentList = [];
-		//this.divisionlist = [];
-
-		//this.companyId = companyId;
-		//for (let i = 0; i < this.allManagemtninfo.length; i++) {
-		//	if (this.allManagemtninfo[i].parentId == companyId) {
-		//		this.bulist.push(this.allManagemtninfo[i]);
-		//	}
-		//}
-		//for Structure
-		//if (this.allManagemtninfo)
-		//{
-
-		//	this.gridData = this.makeNestedObj(this.allManagemtninfo, companyId);
-		//}
-
-		//if (this.gridData.length == 0)
-		//{
-		//	this.workFlowtService1.getManagemententity().subscribe(
-		//		results => this.onManagemtntdataLoad(results[0]),
-		//		error => this.onDataLoadFailed(error)
-		//	);
-
-		//}
-
-		//if (this.gridData.length == 0)
-		//{
-		//	this.gridData = this.makeNestedObj(this.allManagemtninfo, companyId);
-		//}
-
-		//this.cols1 = [
-		//	{ field: 'code', header: 'Code' },
-		//	{ field: 'name', header: 'Name' },
-		//	//{ field: 'description', header: 'Description' },
-		//	//{ field: 'legalEntityId', header: 'ID' },
-		//];
 		this.showManagement = true;
 
 		let data = [{ adjustmentDataTypeId: AdjustmentDataTypeId, beforeSite: this.sourceStockLineSetup.beforeManagementStructureEntityId, afterSite: this.sourceStockLineSetup.managementStructureEntityId, adjustmentMemo: AdjustmentMemo}]
@@ -759,11 +668,6 @@ export class StockAdjustmentComponent implements OnInit {
 			this.shelfAllow = true;
 			this.binAllow = true;	
 
-			//this.siteValueTrytoChnage = true;
-			//this.warehouseValueTrytoChange = false;
-			//this.locationValueTrytoChange = false;
-			//this.shelfValueTrytoChange = false;
-			//this.binValueTrytoChange = false;
 		}
 
 		if (siteAllow == "B") {
@@ -779,12 +683,6 @@ export class StockAdjustmentComponent implements OnInit {
 			this.locationAllow = false;
 			this.shelfAllow = false;
 			this.binAllow = false;	
-
-			//this.siteValueTrytoChnage = false;
-			//this.warehouseValueTrytoChange = false;
-			//this.locationValueTrytoChange = false;
-			//this.shelfValueTrytoChange = false;
-			//this.binValueTrytoChange = false;
 		}
 	}
 
@@ -803,12 +701,6 @@ export class StockAdjustmentComponent implements OnInit {
 			this.locationAllow = true;
 			this.shelfAllow = true;
 			this.binAllow = true;	
-
-			//this.warehouseValueTrytoChange = true; 
-			//this.locationValueTrytoChange = false;
-			//this.shelfValueTrytoChange = false;
-			//this.binValueTrytoChange = false;
-
 		}
 
 		if (warehouseAllow == "B") {
@@ -2420,15 +2312,12 @@ export class StockAdjustmentComponent implements OnInit {
 		this.workFlowtService.getBinDataById(this.sourceStockLineSetup.aftershelfId).subscribe(
 			results => this.onDataLoadBin(results), //sending Location
 			error => this.onDataLoadFailed(error));
-
 	}
 	private onDataLoadLocation(getLocationList: any) { //Storing WareHouse Data
 
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.allLocations = getLocationList; //cha
-		//this.locationId = this.allWareHouses.locationId;
-
 	}
 
 	private onDataLoadShelf(getShelfList: any) {
@@ -2532,12 +2421,8 @@ export class StockAdjustmentComponent implements OnInit {
 				}
 
 			}
-
 			this.stockAdjustmentDataArray.push(data);
-			console.log(this.stockAdjustmentDataArray);
 		}
-
-		//console.log(this.stockAdjustmentDataArray);
 	}
 
 	QuantityNumberValuechange(AdjustmentDataTypeId, BeforeQuantity, AfterQuantity, AdjustmentMemo)
@@ -2575,8 +2460,6 @@ export class StockAdjustmentComponent implements OnInit {
 			this.stockAdjustmentDataArray.push(data);
 			console.log(this.stockAdjustmentDataArray);
 		}
-
-		//console.log(this.stockAdjustmentDataArray);
 	}
 
 	UnitCostNumberValuechange(AdjustmentDataTypeId, BeforeUnitCost, AfterUnitCost, AdjustmentMemo)
@@ -2592,18 +2475,13 @@ export class StockAdjustmentComponent implements OnInit {
 				if (this.stockAdjustmentDataArray[i][0].adjustmentDataTypeId == AdjustmentDataTypeId) {
 					this.stockAdjustmentDataArray.splice(i, 1);
 				}
-
 			}
-
 			this.stockAdjustmentDataArray.push(data);
 			console.log(this.stockAdjustmentDataArray);
 		}
-
-		//console.log(this.stockAdjustmentDataArray);
 	}
 
 	UnitCostNumberValuechange1(AdjustmentDataTypeId, BeforeUnitCost, AfterUnitCost, AdjustmentMemo)
-
 	{
 		if (this.sourceStockLineSetup.UnitCostAdjustmentReason) {
 			this.unitCostAdjustmentReasonTypeChange = false;
@@ -2612,8 +2490,6 @@ export class StockAdjustmentComponent implements OnInit {
 		{
 			this.unitCostAdjustmentReasonTypeChange = true;
 		}
-		
-
 		let data = [{ adjustmentDataTypeId: AdjustmentDataTypeId, beforeSite: this.sourceStockLineSetup.BeforecoreUnitCost, afterSite: AfterUnitCost, adjustmentMemo: AdjustmentMemo }]
 		if (this.stockAdjustmentDataArray.length <= 0) {
 			this.stockAdjustmentDataArray.push(data);
@@ -2623,14 +2499,10 @@ export class StockAdjustmentComponent implements OnInit {
 				if (this.stockAdjustmentDataArray[i][0].adjustmentDataTypeId == AdjustmentDataTypeId) {
 					this.stockAdjustmentDataArray.splice(i, 1);
 				}
-
 			}
-
 			this.stockAdjustmentDataArray.push(data);
 			console.log(this.stockAdjustmentDataArray);
 		}
-
-		//console.log(this.stockAdjustmentDataArray);
 	}
 
 	UnitSalePriceNumberValuechange(AdjustmentDataTypeId, BeforeUnitSaleprice, AfterUnitSaleprice, AdjustmentMemo)
@@ -2648,12 +2520,8 @@ export class StockAdjustmentComponent implements OnInit {
 				}
 
 			}
-
 			this.stockAdjustmentDataArray.push(data);
-			console.log(this.stockAdjustmentDataArray);
 		}
-
-		//console.log(this.stockAdjustmentDataArray);
 
 	}
 
@@ -2667,8 +2535,6 @@ export class StockAdjustmentComponent implements OnInit {
 		{
 			this.unitCostAdjustmentReasonTypeChange = true;
 		}
-		
-
 		let data = [{ adjustmentDataTypeId: AdjustmentDataTypeId, beforeSite: this.sourceStockLineSetup.BeforeunitSalesPrice, afterSite: AfterUnitSaleprice, adjustmentMemo: AdjustmentMemo }]
 		if (this.stockAdjustmentDataArray.length <= 0) {
 			this.stockAdjustmentDataArray.push(data);
@@ -2680,13 +2546,9 @@ export class StockAdjustmentComponent implements OnInit {
 				}
 
 			}
-
 			this.stockAdjustmentDataArray.push(data);
 			console.log(this.stockAdjustmentDataArray);
 		}
-
-		//console.log(this.stockAdjustmentDataArray);
-
 	}
 
 	partValueSelect(AdjustmentDataTypeId, Beforepart, Afterpart, AdjustmentMemo)
@@ -2714,12 +2576,7 @@ export class StockAdjustmentComponent implements OnInit {
 	}
 	private savesuccessCompleted(user?: any) {
 		this.isSaving = false;
-
-
 		this.alertService.showMessage("Success", `Action was Edited successfully`, MessageSeverity.success);
-
-
-
 		this.loadData();
 	}
 
@@ -2729,21 +2586,7 @@ export class StockAdjustmentComponent implements OnInit {
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.allWareHouses = getWarehousList; //cha
-		//this.warehouseId = this.allWareHouses.warehouseId;
-
 	}
-
-	//isTimeLifeEdit(isEdit)
-	//{
-	//	if (isEdit == true) {
-	//		this.AllowEdit = true;
-	//	}
-
-	//	else {
-	//		this.AllowEdit = false;
-	//	}
-	//}
-
 
 }
 
