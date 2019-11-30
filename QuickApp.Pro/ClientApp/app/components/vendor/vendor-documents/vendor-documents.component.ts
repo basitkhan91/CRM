@@ -102,7 +102,7 @@ export class VendorDocumentsComponent implements OnInit {
 
 	getList() {
 		this.workFlowtService.getDocumentList(this.local.vendorId).subscribe(res => {
-			this.vendorDocumentsData = res;
+			this.vendorDocumentsData = res;			
 		})
 	}
 	getListById(vendorDocId) {		
@@ -132,19 +132,7 @@ export class VendorDocumentsComponent implements OnInit {
 			this.formData.append(key, data[key]);
 		}
 		
-		// if(this.documentInformation.vendorDocumentDetailId >0)
-		// {
-		// 	this.workFlowtService.documentUpdateUploadAction(this.formData).subscribe(res => {
-		// 		this.formData = new FormData()
-		// 		this.getList();
-		// 		this.alertService.showMessage(
-		// 			'Success',
-		// 			`Saved Documents Successfully `,
-		// 			MessageSeverity.success
-		// 		);
-		// 	})
-		// }
-		// else{
+
 			this.workFlowtService.documentUploadAction(this.formData).subscribe(res => {
 				this.documentInformation.vendorDocumentDetailId=0;
 				this.documentInformation.docDescription='';
@@ -161,10 +149,6 @@ export class VendorDocumentsComponent implements OnInit {
 				
 			
 			})
-		//}
-
-		
-		
 
 	}
 	updateVendorDocument() { 
@@ -174,22 +158,27 @@ export class VendorDocumentsComponent implements OnInit {
 	}
 
 	editVendorDocument(rowdata,e) {
-		this.toGetUploadDocumentsList(rowdata.attachmentId, rowdata.vendorId,3);
+		//this.toGetUploadDocumentsList(rowdata.attachmentId, rowdata.vendorId,3);
 		this.documentInformation=rowdata;
 	}
 
-	openView(content, row) {
+	openView(content, row) {		
 		this.toGetUploadDocumentsList(row.attachmentId, row.vendorId,3);
-		
+
+		// this.workFlowtService.toGetUploadDocumentsList(row.attachmentId, row.vendorId,3).subscribe(res => {
+		// 	this.sourceViewforDocumentList = res;		
+		// 	console.log(this.sourceViewforDocumentList);						
+		// })
 		this.sourceViewforDocument = row;	
-		
+			
+		this.modal = this.modalService.open(content, { size: 'sm' });
+           this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
 		//console.log(this.sourceViewforDocument);
 		//this.getListById(row.vendorDocumentDetailId);
 		
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+        
 	}
 	openDelete(content, row) {
         this.isEditMode = false;

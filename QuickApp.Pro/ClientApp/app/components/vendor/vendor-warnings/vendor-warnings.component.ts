@@ -354,7 +354,7 @@ export class VendorWarningsComponent implements OnInit {
     nextClick() {
         this.activeIndex = 8;
         this.vendorService.indexObj.next(this.activeIndex);
-        this.vendorService.changeStep('Documents');
+        this.vendorService.changeStep('Memos');
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-memo');
     }
 

@@ -1553,7 +1553,7 @@ getUpdateDocumentUploadEndpoint<T>(file: any): Observable<T> {
 }
 
 GetUploadDocumentsList(attachmentId, vendorId,moduleId) {
-	return this.http.get(`${this._getVendorDocumentAttachmentslist}?attachmentId=${attachmentId}&referenceId=${vendorId}&moduleId=${moduleId}`,  this.getRequestHeaders())
+	return this.http.get<any>(`${this._getVendorDocumentAttachmentslist}?attachmentId=${attachmentId}&referenceId=${vendorId}&moduleId=${moduleId}`,  this.getRequestHeaders())
 }
 
 
