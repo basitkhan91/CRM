@@ -16,13 +16,17 @@
                     <div class="form-group col-sm-12">
                       <label class="control-label col-sm-4">Ledger Name <span class="clr-red">*</span></label>
                       <div class="col-sm-7">
-                        <select formControlName="ledgerName" class="form-control" [ngClass]="{ 'is-invalid': submitted && formdata.title.errors }">
+                        <select formControlName="ledgerName" class="form-control">
                           <option value="">--Select--</option>
                           <option value="1">ABC Ledger</option>
                           <option value="2">DFG Company</option>
                           <option value="3">FFG Ledger</option>
                         </select>
+                        <div *ngIf="submittedForm && formdata.ledgerName.errors" class="col-sm-12 invalid-feedback">
+                            <div *ngIf="formdata.ledgerName.errors">Ledger Name is required</div>
+                        </div>
                       </div>
+                      
                     </div>
                     <div class="form-group col-sm-12" *ngIf="!editMode">
                       <label class="control-label col-sm-4">Old Account Code</label>
@@ -33,12 +37,15 @@
                     <div class="form-group col-sm-12">
                       <label class="control-label col-sm-4">Account Code <span class="clr-red">*</span></label>
                         <div class="col-sm-7">
-                         <select formControlName="accountCode" class="form-control" [ngClass]="{ 'is-invalid': submitted && formdata.title.errors }">
+                         <select formControlName="accountCode" class="form-control">
                           <option value="">--Select--</option>
                           <option value="1">ABC Ledger</option>
                           <option value="2">DFG Company</option>
                           <option value="3">FFG Ledger</option>
                         </select>
+                        <div *ngIf="submittedForm && formdata.accountCode.errors" class="col-sm-12 invalid-feedback">
+                            <div *ngIf="formdata.accountCode.errors">Account Code is required</div>
+                        </div>
                       </div>
                       
                     </div>
@@ -46,12 +53,15 @@
                       <label class="control-label col-sm-4">Account Name <span class="clr-red">*</span></label>
                        <div class="col-sm-7">
                           <input formControlName="accountName" class="form-control" type="text" [(ngModel)]="currentGLAccount.accountName">
+                          <div *ngIf="submittedForm && formdata.accountName.errors" class="col-sm-12 invalid-feedback">
+                            <div *ngIf="formdata.accountName.errors">Account Name is required</div>
+                        </div>
                         </div>
                     </div>
                       <div class="form-group col-sm-12">
                           <label class="control-label col-sm-4">Account Type <span class="clr-red">*</span></label>
                           <div class="col-sm-7">
-                              <select  formControlName="accountType" class="form-control" [ngClass]="{ 'is-invalid': submitted && formdata.title.errors }">
+                              <select  formControlName="accountType" class="form-control">
                                   <option value="">--Select--</option>
                                   <option value="1">Assets</option>
                                   <option value="2">Liabilities</option>
@@ -59,6 +69,9 @@
                                   <option value="4">Revenue</option>
                                   <option value="5">Expenses</option>
                               </select> 
+                              <div *ngIf="submittedForm && formdata.accountType.errors" class="col-sm-12 invalid-feedback">
+                                <div *ngIf="formdata.accountType.errors">Account Type is required</div>
+                              </div>
                               <!-- <select formControlName="accountType" [(ngModel)]="currentGLAccount.glAccountTypeId" [ngModelOptions]="{standalone: true}">
                                 <option *ngFor="let accounttype of allGLAccountClassInfo" [ngValue]="accounttype.glAccountClassId">{{accounttype.glAccountClassName}}</option>
                             </select> -->
@@ -88,7 +101,7 @@
                         <!-- <select formControlName="leafNodeName" [(ngModel)]="currentGLAccount.glAccountNodeId">
                             <option *ngFor="let nodeType of nodeSetupList" [ngValue]="nodeType.glAccountNodeId">{{nodeType.nodeName}}</option>
                         </select> -->
-                        <p-dropdown [options]="leafNodeNameObj" formControlName="leafNodeName" [filter]="true" [style]="{'width':'150px'}"></p-dropdown>
+                        <p-dropdown [options]="leafNodeNameObj" formControlName="leafNodeName" [filter]="true" styleClass="accountdropdown" [style]="{'width':'150px'}"></p-dropdown>
                        <!--  <p-multiSelect [options]="nodeSetupList" formControlName="leafNodeName"></p-multiSelect> -->
                       </div>
                     </div>  
@@ -102,19 +115,14 @@
                   <div class="col-sm-5">
                       <div class="form-group col-sm-12">
                           <label class="control-label col-sm-4">Balance Type <span class="clr-red">*</span></label>
-                          <div class="col-sm-7">
-                               <label class="wauto">
-                                    <input formControlName="balanceType" type="checkbox" id="" [(ngModel)]="currentGLAccount.balanceTypeActual" >
-                                    Actual
-                                </label>
-                                <label class="wauto">
-                                    <input formControlName="balanceType" type="checkbox" id="" [(ngModel)]="currentGLAccount.balanceTypeBudget" >
-                                    Budget
-                                </label>
-                                <label class="wauto">
-                                    <input formControlName="balanceType" type="checkbox" id="" [(ngModel)]="currentGLAccount.balanceTypeForecast">
-                                    Forecast
-                                </label>
+                          <div class="col-sm-7">                            
+
+                                <ng-container *ngFor="let checkbox of balanceTypeCheckBox; let i = index" formArrayName="balanceTypeCheckBox">
+                                  <input type="checkbox" [formControlName]="i" />{{checkbox.name}}
+                                  
+                                </ng-container>
+
+                               
                           </div>
                       </div>  
                       <div class="form-group col-sm-12">
@@ -144,6 +152,9 @@
                         <option value="5">PAS</option>
                         <option value="6">Silverxis</option>
                       </select>
+                      <div *ngIf="submittedForm && formdata.entities.errors" class="col-sm-12 invalid-feedback">
+                                <div *ngIf="formdata.entities.errors">Entities is required</div>
+                              </div>
                       </div>
                     </div>
                       <div class="form-group col-sm-12 allow-manual-je-block">
@@ -161,6 +172,10 @@
                                   <option value="">--Select--</option>
                                   <option *ngFor="let classType of allGLCashFlowClassInfo" [ngValue]="classType.glClassFlowClassificationId">  {{classType.glClassFlowClassificationName}}</option>
                               </select>
+                               <div *ngIf="submittedForm && formdata.classification.errors" class="col-sm-12 invalid-feedback">
+                                <div *ngIf="formdata.classification.errors">Cash Flows Classification is required</div>
+                              </div>
+
                           </div>                      
                       </div>   
                       
@@ -173,12 +188,15 @@
                               <option value="">--Select--</option>
                               <option *ngFor="let poCategory of poroCategoryList" [ngValue]="poCategory.poroCategoryId">  {{poCategory.categoryName}}</option>
                           </select>
+                          <div *ngIf="submittedForm && formdata.poCategory.errors" class="col-sm-12 invalid-feedback">
+                                <div *ngIf="formdata.poCategory.errors">PO Category is required</div>
+                              </div>
                       </div>
                     </div>
                     <div class="form-group col-sm-12">
                       <label class="control-label col-sm-4">Created By <span class="clr-red">*</span></label>
                       <div class="col-sm-7">
-                        <input formControlName="createdBy" class="form-control" type="text" value="Shabbir">
+                        <input formControlName="createdBy" class="form-control" type="text" value="Shabbir" disabled>
                       </div>
                     </div>
                     <div class="form-group col-sm-12">
@@ -418,7 +436,7 @@
     </div>
 
 -->
-
+<!--
     <ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
         <div class="modal-header">
             <h4 class="modal-title" *ngIf="isEditMode">Edit GL Cahs Flow Classification</h4>
@@ -455,3 +473,4 @@
             <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
         </p-footer>
     </p-dialog>
+-->

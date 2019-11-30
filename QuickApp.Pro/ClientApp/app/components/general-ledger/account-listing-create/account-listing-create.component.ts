@@ -1,5 +1,5 @@
 ﻿import { OnInit, Component } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ActivatedRoute } from "@angular/router";
 import { fadeInOut } from "../../../services/animations";
 import { AlertService } from "../../../services/alert.service";
@@ -54,8 +54,22 @@ export class AccountListingCreateComponent implements OnInit {
     accountData:any[];
     leafNodeNameObj:any[];
     accountTitle = "Create GL Accounts";
-    submitted: any;
+    selectedBalanceType = [];
+    actualChecked;budgetChecked;forecastChecked;
+    bChecked; wChecked; oChecked;
+    submittedForm = false;
 
+    balanceTypeCheckBox = [{
+        name: 'Actual',
+        value: false        
+      }, {
+        name: 'Budget',
+       value: false  
+      }, {
+        name: 'Forecast',
+        value: false  
+      }];
+submittedValue: any;
     constructor(private route: ActivatedRoute, 
         private accountListingService: AccountListingService,
         private formBuilder: FormBuilder, private legalEntityservice: LegalEntityService, private modalService: NgbModal, private poroCategoryService: POROCategoryService, private nodeSetupService: NodeSetupService, private router: Router, private authService: AuthService, private glcashFlowClassifcationService: GlCashFlowClassificationService, private alertService: AlertService, private glAccountService: GlAccountService, private currencyService: CurrencyService, public glAccountClassService: GLAccountClassService) {
@@ -122,22 +136,48 @@ export class AccountListingCreateComponent implements OnInit {
             accountDescription: ['', Validators.required],
             active: [true, Validators.required],
             leafNodeName: '',
-            interCompany: false,
-            balanceType: '',
+            interCompany: false,           
             category: '',
-            entities: '',
+            entities: ['', Validators.required],
             allowManual: '',
-            classification: '',
-            poCategory: '',
+            classification: ['', Validators.required],
+            poCategory: ['', Validators.required],
             createdBy: this.userName,
-            createdDate: formatted_date
+            createdDate: formatted_date,
+            balanceTypeCheckBox: this.formBuilder.array(this.balanceTypeCheckBox.map(x => x.value))
         });
     }
 
     get formdata() { return this.accountListCreateForm.controls; }
 
     onSubmitAccountForm(){
-        console.log('form controls data :', this.formdata)
+        
+        console.log('accountListCreateForm values :', this.accountListCreateForm.value)
+         this.submittedForm = true;
+
+        // stop here if form is invalid
+        if (this.accountListCreateForm.invalid) {
+            return;
+        }
+
+        const checkboxControl = (this.accountListCreateForm.controls.balanceTypeCheckBox as FormArray);
+        const formValue = {
+          ...this.accountListCreateForm.value,
+          balanceCheckboxes: {
+            actual: this.accountListCreateForm.value.balanceTypeCheckBox[0],
+            budget: this.accountListCreateForm.value.balanceTypeCheckBox[1],
+            forecast: this.accountListCreateForm.value.balanceTypeCheckBox[2]
+          }
+        }
+        this.submittedValue = formValue;
+
+         this.accountListingService.createGlAccount(formValue).subscribe(response => {
+           console.log('response received :', response)
+           this.alertService.showMessage('GLAccount added successfully.');
+           this.router.navigateByUrl('/generalledgermodule/generalledgerpage/app-account-listing');
+        })
+
+    console.log('chk :', this.submittedValue)
     }
 
     updateAccountData(id): void{
@@ -291,5 +331,20 @@ export class AccountListingCreateComponent implements OnInit {
         this.isEditMode = false;
         this.modal.close();
     }
+
+    onCheckboxChagen(event, value) {
+        if (event.checked) {
+          this.selectedBalanceType.push(value);
+        } 
+
+        if (!event.checked) {
+          let index = this.selectedBalanceType.indexOf(value);
+          if (index > -1) {
+            this.selectedBalanceType.splice(index, 1);
+          }
+        }
+        console.log('array :', this.selectedBalanceType)
+        console.log("Interests array => " + JSON.stringify(this.selectedBalanceType, null, 2));
+  }
 
 }

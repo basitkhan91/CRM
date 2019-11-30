@@ -27,7 +27,8 @@
       [scrollable]="true"
       [totalRecords]="totalRecords"
       scrollHeight="450px"
-      [globalFilterFields]="['accountName','description','prevAccountCode']"
+      styleClass="accounttable"
+      [globalFilterFields]="['accountName','ledgerName','prevAccountCode']"
     >      
       <ng-template pTemplate="caption">
         <div style="display:flex;">
@@ -53,7 +54,7 @@
             />
           </div>
           <a
-              matTooltip="Create Customer"
+              matTooltip="Create GL Account"
               class="btn btn-success nobg btn-cstm"
               [routerLink]="[
                 '/generalledgermodule/generalledgerpage/app-account-listing-create'
@@ -92,19 +93,11 @@
               accept=".xlsx, .xls, .csv"
             />
             <label for="upload">
-              <span matTooltip="Upload Data (Excel)">
+              <span matTooltip="Upload File (Excel)">
                 <i class="fa fa-upload"></i>
               </span>
             </label>
-            &nbsp; &nbsp;
-            <a
-              matTooltip="Create Customer"
-              class="btn btn-success nobg btn-cstm"
-              [routerLink]="[
-                '/generalledgermodule/generalledgerpage/app-account-listing-create'
-              ]"
-              ><span><i class="fa fa-plus"></i></span
-            ></a>
+            
           </div> 
         </div>
       </ng-template>
@@ -130,7 +123,7 @@
         </tr>
         <tr>
           <th  style="width:120px"  *ngFor="let col of columns"  [ngSwitch]="col.field" >
-              <!-- <input type="text" style="width:100%;" pInputText   (keyup)="filterData($event)"> -->
+            <!-- <input type="text" style="width:100%;" pInputText   (keyup)="filterData($event)"> -->
             <input style="width:100%;"  pInputText  type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
            
           </th>
@@ -156,7 +149,7 @@
                 : rowData[col.field]
             }}
           </td>
-          <td style="width:200px" *ngIf="selectedColumns.length > 0">
+          <td style="width:200px; text-align: left" *ngIf="selectedColumns.length > 0">
             <p-inputSwitch
               [(ngModel)]="rowData['isActive']"
               name="isActive{{ rowIndex }}"
@@ -233,10 +226,10 @@
 
 
 <!-- Modal Section -->
-
+<!--
 <div id="view" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
-    <!-- Modal content-->
+    
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">
@@ -528,8 +521,7 @@
                       </div>
                       <div class="col-sm-6">
                           <p><span class="label"><b>EDI: </b></span><span class="value">{{viewDataGeneralInformation.ediDescription}}</span></p>
-                          <!--<p><span class="label"><b>Deferred PO: </b></span><span class="value">{{customerVfinanceiewFeilds.customerCode}}</span></p>
-                  <p><span class="label"><b>Deferred RO: </b></span><span class="value">{{customerViewFeilds.customerCode}}</span></p>-->
+                          
                           <p><span class="label"><b>Currency: </b></span><span class="value">{{viewDataGeneralInformation.currencyId}}</span></p>
                       </div>
                   </div>
@@ -690,3 +682,4 @@
     </div>
   </div>
 </div>
+-->
