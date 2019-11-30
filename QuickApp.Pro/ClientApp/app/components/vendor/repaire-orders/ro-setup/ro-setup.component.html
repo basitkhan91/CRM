@@ -458,10 +458,10 @@
 									<th>UOM</th>
 									<th>Order Qty</th>
 									<th>Need By</th>
-									<th>Stockline Num</th>
+									<!-- <th>Stockline Num</th>
 									<th>Control Id</th>
 									<th>Control Num</th>
-									<th>PO</th>
+									<th>PO</th> -->
 									<th colspan="4">Management Structure <span class="clr-red">*</span></th>
 									<th colspan="10"></th>
 								</tr>
@@ -555,12 +555,12 @@
 									<td>{{partList.UOMShortName}}</td>
 									<td><input class="form-control" type="number" pKeyFilter="pint" [(ngModel)]="partChildList.quantityOrdered" name="childQtyOrdered{{row_index}}{{row_no}}" (keyup)="onChangeChildQtyOrdered(partList)" /></td> <!--[disabled]="!partList.quantityOrdered"-->
 									<td><p-calendar class="pcal-cpo-grid" [showIcon]="true" [minDate]="sourceRoApproval.openDate" [(ngModel)]="partChildList.needByDate" name="childNeedByDate{{row_index}}{{row_no}}"></p-calendar></td>
-									<td>
+									<!-- <td>
 										<p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="partChildList.stocklineId" name="stocklineNum{{row_index}}{{row_no}}" [suggestions]="allStocklineDetails" (completeMethod)="filterStocklineNum($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
 									</td>
 									<td><input type="text" class="form-control" [(ngModel)]="partChildList.controlId" name="controlId{{row_index}}{{row_no}}" disabled></td>
 									<td><input type="text" class="form-control" [(ngModel)]="partChildList.controlNumber" name="controlNumber{{row_index}}{{row_no}}" disabled></td>
-									<td><input type="text" class="form-control" [(ngModel)]="partChildList.purchaseOrderId" name="purchaseOrderId{{row_index}}{{row_no}}" disabled></td>
+									<td><input type="text" class="form-control" [(ngModel)]="partChildList.purchaseOrderId" name="purchaseOrderId{{row_index}}{{row_no}}" disabled></td> -->
 									<td>
 										<label style="width:90px;">Company:</label>
 										<select class="inner-addon right-addon autosuggesions-add inline-block mw400"

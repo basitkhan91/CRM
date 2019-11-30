@@ -26,6 +26,7 @@ import { PercentService } from '../../../../services/percent.service';
 import { VendorCapabilitiesService } from '../../../../services/vendorcapabilities.service';
 import { ItemMasterService } from '../../../../services/itemMaster.service';
 import { DatePipe } from '@angular/common';
+import { WorkOrderService } from '../../../../services/work-order/work-order.service';
 
 @Component({
 	selector: 'app-ro-setup',
@@ -220,7 +221,8 @@ export class RoSetupComponent implements OnInit {
 		private percentService: PercentService,
 		private vendorCapesService: VendorCapabilitiesService,
 		private itemser: ItemMasterService,
-		private datePipe: DatePipe) {
+		private datePipe: DatePipe,
+		private workOrderService: WorkOrderService) {
 		
 		this.vendorService.ShowPtab = false;
 		this.vendorService.alertObj.next(this.vendorService.ShowPtab);
@@ -1196,9 +1198,16 @@ export class RoSetupComponent implements OnInit {
 					parentdata.partNumber = this.partWithId.partNumber;
 					parentdata.itemMasterId = this.partWithId.itemMasterId;
 					//parentdata.partNumberId = this.partWithId.itemMasterId;
+					this.getConditionByItemMasterId(parentdata.itemMasterId);
 				}
 			})
-	}	
+	}
+
+	getConditionByItemMasterId(itemMasterId) {
+		this.workOrderService.getConditionByItemMasterId(itemMasterId).subscribe(res => {
+			console.log(res);			
+		})
+	}
 	
 	filterNames(event) {
 		this.customerNames = this.allCustomers;
@@ -3419,7 +3428,7 @@ export class RoSetupComponent implements OnInit {
 				this.approver5 = response;
 			}
 		})
-	}
+	}	
 
 	// getShipToSiteName(data, id) {
 	// 	this.shipToAddress = {};
