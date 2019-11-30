@@ -476,7 +476,12 @@ namespace DAL.Repositories
 
                             join Empe in _appContext.Employee on Convert.ToInt32(t.SecondarySalesPersonId) equals Empe.EmployeeId into Empl
                             from Empe in Empl.DefaultIfEmpty()
-                           
+                            join Employeecsr in _appContext.Employee on t.CsrId equals Employeecsr.EmployeeId into Employeecsrname
+                            from Employeecsr in Employeecsrname.DefaultIfEmpty()
+
+                            join Employeesald in _appContext.Employee on t.SaId equals Employeesald.EmployeeId into Employeesaldname
+                            from Employeesald in Employeesaldname.DefaultIfEmpty()
+
                             join cont in _appContext.Countries on Convert.ToInt32(ad.Country) equals cont.countries_id into country
                             from cont in country.DefaultIfEmpty()
 
@@ -490,6 +495,16 @@ namespace DAL.Repositories
                             join cc in _appContext.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
                             join mup in _appContext.MarkUpPercentage on t.MarkUpPercentageId equals mup.MarkUpPercentageId into tmup
                             from mup in tmup.DefaultIfEmpty()
+
+                            join inte in _appContext.CustomerIntegrationPortal on t.CustomerId equals inte.CustomerId into integra
+                            from inte in integra.DefaultIfEmpty()
+                            join intepo in _appContext.IntegrationPortal on inte.IntegrationPortalId equals intepo.IntegrationPortalId into integrapo
+                            from intepo in integrapo.DefaultIfEmpty()
+                            join v in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals v.CustomerAffiliationId
+
+                            join taxTyp in _appContext.CustomerTaxTypeRateMapping on t.CustomerId equals taxTyp.CustomerId into taxtypee
+                            from taxTyp in taxtypee.DefaultIfEmpty()
+
                             where t.CustomerId == customerId //&&  (t.IsDelete == true || t.IsDelete == null)
                                                              // select new { t, ad, vt }).ToList();
                             select new
@@ -517,6 +532,8 @@ namespace DAL.Repositories
                                 customerCode = t.CustomerCode,
                                 doingBuinessAsName = t.DoingBuinessAsName,
                                 parent = t.Parent,
+
+                               
                                 customerParentName = t.CustomerParentName,
                                 customerURL = t.CustomerURL,
                                 generalCurrencyId = t.CurrencyId,
@@ -555,7 +572,7 @@ namespace DAL.Repositories
                                 primarySalesPersonId = t.PrimarySalesPersonId,
                                 primarySalesPersonFirstName = Emp.FirstName,
 
-                                csrName = t.CSRName,
+                               
                                 csrId = t.CsrId,
                                 saId = t.SaId,
                                 secondarySalesPersonId = t.SecondarySalesPersonId,
@@ -563,13 +580,19 @@ namespace DAL.Repositories
 
                                 annualQuota = t.AnnualQuota,
                                 annualRevenuePotential = t.AnnualRevenuePotential,
-                                AgentName = t.AgentName,
+                                AgentName = Employeesald.FirstName,
 								t.CustomerPhoneExt,
+                                ClassificationName=cc.Description,
+                                IntegrationWith= intepo.Description,
 
-                              
-
-
-
+                          CreditTermsName  =creditTerms.Name,
+                          MarkUpPercentage= mup.MarkUpValue,
+                          TaxTypeDescription=t.TaxTypeId,
+                          CsrName= Employeecsr.FirstName,
+                       
+                         AccountType= v.description,
+                        TaxTypeName= taxTyp.TaxType,
+                             TaxRateName=   taxTyp.TaxRate
 
 
                                 //t.CreditTermsId,
@@ -1512,32 +1535,54 @@ namespace DAL.Repositories
         /// <param name="objCustomer"></param>
         public void AddCustomerShippingAddress(Customer objCustomer)
         {
-            CustomerShippingAddress objCustomerShippingAddress = new CustomerShippingAddress();
-           // var shippingaddress = _appContext.CustomerShippingAddress.GetSingleOrDefault(a => a.AddressId == objCustomer.AddressId && a.CustomerId == objCustomer.CustomerId);
-        //var shipping =    _appContext.CustomerShippingAddress
-          //       .Where(p => p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
-            objCustomerShippingAddress.CustomerId = objCustomer.CustomerId;
-            objCustomerShippingAddress.AddressId = objCustomer.AddressId;
-            objCustomerShippingAddress.MasterCompanyId = objCustomer.MasterCompanyId;                  
-            objCustomerShippingAddress.SiteName = objCustomer.CustomerCode;
-            objCustomerShippingAddress.CreatedDate = DateTime.Now;
-            objCustomerShippingAddress.UpdatedDate = DateTime.Now;
-            objCustomerShippingAddress.CreatedBy = objCustomer.CreatedBy;
-            objCustomerShippingAddress.UpdatedBy = objCustomer.UpdatedBy;
-            objCustomerShippingAddress.IsActive = objCustomer.IsActive;
-            objCustomerShippingAddress.IsPrimary = true;
-            objCustomerShippingAddress.IsDelete = false;
-            //if (shippingAddressId >0)
-            //{
-            //    objCustomerShippingAddress.CustomerShippingAddressId = shippingAddressId;//shipping.CustomerShippingAddressId;
-            //}
+           // CustomerShippingAddress objCustomerShippingAddress = new CustomerShippingAddress();
+            // var shippingaddress = _appContext.CustomerShippingAddress.GetSingleOrDefault(a => a.AddressId == objCustomer.AddressId && a.CustomerId == objCustomer.CustomerId);
+            //var shipping = _appContext.CustomerShippingAddress
+            //         .Where(p => p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
 
-            if (objCustomerShippingAddress.CustomerShippingAddressId > 0)
+        
+          
+          
+
+            //if (objCustomerShippingAddress.CustomerShippingAddressId > 0)
+            //{
+                //_appContext.CustomerShippingAddress.detch
+                CustomerShippingAddress data = _appContext.CustomerShippingAddress.AsNoTracking().Where(p=>p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
+                //_appContext.CustomerShippingAddress.detach(objCustomerShippingAddress);
+               if(data!=null)
             {
-                _appContext.CustomerShippingAddress.Update(objCustomerShippingAddress);               
+                if (data.CustomerShippingAddressId > 0)
+                {
+                    data.CustomerId = objCustomer.CustomerId;
+                    data.AddressId = objCustomer.AddressId;
+                    data.MasterCompanyId = objCustomer.MasterCompanyId;
+                    data.SiteName = objCustomer.CustomerCode;
+                    data.CreatedDate = DateTime.Now;
+                    data.UpdatedDate = DateTime.Now;
+                    data.CreatedBy = objCustomer.CreatedBy;
+                    data.UpdatedBy = objCustomer.UpdatedBy;
+                    data.IsActive = objCustomer.IsActive;
+                    data.IsPrimary = true;
+                    data.IsDelete = false;
+                    _appContext.CustomerShippingAddress.Update(data);
+                }
             }
             else
             {
+                CustomerShippingAddress objCustomerShippingAddress = new CustomerShippingAddress();
+
+                objCustomerShippingAddress.CustomerId = objCustomer.CustomerId;
+                objCustomerShippingAddress.AddressId = objCustomer.AddressId;
+                objCustomerShippingAddress.MasterCompanyId = objCustomer.MasterCompanyId;
+                objCustomerShippingAddress.SiteName = objCustomer.CustomerCode;
+                objCustomerShippingAddress.CreatedDate = DateTime.Now;
+                objCustomerShippingAddress.UpdatedDate = DateTime.Now;
+                objCustomerShippingAddress.CreatedBy = objCustomer.CreatedBy;
+                objCustomerShippingAddress.UpdatedBy = objCustomer.UpdatedBy;
+                objCustomerShippingAddress.IsActive = objCustomer.IsActive;
+                objCustomerShippingAddress.IsPrimary = true;
+                objCustomerShippingAddress.IsDelete = false;
+              
                 _appContext.CustomerShippingAddress.Add(objCustomerShippingAddress);
             }
 
@@ -1558,30 +1603,71 @@ namespace DAL.Repositories
         /// <param name="objCustomer"></param>
         public void AddCustomerBillinggAddress(Customer objCustomer)
         {
-            CustomerBillingAddress objCustomerBillingAddress = new CustomerBillingAddress();
-            
-            objCustomerBillingAddress.CustomerId = objCustomer.CustomerId;
-            objCustomerBillingAddress.MasterCompanyId = objCustomer.MasterCompanyId;
-            objCustomerBillingAddress.AddressId = objCustomer.AddressId;
-            objCustomerBillingAddress.SiteName = objCustomer.CustomerCode;              
-            objCustomerBillingAddress.CreatedDate = DateTime.Now;
-            objCustomerBillingAddress.UpdatedDate = DateTime.Now;
-            objCustomerBillingAddress.CreatedBy = objCustomer.CreatedBy;
-            objCustomerBillingAddress.UpdatedBy = objCustomer.UpdatedBy;
-            objCustomerBillingAddress.IsPrimary = true;
-            objCustomerBillingAddress.IsActive = true;
-            objCustomerBillingAddress.IsDelete = false;
+            CustomerBillingAddress data = _appContext.CustomerBillingAddress.AsNoTracking().Where(p => p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
 
-            if (objCustomerBillingAddress.CustomerBillingAddressId > 0)
+            if (data != null)
             {
-                _appContext.CustomerBillingAddress.Update(objCustomerBillingAddress);
+                if (data.CustomerBillingAddressId > 0)
+                {
+                    data.CustomerId = objCustomer.CustomerId;
+                    data.MasterCompanyId = objCustomer.MasterCompanyId;
+                    data.AddressId = objCustomer.AddressId;
+                    data.SiteName = objCustomer.CustomerCode;
+                    data.CreatedDate = DateTime.Now;
+                    data.UpdatedDate = DateTime.Now;
+                    data.CreatedBy = objCustomer.CreatedBy;
+                    data.UpdatedBy = objCustomer.UpdatedBy;
+                    data.IsPrimary = true;
+                    data.IsActive = true;
+                    data.IsDelete = false;
+                    _appContext.CustomerBillingAddress.Update(data);
+                }
             }
             else
             {
+                CustomerBillingAddress objCustomerBillingAddress = new CustomerBillingAddress();
+
+                objCustomerBillingAddress.CustomerId = objCustomer.CustomerId;
+                objCustomerBillingAddress.MasterCompanyId = objCustomer.MasterCompanyId;
+                objCustomerBillingAddress.AddressId = objCustomer.AddressId;
+                objCustomerBillingAddress.SiteName = objCustomer.CustomerCode;
+                objCustomerBillingAddress.CreatedDate = DateTime.Now;
+                objCustomerBillingAddress.UpdatedDate = DateTime.Now;
+                objCustomerBillingAddress.CreatedBy = objCustomer.CreatedBy;
+                objCustomerBillingAddress.UpdatedBy = objCustomer.UpdatedBy;
+                objCustomerBillingAddress.IsPrimary = true;
+                objCustomerBillingAddress.IsActive = true;
+                objCustomerBillingAddress.IsDelete = false;
+
                 _appContext.CustomerBillingAddress.Add(objCustomerBillingAddress);
             }
 
             _appContext.SaveChanges();
+
+            // CustomerBillingAddress objCustomerBillingAddress = new CustomerBillingAddress();
+
+            //objCustomerBillingAddress.CustomerId = objCustomer.CustomerId;
+            //objCustomerBillingAddress.MasterCompanyId = objCustomer.MasterCompanyId;
+            //objCustomerBillingAddress.AddressId = objCustomer.AddressId;
+            //objCustomerBillingAddress.SiteName = objCustomer.CustomerCode;              
+            //objCustomerBillingAddress.CreatedDate = DateTime.Now;
+            //objCustomerBillingAddress.UpdatedDate = DateTime.Now;
+            //objCustomerBillingAddress.CreatedBy = objCustomer.CreatedBy;
+            //objCustomerBillingAddress.UpdatedBy = objCustomer.UpdatedBy;
+            //objCustomerBillingAddress.IsPrimary = true;
+            //objCustomerBillingAddress.IsActive = true;
+            //objCustomerBillingAddress.IsDelete = false;
+
+            //if (objCustomerBillingAddress.CustomerBillingAddressId > 0)
+            //{
+            //    _appContext.CustomerBillingAddress.Update(objCustomerBillingAddress);
+            //}
+            //else
+            //{
+            //    _appContext.CustomerBillingAddress.Add(objCustomerBillingAddress);
+            //}
+
+            //_appContext.SaveChanges();
             //return objCustomerBillingAddress;
         }
 

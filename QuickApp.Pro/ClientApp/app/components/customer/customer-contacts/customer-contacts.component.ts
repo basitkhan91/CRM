@@ -182,7 +182,8 @@ export class CustomerContactsComponent implements OnInit {
 	// }
 
 	viewSelectedRow(rowData) {
-		this.sourceViewforContact = rowData;
+        this.sourceViewforContact = rowData;
+        
     }
     onAddContactInfo() {
         this.isEditButton = false;
@@ -294,10 +295,14 @@ export class CustomerContactsComponent implements OnInit {
     }
     addATAChapter(rowData) {
         this.sourceViewforContact = '';
-
+        this.add_SelectedModels = undefined;
+        this.add_SelectedId = undefined;
 		this.selectedContact = rowData;
-		this.ataListDataValues = [];
-		this.getATACustomerContactMapped();
+        this.ataListDataValues = [];
+        this.add_ataSubChapterList = '';
+       
+        this.getATACustomerContactMapped();
+
 
 	}
       dismissModel() {
@@ -344,7 +349,7 @@ export class CustomerContactsComponent implements OnInit {
 		this.add_SelectedModels = undefined;
         this.add_SelectedId = undefined;
         //debugger
-
+        this.add_ataSubChapterList = '';
         await this.saveCustomerContactATAMapped.emit(ataMappingData);
 
         setTimeout(() => {  
