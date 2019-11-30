@@ -37,7 +37,6 @@ import { EditVendorCapabilitiesComponent } from '../components/vendor/vendor-cap
 import { RolesGuardService } from '../services/roles-guard.service';
 import { CommonService } from '../services/common.service';
 import { VendorDocumentsComponent } from '../components/vendor/vendor-documents/vendor-documents.component';
-import { WorkOrderService } from '../services/work-order/work-order.service';
 
 
 const vendorPagesRoutes: Routes = [
@@ -87,8 +86,7 @@ const vendorPagesRoutes: Routes = [
 		RouterModule
 	],
 	providers: [
-		AuthService, AuthGuard,CommonService,
-		WorkOrderService
+		AuthService, AuthGuard,CommonService
 	]
 })
 export class VendorPagesRoutingModule { }
