@@ -747,7 +747,7 @@ namespace DAL.Repositories
                                                   from exp in wolexp.DefaultIfEmpty()
                                                   join emp in _appContext.Employee on wol.EmployeeId equals emp.EmployeeId into wolemp
                                                   from emp in wolemp.DefaultIfEmpty()
-                                                  join task in _appContext.Task.Where(p=>p.IsActive==true && p.IsDelete==false) on wol.TaskId equals task.TaskId into woltask
+                                                  join task in _appContext.Task.Where(p => p.IsActive == true && p.IsDelete == false) on wol.TaskId equals task.TaskId into woltask
                                                   from task in woltask.DefaultIfEmpty()
                                                   where wol.WorkOrderLaborHeaderId == lh.WorkOrderLaborHeaderId
                                                   select new
@@ -817,6 +817,10 @@ namespace DAL.Repositories
         {
             try
             {
+                if(workOrderCharges!=null && workOrderCharges.Count>0)
+                {
+                    workOrderCharges.ForEach(p => p.ChargesTypeId = p.workflowChargeTypeId);
+                }
                 _appContext.WorkOrderCharges.AddRange(workOrderCharges);
                 _appContext.SaveChanges();
                 return workOrderCharges;
@@ -894,7 +898,8 @@ namespace DAL.Repositories
                                 woc.UpdatedDate,
                                 woc.WorkFlowWorkOrderId,
                                 woc.WorkOrderChargesId,
-                                woc.WorkOrderId
+                                woc.WorkOrderId,
+                                WorkflowChargeTypeId= woc.ChargesTypeId
                             }
                           ).Distinct().ToList();
                 return list;
@@ -1057,7 +1062,7 @@ namespace DAL.Repositories
                 workOrderAsset.CheckedInDate = workOrderAssetCheckInOut.CheckedInDate;
                 workOrderAsset.UpdatedBy = workOrderAssetCheckInOut.UpdatedBy;
                 workOrderAsset.CheckInOutStatus = workOrderAssetCheckInOut.CheckInOutStatus;
-                
+
 
                 _appContext.WorkOrderAssets.Attach(workOrderAsset);
                 _appContext.Entry(workOrderAsset).Property(x => x.CheckedInById).IsModified = true;
@@ -1531,16 +1536,16 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<WorkOrderReserveIssuesParts> GetReservedIssuedParts(long WorkFlowWorkOrderId, long workOrderId,int statusId)
+        public IEnumerable<WorkOrderReserveIssuesParts> GetReservedIssuedParts(long WorkFlowWorkOrderId, long workOrderId, int statusId)
         {
-            int partStatusId=0;
-            int rvStatusId=0;
-            if(statusId==Convert.ToInt32(PartStatusEnum.Reserve))
+            int partStatusId = 0;
+            int rvStatusId = 0;
+            if (statusId == Convert.ToInt32(PartStatusEnum.Reserve))
             {
                 partStatusId = 0;
                 rvStatusId = 0;
             }
-            else if(statusId == Convert.ToInt32(PartStatusEnum.Issue))
+            else if (statusId == Convert.ToInt32(PartStatusEnum.Issue))
             {
                 partStatusId = 1;
                 rvStatusId = 1;
@@ -1567,13 +1572,15 @@ namespace DAL.Repositories
                 var list = (from wom in _appContext.WorkOrderMaterials
                             join im in _appContext.ItemMaster on wom.ItemMasterId equals im.ItemMasterId
                             join con in _appContext.Condition on wom.ConditionCodeId equals con.ConditionId
-                             into wopcon from con in wopcon.DefaultIfEmpty()
+                             into wopcon
+                            from con in wopcon.DefaultIfEmpty()
                             join sl in _appContext.StockLine on new { a = (long?)wom.ConditionCodeId, b = (long?)wom.WorkOrderMaterialsId } equals new { a = sl.ConditionId, b = sl == null ? 0 : sl.WorkOrderMaterialsId }
-                            into wopsl from sl in wopsl.DefaultIfEmpty()
-                            //join sl in _appContext.StockLine on wom.WorkOrderMaterialsId equals sl.WorkOrderMaterialsId
-                            // into womsl from sl in womsl.DefaultIfEmpty()
-                            
-                            where wom.IsDeleted == false && wom.IsActive == true 
+                            into wopsl
+                            from sl in wopsl.DefaultIfEmpty()
+                                //join sl in _appContext.StockLine on wom.WorkOrderMaterialsId equals sl.WorkOrderMaterialsId
+                                // into womsl from sl in womsl.DefaultIfEmpty()
+
+                            where wom.IsDeleted == false && wom.IsActive == true
                             && (wom.IsAltPart == null || wom.IsAltPart == false)
 
                             && (wom.WorkFlowWorkOrderId == WorkFlowWorkOrderId || wom.WorkOrderId == workOrderId)
@@ -1603,7 +1610,7 @@ namespace DAL.Repositories
                                 im.ItemClassificationId,
                                 im.PurchaseUnitOfMeasureId,
                                 wom.TaskId,
-                                PartStatusId=wom.PartStatusId==null?0: wom.PartStatusId,
+                                PartStatusId = wom.PartStatusId == null ? 0 : wom.PartStatusId,
                                 wom.ExtendedCost
 
                             }
@@ -1633,7 +1640,7 @@ namespace DAL.Repositories
                         workOrderReserveIssuesPart.QuantityTurnIn = item.QuantityTurnIn;
                         workOrderReserveIssuesPart.ReservedBy = item.ReservedBy;
                         workOrderReserveIssuesPart.ReservedDate = item.ReservedDate;
-                        workOrderReserveIssuesPart.WOReservedIssuedAltParts = GetWOReservedIssuedAltParts(item.ItemMasterId, item.WorkFlowWorkOrderId, item.WorkOrderId, item.TaskId,partStatusId,rvStatusId);
+                        workOrderReserveIssuesPart.WOReservedIssuedAltParts = GetWOReservedIssuedAltParts(item.ItemMasterId, item.WorkFlowWorkOrderId, item.WorkOrderId, item.TaskId, partStatusId, rvStatusId);
                         workOrderReserveIssuesPart.WorkOrderId = item.WorkOrderId;
                         workOrderReserveIssuesPart.WorkFlowWorkOrderId = item.WorkFlowWorkOrderId;
                         workOrderReserveIssuesPart.WorkOrderMaterialsId = item.WorkOrderMaterialsId;
@@ -2323,6 +2330,31 @@ namespace DAL.Repositories
             }
         }
 
+        public object GetStockLineDetails(long stockLineId)
+        {
+            try
+            {
+                var serialNo = (from sl in _appContext.StockLine
+                                join po in _appContext.PurchaseOrder on sl.PurchaseOrderId equals po.PurchaseOrderId into slpo
+                                from po in slpo.DefaultIfEmpty()
+                                where sl.StockLineId == stockLineId
+                                select new
+                                {
+                                    sl.ControlNumber,
+                                    ControlId = sl.IdNumber,
+                                    PurchaseOrderNo = po == null ? "" : po.PurchaseOrderNumber,
+                                    PurchaseOrderId = sl.PurchaseOrderId == null ? 0 : sl.PurchaseOrderId
+                                }).FirstOrDefault();
+
+                return serialNo;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         #endregion
 
         #region Private Methods
@@ -2936,7 +2968,7 @@ namespace DAL.Repositories
         }
 
 
-        private List<WOReservedIssuedAltParts> GetWOReservedIssuedAltParts(long? itemMasterId, long wokorderWorkFlowId, long workOrderId, long taskId,int partStatusId,int rvStatusId)
+        private List<WOReservedIssuedAltParts> GetWOReservedIssuedAltParts(long? itemMasterId, long wokorderWorkFlowId, long workOrderId, long taskId, int partStatusId, int rvStatusId)
         {
             List<WOReservedIssuedAltParts> woReservedIssuedAltParts = new List<WOReservedIssuedAltParts>();
             WOReservedIssuedAltParts woReservedIssuedAltPart;
@@ -3081,7 +3113,7 @@ namespace DAL.Repositories
                 woStockLine.QuantityOnHand = part.QuantityOnHand;
                 if (Convert.ToInt32(PartStatusEnum.Reserve) == part.PartStatusId || Convert.ToInt32(PartStatusEnum.ReserveAndIssue) == part.PartStatusId)
                 {
-                    woStockLine.QuantityAvailable = woStockLine.QuantityAvailable==null?0: woStockLine.QuantityAvailable - part.QuantityReserved;
+                    woStockLine.QuantityAvailable = woStockLine.QuantityAvailable == null ? 0 : woStockLine.QuantityAvailable - part.QuantityReserved;
                 }
                 if (Convert.ToInt32(PartStatusEnum.UnReserve) == part.PartStatusId)
                 {
