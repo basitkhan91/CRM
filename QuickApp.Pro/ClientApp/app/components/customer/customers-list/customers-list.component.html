@@ -2,7 +2,14 @@
     <div class="card-body">
         <div class="inline-block display-flex">
             <h3 class="po-head lead">Customer List</h3>
-            &nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <a matTooltip="Create Customer"
+               class="plusicon-cstm new-margin"
+               [routerLink]="[
+                '/customersmodule/customerpages/app-customer-create'
+              ]">
+                <i class="fa fa-plus-circle fa-lg"></i>
+            </a>
         </div>
         <p-table #dt
                  class="rpo-table-cstm rro-table-cstm"
@@ -41,7 +48,7 @@
                                    style="float:left"
                                    (onChange)="columnsChanges()"></p-multiSelect>
 
-                    <div style=" left: -17px;"
+                    <div style=" left: -10px;"
                          class="inner-addon right-addon w50 inline-block  g-filter-search-cstm">
                         <i class="fa fa-search"></i>
                         <input type="text"
@@ -59,6 +66,7 @@
                             icon="fa-download"
                             iconPos="left"
                             label="Export All Data"
+                            style="left:-10px;"
                             (click)="dt.exportCSV()"></button>
                     <button type="button"
                             class="btn btn-primary-cstm "
@@ -68,6 +76,7 @@
                             icon="fa-download"
                             iconPos="left"
                             label="Export Selection Only"
+                            style="left:-10px;"
                             (click)="dt.exportCSV({ selectionOnly: true })"></button>
                     <div class="excel-upload  excel-upload-cstm">
                         <input type="file"
@@ -75,21 +84,13 @@
                                id="upload"
                                (change)="customExcelUpload($event)"
                                class="uploaddoc upload-file"
+                               style="left:-10px;"
                                accept=".xlsx, .xls, .csv" />
                         <label for="upload">
                             <span matTooltip="Upload Data (Excel)">
                                 <i class="fa fa-upload"></i>
                             </span>
                         </label>
-                        &nbsp; &nbsp;
-                        <a style="margin-left: -7px"
-                           matTooltip="Create Customer"
-                           class="btn btn-success nobg btn-cstm"
-                           [routerLink]="[
-                '/customersmodule/customerpages/app-customer-create'
-              ]">
-                            <span><i class="fa fa-plus"></i></span>
-                        </a>
                     </div>
                 </div>
             </ng-template>
@@ -119,14 +120,11 @@
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowData let-columns="columns">
-                <tr [pSelectableRow]="rowData" pReorderableRowHandle (click)="viewSelectedRow(rowData)" data-target="#view">
+                <tr [pSelectableRowDblClick]="rowData" pReorderableRowHandle (dblclick)="viewSelectedRowdbl(viewdbl,rowData)">
                     <td style="width:120px"
                         *ngFor="let col of columns"
                         class="ui-resizable-column"
-                        pReorderableRowHandle
-                        data-toggle="modal"
-                        data-target="#view"
-                        (dblclick)="viewSelectedRow(rowData)">
+                        pReorderableRowHandle>
                         {{
               col.field == 'createdDate'
                 ? (rowData[col.field] | date: 'MM/dd/yyyy')
@@ -165,7 +163,7 @@
                                 matTooltip="Delete"
                                 data-target="#delete"
                                 data-toggle="modal"
-                                (click)="delete(rowData)">
+                                (click)="delete(content1,rowData)">
                             <mat-icon color="warn">delete</mat-icon>
                         </button>
                         <button class="btn-history"
@@ -253,7 +251,7 @@
                                             <p>
                                                 <span class="label"><b>Internal/External: </b></span><span class="value">
                                                     {{
-                          viewDataGeneralInformation.description
+                          viewDataGeneralInformation.accountType
                                                     }}
                                                 </span>
                                             </p>
@@ -267,10 +265,11 @@
                                             <p>
                                                 <span class="label"><b>Parent: </b></span><span class="value">
                                                     {{
-                          viewDataGeneralInformation.parent
+                          viewDataGeneralInformation.customerParentName
                                                     }}
                                                 </span>
                                             </p>
+
                                             <p>
                                                 <span class="label"><b>Address 1: </b></span><span class="value">
                                                     {{
@@ -285,13 +284,7 @@
                                                     }}
                                                 </span>
                                             </p>
-                                            <p>
-                                                <span class="label"><b>Address 3: </b></span><span class="value">
-                                                    {{
-                          viewDataGeneralInformation.address3
-                                                    }}
-                                                </span>
-                                            </p>
+
                                             <p>
                                                 <span class="label"><b>City: </b></span><span class="value">
                                                     {{
@@ -332,10 +325,18 @@
                                             <p>
                                                 <span class="label"><b>Classification: </b></span><span class="value">
                                                     {{
-                          viewDataGeneralInformation.customerClassificationId
+                          viewDataGeneralInformation.classificationName
                                                     }}
                                                 </span>
                                             </p>
+                                            <p>
+                                                <span class="label"><b>Integration With: </b></span><span class="value">
+                                                    {{
+                          viewDataGeneralInformation.integrationWith
+                                                    }}
+                                                </span>
+                                            </p>
+
                                             <p>
                                                 <span class="label"><b>Contract Ref: </b></span><span class="value">
                                                     {{
@@ -501,12 +502,15 @@
                         <div id="step5" class="panel-collapse collapse">
                             <div class="panel-body">
                                 <div class="col-sm-6">
-                                    <p><span class="label"><b>MarkUp %: </b></span><span class="value">{{viewDataGeneralInformation.markUpPercent}}</span></p>
+                                    <p><span class="label"><b>MarkUp %: </b></span><span class="value">{{viewDataGeneralInformation.markUpPercentage}}</span></p>
                                     <p><span class="label"><b>Credit Limit:: </b></span><span class="value">{{viewDataGeneralInformation.creditLimit}}</span></p>
-                                    <p><span class="label"><b>Credit Terms: </b></span><span class="value">{{viewDataGeneralInformation.creditTermsId}}</span></p>
+                                    <p><span class="label"><b>Credit Terms: </b></span><span class="value">{{viewDataGeneralInformation.creditTermsName}}</span></p>
                                     <p><span class="label"><b>Allow Netting of AP/AR: </b></span><span class="value">{{viewDataGeneralInformation.allowNettingOfAPAR}}</span></p>
                                     <p><span class="label"><b>Taxable Exempt: </b></span><span class="value">{{viewDataGeneralInformation.isTaxExempt}}</span></p>
-                                    <p><span class="label"><b>Tax Rate - State/Prov: </b></span><span class="value">{{viewDataGeneralInformation.taxRateStateOrProvince}}</span></p>
+                                    <p><span class="label"><b>Tax Type: </b></span><span class="value">{{viewDataGeneralInformation.taxTypeName}}</span></p>
+
+
+                                    <p><span class="label"><b>Tax Rate - State/Prov: </b></span><span class="value">{{viewDataGeneralInformation.taxRateName}}</span></p>
                                     <p><span class="label"><b>Tax Rate - Other: </b></span><span class="value">{{viewDataGeneralInformation.taxRateOther}}</span></p>
                                 </div>
                                 <div class="col-sm-6">
@@ -635,7 +639,6 @@
                     </div>
 
 
-
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step8">Sales Person/Agent Info</a> </h4>
@@ -647,24 +650,13 @@
                                     <p><span class="label"><b>Secondary Sales Person Name: </b></span><span class="value">{{viewDataGeneralInformation.secondarySalesPersonName}}</span></p>
                                     <p><span class="label"><b>CSR Name: </b></span><span class="value">{{viewDataGeneralInformation.csrName}}</span></p>
                                     <p><span class="label"><b>Agent Name: </b></span><span class="value">{{viewDataGeneralInformation.agentName}}</span></p>
+                                    <p><span class="label"><b>Annual Quota  : </b></span><span class="value">{{viewDataGeneralInformation.annualQuota}}</span></p>
+                                    <p><span class="label"><b>Annual Revenue Potential: </b></span><span class="value">{{viewDataGeneralInformation.annualRevenuePotential}}</span></p>
+
                                 </div>
                             </div>
                         </div>
                     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
                 </div>
@@ -677,3 +669,484 @@
         </div>
     </div>
 </div>
+<ng-template #viewdbl class="modal fade " id="viewdbl" role="dialog">
+    <div 
+         
+         role="dialog">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close"  (click)="dismissModel()">
+                        &times;
+                    </button>
+                    <h4 class="modal-title">Details of Customer</h4>
+                   
+                </div>
+                <div class="modal-body" *ngIf="viewDataGeneralInformation">
+                    <div class="panel-group" id="accordion">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <div>
+
+                                    </div>
+                                    <a class="collapsed" data-toggle="collapse" href="#step11">General Info</a>
+                                </h4>
+                            </div>
+                            <div id="step11" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    <div class="modal-content">
+                                        <div class="table-responsive default-bg clear">
+                                            <div class="col-sm-6">
+                                                <p>
+                                                    <span class="label"><b>Customer Name: </b></span><span class="value">
+                                                        {{
+                          viewDataGeneralInformation.name
+                                                        }}
+                                                    </span>
+                                                </p>
+                                                <p>
+                                                    <span class="label"><b>Customer Code: </b></span><span class="value">
+                                                        {{
+                          viewDataGeneralInformation.customerCode
+                                                        }}
+                                                    </span>
+                                                </p>
+                                                <p>
+                                                    <span class="label"><b>Internal/External: </b></span><span class="value">
+                                                        {{
+                          viewDataGeneralInformation.accountType
+                                                        }}
+                                                    </span>
+                                                </p>
+                                                <p>
+                                                    <span class="label"><b>D/b/a: </b></span><span class="value">
+                                                        {{
+                          viewDataGeneralInformation.doingBuinessAsName
+                                                        }}
+                                                    </span>
+                                                </p>
+                                                <p>
+                                                    <span class="label"><b>Parent: </b></span><span class="value">
+                                                        {{
+                          viewDataGeneralInformation.customerParentName
+                                                        }}
+                                                    </span>
+                                                </p>
+
+                                                <p>
+                                                    <span class="label"><b>Address 1: </b></span><span class="value">
+                                                        {{
+                          viewDataGeneralInformation.address1
+                                                        }}
+                                                    </span>
+                                                </p>
+                                                <p>
+                                                    <span class="label"><b>Address 2: </b></span><span class="value">
+                                                        {{
+                          viewDataGeneralInformation.address2
+                                                        }}
+                                                    </span>
+                                                </p>
+
+                                                <p>
+                                                    <span class="label"><b>City: </b></span><span class="value">
+                                                        {{
+                          viewDataGeneralInformation.city
+                                                        }}
+                                                    </span>
+                                                </p>
+                                                <p>
+                                                    <span class="label"><b>State/Province: </b></span><span class="value">
+                                                        {{
+                          viewDataGeneralInformation.stateOrProvince
+                                                        }}
+                                                    </span>
+                                                </p>
+                                                <p>
+                                                    <span class="label"><b>Postal: </b></span><span class="value">
+                                                        {{
+                          viewDataGeneralInformation.postalCode
+                                                        }}
+                                                    </span>
+                                                </p>
+                                                <p>
+                                                    <span class="label"><b>Country: </b></span><span class="value">
+                                                        {{
+                          viewDataGeneralInformation.countryName
+                                                        }}
+                                                    </span>
+                                                </p>
+                                                <p>
+                                                    <span class="label"><b>Email: </b></span><span class="value">
+                                                        {{
+                          viewDataGeneralInformation.email
+                                                        }}
+                                                    </span>
+                                                </p>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <p>
+                                                    <span class="label"><b>Classification: </b></span><span class="value">
+                                                        {{
+                          viewDataGeneralInformation.classificationName
+                                                        }}
+                                                    </span>
+                                                </p>
+                                                <p>
+                                                    <span class="label"><b>Integration With: </b></span><span class="value">
+                                                        {{
+                          viewDataGeneralInformation.integrationWith
+                                                        }}
+                                                    </span>
+                                                </p>
+
+                                                <p>
+                                                    <span class="label"><b>Contract Ref: </b></span><span class="value">
+                                                        {{
+                          viewDataGeneralInformation.contractReference
+                                                        }}
+                                                    </span>
+                                                </p>
+                                                <p>
+                                                    <span class="label"><b>PBH Customer: </b></span><span class="value">
+                                                        {{
+                          viewDataGeneralInformation.pbhCustomerMemo
+                                                        }}
+                                                    </span>
+                                                </p>
+                                                <p>
+                                                    <span class="label"><b>Restrict PMA: </b></span><span class="value">
+                                                        {{
+                          viewDataGeneralInformation.restrictPMAMemo
+                                                        }}
+                                                    </span>
+                                                </p>
+                                                <p>
+                                                    <span class="label"><b>URL to Customer site: </b></span><span class="value">
+                                                        {{
+                          viewDataGeneralInformation.customerURL
+                                                        }}
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step12">Contact</a> </h4>
+                            </div>
+                            <div id="step12" class="panel-collapse  collapse">
+                                <div class="panel-body">
+                                    <div class="col-sm-12">
+                                        <div class="shadow-Box">
+                                            <p-table class="rpo-table-cstm"
+                                                     [columns]="customerContactsColumns"
+                                                     [value]="customerContacts"
+                                                     [paginator]="true"
+                                                     [rows]="10"
+                                                     [first]="first">
+                                                <ng-template pTemplate="header" let-columns>
+                                                    <tr>
+
+                                                        <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
+                                                            {{ col.header }}
+                                                        </th>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body"
+                                                             let-rowData
+                                                             let-columns="columns"
+                                                             let-rowIndex="rowIndex">
+                                                    <tr>
+
+                                                        <td *ngFor="let col of columns">
+                                                            {{ rowData[col.field] }}
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step13">Aircraft Info</a> </h4>
+                            </div>
+                            <div id="step13" class="panel-collapse  collapse">
+                                <div class="panel-body">
+                                    <div class="col-sm-12">
+                                        <div class="shadow-Box">
+                                            <p-table class="rpo-table-cstm"
+                                                     [columns]="colsaircraftLD"
+                                                     [value]="aircraftListDataValues"
+                                                     [paginator]="true"
+                                                     [rows]="10"
+                                                     [first]="first">
+                                                <ng-template pTemplate="header" let-columns>
+                                                    <tr>
+
+                                                        <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
+                                                            {{ col.header }}
+                                                        </th>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body"
+                                                             let-rowData
+                                                             let-columns="columns"
+                                                             let-rowIndex="rowIndex">
+                                                    <tr>
+
+                                                        <td *ngFor="let col of columns">
+                                                            {{ rowData[col.field] }}
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step14">ATA Info</a> </h4>
+                            </div>
+                            <div id="step14" class="panel-collapse  collapse">
+                                <div class="panel-body">
+                                    <div class="col-sm-12">
+                                        <div class="shadow-Box">
+                                            <p-table class="rpo-table-cstm"
+                                                     [columns]="ataHeaders"
+                                                     [value]="ataListDataValues"
+                                                     [paginator]="true"
+                                                     [rows]="10"
+                                                     [first]="first">
+                                                <ng-template pTemplate="header" let-columns>
+                                                    <tr>
+
+                                                        <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
+                                                            {{ col.header }}
+                                                        </th>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body"
+                                                             let-rowData
+                                                             let-columns="columns"
+                                                             let-rowIndex="rowIndex">
+                                                    <tr>
+
+                                                        <td *ngFor="let col of columns">
+                                                            {{ rowData[col.field] }}
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step15">Financial Info</a> </h4>
+                            </div>
+                            <div id="step15" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="col-sm-6">
+                                        <p><span class="label"><b>MarkUp %: </b></span><span class="value">{{viewDataGeneralInformation.markUpPercentage}}</span></p>
+                                        <p><span class="label"><b>Credit Limit:: </b></span><span class="value">{{viewDataGeneralInformation.creditLimit}}</span></p>
+                                        <p><span class="label"><b>Credit Terms: </b></span><span class="value">{{viewDataGeneralInformation.creditTermsName}}</span></p>
+                                        <p><span class="label"><b>Allow Netting of AP/AR: </b></span><span class="value">{{viewDataGeneralInformation.allowNettingOfAPAR}}</span></p>
+                                        <p><span class="label"><b>Taxable Exempt: </b></span><span class="value">{{viewDataGeneralInformation.isTaxExempt}}</span></p>
+                                        <p><span class="label"><b>Tax Type: </b></span><span class="value">{{viewDataGeneralInformation.taxTypeName}}</span></p>
+
+
+                                        <p><span class="label"><b>Tax Rate - State/Prov: </b></span><span class="value">{{viewDataGeneralInformation.taxRateName}}</span></p>
+                                        <p><span class="label"><b>Tax Rate - Other: </b></span><span class="value">{{viewDataGeneralInformation.taxRateOther}}</span></p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p><span class="label"><b>EDI: </b></span><span class="value">{{viewDataGeneralInformation.ediDescription}}</span></p>
+                                        <!--<p><span class="label"><b>Deferred PO: </b></span><span class="value">{{customerVfinanceiewFeilds.customerCode}}</span></p>
+                                        <p><span class="label"><b>Deferred RO: </b></span><span class="value">{{customerViewFeilds.customerCode}}</span></p>-->
+                                        "l
+                                        <p><span class="label"><b>Currency: </b></span><span class="value">{{viewDataGeneralInformation.currency}}</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step16">Bill Information</a> </h4>
+                            </div>
+                            <div id="step16" class="panel-collapse  collapse">
+                                <div class="panel-body">
+                                    <div class="col-sm-12">
+                                        <div class="shadow-Box">
+                                            <p-table class="rpo-table-cstm"
+                                                     [columns]="billingInfoTableHeaders"
+                                                     [value]="billingInfoList"
+                                                     [paginator]="true"
+                                                     [rows]="10"
+                                                     [first]="first">
+                                                <ng-template pTemplate="header" let-columns>
+                                                    <tr>
+
+                                                        <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
+                                                            {{ col.header }}
+                                                        </th>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body"
+                                                             let-rowData
+                                                             let-columns="columns"
+                                                             let-rowIndex="rowIndex">
+                                                    <tr>
+
+                                                        <td *ngFor="let col of columns">
+                                                            {{ rowData[col.field] }}
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step17">Shipping Information</a> </h4>
+                            </div>
+                            <div id="step17" class="panel-collapse  collapse">
+                                <div class="panel-body">
+                                    <div class="col-sm-12">
+                                        <h4> Shipping Site Info List </h4>
+                                        <div class="shadow-Box">
+                                            <p-table class="rpo-table-cstm"
+                                                     [columns]="domesticShippingHeaders"
+                                                     [value]="domesticShippingData"
+                                                     [paginator]="true"
+                                                     [rows]="10"
+                                                     [first]="first">
+                                                <ng-template pTemplate="header" let-columns>
+                                                    <tr>
+
+                                                        <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
+                                                            {{ col.header }}
+                                                        </th>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body"
+                                                             let-rowData
+                                                             let-columns="columns"
+                                                             let-rowIndex="rowIndex">
+                                                    <tr>
+
+                                                        <td *ngFor="let col of columns">
+                                                            {{ rowData[col.field] }}
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12">
+                                        <h4> International Shipping Details </h4>
+                                        <div class="shadow-Box">
+                                            <p-table class="rpo-table-cstm"
+                                                     [columns]="internationalShippingHeaders"
+                                                     [value]="internationalShippingData"
+                                                     [paginator]="true"
+                                                     [rows]="10"
+                                                     [first]="first">
+                                                <ng-template pTemplate="header" let-columns>
+                                                    <tr>
+
+                                                        <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
+                                                            {{ col.header }}
+                                                        </th>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body"
+                                                             let-rowData
+                                                             let-columns="columns"
+                                                             let-rowIndex="rowIndex">
+                                                    <tr>
+
+                                                        <td *ngFor="let col of columns">
+                                                            {{ rowData[col.field] }}
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step18">Sales Person/Agent Info</a> </h4>
+                            </div>
+                            <div id="step18" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="col-sm-10">
+                                        <p><span class="label"><b>Primary Sales Person Name: </b></span><span class="value">{{viewDataGeneralInformation.primarySalesPersonFirstName}}</span></p>
+                                        <p><span class="label"><b>Secondary Sales Person Name: </b></span><span class="value">{{viewDataGeneralInformation.secondarySalesPersonName}}</span></p>
+                                        <p><span class="label"><b>CSR Name: </b></span><span class="value">{{viewDataGeneralInformation.csrName}}</span></p>
+                                        <p><span class="label"><b>Agent Name: </b></span><span class="value">{{viewDataGeneralInformation.agentName}}</span></p>
+                                        <p><span class="label"><b>Annual Quota  : </b></span><span class="value">{{viewDataGeneralInformation.annualQuota}}</span></p>
+                                        <p><span class="label"><b>Annual Revenue Potential: </b></span><span class="value">{{viewDataGeneralInformation.annualRevenuePotential}}</span></p>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                 
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"  (click)="dismissModel()">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </ng-template>
+    <ng-template #content1 let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+            <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
+            <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+        </div>
+    </ng-template>

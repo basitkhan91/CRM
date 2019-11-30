@@ -1,8 +1,8 @@
 <div class="fixed-table-container-inner table-responsive cat4-table" style="height:380px;">
-    <div style="position: absolute; width: 100%; z-index: 1;">
+    <div style="width: 100%; z-index: 1;">
         <span class="cat-heading cat4" >Add New Equipments<i (click)="addRow()" class="fa fa-plus"></i></span>
     </div>
-    <table class="table table-bordered table-fixed workflow-table-equip" style="margin-top:31px;" >
+    <table class="table table-bordered table-fixed workflow-table-equip">
          <tr>
                 <th><label>S.No</label></th>
             <th><label>Asset Id *</label></th>
@@ -39,9 +39,8 @@
 
         </tr>
     </table>
-    <div *ngIf="isWorkOrder" style="float:right"> 
-                    
-            <button *ngIf="isWorkOrder" class="btn btn-primary btn-primary-cstm"  (click)="saveEquipmentWorkOrder(); " style="padding: 6px 12px !important;">Save</button>
+    <div *ngIf="isWorkOrder" style="float:right">                     
+            <button *ngIf="isWorkOrder" class="btn btn-primary btn-primary-cstm"  (click)="saveEquipmentWorkOrder(); " style="padding: 6px 12px !important; margin-top: 10px;">Save</button>
     </div>
 
 </div>

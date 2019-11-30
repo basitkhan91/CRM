@@ -23,6 +23,7 @@ namespace QuickApp.Pro.Controllers
         {
             get { return "admin"; }
         }
+
         #endregion Private Members
 
         #region Constructor
@@ -380,6 +381,21 @@ namespace QuickApp.Pro.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+
+        [HttpGet("getPurchaseOrderHeaderById/{purchaseOrderId}")]
+        public IActionResult GetPurchaseOrderHeaderById(long purchaseOrderId)
+        {
+            var repairOrderHeader = unitOfWork.PartStockLineMapper.GetPurchaseOrderHeader(purchaseOrderId);
+            return Ok(repairOrderHeader);
+        }
+
+        [HttpGet("GetReceivePOPartsForSummary/{purchaseOrderId}")]
+        public IActionResult GetReceivingPurchaseOrderForSummary(long purchaseOrderId)
+        {
+            var parts = unitOfWork.PartStockLineMapper.GetPurchaseOrderPartsForSummary(purchaseOrderId);
+            return Ok(parts);
         }
 
 

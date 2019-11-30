@@ -67,7 +67,7 @@
                     </div>
                     <div class="form-group">
                         <label>Contact Phone</label>
-                        <input class="form-control" type="text" name="contactPhone" [(ngModel)]="repairOrderHeaderData.contactPhone" disabled>
+                        <input class="form-control" type="text" name="contactPhone" [(ngModel)]="repairOrderHeaderData.vendorPhone" disabled>
                     </div>
                     <div class="form-group">
                         <label>Credit Limit &amp; Terms</label>
@@ -201,7 +201,7 @@
                                         <!--this row is for the parent part-->
                                         <tr class="basic-info" *ngIf="part.isParent">
                                             <td class="details-control eachcol" style="padding: 4px 6px;">
-                                                <section> <!--*ngIf="isSplitShipmentPart(part.itemMasterId)"-->
+                                                <section *ngIf="isSplitShipmentPart(part.itemMasterId)">
                                                     <i class="fa fa-{{ part.toggleIcon ? 'minus':'plus'}} btn btn-success btn-cstm btn-xs margin0" (click)="showSplitShipmentParts(part)"></i>
                                                 </section>
                                             </td>
@@ -226,7 +226,8 @@
                                             <!-- <td>{{part.stockLine.controlNumber}}</td>
                                             <td>{{part.stockLine.purchaseOrderNumber}}</td> -->
                                             <td colspan="3"></td>
-                                            <td *ngIf="part.managementStructureName != undefined && part.managementStructureName.length > 0" colspan="2">{{part?.managementStructureName[0]}}, {{part?.managementStructureName[1]}}, {{part?.managementStructureName[2]}}, {{part?.managementStructureName[3]}}</td>
+                                            <td colspan="2" *ngIf="part.managementStructureName != undefined && part.managementStructureName.length > 0">{{part?.managementStructureName[0]}}, {{part?.managementStructureName[1]}}, {{part?.managementStructureName[2]}}, {{part?.managementStructureName[3]}}</td>
+                                            <td colspan="2" *ngIf="part.managementStructureName == undefined || part.managementStructureName.length < 1"></td>
                                             <td>
                                                 <section *ngIf="part.itemMaster != null && part.quantityRepaired < part.quantityToRepair">
                                                     <p-inputSwitch *ngIf="part.itemMaster.isSerialized == true" [(ngModel)]="part.itemMaster.isSerialized" pTooltip="Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartSerialized(part)"></p-inputSwitch>
@@ -288,10 +289,13 @@
                                             </td>                                            
                                             <!-- <td>{{part.stockLine.controlNumber}}</td>
                                             <td>{{part.stockLine.purchaseOrderNumber}}</td> -->
-                                            <td>{{'NA'}}</td>
-                                            <td>{{part?.userName}}</td>
-                                            <td>{{part.addressText }}</td>
-                                            <td *ngIf="part.managementStructureName != undefined && part.managementStructureName.length > 0" colspan="3">{{part.managementStructureName[0]}}, {{part.managementStructureName[1]}}, {{part.managementStructureName[2]}}, {{part.managementStructureName[3]}}</td>
+                                            <td>{{part.roPartSplitUserTypeId == 3 ? 'Vendor' : part.roPartSplitUserTypeId == 1 ? 'Customer' : 'Company'}}</td>
+                                            <td></td>
+                                            <!-- <td>{{part?.userName}}</td> -->
+                                            <!-- <td></td> -->
+                                            <td>{{part?.roPartSplitAddress1}}, {{part?.roPartSplitCity}}, {{part?.roPartSplitCountry}}, {{part?.roPartSplitPostalCode}}</td>
+                                            <td colspan="3" *ngIf="part.managementStructureName != undefined && part.managementStructureName.length > 0">{{part.managementStructureName[0]}}, {{part.managementStructureName[1]}}, {{part.managementStructureName[2]}}, {{part.managementStructureName[3]}}</td>
+                                            <td colspan="3" *ngIf="part.managementStructureName == undefined || part.managementStructureName.length < 1"></td>
                                             <td><input type="text" *ngIf="part.quantityRepaired < part.quantityToRepair" [(ngModel)]="part.quantityActuallyReceived" (keyup)="addStockLine(part, false)" pInputText pKeyFilter="pnum" class="form-control" /></td>
                                             <td><a class="btn btn-primary-cstm btn-po-details-child" *ngIf="part.quantityRepaired < part.quantityToRepair" (click)="toggleStockLine($event, part)">{{ part.showStockLineGrid ? 'Close' : 'Receive'}}</a></td>
                                             <td></td>
@@ -763,7 +767,7 @@
                                                             <div class="col-md-3">
                                                                 <div class="form-group">
                                                                     <label>Serial Num</label>
-                                                                    <input class="form-control" disabled="{{part.stocklineListObj[part.currentSERIndex].serialNumberNotProvided}}" [(ngModel)]="part.stocklineListObj[part.currentSERIndex].serialNumber" type="text" pInputText [maxLength]="25">
+                                                                    <input class="form-control" (keyup)="moveByKey($event, part)"  disabled="{{part.stocklineListObj[part.currentSERIndex].serialNumberNotProvided}}" [(ngModel)]="part.stocklineListObj[part.currentSERIndex].serialNumber" type="text" pInputText [maxLength]="25">
                                                                     <div class="checkbox-cstm" style="margin-top: 4px">
                                                                         <label style="width: 200px;">
                                                                             <input type="checkbox" class="form-control" [(ngModel)]="part.stocklineListObj[part.currentSERIndex].serialNumberNotProvided" (click)="onSerialNumberNotProvided(part.stocklineListObj[part.currentSERIndex])">

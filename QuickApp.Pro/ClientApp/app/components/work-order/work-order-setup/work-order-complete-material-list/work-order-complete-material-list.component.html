@@ -8,18 +8,24 @@
 </div> -->
 
 
-<div>
-    <button *ngIf="!addNewMaterial" data-target="#addNewMaterials" data-toggle="modal" class="btn btn-primary btn-primary-cstm"  (click)="addNew(); " style="padding: 6px 12px !important;">Add New Material</button>
-    <button *ngIf="addNewMaterial" data-toggle="modal" data-toggle="modal" class="btn btn-primary btn-primary-cstm"  (click)="closeAddNew()" style="padding: 6px 12px !important;">Close Add New  Material</button>
+    <div>
+        <button *ngIf="!addNewMaterial" data-target="#addNewMaterials" data-toggle="modal" class="btn btn-primary btn-primary-cstm" (click)="addNew(); " style="padding: 6px 12px !important;">Add New Material</button>
+        <button *ngIf="addNewMaterial" data-toggle="modal" data-toggle="modal" class="btn btn-primary btn-primary-cstm" (click)="closeAddNew()" style="padding: 6px 12px !important;">Close Add New  Material</button>
 
 
-    <button *ngIf="(materialStatus === null || materialStatus === 4)" class="btn btn-primary btn-primary-cstm"  style="padding: 6px 12px !important;" (click)="partsIssueRI(1)" data-toggle="modal" data-target="#reserve" >Reserve Stock</button>
+        <!--<button *ngIf="(materialStatus === null || materialStatus === 4)" class="btn btn-primary btn-primary-cstm"  style="padding: 6px 12px !important;" (click)="partsIssueRI(1)" data-toggle="modal" data-target="#reserve" >Reserve Stock</button>
     <button  *ngIf="materialStatus === 1" class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(2)" data-toggle="modal" data-target="#reserve" > Issue </button>
     <button *ngIf="(materialStatus === null  || materialStatus === 4)" class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(3)" data-toggle="modal" data-target="#reserve" > Reserve & Issue </button>
     <button *ngIf="(materialStatus === 1 || materialStatus === 5)" class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(4)" data-toggle="modal" data-target="#reserve" > Unreserve </button>
-    <button *ngIf="materialStatus === 2" class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(5)" data-toggle="modal" data-target="#reserve" > UnIssue </button>
+    <button *ngIf="materialStatus === 2" class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(5)" data-toggle="modal" data-target="#reserve" > UnIssue </button>-->
 
-</div>
+        <button class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important;" (click)="partsIssueRI(1)" data-toggle="modal" data-target="#reserve">Reserve </button>
+        <button class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(2)" data-toggle="modal" data-target="#reserve"> Issue </button>
+        <button class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(3)" data-toggle="modal" data-target="#reserve"> Reserve & Issue </button>
+        <button class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(4)" data-toggle="modal" data-target="#reserve"> UnReserve </button>
+        <button class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(5)" data-toggle="modal" data-target="#reserve"> UnIssue </button>
+
+    </div>
 
 
 
@@ -79,7 +85,7 @@
                                             <input rows="1" value="{{material.partDescription}}" [disabled]="true" [(ngModel)]="material.partDescription">
                                         </td>
                                         <td>
-                                            <select class="form-control custom-select wf-pub-id" id="ddlMaterialCondition" [(ngModel)]="material.conditionCodeId">
+                                            <select class="form-control wf-pub-id" id="ddlMaterialCondition" [(ngModel)]="material.conditionCodeId"> <!--custom-select-->
                                                 <option value="">Select</option>
                                                 <option *ngFor="let condition of materialCondition" value="{{condition.conditionId}}">
                                                     {{condition.description}}
@@ -87,7 +93,7 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <select class="form-control custom-select wf-pub-id" id="ddlMandatoryOrSupplemental" [(ngModel)]="material.mandatoryOrSupplemental" name="mandatoryOrSupplemental{{i}}" style="margin:auto;">
+                                            <select class="form-control wf-pub-id" id="ddlMandatoryOrSupplemental" [(ngModel)]="material.mandatoryOrSupplemental" name="mandatoryOrSupplemental{{i}}" style="margin:auto;">
                                                 <option value="">Select</option>
                                                 <option *ngFor="let mandatory of materialMandatory" value="{{mandatory.name}}">
                                                     {{mandatory.name}}
@@ -95,7 +101,7 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <select class="form-control custom-select dropdown-select wf-pub-id" [(ngModel)]="material.itemClassificationId" [disabled]="true">
+                                            <select class="form-control dropdown-select wf-pub-id" [(ngModel)]="material.itemClassificationId" [disabled]="true">
                                                 <option *ngFor="let item of itemClassInfo" value="{{item.itemClassificationId}}">
                                                     {{item.description}}
                                                 </option>
@@ -105,7 +111,7 @@
                                             <input type="text" maxlength="10" pInputText pKeyFilter="pnum" class="form-control" value="{{material.quantity}}"  (input)="validateQuantity($event, material);calculateQtySummation();calculateExtendedCost(material);calculateExtendedPrice(material);" [(ngModel)]="material.quantity" />
                                         </td>
                                         <td>
-                                            <select class="form-control custom-select wf-pub-id" id="ddlMaterialUOM" [(ngModel)]="material.unitOfMeasureId">
+                                            <select class="form-control wf-pub-id" id="ddlMaterialUOM" [(ngModel)]="material.unitOfMeasureId">
                                                 <option value="">Select</option>
                                                 <option *ngFor="let uom of materialUOM" value="{{uom.unitOfMeasureId}}">
                                                     {{uom.shortName}}
@@ -169,7 +175,7 @@
                     
                             <div style="float:right"> 
                     
-                                    <button *ngIf="isWorkOrder" class="btn btn-primary btn-primary-cstm"  (click)="saveMaterialListForWorkOrder(); closeAddNew();" style="padding: 6px 12px !important;">Save</button>
+                                    <button *ngIf="isWorkOrder" class="btn btn-primary btn-primary-cstm" data-dismiss="modal" (click)="saveMaterialListForWorkOrder(); closeAddNew();" style="padding: 6px 12px !important;">Save</button>
                             </div>
                         
                     </div>
@@ -240,10 +246,10 @@
                                 <td>{{m.condition}}</td>
                                 <td>{{m.itemType}}</td>
                                 <td>{{m.qunatityRequried}}</td>
-                                <td>{{m.qunatityReserved}}</td>
-                                <td>{{m.qunatityTurnIn}}</td>
-                                <td>{{m.qunatityIssued}}</td>
-                                <td>{{m.qunatityBackOrder}}</td>
+                                <td>{{m.quantityReserved}}</td>
+                                <td>{{m.quantityTurnIn}}</td>
+                                <td>{{m.quantityIssued}}</td>
+                                <td>{{m.quantityBackOrder}}</td>
                                 <td>{{m.qunatityRemaining}}</td>
                                 <td>{{m.unitCost}}</td>
                                 <td>{{m.extendedCost}}</td>
@@ -364,7 +370,7 @@
                                                       
                                                     </td>
                                                     <td>
-                                                            <input type="number" name="quantity{{i}}" [(ngModel)]="x.qunatityIssued">
+                                                            <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityIssued">
                                                       
                                                     </td>
 

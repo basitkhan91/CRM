@@ -84,8 +84,8 @@ export class WorkOrderQuoteComponent implements OnInit {
       openDate:this.quoteForm.openDate,
       QuoteDueDate:this.quoteDueDate,
       ValidForDays:this.validFor,
-      ExpirationDate:this.expirationDate,
-      QuoteStatusId:1,
+        ExpirationDate: this.expirationDate,
+        QuoteStatusId: this.quoteForm.expirationDateStatus,
       CustomerId:this.quoteForm.CustomerId,
       CurrencyId:1,
       AccountsReceivableBalance:1000.012,
@@ -108,7 +108,11 @@ export class WorkOrderQuoteComponent implements OnInit {
       this.customerName = res.customerDetails.customerName;
       this.customerContact = res.customerDetails.customerContact;
       this.customerRef = res.customerDetails.customerRef;
-      this.csr = res.customerDetails.csrName;
+        this.csr = res.customerDetails.csrName;
+        this.customerEmail = res.customerDetails.customerEmail;
+        this.customerPhone = res.customerDetails.customerPhone;
+
+
       this.creditLimit = res.creditLimit;
       this.workOrderNumber = res.workOrderNum;
       this.quoteForm.WorkOrderId = res.workOrderId;

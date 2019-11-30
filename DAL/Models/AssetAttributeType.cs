@@ -38,11 +38,11 @@ namespace DAL.Models
         [ForeignKey("AdDepsGLAccountId")]
         public long? AdDepsGLAccountId { get; set; }
 
-        public decimal? AssetSale { get; set; }
+        public long? AssetSale { get; set; }
 
-        public decimal? AssetWriteOff { get; set; }
+        public long? AssetWriteOff { get; set; }
 
-        public decimal? AssetWriteDown { get; set; }
+        public long? AssetWriteDown { get; set; }
 
         public long? ManagementStructureId { get; set; }
 

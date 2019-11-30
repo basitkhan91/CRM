@@ -297,17 +297,17 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-        [HttpGet("saveassetcheckedin")]
-        public IActionResult SaveAssetCheckedIn(long WorkOrderAssetId, long checkedInById, DateTime checkedInDate, string updatedBy)
+        [HttpPost("saveassetcheckedin")]
+        public IActionResult SaveAssetCheckedIn([FromBody]WorkOrderAssetCheckInOut workOrderAssetCheckInOut)
         {
-             unitOfWork.WorkOrderRepository.SaveAssetCheckedIn(WorkOrderAssetId, checkedInById, checkedInDate, updatedBy);
+             unitOfWork.WorkOrderRepository.SaveAssetCheckedIn(workOrderAssetCheckInOut);
             return Ok();
         }
 
-        [HttpGet("saveassetcheckedout")]
-        public IActionResult SaveAssetCheckedOut(long WorkOrderAssetId, long checkedOutById, DateTime checkedOutDate, string updatedBy)
+        [HttpPost("saveassetcheckedout")]
+        public IActionResult SaveAssetCheckedOut([FromBody]WorkOrderAssetCheckInOut workOrderAssetCheckInOut)
         {
-            unitOfWork.WorkOrderRepository.SaveAssetCheckedOut(WorkOrderAssetId, checkedOutById, checkedOutDate, updatedBy);
+            unitOfWork.WorkOrderRepository.SaveAssetCheckedOut(workOrderAssetCheckInOut);
             return Ok();
         }
 
@@ -634,9 +634,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("getreservedissuesparts")]
-        public IActionResult GetReservedIssuesParts(long WorkFlowWorkOrderId=0,long workOrderId=0)
+        public IActionResult GetReservedIssuesParts(long WorkFlowWorkOrderId=0,long workOrderId=0, int statusId=0)
         {
-            var result = unitOfWork.WorkOrderRepository.GetReservedIssuedParts(WorkFlowWorkOrderId, workOrderId);
+            var result = unitOfWork.WorkOrderRepository.GetReservedIssuedParts(WorkFlowWorkOrderId, workOrderId, statusId);
             return Ok(result);
         }
 
@@ -796,7 +796,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-        
+        [HttpGet("stocklinedetails")]
+        public IActionResult GetStockLineDetails(long stockLineId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetStockLineDetails(stockLineId);
+            return Ok(result);
+        }
+
+
 
         [HttpGet("gettechnicians")]
         public IActionResult GetTechnicians()
@@ -831,407 +838,408 @@ namespace QuickApp.Pro.Controllers
                         }
                     }
 
-                    List<long> taskIds = new List<long>();
-                    if (workFlow.ExistingWorkFlowId > 0)
-                    {
-                        taskIds = getAllUniqueTaskIds(workFlow);
-                    }
+                    //List<long> taskIds = new List<long>();
+                    //if (workFlow.ExistingWorkFlowId > 0)
+                    //{
+                    //    taskIds = getAllUniqueTaskIds(workFlow);
+                    //}
 
-                    if (workFlow.Charges != null && workFlow.Charges.Count > 0)
-                    {
+                    //if (workFlow.Charges != null && workFlow.Charges.Count > 0)
+                    //{
 
-                        var currentIds = workFlow.Charges.Select(x => x.WorkflowChargesListId).ToList();
-                        List<WorkflowChargesList> itemsToRemove = new List<WorkflowChargesList>();
+                    //    var currentIds = workFlow.Charges.Select(x => x.WorkflowChargesListId).ToList();
+                    //    List<WorkflowChargesList> itemsToRemove = new List<WorkflowChargesList>();
 
-                        workFlow.Charges.ForEach(x =>
-                        {
-                            x.MasterCompanyId = masterCompanyId;
-                            x.CreatedBy = userName;
-                            x.CreatedDate = DateTime.Now;
-                            x.UpdatedBy = userName;
-                            x.UpdatedDate = DateTime.Now;
-                        });
+                    //    workFlow.Charges.ForEach(x =>
+                    //    {
+                    //        x.MasterCompanyId = masterCompanyId;
+                    //        x.CreatedBy = userName;
+                    //        x.CreatedDate = DateTime.Now;
+                    //        x.UpdatedBy = userName;
+                    //        x.UpdatedDate = DateTime.Now;
+                    //    });
 
-                        if (workFlow.ExistingWorkFlowId > 0)
-                        {
+                    //    if (workFlow.ExistingWorkFlowId > 0)
+                    //    {
 
-                            itemsToRemove = unitOfWork.Repository<WorkflowChargesList>()
-                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
-                            x.IsDelete == false && !currentIds.Contains(x.WorkflowChargesListId)
-                            ).ToList();
+                    //        itemsToRemove = unitOfWork.Repository<WorkflowChargesList>()
+                    //        .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
+                    //        x.IsDelete == false && !currentIds.Contains(x.WorkflowChargesListId)
+                    //        ).ToList();
 
-                            foreach (var charges in itemsToRemove)
-                            {
-                                charges.IsDelete = true;
-                            }
+                    //        foreach (var charges in itemsToRemove)
+                    //        {
+                    //            charges.IsDelete = true;
+                    //        }
 
-                            workFlow.Charges.AddRange(itemsToRemove);
-                        }
+                    //        workFlow.Charges.AddRange(itemsToRemove);
+                    //    }
 
-                    }
-                    else
-                    {
-                        if (workFlow.ExistingWorkFlowId > 0)
-                        {
-                            workFlow.Charges = unitOfWork.Repository<WorkflowChargesList>()
-                                                .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
-                                                    x.IsDelete == false
-                                                ).ToList();
+                    //}
+                    //else
+                    //{
+                    //    if (workFlow.ExistingWorkFlowId > 0)
+                    //    {
+                    //        workFlow.Charges = unitOfWork.Repository<WorkflowChargesList>()
+                    //                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
+                    //                                x.IsDelete == false
+                    //                            ).ToList();
 
-                            workFlow.Charges.ForEach(x =>
-                            {
-                                x.UpdatedBy = userName;
-                                x.UpdatedDate = DateTime.Now;
-                                x.IsDelete = true;
-                            });
-                        }
-                    }
+                    //        workFlow.Charges.ForEach(x =>
+                    //        {
+                    //            x.UpdatedBy = userName;
+                    //            x.UpdatedDate = DateTime.Now;
+                    //            x.IsDelete = true;
+                    //        });
+                    //    }
+                    //}
 
-                    if (workFlow.Directions != null && workFlow.Directions.Count > 0)
-                    {
-                        var currentIds = workFlow.Directions.Select(x => x.WorkflowDirectionId).ToList();
-                        List<WorkFlowDirection> itemsToRemove = new List<WorkFlowDirection>();
+                    //if (workFlow.Directions != null && workFlow.Directions.Count > 0)
+                    //{
+                    //    var currentIds = workFlow.Directions.Select(x => x.WorkflowDirectionId).ToList();
+                    //    List<WorkFlowDirection> itemsToRemove = new List<WorkFlowDirection>();
 
-                        workFlow.Directions.ForEach(x =>
-                        {
-                            x.MasterCompanyId = masterCompanyId;
-                            x.CreatedBy = userName;
-                            x.CreatedDate = DateTime.Now;
-                            x.UpdatedBy = userName;
-                            x.UpdaedDate = DateTime.Now;
-                        });
+                    //    workFlow.Directions.ForEach(x =>
+                    //    {
+                    //        x.MasterCompanyId = masterCompanyId;
+                    //        x.CreatedBy = userName;
+                    //        x.CreatedDate = DateTime.Now;
+                    //        x.UpdatedBy = userName;
+                    //        x.UpdaedDate = DateTime.Now;
+                    //    });
 
-                        if (workFlow.ExistingWorkFlowId > 0)
-                        {
-                            itemsToRemove = unitOfWork.Repository<WorkFlowDirection>()
-                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
-                            x.IsDelete == false && !currentIds.Contains(x.WorkflowDirectionId)
-                            ).ToList();
+                    //    if (workFlow.ExistingWorkFlowId > 0)
+                    //    {
+                    //        itemsToRemove = unitOfWork.Repository<WorkFlowDirection>()
+                    //        .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
+                    //        x.IsDelete == false && !currentIds.Contains(x.WorkflowDirectionId)
+                    //        ).ToList();
 
-                            foreach (var item in itemsToRemove)
-                            {
-                                item.IsDelete = true;
-                            }
-                            workFlow.Directions.AddRange(itemsToRemove);
-                        }
-                    }
-                    else
-                    {
-                        if (workFlow.ExistingWorkFlowId > 0)
-                        {
-                            workFlow.Directions = unitOfWork.Repository<WorkFlowDirection>()
-                                                .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
-                                                && x.IsDelete == false
-                                                ).ToList();
+                    //        foreach (var item in itemsToRemove)
+                    //        {
+                    //            item.IsDelete = true;
+                    //        }
+                    //        workFlow.Directions.AddRange(itemsToRemove);
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    if (workFlow.ExistingWorkFlowId > 0)
+                    //    {
+                    //        workFlow.Directions = unitOfWork.Repository<WorkFlowDirection>()
+                    //                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
+                    //                            && x.IsDelete == false
+                    //                            ).ToList();
 
-                            workFlow.Directions.ForEach(x =>
-                            {
-                                x.UpdatedBy = userName;
-                                x.UpdaedDate = DateTime.Now;
-                                x.IsDelete = true;
-                            });
-                        }
-                    }
+                    //        workFlow.Directions.ForEach(x =>
+                    //        {
+                    //            x.UpdatedBy = userName;
+                    //            x.UpdaedDate = DateTime.Now;
+                    //            x.IsDelete = true;
+                    //        });
+                    //    }
+                    //}
 
-                    if (workFlow.Equipments != null && workFlow.Equipments.Count > 0)
-                    {
-                        var currentIds = workFlow.Equipments.Select(x => x.WorkflowEquipmentListId).ToList();
-                        List<WorkflowEquipmentList> itemsToRemove = new List<WorkflowEquipmentList>();
+                    //if (workFlow.Equipments != null && workFlow.Equipments.Count > 0)
+                    //{
+                    //    var currentIds = workFlow.Equipments.Select(x => x.WorkflowEquipmentListId).ToList();
+                    //    List<WorkflowEquipmentList> itemsToRemove = new List<WorkflowEquipmentList>();
 
-                        workFlow.Equipments.ForEach(x =>
-                        {
-                            x.MasterCompanyId = masterCompanyId;
-                            x.CreatedBy = userName;
-                            x.CreatedDate = DateTime.Now;
-                            x.UpdatedBy = userName;
-                            x.UpdatedDate = DateTime.Now;
-                        });
+                    //    workFlow.Equipments.ForEach(x =>
+                    //    {
+                    //        x.MasterCompanyId = masterCompanyId;
+                    //        x.CreatedBy = userName;
+                    //        x.CreatedDate = DateTime.Now;
+                    //        x.UpdatedBy = userName;
+                    //        x.UpdatedDate = DateTime.Now;
+                    //    });
 
-                        if (workFlow.ExistingWorkFlowId > 0)
-                        {
-                            itemsToRemove = unitOfWork.Repository<WorkflowEquipmentList>()
-                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
-                            x.IsDelete == false && !currentIds.Contains(x.WorkflowEquipmentListId)
-                            ).ToList();
+                    //    if (workFlow.ExistingWorkFlowId > 0)
+                    //    {
+                    //        itemsToRemove = unitOfWork.Repository<WorkflowEquipmentList>()
+                    //        .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
+                    //        x.IsDelete == false && !currentIds.Contains(x.WorkflowEquipmentListId)
+                    //        ).ToList();
 
-                            foreach (var item in itemsToRemove)
-                            {
-                                item.IsDelete = true;
-                            }
-                            workFlow.Equipments.AddRange(itemsToRemove);
-                        }
-                    }
-                    else
-                    {
-                        if (workFlow.ExistingWorkFlowId > 0)
-                        {
-                            workFlow.Equipments = unitOfWork.Repository<WorkflowEquipmentList>()
-                                                .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
-                                                    && x.IsDelete == false
-                                                ).ToList();
-                            workFlow.Equipments.ForEach(x =>
-                            {
-                                x.UpdatedBy = userName;
-                                x.UpdatedDate = DateTime.Now;
-                                x.IsDelete = true;
-                            });
-                        }
-                    }
+                    //        foreach (var item in itemsToRemove)
+                    //        {
+                    //            item.IsDelete = true;
+                    //        }
+                    //        workFlow.Equipments.AddRange(itemsToRemove);
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    if (workFlow.ExistingWorkFlowId > 0)
+                    //    {
+                    //        workFlow.Equipments = unitOfWork.Repository<WorkflowEquipmentList>()
+                    //                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
+                    //                                && x.IsDelete == false
+                    //                            ).ToList();
+                    //        workFlow.Equipments.ForEach(x =>
+                    //        {
+                    //            x.UpdatedBy = userName;
+                    //            x.UpdatedDate = DateTime.Now;
+                    //            x.IsDelete = true;
+                    //        });
+                    //    }
+                    //}
 
-                    if (workFlow.Exclusions != null && workFlow.Exclusions.Count > 0)
-                    {
-                        var currentIds = workFlow.Exclusions.Select(x => x.WorkflowExclusionId).ToList();
-                        List<WorkFlowExclusion> itemsToRemove = new List<WorkFlowExclusion>();
+                    //if (workFlow.Exclusions != null && workFlow.Exclusions.Count > 0)
+                    //{
+                    //    var currentIds = workFlow.Exclusions.Select(x => x.WorkflowExclusionId).ToList();
+                    //    List<WorkFlowExclusion> itemsToRemove = new List<WorkFlowExclusion>();
 
-                        workFlow.Exclusions.ForEach(x =>
-                        {
-                            x.MasterCompanyId = masterCompanyId;
-                            x.CreatedBy = userName;
-                            x.CreatedDate = DateTime.Now;
-                            x.UpdatedBy = userName;
-                            x.UpdatedDate = DateTime.Now;
-                        });
+                    //    workFlow.Exclusions.ForEach(x =>
+                    //    {
+                    //        x.MasterCompanyId = masterCompanyId;
+                    //        x.CreatedBy = userName;
+                    //        x.CreatedDate = DateTime.Now;
+                    //        x.UpdatedBy = userName;
+                    //        x.UpdatedDate = DateTime.Now;
+                    //    });
 
-                        if (workFlow.ExistingWorkFlowId > 0)
-                        {
-                            itemsToRemove = unitOfWork.Repository<WorkFlowExclusion>()
-                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
-                            x.IsDelete == false && !currentIds.Contains(x.WorkflowExclusionId)
-                            ).ToList();
+                    //    if (workFlow.ExistingWorkFlowId > 0)
+                    //    {
+                    //        itemsToRemove = unitOfWork.Repository<WorkFlowExclusion>()
+                    //        .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
+                    //        x.IsDelete == false && !currentIds.Contains(x.WorkflowExclusionId)
+                    //        ).ToList();
 
-                            foreach (var item in itemsToRemove)
-                            {
-                                item.IsDelete = true;
-                            }
+                    //        foreach (var item in itemsToRemove)
+                    //        {
+                    //            item.IsDelete = true;
+                    //        }
 
-                            workFlow.Exclusions.AddRange(itemsToRemove);
-                        }
+                    //        workFlow.Exclusions.AddRange(itemsToRemove);
+                    //    }
 
-                    }
-                    else
-                    {
-                        if (workFlow.ExistingWorkFlowId > 0)
-                        {
-                            workFlow.Exclusions = unitOfWork.Repository<WorkFlowExclusion>()
-                                                .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
-                                                    && x.IsDelete == false
-                                                ).ToList();
-                            workFlow.Exclusions.ForEach(x =>
-                            {
-                                x.UpdatedBy = userName;
-                                x.UpdatedDate = DateTime.Now;
-                                x.IsDelete = true;
-                            });
-                        }
-                    }
+                    //}
+                    //else
+                    //{
+                    //    if (workFlow.ExistingWorkFlowId > 0)
+                    //    {
+                    //        workFlow.Exclusions = unitOfWork.Repository<WorkFlowExclusion>()
+                    //                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
+                    //                                && x.IsDelete == false
+                    //                            ).ToList();
+                    //        workFlow.Exclusions.ForEach(x =>
+                    //        {
+                    //            x.UpdatedBy = userName;
+                    //            x.UpdatedDate = DateTime.Now;
+                    //            x.IsDelete = true;
+                    //        });
+                    //    }
+                    //}
 
-                    if (workFlow.Expertise != null && workFlow.Expertise.Count > 0)
-                    {
-                        var currentIds = workFlow.Expertise.Select(x => x.WorkflowExpertiseListId).ToList();
-                        List<WorkflowExpertiseList> itemsToRemove = new List<WorkflowExpertiseList>();
+                    //if (workFlow.Expertise != null && workFlow.Expertise.Count > 0)
+                    //{
+                    //    var currentIds = workFlow.Expertise.Select(x => x.WorkflowExpertiseListId).ToList();
+                    //    List<WorkflowExpertiseList> itemsToRemove = new List<WorkflowExpertiseList>();
 
-                        workFlow.Expertise.ForEach(x =>
-                        {
-                            x.MasterCompanyId = masterCompanyId;
-                            x.CreatedBy = userName;
-                            x.CreatedDate = DateTime.Now;
-                            x.UpdatedBy = userName;
-                            x.UpdatedDate = DateTime.Now;
-                        });
+                    //    workFlow.Expertise.ForEach(x =>
+                    //    {
+                    //        x.MasterCompanyId = masterCompanyId;
+                    //        x.CreatedBy = userName;
+                    //        x.CreatedDate = DateTime.Now;
+                    //        x.UpdatedBy = userName;
+                    //        x.UpdatedDate = DateTime.Now;
+                    //    });
 
-                        if (workFlow.ExistingWorkFlowId > 0)
-                        {
-                            itemsToRemove = unitOfWork.Repository<WorkflowExpertiseList>()
-                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
-                            x.IsDelete == false && !currentIds.Contains(x.WorkflowExpertiseListId)
-                            ).ToList();
+                    //    if (workFlow.ExistingWorkFlowId > 0)
+                    //    {
+                    //        itemsToRemove = unitOfWork.Repository<WorkflowExpertiseList>()
+                    //        .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
+                    //        x.IsDelete == false && !currentIds.Contains(x.WorkflowExpertiseListId)
+                    //        ).ToList();
 
-                            foreach (var item in itemsToRemove)
-                            {
-                                item.IsDelete = true;
-                            }
+                    //        foreach (var item in itemsToRemove)
+                    //        {
+                    //            item.IsDelete = true;
+                    //        }
 
-                            workFlow.Expertise.AddRange(itemsToRemove);
-                        }
-                    }
-                    else
-                    {
-                        if (workFlow.ExistingWorkFlowId > 0)
-                        {
-                            workFlow.Expertise = unitOfWork.Repository<WorkflowExpertiseList>()
-                                                .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
-                                                    && x.IsDelete == false
-                                                ).ToList();
+                    //        workFlow.Expertise.AddRange(itemsToRemove);
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    if (workFlow.ExistingWorkFlowId > 0)
+                    //    {
+                    //        workFlow.Expertise = unitOfWork.Repository<WorkflowExpertiseList>()
+                    //                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
+                    //                                && x.IsDelete == false
+                    //                            ).ToList();
 
-                            workFlow.Expertise.ForEach(x =>
-                            {
-                                x.UpdatedBy = userName;
-                                x.UpdatedDate = DateTime.Now;
-                                x.IsDelete = true;
-                            });
-                        }
-                    }
+                    //        workFlow.Expertise.ForEach(x =>
+                    //        {
+                    //            x.UpdatedBy = userName;
+                    //            x.UpdatedDate = DateTime.Now;
+                    //            x.IsDelete = true;
+                    //        });
+                    //    }
+                    //}
 
-                    if (workFlow.MaterialList != null && workFlow.MaterialList.Count > 0)
-                    {
-                        var currentIds = workFlow.MaterialList.Select(x => x.WorkflowMaterialListId).ToList();
-                        List<WorkflowMaterial> itemsToRemove = new List<WorkflowMaterial>();
+                    //if (workFlow.MaterialList != null && workFlow.MaterialList.Count > 0)
+                    //{
+                    //    var currentIds = workFlow.MaterialList.Select(x => x.WorkflowMaterialListId).ToList();
+                    //    List<WorkflowMaterial> itemsToRemove = new List<WorkflowMaterial>();
 
-                        workFlow.MaterialList.ForEach(x =>
-                        {
-                            x.MasterCompanyId = masterCompanyId;
-                            x.CreatedBy = userName;
-                            x.CreatedDate = DateTime.Now;
-                            x.UpdatedBy = userName;
-                            x.UpdatedDate = DateTime.Now;
-                        });
+                    //    workFlow.MaterialList.ForEach(x =>
+                    //    {
+                    //        x.MasterCompanyId = masterCompanyId;
+                    //        x.CreatedBy = userName;
+                    //        x.CreatedDate = DateTime.Now;
+                    //        x.UpdatedBy = userName;
+                    //        x.UpdatedDate = DateTime.Now;
+                    //    });
 
-                        if (workFlow.ExistingWorkFlowId > 0)
-                        {
-                            itemsToRemove = unitOfWork.Repository<WorkflowMaterial>()
-                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
-                            x.IsDelete == false && !currentIds.Contains(x.WorkflowMaterialListId)
-                            ).ToList();
+                    //    if (workFlow.ExistingWorkFlowId > 0)
+                    //    {
+                    //        itemsToRemove = unitOfWork.Repository<WorkflowMaterial>()
+                    //        .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
+                    //        x.IsDelete == false && !currentIds.Contains(x.WorkflowMaterialListId)
+                    //        ).ToList();
 
-                            foreach (var item in itemsToRemove)
-                            {
-                                item.IsDelete = true;
-                            }
+                    //        foreach (var item in itemsToRemove)
+                    //        {
+                    //            item.IsDelete = true;
+                    //        }
 
-                            workFlow.MaterialList.AddRange(itemsToRemove);
-                        }
+                    //        workFlow.MaterialList.AddRange(itemsToRemove);
+                    //    }
 
-                    }
-                    else
-                    {
-                        if (workFlow.ExistingWorkFlowId > 0)
-                        {
-                            workFlow.MaterialList = unitOfWork.Repository<WorkflowMaterial>()
-                                                .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
-                                                    && x.IsDelete == false
-                                                ).ToList();
+                    //}
+                    //else
+                    //{
+                    //    if (workFlow.ExistingWorkFlowId > 0)
+                    //    {
+                    //        workFlow.MaterialList = unitOfWork.Repository<WorkflowMaterial>()
+                    //                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
+                    //                                && x.IsDelete == false
+                    //                            ).ToList();
 
-                            workFlow.MaterialList.ForEach(x =>
-                            {
-                                x.UpdatedBy = userName;
-                                x.UpdatedDate = DateTime.Now;
-                                x.IsDelete = true;
-                            });
-                        }
-                    }
+                    //        workFlow.MaterialList.ForEach(x =>
+                    //        {
+                    //            x.UpdatedBy = userName;
+                    //            x.UpdatedDate = DateTime.Now;
+                    //            x.IsDelete = true;
+                    //        });
+                    //    }
+                    //}
 
-                    if (workFlow.Measurements != null && workFlow.Measurements.Count > 0)
-                    {
-                        var currentIds = workFlow.Measurements.Select(x => x.WorkflowMeasurementId).ToList();
-                        List<WorkflowMeasurement> itemsToRemove = new List<WorkflowMeasurement>();
+                    //if (workFlow.Measurements != null && workFlow.Measurements.Count > 0)
+                    //{
+                    //    var currentIds = workFlow.Measurements.Select(x => x.WorkflowMeasurementId).ToList();
+                    //    List<WorkflowMeasurement> itemsToRemove = new List<WorkflowMeasurement>();
 
-                        workFlow.Measurements.ForEach(x =>
-                        {
-                            x.MasterCompanyId = masterCompanyId;
-                            x.CreatedBy = userName;
-                            x.CreatedDate = DateTime.Now;
-                            x.UpdatedBy = userName;
-                            x.UpdatedDate = DateTime.Now;
-                        });
+                    //    workFlow.Measurements.ForEach(x =>
+                    //    {
+                    //        x.MasterCompanyId = masterCompanyId;
+                    //        x.CreatedBy = userName;
+                    //        x.CreatedDate = DateTime.Now;
+                    //        x.UpdatedBy = userName;
+                    //        x.UpdatedDate = DateTime.Now;
+                    //    });
 
-                        if (workFlow.ExistingWorkFlowId > 0)
-                        {
-                            itemsToRemove = unitOfWork.Repository<WorkflowMeasurement>()
-                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
-                            x.IsDelete == false && !currentIds.Contains(x.WorkflowMeasurementId)
-                            ).ToList();
+                    //    if (workFlow.ExistingWorkFlowId > 0)
+                    //    {
+                    //        itemsToRemove = unitOfWork.Repository<WorkflowMeasurement>()
+                    //        .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId &&
+                    //        x.IsDelete == false && !currentIds.Contains(x.WorkflowMeasurementId)
+                    //        ).ToList();
 
-                            foreach (var item in itemsToRemove)
-                            {
-                                item.IsDelete = true;
-                            }
-                            workFlow.Measurements.AddRange(itemsToRemove);
-                        }
-                    }
-                    else
-                    {
-                        if (workFlow.ExistingWorkFlowId > 0)
-                        {
-                            workFlow.Measurements = unitOfWork.Repository<WorkflowMeasurement>()
-                                                .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
-                                                    && x.IsDelete == false
-                                                ).ToList();
-                            workFlow.Measurements.ForEach(x =>
-                            {
-                                x.UpdatedBy = userName;
-                                x.UpdatedDate = DateTime.Now;
-                                x.IsDelete = true;
-                            });
-                        }
-                    }
+                    //        foreach (var item in itemsToRemove)
+                    //        {
+                    //            item.IsDelete = true;
+                    //        }
+                    //        workFlow.Measurements.AddRange(itemsToRemove);
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    if (workFlow.ExistingWorkFlowId > 0)
+                    //    {
+                    //        workFlow.Measurements = unitOfWork.Repository<WorkflowMeasurement>()
+                    //                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
+                    //                                && x.IsDelete == false
+                    //                            ).ToList();
+                    //        workFlow.Measurements.ForEach(x =>
+                    //        {
+                    //            x.UpdatedBy = userName;
+                    //            x.UpdatedDate = DateTime.Now;
+                    //            x.IsDelete = true;
+                    //        });
+                    //    }
+                    //}
 
 
-                    if (workFlow.Publication != null && workFlow.Publication.Count > 0)
-                    {
-                        var currentids = workFlow.Publication.Select(x => x.Id).ToList();
+                    //if (workFlow.Publication != null && workFlow.Publication.Count > 0)
+                    //{
+                    //    var currentids = workFlow.Publication.Select(x => x.Id).ToList();
 
-                        workFlow.Publication.ForEach(x =>
-                        {
-                            x.MasterCompanyId = masterCompanyId;
-                            x.CreatedBy = userName;
-                            x.CreatedDate = DateTime.Now;
-                            x.UpdatedBy = userName;
-                            x.UpdatedDate = DateTime.Now;
-                        });
-                        if (workFlow.ExistingWorkFlowId > 0)
-                        {
-                            var itemsToRemove = unitOfWork.Repository<Publications>()
-                            .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
-                            && x.IsDeleted == false && !currentids.Contains(x.Id)
-                            ).ToList();
+                    //    workFlow.Publication.ForEach(x =>
+                    //    {
+                    //        x.MasterCompanyId = masterCompanyId;
+                    //        x.CreatedBy = userName;
+                    //        x.CreatedDate = DateTime.Now;
+                    //        x.UpdatedBy = userName;
+                    //        x.UpdatedDate = DateTime.Now;
+                    //    });
+                    //    if (workFlow.ExistingWorkFlowId > 0)
+                    //    {
+                    //        var itemsToRemove = unitOfWork.Repository<Publications>()
+                    //        .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
+                    //        && x.IsDeleted == false && !currentids.Contains(x.Id)
+                    //        ).ToList();
 
-                            foreach (var publication in itemsToRemove)
-                            {
-                                publication.IsDeleted = true;
-                            }
+                    //        foreach (var publication in itemsToRemove)
+                    //        {
+                    //            publication.IsDeleted = true;
+                    //        }
 
-                            workFlow.Publication.AddRange(itemsToRemove);
-                        }
+                    //        workFlow.Publication.AddRange(itemsToRemove);
+                    //    }
 
-                        List<long> ids = new List<long>();
-                        foreach (var publication in workFlow.Publication)
-                        {
-                            ids.Clear();
+                    //    List<long> ids = new List<long>();
+                    //    foreach (var publication in workFlow.Publication)
+                    //    {
+                    //        ids.Clear();
 
-                            if (publication.WorkflowPublicationDashNumbers != null)
-                            {
-                                ids = publication.WorkflowPublicationDashNumbers.Select(x => x.WorkflowPublicationDashNumberId).ToList();
-                            }
+                    //        if (publication.WorkflowPublicationDashNumbers != null)
+                    //        {
+                    //            ids = publication.WorkflowPublicationDashNumbers.Select(x => x.WorkflowPublicationDashNumberId).ToList();
+                    //        }
 
-                            var itemsToDelete = unitOfWork.Repository<WorkflowPublicationDashNumber>()
-                                .Find(x =>
-                                x.PublicationsId == publication.Id &&
-                                !ids.Contains(x.WorkflowPublicationDashNumberId)
-                                );
+                    //        var itemsToDelete = unitOfWork.Repository<WorkflowPublicationDashNumber>()
+                    //            .Find(x =>
+                    //            x.PublicationsId == publication.Id &&
+                    //            !ids.Contains(x.WorkflowPublicationDashNumberId)
+                    //            );
 
-                            foreach (var item in itemsToDelete)
-                            {
-                                unitOfWork.Repository<WorkflowPublicationDashNumber>().Remove(item);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (workFlow.ExistingWorkFlowId > 0)
-                        {
-                            workFlow.Publication = unitOfWork.Repository<Publications>()
-                             .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
-                                && x.IsDeleted == false
-                             ).ToList();
+                    //        foreach (var item in itemsToDelete)
+                    //        {
+                    //            unitOfWork.Repository<WorkflowPublicationDashNumber>().Remove(item);
+                    //        }
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    if (workFlow.ExistingWorkFlowId > 0)
+                    //    {
+                    //        workFlow.Publication = unitOfWork.Repository<Publications>()
+                    //         .Find(x => x.WorkflowId == workFlow.ExistingWorkFlowId
+                    //            && x.IsDeleted == false
+                    //         ).ToList();
 
-                            workFlow.Publication.ForEach(x =>
-                            {
-                                x.UpdatedBy = userName;
-                                x.UpdatedDate = DateTime.Now;
-                                x.IsDeleted = true;
-                            });
-                        }
-                    }
+                    //        workFlow.Publication.ForEach(x =>
+                    //        {
+                    //            x.UpdatedBy = userName;
+                    //            x.UpdatedDate = DateTime.Now;
+                    //            x.IsDeleted = true;
+                    //        });
+                    //    }
+                    //}
+
                     if (workFlow != null && workFlow.ExistingWorkFlowId > 0)
                     {
                         var exworkFlow = GetWorkFlowDetails(workFlow.ExistingWorkFlowId);

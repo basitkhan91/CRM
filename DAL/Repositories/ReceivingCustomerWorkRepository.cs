@@ -106,7 +106,7 @@ namespace DAL.Repositories
                                   stl.Owner,
                                   stl.OwnerType,
                                   stl.TraceableTo,
-                                  stl.Manufacturer,
+                                  stl.ManufacturerId,
                                   stl.ManufacturingDate,
                                   stl.PartCertificationNumber,
                                   stl.CertifiedBy,

@@ -8,7 +8,7 @@ import { UnitOfMeasureService } from '../../../../services/unitofmeasure.service
 import { CurrencyService } from '../../../../services/currency.service';
 import { AlertService, MessageSeverity } from '../../../../services/alert.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Router } from '@angular/router'
+import { Router, ActivatedRoute } from '@angular/router'
 import { ModalService } from '../../../../services/Index';
 import { EmployeeService } from '../../../../services/employee.service';
 import { ItemMasterService } from '../../../../services/itemMaster.service';
@@ -174,7 +174,8 @@ export class ReceivngPoComponent implements OnInit {
         private alertService: AlertService,
         private accountService: AccountService,
         private glAccountService: GlAccountService,
-        private shippingService: ShippingService
+        private shippingService: ShippingService,
+        private _actRoute: ActivatedRoute,
     ) {
         this.getAllSite();
         this.getCustomers();
@@ -188,6 +189,7 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.receivingService.purchaseOrderId = this._actRoute.snapshot.queryParams['repairorderid'];
         this.receivingService.getPurchaseOrderDataById(this.receivingService.purchaseOrderId).subscribe(
             results => {
                 this.receivingService.purchaseOrder = results[0];
@@ -1483,7 +1485,7 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     private moveByKey(event, part) {
-;       // CTRL + Down Arrow
+       // CTRL + Down Arrow
         if (event.ctrlKey && event.keyCode == 40) {
             this.moveStockLinePage('stockline', part.currentSERIndex + 1, part);
         }

@@ -62,6 +62,8 @@ export class EditPoComponent implements OnInit {
     GLAccountList: GlAccount[];
     currentDate: Date;
     ShippingViaList : DropDownData[];
+    purchaseOrderId: number;
+
     /** edit-po ctor */
     constructor(public receivingService: ReceivingService,
         public priority: PriorityService,
@@ -91,6 +93,7 @@ export class EditPoComponent implements OnInit {
 
         this.receivingService.getPurchaseOrderDataForEditById(this.receivingService.purchaseOrderId).subscribe(
             results => {
+                this.purchaseOrderId = results[0].purchaseOrderId;
                 this.purchaseOrderData = results[0];
                 this.purchaseOrderData.openDate = new Date(results[0].openDate).toLocaleDateString();
                 this.purchaseOrderData.needByDate = new Date(results[0].needByDate);
@@ -1007,7 +1010,8 @@ export class EditPoComponent implements OnInit {
         if (receiveParts.length > 0) {
             this.shippingService.updateStockLine(receiveParts).subscribe(data => {
                 this.alertService.showMessage(this.pageTitle, 'Stock Line updated successfully.', MessageSeverity.success);
-                return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
+                //return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
+                this.route.navigateByUrl(`/receivingmodule/receivingpages/app-view-po?purchaseOrderId=${this.purchaseOrderId}`);
             },
                 error => {
                     var message = '';

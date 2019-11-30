@@ -76,6 +76,7 @@ export class WorkOrderCompleteMaterialListComponent {
         console.log(this.materialStatus);
 
         this.workFlowWorkOrderId = this.savedWorkOrderData.workFlowWorkOrderId;
+        this.addRow();
 
         this.actionService.GetMaterialMandatory().subscribe(
             mandatory => {
@@ -363,7 +364,7 @@ export class WorkOrderCompleteMaterialListComponent {
         // workFlowWorkOrderId
         // 85
         if (this.workFlowWorkOrderId) {
-            this.workOrderService.getReservedPartsByWorkFlowWOId(this.workFlowWorkOrderId).subscribe(res => {
+            this.workOrderService.getReservedPartsByWorkFlowWOId(this.workFlowWorkOrderId, statusId).subscribe(res => {
                 this.reservedList = res.map(x => {
 
                     return {
@@ -412,5 +413,8 @@ export class WorkOrderCompleteMaterialListComponent {
 
 
     }
+
+
+
 
 }

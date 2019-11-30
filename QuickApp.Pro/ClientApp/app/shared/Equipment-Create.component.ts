@@ -16,7 +16,8 @@ import { MessageSeverity, AlertService } from "../services/alert.service";
 export class EquipmentCreateComponent implements OnInit, OnChanges {
     partCollection: any[];
     @Input() workFlowObject;
-    @Input() isWorkOrder = false;
+    //@Input() isWorkOrder = false;
+    @Input() isWorkOrder: boolean;
     @Input() workFlow: IWorkFlow;
     @Input() UpdateMode: boolean;
     @Output() saveEquipmentListForWO = new EventEmitter();
@@ -39,10 +40,11 @@ export class EquipmentCreateComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
-
+        console.log(this.isWorkOrder);
         if (this.isWorkOrder) {
             this.workFlow = this.workFlowObject;
             this.row = this.workFlow.equipments[0];
+            this.addRow();
         } else {
             this.row = this.workFlow.equipments[0];
             if (this.row == undefined) {

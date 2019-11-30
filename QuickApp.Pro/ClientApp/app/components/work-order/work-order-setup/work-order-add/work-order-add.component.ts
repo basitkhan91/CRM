@@ -103,6 +103,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     // labor Object Modal
     labor = new WorkOrderLabor();
     isWorkOrder: boolean = true;
+    data: any;
 
     workFlowList: any;
 
@@ -144,13 +145,17 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     MPNList = [];
     workFlowObject = {
         materialList: [],
-        equipments: []
+        equipments: [],
+        charges: [],
+        exclusions: []
     }
     materialStatus: any;
     workOrderLaborList: any;
     taskList: any;
-    subTabOtherOptions: any;
+    subTabOtherOptions: any = '';
     workOrderChargesList: Object;
+    workOrderExclusionsList: Object;
+    isEditLabor: boolean = false;
 
 
     constructor(
@@ -198,6 +203,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         // this.getStockLines();
         if (!this.isEdit) {
 
+            this.isEditLabor = true;
             this.addMPN();
             this.getAllGridModals();
         } else {
@@ -215,6 +221,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                     this.getRevisedpartNumberByItemMasterId(x.masterPartId, index);
                     this.getStockLineByItemMasterId(x.masterPartId, x.conditionId, index);
                     this.getConditionByItemMasterId(x.masterPartId, index);
+                    this.getWorkFlowByPNandScope({ ...x, masterPartId: getObjectById('itemMasterId', x.masterPartId, this.partNumberOriginalData) });
+                    this.getPartPublicationByItemMasterId(x.masterPartId);
                     return {
                         ...x,
                         technicianId: getObjectById('value', x.technicianId, this.employeesOriginalData),
@@ -222,8 +230,10 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                         mappingItemMasterId: getObjectById('mappingItemMasterId', x.mappingItemMasterId, x.revisedParts),
                     }
 
+
                 })
             }
+
             this.showTableGrid = true;
             this.workFlowWorkOrderId = data.workFlowWorkOrderId;
             if (data.isSinglePN) {
@@ -701,6 +711,9 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
 
+
+
+
     saveWorkOrderEquipmentList(data) {
         const equipmentArr = data.equipments.map(x => {
             return {
@@ -721,6 +734,29 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         })
 
 
+    }
+
+
+
+    saveWorkOrderChargesList(data) {
+        const chargesArr = data.charges.map(x => {
+            return {
+                ...x,
+                masterCompanyId: 1,
+                isActive: true,
+                workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId
+            }
+        })
+        console.log(data);
+        this.workOrderService.createWorkOrderChargesList(chargesArr).subscribe(res => {
+            this.workFlowObject.charges = [];
+            this.alertService.showMessage(
+                this.moduleName,
+                'Saved Work Order Charges  Succesfully',
+                MessageSeverity.success
+            );
+            this.getChargesListByWorkOrderId();
+        })
     }
 
     formWorkerOrderLaborJson(data) {
@@ -801,31 +837,39 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         }
     }
 
-    getChargesListByWorkOrderId() {
 
-        if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
-            this.workOrderService.getWorkOrderChargesList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
-                this.workOrderChargesList = res;
-            })
+    clearLaborList() {
 
+        for (let task of this.taskList) {
+            this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [new AllTasks()];
         }
-
     }
 
+
+
     getWorkFlowLaborList() {
+
+
+        this.clearLaborList();
+
         if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
             this.workOrderService.getWorkOrderLaborList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
-                const data = res;
+                this.data = {};
+                this.data = res;
+                console.log('aaaa');
+                console.log(this.data);
                 this.workOrderLaborList = {
-                    ...data,
-                    workFlowWorkOrderId: getObjectById('value', data.workFlowWorkOrderId, this.workOrderWorkFlowOriginalData),
-                    employeeId: getObjectById('value', data.employeeId, this.employeesOriginalData),
-                    dataEnteredBy: getObjectById('value', data.employeeId, this.employeesOriginalData),
+                    ...this.data,
+                    workFlowWorkOrderId: getObjectById('value', this.data.workFlowWorkOrderId, this.workOrderWorkFlowOriginalData),
+                    employeeId: getObjectById('value', this.data.employeeId, this.employeesOriginalData),
+                    dataEnteredBy: getObjectById('value', this.data.employeeId, this.employeesOriginalData),
                 };
-                
+
                 if (res) {
-                    for (let labList of res['laborList']) {
+
+                    for (let labList of this.data['laborList']) {
                         for (let task of this.taskList) {
+
                             if (task.taskId == labList['taskId']) {
                                 if (this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == undefined || this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == null) {
                                     this.labor.workOrderLaborList[0][task.description.toLowerCase()].splice(0, 1);
@@ -855,14 +899,63 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
 
 
-
     otherOptionSelected(value) {
         this.subTabOtherOptions = value;
         if (value === 'charges') {
             this.getChargesListByWorkOrderId();
+        } else if (value === 'exclusions') {
+            this.getExclusionListByWorkOrderId();
+        }
+
+
+    }
+
+
+    getChargesListByWorkOrderId() {
+        if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
+            this.workOrderService.getWorkOrderChargesList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
+                this.workOrderChargesList = res;
+            })
+
         }
 
     }
+
+
+    saveWorkOrderExclusionsList(data) {
+        const exclusionsArr = data.exclusions.map(x => {
+            return {
+                ...x,
+                masterCompanyId: 1,
+                isActive: true,
+                workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId
+            }
+        })
+            ;
+        this.workOrderService.createWorkOrderExclusionList(exclusionsArr).subscribe(res => {
+            this.workFlowObject.charges = [];
+            this.alertService.showMessage(
+                this.moduleName,
+                'Saved Work Order Exclusions  Succesfully',
+                MessageSeverity.success
+            );
+            this.getExclusionListByWorkOrderId();
+        })
+    }
+
+
+    getExclusionListByWorkOrderId() {
+
+        if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
+            this.workOrderService.getWorkOrderExclusionsList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
+                this.workOrderExclusionsList = res;
+            })
+
+        }
+
+    }
+
+
 
 
 
@@ -1071,6 +1164,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     gridTabChange(value) {
         this.gridActiveTab = value;
         this.subTabWorkFlow = '';
+        this.subTabOtherOptions = '';
     }
     // changeSinglePN(event): void {
     //   this.workOrder.isSinglePN = !this.workOrder.isSinglePN;

@@ -158,5 +158,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
 
         }
+        [HttpGet]
+        [Route("defaultcurrency")]
+        public IActionResult GetDefaultCurrency(long legalEntityId)
+        {
+            var result = _unitOfWork.CommonRepository.GetDefaultCurrency(legalEntityId);
+            return Ok(result);
+
+        }
+        
     }
 }

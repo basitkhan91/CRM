@@ -14,7 +14,7 @@
         this.workflowId = 0;
         this.workOrderStageId = 1;
         this.workOrderStatusId = 1;
-        this.workOrderPriorityId = null;
+        this.workOrderPriorityId = 1;
         this.isPMA = false;
         this.isDER = false;
         this.techStationId = 0;

@@ -56,6 +56,8 @@ import { PartDetailsComponent } from "../components/sales/shared/components/add-
 import { ItemMasterService } from "../services/itemMaster.service";
 import { SalesPartNumbersComponent } from "../components/sales/quotes/shared/components/sales-part-number/sales-part-numbers.component";
 import { StocklinePartDetailsComponent } from "../components/sales/shared/components/add-sales-part-number/stockline-part-details/stockline-part-details.component";
+import { MarginDetail } from "../components/sales/shared/models/margin-detail";
+import { SalesMarginComponent } from "../components/sales/shared/components/sales-margin/sales-margin..component";
 
 @NgModule({
   imports: [
@@ -102,7 +104,8 @@ import { StocklinePartDetailsComponent } from "../components/sales/shared/compon
     PartNumberFilterComponent,
     PartDetailsComponent,
     SalesPartNumbersComponent,
-    StocklinePartDetailsComponent
+    StocklinePartDetailsComponent,
+    SalesMarginComponent
   ],
   providers: [CustomerService, SalesQuoteService, SalesQuoteEndpointService, ItemMasterService],
   entryComponents: []

@@ -2,6 +2,29 @@
     <div class="right_col" role="main">
 
         <div class="x_content">
+
+
+
+                <div class="table-responsive">
+                        <div>
+                            <div class="col-md-12" style="margin-bottom: -10px;">
+                                <h4 class="float-right">
+                                        Add Capability
+                                        <button
+                                          class="plusicon-cstm"
+                                          ><i class="fa fa-plus-circle fa-lg" (click)="openCapes(content)"></i
+                                        ></button>
+                
+                                      </h4>
+                            </div>
+                            <div class="clear"></div>
+                            <hr />
+                        </div>
+                
+
+                </div>
+
+
             <!--<nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
@@ -100,3 +123,109 @@
 
     </div>
 </div>
+
+
+<ng-template #content let-c="close" let-d="dismiss">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" (click)="dismissModel()">×</button>
+                    <h4 class="modal-title">Add Capability</h4>
+                </div>
+                <div class="modal-body">
+                     <form [formGroup]="capabilitiesForm">
+                             <div formArrayName="mfgForm">
+                    <div class="form-row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="popup-plusicon-cstm">Capability Types </label>
+                                     <select [(ngModel)]="capabilityForm.CapabilityTypeId" (onSelect)="selectCap($event)" [ngModelOptions]="{standalone: true}">
+                                                        <option>--Select--</option>
+                                                        <option *ngFor="let cap of capabilityTypeData" [ngValue]="cap.CapabilityTypeId">{{cap.Description}}</option>
+                                     </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="popup-plusicon-cstm">PN </label>
+                                      <p-autoComplete [(ngModel)]="capabilityForm.selectedPartId" (onKeyUp)=partPNentHandler($event)
+                                                                               (onSelect)="partnmId($event)" [ngModelOptions]="{standalone: true}"
+                                                                               [suggestions]="partCollection" (completeMethod)="filterPNpartItems($event)" [size]="30"
+                                                                               [minLength]="1" [dropdown]="true">
+                                                                   <ng-template let-partName pTemplate="part">
+                                                                       <div class="ui-helper-clearfix">{{partName}}</div>
+                                                                   </ng-template>
+                                                               </p-autoComplete>
+                            </div>
+                        </div>
+                         <div class="col-md-3">
+                            <div class="">
+                                <label class="popup-plusicon-cstm">Aircraft Manufacturer </label>
+                                     <p-multiSelect [options]="manufacturerData"
+                                                               [ngModelOptions]="{standalone: true}"
+                                                               [(ngModel)]="capabilityForm.selectedAircraftTypes" [panelStyle]="{minWidth:'12em'}"
+                                                               (onChange)="manufacturerChange($event,capabilityForm)">
+                                                </p-multiSelect>
+                            </div>
+                        </div>
+                         <div class="col-md-2">
+                            <div class="">
+                                <label class="popup-plusicon-cstm">Model </label>
+                                   <p-multiSelect [options]="capabilityForm.selectedAircraftDataModels"
+                                                               [ngModelOptions]="{standalone: true}"
+                                                               [(ngModel)]="capabilityForm.selectedAircraftModelTypes"
+                                                               [panelStyle]="{minWidth:'12em'}" (click)="openModelPopups(capabilityForm)"
+                                                               (onChange)="aircraftModalChange($event,capabilityForm)">
+                                                </p-multiSelect>
+                            </div>
+                        </div>
+                         <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="popup-plusicon-cstm">Dash Number </label>
+                                   <select [(ngModel)]="capabilityForm.selectedDashNumbers" [ngModelOptions]="{standalone: true}">
+                                                    <option>--Select--</option>
+                                                    <option *ngFor="let dashnumbers of search_AircraftDashNumberList" [ngValue]="dashnumbers.label">{{dashnumbers.label}}</option>
+                                                </select>
+                            </div>
+                        </div>
+ 
+                       
+                        <div class="col-md-1">
+                            <button style="margin-top: 20px;" type="button" class="btn btn-primary-cstm" (click)="addModels(capabilityForm)">Add</button>
+                        </div>
+                    </div>
+ 
+ 
+                     <ng-container *ngFor="let item of mfgFormArray.controls;let i=index" [formGroupName]="i">
+ 
+                         <div class="form-row" *ngIf="mfgFormArray.controls[i].controls['isDelete'].value != true">
+                             <div class="col-md-2">
+                                <!-- <input type="text" formControlName="capabilityTypeId" isabled="true" /> --> 
+                             </div>
+                             <div class="col-md-2">
+                                 <input type="text" formControlName="PartId" disabled="true" />
+                             </div>
+                             <div class="col-md-3">
+                                 <input type="text" formControlName="aircraftTypeName" disabled="true" />
+                             </div>
+                             <div class="col-md-2">
+                                 <input type="text" formControlName="aircraftModelName" disabled="true" />
+                             </div>
+                             <div class="col-md-2">
+                                 <input type="text" formControlName="DashNumber" disabled="true" />
+                             </div>
+                        </div>
+                     </ng-container>
+ 
+                   
+                 </div>
+                      </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="saveCapabilities()">Save</button>
+                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
+                </div>
+            </div>
+        </div>
+    </ng-template>

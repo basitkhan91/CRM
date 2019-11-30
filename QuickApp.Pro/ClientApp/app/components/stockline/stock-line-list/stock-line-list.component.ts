@@ -423,50 +423,6 @@ export class StockLineListComponent implements OnInit {
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
 
-    //eventHandler(event) {
-    //	let value = event.target.value.toLowerCase()
-    //	if (this.selectedreason) {
-    //		if (value == this.selectedreason.toLowerCase()) {
-    //			this.disableSave = true;
-    //		}
-    //		else {
-    //			this.disableSave = false;
-    //		}
-    //	}
-    //}
-
-
-
-    //itemId(event) {
-    //	for (let i = 0; i < this.allreasn.length; i++) {
-    //		if (event == this.allreasn[i][0].reasonName) {
-
-    //			this.disableSave = true;
-    //			this.selectedreason = event;
-    //		}
-
-    //	}
-    //}
-
-
-
-
-
-    //filterReasons(event) {
-
-    //	this.localCollection = [];
-    //	for (let i = 0; i < this.allReasonsInfo.length; i++) {
-    //		let reasonName = this.allReasonsInfo[i].reasonCode;
-    //		if (reasonName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-    //			this.allreasn.push([{
-    //				"reasonId": this.allReasonsInfo[i].reasonId,
-    //				"reasonName": reasonName
-    //			}]),
-    //				this.localCollection.push(reasonName);
-    //		}
-    //	}
-    //}
-
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
 
         // debugger;

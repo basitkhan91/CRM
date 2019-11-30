@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import * as $ from 'jquery'
 
 
 @Component({
@@ -8,8 +8,17 @@ import { Component, Input } from '@angular/core';
 
 })
 /** WorkOrderDocuments component*/
-export class WorkOrderChargessComponent {
+export class WorkOrderChargesComponent {
   @Input() workOrderChargesList;
+  @Input() workFlowObject;
+  @Input() isWorkOrder;
+  @Output() saveChargesListForWO =  new EventEmitter();
   constructor() {}
+
+
+  saveChargesList(event){
+    this.saveChargesListForWO.emit(event);
+    $('#addNewCharges').modal('hide');
+  }
 
 }

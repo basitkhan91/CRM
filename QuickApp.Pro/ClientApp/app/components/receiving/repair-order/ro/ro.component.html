@@ -15,7 +15,7 @@
                         <h4 class="po-head">Search Repair Order</h4>
 
                         <div class="form-row">
-                            <p-table class="ptable-custom" #dt [value]="allROlistInfo" [metaKeySelection]="true"
+                            <p-table #dt class="ptable-custom" #dt [value]="allROlistInfo" [metaKeySelection]="true"
                                      [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]"
                                      [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn"
                                      [resizableColumns]="true" [reorderableColumns]="true" [responsive]="true">
@@ -77,7 +77,7 @@
                                                 </a>
                                             </span>
                                             <span *ngIf="rowData.statusId == 3" (click)="editStockLine(rowData)">
-                                                <a data-toggle="tooltip" pTooltip="Edit RO Stockline" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="" edit="">
+                                                <a data-toggle="tooltip" pTooltip="Edit Received Parts" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="" edit="">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
                                             </span>
@@ -121,7 +121,7 @@
                             <div class="col-sm-3">
                                     <p><span class="label"><b>Vendor Name: </b></span><span class="value">{{roHeaderAdd.vendorName ? roHeaderAdd.vendorName : '-'}}</span></p>
                                     <p><span class="label"><b>Vendor Code: </b></span><span class="value">{{roHeaderAdd.vendorCode ? roHeaderAdd.vendorCode : '-'}}</span></p>
-                                    <p><span class="label"><b>Vendor Contact: </b></span><span class="value">{{roHeaderAdd.vendorContact ? roHeaderAdd.vendorContact : '-'}}</span></p>
+                                    <p><span class="label"><b>Vendor Contact: </b></span><span class="value">{{roHeaderAdd.contactName ? roHeaderAdd.contactName : '-'}}</span></p>
                                     <p><span class="label"><b>Contact Phone: </b></span><span class="value">{{roHeaderAdd.workPhone ? roHeaderAdd.workPhone : '-'}}</span></p>
                                     <p><span class="label"><b>Credit Limit & Terms: </b></span><span class="value">
                                         {{roHeaderAdd.creditLimit ? roHeaderAdd.creditLimit : '-'}} &

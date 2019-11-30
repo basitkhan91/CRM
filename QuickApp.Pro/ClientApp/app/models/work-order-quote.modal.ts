@@ -48,8 +48,11 @@ export class WorkOrderQuote {
     IsActive:boolean = true;
     IsDeleted:boolean = false;
     creditTermsandLimit: string;
+    quoteNumber: any;
+    expirationDateStatus: number;
   constructor() {
-    this.WorkOrderId = 0;
+      this.WorkOrderId = 0;
+      this.expirationDateStatus = 1;
   }
 }
 export class multiParts {
@@ -86,6 +89,7 @@ export class multiParts {
     this.isPMA = false;
     this.isDER = false;
     this.tatDaysStandard = null;
-    this.isActive = false;
+      this.isActive = false;
+      
   }
 }

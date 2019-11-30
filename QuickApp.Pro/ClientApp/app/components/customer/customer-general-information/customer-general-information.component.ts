@@ -480,10 +480,22 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
             });
 
-            this.getCustomerClassificationByCustomerId();
+        
             this.getCustomerIntegrationTypesByCustomerId();
-            this.getCustomerRestrictedPMAByCustomerId();
-            this.getCustomerRestrictedDERByCustomerId();
+
+            setTimeout(() => { 
+                this.getCustomerRestrictedPMAByCustomerId();
+            }, 1000);
+
+            setTimeout(() => { 
+                this.getCustomerRestrictedDERByCustomerId();
+            }, 1000);
+
+            setTimeout(() => { 
+                this.getCustomerClassificationByCustomerId();
+            }, 1000);
+
+            
         }
     }
 
@@ -858,7 +870,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     }
     saveGeneralInformation() {
-        debugger
+       
       
         if (!this.isEdit) {
             this.customerService.newAction({

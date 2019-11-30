@@ -157,7 +157,15 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _getVendorPOmemolist: string = "/api/Vendor/vendorpomemolist";
 	private readonly _getVendorROmemolist: string = "/api/Vendor/vendorromemolist";
 	private readonly _updateVendorPOROmemolist: string = "/api/Vendor/updatevendormemotext";
-    
+
+	private readonly _getVendorDocslist: string = "/api/Vendor/getVendorDocumentDetailList";
+	private readonly _addDocumentDetails: string = "/api/Vendor/vendorDocumentUpload";
+	private readonly _updateDocumentDetails: string = "/api/Vendor/vendorDocumentUpdate";
+	private readonly _getVendorDocsDetailsById: string = "/api/Vendor/getVendorDocumentDetail";
+	private readonly _getVendorDocumentAttachmentslist: string = "/api/FileUpload/getattachmentdetails";
+	private readonly _getVendorDeleteDocsDetailsById: string = "/api/Vendor/vendorDocumentDelete";
+	
+	
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
 	get vendorlistsUrl() { return this.configurations.baseUrl + this._vendrUrl; }
 	get vendorBasicListUrl(){return this.configurations.baseUrl+ this._vendorLiteUrl}
@@ -1524,6 +1532,33 @@ updateVendorPOROmemolist(id, type, memoText,updatedBy) {
 	return this.http.put(`${this._updateVendorPOROmemolist}?id=${id}&type=${type}&memoText=${memoText}&updatedBy=${updatedBy}`, {} , this.getRequestHeaders())
 }
 
+getDocumentList(vendorId) {
+	return this.http.get(`${this._getVendorDocslist}/${vendorId}`, this.getRequestHeaders())
+}
 
+
+ getDocumentUploadEndpoint<T>(file: any): Observable<T> {
+	const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
+	return this.http.post<T>(`${this._addDocumentDetails}`, file);
+}
+
+getDocumentListbyId(vendorDocumentId) {
+	return this.http.get(`${this._getVendorDocsDetailsById}/${vendorDocumentId}`, this.getRequestHeaders())
+}
+
+getUpdateDocumentUploadEndpoint<T>(file: any): Observable<T> {
+	debugger
+	const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
+	return this.http.put<T>(`${this._updateDocumentDetails}`, file);
+}
+
+GetUploadDocumentsList(attachmentId, vendorId,moduleId) {
+	return this.http.get<any>(`${this._getVendorDocumentAttachmentslist}?attachmentId=${attachmentId}&referenceId=${vendorId}&moduleId=${moduleId}`,  this.getRequestHeaders())
+}
+
+
+getdeleteDocumentListbyId(vendorDocumentId) {
+	return this.http.delete(`${this._getVendorDeleteDocsDetailsById}/${vendorDocumentId}`, this.getRequestHeaders())
+}
 
 }

@@ -115,7 +115,7 @@ namespace DAL.Repositories
             }
 
             var totalRecords = (from ro in _appContext.RepairOrder
-                                join emp in _appContext.Employee on ro.ApproverId equals emp.EmployeeId
+                                join emp in _appContext.Employee on ro.RequisitionerId equals emp.EmployeeId
                                 join v in _appContext.Vendor on ro.VendorId equals v.VendorId
                                 join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
                                 from appr in approver.DefaultIfEmpty()
@@ -134,7 +134,7 @@ namespace DAL.Repositories
                 .Count();
 
             var repairOrderList = (from ro in _appContext.RepairOrder
-                                   join emp in _appContext.Employee on ro.ApproverId equals emp.EmployeeId
+                                   join emp in _appContext.Employee on ro.RequisitionerId equals emp.EmployeeId
                                    join v in _appContext.Vendor on ro.VendorId equals v.VendorId
                                    join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
                                    from appr in approver.DefaultIfEmpty()
@@ -275,7 +275,7 @@ namespace DAL.Repositories
                                 Requisitioner = req.FirstName,
                                 ro.OpenDate,
                                 v.VendorCode,
-                                Approver = app.FirstName,
+                                Approver = app==null?"": app.FirstName,
                                 ro.ClosedDate,
                                 con.WorkPhone,
                                 ContactName = con.FirstName,
@@ -349,14 +349,13 @@ namespace DAL.Repositories
 
         public object RepairOrderPartsById(long repairOrderId)
         {
-            var roPartsList = (from ro in _appContext.RepairOrder
-                               join rop in _appContext.RepairOrderPart on ro.RepairOrderId equals rop.RepairOrderId
-                               where rop.RepairOrderId == repairOrderId
-                                && ro.IsDeleted == false
-                               select new
-                               {
-                                   rop
-                               }).ToList();
+            var roPartsList = _appContext.RepairOrder
+                .Include("RepairOrderPart")
+                .Where(x => x.RepairOrderId == repairOrderId && x.IsDeleted == false)
+                .SelectMany(x => x.RepairOrderPart)
+                .OrderByDescending(x => x.IsParent)
+                .GroupBy(g => g.ParentId)
+                .ToList();
 
             var repairOrderDtoList = new List<RepairOrderPartDto>();
             RepairOrderPartDto repairOrderPartDto = null;
@@ -366,72 +365,80 @@ namespace DAL.Repositories
             {
                 foreach (var roPart in roPartsList)
                 {
-                    if (roPart.rop.IsParent == true)
+                    if (roPart != null && roPart.Any())
                     {
-                        repairOrderPartDto = new RepairOrderPartDto();
-                        repairOrderPartDto.RepairOrderPartRecordId = roPart.rop.RepairOrderPartRecordId;
-                        repairOrderPartDto.RepairOrderId = roPart.rop.RepairOrderId;
-                        repairOrderPartDto.AltPartNumberId = roPart.rop.AltPartNumberId;
-                        repairOrderPartDto.AssetId = roPart.rop.AssetId;
-                        repairOrderPartDto.ConditionId = roPart.rop.ConditionId;
-                        repairOrderPartDto.CreatedBy = roPart.rop.CreatedBy;
-                        repairOrderPartDto.DiscountAmount = roPart.rop.DiscountAmount;
-                        repairOrderPartDto.DiscountPercent = roPart.rop.DiscountPercent;
-                        repairOrderPartDto.DiscountPerUnit = roPart.rop.DiscountPerUnit;
-                        repairOrderPartDto.ExtendedCost = roPart.rop.ExtendedCost;
-                        repairOrderPartDto.ForeignExchangeRate = roPart.rop.ForeignExchangeRate;
-                        repairOrderPartDto.FunctionalCurrencyId = roPart.rop.FunctionalCurrencyId;
-                        repairOrderPartDto.GlAccountId = roPart.rop.GlAccountId;
-                        repairOrderPartDto.IsParent = roPart.rop.IsParent;
-                        repairOrderPartDto.ItemMasterId = roPart.rop.ItemMasterId;
-                        repairOrderPartDto.ItemTypeId = roPart.rop.ItemTypeId;
-                        repairOrderPartDto.ManagementStructureId = roPart.rop.ManagementStructureId;
-                        repairOrderPartDto.ManufacturerId = roPart.rop.ManufacturerId;
-                        repairOrderPartDto.MasterCompanyId = roPart.rop.MasterCompanyId;
-                        repairOrderPartDto.Memo = roPart.rop.Memo;
-                        repairOrderPartDto.NeedByDate = roPart.rop.NeedByDate;
-                        repairOrderPartDto.PartNumberId = roPart.rop.PartNumberId;
-                        repairOrderPartDto.QuantityOrdered = roPart.rop.QuantityOrdered;
-                        repairOrderPartDto.ReportCurrencyId = roPart.rop.ReportCurrencyId;
-                        repairOrderPartDto.SalesOrderId = roPart.rop.SalesOrderId;
-                        repairOrderPartDto.UnitCost = roPart.rop.UnitCost;
-                        repairOrderPartDto.UOMId = roPart.rop.UOMId;
-                        repairOrderPartDto.UpdatedBy = roPart.rop.UpdatedBy;
-                        repairOrderPartDto.WorkOrderId = roPart.rop.WorkOrderId;
-                        repairOrderPartDto.StockLineId = _getStockLine(roPart.rop.RepairOrderId, roPart.rop.RepairOrderPartRecordId)?.StockLineId;
+                        foreach (var roPartObj in roPart)
+                        {
+                            if (roPartObj.IsParent == true)
+                            {
+                                repairOrderPartDto = new RepairOrderPartDto
+                                {
+                                    RepairOrderPartRecordId = roPartObj.RepairOrderPartRecordId,
+                                    RepairOrderId = roPartObj.RepairOrderId,
+                                    AltPartNumberId = roPartObj.AltPartNumberId,
+                                    AssetId = roPartObj.AssetId,
+                                    ConditionId = roPartObj.ConditionId,
+                                    CreatedBy = roPartObj.CreatedBy,
+                                    DiscountAmount = roPartObj.DiscountAmount,
+                                    DiscountPercent = roPartObj.DiscountPercent,
+                                    DiscountPerUnit = roPartObj.DiscountPerUnit,
+                                    ExtendedCost = roPartObj.ExtendedCost,
+                                    ForeignExchangeRate = roPartObj.ForeignExchangeRate,
+                                    FunctionalCurrencyId = roPartObj.FunctionalCurrencyId,
+                                    GlAccountId = roPartObj.GlAccountId,
+                                    IsParent = roPartObj.IsParent,
+                                    ItemMasterId = roPartObj.ItemMasterId,
+                                    ItemTypeId = roPartObj.ItemTypeId,
+                                    ManagementStructureId = roPartObj.ManagementStructureId,
+                                    ManufacturerId = roPartObj.ManufacturerId,
+                                    MasterCompanyId = roPartObj.MasterCompanyId,
+                                    Memo = roPartObj.Memo,
+                                    NeedByDate = roPartObj.NeedByDate,
+                                    PartNumberId = roPartObj.PartNumberId,
+                                    QuantityOrdered = roPartObj.QuantityOrdered,
+                                    ReportCurrencyId = roPartObj.ReportCurrencyId,
+                                    SalesOrderId = roPartObj.SalesOrderId,
+                                    UnitCost = roPartObj.UnitCost,
+                                    UOMId = roPartObj.UOMId,
+                                    UpdatedBy = roPartObj.UpdatedBy,
+                                    WorkOrderId = roPartObj.WorkOrderId,
+                                    StockLineId = roPartObj.StockLineId,
+                                };
 
-                        repairOrderDtoList.Add(repairOrderPartDto);
-                    }
-                    else
-                    {
-                        roPartSplit = new RoPartSplits
-                        {
-                            RepairOrderPartRecordId = roPart.rop.RepairOrderPartRecordId,
-                            RepairOrderId = roPart.rop.RepairOrderId,
-                            AssetId = roPart.rop.AssetId,
-                            ItemMasterId = roPart.rop.ItemMasterId,
-                            ManagementStructureId = roPart.rop.ManagementStructureId,
-                            PartNumberId = roPart.rop.PartNumberId,
-                            QuantityOrdered = roPart.rop.QuantityOrdered,
-                            UOMId = roPart.rop.UOMId,
-                            RoPartSplitAddress1 = roPart.rop.RoPartSplitAddress1,
-                            RoPartSplitAddress2 = roPart.rop.RoPartSplitAddress2,
-                            RoPartSplitAddress3 = roPart.rop.RoPartSplitAddress3,
-                            RoPartSplitAddressId = roPart.rop.RoPartSplitAddressId,
-                            RoPartSplitCity = roPart.rop.RoPartSplitCity,
-                            RoPartSplitCountry = roPart.rop.RoPartSplitCountry,
-                            RoPartSplitPostalCode = roPart.rop.RoPartSplitPostalCode,
-                            RoPartSplitStateOrProvince = roPart.rop.RoPartSplitStateOrProvince,
-                            RoPartSplitUserId = roPart.rop.RoPartSplitUserId,
-                            RoPartSplitUserTypeId = roPart.rop.RoPartSplitUserTypeId,
-                            NeedByDate = roPart.rop.NeedByDate,
-                            StockLineId = _getStockLine(roPart.rop.RepairOrderId, roPart.rop.RepairOrderPartRecordId)?.StockLineId
-                        };
-                        if (repairOrderPartDto.RoPartSplits == null)
-                        {
-                            repairOrderPartDto.RoPartSplits = new List<RoPartSplits>();
+                                repairOrderDtoList.Add(repairOrderPartDto);
+                            }
+                            else
+                            {
+                                roPartSplit = new RoPartSplits
+                                {
+                                    RepairOrderPartRecordId = roPartObj.RepairOrderPartRecordId,
+                                    RepairOrderId = roPartObj.RepairOrderId,
+                                    AssetId = roPartObj.AssetId,
+                                    ItemMasterId = roPartObj.ItemMasterId,
+                                    ManagementStructureId = roPartObj.ManagementStructureId,
+                                    PartNumberId = roPartObj.PartNumberId,
+                                    QuantityOrdered = roPartObj.QuantityOrdered,
+                                    UOMId = roPartObj.UOMId,
+                                    RoPartSplitAddress1 = roPartObj.RoPartSplitAddress1,
+                                    RoPartSplitAddress2 = roPartObj.RoPartSplitAddress2,
+                                    RoPartSplitAddress3 = roPartObj.RoPartSplitAddress3,
+                                    RoPartSplitAddressId = roPartObj.RoPartSplitAddressId,
+                                    RoPartSplitCity = roPartObj.RoPartSplitCity,
+                                    RoPartSplitCountry = roPartObj.RoPartSplitCountry,
+                                    RoPartSplitPostalCode = roPartObj.RoPartSplitPostalCode,
+                                    RoPartSplitStateOrProvince = roPartObj.RoPartSplitStateOrProvince,
+                                    RoPartSplitUserId = roPartObj.RoPartSplitUserId,
+                                    RoPartSplitUserTypeId = roPartObj.RoPartSplitUserTypeId,
+                                    NeedByDate = roPartObj.NeedByDate,
+                                    StockLineId = roPartObj.StockLineId,
+                                };
+                                if (repairOrderPartDto.RoPartSplits == null)
+                                {
+                                    repairOrderPartDto.RoPartSplits = new List<RoPartSplits>();
+                                }
+                                repairOrderPartDto.RoPartSplits.Add(roPartSplit);
+                            }
                         }
-                        repairOrderPartDto.RoPartSplits.Add(roPartSplit);
                     }
                 }
             }
@@ -578,7 +585,10 @@ namespace DAL.Repositories
                 var repairOrderPartList = _appContext.RepairOrder
                   .Include("RepairOrderPart")
                   .Where(x => x.RepairOrderId == repairOrderId && x.IsDeleted == false)
-                  .SelectMany(y => y.RepairOrderPart);
+                  .SelectMany(x => x.RepairOrderPart)
+                  .OrderByDescending(x => x.IsParent)
+                  .GroupBy(g => g.ParentId)
+                  .ToList();
 
                 var repairOrder = _appContext.RepairOrder.Where(x => x.RepairOrderId == repairOrderId && x.IsDeleted == false).FirstOrDefault();
                 var roNumber = repairOrder?.RepairOrderNumber;
@@ -594,74 +604,82 @@ namespace DAL.Repositories
                 {
                     foreach (var repairOrderPart in repairOrderPartList)
                     {
-                        if (repairOrderPart.IsParent == true)
+                        if (repairOrderPart != null && repairOrderPart.Any())
                         {
-                            repairOrderPartViewDto = new RepairOrderPartViewDto();
-                            repairOrderPartViewDto.PartNumber = _getItemMaster(repairOrderPart.ItemMasterId)?.PartNumber;
-                            repairOrderPartViewDto.AltPartNumber = _getItemMaster(repairOrderPart.ItemMasterId)?.PartNumber;
-                            repairOrderPartViewDto.PartDescription = _getItemMaster(repairOrderPart.ItemMasterId)?.PartDescription;
-                            repairOrderPartViewDto.ItemType = _getItemType(repairOrderPart.ItemTypeId)?.Description;
-                            repairOrderPartViewDto.Manufacturer = _getManufacturer(repairOrderPart.RepairOrderId);
-                            repairOrderPartViewDto.GlAccount = _getGlAccountName(repairOrderPart.RepairOrderId);
-                            repairOrderPartViewDto.UnitOfMeasure = _getUnitOfMeasure(repairOrderPart.RepairOrderId);
-                            repairOrderPartViewDto.Condition = _getCondtion(repairOrderPart.ConditionId)?.Description;
-                            repairOrderPartViewDto.FunctionalCurrency = _getCurrency(repairOrderPart.FunctionalCurrencyId)?.DisplayName;
-                            repairOrderPartViewDto.ReportCurrency = _getCurrency(repairOrderPart.ReportCurrencyId)?.DisplayName;
-                            repairOrderPartViewDto.WorkOrderNo = _getWorkOrder(repairOrderPart.WorkOrderId)?.WorkOrderNum;
-                            repairOrderPartViewDto.SalesOrderNo = repairOrderPart.SalesOrderId;
-                            repairOrderPartViewDto.RepairOrderId = repairOrderPart.RepairOrderId;
-                            repairOrderPartViewDto.NeedByDate = repairOrderPart.NeedByDate;
-                            repairOrderPartViewDto.QuantityOrdered = repairOrderPart.QuantityOrdered;
-                            repairOrderPartViewDto.UnitCost = repairOrderPart.UnitCost;
-                            repairOrderPartViewDto.DiscountPercent = repairOrderPart.DiscountPercent;
-                            repairOrderPartViewDto.DiscountPerUnit = repairOrderPart.DiscountPerUnit;
-                            repairOrderPartViewDto.DiscountAmount = repairOrderPart.DiscountAmount;
-                            repairOrderPartViewDto.ExtendedCost = repairOrderPart.ExtendedCost;
-                            repairOrderPartViewDto.ReportCurrencyId = repairOrderPart.ReportCurrencyId;
-                            repairOrderPartViewDto.FunctionalCurrencyId = repairOrderPart.FunctionalCurrencyId;
-                            repairOrderPartViewDto.ForeignExchangeRate = repairOrderPart.ForeignExchangeRate;
-                            repairOrderPartViewDto.ManagementStructureId = repairOrderPart.ManagementStructureId;
-                            repairOrderPartViewDto.StockLineNumber = _getStockLine(repairOrderPart.RepairOrderId, repairOrderPart.RepairOrderPartRecordId)?.StockLineNumber;
-                            repairOrderPartViewDto.ControlId = _getStockLine(repairOrderPart.RepairOrderId, repairOrderPart.RepairOrderPartRecordId)?.IdNumber;
-                            repairOrderPartViewDto.ControlNumber = _getStockLine(repairOrderPart.RepairOrderId, repairOrderPart.RepairOrderPartRecordId)?.ControlNumber;
-                            repairOrderPartViewDto.RepairOrderNo = roNumber;
-                            repairOrderPartViewDto.Memo = repairOrderPart.Memo;
-                            repairOrderPartViewDto.PO = poNumber;
-                            returnObjects.Add(repairOrderPartViewDto);
-                        }
-                        else
-                        {
-                            repairOrderSplitPart = new RepairOrderSplitParts
+                            foreach (var repairOrderPartObj in repairOrderPart)
                             {
-                                RepairOrderPartRecordId = repairOrderPart.RepairOrderPartRecordId,
-                                RepairOrderId = repairOrderPart.RepairOrderId,
-                                ManagementStructureId = repairOrderPart.ManagementStructureId,
-                                NeedByDate = repairOrderPart.NeedByDate,
-                                QuantityOrdered = repairOrderPart.QuantityOrdered,
-                                RoPartSplitAddress1 = repairOrderPart.RoPartSplitAddress1,
-                                RoPartSplitAddress2 = repairOrderPart.RoPartSplitAddress2,
-                                RoPartSplitAddress3 = repairOrderPart.RoPartSplitAddress3,
-                                RoPartSplitCity = repairOrderPart.RoPartSplitCity,
-                                RoPartSplitState = repairOrderPart.RoPartSplitStateOrProvince,
-                                RoPartSplitPostalCode = repairOrderPart.RoPartSplitPostalCode,
-                                RoPartSplitCountry = repairOrderPart.RoPartSplitCountry,
-                                UnitOfMeasure = _getUnitOfMeasure(repairOrderPart.RepairOrderId),
-                                PartNumber = _getItemMaster(repairOrderPart.ItemMasterId)?.PartNumber,
-                                PartDescription = _getItemMaster(repairOrderPart.ItemMasterId)?.PartDescription,
-                                UserType = repairOrderPart.RoPartSplitUserTypeId == 1
-                                    ? "Customer"
-                                    : (repairOrderPart.RoPartSplitUserTypeId == 2 ? "Vendor" : "Company"),
-                                User = _getUser(repairOrderPart.RoPartSplitUserTypeId, repairOrderPart.RepairOrderId),
-                                StockLineNumber = _getStockLine(repairOrderPart.RepairOrderId, repairOrderPart.RepairOrderPartRecordId)?.StockLineNumber,
-                                ControlId = _getStockLine(repairOrderPart.RepairOrderId, repairOrderPart.RepairOrderPartRecordId)?.IdNumber,
-                                ControlNumber = _getStockLine(repairOrderPart.RepairOrderId, repairOrderPart.RepairOrderPartRecordId)?.ControlNumber,
-                                PO = poNumber
-                            };
-                            if (repairOrderPartViewDto.RepairOrderSplitParts == null)
-                            {
-                                repairOrderPartViewDto.RepairOrderSplitParts = new List<RepairOrderSplitParts>();
+                                if (repairOrderPartObj.IsParent == true)
+                                {
+                                    repairOrderPartViewDto = new RepairOrderPartViewDto();
+                                    repairOrderPartViewDto.PartNumber = _getItemMaster(repairOrderPartObj.ItemMasterId)?.PartNumber;
+                                    repairOrderPartViewDto.AltPartNumber = _getItemMaster(repairOrderPartObj.ItemMasterId)?.PartNumber;
+                                    repairOrderPartViewDto.PartDescription = _getItemMaster(repairOrderPartObj.ItemMasterId)?.PartDescription;
+                                    repairOrderPartViewDto.ItemType = _getItemType(repairOrderPartObj.ItemTypeId)?.Description;
+                                    repairOrderPartViewDto.Manufacturer = _getManufacturer(repairOrderPartObj.RepairOrderId);
+                                    repairOrderPartViewDto.GlAccount = _getGlAccountName(repairOrderPartObj.RepairOrderId);
+                                    repairOrderPartViewDto.UnitOfMeasure = _getUnitOfMeasure(repairOrderPartObj.RepairOrderId);
+                                    repairOrderPartViewDto.Condition = _getCondtion(repairOrderPartObj.ConditionId)?.Description;
+                                    repairOrderPartViewDto.FunctionalCurrency = _getCurrency(repairOrderPartObj.FunctionalCurrencyId)?.DisplayName;
+                                    repairOrderPartViewDto.ReportCurrency = _getCurrency(repairOrderPartObj.ReportCurrencyId)?.DisplayName;
+                                    repairOrderPartViewDto.WorkOrderNo = _getWorkOrder(repairOrderPartObj.WorkOrderId)?.WorkOrderNum;
+                                    repairOrderPartViewDto.SalesOrderNo = repairOrderPartObj.SalesOrderId;
+                                    repairOrderPartViewDto.RepairOrderId = repairOrderPartObj.RepairOrderId;
+                                    repairOrderPartViewDto.NeedByDate = repairOrderPartObj.NeedByDate;
+                                    repairOrderPartViewDto.QuantityOrdered = repairOrderPartObj.QuantityOrdered;
+                                    repairOrderPartViewDto.UnitCost = repairOrderPartObj.UnitCost;
+                                    repairOrderPartViewDto.DiscountPercent = repairOrderPartObj.DiscountPercent;
+                                    repairOrderPartViewDto.DiscountPerUnit = repairOrderPartObj.DiscountPerUnit;
+                                    repairOrderPartViewDto.DiscountAmount = repairOrderPartObj.DiscountAmount;
+                                    repairOrderPartViewDto.ExtendedCost = repairOrderPartObj.ExtendedCost;
+                                    repairOrderPartViewDto.ReportCurrencyId = repairOrderPartObj.ReportCurrencyId;
+                                    repairOrderPartViewDto.FunctionalCurrencyId = repairOrderPartObj.FunctionalCurrencyId;
+                                    repairOrderPartViewDto.ForeignExchangeRate = repairOrderPartObj.ForeignExchangeRate;
+                                    repairOrderPartViewDto.ManagementStructureId = repairOrderPartObj.ManagementStructureId;
+                                    repairOrderPartViewDto.StockLineNumber = _getStockLine(repairOrderPartObj.StockLineId)?.StockLineNumber;
+                                    repairOrderPartViewDto.ControlId = _getStockLine(repairOrderPartObj.StockLineId)?.IdNumber;
+                                    repairOrderPartViewDto.ControlNumber = _getStockLine(repairOrderPartObj.StockLineId)?.ControlNumber;
+                                    repairOrderPartViewDto.RepairOrderNo = roNumber;
+                                    repairOrderPartViewDto.Memo = repairOrderPartObj.Memo;
+                                    repairOrderPartViewDto.PO = poNumber;
+                                    repairOrderPartViewDto.RepairOrderPartRecordId = repairOrderPartObj.RepairOrderPartRecordId;
+
+                                    returnObjects.Add(repairOrderPartViewDto);
+                                }
+                                else
+                                {
+                                    repairOrderSplitPart = new RepairOrderSplitParts
+                                    {
+                                        RepairOrderPartRecordId = repairOrderPartObj.RepairOrderPartRecordId,
+                                        RepairOrderId = repairOrderPartObj.RepairOrderId,
+                                        ManagementStructureId = repairOrderPartObj.ManagementStructureId,
+                                        NeedByDate = repairOrderPartObj.NeedByDate,
+                                        QuantityOrdered = repairOrderPartObj.QuantityOrdered,
+                                        RoPartSplitAddress1 = repairOrderPartObj.RoPartSplitAddress1,
+                                        RoPartSplitAddress2 = repairOrderPartObj.RoPartSplitAddress2,
+                                        RoPartSplitAddress3 = repairOrderPartObj.RoPartSplitAddress3,
+                                        RoPartSplitCity = repairOrderPartObj.RoPartSplitCity,
+                                        RoPartSplitState = repairOrderPartObj.RoPartSplitStateOrProvince,
+                                        RoPartSplitPostalCode = repairOrderPartObj.RoPartSplitPostalCode,
+                                        RoPartSplitCountry = repairOrderPartObj.RoPartSplitCountry,
+                                        UnitOfMeasure = _getUnitOfMeasure(repairOrderPartObj.RepairOrderId),
+                                        PartNumber = _getItemMaster(repairOrderPartObj.ItemMasterId)?.PartNumber,
+                                        PartDescription = _getItemMaster(repairOrderPartObj.ItemMasterId)?.PartDescription,
+                                        UserType = repairOrderPartObj.RoPartSplitUserTypeId == 1
+                                            ? "Customer"
+                                            : (repairOrderPartObj.RoPartSplitUserTypeId == 2 ? "Vendor" : "Company"),
+                                        User = _getUser(repairOrderPartObj.RoPartSplitUserTypeId, repairOrderPartObj.RepairOrderId),
+                                        StockLineNumber = _getStockLine(repairOrderPartObj.StockLineId)?.StockLineNumber,
+                                        ControlId = _getStockLine(repairOrderPartObj.StockLineId)?.IdNumber,
+                                        ControlNumber = _getStockLine(repairOrderPartObj.StockLineId)?.ControlNumber,
+                                        PO = poNumber
+                                    };
+                                    if (repairOrderPartViewDto.RepairOrderSplitParts == null)
+                                    {
+                                        repairOrderPartViewDto.RepairOrderSplitParts = new List<RepairOrderSplitParts>();
+                                    }
+                                    repairOrderPartViewDto.RepairOrderSplitParts.Add(repairOrderSplitPart);
+                                }
                             }
-                            repairOrderPartViewDto.RepairOrderSplitParts.Add(repairOrderSplitPart);
                         }
                     }
                 }
@@ -803,7 +821,7 @@ namespace DAL.Repositories
                 case 1:
                     var test = (from rop in _appContext.RepairOrderPart
                                 join ro in _appContext.RepairOrder on rop.RepairOrderId equals ro.RepairOrderId
-                                join cus in _appContext.Customer on rop.RoPartSplitUserTypeId equals (int?)cus.CustomerId
+                                join cus in _appContext.Customer on rop.RoPartSplitUserId equals (int?)cus.CustomerId
                                 where rop.RepairOrderId == repairOrderId
                                 select new
                                 {
@@ -812,8 +830,9 @@ namespace DAL.Repositories
                     user = test == null ? "" : test.CustomerName;
                     break;
                 case 2:
-                    var test2 = (from ro in _appContext.RepairOrder
-                                 join v in _appContext.Vendor on ro.ShipToUserId equals v.VendorId
+                    var test2 = (from rop in _appContext.RepairOrderPart
+                                 join ro in _appContext.RepairOrder on rop.RepairOrderId equals ro.RepairOrderId
+                                 join v in _appContext.Vendor on rop.RoPartSplitUserId equals (int?)v.VendorId
                                  where ro.RepairOrderId == repairOrderId
                                  select new
                                  {
@@ -822,8 +841,9 @@ namespace DAL.Repositories
                     user = test2 == null ? "" : test2.VendorName;
                     break;
                 default:
-                    var test3 = (from ro in _appContext.RepairOrder
-                                 join le in _appContext.LegalEntity on ro.ShipToUserId equals le.LegalEntityId
+                    var test3 = (from rop in _appContext.RepairOrderPart
+                                 join ro in _appContext.RepairOrder on rop.RepairOrderId equals ro.RepairOrderId
+                                 join le in _appContext.LegalEntity on rop.RoPartSplitUserId equals (int?)le.LegalEntityId
                                  where ro.RepairOrderId == repairOrderId
                                  select new
                                  {
@@ -836,10 +856,10 @@ namespace DAL.Repositories
             return user;
         }
 
-        private StockLine _getStockLine(long repairOrderId, long repairOrderPartRecordId)
+        private StockLine _getStockLine(long? stockLineId)
         {
             var stockLine = _appContext.StockLine
-               .Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == repairOrderPartRecordId)
+               .Where(x => x.StockLineId == stockLineId)
                .FirstOrDefault();
 
             return stockLine;

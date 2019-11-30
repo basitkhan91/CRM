@@ -28,7 +28,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getById/{id}")]
         public IActionResult getIntangibleAttributeTypeById(long id)
         {
-            AssetIntangibleAttributeType item = unitOfWork.Repository<AssetIntangibleAttributeType>().Find(x => x.AssetIntangibleTypeId == id).FirstOrDefault(x => !(x?.IsDelete ?? false));
+            AssetIntangibleAttributeType item = unitOfWork.Repository<AssetIntangibleAttributeType>().Find(x => x.AssetIntangibleTypeId == id).FirstOrDefault(x => !(x?.IsDeleted ?? false));
             return Ok(item);
         }
 
@@ -84,7 +84,7 @@ namespace QuickApp.Pro.Controllers
             var intangibleAttributeType = unitOfWork.Repository<AssetIntangibleAttributeType>().Find(x => x.AssetIntangibleAttributeTypeId == id).FirstOrDefault();
             if (intangibleAttributeType != null)
             {
-                intangibleAttributeType.IsDelete = true;
+                intangibleAttributeType.IsDeleted = true;
                 unitOfWork.Repository<AssetIntangibleAttributeType>().Update(intangibleAttributeType);
                 unitOfWork.SaveChanges();
                 return Ok();
@@ -109,7 +109,7 @@ namespace QuickApp.Pro.Controllers
                 columHeaders.Add(columnHeader);
             }
             dynamicGridData.columHeaders = columHeaders;
-            dynamicGridData.ColumnData = unitOfWork.Repository<AssetIntangibleAttributeType>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetIntangibleAttributeTypeId);
+            dynamicGridData.ColumnData = unitOfWork.Repository<AssetIntangibleAttributeType>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.AssetIntangibleAttributeTypeId);
             return Ok(dynamicGridData);
         }
         #endregion

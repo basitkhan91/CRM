@@ -50,11 +50,12 @@ export class VendorsListComponent implements OnInit {
     mobilePhone: number;
     fax: any = "";
     vendorTypeId: any = "";
+    description: any = "";
     doingBusinessAsName: any = "";
     parent: any = "";
     address1: any = "";
     address2: any = "";
-    address3: any = "";
+    //address3: any = "";
     city: any = "";
     stateOrProvince: any = "";
     postal: any = "";
@@ -122,6 +123,13 @@ export class VendorsListComponent implements OnInit {
     Active: string = "Active";
     length: number;
     localCollection: any;
+    //updateActiveData: any;
+    updateActiveData = {
+		vendorId:0,
+		updatedBy: '',
+        isActive: false,
+        isdelete:false
+	}
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
     public allWorkFlows: any[] = [];
@@ -213,21 +221,27 @@ export class VendorsListComponent implements OnInit {
     }
 
     handleChanges(rowData, e) {
+      
+        this.updateActiveData.updatedBy = this.userName;
+        this.updateActiveData.vendorId = rowData.vendorId;
+      
         if (e.checked == false) {
             this.sourceVendor = rowData;
-            this.sourceVendor.updatedBy = this.userName;
+           // this.sourceVendor.updatedBy = this.userName;
             this.Active = "In Active";
-            this.sourceVendor.isActive == false;
-            this.workFlowtService.updateActionforActive(this.sourceVendor).subscribe(
+            this.updateActiveData.isActive = false;
+            //this.sourceVendor.isActive == false;
+            this.workFlowtService.updateActionforActive(this.updateActiveData).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
         }
         else {
-            this.sourceVendor = rowData;
-            this.sourceVendor.updatedBy = this.userName;
+            //this.sourceVendor = rowData;
+            //this.sourceVendor.updatedBy = this.userName;
             this.Active = "Active";
-            this.sourceVendor.isActive == true;
-            this.workFlowtService.updateActionforActive(this.sourceVendor).subscribe(
+            //this.sourceVendor.isActive == true;
+            this.updateActiveData.isActive = true;
+            this.workFlowtService.updateActionforActive(this.updateActiveData).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
         }
@@ -352,7 +366,7 @@ export class VendorsListComponent implements OnInit {
             { field: 'siteName', header: 'Site Name' },
             { field: 'address1', header: 'Address1' },
             { field: 'address2', header: 'Address2' },
-            { field: 'address3', header: 'Address3' },
+            //{ field: 'address3', header: 'Address3' },
             { field: 'city', header: 'City' },
             { field: 'stateOrProvince', header: 'State/Prov' },
             { field: 'postalCode', header: 'Postal Code' },
@@ -402,9 +416,13 @@ export class VendorsListComponent implements OnInit {
 
     openView(content, row) {
         
+        console.log(row);
+
         this.vendorCode = row.vendorCode;
         this.vendorName = row.vendorName;
         this.vendorTypeId = row.t.vendorTypeId;
+        this.description=row.description;
+        console.log(this.description);
         this.doingBusinessAsName = row.t.doingBusinessAsName;
         this.parent = row.t.parent;
         if (row.currency) {
@@ -423,7 +441,7 @@ export class VendorsListComponent implements OnInit {
        
         this.address1 = row.address1;
         this.address2 = row.address2;
-        this.address3 = row.address3;
+       // this.address3 = row.address3;
         this.city = row.city;
         this.stateOrProvince = row.stateOrProvince;
         this.postalCode = row.postalCode;
@@ -466,13 +484,16 @@ export class VendorsListComponent implements OnInit {
     AddPage() {
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
     }
-    deleteItemAndCloseModel() {
+    deleteItemAndCloseModel() {       
+       
         this.isSaving = true;
         this.isDeleteMode = true;
-        this.sourceVendor.isdelete = true;
+        this.updateActiveData.vendorId=this.sourceVendor.vendorId;
+        //this.sourceVendor.isdelete = true;
+        this.updateActiveData.isdelete=true;
         //this.sourceVendor = content;
-        this.sourceVendor.updatedBy = this.userName;
-        this.workFlowtService.updatevendorstatus(this.sourceVendor).subscribe(
+        this.updateActiveData.updatedBy = this.userName;
+        this.workFlowtService.updatevendorstatus(this.updateActiveData).subscribe(
             response => this.saveCompleted(this.sourceVendor),
             error => this.saveFailedHelper(error));
         this.modal.close();

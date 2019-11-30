@@ -707,6 +707,34 @@ export class VendorService {
         return this.actionEndpoint.updateVendorPOROmemolist(id, type, memoText,updatedBy);
     }
     
+    getDocumentList(vendorId) {
+        return this.actionEndpoint.getDocumentList(vendorId)
+    }
+	
+	
+	 documentUploadAction(action: any) {
+        return this.actionEndpoint.getDocumentUploadEndpoint<any>(action);
+    }
+
+    getDocumentListbyId(vendorDocumentId) {
+        return this.actionEndpoint.getDocumentListbyId(vendorDocumentId)
+    }
+	
+	
+	 documentUpdateUploadAction(action: any) {
+        return this.actionEndpoint.getUpdateDocumentUploadEndpoint<any>(action);
+    }
+
+    toGetUploadDocumentsList(attachmentId, vendorId,moduleId)
+    {
+        return this.actionEndpoint.GetUploadDocumentsList(attachmentId, vendorId,moduleId);
+    }
+
+    getDeleteDocumentListbyId(vendorDocumentId) {
+        return this.actionEndpoint.getdeleteDocumentListbyId(vendorDocumentId)
+    }
+    
+    
       
 }
 
