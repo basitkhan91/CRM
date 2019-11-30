@@ -123,7 +123,13 @@ export class VendorMemoComponent implements OnInit{
 			res=>{
 				this.VendorPOMemolist();
 				this.VendorROMemolist();
+				this.alertService.showMessage(
+					'Success',
+					`Saved Memo Successfully `,
+					MessageSeverity.success
+				);
 			}
+			
 		)     
 	}
 	
@@ -133,5 +139,13 @@ export class VendorMemoComponent implements OnInit{
         this.workFlowtService.indexObj.next(this.activeIndex);
         this.workFlowtService.changeStep('Documents');
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-documents');
-    }
+	}
+	
+	backClick()
+	{
+		this.activeIndex = 7;
+        this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Warnings');
+        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
+	}
 }   
