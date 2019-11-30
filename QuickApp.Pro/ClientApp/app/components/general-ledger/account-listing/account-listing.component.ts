@@ -37,10 +37,13 @@ export class AccountListingComponent implements OnInit {
     totalPages: number = 0;
     headers = [
         { field: 'ledgerName', header: 'Ledger Name' },
-        { field: 'prevAccountCode', header: 'Old GL Account Code' },
+        { field: 'oldAccountCode', header: 'Old GL Account Code' },
         { field: 'accountCode', header: 'GL Account Code' },
         { field: 'accountName', header: 'Account Name' },
-        { field: 'accountActive', header: 'Active' }       
+        { field: 'entities', header: 'Share With Entities' },
+        { field: 'leafleafNodeNameName', header: 'Leaf Node Name' },
+        { field: 'isActive', header: 'Active' },
+
     ]
     selectedColumns = this.headers;
     data: any;
