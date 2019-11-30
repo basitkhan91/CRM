@@ -25,6 +25,7 @@ import { listSearchFilterObjectCreation } from '../../../generic/autocomplete';
 
 
 
+
 @Component({
     selector: 'app-customers-list',
     templateUrl: './customers-list.component.html',
@@ -138,6 +139,8 @@ export class CustomersListComponent implements OnInit {
     // loading: boolean;
     totalRecords: number = 0;
     totalPages: number = 0;
+    isDeleteMode: boolean = false;
+    customerId: number = 0;
     headers = [
         { field: 'name', header: 'Customer Name' },
         { field: 'customerCode', header: 'Customer Code' },
@@ -162,6 +165,7 @@ export class CustomersListComponent implements OnInit {
     private table: Table;
     lazyLoadEventData: any;
     viewData: any[];
+    modal: NgbModalRef;
     viewDataGeneralInformation: any[];
     customerContacts: any;
     customerContactsColumns = [
@@ -192,7 +196,7 @@ export class CustomersListComponent implements OnInit {
         { field: 'siteName', header: 'Site Name' },
         { field: 'address1', header: 'Address1' },
         { field: 'address2', header: 'Address2' },
-        { field: 'address3', header: 'Address3' },
+       
         { field: 'city', header: 'City' },
         { field: 'stateOrProvince', header: 'State/Prov' },
         { field: 'postalCode', header: 'Postal Code' },
@@ -202,7 +206,7 @@ export class CustomersListComponent implements OnInit {
         { field: 'siteName', header: 'Site Name' },
         { field: 'address1', header: 'Address1' },
         { field: 'address2', header: 'Address2' },
-        { field: 'address3', header: 'Address3' },
+      
         { field: 'city', header: 'City' },
         { field: 'stateOrProvince', header: 'State Or Province' },
         { field: 'postalCode', header: 'Postal Code' },
@@ -358,14 +362,10 @@ export class CustomersListComponent implements OnInit {
         const { customerId } = rowData;
         this._route.navigateByUrl(`customersmodule/customerpages/app-customer-edit/${customerId}`);
     }
-    delete(rowData) {
-        this.customerService.updateListstatus(rowData.customerId).subscribe(res => {
-            this.getList(this.lazyLoadEventData);
-            this.alertService.showMessage("Success", `Successfully Deleted Record`, MessageSeverity.success);
-
-        })
-    }
+  
+   
     viewSelectedRow(rowData) {
+
       
         const { customerId } = rowData;
         this.customerService.getCustomerdataById(customerId).subscribe(res => {
@@ -377,6 +377,29 @@ export class CustomersListComponent implements OnInit {
         this.getBillingDataById(customerId);
         this.getDomesticShippingByCustomerId(customerId);
         this.getInternationalShippingByCustomerId(customerId);
+        //this.modal = this.modalService.open(content, { size: 'sm' });
+        //this.modal.result.then(() => {
+        //    console.log('When user closes');
+        //}, () => { console.log('Backdrop click') })
+
+    }
+    viewSelectedRowdbl(content, rowData) {
+
+
+        const { customerId } = rowData;
+        this.customerService.getCustomerdataById(customerId).subscribe(res => {
+            this.viewDataGeneralInformation = res[0];
+        })
+        this.getAllCustomerContact(customerId);
+        this.getAircraftMappedDataByCustomerId(customerId);
+        this.getMappedATAByCustomerId(customerId);
+        this.getBillingDataById(customerId);
+        this.getDomesticShippingByCustomerId(customerId);
+        this.getInternationalShippingByCustomerId(customerId);
+        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
 
     }
 
@@ -458,6 +481,7 @@ export class CustomersListComponent implements OnInit {
         $('#step6').collapse('show');
         $('#step7').collapse('show');
         $('#step8').collapse('show');
+ 
     }
     CloseAllCustomerDetailsModel() {
         $('#step1').collapse('hide');
@@ -468,8 +492,60 @@ export class CustomersListComponent implements OnInit {
         $('#step6').collapse('hide');
         $('#step7').collapse('hide');
         $('#step8').collapse('hide');
-    }
 
+    }
+    //delete(rowData) {
+    //    this.customerService.updateListstatus(rowData.customerId).subscribe(res => {
+    //        this.getList(this.lazyLoadEventData);
+    //        this.alertService.showMessage("Success", `Successfully Deleted Record`, MessageSeverity.success);
+
+    //    })
+    //}
+    dismissModel() {
+        this.isDeleteMode = false;
+      
+        this.modal.close();
+    }
+    delete(content, rowData) {
+       
+        this.isDeleteMode = true;
+
+
+        this.customerId = rowData.customerId;
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+    deleteItemAndCloseModel() {
+        let customerId = this.customerId;
+        if (customerId > 0) {
+
+            this.customerService.updateListstatus(customerId).subscribe(
+                response => this.saveCompleted(''),
+                error => this.saveFailedHelper(error));
+        }
+
+        this.modal.close();
+    }
+    private saveCompleted(user?: any) {
+
+        if (this.isDeleteMode == true) {
+            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
+            this.isDeleteMode = false;
+        }
+        else {
+            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+            this.saveCompleted
+        }
+        this.getList(this.lazyLoadEventData);
+    }
+    private saveFailedHelper(error: any) {
+
+        this.alertService.stopLoadingMessage();
+        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+    }
     // ngAfterViewInit() {
     //     this.dataSource.paginator = this.paginator;
     //     this.dataSource.sort = this.sort;
