@@ -51,6 +51,12 @@
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4">Customer Code</label>
+                                            <div class="col-sm-7">
+                                                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.customerCode" readonly>
+                                            </div>
+                                        </div>
+                                    <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">RECEIVING NUM</label>
                                         <div class="col-sm-7">
                                             <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.receivingCustomerNumber" readonly>
@@ -69,13 +75,17 @@
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Contact</label>
                                         <div class="col-sm-7">
-                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.customerContactId">
+                                           
+                                            <select [(ngModel)]="sourcereceving.customerContactId" [ngModelOptions]="{standalone: true}" (change)="customerContactChange(sourcereceving.customerContactId)">
+                                                    <option>--Select</option>
+                                                    <option *ngFor="let contact of customerContactList" [ngValue]="contact.contactId">{{contact.contactTitle}}</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Contact Phone</label>
                                         <div class="col-sm-7">
-                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.customerContactId">
+                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.workPhone">
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-12 input-icon1">
@@ -93,6 +103,12 @@
                                             <input class="form-control" [disabled]="true" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.partDescription">
                                         </div>
                                     </div>
+                                    <div class="form-group col-sm-12">
+                                            <label class="control-label col-sm-4">Manufacturer</label>
+                                            <div class="col-sm-7">
+                                                <input class="form-control" [disabled]="true" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.manufacturer">
+                                            </div>
+                                        </div>
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Change PN </label>
                                         <p-autoComplete [(ngModel)]="sourcereceving.changePartNumber" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
@@ -233,7 +249,7 @@
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4" for="obtainFrom">Tracable to</label>
                                         <div class="col-sm-7">
-                                            <select id="obtainFrom" [(ngModel)]="sourcereceving.traceableTo" [ngModelOptions]="{standalone: true}" class="form-control">
+                                            <select id="obtainFrom" [(ngModel)]="sourcereceving.traceableToType" [ngModelOptions]="{standalone: true}" class="form-control">
 
                                                 <option [value]="1">Customer</option>
                                                 <option [value]="2">Other </option>
@@ -243,7 +259,7 @@
                                         </div>
                                         <div class="form-group col-sm-12">
                                             <label class="control-label col-sm-4"></label>
-                                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.traceableTo == 1">
+                                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.traceableToType == 1">
                                                 <select [(ngModel)]="sourcereceving.traceableToCustomerId" [ngModelOptions]="{standalone: true}">
                                                     <option *ngFor="let customer of allCustomer" [ngValue]="customer.customerId">{{customer.name}}</option>
                                                 </select>
@@ -251,13 +267,13 @@
                                         </div>
                                         <div class="form-group col-sm-12">
                                             <label class="control-label col-sm-4"></label>
-                                            <div class="col-sm-7" *ngIf="sourcereceving.traceableTo == 2">
+                                            <div class="col-sm-7" *ngIf="sourcereceving.traceableToType == 2">
                                                 <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.traceableToOther">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-12">
                                             <label class="control-label col-sm-4"></label>
-                                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.traceableTo == 3">
+                                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.traceableToType == 3">
                                                 <select [(ngModel)]="sourcereceving.traceableToVendorId" [ngModelOptions]="{standalone: true}">
                                                     <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorId">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                                                 </select>
@@ -265,8 +281,8 @@
                                         </div>
                                         <div class="form-group col-sm-12">
                                             <label class="control-label col-sm-4"></label>
-                                            <div lass="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.traceableTo == 4">
-                                                <select [(ngModel)]="sourcereceving.companyId" [ngModelOptions]="{standalone: true}">
+                                            <div lass="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.traceableToType == 4">
+                                                <select [(ngModel)]="sourcereceving.traceableToCompanyId" [ngModelOptions]="{standalone: true}">
                                                     <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
                                                 </select>
                                             </div>
@@ -280,7 +296,7 @@
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Obtain From</label>
                                         <div class="col-sm-7">
-                                            <select [(ngModel)]="sourcereceving.obtainFrom" [ngModelOptions]="{standalone: true}" class="form-control">
+                                            <select [(ngModel)]="sourcereceving.obtainFromType" [ngModelOptions]="{standalone: true}" class="form-control">
                                                 <option>--Select--</option>
                                                 <option value="1">Customer</option>
                                                 <option value="2">Other </option>
@@ -289,19 +305,24 @@
                                             </select>
                                         </div>
                                         <label class="control-label col-sm-4"></label>
-                                        <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.obtainFrom == 1">
+                                        <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.obtainFromType == 1">
                                             <select [(ngModel)]="sourcereceving.obtainFromCustomerId" [ngModelOptions]="{standalone: true}">
                                                 <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
                                             </select>
                                         </div>
-                                        <div class="col-sm-7" *ngIf="sourcereceving.obtainFrom == 2">
+                                        <div class="col-sm-7" *ngIf="sourcereceving.obtainFromType == 2">
                                             <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.obtainFromOther">
                                         </div>
-                                        <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.obtainFrom == 3">
+                                        <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.obtainFromType == 3">
                                             <select [(ngModel)]="sourcereceving.obtainFromVendorId" [ngModelOptions]="{standalone: true}">
                                                 <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option>
                                             </select>
                                         </div>
+                                        <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.obtainFromType == 4">
+                                                <select [(ngModel)]="sourcereceving.obtainFromCompanyId" [ngModelOptions]="{standalone: true}">
+                                                        <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                                                </select>
+                                            </div>
                                     </div>
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">MFG Date</label>
@@ -355,6 +376,52 @@
                                             </div>
                                             <div class="clear"></div>
                                         </div>
+
+                                        <div class="form-group col-sm-12">
+                                                <div class="col-sm-4">
+                                                    </div>
+                                                    <div class="col-sm-7">
+                                                <div class="card" style="margin-top: 20px;">
+                                                        <div class="card-header" style="padding: 10px 12px;">
+                                                            <h5 style="margin-bottom: 0; font-size: 12px;">Management Structure <span class="clr-red">*</span></h5>
+                                                        </div>
+                                                        <div class="card-body" style="padding: 12px 12px 4px;">
+                                                            <div class="form-group">
+                                                                <select class="form-control" name="primaryCompany" [(ngModel)]="sourcereceving.companyId" 
+                                                                (change)="getBUList(sourcereceving.companyId)" #mCompanyName required>
+                                                                    <option value="0">Select Company</option>
+                                                    <option *ngFor="let name of maincompanylist" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                                                </select>
+                                                                <div *ngIf="mCompanyName.invalid && (mCompanyName.dirty || mCompanyName.touched)" class="alert alert-danger alert-danger-cstm">
+                                                                        <div *ngIf="mCompanyName.errors.required">
+                                                                            <small> Company Name is required </small>
+                                                                        </div>
+                                                                </div>
+                            
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <select [(ngModel)]="sourcereceving.buId" name="primaryBU" (change)="getDivisionlist(sourcereceving.buId)" class="form-control">
+                                                                    <option value="0">Select BU</option>
+                                                                    <option *ngFor="let name of bulist" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <select class="form-control" [(ngModel)]="sourcereceving.divisionId" name="primaryDivision" (change)="getDepartmentlist(sourcereceving.divisionId)">
+                                                                    <option value="0">Select Division</option>
+                                                                    <option *ngFor="let name of divisionlist" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <select class="form-control" [(ngModel)]="sourcereceving.departmentId" name="primaryDept" (change)="getDepartmentId(sourcereceving.departmentId)">
+                                                                    <option value="0">Select Dept</option>
+                                                                    <option *ngFor="let name of departmentList" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    </div>
+
+                                        </div>
                                 </div>
                             </div>
 
@@ -376,36 +443,35 @@
                                                     </tr>
                                                     <tr>
                                                         <td>Remaining</td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesRemaining"></td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeRemaining"></td>
+                                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesRemaining"></td>
+                                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeRemaining"></td>
                                                         <td></td>
                                                        
                                                     </tr>
                                                     <tr>
                                                         <td>Since New</td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceNew"></td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceNew"></td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.lastSinceNew"></td>
+                                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceNew"></td>
+                                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceNew"></td>
+                                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.lastSinceNew"></td>
                                                         
                                                     </tr>
                                                     <tr>
                                                         <td>Since Ovh</td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceOVH"></td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceOVH"></td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.lastSinceOVH"></td>
+                                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceOVH"></td>
+                                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceOVH"></td>
+                                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.lastSinceOVH"></td>
                                                         
                                                     </tr>
                                                     <tr>
                                                         <td>Since Insp</td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceInspection"></td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceInspection"></td>
-                                                         <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.lastSinceInspection"></td>
-                                                        <td></td>
+                                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceInspection"></td>
+                                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceInspection"></td>
+                                                         <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.lastSinceInspection"></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Since Repair</td>
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceRepair"></td>                 
-                                                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceRepair"></td>
+                                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceRepair"></td>                 
+                                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceRepair"></td>
                                                          <td></td>
                                                     </tr>
                                                 </tbody>
