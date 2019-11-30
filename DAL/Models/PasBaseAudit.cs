@@ -9,7 +9,7 @@ namespace DAL.Models
         public string UpdatedBy { get; set; }
         public DateTime UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
-        public Nullable<bool> IsDeleted { get; set; }
+        public Nullable<bool> IsDelete { get; set; }
     }
 }
 

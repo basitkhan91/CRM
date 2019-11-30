@@ -99,14 +99,16 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.SaveChanges();
 
                 var masterpart = _unitOfWork.Repository<MasterParts>().Find(x => x.MasterPartId == asset.MasterPartId).FirstOrDefault();
-                masterpart.PartNumber = asset.Name;
-                masterpart.Description = asset.Description;
-                masterpart.ManufacturerId = asset.ManufacturerId;
-                masterpart.MasterCompanyId = 1;
-                masterpart.UpdatedDate = DateTime.Now;
-                _unitOfWork.Repository<MasterParts>().Update(masterpart);
-                _unitOfWork.SaveChanges();
-
+                if (masterpart != null)
+                {
+                    masterpart.PartNumber = asset.Name;
+                    masterpart.Description = asset.Description;
+                    masterpart.ManufacturerId = asset.ManufacturerId;
+                    masterpart.MasterCompanyId = 1;
+                    masterpart.UpdatedDate = DateTime.Now;
+                    _unitOfWork.Repository<MasterParts>().Update(masterpart);
+                    _unitOfWork.SaveChanges();
+                }
                 return Ok(asset);
             }
             else
@@ -150,6 +152,40 @@ namespace QuickApp.Pro.Controllers
                     asset.IsDelete = true;
                     _unitOfWork.Asset.Remove(asset);
                     _unitOfWork.SaveChanges();
+                }
+                return Ok(id);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("removeCapesById/{id}")]
+
+        public IActionResult removeAssetCapesById(long id)
+        {
+            var assetcapesauditcount = _unitOfWork.Repository<AssetCapesAudit>().Find(x => x.AssetCapesId == id).Count();
+            var assetcapesaudit = _unitOfWork.Repository<AssetCapesAudit>().Find(x => x.AssetCapesId == id).FirstOrDefault();
+            var assetcapes = _unitOfWork.Repository<AssetCapes>().Find(x => x.AssetCapesId == id).FirstOrDefault();
+            if (assetcapes != null)
+            {
+                if (assetcapesaudit != null)
+                {
+                    if (assetcapesauditcount > 1)
+                    {
+                        assetcapes.MasterCompanyId = 1;
+                        assetcapes.IsDelete = true;
+                        assetcapes.UpdatedDate = DateTime.Now;
+                        _unitOfWork.Repository<AssetCapes>().Update(assetcapes);
+                        _unitOfWork.SaveChanges();
+                    }
+                    else
+                    {
+                        assetcapes.IsDelete = true;
+                        _unitOfWork.AssetCapes.Remove(assetcapes);
+                        _unitOfWork.SaveChanges();
+                    }
                 }
                 return Ok(id);
             }

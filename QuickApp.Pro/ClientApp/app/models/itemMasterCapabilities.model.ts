@@ -32,6 +32,7 @@ export class ItemMasterCapabilitiesModel {
     componentDescription: any;
     clcfNumber: any;
     assetRecordId: number;
+    AssetCapesId: number;
 
     public constructor(init?: Partial<ItemMasterCapabilitiesModel>) {
         Object.assign(this, init);
