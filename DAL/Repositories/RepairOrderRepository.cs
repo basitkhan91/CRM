@@ -115,7 +115,7 @@ namespace DAL.Repositories
             }
 
             var totalRecords = (from ro in _appContext.RepairOrder
-                                join emp in _appContext.Employee on ro.RequestedBy equals emp.EmployeeId
+                                join emp in _appContext.Employee on ro.RequisitionerId equals emp.EmployeeId
                                 join v in _appContext.Vendor on ro.VendorId equals v.VendorId
                                 join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
                                 from appr in approver.DefaultIfEmpty()
@@ -134,7 +134,7 @@ namespace DAL.Repositories
                 .Count();
 
             var repairOrderList = (from ro in _appContext.RepairOrder
-                                   join emp in _appContext.Employee on ro.RequestedBy equals emp.EmployeeId
+                                   join emp in _appContext.Employee on ro.RequisitionerId equals emp.EmployeeId
                                    join v in _appContext.Vendor on ro.VendorId equals v.VendorId
                                    join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
                                    from appr in approver.DefaultIfEmpty()
@@ -275,7 +275,7 @@ namespace DAL.Repositories
                                 Requisitioner = req.FirstName,
                                 ro.OpenDate,
                                 v.VendorCode,
-                                Approver = app.FirstName,
+                                Approver = app==null?"": app.FirstName,
                                 ro.ClosedDate,
                                 con.WorkPhone,
                                 ContactName = con.FirstName,

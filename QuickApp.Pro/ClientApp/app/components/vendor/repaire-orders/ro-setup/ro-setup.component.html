@@ -362,7 +362,7 @@
 									<td>
 										<p-autoComplete field="description" class="pautocomp-cstm"
 										[(ngModel)]="partList.conditionId" name="conditionCode{{row_index}}" [suggestions]="conditionList" 
-										(completeMethod)="filterCond($event)"  [size]="30" [minLength]="1" [dropdown]="true" #conditionCode="ngModel" errorMessage="Records not found" [forceSelection]="true" required>                                       
+										(completeMethod)="filterCond($event)"  [size]="30" [minLength]="1" [dropdown]="true" #conditionCode="ngModel" errorMessage="Records not found" [forceSelection]="true" [disabled]="!partList.itemMasterId" (onSelect)="getStockLineByItemMasterId(partList)" required>
 										</p-autoComplete>
 										<div *ngIf="conditionCode.invalid && (conditionCode.dirty || conditionCode.touched)" class="alert alert-danger alert-danger-cstm">
 												<div *ngIf="conditionCode.errors.required">
@@ -404,11 +404,11 @@
 										</p-autoComplete>
 									</td>
 									<td>
-										<p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="partList.stocklineId" name="stocklineNum{{row_index}}" [suggestions]="allStocklineDetails" (completeMethod)="filterStocklineNum($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
+										<p-autoComplete field="stockLineNumber" class="pautocomp-cstm" [(ngModel)]="partList.stocklineId" name="stocklineNum{{row_index}}" [suggestions]="allStocklineDetails" (completeMethod)="filterStocklineNum($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [disabled]="!partList.conditionId" (onSelect)="getStockLineDetails(partList)" [forceSelection]="true"></p-autoComplete>
 									</td>
 									<td><input type="text" class="form-control" [(ngModel)]="partList.controlId" name="controlId{{row_index}}" disabled></td>
 									<td><input type="text" class="form-control" [(ngModel)]="partList.controlNumber" name="controlNumber{{row_index}}" disabled></td>
-									<td><input type="text" class="form-control" [(ngModel)]="partList.purchaseOrderId" name="purchaseOrderId{{row_index}}" disabled></td>
+									<td><input type="text" class="form-control" [(ngModel)]="partList.purchaseOrderNum" name="purchaseOrderNum{{row_index}}" disabled></td>
 									<td><input type="number" class="form-control" [(ngModel)]="partList.workOrderId" name="workOrderId{{row_index}}"></td>
 									<td><input type="number" class="form-control" [(ngModel)]="partList.salesOrderId" name="salesOrderId{{row_index}}"></td>
 									<td style="min-width: 90px;">									
