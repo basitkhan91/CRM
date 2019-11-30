@@ -15,20 +15,20 @@ namespace DAL.Models
         public bool? IsSerialized { get; set; }
         public long? ItemMasterId { get; set; }
         public string ContactId { get; set; }
-        public short? TraceableToType { get; set; }
+        public string TraceableToType { get; set; }
         public string ChangePartNumber { get; set; }
         public string PartCertificationNumber { get; set; }
         public short? Quantity { get; set; }
         [ForeignKey("ConditionId")]
-        public long ConditionId { get; set; }
+        public long? ConditionId { get; set; }
         public long? SiteId { get; set; }
         public long? BinId { get; set; }
         public long? ShelfId { get; set; }
         [ForeignKey("WarehouseId")]
-        public long WarehouseId { get; set; }
+        public long? WarehouseId { get; set; }
         [ForeignKey("LocationId")]
-        public long LocationId { get; set; }
-        public short? ObtainFromType { get; set; }
+        public long? LocationId { get; set; }
+        public string ObtainFromType { get; set; }
         public string PartDescription { get; set; }
         public string Owner { get; set; }
         public bool? IsCustomerStock { get; set; }
@@ -40,7 +40,7 @@ namespace DAL.Models
         public string ManufacturingTrace { get; set; }
         public string ManufacturingLotNumber { get; set; }
         [ForeignKey("EmployeeId")]
-        public long EmployeeId { get; set; }
+        public long? EmployeeId { get; set; }
         public string SerialNumber { get; set; }
         public string CertifiedBy { get; set; }
         public DateTime? TagDate { get; set; }
@@ -53,7 +53,7 @@ namespace DAL.Models
         [ForeignKey("MasterCompanyId")]
         public int MasterCompanyId { get; set; }
         public bool? IsActive { get; set; }
-        public bool? IsDeleted { get; set; }
+        public bool IsDeleted { get; set; }
         public bool? IsExpirationDate { get; set; }
         public string PartNumber { get; set; }
         public virtual Condition Condition { get; set; }
@@ -69,9 +69,10 @@ namespace DAL.Models
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         [ForeignKey("ManagementStructureId")]
-        public long ManagementStructureId { get; set; }
+        public long? ManagementStructureId { get; set; }
         public string CreatedBy {get; set;}
         public string UpdatedBy {get; set;}
+        public string Manufacturer {get; set;}
 
         #region NOT USED
         [ForeignKey("CustomerClassificationId")]

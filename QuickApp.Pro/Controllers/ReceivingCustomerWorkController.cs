@@ -33,7 +33,9 @@ namespace QuickApp.Pro.Controllers
             //var result = _unitOfWork.receivingCustomerWork.GetAllreceivingCustomerWork(); //GetAllSite Information
             //return Ok(result);
 
-            var customerworkList = _context.ReceivingCustomerWork.ToList();
+            var customerworkList = _context.ReceivingCustomerWork
+                .Where(rcw => rcw.IsDeleted == false)
+                .ToList();
             return Ok(customerworkList);
 
         }
@@ -124,7 +126,7 @@ namespace QuickApp.Pro.Controllers
             receivingCustomerWorkModel.CustomerReference = receivingCustomerWorkViewModel.CustomerReference;
             receivingCustomerWorkModel.IsSerialized = receivingCustomerWorkViewModel.IsSerialized;
             receivingCustomerWorkModel.ItemMasterId = receivingCustomerWorkViewModel.ItemMasterId;
-            receivingCustomerWorkModel.ContactId = receivingCustomerWorkViewModel.ContactId;
+            receivingCustomerWorkModel.ContactId = receivingCustomerWorkViewModel.CustomerContactId;
             receivingCustomerWorkModel.TraceableToType = receivingCustomerWorkViewModel.TraceableToType;
             receivingCustomerWorkModel.ChangePartNumber = receivingCustomerWorkViewModel.ChangePartNumber;
             receivingCustomerWorkModel.PartCertificationNumber = receivingCustomerWorkViewModel.PartCertificationNumber;
@@ -164,12 +166,9 @@ namespace QuickApp.Pro.Controllers
             receivingCustomerWorkModel.CreatedBy = receivingCustomerWorkViewModel.CreatedBy;
             receivingCustomerWorkModel.UpdatedBy = receivingCustomerWorkViewModel.UpdatedBy;
             receivingCustomerWorkModel.MasterCompanyId = receivingCustomerWorkViewModel.MasterCompanyId;
+            receivingCustomerWorkModel.Manufacturer = receivingCustomerWorkViewModel.Manufacturer;
 
             return receivingCustomerWorkModel;
-
-            //public DateTime? UpdatedDate { get; set; }
-
-
         }
 
         [HttpGet("timeLifeGetById/{id}")]
