@@ -1809,7 +1809,7 @@ export class StockAdjustmentComponent implements OnInit {
 						DiscountSalesPrice: this.sourceStockLineSetup.AfterDiscountSalesPrice,
 						LotCostAdjustment: this.sourceStockLineSetup.AfterLotCostAdjustment,
 						RevalueStockCost: this.sourceStockLineSetup.AfterRevalueStockCost,
-						ManagementStructureEntityId: this.sourceStockLineSetup.managementStructureEntityId,
+						ManagementStructureId: this.sourceStockLineSetup.managementStructureEntityId,
 						UnitCostAdjustmentReasonTypeId: this.sourceStockLineSetup.unitCostAdjustmentReasonTypeId,
 						UnitSalePriceAdjustmentReasonTypeId: this.sourceStockLineSetup.unitSalePriceAdjustmentReasonTypeId,
 						isSerialized: this.sourceStockLineSetup.isSerialized
@@ -1899,7 +1899,7 @@ export class StockAdjustmentComponent implements OnInit {
 			DiscountSalesPrice: this.sourceStockLineSetup.AfterDiscountSalesPrice,
 			LotCostAdjustment: this.sourceStockLineSetup.AfterLotCostAdjustment,
 			RevalueStockCost: this.sourceStockLineSetup.AfterRevalueStockCost,
-			ManagementStructureEntityId: this.sourceStockLineSetup.managementStructureEntityId,
+			ManagementStructureId: this.sourceStockLineSetup.managementStructureEntityId,
 			UnitCostAdjustmentReasonTypeId: this.sourceStockLineSetup.unitCostAdjustmentReasonTypeId,
 			UnitSalePriceAdjustmentReasonTypeId: this.sourceStockLineSetup.unitSalePriceAdjustmentReasonTypeId,
 			isSerialized:this.sourceStockLineSetup.isSerialized
