@@ -276,7 +276,7 @@ export class PurchaseOrderComponent implements OnInit, AfterViewInit {
 
     public getSelectedRow(rowData) {
         this.receivingService.purchaseOrderId = rowData.purchaseOrderId;
-        this._router.navigateByUrl('/receivingmodule/receivingpages/app-receivng-po');
+        this._router.navigateByUrl(`/receivingmodule/receivingpages/app-receivng-po?purchaseOrderId=${rowData.purchaseOrderId}`);
     }
 
     public editStockLine(rowData) {

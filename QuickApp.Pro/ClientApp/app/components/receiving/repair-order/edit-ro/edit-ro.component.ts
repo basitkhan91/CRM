@@ -91,11 +91,6 @@ export class EditRoComponent implements OnInit {
     }
 
     ngOnInit() {
-        // if (this.receivingService.purchaseOrderId == undefined && this.receivingService.purchaseOrderId == null ) {
-        //     this.alertService.showMessage(this.pageTitle, "No purchase order is selected to edit.", MessageSeverity.error);
-        //     return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
-        // }
-
         this.repairOrderId = this._actRoute.snapshot.queryParams['repairorderid'];
         this.receivingService.getReceivingROHeaderById(this.repairOrderId).subscribe(res => {
             console.log(res);
@@ -105,17 +100,12 @@ export class EditRoComponent implements OnInit {
             this.repairOrderHeaderData.dateApproved = this.repairOrderHeaderData.dateApproved ? new Date(this.repairOrderHeaderData.dateApproved) : '';
             this.repairOrderHeaderData.needByDate = this.repairOrderHeaderData.needByDate ? new Date(this.repairOrderHeaderData.needByDate) : '';
             this.getManagementStructureCodes(this.repairOrderHeaderData.managementStructureId);
-                
         });
 
         this.receivingService.getReceivingROPartsForEditById(this.repairOrderId).subscribe(
             results => {
                 console.log(results);                
                 this.repairOrderData = results;
-                // this.purchaseOrderData.openDate = new Date(results[0].openDate).toLocaleDateString();
-                // this.purchaseOrderData.needByDate = new Date(results[0].needByDate);
-                // this.purchaseOrderData.dateApproved = new Date(results[0].dateApproved).toLocaleDateString();
-
                 this.getManagementStructure().subscribe(
                     results => {
                         this.managementStructure = results[0];
@@ -905,14 +895,14 @@ export class EditRoComponent implements OnInit {
     }
 
     calculateExtendedCost(part: any, stockLine: any): void {
-        if (stockLine.purchaseOrderUnitCost == undefined || stockLine.purchaseOrderUnitCost == '') {
+        if (stockLine.repairOrderUnitCost == undefined || stockLine.repairOrderUnitCost == '') {
             return;
         }
         if (part.itemMaster.isSerialized) {
-            stockLine.purchaseOrderExtendedCost = stockLine.purchaseOrderUnitCost;
+            stockLine.repairOrderExtendedCost = stockLine.repairOrderUnitCost;
         }
         else {
-            stockLine.purchaseOrderExtendedCost = stockLine.purchaseOrderUnitCost * part.quantityActuallyReceived;
+            stockLine.repairOrderExtendedCost = stockLine.repairOrderUnitCost * part.quantityActuallyReceived;
         }
     }
 

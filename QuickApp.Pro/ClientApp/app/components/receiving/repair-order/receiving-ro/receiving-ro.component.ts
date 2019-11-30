@@ -1529,4 +1529,15 @@ export class ReceivingRoComponent implements OnInit {
         }
         
     }
+
+    private moveByKey(event, part) {
+        // CTRL + Down Arrow
+        if (event.ctrlKey && event.keyCode == 40) {
+            this.moveStockLinePage('stockline', part.currentSERIndex + 1, part);
+        }
+        // CTRL + Up Arrow
+        if (event.ctrlKey && event.keyCode == 38) {
+            this.moveStockLinePage('stockline', part.currentSERIndex - 1, part);
+        }
+    } 
 }

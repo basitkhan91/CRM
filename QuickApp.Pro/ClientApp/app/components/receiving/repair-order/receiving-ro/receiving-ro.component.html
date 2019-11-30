@@ -767,7 +767,7 @@
                                                             <div class="col-md-3">
                                                                 <div class="form-group">
                                                                     <label>Serial Num</label>
-                                                                    <input class="form-control" disabled="{{part.stocklineListObj[part.currentSERIndex].serialNumberNotProvided}}" [(ngModel)]="part.stocklineListObj[part.currentSERIndex].serialNumber" type="text" pInputText [maxLength]="25">
+                                                                    <input class="form-control" (keyup)="moveByKey($event, part)"  disabled="{{part.stocklineListObj[part.currentSERIndex].serialNumberNotProvided}}" [(ngModel)]="part.stocklineListObj[part.currentSERIndex].serialNumber" type="text" pInputText [maxLength]="25">
                                                                     <div class="checkbox-cstm" style="margin-top: 4px">
                                                                         <label style="width: 200px;">
                                                                             <input type="checkbox" class="form-control" [(ngModel)]="part.stocklineListObj[part.currentSERIndex].serialNumberNotProvided" (click)="onSerialNumberNotProvided(part.stocklineListObj[part.currentSERIndex])">
