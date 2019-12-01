@@ -10,6 +10,10 @@ import { SalesPagesComponent } from "./salespages.component";
 import { SalesQuoteListComponent } from "../components/sales/quotes/sales-quote-list/sales-quote-list.component";
 import { SalesQuoteCreateComponent } from "../components/sales/quotes/sales-quote-create/sales-quote-create.component";
 import { SalesQuoteComponent } from "../components/sales/quotes/sales-quote/sales-quote-component";
+import { SalesOrderListComponent } from "../components/sales/order/sales-order-list/sales-order-list.component";
+import { SalesOrderCreateComponent } from "../components/sales/order/sales-order-create/sales-order-create.component";
+import { SalesOrderComponent } from "../components/sales/order/sales-order/sales-order-component";
+
 
 const salesPagesRoutes: Routes = [
   {
@@ -26,7 +30,18 @@ const salesPagesRoutes: Routes = [
         path: "sales-quote-list",
         component: SalesQuoteListComponent,
         data: { title: "Sales Quote List" }
-      }
+      },
+        { path: "sales-order", component: SalesOrderComponent },
+        {
+            path: "sales-order-create/:customerId",
+            component: SalesOrderCreateComponent
+        },
+        { path: "sales-order-edit/:id", component: null },
+        {
+            path: "sales-order-list",
+            component: SalesOrderListComponent,
+            data: { title: "Sales Order List" }
+        }
     ]
   }
 ];

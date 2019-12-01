@@ -3,11 +3,11 @@
 export class AssetAttributeType {
 
     constructor(assetAttributeTypeId?: number, assetTypeId?: number, description?: string, assetAttributeTypeName?: string,
-        conventionType?: number, depreciationMethod?: number, residualPercentage?: number, residualValue?: number, assetLife?: number, depreciationFrequencyId?: number, acquiredGLAccountId?: number, deprExpenseGLAccountId?: number, adDepsGLAccountId?: number, assetSale?: number, assetWriteOff?: number, assetWriteDown?: number,
+        conventionType?: number, depreciationMethod?: number, residualPercentage?: number, residualValue?: number, assetLife?: number, depreciationFrequencyId?: number, acquiredGLAccountId?: number, deprExpenseGLAccountId?: number, adDepsGLAccountId?: number, assetSale?: number, assetWriteOff?: number, assetWriteDown?: number, managementStructureId?: number,
         createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, isActive?: boolean, isDelete?: boolean) {
 
         this.assetAttributeTypeId = assetAttributeTypeId;
-        this.assetTypeId = assetTypeId || 0;
+        this.assetTypeId = assetTypeId;
         this.description = description || "";
         this.assetAttributeTypeName = assetAttributeTypeName || "";
         this.conventionType = conventionType || 0;
@@ -22,6 +22,7 @@ export class AssetAttributeType {
         this.assetSale = assetSale || 0;
         this.assetWriteOff = assetWriteOff || 0;
         this.assetWriteDown = assetWriteDown || 0;
+        this.managementStructureId = managementStructureId || 0;
         this.createdBy = createdBy || "admin";
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
@@ -46,6 +47,7 @@ export class AssetAttributeType {
     assetSale: number;
     assetWriteOff: number;
     assetWriteDown: number;
+    managementStructureId: number;
     createdBy: string;
     updatedBy: string;
     createdDate: Date;
