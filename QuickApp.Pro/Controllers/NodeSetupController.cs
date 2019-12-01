@@ -34,7 +34,23 @@ namespace QuickApp.Pro.Controllers
         public IActionResult getAllGLAccountNode()
         {
             var glAccountNodes = unitOfWork.GLAccountNode.GetAllGLAccount();
-            
+
+            foreach (var node in glAccountNodes)
+            {
+                if (node.ParentNode != null)
+                {
+                    node.ParentNode.ParentNode = null;
+
+                }
+            }
+
+            return Ok(glAccountNodes);
+        }
+        [HttpGet("getAllLeafNode")]
+        public IActionResult getAllGLAccountLeafNode()
+        {
+            var glAccountNodes = unitOfWork.GLAccountNode.GetAllGLAccountLeafNode();
+
             foreach (var node in glAccountNodes)
             {
                 if (node.ParentNode != null)
@@ -53,13 +69,13 @@ namespace QuickApp.Pro.Controllers
             var node = unitOfWork.Repository<GLAccountNode>().Find(x => x.GLAccountNodeId == id && x.IsDelete != true);
             return Ok(node);
         }
-        
-        
+
+
         [HttpGet("shareWithOtherEntityById/{id}")]
         [Produces(typeof(List<GLAccountNodeShareWithEntityMapper>))]
         public IActionResult getShareWithEntityNodeById(long id)
         {
-            var node = unitOfWork.GLAccountClass.getShareWithEntityNodeById(id); 
+            var node = unitOfWork.GLAccountClass.getShareWithEntityNodeById(id);
             return Ok(node);
 
         }
@@ -157,7 +173,7 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest();
             }
         }
-        
+
 
         //[HttpGet("updateIsActive/{glAccountNodeId)}")]
         //public ActionResult updateIsActive(long glAccountNodeId)
