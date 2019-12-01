@@ -14,19 +14,17 @@
                 <div class="tab-pane active" id="home">
                   <div class="col-sm-4" style="margin-left: 15px">
                     <div class="form-group">
-                        <label class="">Ledger Name <span class="clr-red">*</span></label>
+                        <label class="">Ledger Name</label>
                         <div class="inner-addon right-addon inline-block">
                            <p-autoComplete  class="autocomp-customer-cstm" 
-                            name="name"
-                            (onKeyUp)="checkLedgerNameExists('name',$event.target.value)"
-                            (onSelect)="selectedLedgerName()" 
+                            name="name"                            
                              [(ngModel)]="glAccountObj.ledgename" [suggestions]="ledgerNameObject" formControlName="ledgerName" 
                              field="name" emptyMessage="No results"
                              (completeMethod)="loadLedgerNames($event)" [size]="30"
                                             [minLength]="1" [dropdown]="true" required>
                                 
                             </p-autoComplete>
-                            <div *ngIf="ischeckLedgerNameExists" class="clr-red">Entry Already Exists</div>
+                            <!-- <div *ngIf="ischeckLedgerNameExists" class="clr-red">Entry Already Exists</div> -->
                         </div>
                         <div *ngIf="submittedForm && formdata.ledgerName.errors" class="col-sm-12 invalid-feedback">
                             <div *ngIf="formdata.ledgerName.errors">Ledger Name is required</div>
@@ -71,7 +69,7 @@
                             name="name"
                             (onKeyUp)="checkAccountNameExists('name',$event.target.value)"
                             (onSelect)="selectedAccountName()" 
-                             [(ngModel)]="glAccountObj.accountCodeId" [suggestions]="accountCodeObject" formControlName="accountName" 
+                             [(ngModel)]="glAccountObj.accountCodeName" [suggestions]="accountNameObject" formControlName="accountName" 
                              field="name" emptyMessage="No results"
                              (completeMethod)="loadAccountName($event)" [size]="30"
                                             [minLength]="1" [dropdown]="true" required>
@@ -123,7 +121,7 @@
                     </div> 
                     
                       <div class="form-group col-sm-12">
-                      <label class="">Leaf Node Name <span class="clr-red">*</span></label>
+                      <label class="">Leaf Node Name</label>
                          <div class="">
                         <!-- <select>
                           <option>ABC Ledger</option>
@@ -133,7 +131,7 @@
                         <!-- <select formControlName="leafNodeName" [(ngModel)]="currentGLAccount.glAccountNodeId">
                             <option *ngFor="let nodeType of nodeSetupList" [ngValue]="nodeType.glAccountNodeId">{{nodeType.nodeName}}</option>
                         </select> -->
-                        <p-dropdown [options]="leafNodeNameObj" formControlName="leafNodeName" [filter]="true" styleClass="accountdropdown" [style]="{'width':'150px'}"></p-dropdown>
+                        <p-dropdown [options]="leafNodeNameObj" formControlName="leafNodeName" [filter]="true" styleClass="accountdropdown"></p-dropdown>
                        <!--  <p-multiSelect [options]="nodeSetupList" formControlName="leafNodeName"></p-multiSelect> -->
 
                        
@@ -141,7 +139,7 @@
                       </div>
                     </div>  
                       <div class="form-group col-sm-12">
-                      <label for="interCompany" class="">Inter Company</label>
+                      <label for="interCompany" class="">InterCompany</label>
                      <input formControlName="interCompany" type="checkbox">
                     </div>                
                   </div>
@@ -196,7 +194,7 @@
                     </div>
                       <div class="form-group col-sm-12 allow-manual-je-block">
                       <label class="">Allow Manual JE </label>
-                      <input formControlName="allowManual" type="checkbox">
+                      <input formControlName="allowManualJE" type="checkbox">
                     </div>
                                            
                       
@@ -219,12 +217,12 @@
                       <label class="">PO Category <span class="clr-red">*</span></label>
                        <div class="">
 
-                        <select formControlName="poCategory" [(ngModel)]="glAccountObj.poroCategoryId">
+                        <select formControlName="poroCategory" [(ngModel)]="glAccountObj.poroCategoryId">
                               <option value="">--Select--</option>
                               <option *ngFor="let poCategory of poroCategoryList" [ngValue]="poCategory.poroCategoryId">  {{poCategory.categoryName}}</option>
                           </select>
-                          <div *ngIf="submittedForm && formdata.poCategory.errors" class="col-sm-12 invalid-feedback">
-                                <div *ngIf="formdata.poCategory.errors">PO Category is required</div>
+                          <div *ngIf="submittedForm && formdata.poroCategory.errors" class="col-sm-12 invalid-feedback">
+                                <div *ngIf="formdata.poroCategory.errors">PO Category is required</div>
                               </div>
                       </div>
                     </div>
@@ -245,7 +243,7 @@
                   </div>
                   <div class="clear"></div>
                   <hr>
-                  <button class="btn btn-success pull-right">Save</button>
+                  <button class="btn btn-success pull-right" [disabled]="!accountListCreateForm.valid">Save</button>
                   <div class="clear"></div>
                 </div>
               </div>

@@ -61,6 +61,7 @@ export class AccountListingCreateComponent implements OnInit {
     glAccountObj:any = {}
     ledgerNameObject: any[];
     accountCodeObject: any[];
+    accountNameObject: any[];
     accountTypeObject: any[];
     ischeckLedgerNameExists: boolean = false;
     isAccountCodeExists: boolean = false;
@@ -70,7 +71,7 @@ export class AccountListingCreateComponent implements OnInit {
 
     balanceTypeCheckBox = [{
         name: 'Actual',
-        value: false        
+        value: true        
       }, {
         name: 'Budget',
        value: false  
@@ -78,6 +79,10 @@ export class AccountListingCreateComponent implements OnInit {
         name: 'Forecast',
         value: false  
       }];
+
+
+
+
 submittedValue: any;
     constructor(private route: ActivatedRoute, 
         private accountListingService: AccountListingService,
@@ -123,21 +128,21 @@ submittedValue: any;
         }
 
         let current_datetime = new Date()
-        let formatted_date = current_datetime.getDate() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear()
+        let formatted_date = (current_datetime.getMonth() + 1) + "/" + current_datetime.getDate() +  "/" + current_datetime.getFullYear()
         
-        this.leafNodeNameObj = [
-            {label:'Select City', value:''},
-            {label: 'abc', value: '1'},
-            {label: 'sass', value: '2'},
-            {label: 'gtll', value: '3'},
-            {label: 'years', value: '4'},
-            {label: 'opo', value: '5'},
-            {label: 'wqw', value: '6'},
-            {label: 'sas', value: '7'}            
-        ];
+        // this.leafNodeNameObj = [
+        //     {label:'Select', value:''},
+        //     {label: 'abc', value: '1'},
+        //     {label: 'sass', value: '2'},
+        //     {label: 'gtll', value: '3'},
+        //     {label: 'years', value: '4'},
+        //     {label: 'opo', value: '5'},
+        //     {label: 'wqw', value: '6'},
+        //     {label: 'sas', value: '7'}            
+        // ];
 
         this.entitiesObj = [
-            {label:'Select', value:''},
+            //{label:'Select', value:''},
             {label: 'abc', value: '1'},
             {label: 'sass', value: '2'},
             {label: 'gtll', value: '3'},
@@ -153,19 +158,23 @@ submittedValue: any;
             accountCode: ['', Validators.required],
             accountName: ['', Validators.required],
             accountType: ['', Validators.required],
-            accountDescription: ['', Validators.required],
+            accountDescription: '',
             active: [true, Validators.required],
             leafNodeName: '',
             interCompany: false,           
             category: null,
             entities: ['', Validators.required],
-            allowManual: true,
+            allowManualJE: true,
             classification: [null, Validators.required],
-            poCategory: [null, Validators.required],
+            poroCategory: [null, Validators.required],
             createdBy: this.userName,
             createdDate: formatted_date,
             balanceTypeCheckBox: this.formBuilder.array(this.balanceTypeCheckBox.map(x => x.value))
         });
+
+        this.getAccountObject()
+        this.getLedgerObject()
+        this.getLeafNodeObject()
     }
 
     get formdata() { return this.accountListCreateForm.controls; }
@@ -183,11 +192,9 @@ submittedValue: any;
         const checkboxControl = (this.accountListCreateForm.controls.balanceTypeCheckBox as FormArray);
         const formValue = {
           ...this.accountListCreateForm.value,
-          balanceCheckboxes: {
-            actual: this.accountListCreateForm.value.balanceTypeCheckBox[0],
-            budget: this.accountListCreateForm.value.balanceTypeCheckBox[1],
-            forecast: this.accountListCreateForm.value.balanceTypeCheckBox[2]
-          }
+          BalanceTypeActual: this.accountListCreateForm.value.balanceTypeCheckBox[0],
+          BalanceTypeBudget: this.accountListCreateForm.value.balanceTypeCheckBox[1],
+          BalanceTypeForecast: this.accountListCreateForm.value.balanceTypeCheckBox[2]          
         }
         this.submittedValue = formValue;
 
@@ -210,24 +217,24 @@ submittedValue: any;
 
     loadLedgerNames(event){
 
-        this.ledgerNameObject = [
-        {
-            id: 1,
-            name: 'ledger1'
-        },
-        {
-            id: 2,
-            name: 'ledger2'
-        },
-        {   
-            id: 3,
-            name: 'ledger3'
-        },
-        {
-            id: 4,
-            name: 'ledger4'
-        } 
-        ];        
+        // this.ledgerNameObject = [
+        // {
+        //     id: 1,
+        //     name: 'ledger1'
+        // },
+        // {
+        //     id: 2,
+        //     name: 'ledger2'
+        // },
+        // {   
+        //     id: 3,
+        //     name: 'ledger3'
+        // },
+        // {
+        //     id: 4,
+        //     name: 'ledger4'
+        // } 
+        // ];        
         this.ledgerNameObject = [...this.ledgerNameObject.filter(x => {           
             return x.name.toLowerCase().includes(event.query.toLowerCase())
         })]
@@ -251,24 +258,24 @@ submittedValue: any;
 
      loadAccountCode(event){
 
-        this.accountCodeObject = [
-        {
-            id: 1,
-            name: 'account1'
-        },
-        {
-            id: 2,
-            name: 'account2'
-        },
-        {   
-            id: 3,
-            name: 'account3'
-        },
-        {
-            id: 4,
-            name: 'account4'
-        } 
-        ];        
+        // this.accountCodeObject = [
+        // {
+        //     id: 1,
+        //     name: 'account1'
+        // },
+        // {
+        //     id: 2,
+        //     name: 'account2'
+        // },
+        // {   
+        //     id: 3,
+        //     name: 'account3'
+        // },
+        // {
+        //     id: 4,
+        //     name: 'account4'
+        // } 
+        // ];        
         this.accountCodeObject = [...this.accountCodeObject.filter(x => {           
             return x.name.toLowerCase().includes(event.query.toLowerCase())
         })]
@@ -292,31 +299,13 @@ submittedValue: any;
 
 loadAccountName(event){
 
-        this.accountCodeObject = [
-        {
-            id: 1,
-            name: 'account1'
-        },
-        {
-            id: 2,
-            name: 'account2'
-        },
-        {   
-            id: 3,
-            name: 'account3'
-        },
-        {
-            id: 4,
-            name: 'account4'
-        } 
-        ];        
-        this.accountCodeObject = [...this.accountCodeObject.filter(x => {           
+        this.accountNameObject = [...this.accountNameObject.filter(x => {           
             return x.name.toLowerCase().includes(event.query.toLowerCase())
         })]
     }
 
     checkAccountNameExists(field, value) {
-        const exists = validateRecordExistsOrNot(field, value, this.accountCodeObject)
+        const exists = validateRecordExistsOrNot(field, value, this.accountNameObject)
         if (exists.length > 0) {
 
             this.isAccountNameExists = true;
@@ -469,6 +458,67 @@ loadAccountType(event){
         this.glcashFlowClassifcationService.getWorkFlows().subscribe(cahsFlowClassdata => {
             this.allGLCashFlowClassInfo = cahsFlowClassdata[0];
         })
+    }
+
+    getAccountObject(){
+         this.accountListingService.getAll().subscribe(
+            datalist=> {
+                 let accountNameObj = {}   
+                 let accountCodeObj = {}   
+
+                 let accountNameCollection = [] 
+                 let accountCodeCollection = [] 
+
+                const x = datalist.filter( (o, index) => {
+                  accountNameObj = {
+                    id: datalist[index]['accountName'],
+                    name: datalist[index]['accountName']
+                  }
+
+                  accountCodeObj = {
+                   id: datalist[index]['accountCode'],
+                    name: datalist[index]['accountCode']
+                  }
+
+                  accountNameCollection.push(accountNameObj)
+                  accountCodeCollection.push(accountCodeObj)
+
+                })
+            this.accountNameObject = accountNameCollection
+            this.accountCodeObject = accountCodeCollection
+            })
+    }
+
+    getLedgerObject(){
+         this.accountListingService.getLedgerData().subscribe(
+            datalist=> {
+                 let obj = {}   
+                 let collection = [] 
+                const x = datalist.filter( (o, index) => {
+                  obj = {
+                    id: datalist[index]['ledgerName'],
+                    name: datalist[index]['ledgerName']
+                  }
+                  collection.push(obj)
+                })
+            this.ledgerNameObject = collection
+            })
+    }
+
+    getLeafNodeObject(){
+         this.accountListingService.getLeafNodeData().subscribe(
+            datalist=> {
+                 let obj = {}   
+                 let collection = [] 
+                const x = datalist.filter( (o, index) => {
+                  obj = {
+                    label: datalist[index]['nodeName'],
+                    value: datalist[index]['glAccountNodeId']
+                  }
+                  collection.push(obj)
+                })
+            this.leafNodeNameObj = collection
+            })
     }
 
     private loadCompaniesData() {
