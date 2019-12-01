@@ -92,7 +92,7 @@ export class EditRoComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.repairOrderId = this._actRoute.snapshot.queryParams['purchaseorderid'];
+        this.repairOrderId = this._actRoute.snapshot.queryParams['repairorderid'];
         this.receivingService.getReceivingROHeaderById(this.repairOrderId).subscribe(res => {
             this.repairOrderHeaderData = res;
             this.repairOrderHeaderData.openDate = this.repairOrderHeaderData.openDate ? new Date(this.repairOrderHeaderData.openDate) : '';
@@ -101,10 +101,10 @@ export class EditRoComponent implements OnInit {
             this.repairOrderHeaderData.needByDate = this.repairOrderHeaderData.needByDate ? new Date(this.repairOrderHeaderData.needByDate) : '';
             this.getManagementStructureCodes(this.repairOrderHeaderData.managementStructureId);
         });
-        debugger;
+        
         this.receivingService.getReceivingROPartsForEditById(this.repairOrderId).subscribe(
             results => {
-                console.log(results);
+                
                 this.repairOrderData = results;
                 this.getManagementStructure().subscribe(
                     results => {
@@ -159,6 +159,7 @@ export class EditRoComponent implements OnInit {
                                     part.BusinessUnitList.push(dropdown);
                                 }
                             }
+                            
                             if (managementHierarchy[2] != undefined && managementHierarchy[2].length > 0) {
                                 part.divisionId = selectedManagementStructure[2].managementStructureId;
                                 part.DivisionList = [];
@@ -229,21 +230,6 @@ export class EditRoComponent implements OnInit {
                                             SL.DepartmentList.push(dropdown);
                                         }
                                     }
-
-                                    // TODO : Async call not setting proper values.
-                                    //debugger;
-                                    //if (SL.siteId > 0) {
-                                    //    this.getStockLineWareHouse(SL, true);
-                                    //}
-                                    //if (SL.warehouseId > 0) {
-                                    //    this.getStockLineLocation(SL, true);
-                                    //}
-                                    //if (SL.locationId > 0) {
-                                    //    this.getStockLineShelf(SL, true);
-                                    //}
-                                    //if (SL.shelfId > 0) {
-                                    //    this.getStockLineBin(SL, true);
-                                    //}
 
                                 }
 
@@ -1017,6 +1003,18 @@ export class EditRoComponent implements OnInit {
                 var stockLineToUpdate = part.stockLine.filter(x => x.isEnabled);
 
                 for (var stockLine of stockLineToUpdate) {
+
+
+                    if (stockLine.conditionId == undefined || stockLine.conditionId == 0) {
+                        this.alertService.showMessage(this.pageTitle, "Please select Condition in Part No. " + part.itemMaster.partNumber + " at stockline " + stockLine.stockLineNumber, MessageSeverity.error);
+                        return;
+                    }
+
+                    if (stockLine.siteId == undefined || stockLine.siteId == 0) {
+                        this.alertService.showMessage(this.pageTitle, "Please select Site in Part No. " + part.itemMaster.partNumber + " of stockline " + stockLine.stockLineNumber, MessageSeverity.error);
+                        return;
+                    }
+
                     for (var tl of part.timeLife) {
                         if (tl.stockLineId == stockLine.stockLineId) {
                             timeLife.push(tl);

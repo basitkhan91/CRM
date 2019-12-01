@@ -9,8 +9,16 @@ namespace DAL.Repositories
 {
     public class PartStockLineMapperRepository : Repository<PartStockLineMapperRepository>, IPartStockLineMapper
     {
-        public PartStockLineMapperRepository(ApplicationDbContext context) : base(context)
+        #region Private
+        private ICommonRepository commonRepository;
+        private static long[] accessedManagementStructureId = { 0 };
+        private List<long> ManagementStructureIds = new List<long>();
+        private static Dictionary<string, string> keyValues = new Dictionary<string, string>();
+        #endregion
+
+        public PartStockLineMapperRepository(ApplicationDbContext context, ICommonRepository commonRepository) : base(context)
         {
+            this.commonRepository = commonRepository;
         }
 
         public object GetReceivingPurchaseOrderList(long id)
@@ -289,7 +297,11 @@ namespace DAL.Repositories
                             BinText = GetBinText(SL.BinId),
                             ObtainFrom = SL.ObtainFromType == 2 ? SL.ObtainFrom : GetCustomerVendor(SL.ObtainFrom, SL.ObtainFromType),
                             Owner = SL.OwnerType == 2 ? SL.Owner : GetCustomerVendor(SL.Owner, SL.OwnerType),
-                            TraceableTo = SL.TraceableToType == 2 ? SL.TraceableTo : GetCustomerVendor(SL.TraceableTo, SL.TraceableToType)
+                            TraceableTo = SL.TraceableToType == 2 ? SL.TraceableTo : GetCustomerVendor(SL.TraceableTo, SL.TraceableToType),
+                            CompanyText = GetManagementStrucreCodeByName(SL.ManagementStructureEntityId, "Level1"),
+                            BusinessUnitText = GetManagementStrucreCodeByName(SL.ManagementStructureEntityId, "Level2"),
+                            DivisionText = GetManagementStrucreCodeByName(SL.ManagementStructureEntityId, "Level3"),
+                            DepartmentText = GetManagementStrucreCodeByName(SL.ManagementStructureEntityId, "Level4"),
                         }),
                         TimeLife = x.TimeLife
                     })
@@ -437,7 +449,11 @@ namespace DAL.Repositories
                                  TraceableTo = SL.TraceableTo,
                                  ObtainFromText = SL.ObtainFromType == 2 ? SL.ObtainFrom : GetCustomerVendor(SL.ObtainFrom, SL.ObtainFromType),
                                  OwnerText = SL.OwnerType == 2 ? SL.Owner : GetCustomerVendor(SL.Owner, SL.OwnerType),
-                                 TraceableToText = SL.TraceableToType == 2 ? SL.TraceableTo : GetCustomerVendor(SL.TraceableTo, SL.TraceableToType)
+                                 TraceableToText = SL.TraceableToType == 2 ? SL.TraceableTo : GetCustomerVendor(SL.TraceableTo, SL.TraceableToType),
+                                 CompanyText = GetManagementStrucreCodeByName(SL.ManagementStructureEntityId, "Level1"),
+                                 BusinessUnitText = GetManagementStrucreCodeByName(SL.ManagementStructureEntityId, "Level2"),
+                                 DivisionText = GetManagementStrucreCodeByName(SL.ManagementStructureEntityId, "Level3"),
+                                 DepartmentText = GetManagementStrucreCodeByName(SL.ManagementStructureEntityId, "Level4"),
                              }),
                              TimeLife = _appContext.TimeLife.Where(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId),
                              ItemMaster = new
@@ -795,5 +811,26 @@ namespace DAL.Repositories
         #endregion PRIVATE METHODS
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
+
+        private string GetManagementStrucreCodeByName(long? managementStructureId, string keyName)
+        {
+            string returnValue = string.Empty;
+
+            if (managementStructureId != null)
+            {
+                if (Array.IndexOf(ManagementStructureIds.ToArray(), managementStructureId) < 0)
+                {
+                    ManagementStructureIds.Add(Convert.ToInt64(managementStructureId));
+                    keyValues = commonRepository.GetManagementStructureCodes(Convert.ToInt64(managementStructureId));
+                }
+
+                if (keyValues.ContainsKey(keyName))
+                {
+                    returnValue = keyValues[keyName];
+                }
+            }
+            return returnValue;
+        }
+
     }
 }

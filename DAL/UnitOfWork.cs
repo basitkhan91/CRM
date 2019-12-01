@@ -921,7 +921,7 @@ namespace DAL
                 return _vendorDocumentDetails;
             }
         }
-        
+
         //public IVendorShippingDetailsRepository VendorShippingDetailsRepository
 
         //{
@@ -1687,7 +1687,7 @@ namespace DAL
             get
             {
                 if (partStockLineMapper == null)
-                    partStockLineMapper = new PartStockLineMapperRepository(_context);
+                    partStockLineMapper = new PartStockLineMapperRepository(_context, CommonRepository);
                 return partStockLineMapper;
             }
         }
@@ -1840,7 +1840,7 @@ namespace DAL
                 return _communicationRepository;
             }
         }
-        
+
         public IPercentageRepository PercentageRepository
         {
             get
@@ -1913,9 +1913,12 @@ namespace DAL
             }
         }
 
-        public IReceiveRepairOrderRepository ReceiveRepairOrder {
-            get {
-                if (_receiveRepairOrder == null) {
+        public IReceiveRepairOrderRepository ReceiveRepairOrder
+        {
+            get
+            {
+                if (_receiveRepairOrder == null)
+                {
                     _receiveRepairOrder = new ReceiveRepairOrderRepository(_context, CommonRepository);
                 }
                 return _receiveRepairOrder;
