@@ -79,6 +79,7 @@ namespace DAL.Repositories
         public object GetReceivingPurchaseOrderEdit(long purchaseOrderId)
         {
             var parts = (from part in _appContext.PurchaseOrderPart
+                         join order in _appContext.PurchaseOrder on part.PurchaseOrderId equals order.PurchaseOrderId
                          join itm in _appContext.ItemMaster on part.ItemMasterId equals itm.ItemMasterId
                          join manf in _appContext.Manufacturer on itm.ManufacturerId equals manf.ManufacturerId
                          into leftManf
@@ -89,10 +90,12 @@ namespace DAL.Repositories
                          where part.PurchaseOrderId == purchaseOrderId
                          select new
                          {
+                             PurchaseOrderId = part.PurchaseOrderId,
+                             PurchaseOrderPartRecordId = part.PurchaseOrderPartRecordId,
                              ItemMasterId = itm.ItemMasterId,
                              PartNumber = itm.PartNumber,
                              PartDescription = itm.PartDescription,
-                             QuantityToRepair = part.QuantityOrdered,
+                             QuantityOrdered = part.QuantityOrdered,
                              StockLineCount = _appContext.StockLine.Count(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId),
                              PoPartSplitUserName = emp != null ? emp.FirstName + " " + emp.LastName : "",
                              StockLine = _appContext.StockLine.Where(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId).Select(SL => new

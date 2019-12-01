@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DAL.Repositories.Interfaces;
 
@@ -8,13 +9,17 @@ namespace DAL.Repositories
     {
         #region Private Members
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
-
+        private ICommonRepository commonRepository;
+        private static long[] accessedManagementStructureId = { 0 };
+        private List<long> ManagementStructureIds = new List<long>();
+        private static Dictionary<string, string> keyValues = new Dictionary<string, string>();
         #endregion Private Members
 
         #region Public Methods
 
-        public ReceiveRepairOrderRepository(ApplicationDbContext context) : base(context)
+        public ReceiveRepairOrderRepository(ApplicationDbContext context, ICommonRepository commonRepository) : base(context)
         {
+            this.commonRepository = commonRepository;
         }
 
         public object GetRepairOrderHeader(long repairOrderId)
@@ -47,7 +52,7 @@ namespace DAL.Repositories
                                          VendorName = vend.VendorName,
                                          VendorCode = vend.VendorCode,
                                          VendorContact = cont != null ? cont.FirstName + " " + cont.LastName : "",
-                                         VendorPhone = cont != null ?  (!string.IsNullOrWhiteSpace(cont.WorkPhone) ?  string.Format("{0}-({1})", cont.WorkPhone, cont.WorkPhoneExtn) : (!string.IsNullOrWhiteSpace(cont.MobilePhone) ? cont.MobilePhone : "")) : "",
+                                         VendorPhone = cont != null ? (!string.IsNullOrWhiteSpace(cont.WorkPhone) ? string.Format("{0}-({1})", cont.WorkPhone, cont.WorkPhoneExtn) : (!string.IsNullOrWhiteSpace(cont.MobilePhone) ? cont.MobilePhone : "")) : "",
                                          RequestedBy = emp != null ? emp.FirstName + " " + emp.LastName : "",
                                          OpenDate = ro.OpenDate,
                                          ClosedDate = ro.ClosedDate,
@@ -163,6 +168,7 @@ namespace DAL.Repositories
 
         public object GetReceivingRepairOrderForView(long repairOrderId)
         {
+            //var values = _unitOfWork.CommonRepository.GetManagementStructureCodes()
             var parts = (from part in _appContext.RepairOrderPart
 
                          join itm in _appContext.ItemMaster on part.ItemMasterId equals itm.ItemMasterId
@@ -190,7 +196,7 @@ namespace DAL.Repositories
                              IsParent = part.IsParent,
                              ManagementStructureId = part.ManagementStructureId,
                              QuantityToRepair = part.QuantityOrdered,
-                             DiscountPerUnit = part.DiscountPercent,
+                             DiscountPerUnit = part.DiscountPerUnit,
                              ExtendedCost = part.ExtendedCost,
                              UnitCost = part.UnitCost,
                              StockLine = _appContext.StockLine.Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId).Select(SL => new
@@ -236,6 +242,10 @@ namespace DAL.Repositories
                                  LocationId = SL.LocationId,
                                  ShelfId = SL.ShelfId,
                                  BinId = SL.BinId,
+                                 CompanyText = GetManagementStrucreCodeByName(SL.ManagementStructureEntityId, "Level1"),
+                                 BusinessUnitText = GetManagementStrucreCodeByName(SL.ManagementStructureEntityId, "Level2"),
+                                 DivisionText = GetManagementStrucreCodeByName(SL.ManagementStructureEntityId, "Level3"),
+                                 DepartmentText = GetManagementStrucreCodeByName(SL.ManagementStructureEntityId, "Level4"),
                                  ManufacturerText = manf != null ? manf.Name : "",
                                  ShippingViaText = GetShippViaText(SL.ShippingViaId),
                                  SiteText = GetSiteText(SL.SiteId),
@@ -275,7 +285,7 @@ namespace DAL.Repositories
                                  } : null
                              }
                          }).ToList();
-
+      
             return parts;
         }
 
@@ -296,10 +306,13 @@ namespace DAL.Repositories
                          where part.RepairOrderId == repairOrderId
                          select new
                          {
+                             RepairOrderPartRecordId = part.RepairOrderPartRecordId,
+                             RepairOrderId = part.RepairOrderId,
                              ItemMasterId = itm.ItemMasterId,
                              PartNumber = itm.PartNumber,
                              PartDescription = itm.PartDescription,
                              QuantityToRepair = part.QuantityOrdered,
+                             DiscountPerUnit = part.DiscountPerUnit,
                              StockLineCount = _appContext.StockLine.Count(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId),
                              RoPartSplitUserName = emp != null ? emp.FirstName + " " + emp.LastName : "",
                              UomText = uom != null ? uom.ShortName : "",
@@ -343,11 +356,11 @@ namespace DAL.Repositories
                                  GLAccountText = _appContext.GLAccount.Where(p => p.GLAccountId == SL.GLAccountId).FirstOrDefault().AccountName,
                                  ConditionText = SL.ConditionId != null ? _appContext.Condition.Where(p => p.ConditionId == SL.ConditionId).FirstOrDefault().Description : "",
                                  ManagementStructureEntityId = SL.ManagementStructureEntityId,
-                                 SiteId = SL.SiteId,
-                                 WarehouseId = SL.WarehouseId,
-                                 LocationId = SL.LocationId,
-                                 ShelfId = SL.ShelfId,
-                                 BinId = SL.BinId,
+                                 SiteId = SL.SiteId != null ? SL.SiteId : 0,
+                                 WarehouseId = SL.WarehouseId != null ? SL.WarehouseId : 0,
+                                 LocationId = SL.LocationId != null ? SL.LocationId : 0,
+                                 ShelfId = SL.ShelfId != null ? SL.ShelfId : 0,
+                                 BinId = SL.BinId != null ? SL.BinId : 0,
                                  SiteText = GetSiteText(SL.SiteId),
                                  WarehouseText = GetWarehouseText(SL.WarehouseId),
                                  LocationText = GetLocationText(SL.LocationId),
@@ -474,7 +487,7 @@ namespace DAL.Repositories
             return "";
         }
 
-       
+
         private string GetShippViaText(long? shippViaId)
         {
             if (shippViaId != null)
@@ -489,6 +502,25 @@ namespace DAL.Repositories
             return "";
         }
 
+        private string GetManagementStrucreCodeByName(long? managementStructureId, string keyName)
+        {
+            string returnValue = string.Empty;
+
+            if (managementStructureId != null)
+            {
+                if (Array.IndexOf(ManagementStructureIds.ToArray(), managementStructureId) < 0)
+                {
+                    ManagementStructureIds.Add(Convert.ToInt64(managementStructureId));
+                    keyValues = commonRepository.GetManagementStructureCodes(Convert.ToInt64(managementStructureId));
+                }
+
+                if (keyValues.ContainsKey(keyName))
+                {
+                    returnValue = keyValues[keyName];
+                }
+            }
+            return returnValue;
+        }
 
 
         #endregion Private Methods
