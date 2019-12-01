@@ -497,6 +497,7 @@ export class CreateAssetComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allGlInfo = getGlList;
+       // console.log(this.allGlInfo);
     }
 
     private glList() {
@@ -777,7 +778,8 @@ export class CreateAssetComponent implements OnInit {
 
     loadDepricationMethod() {
         this.depriciationMethodService.getAll().subscribe(depriciationmethods => {
-            this.depriciationMethodList = depriciationmethods[0];
+            this.depriciationMethodList = depriciationmethods[0].columnData;
+            console.log(this.depriciationMethodList);
         });
     }
 
