@@ -34,6 +34,7 @@ import { MenuItem } from 'primeng/api';
 import { AssetStepsComponent } from "../components/Asset-Management/Asset-Steps-primeng/asset-steps/asset-steps.component";
 import { AssetService } from "../services/asset/Assetservice";
 import { AssetEndpoint } from "../services/asset/Asset-endpoint.service";
+import { CommonService } from '../services/common.service';
 import { AuditModule } from "../audit/audit.module";
 import { ViewAssetComponent } from "../components/Asset-Management/Asset-pages/view-asset/view-asset.component";
 @NgModule({
@@ -69,7 +70,8 @@ import { ViewAssetComponent } from "../components/Asset-Management/Asset-pages/v
         ViewAssetComponent
     ],
     providers: [AssetService,
-        AssetEndpoint
+        AssetEndpoint,
+        CommonService
 
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
