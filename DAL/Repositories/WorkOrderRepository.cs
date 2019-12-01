@@ -1408,6 +1408,15 @@ namespace DAL.Repositories
             {
                 foreach (var item in workOrderMaterials)
                 {
+                    if (item.PartStatusId == Convert.ToInt32(PartStatusEnum.UnIssue))
+                    {
+                        item.PartStatusId = Convert.ToInt32(PartStatusEnum.Issue);
+                    }
+                    if (item.PartStatusId == Convert.ToInt32(PartStatusEnum.UnReserve))
+                    {
+                        item.PartStatusId = Convert.ToInt32(PartStatusEnum.Reserve);
+                    }
+
                     if (item.WorkOrderMaterialsId > 0)
                     {
                         _appContext.WorkOrderMaterials.Update(item);
@@ -1560,13 +1569,13 @@ namespace DAL.Repositories
             }
             else if (statusId == Convert.ToInt32(PartStatusEnum.UnIssue))
             {
-                partStatusId = Convert.ToInt32(PartStatusEnum.Issue);
-                rvStatusId = Convert.ToInt32(PartStatusEnum.Issue);
+                partStatusId = Convert.ToInt32(PartStatusEnum.UnIssue);
+                rvStatusId = Convert.ToInt32(PartStatusEnum.UnIssue);
             }
             else if (statusId == Convert.ToInt32(PartStatusEnum.UnReserve))
             {
-                partStatusId = Convert.ToInt32(PartStatusEnum.Reserve);
-                rvStatusId = Convert.ToInt32(PartStatusEnum.Reserve);
+                partStatusId = Convert.ToInt32(PartStatusEnum.UnReserve);
+                rvStatusId = Convert.ToInt32(PartStatusEnum.UnReserve);
             }
             List<WorkOrderReserveIssuesParts> workOrderReserveIssuesParts = new List<WorkOrderReserveIssuesParts>();
             WorkOrderReserveIssuesParts workOrderReserveIssuesPart;
@@ -1675,6 +1684,15 @@ namespace DAL.Repositories
             {
                 foreach (var part in reserveIssuesParts)
                 {
+                    if (part.PartStatusId == Convert.ToInt32(PartStatusEnum.UnIssue))
+                    {
+                        part.PartStatusId = Convert.ToInt32(PartStatusEnum.Reserve);
+                    }
+                    if (part.PartStatusId == Convert.ToInt32(PartStatusEnum.UnReserve))
+                    {
+                        part.PartStatusId = 0;
+                    }
+
                     SaveWorkOrderMaterial(part);
                     SaveStockLine(part);
 
@@ -1682,6 +1700,15 @@ namespace DAL.Repositories
                     {
                         foreach (var altPart in part.WOReservedIssuedAltParts)
                         {
+                            if (altPart.PartStatusId == Convert.ToInt32(PartStatusEnum.UnIssue))
+                            {
+                                altPart.PartStatusId = Convert.ToInt32(PartStatusEnum.Issue);
+                            }
+                            if (altPart.PartStatusId == Convert.ToInt32(PartStatusEnum.UnReserve))
+                            {
+                                altPart.PartStatusId = Convert.ToInt32(PartStatusEnum.Reserve);
+                            }
+
                             SaveWorkOrderMaterialAltPart(altPart);
                             SaveStockLineAltPart(altPart);
                         }
@@ -2549,8 +2576,8 @@ namespace DAL.Repositories
                     workOrderCharge.FixedAmount = 0;
                     workOrderCharge.IsActive = true;
                     workOrderCharge.IsDeleted = false;
-                    workOrderCharge.ChargesTypeId = 1;
-                    workOrderCharge.MarkupPercentageId = 1;
+                    workOrderCharge.ChargesTypeId = Convert.ToInt32(item.WorkflowChargeTypeId);
+                    workOrderCharge.MarkupPercentageId =1;
                     workOrderCharge.MasterCompanyId = Convert.ToInt32(masterCompanyId);
                     workOrderCharge.ChargeType = "";
                     workOrderCharge.Quantity = item.Quantity;
