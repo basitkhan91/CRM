@@ -1,6 +1,6 @@
 ﻿import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
-import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { NgForm, FormBuilder, FormGroup, Validators, FormControl,FormArray } from '@angular/forms';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { TableModule } from 'primeng/table';
@@ -80,6 +80,8 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
     selectedModel: any = [];//To Store selected Aircraft Modal Data
     search_AircraftDashNumberList: any;
     capabilitiesForm: FormGroup;
+    onSelectedId: any;
+    itemMasterId: number;
     /** item-master-capabilities-list ctor */
     constructor(private itemMasterService: ItemMasterService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService,private dashnumberservices: DashNumberService,private formBuilder: FormBuilder)
     {
@@ -135,6 +137,9 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
         this.manufacturerdata();
         this.getAllDashNumbers();
 
+    }
+    get mfgFormArray(): FormArray {
+        return this.capabilitiesForm.get('mfgForm') as FormArray;
     }
 
     dataSource: MatTableDataSource<any>;
@@ -323,6 +328,36 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
         this.allPartnumbersInfo = allWorkFlows;
     }
 
+    openModelPopups(capData) {
+        if (this.itemMasterService.isEditMode == false) {
+
+            //Adding for Aircraft manafacturer List Has empty then List Should be null
+            if (capData.selectedAircraftTypes.length > 0) {
+                var arr = capData.selectedAircraftTypes;
+                var selectedvalues = arr.join(",");
+                this.itemMasterService.getAircraftTypes(selectedvalues).subscribe(
+                    results => this.onDataLoadaircrafttypeSuccessful(results[0], capData),
+                    error => this.onDataLoadFailed(error)
+                );
+            }
+            else {
+                this.allAircraftinfo = []; //Making empty if selecting is null
+            }
+        }
+    }
+
+    private onDataLoadaircrafttypeSuccessful(allWorkFlows: any[], capData) //getting Models Based on Manfacturer Selection
+    {
+
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        capData.selectedAircraftDataModels = [];
+        allWorkFlows.forEach(element => {
+            capData.selectedAircraftDataModels.push({ value: element.aircraftModelId, label: element.modelName, aircraftTypeId: element.aircraftTypeId })
+        });
+
+    }
+
 
     private manufacturerdata() {
         this.alertService.startLoadingMessage();
@@ -436,4 +471,96 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
             })
         })
     }
+    manufacturerChange(event, capData) {
+        let selectedData = event.value;
+        capData.selectedManufacturer = [];
+        selectedData.forEach(element1 => {
+            this.manufacturerData.forEach(element2 => {
+                if (element1 == element2.value) {
+                    capData.selectedManufacturer.push(element2);
+                }
+            })
+        })
+    }
+    partEventHandler(event) {
+        if (event) {
+            if (event.target.value != "") {
+
+                let value = event.target.value.toLowerCase();
+                if (this.onSelectedId) {
+                    if (value == this.onSelectedId.toLowerCase()) {
+                        this.disableSave = true;
+                    }
+                    else {
+                        this.disableSave = false;
+                    }
+                }
+            }
+        }
+    }
+    private onpartnumberloadsuccessfull(allWorkFlows: any[]) //getting Part Description
+    {
+
+
+        this.descriptionbyPart = allWorkFlows[0]
+        this.sourceItemMasterCap.partDescription = allWorkFlows[0].partDescription;
+
+
+    }
+    partnmId(event) {
+        //
+        if (this.itemclaColl) {
+            for (let i = 0; i < this.itemclaColl.length; i++) {
+                if (event == this.itemclaColl[i][0].partName) {
+                    this.sourceItemMasterCap.partId = this.itemclaColl[i][0].partId;
+                    this.itemMasterId = this.itemclaColl[i][0].partId;
+                    this.disableSavepartNumber = true;
+                    this.selectedActionName = event;
+                }
+            }
+            this.itemMasterService.getDescriptionbypart(event).subscribe(
+                results => this.onpartnumberloadsuccessfull(results[0]),
+                error => this.onDataLoadFailed(error)
+
+
+            );
+            this.disableSavepartDescription = true;
+        }
+    }
+    filterPNpartItems(event) {
+
+        this.partCollection = [];
+        this.itemclaColl = [];
+        if (this.allPartnumbersInfo) {
+            if (this.allPartnumbersInfo.length > 0) {
+
+                for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
+                    let partName = this.allPartnumbersInfo[i].partNumber;
+                    if (partName) {
+                        if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                            this.itemclaColl.push([{
+                                "partId": this.allPartnumbersInfo[i].itemMasterId,
+                                "partName": partName
+                            }]),
+
+                                this.partCollection.push(partName);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    onPartIdselection(event) {
+        if (this.itemclaColl) {
+
+            for (let i = 0; i < this.itemclaColl.length; i++) {
+                if (event == this.itemclaColl[i][0].partId) {
+                    this.disableSave = true;
+
+                    this.onSelectedId = event;
+                }
+            }
+        }
+    }
+
 }
