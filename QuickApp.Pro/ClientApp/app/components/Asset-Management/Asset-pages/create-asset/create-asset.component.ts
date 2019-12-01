@@ -19,6 +19,7 @@ import { DepriciationMethod } from '../../../../models/depriciation-method.model
 import { Router } from '@angular/router';
 import { AssetIntangibleType } from '../../../../models/asset-intangible-type.model';
 import { AssetIntangibleAttributeType } from '../../../../models/asset-intangible-attribute-type.model';
+import { CommonService } from '../../../../services/common.service';
 
 @Component({
     selector: 'app-create-asset',
@@ -69,9 +70,11 @@ export class CreateAssetComponent implements OnInit {
     depriciationMethodList: DepriciationMethod[];
     allAssets: any[] = [];
     auditHistory: any[];
+    amortizationFrequencyList:any[];
+    depreciationFrequencyList:any[];
 
     constructor(private glAccountService: GlAccountService, private intangibleTypeService: AssetIntangibleTypeService, private route: Router, private assetService: AssetService, private legalEntityServices: LegalEntityService, private alertService: AlertService, public itemMasterservice: ItemMasterService,
-        public unitService: UnitOfMeasureService, public currencyService: CurrencyService, public assetTypeService: AssetTypeService, private depriciationMethodService: DepriciationMethodService, private authService: AuthService, public assetattrService1: AssetAttributeTypeService, public assetIntangibleService: AssetIntangibleAttributeTypeService) {
+        public unitService: UnitOfMeasureService, public currencyService: CurrencyService, public assetTypeService: AssetTypeService, private depriciationMethodService: DepriciationMethodService, private authService: AuthService, public assetattrService1: AssetAttributeTypeService, public assetIntangibleService: AssetIntangibleAttributeTypeService,private commonservice: CommonService,) {
 
         if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
             this.showLable = true;
@@ -124,6 +127,8 @@ export class CreateAssetComponent implements OnInit {
         this.intangibleData();
         this.glList();
         this.loadDepricationMethod();
+        this.getAmortizationFrequencyList();
+        this.getDepreciationFrequencyList();
     }
 
     private AssetAttData() {
@@ -507,6 +512,18 @@ export class CreateAssetComponent implements OnInit {
             results => this.onGlAccountLoad(results[0]),
             error => this.onDataLoadFailed(error)
         );
+    }
+    getAmortizationFrequencyList() {
+        this.commonservice.smartDropDownList('AssetAmortizationInterval', 'AssetAmortizationIntervalId', 'AssetAmortizationIntervalCode').subscribe(res => {
+            this.amortizationFrequencyList = res;
+
+        })
+    }
+    getDepreciationFrequencyList() {
+        this.commonservice.smartDropDownList('AssetDepreciationFrequency', 'AssetDepreciationFrequencyId', 'Name').subscribe(res => {
+            this.depreciationFrequencyList = res;
+
+        })
     }
 
     private intangibleData() {
