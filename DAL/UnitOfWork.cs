@@ -1916,7 +1916,7 @@ namespace DAL
         public IReceiveRepairOrderRepository ReceiveRepairOrder {
             get {
                 if (_receiveRepairOrder == null) {
-                    _receiveRepairOrder = new ReceiveRepairOrderRepository(_context);
+                    _receiveRepairOrder = new ReceiveRepairOrderRepository(_context, CommonRepository);
                 }
                 return _receiveRepairOrder;
             }

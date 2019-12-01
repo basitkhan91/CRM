@@ -16,6 +16,7 @@ import { GlAccountService } from '../../../../services/glAccount/glAccount.servi
 import { GlAccount } from '../../../../models/GlAccount.model';
 import { ShippingService } from '../../../../services/shipping/shipping-service';
 import { CommonService } from '../../../../services/common.service';
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
     selector: 'app-edit-ro',
@@ -62,7 +63,7 @@ export class EditRoComponent implements OnInit {
     SiteList: any[];
     GLAccountList: GlAccount[];
     currentDate: Date;
-    ShippingViaList : DropDownData[];
+    ShippingViaList: DropDownData[];
     repairOrderId: number;
     repairOrderHeaderData: any;
     headerManagementStructure: any = {};
@@ -91,9 +92,8 @@ export class EditRoComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.repairOrderId = this._actRoute.snapshot.queryParams['repairorderid'];
+        this.repairOrderId = this._actRoute.snapshot.queryParams['purchaseorderid'];
         this.receivingService.getReceivingROHeaderById(this.repairOrderId).subscribe(res => {
-            console.log(res);
             this.repairOrderHeaderData = res;
             this.repairOrderHeaderData.openDate = this.repairOrderHeaderData.openDate ? new Date(this.repairOrderHeaderData.openDate) : '';
             this.repairOrderHeaderData.closedDate = this.repairOrderHeaderData.closedDate ? new Date(this.repairOrderHeaderData.closedDate) : '';
@@ -101,10 +101,10 @@ export class EditRoComponent implements OnInit {
             this.repairOrderHeaderData.needByDate = this.repairOrderHeaderData.needByDate ? new Date(this.repairOrderHeaderData.needByDate) : '';
             this.getManagementStructureCodes(this.repairOrderHeaderData.managementStructureId);
         });
-
+        debugger;
         this.receivingService.getReceivingROPartsForEditById(this.repairOrderId).subscribe(
             results => {
-                console.log(results);                
+                console.log(results);
                 this.repairOrderData = results;
                 this.getManagementStructure().subscribe(
                     results => {
@@ -281,20 +281,20 @@ export class EditRoComponent implements OnInit {
     }
 
     getManagementStructureCodes(id) {
-        this.commonService.getManagementStructureCodes(id).subscribe(res => {       
-			if (res.Level1) {
-				this.headerManagementStructure.level1 = res.Level1;
+        this.commonService.getManagementStructureCodes(id).subscribe(res => {
+            if (res.Level1) {
+                this.headerManagementStructure.level1 = res.Level1;
             }
             if (res.Level2) {
-				this.headerManagementStructure.level2 = res.Level2;
+                this.headerManagementStructure.level2 = res.Level2;
             }
             if (res.Level3) {
-				this.headerManagementStructure.level3 = res.Level3;
+                this.headerManagementStructure.level3 = res.Level3;
             }
             if (res.Level4) {
-				this.headerManagementStructure.level4 = res.Level4;
-			}
-		})
+                this.headerManagementStructure.level4 = res.Level4;
+            }
+        })
     }
 
     private getManagementStructure() {
@@ -573,16 +573,16 @@ export class EditRoComponent implements OnInit {
                                 SL.SiteList.push(row);
                             }
 
-                            if (SL.warehouseId > 0) {
+                            if (SL.siteId > 0) {
                                 this.getStockLineWareHouse(SL, true);
                             }
-                            if (SL.locationId > 0) {
+                            if (SL.warehouseId > 0) {
                                 this.getStockLineLocation(SL, true);
                             }
-                            if (SL.shelfId > 0) {
+                            if (SL.locationId > 0) {
                                 this.getStockLineShelf(SL, true);
                             }
-                            if (SL.binId > 0) {
+                            if (SL.shelfId > 0) {
                                 this.getStockLineBin(SL, true);
                             }
                         }
@@ -617,6 +617,7 @@ export class EditRoComponent implements OnInit {
     }
 
     private getStockLineWareHouse(stockLine: StockLine, onPageLoad: boolean): void {
+
         stockLine.WareHouseList = [];
         stockLine.LocationList = [];
         stockLine.ShelfList = [];
@@ -634,7 +635,7 @@ export class EditRoComponent implements OnInit {
                 for (let wareHouse of results) {
                     var dropdown = new DropDownData();
                     dropdown.Key = wareHouse.warehouseId.toLocaleString();
-                    dropdown.Value = wareHouse.warehouseName;
+                    dropdown.Value = wareHouse.warehouseName;         
                     stockLine.WareHouseList.push(dropdown);
                 }
             },
@@ -1017,12 +1018,12 @@ export class EditRoComponent implements OnInit {
 
                 for (var stockLine of stockLineToUpdate) {
                     for (var tl of part.timeLife) {
-                        if (tl.stockLineId == stockLine.stockLineId) {                            
+                        if (tl.stockLineId == stockLine.stockLineId) {
                             timeLife.push(tl);
                         }
                     }
                 }
-                
+
                 if (stockLineToUpdate.length > 0) {
                     let receivePart: ReceiveParts = new ReceiveParts();
                     receivePart.repairOrderPartRecordId = part.repairOrderPartRecordId;
@@ -1058,8 +1059,6 @@ export class EditRoComponent implements OnInit {
         //return this.route.navigate(['/receivingmodule/receivingpages/app-view-po']);
     }
 
- 
-
     private getShippingVia(): void {
         this.shippingService.getAllShippingVia().subscribe(results => {
             this.ShippingViaList = [];
@@ -1085,6 +1084,13 @@ export class EditRoComponent implements OnInit {
             },
             error => this.onDataLoadFailed(error)
         );
+    }
+
+    SetStockLineUnitCost(part: RepairOrderPart) : void {
+        for (var SL of part.stockLine) {
+            SL.repairOrderUnitCost = part.unitCost;
+            SL.repairOrderExtendedCost = SL.quantity * SL.repairOrderUnitCost;
+        }
     }
 }
 

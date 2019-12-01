@@ -686,8 +686,7 @@ export class ReceivingRoComponent implements OnInit {
             this.addStockLine(part, false);
             return;
         }
-        
-        
+
         if (part.quantityActuallyReceived == undefined || part.quantityActuallyReceived == 0) {
             part.showStockLineGrid = false;
             this.alertService.showMessage(this.pageTitle, 'Please enter Quantity Received.', MessageSeverity.error);
@@ -725,31 +724,35 @@ export class ReceivingRoComponent implements OnInit {
         }
 
         part.visible = true;
-        this.createStockLineItems(part);
+        if (part.stocklineListObj.length != quantity) {
+            this.createStockLineItems(part);
 
-        if (part.itemMaster.isTimeLife) {
-            for (var i = 0; i < quantity; i++) {
-                let timeLife: TimeLife = new TimeLife();
-                timeLife.timeLifeCyclesId = 0;
-                timeLife.repairOrderId = part.repairOrderId;
-                timeLife.repairOrderPartRecordId = part.repairOrderPartRecordId;
-                timeLife.cyclesRemaining = '';
-                timeLife.cyclesSinceInspection = '';
-                timeLife.cyclesSinceNew = '';
-                timeLife.cyclesSinceOVH = '';
-                timeLife.cyclesSinceRepair = '';
-                timeLife.timeRemaining = '';
-                timeLife.timeSinceInspection = '';
-                timeLife.timeSinceNew = '';
-                timeLife.timeSinceOVH = '';
-                timeLife.timeSinceRepair = '';
-                timeLife.lastSinceNew = '';
-                timeLife.lastSinceInspection = '';
-                timeLife.lastSinceOVH = '';
-                timeLife.detailsNotProvided = false;
-                part.timeLifeList.push(timeLife);
+            if (part.itemMaster.isTimeLife) {
+                part.timeLifeList = [];
+                for (var i = 0; i < quantity; i++) {
+                    let timeLife: TimeLife = new TimeLife();
+                    timeLife.timeLifeCyclesId = 0;
+                    timeLife.repairOrderId = part.repairOrderId;
+                    timeLife.repairOrderPartRecordId = part.repairOrderPartRecordId;
+                    timeLife.cyclesRemaining = '';
+                    timeLife.cyclesSinceInspection = '';
+                    timeLife.cyclesSinceNew = '';
+                    timeLife.cyclesSinceOVH = '';
+                    timeLife.cyclesSinceRepair = '';
+                    timeLife.timeRemaining = '';
+                    timeLife.timeSinceInspection = '';
+                    timeLife.timeSinceNew = '';
+                    timeLife.timeSinceOVH = '';
+                    timeLife.timeSinceRepair = '';
+                    timeLife.lastSinceNew = '';
+                    timeLife.lastSinceInspection = '';
+                    timeLife.lastSinceOVH = '';
+                    timeLife.detailsNotProvided = false;
+                    part.timeLifeList.push(timeLife);
+                }
             }
         }
+        
 
         this.addStockLine(part, true);
     }

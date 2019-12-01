@@ -1,5 +1,5 @@
 ﻿<div class="x_panel" style="">
-    <div class="x_content" *ngIf="purchaseOrderData != undefined && purchaseOrderData != null">
+    <div class="x_content" *ngIf="purchaseOrderData != undefined && purchaseOrderData != null && purchaseOrderData != undefined && purchaseOrderData != null">
         <div class="card">
             <div class="card-header">
                 <nav class="pull-left" aria-label="breadcrumb">
@@ -21,9 +21,9 @@
                             <div class="form-group">
                                 <label style="float:left; width:auto; margin-right:20px; padding-top:3px;">Status:</label>
                                 <div>
-                                    <div class="pull-left" style="margin-top: 4px; margin-right: 15px;" *ngFor="let status of poStatus">
+                                    <div class="pull-left" style="margin-top: 4px; margin-right: 15px;" *ngFor="let status of roStatus">
                                         <label class="radio-cstm wauto">
-                                            <input type="radio" [checked]="status.Key == purchaseOrderData.statusId" name="postatus" class="form-control" value="{{status.Key}}" disabled required>
+                                            <input type="radio" [checked]="status.Key == purchaseOrderData.statusId" name="roStatus" class="form-control" value="{{status.Key}}" disabled>
                                             <span class="checkmark"></span>
                                             {{status.Value}}
                                         </label>
@@ -33,110 +33,151 @@
                         </div>
                     </div>
                     <hr />
-                    <div class="form-row" style="margin-top: 15px;">
+                    <div class="form-row" style="margin-top: 10px;">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>PO Num</label>
-                                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.purchaseOrderNumber" disabled="disabled" required>
+                                <label>RO Num</label>
+                                <input class="form-control" type="text" name="purchaseOrderNum" [(ngModel)]="purchaseOrderData.purchaseOrderNumber" disabled>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>Vendor Num</label>
-                                <div class="inner-addon right-addon inline-block">
-                                    <input class="form-control" type="text" [value]="purchaseOrderData.vendor.vendorCode" disabled="disabled" required>
-                                </div>
+                                <label>Vendor Name</label>
+                                <input class="form-control" type="text" name="vendorName" [(ngModel)]="purchaseOrderData.vendorName" disabled>
                             </div>
                         </div>
-
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Requisitioner</label>
-                                <input type="text" class="form-control" [ngModelOptions]="{standalone: true}" disabled="disabled" [(ngModel)]="purchaseOrderData.requestedByText" />                               
+                                <input class="form-control" type="text" name="requestedBy" [(ngModel)]="purchaseOrderData.requestedBy" disabled>
                             </div>
                         </div>
-                        <!--<div class="col-md-3">
-                            <div class="form-group">
-                                <label>Company</label>
-                                <select disabled="disabled" class="form-control" [(ngModel)]="poSelectedCompanyId" #selects="ngModel" [ngModelOptions]="{standalone: true}" required>
-                                    <option *ngFor="let company of poCompanyList" [value]="company.Key">{{company.Value}}</option>
-                                </select>
-                            </div>
-                        </div>-->
                     </div>
-
+                    <hr />
                     <div *ngIf="toggle_epo_header">
                         <div class="form-row">
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Open Date</label>
-                                    <p-calendar disabled="disabled" class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.openDate" [required]="true"></p-calendar>
+                                    <p-calendar class="pas-clder" [showIcon]="true" name="openDate" [(ngModel)]="purchaseOrderData.openDate" [disabled]="true"></p-calendar>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Vendor Name</label>
-                                    <div class="inner-addon right-addon inline-block">
-                                        <input type="text" class="form-control" [value]="purchaseOrderData.vendor.vendorName" disabled="disabled" required>
-                                    </div>
+                                    <label>Closed/Cancelled Date</label>
+                                    <p-calendar class="pas-clder" [showIcon]="true" name="closedDate" [(ngModel)]="purchaseOrderData.closedDate" [disabled]="true"></p-calendar>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Approver</label>
-                                    <div class="inner-addon">
-                                        <input disabled="disabled" type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.approver" required>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="form-row">
-                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Need By</label>
-                                    <p-calendar disabled="disabled" class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.needByDate" [required]="true"></p-calendar>
+                                    <p-calendar class="pas-clder" [showIcon]="true" name="needByDate" [(ngModel)]="purchaseOrderData.needByDate" [disabled]="true"></p-calendar>
+                                </div>
+                                <div class="form-group">
+                                    <label>Priority</label>
+                                    <input class="form-control" type="text" name="priority" [(ngModel)]="purchaseOrderData.priority" disabled>
                                 </div>
                             </div>
                             <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Vendor Code</label>
+                                    <input class="form-control" type="text" name="vendorCode" [(ngModel)]="purchaseOrderData.vendorCode" disabled>
+                                </div>
                                 <div class="form-group">
                                     <label>Vendor Contact</label>
-                                    <input class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.vendor.vendorName" type="text" disabled="disabled" />
+                                    <input class="form-control" type="text" name="vendorContact" [(ngModel)]="purchaseOrderData.vendorContact" disabled>
                                 </div>
+                                <div class="form-group">
+                                    <label>Contact Phone</label>
+                                    <input class="form-control" type="text" name="contactPhone" [(ngModel)]="purchaseOrderData.vendorPhone" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label>Credit Limit &amp; Terms</label>
+                                    <div class="form-row">
+                                        <div class="col-sm-5">
+                                            <input class="form-control" type="text" placeholder="limit" name="creditLimit" [(ngModel)]="purchaseOrderData.creditLimit" disabled>
+                                        </div>
+                                        <div class="col-sm-7">
+                                            <input class="form-control" type="text" name="creditTerms" [(ngModel)]="purchaseOrderData.terms" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                             <div class="col-md-3">
+
+                                <div class="form-group">
+                                    <label>Approver</label>
+                                    <input class="form-control" type="text" name="approver" [(ngModel)]="purchaseOrderData.approver" disabled>
+                                </div>
                                 <div class="form-group">
                                     <label>Approved Date</label>
-                                    <p>{{purchaseOrderData.dateApproved | date: 'dd/MM/yyyy'}}</p>
-                                    <!--<p-calendar disabled="disabled" class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.dateApproved" [required]="true"></p-calendar>-->
+                                    <p-calendar class="pas-clder" [showIcon]="true" name="approvedDate" [(ngModel)]="purchaseOrderData.dateApproved" [disabled]="true"></p-calendar>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Deferred Receiver</label>
-                                    <input type="checkbox" disabled [checked]="purchaseOrderData.deferredReceiver" class="form-control names ui-autocomplete-input">
-
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Resale</label>
-                                    <input type="checkbox" disabled [checked]="purchaseOrderData.resale" class="form-control names ui-autocomplete-input">
-
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
+                                <div class="form-group memo-popup-cstm" style="margin-top: 12px;">
                                     <label>Memo</label>
-                                    <textarea disabled class="form-control h100 scroll-x" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.notes"></textarea>
+                                    <span tooltipPosition="top" pTooltip="{{purchaseOrderData.memo}}">
+                                        <input type="text" name="memo" pInputText class="form-control" value="{{purchaseOrderData.memo}}" disabled />
+                                    </span>
+                                    <i class="fa fa-info-circle fa-lg" tooltipPosition="top" pTooltip="{{purchaseOrderData.memo}}"></i>
+                                </div>
+                                <!-- <div class="form-group">
+                    <label>Status <span class="clr-red">*</span></label>
+                    <select class="form-control" name="status" [(ngModel)]="sourceRoApproval.statusId" #statusId="ngModel" required>
+                        <option value="1">Open</option>
+                        <option value="2">Pending</option>
+                        <option value="3">Fulfilling</option>
+                        <option value="4">Closed</option>
+                    </select>
+                    <div *ngIf="statusId.invalid && (statusId.dirty || statusId.touched)" class="alert alert-danger alert-danger-cstm">
+                            <div *ngIf="statusId.errors.required">
+                                <small> Status is required </small>
+                            </div>
+                    </div>
+                </div> -->
+                                <div class="form-group">
+                                    <div class="checkbox-cstm" style="margin-top: 15px;">
+                                        <label>
+                                            <input type="checkbox" name="resale" class="form-control" [(ngModel)]="purchaseOrderData.resale" disabled>
+                                            <span class="cr" style="opacity: 0.6;"><i class="cr-icon pi pi-check"></i></span>
+                                            Resale
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="checkbox-cstm" style="margin-top: 10px;">
+                                        <label>
+                                            <input type="checkbox" name="deferredReceiver" [(ngModel)]="purchaseOrderData.deferredReceiver" disabled>
+                                            <span class="cr" style="opacity: 0.6;"><i class="cr-icon pi pi-check"></i></span>
+                                            Deferred Receiver
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card" style="margin-top: 20px;">
+                                    <div class="card-header" style="padding: 10px 12px;">
+                                        <h5 style="margin-bottom: 0; font-size: 12px;">Management Structure</h5>
+                                    </div>
+                                    <div class="card-body" style="padding: 4px 12px 6px;">
+                                        <div class="form-group" style="margin-bottom: 2px;">
+                                            <label>Company</label>
+                                            <input class="form-control" type="text" name="companyName" [(ngModel)]="headerManagementStructure.level1" disabled>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom: 2px;">
+                                            <label>BU</label>
+                                            <input class="form-control" type="text" name="BUName" [(ngModel)]="headerManagementStructure.level2" disabled>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom: 2px;">
+                                            <label>Division</label>
+                                            <input class="form-control" type="text" name="divisionName" [(ngModel)]="headerManagementStructure.level3" disabled>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom: 2px;">
+                                            <label>Dept</label>
+                                            <input class="form-control" type="text" name="deptName" [(ngModel)]="headerManagementStructure.level4" disabled>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
+
                 </form>
             </div>
         </div>

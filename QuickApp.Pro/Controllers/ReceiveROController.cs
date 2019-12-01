@@ -200,12 +200,14 @@ namespace QuickApp.Pro.Controllers
                         {
                             var stockLine = receivePart.StockLines.Where(x => x.StockLineId == dbStockLine.StockLineId).FirstOrDefault();
                             dbStockLine.ManagementStructureEntityId = stockLine.ManagementStructureEntityId;
-                            dbStockLine.ShelfId = stockLine.ShelfId > 0 ? stockLine.ShelfId : null;
+                            dbStockLine.SiteId = stockLine.SiteId > 0 ? stockLine.SiteId : null;
                             dbStockLine.WarehouseId = stockLine.WarehouseId > 0 ? stockLine.WarehouseId : null;
+                            dbStockLine.LocationId = stockLine.LocationId > 0 ? stockLine.LocationId : null;
+                            dbStockLine.ShelfId = stockLine.ShelfId > 0 ? stockLine.ShelfId : null;
                             dbStockLine.BinId = stockLine.BinId > 0 ? stockLine.BinId : null;
+
                             dbStockLine.RepairOrderUnitCost = stockLine.RepairOrderUnitCost;
                             dbStockLine.RepairOrderExtendedCost = stockLine.RepairOrderExtendedCost;
-                            dbStockLine.LocationId = stockLine.LocationId > 0 ? stockLine.LocationId : null;
                             dbStockLine.ConditionId = stockLine.ConditionId > 0 ? stockLine.ConditionId : null;
                             dbStockLine.ManufacturingTrace = stockLine.ManufacturingTrace;
                             dbStockLine.ManufacturerLotNumber = stockLine.ManufacturerLotNumber;
@@ -222,12 +224,13 @@ namespace QuickApp.Pro.Controllers
                             dbStockLine.ExpirationDate = stockLine.ExpirationDate;
                             dbStockLine.CertifiedDueDate = stockLine.CertifiedDueDate;
                             dbStockLine.UpdatedBy = UserName;
-                            dbStockLine.OwnerType = stockLine.OwnerType;
-                            dbStockLine.ObtainFromType = stockLine.ObtainFromType;
-                            dbStockLine.TraceableToType = stockLine.TraceableToType;
-                            dbStockLine.Owner = stockLine.Owner;
-                            dbStockLine.ObtainFrom = stockLine.ObtainFrom;
-                            dbStockLine.TraceableTo = stockLine.TraceableTo;
+                            
+                            //dbStockLine.OwnerType = stockLine.OwnerType;
+                            //dbStockLine.ObtainFromType = stockLine.ObtainFromType;
+                            //dbStockLine.TraceableToType = stockLine.TraceableToType;
+                            //dbStockLine.Owner = stockLine.Owner;
+                            //dbStockLine.ObtainFrom = stockLine.ObtainFrom;
+                            //dbStockLine.TraceableTo = stockLine.TraceableTo;
                             dbStockLine.UpdatedDate = DateTime.Now;
                             receivePart.StockLines.Remove(stockLine);
                             unitOfWork.Repository<StockLine>().Update(dbStockLine);
