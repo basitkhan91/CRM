@@ -960,6 +960,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allitemclassificationInfo = allWorkFlows;
+        console.log("this.allitemclassificationInfo:::", this.allitemclassificationInfo)
     }
 
     //loading GlAccount from generalLedger//
@@ -1014,6 +1015,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allManufacturerInfo = allWorkFlows;
+        console.log("this.allManufacturerInfo", this.allManufacturerInfo)
 
     }
 
@@ -4887,7 +4889,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 }
             }
         }
-        this.modal.close();
+        //this.modal.close();
     }
 
 
