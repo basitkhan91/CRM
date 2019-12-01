@@ -36,6 +36,7 @@ export class VendorService {
     purchasepartcollection: any[] = [];
     repairecollection: any;
     isEditMode: boolean = false;
+    isReset: boolean = false;
     paymentCollection: any;
     listCollection: any;
     generalCollection: any;

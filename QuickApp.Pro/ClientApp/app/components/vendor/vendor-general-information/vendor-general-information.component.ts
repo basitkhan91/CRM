@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef, AfterViewChecked, OnDestroy } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -39,7 +39,7 @@ declare const google: any;
     animations: [fadeInOut]
 })
 /** anys component*/
-export class VendorGeneralInformationComponent implements OnInit {
+export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
     disableSaveVenderName: boolean;
     disableSaveVenderCode: boolean;
     VendorCodesColl: any[] = [];
@@ -95,7 +95,7 @@ export class VendorGeneralInformationComponent implements OnInit {
     isVendorAlsoCustomer: boolean = false;
     disableSaveParentName: boolean;
     disablesaveForClassification: boolean;
-    selectedClass: any;  
+    selectedClass: any;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     filteredBrands: any[];
@@ -134,14 +134,12 @@ export class VendorGeneralInformationComponent implements OnInit {
     //@ViewChild('f') form: any;
 
     constructor(public vendorclassificationService: VendorClassificationService, private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public customerser: CustomerService, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, public commonService: CommonService) {
-        this.dataSource = new MatTableDataSource();   
-                     
-        if (this.local)
-        {
+        this.dataSource = new MatTableDataSource();
+
+        if (this.local) {
             this.vendorService.contactCollection = this.local;
         }
-        if (this.vendorService.generalCollection)
-        {
+        if (this.vendorService.generalCollection) {
             this.local = this.vendorService.generalCollection;
         }
 
@@ -158,7 +156,7 @@ export class VendorGeneralInformationComponent implements OnInit {
             this.sourceVendor.stateOrProvince = this.vendorService.listCollection.stateOrProvince;
             this.sourceVendor.PostalCode = this.vendorService.listCollection.postalCode;
 
-        }        
+        }
         if (this.customerser.isCustomerAlsoVendor == true) {
             this.sourceVendor = this.customerser.localCollectiontoVendor;
             this.sourceVendor.vendorEmail = this.customerser.localCollectiontoVendor.email;
@@ -167,8 +165,8 @@ export class VendorGeneralInformationComponent implements OnInit {
             this.sourceVendor.vendorCode = this.customerser.localCollectiontoVendor.customerCode;
             this.sourceVendor.doingBusinessAsName = this.customerser.localCollectiontoVendor.doingBuinessAsName;
             this.sourceVendor.PostalCode = this.customerser.localCollectiontoVendor.postalCode;
-        }    
-        
+        }
+
         //if(!this.vendorService.isEditMode)
         //{            
         //    if(this.viewName == "Create")
@@ -178,7 +176,7 @@ export class VendorGeneralInformationComponent implements OnInit {
         //        this.sourceVendor="";
         //        this.vendorService.isEditMode=false;
         //    }         
-            
+
         //}        
 
         // if(this.viewName == "Create")
@@ -188,11 +186,12 @@ export class VendorGeneralInformationComponent implements OnInit {
         // }
         // else{
         //     alert(this.viewName);
-           
+
         // }
-    }   
+    }
 
     ngOnInit(): void {
+        
         this.matSpinner = false;
         this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-general-information';
         this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
@@ -209,10 +208,10 @@ export class VendorGeneralInformationComponent implements OnInit {
             center: { lat: 36.890257, lng: 30.707417 },
             zoom: 12
         };
-        this.sourceVendor.vendorTypeId = 1;       
+        this.sourceVendor.vendorTypeId = 1;
         if (this.vendorService.isEditMode == false) {
             this.sourceVendor.vendorTypeId = 2;
-            this.viewName = "Create";             
+            this.viewName = "Create";
         }
         if (this.vendorService.enableExternal == false) {
             this.sourceVendor.vendorTypeId = 2;
@@ -231,17 +230,23 @@ export class VendorGeneralInformationComponent implements OnInit {
         ];
         if (!this.intSelectedColumns) {
             this.intSelectedColumns = this.cols;
-        }        
-       this.CreateVendorOnClick();               
+        }
+        this.CreateVendorOnClick();
+        console.log(this.sourceVendor, this.isEditMode, this.viewName, "vendor Information ");
+        if (!this.vendorService.isReset) {
+            this.sourceVendor = {};
+        }
     }
-
+    ngOnDestroy(): void {
+        this.sourceVendor = {};
+        this.vendorService.isReset = false;
+    }
     sourceVendor: any = {};
     closethis() {
         this.closeCmpny = false;
     }
     public allWorkFlows: any[] = [];
-    private loadData()
-    {
+    private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.vendorService.getWorkFlows().subscribe(
@@ -361,8 +366,7 @@ export class VendorGeneralInformationComponent implements OnInit {
 
     saveVendorClassificationDetails() {
         this.isSaving = true;
-        if (this.vendorClassName.toLowerCase().trim()=="")
-        {
+        if (this.vendorClassName.toLowerCase().trim() == "") {
             this.alertService.showMessage("Empty", 'Cannot Submit Empty', MessageSeverity.warn);
             return;
         }
@@ -381,8 +385,8 @@ export class VendorGeneralInformationComponent implements OnInit {
             this.sourceAction.classificationName = this.vendorClassName;
             this.sourceAction.masterCompanyId = 1;
             this.vendorclassificationService.newVendorClassification(this.sourceAction).subscribe(data => {
-                if (data) { 
-                    this.sourceVendor.vendorClassificationId = data.vendorClassificationId 
+                if (data) {
+                    this.sourceVendor.vendorClassificationId = data.vendorClassificationId
                 }
                 this.alertService.showMessage("Success", 'Added New Vendor Classification Successfully.', MessageSeverity.success);
 
@@ -458,7 +462,7 @@ export class VendorGeneralInformationComponent implements OnInit {
             }
         }
     }
-  
+
     filterVendorCodes(event) {
         this.vendorCodes = [];
         for (let i = 0; i < this.allActions.length; i++) {
@@ -566,8 +570,9 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.loadingIndicator = true;
         this.sourceVendor = row;
     }
-    editItemAndCloseModel(goNxt?:any) {
+    editItemAndCloseModel(goNxt?: any) {
         this.isSaving = true;
+        this.isEditMode = true;
         if (!(this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
             && this.sourceVendor.PostalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationId
         )) {
@@ -641,6 +646,7 @@ export class VendorGeneralInformationComponent implements OnInit {
         }
         else {
         }
+        
 
     }
 
@@ -652,8 +658,8 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
     }
 
-    CreateVendorOnClick() {       
-        this.activeIndex = 1;       
+    CreateVendorOnClick() {
+        this.activeIndex = 1;
         this.vendorService.indexObj.next(this.activeIndex);
         this.vendorService.changeStep('General Information');
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
@@ -680,7 +686,7 @@ export class VendorGeneralInformationComponent implements OnInit {
     private savesuccessCompleted(user?: any, goNxt?: any) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-        if(goNxt === 'goNext'){
+        if (goNxt === 'goNext') {
             this.nextClick();
         }
         this.loadData();
@@ -739,8 +745,8 @@ export class VendorGeneralInformationComponent implements OnInit {
         }
     }
 
-    checkVendorExist(){
-        this.disableSaveVenderName = false; 
+    checkVendorExist() {
+        this.disableSaveVenderName = false;
         for (let i = 0; i < this.VendorNamecoll.length; i++) {
             if (this.sourceVendor.vendorName == this.VendorNamecoll[i][0].vendorName) {
                 this.disableSaveVenName = true;
@@ -791,12 +797,12 @@ export class VendorGeneralInformationComponent implements OnInit {
     //Added by Vijay For Capabilities dropdown binding
 
     getAllVendorCapabilities(): void {
-        
+
         this.commonService.smartDropDownList('VendorCapabiliy', 'VendorCapabilityId', 'capabilityDescription').subscribe(res => {
-            this.dropDownVendorCapabilitiesList = res;            
+            this.dropDownVendorCapabilitiesList = res;
         })
     }
-   
+
     eventCountryHandler(event) {
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();

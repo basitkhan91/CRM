@@ -310,6 +310,7 @@ export class VendorsListComponent implements OnInit {
         this.workFlowtService.isEditMode = true;
         this.isSaving = true;
         this.sourceVendor = row;
+        this.workFlowtService.isReset = true;
         this.loadMasterCompanies();
         this.workFlowtService.listCollection = this.sourceVendor;
         this.activeIndex = 0;
