@@ -1249,7 +1249,7 @@ namespace QuickApp.Pro.Controllers
                         UOMId = roSplit.UOMId,
                         ManagementStructureId = roSplit.ManagementStructureId,
                         NeedByDate = roSplit.NeedByDate,
-                        StockLineId= roSplit.StockLineId,
+                        StockLineId = roSplit.StockLineId,
                     };
                     roPartDto.RoPartSplits.Add(roPartSplitObj);
                 }
@@ -1543,6 +1543,19 @@ namespace QuickApp.Pro.Controllers
                 contactObj.UpdatedDate = DateTime.Now;
                 contactObj.CreatedBy = vendorContactViewModel.CreatedBy;
                 contactObj.UpdatedBy = vendorContactViewModel.UpdatedBy;
+
+                if (vendorContactViewModel.IsDefaultContact == true)
+                {
+                    var vendorConcatData = _unitOfWork.vendorContactRepository.GetAll().Where(p => p.VendorId == contactObj.VendorId).ToList();
+
+                    foreach (var objContactdata in vendorConcatData)
+                    {
+                        objContactdata.IsDefaultContact = false;
+                        _unitOfWork.vendorContactRepository.Update(objContactdata);
+                    }
+                    _unitOfWork.SaveChanges();
+                }
+
                 _unitOfWork.vendorContactRepository.Add(contactObj);
                 _unitOfWork.SaveChanges();
 
@@ -1557,7 +1570,7 @@ namespace QuickApp.Pro.Controllers
             if (ModelState.IsValid)
             {
                 var VendorrObj = _unitOfWork.Vendor.GetSingleOrDefault(a => a.VendorId == id);
-                if(VendorrObj != null)
+                if (VendorrObj != null)
                 {
                     //vendorViewModel.MasterCompanyId = 1;
                     VendorrObj.IsActive = vendorViewModel.IsActive;
@@ -1567,7 +1580,7 @@ namespace QuickApp.Pro.Controllers
                     _unitOfWork.Vendor.Update(VendorrObj);
                     _unitOfWork.SaveChanges();
                 }
-                
+
                 return Ok(VendorrObj);
             }
 
@@ -1685,7 +1698,22 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.ContactRepository.Update(contactObj);
                 _unitOfWork.SaveChanges();
                 var vendorContactObj = _unitOfWork.vendorContactRepository.GetVendorContactsbyContctId(id);
+
+
+
+                if (Convert.ToBoolean(contactViewModel.IsDefaultContact) == true)
+                {
+                    var vendorConcatData = _unitOfWork.vendorContactRepository.GetAll().Where(p => p.VendorId == vendorContactObj.VendorId).ToList();
+
+                    foreach (var objContactdata in vendorConcatData)
+                    {
+                        objContactdata.IsDefaultContact = false;
+                        _unitOfWork.vendorContactRepository.Update(objContactdata);
+                    }
+                    _unitOfWork.SaveChanges();
+                }
                 vendorContactObj.IsDefaultContact = Convert.ToBoolean(contactViewModel.IsDefaultContact);
+
                 _unitOfWork.vendorContactRepository.Update(vendorContactObj);
                 _unitOfWork.SaveChanges();
 
@@ -3488,7 +3516,7 @@ namespace QuickApp.Pro.Controllers
                 if (ModelState.IsValid)
                 {
                     if (Request.Form == null)
-                        return BadRequest($"{nameof(objVendorDocumentDetail)} cannot be null");                    
+                        return BadRequest($"{nameof(objVendorDocumentDetail)} cannot be null");
 
                     long VendorDocumentDetailId = Convert.ToInt64(Request.Form["VendorDocumentDetailId"]);
 
