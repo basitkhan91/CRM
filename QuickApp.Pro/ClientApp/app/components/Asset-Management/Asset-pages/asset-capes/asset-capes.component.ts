@@ -112,7 +112,7 @@ export class AssetCapesComponent implements OnInit {
 
     capabilityForm: any ={
         selectedCap:{},CapabilityTypeId: 0, selectedPartId: [], selectedAircraftDataModels: [],
-        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
+        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: [],selectedDashNumbers2: []
     };
 
     capabilityTypeData: any = [{
@@ -551,7 +551,7 @@ export class AssetCapesComponent implements OnInit {
                     //this.getAircraftDashNumber(selectedData);
 
 
-                    capData.selectedDashNumbers = []
+                    capData.selectedDashNumbers2 = []
                     // checks where multi select is empty or not and calls the service
 
                     if (capData.selectedAircraftTypes !== '' && capData.selectedAircraftModelTypes !== '') {
@@ -561,9 +561,11 @@ export class AssetCapesComponent implements OnInit {
                         ).subscribe(dashnumbers => {
                             const responseData = dashnumbers;
                             this.search_AircraftDashNumberList = responseData.map(dashnumbers => {
+                                console.log(dashnumbers);
                                 return {
                                     label: dashnumbers.dashNumber,
-                                    value: dashnumbers.dashNumberId
+                                    value: dashnumbers.dashNumberId,
+                                    modelId:dashnumbers.aircraftModelId,
                                 };
                             });
                         });
@@ -572,6 +574,18 @@ export class AssetCapesComponent implements OnInit {
                 }
             })
         })
+    }
+    dashNumberChange(event, capData) {
+        let selectedData = event.value;
+        capData.selectedDashNumbers2 = [];
+        selectedData.forEach(element1 => {
+            this.search_AircraftDashNumberList.forEach(element2 => {
+                if (element1 == element2.value) {
+                    capData.selectedDashNumbers2.push(element2);
+                }
+            })
+        })
+        console.log(capData.selectedDashNumbers2);
     }
     cunstructFormForEdit() {
         if (this.manufacturerData.length > 0) {
@@ -781,95 +795,77 @@ export class AssetCapesComponent implements OnInit {
             capbilitiesObj.PartId = capData.selectedPartId;
             capbilitiesObj.itemMasterId = this.itemMasterId;
             capbilitiesObj.AssetCapesId = this.AssetCapesId;
-            capbilitiesObj.AircraftDashNumberId = capData.selectedDashNumbers;
-            console.log(capData.selectedDashNumbers);
-            if(capData.selectedDashNumbers){
-            this.dashnumberservices.getById(capData.selectedDashNumbers).subscribe(dashnumbers => {
-                const responseData = dashnumbers[0];
-                capbilitiesObj.DashNumber = responseData[0].dashNumber;
-            });
-        }else{
-            capbilitiesObj.DashNumber = 'Undefined'
-        }
+            capbilitiesObj.aircraftModelName = 'Undefined';
+            capbilitiesObj.DashNumber = 'Undefined';
+           // capbilitiesObj.AircraftDashNumberId = capData.selectedDashNumbers;
+            console.log(capData.selectedDashNumbers2);
+
+            if(capData.selectedModel.length==0){
+                let mfObj = this.formBuilder.group(capbilitiesObj);
+                this.mfgFormArray.push(mfObj);
+                    let mfgIndex = this.mfgFormArray.controls.length - 1;
+                    this.mfgFormArray.controls[mfgIndex]['buList'] = [];
+                    this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
+                    this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
+            }
+
             capData.selectedModel.forEach(element2 => {
                 if (element2.aircraftTypeId == element1.value) {
                     capbilitiesObj.aircraftModelName = element2.label;
                     capbilitiesObj.aircraftModelId = element2.value;
-                    let index = capData.CapabilityTypeId - 1;
-                    let mfObj = this.formBuilder.group(capbilitiesObj);
-                    let mfgItemExisted = this.checkIsExisted(capData.CapabilityTypeId,element1.value, element2.value, this.mfgFormArray, capData);
-                    if (mfgItemExisted == false) {
-                        this.mfgFormArray.push(mfObj);
-                        let mfgIndex = this.mfgFormArray.controls.length - 1;
-                        this.mfgFormArray.controls[mfgIndex]['buList'] = [];
-                        this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
-                        this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
 
+                    if(capData.selectedDashNumbers2.length==0){
+                        let mfObj = this.formBuilder.group(capbilitiesObj);
+                        let mfgItemExisted = this.checkIsExisted(capData.CapabilityTypeId,element1.value, element2.value, this.mfgFormArray, capData);
+                        if (mfgItemExisted == false) {
+                            this.mfgFormArray.push(mfObj);
+                            let mfgIndex = this.mfgFormArray.controls.length - 1;
+                            this.mfgFormArray.controls[mfgIndex]['buList'] = [];
+                            this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
+                            this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
+    
+                        }
                     }
-                    /*
-                    switch (capData.formArrayName) {
-                        case "mfgForm":
-                            let mfgItemExisted = this.checkIsExisted(element1.value, element2.value, this.mfgFormArray, this.capabilityTypeData[0]);
+            
+                    capData.selectedDashNumbers2.forEach(element3 => {
+                        if (element3.modelId == element2.value) {
+        
+                            capbilitiesObj.DashNumber = element3.label;
+                            capbilitiesObj.AircraftDashNumberId = element3.value;
+                           
+                            let index = capData.CapabilityTypeId - 1;
+                            let mfObj = this.formBuilder.group(capbilitiesObj);
+                            let mfgItemExisted = this.checkIsExisted(capData.CapabilityTypeId,element1.value, element2.value, this.mfgFormArray, capData);
                             if (mfgItemExisted == false) {
                                 this.mfgFormArray.push(mfObj);
                                 let mfgIndex = this.mfgFormArray.controls.length - 1;
-
+                                this.mfgFormArray.controls[mfgIndex]['buList'] = [];
+                                this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
+                                this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
+        
                             }
-
-
-                            break;
-                        case "overhaulForm":
-                            let oralItemExisted = this.checkIsExisted(element1.value, element2.value, this.overhaulFormArray, this.capabilityTypeData[1]);
-                            if (oralItemExisted == false) {
-                                this.overhaulFormArray.push(mfObj);
-                                let overIndex = this.overhaulFormArray.controls.length - 1;
-
+                           
+                        }else{
+                            let mfObj = this.formBuilder.group(capbilitiesObj);
+                            let mfgItemExisted = this.checkIsExisted(capData.CapabilityTypeId,element1.value, element2.value, this.mfgFormArray, capData);
+                            if (mfgItemExisted == false) {
+                                this.mfgFormArray.push(mfObj);
+                                let mfgIndex = this.mfgFormArray.controls.length - 1;
+                                this.mfgFormArray.controls[mfgIndex]['buList'] = [];
+                                this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
+                                this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
+        
                             }
-                            break;
-                        case "distributionForm":
-                            let distExisted = this.checkIsExisted(element1.value, element2.value, this.distributionFormArray, this.capabilityTypeData[2]);
-                            if (distExisted == false) {
-                                this.distributionFormArray.push(mfObj);
-                                let distIndex = this.distributionFormArray.controls.length - 1;
-                                this.distributionFormArray.controls[distIndex]['buList'] = [];
-                                this.distributionFormArray.controls[distIndex]['departmentList'] = [];
-                                this.distributionFormArray.controls[distIndex]['divisionlist'] = [];
-                            }
-                            break;
-                        case "certificationForm":
-                            let certExisted = this.checkIsExisted(element1.value, element2.value, this.certificationFormArray, this.capabilityTypeData[3]);
-                            if (certExisted == false) {
-                                this.certificationFormArray.push(mfObj);
-                                let certIndex = this.certificationFormArray.controls.length - 1;
-                                this.certificationFormArray.controls[certIndex]['buList'] = [];
-                                this.certificationFormArray.controls[certIndex]['departmentList'] = [];
-                                this.certificationFormArray.controls[certIndex]['divisionlist'] = [];
-                            }
-                            break;
-                        case "repairForm":
-                            let repairExisted = this.checkIsExisted(element1.value, element2.value, this.repairFormArray, this.capabilityTypeData[4]);
-                            if (repairExisted == false) {
-                                this.repairFormArray.push(mfObj);
-                                let repIndex = this.repairFormArray.controls.length - 1;
-                                this.repairFormArray.controls[repIndex]['buList'] = [];
-                                this.repairFormArray.controls[repIndex]['departmentList'] = [];
-                                this.repairFormArray.controls[repIndex]['divisionlist'] = [];
-                            }
-                            break;
-                        case "exchangeForm":
-                            let exchangeExisted = this.checkIsExisted(element1.value, element2.value, this.exchangeFormArray, this.capabilityTypeData[5]);
-                            if (exchangeExisted == false) {
-                                this.exchangeFormArray.push(mfObj);
-                                let excngIndex = this.exchangeFormArray.controls.length - 1;
-                                this.exchangeFormArray.controls[excngIndex]['buList'] = [];
-                                this.exchangeFormArray.controls[excngIndex]['departmentList'] = [];
-                                this.exchangeFormArray.controls[excngIndex]['divisionlist'] = [];
-                            }
-                            break;
-                    }*/
+                        }
+        
+                    });
+                   
                 }
 
             });
+
+           
+
         });
 
     }
@@ -975,7 +971,7 @@ export class AssetCapesComponent implements OnInit {
         this.assetServices.saveManfacturerinforcapes(capabilityCollection).subscribe(data11 => {
             this.loadCapesData();
         })
-        
+        this.mfgFormArray.controls = [];
         this.modal.close();
     }
 
@@ -1011,6 +1007,7 @@ export class AssetCapesComponent implements OnInit {
 
         this.isEditMode = false;
         this.isDeleteMode = true;
+        this.mfgFormArray.controls = [];
         this.modal = this.modalService.open(content, { size: 'lg' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -1083,6 +1080,8 @@ export class AssetCapesComponent implements OnInit {
         this.assetServices.listCollection = this.local;
         this.activeIndex = 0;
         this.assetServices.indexObj.next(this.activeIndex);
+        this.assetServices.isEditMode = true;
+        this.isSaving = true;
         this.route.navigateByUrl('/assetmodule/assetpages/app-create-asset');
     }
 }

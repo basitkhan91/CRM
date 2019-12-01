@@ -83,10 +83,13 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label class="popup-plusicon-cstm">Dash Number </label>
-                                                <select [(ngModel)]="capabilityForm.selectedDashNumbers" [ngModelOptions]="{standalone: true}">
-                                                    <option>--Select--</option>
-                                                    <option *ngFor="let dashnumbers of search_AircraftDashNumberList" [ngValue]="dashnumbers.value">{{dashnumbers.label}}</option>
-                                                </select>
+
+                                                <p-multiSelect [options]="search_AircraftDashNumberList"
+                                                [ngModelOptions]="{standalone: true}"
+                                                [(ngModel)]="capabilityForm.selectedDashNumbers"
+                                                [panelStyle]="{minWidth:'12em'}"
+                                                (onChange)="dashNumberChange($event,capabilityForm)">
+                                                </p-multiSelect>
                                             </div>
                                         </div>
 
