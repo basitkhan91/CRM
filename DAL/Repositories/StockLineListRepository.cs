@@ -17,6 +17,44 @@ namespace DAL.Repositories
         {
             try
             {
+                var totalRecords = (from stl in _appContext.StockLine
+                                               join im in _appContext.ItemMaster on stl.ItemMasterId equals im.ItemMasterId
+                                               join co in _appContext.Condition on stl.ConditionId equals co.ConditionId
+                                               join ig in _appContext.Itemgroup on im.ItemGroupId equals ig.ItemGroupId into itemgroup
+                                               from ig in itemgroup.DefaultIfEmpty()
+                                               join si in _appContext.Site on stl.SiteId equals si.SiteId into sit
+                                               from si in sit.DefaultIfEmpty()
+                                               join w in _appContext.Warehouse on stl.WarehouseId equals w.WarehouseId into ware
+                                               from w in ware.DefaultIfEmpty()
+                                               join l in _appContext.Location on stl.LocationId equals l.LocationId into loc
+                                               from l in loc.DefaultIfEmpty()
+                                               join sh in _appContext.Shelf on stl.ShelfId equals sh.ShelfId into she
+                                               from sh in she.DefaultIfEmpty()
+                                               join bi in _appContext.Bin on stl.BinId equals bi.BinId into bin
+                                               from bi in bin.DefaultIfEmpty()
+                                               join po in _appContext.PurchaseOrder on stl.PurchaseOrderId equals po.PurchaseOrderId into purchase
+                                               from po in purchase.DefaultIfEmpty()
+                                               join ro in _appContext.RepairOrder on stl.RepairOrderId equals ro.RepairOrderId into repair
+                                               from ro in repair.DefaultIfEmpty()
+                                               join mana in _appContext.ManagementStructure on stl.ManagementStructureEntityId equals mana.ManagementStructureId into manage
+                                               from mana in manage.DefaultIfEmpty()
+                                               join managmentLegalEntity in _appContext.ManagementStructure on mana.ManagementStructureId equals managmentLegalEntity.ManagementStructureId into mainCompanyTree
+                                               from managmentLegalEntity in mainCompanyTree.DefaultIfEmpty()
+                                               join divmanagmentLegalEntity in _appContext.ManagementStructure on managmentLegalEntity.ParentId equals divmanagmentLegalEntity.ManagementStructureId into mainDivCompany
+                                               from divmanagmentLegalEntity in mainDivCompany.DefaultIfEmpty()
+                                               join biumanagmentLegalEntity in _appContext.ManagementStructure on divmanagmentLegalEntity.ParentId equals biumanagmentLegalEntity.ManagementStructureId into BIUDivCompany
+                                               from biumanagmentLegalEntity in BIUDivCompany.DefaultIfEmpty()
+                                               join compmanagmentLegalEntity in _appContext.ManagementStructure on biumanagmentLegalEntity.ParentId equals compmanagmentLegalEntity.ManagementStructureId into comivCompany
+                                               from compmanagmentLegalEntity in comivCompany.DefaultIfEmpty()
+                                               join ti in _appContext.TimeLife on stl.TimeLifeCyclesId equals ti.TimeLifeCyclesId into time
+                                               from ti in time.DefaultIfEmpty()
+                                               join man in _appContext.Manufacturer on stl.ManufacturerId equals man.ManufacturerId into manufa
+                                               from man in manufa.DefaultIfEmpty()
+                                               select new
+                                               {
+                                                   stl.StockLineNumber,
+                                               }).Count();
+
                 var result = (from stl in _appContext.StockLine
 
                               join im in _appContext.ItemMaster on stl.ItemMasterId equals im.ItemMasterId
@@ -177,6 +215,7 @@ namespace DAL.Repositories
                                   biumanagmentLegalEntity,
                                   compmanagmentLegalEntity,
                                   mana,
+                                  totalRecords
                               }).ToList();
                 return result;
             }
