@@ -14,19 +14,17 @@
                 <div class="tab-pane active" id="home">
                   <div class="col-sm-4" style="margin-left: 15px">
                     <div class="form-group">
-                        <label class="">Ledger Name <span class="clr-red">*</span></label>
+                        <label class="">Ledger Name</label>
                         <div class="inner-addon right-addon inline-block">
                            <p-autoComplete  class="autocomp-customer-cstm" 
-                            name="name"
-                            (onKeyUp)="checkLedgerNameExists('name',$event.target.value)"
-                            (onSelect)="selectedLedgerName()" 
+                            name="name"                            
                              [(ngModel)]="glAccountObj.ledgename" [suggestions]="ledgerNameObject" formControlName="ledgerName" 
                              field="name" emptyMessage="No results"
                              (completeMethod)="loadLedgerNames($event)" [size]="30"
                                             [minLength]="1" [dropdown]="true" required>
                                 
                             </p-autoComplete>
-                            <div *ngIf="ischeckLedgerNameExists" class="clr-red">Entry Already Exists</div>
+                            <!-- <div *ngIf="ischeckLedgerNameExists" class="clr-red">Entry Already Exists</div> -->
                         </div>
                         <div *ngIf="submittedForm && formdata.ledgerName.errors" class="col-sm-12 invalid-feedback">
                             <div *ngIf="formdata.ledgerName.errors">Ledger Name is required</div>

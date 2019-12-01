@@ -1519,7 +1519,7 @@ input[type="text"] {
     *, :after, :before {
         box-sizing: border-box;
         /*border-radius: 9px;
-	padding: 0.002px;*/
+    padding: 0.002px;*/
     }
 
     #integration-list {
@@ -8213,7 +8213,7 @@ input[type="text"] {
     }
     /*
 table thead tr th:first-child input, table tr td:first-child input {
-	width: 26px;
+    width: 26px;
 }
 */
     .po-data, .ro-data {
@@ -11912,7 +11912,7 @@ table thead tr th:first-child input, table tr td:first-child input {
     }
     /*
 .modal-content p-autocomplete span.ui-autocomplete.ui-widget.ui-autocomplete-dd input.ui-inputtext {
-	width: 169px !important;
+    width: 169px !important;
 }
 */
     p-autocomplete span.ui-autocomplete.ui-widget.ui-autocomplete-dd button span {
@@ -12356,7 +12356,7 @@ table thead tr th:first-child input, table tr td:first-child input {
         border: none;
     }
     /*.ui-widget-header {
-	background: #4b9ed3;
+    background: #4b9ed3;
 }*/
     .ui-dialog-footer {
         padding: 0.6em !important;
@@ -12697,28 +12697,28 @@ body .ui-datepicker table td > a.ui-state-active {
     color: #337ab7;
 }
 .pub-type-select .ui-dropdown {
-	width: 100% !important;
+    width: 100% !important;
   }
 
   .pub-border .ui-dropdown {
-	border-radius: 5px;
+    border-radius: 5px;
   }
   .pub-multi{
-	 padding-right: 2px;
-	  
+     padding-right: 2px;
+      
   }
   .pub-type-select .ui-dropdown-trigger .ui-dropdown-trigger-icon {
-	left: 33% !important;
+    left: 33% !important;
   }
   .pub-type-select .ui-dropdown-label  {
-	text-align: left;
+    text-align: left;
   }
 
   .checkbox-blue .ui-chkbox-box.ui-state-active {
-	border-color: #005b9f !important;
-	background-color: #005b9f !important;
-	color: #ffffff;
-	padding: 1px;
+    border-color: #005b9f !important;
+    background-color: #005b9f !important;
+    color: #ffffff;
+    padding: 1px;
   }
   .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
     margin-left: -1px;
@@ -14298,6 +14298,7 @@ p-dropdown .accountdropdown.ui-widget{
 margin-left: -6px;
 }
 
-.add-glaccount .btn-success.disabled{
+.add-glaccount .btn-success.disabled,
+.add-glaccount .btn-success:disabled{
     cursor: no-drop
 }

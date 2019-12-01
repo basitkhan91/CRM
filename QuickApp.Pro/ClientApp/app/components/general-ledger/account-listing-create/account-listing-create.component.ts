@@ -130,19 +130,19 @@ submittedValue: any;
         let current_datetime = new Date()
         let formatted_date = (current_datetime.getMonth() + 1) + "/" + current_datetime.getDate() +  "/" + current_datetime.getFullYear()
         
-        this.leafNodeNameObj = [
-            {label:'Select', value:''},
-            {label: 'abc', value: '1'},
-            {label: 'sass', value: '2'},
-            {label: 'gtll', value: '3'},
-            {label: 'years', value: '4'},
-            {label: 'opo', value: '5'},
-            {label: 'wqw', value: '6'},
-            {label: 'sas', value: '7'}            
-        ];
+        // this.leafNodeNameObj = [
+        //     {label:'Select', value:''},
+        //     {label: 'abc', value: '1'},
+        //     {label: 'sass', value: '2'},
+        //     {label: 'gtll', value: '3'},
+        //     {label: 'years', value: '4'},
+        //     {label: 'opo', value: '5'},
+        //     {label: 'wqw', value: '6'},
+        //     {label: 'sas', value: '7'}            
+        // ];
 
         this.entitiesObj = [
-            {label:'Select', value:''},
+            //{label:'Select', value:''},
             {label: 'abc', value: '1'},
             {label: 'sass', value: '2'},
             {label: 'gtll', value: '3'},
@@ -158,7 +158,7 @@ submittedValue: any;
             accountCode: ['', Validators.required],
             accountName: ['', Validators.required],
             accountType: ['', Validators.required],
-            accountDescription: ['', Validators.required],
+            accountDescription: '',
             active: [true, Validators.required],
             leafNodeName: '',
             interCompany: false,           
@@ -174,6 +174,7 @@ submittedValue: any;
 
         this.getAccountObject()
         this.getLedgerObject()
+        this.getLeafNodeObject()
     }
 
     get formdata() { return this.accountListCreateForm.controls; }
@@ -501,6 +502,22 @@ loadAccountType(event){
                   collection.push(obj)
                 })
             this.ledgerNameObject = collection
+            })
+    }
+
+    getLeafNodeObject(){
+         this.accountListingService.getLeafNodeData().subscribe(
+            datalist=> {
+                 let obj = {}   
+                 let collection = [] 
+                const x = datalist.filter( (o, index) => {
+                  obj = {
+                    label: datalist[index]['nodeName'],
+                    value: datalist[index]['glAccountNodeId']
+                  }
+                  collection.push(obj)
+                })
+            this.leafNodeNameObj = collection
             })
     }
 

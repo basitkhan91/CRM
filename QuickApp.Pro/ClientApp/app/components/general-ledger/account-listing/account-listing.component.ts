@@ -36,12 +36,12 @@ export class AccountListingComponent implements OnInit {
     totalRecords: number = 0;
     totalPages: number = 0;
     headers = [
-        //{ field: 'ledgerName', header: 'Ledger Name' },
+        { field: 'ledgerName', header: 'Ledger Name' },
         { field: 'oldAccountCode', header: 'Old GL Account Code' },
         { field: 'accountCode', header: 'GL Account Code' },
         { field: 'accountName', header: 'Account Name' },
         //{ field: 'entities', header: 'Share With Entities' },
-       // { field: 'leafleafNodeNameName', header: 'Leaf Node Name' },
+        { field: 'leafleafNodeNameName', header: 'Leaf Node Name' },
         { field: 'isActive', header: 'Active' },
 
     ]

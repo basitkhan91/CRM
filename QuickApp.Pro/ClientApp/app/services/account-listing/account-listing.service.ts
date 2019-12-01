@@ -20,6 +20,7 @@ export class AccountListingService extends EndpointFactory {
    private readonly getGlAccountUrl: string = "/api/GlAccount/getAllGLAccount";
    private readonly getGlAccountByIdUrl: string = "/api/nodesetup/getById";
    private readonly getLedgerNamesUrl: string = "/api/nodesetup/getAll";
+   private readonly getLeafNodeUrl: string = "/api/nodesetup/getAllLeafNode";
 
    get createGlAccountUri() { return this.configurations.baseUrl + this.createGlAccountUrl; }
    get updateGlAccountUri() { return this.configurations.baseUrl + this.updateGlAccountUrl; }
@@ -27,6 +28,7 @@ export class AccountListingService extends EndpointFactory {
    get getGlAccountUri() { return this.configurations.baseUrl + this.getGlAccountUrl; }
    get getGlAccountByIdUri() { return this.configurations.baseUrl + this.getGlAccountByIdUrl; }
    get getLedgerNamesUri() { return this.configurations.baseUrl + this.getLedgerNamesUrl; }
+   get getLeafNodeUri() { return this.configurations.baseUrl + this.getLeafNodeUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -36,13 +38,19 @@ export class AccountListingService extends EndpointFactory {
    
     public getAll(): Observable<any> {
         //return this.http.get('dist/assets/data/accountlisting.json').pipe(map((response: any) => response)); 
-    	return this.http.get(`${this.getGlAccountUri}`).pipe(map((response: any) => response)); 
+      return this.http.get(`${this.getGlAccountUri}`).pipe(map((response: any) => response)); 
         //return Observable.forkJoin(this.accountListEndpointservice.getData<any[]>());
     }
 
     public getLedgerData(): Observable<any> {
         //return this.http.get('dist/assets/data/accountlisting.json').pipe(map((response: any) => response)); 
       return this.http.get(`${this.getLedgerNamesUri}`).pipe(map((response: any) => response)); 
+        //return Observable.forkJoin(this.accountListEndpointservice.getData<any[]>());
+    }
+
+    public getLeafNodeData(): Observable<any> {
+        //return this.http.get('dist/assets/data/accountlisting.json').pipe(map((response: any) => response)); 
+      return this.http.get(`${this.getLeafNodeUri}`).pipe(map((response: any) => response)); 
         //return Observable.forkJoin(this.accountListEndpointservice.getData<any[]>());
     }
 
@@ -54,7 +62,7 @@ export class AccountListingService extends EndpointFactory {
 
 
     createGlAccount(data: any): Observable<any> {
-    	let body = JSON.stringify(data);
+      let body = JSON.stringify(data);
         let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
         return this.http.post(this.createGlAccountUri, body, this.getRequestHeaders())
             .map((response: HttpResponseBase) => {
