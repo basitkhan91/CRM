@@ -1165,6 +1165,7 @@ export class ReceivingRoComponent implements OnInit {
     }
 
     onChangeTimeLife(part: RepairOrderPart) {
+        part.timeLifeList[part.currentTLIndex].detailsNotProvided = part.detailsNotProvided;
             part.timeLifeList[part.currentTLIndex].timeLifeCyclesId = 0;
             part.timeLifeList[part.currentTLIndex].repairOrderId = part.repairOrderId;
             part.timeLifeList[part.currentTLIndex].repairOrderPartRecordId = part.repairOrderPartRecordId;
@@ -1260,8 +1261,7 @@ export class ReceivingRoComponent implements OnInit {
                     item.stocklineListObj[i].repairOrderUnitCost = item.stocklineListObj[i].repairOrderUnitCost == undefined ||
                         item.stocklineListObj[i].repairOrderUnitCost.toString() == '' ? 0 :
                         item.stocklineListObj[i].repairOrderUnitCost;
-                    //item.stocklineListObj[i].oEM = item.itemMaster.oemPNId;
-
+                    
                     if (item.stocklineListObj[i].companyId == undefined || item.stocklineListObj[i].companyId == 0) {
                         errorMessages.push("Please select Company in Receiving Qty - " + (i + 1).toString() + ofPartMsg);
                     }
@@ -1287,9 +1287,8 @@ export class ReceivingRoComponent implements OnInit {
             }
 
             if (item.timeLifeList != undefined && item.timeLifeList.length > 0) {
-                // need to have some check to make sure atleast one field is entered.
                 for (var i = 0; i < item.timeLifeList.length; i++) {
-                    if (item.isTimeLifeUpdateLater != undefined && !item.isTimeLifeUpdateLater) {
+                    if (item.detailsNotProvided != true) {
                         var timeLife = item.timeLifeList[i];
                         if (timeLife.cyclesRemaining == '' && timeLife.cyclesSinceNew == '' && timeLife.cyclesSinceOVH == '' && timeLife.cyclesSinceInspection == '' && timeLife.cyclesSinceRepair == '' &&
                             timeLife.timeRemaining == '' && timeLife.timeSinceNew == '' && timeLife.timeSinceOVH == '' && timeLife.timeSinceInspection == '' && timeLife.timeSinceRepair == '' &&

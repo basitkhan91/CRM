@@ -412,20 +412,20 @@
                                 <td></td>
                                 <td>
                                     <label style="width:90px;">Company:</label>
-                                    {{part.stockLine[stockline_row_index].companyText}}
+                                    {{SL.companyText}}
                                     <!-- <select class="form-control"
-                                            [(ngModel)]="SL.companyId"
-                                            #selects="ngModel"
-                                            [ngModelOptions]="{standalone: true}"
-                                            (change)="getStockLineBusinessUnitList(SL)"
-                                            [disabled]="!SL.isEnabled">
-                                        <option value="0">Select</option>
-                                        <option *ngFor="let company of SL.CompanyList" [value]="company.Key">{{company.Value}}</option>
-                                    </select> -->
+            [(ngModel)]="SL.companyId"
+            #selects="ngModel"
+            [ngModelOptions]="{standalone: true}"
+            (change)="getStockLineBusinessUnitList(SL)"
+            [disabled]="!SL.isEnabled">
+        <option value="0">Select</option>
+        <option *ngFor="let company of SL.CompanyList" [value]="company.Key">{{company.Value}}</option>
+    </select> -->
                                 </td>
                                 <td>
                                     <label style="width:90px;">BU:</label>
-                                    {{part.stockLine[stockline_row_index].businessUnitText}}
+                                    {{SL.businessUnitText}}
                                     <!-- <select class="form-control"
                                             [(ngModel)]="SL.businessUnitId"
                                             #selects="ngModel"
@@ -438,7 +438,7 @@
                                 </td>
                                 <td>
                                     <label style="width:90px;">Division:</label>
-                                    {{part.stockLine[stockline_row_index].divisionText}}
+                                    {{SL.divisionText}}
                                     <!-- <select class="form-control"
                                             [(ngModel)]="SL.divisionId"
                                             #selects="ngModel"
@@ -451,7 +451,7 @@
                                 </td>
                                 <td>
                                     <label style="width:90px;">Dept:</label>
-                                    {{part.stockLine[stockline_row_index].departmentText}}
+                                    {{SL.departmentText}}
                                     <!-- <select class="form-control"
                                             [(ngModel)]="SL.departmentId"
                                             #selects="ngModel"
@@ -521,11 +521,11 @@
                                         <option *ngFor="let bin of SL.BinList" [value]="bin.Key">{{bin.Value}}</option>
                                     </select> -->
                                 </td>
-                                <td>{{SL.ownerType == 3 ? 'Vendor' : SL.ownerType == 1 ? 'Customer' : 'Company' }}</td>
+                                <td>{{SL.ownerType == 3 ? 'Vendor' : SL.ownerType == 1 ? 'Customer' : 'Other' }}</td>
                                 <td>{{SL.ownerText}}</td>
-                                <td>{{SL.obtainFromType == 3 ? 'Vendor' : SL.obtainFromType == 1 ? 'Customer' : 'Company' }}</td>
+                                <td>{{SL.obtainFromType == 3 ? 'Vendor' : SL.obtainFromType == 1 ? 'Customer' : 'Other' }}</td>
                                 <td>{{SL.obtainFromText}}</td>
-                                <td>{{SL.traceableToType == 3 ? 'Vendor' : SL.traceableToType == 1 ? 'Customer' : 'Company' }}</td>
+                                <td>{{SL.traceableToType == 3 ? 'Vendor' : SL.traceableToType == 1 ? 'Customer' : 'Other' }}</td>
                                 <td>{{SL.traceableToText}}</td>
                                 <td>{{SL.manufacturingTrace}}</td>
                                 <td>{{SL.manufacturerName}}</td>                                

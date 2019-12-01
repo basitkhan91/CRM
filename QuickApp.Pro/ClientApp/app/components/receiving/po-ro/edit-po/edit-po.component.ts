@@ -243,20 +243,6 @@ export class EditPoComponent implements OnInit {
                                         }
                                     }
 
-                                    // TODO : Async call not setting proper values.
-                                    //debugger;
-                                    //if (SL.siteId > 0) {
-                                    //    this.getStockLineWareHouse(SL, true);
-                                    //}
-                                    //if (SL.warehouseId > 0) {
-                                    //    this.getStockLineLocation(SL, true);
-                                    //}
-                                    //if (SL.locationId > 0) {
-                                    //    this.getStockLineShelf(SL, true);
-                                    //}
-                                    //if (SL.shelfId > 0) {
-                                    //    this.getStockLineBin(SL, true);
-                                    //}
 
                                 }
 
@@ -1009,13 +995,25 @@ export class EditPoComponent implements OnInit {
 
                 var timeLife = [];
                 var stockLineToUpdate = part.stockLine.filter(x => x.isEnabled);
-
+                var index = 1;
                 for (var stockLine of stockLineToUpdate) {
+
+                    if (stockLine.conditionId == undefined || stockLine.conditionId == 0) {
+                        this.alertService.showMessage(this.pageTitle, "Please select Condition in Part No. " + part.itemMaster.partNumber + " at stockline " + stockLine.stockLineNumber, MessageSeverity.error);
+                        return;
+                    }
+
+                    if (stockLine.siteId == undefined || stockLine.siteId == 0) {
+                        this.alertService.showMessage(this.pageTitle, "Please select Site in Part No. " + part.itemMaster.partNumber + " of stockline " + stockLine.stockLineNumber, MessageSeverity.error);
+                        return;
+                    }
+
                     for (var tl of part.timeLife) {
                         if (tl.stockLineId == stockLine.stockLineId) {
                             timeLife.push(tl);
                         }
                     }
+                    index +=1;
                 }
 
                 if (stockLineToUpdate.length > 0) {
