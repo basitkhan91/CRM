@@ -118,6 +118,11 @@ export class StockLineListComponent implements OnInit {
     tagdate: any;
     idNumber: any;
     manufacturerId: any;
+
+    totalRecords: number = 0;
+    totalPages: number = 0;
+    pageSize: number = 20;
+
     ngOnInit(): void {
 
         this.loadData();
@@ -204,6 +209,9 @@ export class StockLineListComponent implements OnInit {
     }
     private onDataLoadSuccessful(allWorkFlows: any[]) {
         // alert('success');
+        this.totalRecords = allWorkFlows[0].totalRecords;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
@@ -225,44 +233,13 @@ export class StockLineListComponent implements OnInit {
 
     }
 
-    //private onDataLoadFailed(error: any) {
-    //	// alert(error);
-    //	this.alertService.stopLoadingMessage();
-    //	this.loadingIndicator = false;
-
-    //}
-
-    //open(content) {
-
-    //	this.isEditMode = false;
-    //	this.isDeleteMode = false;
-
-    //	this.isSaving = true;
-    //	this.loadMasterCompanies();
-    //	this.sourceAction = new Reason();
-    //	this.sourceAction.isActive = true;
-    //	this.reasonName = "";
-
-    //	this.modal = this.modalService.open(content, { size: 'sm' });
-    //	this.modal.result.then(() => {
-
-
-
-    //		console.log('When user closes');
-    //	}, () => { console.log('Backdrop click') })
-    //}
-
-    //To Display all the values when clicked on view  
     openView(content, row) {
 
         this.sourceViewOptions = row;
-        //this.reason_Name = row.reasonCode;
-        //this.reasonForRemoval = row.reasonForRemoval;
-        //this.shelfLife = row.shelfLife;
-        this.company = row.companyName;
-        this.businessUnitName = row.businessUnitName;
-        this.division = row.divisionName;
-        this.departmentName = row.departmentName;
+        this.company = row.compmanagmentLegalEntity.name;
+        this.businessUnitName = row.biumanagmentLegalEntity.name;
+        this.division = row.divmanagmentLegalEntity.name;
+        this.departmentName = row.mana.name;
         this.partNumber = row.partNumber;
         this.glAccountId = row.glAccountId;
         this.glAccountName = row.glAccountName;

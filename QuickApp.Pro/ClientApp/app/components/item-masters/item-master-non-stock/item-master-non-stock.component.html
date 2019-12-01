@@ -56,9 +56,12 @@
                             </label>
                         </div>
                         <div>
+                            
                             <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.itemGroupId">
-                                <option *ngFor="let itemGroupName of allitemgroupobjInfo" [ngValue]="itemGroupName.itemGroupId">{{itemGroupName.description}}</option>
-                            </select>
+                                <ng-container *ngFor="let itemGroupName of allitemgroupobjInfo">
+                                    <option  [ngValue]="itemGroupName.itemGroupId" *ngIf="itemGroupName.isActive" >{{itemGroupName.description}}</option>
+                                  </ng-container> 
+                             </select>
                         </div>
                         <div class="inline-block display-flex spacing-label" style="margin-top: 5px;">
                             <label class="control-label">Acquired?</label>
@@ -87,7 +90,9 @@
                         </div>
                         <div>
                             <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.manufacturerId">
-                                <option *ngFor="let name of allManufacturerInfo" [ngValue]="name.manufacturerId">{{name.name}}</option>
+                                <ng-container *ngFor="let name of allManufacturerInfo">
+                                    <option  [ngValue]="name.manufacturerId" *ngIf="name.isActive">{{name.name}}</option>
+                                </ng-container>
                             </select>
                         </div>
                         <label class="control-label control-item">Discount (%) on Purchases </label>
@@ -112,7 +117,9 @@
                             </label>
                         </div>
                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.purchaseUnitOfMeasureId">
-                            <option *ngFor="let unitName of allUnitOfMeasureinfo" [ngValue]="unitName.unitOfMeasureId">{{unitName.shortName}}</option>
+                            <ng-container *ngFor="let unitName of allUnitOfMeasureinfo">
+                                <option  [ngValue]="unitName.unitOfMeasureId" *ngIf="unitName.isActive">{{unitName.shortName}}</option>
+                            </ng-container>
                         </select>
                         <div class="checkbox-cstm" style="margin-top: 14px;">
                             <label>

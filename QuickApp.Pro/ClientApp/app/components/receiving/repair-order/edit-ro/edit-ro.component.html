@@ -16,6 +16,7 @@
             <div class="card-body">
                 <h4 class="po-head">Receiving - RO Grid (Single RO)</h4>
                 <form id="" class="ro-grid-form" name="">
+
                     <div class="form-row">
                         <div class="col-md-8">
                             <div class="form-group">
@@ -53,7 +54,7 @@
                             </div>
                         </div>
                     </div>
-
+                    <hr />
                     <div *ngIf="toggle_epo_header">
                         <div class="form-row">
                             <div class="col-md-3">
@@ -177,6 +178,7 @@
                             </div>
                         </div>
                     </div>
+                
                 </form>
             </div>
         </div>
@@ -235,10 +237,10 @@
                             <td>{{part.uomText}}</td>
                             <td>{{part.itemMaster.isPma ? "PMA," : '' + part.itemMaster.isDer ? "DER" : ''}}</td>
                             <td colspan="2">{{part.quantityToRepair}}</td>
-                            <td>{{part.DiscountPerUnit}}</td>
+                            <td>{{part.discountPerUnit}}</td>
                             <td>
                                 <input type="text" class="form-control" pInputText pKeyFilter="pnum"
-                                       (focusout)="calculatePartExtendedCost(part, SL)"
+                                       (focusout)="calculatePartExtendedCost(part, SL); SetStockLineUnitCost(part);"
                                        [disabled]="!part.isEnabled"
                                        [(ngModel)]="part.unitCost">
                             </td>

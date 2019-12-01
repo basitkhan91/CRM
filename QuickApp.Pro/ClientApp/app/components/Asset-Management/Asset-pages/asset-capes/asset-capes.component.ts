@@ -782,11 +782,15 @@ export class AssetCapesComponent implements OnInit {
             capbilitiesObj.itemMasterId = this.itemMasterId;
             capbilitiesObj.AssetCapesId = this.AssetCapesId;
             capbilitiesObj.AircraftDashNumberId = capData.selectedDashNumbers;
-
+            console.log(capData.selectedDashNumbers);
+            if(capData.selectedDashNumbers){
             this.dashnumberservices.getById(capData.selectedDashNumbers).subscribe(dashnumbers => {
                 const responseData = dashnumbers[0];
                 capbilitiesObj.DashNumber = responseData[0].dashNumber;
             });
+        }else{
+            capbilitiesObj.DashNumber = 'Undefined'
+        }
             capData.selectedModel.forEach(element2 => {
                 if (element2.aircraftTypeId == element1.value) {
                     capbilitiesObj.aircraftModelName = element2.label;
@@ -871,12 +875,12 @@ export class AssetCapesComponent implements OnInit {
     }
 
     
-    openDelete(content, row) {
+    openDelete(content2, row) {
 
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.assetServices.CapeslistCollection = row;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content2, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -969,8 +973,9 @@ export class AssetCapesComponent implements OnInit {
         });
 
         this.assetServices.saveManfacturerinforcapes(capabilityCollection).subscribe(data11 => {
+            this.loadCapesData();
         })
-        this.loadCapesData();
+        
         this.modal.close();
     }
 
@@ -1053,7 +1058,7 @@ export class AssetCapesComponent implements OnInit {
         let getSelectedCollection = [];
         this.assetServices.isCapsEditMode = true;
         this.isSaving = true;
-        this.assetServices.getCapabilityData(row.assetRecordId).subscribe(data => {
+        this.assetServices.getCapabilityData(row.assetCapesId).subscribe(data => {
             getSelectedCollection = data;
             if (getSelectedCollection) {
                 this.capabilityEditCollection = getSelectedCollection;

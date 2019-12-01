@@ -66,6 +66,7 @@ export class CustomerWorkEditComponent {
     showFreeQuantity: boolean;
     showNormalQuantity: boolean;
     allWareHouses: any[];
+    customerContactList: any[];
     allLocations: any[];
     allShelfs: any[];
     allBins: any[];
@@ -81,6 +82,13 @@ export class CustomerWorkEditComponent {
     collectionofstockLineTimeLife: any;
     value: number;
     collectionofstockLine: any;
+
+    parentManagementInfo: any[] = [];
+    childManagementInfo: any[] = [];
+    bulist: any[] = [];
+    divisionlist: any[] = [];
+    departmentList: any[] = [];
+    partListData: any[] = [];
 
     constructor(private router: Router,private conditionService: ConditionService, public workFlowtService1: LegalEntityService, private siteService: SiteService, private binService: BinService, private vendorservice: VendorService, public employeeService: EmployeeService, private alertService: AlertService, public itemser: ItemMasterService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public receivingCustomerWorkService: ReceivingCustomerWorkService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerservices: CustomerService) {
         this.dataSource = new MatTableDataSource();
@@ -164,6 +172,7 @@ export class CustomerWorkEditComponent {
         this.vendorList();
         this.loadSiteData();
         this.loadManagementdata();
+        this.loadManagementdataForTree();
         if (!this.sourcereceving.receivingCustomerWorkId) {
             this.sourcereceving.receivingCustomerNumber = 'Creating';
         }
@@ -346,7 +355,7 @@ export class CustomerWorkEditComponent {
             this.sourcereceving.createdBy = this.userName;
             this.sourcereceving.updatedBy = this.userName;
             this.sourcereceving.masterCompanyId = 1;
-            console.log(this.sourceTimeLife);
+            console.log(this.sourcereceving);
             if ((this.sourceTimeLife != null) || (this.sourceTimeLife != "null")) {
                 if (this.sourceTimeLife.timeLife) {
                     this.receivingCustomerWorkService.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
@@ -360,6 +369,35 @@ export class CustomerWorkEditComponent {
                             this.sourcereceving.tagType = '';
                             this.sourcereceving.partCertificationNumber = '';
                         }
+                        switch(this.sourcereceving.traceableToType){
+                            case '1':
+                                this.sourcereceving.traceableTo = this.sourcereceving.traceableToCustomerId;
+                                break;
+                            case '2':
+                                this.sourcereceving.traceableTo = this.sourcereceving.traceableToOther;
+                                break;
+                            case '3':
+                                this.sourcereceving.traceableTo = this.sourcereceving.traceableToVendorId;
+                                break;
+                            case '4':
+                                this.sourcereceving.traceableTo = this.sourcereceving.traceableToCompanyId;
+                                break;
+                        }
+                        switch(this.sourcereceving.obtainFromType){
+                            case '1':
+                                this.sourcereceving.obtainFrom = this.sourcereceving.obtainFromCustomerId;
+                                break;
+                            case '2':
+                                this.sourcereceving.obtainFrom = this.sourcereceving.obtainFromOther;
+                                break;
+                            case '3':
+                                this.sourcereceving.obtainFrom = this.sourcereceving.obtainFromVendorId;
+                                break;
+                            case '4':
+                                this.sourcereceving.obtainFrom = this.sourcereceving.obtainFromCompanyId;
+                                break;
+                        }
+                        console.log(this.sourcereceving);
                         this.receivingCustomerWorkService.newReason(this.sourcereceving).subscribe(
                             role => this.saveSuccessHelper(role),
                             error => this.saveFailedHelper(error));
@@ -602,13 +640,29 @@ export class CustomerWorkEditComponent {
             for (let i = 0; i < this.allCustomer.length; i++) {
                 if (event == this.allCustomer[i].name) {
                     this.sourcereceving.customerId = this.allCustomer[i].customerId;
+                    this.sourcereceving.customerCode = this.allCustomer[i].customerCode;
                     this.selectedActionName = event;
+                    this.getAllCustomerContact(this.allCustomer[i].customerId);
                 }
             }
             this.customerservices.getDescriptionbypart(event).subscribe(
                 results => this.oncustomernumberloadsuccessfull(results[0]),
                 error => this.onDataLoadFailed(error)
             );
+        }
+    }
+    getAllCustomerContact(id) {
+        // get Customer Contatcs 
+        
+		this.customerservices.getContacts(id).subscribe(res => {
+			this.customerContactList = res[0]
+		})
+	}
+    customerContactChange(customerContact) {
+        for (let i = 0; i < this.customerContactList.length; i++) {
+            if (customerContact == this.customerContactList[i].contactId) {
+                this.sourcereceving.workPhone = this.customerContactList[i].workPhone;
+            }
         }
     }
 
@@ -632,6 +686,8 @@ export class CustomerWorkEditComponent {
     }
     private onpartnumberloadsuccessfull(allWorkFlows: any[]) {
         //this.descriptionbyPart = allWorkFlows[0]
+        this.sourcereceving.manufacturerId = allWorkFlows[0].manufacturerId;
+        this.sourcereceving.manufacturer = allWorkFlows[0].manufacturer.name;
         this.sourcereceving.partDescription = allWorkFlows[0].partDescription;
         this.sourcereceving.isSerialized = allWorkFlows[0].isSerialized;
         this.sourcereceving.isTimeLife = allWorkFlows[0].isTimeLife;
@@ -848,4 +904,187 @@ export class CustomerWorkEditComponent {
             }
         }
     }
+
+
+
+    private loadManagementdataForTree() {
+		this.workFlowtService1.getManagemententity().subscribe(
+			results => this.onManagemtntdataLoadTree(results[0]),
+			error => this.onDataLoadFailed(error)
+		);
+	}
+
+	private onManagemtntdataLoadTree(managementInfo: any[]) {
+		//console.log(managementInfo);
+		this.allManagemtninfo = managementInfo;
+		this.parentManagementInfo = managementInfo;
+		this.childManagementInfo = managementInfo;
+		for (let i = 0; i < this.allManagemtninfo.length; i++) {
+			if (this.allManagemtninfo[i].parentId == null) {
+				this.bulist = [];
+				this.divisionlist = [];
+				this.departmentList = [];
+				this.maincompanylist.push(this.allManagemtninfo[i]);
+			}
+		}
+	}
+
+	getBUList(companyId) {
+		this.sourcereceving.managementStructureId = companyId;
+		this.bulist = [];
+		this.divisionlist = [];
+		this.departmentList = [];
+		for (let i = 0; i < this.allManagemtninfo.length; i++) {
+			if (this.allManagemtninfo[i].parentId == companyId) {
+				this.bulist.push(this.allManagemtninfo[i]);
+			}
+		}
+		for (let i = 0; i < this.partListData.length; i++) {
+			this.partListData[i].parentCompanyId = companyId;
+			this.getParentBUList(this.partListData[i]);
+			if (this.partListData[i].childList) {
+				for (let j = 0; j < this.partListData[i].childList.length; j++) {
+					this.partListData[i].childList[j].childCompanyId = companyId;
+					this.getChildBUList(this.partListData[i].childList[j]);
+				}
+			}
+		}
+
+	}
+
+	getDivisionlist(buId) {
+		this.sourcereceving.managementStructureId = buId;
+		this.divisionlist = [];
+		this.departmentList = [];
+		for (let i = 0; i < this.allManagemtninfo.length; i++) {
+			if (this.allManagemtninfo[i].parentId == buId) {
+				this.divisionlist.push(this.allManagemtninfo[i]);
+			}
+		}
+		for (let i = 0; i < this.partListData.length; i++) {
+			this.partListData[i].parentbuId = buId;
+			this.getParentDivisionlist(this.partListData[i]);
+			if (this.partListData[i].childList) {
+				for (let j = 0; j < this.partListData[i].childList.length; j++) {
+					this.partListData[i].childList[j].childbuId = buId;
+					this.getChildDivisionlist(this.partListData[i].childList[j]);
+				}
+			}
+		}
+	}
+
+	getDepartmentlist(divisionId) {
+		this.sourcereceving.managementStructureId = divisionId;
+		this.departmentList = [];
+		for (let i = 0; i < this.allManagemtninfo.length; i++) {
+			if (this.allManagemtninfo[i].parentId == divisionId) {
+				this.departmentList.push(this.allManagemtninfo[i]);
+			}
+		}
+		for (let i = 0; i < this.partListData.length; i++) {
+			this.partListData[i].parentDivisionId = divisionId;
+			this.getParentDeptlist(this.partListData[i]);
+			if (this.partListData[i].childList) {
+				for (let j = 0; j < this.partListData[i].childList.length; j++) {
+					this.partListData[i].childList[j].childDivisionId = divisionId;
+					this.getChildDeptlist(this.partListData[i].childList[j]);
+				}
+			}
+		}
+	}
+
+	getDepartmentId(departmentId) {
+		this.sourcereceving.managementStructureId = departmentId;
+		for (let i = 0; i < this.partListData.length; i++) {
+			this.partListData[i].parentDeptId = departmentId;
+		}
+		for (let i = 0; i < this.partListData.length; i++) {
+			this.partListData[i].parentDeptId = departmentId;
+			this.getParentDeptId(this.partListData[i]);
+			if (this.partListData[i].childList) {
+				for (let j = 0; j < this.partListData[i].childList.length; j++) {
+					this.partListData[i].childList[j].childDeptId = departmentId;
+					this.getChildDeptId(this.partListData[i].childList[j]);
+				}
+			}
+		}
+	}
+
+	getParentBUList(partList) {
+		partList.managementStructureId = partList.parentCompanyId;
+		partList.parentBulist = []
+		partList.parentDivisionlist = [];
+		partList.parentDepartmentlist = [];
+		for (let i = 0; i < this.parentManagementInfo.length; i++) {
+			if (this.parentManagementInfo[i].parentId == partList.parentCompanyId) {
+				partList.parentBulist.push(this.parentManagementInfo[i]);
+			}
+		}
+	}
+
+	getParentDivisionlist(partList) {
+		partList.managementStructureId = partList.parentbuId;
+		partList.parentDivisionlist = [];
+		partList.parentDepartmentlist = [];
+		for (let i = 0; i < this.parentManagementInfo.length; i++) {
+			if (this.parentManagementInfo[i].parentId == partList.parentbuId) {
+				partList.parentDivisionlist.push(this.parentManagementInfo[i]);
+			}
+		}
+	}
+
+	getParentDeptlist(partList) {
+		partList.managementStructureId = partList.parentDivisionId;
+		partList.parentDepartmentlist = [];
+		for (let i = 0; i < this.parentManagementInfo.length; i++) {
+			if (this.parentManagementInfo[i].parentId == partList.parentDivisionId) {
+				partList.parentDepartmentlist.push(this.parentManagementInfo[i]);
+			}
+		}
+	}
+
+	getParentDeptId(partList) {
+		partList.managementStructureId = partList.parentDeptId;
+	}
+
+	getChildBUList(partChildList) {
+		partChildList.managementStructureId = partChildList.childCompanyId;
+		console.log(partChildList.managementStructureId);
+
+		partChildList.childBulist = [];
+		partChildList.childDivisionlist = [];
+		partChildList.childDepartmentlist = [];
+		for (let i = 0; i < this.childManagementInfo.length; i++) {
+			if (this.childManagementInfo[i].parentId == partChildList.childCompanyId) {
+				partChildList.childBulist.push(this.childManagementInfo[i]);
+			}
+		}
+	}
+
+	getChildDivisionlist(partChildList) {
+		partChildList.managementStructureId = partChildList.childbuId;
+		partChildList.childDivisionlist = [];
+		partChildList.childDepartmentlist = [];
+		for (let i = 0; i < this.childManagementInfo.length; i++) {
+			if (this.childManagementInfo[i].parentId == partChildList.childbuId) {
+				partChildList.childDivisionlist.push(this.childManagementInfo[i]);
+			}
+		}
+	}
+
+	getChildDeptlist(partChildList) {
+		partChildList.managementStructureId = partChildList.childDivisionId;
+		partChildList.childDepartmentlist = [];
+		for (let i = 0; i < this.childManagementInfo.length; i++) {
+			if (this.childManagementInfo[i].parentId == partChildList.childDivisionId) {
+				partChildList.childDepartmentlist.push(this.childManagementInfo[i]);
+			}
+		}
+	}
+
+	getChildDeptId(partChildList) {
+		partChildList.managementStructureId = partChildList.childDeptId;
+	}
+
+
 }

@@ -171,6 +171,7 @@ export class RepairOrderPart {
     BinList: DropDownData[];
     stockLine: StockLine[];
     timeLife: TimeLife[];
+    detailsNotProvided: boolean;
 }
 
 export class TimeLife {

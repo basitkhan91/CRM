@@ -9,6 +9,7 @@ import { UnitOfMeasureService } from '../../../../services/unitofmeasure.service
 import { AlertService, MessageSeverity } from '../../../../services/alert.service';
 import { ActionService } from '../../../../Workflow/ActionService';
 import { WorkOrderService } from '../../../../services/work-order/work-order.service';
+import * as $ from 'jquery'
 // import { PageHeaderComponent } from '../../../../shared/page-header.component';
 // import * as $ from 'jquery';
 
@@ -354,7 +355,8 @@ export class WorkOrderCompleteMaterialListComponent {
 
     saveMaterialListForWorkOrder() {
 
-        this.saveMaterialListForWO.emit(this.workFlow)
+        this.saveMaterialListForWO.emit(this.workFlow);
+        $('#addNewMaterials').modal('hide');
     }
 
     partsIssueRI(statusId) {

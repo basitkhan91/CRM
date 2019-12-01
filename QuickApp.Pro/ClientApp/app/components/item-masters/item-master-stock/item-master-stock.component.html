@@ -154,13 +154,15 @@
                                         </label>
 
                                     </div>
-                                    <div>
+                                    <div>                             
                                         <select name="itemclassification" class="select-drop"
                                                 [(ngModel)]="sourceItemMaster.itemClassificationId">
-                                            <option *ngFor="let itemName of allitemclassificationInfo"
-                                                    [ngValue]="itemName.itemClassificationId">
-                                                {{itemName.description}}
-                                            </option>
+                                            <ng-container *ngFor="let itemName of allitemclassificationInfo">
+                                                <option 
+                                                        [ngValue]="itemName.itemClassificationId" *ngIf="itemName.isActive">
+                                                    {{itemName.description}}
+                                                </option>
+                                            </ng-container>
                                         </select>
                                     </div>
                                     <div class="inline-block display-flex spacing-label">
@@ -173,10 +175,11 @@
                                     <div>
                                         <select [ngModelOptions]="{standalone: true}" class="select-drop"
                                                 [(ngModel)]="sourceItemMaster.itemGroupId">
-                                            <option *ngFor="let itemGroupName of allitemgroupobjInfo"
-                                                    [ngValue]="itemGroupName.itemGroupId">
-                                                {{itemGroupName.description}}
-                                            </option>
+                                            <ng-container *ngFor="let itemGroupName of allitemgroupobjInfo">
+                                                <option [ngValue]="itemGroupName.itemGroupId" *ngIf="itemGroupName.isActive">
+                                                    {{itemGroupName.description}}
+                                                </option>
+                                            </ng-container>
                                         </select>
                                     </div>
                                     <div class="inline-block display-flex spacing-label">
@@ -377,10 +380,11 @@
                                     <div>
                                         <select [ngModelOptions]="{standalone: true}"
                                                 [(ngModel)]="sourceItemMaster.manufacturerId" (change)="getManufacturer(manufacturer)">
-                                            <option *ngFor="let manufacturer of allManufacturerInfo"
-                                                    [ngValue]="manufacturer.manufacturerId">
-                                                {{manufacturer.name}}
-                                            </option>
+                                            <ng-container *ngFor="let manufacturer of allManufacturerInfo">
+                                                <option [ngValue]="manufacturer.manufacturerId" *ngIf="manufacturer.isActive">
+                                                    {{manufacturer.name}}
+                                                </option>
+                                            </ng-container>
                                         </select>
                                     </div>
                                     <div class="inline-block display-flex spacing-label">

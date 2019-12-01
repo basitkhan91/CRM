@@ -138,7 +138,7 @@ export class PurchaseOrderPart {
     hasChildren: boolean;
     eCCNAlreadyExist: boolean;
     itarNumberExist: boolean;
-
+    detailsNotProvided: boolean;
     stockLineCount: number;
 
     currentSLIndex: number;

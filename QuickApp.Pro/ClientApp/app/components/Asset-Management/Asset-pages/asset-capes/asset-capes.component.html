@@ -129,7 +129,7 @@
                     </div>
                 </div>
             </ng-template>
-            <ng-template #content let-c="close" let-d="dismiss">
+            <ng-template #content2 let-c="close" let-d="dismiss">
                 <div class="modal-header">
                     <h4 class="modal-title">Are You Sure Want to Delete?</h4>
                     <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
@@ -205,7 +205,7 @@
                         </button>
 
 
-                        <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
+                        <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content2,rowData)">
                             <mat-icon color="warn">delete</mat-icon>
                         </button>
 
