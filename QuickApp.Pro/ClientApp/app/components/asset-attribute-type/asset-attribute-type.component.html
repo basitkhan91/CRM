@@ -136,7 +136,7 @@
                             <span class="label">
                                 <b>Asset Type: </b>
                             </span>
-                            <span class="value">{{itemDetails.assetTypeId}}</span>
+                            <span class="value">{{itemDetails.assetTypeName}}</span>
                         </p>
                         <p>
                             <span class="label">
@@ -155,13 +155,13 @@
                             <span class="label">
                                 <b>Convention Type: </b>
                             </span>
-                            <span class="value">{{itemDetails.conventionType}}</span>
+                            <span class="value">{{itemDetails.conventionTypeName}}</span>
                         </p>
                         <p>
                             <span class="label">
                                 <b>Depreciation Method: </b>
                             </span>
-                            <span class="value">{{itemDetails.depreciationMethod}}</span>
+                            <span class="value">{{itemDetails.depreciationMethodName}}</span>
                         </p>
                         <p>
                             <span class="label">
@@ -185,43 +185,43 @@
                             <span class="label">
                                 <b>Depreciation Frequency: </b>
                             </span>
-                            <span class="value">{{itemDetails.depreciationFrequencyId}}</span>
+                            <span class="value">{{itemDetails.depreciationFrequencyName}}</span>
                         </p>
                         <p>
                             <span class="label">
                                 <b>Acquired GL Account: </b>
                             </span>
-                            <span class="value">{{itemDetails.acquiredGLAccountId}}</span>
+                            <span class="value">{{itemDetails.acquiredGLAccountName}}</span>
                         </p>
                         <p>
                             <span class="label">
                                 <b>Depr Expense GL Account: </b>
                             </span>
-                            <span class="value">{{itemDetails.deprExpenseGLAccountId}}</span>
+                            <span class="value">{{itemDetails.deprExpenseGLAccountName}}</span>
                         </p>
                         <p>
                             <span class="label">
                                 <b>Ad Deps GL Account: </b>
                             </span>
-                            <span class="value">{{itemDetails.adDepsGLAccountId}}</span>
+                            <span class="value">{{itemDetails.adDepsGLAccountName}}</span>
                         </p>
                         <p>
                             <span class="label">
                                 <b>Asset Sale: </b>
                             </span>
-                            <span class="value">{{itemDetails.assetSale}}</span>
+                            <span class="value">{{itemDetails.assetSaleName}}</span>
                         </p>
                         <p>
                             <span class="label">
                                 <b>Asset WriteOff: </b>
                             </span>
-                            <span class="value">{{itemDetails.assetWriteOff}}</span>
+                            <span class="value">{{itemDetails.assetWriteOffName}}</span>
                         </p>
                         <p>
                             <span class="label">
                                 <b>Asset WriteDown: </b>
                             </span>
-                            <span class="value">{{itemDetails.assetWriteDown}}</span>
+                            <span class="value">{{itemDetails.assetWriteDownName}}</span>
                         </p>
                         <p>
                             <span class="label">
@@ -312,7 +312,7 @@
                                 </div>
                                 <div class="col-sm-5">
                                     <select class="form-control" name="conventionType" [(ngModel)]="conventionType">
-                                        <option *ngFor="let conventionType of conventionTypeList" [ngValue]="conventionType.code">{{conventionType.name}}</option>
+                                        <option *ngFor="let conventionType of conventionTypeList" [ngValue]="conventionType.value">{{conventionType.label}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -335,7 +335,7 @@
                                 <div class="col-sm-5">
                                     <select name="residualPercentage" [(ngModel)]="currentRow.residualPercentage">
                                         <option value="">Select Percentage</option>
-                                        <option *ngFor="let Percentlist of percentageList" [ngValue]="Percentlist.value">{{Percentlist.label}}</option>
+                                        <option *ngFor="let Percentlist of percentageList" [ngValue]="Percentlist.value">{{Percentlist.value}}</option>
                                     </select>
                                 </div>
                             </div>

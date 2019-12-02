@@ -64,7 +64,7 @@ export class AssetAttributeTypeComponent implements OnInit {
     mgmtStructureId: any;
     disableForMgmtStructure: boolean;
     depriciationMethodList: DepriciationMethod[];
-    conventionTypeList = [{ name: "Mid Month", code: "1" }, { name: "Pro-rate", code: "2" }];
+    conventionTypeList: any[];
     objectKeys = Object.keys;
     depreciationFreq: any[];
     assetSaleList: any[];
@@ -325,7 +325,7 @@ export class AssetAttributeTypeComponent implements OnInit {
 
     getAllPercentage() {
         this.commonservice.smartDropDownList('[Percent]', 'PercentId', 'PercentValue').subscribe(res => {
-            console.log('res: '+res);
+            //console.log('res: '+res);
             this.percentageList = res;
         });
         //console.log('percentge list : ', this.percentageList);
@@ -334,6 +334,12 @@ export class AssetAttributeTypeComponent implements OnInit {
     getAllFrequency() {
         this.commonservice.smartDropDownList('[AssetDepreciationFrequency]', 'AssetDepreciationFrequencyId', 'Name').subscribe(res => {
             this.depreciationFreq = res;
+        })
+    }
+
+    getAllConventionTypes() {
+        this.commonservice.smartDropDownList('[ConventionType]', 'ConventionTypeId', 'Name').subscribe(res => {
+            this.conventionTypeList = res;
         })
     }
 
@@ -426,46 +432,49 @@ export class AssetAttributeTypeComponent implements OnInit {
 
     //Get the page's grid data
     getItemList() {
-        /*this.coreDataService.getAll().subscribe(res => {
+        //TODO
+        /* Uncomment this part once API is developed
+        this.coreDataService.getAll().subscribe(res => {
             const responseData = res[0];
             this.itemList = responseData;
             this.totalRecords = responseData.length;
             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
         });*/
         let testData: any[] = [];
-        //1, 1, 'desc', 'typeName',1,1,1,1,100,2,14,15,18
+        //TODO - Comment this sample list once API is done
         testData.push({
             assetAttributeTypeId: "1",
             assetTypeId: "6",
+            assetTypeName:"dsdf",
             description: "description",
             assetAttributeTypeName: "dsdf",
             conventionType: "1",
-            conventionTypeName: "conventionTypeName",
-            depreciationMethod: "1",
-            depreciationMethodName: "1",
+            conventionTypeName: "Mid Month",
+            depreciationMethod: "25",
+            depreciationMethodName: "111",
             residualPercentage: "1",
             residualValue: "100",
             assetLife: "100",
             depreciationFrequencyId: "1",
-            depreciationFrequencyName: "Freq Label",
+            depreciationFrequencyName: "Monthly",
             acquiredGLAccountId: "14",
             acquiredGLAccountName: "Vehicle Repairs",
             deprExpenseGLAccountId: "15",
             deprExpenseGLAccountName: "test",
             adDepsGLAccountId: "18",
             adDepsGLAccountName: "snehakakarla",
-            assetSale: "17",
-            assetSaleName: "17",
-            assetWriteOff: "17",
-            assetWriteOffName: "17",
+            assetSale: "15",
+            assetSaleName: "10100",
+            assetWriteOff: "15",
+            assetWriteOffName: "10100",
             assetWriteDown: "17",
-            assetWriteDownName: "assetWriteDownName",
+            assetWriteDownName: "10100",
             createdBy: "",
             createdDate: "",
             updatedDate: "",
             updatedBy: "",
-            isActive: "",
-            isDelete: "",
+            isActive: "true",
+            isDelete: "false",
         });
         this.itemList = testData;
     }
@@ -542,8 +551,12 @@ export class AssetAttributeTypeComponent implements OnInit {
             deprExpenseGLAccountId: getObjectById('glAccountId', rowData.deprExpenseGLAccountId, this.allGlInfo),
             adDepsGLAccountId: getObjectById('glAccountId', rowData.adDepsGLAccountId, this.allGlInfo),
             depreciationMethod: getObjectById('assetDepreciationMethodId', rowData.depreciationMethod, this.depriciationMethodList),
-            depreciationFrequencyId: getObjectById('code', rowData.depreciationFrequencyId, this.depreciationFreq),
-            conventionType: getObjectById('code', rowData.conventionType, this.conventionTypeList)
+            //depreciationFrequencyId: getObjectById('value', rowData.depreciationFrequencyId, this.depreciationFreq),
+            //conventionType: getObjectById('value', rowData.conventionType, this.conventionTypeList),
+            //residualPercentage: getObjectById('value', rowData.residualPercentage, this.percentageList),
+            assetSale: getObjectById('glAccountId', rowData.assetSale, this.allGlInfo),
+            assetWriteOff: getObjectById('glAccountId', rowData.assetWriteOff, this.allGlInfo),
+            assetWriteDown: getObjectById('glAccountId', rowData.assetWriteDown, this.allGlInfo)
         };
         this.currentRow = { ...this.currentRow }
         this.mgmtStructureId = this.currentRow.managementStructureId;
@@ -577,6 +590,7 @@ export class AssetAttributeTypeComponent implements OnInit {
         this.loadManagementdata();
         this.getAllPercentage();
         this.getAllFrequency();
+        this.getAllConventionTypes();
         this.rowName = "Asset Attribute Type";
         this.header = "Asset Attribute Type";
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-asset-attribute-type';
@@ -606,6 +620,10 @@ export class AssetAttributeTypeComponent implements OnInit {
     }
 
     resetFromData() {
+        this.selectedCompanyID = 0;
+        this.selectedBUId = 0;
+        this.selectedDivisionID = 0;
+        this.selectedDeptID = 0;
         this.currentRow = new AssetAttributeType();
     }
 }

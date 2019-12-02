@@ -10,12 +10,12 @@ export class AssetAttributeType {
         this.assetTypeId = assetTypeId;
         this.description = description || "";
         this.assetAttributeTypeName = assetAttributeTypeName || "";
-        this.conventionType = conventionType || 0;
+        this.conventionType = conventionType;
         this.depreciationMethod = depreciationMethod || 0;
-        this.residualPercentage = residualPercentage || 0;
+        this.residualPercentage = residualPercentage;
         this.residualValue = residualValue || 0;
         this.assetLife = assetLife || 0;
-        this.depreciationFrequencyId = depreciationFrequencyId || 0;
+        this.depreciationFrequencyId = depreciationFrequencyId;
         this.acquiredGLAccountId = acquiredGLAccountId || 0;
         this.deprExpenseGLAccountId = deprExpenseGLAccountId || 0;
         this.adDepsGLAccountId = adDepsGLAccountId || 0;
