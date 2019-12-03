@@ -1,528 +1,540 @@
-﻿<div [@fadeInOut] class="page-content">
-
-	<div class="right_col" role="main">
-		<div class="x_content">
-			<div class="right_col" role="main">
-				<div class="inline-block display-flex">
-					<h4 _ngcontent-c24="" class="po-head" style="padding: 0px 8px;"> Vendor List </h4>
-					<a matTooltip="Add Vendor" (click)="navigateTogeneralInfo()" class="plusicon-cstm ">
-						<i class="fa fa-plus-circle fa-lg"></i>
-					</a>
-				</div>
-
-					<p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="allVendorList" [rows]="10" [paginator]="true" [pageLinks]="3"
-							 [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" [metaKeySelection]="true"
-							 selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true"
-							 [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
-						<ng-template pTemplate="caption">
-
-							<div style="text-align: right">
-								<p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
-											   selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}"
-											   defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-
-
-								<div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
-									<i class="fa fa-search"></i>
-									<input type="text" pInputText size="50" class="form-control ui-autocomplete-input "
-										   (input)="dt.filterGlobal($event.target.value, 'contains')"
-										   placeholder=" Filter">
-								</div>
-
-
-								<button type="button" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left" label="Export All Data"
-										(click)="dt.exportCSV()" style="padding: 5px 12px !important;"></button>
-								<button type="button" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left" label="Export Selected"
-										(click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 12px !important;"></button>
-
-								<div class="excel-upload excel-upload-cstm">
-									<input type="file" name="upload[]" id="upload" class="uploaddoc upload-file"
-										   data-multiple-caption="{count} files selected"
-										   accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-									<label for="upload">
-										<span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-									</label>
-								</div>
-							</div>
-
-
-						</ng-template>
-						<ng-template pTemplate="colgroup" let-columns>
-							<colgroup>
-								<col *ngFor="let col of columns" style="width:130px">
-							</colgroup>
-						</ng-template>
-
-						<ng-template pTemplate="header" let-columns>
-							<tr>
-
-								<th *ngFor="let col of columns" pResizableColumn pReorderableColumn
-									[pSortableColumn]="col.field">
-									{{col.header}}
-									<p-sortIcon [field]="col.field"></p-sortIcon>
-								</th>
-
-								<th style="width:200px"></th>
-
-							</tr>
-
-							<tr>
-								<th *ngFor="let col of columns" [ngSwitch]="col.field">
-									<input style="width:100%;" pInputText type="text"
-										   (input)="dt.filter($event.target.value, col.field, 'contains')">
-
-								</th>
-								<th style="width:200px"></th>
-							</tr>
-						</ng-template>
-
-						<ng-template pTemplate="body" let-rowData let-columns="columns">
-							<tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdit(rowData)">
-								<!-- <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-					{{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
-				</td> -->
-								<td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-									{{col.field == 'vendorPhone'?rowData['t']['vendorPhone']:rowData[col.field]}}
-								</td>
-
-								<td style="width:200px">
-									<p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
-												   *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off"
-												   (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']">
-									</p-inputSwitch>
-									<p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
-												   *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on"
-												   offLabel="off" (onChange)="handleChanges(rowData,$event)"
-												   [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-									<p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
-												   *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off"
-												   (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']">
-									</p-inputSwitch>
-									<span data-toggle="modal" data-target="#view">
-										<a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip"
-										   (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a>
-									</span>
-									<button [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
-											class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="Edit">
-										<mat-icon>edit</mat-icon>
-									</button>
-
-									<i class="fa fa-users" mat-icon-button matTooltip="Contacts"
-									   (click)="openContactList(contentcontact,rowData)">
-
-									</i>
-
-									<button [validate] moduleName="app-vendors-list" requirePermission="canDelete"
-											class="btn-delete" mat-icon-button matTooltip="Delete"
-											(click)=" openDelete(content1, rowData)">
-										<mat-icon color="warn">delete</mat-icon>
-									</button>
-
-									<button class="btn-history" mat-icon-button matTooltip="History"
-											(click)="openHist(contentHist,rowData)">
-										<mat-icon color="green">history</mat-icon>
-									</button>
-									<button class="btn-pos" mat-icon-button matTooltip="PO's">
-										<mat-icon color="green">format_list_bulleted</mat-icon>
-									</button>
-									<button class="btn-ros" mat-icon-button matTooltip="RO's">
-										<mat-icon color="green">view_list</mat-icon>
-									</button>
-
-								</td>
-							</tr>
-						</ng-template>
-
-					</p-table>
-
-				</div>
-
-
-
-
-
-			<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
-				<div class="modal-header">
-
-					<h4 class="modal-title">History of {{this.selectedRow['vendorName']}}</h4>
-					<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-						<span aria-hidden="true">&times;</span>
-					</button>
-
-
-				</div>
-				<div class="modal-body">
-
-					<div class="table-responsive" *ngIf="auditHisory.length > 0">
-						<table class="table table-bordered">
-							<thead>
-								<tr>
-									<th>PID</th>
-									<th>Description</th>
-									<th>previousValue</th>
-									<th>newValue</th>
-									<th>Last Updated By</th>
-									<th>Last Updated Time</th>
-								</tr>
-							</thead>
-							<tr *ngFor="let audit of auditHisory">
-								<td>{{audit.auditHistoryId}}</td>
-								<td>{{audit.columnName}}</td>
-								<td>{{audit.previousValue}}</td>
-								<td>{{audit.newValue}}</td>
-								<td>{{audit.updatedBy}}</td>
-								<td>{{audit.updatedDate}}</td>
-							</tr>
-						</table>
-					</div>
-					<div class="history-no-record" *ngIf="auditHisory.length == 0">
-						No Record found
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-				</div>
-			</ng-template>
-
-			<ng-template #view class="modal fade " id="view" role="dialog">
-
-				<div class="modal-body viewform">
-					<div id="adminsearchlocationajax" class="table-responsive default-bg clear">
-						<div class="modal-header">
-							<button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id=""
-								name="">×</button>
-							<h4 class="modal-title">Details of {{vendorName}}</h4>
-
-						</div>
-
-						<hr>
-						<div>
-								<button type="button" class="btn btn-success" (click)="ExpandAllVenodrDetailsModel()">Open All</button>
-								<button type="button" class="btn btn-info" (click)="CloseAllVenodrDetailsModel()">Close All</button>
-							
-						</div>
-						<div class="panel-group" id="accordion">
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h4 class="panel-title"> <a data-toggle="collapse" href="#step1"
-											aria-expanded="false" aria-controls="receive" class="collapsed">General
-											Information</a> </h4>
-								</div>
-								<div id="step1" class="panel-collapse collapse" aria-expanded="false"
-									style="height: 0px;">
-									<div *ngIf="showGeneralData">
-										<div class="modal-content">
-
-											<div class="table-responsive default-bg clear">
-												<div class="col-sm-6">
-													<p>
-														<span class="label"><b>Vendor Name: </b></span><span class="value">{{vendorName}}</span>
-													</p>
-													<p>
-														<span class="label"><b>Vendor Code: </b></span><span class="value">{{vendorCode}}</span>
-													</p>
-													<p>
-														<span class="label"><b>Internal/External: </b></span><span class="value">{{description}}</span>
-													</p>
-													<p>
-														<span class="label"><b>D/b/a: </b></span><span class="value">{{doingBusinessAsName}}</span>
-													</p>
-													<p>
-														<span class="label"><b>Parent: </b></span><span class="value">{{parent}}</span>
-													</p>
-													<p>
-														<span class="label"><b>Address1: </b></span><span class="value">{{address1}}</span>
-													</p>
-													<p>
-														<span class="label"><b>Address2 : </b></span><span class="value">{{address2}}</span>
-													</p>
-													<!-- <p><span class="label"><b>Address3: </b></span><span
-			class="value">{{address3}}</span></p>-->
-													<p>
-														<span class="label"><b>City: </b></span><span class="value">{{city}}</span>
-													</p>
-													<p>
-														<span class="label"><b>State or Province: </b></span><span class="value">{{stateOrProvince}}</span>
-													</p>
-													<p>
-														<span class="label"><b>Postal: </b></span><span class="value">{{postalCode}}</span>
-													</p>
-													<p>
-														<span class="label"><b>Country: </b></span><span class="value">{{country}}</span>
-													</p>
-												</div>
-												<div class="col-sm-6">
-													<p><span class="label"><b>Email: </b></span><span
-															class="value">{{vendorEmail}}</span></p>
-													<p><span class="label"><b>Classification : </b></span><span
-															class="value">{{vendorClassificationId}}</span></p>
-													<p><span class="label"><b>Contract Reference: </b></span><span
-															class="value">{{vendorContractReference}}</span></p>
-													<p><span class="label"><b>Preferred Vendor: </b></span><span
-															class="value">{{isPreferredVendor}}</span></p>
-													<p><span class="label"><b>License #:</b></span><span
-															class="value">{{licenseNumber}}</span></p>
-													<p><span class="label"><b>Capability: </b></span><span
-															class="value">{{capabilityId}}</span></p>
-													<p><span class="label"><b>URL to Vendor site: </b></span><span
-															class="value">{{vendorURL}}</span></p>
-												</div>
-
-
-												<div class="clear"></div>
-											</div>
-											<div class="modal-footer">
-													<a data-toggle="collapse" href="#step1" class="btn btn-info">Close</a>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="panel panel-default">
-                                <div class="panel-heading">
-                                    
-                                    <h4 class="panel-title">
-                                        <a  data-toggle="collapse" href="#step2"
-                                           aria-expanded="false" class="collapsed">Contact</a>
-                                    </h4>
-                                </div>
-								<div id="step2" class="panel-collapse collapse in" aria-expanded="true" style="">
-									<div class="panel-body">
-										<div class="table-responsive">
-											<p-table #dt [value]="allContacts" [metaKeySelection]="true" [rows]="10"
-												[paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
-												[columns]="selectedContactColumns" [resizableColumns]="true"
-												[reorderableColumns]="true">
-
-
-												<ng-template pTemplate="header" let-columns>
-													<tr>
-
-														<th *ngFor="let col of columns" pResizableColumn
-															pReorderableColumn [pSortableColumn]="col.field">
-															{{col.header}}
-															<p-sortIcon [field]="col.field"></p-sortIcon>
-														</th>
-
-
-
-													</tr>
-												</ng-template>
-
-												<ng-template pTemplate="body" let-rowData let-columns="columns">
-													<tr [pSelectableRow]="rowData"
-														(dblclick)="toggledbldisplay(rowData)">
-
-
-														<td *ngFor="let col of columns" class="ui-resizable-column"
-															pReorderableRowHandle>
-															{{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
-														</td>
-
-
-
-													</tr>
-												</ng-template>
-											</p-table>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step3"
-   aria-expanded="false">Financial Info</a> </h4>
-								</div>
-								<div id="step3" class="panel-collapse collapse" aria-expanded="false"
-									style="height: 0px;">
-									<div class="panel-body">
-										<div class="col-sm-6">
-											<div class="=col-sm-12">
-												<p><span class="label"><b>Credit Limit: </b></span><span
-														class="value">{{creditlimit}}</span></p>
-												<p><span class="label"><b>Credit Terms: </b></span><span
-														class="value">{{creditTermsId}}</span></p>
-												<p><span class="label"><b>Currency: </b></span><span
-														class="value">{{currencyId}}</span></p>
-												<p><span class="label"><b>Discount Level: </b></span><span
-														class="value">{{discountLevel}}</span></p>
-												<p><span class="label"><b>1099 Required: </b></span><span
-														class="value">{{is1099Required}}</span></p>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step4"
-   aria-expanded="false">Payment Info</a> </h4>
-								</div>
-								<div id="step4" class="panel-collapse collapse" aria-expanded="false"
-									style="height: 0px;">
-									<div class="panel-body">
-										<div class="table-responsive">
-											<p-table #dt [value]="allpayments" [metaKeySelection]="true" [rows]="10"
-												[paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
-												[columns]="selectedPaymentColumns" [resizableColumns]="true"
-												[reorderableColumns]="true">
-
-
-
-												<ng-template pTemplate="header" let-columns>
-													<tr>
-
-														<th *ngFor="let col of columns" pResizableColumn
-															pReorderableColumn [pSortableColumn]="col.field">
-															{{col.header}}
-															<p-sortIcon [field]="col.field"></p-sortIcon>
-														</th>
-
-													</tr>
-												</ng-template>
-
-												<ng-template pTemplate="body" let-rowData let-columns="columns">
-													<tr [pSelectableRow]="rowData"
-														(dblclick)="toggledbldisplay(rowData)">
-
-
-														<td *ngFor="let col of columns" class="ui-resizable-column"
-															pReorderableRowHandle>
-															{{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyy'):rowData[col.field]}}
-														</td>
-
-
-
-													</tr>
-												</ng-template>
-											</p-table>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step5"
-   aria-expanded="false">Shipping Info</a> </h4>
-								</div>
-								<div id="step5" class="panel-collapse collapse" aria-expanded="false"
-									style="height: 0px;">
-									<div class="panel-body">
-										<div class="table-responsive">
-											<p-table #dt [value]="allShippings" [metaKeySelection]="true" [rows]="10"
-												[paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
-												[columns]="selectedShippingColumns" [resizableColumns]="true"
-												[reorderableColumns]="true">
-
-
-
-												<ng-template pTemplate="header" let-columns>
-													<tr>
-
-														<th *ngFor="let col of columns" pResizableColumn
-															pReorderableColumn [pSortableColumn]="col.field">
-															{{col.header}}
-															<p-sortIcon [field]="col.field"></p-sortIcon>
-														</th>
-
-														<!--<th></th>-->
-
-													</tr>
-												</ng-template>
-
-												<ng-template pTemplate="body" let-rowData let-columns="columns">
-													<tr [pSelectableRow]="rowData"
-														(dblclick)="toggledbldisplay(rowData)">
-
-
-														<td *ngFor="let col of columns" class="ui-resizable-column"
-															pReorderableRowHandle>
-															{{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
-														</td>
-
-
-
-													</tr>
-												</ng-template>
-											</p-table>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</ng-template>
-
-			<ng-template #content1 let-c="close" let-d="dismiss">
-				<div class="modal-header">
-					<h4 class="modal-title">Are You Sure Want to Delete?</h4>
-					<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-
-				<div class="modal-footer">
-					<button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
-					<button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
-				</div>
-			</ng-template>
-
-
-
-		</div>
-
-
-
-	</div>
-
+﻿﻿<div class="card">
+    <div class="card-body">
+        <div class="inline-block display-flex">
+            <h4 _ngcontent-c24="" class="po-head" style="padding: 0px 8px;"> Vendor List </h4>
+            <a matTooltip="Add Vendor" (click)="navigateTogeneralInfo()" class="plusicon-cstm ">
+                <i class="fa fa-plus-circle fa-lg"></i>
+            </a>
+        </div>
+
+        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="allVendorList" [rows]="10" [paginator]="true" [pageLinks]="3"
+                 [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" [metaKeySelection]="true"
+                 selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true"
+                 [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
+            <ng-template pTemplate="caption">
+
+                <div style="text-align: right">
+                    <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+                                   selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}"
+                                   defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
+
+
+                    <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
+                        <i class="fa fa-search"></i>
+                        <input type="text" pInputText size="50" class="form-control ui-autocomplete-input "
+                               (input)="dt.filterGlobal($event.target.value, 'contains')"
+                               placeholder=" Filter">
+                    </div>
+
+
+                    <button type="button" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left" label="Export All Data"
+                            (click)="dt.exportCSV()" style="padding: 5px 12px !important;"></button>
+                    <button type="button" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left" label="Export Selected"
+                            (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 12px !important;"></button>
+
+                    <div class="excel-upload excel-upload-cstm">
+                        <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file"
+                               data-multiple-caption="{count} files selected"
+                               accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                        <label for="upload">
+                            <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+                        </label>
+                    </div>
+                </div>
+
+
+            </ng-template>
+            <ng-template pTemplate="colgroup" let-columns>
+                <colgroup>
+                    <col *ngFor="let col of columns" style="width:130px">
+                </colgroup>
+            </ng-template>
+
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+
+                    <th *ngFor="let col of columns" pResizableColumn pReorderableColumn
+                        [pSortableColumn]="col.field">
+                        {{col.header}}
+                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                    </th>
+
+                    <th style="width:200px"></th>
+
+                </tr>
+
+                <tr>
+                    <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                        <input style="width:100%;" pInputText type="text"
+                               (input)="dt.filter($event.target.value, col.field, 'contains')">
+
+                    </th>
+                    <th style="width:200px"></th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdit(rowData)">
+
+                    <!-- <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                        {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                    </td> -->
+                    <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                        {{col.field == 'vendorPhone'?rowData['t']['vendorPhone']:rowData[col.field]}}
+                    </td>
+
+                    <td style="width:200px">
+                        <p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
+                                       *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off"
+                                       (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']">
+                        </p-inputSwitch>
+                        <p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
+                                       *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on"
+                                       offLabel="off" (onChange)="handleChanges(rowData,$event)"
+                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                        <p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
+                                       *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off"
+                                       (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']">
+                        </p-inputSwitch>
+                        <span data-toggle="modal" data-target="#view">
+                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip"
+                               (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a>
+                        </span>
+                        <button [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
+                                class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="Edit">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+
+                        <i class="fa fa-users" mat-icon-button matTooltip="Contacts"
+                           (click)="openContactList(contentcontact,rowData)">
+
+                        </i>
+
+                        <button [validate] moduleName="app-vendors-list" requirePermission="canDelete"
+                                class="btn-delete" mat-icon-button matTooltip="Delete"
+                                (click)=" openDelete(content1, rowData)">
+                            <mat-icon color="warn">delete</mat-icon>
+                        </button>
+
+                        <button class="btn-history" mat-icon-button matTooltip="History"
+                                (click)="openHist(contentHist,rowData)">
+                            <mat-icon color="green">history</mat-icon>
+                        </button>
+                        <button class="btn-pos" mat-icon-button matTooltip="PO's">
+                            <mat-icon color="green">format_list_bulleted</mat-icon>
+                        </button>
+                        <button class="btn-ros" mat-icon-button matTooltip="RO's">
+                            <mat-icon color="green">view_list</mat-icon>
+                        </button>
+
+                    </td>
+                </tr>
+            </ng-template>
+
+
+        </p-table>
+
+
+
+
+
+
+
+        <ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
+            <div class="modal-header">
+                <h4 class="modal-title">History of {{this.selectedRow['vendorName']}}</h4>
+                <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+
+            </div>
+            <div class="modal-body">
+
+                <div class="table-responsive" *ngIf="auditHisory.length > 0">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>PID</th>
+                                <th>Description</th>
+                                <th>previousValue</th>
+                                <th>newValue</th>
+                                <th>Last Updated By</th>
+                                <th>Last Updated Time</th>
+                            </tr>
+                        </thead>
+                        <tr *ngFor="let audit of auditHisory">
+                            <td>{{audit.auditHistoryId}}</td>
+                            <td>{{audit.columnName}}</td>
+                            <td>{{audit.previousValue}}</td>
+                            <td>{{audit.newValue}}</td>
+                            <td>{{audit.updatedBy}}</td>
+                            <td>{{audit.updatedDate}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="history-no-record" *ngIf="auditHisory.length == 0">
+                    No Record found
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+            </div>
+        </ng-template>
+    </div>
 </div>
+<ng-template #view class="modal fade " id="view" role="dialog">
+
+    <div class="modal-body viewform">
+        <div id="adminsearchlocationajax" class="table-responsive default-bg clear">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id=""
+                        name="">
+                    ×
+                </button>
+                <h4 class="modal-title">Details of {{vendorName}}</h4>
+
+                <div>
+                    <button type="button" class="btn btn-success" (click)="ExpandAllVenodrDetailsModel()">Open All</button>
+                    <button type="button" class="btn btn-info" (click)="CloseAllVenodrDetailsModel()">Close All</button>
+
+                </div>
+            </div>
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#step1"
+                               aria-expanded="false" aria-controls="receive" class="collapsed">
+                                General
+                                Information
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="step1" class="panel-collapse collapse" aria-expanded="false"
+                         style="height: 0px;">
+                        <div *ngIf="showGeneralData">
+                            <div class="modal-content">
+
+                                <div class="table-responsive default-bg clear">
+                                    <div class="col-sm-6">
+                                        <p>
+                                            <span class="label"><b>Vendor Name: </b></span><span class="value">{{vendorName}}</span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Vendor Code: </b></span><span class="value">{{vendorCode}}</span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Internal/External: </b></span><span class="value">{{description}}</span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>D/b/a: </b></span><span class="value">{{doingBusinessAsName}}</span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Parent: </b></span><span class="value">{{parent}}</span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Address1: </b></span><span class="value">{{address1}}</span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Address2 : </b></span><span class="value">ue{{address2}}</span>
+                                        </p>
+                                        <!-- <p><span class="label"><b>Address3: </b></span><span
+                                        class="value">{{address3}}</span></p>-->
+                                        <p>
+                                            <span class="label"><b>City: </b></span><span class="value">{{city}}</span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>State or Province: </b></span><span class="value">{{stateOrProvince}}</span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Postal: </b></span><span class="value">{{postalCode}}</span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Country: </b></span><span class="value">{{country}}</span>
+                                        </p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p>
+                                            <span class="label"><b>Email: </b></span><span class="value">{{vendorEmail}}</span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Classification : </b></span><span class="value">{{vendorClassificationId}}</span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Contract Reference: </b></span><span class="value">{{vendorContractReference}}</span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Preferred Vendor: </b></span><span class="value">{{isPreferredVendor}}</span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>License #:</b></span><span class="value">{{licenseNumber}}</span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Capability: </b></span><span class="value">{{capabilityId}}</span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>URL to Vendor site: </b></span><span class="value">{{vendorURL}}</span>
+                                        </p>
+                                    </div>
+
+
+                                    <div class="clear"></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <a data-toggle="collapse" href="#step1" class="btn btn-info">Close</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#step2"
+                               aria-expanded="false" class="collapsed">Contact</a>
+                        </h4>
+                    </div>
+                    <div id="step2" class="panel-collapse collapse in" aria-expanded="true" style="">
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <p-table #dt [value]="allContacts" [metaKeySelection]="true" [rows]="10"
+                                         [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
+                                         [columns]="selectedContactColumns" [resizableColumns]="true"
+                                         [reorderableColumns]="true">
+
+
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+
+                                            <th *ngFor="let col of columns" pResizableColumn
+                                                pReorderableColumn [pSortableColumn]="col.field">
+                                                {{col.header}}
+                                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                            </th>
+
+
+
+                                        </tr>
+                                    </ng-template>
+
+                                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                        <tr [pSelectableRow]="rowData"
+                                            (dblclick)="toggledbldisplay(rowData)">
+
+
+                                            <td *ngFor="let col of columns" class="ui-resizable-column"
+                                                pReorderableRowHandle>
+                                                {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                            </td>
+
+
+
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="collapsed" data-toggle="collapse" href="#step3"
+                               aria-expanded="false">Financial Info</a>
+                        </h4>
+                    </div>
+                    <div id="step3" class="panel-collapse collapse" aria-expanded="false"
+                         style="height: 0px;">
+                        <div class="panel-body">
+                            <div class="col-sm-6">
+                                <div class="=col-sm-12">
+                                    <p>
+                                        <span class="label"><b>Credit Limit: </b></span><span class="value">{{creditlimit}}</span>
+                                    </p>
+                                    <p>
+                                        <span class="label"><b>Credit Terms: </b></span><span class="value">{{creditTermsId}}</span>
+                                    </p>
+                                    <p>
+                                        <span class="label"><b>Currency: </b></span><span class="value">{{currencyId}}</span>
+                                    </p>
+                                    <p>
+                                        <span class="label"><b>Discount Level: </b></span><span class="value">{{discountLevel}}</span>
+                                    </p>
+                                    <p>
+                                        <span class="label"><b>1099 Required: </b></span><span class="value">{{is1099Required}}</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="collapsed" data-toggle="collapse" href="#step4"
+                               aria-expanded="false">Payment Info</a>
+                        </h4>
+                    </div>
+                    <div id="step4" class="panel-collapse collapse" aria-expanded="false"
+                         style="height: 0px;">
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <p-table #dt [value]="allpayments" [metaKeySelection]="true" [rows]="10"
+                                         [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
+                                         [columns]="selectedPaymentColumns" [resizableColumns]="true"
+                                         [reorderableColumns]="true">
+
+
+
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+
+                                            <th *ngFor="let col of columns" pResizableColumn
+                                                pReorderableColumn [pSortableColumn]="col.field">
+                                                {{col.header}}
+                                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                            </th>
+
+                                        </tr>
+                                    </ng-template>
+
+                                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                        <tr [pSelectableRow]="rowData"
+                                            (dblclick)="toggledbldisplay(rowData)">
+
+
+                                            <td *ngFor="let col of columns" class="ui-resizable-column"
+                                                pReorderableRowHandle>
+                                                {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyy'):rowData[col.field]}}
+                                            </td>
+
+
+
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="collapsed" data-toggle="collapse" href="#step5"
+                               aria-expanded="false">Shipping Info</a>
+                        </h4>
+                    </div>
+                    <div id="step5" class="panel-collapse collapse" aria-expanded="false"
+                         style="height: 0px;">
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <p-table #dt [value]="allShippings" [metaKeySelection]="true" [rows]="10"
+                                         [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
+                                         [columns]="selectedShippingColumns" [resizableColumns]="true"
+                                         [reorderableColumns]="true">
+
+
+
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+
+                                            <th *ngFor="let col of columns" pResizableColumn
+                                                pReorderableColumn [pSortableColumn]="col.field">
+                                                {{col.header}}
+                                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                            </th>
+
+                                            <!--<th></th>-->
+
+                                        </tr>
+                                    </ng-template>
+
+                                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                        <tr [pSelectableRow]="rowData"
+                                            (dblclick)="toggledbldisplay(rowData)">
+
+
+                                            <td *ngFor="let col of columns" class="ui-resizable-column"
+                                                pReorderableRowHandle>
+                                                {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
+                                            </td>
+
+
+
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #content1 let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
+</ng-template>
+
 <ng-template #contentcontact let-c="close" let-d="dismiss" class="modal fade" role="dialog">
-		<div class="modal-content">
-				<div class="modal-header">
-						<button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
 
-						<h4 class="modal-title"> Contacts of {{this.selectedRow['vendorName']}}</h4>
-				</div>
-			
+            <h4 class="modal-title"> Contacts of {{this.selectedRow['vendorName']}}</h4>
+        </div>
 
-			<div class="modal-body viewform">
-					
-					<p-table class="table-responsive" #dt *ngIf="allContacts.length > 0" [value]="allContacts" [metaKeySelection]="true" [rows]="10" [paginator]="true"
-							[pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedContactColumns"
-							[resizableColumns]="true" [reorderableColumns]="true">
-			
-			
-							<ng-template pTemplate="header" let-columns>
-								<tr>
-									<th *ngFor="let col of columns" pResizableColumn pReorderableColumn
-										[pSortableColumn]="col.field">
-										{{col.header}}
-										<p-sortIcon [field]="col.field"></p-sortIcon>
-									</th>
-								</tr>
-							</ng-template>
-			
-							<ng-template pTemplate="body" let-rowData let-columns="columns">
-								<tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)">
-						
-									<td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-										{{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
-									</td>			
-								</tr>
-							</ng-template>
-						</p-table>
-						<div class="contact-no-record" *ngIf="allContacts.length == 0">
-							No Records found
-						</div>
-						
-			        
-			</div>
-			<div class="modal-footer">
-					
-					<button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
-			</div>
-		</div>
 
-	
+        <div class="modal-body viewform">
+
+            <p-table class="table-responsive" #dt *ngIf="allContacts.length > 0" [value]="allContacts" [metaKeySelection]="true" [rows]="10" [paginator]="true"
+                     [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedContactColumns"
+                     [resizableColumns]="true" [reorderableColumns]="true">
+
+
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th *ngFor="let col of columns" pResizableColumn pReorderableColumn
+                            [pSortableColumn]="col.field">
+                            {{col.header}}
+                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                        </th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                    <tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)">
+
+                        <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                            {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <div class="contact-no-record" *ngIf="allContacts.length == 0">
+                No Records found
+            </div>
+
+
+        </div>
+        <div class="modal-footer">
+
+            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
+        </div>
+    </div>
+
+
 </ng-template>
