@@ -311,8 +311,8 @@
                                     <label for="conventionType" class="control-label">Convention Type</label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <select class="form-control" name="conventionType" [(ngModel)]="conventionType">
-                                        <option *ngFor="let conventionType of conventionTypeList" [ngValue]="conventionType.value">{{conventionType.label}}</option>
+                                    <select  name="conventionType" [(ngModel)]="currentRow.conventionType">
+                                        <option *ngFor="let convType of conventionTypeList" [ngValue]="convType">{{convType.label}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -335,7 +335,7 @@
                                 <div class="col-sm-5">
                                     <select name="residualPercentage" [(ngModel)]="currentRow.residualPercentage">
                                         <option value="">Select Percentage</option>
-                                        <option *ngFor="let Percentlist of percentageList" [ngValue]="Percentlist.value">{{Percentlist.value}}</option>
+                                        <option *ngFor="let Percentlist of percentageList" [ngValue]="Percentlist">{{Percentlist.value}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -363,7 +363,7 @@
                                 </div>
                                 <div class="col-sm-5">
                                     <select name="depreciationFrequencyId" [(ngModel)]="currentRow.depreciationFrequencyId">
-                                        <option *ngFor="let freq of depreciationFreq" [ngValue]="freq.value">{{freq.label}}</option>
+                                        <option *ngFor="let freq of depreciationFreq" [ngValue]="freq">{{freq.label}}</option>
                                     </select>
                                 </div>
                             </div>

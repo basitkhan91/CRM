@@ -184,11 +184,11 @@ export class AssetAttributeTypeComponent implements OnInit {
         this.depriciationMethodService.getAll().subscribe(depriciationmethods => {
             this.depriciationMethodList = depriciationmethods[0].columnData;
         });
-        console.log(this.depriciationMethodList);
+        //console.log(this.depriciationMethodList);
     }
 
     companySelected(): void {
-        console.log(`Company Id :${this.selectedCompanyID}`);
+        //console.log(`Company Id :${this.selectedCompanyID}`);
 
         if (this.selectedCompanyID != undefined && this.selectedCompanyID.toString() !== "0") {
             this.mgmtStructureId = this.selectedCompanyID;
@@ -206,7 +206,7 @@ export class AssetAttributeTypeComponent implements OnInit {
     }
 
     buSelected(): void {
-        console.log(`BU :${this.selectedBUId}`);
+        //console.log(`BU :${this.selectedBUId}`);
         this.mgmtStructureId = this.selectedBUId;
         if (this.selectedBUId.toString() !== "0") {
             this.mgmtStructureId = this.selectedBUId;
@@ -221,7 +221,7 @@ export class AssetAttributeTypeComponent implements OnInit {
     }
 
     divisionSelected(): void {
-        console.log(`Division id :${this.selectedDivisionID}`);
+        //console.log(`Division id :${this.selectedDivisionID}`);
         if (this.selectedDivisionID.toString() !== "0") {
             this.mgmtStructureId = this.selectedDivisionID;
         } else {
@@ -325,10 +325,10 @@ export class AssetAttributeTypeComponent implements OnInit {
 
     getAllPercentage() {
         this.commonservice.smartDropDownList('[Percent]', 'PercentId', 'PercentValue').subscribe(res => {
-            //console.log('res: '+res);
+            ////console.log('res: '+res);
             this.percentageList = res;
         });
-        //console.log('percentge list : ', this.percentageList);
+        ////console.log('percentge list : ', this.percentageList);
     }
 
     getAllFrequency() {
@@ -340,15 +340,16 @@ export class AssetAttributeTypeComponent implements OnInit {
     getAllConventionTypes() {
         this.commonservice.smartDropDownList('[ConventionType]', 'ConventionTypeId', 'Name').subscribe(res => {
             this.conventionTypeList = res;
+            //console.log('conventionTypeList', this.conventionTypeList);
         })
     }
 
     filterPercentage(event) {
-        console.log(parseInt(event.query));
+        //console.log(parseInt(event.query));
         this.filteredPercentageList = this.percentageList;
 
         this.filteredPercentageList = [...this.percentageList.filter(x => {
-            console.log(x);
+            //console.log(x);
 
             return x.percentValue.includes(parseInt(event.query))
         })]
@@ -363,8 +364,8 @@ export class AssetAttributeTypeComponent implements OnInit {
     //Step E1: Open row up for editing
     addNewItem(): void {
         this.currentRow = new AssetAttributeType();
-        console.log(new AssetAttributeType().assetAttributeTypeName);
-        console.log(this.currentRow.assetAttributeTypeName);
+        //console.log(new AssetAttributeType().assetAttributeTypeName);
+        //console.log(this.currentRow.assetAttributeTypeName);
         this.currentModeOfOperation = ModeOfOperation.Add;
     }
 
@@ -495,18 +496,18 @@ export class AssetAttributeTypeComponent implements OnInit {
 
     /*
     openItemForEdit(rowData): void {
-        console.log('adDepsGLAccountId = '+rowData.adDepsGLAccountId);
+        //console.log('adDepsGLAccountId = '+rowData.adDepsGLAccountId);
         this.currentRow = {
             ...rowData,
             acquiredGLAccountId: getObjectById('acquiredGLAccountId', rowData.acquiredGLAccountId, this.allGlInfo)
         };
-        console.log("acquiredGLAccountId = "+this.currentRow.acquiredGLAccountId);
+        //console.log("acquiredGLAccountId = "+this.currentRow.acquiredGLAccountId);
         this.currentModeOfOperation = ModeOfOperation.Update;
     }*/
 
     saveNewItem(): void {
         this.currentModeOfOperation = ModeOfOperation.Add;
-        console.log(this.currentRow);
+        //console.log(this.currentRow);
         this.coreDataService.add(this.currentRow).subscribe(response => {
             this.alertService.showMessage('Success', this.rowName + " added successfully.", MessageSeverity.success);
             this.getItemList();
@@ -516,7 +517,7 @@ export class AssetAttributeTypeComponent implements OnInit {
 
     saveExistingItem(rowData): void {
         let item = rowData as AssetAttributeType;
-        console.log(item);
+        //console.log('saveExistingItem:',item);
         var itemExists = this.checkItemExists(item);
         if (itemExists) {
             this.currentModeOfOperation = ModeOfOperation.Update;
@@ -543,7 +544,6 @@ export class AssetAttributeTypeComponent implements OnInit {
     }
 
     showItemEdit(rowData): void {
-        console.log('acquiredGLAccountId = ' + rowData.acquiredGLAccountId);
         this.currentRow = {
             ...rowData,
             assetTypeId: getObjectById('assetTypeId', rowData.assetTypeId, this.allAssetTypes),
@@ -551,9 +551,9 @@ export class AssetAttributeTypeComponent implements OnInit {
             deprExpenseGLAccountId: getObjectById('glAccountId', rowData.deprExpenseGLAccountId, this.allGlInfo),
             adDepsGLAccountId: getObjectById('glAccountId', rowData.adDepsGLAccountId, this.allGlInfo),
             depreciationMethod: getObjectById('assetDepreciationMethodId', rowData.depreciationMethod, this.depriciationMethodList),
-            //depreciationFrequencyId: getObjectById('value', rowData.depreciationFrequencyId, this.depreciationFreq),
-            //conventionType: getObjectById('value', rowData.conventionType, this.conventionTypeList),
-            //residualPercentage: getObjectById('value', rowData.residualPercentage, this.percentageList),
+            depreciationFrequencyId: getObjectById('value', rowData.depreciationFrequencyId, this.depreciationFreq),
+            conventionType: getObjectById('value', rowData.conventionType, this.conventionTypeList),
+            residualPercentage: getObjectById('value', rowData.residualPercentage, this.percentageList),
             assetSale: getObjectById('glAccountId', rowData.assetSale, this.allGlInfo),
             assetWriteOff: getObjectById('glAccountId', rowData.assetWriteOff, this.allGlInfo),
             assetWriteDown: getObjectById('glAccountId', rowData.assetWriteDown, this.allGlInfo)
@@ -561,7 +561,7 @@ export class AssetAttributeTypeComponent implements OnInit {
         this.currentRow = { ...this.currentRow }
         this.mgmtStructureId = this.currentRow.managementStructureId;
         this.populateMgmtStructure(this.currentRow.managementStructureId);
-        console.log("acquiredGLAccountId = " + this.currentRow.acquiredGLAccountId);
+        //console.log("conventionType = " + this.currentRow.conventionType);
         this.currentModeOfOperation = ModeOfOperation.Update;
         //this.currentRow = rowData as AssetAttributeType;
         this.currentModeOfOperation = ModeOfOperation.Update;
