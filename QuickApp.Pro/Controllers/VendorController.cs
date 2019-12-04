@@ -1373,7 +1373,7 @@ namespace QuickApp.Pro.Controllers
                 var actionobject = _unitOfWork.Vendor.GetSingleOrDefault(c => c.VendorId == id);
                 var address = _unitOfWork.Address.GetSingleOrDefault(c => c.AddressId == actionobject.AddressId);
 
-                vt.VendorTypeId = 1;
+                //vt.VendorTypeId = 1;
                 vendorViewModel.MasterCompanyId = 1;
                 actionobject.VendorId = vendorViewModel.VendorId;
                 actionobject.VendorName = vendorViewModel.VendorName;

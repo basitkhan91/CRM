@@ -30,13 +30,18 @@ namespace DAL.Repositories
             {
                 var data = (from t in _appContext.Vendor
                             join ad in _appContext.Address on t.AddressId equals ad.AddressId
-                            join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId
+                            join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
+                            from vt in vtt.DefaultIfEmpty()
                             join ct in _appContext.CreditTerms on t.CreditTermsId equals ct.CreditTermsId into crd
                             from ct in crd.DefaultIfEmpty()
                             join cu in _appContext.Currency on t.CurrencyId equals cu.CurrencyId into curr
                             from cu in curr.DefaultIfEmpty()
                             join di in _appContext.Discount on t.DiscountId equals di.DiscountId into dis
                             from di in dis.DefaultIfEmpty()
+                            join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
+                            from vc in vcd.DefaultIfEmpty()
+                            join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
+                            from vca in vcad.DefaultIfEmpty()
                             where t.IsDelete != true
                             select new
                             {
@@ -64,7 +69,9 @@ namespace DAL.Repositories
                                 t.CreditLimit,
                                 CurrencyId = cu.Code,
                                 CreditTermsId = ct.Name,
-                                DiscountLevel = di == null ? 0 : di.DiscontValue
+                                DiscountLevel = di == null ? 0 : di.DiscontValue,
+                                vc.ClassificationName,
+                                VendorCapabilityName = vca.capabilityDescription
                             })/*.Where(t => t.IsActive == true)*/.OrderByDescending(c => c.CreatedDate).ToList();
                 return data;
 

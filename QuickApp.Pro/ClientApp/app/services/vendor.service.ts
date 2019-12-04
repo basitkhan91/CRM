@@ -173,7 +173,7 @@ export class VendorService {
     }
     getVendorWarnings(vendorId: any) {
         return Observable.forkJoin(
-            this.actionEndpoint.getVendorwarnigs<any[]>(vendorId));
+            this.actionEndpoint.getVendorwarnigs<any>(vendorId));
     }
     getVendorShipViaDetails(rowData) {
         return Observable.forkJoin(
