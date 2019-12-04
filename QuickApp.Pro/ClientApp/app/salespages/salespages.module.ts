@@ -58,6 +58,13 @@ import { SalesPartNumbersComponent } from "../components/sales/quotes/shared/com
 import { StocklinePartDetailsComponent } from "../components/sales/shared/components/add-sales-part-number/stockline-part-details/stockline-part-details.component";
 import { MarginDetail } from "../components/sales/shared/models/margin-detail";
 import { SalesMarginComponent } from "../components/sales/shared/components/sales-margin/sales-margin..component";
+//Sales Order Components - Start
+import { SalesOrderListComponent } from "../components/sales/order/sales-order-list/sales-order-list.component";
+import { SalesOrderCreateComponent } from "../components/sales/order/sales-order-create/sales-order-create.component";
+import { SalesOrderComponent } from "../components/sales/order/sales-order/sales-order-component";
+import { SalesOrderService } from "../services/salesorder.service";
+import { SalesOrderEndpointService } from "../services/salesorder-endpoint.service";
+//Sales Order Components - End
 
 @NgModule({
   imports: [
@@ -105,9 +112,12 @@ import { SalesMarginComponent } from "../components/sales/shared/components/sale
     PartDetailsComponent,
     SalesPartNumbersComponent,
     StocklinePartDetailsComponent,
-    SalesMarginComponent
+    SalesMarginComponent,
+	SalesOrderListComponent,
+    SalesOrderCreateComponent,
+    SalesOrderComponent
   ],
-  providers: [CustomerService, SalesQuoteService, SalesQuoteEndpointService, ItemMasterService],
+  providers: [CustomerService, SalesQuoteService, SalesQuoteEndpointService, ItemMasterService, SalesOrderService, SalesOrderEndpointService],
   entryComponents: []
 })
 export class SalesPagesModule { }
