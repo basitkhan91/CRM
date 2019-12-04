@@ -31,7 +31,8 @@ export class CustomerDocumentsComponent implements OnInit {
 		docDescription: ''
 	}
 	customerDocumentsData: any = [];
-	customerDocumentsColumns = [
+    customerDocumentsColumns = [
+        
 		{ field: 'docName', header: 'Name' },
 		{ field: 'docDescription', header: 'Description' },
 		{ field: 'documents', header: 'Documents' },
@@ -40,13 +41,19 @@ export class CustomerDocumentsComponent implements OnInit {
 	selectedColumns = this.customerDocumentsColumns;
 	formData = new FormData()
 	// ediData: any;
-	isEditButton: boolean = false;
+    isEditButton: boolean = false;
+    isDeleteMode: boolean = false;
 	id: number;
 	customerCode: any;
 	customerName: any;
-	sourceViewforDocument: any;
-	// modal: NgbModalRef;
-
+    sourceViewforDocument: any;
+    localCollection: any;
+	 modal: NgbModalRef;
+    sourceViewforDocumentList: any = [];
+    headersforAttachment = [
+        { field: 'fileName', header: 'File Name' },
+        //{ field: 'link', header: 'Action' },
+    ];
 	constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService,
 		private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 	}
@@ -64,7 +71,8 @@ export class CustomerDocumentsComponent implements OnInit {
             this.customerCode = this.savedGeneralInformationData.customerCode;
             this.customerName = this.savedGeneralInformationData.name;
 
-		}
+        }
+        this.getList();
 	}
 
 
@@ -81,9 +89,26 @@ export class CustomerDocumentsComponent implements OnInit {
 		for (let file of event.files)
 			this.formData.append(file.name, file);
 	}
-	openDocument() {
+	
+    openDocument(content, row) {
 
-	}
+        this.sourceViewforDocument = row;
+        this.toGetUploadDocumentsList(row.attachmentId, row.customerId, 1);
+       
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    
+
+    }
+    toGetUploadDocumentsList(attachmentId, customerId, moduleId) {
+       
+        this.customerService.toGetUploadDocumentsList(attachmentId, customerId, moduleId).subscribe(res => {
+            this.sourceViewforDocumentList = res;
+            console.log(this.sourceViewforDocumentList);
+        })
+    }
 	getList() {
 		this.customerService.getDocumentList(this.id).subscribe(res => {
 			this.customerDocumentsData = res;
@@ -99,29 +124,95 @@ export class CustomerDocumentsComponent implements OnInit {
 
 		for (var key in data) {
 			this.formData.append(key, data[key]);
-		}
+        }
+        if (!this.isEditButton) {
+            this.customerService.documentUploadAction(this.formData).subscribe(res => {
+                this.formData = new FormData()
+                this.documentInformation = {
 
-		this.customerService.documentUploadAction(this.formData).subscribe(res => {
-			this.formData = new FormData()
-			this.getList();
-			this.alertService.showMessage(
-				'Success',
-				`Saved Documents Successfully `,
-				MessageSeverity.success
-			);
-		})
+                    docName: '',
+                    docMemo: '',
+                    docDescription: ''
+                }
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Saved Documents Successfully `,
+                    MessageSeverity.success
+                );
+            })
+        }
+        else {
+            this.customerService.documentUploadAction(this.formData).subscribe(res => {
+                this.documentInformation = {
 
-	}
+                    docName: '',
+                    docMemo: '',
+                    docDescription: ''
+                }
+                this.isEditButton = false;
+                this.formData = new FormData()
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Updated Documents Successfully `,
+                    MessageSeverity.success
+                );
+            })
+        }
+
+    }
+   
 	updateCustomerDocument() { }
 
-	editCustomerDocument() {
-
+    editCustomerDocument(rowdata) {
+        this.isEditButton = true;
+        this.documentInformation = rowdata;
 	}
+    addDocumentDetails() {
+        this.isEditButton = false;
+        this.documentInformation = {
 
+		docName: '',
+		docMemo: '',
+		docDescription: ''
+	}
+    }
 	backClick() {
 		this.tab.emit('Warnings');
-	}
-
+    }
+    openDelete(content, row) {
+        
+        this.isDeleteMode = true;
+        delete row.updatedBy;
+        this.localCollection = row;
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+    deleteItemAndCloseModel() {
+        let customerDocumentDetailId = this.localCollection.customerDocumentDetailId;
+        if (customerDocumentDetailId > 0) {
+            //this.isSaving = true;
+            this.customerService.getDeleteDocumentListbyId(customerDocumentDetailId).subscribe(
+               
+                this.alertService.showMessage(
+                    'Success',
+                    `Action was deleted successfully `,
+                    MessageSeverity.success
+                ));
+            debugger
+            this.getList();
+           
+        }
+        this.modal.close();
+    }
+      dismissModel() {
+         this.isDeleteMode = false;
+       
+         this.modal.close();
+     }
 }
 
 

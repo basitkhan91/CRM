@@ -681,6 +681,7 @@ namespace DAL.Repositories
             {
 
                 var data = (from ca in _appContext.CustomerContactATAMapping
+                          join cont in _appContext.CustomerContact  on ca.CustomerContactId equals cont.ContactId
                             where ca.CustomerId == customerId && ca.IsDeleted == false
                             select new
                             {
@@ -1150,7 +1151,7 @@ namespace DAL.Repositories
             {
                 CustomerDocumentDetail CustomerDocumentDetails = new CustomerDocumentDetail();
                 CustomerDocumentDetails = _appContext.CustomerDocumentDetails
-                    .Where(p => p.IsDeleted == false && p.CustomerId == id)
+                    .Where(p => p.IsDeleted == false && p.CustomerDocumentDetailId == id)
                     .OrderByDescending(p => p.UpdatedDate)
                     .FirstOrDefault();
                 return CustomerDocumentDetails;

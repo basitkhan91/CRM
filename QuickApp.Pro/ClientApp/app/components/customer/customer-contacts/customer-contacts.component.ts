@@ -37,13 +37,18 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 export class CustomerContactsComponent implements OnInit {
 	@Input() savedGeneralInformationData;
 	@Input() editMode;
-	@Input() editGeneralInformationData;
+    @Input() editGeneralInformationData;
+   
 	@Input() add_ataChapterList;
 
 	// @Input() ataListDataValues;
 	@Output() tab = new EventEmitter<any>();
 	@Output() saveCustomerContactATAMapped = new EventEmitter();
 	@Output() refreshCustomerATAMapped = new EventEmitter();
+	@Output() refreshCustomerATAByCustomerId = new EventEmitter();
+	
+    
+    
 	contactsListOriginal: any;
 	firstNamesList: any;
 	middleNamesList: any;
@@ -72,6 +77,7 @@ export class CustomerContactsComponent implements OnInit {
 	isEditButton: boolean = false;
     id: number;
     contactId: number;
+    contactATAId: number;
 	customerCode: any;
     customerName: any;
     modal: NgbModalRef;
@@ -287,8 +293,14 @@ export class CustomerContactsComponent implements OnInit {
         if (contactId > 0) {
       
             this.customerService.deleteContact(contactId).subscribe(
-                response => this.saveCompleted(this.sourceCustomer),
+                response => {
+					this.saveCompleted(this.sourceCustomer);
+					this.refreshCustomerATAByCustomerId.emit(this.id)
+				},
                 error => this.saveFailedHelper(error));
+              
+           
+
         }
 
         this.modal.close();
@@ -379,18 +391,51 @@ export class CustomerContactsComponent implements OnInit {
 		})
 	}
 
-	deleteATAMapped(rowData) {
-		this.customerService.deleteATAMappedByContactId(rowData.customerContactATAMappingId).subscribe(res => {
-			this.getATACustomerContactMapped();
-			this.refreshCustomerATAMapped.emit(this.id)
-			this.alertService.showMessage(
-				'Success',
-				'Deleted ATA Mapped  Successfully ',
-				MessageSeverity.success
-			);
-		})
+	//deleteATAMapped(rowData) {
+	//	this.customerService.deleteATAMappedByContactId(rowData.customerContactATAMappingId).subscribe(res => {
+	//		this.getATACustomerContactMapped();
+	//		this.refreshCustomerATAMapped.emit(this.id)
+	//		this.alertService.showMessage(
+	//			'Success',
+	//			'Deleted ATA Mapped  Successfully ',
+	//			MessageSeverity.success
+	//		);
+	//	})
 
-	}
+	//}
+
+
+    deleteATAMapped(content, rowData) {
+        this.sourceViewforContact = '';
+        this.isDeleteMode = true;
+
+
+        this.contactATAId = rowData.customerContactATAMappingId;
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    deleteItemAndCloseModel1() {
+        let contactATAId = this.contactATAId;
+        if (contactATAId > 0) {
+
+            this.customerService.deleteATAMappedByContactId(contactATAId).subscribe(
+                response => {
+                    this.saveCompleted(this.sourceCustomer);
+                    this.getATACustomerContactMapped();
+              	   this.refreshCustomerATAMapped.emit(this.id)
+                    
+                },
+                error => this.saveFailedHelper(error));
+
+
+
+        }
+
+        this.modal.close();
+    }
 
 	getAuditHistoryById(rowData) {
 		this.customerService.getCustomerContactAuditDetails(rowData.customerContactId).subscribe(res => {
@@ -430,6 +475,8 @@ export class CustomerContactsComponent implements OnInit {
             this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
             this.saveCompleted
         }
+        
+        
         this.getAllCustomerContact();
     }
     private saveFailedHelper(error: any) {
