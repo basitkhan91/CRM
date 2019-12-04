@@ -19,6 +19,7 @@ export class WorkOrderAssetsComponent implements OnInit {
     @Input() workFlowObject;
     @Output() getEquipmentData = new EventEmitter();
     @Output() saveEquipmentListForWO = new EventEmitter();
+    @Output() updateEquipmentListForWO = new EventEmitter();
     assetRecordId: any;
     addNewMaterial: any;
     assets = {
@@ -34,6 +35,8 @@ export class WorkOrderAssetsComponent implements OnInit {
     currentRecord: any;
     employeeList: any;
     generalInfoForm: NgForm;
+    isEdit: boolean = false;
+    editData: any;
 
     ngOnInit(): void {
         console.log(this.workFlowObject);
@@ -125,20 +128,37 @@ export class WorkOrderAssetsComponent implements OnInit {
         }
 
     }
+    createNew() {
+        this.isEdit = false;
+        this.editData = undefined;
+    }
+    edit(rowData) {
+        this.isEdit = true;
+        this.editData = rowData;
+    }
+    delete(rowData) {
+
+    }
 
 
-  saveEquipmentList(event){
-    this.saveEquipmentListForWO.emit(event)
-    $('#addNewEquipments').modal('hide');
-  }
+    saveEquipmentList(event) {
+        this.saveEquipmentListForWO.emit(event)
+        $('#addNewEquipments').modal('hide');
+    }
+
+    updateEquipmentList(event) {
+        this.updateEquipmentListForWO.emit(event)
+        this.isEdit = false;
+        $('#addNewEquipments').modal('hide');
+    }
 
 
-  // getWorkOrderAssetList(): void {
-  //     this.workOrderService.getWorkOrderAssetList(7).subscribe(
-  //         result => {
-  //             this.workOrderAssetList = result;
-  //         }
-  //     );
-  // }
+    // getWorkOrderAssetList(): void {
+    //     this.workOrderService.getWorkOrderAssetList(7).subscribe(
+    //         result => {
+    //             this.workOrderAssetList = result;
+    //         }
+    //     );
+    // }
 
 }

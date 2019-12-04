@@ -193,9 +193,22 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/createworkordermaterials`, JSON.stringify(data), this.getRequestHeaders())
     }
 
+    updateWorkOrderMaterialList(data) {
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/updateworkordermaterials`, JSON.stringify(data), this.getRequestHeaders())
+    }
+    deleteWorkOrderMaterialListById(workOrderMaterialId, updatedBy){
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/deleteworkordermaterial?workOrderMaterialsId=${workOrderMaterialId}&updatedBy=${updatedBy}`,  this.getRequestHeaders())
+        
+    }
+
+    
+
     createWorkOrderEquipmentList(data){
         return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/createworkorderassets`, JSON.stringify(data), this.getRequestHeaders())
-        
+    }
+
+    updateWorkOrderEquipmentList(data){
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/updateworkorderassets`, JSON.stringify(data), this.getRequestHeaders())
         
     }
 
@@ -204,9 +217,21 @@ export class WorkOrderEndpointService extends EndpointFactory {
     }
 
 
+    updateWorkOrderChargesList(data){
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/updateworkordercharges`, JSON.stringify(data), this.getRequestHeaders())
+    }
+    
+
+
     createWorkOrderExclusionList(data){
         return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/createworkorderexclusions`, JSON.stringify(data), this.getRequestHeaders());
     }
+
+    updateWorkOrderExclusionList(data){
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/updateworkorderexclusions`, JSON.stringify(data), this.getRequestHeaders());
+    }
+
+    
     getTasks() {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/Task/Get`, this.getRequestHeaders())
     }

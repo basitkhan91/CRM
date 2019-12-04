@@ -27,9 +27,14 @@ export class MaterialListCreateComponent implements OnInit {
     allconditioninfo: any[] = [];
     partListData: any[] = [];
     @Input() isWorkOrder;
+    @Input() isEdit = false;
+    @Input() editData;
     @Input() workFlow: IWorkFlow;
     @Input() UpdateMode: boolean;
     @Output() workFlowChange = new EventEmitter();
+    @Output() saveMaterialListForWO = new EventEmitter();
+    @Output() updateMaterialListForWO = new EventEmitter();
+    
     @Output() notify: EventEmitter<IWorkFlow> =
         new EventEmitter<IWorkFlow>();
     materialCondition: any[] = [];
@@ -56,11 +61,43 @@ export class MaterialListCreateComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.row = this.workFlow.materialList[0];
-        if (this.row == undefined) {
-            this.row = {};
+        // this.row = this.workFlow.materialList[0];
+        // if (this.row == undefined) {
+        //     this.row = {};
+        // }
+        // this.row.taskId = this.workFlow.taskId;
+
+
+        if (this.isWorkOrder) {
+            this.row = this.workFlow.materialList[0];
+            if (this.isEdit) {
+                this.workFlow.materialList = [];
+                // const data = {
+                //     ...this.editData,
+                //     partDescription: this.editData.epnDescription,
+                //     partNumber: this.editData.epn,
+
+                // }
+                this.workFlow.materialList.push(this.editData);
+                this.reCalculate();
+            } else {
+                this.workFlow.materialList = [];
+                this.row = this.workFlow.materialList[0];
+                this.addRow();
+            }
+
+        } else {
+            this.row = this.workFlow.materialList[0];
+            if (this.row == undefined) {
+                this.row = {};
+            }
+            this.row.taskId = this.workFlow.taskId;
         }
-        this.row.taskId = this.workFlow.taskId;
+
+
+
+
+
         this.actionService.GetMaterialMandatory().subscribe(
             mandatory => {
                 this.materialMandatory = mandatory;
@@ -292,7 +329,7 @@ export class MaterialListCreateComponent implements OnInit {
     }
 
     validateQuantity(event, material): void {
-        debugger;
+
         if (material.quantity != "") {
             event.target.value = parseInt(material.quantity);
             material.quantity = parseInt(material.quantity);
@@ -329,6 +366,14 @@ export class MaterialListCreateComponent implements OnInit {
             })]
             this.isDeferredBoolean = false;
         }
+    }
+
+    saveMaterialsWorkOrder() {
+        this.saveMaterialListForWO.emit(this.workFlow)
+    }
+
+    updateMaterialsWorkOrder() {
+        this.updateMaterialListForWO.emit(this.workFlow);
     }
 
 

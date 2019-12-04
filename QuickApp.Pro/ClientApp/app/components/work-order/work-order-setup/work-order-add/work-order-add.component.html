@@ -753,7 +753,8 @@
                     </div>
 
                     <div [ngClass]="{hidedata : gridActiveTab !== 'equipment'}">
-                        <app-work-order-assets (saveEquipmentListForWO)="saveWorkOrderEquipmentList($event)" 
+                        <app-work-order-assets (saveEquipmentListForWO)="saveWorkOrderEquipmentList($event)"
+                         (updateEquipmentListForWO)="updateWorkOrderEquipmentList($event)"
                          (getEquipmentData)="getEquipmentByWorkOrderId($event)" 
                          [employeesOriginalData]="employeesOriginalData" 
                           [isWorkOrder]="isWorkOrder" 
@@ -765,9 +766,15 @@
                             <app-work-order-quote [quoteForm]="quote"></app-work-order-quote>
                         </div>
                     <div *ngIf="workOrderId" [ngClass]="{hidedata : gridActiveTab !== 'materialList' }" >  
-                      <app-work-order-complete-material-list [materialStatus]="materialStatus" [isWorkOrder]="isWorkOrder" [workFlow]="workFlowObject" [savedWorkOrderData]="savedWorkOrderData" [workOrderMaterialList]="workOrderMaterialList"
+                      <app-work-order-complete-material-list [materialStatus]="materialStatus"
+                       [isWorkOrder]="isWorkOrder" 
+                       [workFlowObject]="workFlowObject" 
+                       [savedWorkOrderData]="savedWorkOrderData" 
+                       [workOrderMaterialList]="workOrderMaterialList"
                       (saveRIParts)="saveReservedPartorIssue($event)"
-                      (saveMaterialListForWO)="saveWorkOrderMaterialList($event)"></app-work-order-complete-material-list>
+                      (saveMaterialListForWO)="saveWorkOrderMaterialList($event)"
+                      (updateMaterialListForWO)="updateWorkOrderMaterialList($event)"
+                      ></app-work-order-complete-material-list>
                     </div>
                       
 
@@ -791,6 +798,7 @@
                           [isWorkOrder]="isWorkOrder"
                            [workOrderChargesList]="workOrderChargesList" 
                         (saveChargesListForWO)="saveWorkOrderChargesList($event)"
+                        (updateChargesListForWO)="updateWorkOrderChargesList($event)"
                         
                         ></app-work-order-charges> 
                     </div>
@@ -801,6 +809,7 @@
                           [isWorkOrder]="isWorkOrder"
                            [workOrderExclusionsList]="workOrderExclusionsList" 
                         (saveExclusionsListForWO)="saveWorkOrderExclusionsList($event)"
+                        (updateExclusionsListForWO)="updateWorkOrderExclusionsList($event)"
                         
                         ></app-work-order-exclusions> 
                     </div>

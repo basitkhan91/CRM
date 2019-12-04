@@ -15,10 +15,14 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     @Input() isWorkOrder = false;
     @Input() workFlow: IWorkFlow;
     @Input() UpdateMode: boolean;
+    @Input() isEdit = false;
+    @Input() editData;
     @Output() saveExclusionsListForWO = new EventEmitter();
+    @Output() updateExclusionsListForWO = new EventEmitter();
+
     @Output() notify: EventEmitter<IWorkFlow> =
         new EventEmitter<IWorkFlow>();
-    
+
     exclusionEstimatedOccurances: any = [];
     row: any;
     allPartnumbersInfo: any[] = [];
@@ -38,10 +42,26 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     ngOnInit(): void {
 
 
-        if(this.isWorkOrder){
+        if (this.isWorkOrder) {
             this.row = this.workFlow.exclusions[0];
-            this.addRow();
-        }else{
+            if (this.isEdit) {
+                this.workFlow.exclusions = [];
+                const data = {
+                    ...this.editData,
+                    partDescription: this.editData.epnDescription,
+                    partNumber: this.editData.epn,
+
+                }
+                this.workFlow.exclusions.push(data);
+                this.reCalculate();
+            } else {
+                this.workFlow.exclusions = [];
+                this.row = this.workFlow.exclusions[0];
+                this.addRow();
+            }
+            // this.row = this.workFlow.exclusions[0];
+            // this.addRow();
+        } else {
             this.row = this.workFlow.exclusions[0];
             if (this.row == undefined) {
                 this.row = {};
@@ -184,8 +204,12 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
         this.allPartnumbersInfo = allWorkFlows;
     }
 
-    saveExclusionsWorkOrder(){
+    saveExclusionsWorkOrder() {
         this.saveExclusionsListForWO.emit(this.workFlow)
+    }
+
+    updateExclusionsWorkOrder() {
+        this.updateExclusionsListForWO.emit(this.workFlow);
     }
 
 }

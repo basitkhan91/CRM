@@ -129,15 +129,31 @@ export class WorkOrderService {
     createWorkOrderMaterialList(data) {
         return this.workOrderEndpointService.createWorkOrderMaterialList(data);
     }
-    createWorkOrderEquipmentList(data){
+    updateWorkOrderMaterialList(data) {
+        return this.workOrderEndpointService.updateWorkOrderMaterialList(data);
+    }
+    deleteWorkOrderMaterialListById(workOrderMaterialId, updatedBy) {
+        return this.workOrderEndpointService.deleteWorkOrderMaterialListById(workOrderMaterialId, updatedBy);
+    }
+    createWorkOrderEquipmentList(data) {
         return this.workOrderEndpointService.createWorkOrderEquipmentList(data);
     }
-    createWorkOrderChargesList(data){
+    updateWorkOrderEquipmentList(data) {
+        return this.workOrderEndpointService.updateWorkOrderEquipmentList(data);
+    }
+    createWorkOrderChargesList(data) {
         return this.workOrderEndpointService.createWorkOrderChargesList(data);
     }
 
-    createWorkOrderExclusionList(data){
+    updateWorkOrderChargesList(data) {
+        return this.workOrderEndpointService.updateWorkOrderChargesList(data);
+    }
+
+    createWorkOrderExclusionList(data) {
         return this.workOrderEndpointService.createWorkOrderExclusionList(data);
+    }
+    updateWorkOrderExclusionList(data) {
+        return this.workOrderEndpointService.updateWorkOrderExclusionList(data);
     }
     getAllTasks() {
         return this.workOrderEndpointService.getTasks();
@@ -160,7 +176,7 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getWorkOrderLaborList(workFlowWorkOrderId, workOrderId)
     }
 
-    getWorkOrderDirectionList(workFlowWorkOrderId, workOrderId){
+    getWorkOrderDirectionList(workFlowWorkOrderId, workOrderId) {
         return this.workOrderEndpointService.getWorkOrderDirectionList(workFlowWorkOrderId, workOrderId)
     }
 
@@ -178,17 +194,17 @@ export class WorkOrderService {
     getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId, statusId) {
         return this.workOrderEndpointService.getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId, statusId);
     }
-    saveReservedPartorIssue(alternatePart){
+    saveReservedPartorIssue(alternatePart) {
         return this.workOrderEndpointService.saveReservedPartorIssue(alternatePart)
     }
-    assetsCheckInByWorkOrderAssetsId(assetcheckin){
+    assetsCheckInByWorkOrderAssetsId(assetcheckin) {
         return this.workOrderEndpointService.assetsCheckInByWorkOrderAssetsId(assetcheckin);
     }
-    assetsCheckOutByWorkOrderAssetsId(assetcheckout){ 
+    assetsCheckOutByWorkOrderAssetsId(assetcheckout) {
         return this.workOrderEndpointService.assetsCheckOutByWorkOrderAssetsId(assetcheckout);
     }
 
-    createQuote(data){
+    createQuote(data) {
         return this.workOrderEndpointService.createQuotation(data);
     }
 

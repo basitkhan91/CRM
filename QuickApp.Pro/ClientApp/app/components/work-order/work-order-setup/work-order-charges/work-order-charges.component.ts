@@ -13,12 +13,33 @@ export class WorkOrderChargesComponent {
   @Input() workFlowObject;
   @Input() isWorkOrder;
   @Output() saveChargesListForWO =  new EventEmitter();
+  @Output() updateChargesListForWO =  new EventEmitter();
+  
+  isEdit: boolean = false;
+  editData: any;
   constructor() {}
 
+
+      createNew() {
+        this.isEdit = false;
+        this.editData = undefined;
+    }
+    edit(rowData) {
+        this.isEdit = true;
+        this.editData = rowData;
+    }
+    delete(rowData) {
+    }
 
   saveChargesList(event){
     this.saveChargesListForWO.emit(event);
     $('#addNewCharges').modal('hide');
+  }
+
+  updateChargesList(event){
+    this.updateChargesListForWO.emit(event);
+    $('#addNewCharges').modal('hide');
+    this.isEdit = false;
   }
 
 }

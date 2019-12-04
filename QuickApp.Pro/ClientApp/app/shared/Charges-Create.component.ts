@@ -7,6 +7,7 @@ import { IChargesType } from "../Workflow/ChargesType";
 import { CurrencyService } from "../services/currency.service";
 import { VendorService } from "../services/vendor.service";
 import { AlertService, MessageSeverity } from "../services/alert.service";
+import { getObjectById } from "../generic/autocomplete";
 
 @Component({
     selector: 'grd-charges',
@@ -21,7 +22,11 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     @Input() workFlow: IWorkFlow;
     @Input() UpdateMode: boolean;
     @Input() isWorkOrder: boolean;
+    @Input() isEdit = false;
+    @Input() editData;
     @Output() saveChargesListForWO = new EventEmitter();
+    @Output() updateChargesListForWO = new EventEmitter();
+
 
     @Output() notify: EventEmitter<IWorkFlow> =
         new EventEmitter<IWorkFlow>();
@@ -39,16 +44,36 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
-            if(this.isWorkOrder){
+        if (this.isWorkOrder) {
+            // this.row = this.workFlow.charges[0];
+            // this.addRow();
+
+
+            this.row = this.workFlow.charges[0];
+            if (this.isEdit) {
+                this.workFlow.charges = [];
+                const data = { ...this.editData, vendor: this.editData.vendorName }
+                this.workFlow.charges.push(data);
+                this.reCalculate()
+            } else {
+                this.workFlow.charges = [];
+                this.workFlow.qtySummation = 0;
+                this.workFlow.extendedCostSummation = 0;
+                this.workFlow.totalChargesCost = 0;
+
                 this.row = this.workFlow.charges[0];
                 this.addRow();
-            }else{
-                this.row = this.workFlow.charges[0];
-                if (this.row == undefined) {
-                    this.row = {};
-                }
-                this.row.taskId = this.workFlow.taskId;
             }
+
+
+
+        } else {
+            this.row = this.workFlow.charges[0];
+            if (this.row == undefined) {
+                this.row = {};
+            }
+            this.row.taskId = this.workFlow.taskId;
+        }
 
         this.actionService.getChargesType().subscribe(
             chargesTypes => {
@@ -77,6 +102,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     }
 
     reCalculate() {
+
         this.calculateQtySummation();
         this.calculateExtendedCostSummation();
         this.calculateExtendedPriceSummation();
@@ -181,7 +207,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         event.target.value = event.target.value == '' ? '' : parseInt(charges.quantity);
         if (event.target.value != '') {
             charges.quantity = parseInt(charges.quantity);
-        }        
+        }
     }
 
     // sum of the qty
@@ -226,7 +252,11 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     }
 
 
-    saveChargesWorkOrder(){
+    saveChargesWorkOrder() {
         this.saveChargesListForWO.emit(this.workFlow)
+    }
+
+    updateChargesWorkOrder() {
+        this.updateChargesListForWO.emit(this.workFlow);
     }
 }

@@ -9,6 +9,7 @@
       
       data-target="#addNewExclusions"
       data-toggle="modal"
+      (click)="createNew()"
       class="btn btn-primary btn-primary-cstm"
       style="padding: 6px 12px !important;"
     >
@@ -30,7 +31,19 @@
           <h4 class="modal-title">Exclusions</h4>
         </div>
         <div class="modal-body">
-          <grd-exclusions [workFlow]='workFlowObject' [isWorkOrder]="isWorkOrder" (saveExclusionsListForWO)="saveExclusionsList($event)"></grd-exclusions>
+          <grd-exclusions  *ngIf="!isEdit"
+           [workFlow]='workFlowObject' 
+          [isWorkOrder]="isWorkOrder" 
+          (saveExclusionsListForWO)="saveExclusionsList($event)">
+          </grd-exclusions>
+
+        <grd-exclusions *ngIf="isEdit && editData"
+        [isEdit]="isEdit"
+        [editData]="editData"
+        [workFlow]='workFlowObject' 
+        [isWorkOrder]="isWorkOrder" 
+        (updateExclusionsListForWO)="updateExclusionsList($event)">
+      </grd-exclusions>
   
         </div>
         <div class="modal-footer">
@@ -46,7 +59,7 @@
 
 
 <div class="equipment-tab-content" >
-                                                <div class="x_panel" *ngIf="workOrderExclusionsList">
+     <div class="x_panel" *ngIf="workOrderExclusionsList">
                                                     <div class="tab-content">
                                                         <div class="table-responsive table-overflow" id="workflow-attributes-block">
                                                             <table class="table table-bordered ">
@@ -58,6 +71,7 @@
                                                                         <th class="text-center">Unit Cost</th>
                                                                         <th class="text-center">Extended Cost</th>
                                                                         <th class="text-center">Memo</th>
+                                                                        <th colspan="4" class="text-center"></th>
                                                                     </tr> 
                                                                 </thead>
                                                             
@@ -69,6 +83,29 @@
                                                                         <td>{{w.unitCost}}</td>
                                                                         <td>{{w.extendedCost}}</td>
                                                                         <td>{{w.memo}}</td>
+
+                                                                        <td>
+                                                                          <button
+                                                                            class="btn-edit ptable-wo-btns"
+                                                                            mat-icon-button
+                                                                            data-target="#addNewExclusions"
+                                                                            data-toggle="modal"
+                                                                            (click)="edit(w)"
+                                                                            matTooltip="Edit"
+                                                                          >
+                                                                            <mat-icon>edit</mat-icon>
+                                                                          </button>
+                                                                        </td>
+                                                                        <td>
+                                                                          <button
+                                                                            class="btn-delete ptable-wo-btns"
+                                                                            mat-icon-button
+                                                                            matTooltip="Delete"
+                                                                            (click)="delete(w)"
+                                                                          >
+                                                                            <mat-icon color="warn">delete</mat-icon>
+                                                                          </button>
+                                                                        </td>
                                
                                                                     </tr> 
                                                                 </tbody>

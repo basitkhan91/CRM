@@ -163,13 +163,14 @@ export class VendorDocumentsComponent implements OnInit {
 	}
 
 	openView(content, row) {		
-		this.toGetUploadDocumentsList(row.attachmentId, row.vendorId,3);
+		// this.toGetUploadDocumentsList(row.attachmentId, row.vendorId,3);
 
-		// this.workFlowtService.toGetUploadDocumentsList(row.attachmentId, row.vendorId,3).subscribe(res => {
-		// 	this.sourceViewforDocumentList = res;		
-		// 	console.log(this.sourceViewforDocumentList);						
-		// })
-		this.sourceViewforDocument = row;	
+		this.workFlowtService.toGetUploadDocumentsList(row.attachmentId, row.vendorId,3).subscribe(res => {
+			this.sourceViewforDocumentList = res;	
+			this.sourceViewforDocument = row;		
+						
+		})
+	
 			
 		this.modal = this.modalService.open(content, { size: 'sm' });
            this.modal.result.then(() => {
@@ -220,7 +221,8 @@ export class VendorDocumentsComponent implements OnInit {
 		this.workFlowtService.changeStep('General Information');
 		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
        
-    }
+	}
+	
    
 }
 
