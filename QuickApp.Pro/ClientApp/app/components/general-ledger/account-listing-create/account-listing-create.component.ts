@@ -1,5 +1,5 @@
 ﻿import { OnInit, Component } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ActivatedRoute } from "@angular/router";
 import { fadeInOut } from "../../../services/animations";
 import { AlertService } from "../../../services/alert.service";
@@ -17,6 +17,7 @@ import { GlCashFlowClassification } from "../../../models/glcashflowclassificati
 import { NgbModalRef, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ModalService } from "../../../services/Index";
 import { AccountListingService } from '../../../services/account-listing/account-listing.service'
+import { getValueFromObjectByKey, getObjectByValue, validateRecordExistsOrNot, editValueAssignByCondition, getObjectById, selectedValueValidate } from '../../../generic/autocomplete';
 
 
 @Component({
@@ -53,9 +54,36 @@ export class AccountListingCreateComponent implements OnInit {
     editMode = false;
     accountData:any[];
     leafNodeNameObj:any[];
+    entitiesObj:any[];
     accountTitle = "Create GL Accounts";
-    submitted: any;
+    selectedBalanceType = [];    
+    submittedForm = false;
+    glAccountObj:any = {}
+    ledgerNameObject: any[];
+    accountCodeObject: any[];
+    accountNameObject: any[];
+    accountTypeObject: any[];
+    ischeckLedgerNameExists: boolean = false;
+    isAccountCodeExists: boolean = false;
+    isAccountNameExists: boolean = false;
+    isAccountTypeExists: boolean = false;
+   
 
+    balanceTypeCheckBox = [{
+        name: 'Actual',
+        value: true        
+      }, {
+        name: 'Budget',
+       value: false  
+      }, {
+        name: 'Forecast',
+        value: false  
+      }];
+
+
+
+
+submittedValue: any;
     constructor(private route: ActivatedRoute, 
         private accountListingService: AccountListingService,
         private formBuilder: FormBuilder, private legalEntityservice: LegalEntityService, private modalService: NgbModal, private poroCategoryService: POROCategoryService, private nodeSetupService: NodeSetupService, private router: Router, private authService: AuthService, private glcashFlowClassifcationService: GlCashFlowClassificationService, private alertService: AlertService, private glAccountService: GlAccountService, private currencyService: CurrencyService, public glAccountClassService: GLAccountClassService) {
@@ -69,7 +97,7 @@ export class AccountListingCreateComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
+        this.glAccountObj.isActiveFlag = true;
         this.route.paramMap.subscribe(params => {
             //console.log('params :', params)
              this.accountId = params.get("id")
@@ -100,10 +128,21 @@ export class AccountListingCreateComponent implements OnInit {
         }
 
         let current_datetime = new Date()
-        let formatted_date = current_datetime.getDate() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear()
+        let formatted_date = (current_datetime.getMonth() + 1) + "/" + current_datetime.getDate() +  "/" + current_datetime.getFullYear()
         
-        this.leafNodeNameObj = [
-            {label:'Select City', value:null},
+        // this.leafNodeNameObj = [
+        //     {label:'Select', value:''},
+        //     {label: 'abc', value: '1'},
+        //     {label: 'sass', value: '2'},
+        //     {label: 'gtll', value: '3'},
+        //     {label: 'years', value: '4'},
+        //     {label: 'opo', value: '5'},
+        //     {label: 'wqw', value: '6'},
+        //     {label: 'sas', value: '7'}            
+        // ];
+
+        this.entitiesObj = [
+            //{label:'Select', value:''},
             {label: 'abc', value: '1'},
             {label: 'sass', value: '2'},
             {label: 'gtll', value: '3'},
@@ -115,29 +154,212 @@ export class AccountListingCreateComponent implements OnInit {
 
         this.accountListCreateForm = this.formBuilder.group({
             ledgerName: ['', Validators.required],
-            oldAccountCode: ['', Validators.required],
+            oldAccountCode: '',
             accountCode: ['', Validators.required],
             accountName: ['', Validators.required],
             accountType: ['', Validators.required],
-            accountDescription: ['', Validators.required],
+            accountDescription: '',
             active: [true, Validators.required],
             leafNodeName: '',
-            interCompany: false,
-            balanceType: '',
-            category: '',
-            entities: '',
-            allowManual: '',
-            classification: '',
-            poCategory: '',
+            interCompany: false,           
+            category: null,
+            entities: ['', Validators.required],
+            allowManualJE: true,
+            classification: [null, Validators.required],
+            poroCategory: [null, Validators.required],
             createdBy: this.userName,
-            createdDate: formatted_date
+            createdDate: formatted_date,
+            balanceTypeCheckBox: this.formBuilder.array(this.balanceTypeCheckBox.map(x => x.value))
         });
+
+        this.getAccountObject()
+        this.getLedgerObject()
+        this.getLeafNodeObject()
     }
 
     get formdata() { return this.accountListCreateForm.controls; }
 
     onSubmitAccountForm(){
-        console.log('form controls data :', this.formdata)
+        
+        console.log('accountListCreateForm values :', this.accountListCreateForm.value)
+         this.submittedForm = true;
+
+        // stop here if form is invalid
+        if (this.accountListCreateForm.invalid) {
+            return;
+        }
+
+        const checkboxControl = (this.accountListCreateForm.controls.balanceTypeCheckBox as FormArray);
+        const formValue = {
+          ...this.accountListCreateForm.value,
+          BalanceTypeActual: this.accountListCreateForm.value.balanceTypeCheckBox[0],
+          BalanceTypeBudget: this.accountListCreateForm.value.balanceTypeCheckBox[1],
+          BalanceTypeForecast: this.accountListCreateForm.value.balanceTypeCheckBox[2]          
+        }
+        this.submittedValue = formValue;
+
+        if(this.editMode){
+            this.accountListingService.updateGlAccount(formValue).subscribe(response => {
+               console.log('update response received :', response)
+               this.alertService.showMessage('GLAccount Updated successfully.');
+               this.router.navigateByUrl('/generalledgermodule/generalledgerpage/app-account-listing');
+            })
+        }else{
+            this.accountListingService.createGlAccount(formValue).subscribe(response => {
+               console.log('response received :', response)
+               this.alertService.showMessage('GLAccount added successfully.');
+               this.router.navigateByUrl('/generalledgermodule/generalledgerpage/app-account-listing');
+            })
+        }        
+
+    console.log('chk :', this.submittedValue)
+    }
+
+    loadLedgerNames(event){
+
+        // this.ledgerNameObject = [
+        // {
+        //     id: 1,
+        //     name: 'ledger1'
+        // },
+        // {
+        //     id: 2,
+        //     name: 'ledger2'
+        // },
+        // {   
+        //     id: 3,
+        //     name: 'ledger3'
+        // },
+        // {
+        //     id: 4,
+        //     name: 'ledger4'
+        // } 
+        // ];        
+        this.ledgerNameObject = [...this.ledgerNameObject.filter(x => {           
+            return x.name.toLowerCase().includes(event.query.toLowerCase())
+        })]
+    }
+
+    checkLedgerNameExists(field, value) {
+        const exists = validateRecordExistsOrNot(field, value, this.ledgerNameObject)
+        if (exists.length > 0) {
+
+            this.ischeckLedgerNameExists = true;
+        } else {
+
+            this.ischeckLedgerNameExists = false;
+        }
+
+    }
+   
+    selectedLedgerName() {
+        this.ischeckLedgerNameExists = true;
+    }
+
+     loadAccountCode(event){
+
+        // this.accountCodeObject = [
+        // {
+        //     id: 1,
+        //     name: 'account1'
+        // },
+        // {
+        //     id: 2,
+        //     name: 'account2'
+        // },
+        // {   
+        //     id: 3,
+        //     name: 'account3'
+        // },
+        // {
+        //     id: 4,
+        //     name: 'account4'
+        // } 
+        // ];        
+        this.accountCodeObject = [...this.accountCodeObject.filter(x => {           
+            return x.name.toLowerCase().includes(event.query.toLowerCase())
+        })]
+    }
+
+    checkAccountCodeExists(field, value) {
+        const exists = validateRecordExistsOrNot(field, value, this.accountCodeObject)
+        if (exists.length > 0) {
+
+            this.isAccountCodeExists = true;
+        } else {
+
+            this.isAccountCodeExists = false;
+        }
+
+    }
+   
+    selectedAccountCode() {
+        this.isAccountCodeExists = true;
+    }
+
+loadAccountName(event){
+
+        this.accountNameObject = [...this.accountNameObject.filter(x => {           
+            return x.name.toLowerCase().includes(event.query.toLowerCase())
+        })]
+    }
+
+    checkAccountNameExists(field, value) {
+        const exists = validateRecordExistsOrNot(field, value, this.accountNameObject)
+        if (exists.length > 0) {
+
+            this.isAccountNameExists = true;
+        } else {
+
+            this.isAccountNameExists = false;
+        }
+
+    }
+   
+    selectedAccountName() {
+        this.isAccountNameExists = true;
+    }
+
+
+loadAccountType(event){
+
+        this.accountTypeObject = [
+        {
+            id: 1,
+            name: 'Assets'
+        },
+        {
+            id: 2,
+            name: 'Liabilities'
+        },
+        {   
+            id: 3,
+            name: 'Revenue'
+        },
+        {
+            id: 4,
+            name: 'Expenses'
+        } 
+        ];        
+        this.accountTypeObject = [...this.accountTypeObject.filter(x => {           
+            return x.name.toLowerCase().includes(event.query.toLowerCase())
+        })]
+    }
+
+    checkAccountTypeExists(field, value) {
+        const exists = validateRecordExistsOrNot(field, value, this.accountTypeObject)
+        if (exists.length > 0) {
+
+            this.isAccountTypeExists = true;
+        } else {
+
+            this.isAccountTypeExists = false;
+        }
+
+    }
+   
+    selectedAccountType() {
+        this.isAccountTypeExists = true;
     }
 
     updateAccountData(id): void{
@@ -151,12 +373,21 @@ export class AccountListingCreateComponent implements OnInit {
                      obj = data[index]  
                 })
                 console.log('obj 12 :', obj)
-                if(Object.keys(obj).length > 0){
-                    this.accountListCreateForm.setValue({
-                        ledgerName: obj['ledgerName'],
-                        accountName: obj['accountName'],
-                        description: obj['description']
-                    })
+                if(Object.keys(obj).length > 0){                  
+                    this.accountListCreateForm.valueChanges.subscribe(  
+                       value=> {  
+                          console.log(JSON.stringify(value));  
+                       }  
+                    );  
+                }
+
+                this.glAccountObj = {
+                    ledgerId: 1,
+                    accountCodeId: 2,
+                    categoryId: 3,
+                    entityId: 4,
+                    classificationId: 5,
+                    poroCategoryId: 2
                 }
                 
                 console.log('obj :', obj)
@@ -229,6 +460,67 @@ export class AccountListingCreateComponent implements OnInit {
         })
     }
 
+    getAccountObject(){
+         this.accountListingService.getAll().subscribe(
+            datalist=> {
+                 let accountNameObj = {}   
+                 let accountCodeObj = {}   
+
+                 let accountNameCollection = [] 
+                 let accountCodeCollection = [] 
+
+                const x = datalist.filter( (o, index) => {
+                  accountNameObj = {
+                    id: datalist[index]['accountName'],
+                    name: datalist[index]['accountName']
+                  }
+
+                  accountCodeObj = {
+                   id: datalist[index]['accountCode'],
+                    name: datalist[index]['accountCode']
+                  }
+
+                  accountNameCollection.push(accountNameObj)
+                  accountCodeCollection.push(accountCodeObj)
+
+                })
+            this.accountNameObject = accountNameCollection
+            this.accountCodeObject = accountCodeCollection
+            })
+    }
+
+    getLedgerObject(){
+         this.accountListingService.getLedgerData().subscribe(
+            datalist=> {
+                 let obj = {}   
+                 let collection = [] 
+                const x = datalist.filter( (o, index) => {
+                  obj = {
+                    id: datalist[index]['ledgerName'],
+                    name: datalist[index]['ledgerName']
+                  }
+                  collection.push(obj)
+                })
+            this.ledgerNameObject = collection
+            })
+    }
+
+    getLeafNodeObject(){
+         this.accountListingService.getLeafNodeData().subscribe(
+            datalist=> {
+                 let obj = {}   
+                 let collection = [] 
+                const x = datalist.filter( (o, index) => {
+                  obj = {
+                    label: datalist[index]['nodeName'],
+                    value: datalist[index]['glAccountNodeId']
+                  }
+                  collection.push(obj)
+                })
+            this.leafNodeNameObj = collection
+            })
+    }
+
     private loadCompaniesData() {
         this.legalEntityservice.getEntityList().subscribe(entitydata => {
             this.companyList = entitydata[0];
@@ -291,5 +583,20 @@ export class AccountListingCreateComponent implements OnInit {
         this.isEditMode = false;
         this.modal.close();
     }
+
+    onCheckboxChagen(event, value) {
+        if (event.checked) {
+          this.selectedBalanceType.push(value);
+        } 
+
+        if (!event.checked) {
+          let index = this.selectedBalanceType.indexOf(value);
+          if (index > -1) {
+            this.selectedBalanceType.splice(index, 1);
+          }
+        }
+        console.log('array :', this.selectedBalanceType)
+        console.log("Interests array => " + JSON.stringify(this.selectedBalanceType, null, 2));
+  }
 
 }

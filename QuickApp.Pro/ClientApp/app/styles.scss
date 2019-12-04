@@ -1519,7 +1519,7 @@ input[type="text"] {
     *, :after, :before {
         box-sizing: border-box;
         /*border-radius: 9px;
-	padding: 0.002px;*/
+    padding: 0.002px;*/
     }
 
     #integration-list {
@@ -2863,6 +2863,16 @@ input[type="text"] {
         margin-bottom: 7px;
         font-size: small !important
     }
+
+.add-glaccount.form-horizontal label{    
+    font-size: 12px !important;
+    font-weight: normal !important;
+    text-align: left;
+    width: auto;
+    text-align: left;
+    
+}
+
 
     .form-horizontal .control-label {
         font-weight: 500;
@@ -8203,7 +8213,7 @@ input[type="text"] {
     }
     /*
 table thead tr th:first-child input, table tr td:first-child input {
-	width: 26px;
+    width: 26px;
 }
 */
     .po-data, .ro-data {
@@ -11902,7 +11912,7 @@ table thead tr th:first-child input, table tr td:first-child input {
     }
     /*
 .modal-content p-autocomplete span.ui-autocomplete.ui-widget.ui-autocomplete-dd input.ui-inputtext {
-	width: 169px !important;
+    width: 169px !important;
 }
 */
     p-autocomplete span.ui-autocomplete.ui-widget.ui-autocomplete-dd button span {
@@ -12346,7 +12356,7 @@ table thead tr th:first-child input, table tr td:first-child input {
         border: none;
     }
     /*.ui-widget-header {
-	background: #4b9ed3;
+    background: #4b9ed3;
 }*/
     .ui-dialog-footer {
         padding: 0.6em !important;
@@ -12687,28 +12697,28 @@ body .ui-datepicker table td > a.ui-state-active {
     color: #337ab7;
 }
 .pub-type-select .ui-dropdown {
-	width: 100% !important;
+    width: 100% !important;
   }
 
   .pub-border .ui-dropdown {
-	border-radius: 5px;
+    border-radius: 5px;
   }
   .pub-multi{
-	 padding-right: 2px;
-	  
+     padding-right: 2px;
+      
   }
   .pub-type-select .ui-dropdown-trigger .ui-dropdown-trigger-icon {
-	left: 33% !important;
+    left: 33% !important;
   }
   .pub-type-select .ui-dropdown-label  {
-	text-align: left;
+    text-align: left;
   }
 
   .checkbox-blue .ui-chkbox-box.ui-state-active {
-	border-color: #005b9f !important;
-	background-color: #005b9f !important;
-	color: #ffffff;
-	padding: 1px;
+    border-color: #005b9f !important;
+    background-color: #005b9f !important;
+    color: #ffffff;
+    padding: 1px;
   }
   .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
     margin-left: -1px;
@@ -12761,6 +12771,10 @@ body .ui-datepicker table td > a.ui-state-active {
     .inner-addon .fa.fa-search {
         position: absolute;
         color: #9a9a9a;
+    }
+
+    .accounttable .inner-addon .fa.fa-search {
+        right: 10px;
     }
 
     .ui-calendar {
@@ -13516,6 +13530,11 @@ button {
     p-dropdown .ui-dropdown-label {
         padding: 5px;
         margin-bottom: 0 !important;
+        text-align: left;
+    }
+
+    p-dropdown .accountdropdown .ui-widget label.ui-dropdown-label{
+        text-align: left;
     }
 
     p-multiselect {
@@ -13746,21 +13765,6 @@ button {
 .rpo-table-cstm .ui-paginator, .rpo-table-cstm .ui-table-caption,
 .wf-table-cstm .ui-paginator, .wf-table-cstm .ui-table-caption {
     background-color: transparent !important;
-}
-.ptable-custom .ui-table .ui-table-tbody > tr {
-    background-color: #fff !important;
-}
-.ptable-custom .ui-table .ui-table-tbody > tr > td {
-    padding: 5px 2px !important;
-}
-.ptable-custom .ui-table .ui-table-tbody > tr.ui-state-highlight {
-    background-color: #f1f1f1 !important;
-}
-.ptable-custom .ui-paginator, .ptable-custom .ui-table-caption {
-    background-color: transparent !important;
-}
-.ptable-custom th {
-    padding: 8px 5px !important;
 }
 .wfl-table-cstm tr th:nth-child(2) {
     width: 90px !important;
@@ -14021,12 +14025,7 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .p-autocomplete-ctsm-1 .ui-autocomplete .ui-autocomplete-panel{
     width: 135px !important;
 }
-.wf-label-cstm label {
-    font-size: 12px !important;
-  }
-  .wf-label-cstm h5 {
-    color: red;
-  }
+
 
 .p-dropdown-custom .ui-dropdown label.ui-dropdown-label {
     text-align: left;
@@ -14042,14 +14041,7 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     text-align: left;
     font-size: 12px !important;
   }
-.p-dropdown-custom-gen .ui-autocomplete {
-    padding: 0;
-}
-.p-dropdown-custom-gen .ui-autocomplete .ui-autocomplete-panel {
-    top: 24px !important;
-}
-
-.p-dropdown-custom-md .ui-dropdown {
+.p-dropdown-custom-md .ui-dropdown{
     width: 138px !important;
 }
 .p-dropdown-custom-md-Header .ui-dropdown{
@@ -14266,10 +14258,6 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     width: calc(100% - 30px) !important;
     margin-right: 18px;
 }
-.pautocomp-vendor-shipvia {
-    float: left;
-    margin-top: -5px;
-}
 
 .pcalendar-wo-labor .ui-calendar.ui-calendar-w-btn .ui-inputtext {
     width: 115px !important;
@@ -14289,4 +14277,28 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 
 .audit-template-launcher{
     width: 650px !important;
+}
+
+.add-glaccount .invalid-feedback{
+    display: block;
+}
+
+
+p-dropdown .accountdropdown.ui-widget{
+    width: 100% !important;
+}
+
+
+.accountdropdown.ui-dropdown .ui-dropdown-trigger {
+    background-color: #337ab7 !important;
+    color: #fff
+}
+
+.accountdropdown.ui-dropdown .ui-dropdown-trigger .ui-dropdown-trigger-icon{
+margin-left: -6px;
+}
+
+.add-glaccount .btn-success.disabled,
+.add-glaccount .btn-success:disabled{
+    cursor: no-drop
 }
