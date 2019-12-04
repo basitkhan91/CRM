@@ -53,6 +53,7 @@ export class VendorsListComponent implements OnInit {
     description: any = "";
     doingBusinessAsName: any = "";
     parent: any = "";
+    vendorParentName: any = "";
     address1: any = "";
     address2: any = "";
     //address3: any = "";
@@ -65,13 +66,16 @@ export class VendorsListComponent implements OnInit {
     vendorContractReference: any = "";
     licenseNumber: any = "";
     capabilityId: any = "";
+    vendorCapabilityName: any = "";
     vendorURL: any = "";
     postalCode: any = "";
     vendorClassificationId: any = "";
+    vendorClassificationName: any = "";
     creditlimit: any = "";
     creditTermsId: any = "";
     currencyId: any = "";
     discountLevel: any = "";
+    vendorPhoneNo:any="";
     is1099Required: any = "";      
     showGeneralData: boolean = true;
     showcontactdata: boolean = true;
@@ -79,10 +83,16 @@ export class VendorsListComponent implements OnInit {
     allContacts: any[] = [];
     allpayments: any[] = [];
     selectedPaymentColumns: any[];
-    allShippings: any[];
+    allShippings: any[];  
     shippingCol: any[];
     selectedShippingColumns: any[];
     selectedRow: any;
+    billingInfoList: any[];
+    selectedBillingColumns: any[];
+    billingCol: any[];
+    warningInfoList: any[];
+    selectedWarningColumns: any[];
+    warninggCol: any[];
     ngOnInit() {
         this.loadData();
         this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendors-list';
@@ -122,7 +132,7 @@ export class VendorsListComponent implements OnInit {
     actionName: string;
     Active: string = "Active";
     length: number;
-    localCollection: any;
+    localCollection: any;  
     //updateActiveData: any;
     updateActiveData = {
 		vendorId:0,
@@ -377,6 +387,60 @@ export class VendorsListComponent implements OnInit {
         this.selectedShippingColumns = this.shippingCol;
     }
 
+   private loadBillingData(vendorId) {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.workFlowtService.getVendorBillAddressGet(vendorId).subscribe(
+            results => this.onBillingDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+      
+
+        this.billingCol = [
+            { field: 'siteName', header: 'Site Name' },
+            { field: 'address1', header: 'Address1' },
+            { field: 'address2', header: 'Address2' },           
+            { field: 'city', header: 'City' },
+            { field: 'stateOrProvince', header: 'State/Prov' },
+            { field: 'postalCode', header: 'Postal Code' },
+            { field: 'country', header: 'Country' }
+        ];
+
+        this.selectedBillingColumns = this.billingCol;
+    }
+
+     private loadWarningsData(vendorId) {
+        this.workFlowtService.getVendorWarnings(vendorId).subscribe(
+            data => {
+             this.warningInfoList = data[0].map(x => {
+            return {
+                ...x,
+                sourceModule: `${x.t.sourceModule == null ?'': x.t.sourceModule}`, 
+                warningMessage: `${x.t.warningMessage == null ?'': x.t.warningMessage}`,    
+                restrictMessage: `${x.t.restrictMessage == null ?'': x.t.restrictMessage}`   
+                };
+            });       
+               console.log(this.warningInfoList);
+            });
+
+            this.warninggCol = [
+                { field: 'sourceModule', header: 'Module' },
+                { field: 'warningMessage', header: 'Warning Message' },
+                { field: 'restrictMessage', header: 'Restrict Message' }          
+              
+            ];    
+            this.selectedWarningColumns = this.warninggCol;
+
+
+    }
+
+    private onBillingDataLoadSuccessful(allWorkFlows: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.billingInfoList = allWorkFlows;      
+    }
+
     private onShippingDataLoadSuccessful(allWorkFlows: any[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
@@ -415,17 +479,15 @@ export class VendorsListComponent implements OnInit {
         this.allpayments = allWorkFlows;
     }
 
-    openView(content, row) {
-        
-        console.log(row);
-
+    openView(content, row) {       
         this.vendorCode = row.vendorCode;
         this.vendorName = row.vendorName;
         this.vendorTypeId = row.t.vendorTypeId;
         this.description=row.description;
-        console.log(this.description);
+        console.log(this.vendorClassificationName);
         this.doingBusinessAsName = row.t.doingBusinessAsName;
         this.parent = row.t.parent;
+        this.vendorParentName=row.t.vendorParentName;
         if (row.currency) {
             this.currencyId = row.currency.symbol;
         }
@@ -447,12 +509,15 @@ export class VendorsListComponent implements OnInit {
         this.stateOrProvince = row.stateOrProvince;
         this.postalCode = row.postalCode;
         this.country = row.country;
+        this.vendorPhoneNo=row.t.vendorPhone;
         this.vendorEmail = row.vendorEmail;
-        this.vendorClassificationId = row.t.vendorClassificationId;
+        //this.vendorClassificationId = row.t.vendorClassificationId;
+        this.vendorClassificationName = row.classificationName;
         this.vendorContractReference = row.t.vendorContractReference;
         this.isPreferredVendor = row.t.isPreferredVendor;
         this.licenseNumber = row.t.licenseNumber;
         this.capabilityId = row.capabilityId;
+        this.vendorCapabilityName=row.vendorCapabilityName;
         this.vendorURL = row.t.vendorURL;
         this.creditlimit = row.t.creditLimit;        
         this.discountLevel = row.discountLevel;
@@ -460,6 +525,8 @@ export class VendorsListComponent implements OnInit {
         this.loadContactDataData(row.vendorId);
         this.loadPayamentData(row.vendorId);
         this.loadShippingData(row.vendorId);
+        this.loadBillingData(row.vendorId);
+        this.loadWarningsData(row.vendorId);
         this.modal = this.modalService.open(content, { size: 'lg' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -646,6 +713,8 @@ export class VendorsListComponent implements OnInit {
         $('#step3').collapse('show');
         $('#step4').collapse('show');
         $('#step5').collapse('show');
+        $('#step6').collapse('show');
+        $('#step7').collapse('show');
     }
     CloseAllVenodrDetailsModel()
     {
@@ -654,6 +723,8 @@ export class VendorsListComponent implements OnInit {
         $('#step3').collapse('hide');
         $('#step4').collapse('hide');
         $('#step5').collapse('hide');
+        $('#step6').collapse('hide');
+        $('#step7').collapse('hide');
     }
 
 }
