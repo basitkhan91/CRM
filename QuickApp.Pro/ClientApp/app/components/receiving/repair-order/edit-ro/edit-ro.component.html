@@ -178,7 +178,7 @@
                             </div>
                         </div>
                     </div>
-                
+
                 </form>
             </div>
         </div>
@@ -206,6 +206,7 @@
                         <th>SO</th>
                         <th>Sub-WO</th>
                         <th colspan="4" style="text-align: center;">Management Structure</th>
+                        <th colspan="6"></th>
                         <th>Site</th>
                         <th>Warehouse</th>
                         <th>Location</th>
@@ -307,6 +308,7 @@
                                     <option *ngFor="let department of part.DepartmentList" [value]="department.Key">{{department.Value}}</option>
                                 </select>
                             </td>
+                            <td colspan="6"></td>
                             <td>
                                 <select class="form-control"
                                         [(ngModel)]="part.siteId"
@@ -385,6 +387,7 @@
                                 <th>SO </th>
                                 <th>Sub-WO </th>
                                 <th colspan="4" style="text-align: center;">Management Structure</th>
+                                <th colspan="6"></th>
                                 <th>Site</th>
                                 <th>Warehouse</th>
                                 <th>Location</th>
@@ -508,6 +511,144 @@
                                         <option *ngFor="let department of SL.DepartmentList" [value]="department.Key">{{department.Value}}</option>
                                     </select>
                                 </td>
+                                <!--<td>
+                                    <label>Owner </label>
+                                    <select class="form-control" (change)="onOwnerChange($event, SL)" [(ngModel)]="SL.ownerType">
+                                        <option value="0">Select</option>
+                                        <option value="1">Customer</option>
+                                        <option value="2">Other </option>
+                                        <option value="3">Vendor</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <div class="form-group" *ngIf="SL.ownerType != undefined && SL.ownerType > 0 && SL.owner > 0">
+                                        <div class="form-row">
+                                            <div class="col-sm-11">
+
+                                                <p-autoComplete *ngIf="SL.ownerType == 1"
+                                                                [(ngModel)]="SL.ownerObject"
+                                                                [suggestions]="SL.filteredRecords"
+                                                                (completeMethod)="onFilter($event, SL, SL.ownerType)"
+                                                                (onSelect)="onOwnerSelect(SL)"
+                                                                [dropdown]="true" [size]="32" [minLength]="1"
+                                                                field="Value" class="rpo-acomp">
+
+                                                </p-autoComplete>
+
+                                                <input *ngIf="SL.ownerType == 2"
+                                                       class="form-control"
+                                                       type="text"
+                                                       [ngModelOptions]="{standalone: true}"
+                                                       [(ngModel)]="SL.owner"
+                                                       pInputText>
+
+                                                <p-autoComplete *ngIf="SL.ownerType == 3"
+                                                                [(ngModel)]="SL.ownerObject"
+                                                                [suggestions]="SL.filteredRecords"
+                                                                (completeMethod)="onFilter($event, SL, SL.ownerType)"
+                                                                (onSelect)="onOwnerSelect(SL)"
+                                                                [dropdown]="true" [size]="32" [minLength]="1"
+                                                                field="Value" class="rpo-acomp">
+                                                </p-autoComplete>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <label>Obtain From </label>
+
+                                    <select class="form-control"
+                                            [(ngModel)]="SL.obtainFromType"
+                                            #selects="ngModel"
+                                            [ngModelOptions]="{standalone: true}"
+                                            (change)="onObtainFromChange($event, SL)">
+                                        <option value="0">Select</option>
+                                        <option value="1">Customer</option>
+                                        <option value="2">Other </option>
+                                        <option value="3">Vendor</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <div class="form-group" *ngIf="SL.obtainFromType != undefined && SL.obtainFromType > 0 && SL.obtainFrom > 0">
+                                        <div class="form-row">
+                                            <div class="col-sm-11">
+
+                                                <p-autoComplete *ngIf="SL.obtainFromType == 1"
+                                                                [(ngModel)]="SL.obtainFromObject"
+                                                                [suggestions]="SL.filteredRecords"
+                                                                (completeMethod)="onFilter($event, SL, SL.obtainFromType)"
+                                                                (onSelect)="onObtainSelect(SL)"
+                                                                [dropdown]="true" [size]="32" [minLength]="1"
+                                                                field="Value" class="rpo-acomp">
+
+                                                </p-autoComplete>
+
+                                                <input *ngIf="SL.obtainFromType == 2"
+                                                       class="form-control"
+                                                       type="text"
+                                                       [ngModelOptions]="{standalone: true}"
+                                                       [(ngModel)]="SL.obtainFrom"
+                                                       pInputText>
+
+                                                <p-autoComplete *ngIf="SL.obtainFromType == 3"
+                                                                [(ngModel)]="SL.obtainFromObject"
+                                                                [suggestions]="SL.filteredRecords"
+                                                                (completeMethod)="onFilter($event, SL, SL.obtainFromType)"
+                                                                (onSelect)="onObtainSelect(SL)"
+                                                                [dropdown]="true" [size]="32" [minLength]="1"
+                                                                field="Value" class="rpo-acomp">
+                                                </p-autoComplete>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <label>Traceable To</label>
+                                    <select class="form-control" (change)="onTraceableToChange($event, SL)" [(ngModel)]="SL.traceableToType">
+                                        <option value="0">Select</option>
+                                        <option value="1">Customer</option>
+                                        <option value="2">Other </option>
+                                        <option value="3">Vendor</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <div class="form-group" *ngIf="SL.traceableToType != undefined && SL.traceableToType > 0 && SL.traceableTo > 0">
+                                        <div class="form-row">
+                                            <div class="col-sm-11">
+
+                                                <p-autoComplete *ngIf="SL.traceableToType == 1"
+                                                                [(ngModel)]="SL.traceableToObject"
+                                                                [suggestions]="SL.filteredRecords"
+                                                                (completeMethod)="onFilter($event, SL, SL.traceableToType)"
+                                                                (onSelect)="onTraceableToSelect(SL)"
+                                                                [dropdown]="true" [size]="32" [minLength]="1"
+                                                                field="Value" class="rpo-acomp">
+
+                                                </p-autoComplete>
+
+                                                <input *ngIf="SL.traceableToType == 2"
+                                                       class="form-control"
+                                                       type="text"
+                                                       [ngModelOptions]="{standalone: true}"
+                                                       [(ngModel)]="SL.traceableTo"
+                                                       pInputText>
+
+                                                <p-autoComplete *ngIf="SL.traceableToType == 3"
+                                                                [(ngModel)]="SL.traceableToObject"
+                                                                [suggestions]="SL.filteredRecords"
+                                                                (completeMethod)="onFilter($event, SL, SL.traceableToType)"
+                                                                (onSelect)="onTraceableToSelect(SL)"
+                                                                [dropdown]="true" [size]="32" [minLength]="1"
+                                                                field="Value" class="rpo-acomp">
+                                                </p-autoComplete>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>-->
+
                                 <td>
                                     <select class="form-control"
                                             name="siteId{{stockline_row_index}}"
@@ -568,24 +709,27 @@
                                     </select>
                                 </td>
                                 <!-- <td>
-                                    <select name="ownerType{{stockline_row_index}}" [(ngModel)]="SL.ownerType">
-                                        <option value="1">Customer</option>
-                                        <option value="2">Vendor</option>
-                                        <option value="3">Company</option>
-                                    </select>
-                                </td> -->
+        <select name="ownerType{{stockline_row_index}}" [(ngModel)]="SL.ownerType">
+            <option value="1">Customer</option>
+            <option value="2">Vendor</option>
+            <option value="3">Company</option>
+        </select>
+    </td> -->
                                 <!--<td>{{SL.ownerType}}</td>
-                                <td>{{SL.owner}}</td>
-                                <td>{{SL.obtainFromType}}</td>
-                                <td>{{SL.obtainFrom}}</td>
-                                <td>{{SL.traceableToType}}</td>
-                                <td>{{SL.traceableTo}}</td>-->
+    <td>{{SL.owner}}</td>
+    <td>{{SL.obtainFromType}}</td>
+    <td>{{SL.obtainFrom}}</td>
+    <td>{{SL.traceableToType}}</td>
+    <td>{{SL.traceableTo}}</td>-->
                                 <td>
                                     <input class="form-control" type="text"
                                            [disabled]="!SL.isEnabled"
                                            [(ngModel)]="SL.manufacturingTrace"
                                            pInputText [maxLength]="200">
+                                    ax
+                                    /t
                                 </td>
+                                <
                                 <td>
                                     <select class="form-control"
                                             [(ngModel)]="SL.manufacturerId"
@@ -676,11 +820,11 @@
                                     <input class="form-control" type="text" [disabled]="!SL.isEnabled" [(ngModel)]="SL.engineSerialNumber" pInputText [maxLength]="200">
                                 </td>
                                 <!-- <td>
-                                    <input type="text" class="form-control" disabled value="unknown field" />
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" disabled value="unknown field" />
-                                </td> -->
+        <input type="text" class="form-control" disabled value="unknown field" />
+    </td>
+    <td>
+        <input type="text" class="form-control" disabled value="unknown field" />
+    </td> -->
                                 <td>{{SL.glAccountText}}</td>
                                 <td>
                                     <input type="checkbox" disabled [checked]="part.itemMaster.isTimeLife == true" />
