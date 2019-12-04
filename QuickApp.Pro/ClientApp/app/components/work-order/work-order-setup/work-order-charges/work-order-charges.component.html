@@ -1,21 +1,14 @@
-
-
-
-
 <div>
   <button
-    
     data-target="#addNewCharges"
     data-toggle="modal"
+    (click)="createNew()"
     class="btn btn-primary btn-primary-cstm"
     style="padding: 6px 12px !important;"
   >
     Add Charges
   </button>
 </div>
-
-
-
 
 <div id="addNewCharges" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
@@ -28,8 +21,21 @@
         <h4 class="modal-title">Charges</h4>
       </div>
       <div class="modal-body">
-        <grd-charges  [workFlow]='workFlowObject' [isWorkOrder]="isWorkOrder" (saveChargesListForWO)="saveChargesList($event)"></grd-charges>
+        <grd-charges
+          *ngIf="!isEdit"
+          [workFlow]="workFlowObject"
+          [isWorkOrder]="isWorkOrder"
+          (saveChargesListForWO)="saveChargesList($event)"
+        ></grd-charges>
 
+        <grd-charges
+          *ngIf="isEdit && editData"
+          [isEdit]="isEdit"
+          [editData]="editData"
+          [workFlow]="workFlowObject"
+          [isWorkOrder]="isWorkOrder"
+          (updateChargesListForWO)="updateChargesList($event)"
+        ></grd-charges>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">
@@ -39,10 +45,6 @@
     </div>
   </div>
 </div>
-
-
-
-
 
 <div class="equipment-tab-content">
   <div class="x_panel" *ngIf="workOrderChargesList">
@@ -62,6 +64,7 @@
               <th class="text-center">Unit Price</th>
               <th class="text-center">Extended Price</th>
               <th class="text-center">vendorName</th>
+              <th colspan="4" class="text-center"></th>
             </tr>
           </thead>
 
@@ -75,6 +78,28 @@
               <td>{{ w.unitPrice }}</td>
               <td>{{ w.extendedPrice }}</td>
               <td>{{ w.vendorName }}</td>
+              <td>
+                <button
+                  class="btn-edit ptable-wo-btns"
+                  mat-icon-button
+                  data-target="#addNewCharges"
+                  data-toggle="modal"
+                  (click)="edit(w)"
+                  matTooltip="Edit"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </td>
+              <td>
+                <button
+                  class="btn-delete ptable-wo-btns"
+                  mat-icon-button
+                  matTooltip="Delete"
+                  (click)="delete(w)"
+                >
+                  <mat-icon color="warn">delete</mat-icon>
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>

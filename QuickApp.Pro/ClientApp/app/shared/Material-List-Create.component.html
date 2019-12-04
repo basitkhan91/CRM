@@ -1,6 +1,6 @@
 <div class="fixed-table-container-inner table-responsive cat4-table fixed-column-table column-r1-fixed">
     <div>
-        <span class="cat-heading cat4">
+        <span class="cat-heading cat4" *ngIf="!isEdit">
             Add New Material List<i (click)="addRow()" class="fa fa-plus"></i>
             <span class="float-right">
                 Deferred &nbsp;<input type="checkbox" (click)="isDeferredEnable($event)" />
@@ -132,7 +132,27 @@
     </table>
 
 
-    <button *ngIf="isWorkOrder" class="btn btn-primary btn-primary-cstm"  (click)="saveMaterialListForWorkOrder()" style="padding: 6px 12px !important;">Save</button>
+    <div *ngIf="isWorkOrder && !isEdit" style="float:right">
+        <button
+          *ngIf="isWorkOrder"
+          class="btn btn-primary btn-primary-cstm"
+          (click)="saveMaterialsWorkOrder()"
+          style="padding: 6px 12px !important;margin-top: 10px;"
+        >
+          Save
+        </button>
+      </div>
+    
+      <div *ngIf="isWorkOrder && isEdit" style="float:right">
+        <button
+          *ngIf="isWorkOrder"
+          class="btn btn-primary btn-primary-cstm"
+          (click)="updateMaterialsListForWO()"
+          style="padding: 6px 12px !important;margin-top: 10px;"
+        >
+          Update
+        </button>
+      </div>
 </div>
 
 

@@ -704,9 +704,31 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 MessageSeverity.success
             );
             this.getMaterialListByWorkOrderId();
-            this.getWorkFlowLaborList();
+            // this.getWorkFlowLaborList();
         })
 
+    }
+
+    updateWorkOrderMaterialList(data){
+        const materialArr = data.materialList.map(x => {
+            return {
+                ...x,
+                masterCompanyId: 1,
+                isActive: true,
+                workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId
+            }
+        })
+        console.log(data);
+        this.workOrderService.updateWorkOrderMaterialList(materialArr).subscribe(res => {
+            this.workFlowObject.materialList = [];
+            this.alertService.showMessage(
+                this.moduleName,
+                'update Work Order MaterialList  Succesfully',
+                MessageSeverity.success
+            );
+            this.getMaterialListByWorkOrderId();
+      
+        })
     }
 
 
@@ -723,6 +745,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId
             }
         })
+
         this.workOrderService.createWorkOrderEquipmentList(equipmentArr).subscribe(res => {
             this.workFlowObject.equipments = [];
             this.alertService.showMessage(
@@ -732,8 +755,28 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             );
             this.getEquipmentByWorkOrderId();
         })
+    }
+
+    updateWorkOrderEquipmentList(data) {
+        const equipmentArr = data.equipments.map(x => {
+            return {
+                ...x,
+                masterCompanyId: 1,
+                isActive: true,
+                workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId
+            }
+        })
 
 
+        this.workOrderService.updateWorkOrderEquipmentList(equipmentArr).subscribe(res => {
+            this.workFlowObject.equipments = [];
+            this.alertService.showMessage(
+                this.moduleName,
+                'Updated  Work Order Equipment Succesfully',
+                MessageSeverity.success
+            );
+            this.getEquipmentByWorkOrderId();
+        })
     }
 
 
@@ -753,6 +796,29 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             this.alertService.showMessage(
                 this.moduleName,
                 'Saved Work Order Charges  Succesfully',
+                MessageSeverity.success
+            );
+            this.getChargesListByWorkOrderId();
+        })
+    }
+
+
+
+    updateWorkOrderChargesList(data){
+        const chargesArr = data.charges.map(x => {
+            return {
+                ...x,
+                masterCompanyId: 1,
+                isActive: true,
+                workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId
+            }
+        })
+        console.log(data);
+        this.workOrderService.updateWorkOrderChargesList(chargesArr).subscribe(res => {
+            this.workFlowObject.charges = [];
+            this.alertService.showMessage(
+                this.moduleName,
+                'Update Work Order Charges  Succesfully',
                 MessageSeverity.success
             );
             this.getChargesListByWorkOrderId();
@@ -930,13 +996,32 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 isActive: true,
                 workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId
             }
-        })
-            ;
+        });
         this.workOrderService.createWorkOrderExclusionList(exclusionsArr).subscribe(res => {
             this.workFlowObject.charges = [];
             this.alertService.showMessage(
                 this.moduleName,
                 'Saved Work Order Exclusions  Succesfully',
+                MessageSeverity.success
+            );
+            this.getExclusionListByWorkOrderId();
+        })
+    }
+
+    updateWorkOrderExclusionsList(data){
+        const exclusionsArr = data.exclusions.map(x => {
+            return {
+                ...x,
+                masterCompanyId: 1,
+                isActive: true,
+                workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId
+            }
+        });
+        this.workOrderService.updateWorkOrderExclusionList(exclusionsArr).subscribe(res => {
+            this.workFlowObject.charges = [];
+            this.alertService.showMessage(
+                this.moduleName,
+                'Update Work Order Exclusions  Succesfully',
                 MessageSeverity.success
             );
             this.getExclusionListByWorkOrderId();

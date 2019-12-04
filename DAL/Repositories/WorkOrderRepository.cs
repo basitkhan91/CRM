@@ -1005,10 +1005,12 @@ namespace DAL.Repositories
                                            select new
                                            {
                                                wa.AssetRecordId,
+
                                                wa.WorkOrderAssetId,
                                                AssetId = a.AssetId,
                                                a.Description,
                                                at.AssetTypeName,
+											   at.AssetTypeId,
                                                wa.Quantity,
                                                wa.MinQuantity,
                                                wa.MaxQuantity,

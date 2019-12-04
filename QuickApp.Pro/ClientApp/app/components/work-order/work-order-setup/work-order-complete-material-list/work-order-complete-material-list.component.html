@@ -4,13 +4,13 @@
 
 <!-- <div  >
 
-    <grd-material  [isWorkOrder]="isWorkOrder" [workFlowObject]="workFlowObject" (saveMaterialList)="saveMaterialListForWO.emit($event)" ></grd-material>
+   
 </div> -->
 
 
     <div>
-        <button *ngIf="!addNewMaterial" data-target="#addNewMaterials" data-toggle="modal" class="btn btn-primary btn-primary-cstm" (click)="addNew(); " style="padding: 6px 12px !important;">Add New Material</button>
-        <button *ngIf="addNewMaterial" data-toggle="modal" data-toggle="modal" class="btn btn-primary btn-primary-cstm" (click)="closeAddNew()" style="padding: 6px 12px !important;">Close Add New  Material</button>
+        <button  data-target="#addNewMaterials" data-toggle="modal" class="btn btn-primary btn-primary-cstm" (click)="createNew(); " style="padding: 6px 12px !important;">Add New Material</button>
+        <!-- <button *ngIf="addNewMaterial" data-toggle="modal" data-toggle="modal" class="btn btn-primary btn-primary-cstm" (click)="closeAddNew()" style="padding: 6px 12px !important;">Close Add New  Material</button> -->
 
 
         <!--<button *ngIf="(materialStatus === null || materialStatus === 4)" class="btn btn-primary btn-primary-cstm"  style="padding: 6px 12px !important;" (click)="partsIssueRI(1)" data-toggle="modal" data-target="#reserve" >Reserve Stock</button>
@@ -29,164 +29,38 @@
 
 
 
-<div id="addNewMaterials" class="modal fade" role="dialog">
+    <div id="addNewMaterials" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg">
       
           <!-- Modal content-->
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" (click)="closeAddNew()">&times;</button>
-              <h4 class="modal-title">Add New Material</h4>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Add Material</h4>
             </div>
             <div class="modal-body">
-                    <div *ngIf="addNewMaterial" class="fixed-table-container-inner table-responsive cat4-table fixed-column-table column-r1-fixed">
-                            <div>
-                                <span class="cat-heading cat4">
-                                    Add New Material List<i (click)="addRow()" class="fa fa-plus"></i>
-                                    <span class="float-right">
-                                        Deferred &nbsp;<input type="checkbox" (click)="isDeferredEnable($event)" />
-                                    </span>
-                                </span>
-                                
-                            </div>
-                           
-                            <table class="table table-bordered table-fixed workflow-table-material">
-                                <thead>
-                                    <tr>
-                                        <th>S.No</th>
-                                        <th>PN *</th>
-                                        <th>Description *</th>
-                                        <th>Cond *</th>
-                                        <th>Mandatory / Supplemental *</th>
-                                        <th>Item Classification</th>
-                                        <th>QTY *</th>
-                                        <th>UOM *</th>
-                                        <th>Unit Cost *</th>
-                                        <th>Extended Cost *</th>
-                                        <th>Unit Price *</th>
-                                        <th>Extended Price</th>
-                                        <th>Memo</th>
-                                        <th>Deferred</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>       
-                                <tbody>
-                                    <tr class="material-tr" [hidden]="material.isDelete" *ngFor="let material of workFlow.materialList;let i = index">
-                                        <td>{{(currentPage - 1) * itemsPerPage + i + 1}}</td>
-                                        <td>
-                                            <p-autoComplete (onSelect)="onPartSelect($event, material)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [(ngModel)]="material.partNumber"
-                                                            [minLength]="1" [dropdown]="true" class="workflow-measurement-select">
-                                                <ng-template let-partName pTemplate="part">
-                                                    <div class="ui-helper-clearfix">{{partName}}</div>
-                                                </ng-template>
-                                            </p-autoComplete>
-                                        </td>
-                                        <td>
-                                            <input rows="1" value="{{material.partDescription}}" [disabled]="true" [(ngModel)]="material.partDescription">
-                                        </td>
-                                        <td>
-                                            <select class="form-control wf-pub-id" id="ddlMaterialCondition" [(ngModel)]="material.conditionCodeId"> <!--custom-select-->
-                                                <option value="">Select</option>
-                                                <option *ngFor="let condition of materialCondition" value="{{condition.conditionId}}">
-                                                    {{condition.description}}
-                                                </option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <select class="form-control wf-pub-id" id="ddlMandatoryOrSupplemental" [(ngModel)]="material.mandatoryOrSupplemental" name="mandatoryOrSupplemental{{i}}" style="margin:auto;">
-                                                <option value="">Select</option>
-                                                <option *ngFor="let mandatory of materialMandatory" value="{{mandatory.name}}">
-                                                    {{mandatory.name}}
-                                                </option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <select class="form-control dropdown-select wf-pub-id" [(ngModel)]="material.itemClassificationId" [disabled]="true">
-                                                <option *ngFor="let item of itemClassInfo" value="{{item.itemClassificationId}}">
-                                                    {{item.description}}
-                                                </option>
-                                            </select>
-                                        </td>
-                                        <td style="width: 200px">
-                                            <input type="text" maxlength="10" pInputText pKeyFilter="pnum" class="form-control" value="{{material.quantity}}"  (input)="validateQuantity($event, material);calculateQtySummation();calculateExtendedCost(material);calculateExtendedPrice(material);" [(ngModel)]="material.quantity" />
-                                        </td>
-                                        <td>
-                                            <select class="form-control wf-pub-id" id="ddlMaterialUOM" [(ngModel)]="material.unitOfMeasureId">
-                                                <option value="">Select</option>
-                                                <option *ngFor="let uom of materialUOM" value="{{uom.unitOfMeasureId}}">
-                                                    {{uom.shortName}}
-                                                </option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" pInputText pKeyFilter="money" value="{{material.unitCost}}" (input)="calculateExtendedCost(material)" [(ngModel)]="material.unitCost" />
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" pInputText pKeyFilter="money" [disabled]="true" value="{{material.extendedCost}}" [(ngModel)]="material.extendedCost" />
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" pInputText pKeyFilter="money" value="{{material.price}}" [(ngModel)]="material.price" (input)="calculatePriceSummation();calculateExtendedPrice(material);" />
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" disabled pInputText pKeyFilter="money" value="{{material.extendedPrice}}" [(ngModel)]="material.extendedPrice" />
-                                        </td>
-                                        <td>
-                                            <textarea style="height: 25px;margin-top: 5px;min-width: 130px !important;" class="form-control" [(ngModel)]="material.memo" value="{{material.memo}}"></textarea>
-                                        </td>
-                                        <td style="width:30px;">
-                                            <div class="custom-checkbox-box">
-                                                <input class="filled-in" id="PMS" type="checkbox" value="{{material.isDeferred}}" [(ngModel)]="material.isDeferred">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-danger nobg" (click)="deleteRow(i)">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                <tfoot *ngIf="workFlow.materialList.length > 0" >
-                                    <tr>
-                                        <td>
-                                            Total
-                                        </td>
-                                        <td> &nbsp;</td>
-                        
-                                        <td> &nbsp;</td>
-                                        <td> &nbsp;</td>
-                                        <td> &nbsp;</td>
-                                        <td> &nbsp;</td>
-                                        <td> {{workFlow.materialQtySummation}}</td>
-                                        <td> &nbsp;</td>
-                                        <td> &nbsp;</td>
-                                        <td>{{workFlow.materialExtendedCostSummation}}</td>
-                                        <td>{{workFlow.totalMaterialCost}}</td>
-                                        <td>{{workFlow.materialExtendedPriceSummation}}</td>
-                                        <td> &nbsp;</td>
-                                        <td> &nbsp;</td>
-                                        <td> &nbsp;</td>
-                                    </tr>
-                                </tfoot>
-                        
-                        
-                                
-                            </table>
-                        
-                    
-                            <div style="float:right"> 
-                    
-                                    <button *ngIf="isWorkOrder" class="btn btn-primary btn-primary-cstm" data-dismiss="modal" (click)="saveMaterialListForWorkOrder(); closeAddNew();" style="padding: 6px 12px !important;">Save</button>
-                            </div>
-                        
-                    </div>
+                <grd-material  *ngIf="!isEdit" 
+                [isWorkOrder]="isWorkOrder" 
+                [workFlow]="workFlowObject" 
+                (saveMaterialListForWO)="saveMaterialList($event)" ></grd-material>
+            
+              <grd-material *ngIf="isEdit && editData"
+                [isEdit]="isEdit"
+                [editData]="editData"
+                [isWorkOrder]="isWorkOrder" 
+                [workFlow]="workFlowObject" 
+                (updateMaterialListForWO)="updateMaterialList($event)" >
+            </grd-material> 
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal" (click)="closeAddNew()">Close</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
           </div>
       
         </div>
       </div>
+
+
 
 
     
@@ -230,6 +104,7 @@
                                 <th class="text-center">Location</th>
                                 <th class="text-center">Shelf</th>
                                 <th class="text-center">Bin</th>
+                                <th colspan="4" class="text-center"></th>
 
                             </tr>
                         </thead>
@@ -268,6 +143,28 @@
                                 <td>{{m.location}}</td>
                                 <td>{{m.shelf}}</td>
                                 <td>{{m.bin}}</td>
+                                <td>
+                                    <button
+                                      class="btn-edit ptable-wo-btns"
+                                      mat-icon-button
+                                      data-target="#addNewMaterials" 
+                                      data-toggle="modal"
+                                      (click)="edit(m)"
+                                      matTooltip="Edit"
+                                    >
+                                      <mat-icon>edit</mat-icon>
+                                    </button>
+                                  </td>
+                                  <td>
+                                    <button
+                                      class="btn-delete ptable-wo-btns"
+                                      mat-icon-button
+                                      matTooltip="Delete"
+                                      (click)="delete(m)"
+                                    >
+                                      <mat-icon color="warn">delete</mat-icon>
+                                    </button>
+                                  </td>
                            
                             </tr>
                              

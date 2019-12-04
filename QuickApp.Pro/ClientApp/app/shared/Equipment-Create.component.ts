@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, EventEmitter, Output } from "@angular/core";
+import { Component, Input, OnChanges, OnInit, EventEmitter, Output, AfterContentChecked, AfterViewInit, DoCheck } from "@angular/core";
 import { IWorkFlow } from "../Workflow/WorkFlow";
 import { ActionService } from "../Workflow/ActionService";
 import { IEquipmentAssetType } from "../Workflow/EquipmentAssetType";
@@ -13,14 +13,18 @@ import { MessageSeverity, AlertService } from "../services/alert.service";
     templateUrl: './Equipment-Create.component.html',
     styleUrls: ['./Equipment-Create.component.css']
 })
-export class EquipmentCreateComponent implements OnInit, OnChanges {
+export class EquipmentCreateComponent implements OnInit {
     partCollection: any[];
     @Input() workFlowObject;
     //@Input() isWorkOrder = false;
     @Input() isWorkOrder: boolean;
     @Input() workFlow: IWorkFlow;
+    @Input() isEdit = false;
+    @Input() editData;
     @Input() UpdateMode: boolean;
     @Output() saveEquipmentListForWO = new EventEmitter();
+    @Output() updateEquipmentListForWO = new EventEmitter();
+
     @Output() notify: EventEmitter<IWorkFlow> =
         new EventEmitter<IWorkFlow>();
     allUomdata: any[] = [];
@@ -40,11 +44,26 @@ export class EquipmentCreateComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
-        console.log(this.isWorkOrder);
+        console.log(this.editData);
         if (this.isWorkOrder) {
             this.workFlow = this.workFlowObject;
             this.row = this.workFlow.equipments[0];
-            this.addRow();
+            if (this.isEdit) {
+                this.workFlow.equipments = [];
+                const data = {
+                    ...this.editData,
+                    partNumber: this.editData.assetId,
+                    assetDescription: this.editData.description,
+                    assetTypeId: this.editData.assetTypeId
+                }
+                this.workFlow.equipments.push(data);
+            } else {
+                this.workFlow.equipments = [];
+                this.row = this.workFlow.equipments[0];
+                this.addRow();
+            }
+
+
         } else {
             this.row = this.workFlow.equipments[0];
             if (this.row == undefined) {
@@ -64,9 +83,7 @@ export class EquipmentCreateComponent implements OnInit, OnChanges {
 
     }
 
-    ngOnChanges(): void {
 
-    }
 
     addRow(): void {
         var newRow = Object.assign({}, this.row);
@@ -189,5 +206,9 @@ export class EquipmentCreateComponent implements OnInit, OnChanges {
 
     saveEquipmentWorkOrder() {
         this.saveEquipmentListForWO.emit(this.workFlow)
+    }
+
+    updateEquipmentWorkOrder() {
+        this.updateEquipmentListForWO.emit(this.workFlow)
     }
 }

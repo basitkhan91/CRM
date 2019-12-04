@@ -1,72 +1,172 @@
-<div class="fixed-table-container-inner table-responsive cat4-table" style="height:380px;">
-    <div style="width: 100%; z-index: 1;">
-        <span class="cat-heading cat4">Add New Charges<i (click)="addRow()" class="fa fa-plus"></i></span>
-    </div>
-    <table class="table table-bordered table-fixed workflow-table-charges">
-        <tr>
-            <th><label>S.No</label></th>
-            <th><label>Type *</label></th>
-            <th><label>Description</label></th>
-            <th><label>QTY *</label></th>
-            <th><label>Unit Cost *</label></th>
-            <th><label>Extended Cost *</label></th>
-            <th><label>Unit Price</label></th>
-            <th><label>Extended Price</label></th>
-            <th><label>Vendor Name</label></th>
-            <th><label style="text-align: left;">Actions </label></th>
-        </tr>
-        <tr class="charge-tr" [hidden]="charge.isDelete" *ngFor="let charge of workFlow.charges; let i = index">
-            <td>{{(currentPage - 1) * itemsPerPage + i + 1}}</td>
-            <td>
-                <select class="form-control custom-select wf-pub-id" id='dllChargesType' (change)="onChargeTypeChange($event, charge)" [(ngModel)]="charge.workflowChargeTypeId" style="width: 130px;">
-                    <option [value]="0">Select</option>
-                    <option [value]="ctype.id" *ngFor="let ctype of chargesTypes">{{ctype.name}}</option>
-                </select>
-            </td>
-            <td>
-                <input type="text" pInputText value="{{charge.description}}" [(ngModel)]="charge.description" class="form-control">
+<div
+  class="fixed-table-container-inner table-responsive cat4-table"
+  style="height:380px;"
+>
+  <div style="width: 100%; z-index: 1;" *ngIf="!isEdit">
+    <span class="cat-heading cat4"
+      >Add New Charges<i (click)="addRow()" class="fa fa-plus"></i
+    ></span>
+  </div>
+  <table class="table table-bordered table-fixed workflow-table-charges">
+    <tr>
+      <th><label>S.No</label></th>
+      <th><label>Type *</label></th>
+      <th><label>Description</label></th>
+      <th><label>QTY *</label></th>
+      <th><label>Unit Cost *</label></th>
+      <th><label>Extended Cost *</label></th>
+      <th><label>Unit Price</label></th>
+      <th><label>Extended Price</label></th>
+      <th><label>Vendor Name</label></th>
+      <th><label style="text-align: left;">Actions </label></th>
+    </tr>
+    <tr
+      class="charge-tr"
+      [hidden]="charge.isDelete"
+      *ngFor="let charge of workFlow.charges; let i = index"
+    >
+      <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+      <td>
+        <select
+          class="form-control custom-select wf-pub-id"
+          id="dllChargesType"
+          (change)="onChargeTypeChange($event, charge)"
+          [(ngModel)]="charge.workflowChargeTypeId"
+          style="width: 130px;"
+        >
+          <option [value]="0">Select</option>
+          <option [value]="ctype.id" *ngFor="let ctype of chargesTypes">{{
+            ctype.name
+          }}</option>
+        </select>
+      </td>
+      <td>
+        <input
+          type="text"
+          pInputText
+          value="{{ charge.description }}"
+          [(ngModel)]="charge.description"
+          class="form-control"
+        />
+      </td>
 
-            <td><input type="text" pInputText pKeyFilter="pnum" maxlength="10" class="form-control" value="{{charge.quantity}}" (input)="validateQuantity($event, charge);calculateQtySummation();calculateExtendedCost(charge);calculateExtendedPrice(charge)" [(ngModel)]="charge.quantity"></td>
-            <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.unitCost}}" (input)="calculateExtendedCost(charge);" [(ngModel)]="charge.unitCost"></td>
-            <td><input type="text" pInputText pKeyFilter="money" class="form-control" [disabled]="true" value="{{charge.extendedCost}}" [(ngModel)]="charge.extendedCost" (input)="calculateExtendedCostSummation()"></td>
-            <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.unitPrice}}" [(ngModel)]="charge.unitPrice" (input)="calculateExtendedPrice(charge)"> </td>
-            <td><input type="text" pInputText pKeyFilter="money" class="form-control" value="{{charge.extendedPrice}}" [(ngModel)]="charge.extendedPrice" disabled></td>
-            <td>
-                <p-autoComplete [(ngModel)]="charge.vendor"
-                                [suggestions]="vendorCollection" 
-                                (completeMethod)="filterVendor($event)" 
-                                (onSelect)="onVendorSelected(charge,$event)" 
-                                [dropdown]="true" [size]="30" [minLength]="1" 
-                                field="vendorName" class="workflow-measurement-select">
-                    
-                </p-autoComplete>
-            </td>
-            <td>
-                <button class="btn btn-danger nobg" (click)="deleteRow(i)">
-                    <i class="fa fa-trash"></i>
-                </button>
-            </td>
-        </tr>
-        <tr *ngIf="workFlow.charges.length > 0">
-            <td>
-                <b>Total : </b>
-            </td>
-            <td> &nbsp;</td>
-            <td> &nbsp;</td>
-            <td>{{workFlow.qtySummation}}</td>
-            <td>&nbsp;</td>
-            <td>{{workFlow.extendedCostSummation}}</td>
-            <td>&nbsp;</td>
-            <td>{{workFlow.totalChargesCost}}</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-        </tr>
-    </table>
+      <td>
+        <input
+          type="text"
+          pInputText
+          pKeyFilter="pnum"
+          maxlength="10"
+          class="form-control"
+          value="{{ charge.quantity }}"
+          (input)="
+            validateQuantity($event, charge);
+            calculateQtySummation();
+            calculateExtendedCost(charge);
+            calculateExtendedPrice(charge)
+          "
+          [(ngModel)]="charge.quantity"
+        />
+      </td>
+      <td>
+        <input
+          type="text"
+          pInputText
+          pKeyFilter="money"
+          class="form-control"
+          value="{{ charge.unitCost }}"
+          (input)="calculateExtendedCost(charge)"
+          [(ngModel)]="charge.unitCost"
+        />
+      </td>
+      <td>
+        <input
+          type="text"
+          pInputText
+          pKeyFilter="money"
+          class="form-control"
+          [disabled]="true"
+          value="{{ charge.extendedCost }}"
+          [(ngModel)]="charge.extendedCost"
+          (input)="calculateExtendedCostSummation()"
+        />
+      </td>
+      <td>
+        <input
+          type="text"
+          pInputText
+          pKeyFilter="money"
+          class="form-control"
+          value="{{ charge.unitPrice }}"
+          [(ngModel)]="charge.unitPrice"
+          (input)="calculateExtendedPrice(charge)"
+        />
+      </td>
+      <td>
+        <input
+          type="text"
+          pInputText
+          pKeyFilter="money"
+          class="form-control"
+          value="{{ charge.extendedPrice }}"
+          [(ngModel)]="charge.extendedPrice"
+          disabled
+        />
+      </td>
+      <td>
+        <p-autoComplete
+          [(ngModel)]="charge.vendor"
+          [suggestions]="vendorCollection"
+          (completeMethod)="filterVendor($event)"
+          (onSelect)="onVendorSelected(charge, $event)"
+          [dropdown]="true"
+          [size]="30"
+          [minLength]="1"
+          field="vendorName"
+          class="workflow-measurement-select"
+        >
+        </p-autoComplete>
+      </td>
+      <td>
+        <button class="btn btn-danger nobg" (click)="deleteRow(i)">
+          <i class="fa fa-trash"></i>
+        </button>
+      </td>
+    </tr>
+    <tr *ngIf="workFlow.charges.length > 0">
+      <td>
+        <b>Total : </b>
+      </td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>{{ workFlow.qtySummation }}</td>
+      <td>&nbsp;</td>
+      <td>{{ workFlow.extendedCostSummation }}</td>
+      <td>&nbsp;</td>
+      <td>{{ workFlow.totalChargesCost }}</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
 
-    <div *ngIf="isWorkOrder" style="float:right"> 
-                    
-        <button *ngIf="isWorkOrder" class="btn btn-primary btn-primary-cstm"  (click)="saveChargesWorkOrder(); " style="padding: 6px 12px !important;margin-top: 10px;">Save</button>
-</div>
+  <div *ngIf="isWorkOrder && !isEdit" style="float:right">
+    <button
+      *ngIf="isWorkOrder"
+      class="btn btn-primary btn-primary-cstm"
+      (click)="saveChargesWorkOrder()"
+      style="padding: 6px 12px !important;margin-top: 10px;"
+    >
+      Save
+    </button>
+  </div>
 
-
+  <div *ngIf="isWorkOrder && isEdit" style="float:right">
+    <button
+      *ngIf="isWorkOrder"
+      class="btn btn-primary btn-primary-cstm"
+      (click)="updateChargesWorkOrder()"
+      style="padding: 6px 12px !important;margin-top: 10px;"
+    >
+      Update
+    </button>
+  </div>
 </div>
