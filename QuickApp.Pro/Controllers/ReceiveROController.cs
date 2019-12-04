@@ -174,7 +174,8 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("GetReceieveROPartsForEdit/{repairOrderId}")]
-        public IActionResult GetReceieveROPartsForEdit(long repairOrderId) {
+        public IActionResult GetReceieveROPartsForEdit(long repairOrderId)
+        {
             var parts = unitOfWork.ReceiveRepairOrder.GetReceivingRepairOrderForEdit(repairOrderId);
             return Ok(parts);
         }
@@ -224,13 +225,14 @@ namespace QuickApp.Pro.Controllers
                             dbStockLine.ExpirationDate = stockLine.ExpirationDate;
                             dbStockLine.CertifiedDueDate = stockLine.CertifiedDueDate;
                             dbStockLine.UpdatedBy = UserName;
+
+                            dbStockLine.OwnerType = stockLine.OwnerType;
+                            dbStockLine.Owner = stockLine.Owner;
+                            dbStockLine.ObtainFromType = stockLine.ObtainFromType;
+                            dbStockLine.ObtainFrom = stockLine.ObtainFrom;
+                            dbStockLine.TraceableToType = stockLine.TraceableToType;
+                            dbStockLine.TraceableTo = stockLine.TraceableTo;
                             
-                            //dbStockLine.OwnerType = stockLine.OwnerType;
-                            //dbStockLine.ObtainFromType = stockLine.ObtainFromType;
-                            //dbStockLine.TraceableToType = stockLine.TraceableToType;
-                            //dbStockLine.Owner = stockLine.Owner;
-                            //dbStockLine.ObtainFrom = stockLine.ObtainFrom;
-                            //dbStockLine.TraceableTo = stockLine.TraceableTo;
                             dbStockLine.UpdatedDate = DateTime.Now;
                             receivePart.StockLines.Remove(stockLine);
                             unitOfWork.Repository<StockLine>().Update(dbStockLine);
