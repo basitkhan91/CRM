@@ -300,7 +300,8 @@ export class CustomerStepsPrimengComponent {
 	}
 
 
-	getMappedATAByCustomerId(customerId) {
+    getMappedATAByCustomerId(customerId) {
+        debugger
 		// const id = this.savedGeneralInformationData.customerId;
 		this.customerService.getATAMappedByCustomerId(customerId).subscribe(res => {
 			this.ataListDataValues = res;

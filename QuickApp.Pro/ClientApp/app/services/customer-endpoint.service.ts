@@ -115,6 +115,9 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _addShipViaDetails: string = '/api/Customer/addShipViaDetails';
     private readonly _addDocumentDetails: string = '/api/Customer/customerDocumentUpload';
     private readonly _addRemoveDetails: string = '/api/Customer/customerDocumentDelete';
+
+    private readonly _deleteCustomerDocuments: string = '/api/Customer/deleteCustomerDocuments';
+    
     private readonly _customerContactHistory: string = '/api/Customer/customercontactauditdetails'
     private readonly _customerGlobalSearch: string = '/api/Customer/ListGlobalSearch'
     private readonly _customerGetWarning: string = '/api/Customer/GetCustomerWarnings';
@@ -131,7 +134,8 @@ export class CustomerEndpoint extends EndpointFactory {
     
 
     private readonly _customersBillingUpdateforActive: string = '/api/Customer/customersBillingUpdateStatus'
-
+    private readonly _getCustomerDocumentAttachmentslist: string = "/api/FileUpload/getattachmentdetails";
+    private readonly _updateCustomerDocument: string = '/api/Customer/customerDocumentUpdate';
 
 
 
@@ -202,6 +206,9 @@ export class CustomerEndpoint extends EndpointFactory {
 
     get customersBillingUpdateforActive() { return this.configurations.baseUrl + this._customersBillingUpdateforActive }
     get deleteShipVia() { return this.configurations.baseUrl + this._deleteShipVia; }
+    get deleteCustomerDocuments() { return this.configurations.baseUrl + this._addRemoveDetails; }
+  
+    
 
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -1287,6 +1294,19 @@ export class CustomerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.CustomersBillingUpdateforActive(id, status, updatedBy));
             });
     }  
+    GetUploadDocumentsList(attachmentId, customerId, moduleId) {
+        return this.http.get<any>(`${this._getCustomerDocumentAttachmentslist}?attachmentId=${attachmentId}&referenceId=${customerId}&moduleId=${moduleId}`, this.getRequestHeaders())
+    }
+
+    getdeleteDocumentListbyId(customerDocumentId) {
+        return this.http.delete(`${this._deleteCustomerDocuments}/${customerDocumentId}`, this.getRequestHeaders())
+    }
+    UpdateDocumentUpload<T>(file: any): Observable<T> {
+        const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
+        return this.http.put<T>(`${this._updateCustomerDocument}`, file);
+    }
+
+
 
 }
 

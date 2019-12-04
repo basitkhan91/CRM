@@ -2150,7 +2150,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult DeleteCustomerTaxTypeRate(long id)
         {
             var existingResult = _unitOfWork.Repository<CustomerTaxTypeRateMapping>().GetSingleOrDefault(c => c.CustomerTaxTypeRateMappingId == id);
-            //existingResult.IsDeleted = true;
+            existingResult.IsDeleted = true;
             _unitOfWork.Repository<CustomerTaxTypeRateMapping>().Update(existingResult);
             _unitOfWork.SaveChanges();
             return Ok(id);
@@ -2745,20 +2745,70 @@ namespace QuickApp.Pro.Controllers
                 {
                     if (Request.Form == null)
                         return BadRequest($"{nameof(objCustomerDocumentDetail)} cannot be null");
+               
+                        long CustomerDocumentDetailId = Convert.ToInt64(Request.Form["CustomerDocumentDetailId"]);
 
-                    objCustomerDocumentDetail.CustomerId = Convert.ToInt64(Request.Form["CustomerId"]);
-                    objCustomerDocumentDetail.MasterCompanyId = 1;
-                    objCustomerDocumentDetail.UpdatedBy = Request.Form["UpdatedBy"];
-                    objCustomerDocumentDetail.DocName = Request.Form["DocName"];
-                    objCustomerDocumentDetail.DocMemo = Request.Form["DocMemo"];
-                    objCustomerDocumentDetail.DocDescription = Request.Form["DocDescription"];
-                    objCustomerDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objCustomerDocumentDetail.CustomerId,
-                                                                        Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), objCustomerDocumentDetail.UpdatedBy, objCustomerDocumentDetail.MasterCompanyId);
-                    _unitOfWork.CreateDocumentDetails.Add(objCustomerDocumentDetail);
-                    _unitOfWork.SaveChanges();
+                        if (CustomerDocumentDetailId > 0)
+                        {
+                            var customerDocObj = _unitOfWork.Customer.GetCustomerDocumentDetailById(CustomerDocumentDetailId);
+                        //objVendorDocumentDetail.MasterCompanyId = 1;      
+                        customerDocObj.CustomerId = Convert.ToInt64(Request.Form["CustomerId"]);
+                        customerDocObj.UpdatedBy = Request.Form["UpdatedBy"];
+                        customerDocObj.DocName = Request.Form["DocName"];
+                        customerDocObj.DocMemo = Request.Form["DocMemo"];
+                        customerDocObj.DocDescription = Request.Form["DocDescription"];
+                            if (customerDocObj.AttachmentId > 0)
+                            {
+                            customerDocObj.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objCustomerDocumentDetail.CustomerId,
+                              Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), customerDocObj.UpdatedBy, customerDocObj.MasterCompanyId, customerDocObj.AttachmentId);
 
-                    return Ok(objCustomerDocumentDetail);
-                }
+                            }
+                            else
+                            {
+                            customerDocObj.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objCustomerDocumentDetail.CustomerId,
+                                 Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), customerDocObj.UpdatedBy, customerDocObj.MasterCompanyId);
+                            }
+
+                            _unitOfWork.CreateDocumentDetails.Update(customerDocObj);
+                            _unitOfWork.SaveChanges();
+                        }
+                        else
+                        {
+                        objCustomerDocumentDetail.CustomerId = Convert.ToInt64(Request.Form["CustomerId"]);
+                        objCustomerDocumentDetail.MasterCompanyId = 1;
+                        objCustomerDocumentDetail.CreatedBy = Request.Form["CreatedBy"];
+                        objCustomerDocumentDetail.UpdatedBy = Request.Form["UpdatedBy"];
+                        objCustomerDocumentDetail.DocName = Request.Form["DocName"];
+                        objCustomerDocumentDetail.DocMemo = Request.Form["DocMemo"];
+                        objCustomerDocumentDetail.DocDescription = Request.Form["DocDescription"];
+                        objCustomerDocumentDetail.IsActive = true;
+                        objCustomerDocumentDetail.IsDeleted = false;
+                        objCustomerDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objCustomerDocumentDetail.CustomerId,
+                                                                                Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), objCustomerDocumentDetail.UpdatedBy, objCustomerDocumentDetail.MasterCompanyId);
+                            _unitOfWork.CreateDocumentDetails.Add(objCustomerDocumentDetail);
+                            _unitOfWork.SaveChanges();
+                        }
+
+
+
+                        return Ok(objCustomerDocumentDetail);
+                    }
+
+
+
+                    //objCustomerDocumentDetail.CustomerId = Convert.ToInt64(Request.Form["CustomerId"]);
+                    //objCustomerDocumentDetail.MasterCompanyId = 1;
+                    //objCustomerDocumentDetail.UpdatedBy = Request.Form["UpdatedBy"];
+                    //objCustomerDocumentDetail.DocName = Request.Form["DocName"];
+                    //objCustomerDocumentDetail.DocMemo = Request.Form["DocMemo"];
+                    //objCustomerDocumentDetail.DocDescription = Request.Form["DocDescription"];
+                    //objCustomerDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objCustomerDocumentDetail.CustomerId,
+                    //                                                    Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), objCustomerDocumentDetail.UpdatedBy, objCustomerDocumentDetail.MasterCompanyId);
+                   // _unitOfWork.CreateDocumentDetails.Add(objCustomerDocumentDetail);
+                    //_unitOfWork.SaveChanges();
+
+                    //return Ok(objCustomerDocumentDetail);
+                
                 return Ok(ModelState);
             }
             catch (Exception ex)
@@ -2956,6 +3006,15 @@ namespace QuickApp.Pro.Controllers
         {
             _unitOfWork.Customer.CustomerShippingDetailsViaStatus(id, status, updatedBy);
             return Ok();
+        }
+        [HttpDelete("deleteCustomerDocuments/{id}")]
+        public IActionResult DeleteCustomerDocuments(long id)
+        {
+            var existingResult = _unitOfWork.Repository<CustomerDocumentDetail>().GetSingleOrDefault(c => c.CustomerDocumentDetailId == id);
+            existingResult.IsDeleted = true;
+            _unitOfWork.Repository<CustomerDocumentDetail>().Update(existingResult);
+            _unitOfWork.SaveChanges();
+            return Ok(id);
         }
     }
 

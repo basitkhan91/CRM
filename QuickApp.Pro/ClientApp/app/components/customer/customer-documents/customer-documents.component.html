@@ -25,7 +25,8 @@
                                       href="#"
                                       data-toggle="modal"
                                       data-target="#addDocumentDetails"
-                                      ><i class="fa fa-plus-circle fa-lg"></i
+                                     (click)="addDocumentDetails()"
+                                       ><i class="fa fa-plus-circle fa-lg"></i
                                     ></a>
                                   </h4>
                         </div>
@@ -76,13 +77,14 @@
                                 </td>
 
                                 <td>
-                                    <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openDocument(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                                   
+                                    <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openDocument(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
 
-                                    <button class="btn-edit" mat-icon-button (click)="editCustomerDocument(rowData)" matTooltip="edit"  data-toggle="modal" data-target="#addDocumentDetails">
+                                    <button class="btn-edit" mat-icon-button (click)="editCustomerDocument(rowData)" matTooltip="edit" data-toggle="modal" data-target="#addDocumentDetails">
                                         <mat-icon>edit</mat-icon>
                                     </button>
 
-                                    <button class="btn-delete" mat-icon-button matTooltip="delete">
+                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)=" openDelete(deleteContent, rowData)">
                                         <mat-icon color="warn">delete</mat-icon>
                                     </button>
 
@@ -127,6 +129,20 @@
         </div>
 
     </div>
+<ng-template #deleteContent let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
+</ng-template>
+
     <div id="view"  #view class="modal fade" role="dialog" *ngIf="sourceViewforDocument">
             <div class="modal-dialog">
           
@@ -134,16 +150,48 @@
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <h4 class="modal-title">Details of Customer Contact</h4>
+                  <h4 class="modal-title">Details of Customer Document</h4>
                 </div>
                 <div class="modal-body">
-                        <div class="col-sm-12">
-                                <p><span class="label"><b>Name: </b></span><span class="value">{{sourceViewforDocument.name}}</span></p>
-                                <p><span class="label"><b>Description: </b></span><span class="value">{{sourceViewforDocument.description}}</span></p>
-                                <p><span class="label"><b>Memo: </b></span><span class="value">{{sourceViewforDocument.memo}}</span></p>
-                                <p><span class="label"><b>Attachments: </b></span><span class="value"></span></p>
-                                <div class="clear"></div>
-                            </div>
+                    <div class="col-sm-12">
+                        <p><span class="label"><b>Name: </b></span><span class="value">{{sourceViewforDocument.docName}}</span></p>
+                        <p><span class="label"><b>Description: </b></span><span class="value">{{sourceViewforDocument.docDescription}}</span></p>
+                        <p><span class="label"><b>Memo: </b></span><span class="value">{{sourceViewforDocument.docMemo}}</span></p>
+                        <p><span class="label"><b>Attachments: </b></span><span class="value"></span></p>
+                        <div>
+                            <h4 class="panel-title" style="padding-left: 10px;">Attachment Details:</h4>
+                            <p-table class="rpo-table-cstm"
+                                     [columns]="headersforAttachment"
+                                     [value]="sourceViewforDocumentList"
+                                     [paginator]="true"
+                                     [rows]="10"
+                                     [first]="first">
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th>Sl.No</th>
+                                        <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
+                                            {{ col.header }}
+                                        </th>
+                                        <th>Action</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body"
+                                             let-rowData
+                                             let-columns="columns"
+                                             let-rowIndex="rowIndex">
+                                    <tr>
+                                        <td>{{ rowIndex + 1 }}</td>
+                                        <td *ngFor="let col of columns">
+                                            {{ rowData[col.field] }}
+                                        </td>
+                                        <td><a class="btn btn-primary-cstm" (click)="downloadFileUpload(rowData)" download>Download</a></td>
+                                    </tr>
+
+                                </ng-template>
+                            </p-table>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -212,11 +260,11 @@
                             </div>
                             <div class="form-group">
                                 <label>Description <span class="clr-red">*</span></label>
-                                <textarea class="form-control" name="description" [(ngModel)]="documentInformation.docMemo" required></textarea>
+                                <textarea class="form-control" name="description" [(ngModel)]="documentInformation.docDescription" required></textarea>
                             </div>
                             <div class="form-group">
                                 <label>Memo <span class="clr-red">*</span></label>
-                                <textarea class="form-control" name="memo" [(ngModel)]="documentInformation.docDescription" required></textarea>
+                                <textarea class="form-control" name="memo" [(ngModel)]="documentInformation.docMemo" required></textarea>
                             </div>                            
                         </div>
 
@@ -230,8 +278,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button"  *ngIf="!isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" (click)="saveDocumentInformation()" data-dismiss="modal">Save</button>
-                    <button type="button"  *ngIf="isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" (click)="updateCustomerDocument()" data-dismiss="modal">Update</button>
+                    <button type="button"  *ngIf="!isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" (click)="saveDocumentInformation()" [disabled]="!addDocumentForm.valid" data-dismiss="modal">Save</button>
+                    <button type="button"  *ngIf="isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" (click)="saveDocumentInformation()" [disabled]="!addDocumentForm.valid" data-dismiss="modal">Update</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                 </div>
             </form>

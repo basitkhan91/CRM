@@ -568,4 +568,14 @@ export class CustomerService {
     CustomersBillingUpdateforActive(id, status, updatedBy) {
         return this.customerEndpoint.CustomersBillingUpdateforActive(id, status, updatedBy)
     }
+    toGetUploadDocumentsList(attachmentId, customerId, moduleId) {
+        return this.customerEndpoint.GetUploadDocumentsList(attachmentId, customerId, moduleId);
+    }
+    getDeleteDocumentListbyId(customerDocumentId) {
+        return this.customerEndpoint.getdeleteDocumentListbyId(customerDocumentId)
+    }
+    UpdateCustomerDocument(action: any) {
+        return this.customerEndpoint.UpdateDocumentUpload<any>(action);
+    }
+   
 }

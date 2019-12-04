@@ -223,6 +223,7 @@ export class CustomersListComponent implements OnInit {
     aircraftListDataValues: any;
     ataListDataValues: any;
     billingInfoList: any;
+    waringInfoList: any;
     domesticShippingData: any[];
     internationalShippingData: any;
 
@@ -377,6 +378,7 @@ export class CustomersListComponent implements OnInit {
         this.getBillingDataById(customerId);
         this.getDomesticShippingByCustomerId(customerId);
         this.getInternationalShippingByCustomerId(customerId);
+        this.getCustomerWaringByCustomerId(customerId);
         //this.modal = this.modalService.open(content, { size: 'sm' });
         //this.modal.result.then(() => {
         //    console.log('When user closes');
@@ -396,6 +398,7 @@ export class CustomersListComponent implements OnInit {
         this.getBillingDataById(customerId);
         this.getDomesticShippingByCustomerId(customerId);
         this.getInternationalShippingByCustomerId(customerId);
+   
         this.modal = this.modalService.open(content, { size: 'lg' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -453,6 +456,23 @@ export class CustomersListComponent implements OnInit {
 
 
     }
+    getCustomerWaringByCustomerId(customerId) {
+        debugger
+        // const id = this.savedGeneralInformationData.customerId;
+
+        this.customerService.getCustomerWarnings(customerId).subscribe(res => {
+            console.log(res);
+            this.waringInfoList = res[0];
+            // this.totalRecordsForInternationalShipping = res.totalRecordsCount;
+        })
+
+
+
+    }
+
+
+
+    
     // changePage(event: { first: any; rows: number }) {
     //     console.log(event);
     //     this.pageIndex = (event.first / event.rows);

@@ -175,6 +175,7 @@
           [add_ataChapterList]="add_ataChapterList"
           [editGeneralInformationData]="editGeneralInformationData"
           (saveCustomerContactATAMapped)="saveCustomerContactATAMapped($event)"
+          (refreshCustomerATAByCustomerId)="getMappedATAByCustomerId($event)"
           (refreshCustomerATAMapped)="getMappedATAByCustomerId($event)"
           (tab)="changeOfTab($event)"
         ></app-customer-contacts>
