@@ -120,7 +120,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult DeleteAction(long id)
         {
             var existingResult = _unitOfWork.VendorCapabilities.GetSingleOrDefault(c => c.VendorCapabilityId == id);
-            existingResult.IsDelete = true;
+            existingResult.IsDeleted = true;
             _unitOfWork.VendorCapabilities.Update(existingResult);
 
             //_unitOfWork.ActionAttribute.Remove(existingResult);
