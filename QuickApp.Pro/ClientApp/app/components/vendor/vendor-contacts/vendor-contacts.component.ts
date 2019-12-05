@@ -110,11 +110,11 @@ export class VendorContactsComponent implements OnInit {
     isEditMode: boolean = false;
     isDeleteMode: boolean = false;
     vendorContactsColumns = [
-        { field: 'firstName', header: 'FIRST NAME' },
-        { field: 'lastName', header: 'LAST NAME' },
-        { field: 'contactTitle', header: 'CONTACT TITLE' },
-        { field: 'email', header: 'EMAIL' },
-        { field: 'fullContactNo', header: 'MOBILE PHONE' },
+        { field: 'firstName', header: 'First Name' },
+        { field: 'lastName', header: 'Last Name' },
+        { field: 'contactTitle', header: 'Contact Title' },
+        { field: 'email', header: 'Email' },
+        { field: 'fullContactNo', header: 'Mobile Phone' },
         // { field: 'mobilePhone', header: 'Mobile Phone' },
         { field: 'fax', header: 'FAX' },
         // { field: 'isDefaultContact', header: 'Primary Contact' },
