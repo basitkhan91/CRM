@@ -256,6 +256,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("deleteworkordercharge")]
+        public IActionResult DeleteWorkOrderCharge(long workOrderChargeId, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.DeleteWorkOrderCharge(workOrderChargeId, updatedBy);
+            return Ok();
+        }
+
+
         #endregion
 
         #region Work Order Assets
@@ -325,6 +333,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("deleteworkorderasset")]
+        public IActionResult DeleteWorkOrderAsset(long workOrderAssetId, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.DeleteWorkOrderAsset(workOrderAssetId, updatedBy);
+            return Ok();
+        }
+
         #endregion
 
         #region Work Order Exclusions
@@ -365,6 +380,15 @@ namespace QuickApp.Pro.Controllers
             var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderExclusionsList(wfwoId, workOrderId);
             return Ok(result);
         }
+
+        [HttpGet("deleteworkorderexclusions")]
+        public IActionResult DeleteWorkOrderExclusions(long workOrderExclusionsId, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.DeleteWorkOrderExclusions(workOrderExclusionsId, updatedBy);
+            return Ok();
+        }
+
+        
 
         #endregion
 
@@ -653,6 +677,34 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest(ModelState.Values.FirstOrDefault().Errors);
             }
 
+        }
+
+        [HttpGet("getreservedparts")]
+        public IActionResult GetReservedParts(long workFlowWorkOrderId=0, long workOrderId=0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetReservedParts(workFlowWorkOrderId, workOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("getunreservedparts")]
+        public IActionResult GetUnReservedParts(long workFlowWorkOrderId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetUnReservedParts(workFlowWorkOrderId, workOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("getissuedparts")]
+        public IActionResult GetIssuedParts(long workFlowWorkOrderId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetIssuedParts(workFlowWorkOrderId, workOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("getunissuedParts")]
+        public IActionResult GetUnIssuedParts(long workFlowWorkOrderId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetUnIssuedParts(workFlowWorkOrderId, workOrderId);
+            return Ok(result);
         }
 
 
