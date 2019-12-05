@@ -91,9 +91,14 @@ export class CustomerDocumentsComponent implements OnInit {
 	}
 	
     openDocument(content, row) {
+       
+        this.customerService.toGetUploadDocumentsList(row.attachmentId, row.customerId, 1).subscribe(res => {
+            this.sourceViewforDocumentList = res;
+            this.sourceViewforDocument = row;
 
-        this.sourceViewforDocument = row;
-        this.toGetUploadDocumentsList(row.attachmentId, row.customerId, 1);
+        })
+
+       
        
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -202,7 +207,7 @@ export class CustomerDocumentsComponent implements OnInit {
                     `Action was deleted successfully `,
                     MessageSeverity.success
                 ));
-            debugger
+        
             this.getList();
            
         }

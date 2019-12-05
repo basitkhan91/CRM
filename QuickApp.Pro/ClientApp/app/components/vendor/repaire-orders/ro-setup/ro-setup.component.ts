@@ -265,6 +265,7 @@ export class RoSetupComponent implements OnInit {
 
 		this.sourceRoApproval.statusId = 1;
 		this.sourceRoApproval.openDate = new Date();
+		this.sourceRoApproval.closedDate = '';
 		//this.sourceRoApproval.closedDate = new Date();
 		//this.sourceRoApproval.dateRequested = new Date();
 		this.sourceRoApproval.shipToUserTypeId = 3;
@@ -2104,6 +2105,7 @@ export class RoSetupComponent implements OnInit {
 	}
 
 	addPartNumber() {
+		this.inputValidCheck = false;
 		if (this.vendorService.isEditMode == false) {
 			this.partListData.push(new CreatePOPartsList()); //CreatePOPartsListParent
 			//grid childlist disable on load

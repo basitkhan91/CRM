@@ -14200,11 +14200,12 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .pub-ptable-cstm .ui-table-summary {
     text-align: right !important;
 }
-// .input-validate.ng-untouched.ng-invalid, .input-validate.ng-touched.ng-invalid,
-// .p-acomp-validate.ng-untouched.ng-invalid .ui-autocomplete input, .p-acomp-validate.ng-touched.ng-invalid .ui-autocomplete input,
-// .p-clder-validate.ng-untouched.ng-invalid .ui-calendar input, .p-clder-validate.ng-touched.ng-invalid .ui-calendar input {
-//     border: 1px solid #ff586b;
-// }
+.input-validate.ng-untouched.ng-invalid, .input-validate.ng-touched.ng-invalid,
+.p-acomp-validate.ng-untouched.ng-invalid .ui-autocomplete input, .p-acomp-validate.ng-touched.ng-invalid .ui-autocomplete input,
+.p-clder-validate.ng-untouched:not(.ui-inputwrapper-filled) .ui-calendar input, .p-clder-validate.ng-touched:not(.ui-inputwrapper-filled) .ui-calendar input,
+.select-validate.ng-untouched.ng-invalid, .select-validate.ng-touched.ng-invalid {
+    border: 1px solid #ff586b;
+}
 .cus-contact-table tr th {
     padding: 7px !important;
 }

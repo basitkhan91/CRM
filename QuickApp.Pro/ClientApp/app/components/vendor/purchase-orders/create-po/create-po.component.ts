@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { PriorityService } from '../../../../services/priority.service';
 import { AlertService } from '../../../../services/alert.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { MatTableDataSource } from '@angular/material';
+import $ from "jquery";
 //import { PoApprovalComponent } from '../po-approval/po-approval.component';
 
 @Component({
@@ -92,7 +94,23 @@ export class CreatePoComponent implements OnInit {
     selectedContactColumns: any[];
     selectedPaymentColumns: any[];
     cols: any[];
-    selectedColumn: any[];
+	selectedColumn: any[];
+	description: any = "";
+	vendorParentName: any = "";
+	vendorPhoneNo:any="";
+	vendorClassificationName: any = "";
+	vendorCapabilityName: any = "";
+	billingInfoList: any[];
+    selectedBillingColumns: any[];
+    billingCol: any[];
+    warningInfoList: any[];
+    selectedWarningColumns: any[];
+    warninggCol: any[];
+    allVendorPOROList: any[];
+    memoCols:any[];
+    vendorDocumentsData: any=[];
+	vendorDocumentsColumns :any[];
+	dataSource: MatTableDataSource<any>;
 
 	constructor(public workFlowtService: VendorService, public _router: Router, private modalService: NgbModal, public priority: PriorityService, private alertService: AlertService, private route: Router)  {
 		this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-create-po';
@@ -355,74 +373,87 @@ export class CreatePoComponent implements OnInit {
 		}, () => { console.log('Backdrop click') })
 	}
 
-	openView(content, row) {
-		
-		//this.sourceVendor = row;
-		this.vendorCode = row.im.vendorCode;
-		this.vendorName = row.im.vendorName;
-		this.vendorTypeId = row.im.vendorTypeId;
-		this.doingBusinessAsName = row.im.doingBusinessAsName;
-		this.parent = row.im.parent;
-		this.address1 = row.ps.line1;
-		this.address2 = row.ps.line2;
-		this.address3 = row.ps.line3;
-		this.city = row.ps.city;
-		this.stateOrProvince = row.ps.stateOrProvince;
-		this.postalCode = row.ps.postalCode;
-		this.country = row.ps.country;
-		this.vendorEmail = row.im.vendorEmail;
-		this.vendorClassificationId = row.im.vendorClassificationId;
-		this.vendorContractReference = row.im.vendorContractReference;
-		this.isPreferredVendor = row.im.isPreferredVendor;
-		this.licenseNumber = row.im.licenseNumber;
-		this.capabilityId = row.im.capabilityId;
-		this.vendorURL = row.im.vendorURL;
-		this.sourcePo = row;
-		this.creditlimit = row.im.creditlimit;
-		this.creditTermsId = row.im.creditTermsId;
-		this.currencyId = row.im.currencyId;
-		this.discountLevel = row.im.discountLevel;
-		this.is1099Required = row.im.is1099Required;
-		this.loadContactDataData(row.vendorId);
-		this.loadPayamentData(row.vendorId);
-		this.loadShippingData(row.vendorId);
-		this.modal = this.modalService.open(content, { size: 'lg' });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
+	openView(content, row) {       
+        this.vendorCode = row.vendorCode;
+        this.vendorName = row.vendorName;
+        // this.vendorTypeId = row.t.vendorTypeId;
+        // this.description=row.description;
+        // this.doingBusinessAsName = row.t.doingBusinessAsName;
+        // this.parent = row.t.parent;
+        // this.vendorParentName=row.t.vendorParentName;
+    //     if (row.currency) {
+    //         this.currencyId = row.currency.symbol;
+    //     }
+    //     else {
+    //         this.currencyId = row.currencyId;
+    //     }
 
-		
-	}
+    //     if (row.creditterms) {
+    //         this.creditTermsId = row.creditterms.name;
+    //     }
+    //     else {
+    //         this.creditTermsId = row.creditTermsId;
+    //     }
+       
+    //     this.address1 = row.address1;
+    //     this.address2 = row.address2;
+    //    // this.address3 = row.address3;
+    //     this.city = row.city;
+    //     this.stateOrProvince = row.stateOrProvince;
+    //     this.postalCode = row.postalCode;
+    //     this.country = row.country;
+    //     this.vendorPhoneNo=row.t.vendorPhone;
+    //     this.vendorEmail = row.vendorEmail;
+    //     //this.vendorClassificationId = row.t.vendorClassificationId;
+    //     this.vendorClassificationName = row.classificationName;
+    //     this.vendorContractReference = row.t.vendorContractReference;
+    //     this.isPreferredVendor = row.t.isPreferredVendor;
+    //     this.licenseNumber = row.t.licenseNumber;
+    //     this.capabilityId = row.capabilityId;
+    //     this.vendorCapabilityName=row.vendorCapabilityName;
+    //     this.vendorURL = row.t.vendorURL;
+    //     this.creditlimit = row.t.creditLimit;        
+    //     this.discountLevel = row.discountLevel;
+    //     this.is1099Required = row.t.is1099Required;
+        this.loadContactDataData(row.vendorId);
+        this.loadPayamentData(row.vendorId);
+        this.loadShippingData(row.vendorId);
+        this.loadBillingData(row.vendorId);
+        this.loadWarningsData(row.vendorId);
+        this.loadMemosData(row.vendorId);
+        this.loadVendorDocumentsData(row.vendorId);
+        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+	
 	dismissModel() {
 		this.modal.close();
 	}
-	private loadContactDataData(id) {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
+	private loadContactDataData(vendorId) {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.workFlowtService.getContacts(vendorId).subscribe(
+            results => this.onContactDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
 
-		this.workFlowtService.getContacts(id).subscribe(
-			results => this.onContactDataLoadSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-
-		this.contactcols = [
-			//{ field: 'actionId', header: 'Action Id' },
-			{ field: 'firstName', header: 'First Name' },
-			{ field: 'lastName', header: 'Last  Name' },
-			{ field: 'contactTitle', header: 'Contact Title' },
-			{ field: 'email', header: 'Email' },
-			{ field: 'mobilePhone', header: 'Mobile Phone' },
-			{ field: 'fax', header: 'Fax' },
-			{ field: 'createdBy', header: 'Created By' },
-			{ field: 'updatedBy', header: 'Updated By' },
-			{ field: 'updatedDate', header: 'Updated Date' },
-			{ field: 'createdDate', header: 'Created Date' }
-
-		];
-
-		this.selectedContactColumns = this.contactcols;
-
+        this.contactcols = [
+            { field: 'firstName', header: 'First Name' },
+            { field: 'lastName', header: 'Last  Name' },
+            { field: 'contactTitle', header: 'Contact Title' },
+            { field: 'email', header: 'Email' },
+            { field: 'mobilePhone', header: 'Mobile Phone' },
+            { field: 'fax', header: 'Fax' },
+            { field: 'createdBy', header: 'Created By' },
+            { field: 'updatedBy', header: 'Updated By' },
+            { field: 'updatedDate', header: 'Updated Date' },
+            { field: 'createdDate', header: 'Created Date' }
+        ];
+        this.selectedContactColumns = this.contactcols;
 	}
+	
 	private onContactDataLoadSuccessful(allWorkFlows: any[]) {
 
 		this.alertService.stopLoadingMessage();
@@ -431,31 +462,23 @@ export class CreatePoComponent implements OnInit {
 		this.allContacts = allWorkFlows;
 	}
 
-	private loadPayamentData(id) {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
-
-		this.workFlowtService.getCheckPaymentobj(id).subscribe(
-			results => this.onPaymentDataLoadSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
-
-
-
-		this.paymentcols = [
-			//{ field: 'actionId', header: 'Action Id' },
-			{ field: 'siteName', header: 'Site Name' },
-			{ field: 'address1', header: 'Address' },
-			{ field: 'city', header: 'City' },
-			{ field: 'stateOrProvince', header: 'State/Prov' },
-			{ field: 'postalCode', header: 'Postal Code' },
-			{ field: 'country', header: 'Country' }
-
-		];
-
-		this.selectedPaymentColumns = this.paymentcols;
-
-	}
+	private loadPayamentData(vendorId) {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.workFlowtService.getCheckPaymentobj(vendorId).subscribe(
+            results => this.onPaymentDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+        this.paymentcols = [
+            { field: 'siteName', header: 'Site Name' },
+            { field: 'address1', header: 'Address' },
+            { field: 'city', header: 'City' },
+            { field: 'stateOrProvince', header: 'State/Prov' },
+            { field: 'postalCode', header: 'Postal Code' },
+            { field: 'country', header: 'Country' }
+        ];
+        this.selectedPaymentColumns = this.paymentcols;
+    }
 
 	private onPaymentDataLoadSuccessful(allWorkFlows: any[]) {
 
@@ -467,31 +490,110 @@ export class CreatePoComponent implements OnInit {
 
 	}
 
-	private loadShippingData(id) {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
+	private loadShippingData(vendorId) {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.workFlowtService.getVendorShipAddressGet(vendorId).subscribe(
+            results => this.onShippingDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
 
-		this.workFlowtService.getVendorShipAddressGet(id).subscribe(
-			results => this.onShippingDataLoadSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
+        this.shippingCol = [
+            { field: 'siteName', header: 'Site Name' },
+            { field: 'address1', header: 'Address1' },
+            { field: 'address2', header: 'Address2' },
+            //{ field: 'address3', header: 'Address3' },
+            { field: 'city', header: 'City' },
+            { field: 'stateOrProvince', header: 'State/Prov' },
+            { field: 'postalCode', header: 'Postal Code' },
+            { field: 'country', header: 'Country' }
+        ];
 
-		this.shippingCol = [
-
-			{ field: 'siteName', header: 'Site Name' },
-			{ field: 'address1', header: 'Address1' },
-			{ field: 'address2', header: 'Address2' },
-			{ field: 'address3', header: 'Address3' },
-			{ field: 'city', header: 'City' },
-			{ field: 'stateOrProvince', header: 'State/Prov' },
-			{ field: 'postalCode', header: 'Postal Code' },
-			{ field: 'country', header: 'Country' }
-
-		];
-
-		this.selectedShippingColumns = this.shippingCol;
-
+        this.selectedShippingColumns = this.shippingCol;
 	}
+	
+	private loadBillingData(vendorId) {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.workFlowtService.getVendorBillAddressGet(vendorId).subscribe(
+            results => this.onBillingDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+      
+        this.billingCol = [
+            { field: 'siteName', header: 'Site Name' },
+            { field: 'address1', header: 'Address1' },
+            { field: 'address2', header: 'Address2' },           
+            { field: 'city', header: 'City' },
+            { field: 'stateOrProvince', header: 'State/Prov' },
+            { field: 'postalCode', header: 'Postal Code' },
+            { field: 'country', header: 'Country' }
+        ];
+
+        this.selectedBillingColumns = this.billingCol;
+	}
+
+	private loadWarningsData(vendorId) {
+        this.workFlowtService.getVendorWarnings(vendorId).subscribe(
+            data => {
+             this.warningInfoList = data[0].map(x => {
+            return {
+                ...x,
+                sourceModule: `${x.t.sourceModule == null ?'': x.t.sourceModule}`, 
+                warningMessage: `${x.t.warningMessage == null ?'': x.t.warningMessage}`,    
+                restrictMessage: `${x.t.restrictMessage == null ?'': x.t.restrictMessage}`   
+                };
+            });              
+            });
+
+            this.warninggCol = [
+                { field: 'sourceModule', header: 'Module' },
+                { field: 'warningMessage', header: 'Warning Message' },
+                { field: 'restrictMessage', header: 'Restrict Message' }          
+              
+            ];    
+            this.selectedWarningColumns = this.warninggCol;
+	}
+	
+	private loadMemosData(vendorId) {
+		this.workFlowtService.getVendorPOMemolist(vendorId).subscribe(
+			  res => {             
+				  this.allVendorPOROList = res;              
+		  });
+  
+		  this.workFlowtService.getVendorROMemolist(vendorId).subscribe(
+			  res => {        
+				  for (let value of res) {
+					  this.allVendorPOROList.push(value);
+				  }                    
+		  });
+  
+	  this.memoCols = [
+		  { field: 'module', header: 'Module' },			
+		  { field: 'orderNumber', header: 'Id' },
+		  { field: 'notes', header: 'Memo text' }  
+		  ];    
+	 }
+
+	 private loadVendorDocumentsData(vendorId){
+		this.workFlowtService.getDocumentList(vendorId).subscribe(res => {
+			this.vendorDocumentsData = res;			
+		});
+	
+		this.vendorDocumentsColumns = [
+			{ field: 'docName', header: 'Name' },
+			{ field: 'docDescription', header: 'Description' },
+			//{ field: 'documents', header: 'Documents' },
+			{ field: 'docMemo', header: 'Memo' }
+		];
+	   }
+	
+	private onBillingDataLoadSuccessful(allWorkFlows: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.billingInfoList = allWorkFlows;      
+    }
 
 	private onShippingDataLoadSuccessful(allWorkFlows: any[]) {
 
@@ -517,5 +619,32 @@ export class CreatePoComponent implements OnInit {
     onCreatePO() {
         this._router.navigateByUrl('/vendorsmodule/vendorpages/app-purchase-setup');
 	}
+
+	expandAllVendorDetailsModel()
+    {
+        $('#step1').collapse('show');
+        $('#step2').collapse('show');
+        $('#step3').collapse('show');
+        $('#step4').collapse('show');
+        $('#step5').collapse('show');
+        $('#step6').collapse('show');
+        $('#step7').collapse('show');
+
+        $('#step9').collapse('show');
+        $('#step10').collapse('show');
+    }
+    closeAllVendorDetailsModel()
+    {
+        $('#step1').collapse('hide');
+        $('#step2').collapse('hide');
+        $('#step3').collapse('hide');
+        $('#step4').collapse('hide');
+        $('#step5').collapse('hide');
+        $('#step6').collapse('hide');
+        $('#step7').collapse('hide');
+
+        $('#step9').collapse('hide');
+        $('#step10').collapse('hide');
+    }
 
 }
