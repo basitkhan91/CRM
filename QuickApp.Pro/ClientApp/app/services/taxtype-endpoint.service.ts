@@ -17,6 +17,7 @@ export class TaxTypeEndpointService extends EndpointFactory {
     private readonly getTaxTypeDataAuditById: string = "/api/TaxType/audits";
     private readonly _auditUrl: string = "/api/TaxType/audits";
     private readonly getTaxType: string = "/api/TaxType/pagination";
+    private readonly deleteTaxType: string = "/api/TaxType/actions";
 
     get paginate() { return this.configurations.baseUrl + this.getTaxType; }
 	get taxTypeUrl() { return this.configurations.baseUrl + this._taxTypeUrl; }
@@ -71,7 +72,7 @@ export class TaxTypeEndpointService extends EndpointFactory {
 	}
 
 	getDeleteTaxTypeEndpoint<T>(taxTypeId: number): Observable<T> {
-		let endpointUrl = `${this._taxTypeUrlNew}/${taxTypeId}`;
+        let endpointUrl = `${this.deleteTaxType}/${taxTypeId}`;
 
 		return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
 			.catch(error => {
@@ -93,7 +94,7 @@ export class TaxTypeEndpointService extends EndpointFactory {
 
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getDeleteTaxTypeEndpoint(Id));
+                return this.handleError(error, () => this.getTaxTypeAuditDetails(Id));
             });
     }
     
