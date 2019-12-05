@@ -34,7 +34,7 @@ export class MaterialListCreateComponent implements OnInit {
     @Output() workFlowChange = new EventEmitter();
     @Output() saveMaterialListForWO = new EventEmitter();
     @Output() updateMaterialListForWO = new EventEmitter();
-    
+
     @Output() notify: EventEmitter<IWorkFlow> =
         new EventEmitter<IWorkFlow>();
     materialCondition: any[] = [];
@@ -218,7 +218,7 @@ export class MaterialListCreateComponent implements OnInit {
 
             this.defaultConditionId = defaultCondition != undefined ? defaultCondition.conditionId : 0;
 
-            if (this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') {
+            if ((this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') && !this.isEdit) {
                 this.workFlow.materialList[0].conditionCodeId = this.defaultConditionId;
             }
         })
@@ -233,8 +233,8 @@ export class MaterialListCreateComponent implements OnInit {
             this.materialUOM = uomdata[0];
             var defaultUOM = this.materialUOM.find(x => x.shortName.trim().toLowerCase() == "ea".toLowerCase());
             this.defaultUOMId = defaultUOM != undefined ? defaultUOM.defaultUOMId : 0;
-           
-            if (this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') {
+
+            if ((this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') && !this.isEdit) {
                 this.workFlow.materialList[0].unitOfMeasureId = this.defaultUOMId;
             }
         });

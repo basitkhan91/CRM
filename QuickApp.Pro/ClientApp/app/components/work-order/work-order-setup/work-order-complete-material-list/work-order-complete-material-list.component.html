@@ -230,7 +230,7 @@
                                                 <tr *ngFor="let x of reservedList; let i=index;">
 
                                                     <td>
-                                                        <input type="checkbox" name="isParentChecked{{i}}" (ngModelChange)="showAlternateParts($event , x.woReservedIssuedAltParts)" [(ngModel)]="x.isParentChecked">
+                                                        <input type="checkbox" name="isParentChecked{{i}}" (ngModelChange)="showAlternateParts($event , x.woReservedIssuedAltParts)" [(ngModel)]="x.isParentChecked" (change)="selectedParts()">
                                                     </td>
 
 
@@ -243,7 +243,7 @@
                                                         {{x.quantityAlreadyReserved}}
                                                     </td>
                                                     <td>
-                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityReserved">
+                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityReserved" (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 2 ||  statusId === 3 ">
                                                     </td>
                                                     <td>
                                                         <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityTurnIn">
@@ -253,7 +253,7 @@
                                                         {{x.quantityAlreadyIssued}}
                                                     </td>
                                                     <td>
-                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityIssued">
+                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityIssued"  (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 1 || statusId === 3 ">
                                                     </td>
 
                                                     <td></td>
@@ -308,7 +308,7 @@
                                                 <tr *ngFor="let x of alternatePartData; ">
 
                                                     <td>
-                                                        <input type="checkbox" [(ngModel)]="x.isChildChecked" name="isChildChecked{{i}}">
+                                                        <input type="checkbox" [(ngModel)]="x.isChildChecked" name="isChildChecked{{i}}" (change)="selectedParts()">
                                                     </td>
                                                     <td>{{x.altPartNumber}}</td>
                                                     <td>{{x.altPartDescription}}</td>
@@ -317,7 +317,7 @@
                                                     </td>
                                                     <td>{{x.quantityAlreadyReserved}}</td>
                                                     <td>
-                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityReserved">
+                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityReserved" (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 2 ||  statusId === 3 ">
                                                     </td>
                                                     <td>
                                                         <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityTurnIn">
@@ -325,7 +325,7 @@
                                                     </td>
                                                     <td>{{x.quantityAlreadyReserved}}</td>
                                                     <td>
-                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityIssued">
+                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityIssued" (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 1 || statusId === 3 ">
 
                                                     </td>
 
@@ -363,7 +363,7 @@
                                             </tbody>
                                         </table>
                                         <div style="float:right"> 
-                                                <button  class="btn btn-primary btn-primary-cstm" data-dismiss="modal"  (click)="saveRIPart()" style="padding: 6px 12px !important;">Save </button>
+                                                <button  class="btn btn-primary btn-primary-cstm" data-dismiss="modal"  (click)="saveRIPart()" [disabled]="!checkedParts.length > 0" style="padding: 6px 12px !important;">Save </button>
                                             </div>  
                                         
       
@@ -372,7 +372,7 @@
 
    
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
             </div>
           </div>
       

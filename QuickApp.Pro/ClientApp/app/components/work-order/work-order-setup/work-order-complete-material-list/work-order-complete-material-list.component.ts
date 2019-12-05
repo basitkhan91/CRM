@@ -1,4 +1,4 @@
-﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
+﻿import { Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { fadeInOut } from '../../../../services/animations';
 import { IMaterialMandatory } from '../../../../Workflow/MaterialMandatory';
 import { ItemMasterService } from '../../../../services/itemMaster.service';
@@ -10,6 +10,7 @@ import { AlertService, MessageSeverity } from '../../../../services/alert.servic
 import { ActionService } from '../../../../Workflow/ActionService';
 import { WorkOrderService } from '../../../../services/work-order/work-order.service';
 import * as $ from 'jquery'
+import { AuthService } from '../../../../services/auth.service';
 // import { PageHeaderComponent } from '../../../../shared/page-header.component';
 // import * as $ from 'jquery';
 // import * as $ from 'jquery';
@@ -30,6 +31,7 @@ export class WorkOrderCompleteMaterialListComponent {
     @Output() saveMaterialListForWO = new EventEmitter();
     @Output() updateMaterialListForWO = new EventEmitter();
     @Output() saveRIParts = new EventEmitter();
+    @Output() refreshData = new EventEmitter();
     statusId = null;
 
     // workflow Variables 
@@ -73,8 +75,17 @@ export class WorkOrderCompleteMaterialListComponent {
         private conditionService: ConditionService,
         public itemClassService: ItemClassificationService,
         public unitofmeasureService: UnitOfMeasureService,
+        private authService: AuthService,
+        private cdRef: ChangeDetectorRef,
         private alertService: AlertService) {
 
+    }
+
+
+
+
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
     ngOnInit() {
@@ -364,12 +375,23 @@ export class WorkOrderCompleteMaterialListComponent {
         this.addNewMaterial = true;
     }
     edit(rowData) {
+        this.createNew();
+        this.cdRef.detectChanges();
         this.isEdit = true;
         this.addNewMaterial = true;
         this.editData = rowData;
     }
     delete(rowData) {
-    //  const {workOrderMaterialsId} = rowData;
+        const { workOrderMaterialsId } = rowData;
+
+        this.workOrderService.deleteWorkOrderMaterialList(workOrderMaterialsId, this.userName).subscribe(res => {
+            this.refreshData.emit();
+            this.alertService.showMessage(
+                '',
+                'Deleted WorkOrder Material Successfully',
+                MessageSeverity.success
+            );
+        })
 
     }
 
@@ -384,15 +406,30 @@ export class WorkOrderCompleteMaterialListComponent {
         $('#addNewMaterials').modal('hide');
     }
 
+    validatePartsQuantity(data) {
+        if (this.statusId === 1 || this.statusId === 4) {
+            if ((data.quantityAlreadyReserved + data.quantityReserved) > data.quantity) {
+                alert('Quantity Reserved and Quantity Available Cant be greater the Quantity Available');
+                data.quantityReserved = null;
+            }
+        } else if (this.statusId === 2) {
+            if (data.quantityIssued > data.quantityAlreadyReserved) {
+                alert('Quantity Issued  is greater than Quantity Reserved');
+                data.quantityIssued = null;
+            }
+        } else if (this.statusId === 3) {
+            if (data.quantity > (data.quantityReserved + data.quantityIssued)) {
+                alert('Quantity Issued is greater than Quantity Available');
+                data.quantity = null;
+            }
+        }
+
+    }
+
     partsIssueRI(statusId) {
         this.statusId = statusId;
         this.reservedList = [];
         this.alternatePartData = [];
-        //this.workFlowWorkOrderId = 10060
-
-            ;
-        // workFlowWorkOrderId
-        // 85
         if (this.workFlowWorkOrderId) {
             this.workOrderService.getReservedPartsByWorkFlowWOId(this.workFlowWorkOrderId, statusId).subscribe(res => {
                 this.reservedList = res.map(x => {
@@ -422,6 +459,24 @@ export class WorkOrderCompleteMaterialListComponent {
         if (isChecked === false) {
             this.alternatePartData = []
         }
+    }
+
+    selectedParts() {
+        this.checkedParts = [];
+        this.reservedList.map(x => {
+            if (x.isParentChecked) {
+                const { woReservedIssuedAltParts, ...rest } = x
+                this.checkedParts.push({ ...rest, partStatusId: this.statusId });
+            }
+            x.woReservedIssuedAltParts.map(c => {
+                if (c.isChildChecked) {
+                    this.checkedParts.push({ ...c, partStatusId: this.statusId });
+                }
+
+            })
+        })
+        console.log(this.checkedParts)
+
     }
     saveRIPart() {
         this.checkedParts = []

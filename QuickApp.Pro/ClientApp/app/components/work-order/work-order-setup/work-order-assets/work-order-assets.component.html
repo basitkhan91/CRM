@@ -95,16 +95,16 @@
                 {{ asset.findings }}
               </td>
 
-              <!--<td>
+              <td>
                 <a
-                  class="btn btn-info boxed-float-btn nobg"
+                  class="btn  boxed-float-btn nobg"
                   data-toggle="modal"
                   data-target="#view"
                   (click)="viewAsstes(asset)"
                 >
                   <i class="fa fa-eye"></i>
                 </a>
-              </td>-->
+              </td>
 
               <td>
                 <button
@@ -120,7 +120,7 @@
               </td>
               <td *ngIf="asset.checkInOutStatus === 1">
                 <a
-                  class="btn btn-info boxed-float-btn nobg"
+                  class="btn  boxed-float-btn nobg"
                   (click)="checkStatus(asset, 'checkIn'); viewAsstes(asset)"
                   data-toggle="modal"
                   data-target="#checkIn"
@@ -131,7 +131,7 @@
               </td>
               <td *ngIf="asset.checkInOutStatus === 2">
                 <a
-                  class="btn btn-info boxed-float-btn nobg"
+                  class="btn  boxed-float-btn nobg"
                   (click)="checkStatus(asset, 'checkOut'); viewAsstes(asset)"
                   data-toggle="modal"
                   data-target="#checkIn"

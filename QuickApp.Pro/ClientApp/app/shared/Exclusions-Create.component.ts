@@ -50,6 +50,7 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
                     ...this.editData,
                     partDescription: this.editData.epnDescription,
                     partNumber: this.editData.epn,
+                    estimtPercentOccurrance: this.editData.estimtPercentOccurranceId
 
                 }
                 this.workFlow.exclusions.push(data);
@@ -75,8 +76,8 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
         }
     }
 
-    ngOnChanges(): void {
 
+    ngOnChanges(): void {
     }
     reCalculate() {
         this.calculateQtySummation();
@@ -205,6 +206,7 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     }
 
     saveExclusionsWorkOrder() {
+
         this.saveExclusionsListForWO.emit(this.workFlow)
     }
 
