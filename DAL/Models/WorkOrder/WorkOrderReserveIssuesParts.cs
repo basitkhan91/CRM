@@ -55,6 +55,8 @@ namespace DAL.Models
         public int? UnReservedQty { get; set; }
         public int? UnIssuedQty { get; set; }
         public int? QuantityAlreadyReserved { get; set; }
+        public int? QuantityAlreadyIssued { get; set; }
+        
 
     }
 }

@@ -1803,7 +1803,7 @@ namespace DAL.Repositories
                             join sl in _appContext.StockLine on new { a = (long?)wom.ConditionCodeId, b = (long?)wom.WorkOrderMaterialsId } equals new { a = sl.ConditionId, b = sl == null ? 0 : sl.WorkOrderMaterialsId }
                             into wopsl
                             from sl in wopsl.DefaultIfEmpty()
-                            where wom.IsDeleted == false && wom.IsActive == true && wom.QuantityReserved-wom.QuantityIssued > 0
+                            where wom.IsDeleted == false && wom.IsActive == true && wom.QuantityReserved - wom.QuantityIssued > 0
                             && (wom.IsAltPart == null || wom.IsAltPart == false)
                             && wom.WorkFlowWorkOrderId == WorkFlowWorkOrderId
                             select new
@@ -1909,7 +1909,7 @@ namespace DAL.Repositories
                             where wom.IsDeleted == false && wom.IsActive == true && wom.QuantityReserved - wom.QuantityIssued > 0
                             && (wom.IsAltPart == null || wom.IsAltPart == false)
                             && wom.WorkFlowWorkOrderId == WorkFlowWorkOrderId
-                            
+
                             select new
                             {
                                 wom.WorkOrderId,
@@ -1921,7 +1921,8 @@ namespace DAL.Repositories
                                 QuantityAlreadyReserved = wom.QuantityReserved,
                                 wom.UnReservedQty,
                                 wom.QuantityTurnIn,
-                                wom.QuantityIssued,
+                                QuantityIssued=wom.QuantityReserved-(wom.QuantityIssued==null?0:wom.QuantityIssued),
+                                QuantityAlreadyIssued = wom.QuantityIssued,
                                 wom.UnIssuedQty,
                                 Condition = con.Description,
                                 wom.ConditionCodeId,
@@ -1982,6 +1983,8 @@ namespace DAL.Repositories
                         workOrderReserveIssuesPart.PartStatusId = item.PartStatusId;
                         workOrderReserveIssuesPart.ExtendedCost = item.ExtendedCost;
                         workOrderReserveIssuesPart.QuantityAlreadyReserved = item.QuantityAlreadyReserved;
+                        workOrderReserveIssuesPart.QuantityAlreadyIssued = item.QuantityAlreadyIssued;
+
 
                         workOrderReserveIssuesParts.Add(workOrderReserveIssuesPart);
                     }
@@ -2099,7 +2102,7 @@ namespace DAL.Repositories
             }
         }
 
-        
+
 
         #endregion
 
@@ -3840,7 +3843,7 @@ namespace DAL.Repositories
                 }
                 else if (Convert.ToInt32(PartStatusEnum.Issue) == part.PartStatusId)
                 {
-                    woMaterial.QuantityIssued= woMaterial.UnIssuedQty = woMaterial.UnIssuedQty + part.QuantityIssued;
+                    woMaterial.QuantityIssued = woMaterial.UnIssuedQty = woMaterial.UnIssuedQty + part.QuantityIssued;
                     woMaterial.QuantityReserved = woMaterial.UnReservedQty = woMaterial.UnReservedQty - part.QuantityIssued;
                 }
                 else if (Convert.ToInt32(PartStatusEnum.UnIssue) == part.PartStatusId)
@@ -3919,7 +3922,7 @@ namespace DAL.Repositories
 
                 if (Convert.ToInt32(PartStatusEnum.Reserve) == part.PartStatusId)
                 {
-                    woStockLine.QuantityReserved = woStockLine.QuantityReserved+part.QuantityReserved;
+                    woStockLine.QuantityReserved = woStockLine.QuantityReserved + part.QuantityReserved;
                 }
                 else if (Convert.ToInt32(PartStatusEnum.UnReserve) == part.PartStatusId)
                 {
@@ -3971,12 +3974,12 @@ namespace DAL.Repositories
                 }
                 else if (Convert.ToInt32(PartStatusEnum.Issue) == part.PartStatusId)
                 {
-                    stockLine.QuantityIssued =  part.QuantityIssued;
+                    stockLine.QuantityIssued = part.QuantityIssued;
                 }
                 else if (Convert.ToInt32(PartStatusEnum.UnIssue) == part.PartStatusId)
                 {
-                    stockLine.QuantityIssued =  part.QuantityIssued;
-                 
+                    stockLine.QuantityIssued = part.QuantityIssued;
+
                 }
                 else if (Convert.ToInt32(PartStatusEnum.ReserveAndIssue) == part.PartStatusId)
                 {
