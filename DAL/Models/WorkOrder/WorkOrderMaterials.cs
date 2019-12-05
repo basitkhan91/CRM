@@ -35,6 +35,8 @@ namespace DAL.Models
         public bool? IsAltPart { get; set; }
         public long? AltPartMasterPartId { get; set; }
         public int? PartStatusId { get; set; }
+        public int? UnReservedQty { get; set; }
+        public int? UnIssuedQty { get; set; }
 
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
