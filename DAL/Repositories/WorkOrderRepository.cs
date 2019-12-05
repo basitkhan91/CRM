@@ -880,9 +880,9 @@ namespace DAL.Repositories
                                 woc.Description,
                                 woc.Quantity,
                                 woc.UnitCost,
-                                woc.ExtentedCost,
+                                woc.ExtendedCost,
                                 woc.UnitPrice,
-                                woc.ExtentedPrice,
+                                woc.ExtendedPrice,
                                 woc.VendorId,
                                 v.VendorName,
                                 woc.Amount,
@@ -972,6 +972,11 @@ namespace DAL.Repositories
                 {
                     foreach (var asset in workOrderAssets)
                     {
+                        workOrderAssets.ForEach(p =>
+                        {
+                            p.AssetRecordId = Convert.ToInt64(p.AssetId);
+                        });
+
                         if (asset.WorkOrderAssetId > 0)
                         {
                             _appContext.WorkOrderAssets.Update(asset);
@@ -1213,7 +1218,7 @@ namespace DAL.Repositories
                                                join im in _appContext.ItemMaster on we.ItemMasterId equals im.ItemMasterId
                                                join task in _appContext.Task on we.TaskId equals task.TaskId into wetask
                                                from task in wetask.DefaultIfEmpty()
-                                               join eo in _appContext.ExclusionEstimatedOccurances on we.EstOcuuranceId equals eo.Id into weeo
+                                               join eo in _appContext.ExclusionEstimatedOccurances on we.ExstimtPercentOccuranceId equals eo.Id into weeo
                                                from eo in weeo.DefaultIfEmpty()
                                                join mp in _appContext.MarkUpPercentage on we.MarkUpPercentageId equals mp.MarkUpPercentageId into wemp
                                                from mp in wemp.DefaultIfEmpty()
@@ -1225,8 +1230,8 @@ namespace DAL.Repositories
                                                    we.CreatedDate,
                                                    Epn = im.PartNumber,
                                                    EpnDescription = im.PartDescription,
-                                                   we.EstOcuuranceId,
-                                                   EstOcuurance = eo.Name == null ? "" : eo.Name,
+                                                   we.ExstimtPercentOccuranceId,
+                                                   ExstimtPercentOccurance = eo.Name == null ? "" : eo.Name,
                                                    we.ExtendedCost,
                                                    we.FixedAmount,
                                                    we.IsActive,
@@ -1514,8 +1519,14 @@ namespace DAL.Repositories
                                                   wom.QuantityIssued,
                                                   wom.QuantityReserved,
                                                   wom.QuantityTurnIn,
-
-
+                                                  wom.ConditionCodeId,
+                                                  wom.UnitOfMeasureId,
+                                                  wom.Quantity,
+                                                  wom.Price,
+                                                  wom.ExtendedPrice,
+                                                  wom.WorkOrderMaterialsId,
+                                                  wom.WorkFlowWorkOrderId,
+                                                  wom.WorkOrderId
                                               }).Distinct().ToList();
 
                 return workOrderMaterialsList;

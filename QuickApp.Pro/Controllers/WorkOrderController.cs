@@ -256,6 +256,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("deleteworkordercharge")]
+        public IActionResult DeleteWorkOrderCharge(long workOrderChargeId, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.DeleteWorkOrderCharge(workOrderChargeId, updatedBy);
+            return Ok();
+        }
+
+
         #endregion
 
         #region Work Order Assets
@@ -325,6 +333,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("deleteworkorderasset")]
+        public IActionResult DeleteWorkOrderAsset(long workOrderAssetId, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.DeleteWorkOrderAsset(workOrderAssetId, updatedBy);
+            return Ok();
+        }
+
         #endregion
 
         #region Work Order Exclusions
@@ -365,6 +380,15 @@ namespace QuickApp.Pro.Controllers
             var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderExclusionsList(wfwoId, workOrderId);
             return Ok(result);
         }
+
+        [HttpGet("deleteworkorderexclusions")]
+        public IActionResult DeleteWorkOrderExclusions(long workOrderExclusionsId, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.DeleteWorkOrderExclusions(workOrderExclusionsId, updatedBy);
+            return Ok();
+        }
+
+        
 
         #endregion
 
