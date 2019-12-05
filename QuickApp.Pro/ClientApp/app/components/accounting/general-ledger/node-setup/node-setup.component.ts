@@ -506,15 +506,15 @@ export class NodeSetupComponent implements OnInit {
 
     private loadGlAccountClassData() {
         this.alertService.startLoadingMessage();
-        this.glAccountService.getWorkFlows().subscribe(
+        this.glAccountService.getGlAccountClassList().subscribe(
             results => this.onDataLoadGlDataSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
     }
-    onDataLoadGlDataSuccessful(allWorkFlows: any[]) {
+    onDataLoadGlDataSuccessful(glAccountClassList: any) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.allGLAccountClassData = allWorkFlows;
+        this.allGLAccountClassData = glAccountClassList;
         console.log(this.allGLAccountClassData);
     }
 

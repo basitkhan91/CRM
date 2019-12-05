@@ -130,7 +130,7 @@ export class GlAccountClassComponent implements OnInit {
 	private loadData() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-        this.glAccountService.getWorkFlows().subscribe(data => {
+        this.glAccountService.getGlAccountClassList().subscribe(data => {
             this.allunitData = data[0].columHeaders;
             this.GLAccountTypeList = data[0].columnData;
             console.log(this.GLAccountTypeList);

@@ -191,39 +191,8 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getAll")]
         public IActionResult GetAll()
         {
-            List<ColumHeader> columHeaders = new List<ColumHeader>();
-            PropertyInfo[] propertyInfos = typeof(GLAccountClassColModel).GetProperties();
-            ColumHeader columnHeader;
-            DynamicGridData<dynamic> dynamicGridData = new DynamicGridData<dynamic>();
-            foreach (PropertyInfo property in propertyInfos)
-            {
-                columnHeader = new ColumHeader();
-                columnHeader.field = char.ToLower(property.Name[0]) + property.Name.Substring(1);
-                //columnHeader.field = property.Name;
-                columnHeader.header = property.Name;
-                columHeaders.Add(columnHeader);
-            }
-            dynamicGridData.columHeaders = columHeaders;
-            List<GLAccountClassSPModel> gLAccountClassModels = new List<GLAccountClassSPModel>();
-            GLAccountClassSPModel gLAccountClass = null;
-            var gLAccounts = _unitOfWork.Repository<GLAccountClass>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.GLAccountClassId); ;
-            foreach (var item in gLAccounts)
-            {
-                gLAccountClass = new GLAccountClassSPModel();
-                
-                gLAccountClass.gLCID  = item.GLCID;
-                gLAccountClass.gLAccountType = item.GLAccountClassName;
-                gLAccountClass.Memo = item.GLAccountClassMemo;
-                gLAccountClass.GLAccountClassId = item.GLAccountClassId;
-                gLAccountClass.CreatedDate = item.CreatedDate;
-                gLAccountClass.CreatedBy = item.CreatedBy;
-                gLAccountClass.UpdatedDate = item.UpdatedDate;
-                gLAccountClass.UpdatedBy = item.UpdatedBy;
-                gLAccountClass.IsActive = item.IsActive;
-                gLAccountClassModels.Add(gLAccountClass);
-            }
-            dynamicGridData.ColumnData = gLAccountClassModels;
-            return Ok(dynamicGridData);
+            var gLAccounts = _unitOfWork.Repository<GLAccountClass>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.CreatedDate); 
+            return Ok(gLAccounts);
         }
 
         [HttpGet("GLAccountClassauditdetails/{gLAccountClassId}")]

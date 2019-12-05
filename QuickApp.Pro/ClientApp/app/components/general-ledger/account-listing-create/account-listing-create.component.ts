@@ -449,7 +449,7 @@ loadAccountType(event){
     }
 
     private loadGLAccountTypeData() {
-        this.glAccountClassService.getWorkFlows().subscribe(Glaccountdata => {
+        this.glAccountClassService.getGlAccountClassList().subscribe(Glaccountdata => {
             this.allGLAccountClassInfo = Glaccountdata[0];
         })
     }
