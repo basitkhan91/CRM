@@ -18,7 +18,14 @@ import { MasterComapnyService } from '../../../../services/mastercompany.service
 import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
 import { ItemMasterService } from '../../../../services/itemMaster.service';
 import { ATAMain } from '../../../../models/atamain.model';
+import { ATAChapter } from '../../../../models/atachapter.model';
+import { ItemMasterCapabilitiesModel } from '../../../../models/itemMasterCapabilities.model';
 import { DashNumberService } from '../../../../services/dash-number/dash-number.service';
+import { LegalEntityService } from '../../../../services/legalentity.service';
+import { IntegrationService } from '../../../../services/integration-service';
+import { AtaMainService } from '../../../../services/atamain.service';
+import { AtaSubChapter1Service } from '../../../../services/atasubchapter1.service';
+import { WorkOrderService } from '../../../../services/work-order/work-order.service';
 
 
 @Component({
@@ -82,17 +89,27 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
     capabilitiesForm: FormGroup;
     onSelectedId: any;
     itemMasterId: number;
+
+    parentManagementInfo: any[] = [];
+    childManagementInfo: any[] = [];
+    partListData: any[] = [];
+    allintegrationdetails: any;
+    integrationvalues: any[] = [];
+    ataMainchapter: ATAChapter[];
+    atasubchapter = [];
+    LoadAtachapter: any[] = [];
+    cmmList: any[];
     /** item-master-capabilities-list ctor */
-    constructor(private itemMasterService: ItemMasterService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService,private dashnumberservices: DashNumberService,private formBuilder: FormBuilder)
+    constructor(private itemMasterService: ItemMasterService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService,private dashnumberservices: DashNumberService,private formBuilder: FormBuilder,public workFlowtService: LegalEntityService,private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService,public inteService: IntegrationService,private workOrderService: WorkOrderService,)
     {
         this.dataSource = new MatTableDataSource();
         this.itemMasterService.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list';
         this.itemMasterService.bredcrumbObj.next(this.itemMasterService.currentUrl);//Bread Crumb
     }
-
+    
     capabilityForm: any ={
-        selectedCap:{},CapabilityTypeId: 0, selectedPartId: [], selectedAircraftDataModels: [],
-        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
+        selectedCap:{},CapabilityTypeId: 0,companyId: 0,buId: 0,divisionId: 0,departmentId:0,manufacturerId:0,ataChapterId:0,atasubchapter:0,cmmId:0,integrateWith:0,description:'',entryDate:'',isVerified:false,managementStructureId:0,verifiedBy:'',dateVerified:'',nteHrs:0,tat:0, selectedPartId: [], selectedAircraftDataModels: [],
+        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: [], selectedDashNumbers2:[]
     };
 
     capabilityTypeData: any = [{
@@ -136,6 +153,9 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
         //this.loadCapesData();
         this.manufacturerdata();
         this.getAllDashNumbers();
+        this.Integration();
+        this.getAllATAChapter();
+        this.getAllATASubChapter();
 
     }
     get mfgFormArray(): FormArray {
@@ -358,7 +378,6 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
 
     }
 
-
     private manufacturerdata() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -514,6 +533,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
                 if (event == this.itemclaColl[i][0].partName) {
                     this.sourceItemMasterCap.partId = this.itemclaColl[i][0].partId;
                     this.itemMasterId = this.itemclaColl[i][0].partId;
+                    this.getPartPublicationByItemMasterId(this.itemMasterId)
                     this.disableSavepartNumber = true;
                     this.selectedActionName = event;
                 }
@@ -561,6 +581,379 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
                 }
             }
         }
+    }
+
+
+    private loadManagementdataForTree() {
+		this.workFlowtService.getManagemententity().subscribe(
+			results => this.onManagemtntdataLoadTree(results[0]),
+			error => this.onDataLoadFailed(error)
+		);
+	}
+
+	private onManagemtntdataLoadTree(managementInfo: any[]) {
+		//console.log(managementInfo);
+		this.allManagemtninfo = managementInfo;
+		this.parentManagementInfo = managementInfo;
+		this.childManagementInfo = managementInfo;
+		for (let i = 0; i < this.allManagemtninfo.length; i++) {
+			if (this.allManagemtninfo[i].parentId == null) {
+				this.bulist = [];
+				this.divisionlist = [];
+				this.departmentList = [];
+				this.maincompanylist.push(this.allManagemtninfo[i]);
+			}
+		}
+	}
+
+	getBUList(companyId) {
+		this.capabilityForm.managementStructureId = companyId;
+		this.bulist = [];
+		this.divisionlist = [];
+		this.departmentList = [];
+		for (let i = 0; i < this.allManagemtninfo.length; i++) {
+			if (this.allManagemtninfo[i].parentId == companyId) {
+				this.bulist.push(this.allManagemtninfo[i]);
+			}
+		}
+		for (let i = 0; i < this.partListData.length; i++) {
+			this.partListData[i].parentCompanyId = companyId;
+			this.getParentBUList(this.partListData[i]);
+			if (this.partListData[i].childList) {
+				for (let j = 0; j < this.partListData[i].childList.length; j++) {
+					this.partListData[i].childList[j].childCompanyId = companyId;
+					this.getChildBUList(this.partListData[i].childList[j]);
+				}
+			}
+		}
+
+	}
+
+	getDivisionlist(buId) {
+		this.capabilityForm.managementStructureId = buId;
+		this.divisionlist = [];
+		this.departmentList = [];
+		for (let i = 0; i < this.allManagemtninfo.length; i++) {
+			if (this.allManagemtninfo[i].parentId == buId) {
+				this.divisionlist.push(this.allManagemtninfo[i]);
+			}
+		}
+		for (let i = 0; i < this.partListData.length; i++) {
+			this.partListData[i].parentbuId = buId;
+			this.getParentDivisionlist(this.partListData[i]);
+			if (this.partListData[i].childList) {
+				for (let j = 0; j < this.partListData[i].childList.length; j++) {
+					this.partListData[i].childList[j].childbuId = buId;
+					this.getChildDivisionlist(this.partListData[i].childList[j]);
+				}
+			}
+		}
+	}
+
+	getDepartmentlist(divisionId) {
+		this.capabilityForm.managementStructureId = divisionId;
+		this.departmentList = [];
+		for (let i = 0; i < this.allManagemtninfo.length; i++) {
+			if (this.allManagemtninfo[i].parentId == divisionId) {
+				this.departmentList.push(this.allManagemtninfo[i]);
+			}
+		}
+		for (let i = 0; i < this.partListData.length; i++) {
+			this.partListData[i].parentDivisionId = divisionId;
+			this.getParentDeptlist(this.partListData[i]);
+			if (this.partListData[i].childList) {
+				for (let j = 0; j < this.partListData[i].childList.length; j++) {
+					this.partListData[i].childList[j].childDivisionId = divisionId;
+					this.getChildDeptlist(this.partListData[i].childList[j]);
+				}
+			}
+		}
+	}
+
+	getDepartmentId(departmentId) {
+		this.capabilityForm.managementStructureId = departmentId;
+		for (let i = 0; i < this.partListData.length; i++) {
+			this.partListData[i].parentDeptId = departmentId;
+		}
+		for (let i = 0; i < this.partListData.length; i++) {
+			this.partListData[i].parentDeptId = departmentId;
+			this.getParentDeptId(this.partListData[i]);
+			if (this.partListData[i].childList) {
+				for (let j = 0; j < this.partListData[i].childList.length; j++) {
+					this.partListData[i].childList[j].childDeptId = departmentId;
+					this.getChildDeptId(this.partListData[i].childList[j]);
+				}
+			}
+		}
+	}
+
+	getParentBUList(partList) {
+		partList.managementStructureId = partList.parentCompanyId;
+		partList.parentBulist = []
+		partList.parentDivisionlist = [];
+		partList.parentDepartmentlist = [];
+		for (let i = 0; i < this.parentManagementInfo.length; i++) {
+			if (this.parentManagementInfo[i].parentId == partList.parentCompanyId) {
+				partList.parentBulist.push(this.parentManagementInfo[i]);
+			}
+		}
+	}
+
+	getParentDivisionlist(partList) {
+		partList.managementStructureId = partList.parentbuId;
+		partList.parentDivisionlist = [];
+		partList.parentDepartmentlist = [];
+		for (let i = 0; i < this.parentManagementInfo.length; i++) {
+			if (this.parentManagementInfo[i].parentId == partList.parentbuId) {
+				partList.parentDivisionlist.push(this.parentManagementInfo[i]);
+			}
+		}
+	}
+
+	getParentDeptlist(partList) {
+		partList.managementStructureId = partList.parentDivisionId;
+		partList.parentDepartmentlist = [];
+		for (let i = 0; i < this.parentManagementInfo.length; i++) {
+			if (this.parentManagementInfo[i].parentId == partList.parentDivisionId) {
+				partList.parentDepartmentlist.push(this.parentManagementInfo[i]);
+			}
+		}
+	}
+
+	getParentDeptId(partList) {
+		partList.managementStructureId = partList.parentDeptId;
+	}
+
+	getChildBUList(partChildList) {
+		partChildList.managementStructureId = partChildList.childCompanyId;
+		console.log(partChildList.managementStructureId);
+
+		partChildList.childBulist = [];
+		partChildList.childDivisionlist = [];
+		partChildList.childDepartmentlist = [];
+		for (let i = 0; i < this.childManagementInfo.length; i++) {
+			if (this.childManagementInfo[i].parentId == partChildList.childCompanyId) {
+				partChildList.childBulist.push(this.childManagementInfo[i]);
+			}
+		}
+	}
+
+	getChildDivisionlist(partChildList) {
+		partChildList.managementStructureId = partChildList.childbuId;
+		partChildList.childDivisionlist = [];
+		partChildList.childDepartmentlist = [];
+		for (let i = 0; i < this.childManagementInfo.length; i++) {
+			if (this.childManagementInfo[i].parentId == partChildList.childbuId) {
+				partChildList.childDivisionlist.push(this.childManagementInfo[i]);
+			}
+		}
+	}
+
+	getChildDeptlist(partChildList) {
+		partChildList.managementStructureId = partChildList.childDivisionId;
+		partChildList.childDepartmentlist = [];
+		for (let i = 0; i < this.childManagementInfo.length; i++) {
+			if (this.childManagementInfo[i].parentId == partChildList.childDivisionId) {
+				partChildList.childDepartmentlist.push(this.childManagementInfo[i]);
+			}
+		}
+	}
+
+	getChildDeptId(partChildList) {
+		partChildList.managementStructureId = partChildList.childDeptId;
+    }
+    
+
+    getAllATAChapter() {
+        this.atamain.getAtaMainList().subscribe(Atachapter => {
+            this.ataMainchapter = Atachapter[0];
+            for (let i = 0; i < this.ataMainchapter.length; i++) {
+                this.LoadAtachapter.push(
+                    { value: this.ataMainchapter[i].ataChapterId, label: this.ataMainchapter[i].ataChapterName },
+                );
+            }
+        });
+    }
+
+    getAllATASubChapter() {
+        this.atasubchapter1service.getAtaSubChapter1List().subscribe(res => {
+            this.atasubchapter = res[0].map(x => {
+                return {
+                    label: x.description,
+                    value: x
+                }
+            })
+        })
+    }
+    getATASubChapterByATAChapter(atachapterId) {
+        this.atasubchapter1service.getATASubChapterListByATAChapterId(atachapterId).subscribe(atasubchapter => {
+            const responseData = atasubchapter[0];
+            this.atasubchapter = responseData.map(x => {
+                return {
+                    label: x.description,
+                    value: x
+                }
+            })
+        })
+
+    }
+
+    private onIntegrationData(getEmployeeCerficationList: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = getEmployeeCerficationList;
+        this.allintegrationdetails = getEmployeeCerficationList;
+        if (this.allintegrationdetails.length > 0) {
+            for (let i = 0; i < this.allintegrationdetails.length; i++)
+                this.integrationvalues.push(
+                    { value: this.allintegrationdetails[i].integrationPortalId, label: this.allintegrationdetails[i].description },
+                );
+        }
+    }
+    private Integration() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+
+        this.inteService.getWorkFlows().subscribe(
+            results => this.onIntegrationData(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+    async getPartPublicationByItemMasterId(itemMasterId) {
+        await this.workOrderService.getPartPublicationByItemMaster(itemMasterId).subscribe(res => {
+            this.cmmList = res.map(x => {
+                return {
+                    value: x.publicationRecordId,
+                    label: x.publicationId
+                }
+            });
+        })
+    }
+
+    addModels(capData) {
+        this.capabilityTypeData.for
+        let capbilitiesObj = new ItemMasterCapabilitiesModel;
+      // let selectedCap = capData.selectedCap;
+        // this.resetFormArray(capData);
+        capData.selectedManufacturer.forEach(element1 => {
+            capbilitiesObj.aircraftTypeId = element1.value;
+            capbilitiesObj.aircraftTypeName = element1.label;
+            capbilitiesObj.capabilityTypeId = capData.CapabilityTypeId;
+           // capbilitiesObj.capabilityTypeName = capData.selectedCap;
+            capbilitiesObj.aircraftManufacturer = element1.label;
+            capbilitiesObj.PartId = capData.selectedPartId;
+            capbilitiesObj.itemMasterId = this.itemMasterId;
+
+
+             capbilitiesObj.manufacturerId = capData.manufacturerId;
+             capbilitiesObj.ataChapterId = capData.ataChapterId;
+             capbilitiesObj.atasubchapterId = capData.atasubchapter;
+             capbilitiesObj.cmmId = capData.cmmId;
+             capbilitiesObj.integrateWith = capData.integrateWith;
+             capbilitiesObj.description = capData.description;
+              capbilitiesObj.entryDate = capData.entryDate;
+               capbilitiesObj.isVerified = capData.isVerified;
+                capbilitiesObj.managementStructureId = capData.managementStructureId;
+                 capbilitiesObj.verifiedBy = capData.verifiedBy;
+                  capbilitiesObj.dateVerified = capData.dateVerified;
+                   capbilitiesObj.nteHrs = capData.nteHrs;
+                    capbilitiesObj.tat = capData.tat;
+            capbilitiesObj.aircraftModelName = 'Undefined';
+            capbilitiesObj.DashNumber = 'Undefined';
+           // capbilitiesObj.AircraftDashNumberId = capData.selectedDashNumbers;
+            console.log(capData.selectedDashNumbers2);
+
+            if(capData.selectedModel.length==0){
+                let mfObj = this.formBuilder.group(capbilitiesObj);
+                this.mfgFormArray.push(mfObj);
+                    let mfgIndex = this.mfgFormArray.controls.length - 1;
+                    this.mfgFormArray.controls[mfgIndex]['buList'] = [];
+                    this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
+                    this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
+            }
+
+            capData.selectedModel.forEach(element2 => {
+                if (element2.aircraftTypeId == element1.value) {
+                    capbilitiesObj.aircraftModelName = element2.label;
+                    capbilitiesObj.aircraftModelId = element2.value;
+
+                    if(capData.selectedDashNumbers2.length==0){
+                        let mfObj = this.formBuilder.group(capbilitiesObj);
+                        let mfgItemExisted = this.checkIsExisted(capData.CapabilityTypeId,element1.value, element2.value, this.mfgFormArray, capData);
+                        if (mfgItemExisted == false) {
+                            this.mfgFormArray.push(mfObj);
+                            let mfgIndex = this.mfgFormArray.controls.length - 1;
+                            this.mfgFormArray.controls[mfgIndex]['buList'] = [];
+                            this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
+                            this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
+    
+                        }
+                    }
+            
+                    capData.selectedDashNumbers2.forEach(element3 => {
+                        if (element3.modelId == element2.value) {
+        
+                            capbilitiesObj.DashNumber = element3.label;
+                            capbilitiesObj.AircraftDashNumberId = element3.value;
+                           
+                            let index = capData.CapabilityTypeId - 1;
+                            let mfObj = this.formBuilder.group(capbilitiesObj);
+                            let mfgItemExisted = this.checkIsExisted(capData.CapabilityTypeId,element1.value, element2.value, this.mfgFormArray, capData);
+                            if (mfgItemExisted == false) {
+                                this.mfgFormArray.push(mfObj);
+                                let mfgIndex = this.mfgFormArray.controls.length - 1;
+                                this.mfgFormArray.controls[mfgIndex]['buList'] = [];
+                                this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
+                                this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
+        
+                            }
+                           
+                        }else{
+                            let mfObj = this.formBuilder.group(capbilitiesObj);
+                            let mfgItemExisted = this.checkIsExisted(capData.CapabilityTypeId,element1.value, element2.value, this.mfgFormArray, capData);
+                            if (mfgItemExisted == false) {
+                                this.mfgFormArray.push(mfObj);
+                                let mfgIndex = this.mfgFormArray.controls.length - 1;
+                                this.mfgFormArray.controls[mfgIndex]['buList'] = [];
+                                this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
+                                this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
+        
+                            }
+                        }
+        
+                    });
+                   
+                }
+
+            });
+
+           
+
+        });
+
+    }
+    checkIsExisted(capId,type, modal, myForm, capData) {
+        let itemExisted = false;
+        myForm.controls.forEach(data => {
+            if (data['controls']['capabilityTypeId'].value == capId && data['controls']['aircraftTypeId'].value == type && data['controls']['aircraftModelId'].value == modal) {
+                itemExisted = true;
+                data['controls']['isDelete'].setValue(false);
+            } else {
+                let typeId = data['controls']['aircraftTypeId'].value;
+                let typeIndex = capData.selectedAircraftTypes.indexOf(typeId);
+                if (typeIndex == -1) {
+                  //  data['controls']['isDelete'].setValue(true);
+                }
+                let modaleId = data['controls']['aircraftModelId'].value;
+                let modalIndex = capData.selectedAircraftModelTypes.indexOf(modaleId);
+                if (modalIndex == -1) {
+                   // data['controls']['isDelete'].setValue(true);
+                }
+            }
+
+
+        });
+        return itemExisted;
     }
 
 }
