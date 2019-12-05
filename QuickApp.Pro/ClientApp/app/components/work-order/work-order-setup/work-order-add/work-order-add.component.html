@@ -336,7 +336,7 @@
                                 <!-- <th rowspan="2">Qty *</th> -->
                                 <th rowspan="2">Condition Id *</th>
                                 <th rowspan="2">Stock Line Num *</th>
-                                <th rowspan="2">Serial Num *</th>
+                                <th rowspan="2">Serial Num </th>
                                 <th rowspan="2">CMM/Pub Ref</th>
                                 <th rowspan="2">Workflow ID </th>
                                 <th rowspan="2">Stage *</th>
@@ -433,7 +433,7 @@
 
                                 <td><input type="text" class="form-control w100"
                                   name="serialNumber{{i}}"  #serialNumber="ngModel" 
-                                  [(ngModel)]="workOrderPartNumber.serialNumber"  required disabled >
+                                  [(ngModel)]="workOrderPartNumber.serialNumber"   disabled >
                                 </td>
                                 <td>
                                     <p-dropdown placeholder="Select CMM" 
@@ -755,7 +755,7 @@
                     <div [ngClass]="{hidedata : gridActiveTab !== 'equipment'}">
                         <app-work-order-assets (saveEquipmentListForWO)="saveWorkOrderEquipmentList($event)"
                          (updateEquipmentListForWO)="updateWorkOrderEquipmentList($event)"
-                         (getEquipmentData)="getEquipmentByWorkOrderId($event)" 
+                         (refreshData)="getEquipmentByWorkOrderId($event)" 
                          [employeesOriginalData]="employeesOriginalData" 
                           [isWorkOrder]="isWorkOrder" 
                           [workFlowObject]="workFlowObject"
@@ -774,6 +774,7 @@
                       (saveRIParts)="saveReservedPartorIssue($event)"
                       (saveMaterialListForWO)="saveWorkOrderMaterialList($event)"
                       (updateMaterialListForWO)="updateWorkOrderMaterialList($event)"
+                      (refreshData)="getMaterialListByWorkOrderId()"
                       ></app-work-order-complete-material-list>
                     </div>
                       
@@ -799,6 +800,7 @@
                            [workOrderChargesList]="workOrderChargesList" 
                         (saveChargesListForWO)="saveWorkOrderChargesList($event)"
                         (updateChargesListForWO)="updateWorkOrderChargesList($event)"
+                        (refreshData)="getChargesListByWorkOrderId()" 
                         
                         ></app-work-order-charges> 
                     </div>
@@ -810,6 +812,7 @@
                            [workOrderExclusionsList]="workOrderExclusionsList" 
                         (saveExclusionsListForWO)="saveWorkOrderExclusionsList($event)"
                         (updateExclusionsListForWO)="updateWorkOrderExclusionsList($event)"
+                        (refreshData)="getExclusionListByWorkOrderId()"
                         
                         ></app-work-order-exclusions> 
                     </div>

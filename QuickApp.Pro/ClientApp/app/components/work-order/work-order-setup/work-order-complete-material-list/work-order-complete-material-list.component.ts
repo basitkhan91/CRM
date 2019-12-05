@@ -1,4 +1,4 @@
-﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
+﻿import { Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { fadeInOut } from '../../../../services/animations';
 import { IMaterialMandatory } from '../../../../Workflow/MaterialMandatory';
 import { ItemMasterService } from '../../../../services/itemMaster.service';
@@ -10,6 +10,7 @@ import { AlertService, MessageSeverity } from '../../../../services/alert.servic
 import { ActionService } from '../../../../Workflow/ActionService';
 import { WorkOrderService } from '../../../../services/work-order/work-order.service';
 import * as $ from 'jquery'
+import { AuthService } from '../../../../services/auth.service';
 // import { PageHeaderComponent } from '../../../../shared/page-header.component';
 // import * as $ from 'jquery';
 
@@ -29,6 +30,7 @@ export class WorkOrderCompleteMaterialListComponent {
     @Output() saveMaterialListForWO = new EventEmitter();
     @Output() updateMaterialListForWO = new EventEmitter();
     @Output() saveRIParts = new EventEmitter();
+    @Output() refreshData = new EventEmitter();
     statusId = null;
 
     // workflow Variables 
@@ -72,8 +74,17 @@ export class WorkOrderCompleteMaterialListComponent {
         private conditionService: ConditionService,
         public itemClassService: ItemClassificationService,
         public unitofmeasureService: UnitOfMeasureService,
+        private authService: AuthService,
+        private cdRef: ChangeDetectorRef,
         private alertService: AlertService) {
 
+    }
+
+
+
+
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
     ngOnInit() {
@@ -362,12 +373,23 @@ export class WorkOrderCompleteMaterialListComponent {
         this.addNewMaterial = true;
     }
     edit(rowData) {
+        this.createNew();
+        this.cdRef.detectChanges();
         this.isEdit = true;
         this.addNewMaterial = true;
         this.editData = rowData;
     }
     delete(rowData) {
-    //  const {workOrderMaterialsId} = rowData;
+        const { workOrderMaterialsId } = rowData;
+
+        this.workOrderService.deleteWorkOrderMaterialList(workOrderMaterialsId, this.userName).subscribe(res => {
+            this.refreshData.emit();
+            this.alertService.showMessage(
+                '',
+                'Deleted WorkOrder Material Successfully',
+                MessageSeverity.success
+            );
+        })
 
     }
 

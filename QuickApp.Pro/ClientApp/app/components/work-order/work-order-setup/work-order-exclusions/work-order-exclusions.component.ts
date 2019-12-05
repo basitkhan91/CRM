@@ -1,5 +1,8 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import * as $ from 'jquery'
+import { AlertService, MessageSeverity } from '../../../../services/alert.service';
+import { WorkOrderService } from '../../../../services/work-order/work-order.service';
+import { AuthService } from '../../../../services/auth.service';
 
 
 @Component({
@@ -12,42 +15,67 @@ export class WorkOrderExclusionsComponent {
   @Input() workOrderExclusionsList;
   @Input() workFlowObject;
   @Input() isWorkOrder;
-  @Output() saveExclusionsListForWO =  new EventEmitter();
-  @Output() updateExclusionsListForWO  = new EventEmitter()
+  @Output() saveExclusionsListForWO = new EventEmitter();
+  @Output() updateExclusionsListForWO = new EventEmitter()
+  @Output() refreshData = new EventEmitter();
   isEdit: boolean = false;
   editData: any;
-  constructor() {}
+  constructor(private workOrderService: WorkOrderService, private authService: AuthService,
+    private alertService: AlertService, private cdRef: ChangeDetectorRef) {
 
 
-
-
-  
-  createNew() {
-    this.isEdit = false;
-    this.editData = undefined;
-    }
-    edit(rowData) {
-        this.isEdit = true;
-        this.editData = rowData;
-    }
-    delete(rowData) {
-    }
-
-  saveExclusionsList(event){
-      this.saveExclusionsListForWO.emit(event);
-      $('#addNewExclusions').modal('hide');
   }
 
 
-  
-  updateExclusionsList(event){
+  get userName(): string {
+    return this.authService.currentUser ? this.authService.currentUser.userName : "";
+  }
+
+
+
+
+
+
+  createNew() {
+    this.isEdit = false;
+    this.editData = undefined;
+  }
+  edit(rowData) {
+    this.createNew();
+    this.cdRef.detectChanges();
+    this.isEdit = true;
+    this.editData = rowData;
+
+
+  }
+  delete(rowData) {
+    const { workOrderExclusionsId } = rowData;
+    this.workOrderService.deleteWorkOrderExclusionByExclusionId(workOrderExclusionsId, this.userName).subscribe(res => {
+      this.refreshData.emit();
+      this.alertService.showMessage(
+        '',
+        'Deleted WorkOrder Exclusion Successfully',
+        MessageSeverity.success
+      );
+
+    })
+  }
+
+  saveExclusionsList(event) {
+    this.saveExclusionsListForWO.emit(event);
+    $('#addNewExclusions').modal('hide');
+  }
+
+
+
+  updateExclusionsList(event) {
     this.updateExclusionsListForWO.emit(event);
     $('#addNewExclusions').modal('hide');
     this.isEdit = false;
   }
 
 
-//   saveChargesList(event){
-//     this.saveChargesListForWO.emit(event);
-//     $('#addNewCharges').modal('hide');
-  }
+  //   saveChargesList(event){
+  //     this.saveChargesListForWO.emit(event);
+  //     $('#addNewCharges').modal('hide');
+}

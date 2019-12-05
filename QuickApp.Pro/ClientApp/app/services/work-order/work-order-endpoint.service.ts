@@ -240,19 +240,33 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workordermateriallist?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`)
     }
 
+    deleteWorkOrderMaterialList(workOrderMaterialsId,updatedBy ){
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/deleteworkordermaterial?workOrderMaterialsId=${workOrderMaterialsId}&updatedBy=${updatedBy}`, this.getRequestHeaders())
+        
+    }
+
     getWorkOrderPublicationList(workFlowWorkOrderId, workOrderId) {
         return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkorderpublications?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`, this.getRequestHeaders())
     }
 
     getWorkOrderChargesList(workFlowWorkOrderId, workOrderId) {
         return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkflowworkorderchargeslist?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`, this.getRequestHeaders())
+    }
 
+    deleteWorkOrderChargesByChargesId(workOrderChargeId, updatedBy){
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/deleteworkordercharge?workOrderChargeId=${workOrderChargeId}&updatedBy=${updatedBy}`, this.getRequestHeaders())
+        
     }
 
     getWorkOrderExclusionsList(workFlowWorkOrderId, workOrderId) {
 
         return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkflowworkorderexclusionslist?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`, this.getRequestHeaders())
 
+    }
+
+    deleteWorkOrderExclusionByExclusionId(workOrderExclusionsId ,updatedBy){
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/deleteworkorderexclusions?workOrderExclusionsId=${workOrderExclusionsId}&updatedBy=${updatedBy}`, this.getRequestHeaders())
+        
     }
 
     getWorkOrderLaborList(workFlowWorkOrderId, workOrderId) {
@@ -288,7 +302,7 @@ export class WorkOrderEndpointService extends EndpointFactory {
     }
 
     getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId, statusId) {
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/getreservedissuesparts?WorkFlowWorkOrderId=${WorkFlowWorkOrderId}&statusId=${statusId }`)
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/getreservedissuesparts?WorkFlowWorkOrderId=${WorkFlowWorkOrderId}&statusId=${statusId }`, this.getRequestHeaders())
     }
 
     saveReservedPartorIssue(alternatePart){
@@ -303,6 +317,10 @@ export class WorkOrderEndpointService extends EndpointFactory {
     assetsCheckOutByWorkOrderAssetsId(assetcheckout){
        // return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/saveassetcheckedout?WorkOrderAssetId=${workOrderAssetId}&checkedInById=${employeeId}&checkedInDate=${checkedInDate}&updatedBy=${updatedBy}`)  
         return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/saveassetcheckedout`, JSON.stringify(assetcheckout), this.getRequestHeaders());
+     }
+
+     deleteWorkOrderAssetByAssetId(workOrderAssetId,updatedBy){
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/deleteworkorderasset?workOrderAssetId=${workOrderAssetId}&updatedBy=${updatedBy }` ,this.getRequestHeaders())  
      }
 
      createQuotation(data){

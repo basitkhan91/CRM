@@ -161,6 +161,10 @@ export class WorkOrderService {
     getWorkOrderMaterialList(workFlowWorkOrderId, workOrderId) {
         return this.workOrderEndpointService.getWorkOrderMaterialList(workFlowWorkOrderId, workOrderId)
     }
+    deleteWorkOrderMaterialList(workOrderMaterialsId, updatedBy) {
+        return this.workOrderEndpointService.deleteWorkOrderMaterialList(workOrderMaterialsId, updatedBy)
+    }
+
     getWorkOrderPublicationList(workFlowWorkOrderId, workOrderId) {
         return this.workOrderEndpointService.getWorkOrderPublicationList(workFlowWorkOrderId, workOrderId)
     }
@@ -169,8 +173,15 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getWorkOrderChargesList(workFlowWorkOrderId, workOrderId)
     }
 
+    deleteWorkOrderChargesByChargesId(workOrderChargeId, updatedBy) {
+        return this.workOrderEndpointService.deleteWorkOrderChargesByChargesId(workOrderChargeId, updatedBy)
+    }
+
     getWorkOrderExclusionsList(workFlowWorkOrderId, workOrderId) {
         return this.workOrderEndpointService.getWorkOrderExclusionsList(workFlowWorkOrderId, workOrderId)
+    }
+    deleteWorkOrderExclusionByExclusionId(workOrderExclusionsId, updatedBy) {
+        return this.workOrderEndpointService.deleteWorkOrderExclusionByExclusionId(workOrderExclusionsId, updatedBy)
     }
     getWorkOrderLaborList(workFlowWorkOrderId, workOrderId) {
         return this.workOrderEndpointService.getWorkOrderLaborList(workFlowWorkOrderId, workOrderId)
@@ -202,6 +213,9 @@ export class WorkOrderService {
     }
     assetsCheckOutByWorkOrderAssetsId(assetcheckout) {
         return this.workOrderEndpointService.assetsCheckOutByWorkOrderAssetsId(assetcheckout);
+    }
+    deleteWorkOrderAssetByAssetId(workOrderAssetId, updatedBy) {
+        return this.workOrderEndpointService.deleteWorkOrderAssetByAssetId(workOrderAssetId, updatedBy);
     }
 
     createQuote(data) {

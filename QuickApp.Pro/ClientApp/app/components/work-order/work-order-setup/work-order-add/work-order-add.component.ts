@@ -709,7 +709,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     }
 
-    updateWorkOrderMaterialList(data){
+    updateWorkOrderMaterialList(data) {
         const materialArr = data.materialList.map(x => {
             return {
                 ...x,
@@ -727,7 +727,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 MessageSeverity.success
             );
             this.getMaterialListByWorkOrderId();
-      
+
         })
     }
 
@@ -804,7 +804,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
 
-    updateWorkOrderChargesList(data){
+    updateWorkOrderChargesList(data) {
         const chargesArr = data.charges.map(x => {
             return {
                 ...x,
@@ -994,7 +994,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 ...x,
                 masterCompanyId: 1,
                 isActive: true,
-                workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId
+                workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId,
+                estimtPercentOccurranceId: x.estimtPercentOccurrance
             }
         });
         this.workOrderService.createWorkOrderExclusionList(exclusionsArr).subscribe(res => {
@@ -1008,7 +1009,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         })
     }
 
-    updateWorkOrderExclusionsList(data){
+    updateWorkOrderExclusionsList(data) {
         const exclusionsArr = data.exclusions.map(x => {
             return {
                 ...x,
