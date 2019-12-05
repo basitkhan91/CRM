@@ -9,8 +9,7 @@ namespace DAL.Common
         Reserve = 1,
         Issue,
         ReserveAndIssue,
-        UnReserve,
         UnIssue,
-
+        UnReserve,
     }
 }
