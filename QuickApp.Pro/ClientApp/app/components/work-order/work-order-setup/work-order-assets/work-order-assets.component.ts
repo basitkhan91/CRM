@@ -101,6 +101,7 @@ export class WorkOrderAssetsComponent implements OnInit {
 
             this.workOrderService.assetsCheckInByWorkOrderAssetsId(assetcheckin).subscribe(res => {
                 this.assetsform = { ...this.assets };
+                this.getEquipmentData.emit();
                 this.alertService.showMessage(
                     '',
                     'Updated WorkOrder Asset Status Successfully',
@@ -119,6 +120,7 @@ export class WorkOrderAssetsComponent implements OnInit {
             }
             this.workOrderService.assetsCheckOutByWorkOrderAssetsId(assetcheckout).subscribe(res => {
                 this.assetsform = { ...this.assets };
+                this.getEquipmentData.emit();
                 this.alertService.showMessage(
                     '',
                     'Updated WorkOrder Asset Status Successfully',
