@@ -11,6 +11,7 @@ import { CustomerContactModel } from '../../../models/customer-contact.model';
 import { MatDialog } from '@angular/material';
 import { getObjectByValue, getObjectById, getValueFromObjectByKey } from '../../../generic/autocomplete';
 import { VendorService } from '../../../services/vendor.service';
+import { ConfigurationService } from '../../../services/configuration.service';
 
 
 @Component({
@@ -34,7 +35,7 @@ export class VendorDocumentsComponent implements OnInit {
 	vendorDocumentsColumns = [
 		{ field: 'docName', header: 'Name' },
 		{ field: 'docDescription', header: 'Description' },
-		{ field: 'documents', header: 'Documents' },
+		//{ field: 'documents', header: 'Documents' },
 		{ field: 'docMemo', header: 'Memo' }
 	];
 	selectedColumns = this.vendorDocumentsColumns;
@@ -61,7 +62,7 @@ export class VendorDocumentsComponent implements OnInit {
 	
 
 	constructor(public workFlowtService: VendorService,private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService,
-		private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+		private dialog: MatDialog, private masterComapnyService: MasterComapnyService,private configurations: ConfigurationService) {
 			if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
 			
 				this.local = this.workFlowtService.listCollection;
@@ -160,6 +161,10 @@ export class VendorDocumentsComponent implements OnInit {
 	editVendorDocument(rowdata,e) {
 		//this.toGetUploadDocumentsList(rowdata.attachmentId, rowdata.vendorId,3);
 		this.documentInformation=rowdata;
+		this.workFlowtService.toGetUploadDocumentsList(rowdata.attachmentId, rowdata.vendorId,3).subscribe(res => {
+			this.sourceViewforDocumentList = res;	
+			this.sourceViewforDocument = rowdata;						
+		})
 	}
 
 	openView(content, row) {		
@@ -192,20 +197,36 @@ export class VendorDocumentsComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
 	
-	deleteItemAndCloseModel() {  		
+	deleteItemAndCloseModel() {  
+			
 		let vendorDocumentDetailId=this.localCollection.vendorDocumentDetailId;
 		if(vendorDocumentDetailId >0)
 		{
 		 this.isSaving = true;
 		 this.workFlowtService.getDeleteDocumentListbyId(vendorDocumentDetailId).subscribe(
-			this.alertService.showMessage(
-				'Success',
-				`Action was deleted successfully `,
-				MessageSeverity.success
-			));
+			
+			res => {
+				this.getList();
+				this.alertService.showMessage(
+					'Success',
+					`Action was deleted successfully `,
+					MessageSeverity.success
+				)							
+			});	
+			
 		}
+		
 		this.modal.close();      
 	 }
+
+	 dismissModel() {
+        this.modal.close();
+    }
+
+	 downloadFileUpload(rowData) {	
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
+		window.location.assign(url);       
+    }
 
 	backClick() {
 		this.activeIndex = 8;
