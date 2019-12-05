@@ -304,17 +304,18 @@ export class WorkOrderEndpointService extends EndpointFactory {
     getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId, statusId) {
         let urlType;
         if (statusId == 1) {
-            return urlType = 'getreservedparts'
+            urlType = 'getreservedparts'
         } else if (statusId == 2) {
-            return urlType = 'getissuedparts'
+            urlType = 'getissuedparts'
         } else if (statusId == 3) {
-            return urlType = 'getreservedissuesparts'
+            urlType = 'getreservedissuesparts'
         } else if (statusId == 4) {
-            return urlType = 'getunissuedParts'
+            urlType = 'getunissuedParts'
         } else if (statusId == 5) {
-            return urlType = 'getunreservedparts'
+            urlType = 'getunreservedparts'
         }
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/${urlType}?workFlowWorkOrderId=${WorkFlowWorkOrderId}&statusId=${statusId}`)
+
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/${urlType}?workFlowWorkOrderId=${WorkFlowWorkOrderId}&statusId=${statusId}`, this.getRequestHeaders())
 
         // if (statusId == 1)
         //     return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/getreservedparts?workFlowWorkOrderId=${WorkFlowWorkOrderId}&statusId=${statusId}`)

@@ -406,15 +406,30 @@ export class WorkOrderCompleteMaterialListComponent {
         $('#addNewMaterials').modal('hide');
     }
 
+    validatePartsQuantity(data) {
+        if (this.statusId === 1 || this.statusId === 4) {
+            if ((data.quantityAlreadyReserved + data.quantityReserved) > data.quantity) {
+                alert('Quantity Reserved and Quantity Available Cant be greater the Quantity Available');
+                data.quantityReserved = null;
+            }
+        } else if (this.statusId === 2) {
+            if (data.quantityIssued > data.quantityAlreadyReserved) {
+                alert('Quantity Issued  is greater than Quantity Reserved');
+                data.quantityIssued = null;
+            }
+        } else if (this.statusId === 3) {
+            if (data.quantity > (data.quantityReserved + data.quantityIssued)) {
+                alert('Quantity Issued is greater than Quantity Available');
+                data.quantity = null;
+            }
+        }
+
+    }
+
     partsIssueRI(statusId) {
         this.statusId = statusId;
         this.reservedList = [];
         this.alternatePartData = [];
-        //this.workFlowWorkOrderId = 10060
-
-            ;
-        // workFlowWorkOrderId
-        // 85
         if (this.workFlowWorkOrderId) {
             this.workOrderService.getReservedPartsByWorkFlowWOId(this.workFlowWorkOrderId, statusId).subscribe(res => {
                 this.reservedList = res.map(x => {
@@ -444,6 +459,24 @@ export class WorkOrderCompleteMaterialListComponent {
         if (isChecked === false) {
             this.alternatePartData = []
         }
+    }
+
+    selectedParts() {
+        this.checkedParts = [];
+        this.reservedList.map(x => {
+            if (x.isParentChecked) {
+                const { woReservedIssuedAltParts, ...rest } = x
+                this.checkedParts.push({ ...rest, partStatusId: this.statusId });
+            }
+            x.woReservedIssuedAltParts.map(c => {
+                if (c.isChildChecked) {
+                    this.checkedParts.push({ ...c, partStatusId: this.statusId });
+                }
+
+            })
+        })
+        console.log(this.checkedParts)
+
     }
     saveRIPart() {
         this.checkedParts = []

@@ -752,6 +752,7 @@
                         ></app-work-order-labor>
                     </div>
 
+
                     <div [ngClass]="{hidedata : gridActiveTab !== 'equipment'}">
                         <app-work-order-assets (saveEquipmentListForWO)="saveWorkOrderEquipmentList($event)"
                          (updateEquipmentListForWO)="updateWorkOrderEquipmentList($event)"
@@ -760,6 +761,10 @@
                           [isWorkOrder]="isWorkOrder" 
                           [workFlowObject]="workFlowObject"
                           [workOrderAssetList]="workOrderAssetList" [savedWorkOrderData]="savedWorkOrderData" ></app-work-order-assets>
+                    </div>
+
+                    <div  *ngIf="workOrderId" [ngClass]="{hidedata : gridActiveTab !== 'subWO'}">
+                      <!-- <app-work-order-smart [isSubWorkOrder]="issubWorkOrderState"></app-work-order-smart> -->
                     </div>
 
                     <div  *ngIf="quote" [ngClass]="{hidedata : gridActiveTab !== 'quote' }" >
