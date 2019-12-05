@@ -33,6 +33,11 @@ export class ItemMasterCapabilitiesModel {
     clcfNumber: any;
     assetRecordId: number;
     AssetCapesId: number;
+    atasubchapterId:any;
+    cmmId:any;
+    integrateWith:any;
+    nteHrs:number;
+    tat:number;
 
     public constructor(init?: Partial<ItemMasterCapabilitiesModel>) {
         Object.assign(this, init);
