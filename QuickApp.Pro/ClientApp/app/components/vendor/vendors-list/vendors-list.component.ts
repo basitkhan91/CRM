@@ -93,6 +93,11 @@ export class VendorsListComponent implements OnInit {
     warningInfoList: any[];
     selectedWarningColumns: any[];
     warninggCol: any[];
+    allVendorPOROList: any[];
+    memoCols:any[];
+    vendorDocumentsData: any=[];
+	vendorDocumentsColumns :any[];
+
     ngOnInit() {
         this.loadData();
         this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendors-list';
@@ -170,14 +175,14 @@ export class VendorsListComponent implements OnInit {
         );
 
         this.cols = [
-            { field: 'vendorName', header: 'VENDOR NAME' },
-            { field: 'vendorCode', header: 'VENDOR CODE' },
-            { field: 'description', header: 'VENDOR TYPE' },
-            { field: 'stateOrProvince', header: 'VENDOR CLASSIFICATION' },
-            { field: 'vendorEmail', header: 'VENDOR EMAIL' },
-            { field: 'city', header: 'VENDOR CITY' },
-            { field: 'stateOrProvince', header: 'VENDOR STATE' },
-            { field: 'vendorPhone', header: 'VENDOR CONTACT' }
+            { field: 'vendorName', header: 'Vendor Name' },
+            { field: 'vendorCode', header: 'Vendor Code' },
+            { field: 'description', header: 'Vendor Type' },
+            { field: 'stateOrProvince', header: 'Vendor Classification' },
+            { field: 'vendorEmail', header: 'Vendor Email' },
+            { field: 'city', header: 'Vendor City' },
+            { field: 'stateOrProvince', header: 'Vendor State' },
+            { field: 'vendorPhone', header: 'Vendor Contact' }
             // { field: 'createdBy', header: 'Created By' },
             // { field: 'updatedBy', header: 'Updated By' },
             // { field: 'updatedDate', header: 'Updated Date' },
@@ -419,8 +424,8 @@ export class VendorsListComponent implements OnInit {
                 warningMessage: `${x.t.warningMessage == null ?'': x.t.warningMessage}`,    
                 restrictMessage: `${x.t.restrictMessage == null ?'': x.t.restrictMessage}`   
                 };
-            });       
-               console.log(this.warningInfoList);
+            });
+              
             });
 
             this.warninggCol = [
@@ -433,6 +438,42 @@ export class VendorsListComponent implements OnInit {
 
 
     }
+
+    private loadMemosData(vendorId) {
+
+      this.workFlowtService.getVendorPOMemolist(vendorId).subscribe(
+            res => {             
+                this.allVendorPOROList = res;              
+        });
+
+        this.workFlowtService.getVendorROMemolist(vendorId).subscribe(
+            res => {        
+                for (let value of res) {
+                    this.allVendorPOROList.push(value);
+                }                    
+        });
+
+    this.memoCols = [
+		{ field: 'module', header: 'Module' },			
+		{ field: 'orderNumber', header: 'Id' },
+        { field: 'notes', header: 'Memo text' }  
+        ];    
+   }  
+
+
+   private loadVendorDocumentsData(vendorId){
+
+    this.workFlowtService.getDocumentList(vendorId).subscribe(res => {
+        this.vendorDocumentsData = res;			
+    });
+
+    this.vendorDocumentsColumns = [
+		{ field: 'docName', header: 'Name' },
+		{ field: 'docDescription', header: 'Description' },
+		//{ field: 'documents', header: 'Documents' },
+		{ field: 'docMemo', header: 'Memo' }
+	];
+   }
 
     private onBillingDataLoadSuccessful(allWorkFlows: any[]) {
         this.alertService.stopLoadingMessage();
@@ -527,6 +568,8 @@ export class VendorsListComponent implements OnInit {
         this.loadShippingData(row.vendorId);
         this.loadBillingData(row.vendorId);
         this.loadWarningsData(row.vendorId);
+        this.loadMemosData(row.vendorId);
+        this.loadVendorDocumentsData(row.vendorId);
         this.modal = this.modalService.open(content, { size: 'lg' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -715,6 +758,9 @@ export class VendorsListComponent implements OnInit {
         $('#step5').collapse('show');
         $('#step6').collapse('show');
         $('#step7').collapse('show');
+
+        $('#step9').collapse('show');
+        $('#step10').collapse('show');
     }
     CloseAllVenodrDetailsModel()
     {
@@ -725,6 +771,9 @@ export class VendorsListComponent implements OnInit {
         $('#step5').collapse('hide');
         $('#step6').collapse('hide');
         $('#step7').collapse('hide');
+
+        $('#step9').collapse('hide');
+        $('#step10').collapse('hide');
     }
 
 }

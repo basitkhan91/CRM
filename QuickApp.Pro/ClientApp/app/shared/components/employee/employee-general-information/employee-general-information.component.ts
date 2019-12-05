@@ -2482,7 +2482,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             }
         }
     }
-    onKeyUpLeaveNames(event) {
+    onKeyUpLeaveNames(event) {       
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();
             if (this.disableSaveName) {
@@ -2497,6 +2497,24 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             }
 
         }
+    }
+
+    onBlurLeaveName(event)
+    {       
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.allLeaves) {
+                for (let i = 0; i < this.allLeaves.length; i++) {
+                    if (value == this.allLeaves[i].description) {
+                        this.sourceEmployee.description = event;
+                        this.disableSaveLeaveName = true;    
+                        this.disableSaveName = event;
+                    }
+    
+                }
+            }
+        } 
+        
     }
 
     onSelectLeaveName(event) {

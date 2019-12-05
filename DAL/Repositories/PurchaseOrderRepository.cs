@@ -32,21 +32,30 @@ namespace DAL.Repositories
             var skip = take * (pageNumber - 1);
 
             short statusId = 0;
-            if(poFilters.filters.Status=="Open")
+
+            var open = "open";
+            var pending = "pending";
+            var fulfilling = "fulfilling";
+            var closed = "closed";
+            if (!string.IsNullOrEmpty(poFilters.filters.Status))
             {
-                statusId = 1;
-            }
-            else if(poFilters.filters.Status == "Pending")
-            {
-                statusId = 2;
-            }
-            else if (poFilters.filters.Status == "Fulfilling")
-            {
-                statusId = 3;
-            }
-            else if (poFilters.filters.Status == "Closed")
-            {
-                statusId = 4;
+                if (open.Contains(poFilters.filters.Status.ToLower()))
+                {
+                    statusId = 1;
+                }
+                else if (pending.Contains(poFilters.filters.Status.ToLower()))
+                {
+                    statusId = 2;
+                }
+                else if (fulfilling.Contains(poFilters.filters.Status.ToLower()))
+                {
+                    statusId = 3;
+                }
+                else if (closed.Contains(poFilters.filters.Status.ToLower()))
+                {
+                    statusId = 4;
+                }
+
             }
 
             var totalRecords = (from po in _appContext.PurchaseOrder
@@ -76,8 +85,6 @@ namespace DAL.Repositories
                                      from appr in approver.DefaultIfEmpty()
                                      where po.IsDeleted == false
                                      && po.PurchaseOrderNumber.Contains(!String.IsNullOrEmpty(poFilters.filters.PurchaseOrderNo) ? poFilters.filters.PurchaseOrderNo : po.PurchaseOrderNumber)
-                                     //&& Convert.ToString(po.OpenDate) == (Convert.ToString(poFilters.filters.OpenDate) == "1/1/0001 12:00:00 AM" ? Convert.ToString(po.OpenDate) : Convert.ToString(poFilters.filters.OpenDate))
-                                     //&& Convert.ToString(po.ClosedDate) == (Convert.ToString(poFilters.filters.ClosedDate) == "1/1/0001 12:00:00 AM" ? Convert.ToString(po.ClosedDate) : Convert.ToString(poFilters.filters.ClosedDate))
                                      && v.VendorName.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorName) ? poFilters.filters.VendorName : v.VendorName)
                                      && v.VendorCode.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorCode) ? poFilters.filters.VendorCode : v.VendorCode)
                                      && po.StatusId == (statusId > 0 ? statusId : po.StatusId)
@@ -92,7 +99,7 @@ namespace DAL.Repositories
                                          v.VendorCode,
                                          Status = po.StatusId == 1 ? "Open" : (po.StatusId == 2 ? "Pending" : (po.StatusId == 3 ? "Fulfilling" : "Closed")),
                                          RequestedBy = emp.FirstName,
-                                         ApprovedBy = appr==null?"": appr.FirstName,
+                                         ApprovedBy = appr == null ? "" : appr.FirstName,
                                          po.CreatedDate,
                                          po.IsActive,
                                          TotalRecords = totalRecords
@@ -101,14 +108,32 @@ namespace DAL.Repositories
                                     .Take(take)
                                     .ToList();
 
+            if (poFilters.filters.OpenDate != null)
+            {
+                if (purchaseOrderList != null && purchaseOrderList.Any())
+                {
+                    purchaseOrderList = purchaseOrderList
+                        .Where(x => x.OpenDate == poFilters.filters.OpenDate)
+                        .ToList();
+                }
+            }
 
+            if (poFilters.filters.ClosedDate != null)
+            {
+                if (purchaseOrderList != null && purchaseOrderList.Any())
+                {
+                    purchaseOrderList = purchaseOrderList
+                        .Where(x => x.ClosedDate == poFilters.filters.ClosedDate)
+                        .ToList();
+                }
+            }
 
             return purchaseOrderList;
         }
 
         public IEnumerable<object> RecevingPolist()
         {
-            
+
 
             var purchaseOrderList = (from po in _appContext.PurchaseOrder
                                      join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId
@@ -656,7 +681,7 @@ namespace DAL.Repositories
             }
         }
 
-        public void DeletePurchaseOrder(long purchaseOrderId,string updatedBy)
+        public void DeletePurchaseOrder(long purchaseOrderId, string updatedBy)
         {
             try
             {
@@ -680,7 +705,7 @@ namespace DAL.Repositories
             }
         }
 
-        public void PurchaseOrderStatus(long purchaseOrderId,bool status, string updatedBy)
+        public void PurchaseOrderStatus(long purchaseOrderId, bool status, string updatedBy)
         {
             try
             {
@@ -704,7 +729,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetPurchaseOrderlistByVendor(long vendorId,int pageNo,int pageSize)
+        public IEnumerable<object> GetPurchaseOrderlistByVendor(long vendorId, int pageNo, int pageSize)
         {
             var pageNumber = pageNo + 1;
             var take = pageSize;
@@ -715,8 +740,8 @@ namespace DAL.Repositories
                                 join v in _appContext.Vendor on po.VendorId equals v.VendorId
                                 join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
                                 from appr in approver.DefaultIfEmpty()
-                                where po.IsDeleted == false && po.VendorId==vendorId
-                               
+                                where po.IsDeleted == false && po.VendorId == vendorId
+
                                 select new
                                 {
                                     po.PurchaseOrderId
@@ -729,18 +754,21 @@ namespace DAL.Repositories
                                      join v in _appContext.Vendor on po.VendorId equals v.VendorId
                                      join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
                                      from appr in approver.DefaultIfEmpty()
+                                     
                                      where po.IsDeleted == false && po.VendorId == vendorId
                                      select new
                                      {
-                                         po.PurchaseOrderId,
+                                         Status = po.StatusId == 1 ? "Open" : (po.StatusId == 2 ? "Pending" : (po.StatusId == 3 ? "Fulfilling" : "Closed")),
+                                         NoOfItems = _appContext.PurchaseOrderPart.Where(p => p.PurchaseOrderId == po.PurchaseOrderId).Count(),
                                          po.PurchaseOrderNumber,
+                                         po.PurchaseOrderId,
                                          OpenDate = po.OpenDate,
+                                         RequestedBy = emp.FirstName,
+                                         po.DateApproved,
                                          ClosedDate = po.ClosedDate,
+                                         ApprovedBy = appr == null ? "" : appr.FirstName,
                                          v.VendorName,
                                          v.VendorCode,
-                                         Status = po.StatusId == 1 ? "Open" : (po.StatusId == 2 ? "Pending" : (po.StatusId == 3 ? "Fulfilling" : "Closed")),
-                                         RequestedBy = emp.FirstName,
-                                         ApprovedBy = appr == null ? "" : appr.FirstName,
                                          po.CreatedDate,
                                          po.IsActive,
                                          TotalRecords = totalRecords
@@ -764,7 +792,7 @@ namespace DAL.Repositories
                                          join v in _appContext.Vendor on po.VendorId equals v.VendorId
                                          join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
                                          from appr in approver.DefaultIfEmpty()
-                                         where po.IsDeleted == false && po.PurchaseOrderId==purchaseOrderId
+                                         where po.IsDeleted == false && po.PurchaseOrderId == purchaseOrderId
                                          select new
                                          {
                                              po.PurchaseOrderId,
@@ -823,9 +851,11 @@ namespace DAL.Repositories
                             from shv in shipToVen.DefaultIfEmpty()
                             join blcust in _appContext.Customer on po.BillToUserId equals blcust.CustomerId into billToCust
                             from blcust in billToCust.DefaultIfEmpty()
+
                             join blcomp in _appContext.LegalEntity on po.ShipToUserId equals blcomp.LegalEntityId into billToComp
                             from blcomp in billToComp.DefaultIfEmpty()
-                            join blv in _appContext.Vendor on po.ShipToUserId equals blv.VendorId into billToVen
+
+                            join blv in _appContext.Vendor on po.BillToUserId equals blv.VendorId into billToVen
                             from blv in billToVen.DefaultIfEmpty()
 
                             where po.PurchaseOrderId == purchaseOrderId
@@ -920,15 +950,11 @@ namespace DAL.Repositories
 
                             join wo in _appContext.WorkOrder on pop.WorkOrderId equals wo.WorkOrderId into won
                             from wo in won.DefaultIfEmpty()
-                                //join wo in _appContext.SalesOrder on pop.SalesOrderId equals wo.WorkOrderId into won
-                                //from wo in won.DefaultIfEmpty()
-                                //join ro in _appContext.RepairOrder on pop.RepairOrderId equals ro.RepairOrderId into ron
-                                //from ro in ron.DefaultIfEmpty()
                             join shcust in _appContext.Customer on pop.POPartSplitUserId equals shcust.CustomerId into shipToCust
                             from shcust in shipToCust.DefaultIfEmpty()
-                            join shcomp in _appContext.LegalEntity on po.ShipToUserId equals shcomp.LegalEntityId into shipToComp
+                            join shcomp in _appContext.LegalEntity on pop.POPartSplitUserId equals shcomp.LegalEntityId into shipToComp
                             from shcomp in shipToComp.DefaultIfEmpty()
-                            join shv in _appContext.Vendor on po.ShipToUserId equals shv.VendorId into shipToVen
+                            join shv in _appContext.Vendor on pop.POPartSplitUserId equals shv.VendorId into shipToVen
                             from shv in shipToVen.DefaultIfEmpty()
 
                             where pop.PurchaseOrderId == purchaseOrderId
@@ -944,9 +970,9 @@ namespace DAL.Repositories
                                 Condition = cond.Description,
                                 FunctionalCurrency = fcurr.DisplayName,
                                 ReportCurrency = rcurr.DisplayName,
-                                WorkOrderNo = wo.WorkOrderNum,
-                                SalesOrderNo = "",
-                                // ReapairOrderNo=ro.RepairOrderNumber,
+                                WorkOrderNo = pop.WorkOrderId,
+                                SalesOrderNo = pop.WorkOrderId,
+                                ReapairOrderNo = pop.RepairOrderId,
                                 CustomerName = shcust.Name,
                                 VendorName = shv.VendorName,
                                 ComapnyName = shcomp.Name
@@ -980,9 +1006,9 @@ namespace DAL.Repositories
                             purchaseOrderPart.FunctionalCurrency = part.FunctionalCurrency;
                             purchaseOrderPart.ForeignExchangeRate = part.pop.ForeignExchangeRate;
                             purchaseOrderPart.ReportCurrency = part.ReportCurrency;
-                            purchaseOrderPart.WorkOrderNo = part.WorkOrderNo;
-                            purchaseOrderPart.SalesOrderNo = part.SalesOrderNo;
-                            //  purchaseOrderPart.ReapairOrderNo = part.ReapairOrderNo;
+                            purchaseOrderPart.WorkOrderNo = Convert.ToString(part.WorkOrderNo);
+                            purchaseOrderPart.SalesOrderNo = Convert.ToString(part.SalesOrderNo);
+                            purchaseOrderPart.ReapairOrderNo = Convert.ToString(part.ReapairOrderNo);
                             purchaseOrderPart.Memo = part.pop.Memo;
                             purchaseOrderPart.isParent = true;
                             purchaseOrderPart.PurchaseOrderPartRecordId = part.pop.PurchaseOrderPartRecordId;
@@ -1072,12 +1098,12 @@ namespace DAL.Repositories
                                 po.PurchaseOrderId,
                                 po.PurchaseOrderNumber,
                                 v.VendorName,
-                               PODate= po.OpenDate==null?"":po.OpenDate.ToString("ddMMMyyyy"),
+                                PODate = po.OpenDate == null ? "" : po.OpenDate.ToString("ddMMMyyyy"),
                                 ShipToUser = po.ShipToUserType == 1 ? shcust.Name : (po.ShipToUserType == 2 ? shv.VendorName : shcomp.Name),
                                 BillToUser = po.BillToUserType == 1 ? blcust.Name : (po.BillToUserType == 2 ? blv.VendorName : blcomp.Name),
                             }).FirstOrDefault();
 
-                if(data!=null)
+                if (data != null)
                 {
                     purchaseOrderEmail.PurchaseOrderId = data.PurchaseOrderId;
                     purchaseOrderEmail.PurchaseOrderNumber = data.PurchaseOrderNumber;
@@ -1100,7 +1126,7 @@ namespace DAL.Repositories
                                 pop.ExtendedCost
                             }).ToList();
 
-                if(list!=null && list.Count>0)
+                if (list != null && list.Count > 0)
                 {
                     purchaseOrderEmail.PurchaseOrderParts = new List<PurchaseOrderPart>();
                     foreach (var item in list)
@@ -1127,6 +1153,6 @@ namespace DAL.Repositories
 
     }
 
-    
+
 }
 

@@ -679,6 +679,34 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpGet("getreservedparts")]
+        public IActionResult GetReservedParts(long workFlowWorkOrderId=0, long workOrderId=0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetReservedParts(workFlowWorkOrderId, workOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("getunreservedparts")]
+        public IActionResult GetUnReservedParts(long workFlowWorkOrderId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetUnReservedParts(workFlowWorkOrderId, workOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("getissuedparts")]
+        public IActionResult GetIssuedParts(long workFlowWorkOrderId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetIssuedParts(workFlowWorkOrderId, workOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("getunissuedParts")]
+        public IActionResult GetUnIssuedParts(long workFlowWorkOrderId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetUnIssuedParts(workFlowWorkOrderId, workOrderId);
+            return Ok(result);
+        }
+
 
 
         #endregion

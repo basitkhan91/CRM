@@ -24,6 +24,7 @@ import { EmployeeService } from '../../../../services/employee.service';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Router } from '@angular/router';
 import { AppTranslationService } from '../../../../services/app-translation.service';
+import $ from "jquery";
 
 
 
@@ -116,8 +117,7 @@ export class EmployeesListComponent implements OnInit {
             this.shiftId = allWorkFlows[0].employeeShiftMapping.shiftId;
             this.leaveMapArray = allWorkFlows[0].employeeLeaveTypeMapping;
             this.shiftMapArray = allWorkFlows[0].employeeShiftMapping;
-
-            console.log("leaveMapArray" + this.leaveMapArray);
+           
 
         }
         //debugger;
@@ -142,10 +142,8 @@ export class EmployeesListComponent implements OnInit {
     }
     openEdit(row) {
 
-        console.log(row);
-
-        console.log("row");
-
+       //console.log(row);
+        
         //this.isEditMode = true;
         this.empService.isEditMode = true;
         //this.isSaving = true;
@@ -187,19 +185,19 @@ export class EmployeesListComponent implements OnInit {
         );
 
         this.cols = [
-            { field: 'firstName', header: 'FIRST NAME' },
-            { field: 'lastName', header: 'LAST NAME' },
-            { field: 'employeeId', header: 'EMP ID' },
+            { field: 'firstName', header: 'First Name' },
+            { field: 'lastName', header: 'Last Name' },
+            { field: 'employeeId', header: 'Emp Id' },
             // { field: 'email', header: 'Email' },
             //{ field: 'businessUnitId', header: 'BU' },
             //{ field: 'divisionId', header: 'Division' },
             //{ field: 'departmentId', header: 'Department' },
-            { field: 'jobtitle', header: 'JOB TITLE' },
-            { field: 'employeeExpertise', header: 'EMP EXPERTISE'},
-            { field: 'jobtype', header: 'JOB TYPE'},
-            { field: 'startDate', header: 'START DATE'},
-            { field: 'company', header: 'COMPANY' },
-            { field: 'paytype', header: 'PAY TYPE'}
+            { field: 'jobtitle', header: 'Job Title' },
+            { field: 'employeeExpertise', header: 'Emp Expertise'},
+            { field: 'jobtype', header: 'Job Type'},
+            { field: 'startDate', header: 'Start Date'},
+            { field: 'company', header: 'Company' },
+            { field: 'paytype', header: 'Pay Type'}
             // { field: 'createdBy', header: 'Created By' },
             // { field: 'updatedBy', header: 'Updated By' },
             // { field: 'updatedDate', header: 'Updated Date' },
@@ -239,7 +237,7 @@ export class EmployeesListComponent implements OnInit {
 
     openDelete(content, row) {
 
-        console.log(row);
+        //console.log(row);
         this.deleteEmployeeId = row.employeeId
         this.isEditMode = false;
         this.isDeleteMode = true;
@@ -410,5 +408,22 @@ export class EmployeesListComponent implements OnInit {
         }
 
     }
+
+    ExpandAllEmployeeDetailsModel()
+    {
+        $('#step11').collapse('show');
+        $('#step12').collapse('show');
+        $('#step13').collapse('show');
+        //$('#step4').collapse('show');      
+    }
+    CloseAllEmployeerDetailsModel()
+    {
+        $('#step11').collapse('hide');
+        $('#step12').collapse('hide');
+        $('#step13').collapse('hide');
+        //$('#step4').collapse('hide');
+      
+    }
+
 
 }
