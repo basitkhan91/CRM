@@ -693,7 +693,7 @@ namespace QuickApp.Pro.Controllers
             actionobject.ShipToSiteId = poViewModel.ShipToSiteId;
             actionobject.BillToSiteId = poViewModel.BillToSiteId;
             actionobject.ShipVia = poViewModel.ShipVia;
-            actionobject.ShippingAccountNo = poViewModel.ShippingAccountNo;
+            actionobject.ShippingAccountNo = poViewModel.ShippingAcctNum;
             actionobject.ShippingId = poViewModel.ShippingId;
             actionobject.ShippingURL = poViewModel.ShippingURL;
             actionobject.ShipToContact = poViewModel.ShipToContact;

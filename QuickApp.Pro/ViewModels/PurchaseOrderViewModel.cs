@@ -86,6 +86,8 @@ namespace QuickApp.Pro.ViewModels
         public string BillToStateOrProvince { get; set; }
         public string ShipToStateOrProvince { get; set; }
 
+        public string ShippingAcctNum { get; set; }
+
     }
 }
 
