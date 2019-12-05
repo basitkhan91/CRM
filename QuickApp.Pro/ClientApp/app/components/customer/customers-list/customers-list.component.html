@@ -324,10 +324,10 @@
                                         <div class="col-sm-6">
                                             <p>
                                                 <span class="label"><b>Classification: </b></span><span class="value">
-                                                    {{
-                          viewDataGeneralInformation.classificationName
-                                                    }}
-                                                </span>
+
+                          {{viewDataclassification}}
+  
+</span>
                                             </p>
                                             <p>
                                                 <span class="label"><b>Integration With: </b></span><span class="value">
@@ -358,6 +358,92 @@
                                                     }}
                                                 </span>
                                             </p>
+                                            <div>
+
+                                                <p-table class="rpo-table-cstm"
+                                                         [columns]="customerPMAColumns"
+                                                         [value]="restrictedPMAParts"
+                                                         [paginator]="true"
+                                                         [rows]="10"
+                                                         [first]="first">
+                                                    <ng-template pTemplate="header" let-columns>
+                                                        <tr>
+
+                                                            <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
+                                                                {{ col.header }}
+                                                            </th>
+                                                        </tr>
+                                                    </ng-template>
+                                                    <ng-template pTemplate="body"
+                                                                 let-rowData
+                                                                 let-columns="columns"
+                                                                 let-rowIndex="rowIndex">
+                                                        <tr>
+
+                                                            <td *ngFor="let col of columns">
+                                                                {{ rowData[col.field] }}
+                                                            </td>
+                                                        </tr>
+                                                    </ng-template>
+                                                </p-table>
+                                                <!--<p-table class="table-responsive" [value]="restrictedPMAParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th *ngFor="let col of columns">
+                        {{col.header}}
+                    </th>
+
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                <tr>
+                    <td *ngFor="let col of columns">
+                        {{part[col.field]}}
+                    </td>
+
+                </tr>
+            </ng-template>
+        </p-table>-->
+                                            </div>
+
+                                            <p>
+                                                <span class="label"><b>Restrict DER: </b></span><span class="value">
+                                                    {{
+                          viewDataGeneralInformation.restrictDERMemo
+                                                    }}
+                                                </span>
+                                            </p>
+                                            <div>
+
+                                                <p-table class="rpo-table-cstm"
+                                                         [columns]="customerDERColumns"
+                                                         [value]="restrictedDERParts"
+                                                         [paginator]="true"
+                                                         [rows]="10"
+                                                         [first]="first">
+                                                    <ng-template pTemplate="header" let-columns>
+                                                        <tr>
+
+                                                            <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
+                                                                {{ col.header }}
+                                                            </th>
+                                                        </tr>
+                                                    </ng-template>
+                                                    <ng-template pTemplate="body"
+                                                                 let-rowData
+                                                                 let-columns="columns"
+                                                                 let-rowIndex="rowIndex">
+                                                        <tr>
+
+                                                            <td *ngFor="let col of columns">
+                                                                {{ rowData[col.field] }}
+                                                            </td>
+                                                        </tr>
+                                                    </ng-template>
+                                                </p-table>
+                                               
+                                            </div>
+
                                             <p>
                                                 <span class="label"><b>URL to Customer site: </b></span><span class="value">
                                                     {{
@@ -381,7 +467,7 @@
                             <div class="panel-body">
                                 <div class="col-sm-12">
                                     <div class="shadow-Box">
-                                        <p-table class="rpo-table-cstm"
+                                        <p-table class="rro-table-cstm"
                                                  [columns]="customerContactsColumns"
                                                  [value]="customerContacts"
                                                  [paginator]="true"
@@ -399,7 +485,7 @@
                                                          let-rowData
                                                          let-columns="columns"
                                                          let-rowIndex="rowIndex">
-                                                <tr>
+                                                <tr [ngStyle]="{'background-color' : rowData.isDefaultContact === true ? '#79ffe3'  : 'white'  }">
 
                                                     <td *ngFor="let col of columns">
                                                         {{ rowData[col.field] }}
@@ -506,18 +592,47 @@
                                     <p><span class="label"><b>Credit Limit:: </b></span><span class="value">{{viewDataGeneralInformation.creditLimit}}</span></p>
                                     <p><span class="label"><b>Credit Terms: </b></span><span class="value">{{viewDataGeneralInformation.creditTermsName}}</span></p>
                                     <p><span class="label"><b>Allow Netting of AP/AR: </b></span><span class="value">{{viewDataGeneralInformation.allowNettingOfAPAR}}</span></p>
+                                    <p><span class="label"><b>Allow Partial Billing: </b></span><span class="value">{{viewDataGeneralInformation.allowPartialBilling}}</span></p>
+                                    <p><span class="label"><b>Allow ProForma Billing: </b></span><span class="value">{{viewDataGeneralInformation.allowProformaBilling}}</span></p>
+
                                     <p><span class="label"><b>Taxable Exempt: </b></span><span class="value">{{viewDataGeneralInformation.isTaxExempt}}</span></p>
-                                    <p><span class="label"><b>Tax Type: </b></span><span class="value">{{viewDataGeneralInformation.taxTypeName}}</span></p>
+                                    <!--<p><span class="label"><b>Tax Type: </b></span><span class="value">{{viewDataGeneralInformation.taxTypeName}}</span></p>-->
 
 
                                     <p><span class="label"><b>Tax Rate - State/Prov: </b></span><span class="value">{{viewDataGeneralInformation.taxRateName}}</span></p>
                                     <p><span class="label"><b>Tax Rate - Other: </b></span><span class="value">{{viewDataGeneralInformation.taxRateOther}}</span></p>
                                 </div>
                                 <div class="col-sm-6">
-                                    <p><span class="label"><b>EDI: </b></span><span class="value">{{viewDataGeneralInformation.ediDescription}}</span></p>
+                                    <!--<p><span class="label"><b>EDI: </b></span><span class="value">{{viewDataGeneralInformation.ediDescription}}</span></p>-->
                                     <!--<p><span class="label"><b>Deferred PO: </b></span><span class="value">{{customerVfinanceiewFeilds.customerCode}}</span></p>
-                                    <p><span class="label"><b>Deferred RO: </b></span><span class="value">{{customerViewFeilds.customerCode}}</span></p>-->
+    <p><span class="label"><b>Deferred RO: </b></span><span class="value">{{customerViewFeilds.customerCode}}</span></p>-->
                                     <p><span class="label"><b>Currency: </b></span><span class="value">{{viewDataGeneralInformation.currency}}</span></p>
+                                
+                                    <p-table [value]="taxTypeRateMapping" [paginator]="true" [rows]="3" *ngIf="taxTypeRateMapping">
+                                        <ng-template pTemplate="header">
+                                            <tr>
+                                                <!-- <th>S.No</th> -->
+                                                <th>TaxType</th>
+                                                <th>TaxRate</th>
+                                              
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-t>
+                                            <tr>
+                                                <!-- {{($index + 1) + (currentPage - 1) * itemsPerPage}} -->
+                                                <!-- <td>  {{(0 + 1) + (1 - 1) * 3}} </td> -->
+
+                                                <td>{{t.taxType}}</td>
+                                                <td>{{t.taxRate}}</td>
+                                                <!--<td>
+                                                    <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="deleteTaxTypeRate(deleteContent1,t);">
+                                                        <mat-icon color="warn">delete</mat-icon>
+                                                    </button>
+                                                </td>-->
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>
+
                                 </div>
                             </div>
                         </div>
@@ -657,7 +772,84 @@
                             </div>
                         </div>
                     </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step9">Warnings</a> </h4>
+                        </div>
+                        <div id="step9" class="panel-collapse  collapse">
+                            <div class="panel-body">
+                                <div class="col-sm-12">
+                                    <div class="shadow-Box">
+                                        <p-table class="rpo-table-cstm"
+                                                 [columns]="warningHeaders"
+                                                 [value]="waringInfoList"
+                                                 [paginator]="true"
+                                                 [rows]="10"
+                                                 [first]="first">
+                                            <ng-template pTemplate="header" let-columns>
+                                                <tr>
 
+                                                    <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
+                                                        {{ col.header }}
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body"
+                                                         let-rowData
+                                                         let-columns="columns"
+                                                         let-rowIndex="rowIndex">
+                                                <tr>
+
+                                                    <td *ngFor="let col of columns">
+                                                        {{ rowData[col.field] }}
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step10">Documents</a> </h4>
+                        </div>
+                        <div id="step10" class="panel-collapse  collapse">
+                            <div class="panel-body">
+                                <div class="col-sm-12">
+                                    <div class="shadow-Box">
+                                        <p-table class="rpo-table-cstm"
+                                                 [columns]="customerDocumentsColumns"
+                                                 [value]="DocumentsList"
+                                                 [paginator]="true"
+                                                 [rows]="10"
+                                                 [first]="first">
+                                            <ng-template pTemplate="header" let-columns>
+                                                <tr>
+
+                                                    <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
+                                                        {{ col.header }}
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body"
+                                                         let-rowData
+                                                         let-columns="columns"
+                                                         let-rowIndex="rowIndex">
+                                                <tr>
+
+                                                    <td *ngFor="let col of columns">
+                                                        {{ rowData[col.field] }}
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
             </div>
@@ -689,6 +881,8 @@
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <div>
+                                        <button type="button" class="btn btn-success" (click)="dblExpandAllCustomerDetailsModel()">Open All</button>
+                                        <button type="button" class="btn btn-info" (click)="dblCloseAllCustomerDetailsModel()">Close All</button>
 
                                     </div>
                                     <a class="collapsed" data-toggle="collapse" href="#step11">General Info</a>
@@ -823,6 +1017,91 @@
                                                         }}
                                                     </span>
                                                 </p>
+                                                <div>
+
+                                                    <p-table class="rpo-table-cstm"
+                                                             [columns]="customerPMAColumns"
+                                                             [value]="restrictedPMAParts"
+                                                             [paginator]="true"
+                                                             [rows]="10"
+                                                             [first]="first">
+                                                        <ng-template pTemplate="header" let-columns>
+                                                            <tr>
+
+                                                                <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
+                                                                    {{ col.header }}
+                                                                </th>
+                                                            </tr>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="body"
+                                                                     let-rowData
+                                                                     let-columns="columns"
+                                                                     let-rowIndex="rowIndex">
+                                                            <tr>
+
+                                                                <td *ngFor="let col of columns">
+                                                                    {{ rowData[col.field] }}
+                                                                </td>
+                                                            </tr>
+                                                        </ng-template>
+                                                    </p-table>
+                                                    <!--<p-table class="table-responsive" [value]="restrictedPMAParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th *ngFor="let col of columns">
+                        {{col.header}}
+                    </th>
+
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                <tr>
+                    <td *ngFor="let col of columns">
+                        {{part[col.field]}}
+                    </td>
+
+                </tr>
+            </ng-template>
+        </p-table>-->
+                                                </div>
+
+                                                <p>
+                                                    <span class="label"><b>Restrict DER: </b></span><span class="value">
+                                                        {{
+                          viewDataGeneralInformation.restrictDERMemo
+                                                        }}
+                                                    </span>
+                                                </p>
+                                                <div>
+
+                                                    <p-table class="rpo-table-cstm"
+                                                             [columns]="customerDERColumns"
+                                                             [value]="restrictedDERParts"
+                                                             [paginator]="true"
+                                                             [rows]="10"
+                                                             [first]="first">
+                                                        <ng-template pTemplate="header" let-columns>
+                                                            <tr>
+
+                                                                <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
+                                                                    {{ col.header }}
+                                                                </th>
+                                                            </tr>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="body"
+                                                                     let-rowData
+                                                                     let-columns="columns"
+                                                                     let-rowIndex="rowIndex">
+                                                            <tr>
+
+                                                                <td *ngFor="let col of columns">
+                                                                    {{ rowData[col.field] }}
+                                                                </td>
+                                                            </tr>
+                                                        </ng-template>
+                                                    </p-table>
+
+                                                </div>
                                                 <p>
                                                     <span class="label"><b>URL to Customer site: </b></span><span class="value">
                                                         {{
@@ -971,19 +1250,47 @@
                                         <p><span class="label"><b>Credit Limit:: </b></span><span class="value">{{viewDataGeneralInformation.creditLimit}}</span></p>
                                         <p><span class="label"><b>Credit Terms: </b></span><span class="value">{{viewDataGeneralInformation.creditTermsName}}</span></p>
                                         <p><span class="label"><b>Allow Netting of AP/AR: </b></span><span class="value">{{viewDataGeneralInformation.allowNettingOfAPAR}}</span></p>
+                                        <p><span class="label"><b>Allow Partial Billing: </b></span><span class="value">{{viewDataGeneralInformation.allowPartialBilling}}</span></p>
+                                        <p><span class="label"><b>Allow ProForma Billing: </b></span><span class="value">{{viewDataGeneralInformation.allowProformaBilling}}</span></p>
+
                                         <p><span class="label"><b>Taxable Exempt: </b></span><span class="value">{{viewDataGeneralInformation.isTaxExempt}}</span></p>
-                                        <p><span class="label"><b>Tax Type: </b></span><span class="value">{{viewDataGeneralInformation.taxTypeName}}</span></p>
+                                        <!--<p><span class="label"><b>Tax Type: </b></span><span class="value">{{viewDataGeneralInformation.taxTypeName}}</span></p>-->
 
 
                                         <p><span class="label"><b>Tax Rate - State/Prov: </b></span><span class="value">{{viewDataGeneralInformation.taxRateName}}</span></p>
                                         <p><span class="label"><b>Tax Rate - Other: </b></span><span class="value">{{viewDataGeneralInformation.taxRateOther}}</span></p>
                                     </div>
                                     <div class="col-sm-6">
-                                        <p><span class="label"><b>EDI: </b></span><span class="value">{{viewDataGeneralInformation.ediDescription}}</span></p>
+                                        <!--<p><span class="label"><b>EDI: </b></span><span class="value">{{viewDataGeneralInformation.ediDescription}}</span></p>-->
                                         <!--<p><span class="label"><b>Deferred PO: </b></span><span class="value">{{customerVfinanceiewFeilds.customerCode}}</span></p>
-                                        <p><span class="label"><b>Deferred RO: </b></span><span class="value">{{customerViewFeilds.customerCode}}</span></p>-->
-                                        "l
+                    <p><span class="label"><b>Deferred RO: </b></span><span class="value">{{customerViewFeilds.customerCode}}</span></p>-->
                                         <p><span class="label"><b>Currency: </b></span><span class="value">{{viewDataGeneralInformation.currency}}</span></p>
+
+                                        <p-table [value]="taxTypeRateMapping" [paginator]="true" [rows]="3" *ngIf="taxTypeRateMapping">
+                                            <ng-template pTemplate="header">
+                                                <tr>
+                                                    <!-- <th>S.No</th> -->
+                                                    <th>TaxType</th>
+                                                    <th>TaxRate</th>
+
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-t>
+                                                <tr>
+                                                    <!-- {{($index + 1) + (currentPage - 1) * itemsPerPage}} -->
+                                                    <!-- <td>  {{(0 + 1) + (1 - 1) * 3}} </td> -->
+
+                                                    <td>{{t.taxType}}</td>
+                                                    <td>{{t.taxRate}}</td>
+                                                    <!--<td>
+                                    <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="deleteTaxTypeRate(deleteContent1,t);">
+                                        <mat-icon color="warn">delete</mat-icon>
+                                    </button>
+                                </td>-->
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+
                                     </div>
                                 </div>
                             </div>
@@ -1124,8 +1431,85 @@
                             </div>
                         </div>
 
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step19">Warnings</a> </h4>
+                            </div>
+                            <div id="step19" class="panel-collapse  collapse">
+                                <div class="panel-body">
+                                    <div class="col-sm-12">
+                                        <div class="shadow-Box">
+                                            <p-table class="rpo-table-cstm"
+                                                     [columns]="warningHeaders"
+                                                     [value]="waringInfoList"
+                                                     [paginator]="true"
+                                                     [rows]="10"
+                                                     [first]="first">
+                                                <ng-template pTemplate="header" let-columns>
+                                                    <tr>
 
-                 
+                                                        <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
+                                                            {{ col.header }}
+                                                        </th>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body"
+                                                             let-rowData
+                                                             let-columns="columns"
+                                                             let-rowIndex="rowIndex">
+                                                    <tr>
+
+                                                        <td *ngFor="let col of columns">
+                                                            {{ rowData[col.field] }}
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step20">Documents</a> </h4>
+                            </div>
+                            <div id="step20" class="panel-collapse  collapse">
+                                <div class="panel-body">
+                                    <div class="col-sm-12">
+                                        <div class="shadow-Box">
+                                            <p-table class="rpo-table-cstm"
+                                                     [columns]="customerDocumentsColumns"
+                                                     [value]="DocumentsList"
+                                                     [paginator]="true"
+                                                     [rows]="10"
+                                                     [first]="first">
+                                                <ng-template pTemplate="header" let-columns>
+                                                    <tr>
+
+                                                        <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
+                                                            {{ col.header }}
+                                                        </th>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body"
+                                                             let-rowData
+                                                             let-columns="columns"
+                                                             let-rowIndex="rowIndex">
+                                                    <tr>
+
+                                                        <td *ngFor="let col of columns">
+                                                            {{ rowData[col.field] }}
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 <div class="modal-footer">

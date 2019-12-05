@@ -908,7 +908,7 @@ namespace DAL.Repositories
                 throw ex;
             }
         }
-
+       
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
 }
