@@ -13,6 +13,7 @@ import * as $ from 'jquery'
 import { AuthService } from '../../../../services/auth.service';
 // import { PageHeaderComponent } from '../../../../shared/page-header.component';
 // import * as $ from 'jquery';
+// import * as $ from 'jquery';
 
 @Component({
     selector: 'app-work-order-complete-material-list',
@@ -89,6 +90,7 @@ export class WorkOrderCompleteMaterialListComponent {
 
     ngOnInit() {
         console.log(this.materialStatus);
+        this.workFlowWorkOrderId = this.savedWorkOrderData.workFlowWorkOrderId;
 
         // this.workFlowWorkOrderId = this.savedWorkOrderData.workFlowWorkOrderId;
         // this.addRow();
@@ -408,6 +410,9 @@ export class WorkOrderCompleteMaterialListComponent {
         this.statusId = statusId;
         this.reservedList = [];
         this.alternatePartData = [];
+        //this.workFlowWorkOrderId = 10060
+
+            ;
         // workFlowWorkOrderId
         // 85
         if (this.workFlowWorkOrderId) {

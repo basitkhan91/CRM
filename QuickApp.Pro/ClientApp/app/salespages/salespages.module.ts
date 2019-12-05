@@ -64,6 +64,9 @@ import { SalesOrderCreateComponent } from "../components/sales/order/sales-order
 import { SalesOrderComponent } from "../components/sales/order/sales-order/sales-order-component";
 import { SalesOrderService } from "../services/salesorder.service";
 import { SalesOrderEndpointService } from "../services/salesorder-endpoint.service";
+import { SalesOrderAddressComponent } from "../components/sales/order/shared/components/sales-address/sales-address.component";
+import { SalesOrderApproveComponent } from "../components/sales/order/shared/components/sales-approve/sales-approve.component";
+import { SalesOrderPartNumbersComponent } from "../components/sales/order/shared/components/sales-part-number/sales-part-numbers.component";
 //Sales Order Components - End
 
 @NgModule({
@@ -115,7 +118,10 @@ import { SalesOrderEndpointService } from "../services/salesorder-endpoint.servi
     SalesMarginComponent,
 	SalesOrderListComponent,
     SalesOrderCreateComponent,
-    SalesOrderComponent
+      SalesOrderComponent,
+      SalesOrderPartNumbersComponent,
+      SalesOrderApproveComponent,
+      SalesOrderAddressComponent
   ],
   providers: [CustomerService, SalesQuoteService, SalesQuoteEndpointService, ItemMasterService, SalesOrderService, SalesOrderEndpointService],
   entryComponents: []

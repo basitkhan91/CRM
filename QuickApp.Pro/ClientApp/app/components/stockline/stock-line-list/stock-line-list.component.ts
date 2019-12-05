@@ -153,7 +153,7 @@ export class StockLineListComponent implements OnInit {
     public allWorkFlows: StockLineListComponent[] = [];
 
 
-    private loadData() {
+    public loadData() {
         this.workFlowtService.getStockLineList().subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
