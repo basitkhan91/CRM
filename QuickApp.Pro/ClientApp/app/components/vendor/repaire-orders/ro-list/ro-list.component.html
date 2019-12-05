@@ -118,6 +118,12 @@
 			  </div>
 			</ng-template>
 	  
+			<ng-template pTemplate="colgroup" let-columns>
+				<colgroup>
+					<col *ngFor="let col of columns">
+				</colgroup>
+			</ng-template>
+
 			<ng-template pTemplate="header" let-columns>
 			  <tr>
 				<th
