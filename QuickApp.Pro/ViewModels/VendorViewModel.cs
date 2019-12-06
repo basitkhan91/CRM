@@ -23,8 +23,13 @@ namespace QuickApp.Pro.ViewModels
         public int VendorTypeId { get; set; }
         public string DoingBusinessAsName { get; set; }
        
-        public Int64? VendorClassificationId { get; set; }
-       
+        public long? VendorClassificationId { get; set; }
+        public long?[] VendorClassificationIds { get; set; }
+
+        public long?[] IntegrationPortalIds { get; set; }
+        
+
+
         public long Parent { get; set; }
         public string VendorContractReference { get; set; }
        
