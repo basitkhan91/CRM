@@ -212,12 +212,17 @@
                                                 </span>
 
                                             </label>
-                                            <select [(ngModel)]="sourceVendor.vendorClassificationId" name="vendorClassificationId" required>
+                                            <p-multiSelect [options]="allvendorclassificationInfo" [(ngModel)]="sourceVendor.vendorClassificationIds"  name="vendorClassificationIds" required>
+
+                                            </p-multiSelect>
+                                            <!-- <select [(ngModel)]="sourceVendor.vendorClassificationId" name="vendorClassificationId" required>
                                                 <option *ngFor="let venclassName of allVendorClassInfo"
                                                         [ngValue]="venclassName.vendorClassificationId">
                                                     {{venclassName.classificationName}}
                                                 </option>
-                                            </select>
+                                            </select> -->
+
+                                            
                                         </div>
 
                                         <div class="form-group">
@@ -243,9 +248,13 @@
                                                 <span class="pull-left">Integration With</span>
                                                 <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" (click)="onAddIntegrationWith()"></a></span>
                                             </label>
-                                            <p-multiSelect [options]="integrationCols" [(ngModel)]="intSelectedColumns" optionLabel="header"
+                                            <!-- <p-multiSelect [options]="integrationCols" [(ngModel)]="intSelectedColumns" optionLabel="header"
                                                            selectedItemsLabel="{0} columns selected" name="integrationCols"
-                                                           [style]="{minWidth: '200px'}" defaultLabel="Choose Columns"></p-multiSelect>
+                                                           [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                                            </p-multiSelect> -->
+                                           
+                                            <p-multiSelect [options]="integrationOriginalList" [(ngModel)]="sourceVendor.integrationPortalIds"  name="integrationPortalIds" defaultLabel="Choose Columns">
+                                            </p-multiSelect>
                                         </div>
 
                                         <div class="form-group">

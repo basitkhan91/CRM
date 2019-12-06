@@ -191,6 +191,7 @@ namespace DAL.Models
 
         public virtual CustomerType CustomerType { get; set; }
 
+        [NotMapped]
         public List<ClassificationMapping> CustomerClassificationMapping { get; set; }
 
         [NotMapped]
