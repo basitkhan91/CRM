@@ -25,6 +25,9 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetWorkOrderWorkFlowNos(long workOrderId);
         IEnumerable<object> GetWorkOrderTaskAttributes(long workOrderTaskId);
         object WorkOrderWorkFlowView(long workFlowWorkOrderId);
+        object SubWorkOrderHeaderDetails(long workOrderId, long workOrderPartNumberId);
+
+
 
         long CreateWorkOrderLabor(WorkOrderLaborHeader workOrderLabor);
         void UpdateWorkOrderLabor(WorkOrderLaborHeader workOrderLabor);
@@ -97,5 +100,11 @@ namespace DAL.Repositories.Interfaces
 
         IEnumerable<object> GetWorkOrderDirections(long wfwoId, long workOrderId);
         object GetStockLineDetails(long stockLineId);
+
+        SubWorkOrder CreateSubWorkOrder(SubWorkOrder subWorkOrder);
+        SubWorkOrder UpdateSubWorkOrder(SubWorkOrder subWorkOrder);
+        SubWorkOrder SubWorkOrderDetails(long subWorkOrderId);
+        IEnumerable<object> SubWorkOrderList(long workOrderId);
+
     }
 }

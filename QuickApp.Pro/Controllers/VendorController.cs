@@ -1271,7 +1271,12 @@ namespace QuickApp.Pro.Controllers
                 actionobject.VendorId = vendorViewModel.VendorId;
                 actionobject.VendorName = vendorViewModel.VendorName;
                 actionobject.LicenseNumber = vendorViewModel.LicenseNumber;
-                actionobject.VendorClassificationId = vendorViewModel.VendorClassificationId;
+
+                if (vendorViewModel.VendorClassificationIds != null)
+                {
+                    actionobject.VendorClassificationId = vendorViewModel.VendorClassificationIds[0] ?? null;
+                }
+                //actionobject.VendorClassificationId = vendorViewModel.VendorClassificationId;
                 actionobject.capabilityId = vendorViewModel.capabilityId;
                 actionobject.VendorPhone = vendorViewModel.VendorPhone;
                 actionobject.VendorTypeId = vendorViewModel.VendorTypeId;
@@ -1297,6 +1302,28 @@ namespace QuickApp.Pro.Controllers
                 actionobject.AddressId = vendorViewModel.AddressId.Value;
                 _unitOfWork.Vendor.Add(actionobject);
                 _unitOfWork.SaveChanges();
+
+                if (vendorViewModel.VendorClassificationIds != null)
+                {
+                    List<ClassificationMapping> listofEClassificationMappings = vendorViewModel
+                        .VendorClassificationIds
+                        .Select(item => new ClassificationMapping() { ClasificationId = item.Value }
+                        ).ToList();
+                    _unitOfWork.CommonRepository.CreateClassificationMappings(listofEClassificationMappings, Convert.ToInt32(ModuleEnum.Vendor),
+                        actionobject.VendorId, actionobject.CreatedBy);
+                }
+
+                if (vendorViewModel.IntegrationPortalIds != null)
+                {
+                    List<IntegrationPortalMapping> listofIntegrationMappings = vendorViewModel
+                        .IntegrationPortalIds
+                        .Select(item => new IntegrationPortalMapping() { IntegrationPortalId = item.Value }
+                        ).ToList();
+                    _unitOfWork.CommonRepository.CreateIntegrationMappings(listofIntegrationMappings, Convert.ToInt32(ModuleEnum.Vendor),
+                        actionobject.VendorId, actionobject.CreatedBy);
+                }
+
+                
 
 
                 //if (Request.Form.Files.Count > 0)
@@ -1418,6 +1445,51 @@ namespace QuickApp.Pro.Controllers
 
                 _unitOfWork.Vendor.Update(actionobject);
                 _unitOfWork.SaveChanges();
+
+                if (vendorViewModel.VendorClassificationIds != null)
+                {
+                    var classificationList = _context.ClassificationMapping.Where(a => a.ReferenceId == id && a.ModuleId == Convert.ToInt32(ModuleEnum.Vendor)).ToList();
+
+                    if(classificationList.Count>0)
+                    {
+                        foreach (var objData in classificationList)
+                        {
+                            _context.ClassificationMapping.Remove(objData);
+                            _unitOfWork.SaveChanges();
+                        }
+                    }
+
+                    List<ClassificationMapping> listofEClassificationMappings = vendorViewModel
+                        .VendorClassificationIds
+                        .Select(item => new ClassificationMapping() { ClasificationId = item.Value }
+                        ).ToList();
+                    _unitOfWork.CommonRepository.CreateClassificationMappings(listofEClassificationMappings, Convert.ToInt32(ModuleEnum.Vendor),
+                        actionobject.VendorId, actionobject.CreatedBy);
+                }
+
+                if (vendorViewModel.IntegrationPortalIds != null)
+                {
+                    var integrationPortalList = _context.IntegrationPortalMapping.Where(a => a.ReferenceId == id && a.ModuleId == Convert.ToInt32(ModuleEnum.Vendor)).ToList();
+
+                    if (integrationPortalList.Count > 0)
+                    {
+                        foreach (var objData in integrationPortalList)
+                        {
+                            _context.IntegrationPortalMapping.Remove(objData);
+                            _unitOfWork.SaveChanges();
+                        }
+                    }
+
+                    List<IntegrationPortalMapping> listofIntegrationMappings = vendorViewModel
+                        .IntegrationPortalIds
+                        .Select(item => new IntegrationPortalMapping() { IntegrationPortalId = item.Value }
+                        ).ToList();
+                    _unitOfWork.CommonRepository.CreateIntegrationMappings(listofIntegrationMappings, Convert.ToInt32(ModuleEnum.Vendor),
+                        actionobject.VendorId, actionobject.CreatedBy);
+                }
+
+
+               
 
                 //if (Request.Form.Files.Count > 0)
                 //{

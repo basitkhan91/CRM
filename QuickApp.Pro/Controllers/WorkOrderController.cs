@@ -129,6 +129,67 @@ namespace QuickApp.Pro.Controllers
 
         #endregion
 
+
+        #region Sub Work Order
+
+        [HttpPost("createsubworkorder")]
+        public IActionResult CreateSubWorkOrder([FromBody] SubWorkOrder subWorkOrder)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    unitOfWork.WorkOrderRepository.CreateSubWorkOrder(subWorkOrder);
+                    return Ok(subWorkOrder);
+                }
+                else
+                {
+                    return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("updatesubworkorder")]
+        public IActionResult UpdateSubWorkOrder([FromBody] SubWorkOrder subWorkOrder)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    unitOfWork.WorkOrderRepository.UpdateSubWorkOrder(subWorkOrder);
+                    return Ok(subWorkOrder);
+                }
+                else
+                {
+                    return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("subworkorderdetails")]
+        public IActionResult SubWorkOrderDetails(long subWorkOrderId)
+        {
+            var result = unitOfWork.WorkOrderRepository.SubWorkOrderDetails(subWorkOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("subworkorderlist")]
+        public IActionResult SubWorkOrderList(long workOrderId)
+        {
+            var result = unitOfWork.WorkOrderRepository.SubWorkOrderList(workOrderId);
+            return Ok(result);
+        }
+
+        #endregion
+
         #region Work Flow Work Order
 
         [HttpPost("createworkflowworkorder")]
@@ -173,6 +234,15 @@ namespace QuickApp.Pro.Controllers
             var result = unitOfWork.WorkOrderRepository.WorkOrderWorkFlowView(workFlowWorkOrderId);
             return Ok(result);
         }
+
+        [HttpGet("subworkorderheaderdetails")]
+        public IActionResult SubWorkOrderHeaderDetails(long workOrderId, long workOrderPartNumberId)
+        {
+            var result = unitOfWork.WorkOrderRepository.SubWorkOrderHeaderDetails(workOrderId, workOrderPartNumberId);
+            return Ok(result);
+        }
+
+
 
         #endregion
 
