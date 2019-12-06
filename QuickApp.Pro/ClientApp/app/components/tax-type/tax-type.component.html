@@ -18,9 +18,9 @@
                                 <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect  [maxSelectedLabels]="2" [options]="headers"  optionLabel="header" [(ngModel)]="selectedColumns"  
                                         [style]="{minWidth: '200px'}"  style="float:left" (onChange)="columnsChanges()"  ></p-multiSelect>
-                                     <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
+                                     <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
                                         iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
                                         iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button> 
                                     <div class="excel-upload  excel-upload-cstm">
                                         
@@ -74,7 +74,7 @@
                                         <button class="btn-delete" mat-icon-button matTooltip="Delete"  data-target="#delete" data-toggle="modal"  (click)="delete(rowData)">
                                             <mat-icon color="warn">delete</mat-icon>
                                         </button>
-                                        <button class="btn-history" mat-icon-button matTooltip="History" data-target="#contentHist" data-toggle="modal" (click)="getAuditHistoryById(rowData)" >
+                                        <button class="btn-history" mat-icon-button matTooltip="History" data-target="#contentHist" data-toggle="modal" (click)="showHistory(rowData)" >
                                             <mat-icon color="green">history</mat-icon>
                                         </button>
                                     </td>
@@ -149,8 +149,10 @@
                             </label>
                         </div>
                         <div class="col-sm-5">
-                                <p-autoComplete field="description" [(ngModel)]="addNew.description" (onSelect)="selectedTaxType($event)" (onKeyUp)="checkTaxTypeExists('description', $event.target.value)" 
-                                name="description"
+                                <p-autoComplete field="description" [(ngModel)]="addNew.description" (onSelect)="selectedTaxType($event)" 
+                                                (onKeyUp)="checkTaxTypeExists('description', $event.target.value)" 
+                                                name="description"
+                                                (onBlur)="onBlur($event)"
                                 [suggestions]="taxTypeList" (completeMethod)="filterTaxType($event)" [size]="30" [minLength]="1"
                                 [dropdown]="true" class="p-autoComplete-ctsm" required>
            

@@ -24,6 +24,7 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
 import { validateRecordExistsOrNot, selectedValueValidate, editValueAssignByCondition, getObjectByValue, getObjectById } from '../../generic/autocomplete';
 import { ConfigurationService } from '../../services/configuration.service';
+import { ModeOfOperation } from "../../models/ModeOfOperation.enum";
 
 @Component({
     selector: 'app-tax-type',
@@ -102,6 +103,7 @@ export class TaxTypeComponent implements OnInit {
     pageIndex: number = 0;
     pageSize: number = 10;
     totalPages: number;
+    currentModeOfOperation: ModeOfOperation;
     headers = [
         { field: 'description', header: 'Certification Type' },
         { field: 'memo', header: 'Memo' },
@@ -226,6 +228,7 @@ export class TaxTypeComponent implements OnInit {
 
 
     checkTaxTypeExists(field, value) {
+        console.log('this.selectedRecordForEdit', this.selectedRecordForEdit);
         const exists = validateRecordExistsOrNot(field, value, this.originalData, this.selectedRecordForEdit);
         console.log(exists);
         if (exists.length > 0) {
@@ -245,6 +248,7 @@ export class TaxTypeComponent implements OnInit {
         this.taxTypeList = certificationData;
     }
     selectedTaxType(object) {
+        console.log('selectedTaxType', object);
         const exists = selectedValueValidate('description', object, this.selectedRecordForEdit)
 
         this.disableSaveTaxtype = !exists;
@@ -258,6 +262,7 @@ export class TaxTypeComponent implements OnInit {
             description: editValueAssignByCondition('description', this.addNew.description),
             // unitName: editValueAssignByCondition('description', this.addNew.unitName)
         };
+
         if (!this.isEdit) {
             this.taxTypeService.newAction(data).subscribe(() => {
                 this.resetForm();
@@ -345,6 +350,34 @@ export class TaxTypeComponent implements OnInit {
         } else {
             this.selectedRowforDelete = undefined;
         }
+    }
+
+    //Open the audit history modal.
+    showHistory(rowData): void {
+        this.currentModeOfOperation = ModeOfOperation.Audit;
+        this.taxTypeService.getTaxTypeAudit(rowData.assetIntangibleTypeId).subscribe(audits => {
+            if (audits[0].length > 0) {
+                this.auditHistory = audits[0];
+            }
+        });
+        console.log(this.auditHistory);
+    }
+
+    onBlur(event) {
+        //console.log(event.target.value);
+        //console.log(this.addNew);
+        
+        const value = event.target.value;
+        this.disableSaveTaxtype = false;
+        for (let i = 0; i < this.originalData.length; i++) {
+            let description = this.originalData[i].description;
+            if (description.toLowerCase() == value.toLowerCase()) {
+                this.disableSaveTaxtype = true;
+                console.log('description :', description);
+                break;
+            }
+        }
+
     }
 
     // getAuditHistoryById(rowData) {
