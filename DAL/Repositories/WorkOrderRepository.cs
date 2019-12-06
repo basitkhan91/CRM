@@ -46,20 +46,9 @@ namespace DAL.Repositories
                 _appContext.WorkOrder.Add(workOrder);
                 _appContext.SaveChanges();
 
-
                 workOrder.WorkOrderNum = "WO" + workOrder.WorkOrderId;
                 _appContext.WorkOrder.Update(workOrder);
                 _appContext.SaveChanges();
-
-                if (workOrder.IsSubWorkOrder)
-                {
-                    SubWorkOrder subWorkOrder = new SubWorkOrder();
-                    subWorkOrder.WorkOrderId = workOrder.WorkOrderId;
-                    subWorkOrder.IsActive = true;
-                    subWorkOrder.IsDeleted = false;
-                    _appContext.SubWorkOrder.Add(subWorkOrder);
-                    _appContext.SaveChanges();
-                }
 
                 // Creating WorkflowWorkOrder From Work Flow
                 workOrder.WorkFlowWorkOrderId = CreateWorkFlowWorkOrderFromWorkFlow(workOrder.PartNumbers, workOrder.WorkOrderId, workOrder.CreatedBy);
@@ -438,6 +427,106 @@ namespace DAL.Repositories
 
 
 
+        #endregion
+
+        #region Sub Work Order
+
+        public SubWorkOrder CreateSubWorkOrder(SubWorkOrder subWorkOrder)
+        {
+            try
+            {
+
+                string subWorkOrderNo = string.Empty;
+                int versionNo = 0;
+
+                var exSubWorkOrder = _appContext.SubWorkOrder.Where(p => p.WorkOrderId == subWorkOrder.WorkOrderId).OrderByDescending(p=>p.SubWorkOrderId).FirstOrDefault();
+                if (exSubWorkOrder != null)
+                {
+                    var exSubWorkOrderNo = exSubWorkOrder.SubWorkOrderNo;
+                    versionNo = Convert.ToInt32(exSubWorkOrderNo.Substring(exSubWorkOrderNo.IndexOf("-") + 1));
+                    subWorkOrderNo = subWorkOrder.WorkOrderNum + "-" + Convert.ToString(versionNo + 1);
+                }
+                else
+                {
+                    subWorkOrderNo = subWorkOrder.WorkOrderNum + "-" + Convert.ToString(versionNo + 1);
+                }
+
+                subWorkOrder.SubWorkOrderNo = subWorkOrderNo;
+                subWorkOrder.IsActive = true;
+                subWorkOrder.IsDeleted = false;
+                subWorkOrder.CreatedDate = subWorkOrder.UpdatedDate = DateTime.Now;
+                _appContext.SubWorkOrder.Add(subWorkOrder);
+                _appContext.SaveChanges();
+
+                return subWorkOrder;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public SubWorkOrder UpdateSubWorkOrder(SubWorkOrder subWorkOrder)
+        {
+            try
+            {
+                _appContext.SubWorkOrder.Update(subWorkOrder);
+                _appContext.SaveChanges();
+                return subWorkOrder;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public SubWorkOrder SubWorkOrderDetails(long subWorkOrderId)
+        {
+            try
+            {
+                var subWorkOrder = _appContext.Set<SubWorkOrder>().Where(x => x.SubWorkOrderId == subWorkOrderId).FirstOrDefault();
+                return subWorkOrder;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> SubWorkOrderList(long workOrderId)
+        {
+            try
+            {
+                var list = (from swo in _appContext.SubWorkOrder
+                            join wo in _appContext.WorkOrder on swo.WorkOrderId equals wo.WorkOrderId
+                            join wos in _appContext.WorkOrderStage on swo.StageId equals wos.ID into swowos
+                            from wos in swowos.DefaultIfEmpty()
+                            where swo.WorkOrderId == workOrderId
+                            select new
+                            {
+
+                                swo.SubWorkOrderNo,
+                                Stage = wos.Description,
+                                swo.MasterPartNo,
+                                swo.RevisedPartNo,
+                                swo.MasterPartDescription,
+                                swo.OpenDate,
+                                swo.NeedDate,
+                                swo.WorkScope,
+                                swo.WorkOrderId,
+                                swo.SubWorkOrderId
+                            }).Distinct().ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
         #endregion
 
         #region Work Flow Work Order

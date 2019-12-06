@@ -97,5 +97,11 @@ namespace DAL.Repositories.Interfaces
 
         IEnumerable<object> GetWorkOrderDirections(long wfwoId, long workOrderId);
         object GetStockLineDetails(long stockLineId);
+
+        SubWorkOrder CreateSubWorkOrder(SubWorkOrder subWorkOrder);
+        SubWorkOrder UpdateSubWorkOrder(SubWorkOrder subWorkOrder);
+        SubWorkOrder SubWorkOrderDetails(long subWorkOrderId);
+        IEnumerable<object> SubWorkOrderList(long workOrderId);
+
     }
 }
