@@ -19,8 +19,8 @@ import { WorkOrderEquipmentCheckInOutComponent } from '../components/work-order/
 import { WorkOrderCompleteMaterialListComponent } from '../components/work-order/work-order-setup/work-order-complete-material-list/work-order-complete-material-list.component';
 import { WorkOrderReserveIssueComponent } from '../components/work-order/work-order-setup/work-order-reserve-issue/work-order-reserve-issue.component';
 import { WorkOrderMainComponentComponent } from '../components/work-order/work-order-setup/work-order-main-component/work-order-main-component.component';
-import { SubWorkOrderListComponent } from '../components/work-order/work-order-setup/sub-work-order/sub-work-order-list/sub-work-order-list.component';
-import { SubWorkOrderSetupComponent } from '../components/work-order/work-order-setup/sub-work-order/sub-work-order-setup/sub-work-order-setup.component';
+
+
 import { WorkOrderMemoComponent } from '../components/work-order/work-order-setup/work-order-memo/work-order-memo.component';
 import { WorkOrderDocumentsComponent } from '../components/work-order/work-order-setup/work-order-documents/work-order-documents.component';
 import { WorkOrderAnalysisComponent } from '../components/work-order/work-order-setup/work-order-analysis/work-order-analysis.component';
@@ -60,6 +60,8 @@ import { WorkFlowtService } from '../services/workflow.service';
 import { AssetmanagementModule } from '../assetmanagement/assetmanagement.module';
 import { WorkOrderChargesComponent } from '../components/work-order/work-order-setup/work-order-charges/work-order-charges.component';
 import { WorkOrderExclusionsComponent } from '../components/work-order/work-order-setup/work-order-exclusions/work-order-exclusions.component';
+import { SubWorkOrderListComponent } from '../components/work-order/work-order-setup/work-order-subwo-list/work-order-subwo-list.component';
+import { SubWorkOrderComponent } from '../components/work-order/work-order-setup/work-order-sub-wo/work-order-subwo.component';
 
 // import { MaterialListCreateComponent } from '../shared/Material-List-Create.component';
 // import { SharedModule } from '../shared/shared.module';
@@ -103,8 +105,8 @@ import { WorkOrderExclusionsComponent } from '../components/work-order/work-orde
     WorkOrderCompleteMaterialListComponent,
     WorkOrderReserveIssueComponent,
     WorkOrderMainComponentComponent,
-    SubWorkOrderListComponent,
-    SubWorkOrderSetupComponent,
+
+
     WorkOrderMemoComponent,
     WorkOrderDocumentsComponent,
     WorkOrderAnalysisComponent,
@@ -117,6 +119,8 @@ import { WorkOrderExclusionsComponent } from '../components/work-order/work-orde
     WorkOrderAssetsComponent,
     WorkOrderAddressesComponent,
     WorkOrderSmartComponent,
+    SubWorkOrderListComponent,
+    SubWorkOrderComponent
 
 
 
@@ -129,6 +133,7 @@ import { WorkOrderExclusionsComponent } from '../components/work-order/work-orde
     WorkOrderPartNumberService,
     WorkOrderPartNumberEndpointService,
     CommonService
-  ]
+  ],
+  exports: [SubWorkOrderComponent]
 })
 export class WorkOrderPagesModule { }

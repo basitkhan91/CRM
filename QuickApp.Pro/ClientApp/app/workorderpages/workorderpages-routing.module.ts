@@ -16,8 +16,6 @@ import { WorkOrderEquipmentCheckInOutComponent } from '../components/work-order/
 import { WorkOrderCompleteMaterialListComponent } from '../components/work-order/work-order-setup/work-order-complete-material-list/work-order-complete-material-list.component';
 import { WorkOrderReserveIssueComponent } from '../components/work-order/work-order-setup/work-order-reserve-issue/work-order-reserve-issue.component';
 import { WorkOrderMainComponentComponent } from '../components/work-order/work-order-setup/work-order-main-component/work-order-main-component.component';
-import { SubWorkOrderListComponent } from '../components/work-order/work-order-setup/sub-work-order/sub-work-order-list/sub-work-order-list.component';
-import { SubWorkOrderSetupComponent } from '../components/work-order/work-order-setup/sub-work-order/sub-work-order-setup/sub-work-order-setup.component';
 import { WorkOrderMemoComponent } from '../components/work-order/work-order-setup/work-order-memo/work-order-memo.component';
 import { WorkOrderDocumentsComponent } from '../components/work-order/work-order-setup/work-order-documents/work-order-documents.component';
 import { WorkOrderAnalysisComponent } from '../components/work-order/work-order-setup/work-order-analysis/work-order-analysis.component';
@@ -29,6 +27,8 @@ import { AuthService } from '../services/auth.service';
 import { AuthGuard } from '../services/auth-guard.service';
 import { DirectLabourComponent } from '../components/work-order/direct-labour/direct-labour.component';
 import { WorkOrderSmartComponent } from '../components/work-order/work-order-setup/work-order-smart/work-order-smart.component';
+import { SubWorkOrderListComponent } from '../components/work-order/work-order-setup/work-order-subwo-list/work-order-subwo-list.component';
+import { SubWorkOrderComponent } from '../components/work-order/work-order-setup/work-order-sub-wo/work-order-subwo.component';
 
 const workorderPagesRoutes: Routes = [
   {
@@ -51,95 +51,103 @@ const workorderPagesRoutes: Routes = [
         data: { title: 'Work Order Setup' }
       },
       {
+        path: 'app-sub-work-order',
+        component: SubWorkOrderComponent,
+        data: { title: 'Sub WorkOrder Create' }
+      },
+      {
+        path: 'app-sub-work-order?workorderid=:workorderid&mpnid=:mpnid&subworkorderid=:subworkorderid',
+        component: SubWorkOrderComponent,
+        data: { title: 'Sub WorkOrder Create' }
+      },
+
+
+      // {
+      // 	// 'app-sub-work-order/subworkorder/:workorderid/:mpnid/:subworkorderid'
+      // 	path: 'app-receiving-ro?workorderid=:workorderid&mpnid=:mpnid&subworkorderid=:subworkorderid',
+      // 	component: ReceivingRoComponent,
+      // 	data: { title: 'Sub WorkOrder Create' }
+      // },
+      // {
+      //   path: 'app-work-order-quote',
+      //   component: WorkOrderQuoteComponent,
+      //   data: { title: 'Quote' }
+      // },
+      // {
+      //   path: 'app-work-order-manual-entry-labor-hours',
+      //   component: ManualEntryLaborHoursComponent,
+      //   data: { title: 'Manual Entry Labor Hours' }
+      // },
+      // {
+      //   path: 'app-work-order-system-generated-labor-hours',
+      //   component: SystemGeneratedLaborHoursComponent,
+      //   data: { title: 'System Generated Labor Hours' }
+      // },
+      // {
+      //   path: 'app-work-order-bar-code-scanned-labor-hours',
+      //   component: BarCodeScannedLaborHoursComponent,
+      //   data: { title: 'Bar Code Scanned Labour Hours' }
+      // },
+      // {
+      //   path: 'app-work-order-equipment-list',
+      //   component: WorkOrderEquipmentListComponent,
+      //   data: { title: 'Equipment List' }
+      // },
+      // {
+      //   path: 'app-work-order-equipment-check-in-out',
+      //   component: WorkOrderEquipmentCheckInOutComponent,
+      //   data: { title: 'Equipment Check In Out' }
+      // },
+      // {
+      //   path: 'app-work-order-complete-material-list',
+      //   component: WorkOrderCompleteMaterialListComponent,
+      //   data: { title: 'Complete Material List' }
+      // },
+      // {
+      //   path: 'app-work-order-reserve-issue',
+      //   component: WorkOrderReserveIssueComponent,
+      //   data: { title: 'Reserve Issue' }
+      // },
+      // {
+      //   path: 'app-work-order-main-component',
+      //   component: WorkOrderMainComponentComponent,
+      //   data: { title: 'Main Component' }
+      // },
+      // {
+      //   path: 'app-work-order-memo',
+      //   component: WorkOrderMemoComponent,
+      //   data: { title: 'Memo' }
+      // },
+      // {
+      //   path: 'app-work-order-documents',
+      //   component: WorkOrderDocumentsComponent,
+      //   data: { title: 'Documents' }
+      // },
+      // {
+      //   path: 'app-work-order-analysis',
+      //   component: WorkOrderAnalysisComponent,
+      //   data: { title: 'Analysis' }
+      // },
+      // {
+      //   path: 'app-work-order-billing',
+      //   component: WorkOrderBillingComponent,
+      //   data: { title: 'Billing' }
+      // },
+      {
         path: 'app-work-order-quote',
         component: WorkOrderQuoteComponent,
         data: { title: 'Quote' }
       },
-      {
-        path: 'app-work-order-manual-entry-labor-hours',
-        component: ManualEntryLaborHoursComponent,
-        data: { title: 'Manual Entry Labor Hours' }
-      },
-      {
-        path: 'app-work-order-system-generated-labor-hours',
-        component: SystemGeneratedLaborHoursComponent,
-        data: { title: 'System Generated Labor Hours' }
-      },
-      {
-        path: 'app-work-order-bar-code-scanned-labor-hours',
-        component: BarCodeScannedLaborHoursComponent,
-        data: { title: 'Bar Code Scanned Labour Hours' }
-      },
-      {
-        path: 'app-work-order-equipment-list',
-        component: WorkOrderEquipmentListComponent,
-        data: { title: 'Equipment List' }
-      },
-      {
-        path: 'app-work-order-equipment-check-in-out',
-        component: WorkOrderEquipmentCheckInOutComponent,
-        data: { title: 'Equipment Check In Out' }
-      },
-      {
-        path: 'app-work-order-complete-material-list',
-        component: WorkOrderCompleteMaterialListComponent,
-        data: { title: 'Complete Material List' }
-      },
-      {
-        path: 'app-work-order-reserve-issue',
-        component: WorkOrderReserveIssueComponent,
-        data: { title: 'Reserve Issue' }
-      },
-      {
-        path: 'app-work-order-main-component',
-        component: WorkOrderMainComponentComponent,
-        data: { title: 'Main Component' }
-      },
-      {
-        path: 'app-work-order-sub-wo-list',
-        component: SubWorkOrderListComponent,
-        data: { title: 'Sub-WO List' }
-      },
-      {
-        path: 'app-work-order-sub-wo-add',
-        component: SubWorkOrderSetupComponent,
-        data: { title: 'Sub-WO Setup' }
-      },
-      {
-        path: 'app-work-order-memo',
-        component: WorkOrderMemoComponent,
-        data: { title: 'Memo' }
-      },
-      {
-        path: 'app-work-order-documents',
-        component: WorkOrderDocumentsComponent,
-        data: { title: 'Documents' }
-      },
-      {
-        path: 'app-work-order-analysis',
-        component: WorkOrderAnalysisComponent,
-        data: { title: 'Analysis' }
-      },
-      {
-        path: 'app-work-order-billing',
-        component: WorkOrderBillingComponent,
-        data: { title: 'Billing' }
-      },
-      {
-        path: 'app-work-order-quote',
-        component: WorkOrderQuoteComponent,
-        data: { title: 'Quote' }
-      },
-      {
-        path: 'app-work-order-shipping',
-        component: WorkOrderShippingComponent,
-        data: { title: 'Shipping' }
-      },
-      {
-        path: 'app-work-order-direct-labour',
-        component: DirectLabourComponent,
-        data: { title: 'direct-labour' }
-      }
+      // {
+      //   path: 'app-work-order-shipping',
+      //   component: WorkOrderShippingComponent,
+      //   data: { title: 'Shipping' }
+      // },
+      // {
+      //   path: 'app-work-order-direct-labour',
+      //   component: DirectLabourComponent,
+      //   data: { title: 'direct-labour' }
+      // }
     ]
   }
 ];

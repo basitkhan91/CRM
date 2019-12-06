@@ -20,7 +20,8 @@ import { workOrderGeneralInfo } from '../../../../models/work-order-generalInfor
 })
 /** WorkOrderShipping component*/
 export class WorkOrderSmartComponent implements OnInit {
-    isSubWorkOrder = false
+    @Input() isSubWorkOrder = false;
+    @Input() paramsData;
     creditTerms: any;
     employeesOriginalData: any;
     workScopesList: { label: string; value: number; }[];
@@ -60,8 +61,14 @@ export class WorkOrderSmartComponent implements OnInit {
         this.getMultiplePartsNumbers();
         this.getAllPriority();
 
-        this.workOrderId = this.acRouter.snapshot.params['id'];
-        if (this.workOrderId && !this.isSubWorkOrder) {
+        // { workorderid: workorderid, mpnid: workorderid, subworkorderid: 0 }
+        if (this.isSubWorkOrder) {
+            this.workOrderId = this.paramsData.workorderid;
+        } else {
+            this.workOrderId = this.acRouter.snapshot.params['id'];
+        }
+
+        if (this.workOrderId) {
 
 
             this.workOrderService.getWorkOrderById(this.workOrderId).subscribe(res => {

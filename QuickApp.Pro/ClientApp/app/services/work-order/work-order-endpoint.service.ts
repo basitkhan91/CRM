@@ -353,6 +353,10 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.post(`${this.configurations.baseUrl}/api/workOrder/createworkorderquote`, JSON.stringify(data), this.getRequestHeaders())
     }
 
+    getSubWorkOrderHeaderByWorkOrderId(workOrderId, workOrderPartNumberId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/subworkorderheaderdetails?workOrderId=${workOrderId}&workOrderPartNumberId=${workOrderPartNumberId}`)
+    }
+
 
 
 

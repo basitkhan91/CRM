@@ -61,6 +61,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     @Input() priorityList;
     @Input() partNumberOriginalData;
     @Input() workOrderGeneralInformation;
+    @Input() isSubWorkOrder: boolean = false;
     // @Output() viewWorkFlow = new EventEmitter();
 
     // workOrderTypes: WorkOrderType[];
@@ -156,7 +157,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     workOrderChargesList: Object;
     workOrderExclusionsList: Object;
     isEditLabor: boolean = false;
-    issubWorkOrderState: boolean =false;
+
 
 
     constructor(
@@ -186,6 +187,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         this.getTaskList();
     }
     async ngOnInit() {
+
         //  this.showTableGrid = true;
         this.workOrderService.creditTerms = this.creditTerms;
         this.workOrderService.employeesOriginalData = this.employeesOriginalData;
@@ -1250,12 +1252,12 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     // Change of Table Grid
     gridTabChange(value) {
         this.gridActiveTab = value;
-        if(this.gridActiveTab === 'subWO'){
-            this.issubWorkOrderState = true;
-        }
+        // if(this.gridActiveTab === 'subWO'){
+        //     this.issubWorkOrderState = true;
+        // }
         this.subTabWorkFlow = '';
         this.subTabOtherOptions = '';
-   
+
     }
     // changeSinglePN(event): void {
     //   this.workOrder.isSinglePN = !this.workOrder.isSinglePN;
