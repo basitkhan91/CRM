@@ -13353,14 +13353,14 @@ button {
     }
 
     .md-stepper-horizontal .md-step .md-step-circle {
-        width: 30px;
-        height: 30px;
+        width: 25px; //30px
+        height: 25px;
         margin: 0 auto;
         background-color: #999999;
         border-radius: 50%;
         text-align: center;
-        line-height: 30px;
-        font-size: 16px;
+        line-height: 25px;
+        font-size: 12px;
         font-weight: 600;
         color: #ffffff;
     }
@@ -13403,8 +13403,8 @@ button {
     }
 
     .md-stepper-horizontal .md-step .md-step-title {
-        margin-top: 16px;
-        font-size: 16px;
+        margin-top: 12px; //16px
+        font-size: 12px; //16px
         font-weight: 600;
     }
 
