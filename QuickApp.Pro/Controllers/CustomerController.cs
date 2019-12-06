@@ -1997,27 +1997,38 @@ namespace QuickApp.Pro.Controllers
 
                 for (int i = 0; i < customerAircraftMappingVM.Length; i++)
                 {
-                    CustomerAircraftMapping customerAircraftMapping = new CustomerAircraftMapping
+                   
+                    var aircraft = _unitOfWork.Repository<CustomerAircraftMapping>().GetSingleOrDefault(c => c.AircraftTypeId == Convert.ToInt32(customerAircraftMappingVM[i].AircraftTypeId)&& (c.AircraftModelId == customerAircraftMappingVM[i].AircraftModelId) &&(c.DashNumberId == customerAircraftMappingVM[i].DashNumberId) && (c.MasterCompanyId == customerAircraftMappingVM[i].MasterCompanyId) &&(c.CustomerId == customerAircraftMappingVM[i].CustomerId));// && c.AircraftModelId == customerAircraftMappingVM[i].AircraftModelId && c.MasterCompanyId == customerAircraftMappingVM[i].MasterCompanyId && c.CustomerId = customerAircraftMappingVM[i].CustomerId);
+                    if (aircraft == null)
                     {
-                        AircraftType = customerAircraftMappingVM[i].AircraftType,
-                        AircraftModel = customerAircraftMappingVM[i].AircraftModel,
-                        DashNumber = customerAircraftMappingVM[i].DashNumber,
-                        //ModelNumber = customerAircraftMappingVM[i].ModelNumber,
-                        AircraftModelId = customerAircraftMappingVM[i].AircraftModelId,
-                        DashNumberId = customerAircraftMappingVM[i].DashNumberId,
-                        Memo = customerAircraftMappingVM[i].Memo,
-                        MasterCompanyId = customerAircraftMappingVM[i].MasterCompanyId,
-                        CreatedBy = customerAircraftMappingVM[i].CreatedBy,
-                        UpdatedBy = customerAircraftMappingVM[i].UpdatedBy,
-                        CustomerId = customerAircraftMappingVM[i].CustomerId,
-                        CreatedDate = System.DateTime.Now,
-                        UpdatedDate = System.DateTime.Now,
-                        IsDeleted = customerAircraftMappingVM[i].IsDeleted,
-                        Inventory = customerAircraftMappingVM[i].Inventory,
-                        AircraftTypeId = customerAircraftMappingVM[i].AircraftTypeId
-                    };
-                    _unitOfWork.Repository<CustomerAircraftMapping>().Add(customerAircraftMapping);
-                    _unitOfWork.SaveChanges();
+                        CustomerAircraftMapping customerAircraftMapping = new CustomerAircraftMapping
+                        {
+
+                            AircraftType = customerAircraftMappingVM[i].AircraftType,
+                            AircraftModel = customerAircraftMappingVM[i].AircraftModel,
+                            DashNumber = customerAircraftMappingVM[i].DashNumber,
+                            //ModelNumber = customerAircraftMappingVM[i].ModelNumber,
+                            AircraftModelId = customerAircraftMappingVM[i].AircraftModelId,
+                            DashNumberId = customerAircraftMappingVM[i].DashNumberId,
+                            Memo = customerAircraftMappingVM[i].Memo,
+                            MasterCompanyId = customerAircraftMappingVM[i].MasterCompanyId,
+                            CreatedBy = customerAircraftMappingVM[i].CreatedBy,
+                            UpdatedBy = customerAircraftMappingVM[i].UpdatedBy,
+                            CustomerId = customerAircraftMappingVM[i].CustomerId,
+                            CreatedDate = System.DateTime.Now,
+                            UpdatedDate = System.DateTime.Now,
+                            IsDeleted = customerAircraftMappingVM[i].IsDeleted,
+                            Inventory = customerAircraftMappingVM[i].Inventory,
+                            AircraftTypeId = customerAircraftMappingVM[i].AircraftTypeId
+                        };
+                        _unitOfWork.Repository<CustomerAircraftMapping>().Add(customerAircraftMapping);
+                        _unitOfWork.SaveChanges();
+                    }
+                    else
+                    {
+                        return Ok("Record already exist with these details");
+                    }
+                  
                 }
             }
             else

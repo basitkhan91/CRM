@@ -11,7 +11,7 @@ import { CustomerService } from '../../../services/customer.service';
 import { CustomerContactModel } from '../../../models/customer-contact.model';
 import { MatDialog } from '@angular/material';
 import { getObjectByValue, getObjectById, getValueFromObjectByKey } from '../../../generic/autocomplete';
-
+import { ConfigurationService } from '../../../services/configuration.service';
 
 @Component({
 	selector: 'app-customer-documents',
@@ -55,7 +55,7 @@ export class CustomerDocumentsComponent implements OnInit {
         //{ field: 'link', header: 'Action' },
     ];
 	constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService,
-		private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+        private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
 	}
 
 	ngOnInit() {
@@ -173,6 +173,11 @@ export class CustomerDocumentsComponent implements OnInit {
     editCustomerDocument(rowdata) {
         this.isEditButton = true;
         this.documentInformation = rowdata;
+       
+        this.customerService.toGetUploadDocumentsList(rowdata.attachmentId, rowdata.customerId, 1).subscribe(res => {
+            this.sourceViewforDocumentList = res;
+            //this.sourceViewforDocument = rowdata;
+        });
 	}
     addDocumentDetails() {
         this.isEditButton = false;
@@ -217,7 +222,11 @@ export class CustomerDocumentsComponent implements OnInit {
          this.isDeleteMode = false;
        
          this.modal.close();
-     }
+    }
+    downloadFileUpload(rowData) {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
+        window.location.assign(url);
+    }
 }
 
 
