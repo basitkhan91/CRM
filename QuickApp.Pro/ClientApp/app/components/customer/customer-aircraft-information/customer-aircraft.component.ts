@@ -10,6 +10,8 @@ import { AlertService, MessageSeverity } from '../../../services/alert.service';
 
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { NgbModal, NgbActiveModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { error } from '@angular/compiler/src/util';
+import { HttpErrorResponse } from '@angular/common/http';
 @Component({
     selector: 'app-customer-aircraft',
     templateUrl: './customer-aircraft.component.html',
@@ -477,6 +479,7 @@ export class CustomerAircraftComponent implements OnInit {
             }
         })
         await this.customerService.postCustomerAircrafts(data).subscribe(res => {
+            
             this.alertService.showMessage(
                 'Success',
                 'Mapped Aircraft Inventory Successfully',
@@ -490,6 +493,20 @@ export class CustomerAircraftComponent implements OnInit {
             this.dashNumberUnknown = false;
             this.modelUnknown = false;
             this.getAircraftMappedDataByCustomerId()
+        }, error => {
+                this.alertService.showMessage(
+                    'failed',
+                   "Record already exist with these details",
+                    MessageSeverity.error
+                );
+                this.inventoryData = []
+                this.add_SelectedAircraftId = undefined;
+                this.add_SelectedModel = [];
+                this.add_SelectedDashNumber = undefined;
+                this.dashNumberUnknown = false;
+                this.modelUnknown = false;
+                this.getAircraftMappedDataByCustomerId()
+
         })
     }
 

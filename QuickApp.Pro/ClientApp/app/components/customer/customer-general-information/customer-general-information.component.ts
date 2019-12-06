@@ -85,6 +85,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     partListOriginal: any;
     selectedActionName: any;
     disableSaveCustomerName: boolean;
+    disableSaveParentName: boolean;
     disableRestrictedDER: boolean = false;
     disableRestrictedPMA: boolean = false;
     // restrictsPMAList: any;
@@ -829,6 +830,15 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
 
     }
+    checkWithName(event) {
+    
+        if (event == this.generalInformation.name) {
+            this.disableSaveParentName = true;
+        }
+        else {
+            this.disableSaveParentName = false;
+        }
+    }
     checkCustomerCodeExist(value) {
      
         this.isCustomerCodeAlreadyExists = false;
@@ -1052,6 +1062,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 `Added New Integration  Sucessfully `,
                 MessageSeverity.success
             );
+
+
 
         })
 

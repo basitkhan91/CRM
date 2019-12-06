@@ -122,25 +122,28 @@
                                                               field="name" [suggestions]="customerNames"  
                                                               [forceSelection]="true" emptyMessage="No Match Found"
                                                              (completeMethod)="filterCustomerParentNames($event)" [size]="30"
+                                                                            (onSelect)="checkWithName($event)"
+                                                                            (onKeyUp)="checkWithName($event)"
                                                                             [minLength]="1" [dropdown]="true">
                                                                 <!-- <ng-template let-customerParentName pTemplate="item">
                                                                     <div class="ui-helper-clearfix">{{customerParentName}}</div>
                                                                 </ng-template> -->
                                                             </p-autoComplete>
                                                         </div>
-                                                        <div *ngIf="disableSaveParentName" style="color:red">Select From DropDown</div>
+                                                        <div *ngIf="disableSaveParentName" style="color:red">Parent name can't be same as customer name</div>
+                                                        
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Phone <span class="clr-red">*</span></label>
                                                     <div class="col-md-12">
-                                                        <div class="col-md-8">
+                                                        <div class="col-md-6">
                                                                       <input type="text" id="phone" name="phone" pInputText pKeyFilter="num"  minlength=10 maxlength=13 class="form-control" [(ngModel)]="generalInformation.customerPhone" required>
                                                            
                                                         </div>
                                                         
-                                                        <div class="col-md-4">
-                                                                <input type="text"  name="phoneExt" pInputText  maxlength="5" [(ngModel)]="generalInformation.customerPhoneExt">
+                                                        <div class="col-md-6">
+                                                                <input type="text"  name="phoneExt" pInputText  maxlength="10" [(ngModel)]="generalInformation.customerPhoneExt">
                                                         </div>
 
                                                     </div>
@@ -162,7 +165,7 @@
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label>Address Line 1 <span class="clr-red">*</span></label>
-                                                    <input class="form-control"  type="text" id="cmaddress1" name="cmaddress1" [(ngModel)]="generalInformation.address1" required>
+                                                    <input class="form-control" type="text" id="cmaddress1" name="cmaddress1" [(ngModel)]="generalInformation.address1" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Address Line 2</label>
@@ -174,38 +177,38 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label>City <span class="clr-red">*</span></label>
-                                                    <input class="form-control"  type="text" id="cscity" name="cscity" [(ngModel)]="generalInformation.city" required>
+                                                    <input class="form-control" type="text" id="cscity" name="cscity" [(ngModel)]="generalInformation.city" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Primary State/Province <span class="clr-red">*</span></label>
-                                                    <input class="form-control" type="text" name="stateOrProvince"  [(ngModel)]="generalInformation.stateOrProvince" required>
+                                                    <input class="form-control" type="text" name="stateOrProvince" [(ngModel)]="generalInformation.stateOrProvince" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Postal <span class="clr-red">*</span></label>
-                                                    <input class="form-control"  type="text" name="postalCode" [(ngModel)]="generalInformation.postalCode" required>
+                                                    <input class="form-control" type="text" name="postalCode" [(ngModel)]="generalInformation.postalCode" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Country <span class="clr-red">*</span></label>
                                                     <div class="inner-addon right-addon inline-block">
 
-                                                        <p-autoComplete class="autocomp-customer-cstm" filter="true" 
-                                                        [(ngModel)]="generalInformation.country" 
-                                                        emptyMessage="No Match Found"
-                                                         name="country1" [suggestions]="countrycollection"  field="nice_name" (completeMethod)="filterCountries($event)" [size]="30"
+                                                        <p-autoComplete class="autocomp-customer-cstm" filter="true"
+                                                                        [(ngModel)]="generalInformation.country"
+                                                                        emptyMessage="No Match Found"
+                                                                        name="country1" [suggestions]="countrycollection" field="nice_name" (completeMethod)="filterCountries($event)" [size]="30"
                                                                         [minLength]="1" [dropdown]="true" [forceSelection]="true" required>
                                                             <!-- <ng-template let-nice_name pTemplate="item">
-                                                                <div class="ui-helper-clearfix">{{nice_name}}</div>
-                                                            </ng-template> -->
+                    <div class="ui-helper-clearfix">{{nice_name}}</div>
+                </ng-template> -->
                                                         </p-autoComplete>
                                                     </div>
                                                     <!-- <div *ngIf="disablesave" style="color:red">Please Select From DropDown</div> -->
                                                 </div>
-                                                <div class="form-group" style="margin-top: 15px;">
-                                                    <div class="label-cstm">Is this Address For Billing</div>
+                                                <div class="form-group" style="margin-top: 45px;">
+                                                    <div class="label-cstm" style="margin-left:15px;">Is this Address For Billing</div>
                                                     <span class="checkbox-cstm">
                                                         <label style="width: 20px;">
-                                                           
-                                                            <input type="checkbox" name="isAddressForBilling" [(ngModel)]="generalInformation.isAddressForBilling">
+
+                                                            <input type="checkbox" name="isAddressForBilling" [(ngModel)]="generalInformation.isAddressForBilling" >
                                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                         </label>
                                                     </span>
@@ -214,12 +217,22 @@
                                                     <div class="label-cstm">Is this Address For Shipping</div>
                                                     <span class="checkbox-cstm">
                                                         <label style="width: 20px;">
-                                                         
+
                                                             <input type="checkbox" name="isAddressForShipping" [(ngModel)]="generalInformation.isAddressForShipping">
                                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                         </label>
                                                     </span>
                                                 </div>
+                                                <div class="form-group" style="margin-top: 15px;">
+                                                    <div class="label-cstm" style="margin-left:-13px;">Is this Customer also a Vendor</div>
+                                                    <span class="checkbox-cstm">
+                                                        <label style="width: 20px;">
+                                                            <input type="checkbox" name="isCustomerAlsoVendor" [(ngModel)]="generalInformation.isCustomerAlsoVendor">
+                                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                        </label>
+                                                    </span>
+                                                </div>
+
                                                 <!--<div class="form-group">
         <div class="form-control" *ngIf="checkAddress">
             <p-gmap #gmap [style]="{'height':'320px'}" [options]="options" [overlays]="overlays"></p-gmap>
@@ -312,16 +325,7 @@
                                                             </div>
                                                         </div>
                                                 </div>
-                                                <div class="form-group" style="margin-top: 15px;">
-                                                        <div class="label-cstm">Is this Customer also a Vendor</div>
-                                                        <span class="checkbox-cstm">
-                                                            <label style="width: 20px;">
-                                                                <input type="checkbox" name="isCustomerAlsoVendor" [(ngModel)]="generalInformation.isCustomerAlsoVendor">
-                                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                            </label>
-                                                        </span>
-                                                    </div>
-
+                                              
                                                 <!--<div class="form-group">
                 <label>Annual Revenue Potential</label>
                 <input class="form-control" type="text" name="annualRevenuePotential" [(ngModel)]="generalInformation.annualRevenuePotential">
@@ -355,6 +359,7 @@
                                                                      [options]="partListForPMA" 
                                                                      [filter]="true"
                                                                      itemSize="30"
+                                                                      defaultLabel="Except for Choose"
                                                                     ></p-multiSelect>
                                                                 </div>
                                                                 <div class="col-sm-3">
@@ -423,7 +428,8 @@
                                                                                        [(ngModel)]="restictDERtempList"
                                                                                        [options]="partListForDER"
                                                                                        [filter]="true"
-                                                                                       itemSize="30"></p-multiSelect>
+                                                                                       itemSize="30"
+                                                                                       defaultLabel="Except for Choose"></p-multiSelect>
                                                                     </div>
                                                                     <div class="col-sm-3">
                                                                         <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" (click)="addRestrictBER()"></a></span>
@@ -492,7 +498,7 @@
                                             </div>
                                         </div>
                                         <div class="form-row pull-right">
-                                            <button type="submit" class="btn btn-primary-cstm submit-btn" [disabled]="!generalInfoForm.valid || isCustomerNameAlreadyExists || disableSaveCustomerName || isCustomerCodeAlreadyExists" (click)="saveGeneralInformation()">Save &amp; Next</button>
+                                            <button type="submit" class="btn btn-primary-cstm submit-btn" [disabled]="!generalInfoForm.valid || isCustomerNameAlreadyExists || disableSaveCustomerName || isCustomerCodeAlreadyExists ||disableSaveParentName" (click)="saveGeneralInformation()">Save &amp; Next</button>
                                         </div>
 
                                     </div>
@@ -850,9 +856,10 @@
 
                     <div class="form-group">
                         <div class="col-sm-6">
+
                             <span class="checkbox-cstm">
-                                <label style="margin-top: 12px;" class="form-check-label" for="isActive">
-                                    <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="addNewIntergation.isActive">
+                                <label style="margin-top: 12px;" class="form-check-label">
+                                    <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" id="isActive" [(ngModel)]="addNewIntergation.isActive">
                                     <span class="cr"><i class="cr-icon pi pi-check"></i></span> Active
                                 </label>
                             </span>
