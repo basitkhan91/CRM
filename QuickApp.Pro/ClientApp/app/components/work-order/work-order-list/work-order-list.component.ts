@@ -79,6 +79,11 @@ export class WorkOrderListComponent implements OnInit {
     }
 
 
+
+
+
+
+
     columnsChanges() {
         this.refreshList();
     }

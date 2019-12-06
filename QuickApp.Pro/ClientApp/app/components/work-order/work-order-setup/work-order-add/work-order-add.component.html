@@ -763,8 +763,9 @@
                           [workOrderAssetList]="workOrderAssetList" [savedWorkOrderData]="savedWorkOrderData" ></app-work-order-assets>
                     </div>
 
-                    <div  *ngIf="workOrderId" [ngClass]="{hidedata : gridActiveTab !== 'subWO'}">
-                      <!-- <app-work-order-smart [isSubWorkOrder]="issubWorkOrderState"></app-work-order-smart> -->
+                    <div  *ngIf="workOrderId && (gridActiveTab === 'subWO') " [ngClass]="{hidedata : gridActiveTab !== 'subWO'}">
+                        <app-sub-work-orderlist></app-sub-work-orderlist>
+                     
                     </div>
 
                     <div  *ngIf="quote" [ngClass]="{hidedata : gridActiveTab !== 'quote' }" >

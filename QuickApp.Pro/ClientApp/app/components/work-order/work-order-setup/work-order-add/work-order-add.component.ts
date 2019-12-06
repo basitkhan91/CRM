@@ -186,6 +186,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         this.getTaskList();
     }
     async ngOnInit() {
+
         //  this.showTableGrid = true;
         this.workOrderService.creditTerms = this.creditTerms;
         this.workOrderService.employeesOriginalData = this.employeesOriginalData;
@@ -1250,9 +1251,9 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     // Change of Table Grid
     gridTabChange(value) {
         this.gridActiveTab = value;
-        if(this.gridActiveTab === 'subWO'){
-            this.issubWorkOrderState = true;
-        }
+        // if(this.gridActiveTab === 'subWO'){
+        //     this.issubWorkOrderState = true;
+        // }
         this.subTabWorkFlow = '';
         this.subTabOtherOptions = '';
    
