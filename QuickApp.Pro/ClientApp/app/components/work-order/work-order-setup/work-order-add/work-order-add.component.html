@@ -1,8 +1,6 @@
 ﻿<div [@fadeInOut] class="page-content">
     <div class="right_col" role="main">
-        <span class="management-icon" data-original-title="Management" data-toggle="tooltip"><i
-                class="fa fa-sitemap"></i></span><span class="help-icon" data-original-title="Help"
-            data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span>
+       
         <div class="col-md-12">
             <div class="card" style="">
             <form #workOrderForm="ngForm" >
@@ -11,10 +9,12 @@
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item" aria-current="page">Work Order</li>
                             <li class="breadcrumb-item active" aria-current="page">Work Order Setup</li>
+                            <li *ngIf="isSubWorkOrder" class="breadcrumb-item active" aria-current="page">Sub WOrkOrder </li>
                         </ol>
                     </nav>
                     <div class="pheading">
-                        <h4 class="page-heading">Work Order Setup</h4>
+                        <h4 *ngIf="!isSubWorkOrder" class="page-heading">Work Order Setup</h4>
+                        <h4 *ngIf="isSubWorkOrder" class="page-heading">Sub Work Order Setup</h4>
                     </div>
                     <div class="clear"></div>
                     <div class="card">
@@ -336,7 +336,7 @@
                                 <!-- <th rowspan="2">Qty *</th> -->
                                 <th rowspan="2">Condition Id *</th>
                                 <th rowspan="2">Stock Line Num *</th>
-                                <th rowspan="2">Serial Num *</th>
+                                <th rowspan="2">Serial Num </th>
                                 <th rowspan="2">CMM/Pub Ref</th>
                                 <th rowspan="2">Workflow ID </th>
                                 <th rowspan="2">Stage *</th>
@@ -433,7 +433,7 @@
 
                                 <td><input type="text" class="form-control w100"
                                   name="serialNumber{{i}}"  #serialNumber="ngModel" 
-                                  [(ngModel)]="workOrderPartNumber.serialNumber"  required disabled >
+                                  [(ngModel)]="workOrderPartNumber.serialNumber"   disabled >
                                 </td>
                                 <td>
                                     <p-dropdown placeholder="Select CMM" 
@@ -752,14 +752,20 @@
                         ></app-work-order-labor>
                     </div>
 
+
                     <div [ngClass]="{hidedata : gridActiveTab !== 'equipment'}">
                         <app-work-order-assets (saveEquipmentListForWO)="saveWorkOrderEquipmentList($event)"
                          (updateEquipmentListForWO)="updateWorkOrderEquipmentList($event)"
-                         (getEquipmentData)="getEquipmentByWorkOrderId($event)" 
+                         (refreshData)="getEquipmentByWorkOrderId($event)" 
                          [employeesOriginalData]="employeesOriginalData" 
                           [isWorkOrder]="isWorkOrder" 
                           [workFlowObject]="workFlowObject"
                           [workOrderAssetList]="workOrderAssetList" [savedWorkOrderData]="savedWorkOrderData" ></app-work-order-assets>
+                    </div>
+
+                    <div  *ngIf="workOrderId && (gridActiveTab === 'subWO') " [ngClass]="{hidedata : gridActiveTab !== 'subWO'}">
+                        <app-sub-work-orderlist></app-sub-work-orderlist>
+                     
                     </div>
 
                     <div  *ngIf="quote" [ngClass]="{hidedata : gridActiveTab !== 'quote' }" >
@@ -774,6 +780,7 @@
                       (saveRIParts)="saveReservedPartorIssue($event)"
                       (saveMaterialListForWO)="saveWorkOrderMaterialList($event)"
                       (updateMaterialListForWO)="updateWorkOrderMaterialList($event)"
+                      (refreshData)="getMaterialListByWorkOrderId()"
                       ></app-work-order-complete-material-list>
                     </div>
                       
@@ -799,6 +806,7 @@
                            [workOrderChargesList]="workOrderChargesList" 
                         (saveChargesListForWO)="saveWorkOrderChargesList($event)"
                         (updateChargesListForWO)="updateWorkOrderChargesList($event)"
+                        (refreshData)="getChargesListByWorkOrderId()" 
                         
                         ></app-work-order-charges> 
                     </div>
@@ -810,6 +818,7 @@
                            [workOrderExclusionsList]="workOrderExclusionsList" 
                         (saveExclusionsListForWO)="saveWorkOrderExclusionsList($event)"
                         (updateExclusionsListForWO)="updateWorkOrderExclusionsList($event)"
+                        (refreshData)="getExclusionListByWorkOrderId()"
                         
                         ></app-work-order-exclusions> 
                     </div>

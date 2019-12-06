@@ -10,6 +10,8 @@ import { AlertService, MessageSeverity } from '../../../services/alert.service';
 
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { NgbModal, NgbActiveModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { error } from '@angular/compiler/src/util';
+import { HttpErrorResponse } from '@angular/common/http';
 @Component({
     selector: 'app-customer-aircraft',
     templateUrl: './customer-aircraft.component.html',
@@ -33,6 +35,7 @@ export class CustomerAircraftComponent implements OnInit {
     // selectAircraftManfacturer: any = [];
     selectedAircraftModel = [];
     selectedDashNumbers = [];
+    selectedmemo:any =[];
 
     modal: NgbModalRef;
     // add craft inventory variables 
@@ -244,17 +247,27 @@ export class CustomerAircraftComponent implements OnInit {
 
     //  search aircraft information by all parameter
     async searchAircraftInformation() {
-
+       
         await this.searchByFieldUrlCreateforAircraftInformation();
         this.searchAircraftParams = '';
      
         // checks where multi select is empty or not and calls the service
-        if (
+          if (
             this.aircraftManfacturerIdsUrl !== '' &&
             this.aircraftModelsIdUrl !== '' &&
-            this.dashNumberIdUrl !== ''
+            this.dashNumberIdUrl !== '' &&
+            this.selectedmemo !== ''
         ) {
-          
+
+            this.searchAircraftParams = `AircraftTypeId=${this.aircraftManfacturerIdsUrl}&AircraftModelId=${this.aircraftModelsIdUrl}&DashNumberId=${this.dashNumberIdUrl}&memo=${this.selectedmemo}`;
+        }
+       else if (
+            this.aircraftManfacturerIdsUrl !== '' &&
+            this.aircraftModelsIdUrl !== '' &&
+            this.dashNumberIdUrl !== '' 
+           
+        ) {
+
             this.searchAircraftParams = `AircraftTypeId=${this.aircraftManfacturerIdsUrl}&AircraftModelId=${this.aircraftModelsIdUrl}&DashNumberId=${this.dashNumberIdUrl}`;
         }
         // search only by manfacturer and Model and  publicationId
@@ -290,6 +303,26 @@ export class CustomerAircraftComponent implements OnInit {
         else if (this.dashNumberIdUrl !== '') {
             this.searchAircraftParams = `DashNumberId=${this.dashNumberIdUrl}`;
         }
+
+        else if (this.selectedmemo !='')
+        {
+           
+            this.searchAircraftParams = `memo=${this.selectedmemo}`;
+        }
+
+        else if (this.selectedmemo != '' && this.dashNumberIdUrl !== '' && this.aircraftModelsIdUrl !== '') {
+
+            this.searchAircraftParams = `AircraftModelId=${this.aircraftModelsIdUrl}&DashNumberId=${this.dashNumberIdUrl}&memo=${this.selectedmemo}`;
+        }
+        else if (this.selectedmemo != '' && this.dashNumberIdUrl !== '') {
+
+            this.searchAircraftParams = `DashNumberId=${this.dashNumberIdUrl}&memo=${this.selectedmemo}`;
+        }
+        else if (this.selectedmemo != '' && this.aircraftModelsIdUrl !== '') {
+
+            this.searchAircraftParams = `AircraftModelId=${this.aircraftModelsIdUrl}&memo=${this.selectedmemo}`;
+        }
+       
           this.customerService.searchAirMappedByMultiTypeIDModelIDDashIDByCustomerId(this.id, this.searchAircraftParams).subscribe(res => {
             this.aircraftListDataValues = res;
 
@@ -297,7 +330,7 @@ export class CustomerAircraftComponent implements OnInit {
             this.aircraftManfacturerIdsUrl = '';
             this.aircraftModelsIdUrl = '';
             this.dashNumberIdUrl = '';
-
+              this.selectedmemo = [];
             this.selectAircraftManfacturer = '';
             this.selectedAircraftModel = [];
             this.selectedDashNumbers = [];
@@ -446,6 +479,7 @@ export class CustomerAircraftComponent implements OnInit {
             }
         })
         await this.customerService.postCustomerAircrafts(data).subscribe(res => {
+            
             this.alertService.showMessage(
                 'Success',
                 'Mapped Aircraft Inventory Successfully',
@@ -459,6 +493,20 @@ export class CustomerAircraftComponent implements OnInit {
             this.dashNumberUnknown = false;
             this.modelUnknown = false;
             this.getAircraftMappedDataByCustomerId()
+        }, error => {
+                this.alertService.showMessage(
+                    'failed',
+                   "Record already exist with these details",
+                    MessageSeverity.error
+                );
+                this.inventoryData = []
+                this.add_SelectedAircraftId = undefined;
+                this.add_SelectedModel = [];
+                this.add_SelectedDashNumber = undefined;
+                this.dashNumberUnknown = false;
+                this.modelUnknown = false;
+                this.getAircraftMappedDataByCustomerId()
+
         })
     }
 

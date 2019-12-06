@@ -195,6 +195,7 @@ export class PurchaseSetupComponent implements OnInit {
 	childIndex: number;
 	allCountriesList: any = [];
 	countriesList: any = [];
+	inputValidCheck: any;
 
 	constructor(private route: Router,
 		public legalEntityService: LegalEntityService,
@@ -827,6 +828,7 @@ export class PurchaseSetupComponent implements OnInit {
 			//  $('.createPO-form input.ng-invalid, .createPO-form select.ng-invalid, .createPO-form p-calendar.ng-invalid input').addClass('border-red-clr');
 			//  $('.createPO-form input.ng-valid, .createPO-form select.ng-valid').removeClass('border-red-clr');
 			alert('Please enter required fields!');
+			this.inputValidCheck = true;
 		}
 		else {
 			// header save 
@@ -2075,6 +2077,7 @@ export class PurchaseSetupComponent implements OnInit {
 	}
 
 	addPartNumber() {
+		this.inputValidCheck = false;
 		if (this.vendorService.isEditMode == false) {
 			this.partListData.push(new CreatePOPartsList()); //CreatePOPartsListParent
 			//grid childlist disable on load

@@ -1,10 +1,10 @@
 import { Component } from "@angular/core";
 
 @Component({
-  selector: "app-sales-address",
+  selector: "app-sales-order-address",
   templateUrl: "./sales-address.component.html",
   styleUrls: ["./sales-address.component.css"]
 })
-export class SalesAddressComponent {
+export class SalesOrderAddressComponent {
   constructor() {}
 }

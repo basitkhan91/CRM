@@ -129,6 +129,67 @@ namespace QuickApp.Pro.Controllers
 
         #endregion
 
+
+        #region Sub Work Order
+
+        [HttpPost("createsubworkorder")]
+        public IActionResult CreateSubWorkOrder([FromBody] SubWorkOrder subWorkOrder)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    unitOfWork.WorkOrderRepository.CreateSubWorkOrder(subWorkOrder);
+                    return Ok(subWorkOrder);
+                }
+                else
+                {
+                    return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("updatesubworkorder")]
+        public IActionResult UpdateSubWorkOrder([FromBody] SubWorkOrder subWorkOrder)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    unitOfWork.WorkOrderRepository.UpdateSubWorkOrder(subWorkOrder);
+                    return Ok(subWorkOrder);
+                }
+                else
+                {
+                    return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("subworkorderdetails")]
+        public IActionResult SubWorkOrderDetails(long subWorkOrderId)
+        {
+            var result = unitOfWork.WorkOrderRepository.SubWorkOrderDetails(subWorkOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("subworkorderlist")]
+        public IActionResult SubWorkOrderList(long workOrderId)
+        {
+            var result = unitOfWork.WorkOrderRepository.SubWorkOrderList(workOrderId);
+            return Ok(result);
+        }
+
+        #endregion
+
         #region Work Flow Work Order
 
         [HttpPost("createworkflowworkorder")]
@@ -173,6 +234,15 @@ namespace QuickApp.Pro.Controllers
             var result = unitOfWork.WorkOrderRepository.WorkOrderWorkFlowView(workFlowWorkOrderId);
             return Ok(result);
         }
+
+        [HttpGet("subworkorderheaderdetails")]
+        public IActionResult SubWorkOrderHeaderDetails(long workOrderId, long workOrderPartNumberId)
+        {
+            var result = unitOfWork.WorkOrderRepository.SubWorkOrderHeaderDetails(workOrderId, workOrderPartNumberId);
+            return Ok(result);
+        }
+
+
 
         #endregion
 
@@ -256,6 +326,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("deleteworkordercharge")]
+        public IActionResult DeleteWorkOrderCharge(long workOrderChargeId, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.DeleteWorkOrderCharge(workOrderChargeId, updatedBy);
+            return Ok();
+        }
+
+
         #endregion
 
         #region Work Order Assets
@@ -325,6 +403,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("deleteworkorderasset")]
+        public IActionResult DeleteWorkOrderAsset(long workOrderAssetId, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.DeleteWorkOrderAsset(workOrderAssetId, updatedBy);
+            return Ok();
+        }
+
         #endregion
 
         #region Work Order Exclusions
@@ -365,6 +450,15 @@ namespace QuickApp.Pro.Controllers
             var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderExclusionsList(wfwoId, workOrderId);
             return Ok(result);
         }
+
+        [HttpGet("deleteworkorderexclusions")]
+        public IActionResult DeleteWorkOrderExclusions(long workOrderExclusionsId, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.DeleteWorkOrderExclusions(workOrderExclusionsId, updatedBy);
+            return Ok();
+        }
+
+        
 
         #endregion
 
@@ -653,6 +747,34 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest(ModelState.Values.FirstOrDefault().Errors);
             }
 
+        }
+
+        [HttpGet("getreservedparts")]
+        public IActionResult GetReservedParts(long workFlowWorkOrderId=0, long workOrderId=0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetReservedParts(workFlowWorkOrderId, workOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("getunreservedparts")]
+        public IActionResult GetUnReservedParts(long workFlowWorkOrderId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetUnReservedParts(workFlowWorkOrderId, workOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("getissuedparts")]
+        public IActionResult GetIssuedParts(long workFlowWorkOrderId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetIssuedParts(workFlowWorkOrderId, workOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("getunissuedParts")]
+        public IActionResult GetUnIssuedParts(long workFlowWorkOrderId = 0, long workOrderId = 0)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetUnIssuedParts(workFlowWorkOrderId, workOrderId);
+            return Ok(result);
         }
 
 

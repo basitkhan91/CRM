@@ -708,6 +708,7 @@ namespace QuickApp.Pro.Controllers
                 existingResult.LicenseNumber = employeeLicensureViewModel.LicenseNumber;
                 existingResult.EmployeeLicenseTypeId = employeeLicensureViewModel.EmployeeLicenseTypeId;
                 existingResult.IsLicenseInForce = employeeLicensureViewModel.IsLicenseInForce;
+                existingResult.IsExpirationDate = employeeLicensureViewModel.IsExpirationDate;
                 existingResult.CreatedDate = DateTime.Now;
                 existingResult.UpdatedDate = DateTime.Now;
                 existingResult.UpdatedBy = employeeLicensureViewModel.UpdatedBy;

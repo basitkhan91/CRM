@@ -451,8 +451,12 @@ namespace DAL
 
         public DbSet<MasterSalesProbablity> MasterSalesProbablity { get; set; }
         public DbSet<SubWorkOrder> SubWorkOrder { get; set; }
+        public DbSet<IntegrationPortalMapping> IntegrationPortalMapping { get; set; }
 
-        
+        public DbSet<Master1099> Master1099 { get; set; }
+        public DbSet<VendorProcess1099> VendorProcess1099 { get; set; }
+
+
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

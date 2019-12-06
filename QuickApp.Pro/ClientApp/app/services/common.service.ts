@@ -79,5 +79,14 @@ export class CommonService {
         return this.http.get<any>(`${this.baseUrl}/api/workOrder/stocklinedetails?stockLineId=${stockLineId}`, this.authService.getRequestHeaders())
     }
 
+    getClassificationMapping(id,moduleId){
+        return this.http.get<any>(`${this.baseUrl}/api/Common/classificationmappings?referenceId=${id}&moduleId=${moduleId}`, this.authService.getRequestHeaders())
+    }
+
+    getIntegrationMapping(id,moduleId){
+        return this.http.get<any>(`${this.baseUrl}/api/Common/integrationmappings?referenceId=${id}&moduleId=${moduleId}`, this.authService.getRequestHeaders())
+    }
+    
+
 
 }

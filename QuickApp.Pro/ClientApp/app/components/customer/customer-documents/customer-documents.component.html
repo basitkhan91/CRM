@@ -143,7 +143,7 @@
     </div>
 </ng-template>
 
-    <div id="view"  #view class="modal fade" role="dialog" *ngIf="sourceViewforDocument">
+    <div id="view"  #view class="modal fade" role="dialog" >
             <div class="modal-dialog">
           
               <!-- Modal content-->
@@ -152,43 +152,29 @@
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
                   <h4 class="modal-title">Details of Customer Document</h4>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" *ngIf="sourceViewforDocument">
                     <div class="col-sm-12">
                         <p><span class="label"><b>Name: </b></span><span class="value">{{sourceViewforDocument.docName}}</span></p>
                         <p><span class="label"><b>Description: </b></span><span class="value">{{sourceViewforDocument.docDescription}}</span></p>
                         <p><span class="label"><b>Memo: </b></span><span class="value">{{sourceViewforDocument.docMemo}}</span></p>
-                        <p><span class="label"><b>Attachments: </b></span><span class="value"></span></p>
-                        <div>
+                         <div>
                             <h4 class="panel-title" style="padding-left: 10px;">Attachment Details:</h4>
-                            <p-table class="rpo-table-cstm"
-                                     [columns]="headersforAttachment"
-                                     [value]="sourceViewforDocumentList"
-                                     [paginator]="true"
-                                     [rows]="10"
-                                     [first]="first">
-                                <ng-template pTemplate="header" let-columns>
-                                    <tr>
-                                        <th>Sl.No</th>
-                                        <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
-                                            {{ col.header }}
-                                        </th>
-                                        <th>Action</th>
-                                    </tr>
-                                </ng-template>
-                                <ng-template pTemplate="body"
-                                             let-rowData
-                                             let-columns="columns"
-                                             let-rowIndex="rowIndex">
-                                    <tr>
-                                        <td>{{ rowIndex + 1 }}</td>
-                                        <td *ngFor="let col of columns">
-                                            {{ rowData[col.field] }}
-                                        </td>
-                                        <td><a class="btn btn-primary-cstm" (click)="downloadFileUpload(rowData)" download>Download</a></td>
-                                    </tr>
+                            <table class="table table-bordered ">
+                                <tr>
+                                    <th>File Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                                <tr *ngFor="let f of sourceViewforDocumentList ">
+                                    <td>{{f.fileName}}</td>
+                                  
+                                    <td><a class="btn  btn-tbl-file-download" (click)="downloadFileUpload(f)" download>Download</a>  </td>
 
-                                </ng-template>
-                            </p-table>
+                                  
+                                </tr>
+
+                            </table>
+
+                         
                         </div>
                         <div class="clear"></div>
                     </div>
@@ -253,7 +239,7 @@
                 <div class="modal-body">
                     <div class="form-row">
                         <div class="col-md-6">
-                            
+
                             <div class="form-group">
                                 <label>Name <span class="clr-red">*</span></label>
                                 <input class="form-control" type="text" name="name" [(ngModel)]="documentInformation.docName" required>
@@ -265,16 +251,33 @@
                             <div class="form-group">
                                 <label>Memo <span class="clr-red">*</span></label>
                                 <textarea class="form-control" name="memo" [(ngModel)]="documentInformation.docMemo" required></textarea>
-                            </div>                            
+                            </div>
                         </div>
 
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label style="float: none;">Attachments <span class="clr-red">*</span></label>
-                                 <p-fileUpload name="fileupload[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event)"></p-fileUpload>                               
+                                <p-fileUpload name="fileupload[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event)"></p-fileUpload>
                             </div>
                         </div>
-                       
+                        <div class="table-responsive table-overflow">
+                            <h4 class="panel-title" style="padding-left: 10px;">Attachment Details:</h4>
+                            <table class="table table-bordered ">
+                                <tr>
+                                    <th>File Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                                <tr *ngFor="let f of sourceViewforDocumentList ">
+                                    <td>{{f.fileName}}</td>
+                                    <td><a class="btn  btn-tbl-file-download" (click)="downloadFileUpload(f)" download>Download</a>  </td>
+
+
+                                </tr>
+
+                            </table>
+                        </div>
+
+
                     </div>
                 </div>
                 <div class="modal-footer">

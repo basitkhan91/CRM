@@ -46,7 +46,7 @@
                                                 <div class="form-group col-sm-12">
                                                     <label class="control-label col-sm-4">Certification Type</label>
                                                     <div class="inner-addon col-sm-7 inline-block display-flex">
-                                                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeLicenseTypeId">
+                                                        <select class="drp-certification-type" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeLicenseTypeId">
                                                             <option *ngFor="let certificationtype of allCertification" [ngValue]="certificationtype.employeeLicenseTypeId">{{certificationtype.description}}</option>
                                                         </select>
                                                         <a href="#" data-toggle="modal" data-target="#addCertificationType" class="add-icon" (click)="openCertification(contentEdit)"><i class="fa fa-plus"></i></a>
@@ -78,20 +78,33 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-sm-12">
-                                                    <label class="control-label col-sm-4">Certification Expiry Date</label>
-                                                    <div class="col-sm-7">
-                                                        <!--<input class="form-control datepicker" type="date" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.certificationDate">-->
-
-                                                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.ExpirationDate"></p-calendar>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-sm-12">
                                                     <label class="control-label col-sm-4">Is Expiration Date</label>
                                                     <div class="col-sm-7">
-                                                        <input class="form-control datepicker" type="checkbox" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.IsExpirationDate">
+                                                        <input class="form-control datepicker" type="checkbox" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.isExpirationDate">
 
                                                     </div>
                                                 </div>
+
+                                                <p style="margin-bottom: 8px;" *ngIf="!sourceEmployee.isExpirationDate"></p>
+                                                <div class="form-group col-sm-12" *ngIf="sourceEmployee.isExpirationDate">
+                                                        <label class="control-label col-sm-4">Certification Expiry Date</label>
+                                                        <div class="col-sm-7">
+                                                            <!--<input class="form-control datepicker" type="date" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.certificationDate">-->
+    
+                                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.expirationDate"></p-calendar>
+                                                            
+                                                        </div>
+                                                
+                                                </div>
+                                                <!-- <div class="form-group col-sm-12">
+                                                    <label class="control-label col-sm-4">Certification Expiry Date</label>
+                                                    <div class="col-sm-7">                                                     
+
+                                                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.expirationDate"></p-calendar>
+                                                        
+                                                    </div>
+                                                </div> -->
+                                                
                                                 <!--  <div class="form-group col-sm-12">
         <label class="control-label col-sm-4">Certification In Expired?</label>
         <div class="col-sm-7">

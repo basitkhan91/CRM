@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { WorkOrderService } from '../../../../services/work-order/work-order.service';
 import { AuthService } from '../../../../services/auth.service';
 import { AlertService, MessageSeverity } from '../../../../services/alert.service';
@@ -17,7 +17,7 @@ export class WorkOrderAssetsComponent implements OnInit {
     @Input() isWorkOrder;
     @Input() employeesOriginalData;
     @Input() workFlowObject;
-    @Output() getEquipmentData = new EventEmitter();
+    @Output() refreshData = new EventEmitter();
     @Output() saveEquipmentListForWO = new EventEmitter();
     @Output() updateEquipmentListForWO = new EventEmitter();
     assetRecordId: any;
@@ -46,7 +46,7 @@ export class WorkOrderAssetsComponent implements OnInit {
     }
 
     constructor(private workOrderService: WorkOrderService, private authService: AuthService,
-        private alertService: AlertService, ) {
+        private alertService: AlertService, private cdRef: ChangeDetectorRef) {
 
 
     }
@@ -101,6 +101,7 @@ export class WorkOrderAssetsComponent implements OnInit {
 
             this.workOrderService.assetsCheckInByWorkOrderAssetsId(assetcheckin).subscribe(res => {
                 this.assetsform = { ...this.assets };
+                this.refreshData.emit();
                 this.alertService.showMessage(
                     '',
                     'Updated WorkOrder Asset Status Successfully',
@@ -119,6 +120,7 @@ export class WorkOrderAssetsComponent implements OnInit {
             }
             this.workOrderService.assetsCheckOutByWorkOrderAssetsId(assetcheckout).subscribe(res => {
                 this.assetsform = { ...this.assets };
+                this.refreshData.emit();
                 this.alertService.showMessage(
                     '',
                     'Updated WorkOrder Asset Status Successfully',
@@ -133,11 +135,21 @@ export class WorkOrderAssetsComponent implements OnInit {
         this.editData = undefined;
     }
     edit(rowData) {
+        this.createNew();
+        this.cdRef.detectChanges();
         this.isEdit = true;
         this.editData = rowData;
     }
     delete(rowData) {
-
+        const { workOrderAssetId } = rowData;
+        this.workOrderService.deleteWorkOrderAssetByAssetId(workOrderAssetId, this.userName).subscribe(res => {
+            this.refreshData.emit();
+            this.alertService.showMessage(
+                '',
+                'Deleted WorkOrder Asset  Successfully',
+                MessageSeverity.success
+            );
+        })
     }
 
 

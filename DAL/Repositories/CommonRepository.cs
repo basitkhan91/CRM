@@ -245,7 +245,7 @@ namespace DAL.Repositories
                     restrictedParts.ForEach(p =>
                     {
                         p.ReferenceId = referenceId;
-                      //  p.PartNumber = GetRestrictedPartName(p.MasterPartId, moduleId);
+                        //  p.PartNumber = GetRestrictedPartName(p.MasterPartId, moduleId);
                         p.ModuleId = moduleId;
                         p.IsDeleted = false;
                         p.IsActive = true;
@@ -299,7 +299,7 @@ namespace DAL.Repositories
                 {
                     foreach (var item in restrictedParts)
                     {
-                      // item.PartNumber = GetRestrictedPartName(item.MasterPartId, moduleId);
+                        // item.PartNumber = GetRestrictedPartName(item.MasterPartId, moduleId);
                         if (item.RestrictedPartId > 0)
                         {
 
@@ -312,7 +312,7 @@ namespace DAL.Repositories
                             item.IsActive = true;
                             item.IsDeleted = false;
                             item.CreatedDate = item.UpdatedDate = DateTime.Now;
-                           
+
                             _appContext.RestrictedParts.Add(item);
                         }
                         _appContext.SaveChanges();
@@ -329,7 +329,7 @@ namespace DAL.Repositories
         {
             try
             {
-                return _appContext.RestrictedParts.Where(p => p.IsDeleted == false && p.ModuleId == moduleId && p.ReferenceId == referenceId && p.PartType == partType && p.PartNumber !=null)
+                return _appContext.RestrictedParts.Where(p => p.IsDeleted == false && p.ModuleId == moduleId && p.ReferenceId == referenceId && p.PartType == partType && p.PartNumber != null)
                                                    .OrderBy(p => p.RestrictedPartId)
                                                    .ToList();
             }
@@ -470,7 +470,16 @@ namespace DAL.Repositories
             {
                 if (classificationMappings != null && classificationMappings.Count > 0)
                 {
-                    classificationMappings.ForEach(p => { p.ModuleId = moduleId; p.ReferenceId = referenceId; p.IsActive = true; p.IsDeleted = false; p.CreatedDate = DateTime.Now; p.UpdatedDate = DateTime.Now; p.CreatedBy = createdBy; p.UpdatedBy = createdBy; });
+                    // classificationMappings.ForEach(p => { p.ModuleId = moduleId; p.ReferenceId = referenceId; p.IsActive = true; p.IsDeleted = false; p.CreatedDate = DateTime.Now; p.UpdatedDate = DateTime.Now; p.CreatedBy = createdBy; p.UpdatedBy = createdBy; });
+                    foreach (var item in classificationMappings)
+                    {
+                        item.ModuleId = moduleId;
+                        item.ReferenceId = referenceId;
+                        item.IsActive = true;
+                        item.IsDeleted = false;
+                        item.CreatedDate = item.UpdatedDate = DateTime.Now;
+                        item.CreatedBy = item.UpdatedBy = createdBy;
+                    }
                     _appContext.ClassificationMapping.AddRange(classificationMappings);
                     _appContext.SaveChanges();
                 }
@@ -545,7 +554,8 @@ namespace DAL.Repositories
                                                  {
                                                      cm.ClassificationMappingId,
                                                      cm.ClasificationId,
-                                                     vc.ClassificationName
+                                                     vc.ClassificationName,
+                                                     vc.VendorClassificationId
                                                  })
                            .Distinct()
                            .ToList();
@@ -622,16 +632,16 @@ namespace DAL.Repositories
                 shippingVia.UpdatedDate = DateTime.Now;
                 shippingVia.IsActive = true;
                 shippingVia.IsDeleted = false;
-                if(shippingVia.ShippingViaId>0)
+                if (shippingVia.ShippingViaId > 0)
                 {
                     _appContext.ShippingVia.Update(shippingVia);
                 }
                 else
                 {
-                    shippingVia.CreatedDate = DateTime.Now; 
+                    shippingVia.CreatedDate = DateTime.Now;
                     _appContext.ShippingVia.Add(shippingVia);
                 }
-                
+
                 _appContext.SaveChanges();
                 return shippingVia.ShippingViaId;
             }
@@ -890,13 +900,13 @@ namespace DAL.Repositories
             {
 
                 var defaultCurrency = (from le in _appContext.LegalEntity
-                                                 join c in _appContext.Currency on le.FunctionalCurrencyId equals c.CurrencyId
-                                                 where le.LegalEntityId == legalEntityId && c.IsActive == true  && (c.IsDelete==false ||c.IsDelete==null)
-                                                 select new
-                                                 {
-                                              currencyId=       le.FunctionalCurrencyId,
-                                                 currencyName=   c.DisplayName
-                                                 })
+                                       join c in _appContext.Currency on le.FunctionalCurrencyId equals c.CurrencyId
+                                       where le.LegalEntityId == legalEntityId && c.IsActive == true && (c.IsDelete == false || c.IsDelete == null)
+                                       select new
+                                       {
+                                           currencyId = le.FunctionalCurrencyId,
+                                           currencyName = c.DisplayName
+                                       })
                            .Distinct()
                            .ToList();
 
@@ -907,6 +917,49 @@ namespace DAL.Repositories
             {
                 throw ex;
             }
+        }
+
+        public void CreateIntegrationMappings(List<IntegrationPortalMapping> integrationMappings, int moduleId, long referenceId, string createdBy)
+        {
+            try
+            {
+                if (integrationMappings != null && integrationMappings.Count > 0)
+                {
+                    foreach (var item in integrationMappings)
+                    {
+                        item.ModuleId = moduleId;
+                        item.ReferenceId = referenceId;
+                        item.IsActive = true;
+                        item.IsDeleted = false;
+                        item.CreatedDate = item.UpdatedDate = DateTime.Now;
+                        item.CreatedBy = item.UpdatedBy = createdBy;
+                    }
+                    _appContext.IntegrationPortalMapping.AddRange(integrationMappings);
+                    _appContext.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public IEnumerable<object> GetIntegrationMappings(long referenceId, int moduleId)
+        {
+            var integrationnMappingList = (from im in _appContext.IntegrationPortalMapping
+                                             join vc in _appContext.IntegrationPortal on im.IntegrationPortalId equals Convert.ToInt64(vc.IntegrationPortalId)
+                                             where im.IsDeleted == false && im.ModuleId == moduleId && im.ReferenceId == referenceId
+                                             select new
+                                             {
+                                                 im.IntegrationPortalMappingId,
+                                                 im.IntegrationPortalId,
+                                                 vc.Description                                                
+                                             })
+                         .Distinct()
+                         .ToList();
+
+
+            return integrationnMappingList;
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

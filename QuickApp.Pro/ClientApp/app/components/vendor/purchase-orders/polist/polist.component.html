@@ -28,7 +28,7 @@
 			[scrollable]="true"
 			[totalRecords]="totalRecords"
 			scrollHeight="450px"
-		  >
+		  > <!--[scrollable]="true"-->
 			<!-- <ng-template pTemplate="caption">
 				   (onPage)="changePage($event)"
 				<i class="fa fa-search" style="margin:4px 4px 0 0"></i>
@@ -116,6 +116,12 @@
 				</div>
 				
 			  </div>
+			</ng-template>
+
+			<ng-template pTemplate="colgroup" let-columns>
+				<colgroup>
+					<col *ngFor="let col of columns">
+				</colgroup>
 			</ng-template>
 	  
 			<ng-template pTemplate="header" let-columns>

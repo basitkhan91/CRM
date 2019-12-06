@@ -25,6 +25,9 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetWorkOrderWorkFlowNos(long workOrderId);
         IEnumerable<object> GetWorkOrderTaskAttributes(long workOrderTaskId);
         object WorkOrderWorkFlowView(long workFlowWorkOrderId);
+        object SubWorkOrderHeaderDetails(long workOrderId, long workOrderPartNumberId);
+
+
 
         long CreateWorkOrderLabor(WorkOrderLaborHeader workOrderLabor);
         void UpdateWorkOrderLabor(WorkOrderLaborHeader workOrderLabor);
@@ -33,6 +36,7 @@ namespace DAL.Repositories.Interfaces
         List<WorkOrderCharges> CreateWorkOrderCharges(List<WorkOrderCharges> workOrderCharges);
         List<WorkOrderCharges> UpdateWorkOrderCharges(List<WorkOrderCharges> workOrderCharges);
         IEnumerable<object> GetWorkFlowWorkOrderChargesList(long wfwoId = 0, long workOrderId = 0);
+        void DeleteWorkOrderCharge(long workOrderChargeId, string updatedBy);
 
         List<WorkOrderAssets> CreateWorkOrderAssets(List<WorkOrderAssets> workOrderAssets);
         List<WorkOrderAssets> UpdateWorkOrderAssets(List<WorkOrderAssets> workOrderAssets);
@@ -41,11 +45,13 @@ namespace DAL.Repositories.Interfaces
         void SaveAssetCheckedOut(WorkOrderAssetCheckInOut workOrderAssetCheckInOut);
         object GetAssetCheckedInandOutDetails(long assetRecordId, long workOrderAssetId);
         object WorkOrderAssetView(long assetRecordId);
+        void DeleteWorkOrderAsset(long workOrderAssetId, string updatedBy);
 
 
         List<WorkOrderExclusions> CreateWorkOrderExclusions(List<WorkOrderExclusions> workOrderExclusions);
         List<WorkOrderExclusions> UpdateWorkOrderExclusions(List<WorkOrderExclusions> workOrderExclusions);
         IEnumerable<object> GetWorkFlowWorkOrderExclusionsList(long wfwoId = 0, long workOrderId = 0);
+        void DeleteWorkOrderExclusions(long workOrderExclusionsId, string updatedBy);
 
         List<WorkOrderDocuments> CreateWorkOrderDocuments(List<WorkOrderDocuments> workOrderDocuments);
         void UpdateWorkOrderDocuments(WorkOrderDocuments workOrderDocuments);
@@ -87,7 +93,18 @@ namespace DAL.Repositories.Interfaces
 
         IEnumerable<WorkOrderReserveIssuesParts> GetReservedIssuedParts(long WorkFlowWorkOrderId, long workOrderId, int statusId);
         List<WorkOrderReserveIssuesParts> SaveReserveIssuesParts(List<WorkOrderReserveIssuesParts> reserveIssuesParts);
+        IEnumerable<WorkOrderReserveIssuesParts> GetReservedParts(long WorkFlowWorkOrderId, long workOrderId);
+        IEnumerable<WorkOrderReserveIssuesParts> GetUnReservedParts(long WorkFlowWorkOrderId, long workOrderId);
+        IEnumerable<WorkOrderReserveIssuesParts> GetIssuedParts(long WorkFlowWorkOrderId, long workOrderId);
+        IEnumerable<WorkOrderReserveIssuesParts> GetUnIssuedParts(long WorkFlowWorkOrderId, long workOrderId);
+
         IEnumerable<object> GetWorkOrderDirections(long wfwoId, long workOrderId);
         object GetStockLineDetails(long stockLineId);
+
+        SubWorkOrder CreateSubWorkOrder(SubWorkOrder subWorkOrder);
+        SubWorkOrder UpdateSubWorkOrder(SubWorkOrder subWorkOrder);
+        SubWorkOrder SubWorkOrderDetails(long subWorkOrderId);
+        IEnumerable<object> SubWorkOrderList(long workOrderId);
+
     }
 }

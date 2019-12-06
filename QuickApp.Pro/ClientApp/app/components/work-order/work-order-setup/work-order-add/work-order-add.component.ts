@@ -61,6 +61,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     @Input() priorityList;
     @Input() partNumberOriginalData;
     @Input() workOrderGeneralInformation;
+    @Input() isSubWorkOrder: boolean = false;
     // @Output() viewWorkFlow = new EventEmitter();
 
     // workOrderTypes: WorkOrderType[];
@@ -158,6 +159,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     isEditLabor: boolean = false;
 
 
+
     constructor(
         private alertService: AlertService,
         private workOrderService: WorkOrderService,
@@ -185,6 +187,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         this.getTaskList();
     }
     async ngOnInit() {
+
         //  this.showTableGrid = true;
         this.workOrderService.creditTerms = this.creditTerms;
         this.workOrderService.employeesOriginalData = this.employeesOriginalData;
@@ -709,7 +712,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     }
 
-    updateWorkOrderMaterialList(data){
+    updateWorkOrderMaterialList(data) {
         const materialArr = data.materialList.map(x => {
             return {
                 ...x,
@@ -727,7 +730,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 MessageSeverity.success
             );
             this.getMaterialListByWorkOrderId();
-      
+
         })
     }
 
@@ -804,7 +807,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
 
-    updateWorkOrderChargesList(data){
+    updateWorkOrderChargesList(data) {
         const chargesArr = data.charges.map(x => {
             return {
                 ...x,
@@ -994,7 +997,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 ...x,
                 masterCompanyId: 1,
                 isActive: true,
-                workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId
+                workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId,
+                estimtPercentOccurranceId: x.estimtPercentOccurrance
             }
         });
         this.workOrderService.createWorkOrderExclusionList(exclusionsArr).subscribe(res => {
@@ -1008,7 +1012,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         })
     }
 
-    updateWorkOrderExclusionsList(data){
+    updateWorkOrderExclusionsList(data) {
         const exclusionsArr = data.exclusions.map(x => {
             return {
                 ...x,
@@ -1248,8 +1252,12 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     // Change of Table Grid
     gridTabChange(value) {
         this.gridActiveTab = value;
+        // if(this.gridActiveTab === 'subWO'){
+        //     this.issubWorkOrderState = true;
+        // }
         this.subTabWorkFlow = '';
         this.subTabOtherOptions = '';
+
     }
     // changeSinglePN(event): void {
     //   this.workOrder.isSinglePN = !this.workOrder.isSinglePN;

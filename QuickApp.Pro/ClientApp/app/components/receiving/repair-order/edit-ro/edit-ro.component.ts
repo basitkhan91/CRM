@@ -303,13 +303,13 @@ export class EditRoComponent implements OnInit {
 
                 for (let part of this.repairOrderData) {
                     for (let SL of part.stockLine) {
-                        if ((SL.obtainFrom != null || SL.obtainFrom != '') && SL.obtainFromType == 1) {
-                            SL.obtainFromObject = this.CustomerList.find(x => x.Key == SL.obtainFrom);
-                        }
-                        if ((SL.owner != null || SL.owner != '') && SL.obtainFromType == 1) {
+                        if (SL.owner != null && SL.owner != '' && SL.ownerType == 1) {
                             SL.ownerObject = this.CustomerList.find(x => x.Key == SL.owner);
                         }
-                        if ((SL.traceableTo != null || SL.traceableTo != '') && SL.obtainFromType == 1) {
+                        if (SL.obtainFrom != null && SL.obtainFrom != '' && SL.obtainFromType == 1) {
+                            SL.obtainFromObject = this.CustomerList.find(x => x.Key == SL.obtainFrom);
+                        }
+                        if (SL.traceableTo != null && SL.traceableTo != '' && SL.traceableToType == 1) {
                             SL.traceableToObject = this.CustomerList.find(x => x.Key == SL.traceableTo);
                         }
                     }
@@ -332,14 +332,15 @@ export class EditRoComponent implements OnInit {
 
                 for (let part of this.repairOrderData) {
                     for (let SL of part.stockLine) {
-                        if ((SL.obtainFrom != null || SL.obtainFrom != '') && SL.obtainFromType == 3) {
-                            SL.obtainFromObject = this.CustomerList.find(x => x.Key == SL.obtainFrom);
+
+                        if (SL.owner != null && SL.owner != '' && SL.ownerType == 3) {
+                            SL.ownerObject = this.VendorList.find(x => x.Key == SL.owner);
                         }
-                        if ((SL.owner != null || SL.owner != '') && SL.obtainFromType == 3) {
-                            SL.ownerObject = this.CustomerList.find(x => x.Key == SL.owner);
+                        if (SL.obtainFrom != null && SL.obtainFrom != '' && SL.obtainFromType == 3) {
+                            SL.obtainFromObject = this.VendorList.find(x => x.Key == SL.obtainFrom);
                         }
-                        if ((SL.traceableTo != null || SL.traceableTo != '') && SL.obtainFromType == 3) {
-                            SL.traceableToObject = this.CustomerList.find(x => x.Key == SL.traceableTo);
+                        if (SL.traceableTo != null && SL.traceableTo != '' && SL.traceableToType == 3) {
+                            SL.traceableToObject = this.VendorList.find(x => x.Key == SL.traceableTo);
                         }
                     }
                 }
@@ -999,7 +1000,11 @@ export class EditRoComponent implements OnInit {
     private onDataLoadFailed(error: any) {
     }
 
-    onObtainFromChange(event) {
+    onObtainFromChange(event, stockLine) {
+        stockLine.obtainFromObject = {};
+        stockLine.obtainFrom = '';
+
+
         if (event.target.value === '1') {
             this.obtainfromcustomer = true;
             this.obtainfromother = false;
@@ -1017,8 +1022,11 @@ export class EditRoComponent implements OnInit {
         }
     }
 
-    onOwnerChange(event) {
-        if (event.target.value === '1') {
+    onOwnerChange(event, stockLine) {
+        stockLine.ownerObject = {};
+        stockLine.owner = '';
+
+        if (event.target.value === '1') {            
             this.ownercustomer = true;
             this.ownerother = false;
             this.ownervendor = false;
@@ -1035,7 +1043,10 @@ export class EditRoComponent implements OnInit {
         }
     }
 
-    onTraceableToChange(event) {
+    onTraceableToChange(event, stockLine) {
+        stockLine.traceableToObject = '';
+        stockLine.traceableTo = '';
+
         if (event.target.value === '1') {
             this.traceabletocustomer = true;
             this.traceabletoother = false;
