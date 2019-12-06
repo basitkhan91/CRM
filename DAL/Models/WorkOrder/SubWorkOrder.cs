@@ -33,5 +33,11 @@ namespace DAL.Models
 
         [NotMapped]
         public string WorkOrderNum { get; set; }
+        [NotMapped]
+        public long WorkFlowId { get; set; }
+        [NotMapped]
+        public long WorkFlowWorkOrderId { get; set; }
+
+        
     }
 }
