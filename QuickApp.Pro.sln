@@ -28,16 +28,4 @@ Global
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3E08C3F6-681C-4E8E-B0DC-7F6DB116B711}
 	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 3
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://poweraerosuites.visualstudio.com/
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = DAL\\DAL.csproj
-		SccProjectName1 = DAL
-		SccLocalPath1 = DAL
-		SccProjectUniqueName2 = QuickApp.Pro\\QuickApp.Pro.csproj
-		SccProjectName2 = QuickApp.Pro
-		SccLocalPath2 = QuickApp.Pro
-	EndGlobalSection
 EndGlobal
