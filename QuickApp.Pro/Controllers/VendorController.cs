@@ -3370,6 +3370,14 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
+        [HttpPut("getVendorProcess1099List")]
+        public IActionResult GetVendorProcess(int companyId)
+        {
+           var result= _unitOfWork.Vendor.GetVendorProcessList(companyId);
+            return Ok(result);
+        }
+
+
 
         #region Capes
 
