@@ -223,4 +223,12 @@ export class WorkOrderService {
     }
 
 
+    // subWorkOrder 
+    getSubWorkOrderHeaderByWorkOrderId(workOrderId, workOrderPartNumberId) {
+        return this.workOrderEndpointService.getSubWorkOrderHeaderByWorkOrderId(workOrderId, workOrderPartNumberId);
+    }
+
+
+
+
 }

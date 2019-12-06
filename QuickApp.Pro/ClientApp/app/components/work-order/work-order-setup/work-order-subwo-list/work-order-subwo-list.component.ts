@@ -20,7 +20,7 @@ export class SubWorkOrderListComponent implements OnInit {
         // { workorderid: workorderid, mpnid: workorderid, subworkorderid: 0 }
         // console.log('test');
         // &mpn/mpnid=15&subworkOrder
-        const workorderid = 200;
+        const workorderid = 54;
         const mpnid = 0;
         const subworkorderid = 0;
         window.open(`/workordersmodule/workorderspages/app-sub-work-order?workorderid=${workorderid}&mpnid=${mpnid}&subworkorderid=${subworkorderid}`);

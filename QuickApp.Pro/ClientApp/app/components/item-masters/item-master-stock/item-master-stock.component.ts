@@ -42,7 +42,7 @@ import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service'
 import { CustomerService } from '../../../services/customer.service';
 import { PublicationService } from '../../../services/publication.service';
 import { DashNumberService } from '../../../services/dash-number/dash-number.service';
-import {CommonService} from '../../../services/common.service';
+import { CommonService } from '../../../services/common.service';
 import { ItemMasterExchangeLoanComponent } from '../item-master-exch-loan/item-master-exch-loan.component';
 
 @Component({
@@ -53,7 +53,7 @@ import { ItemMasterExchangeLoanComponent } from '../item-master-exch-loan/item-m
 
 /** item-master-stock component*/
 export class ItemMasterStockComponent implements OnInit, AfterViewInit {
-    @ViewChild('exchLoan') exchLoan:ItemMasterExchangeLoanComponent;
+    @ViewChild('exchLoan') exchLoan: ItemMasterExchangeLoanComponent;
     dataSourceValue: MatTableDataSource<Priority>;
     disables: boolean = false;
     disable1: boolean = true;
@@ -303,8 +303,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     dashNumberUnknown = false;
     newFields = {
         Condition: "NEW",
-        PP_UOMId: 2,
-        PP_CurrencyId: 208,
+        PP_UOMId: null,
+        PP_CurrencyId: null,
         PP_FXRatePerc: null,
         PP_VendorListPrice: null,
         PP_LastListPriceDate: new Date(),
@@ -312,8 +312,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         PP_LastPurchaseDiscDate: new Date(),
         PP_PurchaseDiscAmount: null,
         PP_UnitPurchasePrice: null,
-        SP_FSP_UOMId: 2,
-        SP_FSP_CurrencyId: 208,
+        SP_FSP_UOMId: null,
+        SP_FSP_CurrencyId: null,
         SP_FSP_FXRatePerc: null,
         SP_FSP_FlatPriceAmount: null,
         SP_FSP_LastFlatPriceDate: new Date(),
@@ -385,12 +385,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     isValidClassification: boolean = false;
     oemPnData: any;
     //capes
-    capabilityTypeList:any=[];
-    selectedCapabilityTypes:any=[];
-    capeBldList:any=[];
-    distinctAtaList:any[]= [];
+    capabilityTypeList: any = [];
+    selectedCapabilityTypes: any = [];
+    capeBldList: any = [];
+    distinctAtaList: any[] = [];
 
-      // errorLogForPS: string = '';
+    // errorLogForPS: string = '';
 
     constructor(private fb: FormBuilder, public priorityService: PriorityService, public countryservice: CustomerService, private Dashnumservice: DashNumberService, private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService, private Publicationservice: PublicationService, public integrationService: IntegrationService, private formBuilder: FormBuilder, public workFlowtService1: LegalEntityService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
         private authService: AuthService, public unitService: UnitOfMeasureService, private modalService: NgbModal, private glAccountService: GlAccountService, public vendorser: VendorService,
@@ -398,8 +398,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         public currency: CurrencyService, private _actRoute: ActivatedRoute,
         public priority: PriorityService, public inteService: IntegrationService,
         public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService,
-        public proService: ProvisionService, private dialog: MatDialog, 
-        private masterComapnyService: MasterComapnyService, public commonService:CommonService) {
+        public proService: ProvisionService, private dialog: MatDialog,
+        private masterComapnyService: MasterComapnyService, public commonService: CommonService) {
         this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-stock';
         this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
         this.displayedColumns.push('action');
@@ -422,7 +422,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
                 this.selectedIntegrationTypes = this.sourceItemMaster.integrationPortalIds;
                 this.sourceItemMaster.oemPNId = this.sourceItemMaster.oemPNData[0]
-                this.ItemMasterId= this.itemMasterId;
+                this.ItemMasterId = this.itemMasterId;
                 // assign the header values
                 this.pnvalue = this.sourceItemMaster.partNumber;
                 this.pnDescription = this.sourceItemMaster.partDescription;
@@ -4420,25 +4420,23 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         }
     }
 
-    getCapabilityType(){
-        this.commonService.smartDropDownList("CapabilityType","CapabilityTypeId","Description").subscribe(data=>{
-            this.capabilityTypeList=data;
+    getCapabilityType() {
+        this.commonService.smartDropDownList("CapabilityType", "CapabilityTypeId", "Description").subscribe(data => {
+            this.capabilityTypeList = data;
         });
     }
-  
-    onSelectAta( value){
-        console.log(value );
+
+    onSelectAta(value) {
+        console.log(value);
     }
-    addCape(){
-        
-        this.capeBldList=[];
+    addCape() {
+
+        this.capeBldList = [];
         this.distinctAtaList = [];
         const result = [];
         const map = new Map();
-        for (const item of this.ataMappedList) 
-        {
-            if(!map.has(item.ataChapterId))
-            {
+        for (const item of this.ataMappedList) {
+            if (!map.has(item.ataChapterId)) {
                 map.set(item.ataChapterId, true);    // set any value to Map
                 this.distinctAtaList.push({
                     id: item.ataChapterId,
@@ -4447,28 +4445,28 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             }
         }
         // need to get the list of aircraft and have to populate rows for each aircrat
-        this.selectedCapabilityTypes.forEach(cap=>{
-             this.aircraftListDataValues.forEach(x=>{
+        this.selectedCapabilityTypes.forEach(cap => {
+            this.aircraftListDataValues.forEach(x => {
                 this.capeBldList.push(
                     {
-                        capabilityType: this.capabilityTypeList.find(c=> c.value===cap),
+                        capabilityType: this.capabilityTypeList.find(c => c.value === cap),
                         entity: 'ent1',
-                        companyId:1,
-                        buId:2,
-                        departmentId:3,
+                        companyId: 1,
+                        buId: 2,
+                        departmentId: 3,
                         aircraft: x
-   
-   
-                   }
+
+
+                    }
 
                 )
-                
+
             });
-        
+
 
         });
 
-       
+
         console.log(this.capeBldList);
     }
 
@@ -4621,11 +4619,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.router.navigate(['itemmastersmodule/itemmasterpages/app-item-master-list'])
         })
     }
-	saveandcreate() {
-        if(this.isValidClassification){
+    saveandcreate() {
+        if (this.isValidClassification) {
             const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
             const data = { ...this.exportInfo, ExportCountryId: this.tempExportCountryId, ItemMasterId: ItemMasterID }
-    
+
             this.itemser.newItemMasterExportInformation(data).subscribe(datas => {
                 this.tempExportCountryId = null;
                 this.alertService.showMessage(
@@ -4634,16 +4632,16 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     MessageSeverity.success
                 );
                 this.router.navigate(['itemmastersmodule/itemmasterpages/app-item-master-stock']);
-               // Before this line we should clear form but I could not find all forms data and states
-               // so as of now I'm keeping in comments
-               // this.changeOfTab('General');
+                // Before this line we should clear form but I could not find all forms data and states
+                // so as of now I'm keeping in comments
+                // this.changeOfTab('General');
             });
-        }else{
+        } else {
             this.display = true;
             this.modelValue = true;
         }
-        
-        
+
+
     }
 
     selectedOEM(value) {
@@ -4907,7 +4905,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
 
-   
+
 
 
     Manufacturer(content) {
@@ -5640,13 +5638,13 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         } else if (value === 'Atachapter') {
             this.currentTab = 'Atachapter';
             this.activeMenuItem = 3;
-        } else if(value=="Capes"){
+        } else if (value == "Capes") {
             this.currentTab = 'Capes';
             this.activeMenuItem = 4;
         } else if (value === 'PurchaseSales') {
             this.currentTab = 'PurchaseSales';
             this.activeMenuItem = 5;
-        } else if(value==="Exchange"){
+        } else if (value === "Exchange") {
             this.currentTab = 'Exchange';
             this.exchLoan.loadData(this.ItemMasterId);
             this.activeMenuItem = 6;

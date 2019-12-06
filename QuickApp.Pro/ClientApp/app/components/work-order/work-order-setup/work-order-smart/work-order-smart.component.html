@@ -1,3 +1,5 @@
+
+<!-- Edit  -->
 <div
   *ngIf="
     isEdit &&
@@ -13,6 +15,7 @@
   "
 >
   <app-work-order-add
+    [isSubWorkOrder]="isSubWorkOrder"
     [isEdit]="isEdit"
     [workOrderTypes]="workOrderTypes"
     [workOrderStatusList]="workOrderStatusList"
