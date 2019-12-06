@@ -235,6 +235,15 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("subworkorderheaderdetails")]
+        public IActionResult SubWorkOrderHeaderDetails(long workOrderId, long workOrderPartNumberId)
+        {
+            var result = unitOfWork.WorkOrderRepository.SubWorkOrderHeaderDetails(workOrderId, workOrderPartNumberId);
+            return Ok(result);
+        }
+
+
+
         #endregion
 
         #region Work Order Labor
