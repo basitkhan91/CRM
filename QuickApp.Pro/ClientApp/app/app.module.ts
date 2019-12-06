@@ -196,6 +196,7 @@ import { SpinnerComponent } from './shared/spinner/spinner.component';
 import { CardModule } from 'primeng/card';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { WorkOrderService } from './services/work-order/work-order.service';
+import { WorkOrderEndpointService } from './services/work-order/work-order-endpoint.service';
 import { JobTypeService } from './services/job-type.service';
 import { JobTypeEndpontService } from './services/job-type-endpoint.service';
 import { PercentEndpoint } from './services/percent-endpoint.service';
@@ -420,6 +421,7 @@ import { AccountListingService } from './services/account-listing/account-listin
         CompanyService,
         CompanyEndpoint,
         WorkOrderService,
+        WorkOrderEndpointService,
         JobTypeService,
         JobTypeEndpontService,
         PercentService,

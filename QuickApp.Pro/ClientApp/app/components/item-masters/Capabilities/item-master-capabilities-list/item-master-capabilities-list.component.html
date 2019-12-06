@@ -140,9 +140,9 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label class="popup-plusicon-cstm">Capability Types </label>
-                                     <select [(ngModel)]="capabilityForm.CapabilityTypeId" (onSelect)="selectCap($event)" [ngModelOptions]="{standalone: true}">
+                                     <select [(ngModel)]="capabilityForm.CapabilityTypeId" [ngModelOptions]="{standalone: true}">
                                                         <option>--Select--</option>
-                                                        <option *ngFor="let cap of capabilityTypeData" [ngValue]="cap.CapabilityTypeId">{{cap.Description}}</option>
+                                                        <option *ngFor="let cap of capabilityTypeData" [ngValue]="cap.value">{{cap.label}}</option>
                                      </select>
                             </div>
                         </div>
@@ -162,7 +162,7 @@
                         <div class="col-md-2">
                                 <div class="form-group">
                                     <label class="popup-plusicon-cstm">Company</label>
-                                    <select [(ngModel)]="capabilityForm.companyId" (onSelect)="getBUList(capabilityForm.companyId)" [ngModelOptions]="{standalone: true}">
+                                    <select [(ngModel)]="capabilityForm.companyId" (change)="getBUList(capabilityForm.companyId)" [ngModelOptions]="{standalone: true}">
                                             <option>--Select--</option>
                                             <option *ngFor="let name of maincompanylist" [ngValue]="name.managementStructureId">{{name.code}}</option>
                                     </select>
@@ -172,7 +172,7 @@
                             <div class="col-md-2">
                                 <div class="form-group">
                                      <label class="popup-plusicon-cstm">BU </label>
-                                    <select [(ngModel)]="capabilityForm.buId" (onSelect)="getDivisionlist(capabilityForm.buId)" [ngModelOptions]="{standalone: true}" >
+                                    <select [(ngModel)]="capabilityForm.buId" (change)="getDivisionlist(capabilityForm.buId)" [ngModelOptions]="{standalone: true}" >
                                         <option>Select BU</option>
                                         <option *ngFor="let name of bulist" [ngValue]="name.managementStructureId">{{name.code}}</option>
                                     </select>
@@ -181,7 +181,7 @@
                             <div class="col-md-2">
                                 <div class="form-group">
                                      <label class="popup-plusicon-cstm">Division </label>
-                                    <select [(ngModel)]="capabilityForm.divisionId" (onSelect)="getDepartmentlist(capabilityForm.divisionId)" [ngModelOptions]="{standalone: true}">
+                                    <select [(ngModel)]="capabilityForm.divisionId" (change)="getDepartmentlist(capabilityForm.divisionId)" [ngModelOptions]="{standalone: true}">
                                         <option>Select Division</option>
                                         <option *ngFor="let name of divisionlist" [ngValue]="name.managementStructureId">{{name.code}}</option>
                                     </select>
@@ -190,7 +190,7 @@
                              <div class="col-md-2">                               
                                 <div class="form-group">
                                      <label class="popup-plusicon-cstm">Dept </label>
-                                    <select [(ngModel)]="capabilityForm.departmentId" (onSelect)="getDepartmentId(capabilityForm.departmentId)" [ngModelOptions]="{standalone: true}">
+                                    <select [(ngModel)]="capabilityForm.departmentId" (change)="getDepartmentId(capabilityForm.departmentId)" [ngModelOptions]="{standalone: true}">
                                         <option>Select Dept</option>
                                         <option *ngFor="let name of departmentList" [ngValue]="name.managementStructureId">{{name.code}}</option>
                                     </select>
@@ -200,7 +200,8 @@
                                     <div class="form-group">
                                         <label class="popup-plusicon-cstm">Manufacturer </label>
                                         <select [ngModelOptions]="{standalone: true}"
-                                                        [(ngModel)]="capabilityForm.manufacturerId">
+                                                        [(ngModel)]="capabilityForm.manufacturerId"
+                                                        (change)="onManufacturerselection(capabilityForm.manufacturerId)">
                                                     <ng-container *ngFor="let manufacturer of allManufacturerInfo">
                                                         <option [ngValue]="manufacturer.manufacturerId" *ngIf="manufacturer.isActive">
                                                             {{manufacturer.name}}
@@ -210,9 +211,9 @@
                                     </div>
                                 </div>
                            
-                         <div class="col-md-3">
+                         <div class="col-md-2">
                             <div class="">
-                                <label class="popup-plusicon-cstm">Aircraft Manufacturer </label>
+                                <label class="popup-plusicon-cstm text-left">Aircraft Manufacturer </label>
                                      <p-multiSelect [options]="manufacturerData"
                                                                [ngModelOptions]="{standalone: true}"
                                                                [(ngModel)]="capabilityForm.selectedAircraftTypes" [panelStyle]="{minWidth:'12em'}"
@@ -222,7 +223,7 @@
                         </div>
                          <div class="col-md-2">
                             <div class="">
-                                <label class="popup-plusicon-cstm">Model </label>
+                                <label class="popup-plusicon-cstm text-left">Model </label>
                                    <p-multiSelect [options]="capabilityForm.selectedAircraftDataModels"
                                                                [ngModelOptions]="{standalone: true}"
                                                                [(ngModel)]="capabilityForm.selectedAircraftModelTypes"
@@ -232,27 +233,29 @@
                             </div>
                         </div>
                          <div class="col-md-2">
-                            <div class="form-group">
-                                <label class="popup-plusicon-cstm">Dash Number </label>
-                                   <select [(ngModel)]="capabilityForm.selectedDashNumbers" [ngModelOptions]="{standalone: true}">
-                                                    <option>--Select--</option>
-                                                    <option *ngFor="let dashnumbers of search_AircraftDashNumberList" [ngValue]="dashnumbers.label">{{dashnumbers.label}}</option>
-                                                </select>
+                            <div class="">
+                                <label class="popup-plusicon-cstm text-left">Dash Number </label>
+                                <p-multiSelect [options]="search_AircraftDashNumberList"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [(ngModel)]="capabilityForm.selectedDashNumbers"
+                                        [panelStyle]="{minWidth:'12em'}"
+                                        (onChange)="dashNumberChange($event,capabilityForm)">
+                                </p-multiSelect>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label class="popup-plusicon-cstm">DESCRIPTION </label>
                                 <input class="form-control input-value" type="text" [ngModelOptions]="{standalone: true}"
-                                [(ngModel)]="sourceItemMaster.description">
+                                [(ngModel)]="capabilityForm.description">
                             </div>
                         </div>
                         <div class="col-md-2">
                                 <div class="form-group">
                                     <label class="popup-plusicon-cstm">ATA CHAPTER </label>
-                                       <select [(ngModel)]="capabilityForm.ataChapterId" [ngModelOptions]="{standalone: true}" (onSelect)="getBUList(capabilityForm.companyId)">
+                                       <select [(ngModel)]="capabilityForm.ataChapterId" [ngModelOptions]="{standalone: true}" (change)="onAtaChapterselection(capabilityForm.ataChapterId)">
                                                         <option>--Select--</option>
-                                                        <option *ngFor="let atachapter of LoadAtachapter" [ngValue]="atachapter.label">{{atachapter.label}}</option>
+                                                        <option *ngFor="let atachapter of LoadAtachapter" [ngValue]="atachapter.value">{{atachapter.label}}</option>
                                                     </select>
                                 </div>
                             </div>
@@ -260,7 +263,7 @@
                             <div class="col-md-2">
                                     <div class="form-group">
                                         <label class="popup-plusicon-cstm">ATA Sub CHAPTER </label>
-                                           <select [(ngModel)]="capabilityForm.ataSubChapterId" [ngModelOptions]="{standalone: true}">
+                                           <select [(ngModel)]="capabilityForm.ataSubChapterId" [ngModelOptions]="{standalone: true}" (change)="onAtaSubChapterselection(capabilityForm.ataSubChapterId)">
                                                 <option>--Select--</option>
                                                 <option *ngFor="let ata of atasubchapter" [ngValue]="ata.value">{{ata.label}}</option>
                                            </select>
@@ -277,7 +280,7 @@
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label class="popup-plusicon-cstm">CMM ID </label>
-                                     <select [(ngModel)]="capabilityForm.cmmId" [ngModelOptions]="{standalone: true}">
+                                     <select [(ngModel)]="capabilityForm.cmmId" [ngModelOptions]="{standalone: true}" (change)="onCmmselection(capabilityForm.cmmId)">
                                           <option>--Select--</option>
                                            <option *ngFor="let cmm of cmmList" [ngValue]="cmm.value">{{cmm.label}}</option>
                                      </select>
@@ -287,13 +290,13 @@
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label class="popup-plusicon-cstm">INTEGRATE WITH </label>
-                                      <select [(ngModel)]="capabilityForm.integrateWith" [ngModelOptions]="{standalone: true}">
+                                      <select [(ngModel)]="capabilityForm.integrateWith" [ngModelOptions]="{standalone: true}" (change)="onIntegrateWithselection(capabilityForm.integrateWith)">
                                             <option>--Select--</option>
                                             <option *ngFor="let integration of integrationvalues" [ngValue]="integration.value">{{integration.label}}</option>
                                       </select>
                                </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-1">
                                 <div class="form-group">
                                     <label class="popup-plusicon-cstm">VERIFIED</label>
                                     <input type="checkbox"
@@ -301,7 +304,7 @@
                                                [(ngModel)]="capabilityForm.isVerified">
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-1">
                                 <div class="form-group">
                                     <label class="popup-plusicon-cstm">VERIFIED BY</label>
                                     <input class="form-control input-value"  type="text" [ngModelOptions]="{standalone: true}"
@@ -338,26 +341,86 @@
                     </div>
  
  
-                     <ng-container *ngFor="let item of mfgFormArray.controls;let i=index" [formGroupName]="i">
+                    <div class=""> 
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Cap</th>
+                                <th>PartId</th>
+                                <th>aircraft Type</th>
+                                <th>aircraft Model</th>
+                                <th>Dash Number</th>
+                                <th>manufacturer</th>
+                                <th>ata Chapter</th>
+                                <th>ata Sub Chapter</th>
+                                <th>CMM</th>
+                                <th>integrateWith</th>
+                                <th>description</th>
+                                <th>entryDate</th>
+                                <th>verifiedBy</th>
+                                <th>dateVerified</th>
+                                <th>nteHrs</th>
+                                <th>tat</th>
+                                <th>Memo</th>
+                            </tr>
+                            <ng-container *ngFor="let item of mfgFormArray.controls;let i=index" [formGroupName]="i">
  
-                         <div class="form-row" *ngIf="mfgFormArray.controls[i].controls['isDelete'].value != true">
-                             <div class="col-md-2">
-                                <!-- <input type="text" formControlName="capabilityTypeId" isabled="true" /> --> 
-                             </div>
-                             <div class="col-md-2">
-                                 <input type="text" formControlName="PartId" disabled="true" />
-                             </div>
-                             <div class="col-md-3">
-                                 <input type="text" formControlName="aircraftTypeName" disabled="true" />
-                             </div>
-                             <div class="col-md-2">
-                                 <input type="text" formControlName="aircraftModelName" disabled="true" />
-                             </div>
-                             <div class="col-md-2">
-                                 <input type="text" formControlName="DashNumber" disabled="true" />
-                             </div>
-                        </div>
-                     </ng-container>
+                                <tr *ngIf="mfgFormArray.controls[i].controls['isDelete'].value != true">
+                                    <td>
+                                       <!-- <input type="text" formControlName="capabilityTypeId" isabled="true" /> --> 
+                                    </td>
+                                    <td>
+                                        <input type="text" formControlName="PartId" disabled="true" />
+                                    </td>
+                                    <td>
+                                        <input type="text" formControlName="aircraftTypeName" disabled="true" />
+                                    </td>
+                                    <td>
+                                        <input type="text" formControlName="aircraftModelName" disabled="true" />
+                                    </td>
+                                   <td>
+                                        <input type="text" formControlName="DashNumber" disabled="true" />
+                                   </td>
+                                    <td>
+                                       <input type="text" formControlName="manufacturerLabel" disabled="true" />
+                                </td>
+                                   <td>
+                                       <input type="text" formControlName="ataChapterLabel" disabled="true" />
+                                   </td>
+                                   <td>
+                                       <input type="text" formControlName="atasubchapterLable" disabled="true" />
+                                   </td>
+                                   <td>
+                                       <input type="text" formControlName="cmmLabel" disabled="true" />
+                                   </td>
+                                   <td>
+                                       <input type="text" formControlName="integrateWithLabel" disabled="true" />
+                                   </td>
+                                   <td>
+                                       <input type="text" formControlName="description" disabled="true" />
+                                   </td>
+                                   <td>
+                                       <input type="text" formControlName="entryDate" disabled="true" />
+                                   </td>
+                                   <td>
+                                       <input type="text" formControlName="verifiedBy" disabled="true" />
+                                   </td>
+                                   <td>
+                                       <input type="text" formControlName="dateVerified" disabled="true" />
+                                   </td>
+                                   <td>
+                                       <input type="text" formControlName="nteHrs" disabled="true" />
+                                   </td>
+                                   <td>
+                                       <input type="text" formControlName="tat" disabled="true" />
+                                   </td>
+                                   <td>
+                                       <input type="text" formControlName="memo" disabled="true" />
+                                   </td>
+                                </tr>
+                            </ng-container>
+                        </table>
+                    </div>
+                     
  
                    
                  </div>

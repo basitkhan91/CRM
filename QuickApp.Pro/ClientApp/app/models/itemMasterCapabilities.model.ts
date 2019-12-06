@@ -38,6 +38,11 @@ export class ItemMasterCapabilitiesModel {
     integrateWith:any;
     nteHrs:number;
     tat:number;
+    manufacturerLabel:any;
+    ataChapterLabel:any;
+    ataSubchapterLabel:any;
+    cmmLabel:any;
+    integrateWithLabel:any;
 
     public constructor(init?: Partial<ItemMasterCapabilitiesModel>) {
         Object.assign(this, init);
