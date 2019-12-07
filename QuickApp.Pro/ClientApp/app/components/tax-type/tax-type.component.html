@@ -157,7 +157,7 @@
                                 [dropdown]="true" class="p-autoComplete-ctsm" required>
            
                             </p-autoComplete>
-                            <div *ngIf="disableSaveTaxtype" class="clr-red">Already Exists</div>
+                            <div *ngIf="disableSaveTaxtype && addNew.description" class="clr-red">Already Exists</div>
                             <div class="clear"></div>
                         </div>
                     </div>
