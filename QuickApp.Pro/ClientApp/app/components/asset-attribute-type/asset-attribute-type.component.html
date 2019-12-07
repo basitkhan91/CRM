@@ -341,7 +341,7 @@
                                 </div>
                                 <div class="col-sm-5">
                                     <input type="text" name="residualValue" class="form-control"
-                                           [(ngModel)]="currentRow.residualValue" readonly>
+                                           [(ngModel)]="currentRow.residualValue" min="1" required>
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -350,7 +350,7 @@
                                 </div>
                                 <div class="col-sm-5">
                                     <input type="text" name="assetLife" class="form-control"
-                                           [(ngModel)]="currentRow.assetLife">
+                                           [(ngModel)]="currentRow.assetLife" min="1">
                                 </div>
                             </div>
                             <div class="col-sm-12">
