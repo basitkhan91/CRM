@@ -531,6 +531,45 @@ namespace DAL.Repositories
             }
         }
 
+        public object SubWorkOrderHeaderDetails(long workOrderId, long workOrderPartNumberId)
+        {
+            try
+            {
+                var data = (from wo in _appContext.WorkOrder
+                            join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
+                            join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
+                            join rp in _appContext.Nha_Tla_Alt_Equ_ItemMapping on wop.MappingItemMasterId equals rp.MappingItemMasterId into woprp
+                            from rp in woprp.DefaultIfEmpty()
+                            join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId into rpim1
+                            from im1 in rpim1.DefaultIfEmpty()
+                            join sl in _appContext.StockLine on wop.StockLineId equals sl.StockLineId
+                            join wos in _appContext.WorkScope on wop.WorkOrderScopeId equals wos.WorkScopeId
+                            join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
+                            join wf in _appContext.Workflow on wop.WorkflowId equals wf.WorkflowId into wopwf
+                            from wf in wopwf.DefaultIfEmpty()
+                            where wo.WorkOrderId == workOrderId && wop.ID == workOrderPartNumberId
+                            select new
+                            {
+                                wo.WorkOrderNum,
+                                MCPN = im.PartNumber,
+                                RevisedMCPN = im1.PartNumber,
+                                MCPNDescription = im.PartDescription,
+                                MCSerialNum = sl.SerialNumber,
+                                CustName = cust.Name,
+                                WorkScope = wos.Description,
+                                Stockline = sl.StockLineNumber,
+                                WorkFlowId=wf==null?0:wop.WorkflowId,
+                                WorkFlowNo=wf==null?"":wf.WorkOrderNumber
+                            }).FirstOrDefault();
+                return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         private long CreateSubWorkOrderWorkFlow(long workFlowId, long workOrderId, string createdBy, int masterCompanyId)
         {
             try
@@ -657,6 +696,8 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
+
         #endregion
 
         #region Work Flow Work Order
@@ -792,7 +833,7 @@ namespace DAL.Repositories
                                 NTE = (im.OverhaulHours == null ? 0 : im.OverhaulHours) + (im.RPHours == null ? 0 : im.RPHours) + (im.mfgHours == null ? 0 : im.mfgHours) + (im.TestHours == null ? 0 : im.TestHours),
                                 Qty = wop.Quantity,
                                 Stage = wop.Description,
-                                WorkOrderPartNumberId= wop.ID,
+                                WorkOrderPartNumberId = wop.ID,
                                 wop.WorkOrderScopeId
                             }
                           ).Distinct()
@@ -870,41 +911,6 @@ namespace DAL.Repositories
                                 wowf.ChargesCost,
                                 wowf.Total,
                                 wowf.PerOfBerThreshold,
-                            }).FirstOrDefault();
-                return data;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        public object SubWorkOrderHeaderDetails(long workOrderId,long workOrderPartNumberId)
-        {
-            try
-            {
-                var data = (from wo in _appContext.WorkOrder
-                            join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
-                            join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
-                            join rp in _appContext.Nha_Tla_Alt_Equ_ItemMapping on wop.MappingItemMasterId equals rp.MappingItemMasterId into woprp
-                            from rp in woprp.DefaultIfEmpty()
-                            join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId into rpim1
-                            from im1 in rpim1.DefaultIfEmpty()
-                            join sl in _appContext.StockLine on wop.StockLineId equals sl.StockLineId
-                            join wos in _appContext.WorkScope on wop.WorkOrderScopeId equals wos.WorkScopeId
-                            join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
-                            where wo.WorkOrderId== workOrderId && wop.ID == workOrderPartNumberId
-                            select new
-                            {
-                                wo.WorkOrderNum,
-                                MCPN =im.PartNumber,
-                                RevisedMCPN= im1.PartNumber,
-                                MCPNDescription=im.PartDescription,
-                                MCSerialNum=sl.SerialNumber,
-                                CustName=cust.Name,
-                                WorkScope=wos.Description,
-                                Stockline=sl.StockLineNumber
                             }).FirstOrDefault();
                 return data;
             }
@@ -2814,14 +2820,58 @@ namespace DAL.Repositories
             {
 
                 var workFlowNos = (from wf in _appContext.Workflow
+                                   join c in _appContext.Customer on wf.CustomerId equals c.CustomerId
+                                   join im in _appContext.ItemMaster on wf.ItemMasterId equals im.ItemMasterId
+                                   join ws in _appContext.WorkScope on wf.WorkScopeId equals ws.WorkScopeId
+                                   join cur in _appContext.Currency on wf.CurrencyId equals cur.CurrencyId
                                    where (wf.IsDelete == false || wf.IsDelete == null) && wf.IsActive == true && wf.ItemMasterId == partId && wf.WorkScopeId == workScopeId
                                    select new
                                    {
                                        WorkFlowNo = wf.WorkOrderNumber + "_" + wf.Version,
-                                       WorkFlowId = wf.WorkflowId
+                                       WorkFlowId = wf.WorkflowId,
+                                       CustomerName = c.Name,
+                                       im.PartNumber,
+                                       im.PartDescription,
+                                       WorkScope = ws.Description,
+                                       Currency = cur.DisplayName,
                                    }).Distinct().ToList();
 
                 return workFlowNos;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetWorkOrderNos(long partId, long workScopeId)
+        {
+            try
+            {
+
+                var workOrderNos = (from wo in _appContext.WorkOrder
+                                   join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
+                                   join c in _appContext.Customer on wo.CustomerId equals c.CustomerId
+                                   join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
+                                   join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
+                                   join wowf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wowf.WorkOrderId
+
+                                   where wo.IsDeleted == false && wo.IsActive == true && wop.MasterPartId == partId && wop.WorkOrderScopeId == workScopeId
+                                   select new
+                                   {
+                                       wo.WorkOrderNum,
+                                       wo.WorkOrderId,
+                                       WorkOrderPartNumberId = wop.ID,
+                                       wowf.WorkFlowWorkOrderId,
+                                       CustomerName = c.Name,
+                                       im.PartNumber,
+                                       im.PartDescription,
+                                       WorkScope = ws.Description,
+
+                                   }).Distinct().ToList();
+
+                return workOrderNos;
             }
             catch (Exception)
             {
