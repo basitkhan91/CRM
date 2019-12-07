@@ -112,6 +112,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("workordernos")]
+        public IActionResult GetWorkOrderNos(long partId, long workScopeId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderNos(partId, workScopeId);
+            return Ok(result);
+        }
+
         [HttpGet("workorderheaderview")]
         public IActionResult WorkOrderHeaderView(long workOrderId)
         {
@@ -126,9 +133,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-
         #endregion
-
 
         #region Sub Work Order
 
@@ -188,6 +193,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("subworkorderheaderdetails")]
+        public IActionResult SubWorkOrderHeaderDetails(long workOrderId, long workOrderPartNumberId)
+        {
+            var result = unitOfWork.WorkOrderRepository.SubWorkOrderHeaderDetails(workOrderId, workOrderPartNumberId);
+            return Ok(result);
+        }
+
         #endregion
 
         #region Work Flow Work Order
@@ -234,14 +246,6 @@ namespace QuickApp.Pro.Controllers
             var result = unitOfWork.WorkOrderRepository.WorkOrderWorkFlowView(workFlowWorkOrderId);
             return Ok(result);
         }
-
-        [HttpGet("subworkorderheaderdetails")]
-        public IActionResult SubWorkOrderHeaderDetails(long workOrderId, long workOrderPartNumberId)
-        {
-            var result = unitOfWork.WorkOrderRepository.SubWorkOrderHeaderDetails(workOrderId, workOrderPartNumberId);
-            return Ok(result);
-        }
-
 
 
         #endregion
@@ -617,7 +621,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpGet("getworkflowworkorderfreightlist")]
+        [HttpGet("workorderfreightlist")]
         public IActionResult GetWorkFlowWorkOrderFreightList(long wfwoId = 0, long workOrderId = 0)
         {
             var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderFreightList(wfwoId, workOrderId);
