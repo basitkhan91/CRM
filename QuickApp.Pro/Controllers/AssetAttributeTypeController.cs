@@ -32,9 +32,8 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("add")]
         public IActionResult add([FromBody]AssetAttributeType item)
         {
-            //bool isValid = _unitOfWork.AssetAttributeTypeRepository.IsValid(item);
+            bool isValid = _unitOfWork.AssetAttributeTypeRepository.IsValid(item);
             var existingItems = _unitOfWork.AssetAttributeTypeRepository.GetAllItems();
-            bool isValid = true;
             if (isValid)
             {
                 if (ModelState.IsValid)
