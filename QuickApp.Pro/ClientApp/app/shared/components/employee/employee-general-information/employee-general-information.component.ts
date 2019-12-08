@@ -99,7 +99,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     disableSaveLastName: boolean;
     disableSaveLeaveName: boolean;
     selectedActionName: any;
-    disableJobTitle: boolean;
+    disableJobTitle: boolean = true;
+    disableJobType: boolean = true;
     disableExpTitle: boolean;
     display: boolean = false;
     modelValue: boolean = false;
@@ -172,6 +173,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     maincompanylist: any[] = [];
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
+    desableJobTypeSave: boolean = true;
     departmentList: any[] = [];
     bulist: any[] = [];
     divisionlist: any[] = [];
@@ -1202,13 +1204,37 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     filterJobs(event) {
 
         this.localCollection = [];
-        for (let i = 0; i < this.allJobTitlesinfo.length; i++) {
-            let jobName = this.allJobTitlesinfo[i].description;
+        for (let i = 0; i < this.allJobTypesinfo.length; i++) {
+            let jobName = this.allJobTypesinfo[i].jobTypeName;
             if (jobName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                 this.localCollection.push(jobName);
             }
         }
     }
+
+    filterEMpExpertise(event) {
+
+        this.localCollection = [];
+        for (let i = 0; i < this.allEmployeeExpertiseInfo.length; i++) {
+            let empExpertise = this.allEmployeeExpertiseInfo[i].description;
+            if (empExpertise.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.localCollection.push(empExpertise);
+            }
+        }
+    }
+
+    filterJObTitles(event) {
+
+        this.localCollection = [];
+        for (let i = 0; i < this.allJobTitlesinfo.length; i++) {
+            let jobtitle = this.allJobTitlesinfo[i].description;
+            if (jobtitle.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.localCollection.push(jobtitle);
+            }
+        }
+    }
+
+
 
     filterLeaves(event) {
 
@@ -2558,6 +2584,37 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             }
         }
     }
+
+    onJobTypeKeyUP() {
+        console.log(this.jobTypeName);
+        if (this.jobTypeName != "") {
+            this.disableJobType = false;
+        } else {
+            this.disableJobType = true;
+        }
+        
+    }
+    onEmpExpertiseKeyUP() {
+        console.log(this.jobTypeName);
+        if (this.employeeName != "") {
+            this.disableExpTitle = false;
+        } else {
+            this.disableExpTitle = true;
+        }
+
+    }
+
+    onjobTitleKeyUP() {
+        console.log(this.jobTypeName);
+        if (this.jobName != "") {
+            this.disableJobTitle = false;
+        } else {
+            this.disableJobTitle = true;
+        }
+
+    }
+
+    
 
     onKeyUpExp(event) {
         if (event.target.value != "") {

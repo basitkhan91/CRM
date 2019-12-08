@@ -46,9 +46,14 @@
                                                 <div class="form-group col-sm-12">
                                                     <label class="control-label col-sm-4">Certification Type</label>
                                                     <div class="inner-addon col-sm-7 inline-block display-flex">
+                                                        
                                                         <select class="drp-certification-type" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.employeeLicenseTypeId">
-                                                            <option *ngFor="let certificationtype of allCertification" [ngValue]="certificationtype.employeeLicenseTypeId">{{certificationtype.description}}</option>
+                                                            <ng-container *ngFor="let certificationtype of allCertification">
+                                                                <option [ngValue]="certificationtype.employeeLicenseTypeId" *ngIf="certificationtype.isActive">{{certificationtype.description}}</option>
+                                                            </ng-container>
                                                         </select>
+
+
                                                         <a href="#" data-toggle="modal" data-target="#addCertificationType" class="add-icon" (click)="openCertification(contentEdit)"><i class="fa fa-plus"></i></a>
                                                     </div>
                                                 </div>
