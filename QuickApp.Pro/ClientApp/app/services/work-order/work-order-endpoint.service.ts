@@ -357,6 +357,37 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.get(`${this.configurations.baseUrl}/api/workOrder/subworkorderheaderdetails?workOrderId=${workOrderId}&workOrderPartNumberId=${workOrderPartNumberId}`)
     }
 
+    getPartsDetail(workOrderId){
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/workorderpartsview?workOrderId=${workOrderId}`)
+    }
+    
+    getBuildDetailsFromWorkFlow(partId, workScopeId){
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/workflownos?partId=${partId}&workScopeId=${workScopeId}`)
+    }
+
+    getBuildDetailsFromHistoricalWorkOrder(partId, workScopeId){
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/workordernos?partId=${partId}&workScopeId=${workScopeId}`)
+    }
+
+    getWorkFlowDetails(workFlowId){
+        return this.http.get(`${this.configurations.baseUrl}/api/workflow/getworkflow/${workFlowId}`)
+    }
+
+    getWorkOrderMaterialListForQuote(wfwoId){
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/workordermateriallist?wfwoId=${wfwoId}`);
+    }
+    getWorkOrderLaborListForQuote(wfwoId){
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkflowworkorderlabourlist?wfwoId=${wfwoId}`);
+    }
+    getWorkOrderChargesListForQuote(wfwoId){
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkflowworkorderchargeslist?wfwoId=${wfwoId}`);
+    }
+    getWorkOrderExclutionsListForQuote(wfwoId){
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkflowworkorderexclusionslist?wfwoId=${wfwoId}`);
+    }
+    getWorkOrderFreightListForQuote(wfwoId){
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/workorderfreightlist?wfwoId=${wfwoId}`);
+    }
 
 
 
