@@ -152,7 +152,7 @@
                                         <div class="form-group">
                                             <label>Cell</label>
                                             <div class="inner-addon right-addon inline-block">
-                                                <input class="form-control" type="text" name="mobilePhone" [(ngModel)]="sourceEmployee.mobilePhone" pattern="[a-zA-Z ]*">
+                                                <input class="form-control" type="text" id="" [ngModelOptions]="{standalone: true}" name="mobilePhone" [(ngModel)]="sourceEmployee.mobilePhone" pattern="[a-zA-Z ]*">
                                             </div>
                                         </div>                               
                                     </div>
@@ -341,15 +341,38 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-body">
-        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveJobType(); dismissModel();">
-
+    <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveJobType(); dismissModel();">
+    <div class="modal-body">        
 
             <div class="form-group">
-                <label for="description" class="control-label">Job Type<span class="clr-red">*</span></label>
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <label class="control-label">Job Type<span class="clr-red">*</span></label>
+                    </div>
+                    <div class="col-sm-5">
+                        <p-autoComplete class="p-autoComplete-ctsm" [(ngModel)]="jobTypeName" [ngModelOptions]="{standalone: true}" (onKeyUp)=onJobTypeKeyUP($event) (onSelect)="onSelectJob($event)" [suggestions]="localCollection" (completeMethod)="filterJobs($event)" [size]="30"
+                        [minLength]="1" [dropdown]="true">
+                            <ng-template let-jobName pTemplate="item">
+                                <div class="ui-helper-clearfix">{{jobName}}</div>
+                            </ng-template>
+                        </p-autoComplete>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="col-sm-4">
+                        <label class="control-label">Job Type Description</label>
+                    </div>
+                    <div class="col-sm-5">
+                        <input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="jobTypeDescription">
+                    </div>
+                </div>
+
+
+                <!-- <label for="description" class="control-label">Job Type<span class="clr-red">*</span></label>
                 <div class="col-sm-7">
                     <div class="inner-addon right-addon inline-block">
-                        <!--<input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="jobTypeName"> -->
+                        //<input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="jobTypeName">
 
 
 
@@ -362,13 +385,13 @@
 
 
 
-                        <!-- <div *ngIf="disableJobTitle" style="color:red">Already Exist</div> -->
+                        //<div *ngIf="disableJobTitle" style="color:red">Already Exist</div>
                         <div class="clear"></div>
                     </div>
-                    </div>
+                    </div> -->
                 </div>
 
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="description" class="control-label">Job Type Description</label>
                     <div class="col-sm-7">
                         <div class="inner-addon right-addon inline-block">
@@ -378,10 +401,23 @@
 
                         </div>
                     </div>
-                </div>
-
+                </div> -->
 
                 <div class="form-group">
+                    <div class="col-sm-6">
+                        <div class="checkbox-cstm">
+                            <label>
+                                <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive">
+                                <span class="cr">
+                                    <i class="cr-icon pi pi-check"></i>
+                                </span>
+                                Active
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="form-group">
 
                     <div class="col-sm-6">
                         <label class="form-check-label" for="isActive">
@@ -389,17 +425,15 @@
                         </label>
                     </div>
                     <div class="clear"></div>
-                </div>
+                </div> -->
+                           
+        </div> 
+        <div class="modal-footer">
 
-
-                <div class="modal-footer">
-
-                    <button class="btn btn-success" [disabled]="disableJobType">Save</button>
-                    <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-                </div>
-            </form>
-        </div>
-
+                <button class="btn btn-primary-cstm" [disabled]="disableJobType">Save</button>
+                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+            </div>
+    </form>
     </ng-template>
 
 
@@ -412,12 +446,43 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveJobTitle(); dismissModel();">
         <div class="modal-body">
-            <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveJobTitle(); dismissModel();">
+            
 
 
                 <div class="form-group">
-                    <label for="description" class="control-label">Job Title<span class="clr-red">*</span></label>
+                    <div class="col-sm-12">
+                        <div class="col-sm-4">
+                            <label class="control-label">Job Title <span class="clr-red">*</span></label>
+                        </div>
+                        <div class="col-sm-5">
+                                <p-autoComplete class="p-autoComplete-ctsm" [(ngModel)]="jobName" [ngModelOptions]="{standalone: true}" (onKeyUp)=onjobTitleKeyUP($event) (onSelect)="onSelectJob($event)" [suggestions]="localCollection" (completeMethod)="filterJObTitles($event)" [size]="30"
+                                [minLength]="1" [dropdown]="true">
+                                    <ng-template let-jobName pTemplate="item">
+                                        <div class="ui-helper-clearfix">{{jobName}}</div>
+                                    </ng-template>
+                                </p-autoComplete>
+                        </div>
+                    </div>
+                    
+                    <div class="col-sm-12">
+                            <div class="col-sm-4">
+                                <label class="control-label">Memo</label>
+                            </div>
+                            <div class="col-sm-5">
+                                <input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo"  minlength="2">
+                            <div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
+                                Memo is required.
+                            </div>
+                            <div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
+                                Memo must be at least 2 characters long.
+                            </div>
+                            </div>
+                        </div>
+
+
+                    <!-- <label for="description" class="control-label">Job Title<span class="clr-red">*</span></label>
                     <div class="col-sm-7">
                         <div class="inner-addon right-addon inline-block">
 
@@ -430,18 +495,18 @@
 
 
 
-                            <!--<div *ngIf="disableJobTitle" style="color:red">Already Exist</div>
+                            //<div *ngIf="disableJobTitle" style="color:red">Already Exist</div>
 
-    <input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="jobName">
+    //<input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="jobName">
 
-    <div *ngIf="disableJobTitle" style="color:red">">Already Exist</div> -->
+    //<div *ngIf="disableJobTitle" style="color:red">">Already Exist</div> 
                             <div class="clear"></div>
                         </div>
-                    </div>
+                    </div> -->
 
                 </div>
 
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="description" class="control-label">Memo</label>
                     <div class="col-sm-7">
                 <div class="col-sm-7">
@@ -459,7 +524,7 @@
                     </div>
                 </div>
                 </div>
-                </div>
+                </div> -->
                 <!-- <div class="form-group">
                     <label for="description" class="control-label">Memo</label>
                     <div class="control-data">
@@ -474,7 +539,21 @@
                     <div class="clear"></div>
                 </div> -->
 
-                        <div class="form-group">
+                <div class="form-group">
+                        <div class="col-sm-6">
+                            <div class="checkbox-cstm">
+                                <label>
+                                        <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive">
+                                    <span class="cr">
+                                        <i class="cr-icon pi pi-check"></i>
+                                    </span>
+                                    Active
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                        <!-- <div class="form-group">
 
                             <div class="col-sm-6">
                                 <label class="form-check-label" for="isActive">
@@ -482,16 +561,14 @@
                                 </label>
                             </div>
                             <div class="clear"></div>
-                        </div>
-
-
-                        <div class="modal-footer">
-
-                            <button class="btn btn-success" [disabled]="disableJobTitle">Save</button>
-                            <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-                        </div>
-</form>
+                        </div> -->
+                        
     </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary-cstm" [disabled]="disableJobTitle">Save</button>
+        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+    </div>
+</form>
 
 </ng-template>
 
@@ -504,12 +581,28 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
+    <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemLeaveCloseModel()">
     <div class="modal-body">
-        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemLeaveCloseModel()">
+        
 
 
             <div class="form-group">
-                <label for="description" class="control-label">Leave Type<span class="clr-red">*</span></label>
+                    <div class="col-sm-12">
+                            <div class="col-sm-4">
+                                <label class="control-label">Leave Type <span class="clr-red">*</span></label>
+                            </div>
+                            <div class="col-sm-5">
+                                    <p-autoComplete class="p-autoComplete-ctsm" [(ngModel)]="description" [ngModelOptions]="{standalone: true}" [suggestions]="localleaveCollection" (onKeyUp)=onKeyUpLeaveNames($event) (onSelect)="onSelectLeaveName($event)" (onBlur)="onBlurLeaveName($event)" (completeMethod)="filterLeaves($event)" [size]="30"
+                                    [minLength]="1" [dropdown]="true">
+                                        <ng-template let-description pTemplate="item">
+                                            <div class="ui-helper-clearfix">{{description}}</div>
+                                        </ng-template>
+                                    </p-autoComplete>
+                            <div *ngIf="disableSaveLeaveName" style="color:red">Already Exist</div>                    
+                            </div>
+                        </div>
+
+                <!-- <label for="description" class="control-label">Leave Type<span class="clr-red">*</span></label>
                 <div class="col-sm-7">
                     <div class="inner-addon right-addon inline-block">
                         <p-autoComplete [(ngModel)]="description" [ngModelOptions]="{standalone: true}" [suggestions]="localleaveCollection" (onKeyUp)=onKeyUpLeaveNames($event) (onSelect)="onSelectLeaveName($event)" (onBlur)="onBlurLeaveName($event)" (completeMethod)="filterLeaves($event)" [size]="30"
@@ -521,9 +614,23 @@
                         <div *ngIf="disableSaveLeaveName" style="color:red">Already Exist</div>
                         <div class="clear"></div>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="form-group">
+                <div class="col-sm-6">
+                    <div class="checkbox-cstm">
+                        <label>
+                                <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive">
+                            <span class="cr">
+                                <i class="cr-icon pi pi-check"></i>
+                            </span>
+                            Active
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="form-group">
 
                 <div class="col-sm-6">
                     <label class="form-check-label" for="isActive">
@@ -531,14 +638,15 @@
                     </label>
                 </div>
                 <div class="clear"></div>
-            </div>
-            <div class="modal-footer">
-
-                <button class="btn btn-success" [disabled]="disableSaveLeaveName">Save</button>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-            </div>
-        </form>
+            </div> -->
+                    
     </div>
+    <div class="modal-footer">
+
+            <button class="btn btn-primary-cstm" [disabled]="disableSaveLeaveName">Save</button>
+            <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+        </div>
+    </form>
 </ng-template>
 
 
@@ -550,14 +658,44 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
+    <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveEmpExpertise(); dismissModel();">
     <div class="modal-body">
-        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveEmpExpertise(); dismissModel();">
+        
             <div class="form-group">
-                <label for="name" class="control-label">Employee Expertise<span class="clr-red">*</span></label>
+                    <div class="col-sm-12">
+                        <div class="col-sm-4">
+                            <label class="control-label">Employee Expertise <span class="clr-red">*</span></label>
+                        </div>
+                        <div class="col-sm-5">
+                                <p-autoComplete id="memo" class="p-autoComplete-ctsm" [(ngModel)]="employeeName" [ngModelOptions]="{standalone: true}" (onKeyUp)=onEmpExpertiseKeyUP() (onSelect)="onSelectJob($event)" [suggestions]="localCollection" (completeMethod)="filterEMpExpertise($event)" [size]="30"
+                                [minLength]="1" [dropdown]="true">
+                                    <ng-template let-jobName pTemplate="item">
+                                        <div class="ui-helper-clearfix">{{jobName}}</div>
+                                    </ng-template>
+                                </p-autoComplete>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div class="col-sm-4">
+                            <label class="control-label">Memo</label>
+                        </div>
+                        <div class="col-sm-5">
+                            <input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo"  minlength="2">
+                            <div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
+                                Memo is required.
+                            </div>
+                            <div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
+                                Memo must be at least 2 characters long.
+                            </div>
+                        </div>
+                    </div>
+
+                <!-- <label for="name" class="control-label">Employee Expertise<span class="clr-red">*</span></label>
                 <div class="col-sm-7">
                     <div class="inner-addon right-addon inline-block">
 
-                        <!-- <input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="employeeName"> -->
+                        //<input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="employeeName">
 
                         <p-autoComplete id="memo" [(ngModel)]="employeeName" [ngModelOptions]="{standalone: true}" (onKeyUp)=onEmpExpertiseKeyUP() (onSelect)="onSelectJob($event)" [suggestions]="localCollection" (completeMethod)="filterEMpExpertise($event)" [size]="30"
                                         [minLength]="1" [dropdown]="true">
@@ -568,14 +706,14 @@
 
 
 
-                        <!--    <div *ngIf="disableJobTitle" style="color:red">Already Exist</div>
-        <div *ngIf="disableExpTitle" style="color:red">Already Exist</div>
-        <div class="clear"></div> -->
+                        //    <div *ngIf="disableJobTitle" style="color:red">Already Exist</div>
+        //<div *ngIf="disableExpTitle" style="color:red">Already Exist</div>
+        //<div class="clear"></div> 
                     </div>
-                </div>
+                </div> -->
             </div>
 
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="description" class="control-label">Memo</label>
                 <div class="col-sm-7">
             <div class="col-sm-7">
@@ -592,7 +730,7 @@
                 </div>
             </div>
             </div>
-            </div>
+            </div> -->
             <!-- <div class="form-group">
                 <label for="description" class="control-label">Memo</label>
                 <div class="control-data">
@@ -609,22 +747,35 @@
 
                 <div class="clear"></div>
             </div> -->
+
             <div class="form-group">
+                <div class="col-sm-6">
+                    <div class="checkbox-cstm">
+                        <label>
+                            <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive">
+                            <span class="cr">
+                                <i class="cr-icon pi pi-check"></i>
+                            </span>
+                            Active
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- <div class="form-group">
                 <div class="col-sm-6">
                     <label class="form-check-label" for="isActive">
                         <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
                     </label>
                 </div>
                 <div class="clear"></div>
-            </div>
-
-
-            <div class="modal-footer">
-
-                <button class="btn btn-success" [disabled]="disableExpTitle">Save</button>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-            </div>
-        </form>
+            </div> -->
+                    
     </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary-cstm" [disabled]="disableExpTitle">Save</button>
+        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+    </div>
+</form>
 
 </ng-template>

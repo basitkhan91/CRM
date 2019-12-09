@@ -25,6 +25,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AppTranslationService } from '../../../../services/app-translation.service';
 import { CertificationtypeService } from '../../../../services/certificationtype.service';
 import { CertificationType } from '../../../../models/certificationtype.model';
+import { editValueAssignByCondition } from '../../../../generic/autocomplete';
 
 
 
@@ -122,11 +123,12 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
             if (this.sourceEmployee.employeeId) {
                 this.nextbuttonEnable = true;
 
-            }           
+            }
            
+            console.log(this.sourceEmployee);            
             this.empId = this.sourceEmployee.employeeId;
-            this.firstName = this.sourceEmployee.firstName;
-            this.lastName = this.sourceEmployee.lastName;
+            this.firstName = editValueAssignByCondition('firstName', this.sourceEmployee.firstName);
+            this.lastName = editValueAssignByCondition('lastName', this.sourceEmployee.lastName);
             this.local = this.employeeService.listCollection;
             // this.sourceEmployee.certificationDate = new Date();
             this.getwithemployeeLicensureId();
@@ -680,7 +682,7 @@ if (this.sourceEmployee.expirationDate == undefined) {
         this.loadMasterCompanies();
         this.description = "";
         this.sourceEmployee.isActive = true;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop : 'static', keyboard : false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
