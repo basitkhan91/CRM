@@ -104,7 +104,7 @@ namespace DAL.Repositories.Interfaces
 
         SubWorkOrder CreateSubWorkOrder(SubWorkOrder subWorkOrder);
         SubWorkOrder UpdateSubWorkOrder(SubWorkOrder subWorkOrder);
-        SubWorkOrder SubWorkOrderDetails(long subWorkOrderId);
+        object SubWorkOrderDetails(long subWorkOrderId);
         IEnumerable<object> SubWorkOrderList(long workOrderId);
 
     }

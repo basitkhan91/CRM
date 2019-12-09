@@ -485,12 +485,59 @@ namespace DAL.Repositories
             }
         }
 
-        public SubWorkOrder SubWorkOrderDetails(long subWorkOrderId)
+        public object SubWorkOrderDetails(long subWorkOrderId)
         {
             try
             {
-                var subWorkOrder = _appContext.Set<SubWorkOrder>().Where(x => x.SubWorkOrderId == subWorkOrderId).FirstOrDefault();
-                return subWorkOrder;
+                //var subWorkOrder = _appContext.Set<SubWorkOrder>().Where(x => x.SubWorkOrderId == subWorkOrderId).FirstOrDefault();
+                //return subWorkOrder;
+
+                var data = (from swo in _appContext.SubWorkOrder
+                            join wo in _appContext.WorkOrder on swo.WorkOrderId equals wo.WorkOrderId
+                            join wop in _appContext.WorkOrderPartNumber on swo.WorkOrderPartNumberId equals wop.ID
+                            join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
+                            join rp in _appContext.Nha_Tla_Alt_Equ_ItemMapping on wop.MappingItemMasterId equals rp.MappingItemMasterId into woprp
+                            from rp in woprp.DefaultIfEmpty()
+                            join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId into rpim1
+                            from im1 in rpim1.DefaultIfEmpty()
+                            join sl in _appContext.StockLine on wop.StockLineId equals sl.StockLineId
+                            join wos in _appContext.WorkScope on wop.WorkOrderScopeId equals wos.WorkScopeId
+                            join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
+                            join wf in _appContext.Workflow on swo.WorkFlowId equals wf.WorkflowId into wopwf
+                            from wf in wopwf.DefaultIfEmpty()
+                            join pub in _appContext.Publication on swo.CMMId equals pub.PublicationRecordId into woppub
+                            from pub in woppub.DefaultIfEmpty()
+                            join stage in _appContext.WorkOrderStage on swo.StageId equals stage.ID
+                            join status in _appContext.WorkOrderStatus on swo.StatusId equals status.Id
+                            where swo.SubWorkOrderId == subWorkOrderId
+                            select new
+                            {
+                                swo.SubWorkOrderId,
+                                swo.SubWorkOrderNo,
+                                swo.NeedDate,
+                                wo.WorkOrderNum,
+                                MCPN = im.PartNumber,
+                                RevisedMCPN = im1.PartNumber,
+                                MCPNDescription = im.PartDescription,
+                                MCSerialNum = sl.SerialNumber,
+                                CustName = cust.Name,
+                                WorkScope = wos.Description,
+                                Stockline = sl.StockLineNumber,
+                                WorkFlowId = wf == null ? 0 : wop.WorkflowId,
+                                WorkFlowNo = wf == null ? "" : wf.WorkOrderNumber,
+                                wo.OpenDate,
+                                swo.EstCompDate,
+                                swo.StageId,
+                                WorkOrderStage = stage.Description,
+                                swo.StatusId,
+                                WorkOrderStatus = status.Description,
+                                swo.CMMId,
+                                WorkOrderCMM = pub.PublicationId,
+                                swo.IsDER,
+                                swo.IsPMA,
+                                wop.WorkOrderScopeId,
+                            }).FirstOrDefault();
+                return data;
             }
             catch (Exception)
             {
@@ -505,20 +552,26 @@ namespace DAL.Repositories
             {
                 var list = (from swo in _appContext.SubWorkOrder
                             join wo in _appContext.WorkOrder on swo.WorkOrderId equals wo.WorkOrderId
-                            join wos in _appContext.WorkOrderStage on swo.StageId equals wos.ID into swowos
-                            from wos in swowos.DefaultIfEmpty()
+                            join wop in _appContext.WorkOrderPartNumber on swo.WorkOrderPartNumberId equals wop.ID
+                            join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
+                            join wos in _appContext.WorkScope on swo.StatusId equals wos.WorkScopeId
+                            join stage in _appContext.WorkOrderStage on swo.StageId equals stage.ID
+                            join rp in _appContext.Nha_Tla_Alt_Equ_ItemMapping on wop.MappingItemMasterId equals rp.MappingItemMasterId into woprp
+                            from rp in woprp.DefaultIfEmpty()
+                            join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId into rpim1
+                            from im1 in rpim1.DefaultIfEmpty()
                             where swo.WorkOrderId == workOrderId
                             select new
                             {
 
                                 swo.SubWorkOrderNo,
-                                Stage = wos.Description,
-                                swo.MasterPartNo,
-                                swo.RevisedPartNo,
-                                swo.MasterPartDescription,
-                                swo.OpenDate,
+                                WorkScope = wos.Description,
+                                MasterPartNo= im.PartNumber,
+                                RevisedPartNo= im1.PartNumber,
+                                MasterPartDescription= im.PartDescription,
+                                wo.OpenDate,
                                 swo.NeedDate,
-                                swo.WorkScope,
+                                Stage=stage.Description,
                                 swo.WorkOrderId,
                                 swo.SubWorkOrderId
                             }).Distinct().ToList();
@@ -547,6 +600,10 @@ namespace DAL.Repositories
                             join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
                             join wf in _appContext.Workflow on wop.WorkflowId equals wf.WorkflowId into wopwf
                             from wf in wopwf.DefaultIfEmpty()
+                            join pub in _appContext.Publication on wop.CMMId equals pub.PublicationRecordId into woppub
+                            from pub in woppub.DefaultIfEmpty()
+                            join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
+                            join status in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals status.Id
                             where wo.WorkOrderId == workOrderId && wop.ID == workOrderPartNumberId
                             select new
                             {
@@ -558,8 +615,21 @@ namespace DAL.Repositories
                                 CustName = cust.Name,
                                 WorkScope = wos.Description,
                                 Stockline = sl.StockLineNumber,
-                                WorkFlowId=wf==null?0:wop.WorkflowId,
-                                WorkFlowNo=wf==null?"":wf.WorkOrderNumber
+                                WorkFlowId = wf == null ? 0 : wop.WorkflowId,
+                                WorkFlowNo = wf == null ? "" : wf.WorkOrderNumber,
+                                wo.OpenDate,
+                                wop.EstimatedCompletionDate,
+                                wop.WorkOrderStageId,
+                                WorkOrderStage = stage.Description,
+                                wop.WorkOrderStatusId,
+                                WorkOrderStatus = status.Description,
+                                wop.CMMId,
+                                WorkOrderCMM = pub.PublicationId,
+                                wop.IsDER,
+                                wop.IsPMA,
+                                wop.WorkOrderScopeId,
+                                SubWorkOrderNo = wo.WorkOrderNum + "-1"
+
                             }).FirstOrDefault();
                 return data;
             }
@@ -570,7 +640,8 @@ namespace DAL.Repositories
             }
         }
 
-        private long CreateSubWorkOrderWorkFlow(long workFlowId, long workOrderId, string createdBy, int masterCompanyId)
+
+        private long CreateSubWorkOrderWorkFlow(long? workFlowId, long workOrderId, string createdBy, int masterCompanyId)
         {
             try
             {
@@ -2851,25 +2922,25 @@ namespace DAL.Repositories
             {
 
                 var workOrderNos = (from wo in _appContext.WorkOrder
-                                   join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
-                                   join c in _appContext.Customer on wo.CustomerId equals c.CustomerId
-                                   join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
-                                   join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
-                                   join wowf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wowf.WorkOrderId
+                                    join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
+                                    join c in _appContext.Customer on wo.CustomerId equals c.CustomerId
+                                    join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
+                                    join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
+                                    join wowf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wowf.WorkOrderId
 
-                                   where wo.IsDeleted == false && wo.IsActive == true && wop.MasterPartId == partId && wop.WorkOrderScopeId == workScopeId
-                                   select new
-                                   {
-                                       wo.WorkOrderNum,
-                                       wo.WorkOrderId,
-                                       WorkOrderPartNumberId = wop.ID,
-                                       wowf.WorkFlowWorkOrderId,
-                                       CustomerName = c.Name,
-                                       im.PartNumber,
-                                       im.PartDescription,
-                                       WorkScope = ws.Description,
+                                    where wo.IsDeleted == false && wo.IsActive == true && wop.MasterPartId == partId && wop.WorkOrderScopeId == workScopeId
+                                    select new
+                                    {
+                                        wo.WorkOrderNum,
+                                        wo.WorkOrderId,
+                                        WorkOrderPartNumberId = wop.ID,
+                                        wowf.WorkFlowWorkOrderId,
+                                        CustomerName = c.Name,
+                                        im.PartNumber,
+                                        im.PartDescription,
+                                        WorkScope = ws.Description,
 
-                                   }).Distinct().ToList();
+                                    }).Distinct().ToList();
 
                 return workOrderNos;
             }
