@@ -18,7 +18,6 @@ import { WorkOrderEndpointService } from '../work-order/work-order-endpoint.serv
 export class WorkOrderService {
 
     creditTerms: any;
-    employeesOriginalData: any[];
     constructor(private workOrderEndpointService: WorkOrderEndpointService) {
     }
 
@@ -228,38 +227,49 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getSubWorkOrderHeaderByWorkOrderId(workOrderId, workOrderPartNumberId);
     }
 
-    getPartsDetail(workOrderId){
+    createSubWorkOrderHeaderByWorkOrderId(data) {
+        return this.workOrderEndpointService.createSubWorkOrderHeaderByWorkOrderId(data);
+    }
+    updateSubWorkOrderHeaderBySubWorkOrderId(data) {
+        return this.workOrderEndpointService.updateSubWorkOrderHeaderBySubWorkOrderId(data);
+    }
+
+
+
+
+
+    getPartsDetail(workOrderId) {
         return this.workOrderEndpointService.getPartsDetail(workOrderId);
     }
 
-    getBuildDetailsFromWorkFlow(partId, workScopeId){
+    getBuildDetailsFromWorkFlow(partId, workScopeId) {
         return this.workOrderEndpointService.getBuildDetailsFromWorkFlow(partId, workScopeId);
     }
-    getBuildDetailsFromHistoricalWorkOrder(partId, workScopeId){
+    getBuildDetailsFromHistoricalWorkOrder(partId, workScopeId) {
         return this.workOrderEndpointService.getBuildDetailsFromHistoricalWorkOrder(partId, workScopeId);
     }
 
-    getWorkFlowDetails(workFlowId){
+    getWorkFlowDetails(workFlowId) {
         return this.workOrderEndpointService.getWorkFlowDetails(workFlowId);
     }
 
-    getWorkOrderMaterialListForQuote(wfwoId){
+    getWorkOrderMaterialListForQuote(wfwoId) {
         return this.workOrderEndpointService.getWorkOrderMaterialListForQuote(wfwoId);
     }
 
-    getWorkOrderLaborListForQuote(wfwoId){
+    getWorkOrderLaborListForQuote(wfwoId) {
         return this.workOrderEndpointService.getWorkOrderLaborListForQuote(wfwoId);
     }
 
-    getWorkOrderChargesListForQuote(wfwoId){
+    getWorkOrderChargesListForQuote(wfwoId) {
         return this.workOrderEndpointService.getWorkOrderChargesListForQuote(wfwoId);
     }
 
-    getWorkOrderExclutionsListForQuote(wfwoId){
+    getWorkOrderExclutionsListForQuote(wfwoId) {
         return this.workOrderEndpointService.getWorkOrderExclutionsListForQuote(wfwoId);
     }
 
-    getWorkOrderFreightListForQuote(wfwoId){
+    getWorkOrderFreightListForQuote(wfwoId) {
         return this.workOrderEndpointService.getWorkOrderFreightListForQuote(wfwoId);
     }
 
