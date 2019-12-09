@@ -93,3 +93,30 @@ export class multiParts {
       
   }
 }
+
+export class partsDetail{
+  partNumber: string;
+  partDescription: string;
+  revisedPartNo: string;
+  nte: number;
+  condition: string;
+  stockLine: string;
+  serialNumber: number;
+  publicationId: string;
+  workOrderStage: string;
+  workOrderStatus: string;
+  priority: string;
+  customerRequestDate: string;
+  promisedDate: string;
+  estimatedShipDate: string;
+  estimatedCompletionDate: string;
+  isDER: boolean;
+  isPMA: boolean;
+  firstName: string;
+  techStation: string;
+  tearDownReport: string;
+  tatDaysCurrent: number;
+  tatDaysStandard: number;
+  workScope: number;
+  workOrderId: number;
+}

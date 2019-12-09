@@ -362,7 +362,6 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     }
 
     loadWorkFlow() {
-        debugger;
         if (this._workflowService.enableUpdateMode == true && !this.UpdateMode) {
             if (this._workflowService.listCollection) {
                 this.sourceWorkFlow = this._workflowService.listCollection.workflow;
