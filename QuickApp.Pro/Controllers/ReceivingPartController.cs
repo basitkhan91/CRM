@@ -364,6 +364,13 @@ namespace QuickApp.Pro.Controllers
                             dbStockLine.CertifiedDueDate = stockLine.CertifiedDueDate;
                             dbStockLine.UpdatedBy = UserName;
 
+                            dbStockLine.OwnerType = stockLine.OwnerType;
+                            dbStockLine.Owner = stockLine.Owner;
+                            dbStockLine.ObtainFromType = stockLine.ObtainFromType;
+                            dbStockLine.ObtainFrom = stockLine.ObtainFrom;
+                            dbStockLine.TraceableToType = stockLine.TraceableToType;
+                            dbStockLine.TraceableTo = stockLine.TraceableTo;
+
                             dbStockLine.UpdatedDate = DateTime.Now;
                             receivePart.StockLines.Remove(stockLine);
                             unitOfWork.Repository<StockLine>().Update(dbStockLine);

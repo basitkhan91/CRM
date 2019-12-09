@@ -16,6 +16,7 @@ import { GlAccountService } from '../../../../services/glAccount/glAccount.servi
 import { GlAccount } from '../../../../models/GlAccount.model';
 import { ShippingService } from '../../../../services/shipping/shipping-service';
 import { CommonService } from '../../../../services/common.service';
+import { CustomerService } from '../../../../services/customer.service';
 
 @Component({
     selector: 'app-edit-po',
@@ -66,7 +67,8 @@ export class EditPoComponent implements OnInit {
     purchaseOrderId: number;
     purchaseOrderHeaderData: any;
     headerManagementStructure: any = {};
-
+    CustomerList: DropDownData[] = [];
+    VendorList: DropDownData[] = [];
     /** edit-po ctor */
     constructor(public receivingService: ReceivingService,
         public priority: PriorityService,
@@ -82,7 +84,8 @@ export class EditPoComponent implements OnInit {
         private glAccountService: GlAccountService,
         private shippingService: ShippingService,
         private _actRoute: ActivatedRoute,
-        private commonService : CommonService,
+        private commonService: CommonService,
+        private customerService: CustomerService,      
     ) {
 
         this.localPoData = this.vendorService.selectedPoCollection;
@@ -118,7 +121,7 @@ export class EditPoComponent implements OnInit {
                 }
                 this.purchaseOrderId = results[0][0].purchaseOrderId;
                 this.purchaseOrderData.purchaseOderPart = results[0];
-                
+
                 this.getManagementStructure().subscribe(
                     results => {
                         this.managementStructure = results[0];
@@ -262,6 +265,8 @@ export class EditPoComponent implements OnInit {
                         this.getAllSite();
                         this.getAllGLAccount();
                         this.getShippingVia();
+                        this.getCustomers();
+                        this.getVendors();
                     },
                     error => this.onDataLoadFailed(error)
                 );
@@ -278,6 +283,66 @@ export class EditPoComponent implements OnInit {
             { partNumber: 'PN123' }
         ]
     }
+
+    getCustomers(): void {
+
+        this.customerService.getCustomers().subscribe(
+            results => {
+                for (let customer of results[0]) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = customer.customerId.toLocaleString();
+                    dropdown.Value = customer.name;
+                    this.CustomerList.push(dropdown);
+                }
+
+                for (let part of this.purchaseOrderData.purchaseOderPart) {
+                    for (let SL of part.stockLine) {
+                        if (SL.owner != null && SL.owner != '' && SL.ownerType == 1) {
+                            SL.ownerObject = this.CustomerList.find(x => x.Key == SL.owner);
+                        }
+                        if (SL.obtainFrom != null && SL.obtainFrom != '' && SL.obtainFromType == 1) {
+                            SL.obtainFromObject = this.CustomerList.find(x => x.Key == SL.obtainFrom);
+                        }
+                        if (SL.traceableTo != null && SL.traceableTo != '' && SL.traceableToType == 1) {
+                            SL.traceableToObject = this.CustomerList.find(x => x.Key == SL.traceableTo);
+                        }
+                    }
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    getVendors(): void {
+        //stockLine.VendorList = [];
+        this.vendorService.getVendors().subscribe(
+            vendors => {
+                for (let vendor of vendors[0]) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = vendor.vendorId.toLocaleString();
+                    dropdown.Value = vendor.vendorName;
+                    this.VendorList.push(dropdown);
+                }
+
+                for (let part of this.purchaseOrderData.purchaseOderPart) {
+                    for (let SL of part.stockLine) {
+
+                        if (SL.owner != null && SL.owner != '' && SL.ownerType == 3) {
+                            SL.ownerObject = this.VendorList.find(x => x.Key == SL.owner);
+                        }
+                        if (SL.obtainFrom != null && SL.obtainFrom != '' && SL.obtainFromType == 3) {
+                            SL.obtainFromObject = this.VendorList.find(x => x.Key == SL.obtainFrom);
+                        }
+                        if (SL.traceableTo != null && SL.traceableTo != '' && SL.traceableToType == 3) {
+                            SL.traceableToObject = this.VendorList.find(x => x.Key == SL.traceableTo);
+                        }
+                    }
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
 
     private getManagementStructure() {
         return this.legalEntityService.getManagemententity();
@@ -917,7 +982,10 @@ export class EditPoComponent implements OnInit {
     private onDataLoadFailed(error: any) {
     }
 
-    onObtainFromChange(event) {
+    onObtainFromChange(event, stockLine) {
+        stockLine.obtainFromObject = {};
+        stockLine.obtainFrom = '';
+
         if (event.target.value === '1') {
             this.obtainfromcustomer = true;
             this.obtainfromother = false;
@@ -935,7 +1003,10 @@ export class EditPoComponent implements OnInit {
         }
     }
 
-    onOwnerChange(event) {
+    onOwnerChange(event, stockLine) {
+        stockLine.ownerObject = {};
+        stockLine.owner = '';
+
         if (event.target.value === '1') {
             this.ownercustomer = true;
             this.ownerother = false;
@@ -953,7 +1024,10 @@ export class EditPoComponent implements OnInit {
         }
     }
 
-    onTraceableToChange(event) {
+    onTraceableToChange(event, stockLine) {
+        stockLine.traceableToObject = '';
+        stockLine.traceableTo = '';
+
         if (event.target.value === '1') {
             this.traceabletocustomer = true;
             this.traceabletoother = false;
@@ -969,6 +1043,30 @@ export class EditPoComponent implements OnInit {
             this.traceabletocustomer = false;
             this.traceabletoother = false;
         }
+    }
+
+    onFilter(event, stockLine, type): void {
+        stockLine.filteredRecords = [];
+        var dropdownSource = type == 1 ? this.CustomerList : this.VendorList;
+        if (dropdownSource != undefined && dropdownSource.length > 0) {
+            for (let row of dropdownSource) {
+                if (row.Value != undefined && row.Value.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    stockLine.filteredRecords.push(row);
+                }
+            }
+        }
+    }
+
+    onObtainSelect(stockLine: StockLine): void {
+        stockLine.obtainFrom = stockLine.obtainFromObject.Key;
+    }
+
+    onOwnerSelect(stockLine: StockLine): void {
+        stockLine.owner = stockLine.ownerObject.Key;
+    }
+
+    onTraceableToSelect(stockLine: StockLine): void {
+        stockLine.traceableTo = stockLine.traceableToObject.Key;
     }
 
     //remove once add dynamic content
@@ -1013,7 +1111,7 @@ export class EditPoComponent implements OnInit {
                             timeLife.push(tl);
                         }
                     }
-                    index +=1;
+                    index += 1;
                 }
 
                 if (stockLineToUpdate.length > 0) {
