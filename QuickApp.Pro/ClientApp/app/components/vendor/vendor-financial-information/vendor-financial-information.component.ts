@@ -75,6 +75,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-financial-information';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
         this.loadCreditTermsData();
+        this.sourceVendor.v1099RentDefault=true;
         this.sourceVendor.is1099Required = true;
         this.loadDiscountData();
         this.loadCurrencyData();
@@ -243,10 +244,23 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.allActions = allWorkFlows;
     }
 
-    private onVendorsLoadSuccssfull(allVendors: any) {
+    private onVendorsLoadSuccssfull(allVendors: any) {        
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.dataSource.data = allVendors;
+        this.dataSource.data = allVendors;       
+       // debugger
+        if(allVendors[0].t != null)
+        {
+            this.sourceVendor.v1099RentDefault=allVendors[0].t.v1099RentDefault;
+            this.sourceVendor.v1099RoyaltiesDefault=allVendors[0].t.v1099RoyaltiesDefault;
+            this.sourceVendor.v1099OtherIncomeDefault=allVendors[0].t.v1099OtherIncomeDefault;
+            this.sourceVendor.v1099MedicalHealthPaymentsDefault=allVendors[0].t.v1099MedicalHealthPaymentsDefault;
+            this.sourceVendor.v1099NonEmployeeCompDefault=allVendors[0].t.v1099NonEmployeeCompDefault;
+            this.sourceVendor.v1099GoldenParachuteDefault=allVendors[0].t.v1099GoldenParachuteDefault;
+            this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault=allVendors[0].t.v1099GrossProceedsPaidToAttorneyDefault;
+        }
+       
+
     }
 
     filterActions(event) {
@@ -401,94 +415,63 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
             this.showCreditTearms = true;
         }
         if (this.sourceVendor.creditLimit && this.sourceVendor.creditTermsId && this.sourceVendor.currencyId) {
+                        
+            
+            if (this.sourceVendor.v1099RentDefault == true) {
+                this.sourceVendor.v1099RentDefault = true;                   
+            } 
+            else if (this.sourceVendor.v1099RoyaltiesDefault == true) {
+                this.sourceVendor.v1099RoyaltiesDefault = true;                   
+            }
+            else if (this.sourceVendor.v1099OtherIncomeDefault == true) {
+                this.sourceVendor.v1099OtherIncomeDefault = true;                   
+            }
+            else if (this.sourceVendor.v1099RoyaltiesDefault == true) {
+                this.sourceVendor.v1099RoyaltiesDefault = true;                  
+            }
+            else if (this.sourceVendor.v1099NonEmployeeCompDefault == true) {
+                this.sourceVendor.v1099NonEmployeeCompDefault = true;                  
+            }
+            else if (this.sourceVendor.v1099GoldenParachuteDefault == true) {
+                this.sourceVendor.v1099GoldenParachuteDefault = true;            
+            }
+            else if (this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault == true) {
+                this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = true;                 
+            }
+            else
+            {
+                this.sourceVendor.v1099RentDefault = true;    
+            }            
+
+
+            if (this.sourceVendor.v1099RentDefault == 1) {
+                this.sourceVendor.v1099RentDefault = true;
+            }
+            if (this.sourceVendor.v1099RoyaltiesDefault == 2) {
+                this.sourceVendor.v1099RoyaltiesDefault = true;
+            }
+            if (this.sourceVendor.v1099OtherIncomeDefault == 3) {
+                this.sourceVendor.v1099OtherIncomeDefault = true;
+            }
+            if (this.sourceVendor.v1099RoyaltiesDefault == 4) {
+                this.sourceVendor.v1099RoyaltiesDefault = true;
+            }
+            if (this.sourceVendor.v1099NonEmployeeCompDefault == 5) {
+                this.sourceVendor.v1099NonEmployeeCompDefault = true;
+            }
+            if (this.sourceVendor.v1099GoldenParachuteDefault == 6) {
+                this.sourceVendor.v1099GoldenParachuteDefault = true;
+            }
+            if (this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault == 7) {
+                this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = true;
+            }
+            this.sourceVendor.masterCompanyId = 1;
+            
+            
             if (this.sourceVendor.vendorId) {
                 this.sourceVendor.createdBy = this.userName;
                 this.sourceVendor.updatedBy = this.userName;
-                
-                if (this.sourceVendor.v1099RentDefault == true) {
-                    this.sourceVendor.v1099RentDefault = true;
-                    this.sourceVendor.v1099RoyaltiesDefault = null;
-                    this.sourceVendor.v1099OtherIncomeDefault = null;
-                    this.sourceVendor.v1099RoyaltiesDefault = null;
-                    this.sourceVendor.v1099NonEmployeeCompDefault = null;
-                    this.sourceVendor.v1099GoldenParachuteDefault = null;
-                    this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = null;
-                }
-                if (this.sourceVendor.v1099RoyaltiesDefault == true) {
-                    this.sourceVendor.v1099RoyaltiesDefault = true;
-                    this.sourceVendor.v1099RentDefault = null;
-                    this.sourceVendor.v1099OtherIncomeDefault = null;
-                    this.sourceVendor.v1099RoyaltiesDefault = null;
-                    this.sourceVendor.v1099NonEmployeeCompDefault = null;
-                    this.sourceVendor.v1099GoldenParachuteDefault = null;
-                    this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = null;
-                }
-                if (this.sourceVendor.v1099OtherIncomeDefault == true) {
-                    this.sourceVendor.v1099OtherIncomeDefault = true;
-                    this.sourceVendor.v1099RentDefault = null;
-                    this.sourceVendor.v1099RoyaltiesDefault = null;
-                    this.sourceVendor.v1099NonEmployeeCompDefault = null;
-                    this.sourceVendor.v1099GoldenParachuteDefault = null;
-                    this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = null;
-                }
-                if (this.sourceVendor.v1099RoyaltiesDefault == true) {
-                    this.sourceVendor.v1099RoyaltiesDefault = true;
-                    this.sourceVendor.v1099RentDefault = null;
-                    this.sourceVendor.v1099RoyaltiesDefault = null;
-                    this.sourceVendor.v1099OtherIncomeDefault = null;
-                    this.sourceVendor.v1099NonEmployeeCompDefault = null;
-                    this.sourceVendor.v1099GoldenParachuteDefault = null;
-                    this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = null;
-                }
-                if (this.sourceVendor.v1099NonEmployeeCompDefault == true) {
-                    this.sourceVendor.v1099NonEmployeeCompDefault = true;
-                    this.sourceVendor.v1099RoyaltiesDefault = null;
-                    this.sourceVendor.v1099RentDefault = null;
-                    this.sourceVendor.v1099RoyaltiesDefault = null;
-                    this.sourceVendor.v1099OtherIncomeDefault = null;
-                    this.sourceVendor.v1099GoldenParachuteDefault = null;
-                    this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = null;
-                }
-                if (this.sourceVendor.v1099GoldenParachuteDefault == true) {
-                    this.sourceVendor.v1099GoldenParachuteDefault = true;
-                    this.sourceVendor.v1099NonEmployeeCompDefault = null;
-                    this.sourceVendor.v1099RoyaltiesDefault = null;
-                    this.sourceVendor.v1099RentDefault = null;
-                    this.sourceVendor.v1099RoyaltiesDefault = null;
-                    this.sourceVendor.v1099OtherIncomeDefault = null;
-                    this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = null;
-                }
-                if (this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault == true) {
-                    this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = true;
-                    this.sourceVendor.v1099GoldenParachuteDefault = null;
-                    this.sourceVendor.v1099NonEmployeeCompDefault = null;
-                    this.sourceVendor.v1099RoyaltiesDefault = null;
-                    this.sourceVendor.v1099RentDefault = null;
-                    this.sourceVendor.v1099RoyaltiesDefault = null;
-                    this.sourceVendor.v1099OtherIncomeDefault = null;
-                }
-                if (this.sourceVendor.v1099RentDefault == 1) {
-                    this.sourceVendor.v1099RentDefault = true;
-                }
-                if (this.sourceVendor.v1099RoyaltiesDefault == 2) {
-                    this.sourceVendor.v1099RoyaltiesDefault = true;
-                }
-                if (this.sourceVendor.v1099OtherIncomeDefault == 3) {
-                    this.sourceVendor.v1099OtherIncomeDefault = true;
-                }
-                if (this.sourceVendor.v1099RoyaltiesDefault == 4) {
-                    this.sourceVendor.v1099RoyaltiesDefault = true;
-                }
-                if (this.sourceVendor.v1099NonEmployeeCompDefault == 5) {
-                    this.sourceVendor.v1099NonEmployeeCompDefault = true;
-                }
-                if (this.sourceVendor.v1099GoldenParachuteDefault == 6) {
-                    this.sourceVendor.v1099GoldenParachuteDefault = true;
-                }
-                if (this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault == 7) {
-                    this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = true;
-                }
-                this.sourceVendor.masterCompanyId = 1;
+               
                 this.workFlowtService.updatefinanceinfo(this.sourceVendor, this.sourceVendor.vendorId).subscribe(data => {
                     this.localCollection = data;
                     this.workFlowtService.financeCollection = this.local;
@@ -498,8 +481,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
                 })
             }
             else {
-                this.sourceVendor.updatedBy = this.userName;
-                this.sourceVendor.masterCompanyId = 1;
+                this.sourceVendor.updatedBy = this.userName;               
                 this.workFlowtService.updatefinanceinfo(this.sourceVendor, this.local.vendorId).subscribe(data => {
                     this.localCollection = data;
                     this.saveCompleted(this.sourceVendor);
