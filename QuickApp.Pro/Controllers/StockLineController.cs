@@ -37,7 +37,30 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("ListGlobalSearch")]
+        public IActionResult GetListGlobalFilter(string value, int pageNumber, int pageSize)
+        {
+            var result = _unitOfWork.stockLineList.GetListGlobalFilter(value, pageNumber, pageSize);
+            return Ok(result);
+        }
+
         //For getting the stockline values
+
+        [HttpPost("Get")]
+        public IActionResult Get([FromBody] Filters<StockListFilters> stocklistFilters)
+        {
+
+            try
+            {
+                var result = _unitOfWork.stockLineList.GetAllStockLinelistData(stocklistFilters);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpGet("Get")]
         [Produces(typeof(List<StockLineViewModel>))]
@@ -55,8 +78,6 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-        //for Stockline Adjustment Reason Data
 
         [HttpGet("GetAdjustmentReason")]
         [Produces(typeof(List<StocklineAdjustmnetReasonViewModel>))]

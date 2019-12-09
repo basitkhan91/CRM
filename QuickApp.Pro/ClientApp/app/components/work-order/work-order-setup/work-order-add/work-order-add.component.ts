@@ -62,6 +62,9 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     @Input() partNumberOriginalData;
     @Input() workOrderGeneralInformation;
     @Input() isSubWorkOrder: boolean = false;
+    @Input() subWorkOrderDetails;
+    @Input() showTabsGrid = false;
+    @Input() workOrderId;
     // @Output() viewWorkFlow = new EventEmitter();
 
     // workOrderTypes: WorkOrderType[];
@@ -87,12 +90,12 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     isDetailedView: boolean;
     selectedRadioButtonValue: boolean;
     moduleName: string;
-    showTableGrid: Boolean = false;
+    // showTabsGrid: Boolean = false;
     worflowId = [];
     selectedWorkFlowId: number;
     isContract = true;
     gridActiveTab: String = 'workFlow';
-    subTabWorkFlow: String;
+    subTabWorkFlow: String = '';
     // WorkOrder general Information Object Modal
 
     // Address Information Object Modal
@@ -133,7 +136,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     savedWorkOrderData: any;
     workFlowWorkOrderData: any;
     workOrderAssetList: any = [];
-    workOrderId;
+    // workOrderId;
     workFlowWorkOrderId: any = 0;
     workOrderMaterialList: any;
     mpnPartNumbersList: any = [];
@@ -157,6 +160,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     workOrderChargesList: Object;
     workOrderExclusionsList: Object;
     isEditLabor: boolean = false;
+    mpnId: any;
 
 
 
@@ -188,9 +192,9 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
     async ngOnInit() {
 
-        //  this.showTableGrid = true;
+        //  this.showTabsGrid = true;
         this.workOrderService.creditTerms = this.creditTerms;
-        this.workOrderService.employeesOriginalData = this.employeesOriginalData;
+        // this.workOrderService.employeesOriginalData = this.employeesOriginalData;
         this.mpnFlag = true;
         this.isDetailedView = true;
         this.selectedCustomer = new Customer();
@@ -204,52 +208,78 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         // this.getMultiplePartsNumbers();
         // this.getAllPriority();
         // this.getStockLines();
-        if (!this.isEdit) {
 
-            this.isEditLabor = true;
-            this.addMPN();
-            this.getAllGridModals();
+
+
+        if (!this.isSubWorkOrder) { // subWorkOrder false
+            if (!this.isEdit) { // create new WorkOrder
+
+                this.isEditLabor = true;
+                this.addMPN();
+                this.getAllGridModals();
+
+
+
+            } else { // edit WorkOrder
+                const data = this.workOrderGeneralInformation;
+                this.workOrderGeneralInformation = {
+                    ...data,
+                    workOrderTypeId: String(data.workOrderTypeId),
+                    customerReference: data.customerReference,
+                    csr: data.csr,
+                    customerId: data.customerDetails,
+                    employeeId: getObjectById('value', data.employeeId, this.employeesOriginalData),
+                    salesPersonId: getObjectById('value', data.employeeId, this.employeesOriginalData),
+                    partNumbers: data.partNumbers.map((x, index) => {
+
+                        this.getRevisedpartNumberByItemMasterId(x.masterPartId, index);
+                        this.getStockLineByItemMasterId(x.masterPartId, x.conditionId, index);
+                        this.getConditionByItemMasterId(x.masterPartId, index);
+                        this.getWorkFlowByPNandScope({ ...x, masterPartId: getObjectById('itemMasterId', x.masterPartId, this.partNumberOriginalData) });
+                        this.getPartPublicationByItemMasterId(x.masterPartId);
+                        return {
+                            ...x,
+                            technicianId: getObjectById('value', x.technicianId, this.employeesOriginalData),
+                            masterPartId: getObjectById('itemMasterId', x.masterPartId, this.partNumberOriginalData),
+                            mappingItemMasterId: getObjectById('mappingItemMasterId', x.mappingItemMasterId, x.revisedParts),
+                        }
+
+
+                    })
+                }
+
+                this.showTabsGrid = true;
+                this.workFlowWorkOrderId = data.workFlowWorkOrderId;
+                if (data.isSinglePN) {
+                    this.workFlowId = data.partNumbers[0].workflowId;
+                    this.mpnId = data.partNumbers[0].id;
+
+
+                }
+
+                this.workOrderId = data.workOrderId;
+                this.savedWorkOrderData = this.workOrderGeneralInformation;
+                this.getWorkOrderWorkFlowNos();
+
+
+            }
         } else {
-            const data = this.workOrderGeneralInformation;
-            this.workOrderGeneralInformation = {
-                ...data,
-                workOrderTypeId: String(data.workOrderTypeId),
-                customerReference: data.customerReference,
-                csr: data.csr,
-                customerId: data.customerDetails,
-                employeeId: getObjectById('value', data.employeeId, this.employeesOriginalData),
-                salesPersonId: getObjectById('value', data.employeeId, this.employeesOriginalData),
-                partNumbers: data.partNumbers.map((x, index) => {
-
-                    this.getRevisedpartNumberByItemMasterId(x.masterPartId, index);
-                    this.getStockLineByItemMasterId(x.masterPartId, x.conditionId, index);
-                    this.getConditionByItemMasterId(x.masterPartId, index);
-                    this.getWorkFlowByPNandScope({ ...x, masterPartId: getObjectById('itemMasterId', x.masterPartId, this.partNumberOriginalData) });
-                    this.getPartPublicationByItemMasterId(x.masterPartId);
-                    return {
-                        ...x,
-                        technicianId: getObjectById('value', x.technicianId, this.employeesOriginalData),
-                        masterPartId: getObjectById('itemMasterId', x.masterPartId, this.partNumberOriginalData),
-                        mappingItemMasterId: getObjectById('mappingItemMasterId', x.mappingItemMasterId, x.revisedParts),
-                    }
-
-
-                })
-            }
-
-            this.showTableGrid = true;
-            this.workFlowWorkOrderId = data.workFlowWorkOrderId;
-            if (data.isSinglePN) {
-                this.workFlowId = data.partNumbers[0].workflowId;
+            console.log(this.subWorkOrderDetails);
+            // this.workOrderId = this.subWorkOrderDetails.workorderid;
+            this.mpnId = this.subWorkOrderDetails.mpnid;
+            this.workFlowWorkOrderId = this.subWorkOrderDetails.workFlowWorkOrderId;
+            this.workFlowId = this.subWorkOrderDetails.workFlowId;
+            this.savedWorkOrderData = {
+                ...this.workOrderId,
+                ...this.workFlowId,
+                ...this.workFlowWorkOrderId
 
             }
-
-            this.workOrderId = data.workOrderId;
-            this.savedWorkOrderData = this.workOrderGeneralInformation;
-            this.getWorkOrderWorkFlowNos();
-
-
         }
+
+
+
+
 
 
     }
@@ -462,7 +492,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         console.log(value);
 
         // this.workOrderGeneralInformation.isSinglePN = value;
-        this.showTableGrid = false;
+        this.showTabsGrid = false;
         this.getAllGridModals();
     }
     // Handles type of the WorkOrder Dealer
@@ -507,7 +537,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     saveWorkOrder(): void {
         this.mpnPartNumbersList = [];
-        // this.showTableGrid = true; // Show Grid Boolean
+        // this.showTabsGrid = true; // Show Grid Boolean
         const generalInfo = this.workOrderGeneralInformation;
         const data = {
             ...generalInfo,
@@ -584,11 +614,12 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         if (this.workOrderGeneralInformation.isSinglePN == true) {
             // get WOrkFlow Equipment Details if WorFlow Exists
             this.getWorkFlowTabsData();
+            this.mpnId = getValueFromObjectByKey('itemMasterId', data.partNumbers[0].id);
             this.workFlowId = data.partNumbers[0].workflowId;
             this.workFlowWorkOrderId = result.workFlowWorkOrderId;
 
         }
-        this.showTableGrid = true; // Show Grid Boolean
+        this.showTabsGrid = true; // Show Grid Boolean
     }
 
 
@@ -611,6 +642,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         console.log(data)
         // data.workOrderWorkFlowId
         // const data = object;
+        // Used to Sub WorkOrder;
+        this.mpnId = data.masterPartId;
         this.workFlowId = data.workflowId,
             this.workFlowWorkOrderId = data.workOrderWorkFlowId;
         // console.log(workFlowWorkOrderId);

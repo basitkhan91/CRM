@@ -43,6 +43,7 @@ import { User } from '../../../../models/user.model';
 
 import { CompanyService } from '../../../../services/company.service';
 import { CurrencyService } from '../../../../services/currency.service';
+import { getObjectById } from '../../../../generic/autocomplete';
 
 
 
@@ -236,7 +237,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
 
-            this.sourceEmployee = this.employeeService.listCollection;
+            this.sourceEmployee = this.employeeService.listCollection;            
 
             this.empCreationForm.controls['jobTitleId'].setValue(this.sourceEmployee.jobTitleId);
 
@@ -252,7 +253,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             this.updateMode = true;
             this.sourceEmployee.startDate = new Date(this.sourceEmployee.startDate);
             this.sourceEmployee.startDate = new Date();
-            this.sourceEmployee.dateOfBirth = new Date(this.sourceEmployee.dateOfBirth);
+            this.sourceEmployee.dateOfBirth = this.sourceEmployee.dateOfBirth ? new Date(this.sourceEmployee.dateOfBirth) : '';
             if (this.local) {
                 this.employeeService.employeeCollection = this.local;
 
@@ -326,7 +327,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.EmployeeLeaveType();
         this.loadjobtypesData();
         this.loadLegalEntityData();
-        this.loadCurrencyData();
+        this.loadCurrencyData();        
 
     }
 
@@ -1091,6 +1092,16 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.allEmployeeinfo = getEmployeeCerficationList;
         console.log("this.allEmployeeinfo")
         console.log(this.allEmployeeinfo);
+        if(this.sourceEmployee.firstName) {
+            this.sourceEmployee.firstName = getObjectById('employeeId', this.sourceEmployee.employeeId, this.allEmployeeinfo);
+        }
+        if(this.sourceEmployee.middleName) {
+            this.sourceEmployee.middleName = getObjectById('employeeId', this.sourceEmployee.employeeId, this.allEmployeeinfo);
+        }
+        if(this.sourceEmployee.lastName) {
+            this.sourceEmployee.lastName = getObjectById('employeeId', this.sourceEmployee.employeeId, this.allEmployeeinfo);
+        }
+        
     }
     private onLeavedata(getEmployeeCerficationList: any[]) {
         console.log("on levae data");
@@ -1481,7 +1492,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.sourceAction = new JobType();
         this.sourceAction.isActive = true;
         this.jobName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop : 'static', keyboard : false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1495,7 +1506,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.sourceAction = new JobTitle();
         this.sourceAction.isActive = true;
         this.jobName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop : 'static', keyboard : false  });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1524,7 +1535,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.sourceAction = new EmployeeExpertise();
         this.sourceAction.isActive = true;
         this.employeeName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop : 'static', keyboard : false  });
         this.modal.result.then(() => {
             //    console.log('When user closes');
             //}, () => { console.log('Backdrop click') })
@@ -1542,7 +1553,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.sourceAction = new EmployeeLeaveType();
         this.sourceAction.isActive = true;
         this.description = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop : 'static', keyboard : false  });
         this.modal.result.then(() => {
             //    console.log('When user closes');
             //}, () => { console.log('Backdrop click') 

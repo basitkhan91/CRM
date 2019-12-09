@@ -2,8 +2,8 @@
     <div class="right_col" role="main">
        
         <div class="col-md-12">
-            <div class="card" style="">
-            <form #workOrderForm="ngForm" >
+            <div class="card" *ngIf="!isSubWorkOrder" style="">
+            <form  #workOrderForm="ngForm" >
                 <div class="x_content">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
@@ -531,14 +531,15 @@
                   
                 </div>
                 <div>
-                  <button class="btn btn-primary-cstm pull-right" *ngIf="!showTableGrid && !isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Save</button>
+                  <button class="btn btn-primary-cstm pull-right" *ngIf="!showTabsGrid && !isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Save</button>
                   <button class="btn btn-primary-cstm pull-right" *ngIf="isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Update</button>
-                  <button  *ngIf="showTableGrid && workOrderGeneralInformation.isSinglePN " class="btn btn-success pull-right" [routerLink]="['/workordersmodule/workorderspages/app-work-order-quote']"[queryParams]="{workOrderId: savedWorkOrderData['workOrderId']}"  >Create Quote</button>
+                  <button  *ngIf="showTabsGrid && workOrderGeneralInformation.isSinglePN " class="btn btn-success pull-right" [routerLink]="['/workordersmodule/workorderspages/app-work-order-quote']"[queryParams]="{workOrderId: savedWorkOrderData['workOrderId']}"  >Create Quote</button>
                 </div>
             </form>
             </div>
 
-            <div class="card " *ngIf="showTableGrid">
+ 
+            <div class="card " *ngIf="showTabsGrid ">
                 <div class="card-header" *ngIf="!workOrderGeneralInformation.isSinglePN ">
                   Multiple  MPN
 
@@ -764,7 +765,7 @@
                     </div>
 
                     <div  *ngIf="workOrderId && (gridActiveTab === 'subWO') " [ngClass]="{hidedata : gridActiveTab !== 'subWO'}">
-                        <app-sub-work-orderlist></app-sub-work-orderlist>
+                        <app-sub-work-orderlist [workOrderId]="workOrderId" [mpnId]="mpnId" ></app-sub-work-orderlist>
                      
                     </div>
 

@@ -354,38 +354,50 @@ export class WorkOrderEndpointService extends EndpointFactory {
     }
 
     getSubWorkOrderHeaderByWorkOrderId(workOrderId, workOrderPartNumberId) {
-        return this.http.get(`${this.configurations.baseUrl}/api/workOrder/subworkorderheaderdetails?workOrderId=${workOrderId}&workOrderPartNumberId=${workOrderPartNumberId}`)
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/subworkorderheaderdetails?workOrderId=${workOrderId}&workOrderPartNumberId=${workOrderPartNumberId}`)
     }
 
-    getPartsDetail(workOrderId){
+    createSubWorkOrderHeaderByWorkOrderId(data) {
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/createsubworkorder`, JSON.stringify(data), this.getRequestHeaders())
+    }
+
+    updateSubWorkOrderHeaderBySubWorkOrderId(data) {
+        return this.http.put<any>(`${this.configurations.baseUrl}/api/workOrder/updatesubworkorder`, JSON.stringify(data), this.getRequestHeaders());
+    }
+
+
+
+
+
+    getPartsDetail(workOrderId) {
         return this.http.get(`${this.configurations.baseUrl}/api/workorder/workorderpartsview?workOrderId=${workOrderId}`)
     }
-    
-    getBuildDetailsFromWorkFlow(partId, workScopeId){
+
+    getBuildDetailsFromWorkFlow(partId, workScopeId) {
         return this.http.get(`${this.configurations.baseUrl}/api/workorder/workflownos?partId=${partId}&workScopeId=${workScopeId}`)
     }
 
-    getBuildDetailsFromHistoricalWorkOrder(partId, workScopeId){
+    getBuildDetailsFromHistoricalWorkOrder(partId, workScopeId) {
         return this.http.get(`${this.configurations.baseUrl}/api/workorder/workordernos?partId=${partId}&workScopeId=${workScopeId}`)
     }
 
-    getWorkFlowDetails(workFlowId){
+    getWorkFlowDetails(workFlowId) {
         return this.http.get(`${this.configurations.baseUrl}/api/workflow/getworkflow/${workFlowId}`)
     }
 
-    getWorkOrderMaterialListForQuote(wfwoId){
+    getWorkOrderMaterialListForQuote(wfwoId) {
         return this.http.get(`${this.configurations.baseUrl}/api/workorder/workordermateriallist?wfwoId=${wfwoId}`);
     }
-    getWorkOrderLaborListForQuote(wfwoId){
+    getWorkOrderLaborListForQuote(wfwoId) {
         return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkflowworkorderlabourlist?wfwoId=${wfwoId}`);
     }
-    getWorkOrderChargesListForQuote(wfwoId){
+    getWorkOrderChargesListForQuote(wfwoId) {
         return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkflowworkorderchargeslist?wfwoId=${wfwoId}`);
     }
-    getWorkOrderExclutionsListForQuote(wfwoId){
+    getWorkOrderExclutionsListForQuote(wfwoId) {
         return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkflowworkorderexclusionslist?wfwoId=${wfwoId}`);
     }
-    getWorkOrderFreightListForQuote(wfwoId){
+    getWorkOrderFreightListForQuote(wfwoId) {
         return this.http.get(`${this.configurations.baseUrl}/api/workorder/workorderfreightlist?wfwoId=${wfwoId}`);
     }
 
