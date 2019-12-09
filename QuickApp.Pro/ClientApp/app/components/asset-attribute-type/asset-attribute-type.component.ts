@@ -558,6 +558,12 @@ export class AssetAttributeTypeComponent implements OnInit {
         });
     }
 
+    selectedAssetType(object) {
+        //console.log('selectedAssetType.assetTypeName', object);
+        //console.log('selectedAssetType.memo', object.assetTypeMemo);
+        this.currentRow.description = object.assetTypeMemo;
+    }
+
     showItemEdit(rowData): void {
         this.currentModeOfOperation = ModeOfOperation.Update;
         //console.log('currentModeOfOperation', this.currentModeOfOperation);
