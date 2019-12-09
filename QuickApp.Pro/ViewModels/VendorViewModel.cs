@@ -63,7 +63,7 @@ namespace QuickApp.Pro.ViewModels
         public Nullable<bool> v1099RoyaltiesDefault { get; set; }
         public long? capabilityId { get; set; }
         public Nullable<bool> v1099OtherIncome { get; set; }
-        public string v1099OtherIncomeDefault { get; set; }
+        public Nullable<bool> v1099OtherIncomeDefault { get; set; }
         public Nullable<bool> v1099MedicalHealthPayments { get; set; }
         public Nullable<bool> v1099MedicalHealthPaymentsDefault { get; set; }
         public Nullable<bool> v1099NonEmployeeComp { get; set; }
