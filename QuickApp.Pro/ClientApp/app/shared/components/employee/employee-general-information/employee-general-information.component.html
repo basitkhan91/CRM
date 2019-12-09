@@ -349,138 +349,148 @@
                 <label for="description" class="control-label">Job Type<span class="clr-red">*</span></label>
                 <div class="col-sm-7">
                     <div class="inner-addon right-addon inline-block">
-                        <input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="jobTypeName">
+                        <!--<input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="jobTypeName"> -->
 
-                        <!--
 
-                  <p-autoComplete [(ngModel)]="jobTypeName" [ngModelOptions]="{standalone: true}" (onKeyUp)=onKeyJob($event) (onSelect)="onSelectJob($event)" [suggestions]="localCollection" (completeMethod)="filterJobs($event)" [size]="30"
-                                [minLength]="1" [dropdown]="true">
-                    <ng-template let-jobName pTemplate="item">
-                        <div class="ui-helper-clearfix">{{jobName}}</div>
-                    </ng-template>
-                </p-autoComplete>
 
-                        -->
+                        <p-autoComplete [(ngModel)]="jobTypeName" [ngModelOptions]="{standalone: true}" (onKeyUp)=onJobTypeKeyUP($event) (onSelect)="onSelectJob($event)" [suggestions]="localCollection" (completeMethod)="filterJobs($event)" [size]="30"
+                                        [minLength]="1" [dropdown]="true">
+                            <ng-template let-jobName pTemplate="item">
+                                <div class="ui-helper-clearfix">{{jobName}}</div>
+                            </ng-template>
+                        </p-autoComplete>
 
-                        <div *ngIf="disableJobTitle" style="color:red">Already Exist</div>
+
+
+                        <!-- <div *ngIf="disableJobTitle" style="color:red">Already Exist</div> -->
                         <div class="clear"></div>
                     </div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="description" class="control-label">Job Type Description</label>
+                <div class="form-group">
+                    <label for="description" class="control-label">Job Type Description</label>
+                    <div class="col-sm-7">
+                        <div class="inner-addon right-addon inline-block">
+                            <input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="jobTypeDescription">
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+
+                    <div class="col-sm-6">
+                        <label class="form-check-label" for="isActive">
+                            <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
+                        </label>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <button class="btn btn-success" [disabled]="disableJobType">Save</button>
+                    <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+                </div>
+            </form>
+        </div>
+
+    </ng-template>
+
+
+
+    <ng-template #content let-c="close" let-d="dismiss" style="width:auto">
+        <div class="modal-header">
+            <h4 class="modal-title" *ngIf="isEditMode">Edit JobTitle</h4>
+            <h4 class="modal-title" *ngIf="!isEditMode">Add JobTitle</h4>
+            <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveJobTitle(); dismissModel();">
+
+
+                <div class="form-group">
+                    <label for="description" class="control-label">Job Title<span class="clr-red">*</span></label>
+                    <div class="col-sm-7">
+                        <div class="inner-addon right-addon inline-block">
+
+                            <p-autoComplete [(ngModel)]="jobName" [ngModelOptions]="{standalone: true}" (onKeyUp)=onjobTitleKeyUP($event) (onSelect)="onSelectJob($event)" [suggestions]="localCollection" (completeMethod)="filterJObTitles($event)" [size]="30"
+                                            [minLength]="1" [dropdown]="true">
+                                <ng-template let-jobName pTemplate="item">
+                                    <div class="ui-helper-clearfix">{{jobName}}</div>
+                                </ng-template>
+                            </p-autoComplete>
+
+
+
+                            <!--<div *ngIf="disableJobTitle" style="color:red">Already Exist</div>
+
+    <input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="jobName">
+
+    <div *ngIf="disableJobTitle" style="color:red">">Already Exist</div> -->
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="description" class="control-label">Memo</label>
+                    <div class="col-sm-7">
                 <div class="col-sm-7">
                     <div class="inner-addon right-addon inline-block">
-                        <input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="jobTypeDescription">
 
-        
-                    
+                        <input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo"  minlength="2">
+                        <div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
+                            Memo is required.
+                        </div>
+                        <div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
+                            Memo must be at least 2 characters long.
+                        </div>
+
+
                     </div>
                 </div>
-            </div>
-
-
-            <div class="form-group">
-
-                <div class="col-sm-6">
-                    <label class="form-check-label" for="isActive">
-                        <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
-                    </label>
                 </div>
-                <div class="clear"></div>
-            </div>
-
-
-            <div class="modal-footer">
-
-                <button class="btn btn-success" [disabled]="disableJobTitle">Save</button>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-            </div>
-        </form>
-    </div>
-
-</ng-template>
-
-
-
-<ng-template #content let-c="close" let-d="dismiss" style="width:auto">
-    <div class="modal-header">
-        <h4 class="modal-title" *ngIf="isEditMode">Edit JobTitle</h4>
-        <h4 class="modal-title" *ngIf="!isEditMode">Add JobTitle</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveJobTitle(); dismissModel();">
-
-
-            <div class="form-group">
-                <label for="description" class="control-label">Job Title<span class="clr-red">*</span></label>
-                <div class="col-sm-7">
-                    <div class="inner-addon right-addon inline-block">
-
-                        <input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="jobName" >
-
-
-                        <div *ngIf="disableJobTitle" style="color:red">">Already Exist</div>
-                        <div class="clear"></div>
-                    </div>
                 </div>
-
-            </div>
-
-            <div class="form-group">
-                <label for="description" class="control-label">Memo</label>
-                <div class="col-sm-7">
-            <div class="col-sm-7">
-                <div class="inner-addon right-addon inline-block">
-
-                    <input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo"  minlength="2">
-                    <div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
-                        Memo is required.
+                <!-- <div class="form-group">
+                    <label for="description" class="control-label">Memo</label>
+                    <div class="control-data">
+                        <input #memo="ngModel" id="memo" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
+                        <div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
+                            Memo is required.
+                        </div>
+                        <div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
+                            Memo must be at least 2 characters long.
+                        </div>
                     </div>
-                    <div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
-                        Memo must be at least 2 characters long.
-                    </div>
+                    <div class="clear"></div>
+                </div> -->
 
-                 
-                </div>
-            </div>
-            </div>
-            </div>
-            <!-- <div class="form-group">
-                <label for="description" class="control-label">Memo</label>
-                <div class="control-data">
-                    <input #memo="ngModel" id="memo" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
-                    <div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
-                        Memo is required.
-                    </div>
-                    <div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
-                        Memo must be at least 2 characters long.
-                    </div>
-                </div>
-                <div class="clear"></div>
-            </div> -->
+                        <div class="form-group">
 
-            <div class="form-group">
+                            <div class="col-sm-6">
+                                <label class="form-check-label" for="isActive">
+                                    <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
+                                </label>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
 
-                <div class="col-sm-6">
-                    <label class="form-check-label" for="isActive">
-                        <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
-                    </label>
-                </div>
-                <div class="clear"></div>
-            </div>
 
-            
-            <div class="modal-footer">
+                        <div class="modal-footer">
 
-                <button class="btn btn-success" [disabled]="disableJobTitle">Save</button>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-            </div>
-        </form>
+                            <button class="btn btn-success" [disabled]="disableJobTitle">Save</button>
+                            <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+                        </div>
+</form>
     </div>
 
 </ng-template>
@@ -547,9 +557,20 @@
                 <div class="col-sm-7">
                     <div class="inner-addon right-addon inline-block">
 
-                        <input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="employeeName">
-                        <div *ngIf="disableExpTitle" style="color:red">Already Exist</div>
-                        <div class="clear"></div>
+                        <!-- <input #memo="ngModel" class="form-control" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="employeeName"> -->
+
+                        <p-autoComplete id="memo" [(ngModel)]="employeeName" [ngModelOptions]="{standalone: true}" (onKeyUp)=onEmpExpertiseKeyUP() (onSelect)="onSelectJob($event)" [suggestions]="localCollection" (completeMethod)="filterEMpExpertise($event)" [size]="30"
+                                        [minLength]="1" [dropdown]="true">
+                            <ng-template let-jobName pTemplate="item">
+                                <div class="ui-helper-clearfix">{{jobName}}</div>
+                            </ng-template>
+                        </p-autoComplete>
+
+
+
+                        <!--    <div *ngIf="disableJobTitle" style="color:red">Already Exist</div>
+        <div *ngIf="disableExpTitle" style="color:red">Already Exist</div>
+        <div class="clear"></div> -->
                     </div>
                 </div>
             </div>

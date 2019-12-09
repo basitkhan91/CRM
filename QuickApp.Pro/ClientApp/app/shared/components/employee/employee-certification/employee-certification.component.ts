@@ -350,7 +350,8 @@ if (this.sourceEmployee.expirationDate == undefined) {
        
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.allCertification = allWorkFlows;       
+        this.allCertification = allWorkFlows;     
+        console.log("this.allCertification::", this.allCertification);
 
     }
 

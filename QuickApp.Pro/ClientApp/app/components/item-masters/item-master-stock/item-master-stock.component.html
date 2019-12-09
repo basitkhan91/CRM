@@ -1267,7 +1267,7 @@
                                             Export UOM <span style="color:red;">*</span>
                                             <span style="margin-left:3px;margin-top:5px;cursor:pointer;">
                                                 <i class="fa fa-plus-circle fa-lg" data-toggle="modal"
-                                                   data-target="#ModalUnit"></i>
+                                                   data-target="#ModalUnit" (click)="exportUOmOpen(ModalUnit)"></i>
                                             </span>
                                         </label>
                                         <select class="select-value-drop1" id="" name="" [(ngModel)]="exportInfo.ExportUomId"
@@ -1660,7 +1660,7 @@
                     <div class="col-sm-6">
                         <div class="checkbox-cstm">
                             <label>
-                                <input type="checkbox" name="isActive" #isActive="ngModel" checked id="isActive" [(ngModel)]="sourceUOM.isActive">
+                                <!--<input type="checkbox" name="isActive" #isActive="ngModel" checked id="isActive" [(ngModel)]="sourceUOM.isActive">-->
                                 <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                 Active
                             </label>
@@ -1806,7 +1806,7 @@
                 <div class="col-sm-12">
                     <div class="col-sm-4">
                         <label for="netDays" class="control-label control-item">
-                            Item Group Description<span class="clr-red">*</span>
+                            Item Group Name<span class="clr-red">*</span>
                         </label>
                     </div>
                     <div class="col-sm-5">
