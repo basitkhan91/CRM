@@ -64,6 +64,40 @@ namespace DAL.Repositories.Interfaces
         long CreateWorkOrderQuote(WorkOrderQuote workOrderQuote);
         void UpdateWorkOrderQuote(WorkOrderQuote workOrderQuote);
         object GetWorkFlowWorkOrderQuote(long wfwoId = 0, long workOrderId = 0);
+        WorkOrderQuoteDetails CreateWorkOrderQuoteDetails(WorkOrderQuoteDetails workOrderQuoteDetails);
+        WorkOrderQuoteDetails UpdateWorkOrderQuoteDetails(WorkOrderQuoteDetails workOrderQuoteDetails);
+
+        List<WorkOrderQuoteExclusions> CreateWorkOrderQuoteExclusions(List<WorkOrderQuoteExclusions> quoteExclusions);
+        List<WorkOrderQuoteExclusions> UpdateWorkOrderQuoteExclusions(List<WorkOrderQuoteExclusions> quoteExclusions);
+        IEnumerable<object> GetWorkOrderQuoteExclusions(long WorkOrderQuoteId);
+        void DeleteWorkOrderQuoteExclusion(long exclusionId, string updatedBy);
+
+        List<WorkOrderQuoteFreight> CreateWorkOrderQuoteFreight(List<WorkOrderQuoteFreight> quoteFreight);
+        List<WorkOrderQuoteFreight> UpdateWorkOrderQuoteFreight(List<WorkOrderQuoteFreight> quoteFreight);
+        IEnumerable<object> GetWorkOrderQuoteFreight(long WorkOrderQuoteId);
+        void DeleteWorkOrderQuoteFreight(long freightId, string updatedBy);
+
+        List<WorkOrderQuoteCharges> CreateWorkOrderQuoteCharges(List<WorkOrderQuoteCharges> quoteCharges);
+        List<WorkOrderQuoteCharges> UpdateWorkOrderQuoteCharges(List<WorkOrderQuoteCharges> quoteCharges);
+        IEnumerable<object> GetWorkOrderQuoteCharges(long WorkOrderQuoteId);
+        void DeleteWorkOrderQuoteCharges(long workOrderChargeId, string updatedBy);
+
+
+        List<WorkOrderQuoteMaterial> CreateWorkOrderQuoteMaterial(List<WorkOrderQuoteMaterial> quoteMaterials);
+        List<WorkOrderQuoteMaterial> UpdateWorkOrderQuoteMaterial(List<WorkOrderQuoteMaterial> quoteMaterials);
+        IEnumerable<object> GetWorkOrderQuoteMaterial(long WorkOrderQuoteId);
+        void DeleteWorkOrderQuoteMaterial(long workOrderMaterialsId, string updatedBy);
+
+        WorkOrderQuoteLaborHeader CreateWorkOrderQuoteLabor(WorkOrderQuoteLaborHeader quoteLabor);
+        WorkOrderQuoteLaborHeader UpdateWorkOrderQuoteLabor(WorkOrderQuoteLaborHeader quoteLabor);
+        object GetWorkOrderQuoteLabor(long WorkOrderQuoteId);
+        void DeleteWorkOrderQuoteLabor(long workOrderQuoteLaborId, string updatedBy);
+
+
+
+
+
+
 
         long CreateWorkOrderFreight(WorkOrderFreight workOrderFreight);
         void UpdateWorkOrderFreight(WorkOrderFreight workOrderFreight);
@@ -104,7 +138,7 @@ namespace DAL.Repositories.Interfaces
 
         SubWorkOrder CreateSubWorkOrder(SubWorkOrder subWorkOrder);
         SubWorkOrder UpdateSubWorkOrder(SubWorkOrder subWorkOrder);
-        SubWorkOrder SubWorkOrderDetails(long subWorkOrderId);
+        object SubWorkOrderDetails(long subWorkOrderId);
         IEnumerable<object> SubWorkOrderList(long workOrderId);
 
     }

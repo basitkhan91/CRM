@@ -423,29 +423,39 @@ namespace QuickApp.Pro.Controllers
                     _unitOfWork.CommonRepository.CreateClassificationMappings(listofEClassificationMappings, Convert.ToInt32(ModuleEnum.Customer),
                         actionobject.CustomerId, actionobject.CreatedBy);
                 }
-
                 if (customerViewModel.IntegrationPortalId != null)
                 {
-
-                    foreach (string s in customerViewModel.IntegrationPortalId)
-                    {
-                        if (s != "")
-                        {
-                            var integrationTypes = new CustomerIntegrationPortal();
-                            integrationTypes.IntegrationPortalId = Convert.ToInt32(s);
-                            integrationTypes.CustomerId = actionobject.CustomerId;
-                            integrationTypes.MasterCompanyId = 1;
-                            integrationTypes.CreatedBy = customerViewModel.CreatedBy;
-                            integrationTypes.UpdatedBy = customerViewModel.UpdatedBy;
-                            integrationTypes.CreatedDate = DateTime.Now;
-                            integrationTypes.UpdatedDate = DateTime.Now;
-                            integrationTypes.IsActive = true;
-                            _unitOfWork.CustomerIntegrationPortalRepository.Add(integrationTypes);
-                            _unitOfWork.SaveChanges();
-                        }
-                    }
-
+                    List<IntegrationPortalMapping> listofIntegrationMappings = customerViewModel
+                        .IntegrationPortalId
+                        .Select(item => new IntegrationPortalMapping() { IntegrationPortalId =Convert.ToInt64(item)}
+                        ).ToList();
+                    _unitOfWork.CommonRepository.CreateIntegrationMappings(listofIntegrationMappings, Convert.ToInt32(ModuleEnum.Customer),
+                        actionobject.CustomerId, actionobject.CreatedBy);
                 }
+
+
+                //if (customerViewModel.IntegrationPortalId != null)
+                //{
+
+                //    foreach (string s in customerViewModel.IntegrationPortalId)
+                //    {
+                //        if (s != "")
+                //        {
+                //            var integrationTypes = new CustomerIntegrationPortal();
+                //            integrationTypes.IntegrationPortalId = Convert.ToInt32(s);
+                //            integrationTypes.CustomerId = actionobject.CustomerId;
+                //            integrationTypes.MasterCompanyId = 1;
+                //            integrationTypes.CreatedBy = customerViewModel.CreatedBy;
+                //            integrationTypes.UpdatedBy = customerViewModel.UpdatedBy;
+                //            integrationTypes.CreatedDate = DateTime.Now;
+                //            integrationTypes.UpdatedDate = DateTime.Now;
+                //            integrationTypes.IsActive = true;
+                //            _unitOfWork.CustomerIntegrationPortalRepository.Add(integrationTypes);
+                //            _unitOfWork.SaveChanges();
+                //        }
+                //    }
+
+                //}
 
                 // _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, attachmentDetails, actionobject.CustomerId,Convert.ToInt32(DAL.Common.ModuleEnum.Customer), Convert.ToString(DAL.Common.ModuleEnum.Customer), actionobject.CreatedBy, actionobject.MasterCompanyId);
 
@@ -544,41 +554,62 @@ namespace QuickApp.Pro.Controllers
                     }
                 }
             }
+
+
+            //if (customerViewModel.IntegrationPortalId != null)
+            //{
+            //    var integrationList = _unitOfWork.CustomerIntegrationPortalRepository.GetAllData().ToList();
+            //    integrationList.Where(a => a.CustomerId == id).ToList().ForEach(a => _unitOfWork.CustomerIntegrationPortalRepository.Remove(a));
+            //    _unitOfWork.SaveChanges();
+
+            //    List<CustomerIntegrationPortal> integrationTypesList = new List<CustomerIntegrationPortal>();
+            //    foreach (string s in customerViewModel.IntegrationPortalId)
+            //    {
+            //        if (s != "")
+            //        {
+            //            CustomerIntegrationPortal integrationTypes = new CustomerIntegrationPortal();
+            //            integrationTypes.CustomerIntegrationPortalId = 0;
+            //            integrationTypes.IntegrationPortalId = Convert.ToInt32(s);
+            //            integrationTypes.CustomerId = id;
+            //            integrationTypes.MasterCompanyId = 1;
+            //            integrationTypes.CreatedBy = customerViewModel.CreatedBy;
+            //            integrationTypes.UpdatedBy = customerViewModel.UpdatedBy;
+            //            integrationTypes.CreatedDate = DateTime.Now;
+            //            integrationTypes.UpdatedDate = DateTime.Now;
+            //            integrationTypes.IsActive = true;
+            //            integrationTypesList.Add(integrationTypes);
+            //           // _unitOfWork.CustomerIntegrationPortalRepository.Add(integrationTypes);
+            //           // _unitOfWork.SaveChanges();
+            //        }
+            //    }
+            //    if (integrationTypesList.Count > 0)
+            //    {
+            //        _unitOfWork.CustomerIntegrationPortalRepository.AddRange(integrationTypesList);
+            //        _unitOfWork.SaveChanges();
+            //    }
+
+
+            //}
             if (customerViewModel.IntegrationPortalId != null)
             {
-                var integrationList = _unitOfWork.CustomerIntegrationPortalRepository.GetAllData().ToList();
-                integrationList.Where(a => a.CustomerId == id).ToList().ForEach(a => _unitOfWork.CustomerIntegrationPortalRepository.Remove(a));
-                _unitOfWork.SaveChanges();
+                var integrationPortalList = _context.IntegrationPortalMapping.Where(a => a.ReferenceId == id && a.ModuleId == Convert.ToInt32(ModuleEnum.Customer)).ToList();
 
-                List<CustomerIntegrationPortal> integrationTypesList = new List<CustomerIntegrationPortal>();
-                foreach (string s in customerViewModel.IntegrationPortalId)
+                if (integrationPortalList.Count > 0)
                 {
-                    if (s != "")
+                    foreach (var objData in integrationPortalList)
                     {
-                        CustomerIntegrationPortal integrationTypes = new CustomerIntegrationPortal();
-                        integrationTypes.CustomerIntegrationPortalId = 0;
-                        integrationTypes.IntegrationPortalId = Convert.ToInt32(s);
-                        integrationTypes.CustomerId = id;
-                        integrationTypes.MasterCompanyId = 1;
-                        integrationTypes.CreatedBy = customerViewModel.CreatedBy;
-                        integrationTypes.UpdatedBy = customerViewModel.UpdatedBy;
-                        integrationTypes.CreatedDate = DateTime.Now;
-                        integrationTypes.UpdatedDate = DateTime.Now;
-                        integrationTypes.IsActive = true;
-                        integrationTypesList.Add(integrationTypes);
-                       // _unitOfWork.CustomerIntegrationPortalRepository.Add(integrationTypes);
-                       // _unitOfWork.SaveChanges();
+                        _context.IntegrationPortalMapping.Remove(objData);
+                        _unitOfWork.SaveChanges();
                     }
                 }
-                if (integrationTypesList.Count > 0)
-                {
-                    _unitOfWork.CustomerIntegrationPortalRepository.AddRange(integrationTypesList);
-                    _unitOfWork.SaveChanges();
-                }
-             
 
+                List<IntegrationPortalMapping> listofIntegrationMappings = customerViewModel
+                    .IntegrationPortalId
+                    .Select(item => new IntegrationPortalMapping() { IntegrationPortalId =Convert.ToInt64(item) }
+                    ).ToList();
+                _unitOfWork.CommonRepository.CreateIntegrationMappings(listofIntegrationMappings, Convert.ToInt32(ModuleEnum.Customer),
+                    actionobject.CustomerId, actionobject.CreatedBy);
             }
-
 
             _unitOfWork.Address.Update(address);
             _unitOfWork.SaveChanges();

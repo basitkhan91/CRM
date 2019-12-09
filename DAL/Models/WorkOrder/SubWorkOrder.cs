@@ -9,18 +9,14 @@ namespace DAL.Models
         [Key]
         public long SubWorkOrderId { get; set; }
         public long WorkOrderId { get; set; }
-        public string MasterPartNo { get; set; }
-        public string MasterPartDescription { get; set; }
-        public string RevisedPartNo { get; set; }
-        public string WorkScope { get; set; }
+        public long WorkOrderPartNumberId { get; set; }
+        public long? WorkFlowId { get; set; }
+        public long? CMMId { get; set; }
         public string SubWorkOrderNo { get; set; }
-        public DateTime OpenDate { get; set; }
         public DateTime? NeedDate { get; set; }
         public DateTime? EstCompDate { get; set; }
         public long? StageId { get; set; }
         public long? StatusId { get; set; }
-        public string CMM { get; set; }
-        public string WorkFlowNo { get; set; }
         public bool IsPMA { get; set; }
         public bool IsDER { get; set; }
         public int MasterCompanyId { get; set; }
@@ -33,8 +29,7 @@ namespace DAL.Models
 
         [NotMapped]
         public string WorkOrderNum { get; set; }
-        [NotMapped]
-        public long WorkFlowId { get; set; }
+        
         [NotMapped]
         public long WorkFlowWorkOrderId { get; set; }
 

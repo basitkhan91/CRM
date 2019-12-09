@@ -41,9 +41,9 @@
                                         <i class="fa fa-search"></i>
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
                                     </div>
-                                    <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding:5px 10px !important;"></button>
-                                    <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>
-                                    <!--<a (click)="open(contentEdit)" matTooltip="Add Item Group" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>-->
+                                    <button type="button" class="btn btn-primary-cstm" pTooltip="Download Data" tooltipPosition="top" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding:5px 10px !important;"></button>
+                                    <button type="button" class="btn btn-primary-cstm" pTooltip="Download Selected Data" tooltipPosition="top" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>
+                                    
                                     <div class="excel-upload excel-upload-cstm">
                                         <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                         <label for="upload">

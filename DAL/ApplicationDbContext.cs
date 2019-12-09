@@ -457,6 +457,16 @@ namespace DAL
         public DbSet<VendorProcess1099> VendorProcess1099 { get; set; }
 
 
+        public DbSet<WorkOrderQuoteExclusions> WorkOrderQuoteExclusions { get; set; }
+        public DbSet<WorkOrderQuoteFreight> WorkOrderQuoteFreight { get; set; }
+        public DbSet<WorkOrderQuoteCharges> WorkOrderQuoteCharges { get; set; }
+        public DbSet<WorkOrderQuoteLabor> WorkOrderQuoteLabor { get; set; }
+        public DbSet<WorkOrderQuoteLaborHeader> WorkOrderQuoteLaborHeader { get; set; }
+        public DbSet<WorkOrderQuoteMaterial> WorkOrderQuoteMaterial { get; set; }
+        public DbSet<WorkOrderQuoteDetails> WorkOrderQuoteDetails { get; set; }
+
+
+
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

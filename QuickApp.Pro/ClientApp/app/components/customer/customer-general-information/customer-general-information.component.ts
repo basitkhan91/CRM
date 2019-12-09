@@ -509,12 +509,23 @@ export class CustomerGeneralInformationComponent implements OnInit {
         });
     }
 
-    async getCustomerIntegrationTypesByCustomerId() {
-        await this.customerService.getintegrationtypes(this.id).subscribe(res => {
-            this.generalInformation.integrationPortalId = res.map(x => x.integrationPortalId)
-            console.log(this.generalInformation.integrationPortalId);
-        });
+    //async getCustomerIntegrationTypesByCustomerId() {
+    //    await this.customerService.getintegrationtypes(this.id).subscribe(res => {
+    //        this.generalInformation.integrationPortalId = res.map(x => x.integrationPortalId)
+    //        console.log(this.generalInformation.integrationPortalId);
+    //    });
+    //}
+
+    async  getCustomerIntegrationTypesByCustomerId() {
+        if (this.id > 0) {
+            await this.commonService.getIntegrationMapping(this.id, 1).subscribe(res => {
+                this.generalInformation.integrationPortalId = res.map(x => x.integrationPortalId);
+
+            });
+        }
+
     }
+
 
     async    getCustomerRestrictedPMAByCustomerId() {
        

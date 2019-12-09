@@ -245,7 +245,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<VendorViewModel>))]
         public IActionResult GetVendorDefault(long vendorId)
         {
-            var vendorDtails = _context.VendorPayment.Where(a => a.VendorId == vendorId).ToList(); //.GetAllCustomersData();
+            var vendorDtails = _context.VendorPayment.Where(a => a.VendorId == vendorId).FirstOrDefault(); //.GetAllCustomersData();
             return Ok(vendorDtails);
 
         }
@@ -1279,6 +1279,7 @@ namespace QuickApp.Pro.Controllers
                 //actionobject.VendorClassificationId = vendorViewModel.VendorClassificationId;
                 actionobject.capabilityId = vendorViewModel.capabilityId;
                 actionobject.VendorPhone = vendorViewModel.VendorPhone;
+                actionobject.VendorPhoneExt = vendorViewModel.VendorPhoneExt;
                 actionobject.VendorTypeId = vendorViewModel.VendorTypeId;
                 actionobject.IsPreferredVendor = vendorViewModel.IsPreferredVendor;
                 actionobject.Parent = vendorViewModel.Parent;
@@ -1404,6 +1405,7 @@ namespace QuickApp.Pro.Controllers
                 vendorViewModel.MasterCompanyId = 1;
                 actionobject.VendorId = vendorViewModel.VendorId;
                 actionobject.VendorName = vendorViewModel.VendorName;
+                actionobject.VendorPhoneExt = vendorViewModel.VendorPhoneExt;
                 actionobject.LicenseNumber = vendorViewModel.LicenseNumber;
                 actionobject.VendorPhone = vendorViewModel.VendorPhone;
                 actionobject.VendorClassificationId = vendorViewModel.VendorClassificationId;
@@ -3370,7 +3372,7 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
-        [HttpPut("getVendorProcess1099List")]
+        [HttpGet("getVendorProcess1099List")]
         public IActionResult GetVendorProcess(int companyId)
         {
            var result= _unitOfWork.Vendor.GetVendorProcessList(companyId);
