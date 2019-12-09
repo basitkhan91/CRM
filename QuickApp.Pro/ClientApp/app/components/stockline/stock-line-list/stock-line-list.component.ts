@@ -19,6 +19,8 @@ import { MasterComapnyService } from '../../../services/mastercompany.service';
 import { AuditHistory } from '../../../models/audithistory.model';
 import { MasterCompany } from '../../../models/mastercompany.model';
 import { Stockline } from '../../../models/stockline.model';
+import { listSearchFilterObjectCreation } from '../../../generic/autocomplete';
+import { Table } from 'primeng/table';
 
 @Component({
     selector: 'app-stock-line-list',
@@ -44,8 +46,7 @@ export class StockLineListComponent implements OnInit {
     sort: MatSort;
     sourceViewOptions: any = {};
     public sourceStockLine: any = {};
-    selectedColumn: any[];
-    selectedColumns: any[];
+    
     createdBy: any = "";
     quantityOnHand: any = "";
     quantityReserved: any = "";
@@ -123,57 +124,68 @@ export class StockLineListComponent implements OnInit {
     totalPages: number = 0;
     pageSize: number = 20;
 
-    ngOnInit(): void {
+        // To display the values in header and column name values
+    headers = [
+    { field: 'partNumber', header: 'PN' },
+    { field: 'partDescription', header: 'PN DESCRIPTION' },
+    { field: 'itemCategory', header: 'ITEM CATEGORY' },
+    { field: 'itemGroup', header: 'ITEM GROUP' },
+    { field: 'stockLineNumber', header: 'SL NUM' },
+    { field: 'serialNumber', header: 'SERIAL NUM' },
+    { field: 'condition', header: 'COND' },
+    { field: 'quantityOnHand', header: 'QTY ON HAND' },
+    { field: 'quantityAvailable', header: 'QTY AVAIL' },
+    { field: 'glAccountName', header: 'GL ACCT' }
+    ]
+    selectedColumns = this.headers;
 
-        this.loadData();
+    lazyLoadEventData: any;
+    pageIndex: number = 0;
+    data: any;
+    private table: Table;
+
+    ngOnInit(): void {
         this.activeIndex = 0;
         this.workFlowtService.currentUrl = '/stocklinemodule/stocklinepages/app-stock-line-list';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
-
     }
 
-    //displayedColumns = ['actionId', 'companyName', 'description', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
     dataSource: MatTableDataSource<any>;
     cols: any[];
-    //allVendorList: any[] = [];
     allStockInfo: StockLineListComponent[] = [];
-    /** stock-line-list ctor */
     constructor(private workFlowtService: StocklineService, private _route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
-        //this.displayedColumns.push('StockLine');
         this.dataSource = new MatTableDataSource();
-        this.loadData();
-
     }
-
-    private onDataLoadFailed(error: any) {
-
-
-    }
-
     public allWorkFlows: StockLineListComponent[] = [];
 
+        loadData(event) {
+            this.lazyLoadEventData = event;
+            const pageIndex = parseInt(event.first) / event.rows;;
+            this.pageIndex = pageIndex;
+            this.pageSize = event.rows;
+            event.first = pageIndex;
+            this.getList(event)
+        }
 
-    public loadData() {
-        this.workFlowtService.getStockLineList().subscribe(
-            results => this.onDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
+    getList(data) {
+        const PagingData = { ...data, filters: listSearchFilterObjectCreation(data.filters) }
+        this.workFlowtService.getStockLineList(PagingData).subscribe(res => {
+            this.data = res;
+            if (res.length > 0) {
+                this.totalRecords = res[0].totalRecords;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            }
 
-        // To display the values in header and column name values
-        this.cols = [
-            { field: 'partNumber', header: 'PN' },
-            { field: 'partDescription', header: 'PN DESCRIPTION' },
-            { field: 'itemCategory', header: 'ITEM CATEGORY' },
-            { field: 'itemGroup', header: 'ITEM GROUP' },
-            { field: 'stockLineNumber', header: 'SL NUM' },
-            { field: 'serialNumber', header: 'SERIAL NUM' },
-            { field: 'condition', header: 'COND' },
-            { field: 'quantityOnHand', header: 'QTY ON HAND' },
-            { field: 'quantityAvailable', header: 'QTY AVAIL' },
-            { field: 'glAccountName', header: 'GL ACCT' }
+        })
+        
 
-        ];
-        this.selectedColumns = this.cols;
+    }
+
+    columnsChanges() {
+        this.refreshList();
+    }
+    refreshList() {
+        this.table.reset();
     }
 
     ngAfterViewInit() {
@@ -199,6 +211,11 @@ export class StockLineListComponent implements OnInit {
         );
 
     }
+
+    private onDataLoadFailed(error: any) {
+        console.log(error);
+    }
+
     public applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue;
     }
@@ -223,6 +240,17 @@ export class StockLineListComponent implements OnInit {
         this.isDeleteMode = false;
         this.isEditMode = false;
         this.modal.close();
+    }
+
+    globalSearch(value) {
+        this.pageIndex = 0;
+        this.workFlowtService.getGlobalSearch(value, this.pageIndex, this.pageSize).subscribe(res => {
+            this.data = res;
+            if (res.length > 0) {
+                this.totalRecords = res[0].totalRecords;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            }
+        })
     }
 
     private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
