@@ -13,7 +13,8 @@ import { AlertService, MessageSeverity } from '../../../services/alert.service';
 import { validateRecordExistsOrNot } from '../../../generic/autocomplete';
 import { CommonService } from '../../../services/common.service';
 import { PercentService } from '../../../services/percent.service';
-
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
+import { NgbModal, NgbActiveModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 @Component({
     selector: 'app-customer-financial-information',
     templateUrl: './customer-financial-information.component.html',
@@ -38,6 +39,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     taxrateList: any;
     state_taxRateList: any;
     id: number;
+    legalEntityId :number;
     intergationNew = {
         allowPartialBilling: true,
         allowProformaBilling: true,
@@ -80,6 +82,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
     isPercentageExists: boolean = false;
     isTaxTypeExists: boolean = false;
     isTaxRateExists: boolean = false;
+    customerTaxRateMappingId: number;
+    isDeleteMode: boolean = false;
     _creditTermList: any[];
     _creditTermPercentageList: any;
     _TaxTypeList: any;
@@ -100,7 +104,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
     selectedConsume: any;
     disableSaveConsume: boolean;
     discountcollection: any[] = [];
-       namecolle: any[] = [];
+    namecolle: any[] = [];
+    modal: NgbModalRef;
+    localcollection: any;
     // discountNew = {
 
 
@@ -219,7 +225,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
         private authService: AuthService,
         private alertService: AlertService,
         private commonservice: CommonService,
-        public percentService: PercentService
+        public percentService: PercentService,
+        private modalService: NgbModal, private activeModal: NgbActiveModal
       
 
     ) {
@@ -247,11 +254,16 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.savedGeneralInformationData = this.editGeneralInformationData;
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
-
+        
+            if (this.editGeneralInformationData.currency == null || this.editGeneralInformationData.currency == 0) {
+                this.getDefaultCurrency();
+            }
+            this.getMappedTaxTypeRateDetails();
         } else {
             this.id = this.savedGeneralInformationData.customerId;
             this.customerCode = this.savedGeneralInformationData.customerCode;
             this.customerName = this.savedGeneralInformationData.name;
+            this.getDefaultCurrency();
         }
 
         // this.id = this.savedGeneralInformationData.customerId;
@@ -297,6 +309,16 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.allCurrencyInfo = res[0];
         })
     }
+    getDefaultCurrency() {
+        this.legalEntityId = 19;
+        this.commonservice.getDefaultCurrency(this.legalEntityId).subscribe(res => {
+            console.log(res);
+            this.savedGeneralInformationData.generalCurrencyId = res[0].currencyId;
+        })
+    }
+
+
+
     getAllPercentage() {
         this.commonservice.smartDropDownList('[Percent]', 'PercentId', 'PercentValue').subscribe(res => {
 
@@ -502,6 +524,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.markUpList = res[0];
         })
     }
+
+
     getAllTaxList() {
         this.taxRateService.getTaxRateList().subscribe(res => {
             // this.taxrateList = res[0];
@@ -514,7 +538,16 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
         })
     }
+    
 
+
+    getMappedTaxTypeRateDetails() {
+        
+        this.customerService.getMappedTaxTypeRateDetails(this.id).subscribe(res => {
+            this.taxTypeRateMapping = res;
+                
+        })
+    }
     mapTaxTypeandRate() {
         // let i = 0;
         if ( this.selectedTaxType.length > 0 ) {
@@ -613,7 +646,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 MessageSeverity.success
             );
             this.restDiscount();
-            this.savedGeneralInformationData.discountId = data.discountId;
+            this.savedGeneralInformationData.discountId = data.discontValue;
         })
 
     }
@@ -687,16 +720,79 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.tab.emit('Atachapter');
     }
 
+    deleteTaxTypeRate(content, rowData) {
+        
+        this.isDeleteMode = true;
+        this.localcollection = rowData;
+        
+        this.customerTaxRateMappingId = rowData.customerTaxTypeRateMappingId;
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
 
-    deleteTaxTypeRate(i) {
-       
-     
-      //  this.partListForPMA = [{ label: rowData.partNumber, value: rowData }, ...this.partListForPMA];
-        this.taxTypeRateMapping.splice(i, 1);
+    deleteItemAndCloseModel() {
+      
+        let customerTaxRateMappingId = this.customerTaxRateMappingId;
+        if (customerTaxRateMappingId > 0) {
+
+            this.customerService.deleteCustomerTaxTypeRateById(customerTaxRateMappingId).subscribe(
+                response => {
+                    this.saveCompleted('');
+
+                    this.getMappedTaxTypeRateDetails();
+
+                },
+                error => this.saveFailedHelper(error));
+
+
+
+        }
+        else {
+            this.taxTypeRateMapping.splice(this.localcollection, 1);
+        }
+
+        this.modal.close();
+    }
+    private saveCompleted(user?: any) {
+
+        if (this.isDeleteMode == true) {
+            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
+            this.isDeleteMode = false;
+        }
+        else {
+            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+            this.saveCompleted
+        }
+
+
+        
+    }
+    private saveFailedHelper(error: any) {
+
+        this.alertService.stopLoadingMessage();
+        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+    }
+    dismissModel() {
+        this.modal.close();
+    }
+
+   // deleteTaxTypeRate(i) {
+    //    debugger
+
+    //    if (i.ustomerTaxTypeRateMappingId > 0) {
+    //        this.customerService.deleteCustomerTaxTypeRateById()
+    //    }
+    //    else {
+    //        //  this.partListForPMA = [{ label: rowData.partNumber, value: rowData }, ...this.partListForPMA];
+    //        this.taxTypeRateMapping.splice(i, 1);
+    //  }
 
       
 
-    }
+    //}
 
     // newAddDiscount
     //     this.itemQuantity = Array(100).fill(1).map((x, i) => i + 1);

@@ -6,97 +6,119 @@
           <div class="col-md-6">
             <div class="form-group ">
               <label>Quote Number <span class="clr-red">*</span></label>
-              <input class="form-control" type="text" [(ngModel)]="quoteForm.quoteNumber" name="quotenumber" />
+              <input class="form-control" type="text" [(ngModel)]="quoteForm.quoteNumber" name="quotenumber" readonly/>
             </div>
             <div class="form-group ">
               <label>Open Date <span class="clr-red">*</span> </label>
-              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.openDate" name="openDate"></p-calendar>
+              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.openDate" name="openDate" [disabled]="true"></p-calendar>
             </div>
             <div class="form-group ">
               <label>Quote Due Date <span class="clr-red">*</span></label>
-              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.quoteDueDate" name="QuoteDueDate"></p-calendar>
+              <p-calendar [showIcon]="true" [(ngModel)]="quoteDueDate" name="QuoteDueDate" aria-readonly></p-calendar>
             </div>
             <div class="form-group ">
               <label> Valid For Days <span class="clr-red">*</span></label>
-              <input class="form-control" type="number" [(ngModel)]="quoteForm.validForDays" name="ValidForDays" />
+              <input class="form-control" type="number" [(ngModel)]="validFor" name="ValidForDays" />
             </div>
             <div class="form-group ">
               <label> Expiration Date <span class="clr-red">*</span></label>
-              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.expirationDate" name="ExpDate"></p-calendar>
+              <p-calendar [showIcon]="true" [(ngModel)]="expirationDate" name="ExpDate"></p-calendar>
             </div>
 
             <div class="form-group">
-              <label> Expiration Date <span class="clr-red">*</span></label>
+              <label> Quotation Status <span class="clr-red">*</span></label>
               <select [(ngModel)]="quoteForm.expirationDateStatus" name="ExpDateStatus">
-                <option value="">Select Status</option>
-                <option value="open">Open</option>
-                <option value="Closed">Closed</option>
-                <option value="Cancelled">Cancelled</option>
-                <option value="Delayed">Delayed</option>
+                <option value=1>Open</option>
+                <option value=2>Closed</option>
+                <option value=3>Cancelled</option>
+                <option value=4>Delayed</option>
               </select>
             </div>
             <div class="form-group ">
               <label>WO Num </label>
-              <input class="form-control" type="text" [(ngModel)]="quoteForm.workOrderNumber" name="WoNumber" />
+              <input class="form-control" type="text" [(ngModel)]="workOrderNumber" name="WoNumber" readonly/>
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <label for="customername">Customer Name
+              <label for="customerName">Customer Name
                 <span class="clr-red">*</span>
               </label>
-              <span *ngIf="quoteForm.customerId !== '' && quoteForm.customerId !== null ">
-                <a data-toggle="tooltip" pTooltip="Customer Email: 'Indigo@gmail.com' , Customer Phone: 0423588779" tooltipPosition="bottom" title=""  data-original-title="View" data-toggle="modal" data-target="#viewcustomerDetailsinQuote"  >
-                    <i class="fa fa-eye"></i>
-                </a>
-            </span>
-              <p-autoComplete class="p-autoComplete-ctsm" [dropdown]="true" [(ngModel)]="quoteForm.customerId"
-                name="CustomerId">
-              </p-autoComplete>
+              <input class="form-control" type="text" [(ngModel)]="customerName" name="customerName" readonly/>
             </div>
             <div class="form-group ">
-              <label for="customercode">Customer Code
+              <label for="customerCode">Customer Code
                 <span class="clr-red">*</span>
               </label>
-              <p-autoComplete class="p-autoComplete-ctsm" [dropdown]="true" [(ngModel)]="quoteForm.customerCodeId"
-                name="CustomerCodeId">
-              </p-autoComplete>
+              <input class="form-control" type="text" [(ngModel)]="customerCode" name="customerCode" readonly/>
             </div>
-
-
             <div class="form-group ">
-              <label for="customerref">Customer Ref
+              <label for="customerContact">Customer Contact
                 <span class="clr-red">*</span>
               </label>
-
-              <input type="text" class="form-control" [(ngModel)]="quoteForm.customerReference"
-                name="CustomerReference" />
+              <input class="form-control" type="text" [(ngModel)]="customerContact" name="customerContact" readonly/>
             </div>
+            <div class="form-group ">
+              <label for="customerEmail">Customer email
+                <span class="clr-red">*</span>
+              </label>
+              <input class="form-control" type="email" [(ngModel)]="customerEmail" name="customerEmail" />
+            </div>
+            <div class="form-group ">
+              <label for="customerPhone">Customer phone
+                <span class="clr-red">*</span>
+              </label>
+              <input class="form-control" type="number" [(ngModel)]="customerPhone" name="customerPhone" />
+            </div>
+            <div class="form-group ">
+              <label for="customerRef">Customer Ref
+                <span class="clr-red">*</span>
+              </label>
+              <input class="form-control" type="text" [(ngModel)]="customerRef" name="customerRef" readonly/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="form-row">
+          <div class="col-md-6">
+
             <div class="form-group">
-              <div class="checkbox-cstm">
-                <label>
-                  <input type="checkbox" name="contract" [(ngModel)]="quoteForm.isContract" />
-                  <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                  Contract
-                </label>
-                <input *ngIf="quoteForm.isContract" type="text" class="form-control" [(ngModel)]="quoteForm.contract"
-                  name="Contract" />
+              <label for="credit">Credit Terms &amp; Limit <span class="clr-red">*</span>
+              </label>
+              <div class="col-md-12">
+                <div class="col-md-4">
+                  <input type="text" class="form-control" [(ngModel)]="creditLimit" name="creditLimit" readonly/>
+                </div>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" [(ngModel)]="creditTerms" name="creditTerms" readonly/>
+                </div>
               </div>
             </div>
-
             <div class="form-group ">
-              <label for="customerref">Quantity
+              <label for="salesPerson">Sales Person
                 <span class="clr-red">*</span>
               </label>
-
-              <input type="text" class="form-control" [(ngModel)]="quoteForm.quantity" name="Quantity" />
+              <input class="form-control" type="text" [(ngModel)]="salesPerson" name="salesPerson" readonly/>
             </div>
-
             <div class="form-group ">
-              <label for="customercontact">Currency
+              <label for="csr">CSR
                 <span class="clr-red">*</span>
               </label>
-              <select [(ngModel)]="quoteForm.currency" name="Currency">
+              <input class="form-control" type="text" [(ngModel)]="csr" name="csr" readonly/>
+            </div>
+            <div class="form-group ">
+              <label for="Employee">Employee
+                <span class="clr-red">*</span>
+              </label>
+              <input class="form-control" type="text" [(ngModel)]="employeeName" name="Employee" readonly/>
+            </div>
+            <div class="form-group ">
+              <label for="Currency">Currency
+                <span class="clr-red">*</span>
+              </label>
+              <select [(ngModel)]="currency" name="Currency">
                 <option value="">Select Currency</option>
                 <option value="inr">₹</option>
                 <option value="usd" selected="1">$</option>
@@ -106,73 +128,10 @@
               </select>
             </div>
             <div class="form-group ">
-              <label for="customercontact">DSO
-                <span class="clr-red">*</span>
-              </label>
-              <input type="text" class="form-control" [(ngModel)]="quoteForm.dso" name="DSO" />
+              <label> DSO <span class="clr-red">*</span></label>
+              <input class="form-control" type="number" [(ngModel)]="dso" name="DSO" />
             </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-6">
-        <div class="form-row">
-          <div class="col-md-6">
-            <div class="form-group ">
-              <label>
-                Customer Request Date <span class="clr-red">*</span></label>
-              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.customerRequestDate" name="customerRequestDate">
-              </p-calendar>
-            </div>
-            <div class="form-group ">
-              <label> Promise Date<span class="clr-red">*</span></label>
-              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.promiseDate" name="PromiseDate"></p-calendar>
-            </div>
-            <div class="form-group ">
-              <label> Est.Completion Date <span class="clr-red">*</span></label>
-              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.estCompletionDate" name="EstCompletionDate">
-              </p-calendar>
-            </div>
-            <div class="form-group ">
-              <label> Est.Ship Date <span class="clr-red">*</span></label>
-              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.estShipDate" name="EstShipDate"></p-calendar>
-            </div>
-
-            <div class="form-group">
-              <label for="credit">Credit Terms &amp; Limit <span class="clr-red">*</span>
-              </label>
-              <div class="col-md-12">
-                <div class="col-md-4">
-                  <input type="text" class="form-control" [(ngModel)]="quoteForm.creditTerms" name="CreditTerms" />
-                </div>
-                <div class="col-md-6">
-                  <select [(ngModel)]="quoteForm.creditTermsandLimit" name="CreditTermsandLimit">
-                    <option value="">- Terms -</option>
-                    <option value="2% 10, Net 30">2% 10, Net 30</option>
-                    <option value="2% 10, Net 45">2% 10, Net 45</option>
-                    <option value="3% 10, Net 45">3% 10, Net 45</option>
-                    <option value="CIA">CIA</option>
-                    <option value="Credit Card">Credit Card</option>
-                    <option value="Due Upon Receipt">Due Upon Receipt</option>
-                    <option value="Net 30">Net 30</option>
-                    <option value="Net 45">Net 45</option>
-                    <option value="Net 60">Net 60</option>
-                    <option value="Net 90">Net 90</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label> Item Count <span class="clr-red">*</span></label>
-              <input type="text" class="form-control" [(ngModel)]="quoteForm.itemCount" name="ItemCount" />
-            </div>
-            <div class="form-group ">
-              <label for="customercontact">AR BAL
-                <span class="clr-red">*</span>
-              </label>
-              <input type="text" class="form-control" [(ngModel)]="quoteForm.accountsReceivableBalance" name="ARBal" />
-            </div>
+            
           </div>
           <div class="col-md-6">
 
@@ -191,112 +150,118 @@
   </div>
 </div>
 
-
-
-<div class="col-md-12">
-
-  <span><strong>Part Details </strong></span>
-  <span class="btn btn-success pull-right add-row-btn" (click)="addMPN()">Add MPN</span>
-  <div class="clear"></div>
-  <div class="table-responsive">
-    <table class="table table-bordered  table-sorting mpn-list-table" id="mpn-list-table">
-      <thead>
-        <tr>
-          <th rowspan="2">PN *</th>
-          <th rowspan="2">PN Description *</th>
-          <th rowspan="2">Revised PN</th>
-          <th rowspan="2">Work Scope *</th>
-          <th rowspan="2">Qty *</th>
-          <th rowspan="2">CMM/Pub Ref</th>
-          <th rowspan="2">Workflow ID *</th>
-          <th rowspan="2">Priority *</th>
-          <th rowspan="2">Customer Request Date *</th>
-          <th rowspan="2">Promised Date *</th>
-          <th rowspan="2">Est. Comp Date *</th>
-          <th rowspan="2">Est. Ship Date *</th>
-          <th rowspan="2">PMA</th>
+<div class="table-responsive" style="height: 300px;">
+  <table class="table table-bordered table-striped table-fixed table-sorting mpn-list-table"
+  id="mpn-list-table">
+  <thead>
+      <tr>
+          <th rowspan="2">MPN</th>
+          <th rowspan="2">MPN Description</th>
+          <th rowspan="2">Revised MPN</th>
+          <th rowspan="2">NTE</th>
+          <th rowspan="2">Condition Id *</th>
+          <th rowspan="2">Stock Line Num *</th>
+          <th rowspan="2">Serial Number</th>
+          <!-- <th rowspan="2">Qty *</th> -->
+          <th rowspan="2">Work Order Stage</th>
+          <th rowspan="2">Work Order Status</th>
+          <th rowspan="2">Priority</th>
+          <th rowspan="2">Customer Request Date</th>
+          <th rowspan="2">Promised Date</th>
+          <th rowspan="2">Estimated Ship Date</th>
+          <th rowspan="2">Estimated Completion Date</th>
           <th rowspan="2">DER</th>
-          <th rowspan="2">TAT (Days)</th>
-          <th class="w100">Action</th>
-
-        </tr>
-
-      </thead>
-      <tbody>
-        <tr class="mpn-row" style="display: table-row;" *ngFor="let pd of quoteForm.partsDetails">
-          <td>
-            <p-autoComplete class="p-autoComplete-ctsm" [(ngModel)]="pd.partNumberId" [dropdown]="true">
-            </p-autoComplete>
-          </td>
-          <td><input type="text" [(ngModel)]="pd.partNumberDescription" name="PnDescription"></td>
-          <td>
-            <p-autoComplete class="p-autoComplete-ctsm" name="RevisedPnId" [(ngModel)]="pd.revisedPartNumberId"
-              [dropdown]="true">
-            </p-autoComplete>
-          </td>
-          <td>
-            <p-dropdown class="p-dropdown-custom-md" [(ngModel)]="pd.workScopeId">
-            </p-dropdown>
-          </td>
-
-          <td><input type="number" class="form-control w50" [(ngModel)]="pd.qty"></td>
-
-
-          <td><a href="sample-document.pdf" target="_blank" class="clr-red">View</a>
-          </td>
-          <td>
-
-            <p-dropdown class="p-dropdown-custom-md" [(ngModel)]="pd.workScopeId">
-            </p-dropdown>
-
-          </td>
-          <td><select [(ngModel)]="pd.priority">
-              <option value="">AOG</option>
-              <option value="">Critical</option>
-              <option value="">Routine</option>
-            </select></td>
-
-          <td>
-            <p-calendar [showIcon]="true" [(ngModel)]="pd.customerRequestDate"></p-calendar>
-          </td>
-          <td>
-            <p-calendar [showIcon]="true" [(ngModel)]="pd.promiseDate"></p-calendar>
-          </td>
-          <td>
-            <p-calendar [showIcon]="true" [(ngModel)]="pd.estCompletionDate"></p-calendar>
-          </td>
-          <td>
-            <p-calendar [showIcon]="true" [(ngModel)]="pd.estShipDate"></p-calendar>
-          </td>
-          <td>
-            <p-checkbox [(ngModel)]="pd.isPMA" binary="false" class="checkbox-table"></p-checkbox>
-          </td>
-          <td>
-            <p-checkbox [(ngModel)]="pd.isDER" binary="false" class="checkbox-table"></p-checkbox>
-          </td>
-          <td>
-            <input type="text" [(ngModel)]="pd.tatDaysStandard">
-          </td>
-          <td>
-            <p-inputSwitch [(ngModel)]="pd.isActive" title="Active/Inactive"></p-inputSwitch>
-            <a title="Delete" class="btn btn-success boxed-float-btn nobg delete-row-btn"><i
-                class="fa fa-trash"></i></a>
-          </td>
-
-
-        </tr>
-
-      </tbody>
-    </table>
-
-  </div>
-  <button class="btn btn-success pull-right"> Save MPN(s)</button>
-
+          <th rowspan="2">PMA</th>
+          <!-- <th rowspan="2">Qty *</th> -->
+          <th rowspan="2">First Name</th>
+          <th rowspan="2">Tech Station</th>
+          <th rowspan="2">Tear Down Report</th>
+          <th rowspan="2">Tat Days Current</th>
+          <!-- <th rowspan="2">Qty *</th> -->
+          <th rowspan="2">Tat Days Standard</th>
+          <th rowspan="2">Work Scope</th>
+          <!--<th rowspan="2"></th>
+      <th rowspan="2"></th>-->
+      </tr>
+  </thead>
+  <tbody>
+      <tr class="mpn-row" style="display: table-row;"
+      *ngFor="let workOrderPart of workOrderPartsDetail; let i=index;">
+        <td>
+          <input [value]="workOrderPart['partNumber']" readonly/>
+        </td>
+        <td>
+          <input [value]="workOrderPart['partDescription']" readonly/>
+        </td>
+        <td>
+          <input [value]="workOrderPart['revisedPartNo']" readonly/>
+        </td>
+        <td>
+          <input [value]="workOrderPart['nte']" readonly/>
+        </td>
+        <td>
+          <input [value]="workOrderPart['condition']" readonly/>
+        </td>
+        <td>
+          <input [value]="workOrderPart['stockLine']" readonly/>
+        </td>
+        <td>
+          <input [value]="workOrderPart['serialNumber']" readonly/>
+        </td>
+        <td>
+          <input [value]="workOrderPart['workOrderStage']" readonly/>
+        </td>
+        <td>
+          <input [value]="workOrderPart['workOrderStatus']" readonly/>
+        </td>
+        <td>
+          <input [value]="workOrderPart['priority']" readonly/>
+        </td>
+        <td>
+          <input [value]="workOrderPart['customerRequestDate']" readonly/>
+        </td>
+        <td>
+          <input [value]="workOrderPart['promisedDate']" readonly/>
+        </td>
+        <td>
+          <input [value]="workOrderPart['estimatedShipDate']" readonly/>
+        </td>
+        <td>
+          <input [value]="workOrderPart['estimatedCompletionDate']" readonly/>
+        </td>
+        <td>
+          <input [value]="workOrderPart['isDER']" readonly/>
+        </td>
+        <td>
+          <input [value]="workOrderPart['isPMA']" readonly/>
+        </td>
+        <td>
+          <input [value]="workOrderPart['firstName']" readonly/>
+        </td>
+        <td>
+          <input [value]="workOrderPart['techStation']" readonly/>
+        </td>
+        <td>
+          <input [value]="workOrderPart['tearDownReport']" readonly/>
+        </td>
+        <td>
+          <input [value]="workOrderPart['tatDaysCurrent']" readonly/>
+        </td>
+        <td>
+          <input [value]="workOrderPart['tatDaysStandard']" readonly/>
+        </td>
+        <td>
+          <input [value]="workOrderPart['workScope']" readonly/>
+        </td>
+  </tbody>
+  </table>
 </div>
+
+
 
 <br>
 
-<div class="card">
+<div class="card" *ngIf="quoteForm.quoteNumber && quoteForm.quoteNumber != ''">
   <div class="card-body">
 
     <div class="col-md-12">
@@ -306,12 +271,9 @@
           <div class="form-group ">
             <label class="fs12">MPN
             </label>
-            <select class="mpn-select" style="width: 100px;">
-              <option>PN12345</option>
-              <option>PN23456</option>
-              <option>PN34567</option>
-              <option>PN45678</option>
-              <option>PN56789</option>
+            <select (change)="partNumberSelected()" class="mpn-select" style="width: 100px;" [(ngModel)]="selectedPartNumber">
+              <option value="">Select</option>
+              <option *ngFor="let mpn of mpnPartNumbersList" [value]="mpn.label">{{mpn.label}}</option>
             </select>
           </div>
         </div>
@@ -324,21 +286,21 @@
       </div>
     </div>
 
-    <div class="col-md-12">
+    <div class="col-md-12" *ngIf="selectedPartNumber != ''">
       <div class="form-group ">
         <label class="fs12">Build Method:
         </label>
-        <button type="button" class="btn btn-primary-cstm">Use Work Flow</button>
-        <button type="button" class="btn btn-primary-cstm">Use Historical WOs</button>
-        <button type="button" class="btn btn-primary-cstm">Build From Scratch</button>
-        <button type="button" class="btn btn-primary-cstm" data-toggle="modal" data-target="#quote-details">Display 3rd
+        <button type="button" class="btn btn-primary-cstm" (click)="buildMethodSelected('use work flow')">Use Work Flow</button>
+        <button type="button" class="btn btn-primary-cstm" (click)="buildMethodSelected('use historical wos')">Use Historical WOs</button>
+        <button type="button" class="btn btn-primary-cstm"(click)="buildMethodSelected('use historical wos')">Build From Scratch</button>
+        <button type="button" class="btn btn-primary-cstm" data-toggle="modal" data-target="#quote-details" (click)="buildMethodSelected('use historical wos')">Display 3rd
           Party Pricing</button>
       </div>
 
 
 
     </div>
-    <div class="table-responsive">
+    <div class="table-responsive" *ngIf="selectedBuildMethod == 'use work flow'">
       <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled">
         <thead>
           <tr>
@@ -346,67 +308,316 @@
             <th>Cust Name</th>
             <th>MC PN</th>
             <th>MC Description</th>
-            <th>WO #</th>
+            <th>Work Flow No</th>
             <th>Work Scope</th>
-            <th>Comp Date</th>
             <th>Currency</th>
-            <th>OEM/PMA/DER</th>
-            <th>Revenue</th>
-            <th>Parts Cost</th>
-            <th>Labor Hrs</th>
-            <th>Labor Cost</th>
-            <th>Overhead</th>
-            <th>Other</th>
-            <th>Total Cost</th>
-            <th>Margins</th>
-            <th>% of Revenue</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="mpn-row">
-            <td><input type="radio" name="historical-wo-list" class="select-mpn-quote"></td>
-            <td>ABC</td>
-            <td>457787-14</td>
-            <td>457787-14</td>
-            <td>WO-45774</td>
-            <td>Overhaul</td>
-            <td>1/12/2018</td>
-            <td>USD</td>
-            <td>Multiple</td>
-            <td> 10,000.00 </td>
-            <td> 2,500.00 </td>
-            <td> 23.80 </td>
-            <td> 595.00 </td>
-            <td> 928.20 </td>
-            <td> 125.00 </td>
-            <td> 4,148.20 </td>
-            <td> 5,851.80 </td>
-            <td>58.5%</td>
-          </tr>
-          <tr class="mpn-row">
-            <td><input type="radio" name="historical-wo-list" class="select-mpn-quote"></td>
-            <td>ABC</td>
-            <td>457787-14</td>
-            <td>457787-14</td>
-            <td>WO-45799</td>
-            <td>Overhaul</td>
-            <td>1/31/2018</td>
-            <td>USD</td>
-            <td>OEM</td>
-            <td> 10,000.00 </td>
-            <td> 2,300.00 </td>
-            <td> 20.00 </td>
-            <td> 500.00 </td>
-            <td> 775.00 </td>
-            <td> 100.00 </td>
-            <td> 3,675.00 </td>
-            <td> 6,325.00 </td>
-            <td>63.9%</td>
+          <tr class="mpn-row" *ngFor="let buildl of buildWorkOrderList">
+            <td><input type="radio" name="historical-wo-list" class="select-mpn-quote" (click)="getQuoteInfo(buildl)"></td>
+            <td>{{buildl.customerName}}</td>
+            <td>{{buildl.partNumber}}</td>
+            <td>{{buildl.partDescription}}</td>
+            <td>{{buildl.workFlowNo}}</td>
+            <td>{{buildl.workScope}}</td>
+            <td>{{buildl.currency}}</td>
           </tr>
         </tbody>
       </table>
 
     </div>
+    <div class="table-responsive" *ngIf="selectedBuildMethod == 'use historical wos'">
+      <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled">
+        <thead>
+          <tr>
+            <th class="events1"></th>
+            <th>Cust Name</th>
+            <th>MC PN</th>
+            <th>MC Description</th>
+            <th>WO No</th>
+            <th>Work Scope</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="mpn-row" *ngFor="let buildl of buildHistoricalList">
+            <td><input type="radio" name="historical-wo-list" class="select-mpn-quote" (click)="getQuoteInfo(buildl)"></td>
+            <td>{{buildl.customerName}}</td>
+            <td>{{buildl.partNumber}}</td>
+            <td>{{buildl.partDescription}}</td>
+            <td>{{buildl.workOrderNum}}</td>
+            <td>{{buildl.workScope}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+  <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;">
+      <div class="form-group ">
+        <button type="button" class="btn" [ngClass]="gridActiveTab === 'materialList'?'btn-primary-cstm':'btn-light-cstm'" (click)="gridTabChange('materialList');">Material List</button>
+        <button type="button" class="btn" [ngClass]="gridActiveTab === 'labor'?'btn-primary-cstm':'btn-light-cstm'" (click)="gridTabChange('labor');">Labor</button>
+        <button type="button" class="btn" [ngClass]="gridActiveTab === 'charges'?'btn-primary-cstm':'btn-light-cstm'" (click)="gridTabChange('charges');">Charges</button>
+        <button type="button" class="btn" [ngClass]="gridActiveTab === 'exclusions'?'btn-primary-cstm':'btn-light-cstm'" (click)="gridTabChange('exclusions');">Exclusions</button>
+      </div>
+  </div>
+
+  <div class="table-responsive" *ngIf="gridActiveTab === 'materialList'">
+    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use work flow'">
+      <thead>
+        <tr>
+          <th>MC PN</th>
+          <th>MC Description</th>
+          <th>QTE/WO/WF/SL/M</th>
+          <th>REF</th>
+          <th>QTY</th>
+          <th>UOM</th>
+          <th>COND TYPE</th>
+          <th>OEM/PMA/DER</th>
+          <th>UNIT COST</th>
+          <th>TOTAL PART COST</th>
+          <th>MARKUP</th>
+          <th>COST PLUS AMOUNT</th>
+          <th>FIXED AMOUNT</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="mpn-row" *ngFor="let matQuotation of materialListQuotation">
+          <td>{{matQuotation.partNumber}}</td>
+          <td>{{matQuotation.partDescription}}</td>
+          <td>{{matQuotation.partDescription}}</td>
+          <td>{{matQuotation.partDescription}}</td>
+          <td>{{matQuotation.quantity}}</td>
+          <td>{{matQuotation.unitOfMeasureId}}</td>
+          <td>{{matQuotation.conditionCodeId}}</td>
+          <td>{{matQuotation.isDeferred}}</td>
+          <td>{{matQuotation.unitCost}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use historical wos'">
+      <thead>
+        <tr>
+          <th>MC PN</th>
+          <th>MC Description</th>
+          <th>QTE/WO/WF/SL/M</th>
+          <th>REF</th>
+          <th>QTY</th>
+          <th>UOM</th>
+          <th>COND TYPE</th>
+          <th>OEM/PMA/DER</th>
+          <th>UNIT COST</th>
+          <th>TOTAL PART COST</th>
+          <th>MARKUP</th>
+          <th>COST PLUS AMOUNT</th>
+          <th>FIXED AMOUNT</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="mpn-row" *ngFor="let matQuotation of materialListQuotation">
+          <td>{{matQuotation.partNumber}}</td>
+          <td>{{matQuotation.partDescription}}</td>
+          <td>{{matQuotation.workOrderNumber}}</td>
+          <td>{{matQuotation.partDescription}}</td>
+          <td>{{matQuotation.quantity}}</td>
+          <td>{{matQuotation.unitOfMeasureId}}</td>
+          <td>{{matQuotation.condition}}</td>
+          <td>{{matQuotation.oem}}</td>
+          <td>{{matQuotation.unitCost}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <div class="table-responsive" *ngIf="gridActiveTab === 'exclusions'">
+    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use work flow'">
+      <thead>
+        <tr>
+          <th>MC PN</th>
+          <th>MC Description</th>
+          <th>QTE/WO/WF/SL/M</th>
+          <th>REF</th>
+          <th>QTY</th>
+          <th>UOM</th>
+          <th>COND TYPE</th>
+          <th>UNIT COST</th>
+          <th>TOTAL PART COST</th>
+          <th>MARKUP</th>
+          <th>COST PLUS AMOUNT</th>
+          <th>FIXED AMOUNT</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="mpn-row" *ngFor="let matQuotation of exclusionsQuotation">
+          <td>{{matQuotation.partNumber}}</td>
+          <td>{{matQuotation.partDescription}}</td>
+          <td>{{matQuotation.partDescription}}</td>
+          <td>{{matQuotation.partDescription}}</td>
+          <td>{{matQuotation.quantity}}</td>
+          <td>{{matQuotation.unitOfMeasureId}}</td>
+          <td>{{matQuotation.conditionCodeId}}</td>
+          <td>{{matQuotation.unitCost}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use historical wos'">
+      <thead>
+        <tr>
+          <th>MC PN</th>
+          <th>MC Description</th>
+          <th>QTE/WO/WF/SL/M</th>
+          <th>REF</th>
+          <th>QTY</th>
+          <th>UOM</th>
+          <th>COND TYPE</th>
+          <th>OEM/PMA/DER</th>
+          <th>UNIT COST</th>
+          <th>TOTAL PART COST</th>
+          <th>MARKUP</th>
+          <th>COST PLUS AMOUNT</th>
+          <th>FIXED AMOUNT</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="mpn-row" *ngFor="let matQuotation of exclusionsQuotation">
+          <td>{{matQuotation.partNumber}}</td>
+          <td>{{matQuotation.partDescription}}</td>
+          <td>{{matQuotation.workOrderNumber}}</td>
+          <td>{{matQuotation.partDescription}}</td>
+          <td>{{matQuotation.quantity}}</td>
+          <td>{{matQuotation.unitOfMeasureId}}</td>
+          <td>{{matQuotation.condition}}</td>
+          <td>{{matQuotation.oem}}</td>
+          <td>{{matQuotation.unitCost}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <div class="table-responsive" *ngIf="gridActiveTab === 'labor'">
+    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use work flow'">
+      <thead>
+        <tr>
+          <th>Task id</th>
+          <th>Direct Labor Rate</th>
+          <th>Estimated Hours</th>
+          <th>Expertise Type Id</th>
+          <th>Labor Direct Rate</th>
+          <th>Labor Overhead Cost</th>
+          <th>Overhead Cost</th>
+          <th>TOTAL PART COST</th>
+          <th>MARKUP</th>
+          <th>COST PLUS AMOUNT</th>
+          <th>FIXED AMOUNT</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="mpn-row" *ngFor="let matQuotation of laborQuotation">
+          <td>{{matQuotation.taskId}}</td>
+          <td>{{matQuotation.directLaborRate}}</td>
+          <td>{{matQuotation.estimatedHours}}</td>
+          <td>{{matQuotation.expertiseTypeId}}</td>
+          <td>{{matQuotation.laborDirectRate}}</td>
+          <td>{{matQuotation.laborOverheadCost}}</td>
+          <td>{{matQuotation.overheadCost}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use historical wos'">
+        <thead>
+          <tr>
+            <th>Task id</th>
+            <th>Direct Labor Rate</th>
+            <th>Estimated Hours</th>
+            <th>Expertise Type Id</th>
+            <th>Labor Direct Rate</th>
+            <th>Labor Overhead Cost</th>
+            <th>Overhead Cost</th>
+            <th>TOTAL PART COST</th>
+            <th>MARKUP</th>
+            <th>COST PLUS AMOUNT</th>
+            <th>FIXED AMOUNT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="mpn-row" *ngFor="let matQuotation of laborQuotation">
+            <td>{{matQuotation.taskId}}</td>
+            <td>{{matQuotation.directLaborRate}}</td>
+            <td>{{matQuotation.estimatedHours}}</td>
+            <td>{{matQuotation.expertiseTypeId}}</td>
+            <td>{{matQuotation.laborDirectRate}}</td>
+            <td>{{matQuotation.laborOverheadCost}}</td>
+            <td>{{matQuotation.overheadCost}}</td>
+          </tr>
+        </tbody>
+    </table>
+
+  </div>
+
+  <div class="table-responsive" *ngIf="gridActiveTab === 'charges'">
+    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use work flow'">
+      <thead>
+        <tr>
+          <th>Task id</th>
+          <th>Description</th>
+          <th>Vendor Name</th>
+          <th>Extended Cost</th>
+          <th>Extended Price</th>
+          <th>Quantity</th>
+          <th>Unit Cost</th>
+          <th>TOTAL PART COST</th>
+          <th>MARKUP</th>
+          <th>COST PLUS AMOUNT</th>
+          <th>FIXED AMOUNT</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="mpn-row" *ngFor="let matQuotation of chargesQuotation">
+          <td>{{matQuotation.taskId}}</td>
+          <td>{{matQuotation.description}}</td>
+          <td>{{matQuotation.vendorName}}</td>
+          <td>{{matQuotation.extendedCost}}</td>
+          <td>{{matQuotation.extendedPrice}}</td>
+          <td>{{matQuotation.quantity}}</td>
+          <td>{{matQuotation.unitCost}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use historical wos'">
+        <thead>
+          <tr>
+            <th>Task id</th>
+            <th>Description</th>
+            <th>Vendor Name</th>
+            <th>Extended Cost</th>
+            <th>Extended Price</th>
+            <th>Quantity</th>
+            <th>Unit Cost</th>
+            <th>TOTAL PART COST</th>
+            <th>MARKUP</th>
+            <th>COST PLUS AMOUNT</th>
+            <th>FIXED AMOUNT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="mpn-row" *ngFor="let matQuotation of chargesQuotation">
+            <td>{{matQuotation.taskId}}</td>
+            <td>{{matQuotation.description}}</td>
+            <td>{{matQuotation.vendorName}}</td>
+            <td>{{matQuotation.extendedCost}}</td>
+            <td>{{matQuotation.extendedPrice}}</td>
+            <td>{{matQuotation.quantity}}</td>
+            <td>{{matQuotation.unitCost}}</td>
+          </tr>
+        </tbody>
+    </table>
+
   </div>
 
 

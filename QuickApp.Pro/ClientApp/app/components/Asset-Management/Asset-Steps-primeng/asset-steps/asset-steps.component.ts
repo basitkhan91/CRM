@@ -15,12 +15,14 @@ export class AssetStepsComponent implements OnInit {
     generalcollection: any;
     collection: any;
     currentUrl: any;
-    items: MenuItem[];
+    items: {}[];
     readonly = true;
     read = false;
     msgs: Message[] = [];
     activeIndex: number;
     showComponentPTab: boolean;
+    isDisabledSteps: boolean = false;
+    isEditMode: boolean = false;
     constructor(private router: ActivatedRoute, private route: Router, private assetService: AssetService) {
        // debugger
         let currentUrl = this.route.url;
@@ -32,10 +34,14 @@ export class AssetStepsComponent implements OnInit {
             this.activeIndex = value;
 
         });
-    } ngOnInit() {
+    } 
+    ngOnInit() {
         //debugger
         this.showComponentPTab = this.assetService.ShowPtab;
         this.currentUrl = this.route.url;
+        if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
+            this.isEditMode = true;
+        }
         //
         if (this.currentUrl == '/assetmodule/assetpages/app-asset-listing') {
             this.showComponentPTab = false;
@@ -44,6 +50,8 @@ export class AssetStepsComponent implements OnInit {
         }
         else if (this.currentUrl == '/assetmodule/assetpages/app-create-asset') {
             this.activeIndex = 0;
+            if(!this.isEditMode)
+                this.isDisabledSteps = true;
 
         }
         else if (this.currentUrl == '/assetmodule/assetpages/app-asset-capes') {
@@ -64,40 +72,55 @@ export class AssetStepsComponent implements OnInit {
 
         this.items = [{
             label: 'General Information',
+            step:1,
+            index:0,
             command: (event: any) => {
                 this.activeIndex = 0;
                 this.msgs.length = 0;
-             this.msgs.push({ severity: 'info', summary: 'Create Asset', detail: event.item.label });
+             this.msgs.push({ severity: 'info', summary: 'Create Asset', detail: event.label });
                 this.route.navigateByUrl('/assetmodule/assetpages/app-create-asset');
 
             }
         },
         {
             label: 'Capes',
+            step:2,
+            index:1,
             command: (event: any) => {
-                this.assetService.financial = true;
-                this.activeIndex = 1;
-                this.msgs.length = 0;
-                this.msgs.push({ severity: 'info', summary: 'Capes', detail: event.item.label });
-                this.route.navigateByUrl('/assetmodule/assetpages/app-asset-capes');
+                if(!this.isDisabledSteps){
+                    this.assetService.financial = true;
+                    this.activeIndex = 1;
+                    this.msgs.length = 0;
+                    this.msgs.push({ severity: 'info', summary: 'Capes', detail: event.label });
+                    this.route.navigateByUrl('/assetmodule/assetpages/app-asset-capes');
+                }
+                
             }
         },
         {
             label: 'Calibration',
+            step:3,
+            index:2,
             command: (event: any) => {
+                if(!this.isDisabledSteps){
                 this.activeIndex = 2;
                 this.msgs.length = 0;
-                this.msgs.push({ severity: 'info', summary: 'Calibration', detail: event.item.label });
+                this.msgs.push({ severity: 'info', summary: 'Calibration', detail: event.label });
                 this.route.navigateByUrl('/assetmodule/assetpages/app-asset-calibration');
+                }
             }
         },
         {
             label: 'Maintance & Warrenty',
+            step:4,
+            index:3,
             command: (event: any) => {
+                if(!this.isDisabledSteps){
                 this.activeIndex = 3;
                 this.msgs.length = 0;
-                this.msgs.push({ severity: 'info', summary: 'Maintance & Warrenty', detail: event.item.label });                
+                this.msgs.push({ severity: 'info', summary: 'Maintance & Warrenty', detail: event.label });                
                 this.route.navigateByUrl('/assetmodule/assetpages/app-asset-maintenance-warranty');
+                }
             }
         },
         ];

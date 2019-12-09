@@ -196,6 +196,7 @@ import { SpinnerComponent } from './shared/spinner/spinner.component';
 import { CardModule } from 'primeng/card';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { WorkOrderService } from './services/work-order/work-order.service';
+import { WorkOrderEndpointService } from './services/work-order/work-order-endpoint.service';
 import { JobTypeService } from './services/job-type.service';
 import { JobTypeEndpontService } from './services/job-type-endpoint.service';
 import { PercentEndpoint } from './services/percent-endpoint.service';
@@ -208,7 +209,10 @@ import { AssetAttributeTypeService } from './services/asset-attribute-type/asset
 import { AssetAttributeTypeEndpointService } from './services/asset-attribute-type/asset-attribute-type-endpoint.service';
 import { AssetIntangibleAttributeTypeService } from './services/asset-intangible-attribute-type/asset-intangible-attribute-type.service';
 import { AssetIntangibleAttributeTypeEndpointService } from './services/asset-intangible-attribute-type/asset-intangible-attribute-type-endpoint.service';
+import { DashNumberService } from './services/dash-number/dash-number.service';
+import { DashNumberEndpointService } from './services/dash-number/dash-number-endpoint.service';
 //import { AuditComponent } from "./components/Audit/audit.component";
+import { AccountListingService } from './services/account-listing/account-listing.service'
 
 @NgModule({
     imports: [
@@ -274,6 +278,8 @@ import { AssetIntangibleAttributeTypeEndpointService } from './services/asset-in
         NotificationEndpoint,
         AccountService,
         AccountEndpoint,
+        DashNumberService,
+        DashNumberEndpointService,
         LocalStoreManager,
         EndpointFactory,
         WorkFlowtService,
@@ -415,6 +421,7 @@ import { AssetIntangibleAttributeTypeEndpointService } from './services/asset-in
         CompanyService,
         CompanyEndpoint,
         WorkOrderService,
+        WorkOrderEndpointService,
         JobTypeService,
         JobTypeEndpontService,
         PercentService,
@@ -422,7 +429,8 @@ import { AssetIntangibleAttributeTypeEndpointService } from './services/asset-in
         PurchaseOrderService,
         PurchaseOrderEndpoint,
         GLAccountService,
-        GLAccountEndpoint
+        GLAccountEndpoint,
+        AccountListingService
     ],
     entryComponents: [LoginDialogComponent, AddTaskDialogComponent],
     bootstrap: [AppComponent],

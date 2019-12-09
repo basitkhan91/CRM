@@ -85,6 +85,7 @@ namespace DAL
         IVendorInternationalWirePaymentRepository _vendorInternationalWirePaymentRepository;
 
         IVendorShippingAddress _vendorShippingAddress;
+        IVendorDocumentDetailRepository _vendorDocumentDetails;
 
         //IVendorShippingDetailsRepository _vendorShippingDetailsRepository;
         IGLAccountClassRespository _gLAccountClassRespository;
@@ -910,6 +911,17 @@ namespace DAL
                 return _vendorShippingAddress;
             }
         }
+        public IVendorDocumentDetailRepository VendorDocumentDetails
+
+        {
+            get
+            {
+                if (_vendorDocumentDetails == null)
+                    _vendorDocumentDetails = new VendorDocumentDetailRepository(_context);
+                return _vendorDocumentDetails;
+            }
+        }
+
         //public IVendorShippingDetailsRepository VendorShippingDetailsRepository
 
         //{
@@ -1675,7 +1687,7 @@ namespace DAL
             get
             {
                 if (partStockLineMapper == null)
-                    partStockLineMapper = new PartStockLineMapperRepository(_context);
+                    partStockLineMapper = new PartStockLineMapperRepository(_context, CommonRepository);
                 return partStockLineMapper;
             }
         }
@@ -1828,7 +1840,7 @@ namespace DAL
                 return _communicationRepository;
             }
         }
-        
+
         public IPercentageRepository PercentageRepository
         {
             get
@@ -1901,10 +1913,13 @@ namespace DAL
             }
         }
 
-        public IReceiveRepairOrderRepository ReceiveRepairOrder {
-            get {
-                if (_receiveRepairOrder == null) {
-                    _receiveRepairOrder = new ReceiveRepairOrderRepository(_context);
+        public IReceiveRepairOrderRepository ReceiveRepairOrder
+        {
+            get
+            {
+                if (_receiveRepairOrder == null)
+                {
+                    _receiveRepairOrder = new ReceiveRepairOrderRepository(_context, CommonRepository);
                 }
                 return _receiveRepairOrder;
             }

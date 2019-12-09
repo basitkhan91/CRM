@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace DAL.Models
 {
@@ -31,9 +29,7 @@ namespace DAL.Models
         public bool BalanceTypeForecast { get; set; }
 
         public string AccountCodeDescription { get; set; }
-
         public DateTime GLCreatedDate { get; set; }
-
         public string GLCreatedBy { get; set; }
         [ForeignKey("MasterCompanyId")]
         public int? MasterCompanyId { get; set; }
@@ -41,17 +37,20 @@ namespace DAL.Models
         public bool IsActive { get; set; }
 
         public bool? IsDelete { get; set; }
-       
+
         public long? GLAccountTypeId { get; set; }
 
         public long? GLAccountNodeId { get; set; }
 
         public long? POROCategoryId { get; set; }
 
-        public long? GLClassFlowClassificationId { get; set; }        
-       
+        public long? GLClassFlowClassificationId { get; set; }
+
         public virtual GlClassFlowClassification GlClassFlowClassification { get; set; }
         public virtual MasterCompany MasterCompany { get; set; }
-        
+
+        public string LedgerName { get; set; }
+
+        public string LeafNodeName { get; set; }
     }
 }

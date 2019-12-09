@@ -4,6 +4,8 @@ import { AlertService, MessageSeverity } from '../../../services/alert.service';
 import { CustomerBillingAddressModel } from '../../../models/customer-billing-address.model';
 import { AuthService } from '../../../services/auth.service';
 import { getValueFromObjectByKey, getObjectByValue, editValueAssignByCondition } from '../../../generic/autocomplete';
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
+import { NgbModal, NgbActiveModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 @Component({
 	selector: 'app-customer-billing-information',
 	templateUrl: './customer-billing-information.component.html',
@@ -26,7 +28,7 @@ export class CustomerBillingInformationComponent {
 		{ field: 'siteName', header: 'Site Name' },
 		{ field: 'address1', header: 'Address1' },
 		{ field: 'address2', header: 'Address2' },
-		{ field: 'address3', header: 'Address3' },
+	
 		{ field: 'city', header: 'City' },
 		{ field: 'stateOrProvince', header: 'State/Prov' },
 		{ field: 'postalCode', header: 'Postal Code' },
@@ -37,7 +39,12 @@ export class CustomerBillingInformationComponent {
 	customerCode: any;
 	customerName: any;
 	isEditMode: boolean = false;
-	billingHistoryData: Object;
+    billingHistoryData: Object;
+    modal: NgbModalRef;
+    isDeleteMode: boolean = false;
+    customerBillingAddressId: number;
+    public sourceCustomer: any = {}
+
 	// isViewModel : boolean = false
 
 
@@ -114,7 +121,8 @@ export class CustomerBillingInformationComponent {
 	// xlocation: string[];
 
 
-    constructor(public customerService: CustomerService, private authService: AuthService, private alertService: AlertService,) {
+    constructor(public customerService: CustomerService, private authService: AuthService, private alertService: AlertService, private modalService: NgbModal,
+        private activeModal: NgbActiveModal,) {
 		// if (this.workFlowtService.financeCollection) {
 		// 	this.local = this.workFlowtService.financeCollection;
 		// }
@@ -207,7 +215,7 @@ export class CustomerBillingInformationComponent {
                 updatedBy: this.userName,
                 country: getValueFromObjectByKey('countries_id', this.billingInfo.country),
 	      masterCompanyId: 1,
-                isPrimary: false,
+               // isPrimary: false,
                 isActive: true,
                 customerId: this.id
              
@@ -276,26 +284,26 @@ export class CustomerBillingInformationComponent {
 		})
 	}
 
-    deleteBillingInfo(rowData) {
-        const obj = {
-            isActive: false,
-            addressStatus: false,
-            updatedBy: this.userName,
-            customerBillingAddressId: rowData.customerBillingAddressId
-        }
-        // delete customer shipping 
-        this.customerService.updateDeleteBillinginfo(obj).subscribe(() => {
-            // toaster
-            this.alertService.showMessage(
-                'Success',
-                `Deleted Billing Sucessfully `,
-                MessageSeverity.success
-            );
-            this.getBillingDataById();
-        })
+    //deleteBillingInfo(rowData) {
+    //    const obj = {
+    //        isActive: false,
+    //        addressStatus: false,
+    //        updatedBy: this.userName,
+    //        customerBillingAddressId: rowData.customerBillingAddressId
+    //    }
+    //    // delete customer shipping 
+    //    this.customerService.updateDeleteBillinginfo(obj).subscribe(() => {
+    //        // toaster
+    //        this.alertService.showMessage(
+    //            'Success',
+    //            `Deleted Billing Sucessfully `,
+    //            MessageSeverity.success
+    //        );
+    //        this.getBillingDataById();
+    //    })
 
 
-    }
+    //}
 
     async updateActiveorInActiveForBilling(rowData) {
   
@@ -311,6 +319,59 @@ export class CustomerBillingInformationComponent {
             );
         })
     }
+
+
+
+    dismissModel() {
+        this.modal.close();
+    }
+    deleteBillingInfo(content, rowData) {
+
+        this.isDeleteMode = true;
+
+     
+        this.customerBillingAddressId = rowData.customerBillingAddressId
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+    deleteItemAndCloseModel() {
+        const obj = {
+            isActive: false,
+            addressStatus: false,
+            updatedBy: this.userName,
+            customerBillingAddressId: this.customerBillingAddressId
+        }
+      
+        if (this.customerBillingAddressId>0) {
+
+            this.customerService.updateDeleteBillinginfo(obj).subscribe(
+                response => this.saveCompleted(this.sourceCustomer),
+                error => this.saveFailedHelper(error));
+        }
+        this.modal.close();
+    }
+    private saveCompleted(user?: any) {
+
+        if (this.isDeleteMode == true) {
+            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
+            this.isDeleteMode = false;
+        }
+        else {
+            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+            this.saveCompleted
+        }
+        this.getBillingDataById();
+    }
+    private saveFailedHelper(error: any) {
+
+        this.alertService.stopLoadingMessage();
+        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+    }
+
+
 	// openEdit(data){
 	// 	this.billingInfo = data;
 	// }

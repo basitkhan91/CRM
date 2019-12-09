@@ -13,7 +13,9 @@ using Microsoft.EntityFrameworkCore;
 using DAL.Models;
 using DAL.Repositories.Interfaces;
 using DAL.Common;
-using DAL.Models.Enums; 
+using DAL.Models.Enums;
+
+using System.Linq.Dynamic.Core;
 
 namespace DAL.Repositories
 {
@@ -70,6 +72,8 @@ namespace DAL.Repositories
 
             var data = (from t in _appContext.Customer
                         join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
+                        join AccountTyp in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals AccountTyp.CustomerAffiliationId
+
                         join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
                         join ad in _appContext.Address on t.AddressId equals ad.AddressId
                         join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
@@ -104,6 +108,7 @@ namespace DAL.Repositories
                             t.CreatedDate,
                             t.IsActive,
                             t.IsDeleted,
+                         AccountType=   AccountTyp.description,
                             TotalRecords = totalRecords
                         }).Distinct().OrderByDescending(p => p.CreatedDate)
                              .Skip(skip)
@@ -268,6 +273,9 @@ namespace DAL.Repositories
         public IEnumerable<object> GetAllCustomersData()
         {
             var data = (from t in _appContext.Customer
+                        join custType in _appContext.CustomerType on t.CustomerTypeId equals custType.CustomerTypeId into cust
+                        from custType in cust.DefaultIfEmpty()
+
                         join ad in _appContext.Address on t.AddressId equals ad.AddressId
                         join vt in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals vt.CustomerAffiliationId
                         join currency in _appContext.Currency on t.CurrencyId equals currency.CurrencyId into curr
@@ -310,6 +318,7 @@ namespace DAL.Repositories
                             t.CreatedBy,
                             t.UpdatedBy,
                             t.UpdatedDate,
+                     
                             ad.AddressId,
                             ad.Country,
                             ad.PostalCode,
@@ -461,6 +470,21 @@ namespace DAL.Repositories
                             join ad in _appContext.Address on t.AddressId equals ad.AddressId into add
                             from ad in add.DefaultIfEmpty()
 
+                           
+                            join Emp in _appContext.Employee on Convert.ToInt32( t.PrimarySalesPersonId) equals Emp.EmployeeId into Emplyee
+                            from Emp in Emplyee.DefaultIfEmpty()
+
+                            join Empe in _appContext.Employee on Convert.ToInt32(t.SecondarySalesPersonId) equals Empe.EmployeeId into Empl
+                            from Empe in Empl.DefaultIfEmpty()
+                            join Employeecsr in _appContext.Employee on t.CsrId equals Employeecsr.EmployeeId into Employeecsrname
+                            from Employeecsr in Employeecsrname.DefaultIfEmpty()
+
+                            join Employeesald in _appContext.Employee on t.SaId equals Employeesald.EmployeeId into Employeesaldname
+                            from Employeesald in Employeesaldname.DefaultIfEmpty()
+
+                            join cont in _appContext.Countries on Convert.ToInt32(ad.Country) equals cont.countries_id into country
+                            from cont in country.DefaultIfEmpty()
+
                             join vt in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals vt.CustomerAffiliationId into vtt
                             from vt in vtt.DefaultIfEmpty()
 
@@ -471,6 +495,16 @@ namespace DAL.Repositories
                             join cc in _appContext.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
                             join mup in _appContext.MarkUpPercentage on t.MarkUpPercentageId equals mup.MarkUpPercentageId into tmup
                             from mup in tmup.DefaultIfEmpty()
+
+                            join inte in _appContext.CustomerIntegrationPortal on t.CustomerId equals inte.CustomerId into integra
+                            from inte in integra.DefaultIfEmpty()
+                            join intepo in _appContext.IntegrationPortal on inte.IntegrationPortalId equals intepo.IntegrationPortalId into integrapo
+                            from intepo in integrapo.DefaultIfEmpty()
+                            join v in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals v.CustomerAffiliationId
+
+                            join taxTyp in _appContext.CustomerTaxTypeRateMapping on t.CustomerId equals taxTyp.CustomerId into taxtypee
+                            from taxTyp in taxtypee.DefaultIfEmpty()
+
                             where t.CustomerId == customerId //&&  (t.IsDelete == true || t.IsDelete == null)
                                                              // select new { t, ad, vt }).ToList();
                             select new
@@ -491,9 +525,15 @@ namespace DAL.Repositories
                                 stateOrProvince = ad.StateOrProvince,
                                 postalCode = ad.PostalCode,
                                 country = ad.Country,
+                                CountryName= cont.countries_name,
+                                currency= currency.DisplayName,
+
+
                                 customerCode = t.CustomerCode,
                                 doingBuinessAsName = t.DoingBuinessAsName,
                                 parent = t.Parent,
+
+                               
                                 customerParentName = t.CustomerParentName,
                                 customerURL = t.CustomerURL,
                                 generalCurrencyId = t.CurrencyId,
@@ -530,19 +570,29 @@ namespace DAL.Repositories
                                 allowProformaBilling = t.AllowProformaBilling,
                                 customerId = t.CustomerId,
                                 primarySalesPersonId = t.PrimarySalesPersonId,
-                                csrName = t.CSRName,
+                                primarySalesPersonFirstName = Emp.FirstName,
+
+                               
                                 csrId = t.CsrId,
                                 saId = t.SaId,
                                 secondarySalesPersonId = t.SecondarySalesPersonId,
+                                secondarySalesPersonName = Empe.FirstName,
+
                                 annualQuota = t.AnnualQuota,
                                 annualRevenuePotential = t.AnnualRevenuePotential,
-                                AgentName = t.AgentName,
-								t.CustomerPhoneExt
+                                AgentName = Employeesald.FirstName,
+								t.CustomerPhoneExt,
+                                ClassificationName=cc.Description,
+                                IntegrationWith= intepo.Description,
 
-
-
-
-
+                          CreditTermsName  =creditTerms.Name,
+                          MarkUpPercentage= mup.MarkUpValue,
+                          TaxTypeDescription=t.TaxTypeId,
+                          CsrName= Employeecsr.FirstName,
+                       
+                         AccountType= v.description,
+                        TaxTypeName= taxTyp.TaxType,
+                             TaxRateName=   taxTyp.TaxRate
 
 
                                 //t.CreditTermsId,
@@ -631,6 +681,7 @@ namespace DAL.Repositories
             {
 
                 var data = (from ca in _appContext.CustomerContactATAMapping
+                          join cont in _appContext.CustomerContact  on ca.CustomerContactId equals cont.ContactId
                             where ca.CustomerId == customerId && ca.IsDeleted == false
                             select new
                             {
@@ -1100,7 +1151,7 @@ namespace DAL.Repositories
             {
                 CustomerDocumentDetail CustomerDocumentDetails = new CustomerDocumentDetail();
                 CustomerDocumentDetails = _appContext.CustomerDocumentDetails
-                    .Where(p => p.IsDeleted == false && p.CustomerId == id)
+                    .Where(p => p.IsDeleted == false && p.CustomerDocumentDetailId == id)
                     .OrderByDescending(p => p.UpdatedDate)
                     .FirstOrDefault();
                 return CustomerDocumentDetails;
@@ -1258,7 +1309,7 @@ namespace DAL.Repositories
         }
 
 
-        public IEnumerable<object> searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(long CustomerId, string AircraftTypeId, string AircraftModelId, string DashNumberId)
+        public IEnumerable<object> searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(long CustomerId, string AircraftTypeId, string AircraftModelId, string DashNumberId,string memo)
         {
             long[] myAircraftTypeId = null;
             long?[] myAircraftModelId = null;
@@ -1273,7 +1324,15 @@ namespace DAL.Repositories
                 myDashNumberId = DashNumberId.Split(',').Select(x => (long?)Convert.ToInt64(x)).ToArray();
 
 
-            if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId != null)
+            if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId != null && memo!=null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && myAircraftModelId.Contains(cam.AircraftModelId) && myDashNumberId.Contains(cam.DashNumberId)&& memo.Contains(cam.Memo) && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+          else  if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId != null)
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
                             where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && myAircraftModelId.Contains(cam.AircraftModelId) && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
@@ -1329,6 +1388,39 @@ namespace DAL.Repositories
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
             }
+            else if (AircraftTypeId == null && myAircraftModelId == null && myDashNumberId == null && memo !=null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && memo.Contains(cam.Memo) && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+            else if ( myAircraftModelId != null && myDashNumberId != null && memo != null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && memo.Contains(cam.Memo) && myAircraftModelId.Contains(cam.AircraftModelId) && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+            else if (myAircraftModelId != null  && memo != null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && memo.Contains(cam.Memo) && myAircraftModelId.Contains(cam.AircraftModelId)  && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+
+            else if (myDashNumberId != null && memo != null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && memo.Contains(cam.Memo)  && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
             else
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
@@ -1349,7 +1441,7 @@ namespace DAL.Repositories
             if (ATAChapterId != null && ATASubChapterID != null)
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
-                            where cATA.CustomerContactId == contactId && myATAChapterId.Contains(cATA.ATAChapterId) && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
+                            where cATA.CustomerId == contactId && myATAChapterId.Contains(cATA.ATAChapterId) && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
                             select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1357,7 +1449,7 @@ namespace DAL.Repositories
             else if (ATAChapterId != null && ATASubChapterID == null)
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
-                            where cATA.CustomerContactId == contactId && myATAChapterId.Contains(cATA.ATAChapterId) && cATA.IsDeleted != true
+                            where cATA.CustomerId == contactId && myATAChapterId.Contains(cATA.ATAChapterId) && cATA.IsDeleted != true
                             select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1366,7 +1458,7 @@ namespace DAL.Repositories
             else if (ATAChapterId == null && ATASubChapterID != null)
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
-                            where cATA.CustomerContactId == contactId && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
+                            where cATA.CustomerId == contactId && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
                             select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1485,26 +1577,54 @@ namespace DAL.Repositories
         /// <param name="objCustomer"></param>
         public void AddCustomerShippingAddress(Customer objCustomer)
         {
-            CustomerShippingAddress objCustomerShippingAddress = new CustomerShippingAddress();
-                      
-            objCustomerShippingAddress.CustomerId = objCustomer.CustomerId;
-            objCustomerShippingAddress.AddressId = objCustomer.AddressId;
-            objCustomerShippingAddress.MasterCompanyId = objCustomer.MasterCompanyId;                  
-            objCustomerShippingAddress.SiteName = objCustomer.CustomerCode;
-            objCustomerShippingAddress.CreatedDate = DateTime.Now;
-            objCustomerShippingAddress.UpdatedDate = DateTime.Now;
-            objCustomerShippingAddress.CreatedBy = objCustomer.CreatedBy;
-            objCustomerShippingAddress.UpdatedBy = objCustomer.UpdatedBy;
-            objCustomerShippingAddress.IsActive = objCustomer.IsActive;
-            objCustomerShippingAddress.IsPrimary = true;
-            objCustomerShippingAddress.IsDelete = false;
+           // CustomerShippingAddress objCustomerShippingAddress = new CustomerShippingAddress();
+            // var shippingaddress = _appContext.CustomerShippingAddress.GetSingleOrDefault(a => a.AddressId == objCustomer.AddressId && a.CustomerId == objCustomer.CustomerId);
+            //var shipping = _appContext.CustomerShippingAddress
+            //         .Where(p => p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
 
-            if (objCustomerShippingAddress.CustomerShippingAddressId > 0)
+        
+          
+          
+
+            //if (objCustomerShippingAddress.CustomerShippingAddressId > 0)
+            //{
+                //_appContext.CustomerShippingAddress.detch
+                CustomerShippingAddress data = _appContext.CustomerShippingAddress.AsNoTracking().Where(p=>p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
+                //_appContext.CustomerShippingAddress.detach(objCustomerShippingAddress);
+               if(data!=null)
             {
-                _appContext.CustomerShippingAddress.Update(objCustomerShippingAddress);               
+                if (data.CustomerShippingAddressId > 0)
+                {
+                    data.CustomerId = objCustomer.CustomerId;
+                    data.AddressId = objCustomer.AddressId;
+                    data.MasterCompanyId = objCustomer.MasterCompanyId;
+                    data.SiteName = objCustomer.CustomerCode;
+                    data.CreatedDate = DateTime.Now;
+                    data.UpdatedDate = DateTime.Now;
+                    data.CreatedBy = objCustomer.CreatedBy;
+                    data.UpdatedBy = objCustomer.UpdatedBy;
+                    data.IsActive = objCustomer.IsActive;
+                    data.IsPrimary = true;
+                    data.IsDelete = false;
+                    _appContext.CustomerShippingAddress.Update(data);
+                }
             }
             else
             {
+                CustomerShippingAddress objCustomerShippingAddress = new CustomerShippingAddress();
+
+                objCustomerShippingAddress.CustomerId = objCustomer.CustomerId;
+                objCustomerShippingAddress.AddressId = objCustomer.AddressId;
+                objCustomerShippingAddress.MasterCompanyId = objCustomer.MasterCompanyId;
+                objCustomerShippingAddress.SiteName = objCustomer.CustomerCode;
+                objCustomerShippingAddress.CreatedDate = DateTime.Now;
+                objCustomerShippingAddress.UpdatedDate = DateTime.Now;
+                objCustomerShippingAddress.CreatedBy = objCustomer.CreatedBy;
+                objCustomerShippingAddress.UpdatedBy = objCustomer.UpdatedBy;
+                objCustomerShippingAddress.IsActive = objCustomer.IsActive;
+                objCustomerShippingAddress.IsPrimary = true;
+                objCustomerShippingAddress.IsDelete = false;
+              
                 _appContext.CustomerShippingAddress.Add(objCustomerShippingAddress);
             }
 
@@ -1525,30 +1645,71 @@ namespace DAL.Repositories
         /// <param name="objCustomer"></param>
         public void AddCustomerBillinggAddress(Customer objCustomer)
         {
-            CustomerBillingAddress objCustomerBillingAddress = new CustomerBillingAddress();
-            
-            objCustomerBillingAddress.CustomerId = objCustomer.CustomerId;
-            objCustomerBillingAddress.MasterCompanyId = objCustomer.MasterCompanyId;
-            objCustomerBillingAddress.AddressId = objCustomer.AddressId;
-            objCustomerBillingAddress.SiteName = objCustomer.CustomerCode;              
-            objCustomerBillingAddress.CreatedDate = DateTime.Now;
-            objCustomerBillingAddress.UpdatedDate = DateTime.Now;
-            objCustomerBillingAddress.CreatedBy = objCustomer.CreatedBy;
-            objCustomerBillingAddress.UpdatedBy = objCustomer.UpdatedBy;
-            objCustomerBillingAddress.IsPrimary = true;
-            objCustomerBillingAddress.IsActive = true;
-            objCustomerBillingAddress.IsDelete = false;
+            CustomerBillingAddress data = _appContext.CustomerBillingAddress.AsNoTracking().Where(p => p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
 
-            if (objCustomerBillingAddress.CustomerBillingAddressId > 0)
+            if (data != null)
             {
-                _appContext.CustomerBillingAddress.Update(objCustomerBillingAddress);
+                if (data.CustomerBillingAddressId > 0)
+                {
+                    data.CustomerId = objCustomer.CustomerId;
+                    data.MasterCompanyId = objCustomer.MasterCompanyId;
+                    data.AddressId = objCustomer.AddressId;
+                    data.SiteName = objCustomer.CustomerCode;
+                    data.CreatedDate = DateTime.Now;
+                    data.UpdatedDate = DateTime.Now;
+                    data.CreatedBy = objCustomer.CreatedBy;
+                    data.UpdatedBy = objCustomer.UpdatedBy;
+                    data.IsPrimary = true;
+                    data.IsActive = true;
+                    data.IsDelete = false;
+                    _appContext.CustomerBillingAddress.Update(data);
+                }
             }
             else
             {
+                CustomerBillingAddress objCustomerBillingAddress = new CustomerBillingAddress();
+
+                objCustomerBillingAddress.CustomerId = objCustomer.CustomerId;
+                objCustomerBillingAddress.MasterCompanyId = objCustomer.MasterCompanyId;
+                objCustomerBillingAddress.AddressId = objCustomer.AddressId;
+                objCustomerBillingAddress.SiteName = objCustomer.CustomerCode;
+                objCustomerBillingAddress.CreatedDate = DateTime.Now;
+                objCustomerBillingAddress.UpdatedDate = DateTime.Now;
+                objCustomerBillingAddress.CreatedBy = objCustomer.CreatedBy;
+                objCustomerBillingAddress.UpdatedBy = objCustomer.UpdatedBy;
+                objCustomerBillingAddress.IsPrimary = true;
+                objCustomerBillingAddress.IsActive = true;
+                objCustomerBillingAddress.IsDelete = false;
+
                 _appContext.CustomerBillingAddress.Add(objCustomerBillingAddress);
             }
 
             _appContext.SaveChanges();
+
+            // CustomerBillingAddress objCustomerBillingAddress = new CustomerBillingAddress();
+
+            //objCustomerBillingAddress.CustomerId = objCustomer.CustomerId;
+            //objCustomerBillingAddress.MasterCompanyId = objCustomer.MasterCompanyId;
+            //objCustomerBillingAddress.AddressId = objCustomer.AddressId;
+            //objCustomerBillingAddress.SiteName = objCustomer.CustomerCode;              
+            //objCustomerBillingAddress.CreatedDate = DateTime.Now;
+            //objCustomerBillingAddress.UpdatedDate = DateTime.Now;
+            //objCustomerBillingAddress.CreatedBy = objCustomer.CreatedBy;
+            //objCustomerBillingAddress.UpdatedBy = objCustomer.UpdatedBy;
+            //objCustomerBillingAddress.IsPrimary = true;
+            //objCustomerBillingAddress.IsActive = true;
+            //objCustomerBillingAddress.IsDelete = false;
+
+            //if (objCustomerBillingAddress.CustomerBillingAddressId > 0)
+            //{
+            //    _appContext.CustomerBillingAddress.Update(objCustomerBillingAddress);
+            //}
+            //else
+            //{
+            //    _appContext.CustomerBillingAddress.Add(objCustomerBillingAddress);
+            //}
+
+            //_appContext.SaveChanges();
             //return objCustomerBillingAddress;
         }
 
@@ -1676,6 +1837,53 @@ namespace DAL.Repositories
                 model.IsActive = status;
 
                 _appContext.CustomerBillingAddress.Attach(model);
+
+                _appContext.Entry(model).Property(x => x.IsActive).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public void DeleteShipViaDetails(long id, string updatedBy)
+        {
+            try
+            {
+                CustomerShipping model = new CustomerShipping();
+                model.CustomerShippingId = id;
+                model.UpdatedDate = DateTime.Now;
+                model.IsDeleted = true;
+                model.UpdatedBy = updatedBy;
+
+                _appContext.CustomerShipping.Attach(model);
+
+                _appContext.Entry(model).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public void CustomerShippingDetailsViaStatus(long id, bool status, string updatedBy)
+        {
+            try
+            {
+                CustomerShipping model = new CustomerShipping();
+                model.CustomerShippingId = id;
+                model.UpdatedDate = DateTime.Now;
+                model.IsActive = status;
+
+                _appContext.CustomerShipping.Attach(model);
 
                 _appContext.Entry(model).Property(x => x.IsActive).IsModified = true;
                 _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;

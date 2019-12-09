@@ -17,13 +17,14 @@ export class EmployeeStepsPrimeNgComponent {
 	generalcollection: any;
 	collection: any;
 	currentUrl: any;
-	items: MenuItem[];
+	items: {}[];
 
 	msgs: Message[] = [];
 
 	activeIndex: number;
 
 	showComponentPTab: boolean;
+    isDisabledSteps: boolean = false;
     /** employee-steps-primeNg ctor */
 	constructor(private router: ActivatedRoute, private route: Router, private employeeService: EmployeeService) {
 		let currentUrl = this.route.url;
@@ -48,6 +49,7 @@ export class EmployeeStepsPrimeNgComponent {
 		}
 		else if (this.currentUrl == '/employeesmodule/employeepages/app-employee-general-information') {
 			this.activeIndex = 0;
+            this.isDisabledSteps = true;
 
 		}
 		else if (this.currentUrl == '/employeesmodule/employeepages/app-employee-certification') {
@@ -69,38 +71,46 @@ export class EmployeeStepsPrimeNgComponent {
 
 		this.items = [{
 			label: 'General Information',
+            step:1,
+            index:0,
 			command: (event: any) => {
 				this.activeIndex = 0;
 				this.msgs.length = 0;
-				this.msgs.push({ severity: 'info', summary: 'General Information', detail: event.item.label });
+				this.msgs.push({ severity: 'info', summary: 'General Information', detail: event.label });
 				this.route.navigateByUrl('/employeesmodule/employeepages/app-employee-general-information');
 
 			}
 		},
 		{
 			label: 'Certification',
+            step:2,
+            index:1,
 			command: (event: any) => {
 				this.activeIndex = 1;
 				this.msgs.length = 0;
-				this.msgs.push({ severity: 'info', summary: 'Contacts', detail: event.item.label });
+				this.msgs.push({ severity: 'info', summary: 'Contacts', detail: event.label });
 				this.route.navigateByUrl('/employeesmodule/employeepages/app-employee-certification');
 			}
 		},
 		{
 			label: 'Training',
+            step:3,
+            index:2,
 			command: (event: any) => {
 				this.activeIndex = 2;
 				this.msgs.length = 0;
-				this.msgs.push({ severity: 'info', summary: 'Financial Information', detail: event.item.label });
+				this.msgs.push({ severity: 'info', summary: 'Financial Information', detail: event.label });
 				this.route.navigateByUrl('/employeesmodule/employeepages/app-employee-training');
 			}
 		},
 		{
 			label: 'Management Structure',
+            step:4,
+            index:3,
 			command: (event: any) => {
 				this.activeIndex = 3;
 				this.msgs.length = 0;
-				this.msgs.push({ severity: 'info', summary: 'Management Structure', detail: event.item.label });
+				this.msgs.push({ severity: 'info', summary: 'Management Structure', detail: event.label });
 				this.route.navigateByUrl('/employeesmodule/employeepages/app-employees-management-structure');
 			}
 		}

@@ -21,7 +21,7 @@ namespace DAL.Repositories
 
         public IEnumerable<Vendor> GetVendorsLite()
         {
-            return _appContext.Vendor.Where(v => v.IsActive == true && v.IsDelete == false).Select(v => new  Vendor{ VendorId= v.VendorId, VendorName=v.VendorName }).OrderBy(c=>c.VendorName).ToList();
+            return _appContext.Vendor.Where(v => v.IsActive == true && v.IsDelete == false).Select(v => new Vendor { VendorId = v.VendorId, VendorName = v.VendorName }).OrderBy(c => c.VendorName).ToList();
         }
 
         public IEnumerable<object> GetVendorListDetails()
@@ -29,22 +29,51 @@ namespace DAL.Repositories
 
             {
                 var data = (from t in _appContext.Vendor
-                                  join ad in _appContext.Address on t.AddressId equals ad.AddressId
-                                  join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId
-                                  join ct in _appContext.CreditTerms on t.CreditTermsId equals ct.CreditTermsId into crd
+                            join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                            join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
+                            from vt in vtt.DefaultIfEmpty()
+                            join ct in _appContext.CreditTerms on t.CreditTermsId equals ct.CreditTermsId into crd
                             from ct in crd.DefaultIfEmpty()
-                            join cu in _appContext.Currency on t.CurrencyId equals cu.CurrencyId into curr 
+                            join cu in _appContext.Currency on t.CurrencyId equals cu.CurrencyId into curr
                             from cu in curr.DefaultIfEmpty()
                             join di in _appContext.Discount on t.DiscountId equals di.DiscountId into dis
                             from di in dis.DefaultIfEmpty()
+                            join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
+                            from vc in vcd.DefaultIfEmpty()
+                            join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
+                            from vca in vcad.DefaultIfEmpty()
                             where t.IsDelete != true
-                            select new { t.VendorId,t,t.VendorEmail,t.IsActive,
-                                Address1 =ad.Line1, Address2=ad.Line2, Address3=ad.Line3,t.VendorCode, t.VendorName, ad.City, ad.StateOrProvince,vt.Description ,t.CreatedDate,t.CreatedBy,t.UpdatedBy,t.UpdatedDate,ad.AddressId,ad.Country,ad.PostalCode,
-                                t.EDI,t.EDIDescription,t.CreditLimit,
-                                CurrencyId= cu.Code,
+                            select new
+                            {
+                                t.VendorId,
+                                t,
+                                t.VendorEmail,
+                                t.IsActive,
+                                Address1 = ad.Line1,
+                                Address2 = ad.Line2,
+                                Address3 = ad.Line3,
+                                t.VendorCode,
+                                t.VendorName,
+                                ad.City,
+                                ad.StateOrProvince,
+                                vt.Description,
+                                t.CreatedDate,
+                                t.CreatedBy,
+                                t.UpdatedBy,
+                                t.UpdatedDate,
+                                ad.AddressId,
+                                ad.Country,
+                                ad.PostalCode,
+                                t.EDI,
+                                t.EDIDescription,
+                                t.CreditLimit,
+                                CurrencyId = cu.Code,
                                 CreditTermsId = ct.Name,
-                                DiscountLevel = di==null ? 0: di.DiscontValue
-                            }).Where(t=>t.IsActive==true).OrderByDescending(c=>c.CreatedDate).ToList();
+                                DiscountLevel = di == null ? 0 : di.DiscontValue,
+                                vc.ClassificationName,
+                                VendorCapabilityName = vca.capabilityDescription,
+                               VendorPhoneContact=t.VendorPhone+" - "+t.VendorPhoneExt
+                            })/*.Where(t => t.IsActive == true)*/.OrderByDescending(c => c.CreatedDate).ToList();
                 return data;
 
                 //old query
@@ -80,7 +109,7 @@ namespace DAL.Repositories
                 var data = (from t in _appContext.Vendor
                             join ad in _appContext.Address on t.AddressId equals ad.AddressId
                             join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId
-                            where t.IsActive == true && t.VendorName==Vendorname
+                            where t.IsActive == true && t.VendorName == Vendorname
                             // select new { t, ad, vt }).ToList();
                             select new
                             {
@@ -104,14 +133,14 @@ namespace DAL.Repositories
                                 t.VendorURL,
                                 t.Parent,
                                 t.CreatedDate,
-                                postal=ad.PostalCode,
+                                postal = ad.PostalCode,
                                 t.CreatedBy,
                                 t.UpdatedBy,
                                 t.UpdatedDate,
                                 ad.AddressId,
                                 ad.Country,
                                 ad.PostalCode,
-                                
+
                             }).ToList();
                 return data;
 
@@ -126,7 +155,7 @@ namespace DAL.Repositories
                             join ad in _appContext.Address on t.AddressId equals ad.AddressId
                             join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId
 
-                            where t.VendorId==vendorId
+                            where t.VendorId == vendorId
                             // select new { t, ad, vt }).ToList();
                             select new
                             {
@@ -175,10 +204,10 @@ namespace DAL.Repositories
                             join uom in _appContext.UnitOfMeasure on im.PurchaseUnitOfMeasureId equals uom.UnitOfMeasureId into um
                             from uom in um.DefaultIfEmpty()
 
-                                join sto in _appContext.StockLine on pop.PurchaseOrderId equals sto.PurchaseOrderId  into sto
-                                from st in sto.DefaultIfEmpty()
+                            join sto in _appContext.StockLine on pop.PurchaseOrderId equals sto.PurchaseOrderId into sto
+                            from st in sto.DefaultIfEmpty()
 
-                               join mf in _appContext.Manufacturer on im.ManufacturerId equals mf.ManufacturerId
+                            join mf in _appContext.Manufacturer on im.ManufacturerId equals mf.ManufacturerId
                             where po.PurchaseOrderId == id
 
                             select new
@@ -275,8 +304,8 @@ namespace DAL.Repositories
                             from v in ve.DefaultIfEmpty()
                             join im in _appContext.ItemMaster on pop.ItemMasterId equals im.ItemMasterId into item
                             from im in item.DefaultIfEmpty()
-                            //join p in _appContext.Part on im.PartId equals p.PartId into part
-                            //from p in part.DefaultIfEmpty()
+                                //join p in _appContext.Part on im.PartId equals p.PartId into part
+                                //from p in part.DefaultIfEmpty()
 
                             join mf in _appContext.Manufacturer on im.ManufacturerId equals mf.ManufacturerId into gj
                             from x in gj.DefaultIfEmpty()
@@ -369,18 +398,18 @@ namespace DAL.Repositories
 
                             select new
                             {
-                               siteName = site.Name,
-                               site.SiteId,
-                               ms.ManagementStructureId,
-                               msite.ManagementSiteId,
-                               ad.AddressId,
-                            
-                               ad.City,
-                               ad.Country,
-                               ad.Line1,
-                               ad.Line2,
-                               ad.Line3,
-                               ad.PostalCode,
+                                siteName = site.Name,
+                                site.SiteId,
+                                ms.ManagementStructureId,
+                                msite.ManagementSiteId,
+                                ad.AddressId,
+
+                                ad.City,
+                                ad.Country,
+                                ad.Line1,
+                                ad.Line2,
+                                ad.Line3,
+                                ad.PostalCode,
 
 
                             }).ToList();
@@ -400,9 +429,9 @@ namespace DAL.Repositories
 
                             select new
                             {
-                               vc.VendorCapabilityId,
-                               vc.VendorCapabilityTypeId,
-                               vc.CapabilityTypeId
+                                vc.VendorCapabilityId,
+                                vc.VendorCapabilityTypeId,
+                                vc.CapabilityTypeId
 
                             }).ToList();
                 return data;
@@ -470,24 +499,24 @@ namespace DAL.Repositories
         {
             try
             {
-				Address address = new Address();
+                Address address = new Address();
 
-				address.City = billingAddress.City;
-				address.Country = billingAddress.Country;
-				
-				
-				
-				address.Line1 = billingAddress.Address1;
-				address.Line2 = billingAddress.Address2;
-				address.Line3 = billingAddress.Address3;
-				address.MasterCompanyId = billingAddress.MasterCompanyId;
-				address.PostalCode = billingAddress.PostalCode;
-				address.StateOrProvince = billingAddress.StateOrProvince;
+                address.City = billingAddress.City;
+                address.Country = billingAddress.Country;
 
-				address.IsActive = true;
-				address.UpdatedDate = address.CreatedDate = DateTime.Now;
-				address.CreatedBy = billingAddress.CreatedBy;
-				address.UpdatedBy = billingAddress.UpdatedBy;
+
+
+                address.Line1 = billingAddress.Address1;
+                address.Line2 = billingAddress.Address2;
+                address.Line3 = billingAddress.Address3;
+                address.MasterCompanyId = billingAddress.MasterCompanyId;
+                address.PostalCode = billingAddress.PostalCode;
+                address.StateOrProvince = billingAddress.StateOrProvince;
+
+                address.IsActive = true;
+                address.UpdatedDate = address.CreatedDate = DateTime.Now;
+                address.CreatedBy = billingAddress.CreatedBy;
+                address.UpdatedBy = billingAddress.UpdatedBy;
 
                 if (billingAddress.AddressId > 0)
                 {
@@ -535,7 +564,7 @@ namespace DAL.Repositories
         {
             try
             {
-                 billingAddress.UpdatedDate = DateTime.Now;
+                billingAddress.UpdatedDate = DateTime.Now;
                 _appContext.VendorBillingAddress.Update(billingAddress);
                 _appContext.SaveChanges();
             }
@@ -545,7 +574,7 @@ namespace DAL.Repositories
             }
         }
 
-        public void DeleteVendorBillingAddress(long billingAddressId,string updatedBy)
+        public void DeleteVendorBillingAddress(long billingAddressId, string updatedBy)
         {
             try
             {
@@ -574,7 +603,7 @@ namespace DAL.Repositories
             try
             {
                 var vsha = _appContext.VendorShippingAddress.Where(x => x.VendorShippingAddressId == shippingAddressId).FirstOrDefault();
-                if(vsha != null)
+                if (vsha != null)
                 {
                     _appContext.VendorShippingAddress.Remove(vsha);
                     _appContext.SaveChanges();
@@ -602,7 +631,7 @@ namespace DAL.Repositories
             bool result = false;
             try
             {
-               
+
                 var vendorShippingDetails = _appContext.VendorShipping.Where(x => x.VendorShippingId == vendorShippingId).FirstOrDefault();
                 if (vendorShippingDetails != null)
                 {
@@ -623,7 +652,7 @@ namespace DAL.Repositories
 
         }
 
-        public void VendorBillingAddressStatus(long billingAddressId,bool status, string updatedBy)
+        public void VendorBillingAddressStatus(long billingAddressId, bool status, string updatedBy)
         {
             try
             {
@@ -665,7 +694,7 @@ namespace DAL.Repositories
                                 ad.PostalCode,
                                 ad.Country,
                                 vba.CreatedDate
-                            }).OrderByDescending(p=>p.CreatedDate).ToList();
+                            }).OrderByDescending(p => p.CreatedDate).ToList();
                 return list;
             }
             catch (Exception ex)
@@ -680,7 +709,8 @@ namespace DAL.Repositories
             {
                 var list = (from vba in _appContext.VendorBillingAddress
                             where vba.IsDeleted == false && vba.VendorId == vendorId
-                            select new {
+                            select new
+                            {
                                 vba.VendorBillingAddressId,
                                 vba.SiteName
                             }).ToList();
@@ -746,9 +776,10 @@ namespace DAL.Repositories
             return data;
         }
 
-        public IEnumerable<Vendor> getVendorsForDropdown() {
-            return _appContext.Vendor.Where(x => 
-            (x.IsActive != null && x.IsActive == true) && 
+        public IEnumerable<Vendor> getVendorsForDropdown()
+        {
+            return _appContext.Vendor.Where(x =>
+            (x.IsActive != null && x.IsActive == true) &&
             (x.IsDelete == null || x.IsDelete == false));
         }
 
@@ -758,7 +789,7 @@ namespace DAL.Repositories
             {
                 var list = (from vba in _appContext.VendorBillingAddressAudit
                             join ad in _appContext.Address on vba.AddressId equals ad.AddressId
-                            where vba.VendorId== vendorId && vba.VendorBillingAddressId== vendorBillingaddressId
+                            where vba.VendorId == vendorId && vba.VendorBillingAddressId == vendorBillingaddressId
                             select new
                             {
                                 vba.SiteName,
@@ -771,7 +802,10 @@ namespace DAL.Repositories
                                 ad.StateOrProvince,
                                 ad.PostalCode,
                                 ad.Country,
-                                vba.CreatedDate
+                                vba.CreatedDate,
+                                vba.UpdatedBy,
+                                vba.UpdatedDate,
+                                vba.CreatedBy
                             }).OrderByDescending(p => p.AuditVendorBillingAddressId).ToList();
                 return list;
             }
@@ -780,6 +814,108 @@ namespace DAL.Repositories
 
                 throw;
             }
+        }
+
+        public IEnumerable<object> GetVendorPOMemoList(long vendorId)
+        {
+            try
+            {
+                var list = (from po in _appContext.PurchaseOrder
+                            where po.IsDeleted == false && po.IsActive == true && po.VendorId == vendorId
+                            select new
+                            {
+                                Module = "PO",
+                                OrderNumberId = po.PurchaseOrderId,
+                                OrderNumber = po.PurchaseOrderNumber,
+                                po.Notes
+                            }).Distinct().ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetVendorROMemoList(long vendorId)
+        {
+            try
+            {
+                var list = (from ro in _appContext.RepairOrder
+                            where ro.IsDeleted == false && ro.IsActive == true && ro.VendorId == vendorId
+                            select new
+                            {
+                                Module = "RO",
+                                OrderNumberId = ro.RepairOrderId,
+                                OrderNumber = ro.RepairOrderNumber,
+                                Notes = ro.RoMemo
+                            }).Distinct().ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void UpdateVendorMemoText(long id, string type, string memoText, string updatedBy)
+        {
+            if (type == "PO")
+            {
+                PurchaseOrder purchaseOrder = new PurchaseOrder();
+                purchaseOrder.PurchaseOrderId = id;
+                purchaseOrder.UpdatedDate = DateTime.Now;
+                purchaseOrder.UpdatedBy = updatedBy;
+                purchaseOrder.Notes = memoText;
+
+                _appContext.PurchaseOrder.Attach(purchaseOrder);
+                _appContext.Entry(purchaseOrder).Property(x => x.Notes).IsModified = true;
+                _appContext.Entry(purchaseOrder).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(purchaseOrder).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+            }
+            else if (type == "RO")
+            {
+                RepairOrder repairOrder = new RepairOrder();
+                repairOrder.RepairOrderId = id;
+                repairOrder.UpdatedDate = DateTime.Now;
+                repairOrder.UpdatedBy = updatedBy;
+                repairOrder.RoMemo = memoText;
+
+                _appContext.RepairOrder.Attach(repairOrder);
+                _appContext.Entry(repairOrder).Property(x => x.RoMemo).IsModified = true;
+                _appContext.Entry(repairOrder).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(repairOrder).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+            }
+        }
+
+        public VendorDocumentDetails GetVendorDocumentDetailById(long id)
+        {
+            try
+            {
+                return _appContext.VendorDocumentDetails.Where(p => p.IsActive == true && p.VendorDocumentDetailId == id).FirstOrDefault();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public IEnumerable<object> GetVendorProcessList(int companyId)
+        {
+            var list = (from m in _appContext.Master1099
+                        where m.IsActive == true && m.MasterCompanyId == companyId
+                        select new
+                        {
+                            m.Master1099Id,
+                            m.Description
+                        }).Distinct().ToList();
+            return list;
+          
         }
 
     }

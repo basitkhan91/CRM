@@ -357,36 +357,36 @@ export class WorkflowListComponent implements OnInit {
     }
 
     private berDetermination(): any {
-        if (this.sourceWorkFlow.fixedAmount !== undefined) {
+        if (this.sourceWorkFlow.fixedAmount != undefined && this.sourceWorkFlow.fixedAmount != "") {
             this.sourceWorkFlow.berThresholdAmount = this.sourceWorkFlow.fixedAmount;
         }
         // check on is percentOfNew enable
-        if (this.sourceWorkFlow.percentOfNew !== undefined) {
+        if (this.sourceWorkFlow.percentOfNew != undefined && this.sourceWorkFlow.percentOfNew != "") {
             this.sourceWorkFlow.berThresholdAmount = this.sourceWorkFlow.percentOfNew;
         }
         // check on is .percentOfReplacement enable
-        if (this.sourceWorkFlow.percentOfReplacement !== undefined) {
+        if (this.sourceWorkFlow.percentOfReplacement != undefined && this.sourceWorkFlow.percentOfReplacement != "") {
             this.sourceWorkFlow.berThresholdAmount = this.sourceWorkFlow.percentOfReplacement;
         }
 
 
         // 1 and 2 check box 
-        if (this.sourceWorkFlow.fixedAmount !== undefined && this.sourceWorkFlow.percentOfNew !== undefined) {
+        if (this.sourceWorkFlow.fixedAmount != undefined && this.sourceWorkFlow.fixedAmount != "" && this.sourceWorkFlow.percentOfNew != undefined && this.sourceWorkFlow.percentOfNew != "") {
             this.sourceWorkFlow.berThresholdAmount = Math.min(this.sourceWorkFlow.fixedAmount, this.sourceWorkFlow.percentOfNew);
         }
 
         // 2 and 3  check box 
-        if (this.sourceWorkFlow.percentOfNew !== undefined && this.sourceWorkFlow.percentOfReplacement !== undefined) {
+        if (this.sourceWorkFlow.percentOfNew != undefined && this.sourceWorkFlow.percentOfNew != "" && this.sourceWorkFlow.percentOfReplacement != undefined && this.sourceWorkFlow.percentOfReplacement != "") {
             this.sourceWorkFlow.berThresholdAmount = Math.min(this.sourceWorkFlow.percentOfNew, this.sourceWorkFlow.percentOfReplacement);
         }
         // 1 and 3  check box 
-        if (this.sourceWorkFlow.fixedAmount !== undefined && this.sourceWorkFlow.percentOfReplacement !== undefined) {
+        if (this.sourceWorkFlow.fixedAmount != undefined && this.sourceWorkFlow.fixedAmount != "" && this.sourceWorkFlow.percentOfReplacement != undefined && this.sourceWorkFlow.percentOfReplacement != "") {
             this.sourceWorkFlow.berThresholdAmount = Math.min(this.sourceWorkFlow.fixedAmount, this.sourceWorkFlow.percentOfReplacement);
         }
 
 
         //1 and 2 and 3 check box
-        if (this.sourceWorkFlow.fixedAmount !== undefined && this.sourceWorkFlow.percentOfNew !== undefined && this.sourceWorkFlow.percentOfReplacement !== undefined) {
+        if (this.sourceWorkFlow.fixedAmount != undefined && this.sourceWorkFlow.fixedAmount != "" && this.sourceWorkFlow.percentOfNew != undefined && this.sourceWorkFlow.percentOfNew != "" && this.sourceWorkFlow.percentOfReplacement != undefined && this.sourceWorkFlow.percentOfReplacement != "") {
             this.sourceWorkFlow.berThresholdAmount = Math.min(this.sourceWorkFlow.fixedAmount, this.sourceWorkFlow.percentOfNew, this.sourceWorkFlow.percentOfReplacement);
         }
         //1 and 2 and 3 check box all uncheck 

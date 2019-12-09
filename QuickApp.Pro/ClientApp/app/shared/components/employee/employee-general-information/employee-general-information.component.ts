@@ -42,6 +42,8 @@ import { User } from '../../../../models/user.model';
 
 
 import { CompanyService } from '../../../../services/company.service';
+import { CurrencyService } from '../../../../services/currency.service';
+import { getObjectById } from '../../../../generic/autocomplete';
 
 
 
@@ -99,7 +101,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     disableSaveLastName: boolean;
     disableSaveLeaveName: boolean;
     selectedActionName: any;
-    disableJobTitle: boolean;
+    disableJobTitle: boolean = true;
+    disableJobType: boolean = true;
     disableExpTitle: boolean;
     display: boolean = false;
     modelValue: boolean = false;
@@ -112,32 +115,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     public jobTypeDescription: any;
     employeeIdTemp = "create"
 
-
-
-
-    ngOnInit(): void {
-
-
-        this.employeeService.currentUrl = '/employeesmodule/employeepages/app-employee-general-information';
-        this.employeeService.bredcrumbObj.next(this.employeeService.currentUrl);
-        this.employeeService.ShowPtab = true;
-        this.employeeService.alertObj.next(this.employeeService.ShowPtab); //steps
-        this.activeIndex = 0;
-        this.employeeService.indexObj.next(this.activeIndex);
-        // this.sourceEmployee.employeeId = 1;
-        this.loadManagementdata();
-        this.loadData();
-        this.loadJobtitlesData();
-        this.loademployeesexperties();
-        this.multiLeavelist();
-        this.EmployeeTrainingType();
-        this.shift();
-        this.Countries();
-        this.EmployeeLeaveType();
-        this.loadjobtypesData();
-        this.loadLegalEntityData();
-
-    }
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
@@ -172,6 +149,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     maincompanylist: any[] = [];
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
+    desableJobTypeSave: boolean = true;
     departmentList: any[] = [];
     bulist: any[] = [];
     divisionlist: any[] = [];
@@ -191,6 +169,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     public userA: any;
     public companylist: any;
     public supervisorId: any = 0;
+    allCurrencyData: any[] = [];
+    currencyList: any[];
 
 
     empCreationForm = new FormGroup({
@@ -206,7 +186,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     });
 
 
-    constructor(private fb: FormBuilder, private Actroute: ActivatedRoute, private translationService: AppTranslationService, private router: Router, public jobTypeService: JobTypeService, public jobTitleService: JobTitleService, private empservice: EmployeeExpertiseService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private route: Router, private alertService: AlertService, public employeeService: EmployeeService, public jobTitleService1: LegalEntityService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private localStorage: LocalStoreManager, private companyService: CompanyService) {
+    constructor(private fb: FormBuilder, private Actroute: ActivatedRoute, private translationService: AppTranslationService, private router: Router, public jobTypeService: JobTypeService, public jobTitleService: JobTitleService, private empservice: EmployeeExpertiseService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private route: Router, private alertService: AlertService, public employeeService: EmployeeService, public jobTitleService1: LegalEntityService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private localStorage: LocalStoreManager, private companyService: CompanyService, public currencyService: CurrencyService) {
         this.displayedColumns.push('action');
 
         //new emp form
@@ -257,7 +237,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
 
-            this.sourceEmployee = this.employeeService.listCollection;
+            this.sourceEmployee = this.employeeService.listCollection;            
 
             this.empCreationForm.controls['jobTitleId'].setValue(this.sourceEmployee.jobTitleId);
 
@@ -273,7 +253,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             this.updateMode = true;
             this.sourceEmployee.startDate = new Date(this.sourceEmployee.startDate);
             this.sourceEmployee.startDate = new Date();
-            this.sourceEmployee.dateOfBirth = new Date(this.sourceEmployee.dateOfBirth);
+            this.sourceEmployee.dateOfBirth = this.sourceEmployee.dateOfBirth ? new Date(this.sourceEmployee.dateOfBirth) : '';
             if (this.local) {
                 this.employeeService.employeeCollection = this.local;
 
@@ -326,12 +306,46 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
                 }
 
             });
+    }
 
-        //new code
+    ngOnInit(): void {
+        this.employeeService.currentUrl = '/employeesmodule/employeepages/app-employee-general-information';
+        this.employeeService.bredcrumbObj.next(this.employeeService.currentUrl);
+        this.employeeService.ShowPtab = true;
+        this.employeeService.alertObj.next(this.employeeService.ShowPtab); //steps
+        this.activeIndex = 0;
+        this.employeeService.indexObj.next(this.activeIndex);
+        // this.sourceEmployee.employeeId = 1;
+        this.loadManagementdata();
+        this.loadData();
+        this.loadJobtitlesData();
+        this.loademployeesexperties();
+        this.multiLeavelist();
+        this.EmployeeTrainingType();
+        this.shift();
+        this.Countries();
+        this.EmployeeLeaveType();
+        this.loadjobtypesData();
+        this.loadLegalEntityData();
+        this.loadCurrencyData();        
 
+    }
 
-
-
+    private loadCurrencyData() {
+		this.currencyService.getCurrencyList().subscribe(currencydata => {
+			console.log(currencydata)
+			this.allCurrencyData = currencydata[0];
+		})
+    }
+    
+    filterCurrencyList(event) {
+		this.currencyList = this.allCurrencyData;
+		if (event.query !== undefined && event.query !== null) {
+			const currlist = [...this.allCurrencyData.filter(x => {
+				return x.symbol.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.currencyList = currlist;
+		}
     }
 
     loadLegalEntityData() {
@@ -494,11 +508,16 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
         console.log(this.empCreationForm);
+        console.log(this.sourceEmployee.firstName);        
 
         this.supervisorId;
-        this.sourceEmployee.firstName = this.empCreationForm.get('firstName').value;
-        this.sourceEmployee.lastName = this.empCreationForm.get('lastName').value;
-        this.sourceEmployee.middleName = this.empCreationForm.get('middleName').value;
+        // this.sourceEmployee.firstName = this.empCreationForm.get('firstName').value;
+        // this.sourceEmployee.lastName = this.empCreationForm.get('lastName').value;
+        // this.sourceEmployee.middleName = this.empCreationForm.get('middleName').value;
+        this.sourceEmployee.firstName = this.sourceEmployee.firstName.firstName ? this.sourceEmployee.firstName.firstName : this.sourceEmployee.firstName;
+        this.sourceEmployee.lastName = this.sourceEmployee.lastName.lastName ? this.sourceEmployee.lastName.lastName : this.sourceEmployee.lastName;
+        this.sourceEmployee.middleName = this.sourceEmployee.middleName.middleName ? this.sourceEmployee.middleName.middleName : this.sourceEmployee.middleName;
+        this.sourceEmployee.currencyId = this.sourceEmployee.currencyId ? this.sourceEmployee.currencyId.currencyId : null;
         this.sourceEmployee.jobTitleId = this.empCreationForm.get('jobTitleId').value;
         this.sourceEmployee.employeeExpertiseId = this.empCreationForm.get('employeeExpertiseId').value;
         this.sourceEmployee.JobTypeId = this.empCreationForm.get('JobTypeId').value;
@@ -1073,6 +1092,16 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.allEmployeeinfo = getEmployeeCerficationList;
         console.log("this.allEmployeeinfo")
         console.log(this.allEmployeeinfo);
+        if(this.sourceEmployee.firstName) {
+            this.sourceEmployee.firstName = getObjectById('employeeId', this.sourceEmployee.employeeId, this.allEmployeeinfo);
+        }
+        if(this.sourceEmployee.middleName) {
+            this.sourceEmployee.middleName = getObjectById('employeeId', this.sourceEmployee.employeeId, this.allEmployeeinfo);
+        }
+        if(this.sourceEmployee.lastName) {
+            this.sourceEmployee.lastName = getObjectById('employeeId', this.sourceEmployee.employeeId, this.allEmployeeinfo);
+        }
+        
     }
     private onLeavedata(getEmployeeCerficationList: any[]) {
         console.log("on levae data");
@@ -1202,13 +1231,37 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     filterJobs(event) {
 
         this.localCollection = [];
-        for (let i = 0; i < this.allJobTitlesinfo.length; i++) {
-            let jobName = this.allJobTitlesinfo[i].description;
+        for (let i = 0; i < this.allJobTypesinfo.length; i++) {
+            let jobName = this.allJobTypesinfo[i].jobTypeName;
             if (jobName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                 this.localCollection.push(jobName);
             }
         }
     }
+
+    filterEMpExpertise(event) {
+
+        this.localCollection = [];
+        for (let i = 0; i < this.allEmployeeExpertiseInfo.length; i++) {
+            let empExpertise = this.allEmployeeExpertiseInfo[i].description;
+            if (empExpertise.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.localCollection.push(empExpertise);
+            }
+        }
+    }
+
+    filterJObTitles(event) {
+
+        this.localCollection = [];
+        for (let i = 0; i < this.allJobTitlesinfo.length; i++) {
+            let jobtitle = this.allJobTitlesinfo[i].description;
+            if (jobtitle.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.localCollection.push(jobtitle);
+            }
+        }
+    }
+
+
 
     filterLeaves(event) {
 
@@ -1439,7 +1492,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.sourceAction = new JobType();
         this.sourceAction.isActive = true;
         this.jobName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop : 'static', keyboard : false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1453,7 +1506,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.sourceAction = new JobTitle();
         this.sourceAction.isActive = true;
         this.jobName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop : 'static', keyboard : false  });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1482,7 +1535,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.sourceAction = new EmployeeExpertise();
         this.sourceAction.isActive = true;
         this.employeeName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop : 'static', keyboard : false  });
         this.modal.result.then(() => {
             //    console.log('When user closes');
             //}, () => { console.log('Backdrop click') })
@@ -1500,7 +1553,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.sourceAction = new EmployeeLeaveType();
         this.sourceAction.isActive = true;
         this.description = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop : 'static', keyboard : false  });
         this.modal.result.then(() => {
             //    console.log('When user closes');
             //}, () => { console.log('Backdrop click') 
@@ -1840,36 +1893,59 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     }
     filterfirstName(event) {
 
-        this.firstCollection = [];
-        for (let i = 0; i < this.allEmployeeinfo.length; i++) {
-            let firstName = this.allEmployeeinfo[i].firstName;
-            if (firstName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.firstCollection.push(firstName);
-            }
-        }
+        // this.firstCollection = [];
+        // for (let i = 0; i < this.allEmployeeinfo.length; i++) {
+        //     let firstName = this.allEmployeeinfo[i].firstName;
+        //     if (firstName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        //         this.firstCollection.push(firstName);
+        //     }
+        // }
+        this.firstCollection = this.allEmployeeinfo;
+		if (event.query !== undefined && event.query !== null) {
+			const emplist = [...this.allEmployeeinfo.filter(x => {
+				return x.firstName.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.firstCollection = emplist;
+		}
     }
 
     filterlastName(event) {
 
-        this.lastNameCollection = [];
-        for (let i = 0; i < this.allEmployeeinfo.length; i++) {
-            let lastName = this.allEmployeeinfo[i].lastName;
-            if (lastName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.lastNameCollection.push(lastName);
-            }
-        }
+        // this.lastNameCollection = [];
+        // for (let i = 0; i < this.allEmployeeinfo.length; i++) {
+        //     let lastName = this.allEmployeeinfo[i].lastName;
+        //     if (lastName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        //         this.lastNameCollection.push(lastName);
+        //     }
+        // }
+        this.lastNameCollection = this.allEmployeeinfo;
+		if (event.query !== undefined && event.query !== null) {
+			const emplist = [...this.allEmployeeinfo.filter(x => {
+				return x.lastName.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.lastNameCollection = emplist;
+		}
     }
     filtermiddleName(event) {
 
-        this.middleNameCollection = [];
-        for (let i = 0; i < this.allEmployeeinfo.length; i++) {
-            let middleName = this.allEmployeeinfo[i].middleName;
-            if (middleName) {
-                if (middleName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                    this.middleNameCollection.push(middleName);
-                }
-            }
-        }
+        // this.middleNameCollection = [];
+        // for (let i = 0; i < this.allEmployeeinfo.length; i++) {
+        //     let middleName = this.allEmployeeinfo[i].middleName;
+        //     if (middleName) {
+        //         if (middleName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        //             this.middleNameCollection.push(middleName);
+        //         }
+        //     }
+        // }
+
+        this.middleNameCollection = this.allEmployeeinfo;
+		if (event.query !== undefined && event.query !== null) {
+			const emplist = [...this.allEmployeeinfo.filter(x => {
+                return x.middleName
+                //.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.middleNameCollection = emplist;
+		}
     }
 
     filterempIdName(event) {
@@ -2482,7 +2558,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             }
         }
     }
-    onKeyUpLeaveNames(event) {
+    onKeyUpLeaveNames(event) {       
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();
             if (this.disableSaveName) {
@@ -2497,6 +2573,24 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             }
 
         }
+    }
+
+    onBlurLeaveName(event)
+    {       
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.allLeaves) {
+                for (let i = 0; i < this.allLeaves.length; i++) {
+                    if (value == this.allLeaves[i].description) {
+                        this.sourceEmployee.description = event;
+                        this.disableSaveLeaveName = true;    
+                        this.disableSaveName = event;
+                    }
+    
+                }
+            }
+        } 
+        
     }
 
     onSelectLeaveName(event) {
@@ -2540,6 +2634,37 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             }
         }
     }
+
+    onJobTypeKeyUP() {
+        console.log(this.jobTypeName);
+        if (this.jobTypeName != "") {
+            this.disableJobType = false;
+        } else {
+            this.disableJobType = true;
+        }
+        
+    }
+    onEmpExpertiseKeyUP() {
+        console.log(this.jobTypeName);
+        if (this.employeeName != "") {
+            this.disableExpTitle = false;
+        } else {
+            this.disableExpTitle = true;
+        }
+
+    }
+
+    onjobTitleKeyUP() {
+        console.log(this.jobTypeName);
+        if (this.jobName != "") {
+            this.disableJobTitle = false;
+        } else {
+            this.disableJobTitle = true;
+        }
+
+    }
+
+    
 
     onKeyUpExp(event) {
         if (event.target.value != "") {

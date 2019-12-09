@@ -48,8 +48,6 @@ export class EmployeesManagementStructureComponent implements OnInit,AfterViewIn
 
     dropdownSettings = {
         singleSelection: false,
-        idField: 'dashNumberId',
-        textField: 'dashNumber',
         selectAllText: 'Select All',
         unSelectAllText: 'UnSelect All',
         itemsShowLimit: 1,
@@ -65,7 +63,7 @@ export class EmployeesManagementStructureComponent implements OnInit,AfterViewIn
         console.log(this.employeeService.listCollection);
         this.structureInit();
         this.loadEmployeeRoles();
-        this.loadManagementStructure();
+        
         if (this.employeeService.listCollection != null && this.employeeService.isEditMode == true) {
             // this.employeeService.storeEmployeeManagementStructure
         }
@@ -84,6 +82,30 @@ export class EmployeesManagementStructureComponent implements OnInit,AfterViewIn
             this.lastName = params.lastname;
         });
     }
+
+    getManagementStructureData(){
+        let roles = [];
+        this.employeeService.getStoredEmployeeRoles(this.empId)
+        .subscribe(
+            (employeeList: any[])=>{
+                this.employeeRolesList.forEach(mainRole => {
+                    employeeList.forEach(role => {
+                        if(role.roleId == mainRole['id']){
+                            roles.push(mainRole['name']);
+                        }
+                    });
+                });
+                this.selectedRoles = roles;
+            }
+        )
+        this.employeeService.getStoredEmployeeManagementStructure(this.empId)
+        .subscribe(
+            (managementStructureList: any[])=>{
+                console.log(managementStructureList);
+                this.employeeService.legalEnityList = managementStructureList;
+            }
+        )
+    }
     structureInit(){
         var toggler = document.getElementsByClassName("caret");
         var i;
@@ -100,6 +122,7 @@ export class EmployeesManagementStructureComponent implements OnInit,AfterViewIn
             results => {
                 this.employeeRolesList = results;
                 this.employeeRoleLabel = this.employeeRolesList.map((emp)=>{ return emp['name']})
+                this.loadManagementStructure();
             },
             error => console.log(error)
         );
@@ -108,6 +131,7 @@ export class EmployeesManagementStructureComponent implements OnInit,AfterViewIn
         this.legalEntityService.getManagemententity().subscribe(
             (results: any)=>{
                 this.onManagemtntdataLoad(results[0])
+                this.getManagementStructureData();
             },
             (error: any)=>{
                 console.log(error);
@@ -202,6 +226,8 @@ export class EmployeesManagementStructureComponent implements OnInit,AfterViewIn
     getLegalEntityList(){
         let result = [];
         this.employeeService.legalEnityList.forEach((ele, index)=>{
+            this.employeeService.legalEnityList[index]['isActive'] = true;
+            this.employeeService.legalEnityList[index]['isDeleted'] = false;
             this.employeeService.legalEnityList[index]['employeeId'] = this.empId;
         })
         return this.employeeService.legalEnityList;

@@ -154,13 +154,15 @@
                                         </label>
 
                                     </div>
-                                    <div>
+                                    <div>                             
                                         <select name="itemclassification" class="select-drop"
                                                 [(ngModel)]="sourceItemMaster.itemClassificationId">
-                                            <option *ngFor="let itemName of allitemclassificationInfo"
-                                                    [ngValue]="itemName.itemClassificationId">
-                                                {{itemName.description}}
-                                            </option>
+                                            <ng-container *ngFor="let itemName of allitemclassificationInfo">
+                                                <option 
+                                                        [ngValue]="itemName.itemClassificationId" *ngIf="itemName.isActive">
+                                                    {{itemName.description}}
+                                                </option>
+                                            </ng-container>
                                         </select>
                                     </div>
                                     <div class="inline-block display-flex spacing-label">
@@ -173,10 +175,11 @@
                                     <div>
                                         <select [ngModelOptions]="{standalone: true}" class="select-drop"
                                                 [(ngModel)]="sourceItemMaster.itemGroupId">
-                                            <option *ngFor="let itemGroupName of allitemgroupobjInfo"
-                                                    [ngValue]="itemGroupName.itemGroupId">
-                                                {{itemGroupName.description}}
-                                            </option>
+                                            <ng-container *ngFor="let itemGroupName of allitemgroupobjInfo">
+                                                <option [ngValue]="itemGroupName.itemGroupId" *ngIf="itemGroupName.isActive">
+                                                    {{itemGroupName.description}}
+                                                </option>
+                                            </ng-container>
                                         </select>
                                     </div>
                                     <div class="inline-block display-flex spacing-label">
@@ -377,10 +380,11 @@
                                     <div>
                                         <select [ngModelOptions]="{standalone: true}"
                                                 [(ngModel)]="sourceItemMaster.manufacturerId" (change)="getManufacturer(manufacturer)">
-                                            <option *ngFor="let manufacturer of allManufacturerInfo"
-                                                    [ngValue]="manufacturer.manufacturerId">
-                                                {{manufacturer.name}}
-                                            </option>
+                                            <ng-container *ngFor="let manufacturer of allManufacturerInfo">
+                                                <option [ngValue]="manufacturer.manufacturerId" *ngIf="manufacturer.isActive">
+                                                    {{manufacturer.name}}
+                                                </option>
+                                            </ng-container>
                                         </select>
                                     </div>
                                     <div class="inline-block display-flex spacing-label">
@@ -1263,7 +1267,7 @@
                                             Export UOM <span style="color:red;">*</span>
                                             <span style="margin-left:3px;margin-top:5px;cursor:pointer;">
                                                 <i class="fa fa-plus-circle fa-lg" data-toggle="modal"
-                                                   data-target="#ModalUnit"></i>
+                                                   data-target="#ModalUnit" (click)="exportUOmOpen(ModalUnit)"></i>
                                             </span>
                                         </label>
                                         <select class="select-value-drop1" id="" name="" [(ngModel)]="exportInfo.ExportUomId"
@@ -1656,7 +1660,7 @@
                     <div class="col-sm-6">
                         <div class="checkbox-cstm">
                             <label>
-                                <input type="checkbox" name="isActive" #isActive="ngModel" checked id="isActive" [(ngModel)]="sourceUOM.isActive">
+                                <!--<input type="checkbox" name="isActive" #isActive="ngModel" checked id="isActive" [(ngModel)]="sourceUOM.isActive">-->
                                 <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                 Active
                             </label>
@@ -1802,7 +1806,7 @@
                 <div class="col-sm-12">
                     <div class="col-sm-4">
                         <label for="netDays" class="control-label control-item">
-                            Item Group Description<span class="clr-red">*</span>
+                            Item Group Name<span class="clr-red">*</span>
                         </label>
                     </div>
                     <div class="col-sm-5">

@@ -153,6 +153,20 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _roListWithFiltersUrl: string = "/api/Vendor/roListWithFilters";
 	private readonly _saveCreateROApproval: string = "/api/Vendor/createRoApprover";
 	private readonly _updateROApproval: string = "/api/Vendor/updateRoApprover";
+
+	private readonly _getVendorPOmemolist: string = "/api/Vendor/vendorpomemolist";
+	private readonly _getVendorROmemolist: string = "/api/Vendor/vendorromemolist";
+	private readonly _updateVendorPOROmemolist: string = "/api/Vendor/updatevendormemotext";
+
+	private readonly _getVendorDocslist: string = "/api/Vendor/getVendorDocumentDetailList";
+	private readonly _addDocumentDetails: string = "/api/Vendor/vendorDocumentUpload";
+	private readonly _updateDocumentDetails: string = "/api/Vendor/vendorDocumentUpdate";
+	private readonly _getVendorDocsDetailsById: string = "/api/Vendor/getVendorDocumentDetail";
+	private readonly _getVendorDocumentAttachmentslist: string = "/api/FileUpload/getattachmentdetails";
+	private readonly _getVendorDeleteDocsDetailsById: string = "/api/Vendor/vendorDocumentDelete";
+	
+    private readonly _getVendorShippingHistory: string = "/api/Vendor/getVendorShippingHistory";
+    private readonly _getVendorBillingHistory: string = "/api/Vendor/getVendorBillingHistory";
     
 
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
@@ -212,8 +226,10 @@ export class VendorEndpointService extends EndpointFactory {
 	get capesdata() { return this.configurations.baseUrl + this._capesdata; }
 
 	get paginate() { return this.configurations.baseUrl + this.getVendor; }
-	get roListWithFiltersUrl() { return this.configurations.baseUrl + this._roListWithFiltersUrl; }
+    get roListWithFiltersUrl() { return this.configurations.baseUrl + this._roListWithFiltersUrl; }
+   
 
+    
 
 	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -1499,4 +1515,62 @@ getROApproverList(repairOrderId) {
 getReceivingROList() {
 	return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/recevingRoList`)
 }
+
+getVendorPOMemolist<T>(vendorId: number): Observable<T> {
+
+	let endpointUrl = `${this._getVendorPOmemolist}?vendorId=${vendorId}`;
+	return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+		.catch(error => {
+			return this.handleError(error, () => this.getVendorPOMemolist(vendorId));
+		});
+}
+
+getVendorROMemolist<T>(vendorId: number): Observable<T> {
+	let endpointUrl = `${this._getVendorROmemolist}?vendorId=${vendorId}`;
+	return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+		.catch(error => {
+			return this.handleError(error, () => this.getVendorROMemolist(vendorId));
+		});
+}
+
+updateVendorPOROmemolist(id, type, memoText,updatedBy) {
+	return this.http.put(`${this._updateVendorPOROmemolist}?id=${id}&type=${type}&memoText=${memoText}&updatedBy=${updatedBy}`, {} , this.getRequestHeaders())
+}
+
+getDocumentList(vendorId) {
+	return this.http.get(`${this._getVendorDocslist}/${vendorId}`, this.getRequestHeaders())
+}
+
+
+ getDocumentUploadEndpoint<T>(file: any): Observable<T> {
+	const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
+	return this.http.post<T>(`${this._addDocumentDetails}`, file);
+}
+
+getDocumentListbyId(vendorDocumentId) {
+	return this.http.get(`${this._getVendorDocsDetailsById}/${vendorDocumentId}`, this.getRequestHeaders())
+}
+
+getUpdateDocumentUploadEndpoint<T>(file: any): Observable<T> {
+	debugger
+	const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
+	return this.http.put<T>(`${this._updateDocumentDetails}`, file);
+}
+
+GetUploadDocumentsList(attachmentId, vendorId,moduleId) {
+	return this.http.get<any>(`${this._getVendorDocumentAttachmentslist}?attachmentId=${attachmentId}&referenceId=${vendorId}&moduleId=${moduleId}`,  this.getRequestHeaders())
+}
+
+
+getdeleteDocumentListbyId(vendorDocumentId) {
+	return this.http.delete(`${this._getVendorDeleteDocsDetailsById}/${vendorDocumentId}`, this.getRequestHeaders())
+}
+    getVendorShippingAuditHistory(vendorId, vendorShippingAddressId) {
+        return this.http.get<any>(`${this._getVendorShippingHistory}?vendorId=${vendorId}&vendorShippingAddressId=${vendorShippingAddressId}`, this.getRequestHeaders())
+    }
+
+    getVendorBillingAuditHistory(vendorId, vendorBillingaddressId) {
+        return this.http.get<any>(`${this._getVendorBillingHistory}?vendorId=${vendorId}&vendorBillingaddressId=${vendorBillingaddressId}`, this.getRequestHeaders())
+    }
+    
 }

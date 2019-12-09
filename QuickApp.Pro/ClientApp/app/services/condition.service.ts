@@ -63,4 +63,8 @@ export class ConditionService {
         return this.conditionEndpoint.getConditionAuditById<any[]>(conditionId);
     }
 
+    ConditionCustomUpload(file) {
+        return this.conditionEndpoint.ConditionCustomUpload(file);
+    }
+
 }

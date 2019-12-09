@@ -22,6 +22,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   @Input() workOrderLaborList: any;
   @Input() taskList: any;
 
+    totalHours: number;
   workOrderWorkFlowList: any;
   employeesOriginalData: any;
   employeeList: any;
@@ -34,25 +35,21 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   billableList = [
     { label: 'Billable', value: 1 },
     { label: 'Non-Billable', value: 2 }
-  ]
+    ]
+
 
   constructor(private workOrderService: WorkOrderService,
     private authService: AuthService,
-    private commonService: CommonService) { }
+      private commonService: CommonService) { }
+    
 
-  // expertiseDropdownMenu = [
-  //   { label: 'Technician', value: 'Technician' },
-  //   { label: 'Quality', value: 'Quality' },
-  //   { label: 'Mechanic', value: 'Mechanic' },
-  //   { label: 'Inspector', value: 'Inspector' },
-  //   { label: 'Receiver', value: 'Receiver' },
-  //   { label: 'Auditor', value: 'Auditor' },
-  //   { label: 'Engineer', value: 'Engineer' }
-  // ];
   ngOnInit() {
 
+    
+    this.workOrderWorkFlowList = this.workOrderWorkFlowOriginalData;
+
     if(this.workOrderLaborList){
-      this.laborForm.workFlowWorkOrderId = this.workOrderLaborList['workFlowWorkOrderNo'];
+      this.laborForm.workFlowWorkOrderId = this.workOrderLaborList['workFlowWorkOrderId'];
       this.laborForm.dataEnteredBy = this.workOrderLaborList['dataEnteredBy'];
       this.laborForm.employeeId = this.workOrderLaborList['employeeId'];
       this.laborForm.isTaskCompletedByOne = this.workOrderLaborList['isTaskCompletedByOne'];
@@ -64,12 +61,18 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(){
+    this.workOrderWorkFlowList = this.workOrderWorkFlowOriginalData;
     if(this.workOrderLaborList){
-      this.laborForm.workFlowWorkOrderId = this.workOrderLaborList['workFlowWorkOrderNo'];
+      this.laborForm.workFlowWorkOrderId = this.workOrderLaborList['workFlowWorkOrderId'];
       this.laborForm.dataEnteredBy = this.workOrderLaborList['dataEnteredBy'];
       this.laborForm.employeeId = this.workOrderLaborList['employeeId'];
       this.laborForm.isTaskCompletedByOne = this.workOrderLaborList['isTaskCompletedByOne'];
-      this.laborForm.expertiseId = this.workOrderLaborList['expertiseId'];
+        this.laborForm.expertiseId = this.workOrderLaborList['expertiseId'];
+        this.totalWorkHours = this.workOrderLaborList['expertiseId'];
+        if (this.workOrderLaborList !== undefined && this.workOrderLaborList !== null) {
+
+            this.totalWorkHours = this.workOrderLaborList.totalWorkHours;
+        }
     }
   }
 
@@ -77,15 +80,6 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   get userName(): string {
     return this.authService.currentUser ? this.authService.currentUser.userName : "";
   }
-
-
-  // getWorkOrderWorkFlowNos(){
-  //   this.workOrderService.getWorkOrderWorkFlowNumbers().subscribe(res => {
-  //     this.workOrderWorkFlowOriginalData = res;
-  //   })
-  // }
-
-
 
   generateLaborForm() {
     const keysArray = Object.keys(this.laborForm.workOrderLaborList[0]);
@@ -113,7 +107,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
       // let m = Math.floor(diff % 3600 / 60).toString();
       // let s = Math.floor(diff % 3600 % 60).toString();
       // obj['adjustedHours'] = `${(h.length ==1)?'0'+h:h}.${(m.length ==1)?'0'+m:m}`;
-      obj['adjustedHours'] = Number(obj.hours) - Number(obj.adjustments)
+      obj['adjustedHours'] = Number(obj.hours) + Number(obj.adjustments)
       var totalHours = 0;
       for(let task in this.laborForm.workOrderLaborList[0]){
         if(this.laborForm.workOrderLaborList[0][task][0]['hours'] != null){
@@ -121,7 +115,8 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
             // hoursArr = taskList['hours'].split(":");
             // if(hoursArr.length == 1){ hoursArr.push(0)}
             // hoursInSeconds = (+hoursArr[0]) * 60 * 60 + (+hoursArr[1]) * 60;
-            this.totalWorkHours += taskList['hours'];
+              this.totalWorkHours += taskList['hours'];
+              
           }
         }
       }
@@ -131,7 +126,8 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
       // this.totalWorkHours = `${(h.length ==1)?'0'+h:h}:${(m.length ==1)?'0'+m:m}:${(s.length ==1)?'0'+s:s}`;
       // this.totalWorkHours = totalHours;
     }
-  }
+    }
+
   filterWorkFlowNumbers(event): void {
 
     this.workOrderWorkFlowList = this.workOrderWorkFlowOriginalData;
@@ -147,6 +143,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   getAllEmployees(): void {
     this.commonService.smartDropDownList('Employee', 'EmployeeId', 'FirstName').subscribe(res => {
       this.employeesOriginalData = res;
+      this.employeeList = res;
     })
   }
 
@@ -161,7 +158,6 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
       this.dataEnteredByList = dataEnteredBy;
     }
   }
-
 
   filterEmployee(event): void {
 
@@ -183,7 +179,8 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
 
   addNewTask(taskName) {
     this.laborForm.workOrderLaborList[0][taskName].push(new AllTasks());
-  }
+    }
+
   startandStop(currentRecord) {
     if (currentRecord.startDate === null) {
       currentRecord.startDate = new Date();
@@ -192,7 +189,6 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
     }
     this.calculateWorkingHoursandMins(currentRecord)
   }
-
 
   resetEndDateandTime(currentRecord) {
     currentRecord.endDate = null;
@@ -208,7 +204,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
       console.log(ms);
       const days = moment.duration(ms)
       console.log(days);
-      currentRecord.hours = Math.floor(days.asHours()) + moment.utc(ms).format(":mm")
+      currentRecord.hours = Math.floor(days.asHours()) + moment.utc(ms).format(".mm")
       // currentRecord.hours = moment(moment(startTime, "hh:mm").diff(moment(endTime, "hh:mm"))).format("hh:mm");
     }
 
@@ -224,8 +220,13 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   }
 
   // moment(new Date()).format('DD/MM/YYYY, h:mm:ss a');
-  saveLabor() {
-    console.log(this.laborForm);
+    saveLabor() {
+        var wolHeaderId = 0;
+        if (this.workOrderLaborList !== undefined && this.workOrderLaborList !== null) {
+
+            wolHeaderId = this.workOrderLaborList.workOrderLaborHeaderId;
+        }
+      console.log(this.laborForm);
     const excessParams = {
       createdBy: this.userName,
       updatedBy: this.userName,
@@ -243,18 +244,23 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
       hoursorClockorScan = 3;
     }
 
-    let tasksData = this.laborForm.workOrderLaborList[0];
+        let tasksData = this.laborForm.workOrderLaborList[0];
+        console.log(tasksData);
     let formedData = {}
-    for(let tdata in tasksData){
-      formedData[tdata] = tasksData[tdata].map(x=>{
-        console.log(x);
-        return {
-          ...x,
-          ...excessParams,
-          taskId: 1,
-          employeeId: getValueFromObjectByKey('value', x.employeeId)
-        }
-      })
+        for (let tdata in tasksData) {
+            console.log('Suresh');
+            console.log(tdata);
+            if (tdata != 'length') {
+                formedData[tdata] = tasksData[tdata].map(x => {
+                    console.log(x);
+                    return {
+                        ...x,
+                        ...excessParams,
+                        taskId: this.getTaksId(tdata),
+                        employeeId: getValueFromObjectByKey('value', x.employeeId)
+                    }
+                })
+            }
     }
     this.saveFormdata = {
       ...this.laborForm,
@@ -264,10 +270,10 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
       masterCompanyId: 1,
       ...excessParams,
       workOrderId: this.id,
-      workFlowWorkOrderId: getValueFromObjectByKey('value', this.laborForm.workFlowWorkOrderId),
-      workOrderLaborList: formedData
-
-
+        workFlowWorkOrderId: getValueFromObjectByKey('value', this.laborForm.workFlowWorkOrderId),
+        workOrderLaborHeaderId: wolHeaderId,
+        workOrderLaborList: formedData,
+        totalWorkHours:this.totalWorkHours
     }
 
 
@@ -294,7 +300,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
 
 
 
-    this.saveworkOrderLabor.emit(this.saveFormdata);
+    this.saveworkOrderLabor.emit(this.saveFormdata);  
 
   }
 
@@ -311,7 +317,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
       try{
         if(this.workOrderLaborList){
           for(let workOrdLList of this.workOrderLaborList['laborList']){
-            if (workOrdLList['wol']['taskId'] == taskId && workOrdLList['wol']['expertiseId'] == expertiseType['value']){
+            if (workOrdLList['taskId'] == taskId && workOrdLList['expertiseId'] == expertiseType['value']){
               return true;
             }
           }
@@ -329,11 +335,19 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
     // return expertiseTypeList;
   }
 
+  getTaksId(taskName){
+    for(let t of this.taskList){
+        if (t['description'].toLowerCase() == taskName.toLowerCase()) {
+        return t['taskId']
+      }
+    }
+  }
+
   isAllowedTask(taskId){
     try{
       if(this.workOrderLaborList){
         for(let workOrdLList of this.workOrderLaborList['laborList']){
-          if (workOrdLList['wol']['taskId'] == taskId){
+          if (workOrdLList['taskId'] == taskId){
             return true;
           }
         }
@@ -354,8 +368,8 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
         }
         else if (this.laborForm['workFloworSpecificTaskorWorkOrder'] == 'workFlow'){
           for(let workOrdLList of this.workOrderLaborList['laborList']){
-            if (workOrdLList['wol']['taskId'] == taskId && workOrdLList['wol']['expertiseId'] == record['expertiseId']){
-              record['hours'] = workOrdLList['wol']['hours'];
+            if (workOrdLList['taskId'] == taskId && workOrdLList['expertiseId'] == record['expertiseId']){
+              record['hours'] = workOrdLList['hours'];
               this.calculateHoursDifference(record);
             }
           }

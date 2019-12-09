@@ -2,7 +2,6 @@
 using DAL;
 using DAL.Common;
 using DAL.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -246,7 +245,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<VendorViewModel>))]
         public IActionResult GetVendorDefault(long vendorId)
         {
-            var vendorDtails = _context.VendorPayment.Where(a => a.VendorId == vendorId).ToList(); //.GetAllCustomersData();
+            var vendorDtails = _context.VendorPayment.Where(a => a.VendorId == vendorId).FirstOrDefault(); //.GetAllCustomersData();
             return Ok(vendorDtails);
 
         }
@@ -694,7 +693,7 @@ namespace QuickApp.Pro.Controllers
             actionobject.ShipToSiteId = poViewModel.ShipToSiteId;
             actionobject.BillToSiteId = poViewModel.BillToSiteId;
             actionobject.ShipVia = poViewModel.ShipVia;
-            actionobject.ShippingAccountNo = poViewModel.ShippingAccountNo;
+            actionobject.ShippingAccountNo = poViewModel.ShippingAcctNum;
             actionobject.ShippingId = poViewModel.ShippingId;
             actionobject.ShippingURL = poViewModel.ShippingURL;
             actionobject.ShipToContact = poViewModel.ShipToContact;
@@ -1057,8 +1056,23 @@ namespace QuickApp.Pro.Controllers
                                 var repairOrderPartObj = _context.RepairOrderPart
                                                                 .Where(a => a.RepairOrderPartRecordId == roPartSplit.RepairOrderPartRecordId)
                                                                 .SingleOrDefault();
-                                repairOrderPartObj = FillRepairOrderSplitPart(repairOrderPartObj, roPartSplit);
-                                UpdateRepairOrderPart(repairOrderPartObj);
+                                if (repairOrderPartObj == null)
+                                {
+                                    var roPartModel2 = new RepairOrderPart();
+                                    roPartModel2 = FillRepairOrderSplitPart(roPartModel2, roPartSplit);
+                                    roPartModel2.ParentId = roViewModel.RepairOrderPartRecordId;
+                                    SaveRepairOrderPart(roPartModel2);
+                                    if (roPartSplit.RepairOrderPartRecordId == 0)
+                                    {
+                                        roPartSplit.RepairOrderPartRecordId = roPartModel2.RepairOrderPartRecordId;
+                                    }
+                                }
+                                else
+                                {
+                                    repairOrderPartObj = FillRepairOrderSplitPart(repairOrderPartObj, roPartSplit);
+                                    repairOrderPartObj.ParentId = roPartModel.ParentId;
+                                    UpdateRepairOrderPart(repairOrderPartObj);
+                                }
                             }
                         }
                     }
@@ -1069,6 +1083,14 @@ namespace QuickApp.Pro.Controllers
                         SaveRepairOrderPart(roPartModel);
                         roViewModel.RepairOrderPartRecordId = roPartModel.RepairOrderPartRecordId;
 
+                        if (roPartModel.ParentId == null || roPartModel.ParentId == 0)
+                        {
+                            var exists = _context.RepairOrderPart.Where(rop => rop.RepairOrderPartRecordId == roPartModel.RepairOrderPartRecordId).SingleOrDefault();
+                            exists.ParentId = roPartModel.RepairOrderPartRecordId;
+                            _context.RepairOrderPart.Update(exists);
+                            _context.SaveChanges();
+                        }
+
                         if (roViewModel.RoPartSplits != null && roViewModel.RoPartSplits.Any())
                         {
                             for (int i = 0, roViewModelRoPartSplitsCount = roViewModel.RoPartSplits.Count; i < roViewModelRoPartSplitsCount; i++)
@@ -1076,6 +1098,7 @@ namespace QuickApp.Pro.Controllers
                                 var roPartSplit = roViewModel.RoPartSplits[i];
                                 var repairOrderPartObj = new RepairOrderPart();
                                 repairOrderPartObj = FillRepairOrderSplitPart(repairOrderPartObj, roPartSplit);
+                                repairOrderPartObj.ParentId = roPartModel.RepairOrderPartRecordId;
                                 SaveRepairOrderPart(repairOrderPartObj);
                                 roViewModel.RoPartSplits[i].RepairOrderPartRecordId = repairOrderPartObj.RepairOrderPartRecordId;
                             }
@@ -1120,10 +1143,10 @@ namespace QuickApp.Pro.Controllers
             roPartModel.Memo = roViewModel.Memo;
             roPartModel.CreatedBy = roViewModel.CreatedBy;
             roPartModel.UpdatedBy = roViewModel.UpdatedBy;
-
+            roPartModel.ParentId = roViewModel.RepairOrderPartRecordId;
+            roPartModel.StockLineId = roViewModel.StockLineId;
 
             return roPartModel;
-
         }
 
         private RepairOrderPart FillRepairOrderSplitPart(RepairOrderPart roPartModel, ViewModels.RoPartSplits roPartSplit)
@@ -1147,6 +1170,7 @@ namespace QuickApp.Pro.Controllers
             roPartModel.NeedByDate = roPartSplit.NeedByDate;
             roPartModel.ManagementStructureId = roPartSplit.ManagementStructureId;
             roPartModel.IsParent = false;
+            roPartModel.StockLineId = roPartSplit.StockLineId;
 
             return roPartModel;
         }
@@ -1195,7 +1219,8 @@ namespace QuickApp.Pro.Controllers
                 Memo = roViewModel.Memo,
                 MasterCompanyId = roViewModel.MasterCompanyId,
                 CreatedBy = roViewModel.CreatedBy,
-                UpdatedBy = roViewModel.UpdatedBy
+                UpdatedBy = roViewModel.UpdatedBy,
+                StockLineId = roViewModel.StockLineId
             };
 
             if (roViewModel.RoPartSplits != null && roViewModel.RoPartSplits.Any())
@@ -1224,6 +1249,7 @@ namespace QuickApp.Pro.Controllers
                         UOMId = roSplit.UOMId,
                         ManagementStructureId = roSplit.ManagementStructureId,
                         NeedByDate = roSplit.NeedByDate,
+                        StockLineId = roSplit.StockLineId,
                     };
                     roPartDto.RoPartSplits.Add(roPartSplitObj);
                 }
@@ -1245,9 +1271,15 @@ namespace QuickApp.Pro.Controllers
                 actionobject.VendorId = vendorViewModel.VendorId;
                 actionobject.VendorName = vendorViewModel.VendorName;
                 actionobject.LicenseNumber = vendorViewModel.LicenseNumber;
-                actionobject.VendorClassificationId = vendorViewModel.VendorClassificationId;
+
+                if (vendorViewModel.VendorClassificationIds != null)
+                {
+                    actionobject.VendorClassificationId = vendorViewModel.VendorClassificationIds[0] ?? null;
+                }
+                //actionobject.VendorClassificationId = vendorViewModel.VendorClassificationId;
                 actionobject.capabilityId = vendorViewModel.capabilityId;
                 actionobject.VendorPhone = vendorViewModel.VendorPhone;
+                actionobject.VendorPhoneExt = vendorViewModel.VendorPhoneExt;
                 actionobject.VendorTypeId = vendorViewModel.VendorTypeId;
                 actionobject.IsPreferredVendor = vendorViewModel.IsPreferredVendor;
                 actionobject.Parent = vendorViewModel.Parent;
@@ -1271,6 +1303,28 @@ namespace QuickApp.Pro.Controllers
                 actionobject.AddressId = vendorViewModel.AddressId.Value;
                 _unitOfWork.Vendor.Add(actionobject);
                 _unitOfWork.SaveChanges();
+
+                if (vendorViewModel.VendorClassificationIds != null)
+                {
+                    List<ClassificationMapping> listofEClassificationMappings = vendorViewModel
+                        .VendorClassificationIds
+                        .Select(item => new ClassificationMapping() { ClasificationId = item.Value }
+                        ).ToList();
+                    _unitOfWork.CommonRepository.CreateClassificationMappings(listofEClassificationMappings, Convert.ToInt32(ModuleEnum.Vendor),
+                        actionobject.VendorId, actionobject.CreatedBy);
+                }
+
+                if (vendorViewModel.IntegrationPortalIds != null)
+                {
+                    List<IntegrationPortalMapping> listofIntegrationMappings = vendorViewModel
+                        .IntegrationPortalIds
+                        .Select(item => new IntegrationPortalMapping() { IntegrationPortalId = item.Value }
+                        ).ToList();
+                    _unitOfWork.CommonRepository.CreateIntegrationMappings(listofIntegrationMappings, Convert.ToInt32(ModuleEnum.Vendor),
+                        actionobject.VendorId, actionobject.CreatedBy);
+                }
+
+                
 
 
                 //if (Request.Form.Files.Count > 0)
@@ -1347,10 +1401,11 @@ namespace QuickApp.Pro.Controllers
                 var actionobject = _unitOfWork.Vendor.GetSingleOrDefault(c => c.VendorId == id);
                 var address = _unitOfWork.Address.GetSingleOrDefault(c => c.AddressId == actionobject.AddressId);
 
-                vt.VendorTypeId = 1;
+                //vt.VendorTypeId = 1;
                 vendorViewModel.MasterCompanyId = 1;
                 actionobject.VendorId = vendorViewModel.VendorId;
                 actionobject.VendorName = vendorViewModel.VendorName;
+                actionobject.VendorPhoneExt = vendorViewModel.VendorPhoneExt;
                 actionobject.LicenseNumber = vendorViewModel.LicenseNumber;
                 actionobject.VendorPhone = vendorViewModel.VendorPhone;
                 actionobject.VendorClassificationId = vendorViewModel.VendorClassificationId;
@@ -1392,6 +1447,51 @@ namespace QuickApp.Pro.Controllers
 
                 _unitOfWork.Vendor.Update(actionobject);
                 _unitOfWork.SaveChanges();
+
+                if (vendorViewModel.VendorClassificationIds != null)
+                {
+                    var classificationList = _context.ClassificationMapping.Where(a => a.ReferenceId == id && a.ModuleId == Convert.ToInt32(ModuleEnum.Vendor)).ToList();
+
+                    if(classificationList.Count>0)
+                    {
+                        foreach (var objData in classificationList)
+                        {
+                            _context.ClassificationMapping.Remove(objData);
+                            _unitOfWork.SaveChanges();
+                        }
+                    }
+
+                    List<ClassificationMapping> listofEClassificationMappings = vendorViewModel
+                        .VendorClassificationIds
+                        .Select(item => new ClassificationMapping() { ClasificationId = item.Value }
+                        ).ToList();
+                    _unitOfWork.CommonRepository.CreateClassificationMappings(listofEClassificationMappings, Convert.ToInt32(ModuleEnum.Vendor),
+                        actionobject.VendorId, actionobject.CreatedBy);
+                }
+
+                if (vendorViewModel.IntegrationPortalIds != null)
+                {
+                    var integrationPortalList = _context.IntegrationPortalMapping.Where(a => a.ReferenceId == id && a.ModuleId == Convert.ToInt32(ModuleEnum.Vendor)).ToList();
+
+                    if (integrationPortalList.Count > 0)
+                    {
+                        foreach (var objData in integrationPortalList)
+                        {
+                            _context.IntegrationPortalMapping.Remove(objData);
+                            _unitOfWork.SaveChanges();
+                        }
+                    }
+
+                    List<IntegrationPortalMapping> listofIntegrationMappings = vendorViewModel
+                        .IntegrationPortalIds
+                        .Select(item => new IntegrationPortalMapping() { IntegrationPortalId = item.Value }
+                        ).ToList();
+                    _unitOfWork.CommonRepository.CreateIntegrationMappings(listofIntegrationMappings, Convert.ToInt32(ModuleEnum.Vendor),
+                        actionobject.VendorId, actionobject.CreatedBy);
+                }
+
+
+               
 
                 //if (Request.Form.Files.Count > 0)
                 //{
@@ -1517,6 +1617,19 @@ namespace QuickApp.Pro.Controllers
                 contactObj.UpdatedDate = DateTime.Now;
                 contactObj.CreatedBy = vendorContactViewModel.CreatedBy;
                 contactObj.UpdatedBy = vendorContactViewModel.UpdatedBy;
+
+                if (vendorContactViewModel.IsDefaultContact == true)
+                {
+                    var vendorConcatData = _unitOfWork.vendorContactRepository.GetAll().Where(p => p.VendorId == contactObj.VendorId).ToList();
+
+                    foreach (var objContactdata in vendorConcatData)
+                    {
+                        objContactdata.IsDefaultContact = false;
+                        _unitOfWork.vendorContactRepository.Update(objContactdata);
+                    }
+                    _unitOfWork.SaveChanges();
+                }
+
                 _unitOfWork.vendorContactRepository.Add(contactObj);
                 _unitOfWork.SaveChanges();
 
@@ -1531,13 +1644,17 @@ namespace QuickApp.Pro.Controllers
             if (ModelState.IsValid)
             {
                 var VendorrObj = _unitOfWork.Vendor.GetSingleOrDefault(a => a.VendorId == id);
-                vendorViewModel.MasterCompanyId = 1;
-                VendorrObj.IsActive = vendorViewModel.IsActive;
-                VendorrObj.UpdatedDate = DateTime.Now;
-                VendorrObj.UpdatedBy = vendorViewModel.UpdatedBy;
-                VendorrObj.VendorId = vendorViewModel.VendorId;
-                _unitOfWork.Vendor.Update(VendorrObj);
-                _unitOfWork.SaveChanges();
+                if (VendorrObj != null)
+                {
+                    //vendorViewModel.MasterCompanyId = 1;
+                    VendorrObj.IsActive = vendorViewModel.IsActive;
+                    VendorrObj.UpdatedDate = DateTime.Now;
+                    VendorrObj.UpdatedBy = vendorViewModel.UpdatedBy;
+                    VendorrObj.VendorId = vendorViewModel.VendorId;
+                    _unitOfWork.Vendor.Update(VendorrObj);
+                    _unitOfWork.SaveChanges();
+                }
+
                 return Ok(VendorrObj);
             }
 
@@ -1655,7 +1772,22 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.ContactRepository.Update(contactObj);
                 _unitOfWork.SaveChanges();
                 var vendorContactObj = _unitOfWork.vendorContactRepository.GetVendorContactsbyContctId(id);
+
+
+
+                if (Convert.ToBoolean(contactViewModel.IsDefaultContact) == true)
+                {
+                    var vendorConcatData = _unitOfWork.vendorContactRepository.GetAll().Where(p => p.VendorId == vendorContactObj.VendorId).ToList();
+
+                    foreach (var objContactdata in vendorConcatData)
+                    {
+                        objContactdata.IsDefaultContact = false;
+                        _unitOfWork.vendorContactRepository.Update(objContactdata);
+                    }
+                    _unitOfWork.SaveChanges();
+                }
                 vendorContactObj.IsDefaultContact = Convert.ToBoolean(contactViewModel.IsDefaultContact);
+
                 _unitOfWork.vendorContactRepository.Update(vendorContactObj);
                 _unitOfWork.SaveChanges();
 
@@ -2147,7 +2279,7 @@ namespace QuickApp.Pro.Controllers
                 VendorPayment defaultPaymentObj = new VendorPayment();
                 defaultPaymentObj.IsActive = true;
                 defaultPaymentObj.MasterCompanyId = 1;
-                defaultPaymentObj.IsActive = vendorPaymentViewModel.IsActive;
+                //defaultPaymentObj.IsActive = vendorPaymentViewModel.IsActive;
                 defaultPaymentObj.DefaultPaymentMethod = vendorPaymentViewModel.DefaultPaymentMethod;
                 defaultPaymentObj.VendorId = vendorPaymentViewModel.VendorId;
                 defaultPaymentObj.CreatedDate = DateTime.Now;
@@ -3219,6 +3351,35 @@ namespace QuickApp.Pro.Controllers
             return Ok(allVendorShippingDetails);
         }
 
+        [HttpGet("vendorpomemolist")]
+        public IActionResult GetVendorPOMemoList(long vendorId)
+        {
+            var result = _unitOfWork.Vendor.GetVendorPOMemoList(vendorId);
+            return Ok(result);
+        }
+
+        [HttpGet("vendorromemolist")]
+        public IActionResult GetVendorROMemoList(long vendorId)
+        {
+            var result = _unitOfWork.Vendor.GetVendorROMemoList(vendorId);
+            return Ok(result);
+        }
+
+        [HttpPut("updatevendormemotext")]
+        public IActionResult UpdateVendorMemoText(long id, string type, string memoText, string updatedBy)
+        {
+            _unitOfWork.Vendor.UpdateVendorMemoText(id, type, memoText, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("getVendorProcess1099List")]
+        public IActionResult GetVendorProcess(int companyId)
+        {
+           var result= _unitOfWork.Vendor.GetVendorProcessList(companyId);
+            return Ok(result);
+        }
+
+
 
         #region Capes
 
@@ -3421,6 +3582,146 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(vendors);
         }
+
+        #endregion
+
+
+        #region VendorDocument
+        [HttpPost("vendorDocumentUpload")]
+        [Produces("application/json")]
+        public IActionResult DocumentUploadAction()
+        {
+
+            try
+            {
+                VendorDocumentDetails objVendorDocumentDetail = new VendorDocumentDetails();
+                if (ModelState.IsValid)
+                {
+                    if (Request.Form == null)
+                        return BadRequest($"{nameof(objVendorDocumentDetail)} cannot be null");
+
+                    long VendorDocumentDetailId = Convert.ToInt64(Request.Form["VendorDocumentDetailId"]);
+
+                    if (VendorDocumentDetailId > 0)
+                    {
+                        var vendorDocObj = _unitOfWork.Vendor.GetVendorDocumentDetailById(VendorDocumentDetailId);
+                        //objVendorDocumentDetail.MasterCompanyId = 1;      
+                        vendorDocObj.VendorId = Convert.ToInt64(Request.Form["VendorId"]);
+                        vendorDocObj.UpdatedBy = Request.Form["UpdatedBy"];
+                        vendorDocObj.DocName = Request.Form["DocName"];
+                        vendorDocObj.DocMemo = Request.Form["DocMemo"];
+                        vendorDocObj.DocDescription = Request.Form["DocDescription"];
+                        if (vendorDocObj.AttachmentId > 0)
+                        {
+                            vendorDocObj.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
+                          Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), vendorDocObj.UpdatedBy, vendorDocObj.MasterCompanyId, vendorDocObj.AttachmentId);
+
+                        }
+                        else
+                        {
+                            vendorDocObj.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
+                             Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), vendorDocObj.UpdatedBy, vendorDocObj.MasterCompanyId);
+                        }
+
+                        _unitOfWork.VendorDocumentDetails.Update(vendorDocObj);
+                        _unitOfWork.SaveChanges();
+                    }
+                    else
+                    {
+                        objVendorDocumentDetail.VendorId = Convert.ToInt64(Request.Form["VendorId"]);
+                        objVendorDocumentDetail.MasterCompanyId = 1;
+                        objVendorDocumentDetail.CreatedBy = Request.Form["CreatedBy"];
+                        objVendorDocumentDetail.UpdatedBy = Request.Form["UpdatedBy"];
+                        objVendorDocumentDetail.DocName = Request.Form["DocName"];
+                        objVendorDocumentDetail.DocMemo = Request.Form["DocMemo"];
+                        objVendorDocumentDetail.DocDescription = Request.Form["DocDescription"];
+                        objVendorDocumentDetail.IsActive = true;
+                        objVendorDocumentDetail.IsDeleted = false;
+                        objVendorDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
+                                                                            Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), objVendorDocumentDetail.UpdatedBy, objVendorDocumentDetail.MasterCompanyId);
+                        _unitOfWork.VendorDocumentDetails.Add(objVendorDocumentDetail);
+                        _unitOfWork.SaveChanges();
+                    }
+
+
+
+                    return Ok(objVendorDocumentDetail);
+                }
+                return Ok(ModelState);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("vendorDocumentUpdate/{id}")]
+        public IActionResult VendorDocumentUpdate(long id)
+        {
+            VendorDocumentDetails objVendorDocumentDetail = new VendorDocumentDetails();
+            if (ModelState.IsValid)
+            {
+                if (Request.Form == null)
+                    return BadRequest($"{nameof(objVendorDocumentDetail)} cannot be null");
+                long VendorDocumentDetailId = Convert.ToInt64(Request.Form["VendorDocumentDetailId"]);
+                objVendorDocumentDetail.VendorId = Convert.ToInt64(Request.Form["VendorId"]);
+                if (VendorDocumentDetailId > 0)
+                {
+                    var vendorDocObj = _unitOfWork.Vendor.GetVendorDocumentDetailById(VendorDocumentDetailId);
+                    //objVendorDocumentDetail.MasterCompanyId = 1;               
+                    vendorDocObj.UpdatedBy = Request.Form["UpdatedBy"];
+                    vendorDocObj.DocName = Request.Form["DocName"];
+                    vendorDocObj.DocMemo = Request.Form["DocMemo"];
+                    vendorDocObj.DocDescription = Request.Form["DocDescription"];
+                    vendorDocObj.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
+                        Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), vendorDocObj.UpdatedBy, vendorDocObj.MasterCompanyId);
+                    _unitOfWork.VendorDocumentDetails.Update(objVendorDocumentDetail);
+                    _unitOfWork.SaveChanges();
+                }
+
+
+
+                return Ok(objVendorDocumentDetail);
+            }
+            return Ok(ModelState);
+        }
+
+
+        [HttpGet("getVendorDocumentDetailList/{id}")]
+        [Produces(typeof(List<VendorDocumentDetails>))]
+        public IActionResult GetVendorDocumentDetail(long id, VendorDocumentDetails vendorDocumentDetail)
+        {
+            var allvendorsDoc = _unitOfWork.VendorDocumentDetails.GetAllDataById(id);
+            return Ok(allvendorsDoc);
+
+        }
+
+        [HttpGet("getVendorDocumentDetail/{id}")]
+        [Produces(typeof(VendorDocumentDetails))]
+        public IActionResult GetCustomerDocumentDetail(long id)
+        {
+            var allvendorsDoc = _unitOfWork.Vendor.GetVendorDocumentDetailById(id);
+            return Ok(allvendorsDoc);
+
+        }
+
+
+
+        [HttpDelete("vendorDocumentDelete/{id}")]
+        [Produces(typeof(VendorDocumentDetails))]
+        public IActionResult DeleteDocumentAction(long id)
+        {
+            var existingResult = _context.VendorDocumentDetails.ToList().Where(p => p.VendorDocumentDetailId == id).FirstOrDefault();
+            if (existingResult != null)
+            {
+                existingResult.IsDeleted = true;
+                _unitOfWork.VendorDocumentDetails.Update(existingResult);
+                _unitOfWork.SaveChanges();
+            }
+
+            return Ok(id);
+        }
+
 
         #endregion
 

@@ -8,9 +8,9 @@ namespace DAL.Models
    public class CustomerIntegrationPortal
     {
  
-        public long? CustomerIntegrationPortalId { get; set; }
+        public long CustomerIntegrationPortalId { get; set; }
 
-        public long? CustomerId { get; set; }
+        public long CustomerId { get; set; }
 
         public int? IntegrationPortalId { get; set; }
 

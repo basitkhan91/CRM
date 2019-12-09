@@ -18,6 +18,13 @@ namespace DAL.Repositories
 
         }
 
+        public IEnumerable<DAL.Models.GLAccountNode> GetAllGLAccountLeafNode()
+        {
+            return _appContext.GLAccountNode.Include("ParentNode").Where(c => c.IsDelete == false && c.LeafNodeCheck ==true && c.IsActive == true)
+                .OrderByDescending(c => c.GLAccountNodeId).ToList();
+
+        }
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { AlertService } from '../../../../services/alert.service';
 import { WorkOrderService } from '../../../../services/work-order/work-order.service';
 import { CreditTermsService } from '../../../../services/Credit Terms.service';
@@ -20,6 +20,10 @@ import { workOrderGeneralInfo } from '../../../../models/work-order-generalInfor
 })
 /** WorkOrderShipping component*/
 export class WorkOrderSmartComponent implements OnInit {
+    @Input() isSubWorkOrder = false;
+    @Input() paramsData;
+    @Input() showTabsGrid;
+
     creditTerms: any;
     employeesOriginalData: any;
     workScopesList: { label: string; value: number; }[];
@@ -48,6 +52,7 @@ export class WorkOrderSmartComponent implements OnInit {
 
 
     ngOnInit() {
+
         this.getAllWorkOrderTypes();
         this.getAllWorkOrderStatus();
         this.getAllCreditTerms();
@@ -58,7 +63,14 @@ export class WorkOrderSmartComponent implements OnInit {
         this.getMultiplePartsNumbers();
         this.getAllPriority();
 
-        this.workOrderId = this.acRouter.snapshot.params['id'];
+        // { workorderid: workorderid, mpnid: workorderid, subworkorderid: 0 }
+        if (!this.isSubWorkOrder) {
+            this.workOrderId = this.acRouter.snapshot.params['id'];
+            // this.workOrderId = this.paramsData.workorderid;
+        } else {
+            this.workOrderId = this.acRouter.snapshot.params['id'];
+        }
+
         if (this.workOrderId) {
 
 
@@ -70,13 +82,11 @@ export class WorkOrderSmartComponent implements OnInit {
                     workOrderNumber: res.workOrderNum,
                     openDate: new Date(res.openDate),
                     customerId: res.customerId,
-                    employeeId: getObjectById('value', workOrderData.employeeId, this.employeesOriginalData),
-                    salesPersonId: getObjectById('value', workOrderData.employeeId, this.employeesOriginalData),
                     partNumbers: res.partNumbers.map(x => {
                         return {
                             ...x,
 
-                            technicianId: getObjectById('value', x.technicianId, this.employeesOriginalData),
+
                             customerRequestDate: new Date(x.customerRequestDate),
                             promisedDate: new Date(x.promisedDate),
                             estimatedCompletionDate: new Date(x.estimatedCompletionDate),

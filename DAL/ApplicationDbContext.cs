@@ -339,7 +339,7 @@ namespace DAL
         public DbSet<ConditionAudit> ConditionAudit { get; set; }
         public DbSet<CreditTermsAudit> CreditTermsAudit { get; set; }
         public DbSet<CurrencyAudit> CurrencyAudit { get; set; }
-        public DbSet<ItemClassficationAudit> ItemClassificationAudit { get; set; }
+        public DbSet<ItemClassficationAudit> ItemClassficationAudit { get; set; }
         public DbSet<ItemgroupAudit> ItemGroupAudit { get; set; }
         public DbSet<JobTitleAudit> JobTitleAudit { get; set; }
         public DbSet<JobTypeAudit> JobTypeAudit { get; set; }
@@ -431,6 +431,7 @@ namespace DAL
         public DbSet<PurchaseOrderAddress> PurchaseOrderAddress { get; set; }
         public DbSet<VendorBillingAddress> VendorBillingAddress { get; set; }
         public DbSet<VendorBillingAddressAudit> VendorBillingAddressAudit { get; set; }
+        public DbSet<VendorDocumentDetails> VendorDocumentDetails { get; set; }
         public DbSet<PurchaseOrderShipVia> PurchaseOrderShipVia { get; set; }
         public DbSet<LegalEntityBillingAddress> LegalEntityBillingAddress { get; set; }
         public DbSet<LegalEntityShippingAddress> LegalEntityShippingAddress { get; set; }
@@ -450,8 +451,22 @@ namespace DAL
 
         public DbSet<MasterSalesProbablity> MasterSalesProbablity { get; set; }
         public DbSet<SubWorkOrder> SubWorkOrder { get; set; }
+        public DbSet<IntegrationPortalMapping> IntegrationPortalMapping { get; set; }
 
-        
+        public DbSet<Master1099> Master1099 { get; set; }
+        public DbSet<VendorProcess1099> VendorProcess1099 { get; set; }
+
+
+        public DbSet<WorkOrderQuoteExclusions> WorkOrderQuoteExclusions { get; set; }
+        public DbSet<WorkOrderQuoteFreight> WorkOrderQuoteFreight { get; set; }
+        public DbSet<WorkOrderQuoteCharges> WorkOrderQuoteCharges { get; set; }
+        public DbSet<WorkOrderQuoteLabor> WorkOrderQuoteLabor { get; set; }
+        public DbSet<WorkOrderQuoteLaborHeader> WorkOrderQuoteLaborHeader { get; set; }
+        public DbSet<WorkOrderQuoteMaterial> WorkOrderQuoteMaterial { get; set; }
+        public DbSet<WorkOrderQuoteDetails> WorkOrderQuoteDetails { get; set; }
+
+
+
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

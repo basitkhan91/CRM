@@ -16,7 +16,7 @@ namespace DAL.Models
         public long? ItemMasterId { get; set; }
         public int SourceId { get; set; }
         public string Reference { get; set; }
-        public int EstOcuuranceId { get; set; } 
+        public int ExstimtPercentOccuranceId { get; set; } 
         public string Memo { get; set; }
         public int? Quantity { get; set; }
         public decimal? UnitCost { get; set; }
@@ -41,9 +41,11 @@ namespace DAL.Models
         [NotMapped]
         public string Source { get; set; }
         [NotMapped]
-        public string EstOcuurance { get; set; }
+        public string ExstimtPercentOccurance { get; set; }
         [NotMapped]
         public string MarkUpPercentage { get; set; }
+        [NotMapped]
+        public string Task { get; set; }
 
     }
 }

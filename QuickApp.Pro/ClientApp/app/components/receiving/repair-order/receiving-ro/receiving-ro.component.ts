@@ -459,7 +459,7 @@ export class ReceivingRoComponent implements OnInit {
                                 error => this.onDataLoadFailed(error)
                             );
                         }
-                        part.userTypeName = this.getUserTypeById(part.roPartSplitUserTypeId.toLocaleString());
+                        part.userTypeName = part.roPartSplitUserTypeId ? this.getUserTypeById(part.roPartSplitUserTypeId.toLocaleString()) : '';
                         part.statusText = this.getStatusById(part.status);
                         part.managementStructureName = parentPart.managementStructureName;
                     }
@@ -643,7 +643,7 @@ export class ReceivingRoComponent implements OnInit {
     }
 
     private isSplitShipmentPart(itemMasterId: number): boolean {
-        return this.repairOrderData.filter(x => x.itemMaster.itemMasterId == itemMasterId && !x.isParent).length > 0;
+        return this.repairOrderData.filter(x => x.itemMasterId == itemMasterId && !x.isParent).length > 0;
     }
 
     private getAllPriority() {
@@ -686,8 +686,7 @@ export class ReceivingRoComponent implements OnInit {
             this.addStockLine(part, false);
             return;
         }
-        
-        
+
         if (part.quantityActuallyReceived == undefined || part.quantityActuallyReceived == 0) {
             part.showStockLineGrid = false;
             this.alertService.showMessage(this.pageTitle, 'Please enter Quantity Received.', MessageSeverity.error);
@@ -725,31 +724,35 @@ export class ReceivingRoComponent implements OnInit {
         }
 
         part.visible = true;
-        this.createStockLineItems(part);
+        if (part.stocklineListObj.length != quantity) {
+            this.createStockLineItems(part);
 
-        if (part.itemMaster.isTimeLife) {
-            for (var i = 0; i < quantity; i++) {
-                let timeLife: TimeLife = new TimeLife();
-                timeLife.timeLifeCyclesId = 0;
-                timeLife.repairOrderId = part.repairOrderId;
-                timeLife.repairOrderPartRecordId = part.repairOrderPartRecordId;
-                timeLife.cyclesRemaining = '';
-                timeLife.cyclesSinceInspection = '';
-                timeLife.cyclesSinceNew = '';
-                timeLife.cyclesSinceOVH = '';
-                timeLife.cyclesSinceRepair = '';
-                timeLife.timeRemaining = '';
-                timeLife.timeSinceInspection = '';
-                timeLife.timeSinceNew = '';
-                timeLife.timeSinceOVH = '';
-                timeLife.timeSinceRepair = '';
-                timeLife.lastSinceNew = '';
-                timeLife.lastSinceInspection = '';
-                timeLife.lastSinceOVH = '';
-                timeLife.detailsNotProvided = false;
-                part.timeLifeList.push(timeLife);
+            if (part.itemMaster.isTimeLife) {
+                part.timeLifeList = [];
+                for (var i = 0; i < quantity; i++) {
+                    let timeLife: TimeLife = new TimeLife();
+                    timeLife.timeLifeCyclesId = 0;
+                    timeLife.repairOrderId = part.repairOrderId;
+                    timeLife.repairOrderPartRecordId = part.repairOrderPartRecordId;
+                    timeLife.cyclesRemaining = '';
+                    timeLife.cyclesSinceInspection = '';
+                    timeLife.cyclesSinceNew = '';
+                    timeLife.cyclesSinceOVH = '';
+                    timeLife.cyclesSinceRepair = '';
+                    timeLife.timeRemaining = '';
+                    timeLife.timeSinceInspection = '';
+                    timeLife.timeSinceNew = '';
+                    timeLife.timeSinceOVH = '';
+                    timeLife.timeSinceRepair = '';
+                    timeLife.lastSinceNew = '';
+                    timeLife.lastSinceInspection = '';
+                    timeLife.lastSinceOVH = '';
+                    timeLife.detailsNotProvided = false;
+                    part.timeLifeList.push(timeLife);
+                }
             }
         }
+        
 
         this.addStockLine(part, true);
     }
@@ -1162,6 +1165,7 @@ export class ReceivingRoComponent implements OnInit {
     }
 
     onChangeTimeLife(part: RepairOrderPart) {
+        part.timeLifeList[part.currentTLIndex].detailsNotProvided = part.detailsNotProvided;
             part.timeLifeList[part.currentTLIndex].timeLifeCyclesId = 0;
             part.timeLifeList[part.currentTLIndex].repairOrderId = part.repairOrderId;
             part.timeLifeList[part.currentTLIndex].repairOrderPartRecordId = part.repairOrderPartRecordId;
@@ -1192,7 +1196,8 @@ export class ReceivingRoComponent implements OnInit {
         let partsToPost: any = this.extractAllAllStockLines();
         this.receivingService.receiveParts(partsToPost).subscribe(data => {
             this.alertService.showMessage(this.pageTitle, 'Parts Received successfully.', MessageSeverity.success);
-            return this.route.navigate(['/receivingmodule/receivingpages/app-edit-ro']);
+            //return this.route.navigate(['/receivingmodule/receivingpages/app-edit-ro']);
+            this.route.navigateByUrl(`/receivingmodule/receivingpages/app-edit-ro?repairOrderId=${this.repairOrderId}`);
         },
             error => {
                 var message = '';
@@ -1256,8 +1261,7 @@ export class ReceivingRoComponent implements OnInit {
                     item.stocklineListObj[i].repairOrderUnitCost = item.stocklineListObj[i].repairOrderUnitCost == undefined ||
                         item.stocklineListObj[i].repairOrderUnitCost.toString() == '' ? 0 :
                         item.stocklineListObj[i].repairOrderUnitCost;
-                    //item.stocklineListObj[i].oEM = item.itemMaster.oemPNId;
-
+                    
                     if (item.stocklineListObj[i].companyId == undefined || item.stocklineListObj[i].companyId == 0) {
                         errorMessages.push("Please select Company in Receiving Qty - " + (i + 1).toString() + ofPartMsg);
                     }
@@ -1283,9 +1287,8 @@ export class ReceivingRoComponent implements OnInit {
             }
 
             if (item.timeLifeList != undefined && item.timeLifeList.length > 0) {
-                // need to have some check to make sure atleast one field is entered.
                 for (var i = 0; i < item.timeLifeList.length; i++) {
-                    if (item.isTimeLifeUpdateLater != undefined && !item.isTimeLifeUpdateLater) {
+                    if (item.detailsNotProvided != true) {
                         var timeLife = item.timeLifeList[i];
                         if (timeLife.cyclesRemaining == '' && timeLife.cyclesSinceNew == '' && timeLife.cyclesSinceOVH == '' && timeLife.cyclesSinceInspection == '' && timeLife.cyclesSinceRepair == '' &&
                             timeLife.timeRemaining == '' && timeLife.timeSinceNew == '' && timeLife.timeSinceOVH == '' && timeLife.timeSinceInspection == '' && timeLife.timeSinceRepair == '' &&
@@ -1528,4 +1531,15 @@ export class ReceivingRoComponent implements OnInit {
         }
         
     }
+
+    private moveByKey(event, part) {
+        // CTRL + Down Arrow
+        if (event.ctrlKey && event.keyCode == 40) {
+            this.moveStockLinePage('stockline', part.currentSERIndex + 1, part);
+        }
+        // CTRL + Up Arrow
+        if (event.ctrlKey && event.keyCode == 38) {
+            this.moveStockLinePage('stockline', part.currentSERIndex - 1, part);
+        }
+    } 
 }

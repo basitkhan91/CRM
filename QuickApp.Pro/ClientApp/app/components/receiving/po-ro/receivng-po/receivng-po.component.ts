@@ -8,7 +8,7 @@ import { UnitOfMeasureService } from '../../../../services/unitofmeasure.service
 import { CurrencyService } from '../../../../services/currency.service';
 import { AlertService, MessageSeverity } from '../../../../services/alert.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Router } from '@angular/router'
+import { Router, ActivatedRoute } from '@angular/router'
 import { ModalService } from '../../../../services/Index';
 import { EmployeeService } from '../../../../services/employee.service';
 import { ItemMasterService } from '../../../../services/itemMaster.service';
@@ -174,7 +174,8 @@ export class ReceivngPoComponent implements OnInit {
         private alertService: AlertService,
         private accountService: AccountService,
         private glAccountService: GlAccountService,
-        private shippingService: ShippingService
+        private shippingService: ShippingService,
+        private _actRoute: ActivatedRoute,
     ) {
         this.getAllSite();
         this.getCustomers();
@@ -188,6 +189,7 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.receivingService.purchaseOrderId = this._actRoute.snapshot.queryParams['purchaseorderid'];
         this.receivingService.getPurchaseOrderDataById(this.receivingService.purchaseOrderId).subscribe(
             results => {
                 this.receivingService.purchaseOrder = results[0];
@@ -679,32 +681,35 @@ export class ReceivngPoComponent implements OnInit {
         }
 
         part.visible = true;
-        this.createStockLineItems(part);
 
-        if (part.itemMaster.isTimeLife) {
-            for (var i = 0; i < quantity; i++) {
-                let timeLife: TimeLife = new TimeLife();
-                timeLife.timeLifeCyclesId = 0;
-                timeLife.purchaseOrderId = part.purchaseOrderId;
-                timeLife.purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
-                timeLife.cyclesRemaining = '';
-                timeLife.cyclesSinceInspection = '';
-                timeLife.cyclesSinceNew = '';
-                timeLife.cyclesSinceOVH = '';
-                timeLife.cyclesSinceRepair = '';
-                timeLife.timeRemaining = '';
-                timeLife.timeSinceInspection = '';
-                timeLife.timeSinceNew = '';
-                timeLife.timeSinceOVH = '';
-                timeLife.timeSinceRepair = '';
-                timeLife.lastSinceNew = '';
-                timeLife.lastSinceInspection = '';
-                timeLife.lastSinceOVH = '';
-                timeLife.detailsNotProvided = false;
-                part.timeLifeList.push(timeLife);
+        if (part.stocklineListObj.length != quantity) {
+            this.createStockLineItems(part);
+
+            if (part.itemMaster.isTimeLife) {
+                for (var i = 0; i < quantity; i++) {
+                    let timeLife: TimeLife = new TimeLife();
+                    timeLife.timeLifeCyclesId = 0;
+                    timeLife.purchaseOrderId = part.purchaseOrderId;
+                    timeLife.purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
+                    timeLife.cyclesRemaining = '';
+                    timeLife.cyclesSinceInspection = '';
+                    timeLife.cyclesSinceNew = '';
+                    timeLife.cyclesSinceOVH = '';
+                    timeLife.cyclesSinceRepair = '';
+                    timeLife.timeRemaining = '';
+                    timeLife.timeSinceInspection = '';
+                    timeLife.timeSinceNew = '';
+                    timeLife.timeSinceOVH = '';
+                    timeLife.timeSinceRepair = '';
+                    timeLife.lastSinceNew = '';
+                    timeLife.lastSinceInspection = '';
+                    timeLife.lastSinceOVH = '';
+                    timeLife.detailsNotProvided= false;
+                    part.timeLifeList.push(timeLife);
+                }
             }
         }
-
+        
         this.addStockLine(part, true);
     }
 
@@ -1116,6 +1121,7 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     onChangeTimeLife(part: PurchaseOrderPart) {
+            part.timeLifeList[part.currentTLIndex].detailsNotProvided = part.detailsNotProvided;
             part.timeLifeList[part.currentTLIndex].timeLifeCyclesId = 0;
             part.timeLifeList[part.currentTLIndex].purchaseOrderId = part.purchaseOrderId;
             part.timeLifeList[part.currentTLIndex].purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
@@ -1145,7 +1151,9 @@ export class ReceivngPoComponent implements OnInit {
         let partsToPost: ReceiveParts[] = this.extractAllAllStockLines();
         this.shippingService.receiveParts(partsToPost).subscribe(data => {
             this.alertService.showMessage(this.pageTitle, 'Parts Received successfully.', MessageSeverity.success);
-            return this.route.navigate(['/receivingmodule/receivingpages/app-edit-po']);
+            this.route.navigateByUrl(`/receivingmodule/receivingpages/app-edit-po?purchaseOrderId=${this.receivingService.purchaseOrderId}`);
+            return;
+            //this.route.navigate([`/receivingmodule/receivingpages/app-edit-po?purchaseOrderId=${this.receivingService.purchaseOrderId}`]);
         },
             error => {
                 var message = '';
@@ -1238,7 +1246,7 @@ export class ReceivngPoComponent implements OnInit {
             if (item.timeLifeList != undefined && item.timeLifeList.length > 0) {
                 // need to have some check to make sure atleast one field is entered.
                 for (var i = 0; i < item.timeLifeList.length; i++) {
-                    if (item.isTimeLifeUpdateLater != undefined && !item.isTimeLifeUpdateLater) {
+                    if (item.detailsNotProvided != true) {
                         var timeLife = item.timeLifeList[i];
                         if (timeLife.cyclesRemaining == '' && timeLife.cyclesSinceNew == '' && timeLife.cyclesSinceOVH == '' && timeLife.cyclesSinceInspection == '' && timeLife.cyclesSinceRepair == '' &&
                             timeLife.timeRemaining == '' && timeLife.timeSinceNew == '' && timeLife.timeSinceOVH == '' && timeLife.timeSinceInspection == '' && timeLife.timeSinceRepair == '' &&
@@ -1483,7 +1491,7 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     private moveByKey(event, part) {
-;       // CTRL + Down Arrow
+       // CTRL + Down Arrow
         if (event.ctrlKey && event.keyCode == 40) {
             this.moveStockLinePage('stockline', part.currentSERIndex + 1, part);
         }

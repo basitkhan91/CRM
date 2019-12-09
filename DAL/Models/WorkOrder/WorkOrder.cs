@@ -80,5 +80,7 @@ namespace DAL.Models
         public string CustomerContact { get; set; }
         public string CustomerRef { get; set; }
         public string CSRName { get; set; }
+        public string CustomerEmail { get;set;}
+        public string CustomerPhone {get; set; }
     }
 }

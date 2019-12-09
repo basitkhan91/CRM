@@ -158,5 +158,28 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
 
         }
+        [HttpGet]
+        [Route("defaultcurrency")]
+        public IActionResult GetDefaultCurrency(long legalEntityId)
+        {
+            var result = _unitOfWork.CommonRepository.GetDefaultCurrency(legalEntityId);
+            return Ok(result);
+
+        }
+
+        [HttpGet("classificationmappings")]
+        public IActionResult GetClassificationMappings(long referenceId ,int moduleId)
+        {
+            var result = _unitOfWork.CommonRepository.GetVendorClassificationMappings(moduleId, referenceId);
+            return Ok(result);
+        }
+
+        [HttpGet("integrationmappings")]
+        public IActionResult GetIntegrationMappings(long referenceId, int moduleId)
+        {
+            var result = _unitOfWork.CommonRepository.GetIntegrationMappings(referenceId, moduleId);
+            return Ok(result);
+        }
+
     }
 }

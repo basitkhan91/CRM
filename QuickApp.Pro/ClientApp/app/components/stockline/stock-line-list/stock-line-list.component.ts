@@ -181,6 +181,11 @@ export class StockLineListComponent implements OnInit {
 
     }
 
+    public loadData() {
+        this.workFlowtService.getStockLineList().subscribe(
+            results => this.onDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
 
     columnsChanges() {
         this.refreshList();

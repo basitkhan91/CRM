@@ -65,7 +65,7 @@ namespace DAL.Repositories
 
 
 
-                           where t.IsDeleted == false || t.IsDeleted == null 
+                           where (t.IsDeleted == false || t.IsDeleted == null) && t.IsActive==true
                            // select new { t, ad, vt }).ToList();
                            select new
                            {
@@ -128,7 +128,7 @@ namespace DAL.Repositories
                                t.UpdatedDate,
 
                                //cc.Description
-                           }).Distinct().ToList();
+                           }).Distinct().OrderByDescending(p=>p.UpdatedDate).ToList();
 
 
 

@@ -57,7 +57,7 @@ namespace DAL.Repositories.Interfaces
         GetData<ShippingViaDetails> GetShippingViaDetails(ShippingViaDetails model);
         GetData<ShippingViaDetails> GetShippingViaDetails(long internationalShippingId, int pageNumber, int pageSize);
         ShippingViaDetails GetShippingViaDetailsById(long id);
-        IEnumerable<object> searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(long CustomerId, string AircraftTypeId, string AircraftModelId, string DashNumberId);
+        IEnumerable<object> searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(long CustomerId, string AircraftTypeId, string AircraftModelId, string DashNumberId,string memo);
         IEnumerable<object> searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(long contactId, string ATAChapterId, string ATASubChapterID);
         IEnumerable<object> GetCustomerShipviaDetails(long customerId, long addressId);
         void CreateDocumentDetails(CustomerDocumentDetail model);
@@ -72,6 +72,8 @@ namespace DAL.Repositories.Interfaces
 
         void CustomerShippingDetailsStatus(long id, bool status, string updatedBy);
         void CustomerBillingStatus(long id, bool status, string updatedBy);
+        void DeleteShipViaDetails(long id, string updatedBy);
+        void CustomerShippingDetailsViaStatus(long id, bool status, string updatedBy);
 
 
     }

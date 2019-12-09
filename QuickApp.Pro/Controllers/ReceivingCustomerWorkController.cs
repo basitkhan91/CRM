@@ -8,7 +8,6 @@ using QuickApp.Pro.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -26,14 +25,19 @@ namespace QuickApp.Pro.Controllers
             _logger = logger;
             _emailer = emailer;
         }
-        
+
         [HttpGet("Get")]
         [Produces(typeof(List<ReceivingCustomerWorkViewModel>))]
         public IActionResult Get()
         {
-            var result = _unitOfWork.receivingCustomerWork.GetAllreceivingCustomerWork(); //GetAllSite Information
-            return Ok(result);
-            
+            //var result = _unitOfWork.receivingCustomerWork.GetAllreceivingCustomerWork(); //GetAllSite Information
+            //return Ok(result);
+
+            var customerworkList = _context.ReceivingCustomerWork
+                .Where(rcw => rcw.IsDeleted == false)
+                .ToList();
+            return Ok(customerworkList);
+
         }
 
         [HttpGet("auditHistoryById/{id}")]
@@ -61,114 +65,112 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 if (receivingCustomerWorkViewModel == null)
+                {
                     return BadRequest($"{nameof(receivingCustomerWorkViewModel)} cannot be null");
-                DAL.Models.ReceivingCustomerWork curreobj = new DAL.Models.ReceivingCustomerWork();
-                curreobj.MasterCompanyId = 1;
-                curreobj.CustomerId = receivingCustomerWorkViewModel.CustomerId;
-                curreobj.ObtainFromType = receivingCustomerWorkViewModel.ObtainFromType;
-                curreobj.PartDescription = receivingCustomerWorkViewModel.PartDescription;
-                curreobj.EmployeeId = receivingCustomerWorkViewModel.EmployeeId;
-                curreobj.Quantity = receivingCustomerWorkViewModel.Quantity;
-                curreobj.WorkPhone = receivingCustomerWorkViewModel.WorkPhone;
-                curreobj.CustomerReference = receivingCustomerWorkViewModel.CustomerReference;
-                curreobj.ContactId = receivingCustomerWorkViewModel.ContactId;
-                curreobj.TraceableToType = receivingCustomerWorkViewModel.TraceableToType;
-                curreobj.TraceableTo = receivingCustomerWorkViewModel.TraceableTo;
-                curreobj.ChangePartNumber = receivingCustomerWorkViewModel.ChangePartNumber;
-                curreobj.PartCertificationNumber = receivingCustomerWorkViewModel.PartCertificationNumber;
-                curreobj.IsSerialized = receivingCustomerWorkViewModel.IsSerialized;
-                curreobj.SerialNumber = receivingCustomerWorkViewModel.SerialNumber;
-                curreobj.ConditionId = receivingCustomerWorkViewModel.ConditionId;
-                curreobj.WarehouseId = receivingCustomerWorkViewModel.WarehouseId;
-                curreobj.Owner = receivingCustomerWorkViewModel.Owner;
-                curreobj.OwnerType = receivingCustomerWorkViewModel.OwnerType;
-                curreobj.IsCustomerStock = receivingCustomerWorkViewModel.IsCustomerStock;
-                curreobj.ExpirationDate = receivingCustomerWorkViewModel.ExpirationDate;
-                curreobj.ManufacturingDate = receivingCustomerWorkViewModel.ManufacturingDate;
-                curreobj.TagDate = receivingCustomerWorkViewModel.TagDate;
-                curreobj.TagType = receivingCustomerWorkViewModel.TagType;
-                curreobj.ReasonForRemoval = receivingCustomerWorkViewModel.ReasonForRemoval;
-                curreobj.ObtainFrom = receivingCustomerWorkViewModel.ObtainFrom;
-                curreobj.ManufacturingTrace = receivingCustomerWorkViewModel.ManufacturingTrace;
-                curreobj.ManufacturingLotNumber = receivingCustomerWorkViewModel.ManufacturingLotNumber;
-                curreobj.IsTimeLife = receivingCustomerWorkViewModel.IsTimeLife;
-                curreobj.IsMFGDate = receivingCustomerWorkViewModel.IsMFGDate;
-                curreobj.LocationId = receivingCustomerWorkViewModel.LocationId;
-                curreobj.SiteId = receivingCustomerWorkViewModel.SiteId;
-                curreobj.ShelfId = receivingCustomerWorkViewModel.ShelfId;
-                curreobj.BinId = receivingCustomerWorkViewModel.BinId;
-                curreobj.IsExpirationDate = receivingCustomerWorkViewModel.IsExpirationDate;
-                curreobj.PartNumber = receivingCustomerWorkViewModel.PartNumber;
-                curreobj.TimeLifeCyclesId = receivingCustomerWorkViewModel.TimeLifeCyclesId;
-                curreobj.IsActive = true;
-                curreobj.CreatedDate = DateTime.Now;
-                curreobj.UpdatedDate = DateTime.Now;
-                curreobj.CreatedBy = receivingCustomerWorkViewModel.CreatedBy;
-                curreobj.UpdatedBy = receivingCustomerWorkViewModel.UpdatedBy;
-              
-                if (receivingCustomerWorkViewModel.ContactId == null)
-                {
-                    curreobj.ContactId = null;
-                }
-                if (receivingCustomerWorkViewModel.EmployeeId == null)
-                {
-                    curreobj.EmployeeId = null;
-                }
-                if (receivingCustomerWorkViewModel.StatusId == null)
-                {
-
-                    curreobj.StatusId = null;
-                }
-                if (receivingCustomerWorkViewModel.CustomerId == null)
-                {
-
-                    curreobj.CustomerId = null;
-                }
-                if (receivingCustomerWorkViewModel.CustomerClassificationId == null)
-                {
-
-                    curreobj.CustomerClassificationId = null;
-                }
-                if (receivingCustomerWorkViewModel.ScopeId == null)
-                {
-
-                    curreobj.ScopeId = null;
-                }
-                if (receivingCustomerWorkViewModel.PriorityId == null)
-                {
-
-                    curreobj.PriorityId = null;
-                }
-                if (receivingCustomerWorkViewModel.ConditionId == null)
-                {
-
-                    curreobj.ConditionId = null;
-                }
-                if (receivingCustomerWorkViewModel.WarehouseId == null)
-                {
-
-                    curreobj.WarehouseId = null;
-                }
-                if (receivingCustomerWorkViewModel.LocationId == null)
-                {
-
-                    curreobj.LocationId = null;
-                }
-                _context.ReceivingCustomerWork.Add(curreobj);
-                _context.SaveChanges();
-                if (curreobj != null)
-                {
-                    var exists = _context.ReceivingCustomerWork.Where(a => a.ReceivingCustomerWorkId == curreobj.ReceivingCustomerWorkId).SingleOrDefault();
-                    exists.ReceivingCustomerNumber = "REC" + curreobj.ReceivingCustomerWorkId;
-                    _context.ReceivingCustomerWork.Update(exists);
-                    _context.SaveChanges();
                 }
 
+
+                if (_context.ReceivingCustomerWork.Any(o => o.ReceivingCustomerWorkId == receivingCustomerWorkViewModel.ReceivingCustomerWorkId))
+                {
+                    // UPDATE
+                    var existingModel = GetReceivingCustomerWork(receivingCustomerWorkViewModel.ReceivingCustomerWorkId);
+                    if (existingModel != null)
+                    {
+                        existingModel = FillReceivingCustomerWork(existingModel, receivingCustomerWorkViewModel);
+                        existingModel.UpdatedDate = DateTime.Now;
+                        _context.ReceivingCustomerWork.Update(existingModel);
+                        _unitOfWork.SaveChanges();
+                    }
+                    return Ok(existingModel);
+                }
+                else
+                {
+                    // SAVE
+                    var receivingCustomerWorkModel = new ReceivingCustomerWork();
+                    receivingCustomerWorkModel = FillReceivingCustomerWork(receivingCustomerWorkModel, receivingCustomerWorkViewModel);
+                    receivingCustomerWorkModel.CreatedDate = DateTime.Now;
+                    _context.ReceivingCustomerWork.Add(receivingCustomerWorkModel);
+                    _unitOfWork.SaveChanges();
+
+                    if (receivingCustomerWorkModel.ReceivingCustomerWorkId != 0)
+                    {
+                        var exists = GetReceivingCustomerWork(receivingCustomerWorkModel.ReceivingCustomerWorkId);
+                        if (exists != null)
+                        {
+                            exists.ReceivingCustomerNumber = "REC" + receivingCustomerWorkModel.ReceivingCustomerWorkId;
+                            _context.ReceivingCustomerWork.Update(exists);
+                            _context.SaveChanges();
+                        }
+                    }
+
+                    return Ok(receivingCustomerWorkModel);
+                }
             }
 
             return Ok(ModelState);
         }
+
+        private ReceivingCustomerWork GetReceivingCustomerWork(long ReceivingCustomerWorkId)
+        {
+            return _context.ReceivingCustomerWork
+                           .Where(a => a.ReceivingCustomerWorkId == ReceivingCustomerWorkId)
+                           .SingleOrDefault();
+        }
+
+        private ReceivingCustomerWork FillReceivingCustomerWork(ReceivingCustomerWork receivingCustomerWorkModel, ReceivingCustomerWorkViewModel receivingCustomerWorkViewModel)
+        {
+            receivingCustomerWorkModel.CustomerId = receivingCustomerWorkViewModel.CustomerId;
+            receivingCustomerWorkModel.ReceivingCustomerNumber = receivingCustomerWorkViewModel.ReceivingCustomerNumber;
+            receivingCustomerWorkModel.CustomerReference = receivingCustomerWorkViewModel.CustomerReference;
+            receivingCustomerWorkModel.IsSerialized = receivingCustomerWorkViewModel.IsSerialized;
+            receivingCustomerWorkModel.ItemMasterId = receivingCustomerWorkViewModel.ItemMasterId;
+            receivingCustomerWorkModel.ContactId = receivingCustomerWorkViewModel.CustomerContactId;
+            receivingCustomerWorkModel.TraceableToType = receivingCustomerWorkViewModel.TraceableToType;
+            receivingCustomerWorkModel.ChangePartNumber = receivingCustomerWorkViewModel.ChangePartNumber;
+            receivingCustomerWorkModel.PartCertificationNumber = receivingCustomerWorkViewModel.PartCertificationNumber;
+            receivingCustomerWorkModel.Quantity = receivingCustomerWorkViewModel.Quantity;
+            receivingCustomerWorkModel.ConditionId = receivingCustomerWorkViewModel.ConditionId;
+            receivingCustomerWorkModel.SiteId = receivingCustomerWorkViewModel.SiteId;
+            receivingCustomerWorkModel.BinId = receivingCustomerWorkViewModel.BinId;
+            receivingCustomerWorkModel.ShelfId = receivingCustomerWorkViewModel.ShelfId;
+            receivingCustomerWorkModel.WarehouseId = receivingCustomerWorkViewModel.WarehouseId;
+            receivingCustomerWorkModel.LocationId = receivingCustomerWorkViewModel.LocationId;
+            receivingCustomerWorkModel.ObtainFromType = receivingCustomerWorkViewModel.ObtainFromType;
+            receivingCustomerWorkModel.PartDescription = receivingCustomerWorkViewModel.PartDescription;
+            receivingCustomerWorkModel.Owner = receivingCustomerWorkViewModel.Owner;
+            receivingCustomerWorkModel.IsCustomerStock = receivingCustomerWorkViewModel.IsCustomerStock;
+            receivingCustomerWorkModel.ManufacturingDate = receivingCustomerWorkViewModel.ManufacturingDate;
+            receivingCustomerWorkModel.ExpirationDate = receivingCustomerWorkViewModel.ExpirationDate;
+            receivingCustomerWorkModel.TimeLifeDate = receivingCustomerWorkViewModel.TimeLifeDate;
+            receivingCustomerWorkModel.TimeLifeOrigin = receivingCustomerWorkViewModel.TimeLifeOrigin;
+            receivingCustomerWorkModel.TimeLifeCyclesId = receivingCustomerWorkViewModel.TimeLifeCyclesId;
+            receivingCustomerWorkModel.ManufacturingTrace = receivingCustomerWorkViewModel.ManufacturingTrace;
+            receivingCustomerWorkModel.ManufacturingLotNumber = receivingCustomerWorkViewModel.ManufacturingLotNumber;
+            receivingCustomerWorkModel.EmployeeId = receivingCustomerWorkViewModel.EmployeeId;
+            receivingCustomerWorkModel.SerialNumber = receivingCustomerWorkViewModel.SerialNumber;
+            receivingCustomerWorkModel.CertifiedBy = receivingCustomerWorkViewModel.CertifiedBy;
+            receivingCustomerWorkModel.TagDate = receivingCustomerWorkViewModel.TagDate;
+            receivingCustomerWorkModel.TagType = receivingCustomerWorkViewModel.TagType;
+            receivingCustomerWorkModel.TraceableTo = receivingCustomerWorkViewModel.TraceableTo;
+            receivingCustomerWorkModel.ObtainFrom = receivingCustomerWorkViewModel.ObtainFrom;
+            receivingCustomerWorkModel.IsTimeLife = receivingCustomerWorkViewModel.IsTimeLife;
+            receivingCustomerWorkModel.IsMFGDate = receivingCustomerWorkViewModel.IsMFGDate;
+            receivingCustomerWorkModel.ManufacturerId = receivingCustomerWorkViewModel.ManufacturerId;
+            receivingCustomerWorkModel.IsActive = receivingCustomerWorkViewModel.IsActive;
+            receivingCustomerWorkModel.IsDeleted = receivingCustomerWorkViewModel.IsDeleted;
+            receivingCustomerWorkModel.IsExpirationDate = receivingCustomerWorkViewModel.IsExpirationDate;
+            receivingCustomerWorkModel.PartNumber = receivingCustomerWorkViewModel.PartNumber;
+            receivingCustomerWorkModel.ManagementStructureId = receivingCustomerWorkViewModel.ManagementStructureId;
+            receivingCustomerWorkModel.CreatedBy = receivingCustomerWorkViewModel.CreatedBy;
+            receivingCustomerWorkModel.UpdatedBy = receivingCustomerWorkViewModel.UpdatedBy;
+            receivingCustomerWorkModel.MasterCompanyId = receivingCustomerWorkViewModel.MasterCompanyId;
+            receivingCustomerWorkModel.Manufacturer = receivingCustomerWorkViewModel.Manufacturer;
+
+            return receivingCustomerWorkModel;
+        }
+
         [HttpGet("timeLifeGetById/{id}")]
         [Produces(typeof(List<TimeLifeViewModel>))]
         public IActionResult GetTimeLife(long id)

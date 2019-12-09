@@ -23,6 +23,7 @@ namespace QuickApp.Pro.Controllers
         {
             get { return "admin"; }
         }
+
         #endregion Private Members
 
         #region Constructor
@@ -339,12 +340,13 @@ namespace QuickApp.Pro.Controllers
                         {
                             var stockLine = receivePart.StockLines.Where(x => x.StockLineId == dbStockLine.StockLineId).FirstOrDefault();
                             dbStockLine.ManagementStructureEntityId = stockLine.ManagementStructureEntityId;
-                            dbStockLine.ShelfId = stockLine.ShelfId > 0 ? stockLine.ShelfId : null;
-                            dbStockLine.WarehouseId = stockLine.WarehouseId > 0 ? stockLine.WarehouseId : null;
-                            dbStockLine.BinId = stockLine.BinId > 0 ? stockLine.BinId : null;
+                            dbStockLine.SiteId = stockLine.SiteId != null ? stockLine.SiteId : 0;
+                            dbStockLine.WarehouseId = stockLine.WarehouseId != null ? stockLine.WarehouseId : 0;
+                            dbStockLine.LocationId = stockLine.LocationId != null ? stockLine.LocationId : 0;
+                            dbStockLine.ShelfId = stockLine.ShelfId != null ? stockLine.ShelfId : 0;
+                            dbStockLine.BinId = stockLine.BinId != null ? stockLine.BinId : 0;
                             dbStockLine.PurchaseOrderUnitCost = stockLine.PurchaseOrderUnitCost;
                             dbStockLine.PurchaseOrderExtendedCost = stockLine.PurchaseOrderExtendedCost;
-                            dbStockLine.LocationId = stockLine.LocationId > 0 ? stockLine.LocationId : null;
                             dbStockLine.ConditionId = stockLine.ConditionId > 0 ? stockLine.ConditionId : null;
                             dbStockLine.ManufacturingTrace = stockLine.ManufacturingTrace;
                             dbStockLine.ManufacturerLotNumber = stockLine.ManufacturerLotNumber;
@@ -361,6 +363,13 @@ namespace QuickApp.Pro.Controllers
                             dbStockLine.ExpirationDate = stockLine.ExpirationDate;
                             dbStockLine.CertifiedDueDate = stockLine.CertifiedDueDate;
                             dbStockLine.UpdatedBy = UserName;
+
+                            dbStockLine.OwnerType = stockLine.OwnerType;
+                            dbStockLine.Owner = stockLine.Owner;
+                            dbStockLine.ObtainFromType = stockLine.ObtainFromType;
+                            dbStockLine.ObtainFrom = stockLine.ObtainFrom;
+                            dbStockLine.TraceableToType = stockLine.TraceableToType;
+                            dbStockLine.TraceableTo = stockLine.TraceableTo;
 
                             dbStockLine.UpdatedDate = DateTime.Now;
                             receivePart.StockLines.Remove(stockLine);
@@ -380,6 +389,21 @@ namespace QuickApp.Pro.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+
+        [HttpGet("getPurchaseOrderHeaderById/{purchaseOrderId}")]
+        public IActionResult GetPurchaseOrderHeaderById(long purchaseOrderId)
+        {
+            var repairOrderHeader = unitOfWork.PartStockLineMapper.GetPurchaseOrderHeader(purchaseOrderId);
+            return Ok(repairOrderHeader);
+        }
+
+        [HttpGet("GetReceivePOPartsForSummary/{purchaseOrderId}")]
+        public IActionResult GetReceivingPurchaseOrderForSummary(long purchaseOrderId)
+        {
+            var parts = unitOfWork.PartStockLineMapper.GetPurchaseOrderPartsForSummary(purchaseOrderId);
+            return Ok(parts);
         }
 
 

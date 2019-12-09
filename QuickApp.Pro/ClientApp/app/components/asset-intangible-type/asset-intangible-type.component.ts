@@ -8,6 +8,8 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 import { AssetIntangibleType } from "../../models/asset-intangible-type.model";
 import { AssetIntangibleTypeService } from "../../services/asset-intangible-type/asset-intangible-type.service";
 import { ModeOfOperation } from "../../models/ModeOfOperation.enum";
+import { ConfigurationService } from '../../services/configuration.service';
+import { validateRecordExistsOrNot, editValueAssignByCondition, getObjectById, selectedValueValidate, getObjectByValue } from '../../generic/autocomplete';
 
 @Component({
     selector: 'app-asset-intangible-type',
@@ -17,6 +19,7 @@ import { ModeOfOperation } from "../../models/ModeOfOperation.enum";
 })
 export class AssetIntangibleTypeComponent implements OnInit {
     itemList: AssetIntangibleType[];
+    filteredItemList: AssetIntangibleType[];
     columnHeaders: any[];
     itemDetails: any;
     currentRow: AssetIntangibleType;
@@ -30,8 +33,19 @@ export class AssetIntangibleTypeComponent implements OnInit {
     totalPages: number;
     modal: NgbModalRef;
     selectedColumns: any[];
-    auditHistory: any[];
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private alertService: AlertService, private coreDataService: AssetIntangibleTypeService, private modalService: NgbModal, private authService: AuthService) {
+    auditHistory: any[] = [];
+    formData = new FormData();
+    existingRecordsResponse: Object;
+    allAssetIntangibleTypes: any[] = [];
+    localCollection: any[] = [];
+    selectedAssetIntangible: any;
+    sourceAction: AssetIntangibleType;
+    private isEditMode: boolean = false;
+    private isDeleteMode: boolean = false;
+    loadingIndicator: boolean;
+    closeResult: string;
+
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private configurations: ConfigurationService, private alertService: AlertService, private coreDataService: AssetIntangibleTypeService, private modalService: NgbModal, private authService: AuthService) {
     }
     ngOnInit(): void {
         //gather up all the required data to be displayed on the screen 
@@ -76,12 +90,14 @@ export class AssetIntangibleTypeComponent implements OnInit {
     //calls API to soft-delete
     deleteItem() {
         let item = this.currentRow;
+        console.log('item', item);
         var itemExists = this.checkItemExists(item);
+        console.log('itemExists : ', itemExists);
         if (itemExists) {
             this.currentModeOfOperation = ModeOfOperation.Update;
             item.updatedBy = this.userName;
             item.isDelete = true;
-            this.coreDataService.update(item).subscribe(response => {
+            this.coreDataService.remove(item.assetIntangibleTypeId).subscribe(response => {
                 this.alertService.showMessage('Success', this.rowName + " removed successfully.", MessageSeverity.success);
                 this.getItemList();
             });
@@ -118,11 +134,20 @@ export class AssetIntangibleTypeComponent implements OnInit {
             item.isActive = rowData.isActive || false;
             item.isDelete = rowData.isDelete || false;
         }
+        else {
+            item.isActive = true;
+        }
         return item;
     }
 
     openItemForEdit(rowData): void {
+        console.log(rowData.assetIntangibleTypeId);
         this.currentRow = this.newItem(rowData);
+        this.currentRow = {
+            ...rowData,
+            assetIntangibleName: getObjectById('assetIntangibleTypeId', rowData.assetIntangibleTypeId, this.itemList)
+        };
+        console.log(this.currentRow);
         this.currentModeOfOperation = ModeOfOperation.Update;
     }
 
@@ -168,7 +193,13 @@ export class AssetIntangibleTypeComponent implements OnInit {
     }
 
     showItemEdit(rowData): void {
+        console.log(rowData.assetIntangibleTypeId);
         this.currentRow = this.newItem(rowData);
+        this.currentRow = {
+            ...rowData,
+            assetIntangibleName: getObjectById('assetIntangibleTypeId', rowData.assetIntangibleTypeId, this.itemList)
+        };
+        console.log(this.currentRow);
         this.currentModeOfOperation = ModeOfOperation.Update;
     }
 
@@ -201,6 +232,100 @@ export class AssetIntangibleTypeComponent implements OnInit {
         this.currentModeOfOperation = ModeOfOperation.None;
         this.selectedColumns = this.columnHeaders;
         this.currentRow = this.newItem(0);
+    }
+
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=AssetIntangibleType&fileName=AssetIntangibleType.xlsx`;
+
+        window.location.assign(url);
+    }
+
+    customExcelUpload(event) {
+        const file = event.target.files;
+
+        console.log(file);
+        if (file.length > 0) {
+
+            this.formData.append('file', file[0])
+            this.coreDataService.bulkUpload(this.formData).subscribe(res => {
+                event.target.value = '';
+
+                this.formData = new FormData();
+                this.existingRecordsResponse = res;
+                this.getItemList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+
+                // $('#duplicateRecords').modal('show');
+                // document.getElementById('duplicateRecords').click();
+
+            })
+        }
+
+    }
+
+    eventHandler(event) {
+        let value = event.target.value.toLowerCase()
+        if (this.selectedAssetIntangible) {
+            if (value == this.selectedAssetIntangible.toLowerCase()) {
+                this.disableSave = true;
+            }
+            else {
+                this.disableSave = false;
+            }
+        }
+    }
+
+    itemId(event) {
+        for (let i = 0; i < this.allAssetIntangibleTypes.length; i++) {
+            if (event == this.allAssetIntangibleTypes[i][0].assetIntangibleName) {
+                this.disableSave = true;
+                this.selectedAssetIntangible = event;
+            }
+
+        }
+    }
+    selectedName(object) {
+        const exists = selectedValueValidate('assetIntangibleName', object, this.currentRow);
+        this.disableSave = !exists;
+    }
+
+    filterAssetIntangibleName(event) {
+        this.filteredItemList = this.itemList;
+
+        const ReasonCodeData = [...this.itemList.filter(x => {
+            return x.assetIntangibleName.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.filteredItemList = ReasonCodeData;
+    }
+
+    filterIntangibleNames(event) {
+        this.localCollection = [];
+        for (let i = 0; i < this.itemList.length; i++) {
+            let assetIntangibleName = this.itemList[i].assetIntangibleName;
+            if (assetIntangibleName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.allAssetIntangibleTypes.push([{
+                    "assetIntangibleTypeId": this.itemList[i].assetIntangibleTypeId,
+                    "assetIntangibleName": assetIntangibleName
+                }]),
+                    this.localCollection.push(assetIntangibleName);
+            }
+        }
+        console.log('this.localCollection', this.localCollection);
+    }
+
+    checkReasonCodeExists(field, value) {
+        const exists = validateRecordExistsOrNot(field, value, this.itemList, this.currentRow);
+        if (exists.length > 0) {
+            this.disableSave = true;
+        }
+        else {
+            this.disableSave = false;
+        }
+
     }
 
 }

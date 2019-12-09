@@ -52,6 +52,11 @@ namespace DAL.Models
         public long? UnitOfMeasureId { get; set; }
         public int? PartStatusId { get; set; }
         public decimal ExtendedCost { get; set; }
+        public int? UnReservedQty { get; set; }
+        public int? UnIssuedQty { get; set; }
+        public int? QuantityAlreadyReserved { get; set; }
+        public int? QuantityAlreadyIssued { get; set; }
+        
 
     }
 }

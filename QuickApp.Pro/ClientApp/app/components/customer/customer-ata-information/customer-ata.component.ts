@@ -6,6 +6,9 @@ import { AuthService } from '../../../services/auth.service';
 import { CustomerService } from '../../../services/customer.service';
 import { MessageSeverity, AlertService } from '../../../services/alert.service';
 
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
+import { NgbModal, NgbActiveModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+
 @Component({
     selector: 'app-customer-ata',
     templateUrl: './customer-ata.component.html',
@@ -42,22 +45,29 @@ export class CustomerATAInformationComponent implements OnInit {
     search_ataSubChapterList: any;
     // search_ataChapterList: { value: number; label: string; }[];
     id: number;
+    contactid: number;
     searchATAParams: string;
     customerName: any;
     customerCode: any;
-
-
+    modal: NgbModalRef;
+    isDeleteMode: boolean = false;
+    public sourceCustomer: any = {}
+    customerContactATAMappingId: number;
     constructor(
         private atasubchapter1service: AtaSubChapter1Service,
         private atamain: AtaMainService,
         private authService: AuthService,
         public customerService: CustomerService,
         private alertService: AlertService,
+        private modalService: NgbModal,
+        private activeModal: NgbActiveModal,
     ) { }
 
     ngOnInit() {
         if (this.editMode) {
             this.id = this.editGeneralInformationData.customerId;
+           
+
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
             this.getMappedATAByCustomerId();
@@ -194,6 +204,7 @@ export class CustomerATAInformationComponent implements OnInit {
 
     // get sub chapter by multiple ids in the search
     getSubChapterByATAChapter() {
+
         console.log(this.search_SelectedATA);
         this.searchByFieldUrlCreateforATA();
 
@@ -223,11 +234,13 @@ export class CustomerATAInformationComponent implements OnInit {
         this.searchATAParams = '';
         // checks where multi select is empty or not and calls the service
         if (this.ataChapterIdUrl !== '' && this.ataSubchapterIdUrl !== '') {
+          
             this.searchATAParams = `ataChapterId=${
                 this.ataChapterIdUrl
                 }&ataSubChapterId=${this.ataSubchapterIdUrl}`;
         }
         else if (this.ataChapterIdUrl !== '') {
+
             this.searchATAParams = `ataChapterId=${this.ataChapterIdUrl}`;
         }
         else if (this.ataSubchapterIdUrl !== '') {
@@ -259,17 +272,17 @@ export class CustomerATAInformationComponent implements OnInit {
 
 
 
-    deleteATAMapping(rowData) {
-        this.customerService.deleteATAMappedByContactId(rowData.customerContactATAMappingId).subscribe(res => {
-            this.refreshCustomerATAMapped.emit(this.id);
-            this.alertService.showMessage(
-                'Success',
-                'Successfully Deleted ATA Mapped Data',
-                MessageSeverity.success
-            );
-            this.getMappedATAByCustomerId();
-        })
-    }
+    //deleteATAMapping(rowData) {
+    //    this.customerService.deleteATAMappedByContactId(rowData.customerContactATAMappingId).subscribe(res => {
+    //        this.refreshCustomerATAMapped.emit(this.id);
+    //        this.alertService.showMessage(
+    //            'Success',
+    //            'Successfully Deleted ATA Mapped Data',
+    //            MessageSeverity.success
+    //        );
+    //        this.getMappedATAByCustomerId();
+    //    })
+    //}
 
     nextClick() {
         this.tab.emit('Financial');
@@ -277,5 +290,51 @@ export class CustomerATAInformationComponent implements OnInit {
     backClick() {
         this.tab.emit('AircraftInfo');
     }
+
+
+    dismissModel() {
+        this.modal.close();
+    }
+    deleteATAMapping(content, rowData) {
+
+        this.isDeleteMode = true;
+
+
+        this.customerContactATAMappingId = rowData.customerContactATAMappingId
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+    deleteItemAndCloseModel() {
+
+        let airCraftingMappingId = this.customerContactATAMappingId;
+        if (airCraftingMappingId > 0) {
+
+            this.customerService.deleteATAMappedByContactId(airCraftingMappingId).subscribe(
+                response => this.saveCompleted(this.sourceCustomer),
+                error => this.saveFailedHelper(error));
+        }
+        this.modal.close();
+    }
+    private saveCompleted(user?: any) {
+
+        if (this.isDeleteMode == true) {
+            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
+            this.isDeleteMode = false;
+        }
+        else {
+            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+            this.saveCompleted
+        }
+        this.getMappedATAByCustomerId();
+    }
+    private saveFailedHelper(error: any) {
+
+        this.alertService.stopLoadingMessage();
+        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+    }
+
 
 }

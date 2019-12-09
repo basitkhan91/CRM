@@ -1,14 +1,12 @@
-﻿using System;
+﻿using AutoMapper;
+using DAL;
+using DAL.Models;
+using Microsoft.AspNetCore.Mvc;
+using QuickApp.Pro.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
-using AutoMapper;
-using DAL;
-using DAL.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using QuickApp.Pro.ViewModels;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -39,9 +37,9 @@ namespace QuickApp.Pro.Controllers
             {
 
                 var glAccountData = unitOfWork.Repository<GLAccount>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.GLAccountId);
-               return Ok(glAccountData);
+                return Ok(glAccountData);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -52,10 +50,10 @@ namespace QuickApp.Pro.Controllers
         public IActionResult getGLAccountBasic()
         {
             var basicglData = unitOfWork.gLAccount.GetGLAccountsLite();
-                var mappedList = Mapper.Map<IEnumerable<GLAccountBaseViewModel>>(basicglData);
-              return Ok(mappedList);
+            var mappedList = Mapper.Map<IEnumerable<GLAccountBaseViewModel>>(basicglData);
+            return Ok(mappedList);
         }
-             
+
         [HttpGet("getMiscData")]
         public IActionResult getMiscData()
         {
@@ -63,7 +61,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(glAccountMiscdata);
         }
 
-        
+
         [HttpGet("getById/{id}")]
         public IActionResult getGlAccountById(long id)
         {
@@ -82,6 +80,12 @@ namespace QuickApp.Pro.Controllers
                     glAccountData.MasterCompanyId = 1;
                     glAccountData.UpdatedDate = DateTime.Now;
                     glAccountData.CreatedDate = DateTime.Now;
+                    if (glAccountData.GLAccountNodeId != null)
+                    {
+                        glAccountData.LedgerName = GetLedgerName(glAccountData.GLAccountNodeId);
+                        glAccountData.LeafNodeName = GetLeafNodeName(glAccountData.GLAccountNodeId);
+                    }
+
                     unitOfWork.Repository<GLAccount>().Add(glAccountData);
                     unitOfWork.SaveChanges();
                     return Ok(glAccountData);
@@ -97,6 +101,16 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest();
             }
 
+        }
+
+        private string GetLedgerName(long? id)
+        {
+            return unitOfWork.Repository<GLAccountNode>().Find(x => x.GLAccountNodeId == id).FirstOrDefault().LedgerName;
+        }
+
+        private string GetLeafNodeName(long? id)
+        {
+            return unitOfWork.Repository<GLAccountNode>().Find(x => x.GLAccountNodeId == id).FirstOrDefault().NodeName;
         }
 
         [HttpPost("update")]

@@ -34,7 +34,7 @@
 								</div>
 								<div class="form-group">
 									<label>Need By <span class="clr-red">*</span></label>
-									<p-calendar class="pas-clder" [showIcon]="true" [minDate]="sourceRoApproval.openDate" name="needByDate" [(ngModel)]="sourceRoApproval.needByDate" (onSelect)="onSelectNeedByDate()" #needByDate="ngModel" required></p-calendar>
+									<p-calendar [ngClass]="inputValidCheck ? 'p-clder-validate' : ''" class="pas-clder" [showIcon]="true" [minDate]="sourceRoApproval.openDate" name="needByDate" [(ngModel)]="sourceRoApproval.needByDate" (onSelect)="onSelectNeedByDate()" #needByDate="ngModel" required></p-calendar>
 									<div *ngIf="needByDate.invalid && (needByDate.dirty || needByDate.touched)" class="alert alert-danger alert-danger-cstm">
 											<div *ngIf="needByDate.errors.required">
 												<small> Need By Date is required </small>
@@ -76,7 +76,7 @@
 								<div class="form-group">
 									<label>Vendor Name <span class="clr-red">*</span></label>
 									<div class="inner-addon right-addon inline-block">
-										<p-autoComplete field="vendorName" class="pautocomp-cstm" (onKeyUp)=eventHandler($event) 
+										<p-autoComplete field="vendorName" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" (onKeyUp)=eventHandler($event) 
 										[(ngModel)]="sourceRoApproval.vendorId" name="vendorName" [suggestions]="vendorNames" 
 										(completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" 
 										errorMessage="Records not found" [forceSelection]="true" #vendorName=ngModel (onSelect)="selectedVendorName($event)" required>
@@ -91,9 +91,7 @@
 								<div class="form-group">
 									<label>Vendor Code <span class="clr-red">*</span></label>
 									<div class="inner-addon right-addon inline-block">
-											<p-autoComplete field="vendorCode" class="pautocomp-cstm" 
-											[(ngModel)]="sourceRoApproval.vendorCode" name="vendorCode" [suggestions]="vendorCodes" 
-											(completeMethod)="filterVendorCodes($event)"  [size]="30" [minLength]="1" [dropdown]="true" #vendorCode="ngModel" errorMessage="Records not found" [forceSelection]="true" required>                   </p-autoComplete>
+											<p-autoComplete field="vendorCode" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" [(ngModel)]="sourceRoApproval.vendorCode" name="vendorCode" [suggestions]="vendorCodes" (completeMethod)="filterVendorCodes($event)"  [size]="30" [minLength]="1" [dropdown]="true" #vendorCode="ngModel" errorMessage="Records not found" [forceSelection]="true" required>   </p-autoComplete>
 										<div *ngIf="vendorCode.invalid && (vendorCode.dirty || vendorCode.touched)" class="alert alert-danger alert-danger-cstm">
 												<div *ngIf="vendorCode.errors.required">
 													<small> Vendor Code is required </small>
@@ -104,9 +102,7 @@
 								<div class="form-group">
 									<label>Vendor Contact <span class="clr-red">*</span></label>
 									<div class="inner-addon right-addon inline-block">
-										<p-autoComplete field="csrName" class="pautocomp-cstm" 
-										[(ngModel)]="sourceRoApproval.vendorContactId" name="vendorContact" [suggestions]="vendorContactsHeader" 
-										(completeMethod)="filterVendorContacts($event)"  [size]="30" [minLength]="1" [dropdown]="true"  errorMessage="Records not found" [forceSelection]="true" [disabled]="vendorName.invalid" #vendorContact="ngModel" required></p-autoComplete>
+										<p-autoComplete field="csrName" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" [(ngModel)]="sourceRoApproval.vendorContactId" name="vendorContact" [suggestions]="vendorContactsHeader" (completeMethod)="filterVendorContacts($event)"  [size]="30" [minLength]="1" [dropdown]="true"  errorMessage="Records not found" [forceSelection]="true" [disabled]="vendorName.invalid" #vendorContact="ngModel" required></p-autoComplete>
 										<div *ngIf="vendorContact.invalid && (vendorContact.dirty || vendorContact.touched)" class="alert alert-danger alert-danger-cstm">
 											<div *ngIf="vendorContact.errors.required">
 												<small> Vendor Contact is required </small>
@@ -131,16 +127,14 @@
 												<input class="form-control" type="text" name="creditTerms" [(ngModel)]="sourceRoApproval.creditTerms" disabled>
 										</div>
 									</div>
-								</div>
-		
+								</div>		
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
 									<label>Requisitioner <span class="clr-red">*</span></label>
 									<div class="inner-addon right-addon inline-block">
 										<div class="inner-addon right-addon inline-block">
-											<p-autoComplete field="label" class="pautocomp-cstm" 
-											[(ngModel)]="sourceRoApproval.requisitionerId" name="requisitionerId" [suggestions]="requisitionerList" (completeMethod)="filterRequisitioner($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" #requisitionerId="ngModel" required>
+											<p-autoComplete field="label" class="pautocomp-cstm" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" [(ngModel)]="sourceRoApproval.requisitionerId" name="requisitionerId" [suggestions]="requisitionerList" (completeMethod)="filterRequisitioner($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" #requisitionerId="ngModel" required>
 											</p-autoComplete>
 											<div *ngIf="requisitionerId.invalid && (requisitionerId.dirty || requisitionerId.touched)" class="alert alert-danger alert-danger-cstm">
 													<div *ngIf="requisitionerId.errors.required">
@@ -276,7 +270,7 @@
 								<th>Cond <span class="clr-red">*</span></th>
 								<th>Order Qty <span class="clr-red">*</span></th>
 								<th>Unit Cost <span class="clr-red">*</span></th>
-								<th>Disc Percent</th>
+								<th>Disc Percent <span class="clr-red">*</span></th>
 								<th>Disc./unit</th>
 								<th>Disc. Amount</th> <!--Disc. Cost/unit-->
 								<th>Ext Cost <span class="clr-red">*</span></th>
@@ -317,8 +311,7 @@
 									</td>
 									<td>
 										<div class="inner-addon inline-block">
-											<p-autoComplete field="label" [(ngModel)]="partList.partNumberId"  name="partNumber{{row_index}}"
-											[suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" #partNum="ngModel" errorMessage="Records not found" (onSelect)="getPNDetailsById(partList)" [forceSelection]="true"  required>                       
+											<p-autoComplete field="label" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" [(ngModel)]="partList.partNumberId"  name="partNumber{{row_index}}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" #partNum="ngModel" errorMessage="Records not found" (onSelect)="getPNDetailsById(partList)" [forceSelection]="true"  required>                       
 											</p-autoComplete>
 											<div *ngIf="partNum.invalid && (partNum.dirty || partNum.touched)" class="alert alert-danger alert-danger-cstm">
 													<div *ngIf="partNum.errors.required">
@@ -352,7 +345,7 @@
 									<td>
 										{{partList.UOMShortName}}
 									</td>
-									<td><p-calendar class="pcal-cpo-grid" [showIcon]="true" [minDate]="sourceRoApproval.openDate" name="needByDate{{row_index}}" [(ngModel)]="partList.needByDate" #pNeedByDate="ngModel" required></p-calendar>
+									<td><p-calendar [ngClass]="inputValidCheck ? 'p-clder-validate' : ''" class="pcal-cpo-grid" [showIcon]="true" [minDate]="sourceRoApproval.openDate" name="needByDate{{row_index}}" [(ngModel)]="partList.needByDate" #pNeedByDate="ngModel" required></p-calendar>
 										<div *ngIf="pNeedByDate.invalid && (pNeedByDate.dirty || pNeedByDate.touched)" class="alert alert-danger alert-danger-cstm">
 												<div *ngIf="pNeedByDate.errors.required">
 													<small> NeedBy Date is required </small>
@@ -360,9 +353,7 @@
 										</div>
 									</td>
 									<td>
-										<p-autoComplete field="description" class="pautocomp-cstm"
-										[(ngModel)]="partList.conditionId" name="conditionCode{{row_index}}" [suggestions]="conditionList" 
-										(completeMethod)="filterCond($event)"  [size]="30" [minLength]="1" [dropdown]="true" #conditionCode="ngModel" errorMessage="Records not found" [forceSelection]="true" required>                                       
+										<p-autoComplete field="description" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" [(ngModel)]="partList.conditionId" name="conditionCode{{row_index}}" [suggestions]="conditionList" (completeMethod)="filterCond($event)"  [size]="30" [minLength]="1" [dropdown]="true" #conditionCode="ngModel" errorMessage="Records not found" [forceSelection]="true" [disabled]="!partList.itemMasterId" (onSelect)="getStockLineByItemMasterId(partList)" required>
 										</p-autoComplete>
 										<div *ngIf="conditionCode.invalid && (conditionCode.dirty || conditionCode.touched)" class="alert alert-danger alert-danger-cstm">
 												<div *ngIf="conditionCode.errors.required">
@@ -370,14 +361,14 @@
 												</div>
 										</div>     
 									</td>
-									<td><input type="number" [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" [(ngModel)]="partList.quantityOrdered" name="parentQtyOrdered{{row_index}}" pKeyFilter="pint" #parentQtyOrdered="ngModel" (keyup)="onChangeParentQtyOrdered($event, partList); onGetDiscAmount(partList); onGetExtCost(partList);" required>
+									<td><input type="number" [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" [(ngModel)]="partList.quantityOrdered" name="parentQtyOrdered{{row_index}}" pKeyFilter="pint" #parentQtyOrdered="ngModel" (keyup)="onChangeParentQtyOrdered($event, partList); onGetDiscAmount(partList); onGetDiscPerUnit(partList); onGetExtCost(partList);" required>
 										<div *ngIf="parentQtyOrdered.invalid && (parentQtyOrdered.dirty || parentQtyOrdered.touched)" class="alert alert-danger alert-danger-cstm">
 												<div *ngIf="parentQtyOrdered.errors.required">
 													<small> Order Qty is required </small>
 												</div>
 										</div> 
 									</td>
-									<td><input type="text" class="form-control" [(ngModel)]="partList.unitCost" name="unitCost{{row_index}}" pKeyFilter="pint" (keyup)="onGetExtCost(partList); onGetDiscPerUnit(partList);" #unitCost="ngModel" required>
+									<td><input type="text" [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" [(ngModel)]="partList.unitCost" name="unitCost{{row_index}}" pKeyFilter="pint" (keyup)="onGetExtCost(partList); onGetDiscAmount(partList); onGetDiscPerUnit(partList);" #unitCost="ngModel" required>
 										<div *ngIf="unitCost.invalid && (unitCost.dirty || unitCost.touched)" class="alert alert-danger alert-danger-cstm">
 												<div *ngIf="unitCost.errors.required">
 													<small> Unit Cost is required </small>
@@ -385,30 +376,28 @@
 										</div> 
 									</td>
 									<td>
-										<p-autoComplete field="percentValue" class="pautocomp-cstm" 
-										[(ngModel)]="partList.discountPercent" name="discountPercent{{row_index}}" [suggestions]="discountPercentList" (completeMethod)="filterDiscountPercent($event)" (onSelect)="onGetDiscPerUnit(partList); onGetDiscAmount(partList); onGetExtCost(partList);" (onBlur)="onGetDiscPerUnit(partList); onGetDiscAmount(partList); onGetExtCost(partList);" [size]="30" [minLength]="1" [dropdown]="true" [forceSelection]="true">
+										<p-autoComplete field="percentValue" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" [(ngModel)]="partList.discountPercent" name="discountPercent{{row_index}}" [suggestions]="discountPercentList" (completeMethod)="filterDiscountPercent($event)" (onSelect)="onGetDiscPerUnit(partList); onGetDiscAmount(partList); onGetExtCost(partList);" (onBlur)="onGetDiscPerUnit(partList); onGetDiscAmount(partList); onGetExtCost(partList);" [size]="30" [minLength]="1" [dropdown]="true" [forceSelection]="true" required>
 										</p-autoComplete>
 									</td>
 									<td><input type="number" class="form-control" [(ngModel)]="partList.discountPerUnit" name="discountPerUnit{{row_index}}" pKeyFilter="pint" disabled></td>
 									<td><input type="number" class="form-control" [(ngModel)]="partList.discountAmount" name="discountAmount{{row_index}}" pKeyFilter="pint" disabled></td>
-									<td><input type="number" class="form-control" [(ngModel)]="partList.extendedCost" name="extendedCost{{row_index}}" pKeyFilter="pint" disabled required></td>
+									<td><input type="number" [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" [(ngModel)]="partList.extendedCost" name="extendedCost{{row_index}}" pKeyFilter="pint" disabled required></td>
 									<td>
-										<p-autoComplete field="symbol" class="pautocomp-cstm"
-										[(ngModel)]="partList.functionalCurrencyId" name="functionalCurrencyId{{row_index}}" [suggestions]="functionalCurrList" (completeMethod)="filterFunctionalCurrency($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" required>
+										<p-autoComplete field="symbol" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" [(ngModel)]="partList.functionalCurrencyId" name="functionalCurrencyId{{row_index}}" [suggestions]="functionalCurrList" (completeMethod)="filterFunctionalCurrency($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" required>
 										</p-autoComplete>
 									</td>
-									<td><input type="number" class="form-control" [(ngModel)]="partList.foreignExchangeRate" name="foreignExchangeRate{{row_index}}" pKeyFilter="num" required></td>
+									<td><input type="number" [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" [(ngModel)]="partList.foreignExchangeRate" name="foreignExchangeRate{{row_index}}" pKeyFilter="num" required></td>
 									<td>
-										<p-autoComplete field="symbol" class="pautocomp-cstm" [(ngModel)]="partList.reportCurrencyId" name="reportCurrencyId{{row_index}}" [suggestions]="functionalTransList" (completeMethod)="filterTransCurrency($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" required
+										<p-autoComplete field="symbol" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" [(ngModel)]="partList.reportCurrencyId" name="reportCurrencyId{{row_index}}" [suggestions]="functionalTransList" (completeMethod)="filterTransCurrency($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" required
 										> <!--[disabled]=true-->          
 										</p-autoComplete>
 									</td>
 									<td>
-										<p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="partList.stocklineId" name="stocklineNum{{row_index}}" [suggestions]="allStocklineDetails" (completeMethod)="filterStocklineNum($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
+										<p-autoComplete field="stockLineNumber" class="pautocomp-cstm" [(ngModel)]="partList.stocklineId" name="stocklineNum{{row_index}}" [suggestions]="allStocklineDetails" (completeMethod)="filterStocklineNum($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [disabled]="!partList.conditionId" (onSelect)="getStockLineDetails(partList)" [forceSelection]="true"></p-autoComplete>
 									</td>
 									<td><input type="text" class="form-control" [(ngModel)]="partList.controlId" name="controlId{{row_index}}" disabled></td>
 									<td><input type="text" class="form-control" [(ngModel)]="partList.controlNumber" name="controlNumber{{row_index}}" disabled></td>
-									<td><input type="text" class="form-control" [(ngModel)]="partList.purchaseOrderId" name="purchaseOrderId{{row_index}}" disabled></td>
+									<td><input type="text" class="form-control" [(ngModel)]="partList.purchaseOrderNum" name="purchaseOrderNum{{row_index}}" disabled></td>
 									<td><input type="number" class="form-control" [(ngModel)]="partList.workOrderId" name="workOrderId{{row_index}}"></td>
 									<td><input type="number" class="form-control" [(ngModel)]="partList.salesOrderId" name="salesOrderId{{row_index}}"></td>
 									<td style="min-width: 90px;">									
@@ -458,10 +447,10 @@
 									<th>UOM</th>
 									<th>Order Qty</th>
 									<th>Need By</th>
-									<th>Stockline Num</th>
+									<!-- <th>Stockline Num</th>
 									<th>Control Id</th>
 									<th>Control Num</th>
-									<th>PO</th>
+									<th>PO</th> -->
 									<th colspan="4">Management Structure <span class="clr-red">*</span></th>
 									<th colspan="10"></th>
 								</tr>
@@ -555,12 +544,12 @@
 									<td>{{partList.UOMShortName}}</td>
 									<td><input class="form-control" type="number" pKeyFilter="pint" [(ngModel)]="partChildList.quantityOrdered" name="childQtyOrdered{{row_index}}{{row_no}}" (keyup)="onChangeChildQtyOrdered(partList)" /></td> <!--[disabled]="!partList.quantityOrdered"-->
 									<td><p-calendar class="pcal-cpo-grid" [showIcon]="true" [minDate]="sourceRoApproval.openDate" [(ngModel)]="partChildList.needByDate" name="childNeedByDate{{row_index}}{{row_no}}"></p-calendar></td>
-									<td>
+									<!-- <td>
 										<p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="partChildList.stocklineId" name="stocklineNum{{row_index}}{{row_no}}" [suggestions]="allStocklineDetails" (completeMethod)="filterStocklineNum($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
 									</td>
 									<td><input type="text" class="form-control" [(ngModel)]="partChildList.controlId" name="controlId{{row_index}}{{row_no}}" disabled></td>
 									<td><input type="text" class="form-control" [(ngModel)]="partChildList.controlNumber" name="controlNumber{{row_index}}{{row_no}}" disabled></td>
-									<td><input type="text" class="form-control" [(ngModel)]="partChildList.purchaseOrderId" name="purchaseOrderId{{row_index}}{{row_no}}" disabled></td>
+									<td><input type="text" class="form-control" [(ngModel)]="partChildList.purchaseOrderId" name="purchaseOrderId{{row_index}}{{row_no}}" disabled></td> -->
 									<td>
 										<label style="width:90px;">Company:</label>
 										<select class="inner-addon right-addon autosuggesions-add inline-block mw400"
@@ -747,7 +736,7 @@
 						<div class="form-group">
 							<div class="form-row" *ngIf="sourceRoApproval.shipToUserTypeId==1">
 								<div class="col-sm-11">
-										<p-autoComplete field="label" class="pautocomp-cstm" (onClear)="clearInputShipTo()"
+										<p-autoComplete field="label" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" (onClear)="clearInputShipTo()"
 										[(ngModel)]="sourceRoApproval.shipToUserId" name="shipCustomerName" [suggestions]="customerNames" 
 										(completeMethod)="filterNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onShipToCustomerSelected($event.value, sourceRoApproval);" #shipCustomerName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
 									<div *ngIf="shipCustomerName.invalid && (shipCustomerName.dirty || shipCustomerName.touched)" class="alert alert-danger alert-danger-cstm">
@@ -763,8 +752,7 @@
 							</div>
 							<div class="form-row" *ngIf="sourceRoApproval.shipToUserTypeId==2">
 								<div class="col-sm-11">
-									<p-autoComplete field="vendorName" class="pautocomp-cstm"
-									(onClear)="clearInputShipTo()" (onKeyUp)=eventHandler($event) [(ngModel)]="sourceRoApproval.shipToUserId" name="shipVendorName" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onShipToVendorSelected($event.vendorId)" errorMessage="Records not found" [forceSelection]="true" #shipVendorName="ngModel" required>
+									<p-autoComplete field="vendorName" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" (onClear)="clearInputShipTo()" (onKeyUp)=eventHandler($event) [(ngModel)]="sourceRoApproval.shipToUserId" name="shipVendorName" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onShipToVendorSelected($event.vendorId)" errorMessage="Records not found" [forceSelection]="true" #shipVendorName="ngModel" required>
 									</p-autoComplete>
 									<div *ngIf="shipVendorName.invalid && (shipVendorName.dirty || shipVendorName.touched)" class="alert alert-danger alert-danger-cstm">
 											<div *ngIf="shipVendorName.errors.required">
@@ -779,7 +767,7 @@
 							</div>
 							<div class="form-row" *ngIf="sourceRoApproval.shipToUserTypeId==3">
 								<div class="col-sm-12">
-										<p-autoComplete field="label" class="pautocomp-cstm"
+										<p-autoComplete field="label" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm"
 										(onClear)="clearInputShipTo()"
 										(onSelect)="onShipToCompanySelected($event)" 
 										 [(ngModel)]="sourceRoApproval.shipToUserId" name="shipCompanyName" 
@@ -806,7 +794,7 @@
 								<span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourceRoApproval.shipToUserId" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('AddCusSiteName')"></a></span>
 								<span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourceRoApproval.shipToUserId" class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('EditCusSiteName', sourceRoApproval)"></a></span>
 							</label>
-							<select class="form-control" (change)="onShipToGetAddress(sourceRoApproval , sourceRoApproval.shipToAddressId)" name="shipCusSiteName" [(ngModel)]="sourceRoApproval.shipToAddressId" #shipCusSiteName="ngModel" required>
+							<select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" (change)="onShipToGetAddress(sourceRoApproval , sourceRoApproval.shipToAddressId)" name="shipCusSiteName" [(ngModel)]="sourceRoApproval.shipToAddressId" #shipCusSiteName="ngModel" required>
 								<option>-- Select --</option>
 								<option *ngFor="let object of shipToCusData" 
 								[ngValue]="object.customerShippingAddressId">{{object.siteName}}</option>
@@ -823,7 +811,7 @@
 								<span style="margin-left:3px;cursor:pointer;"><a  *ngIf="sourceRoApproval.shipToUserId" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('AddVenSiteName')"></a></span>
 								<span style="margin-left:5px;cursor:pointer;"><a  *ngIf="sourceRoApproval.shipToUserId" class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('EditVenSiteName', sourceRoApproval)"></a></span>
 							</label>
-							<select class="form-control" (change)="onShipToGetAddress(sourceRoApproval ,sourceRoApproval.shipToAddressId)" name="shipVenSiteName" [(ngModel)]="sourceRoApproval.shipToAddressId" #shipVenSiteName="ngModel" required>
+							<select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" (change)="onShipToGetAddress(sourceRoApproval ,sourceRoApproval.shipToAddressId)" name="shipVenSiteName" [(ngModel)]="sourceRoApproval.shipToAddressId" #shipVenSiteName="ngModel" required>
 								<option>-- Select --</option>
 								<option *ngFor="let object of vendorSelected"  
 								[ngValue]="object.vendorShippingAddressId">{{object.siteName}}</option>
@@ -840,7 +828,7 @@
 								<span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourceRoApproval.shipToUserId" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('AddComSiteName')"></a></span>
 								<span style="margin-left:5px;cursor:pointer;"><a  *ngIf="sourceRoApproval.shipToUserId" class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('EditComSiteName', sourceRoApproval)"></a></span>
 							</label>
-							<select class="form-control" (change)="onShipToGetCompanyAddress(sourceRoApproval.shipToAddressId)" name="shipCompSiteName" [(ngModel)]="sourceRoApproval.shipToAddressId" #shipCompSiteName="ngModel" required>
+							<select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" (change)="onShipToGetCompanyAddress(sourceRoApproval.shipToAddressId)" name="shipCompSiteName" [(ngModel)]="sourceRoApproval.shipToAddressId" #shipCompSiteName="ngModel" required>
 								<option>-- Select --</option>
 								<option *ngFor="let site of companySiteList_Shipping" [ngValue]="site.legalEntityShippingAddressId">{{site.siteName}}</option>
 							</select>
@@ -872,7 +860,7 @@
 						</div>
 						<div class="form-group" *ngIf="sourceRoApproval.shipToUserTypeId==1 ">
 							<label>Contact Name <span class="clr-red">*</span></label>
-							<p-autoComplete field="firstName" class="pautocomp-cstm" 
+							<p-autoComplete field="firstName" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" 
 							[(ngModel)]="sourceRoApproval.shipToContactId" name="shipToCustomerContactName" [suggestions]="firstNamesShipTo" (completeMethod)="filterCustomerContactsForShipTo($event)"  [size]="30" [minLength]="1" [dropdown]="true" #shipCusContactName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
 							<div *ngIf="shipCusContactName.invalid && (shipCusContactName.dirty || shipCusContactName.touched)" class="alert alert-danger alert-danger-cstm">
 									<div *ngIf="shipCusContactName.errors.required">
@@ -882,7 +870,7 @@
 						</div>
 						<div class="form-group" *ngIf="sourceRoApproval.shipToUserTypeId==2">
 							<label>Contact Name <span class="clr-red">*</span></label>
-							<p-autoComplete field="firstName" class="pautocomp-cstm" [(ngModel)]="sourceRoApproval.shipToContactId" name="shipToVendorContactName" [suggestions]="firstNamesShipTo1" (completeMethod)="filterVendorContactsForShipTo($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" #shipVenContactName="ngModel" required> <!--required-->
+							<p-autoComplete field="firstName" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" [(ngModel)]="sourceRoApproval.shipToContactId" name="shipToVendorContactName" [suggestions]="firstNamesShipTo1" (completeMethod)="filterVendorContactsForShipTo($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" #shipVenContactName="ngModel" required> <!--required-->
 							</p-autoComplete>
 							<div *ngIf="shipVenContactName.invalid && (shipVenContactName.dirty || shipVenContactName.touched)" class="alert alert-danger alert-danger-cstm">
 									<div *ngIf="shipVenContactName.errors.required">
@@ -892,7 +880,7 @@
 						</div>
 						<div class="form-group" *ngIf="sourceRoApproval.shipToUserTypeId==3 ">
 							<label>Contact Name <span class="clr-red">*</span></label>
-							<p-autoComplete field="firstName" class="pautocomp-cstm" 
+							<p-autoComplete field="firstName" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" 
 							[(ngModel)]="sourceRoApproval.shipToContactId" name="shipToCustomerContactName" [suggestions]="contactListForShippingCompany" (completeMethod)="filterShippingContacts($event)"  [size]="30" [minLength]="1" [dropdown]="true" #shipCusContactName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
 							<div *ngIf="shipCusContactName.invalid && (shipCusContactName.dirty || shipCusContactName.touched)" class="alert alert-danger alert-danger-cstm">
 									<div *ngIf="shipCusContactName.errors.required">
@@ -913,7 +901,7 @@
 									<span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourceRoApproval.shipToUserId" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#shipToShipVia" (click)="resetAddressShipViaForm();"></a></span>
 									<span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourceRoApproval.shipToUserId" class="fa fa-edit fa-lg" data-toggle="modal" data-target="#shipToShipVia" (click)="onEditShipVia(sourceRoApproval)"></a></span>
 								</label>
-								<select class="form-control" name="cusShipViaId"  (ngModelChange)="getShipViaDetails($event)" [(ngModel)]="sourceRoApproval.shipViaId" #cusShipViaId="ngModel" required> <!--required-->
+								<select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" name="cusShipViaId"  (ngModelChange)="getShipViaDetails($event)" [(ngModel)]="sourceRoApproval.shipViaId" #cusShipViaId="ngModel" required> <!--required-->
 									<option>-- Select --</option>
 									<option *ngFor="let object of shipViaList" [ngValue]="object.shippingViaId">{{object.name}}</option>
 								</select>
@@ -925,7 +913,7 @@
 							</div>
 							<div class="form-group">
 								<label>Shipping Cost <span class="clr-red">*</span></label>
-								<input class="form-control" type="number" name="cusShippingCost" [(ngModel)]="sourceRoApproval.shippingCost" #cusShippingCost="ngModel" required><!--required-->
+								<input [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" type="number" name="cusShippingCost" [(ngModel)]="sourceRoApproval.shippingCost" #cusShippingCost="ngModel" required><!--required-->
 								<div *ngIf="cusShippingCost.invalid && (cusShippingCost.dirty || cusShippingCost.touched)" class="alert alert-danger alert-danger-cstm">
 									<div *ngIf="cusShippingCost.errors.required">
 										<small> Shipping Cost is required </small>
@@ -934,7 +922,7 @@
 							</div>
 							<div class="form-group">
 								<label>Handling Cost <span class="clr-red">*</span></label>
-								<input class="form-control" type="number" name="cusHandlingCost" [(ngModel)]="sourceRoApproval.handlingCost" #cusHandlingCost="ngModel" required><!--required-->
+								<input [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" type="number" name="cusHandlingCost" [(ngModel)]="sourceRoApproval.handlingCost" #cusHandlingCost="ngModel" required><!--required-->
 								<div *ngIf="cusHandlingCost.invalid && (cusHandlingCost.dirty || cusHandlingCost.touched)" class="alert alert-danger alert-danger-cstm">
 									<div *ngIf="cusHandlingCost.errors.required">
 										<small> Handling Cost is required </small>
@@ -973,7 +961,7 @@
 									<span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#shipToShipVia" (click)="resetAddressShipViaForm();"></a></span>
 									<span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#shipToShipVia" (click)="onEditShipVia(sourceRoApproval)"></a></span>
 								</label>
-								<select class="form-control" name="cusShipViaId"    (ngModelChange)="getShipViaDetails($event)" [(ngModel)]="sourceRoApproval.shipViaId" #cusShipViaId="ngModel" required> <!--required-->
+								<select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" name="cusShipViaId"    (ngModelChange)="getShipViaDetails($event)" [(ngModel)]="sourceRoApproval.shipViaId" #cusShipViaId="ngModel" required> <!--required-->
 									<option>-- Select --</option>
 									<option *ngFor="let object of shipViaList" 
 								 
@@ -988,7 +976,7 @@
 							</div>
 							<div class="form-group">
 								<label>Shipping Cost <span class="clr-red">*</span></label>
-								<input class="form-control" type="number" name="cusShippingCost" [(ngModel)]="sourceRoApproval.shippingCost" #cusShippingCost="ngModel" required><!--required-->
+								<input [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" type="number" name="cusShippingCost" [(ngModel)]="sourceRoApproval.shippingCost" #cusShippingCost="ngModel" required><!--required-->
 								<div *ngIf="cusShippingCost.invalid && (cusShippingCost.dirty || cusShippingCost.touched)" class="alert alert-danger alert-danger-cstm">
 									<div *ngIf="cusShippingCost.errors.required">
 										<small> Shipping Cost is required </small>
@@ -997,7 +985,7 @@
 							</div>
 							<div class="form-group">
 								<label>Handling Cost <span class="clr-red">*</span></label>
-								<input class="form-control" type="number" name="cusHandlingCost" [(ngModel)]="sourceRoApproval.handlingCost" #cusHandlingCost="ngModel" required><!--required-->
+								<input [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" type="number" name="cusHandlingCost" [(ngModel)]="sourceRoApproval.handlingCost" #cusHandlingCost="ngModel" required><!--required-->
 								<div *ngIf="cusHandlingCost.invalid && (cusHandlingCost.dirty || cusHandlingCost.touched)" class="alert alert-danger alert-danger-cstm">
 									<div *ngIf="cusHandlingCost.errors.required">
 										<small> Handling Cost is required </small>
@@ -1035,7 +1023,7 @@
 									<span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourceRoApproval.shipToUserId" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#shipToShipVia" (click)="resetAddressShipViaForm();"></a></span>
 									<span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourceRoApproval.shipToUserId" class="fa fa-edit fa-lg" data-toggle="modal" data-target="#shipToShipVia" (click)="onEditShipVia(sourceRoApproval)"></a></span>
 								</label>
-								<select class="form-control" name="cusShipViaId"  (ngModelChange)="getShipViaDetails($event)" [(ngModel)]="sourceRoApproval.shipViaId" #cusShipViaId="ngModel" required> <!--required-->
+								<select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" name="cusShipViaId"  (ngModelChange)="getShipViaDetails($event)" [(ngModel)]="sourceRoApproval.shipViaId" #cusShipViaId="ngModel" required> <!--required-->
 									<option>-- Select --</option>
 									<option *ngFor="let object of shipViaList" 
 								   
@@ -1050,7 +1038,7 @@
 							</div>
 							<div class="form-group">
 								<label>Shipping Cost <span class="clr-red">*</span></label>
-								<input class="form-control" type="number" name="cusShippingCost" [(ngModel)]="sourceRoApproval.shippingCost" #cusShippingCost="ngModel" required><!--required-->
+								<input [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" type="number" name="cusShippingCost" [(ngModel)]="sourceRoApproval.shippingCost" #cusShippingCost="ngModel" required><!--required-->
 								<div *ngIf="cusShippingCost.invalid && (cusShippingCost.dirty || cusShippingCost.touched)" class="alert alert-danger alert-danger-cstm">
 									<div *ngIf="cusShippingCost.errors.required">
 										<small> Shipping Cost is required </small>
@@ -1059,7 +1047,7 @@
 							</div>
 							<div class="form-group">
 								<label>Handling Cost <span class="clr-red">*</span></label>
-								<input class="form-control" type="number" name="cusHandlingCost" [(ngModel)]="sourceRoApproval.handlingCost" #cusHandlingCost="ngModel" required><!--required-->
+								<input [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" type="number" name="cusHandlingCost" [(ngModel)]="sourceRoApproval.handlingCost" #cusHandlingCost="ngModel" required><!--required-->
 								<div *ngIf="cusHandlingCost.invalid && (cusHandlingCost.dirty || cusHandlingCost.touched)" class="alert alert-danger alert-danger-cstm">
 									<div *ngIf="cusHandlingCost.errors.required">
 										<small> Handling Cost is required </small>
@@ -1110,7 +1098,7 @@
 						<div class="form-group">
 							<div class="form-row" *ngIf="sourceRoApproval.billToUserTypeId==1">
 								<div class="col-sm-11">
-										<p-autoComplete field="label" class="pautocomp-cstm" (onClear)="clearInputBillTo()"
+										<p-autoComplete field="label" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" (onClear)="clearInputBillTo()"
 										[(ngModel)]="sourceRoApproval.billToUserId" name="billToUserName" [suggestions]="customerNames" 
 										(completeMethod)="filterNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onBillToCustomerSelected($event.value)" #billCustomerName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
 								  
@@ -1127,7 +1115,7 @@
 							</div>
 							<div class="form-row" *ngIf="sourceRoApproval.billToUserTypeId==2">
 								<div class="col-sm-11">
-									<p-autoComplete (onClear)="clearInputBillTo()" field="vendorName" class="pautocomp-cstm" (onKeyUp)=eventHandler($event) [(ngModel)]="sourceRoApproval.billToUserId" name="billToUserName" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onBillToVendorSelected($event.vendorId)" errorMessage="Records not found" [forceSelection]="true" #billVendorName="ngModel" required>
+									<p-autoComplete (onClear)="clearInputBillTo()" field="vendorName" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" (onKeyUp)=eventHandler($event) [(ngModel)]="sourceRoApproval.billToUserId" name="billToUserName" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onBillToVendorSelected($event.vendorId)" errorMessage="Records not found" [forceSelection]="true" #billVendorName="ngModel" required>
 									</p-autoComplete>
 									<div *ngIf="billVendorName.invalid && (billVendorName.dirty || billVendorName.touched)" class="alert alert-danger alert-danger-cstm">
 											<div *ngIf="billVendorName.errors.required">
@@ -1142,7 +1130,7 @@
 							</div>
 							<div class="form-row" *ngIf="sourceRoApproval.billToUserTypeId==3">
 								<div class="col-sm-12">
-										<p-autoComplete field="label" class="pautocomp-cstm"
+										<p-autoComplete field="label" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" 
 										(onClear)="clearInputBillTo()"
 										(onSelect)="onBillToCompanySelected($event)" 
 										[(ngModel)]="sourceRoApproval.billToUserId" name="billCompanyName" 
@@ -1169,7 +1157,7 @@
 								<span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourceRoApproval.billToUserId"  class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('AddCusSiteName')"></a></span>
 								<span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourceRoApproval.billToUserId" class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('EditCusSiteName', sourceRoApproval)"></a></span>
 							</label>
-							<select class="form-control" (change)="onBillToGetAddress(sourceRoApproval , sourceRoApproval.billToAddressId)" name="billCusSiteName" [(ngModel)]="sourceRoApproval.billToAddressId" #billCusSiteName="ngModel" required>
+							<select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" (change)="onBillToGetAddress(sourceRoApproval , sourceRoApproval.billToAddressId)" name="billCusSiteName" [(ngModel)]="sourceRoApproval.billToAddressId" #billCusSiteName="ngModel" required>
 								<option>-- Select --</option>
 								<option *ngFor="let object of billToCusData" [ngValue]="object.customerBillingAddressId">{{object.siteName}} </option>
 							</select>
@@ -1185,7 +1173,7 @@
 								<span style="margin-left:3px;cursor:pointer;"><a  *ngIf="sourceRoApproval.billToUserId" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('AddVenSiteName')"></a></span>
 								<span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourceRoApproval.billToUserId" class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('EditVenSiteName', sourceRoApproval)"></a></span>
 							</label>
-							<select class="form-control" (change)="onBillToGetAddress(sourceRoApproval , sourceRoApproval.billToAddressId)" name="billVendorSiteName" [(ngModel)]="sourceRoApproval.billToAddressId" #billVendorSiteName="ngModel" required>
+							<select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" (change)="onBillToGetAddress(sourceRoApproval , sourceRoApproval.billToAddressId)" name="billVendorSiteName" [(ngModel)]="sourceRoApproval.billToAddressId" #billVendorSiteName="ngModel" required>
 								<option>-- Select --</option>
 								<option *ngFor="let object of vendorSelectedForBillTo" [ngValue]="object.vendorBillingAddressId">{{object.siteName}} </option>
 							</select>
@@ -1201,7 +1189,7 @@
 								<span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourceRoApproval.billToUserId" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('AddComSiteName')"></a></span>
 								<span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourceRoApproval.billToUserId" class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('EditComSiteName', sourceRoApproval)"></a></span>
 							</label>
-							<select class="form-control" (change)="onBillToGetCompanyAddress(sourceRoApproval.billToAddressId)" name="billCompSiteName" [(ngModel)]="sourceRoApproval.billToAddressId" #billCompSiteName="ngModel" required> <!--selectedValue2-->
+							<select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" (change)="onBillToGetCompanyAddress(sourceRoApproval.billToAddressId)" name="billCompSiteName" [(ngModel)]="sourceRoApproval.billToAddressId" #billCompSiteName="ngModel" required> <!--selectedValue2-->
 								<option>-- Select --</option>
 								<option *ngFor="let site of companySiteList_Billing" [ngValue]="site.legalEntityBillingAddressId">{{site.siteName}}</option>
 							</select>
@@ -1234,7 +1222,7 @@
 						</div>
 						<div class="form-group" *ngIf="sourceRoApproval.billToUserTypeId==1">
 							<label>Contact Name <span class="clr-red">*</span></label>
-							<p-autoComplete field="firstName" class="pautocomp-cstm" [(ngModel)]="sourceRoApproval.billToContactId" name="customerContactsForBillTo" [suggestions]="firstNamesbillTo" (completeMethod)="filterCustomerContactsForBillTo($event)" [size]="30" errorMessage="Records not found" [forceSelection]="true" [minLength]="1" [dropdown]="true" #billCusContactName="ngModel" required>
+							<p-autoComplete field="firstName" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" [(ngModel)]="sourceRoApproval.billToContactId" name="customerContactsForBillTo" [suggestions]="firstNamesbillTo" (completeMethod)="filterCustomerContactsForBillTo($event)" [size]="30" errorMessage="Records not found" [forceSelection]="true" [minLength]="1" [dropdown]="true" #billCusContactName="ngModel" required>
 							</p-autoComplete>
 							<div *ngIf="billCusContactName.invalid && (billCusContactName.dirty || billCusContactName.touched)" class="alert alert-danger alert-danger-cstm">
 									<div *ngIf="billCusContactName.errors.required">
@@ -1244,7 +1232,7 @@
 						</div>
 						<div class="form-group" *ngIf="sourceRoApproval.billToUserTypeId==2">
 							<label>Contact Name <span class="clr-red">*</span></label>
-							<p-autoComplete field="firstName" class="pautocomp-cstm" [(ngModel)]="sourceRoApproval.billToContactId" name="customerContactsForBillTo" [suggestions]="firstNamesbillTo1" (completeMethod)="filterVendorContactsForBillTo($event)" [size]="30" errorMessage="Records not found" [forceSelection]="true" [minLength]="1" [dropdown]="true" #billVenContactName="ngModel" required></p-autoComplete> <!--required-->
+							<p-autoComplete field="firstName" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" [(ngModel)]="sourceRoApproval.billToContactId" name="customerContactsForBillTo" [suggestions]="firstNamesbillTo1" (completeMethod)="filterVendorContactsForBillTo($event)" [size]="30" errorMessage="Records not found" [forceSelection]="true" [minLength]="1" [dropdown]="true" #billVenContactName="ngModel" required></p-autoComplete> <!--required-->
 							<div *ngIf="billVenContactName.invalid && (billVenContactName.dirty || billVenContactName.touched)" class="alert alert-danger alert-danger-cstm">
 									<div *ngIf="billVenContactName.errors.required">
 										<small> Contact Name is required </small>
@@ -1254,7 +1242,7 @@
 	
 						<div class="form-group" *ngIf="sourceRoApproval.billToUserTypeId==3 ">
 							<label>Contact Name <span class="clr-red">*</span></label>
-							<p-autoComplete field="firstName" class="pautocomp-cstm" 
+							<p-autoComplete field="firstName" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" 
 							[(ngModel)]="sourceRoApproval.billToContactId"  name="customerContactsForBillTo" [suggestions]="contactListForBillingCompany" (completeMethod)="filterBillingContact($event)"  [size]="30" [minLength]="1" [dropdown]="true" #billVenContactName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
 							<div *ngIf="billVenContactName.invalid && (billVenContactName.dirty || billVenContactName.touched)" class="alert alert-danger alert-danger-cstm">
 								<div *ngIf="billVenContactName.errors.required">

@@ -1,10 +1,115 @@
 ﻿<div [@fadeInOut] class="page-content">
-
+   <div class="card padding-10">
 	<div class="right_col" role="main">
 		<div class="x_panel">
             <div class="x_content">
+                <div class="col-md-12 shadow-Box">        
+                    <div class="col-md-4" >
+                        <p class="fs12">
+                        <label class="control-label labels-font-header" style="width: auto; ">Emp First Name: </label>
+                    <span class="span-header-red"> {{firstName }} </span> </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="fs12">
+                        <label class="control-label labels-font-header" style="width: auto; ">Emp Last Name: </label>
+                        <span class="span-header-red"> {{lastName }} </span> </p>
+                    </div>  
+                    <div  class="col-md-4">
+                        <p class="fs12">
+                        <label class="control-label labels-font-header" style="width: auto; ">Emp Id: </label>
+                        <span class="span-header-red"> {{empId}} </span></p>
+                    </div>                              
+                </div>
 
-                <div class="form-group col-sm-4 w400" style="display: inline-block;margin: 10px 5px 0 5px;">
+                <div class="card">
+                        <div class="card-header">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb rpo-bcrumb" style="background-color: transparent;">
+                                    <li class="breadcrumb-item" aria-current="page">Create Training Info</li>
+                                </ol>
+                            </nav>
+                        </div>
+
+                        <form name="" class="form-horizontal add-custustomer">
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <div class="col-md-3">                                
+                                        <div class="form-group">
+                                            <label>Aircraft Model</label>
+                                            <select name="aircraftModelId" class="form-control" [(ngModel)]="sourceEmployee.aircraftModelId">
+                                                <option *ngFor="let type of manufacturerData" [ngValue]="type.value">{{type.label}}</option>
+                                            </select>                                        
+                                        </div> 
+                                        <div class="form-group">
+                                            <label>Completion Date</label>
+                                            <p-calendar [showIcon]="true" name="completionDate" [(ngModel)]="sourceEmployee.completionDate"></p-calendar>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Industry Code</label>
+                                            <input type="number" class="form-control" name="industryCode" [(ngModel)]="sourceEmployee.industryCode">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Training Type <span class="clr-red">*</span></label>
+                                            <select name="employeeTrainingTypeId" class="form-control" [(ngModel)]="sourceEmployee.employeeTrainingTypeId">
+                                                <option *ngFor="let employeeName of alltrainingTypes" [ngValue]="employeeName.employeeTrainingTypeId">{{employeeName.description}}</option>
+                                            </select>                                     
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Cost</label>
+                                            <input type="number" class="form-control cost" name="cost" [(ngModel)]="sourceEmployee.cost">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Expiration Date</label>
+                                            <p-calendar [showIcon]="true" name="expirationDate" [(ngModel)]="sourceEmployee.expirationDate"></p-calendar>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Schedule Date</label>
+                                            <p-calendar [showIcon]="true" name="scheduleDate" [(ngModel)]="sourceEmployee.scheduleDate"></p-calendar>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Duration</label>
+                                            <input type="number" class="form-control" name="duration" [(ngModel)]="sourceEmployee.duration">
+                                        </div>
+                                        <div class="form-group upload">
+                                            <label>Certification Received</label>
+                                            <input type="file" name="upload[]" id="upload" class="inputfile upload-file" data-multiple-caption="{count} files selected" multiple />
+                                            <label for="upload" style="margin-top: 7px;"><figure><i class="fa fa-upload"></i></figure> <span>Choose a file&hellip;</span></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Frequency of Training</label>
+                                            <div>
+                                                <div class="col-sm-7">
+                                                    <input type="number" class="form-control" name="frequencyOfTraining" [(ngModel)]="sourceEmployee.frequencyOfTraining">
+                                                </div>
+                                                <div class="col-sm-5">
+                                                    <select class="form-control" name="unitOfMeasureId" [(ngModel)]="sourceEmployee.unitOfMeasureId">
+                                                        <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo" [ngValue]="unitName.unitOfMeasureId">{{unitName.shortName}}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="margin-top: 25px;">
+                                            <label>Provider</label>
+                                            <input type="text" class="form-control" name="provider" [(ngModel)]="sourceEmployee.provider">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 20px;">
+                                    <button type="button" [disabled]="nextbuttonEnable == false"  class="btn btn-primary-cstm pull-right" (click)="savetrainigSection()">Save & Next</button>
+                                    <button type="button" class="btn btn-primary-cstm pull-right" (click)="previousClick()">Previous</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+
+                <!-- <div class="form-group col-sm-4 w400" style="display: inline-block;margin: 10px 5px 0 5px;">
                     <p class="fs10"> <label class="control-label col-sm-4">Emp First Name:</label> {{firstName}}  </p>
                 </div>
                 <div class="form-group col-sm-4 w400" style="display: inline-block;margin: 10px 5px 0 5px;">
@@ -35,19 +140,18 @@
                                                     <div class="col-sm-7">
                                                  
 
-                                                            <!-- <p-dropdown
+                                                             <p-dropdown
                                                             [options]="manufacturerData"
                                                             name="select Aircraft"
                                                             class="p-dropdown-custom "
                                                             [(ngModel)]="sourceEmployee.aircraftModelId"
                                                             
-                                                          ></p-dropdown> -->
+                                                          ></p-dropdown> 
 
                                                           <select [ngModelOptions]="{standalone: true}"   [(ngModel)]="sourceEmployee.aircraftModelId">
                                                                 <option *ngFor="let type of manufacturerData" [ngValue]="type.value">{{type.label}}</option>
                                                             </select>
                                                     
-                                                        <!-- <input type="number" class="form-control" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.aircraftModelId"> -->
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-sm-12">
@@ -62,7 +166,6 @@
                                                 <div class="form-group col-sm-12">
                                                     <label class="control-label col-sm-4">Schedule Date</label>
                                                     <div class="col-sm-7">
-                                                        <!--<input type="date" class="form-control" id="" name=""  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.scheduleDate">-->
                                                         <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.scheduleDate"></p-calendar>
                                                     </div>
                                                 </div>
@@ -127,46 +230,26 @@
                                             </div>
                                             <div class="clear"></div>
 
-                                            <button type="button" [disabled]="nextbuttonEnable == false"  class="btn btn-success pull-right submit-btn" (click)="savetrainigSection()">Save & Next</button>
-                                            <button type="button" class="btn btn-success pull-right submit-btn" (click)="previousClick()">Previous</button>
+                                            <button type="button" [disabled]="nextbuttonEnable == false"  class="btn btn-primary-cstm pull-right" (click)="savetrainigSection()">Save & Next</button>
+                                            <button type="button" class="btn btn-primary-cstm pull-right" (click)="previousClick()">Previous</button>
                                             <div class="clear"></div>
-                                            <!--
-         <hr class="hr-light-grey" />
-    <button type="button" class="btn btn-success pull-right submit-btn" (click)="editTrainAndCloseModel()">Save</button>
-    -->
-
 
                                         </div>
                                     </div>
 
                                 </div>
-
-
-
                             </div>
                         </div>
                     </div>
 
                     <div class="clear"></div>
-
-
-
-
-
-                </form>
-                <!--Form End-->
-                <div class="pull-right"> &copy; 2018 <a>PAS</a> </div>
-
-
+                </form>             -->
             </div>
-
-
-
-
 		</div>
 		
-	</div>
-
+    </div>
+    </div>
+    <div class="pull-right"> &copy; 2018 <a>PAS</a> </div>
 </div>
 
 

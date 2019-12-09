@@ -24,6 +24,7 @@ export class WorkOrderEndpointService extends EndpointFactory {
     private readonly getAllWorkOrderStatusURL: string = "/api/WorkOrder/workOrderStatus";
     private readonly getAllWorkScopesURL: string = "/api/WorkOrder/getAllworkScopes";
     private readonly getAllWorkOrderStagesURL: string = "/api/WorkOrder/getStages";
+    private readonly createQuote: string = "/api/workOrder/createworkorderquote"
 
     private readonly addLabourURL: string = "/api/WorkOrder/WorkOrderLabourPost";
 
@@ -192,11 +193,44 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/createworkordermaterials`, JSON.stringify(data), this.getRequestHeaders())
     }
 
-    createWorkOrderEquipmentList(data){
-        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/createworkorderassets`, JSON.stringify(data), this.getRequestHeaders())
-        
-        
+    updateWorkOrderMaterialList(data) {
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/updateworkordermaterials`, JSON.stringify(data), this.getRequestHeaders())
     }
+    deleteWorkOrderMaterialListById(workOrderMaterialId, updatedBy) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/deleteworkordermaterial?workOrderMaterialsId=${workOrderMaterialId}&updatedBy=${updatedBy}`, this.getRequestHeaders())
+
+    }
+
+
+
+    createWorkOrderEquipmentList(data) {
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/createworkorderassets`, JSON.stringify(data), this.getRequestHeaders())
+    }
+
+    updateWorkOrderEquipmentList(data) {
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/updateworkorderassets`, JSON.stringify(data), this.getRequestHeaders())
+
+    }
+
+    createWorkOrderChargesList(data) {
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/createworkordercharges`, JSON.stringify(data), this.getRequestHeaders())
+    }
+
+
+    updateWorkOrderChargesList(data) {
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/updateworkordercharges`, JSON.stringify(data), this.getRequestHeaders())
+    }
+
+
+
+    createWorkOrderExclusionList(data) {
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/createworkorderexclusions`, JSON.stringify(data), this.getRequestHeaders());
+    }
+
+    updateWorkOrderExclusionList(data) {
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/updateworkorderexclusions`, JSON.stringify(data), this.getRequestHeaders());
+    }
+
 
     getTasks() {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/Task/Get`, this.getRequestHeaders())
@@ -206,12 +240,21 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workordermateriallist?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`)
     }
 
+    deleteWorkOrderMaterialList(workOrderMaterialsId, updatedBy) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/deleteworkordermaterial?workOrderMaterialsId=${workOrderMaterialsId}&updatedBy=${updatedBy}`, this.getRequestHeaders())
+
+    }
+
     getWorkOrderPublicationList(workFlowWorkOrderId, workOrderId) {
         return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkorderpublications?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`, this.getRequestHeaders())
     }
 
     getWorkOrderChargesList(workFlowWorkOrderId, workOrderId) {
         return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkflowworkorderchargeslist?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`, this.getRequestHeaders())
+    }
+
+    deleteWorkOrderChargesByChargesId(workOrderChargeId, updatedBy) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/deleteworkordercharge?workOrderChargeId=${workOrderChargeId}&updatedBy=${updatedBy}`, this.getRequestHeaders())
 
     }
 
@@ -221,16 +264,29 @@ export class WorkOrderEndpointService extends EndpointFactory {
 
     }
 
-    getWorkOrderLaborList(workFlowWorkOrderId, workOrderId) {
-        return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkflowworkorderlabourlist?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`, this.getRequestHeaders())
+    deleteWorkOrderExclusionByExclusionId(workOrderExclusionsId, updatedBy) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/deleteworkorderexclusions?workOrderExclusionsId=${workOrderExclusionsId}&updatedBy=${updatedBy}`, this.getRequestHeaders())
 
     }
+
+    getWorkOrderLaborList(workFlowWorkOrderId, workOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workorder/getworkflowworkorderlabourlist?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`, this.getRequestHeaders())
+
+    }
+
+    getWorkOrderDirectionList(workFlowWorkOrderId, workOrderId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/workorderdirections?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`, this.getRequestHeaders())
+
+
+    }
+
 
     getWorkOrderWorkFlowByWorkFlowWorkOrderId(workFlowWorkOrderId) {
 
         return this.http.get(`${this.configurations.baseUrl}/api/workorder/workorderworkflowview?workFlowWorkOrderId=${workFlowWorkOrderId}`, this.getRequestHeaders())
 
     }
+
 
 
 
@@ -245,22 +301,105 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderpartsview?workOrderId=${workOrderId}`, this.getRequestHeaders())
     }
 
-    getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId) {
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/getreservedissuesparts?WorkFlowWorkOrderId=${WorkFlowWorkOrderId}`)
+    getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId, statusId) {
+        let urlType;
+        if (statusId == 1) {
+            urlType = 'getreservedparts'
+        } else if (statusId == 2) {
+            urlType = 'getissuedparts'
+        } else if (statusId == 3) {
+            urlType = 'getreservedissuesparts'
+        } else if (statusId == 4) {
+            urlType = 'getunissuedParts'
+        } else if (statusId == 5) {
+            urlType = 'getunreservedparts'
+        }
+
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/${urlType}?workFlowWorkOrderId=${WorkFlowWorkOrderId}&statusId=${statusId}`, this.getRequestHeaders())
+
+        // if (statusId == 1)
+        //     return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/getreservedparts?workFlowWorkOrderId=${WorkFlowWorkOrderId}&statusId=${statusId}`)
+        // else if (statusId == 2)
+        //     return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/getissuedparts?workFlowWorkOrderId=${WorkFlowWorkOrderId}&statusId=${statusId}`)
+        // else if (statusId == 3)
+        //     return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/getreservedissuesparts?workFlowWorkOrderId=${WorkFlowWorkOrderId}&statusId=${statusId}`)
+        // else if (statusId == 4)
+        //     return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/getunissuedParts?workFlowWorkOrderId=${WorkFlowWorkOrderId}&statusId=${statusId}`)
+        // else if (statusId == 5)
+        //     return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/getunreservedparts?workFlowWorkOrderId=${WorkFlowWorkOrderId}&statusId=${statusId}`)
+        // else
+        //     return null;
     }
 
-    saveReservedPartorIssue(alternatePart){
-        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/savereserveissuesparts` , JSON.stringify(alternatePart) , this.getRequestHeaders());
+    saveReservedPartorIssue(alternatePart) {
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/savereserveissuesparts`, JSON.stringify(alternatePart), this.getRequestHeaders());
     }
 
-    assetsCheckInByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy){
-       return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/saveassetcheckedin?WorkOrderAssetId=${workOrderAssetId}&checkedInById=${employeeId}&checkedInDate=${checkedInDate}&updatedBy=${updatedBy}`)  
+    assetsCheckInByWorkOrderAssetsId(assetcheckin) {
+        //return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/saveassetcheckedin?WorkOrderAssetId=${workOrderAssetId}&checkedInById=${employeeId}&checkedInDate=${checkedInDate}&updatedBy=${updatedBy}`)  
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/saveassetcheckedin`, JSON.stringify(assetcheckin), this.getRequestHeaders());
     }
 
-    assetsCheckOutByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy){
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/saveassetcheckedout?WorkOrderAssetId=${workOrderAssetId}&checkedInById=${employeeId}&checkedInDate=${checkedInDate}&updatedBy=${updatedBy}`)  
-     }
+    assetsCheckOutByWorkOrderAssetsId(assetcheckout) {
+        // return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/saveassetcheckedout?WorkOrderAssetId=${workOrderAssetId}&checkedInById=${employeeId}&checkedInDate=${checkedInDate}&updatedBy=${updatedBy}`)  
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/saveassetcheckedout`, JSON.stringify(assetcheckout), this.getRequestHeaders());
+    }
 
+    deleteWorkOrderAssetByAssetId(workOrderAssetId, updatedBy) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/deleteworkorderasset?workOrderAssetId=${workOrderAssetId}&updatedBy=${updatedBy}`, this.getRequestHeaders())
+    }
+
+    createQuotation(data) {
+        return this.http.post(`${this.configurations.baseUrl}/api/workOrder/createworkorderquote`, JSON.stringify(data), this.getRequestHeaders())
+    }
+
+    getSubWorkOrderHeaderByWorkOrderId(workOrderId, workOrderPartNumberId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/subworkorderheaderdetails?workOrderId=${workOrderId}&workOrderPartNumberId=${workOrderPartNumberId}`)
+    }
+
+    createSubWorkOrderHeaderByWorkOrderId(data) {
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/createsubworkorder`, JSON.stringify(data), this.getRequestHeaders())
+    }
+
+    updateSubWorkOrderHeaderBySubWorkOrderId(data) {
+        return this.http.put<any>(`${this.configurations.baseUrl}/api/workOrder/updatesubworkorder`, JSON.stringify(data), this.getRequestHeaders());
+    }
+
+
+
+
+
+    getPartsDetail(workOrderId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/workorderpartsview?workOrderId=${workOrderId}`)
+    }
+
+    getBuildDetailsFromWorkFlow(partId, workScopeId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/workflownos?partId=${partId}&workScopeId=${workScopeId}`)
+    }
+
+    getBuildDetailsFromHistoricalWorkOrder(partId, workScopeId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/workordernos?partId=${partId}&workScopeId=${workScopeId}`)
+    }
+
+    getWorkFlowDetails(workFlowId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workflow/getworkflow/${workFlowId}`)
+    }
+
+    getWorkOrderMaterialListForQuote(wfwoId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/workordermateriallist?wfwoId=${wfwoId}`);
+    }
+    getWorkOrderLaborListForQuote(wfwoId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkflowworkorderlabourlist?wfwoId=${wfwoId}`);
+    }
+    getWorkOrderChargesListForQuote(wfwoId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkflowworkorderchargeslist?wfwoId=${wfwoId}`);
+    }
+    getWorkOrderExclutionsListForQuote(wfwoId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkflowworkorderexclusionslist?wfwoId=${wfwoId}`);
+    }
+    getWorkOrderFreightListForQuote(wfwoId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/workorderfreightlist?wfwoId=${wfwoId}`);
+    }
 
 
 

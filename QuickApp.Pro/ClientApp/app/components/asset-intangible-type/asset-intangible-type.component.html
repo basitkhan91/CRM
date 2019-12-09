@@ -10,7 +10,8 @@
                             <h3 class="po-head lead">{{header}}</h3>
                             &nbsp;&nbsp;
                             <!--Step x: Customize the data-target-->
-                            <a class="plusicon-cstm new-margin" pTooltip="Add {{rowName}}" tooltipPosition="right" data-target="#editItem" data-toggle="modal" (click)="addNewItem()">
+                            <a class="plusicon-cstm new-margin" pTooltip="Add {{rowName}}" tooltipPosition="right" data-target="#editItem" 
+                               data-toggle="modal" (click)="addNewItem()">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
@@ -50,6 +51,7 @@
                                             pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm" pTooltip="Download All Data" tooltipPosition="top"
                                             pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    <!--
                                     <div class="excel-upload excel-upload-cstm">
                                         <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
                                                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" (change)="bulkUpload($event)">
@@ -58,6 +60,17 @@
                                                 <i class="fa fa-upload"></i>
                                             </span>
                                         </label>
+                                    </div>-->
+                                    <div class="excel-upload  excel-upload-cstm">
+                                        <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
+                                               accept=".xlsx, .xls, .csv">
+                                        <label for="upload">
+                                            <span matTooltip="Upload Data (Excel)">
+                                                <i class="fa fa-upload"></i>
+                                            </span>
+                                        </label>
+                                        &nbsp; &nbsp;
+                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()">Sample File Download</button>
                                     </div>
                                 </div>
 
@@ -195,22 +208,39 @@
                     <h4 class="modal-title">{{currentModeOfOperation === 3 ? "Edit" : "Add"}} {{rowName}} </h4>
                 </div>
                 <div class="modal-body">
-                    <form #AssetType="ngForm">
+                    <form #AssetIntangibleType="ngForm">
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="description" class="control-label">Name</label>
+                                    <label for="description" class="control-label">
+                                        Name
+                                        <span class="clr-red">*</span>
+                                    </label>
+
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="name" name="name" [(ngModel)]="currentRow.assetIntangibleName" minlength="2" (onChange)="check"></textarea>
+                                    <p-autoComplete field="assetIntangibleName" 
+                                                    [(ngModel)]="currentRow.assetIntangibleName" 
+                                                    (onSelect)="selectedName($event)" 
+                                                    (onKeyUp)="checkReasonCodeExists('assetIntangibleName', $event.target.value)" 
+                                                    name="assetIntangibleName"
+                                                    [suggestions]="filteredItemList" (completeMethod)="filterAssetIntangibleName($event)" 
+                                                    [size]="30" [minLength]="1"
+                                                    [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                    </p-autoComplete>
+                                    <div *ngIf="disableSave" class="clr-red">Already Exists</div>
+                                    <div class="clear"></div>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="description" class="control-label">Memo</label>
+                                    <label for="description" class="control-label">
+                                        Memo
+                                    </label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription" [(ngModel)]="currentRow.assetIntangibleMemo" minlength="2"></textarea>
+                                    <textarea class="text-item" #memo="ngModel" id="memo" 
+                                              name="memodescription" [(ngModel)]="currentRow.assetIntangibleMemo" minlength="2"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -230,7 +260,11 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="disableSave" (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();"> {{currentModeOfOperation == 3 ? 'Update' : 'Save' }}</button>
+                    <button class="btn btn-primary-cstm" data-dismiss="modal" 
+                            [disabled]="AssetIntangibleType.invalid || disableSave "
+                            (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();"
+                            ng-disabled="AssetIntangibleType.$pristine"
+                            > {{currentModeOfOperation == 3 ? 'Update' : 'Save' }}</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
 
                 </div>
@@ -273,7 +307,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table class="table table-bordered" *ngIf="auditHistory.length> 0 else noDatavailable">
                             <thead>
                                 <tr>
                                     <th>Name</th>
@@ -283,14 +317,30 @@
                                     <th>Last Updated Time</th>
                                 </tr>
                             </thead>
-                            <tr *ngFor="let audit of auditHistory">
-                                <td>{{audit.assetIntangibleName}}</td>
-                                <td>{{audit.assetIntangibleMemo}}</td>
-                                <td>{{audit.isActive ? 'true' : 'false'}}</td>
-                                <td>{{audit.updatedBy}}</td>
-                                <td>{{audit.updatedDate| date: 'MM/dd/yyyy h:mm:ss a'}}</td>
-                            </tr>
+                            <tbody *ngIf="auditHistory.length> 0">
+                                <tr *ngFor="let audit of auditHistory; let i = index;">
+
+                                    <td [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].assetIntangibleName === audit.assetIntangibleName ? 'black' : 'red'  }">
+                                        {{audit.assetIntangibleName}}
+                                    </td>
+                                    <td [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].assetIntangibleMemo === audit.assetIntangibleMemo ? 'black' : 'red'  }">
+                                        {{audit.assetIntangibleMemo}}
+                                    </td>
+                                    <td [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].isActive === audit.isActive ? 'black' : 'red'  }">
+                                        {{audit.isActive}}
+                                    </td>
+                                    <td>{{audit.updatedBy}}</td>
+                                    <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                                </tr>
+                            </tbody>
                         </table>
+                        <ng-template #noDatavailable>
+                            <div class="text-center">
+                                <img src="../../assets/images/binoculars.png" style="height: 100px; width: 100px;">
+                                <h4 style="color: #ff5663;">No History Found </h4>
+                            </div>
+
+                        </ng-template>
                     </div>
                 </div>
                 <div class="modal-footer">

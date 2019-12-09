@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DAL;
+﻿using DAL;
 using DAL.Common;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +6,10 @@ using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
 using QuickApp.Pro.Helpers;
 using QuickApp.Pro.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -96,7 +96,7 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
-        
+
         [HttpGet("GetCompanyData")]
         [Produces(typeof(List<StockLineViewModel>))]
         public IActionResult GetCompanyData()
@@ -859,11 +859,11 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = (from pop in _context.PurchaseOrderPart
-                              where pop.PurchaseOrderId== POId
+                              where pop.PurchaseOrderId == POId
                               select new PurchaseOrderPart
                               {
-                                UnitCost=  pop.UnitCost,
-                                PurchaseOrderId=pop.PurchaseOrderId
+                                  UnitCost = pop.UnitCost,
+                                  PurchaseOrderId = pop.PurchaseOrderId
                               }).ToList();
                 return Ok(result);
             }
@@ -884,8 +884,8 @@ namespace QuickApp.Pro.Controllers
                               where rop.RepairOrderId == ROId
                               select new RepairOrderPart
                               {
-                                UnitCost =   rop.UnitCost,
-                                RepairOrderId=rop.RepairOrderId
+                                  UnitCost = rop.UnitCost,
+                                  RepairOrderId = rop.RepairOrderId
                               }).ToList();
                 return Ok(result);
             }
@@ -966,6 +966,113 @@ namespace QuickApp.Pro.Controllers
             stream.Position = 0;
             string excelName = $"StockLineReport-{DateTime.Now.ToString("ddMMMyyyy")}.xlsx";
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+        }
+
+        [HttpGet("getStocklineDetailsById/{stockLineId}")]
+        public IActionResult GetStockLineDetailsById(long stockLineId)
+        {
+            var result = (from s in _context.StockLine
+                          join po in _context.PurchaseOrder on s.PurchaseOrderId equals po.PurchaseOrderId
+                          where s.StockLineId == stockLineId
+                          select new
+                          {
+                              s.ControlNumber,
+                              po.PurchaseOrderNumber,
+                              ControlId = s.IdNumber
+
+                          }).FirstOrDefault();
+
+            return Ok(result);
+        }
+
+        [HttpGet("getStocklineDetailsByItemMasterId/{itemMasterId}")]
+        public IActionResult GetStocklineDetailsByItemMasterId(long itemMasterId)
+        {
+            var result = (from s in _context.StockLine
+                          join c in _context.Condition on s.ConditionId equals c.ConditionId
+                          join po in _context.PurchaseOrder on s.PurchaseOrderId equals po.PurchaseOrderId
+                          where s.ItemMasterId == itemMasterId
+                          select new
+                          {
+                              s.ControlNumber,
+                              po.PurchaseOrderNumber,
+                              ControlId = s.IdNumber
+
+                          }).ToList();
+
+            return Ok(result);
+        }
+
+        [HttpPost("search")]
+        public IActionResult SearchItemMaster([FromBody]ItemMasterSearchViewModel searchView)
+        {
+            if (searchView == null
+                   || searchView.partSearchParamters == null
+                   || !searchView.partSearchParamters.partId.HasValue)
+            {
+                return BadRequest(new Exception("Invalid request parameter, partId not passed"));
+            }
+
+            IEnumerable<object> result = null;
+
+            if (searchView.partSearchParamters.includeAlternatePartNumber)
+            {
+
+            }
+            else
+            {
+                result = GetPartDetails(searchView);
+            }
+
+
+            var pageCount = (searchView.first / searchView.rows) + 1;
+
+            var searchData = new GetSearchData<object>();
+
+            searchData.Data = DAL.Common.PaginatedList<object>.Create(result.AsQueryable<object>(), pageCount, searchView.rows);
+
+            return Ok(searchData);
+        }
+
+        private IEnumerable<object> GetPartDetails(ItemMasterSearchViewModel searchView)
+        {
+            var result = Enumerable.Empty<object>();
+
+            result = from item in _context.ItemMaster
+                     join sl in _context.StockLine on item.ItemMasterId equals sl.ItemMasterId
+                     join uom in _context.UnitOfMeasure on item.ConsumeUnitOfMeasureId equals uom.UnitOfMeasureId into iuom
+                     from iu in iuom.DefaultIfEmpty()
+                     join currency in _context.Currency on item.CurrencyId equals currency.CurrencyId into itemcurrecy
+                     from ic in itemcurrecy.DefaultIfEmpty()
+                     where item.IsActive.HasValue && item.IsActive.Value == true
+                            && (item.IsDeleted.HasValue && !item.IsDeleted == true || !item.IsDeleted.HasValue)
+                            && (item.MasterCompanyId.HasValue && item.MasterCompanyId.Value == 1)
+                            && item.ItemMasterId == searchView.partSearchParamters.partId
+
+                     select new
+                     {
+                         method = "Stock Line",
+                         itemId = item.ItemMasterId,
+                         partNumber = item.PartNumber,
+                         alternatePartId = item.PartAlternatePartId,
+                         alternateFor = string.Empty,
+                         description = item.PartDescription,
+                         conditionType = string.Empty,
+                         stockLineNumber = sl.StockLineNumber,
+                         uomDescription = iu.Description,
+                         qtyAvailable = sl.QuantityAvailable ?? 0,
+                         qtyOnHand = sl.QuantityOnHand ?? 0,
+                         qtyToOrder = 0,
+                         qtyOnOrder = sl.QuantityOnOrder ?? 0,
+                         itemClassification = item.ItemClassification,
+                         itemGroup = string.Empty,
+                         controlNumber = sl.ControlNumber,
+                         idNumber = sl.IdNumber,
+                         serialNumber = sl.SerialNumber,
+                     };
+
+
+            return result.ToList<object>();
         }
     }
 }

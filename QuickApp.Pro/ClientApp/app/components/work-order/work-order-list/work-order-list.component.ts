@@ -50,6 +50,19 @@ export class WorkOrderListComponent implements OnInit {
     workFlowId: any;
     showTableGrid: boolean = false;
     showMPN: boolean = false;
+    workOrderDirectionList: Object;
+    otherOptions = [
+        { label: 'Other Options', value: '' },
+        { label: 'Freight', value: 'freight' },
+        { label: 'ContactGrid', value: 'contactGrid' },
+        { label: 'Accounting', value: 'accounting' },
+        { label: 'Charges', value: 'charges' },
+        { label: 'Exclusion', value: 'exclusion' },
+
+    ]
+    selectedOtherSubTask: string = ''
+    activeIndex: number;
+    otherOptionShow: boolean = false;
     constructor(private workOrderService: WorkOrderService,
         private route: Router,
         private authService: AuthService,
@@ -64,6 +77,11 @@ export class WorkOrderListComponent implements OnInit {
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
+
+
+
+
+
 
 
     columnsChanges() {
@@ -97,6 +115,10 @@ export class WorkOrderListComponent implements OnInit {
 
         })
     }
+    otherOptionSelected(value) {
+        this.selectedOtherSubTask = value;
+        this.otherOptionShow = false;
+    }
 
     globalSearch(value) {
         // this.pageIndex = 0;
@@ -112,19 +134,24 @@ export class WorkOrderListComponent implements OnInit {
 
     async view(rowData) {
 
-        this.workOrderId = rowData.workOrderId;;
+        this.workOrderId = rowData.workOrderId;
+
+
+
 
         // const { workFlowWorkOrderId } = rowData;
         // const workOrderId = 46;
-        const workFlowWorkOrderId = 0;
+        // const workFlowWorkOrderId = 0;
 
         await this.workOrderService.viewWorkOrderHeader(this.workOrderId).subscribe(res => {
             this.viewWorkOrderHeader = res;
-            if (res.singleMPN !== "Single MPN") {
-                this.showMPN = true;
-            } else {
+            if (res.singleMPN === "Single MPN") {
                 this.showMPN = false;
+                this.getAllTabsData(res.workFlowWorkOrderId, 0);
+            } else {
+                this.showMPN = true;
             }
+            this.workFlowId = res.workFlowId;
 
         })
 
@@ -136,7 +163,7 @@ export class WorkOrderListComponent implements OnInit {
 
 
 
-
+        // this.workOrderId = 0;
         this.getWorkOrderWorkFlowNos(this.workOrderId)
 
 
@@ -160,14 +187,14 @@ export class WorkOrderListComponent implements OnInit {
                     }
                 })
 
-                if (this.viewWorkOrderHeader.singleMPN === 'Single MPN') {
-                    const data = this.mpnPartNumbersList;
+                // if (this.viewWorkOrderHeader.singleMPN === 'Single MPN') {
+                //     const data = this.mpnPartNumbersList;
 
-                    if (data.length === 1) {
-                        this.getAllTabsData(data[0].value.workFlowWorkOrderId, this.workOrderId);
-                        this.showTableGrid = true;
-                    }
-                }
+                //     if (data.length === 1) {
+                //         this.getAllTabsData(data[0].value.workFlowWorkOrderId, this.workOrderId);
+                //         this.showTableGrid = true;
+                //     }
+                // }
                 // else {
                 //     this.showTableGrid = true;
                 // }
@@ -180,7 +207,7 @@ export class WorkOrderListComponent implements OnInit {
     changeofMPN(object) {
         console.log(this.showTableGrid);
 
-        this.showTableGrid = true;
+
         this.workFlowId = object.workflowId;
         this.getAllTabsData(object.workFlowWorkOrderId, this.workOrderId);
 
@@ -193,6 +220,9 @@ export class WorkOrderListComponent implements OnInit {
         this.getChargesListByWorkOrderId(workFlowWorkOrderId, workOrderId);
         this.getExclusionListByWorkOrderId(workFlowWorkOrderId, workOrderId);
         this.getLaborListByWorkOrderId(workFlowWorkOrderId, workOrderId);
+        this.getDirectionByWorkOrderId(workFlowWorkOrderId, workOrderId);
+        this.showTableGrid = true;
+        this.activeIndex = 0;
     }
 
 
@@ -201,7 +231,7 @@ export class WorkOrderListComponent implements OnInit {
 
         // if (workFlowWorkOrderId || workFlowWorkOrderId === 0) {
         // this.workFlowWorkOrderId = this.workFlowWorkOrderData.workFlowWorkOrderId;
-        if (workOrderId) {
+        if (workFlowWorkOrderId) {
             this.workOrderService.getWorkOrderAssetList(workFlowWorkOrderId, workOrderId).subscribe(
                 result => {
                     console.log(result);
@@ -213,7 +243,7 @@ export class WorkOrderListComponent implements OnInit {
     }
 
     getMaterialListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
-        if (workOrderId) {
+        if (workFlowWorkOrderId) {
             this.workOrderService.getWorkOrderMaterialList(workFlowWorkOrderId, workOrderId).subscribe(res => {
 
                 this.workOrderMaterialList = res;
@@ -225,7 +255,7 @@ export class WorkOrderListComponent implements OnInit {
 
     getPublicationListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
 
-        if (workOrderId) {
+        if (workFlowWorkOrderId) {
             this.workOrderService.getWorkOrderPublicationList(workFlowWorkOrderId, workOrderId).subscribe(res => {
                 this.workOrderPublicationList = res;
             })
@@ -235,7 +265,7 @@ export class WorkOrderListComponent implements OnInit {
 
     getChargesListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
 
-        if (workOrderId) {
+        if (workFlowWorkOrderId) {
             this.workOrderService.getWorkOrderChargesList(workFlowWorkOrderId, workOrderId).subscribe(res => {
                 this.workOrderChargesList = res;
             })
@@ -246,7 +276,7 @@ export class WorkOrderListComponent implements OnInit {
 
     getExclusionListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
 
-        if (workOrderId) {
+        if (workFlowWorkOrderId) {
             this.workOrderService.getWorkOrderExclusionsList(workFlowWorkOrderId, workOrderId).subscribe(res => {
                 this.workOrderExclusionsList = res;
             })
@@ -257,13 +287,23 @@ export class WorkOrderListComponent implements OnInit {
 
     getLaborListByWorkOrderId(workFlowWorkOrderId, workOrderId) {
 
-        if (workOrderId) {
+        if (workFlowWorkOrderId) {
             this.workOrderService.getWorkOrderLaborList(workFlowWorkOrderId, workOrderId).subscribe(res => {
-                this.workOrderLaborList = res;
+                this.workOrderLaborList = res.laborList;
+
             })
 
         }
 
+    }
+
+    getDirectionByWorkOrderId(workFlowWorkOrderId, workOrderId) {
+        if (workFlowWorkOrderId) {
+            this.workOrderService.getWorkOrderDirectionList(workFlowWorkOrderId, workOrderId).subscribe(res => {
+                this.workOrderDirectionList = res;
+            })
+
+        }
     }
 
 
@@ -305,6 +345,9 @@ export class WorkOrderListComponent implements OnInit {
 
     }
 
+    showOtherOptions() {
+        this.otherOptionShow = !this.otherOptionShow;
+    }
 
 
 }

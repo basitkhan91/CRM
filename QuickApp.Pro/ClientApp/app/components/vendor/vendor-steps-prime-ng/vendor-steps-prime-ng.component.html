@@ -14,7 +14,7 @@
         (click)="changeStep('General Information')"
         >
         <div class="md-step-circle"><span>1</span></div>
-        <div class="md-step-title">General Information</div>
+        <div class="md-step-title">General Info</div>
         <div class="md-step-bar-left"></div>
         <div class="md-step-bar-right"></div>
     </div>
@@ -41,7 +41,7 @@
         [class.isDisabled]="!isDisabledSteps"
         >
         <div class="md-step-circle"><span>3</span></div>
-        <div class="md-step-title">Financial Information</div>
+        <div class="md-step-title">Financial Info</div>
         <div class="md-step-bar-left"></div>
         <div class="md-step-bar-right"></div>
     </div>
@@ -54,7 +54,7 @@
         [class.isDisabled]="!isDisabledSteps"
         >
         <div class="md-step-circle"><span>4</span></div>
-        <div class="md-step-title">Payment Information</div>
+        <div class="md-step-title">Payment Info</div>
         <div class="md-step-bar-left"></div>
         <div class="md-step-bar-right"></div>
     </div>
@@ -67,7 +67,7 @@
         [class.isDisabled]="!isDisabledSteps"
         >
         <div class="md-step-circle"><span>5</span></div>
-        <div class="md-step-title">Shipping Information</div>
+        <div class="md-step-title">Shipping Info</div>
         <div class="md-step-bar-left"></div>
         <div class="md-step-bar-right"></div>
     </div>
@@ -80,7 +80,7 @@
         [class.isDisabled]="!isDisabledSteps"
         >
         <div class="md-step-circle"><span>6</span></div>
-        <div class="md-step-title">Billing Information</div>
+        <div class="md-step-title">Billing Info</div>
         <div class="md-step-bar-left"></div>
         <div class="md-step-bar-right"></div>
     </div>
@@ -102,11 +102,24 @@
          active: activeMenuItem >= 8,
         editable: activeMenuItem === 8
         }"
-        (click)="changeStep('Documents')"
+        (click)="changeStep('Memos')"
         [class.isDisabled]="!isDisabledSteps"
         >
         <div class="md-step-circle"><span>8</span></div>
         <div class="md-step-title">Memos</div>
+        <div class="md-step-bar-left"></div>
+        <div class="md-step-bar-right"></div>
+    </div>
+    <div class="md-step"
+         [ngClass]="{
+         active: activeMenuItem >= 9,
+        editable: activeMenuItem === 9
+        }"
+        (click)="changeStep('Documents')"
+        [class.isDisabled]="!isDisabledSteps"
+        >
+        <div class="md-step-circle"><span>9</span></div>
+        <div class="md-step-title">Documents</div>
         <div class="md-step-bar-left"></div>
         <div class="md-step-bar-right"></div>
     </div>

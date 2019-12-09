@@ -8,8 +8,10 @@ import { CustomerService } from '../../../services/customer.service';
 import { AuthService } from '../../../services/auth.service';
 import { AlertService, MessageSeverity } from '../../../services/alert.service';
 
-
-
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
+import { NgbModal, NgbActiveModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { error } from '@angular/compiler/src/util';
+import { HttpErrorResponse } from '@angular/common/http';
 @Component({
     selector: 'app-customer-aircraft',
     templateUrl: './customer-aircraft.component.html',
@@ -33,14 +35,15 @@ export class CustomerAircraftComponent implements OnInit {
     // selectAircraftManfacturer: any = [];
     selectedAircraftModel = [];
     selectedDashNumbers = [];
+    selectedmemo:any =[];
 
-
+    modal: NgbModalRef;
     // add craft inventory variables 
     add_SelectedAircraftId: any;
     add_SelectedModel: any = [];
     add_SelectedDashNumber: any;
 
-
+    isDeleteMode: boolean = false;
     add_AircraftModelList: any = [];
     add_AircraftDashNumberList: any = [];
     // temp data for the pop inventory
@@ -54,6 +57,7 @@ export class CustomerAircraftComponent implements OnInit {
     multipleModelUrl: any = '';
     tempAircraftDashNumber: any;
     modelUnknown: boolean = false;
+    airCraftMappingId: number;
     inventoryData: any = [];
     colaircraft: any[] = [
         { field: "AircraftType", header: "Aircraft" },
@@ -74,7 +78,7 @@ export class CustomerAircraftComponent implements OnInit {
     id: number;
     customerCode: any;
     customerName: any;
-
+    public sourceCustomer: any = {}
 
 
 
@@ -84,6 +88,8 @@ export class CustomerAircraftComponent implements OnInit {
         public customerService: CustomerService,
         private authService: AuthService,
         private alertService: AlertService,
+        private modalService: NgbModal,
+        private activeModal: NgbActiveModal,
     ) { }
     ngOnInit() {
         if (this.editMode) {
@@ -156,9 +162,10 @@ export class CustomerAircraftComponent implements OnInit {
 
 
     searchByFieldUrlCreateforAircraftInformation() {
+     
         this.aircraftManfacturerIdsUrl = this.selectAircraftManfacturer;
-        // if (this.selectAircraftManfacturer.length > 0) {
-        //     const aircraftTypeIds = this.selectAircraftManfacturer.reduce(
+        //if (this.selectAircraftManfacturer.length >= 0) {
+        //    const aircraftTypeIds = this.selectAircraftManfacturer.reduce(
         //         (acc, value) => {
         //             return `${acc},${value}`;
         //         },
@@ -170,6 +177,7 @@ export class CustomerAircraftComponent implements OnInit {
         // }
 
         if (this.selectedAircraftModel.length > 0) {
+            
             const aircraftModelIds = this.selectedAircraftModel.reduce((acc, id) => {
                 return `${acc},${id}`;
             }, '');
@@ -239,43 +247,90 @@ export class CustomerAircraftComponent implements OnInit {
 
     //  search aircraft information by all parameter
     async searchAircraftInformation() {
-
+       
         await this.searchByFieldUrlCreateforAircraftInformation();
         this.searchAircraftParams = '';
-
+     
         // checks where multi select is empty or not and calls the service
-        if (
+          if (
             this.aircraftManfacturerIdsUrl !== '' &&
             this.aircraftModelsIdUrl !== '' &&
-            this.dashNumberIdUrl !== ''
+            this.dashNumberIdUrl !== '' &&
+            this.selectedmemo !== ''
         ) {
-            this.searchAircraftParams = `aircraftTypeID=${this.aircraftManfacturerIdsUrl}&aircraftModelID=${this.aircraftModelsIdUrl}&dashNumberId=${this.dashNumberIdUrl}`;
+
+            this.searchAircraftParams = `AircraftTypeId=${this.aircraftManfacturerIdsUrl}&AircraftModelId=${this.aircraftModelsIdUrl}&DashNumberId=${this.dashNumberIdUrl}&memo=${this.selectedmemo}`;
+        }
+       else if (
+            this.aircraftManfacturerIdsUrl !== '' &&
+            this.aircraftModelsIdUrl !== '' &&
+            this.dashNumberIdUrl !== '' 
+           
+        ) {
+
+            this.searchAircraftParams = `AircraftTypeId=${this.aircraftManfacturerIdsUrl}&AircraftModelId=${this.aircraftModelsIdUrl}&DashNumberId=${this.dashNumberIdUrl}`;
         }
         // search only by manfacturer and Model and  publicationId
         else if (
             this.aircraftManfacturerIdsUrl !== '' &&
             this.aircraftModelsIdUrl !== ''
         ) {
-            this.searchAircraftParams = `aircraftTypeID=${this.aircraftManfacturerIdsUrl}&aircraftModelID=${this.aircraftModelsIdUrl}`;
-        } else if (this.aircraftManfacturerIdsUrl !== '') {
-            this.searchAircraftParams = `aircraftTypeID=${this.aircraftManfacturerIdsUrl}`;
+            this.searchAircraftParams = `AircraftTypeId=${this.aircraftManfacturerIdsUrl}&AircraftModelId=${this.aircraftModelsIdUrl}`;
+        }
+
+        else if (
+            this.aircraftManfacturerIdsUrl !== '' &&
+            this.dashNumberIdUrl !== ''
+        ) {
+            this.searchAircraftParams = `AircraftTypeId=${this.aircraftManfacturerIdsUrl}&DashNumberId=${this.dashNumberIdUrl}`;
+        }
+        else if (
+            this.aircraftModelsIdUrl !== '' &&
+            this.dashNumberIdUrl !== ''
+        ) {
+            this.searchAircraftParams = `AircraftModelId=${this.aircraftModelsIdUrl}&DashNumberId=${this.dashNumberIdUrl}`;
+        }
+
+
+        else if (this.aircraftManfacturerIdsUrl !== '') {
+            this.searchAircraftParams = `AircraftTypeId=${this.aircraftManfacturerIdsUrl}`;
         }
         // search only by model and publicationId
         else if (this.aircraftModelsIdUrl !== '') {
-            this.searchAircraftParams = `aircraftModelID=${this.aircraftModelsIdUrl}`;
+            this.searchAircraftParams = `AircraftModelId=${this.aircraftModelsIdUrl}`;
         }
         // search only by dashNumber and publicationId
         else if (this.dashNumberIdUrl !== '') {
-            this.searchAircraftParams = `dashNumberId=${this.dashNumberIdUrl}`;
+            this.searchAircraftParams = `DashNumberId=${this.dashNumberIdUrl}`;
         }
-        this.customerService.searchAirMappedByMultiTypeIDModelIDDashIDByCustomerId(this.id, this.searchAircraftParams).subscribe(res => {
+
+        else if (this.selectedmemo !='')
+        {
+           
+            this.searchAircraftParams = `memo=${this.selectedmemo}`;
+        }
+
+        else if (this.selectedmemo != '' && this.dashNumberIdUrl !== '' && this.aircraftModelsIdUrl !== '') {
+
+            this.searchAircraftParams = `AircraftModelId=${this.aircraftModelsIdUrl}&DashNumberId=${this.dashNumberIdUrl}&memo=${this.selectedmemo}`;
+        }
+        else if (this.selectedmemo != '' && this.dashNumberIdUrl !== '') {
+
+            this.searchAircraftParams = `DashNumberId=${this.dashNumberIdUrl}&memo=${this.selectedmemo}`;
+        }
+        else if (this.selectedmemo != '' && this.aircraftModelsIdUrl !== '') {
+
+            this.searchAircraftParams = `AircraftModelId=${this.aircraftModelsIdUrl}&memo=${this.selectedmemo}`;
+        }
+       
+          this.customerService.searchAirMappedByMultiTypeIDModelIDDashIDByCustomerId(this.id, this.searchAircraftParams).subscribe(res => {
             this.aircraftListDataValues = res;
 
 
             this.aircraftManfacturerIdsUrl = '';
             this.aircraftModelsIdUrl = '';
             this.dashNumberIdUrl = '';
-
+              this.selectedmemo = [];
             this.selectAircraftManfacturer = '';
             this.selectedAircraftModel = [];
             this.selectedDashNumbers = [];
@@ -424,6 +479,7 @@ export class CustomerAircraftComponent implements OnInit {
             }
         })
         await this.customerService.postCustomerAircrafts(data).subscribe(res => {
+            
             this.alertService.showMessage(
                 'Success',
                 'Mapped Aircraft Inventory Successfully',
@@ -437,6 +493,20 @@ export class CustomerAircraftComponent implements OnInit {
             this.dashNumberUnknown = false;
             this.modelUnknown = false;
             this.getAircraftMappedDataByCustomerId()
+        }, error => {
+                this.alertService.showMessage(
+                    'failed',
+                   "Record already exist with these details",
+                    MessageSeverity.error
+                );
+                this.inventoryData = []
+                this.add_SelectedAircraftId = undefined;
+                this.add_SelectedModel = [];
+                this.add_SelectedDashNumber = undefined;
+                this.dashNumberUnknown = false;
+                this.modelUnknown = false;
+                this.getAircraftMappedDataByCustomerId()
+
         })
     }
 
@@ -447,23 +517,65 @@ export class CustomerAircraftComponent implements OnInit {
         })
     }
 
-    deleteAircraftMappedInventory(customerAircraftMappingId) {
-        this.customerService.deleteAircraftInvetoryById(customerAircraftMappingId).subscribe(res => {
-            this.getAircraftMappedDataByCustomerId();
-            this.alertService.showMessage(
-                'Success',
-                'Successfully Deleted Aircraft Inventory ',
-                MessageSeverity.success
-            );
-        })
+    //deleteAircraftMappedInventory(customerAircraftMappingId) {
+    //    this.customerService.deleteAircraftInvetoryById(customerAircraftMappingId).subscribe(res => {
+    //        this.getAircraftMappedDataByCustomerId();
+    //        this.alertService.showMessage(
+    //            'Success',
+    //            'Successfully Deleted Aircraft Inventory ',
+    //            MessageSeverity.success
+    //        );
+    //    })
+    //}
+    dismissModel() {
+        this.modal.close();
     }
+    deleteAircraftMappedInventory(content, id) {
+      
+        this.isDeleteMode = true;
 
+
+        this.airCraftMappingId = id;
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+    deleteItemAndCloseModel() {
+
+        let airCraftingMappingId = this.airCraftMappingId;
+        if (airCraftingMappingId > 0) {
+
+            this.customerService.deleteAircraftInvetoryById(airCraftingMappingId).subscribe(
+                response => this.saveCompleted(this.sourceCustomer),
+                error => this.saveFailedHelper(error));
+        }
+        this.modal.close();
+    }
     nextClick() {
         this.tab.emit('Atachapter');
     }
     backClick() {
 
         this.tab.emit('Contacts');
+    }
+    private saveCompleted(user?: any) {
+
+        if (this.isDeleteMode == true) {
+            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
+            this.isDeleteMode = false;
+        }
+        else {
+            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+            this.saveCompleted
+        }
+        this.getAircraftMappedDataByCustomerId();
+    }
+    private saveFailedHelper(error: any) {
+
+        this.alertService.stopLoadingMessage();
+        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
 
 

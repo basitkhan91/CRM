@@ -93,6 +93,68 @@ namespace DAL.Repositories
 
         }
 
+        public long UploadFiles(IFormFileCollection files, long? referenceId, int moduleId, string moduleName, string uploadedBy, int? masterCompanyId,long attachmentId)
+        {
+            int count = 0;
+            //long attachmentId = 0;
+            try
+            {
+                if (files != null && files.Count > 0)
+                {                 
+
+                    foreach (var file in files)
+                    {
+                        long? fileSize = ContentDispositionHeaderValue.Parse(file.ContentDisposition).Size;
+                        if (Math.Round(Convert.ToDecimal(fileSize / (1024 * 1024)), 2) <= AppSettings.UploadFileSize)
+                        {
+
+                            AttachmentDetails attachmentDetails = new AttachmentDetails();
+                            string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                            string filePath = Path.Combine(AppSettings.UploadFilePath, moduleName, referenceId.ToString());
+
+                            if (!Directory.Exists(filePath))
+                            {
+                                Directory.CreateDirectory(filePath);
+                            }
+
+                            string fullPath = Path.Combine(filePath, fileName);
+                            using (var stream = new FileStream(fullPath, FileMode.Create))
+                            {
+                                file.CopyTo(stream);
+                            }
+                            attachmentDetails.AttachmentId = attachmentId;
+                            //attachmentDetails.Code = "";
+                            attachmentDetails.Description = file.Name;
+                            attachmentDetails.FileFormat = "";
+                            //attachmentDetails.Memo = "";
+
+                            attachmentDetails.FileSize = Math.Round(Convert.ToDecimal(fileSize / (1024 * 1024)), 2);
+                            attachmentDetails.FileName = fileName;
+                            attachmentDetails.Link = fullPath;
+                            attachmentDetails.FileType = file.ContentType;
+                            attachmentDetails.IsActive = true;
+                            attachmentDetails.IsDeleted = false;
+                            attachmentDetails.UpdatedBy = attachmentDetails.CreatedBy = uploadedBy;
+                            attachmentDetails.UpdatedDate = attachmentDetails.CreatedDate = DateTime.Now;
+
+                            _appContext.AttachmentDetails.Add(attachmentDetails);
+                            count++;
+                        }
+
+                    }                   
+                    _appContext.SaveChanges();
+
+                    return attachmentId;
+                }
+                return attachmentId;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+
         public List<AttachmentDetails> GetAttachmentDetails(long attachmentId, long? referenceId, int moduleId)
         {
             try
@@ -100,17 +162,22 @@ namespace DAL.Repositories
                 string filePath = string.Empty;
                 List<AttachmentDetails> attachmentDetails = new List<AttachmentDetails>();
 
-                var result = _appContext.Attachment
-                    .Join(_appContext.AttachmentDetails,
-                           a => a.AttachmentId,
-                           ad => ad.AttachmentId,
-                           (a, ad) => new { a, ad })
-                    .Where(p => p.ad.IsDeleted == false && p.a.AttachmentId == attachmentId && p.a.ModuleId == moduleId && p.a.ReferenceId == referenceId)
-                    .Select(p => new
-                    {
-                        attachmentDetails = p.ad
-                    })
-                    .ToList();
+                 attachmentDetails = (from at in _appContext.Attachment
+                              join atd in _appContext.AttachmentDetails on at.AttachmentId equals atd.AttachmentId
+                              where atd.IsActive == true && at.AttachmentId == attachmentId && at.ModuleId == moduleId && at.ReferenceId == referenceId
+                              select atd).ToList();
+
+                //var result = _appContext.Attachment
+                //    .Join(_appContext.AttachmentDetails,
+                //           a => a.AttachmentId,
+                //           ad => ad.AttachmentId,
+                //           (a, ad) => new { a, ad })
+                //    .Where(p => p.ad.IsDeleted == false && p.a.AttachmentId == attachmentId && p.a.ModuleId == moduleId && p.a.ReferenceId == referenceId)
+                //    .Select(p => new
+                //    {
+                //        attachmentDetails = p.ad
+                //    })
+                //    .ToList();
 
                 return attachmentDetails;
             }
@@ -251,6 +318,15 @@ namespace DAL.Repositories
                 case "StocklineAdjustmentReason":
                     UploadStockAdjustmentReason(BindCustomData<StocklineAdjustmentReason>(file, "AdjustmentReasonId", moduleName));
                     break;
+
+                case "Condition":
+                    UploadCondition(BindCustomData<Condition>(file, "ConditionId", moduleName));
+                    break;
+
+                case "Integration":
+                    UploadIntegration(BindCustomData<IntegrationPortal>(file, "IntegrationPortalId", moduleName));
+                    break;
+
                 default:
                     break;
             }
@@ -696,6 +772,57 @@ namespace DAL.Repositories
                 if (!flag)
                 {
                     _appContext.stocklineAdjustmentReason.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadCondition(List<Condition> ConditionList)
+        {
+
+            foreach (var item in ConditionList)
+            {
+
+                var flag = _appContext.Condition.Any(p => p.IsDelete == false && !string.IsNullOrEmpty(p.Description)
+                && !string.IsNullOrEmpty(p.Description) &&
+                p.Description.ToLower() == item.Description.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.Condition.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadIntegration(List<IntegrationPortal> IntegrationList)
+        {
+
+            foreach (var item in IntegrationList)
+            {
+
+                var flag = _appContext.IntegrationPortal.Any(p => p.IsDelete == false && !string.IsNullOrEmpty(p.Description)
+                && !string.IsNullOrEmpty(p.Description) &&
+                p.Description.ToLower() == item.Description.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.IntegrationPortal.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadItemClass(List<ItemClassfication> ItemClassficationList)
+        {
+
+            foreach (var item in ItemClassficationList)
+            {
+
+                var flag = _appContext.ItemClassification.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.ItemClassificationCode)
+                && !string.IsNullOrEmpty(p.Description) &&
+                p.Description.ToLower() == item.ItemClassificationCode.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.ItemClassification.Add(item);
                     _appContext.SaveChanges();
                 }
             }

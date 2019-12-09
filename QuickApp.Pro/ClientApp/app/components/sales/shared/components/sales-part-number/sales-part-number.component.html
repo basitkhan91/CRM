@@ -1,18 +1,9 @@
 <div class="form-group">
   <div class="row">
-    <button
-      type="button"
-      class="btn btn-primary"
-      (click)="addPartNumber($event)"
-      data-target="#addPartNumber"
-      data-toggle="modal"
-    >
+    <button type="button" class="btn btn-primary" (click)="addPartNumber($event)" data-target="#addPartNumber"
+      data-toggle="modal">
       Add PN
     </button>
   </div>
 </div>
-
-<app-add-sales-part-number
-  [display]="show"
-  (close)="onClose($event)"
-></app-add-sales-part-number>
+<app-add-sales-part-number [display]="show" [customer]="customer" (close)="onClose($event)"></app-add-sales-part-number>

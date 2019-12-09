@@ -65,6 +65,7 @@ export class VendorShippingInformationComponent {
     country: any;
     selectedShipVia: any;
     shipviacollection: any[];
+    shippingauditHisory: any[];
     ngOnInit(): void {
         this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-shipping-information';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
@@ -317,7 +318,17 @@ export class VendorShippingInformationComponent {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-
+    private onAuditHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+       
+        this.shippingauditHisory = auditHistory;
+       
+        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
     private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
@@ -398,9 +409,12 @@ export class VendorShippingInformationComponent {
         this.loadingIndicator = true;
         this.sourceVendor = row;
         this.isSaving = true;
-        this.workFlowtService.shipaddressHistory(this.sourceVendor.vendorShippingAddressId).subscribe(
-            results => this.onHistoryLoadSuccessful(results[0], content),
+        this.workFlowtService.getShipaddressHistory(this.sourceVendor.vendorId, this.sourceVendor.vendorShippingAddressId).subscribe(
+            results => this.onAuditHistoryLoadSuccessful(results, content),
             error => this.saveFailedHelper(error));
+
+
+       
     }
 
     editItemAndCloseModel() {
@@ -448,28 +462,12 @@ export class VendorShippingInformationComponent {
                 return;
             }
 
-        if (!this.shipViaObj.vendorShippingId) {            
+        if (this.shipViaObj.vendorShippingId>0) {            
             this.shipViaObj.createdBy = this.userName;
             this.shipViaObj.updatedBy = this.userName;
             this.shipViaObj.masterCompanyId = 1;
             this.shipViaObj.isActive = true;
-            this.workFlowtService.newShippingViaAdd(this.shipViaObj).subscribe(data => {
-                this.shipViaCollection = data;
-                this.loadShipViaCollection(this.shipViaCollection);
-                if (this.shipViaCollection) {
-                    this.shipViaObj.shipVia = "";
-                    this.shipViaObj.shippingAccountinfo = "";
-                    this.shipViaObj.shippingURL = "";
-                    this.shipViaObj.shippingId = "";
-                    this.shipViaObj.memo = "";
-                }
-            })
-        }
-        else {
-
-            this.sourceVendor.updatedBy = this.userName;
-            this.sourceVendor.masterCompanyId = 1;
-            this.shipViaObj.isActive = true;
+           
             this.workFlowtService.updateshippingViainfo(this.shipViaObj).subscribe(data => {
                 this.shipViaCollection = data;
                 this.loadShipViaCollection(this.shipViaCollection);
@@ -479,8 +477,28 @@ export class VendorShippingInformationComponent {
                     this.shipViaObj.shippingURL = "";
                     this.shipViaObj.shippingId = "";
                     this.shipViaObj.memo = "";
+                    this.shipViaObj.vendorShippingId=0;
                 }
             })
+        }
+        else {
+            this.shipViaObj.createdBy = this.userName;
+            this.sourceVendor.updatedBy = this.userName;
+            this.sourceVendor.masterCompanyId = 1;
+            this.shipViaObj.isActive = true;
+
+            this.workFlowtService.newShippingViaAdd(this.shipViaObj).subscribe(data => {
+                this.shipViaCollection = data;
+                this.loadShipViaCollection(this.shipViaCollection);
+                if (this.shipViaCollection) {
+                    this.shipViaObj.shipVia = "";
+                    this.shipViaObj.shippingAccountinfo = "";
+                    this.shipViaObj.shippingURL = "";
+                    this.shipViaObj.shippingId = "";
+                    this.shipViaObj.memo = "";
+                    this.shipViaObj.vendorShippingId=0;
+                }
+            })            
         }
 
     }

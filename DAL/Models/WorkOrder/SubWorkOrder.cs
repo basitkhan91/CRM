@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
@@ -10,7 +9,30 @@ namespace DAL.Models
         [Key]
         public long SubWorkOrderId { get; set; }
         public long WorkOrderId { get; set; }
+        public long WorkOrderPartNumberId { get; set; }
+        public long? WorkFlowId { get; set; }
+        public long? CMMId { get; set; }
+        public string SubWorkOrderNo { get; set; }
+        public DateTime? NeedDate { get; set; }
+        public DateTime? EstCompDate { get; set; }
+        public long? StageId { get; set; }
+        public long? StatusId { get; set; }
+        public bool IsPMA { get; set; }
+        public bool IsDER { get; set; }
+        public int MasterCompanyId { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime UpdatedDate { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
+
+        [NotMapped]
+        public string WorkOrderNum { get; set; }
+        
+        [NotMapped]
+        public long WorkFlowWorkOrderId { get; set; }
+
+        
     }
 }

@@ -30,6 +30,7 @@ export class AssetService {
     enableExternal: boolean = false;
     customerobject: any[];
     financeCollection: any;
+    CapeslistCollection: any;
     paymentCollection: any;
     salesCollection: any;
     shippingCollection: any;
@@ -86,10 +87,18 @@ export class AssetService {
     remove(assetRecordId: number) {
         return this.assetEndpoint.removeAssetById(assetRecordId);
     }
+    removeCapesById(AssetCapesId: number) {
+        return this.assetEndpoint.removeAssetCapesById(AssetCapesId);
+    }
     //For Saving of Capes//
     saveManfacturerinforcapes(data) {
         return this.assetEndpoint.saveAssetCapesInfo<any>(data);
     }
+
+    addNewAssetInfocapes(data) {
+        return this.assetEndpoint.addNewAssetCapesInfo<any>(data);
+    }
+    
 
     getcapabilityListData(assetRecordId) {
         return Observable.forkJoin(

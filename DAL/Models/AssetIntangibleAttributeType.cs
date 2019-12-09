@@ -12,8 +12,8 @@ namespace DAL.Models
         public long AssetIntangibleAttributeTypeId { get; set; }
         public long AssetIntangibleTypeId { get; set; }
         public long AssetDepreciationMethodId { get; set; }
-        public int IntangibleLife { get; set; }
-        public string AmortizationFrequency { get; set; }
+        public int IntangibleLifeYears { get; set; }
+        public long AssetAmortizationIntervalId { get; set; }
         public long IntangibleGLAccountId { get; set; }
         public long AmortExpenseGLAccountId { get; set; }
         public long AccAmortDeprGLAccountId { get; set; }
@@ -23,7 +23,7 @@ namespace DAL.Models
         public int MasterCompanyId { get; set; }
         public bool? IsActive { get; set; }
 
-        public bool? IsDelete { get; set; }
+        public bool? IsDeleted { get; set; }
 
        
     }

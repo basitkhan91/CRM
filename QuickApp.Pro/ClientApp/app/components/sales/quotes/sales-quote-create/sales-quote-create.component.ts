@@ -24,6 +24,12 @@ export class SalesQuoteCreateComponent implements OnInit {
   showPaginator: boolean = false;
   customerId: number;
   salesQuote: ISalesQuote;
+  customer: any = {
+    customerName: '',
+    customerCode: '',
+    promisedDate: ''
+  };
+
   @ViewChild("newSalesQuoteForm") public newSalesQuoteForm: NgForm;
   constructor(
     private customerService: CustomerService,
@@ -31,6 +37,7 @@ export class SalesQuoteCreateComponent implements OnInit {
     private route: ActivatedRoute,
     private salesQuoteService: SalesQuoteService
   ) {
+
     this.salesQuote = new SalesQuote();
   }
 
@@ -38,6 +45,7 @@ export class SalesQuoteCreateComponent implements OnInit {
     this.customerId = +this.route.snapshot.paramMap.get("customerId");
     console.log(`customer id: ${this.customerId}`);
     this.getNewSalesQuoteInstance(this.customerId);
+
   }
 
   getNewSalesQuoteInstance(customerId: number) {
@@ -45,6 +53,11 @@ export class SalesQuoteCreateComponent implements OnInit {
       .getNewSalesQuoteInstance(customerId)
       .subscribe(data => {
         this.salesQuote = data && data.length ? data[0] : null;
+        this.customer = {
+          customerName: this.salesQuote.customerName,
+          customerCode: this.salesQuote.customerCode,
+          promisedDate: this.salesQuote.customerPromisedDate
+        };
       });
   }
 
@@ -64,6 +77,7 @@ export class SalesQuoteCreateComponent implements OnInit {
 
     console.log(this.salesQuote);
   }
+
   onSubmit() {
     console.log(this.newSalesQuoteForm.valid);
     console.log(this.salesQuote);

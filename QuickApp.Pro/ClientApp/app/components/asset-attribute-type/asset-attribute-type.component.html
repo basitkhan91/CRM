@@ -34,10 +34,6 @@
                             <!--caption-->
                             <ng-template pTemplate="caption">
                                 <div style="text-align: right; margin-left: -6px !important;">
-                                    <!--column names dropdown taking selectedColumns-->
-                                    <!--Step x: Update the dropdown with options-->
-                                    <!--(onChange)="reorderValues($event)"-->
-                                    <!--to-do:add (change)=>-->
                                     <p-multiSelect [maxSelectedLabels]="2"
                                                    [options]="columnHeaders"
                                                    optionLabel="header"
@@ -46,9 +42,9 @@
                                                    selectedItemsLabel="{0} columns selected"
                                                    defaultLabel="Choose Columns">
                                     </p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm" pTooltip="Download Selected" tooltipPosition="top"
-                                            pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm" pTooltip="Download All Data" tooltipPosition="top"
+                                            pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary-cstm" pTooltip="Download Selected" tooltipPosition="top"
                                             pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload excel-upload-cstm">
                                         <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
@@ -136,7 +132,7 @@
                             <span class="label">
                                 <b>Asset Type: </b>
                             </span>
-                            <span class="value">{{itemDetails.assetTypeId}}</span>
+                            <span class="value">{{itemDetails.assetTypeName}}</span>
                         </p>
                         <p>
                             <span class="label">
@@ -155,13 +151,13 @@
                             <span class="label">
                                 <b>Convention Type: </b>
                             </span>
-                            <span class="value">{{itemDetails.conventionType}}</span>
+                            <span class="value">{{itemDetails.conventionTypeName}}</span>
                         </p>
                         <p>
                             <span class="label">
                                 <b>Depreciation Method: </b>
                             </span>
-                            <span class="value">{{itemDetails.depreciationMethod}}</span>
+                            <span class="value">{{itemDetails.depreciationMethodName}}</span>
                         </p>
                         <p>
                             <span class="label">
@@ -185,43 +181,43 @@
                             <span class="label">
                                 <b>Depreciation Frequency: </b>
                             </span>
-                            <span class="value">{{itemDetails.depreciationFrequencyId}}</span>
+                            <span class="value">{{itemDetails.depreciationFrequencyName}}</span>
                         </p>
                         <p>
                             <span class="label">
                                 <b>Acquired GL Account: </b>
                             </span>
-                            <span class="value">{{itemDetails.acquiredGLAccountId}}</span>
+                            <span class="value">{{itemDetails.acquiredGLAccountName}}</span>
                         </p>
                         <p>
                             <span class="label">
                                 <b>Depr Expense GL Account: </b>
                             </span>
-                            <span class="value">{{itemDetails.deprExpenseGLAccountId}}</span>
+                            <span class="value">{{itemDetails.deprExpenseGLAccountName}}</span>
                         </p>
                         <p>
                             <span class="label">
                                 <b>Ad Deps GL Account: </b>
                             </span>
-                            <span class="value">{{itemDetails.adDepsGLAccountId}}</span>
+                            <span class="value">{{itemDetails.adDepsGLAccountName}}</span>
                         </p>
                         <p>
                             <span class="label">
                                 <b>Asset Sale: </b>
                             </span>
-                            <span class="value">{{itemDetails.assetSale}}</span>
+                            <span class="value">{{itemDetails.assetSaleName}}</span>
                         </p>
                         <p>
                             <span class="label">
                                 <b>Asset WriteOff: </b>
                             </span>
-                            <span class="value">{{itemDetails.assetWriteOff}}</span>
+                            <span class="value">{{itemDetails.assetWriteOffName}}</span>
                         </p>
                         <p>
                             <span class="label">
                                 <b>Asset WriteDown: </b>
                             </span>
-                            <span class="value">{{itemDetails.assetWriteDown}}</span>
+                            <span class="value">{{itemDetails.assetWriteDownName}}</span>
                         </p>
                         <p>
                             <span class="label">
@@ -266,7 +262,7 @@
     </div>
 
     <!--Step x: Modal for Edit-->
-    <div #editItem id="editItem" class="modal fade" role="dialog" *ngIf="currentModeOfOperation === 2 || currentModeOfOperation === 3">
+        <div #editItem id="editItem" class="modal fade" role="dialog" *ngIf="currentModeOfOperation === 2 || currentModeOfOperation === 3">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -278,10 +274,17 @@
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="assetTypeId" class="control-label">Asset Type</label>
+                                    <label for="assetTypeId" class="control-label">
+                                        Asset Type
+                                        <span class="clr-red">*</span>
+                                    </label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="assetTypeId" name="assetTypeId" [(ngModel)]="currentRow.assetTypeId" minlength="2" format="number" (onChange)="check"></textarea>
+                                    <p-autoComplete field="assetTypeName" [(ngModel)]="currentRow.assetTypeId" name="assetTypeId"
+                                                    [suggestions]="filteredAssetTypeList" (completeMethod)="filterAssetType($event)"
+                                                    [forceSelection]="true" [size]="30" [minLength]="1" (onSelect)="selectedAssetType($event)"
+                                                    [dropdown]="true" class="p-autoComplete-ctsm" [required]="true">
+                                    </p-autoComplete>
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -289,115 +292,187 @@
                                     <label for="description" class="control-label">Description</label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="description" name="description" [(ngModel)]="currentRow.description" minlength="2" format="number" (onChange)="check"></textarea>
+                                    <textarea class="text-item" #memo="ngModel" id="description" name="description"
+                                              [(ngModel)]="currentRow.description" minlength="2" (onChange)="check"></textarea>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="assetAttributeTypeName" class="control-label">Name</label>
+                                    <label for="assetAttributeTypeName" class="control-label">Name <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="assetAttributeTypeName" name="assetAttributeTypeName" [(ngModel)]="currentRow.assetAttributeTypeName" minlength="2" format="number" (onChange)="check"></textarea>
+                                    <input type="text" name="assetAttributeTypeName" class="form-control"
+                                           [(ngModel)]="currentRow.assetAttributeTypeName" required>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="conventionType" class="control-label">Convention Type</label>
+                                    <label for="conventionType" class="control-label">Convention Type <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="conventionType" name="conventionType" [(ngModel)]="currentRow.conventionType" minlength="2" format="number" (onChange)="check"></textarea>
+                                    <select name="conventionType" [(ngModel)]="currentRow.conventionType" required>
+                                        <option *ngFor="let convType of conventionTypeList" [ngValue]="convType">{{convType.label}}</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="depreciationMethod" class="control-label">Depreciation Method</label>
+                                    <label for="depreciationMethod" class="control-label">Depreciation Method <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="depreciationMethod" name="depreciationMethod" [(ngModel)]="currentRow.depreciationMethod" minlength="2" format="number" (onChange)="check"></textarea>
+                                    <p-autoComplete field="name" [(ngModel)]="currentRow.depreciationMethod" name="depreciationMethod"
+                                                    [suggestions]="filteredDepriciationMethod" (completeMethod)="filterDepriciationMethod($event)"
+                                                    [forceSelection]="true" [size]="30" [minLength]="1"
+                                                    [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                    </p-autoComplete>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="residualPercentage" class="control-label">Residual Percentage</label>
+                                    <label for="residualPercentage" class="control-label">Residual Percentage <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="residualPercentage" name="residualPercentage" [(ngModel)]="currentRow.residualPercentage" minlength="2" format="number" (onChange)="check"></textarea>
+                                    <select name="residualPercentage" [(ngModel)]="currentRow.residualPercentage" required>
+                                        <option value="">Select Percentage</option>
+                                        <option *ngFor="let Percentlist of percentageList" [ngValue]="Percentlist">{{Percentlist.value}}</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="residualValue" class="control-label">Residual Value</label>
+                                    <label for="residualValue" class="control-label">Residual Value <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="residualValue" name="residualValue" [(ngModel)]="currentRow.residualValue" minlength="2" format="number" (onChange)="check"></textarea>
+                                    <input type="text" name="residualValue" class="form-control"
+                                           [(ngModel)]="currentRow.residualValue" min="1" required>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="assetLife" class="control-label">Asset Life</label>
+                                    <label for="assetLife" class="control-label">Asset Life <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="assetLife" name="assetLife" [(ngModel)]="currentRow.assetLife" minlength="2" format="number" (onChange)="check"></textarea>
+                                    <input type="text" name="assetLife" class="form-control"
+                                           [(ngModel)]="currentRow.assetLife" min="1" required>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="depreciationFrequencyId" class="control-label">Depreciation Frequency</label>
+                                    <label for="depreciationFrequencyId" class="control-label">Depreciation Frequency <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="depreciationFrequencyId" name="depreciationFrequencyId" [(ngModel)]="currentRow.depreciationFrequencyId" minlength="2" format="number" (onChange)="check"></textarea>
+                                    <select name="depreciationFrequencyId" [(ngModel)]="currentRow.depreciationFrequencyId" required>
+                                        <option *ngFor="let freq of depreciationFreq" [ngValue]="freq">{{freq.label}}</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="acquiredGLAccountId" class="control-label">Acquired GL Account</label>
+                                    <label for="acquiredGLAccountId" class="control-label">Acquired GL Account <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="acquiredGLAccountId" name="acquiredGLAccountId" [(ngModel)]="currentRow.acquiredGLAccountId" minlength="2" format="number" (onChange)="check"></textarea>
+                                    <p-autoComplete field="accountName" [(ngModel)]="currentRow.acquiredGLAccountId" name="acquiredGLAccountId"
+                                                    [suggestions]="filteredGLAccountList" (completeMethod)="filterGLAccount($event)"
+                                                    [forceSelection]="true" [size]="30" [minLength]="1"
+                                                    [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                    </p-autoComplete>
                                 </div>
+
                             </div>
 
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="deprExpenseGLAccountId" class="control-label">Depr Expense GL Account</label>
+                                    <label for="deprExpenseGLAccountId" class="control-label">Depr Expense GL Account <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="deprExpenseGLAccountId" name="deprExpenseGLAccountId" [(ngModel)]="currentRow.deprExpenseGLAccountId" minlength="2" format="number" (onChange)="check"></textarea>
+                                    <p-autoComplete field="accountName" [(ngModel)]="currentRow.deprExpenseGLAccountId" name="deprExpenseGLAccountId"
+                                                    [suggestions]="filteredGLAccountList" (completeMethod)="filterGLAccount($event)" [forceSelection]="true" [size]="30" [minLength]="1"
+                                                    [dropdown]="true" class="p-autoComplete-ctsm" required>
+
+                                    </p-autoComplete>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="adDepsGLAccountId" class="control-label">Ad Deps GL Account</label>
+                                    <label for="adDepsGLAccountId" class="control-label">Ad Deps GL Account <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #adDepsGLAccountId="ngModel" id="adDepsGLAccountId" name="adDepsGLAccountId" [(ngModel)]="currentRow.adDepsGLAccountId" minlength="2"></textarea>
+                                    <p-autoComplete field="accountName" [(ngModel)]="currentRow.adDepsGLAccountId" name="adDepsGLAccountId"
+                                                    [suggestions]="filteredGLAccountList" (completeMethod)="filterGLAccount($event)" [forceSelection]="true" [size]="30" [minLength]="1"
+                                                    [dropdown]="true" class="p-autoComplete-ctsm" required>
+
+                                    </p-autoComplete>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="assetSale" class="control-label">Asset Sale</label>
+                                    <label for="assetSale" class="control-label">Asset Sale <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #assetSale="ngModel" id="assetSale" name="assetSale" [(ngModel)]="currentRow.assetSale" minlength="2"></textarea>
+                                    <p-autoComplete field="accountCode" [(ngModel)]="currentRow.assetSale" name="assetSale"
+                                                    [suggestions]="filteredAssetSaleList" (completeMethod)="filterAssetSale($event)"
+                                                    [forceSelection]="true" [size]="30" [minLength]="1"
+                                                    [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                    </p-autoComplete>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="assetWriteOff" class="control-label">Asset WriteOff</label>
+                                    <label for="assetWriteOff" class="control-label">Asset Write Off <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #assetWriteOff="ngModel" id="assetWriteOff" name="assetWriteOff" [(ngModel)]="currentRow.assetWriteOff" minlength="2"></textarea>
+                                    <p-autoComplete field="accountCode" [(ngModel)]="currentRow.assetWriteOff" name="assetWriteOff"
+                                                    [suggestions]="filteredWriteOffList" (completeMethod)="filterAssetWriteOff($event)"
+                                                    [forceSelection]="true" [size]="30" [minLength]="1"
+                                                    [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                    </p-autoComplete>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="assetWriteDown" class="control-label">Asset WriteDown</label>
+                                    <label for="assetWriteDown" class="control-label">Asset Write Down <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #assetWriteDown="ngModel" id="assetWriteDown" name="assetWriteDown" [(ngModel)]="currentRow.assetWriteDown" minlength="2"></textarea>
+                                    <p-autoComplete field="accountCode" [(ngModel)]="currentRow.assetWriteDown" name="assetWriteDown"
+                                                    [suggestions]="filteredAssetWriteDownList" (completeMethod)="filterAssetWriteDown($event)"
+                                                    [forceSelection]="true" [size]="30" [minLength]="1"
+                                                    [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                    </p-autoComplete>
                                 </div>
                             </div>
                         </div>
+                        <div class="col-sm-12">
+                            <div class="col-sm-4">
+                                <label for="managementStructure" class="control-label">Management Structure <span class="clr-red">*</span></label>
+                            </div>
+                            <div class="col-sm-5">
+                                <div style="margin: 2px 0">
+                                    <select name="primaryCompany"
+                                            (change)="companySelected()" [(ngModel)]="selectedCompanyID" required>
+                                        <option value="0">Select Company</option>
+                                        <option *ngFor="let name of companyList" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                    </select>
+                                </div>
+                                <div style="margin: 2px 0">
+                                    <select name="primaryBU" [(ngModel)]="selectedBUId" (change)="buSelected()" [disabled]="selectedCompanyID == 0">
+                                        <option value="0">Select BU</option>
+                                        <option *ngFor="let name of buList" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                    </select>
+                                </div>
+                                <div style="margin: 2px 0">
+                                    <select name="primaryDivision" (change)="divisionSelected()" [(ngModel)]="selectedDivisionID" [disabled]="selectedBUId == 0">
+                                        <option value="0">Select Division</option>
+                                        <option *ngFor="let name of divisionList" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                    </select>
+                                </div>
+                                <div style="margin: 2px 0">
+                                    <select  name="primaryDept" [(ngModel)]="selectedDeptID" (change)="departmentSelected()" [disabled]="selectedDivisionID == 0">
+                                        <option value="0">Select Dept</option>
+                                        <option *ngFor="let name of departmentList" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div> 
                         <div class="form-group">
                             <div class="col-sm-6">
                                 <div class="checkbox-cstm">
@@ -414,8 +489,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="disableSave" (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();"> {{currentModeOfOperation == 3 ? 'Update' : 'Save' }}</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="AssetType.invalid" (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();"> {{currentModeOfOperation == 3 ? 'Update' : 'Save' }}</button>
+                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetFromData()">Close</button>
 
                 </div>
             </div>

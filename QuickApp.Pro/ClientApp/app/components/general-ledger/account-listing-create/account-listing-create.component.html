@@ -1,0 +1,511 @@
+﻿
+<div class="card general1">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page">General Ledger</li>
+            <li class="breadcrumb-item active" aria-current="page">{{accountTitle}}</li>
+        </ol>
+    </nav>
+    <div class="col-xs-12 x_content">
+        <h4 class="page-heading">{{accountTitle}}</h4>
+        <form [formGroup]="accountListCreateForm" (ngSubmit)="onSubmitAccountForm()" id="add-customerwork" class="form-horizontal add-glaccount">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="tab-content">
+                <div class="tab-pane active" id="home">
+                  <div class="col-sm-4" style="margin-left: 15px">
+                    <div class="form-group">
+                        <label class="">Ledger Name</label>
+                        <div class="inner-addon right-addon inline-block">
+                           <p-autoComplete  class="autocomp-customer-cstm" 
+                            name="name"                            
+                             [(ngModel)]="glAccountObj.ledgename" [suggestions]="ledgerNameObject" formControlName="ledgerName" 
+                             field="name" emptyMessage="No results"
+                             (completeMethod)="loadLedgerNames($event)" [size]="30"
+                                            [minLength]="1" [dropdown]="true" required>
+                                
+                            </p-autoComplete>
+                            <!-- <div *ngIf="ischeckLedgerNameExists" class="clr-red">Entry Already Exists</div> -->
+                        </div>
+                        <div *ngIf="submittedForm && formdata.ledgerName.errors" class="col-sm-12 invalid-feedback">
+                            <div *ngIf="formdata.ledgerName.errors">Ledger Name is required</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-sm-12" *ngIf="editMode">
+                      <label class="">Old Account Code</label>
+                     <div class="">
+                          <input type="text" formControlName="oldAccountCode" >
+                      </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                      <label class="">Account Code <span class="clr-red">*</span></label>
+
+                      <div class="inner-addon right-addon inline-block">
+                           <p-autoComplete  class="autocomp-customer-cstm" 
+                            name="name"
+                            (onKeyUp)="checkAccountCodeExists('name',$event.target.value)"
+                            (onSelect)="selectedAccountCode()" 
+                             [(ngModel)]="glAccountObj.accountCodeId" [suggestions]="accountCodeObject" formControlName="accountCode" 
+                             field="name" emptyMessage="No results"
+                             (completeMethod)="loadAccountCode($event)" [size]="30"
+                                            [minLength]="1" [dropdown]="true" required>
+                                
+                            </p-autoComplete>
+                            <div *ngIf="isAccountCodeExists" class="clr-red">Entry Already Exists</div>
+                        </div>
+                      <div *ngIf="submittedForm && formdata.accountCode.errors" class="col-sm-12 invalid-feedback">
+                            <div *ngIf="formdata.accountCode.errors">Account Code is required</div>
+                        </div>
+
+
+                      
+                    </div>
+                    <div class="form-group col-sm-12">
+                      <label class="">Account Name <span class="clr-red">*</span></label>
+
+
+                      <div class="inner-addon right-addon inline-block">
+                           <p-autoComplete  class="autocomp-customer-cstm" 
+                            name="name"
+                            (onKeyUp)="checkAccountNameExists('name',$event.target.value)"
+                            (onSelect)="selectedAccountName()" 
+                             [(ngModel)]="glAccountObj.accountCodeName" [suggestions]="accountNameObject" formControlName="accountName" 
+                             field="name" emptyMessage="No results"
+                             (completeMethod)="loadAccountName($event)" [size]="30"
+                                            [minLength]="1" [dropdown]="true" required>
+                                
+                            </p-autoComplete>
+                            <div *ngIf="isAccountNameExists" class="clr-red">Entry Already Exists</div>
+                        </div>
+                        <div *ngIf="submittedForm && formdata.accountName.errors" class="col-sm-12 invalid-feedback">
+                            <div *ngIf="formdata.accountName.errors">Account Name is required</div>
+                        </div>
+
+                      <!--  <div class="col-sm-7">
+                          <input formControlName="accountName" class="form-control" type="text">
+                          <div *ngIf="submittedForm && formdata.accountName.errors" class="col-sm-12 invalid-feedback">
+                            <div *ngIf="formdata.accountName.errors">Account Name is required</div>
+                        </div>
+                        </div> -->
+                    </div>
+                      <div class="form-group col-sm-12">
+                          <label class="">Account Type <span class="clr-red">*</span></label>
+
+
+                          <div class="inner-addon right-addon inline-block">
+                           <p-autoComplete  class="autocomp-customer-cstm" 
+                            name="name"
+                            (onKeyUp)="checkAccountTypeExists('name',$event.target.value)"
+                            (onSelect)="selectedAccountType()" 
+                             [(ngModel)]="glAccountObj.accountTypeId" [suggestions]="accountTypeObject" formControlName="accountType" 
+                             field="name" emptyMessage="No results"
+                             (completeMethod)="loadAccountType($event)" [size]="30"
+                                            [minLength]="1" [dropdown]="true" required>
+                                
+                            </p-autoComplete>
+                            <div *ngIf="isAccountNameExists" class="clr-red">Entry Already Exists</div>
+                        </div>
+                         <div *ngIf="submittedForm && formdata.accountType.errors" class="col-sm-12 invalid-feedback">
+                                <div *ngIf="formdata.accountType.errors">Account Type is required</div>
+                              </div>
+
+                         
+                      </div>
+                    <div class="form-group col-sm-12">
+                      <label class="">Account Description</label>
+                      <input formControlName="accountDescription" class="form-control" type="text">
+                    </div>
+                      <div class="form-group col-sm-12">
+                      <label class="">Active <span class="clr-red">*</span></label>
+                       <input formControlName="active" type="checkbox">
+                    </div> 
+                    
+                      <div class="form-group col-sm-12">
+                      <label class="">Leaf Node Name</label>
+                         <div class="">
+                        <!-- <select>
+                          <option>ABC Ledger</option>
+                          <option>DFG Company</option>
+                          <option>FFG Ledger</option>
+                        </select> -->
+                        <!-- <select formControlName="leafNodeName" [(ngModel)]="currentGLAccount.glAccountNodeId">
+                            <option *ngFor="let nodeType of nodeSetupList" [ngValue]="nodeType.glAccountNodeId">{{nodeType.nodeName}}</option>
+                        </select> -->
+                        <p-dropdown [options]="leafNodeNameObj" formControlName="leafNodeName" [filter]="true" styleClass="accountdropdown"></p-dropdown>
+                       <!--  <p-multiSelect [options]="nodeSetupList" formControlName="leafNodeName"></p-multiSelect> -->
+
+                       
+
+                      </div>
+                    </div>  
+                      <div class="form-group col-sm-12">
+                      <label for="interCompany" class="">InterCompany</label>
+                     <input formControlName="interCompany" type="checkbox">
+                    </div>                
+                  </div>
+                  <div class="col-sm-5" style="margin-left: 15px">
+                      <div class="form-group col-sm-12">
+                          <label class="">Balance Type <span class="clr-red">*</span></label>
+                          <div class="">                            
+
+                                <ng-container *ngFor="let checkbox of balanceTypeCheckBox; let i = index" formArrayName="balanceTypeCheckBox">
+                                  <input type="checkbox" [formControlName]="i" />{{checkbox.name}}
+                                  
+                                </ng-container>
+
+                               
+                          </div>
+                      </div>  
+                      <div class="form-group col-sm-12">
+                      <label class="">1099 Category</label>
+                      <div class="">
+                        <select formControlName="category" [(ngModel)]="glAccountObj.categoryId">
+                        <option value="">--Select--</option>
+                        <option value="1">Rent</option>
+                        <option value="2">Royalties</option>
+                        <option value="3">Other Income</option>
+                        <option value="4">Medical &amp; Healthcare Payments</option>
+                        <option value="5">Non Employee Comp</option>
+                        <option value="6">Golden Parachute</option>
+                        <option value="7">Gross Proceeds paid to an attorneey</option>
+                      </select>
+                      </div>
+                    </div>
+                      <div class="form-group col-sm-12">
+                      <label class="">Share with Entities</label>
+                      <div class="">
+                      <!--   <select formControlName="entities" [(ngModel)]="glAccountObj.entityId">
+                        <option value="">--Select--</option>
+                        <option value="1">Adso</option>
+                        <option value="2">Aerospace</option>
+                        <option value="3">ILS</option>
+                        <option value="4">PArts Base</option>
+                        <option value="5">PAS</option>
+                        <option value="6">Silverxis</option>
+                      </select> -->
+
+                       <p-multiSelect [options]="entitiesObj" formControlName="entities" [(ngModel)]="glAccountObj.entityId"  name="entities" required>
+                      </p-multiSelect>
+
+                   <!--    <div *ngIf="submittedForm && formdata.entities.errors" class="col-sm-12 invalid-feedback">
+                                <div *ngIf="formdata.entities.errors">Entities is required</div>
+                              </div> -->
+                      </div>
+                    </div>
+                      <div class="form-group col-sm-12 allow-manual-je-block">
+                      <label class="">Allow Manual JE </label>
+                      <input formControlName="allowManualJE" type="checkbox">
+                    </div>
+                                           
+                      
+                      <div class="form-group col-sm-12">
+                          <label class="">Cash Flows Classification</label>
+                          <div class="">
+                             <select formControlName="classification" [(ngModel)]="glAccountObj.classificationId">
+                                  <option value="">--Select--</option>
+                                  <option *ngFor="let classType of allGLCashFlowClassInfo" [ngValue]="classType.glClassFlowClassificationId">  {{classType.glClassFlowClassificationName}}</option>
+                              </select>
+                               <!-- <div *ngIf="submittedForm && formdata.classification.errors" class="col-sm-12 invalid-feedback">
+                                <div *ngIf="formdata.classification.errors">Cash Flows Classification is required</div>
+                              </div> -->
+
+                          </div>                      
+                      </div>   
+                      
+                      
+                      <div class="form-group col-sm-12">
+                      <label class="">PO Category <span class="clr-red">*</span></label>
+                       <div class="">
+
+                        <select formControlName="poroCategory" [(ngModel)]="glAccountObj.poroCategoryId">
+                              <option value="">--Select--</option>
+                              <option *ngFor="let poCategory of poroCategoryList" [ngValue]="poCategory.poroCategoryId">  {{poCategory.categoryName}}</option>
+                          </select>
+                          <div *ngIf="submittedForm && formdata.poroCategory.errors" class="col-sm-12 invalid-feedback">
+                                <div *ngIf="formdata.poroCategory.errors">PO Category is required</div>
+                              </div>
+                      </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                      <label class="">Created By <span class="clr-red">*</span></label>
+                      <input formControlName="createdBy" class="form-control" type="text" disabled>
+                      <div class="">
+                        
+                      </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                      <label class="">Created Date <span class="clr-red">*</span></label>
+                      <input formControlName="createdDate" class="form-control" type="text" disabled>
+                      <div class="">
+                        
+                      </div>
+                    </div>                    
+                  </div>
+                  <div class="clear"></div>
+                  <hr>
+                  <button class="btn btn-success pull-right" [disabled]="!accountListCreateForm.valid">Save</button>
+                  <div class="clear"></div>
+                </div>
+              </div>
+              <div class="clearfix"></div>
+            </div>
+          </form>        
+    </div>
+
+<!--
+    <div class="card-body1">
+        <div class="form-row">
+            <div class="col-md-8 wf-h-col">
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="oldaccountCode" class="control-label">Old Account Code</label>
+                            <input type="text" class="form-control input-value" id="oldaccount">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="oldaccountCode" class="control-label">Node Name <strong class="clr-red">*</strong></label>
+                            <select [(ngModel)]="currentGLAccount.glAccountNodeId" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let nodeType of nodeSetupList" [ngValue]="nodeType.glAccountNodeId">{{nodeType.nodeName}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="accountcode" class="control-label">Account Code <strong class="clr-red">*</strong></label>
+                            <input type="text" class="form-control input-value" id="accountcode">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="accountcode" class="control-label">Balance Type <strong class="clr-red">*</strong></label>                            
+                            <div class="inline-block display-flex">
+                                <label class="wauto">
+                                    <input name="test7" type="checkbox" id="" [(ngModel)]="currentGLAccount.balanceTypeActual" [ngModelOptions]="{standalone: true}">
+                                    Actual
+                                </label>
+                                <label class="wauto">
+                                    <input name="test8" type="checkbox" id="" [(ngModel)]="currentGLAccount.balanceTypeBudget" [ngModelOptions]="{standalone: true}">
+                                    Budget
+                                </label>
+                                <label class="wauto">
+                                    <input name="test9" type="checkbox" id="" [(ngModel)]="currentGLAccount.balanceTypeForecast" [ngModelOptions]="{standalone: true}">
+                                    Forecast
+                                </label>
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="accountname" class="control-label">Account Name<strong class="clr-red">*</strong></label>
+                            <input type="text" class="form-control input-value" id="accountname">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="accountname" class="control-label">Account Type<strong class="clr-red">*</strong></label>
+                            <select [(ngModel)]="currentGLAccount.glAccountTypeId" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let accounttype of allGLAccountClassInfo" [ngValue]="accounttype.glAccountClassId">{{accounttype.glAccountClassName}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="accountname" class="control-label">Account Description</label>
+                            <input type="text" class="form-control input-value" id="description">
+                        </div>
+                    </div>
+                </div>
+            </div>
+           </div>
+        </div> -->
+</div>
+
+<br/>
+<br/>
+
+<!--
+    <div class="x_panel" style="">
+        <div class="x_content add-customer-work">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item" aria-current="page">General Ledger</li>
+                    <li class="breadcrumb-item active" aria-current="page">Create GL Account</li>
+                </ol>
+            </nav>
+            <div class="pheading">
+                <h4 class="page-heading">Create GL Account</h4>
+            </div>
+
+            <div class="clear"></div>
+
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="tab-content form-bg">
+                    <div class="tab-pane active" id="home">
+                        <div class="col-sm-4">
+                            <div class=" col-sm-12">
+                                <label class="control-label col-sm-4">Old Account Code</label>
+                                <div class="col-sm-7">
+                                    <input type="text" name="test" value="" [(ngModel)]="currentGLAccount.oldAccountCode" [ngModelOptions]="{standalone: true}" ngDefaultControl>
+                                </div>
+                            </div>
+                            <div class=" col-sm-12">
+                                <label class="control-label col-sm-4">Account Code<strong class="clr-red">*</strong></label>
+                                <div class="col-sm-7">
+                                    <input type="text" name="test" value="" [(ngModel)]="currentGLAccount.accountCode" [ngModelOptions]="{standalone: true}" ngDefaultControl>
+                                </div>
+                            </div>
+
+                            <div class=" col-sm-12">
+                                <label class="control-label col-sm-4">Account Name<strong class="clr-red">*</strong></label>
+                                <div class="col-sm-7">
+                                    <input name="test1" class="form-control" type="text" [(ngModel)]="currentGLAccount.accountName" [ngModelOptions]="{standalone: true}">
+                                </div>
+                            </div>
+
+                            <div class=" col-sm-12 input-icon1">
+                                <label class="control-label col-sm-4">Account Type<strong class="clr-red">*</strong></label>
+                                <div class="col-sm-7">
+                                    <select [(ngModel)]="currentGLAccount.glAccountTypeId" [ngModelOptions]="{standalone: true}">
+                                        <option *ngFor="let accounttype of allGLAccountClassInfo" [ngValue]="accounttype.glAccountClassId">  {{accounttype.glAccountClassName}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class=" col-sm-12">
+                                <label class="control-label col-sm-4">Account Description</label>
+                                <div class="col-sm-7">
+                                    <input name="test2" class="form-control" type="text" [(ngModel)]="currentGLAccount.accountDescription" [ngModelOptions]="{standalone: true}">
+                                </div>
+                            </div>
+
+                            <div class=" col-sm-12 summary-account-block">
+                                <label class="control-label col-sm-4">Active</label>
+                                <div class="col-sm-7">
+                                    <input name="test3" type="checkbox" value="true" [(ngModel)]="currentGLAccount.activeFlag" [ngModelOptions]="{standalone: true}">
+                                </div>
+                            </div>
+                            <div class=" col-sm-12">
+                                <label class="control-label col-sm-4">Node Name<strong class="clr-red">*</strong></label>
+                                <div class="col-sm-7">
+
+                                    <select [(ngModel)]="currentGLAccount.glAccountNodeId" [ngModelOptions]="{standalone: true}">
+                                        <option *ngFor="let nodeType of nodeSetupList" [ngValue]="nodeType.glAccountNodeId">  {{nodeType.nodeName}}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="col-sm-4">
+
+                            <div class=" col-sm-12">
+                                <label class="control-label col-sm-4">Balance Type<strong class="clr-red">*</strong></label>
+                                <div class="col-sm-7">
+                                    <label class="wauto">
+                                        <input name="test7" type="checkbox" id="" [(ngModel)]="currentGLAccount.balanceTypeActual" [ngModelOptions]="{standalone: true}">
+                                        Actual
+                                    </label>
+                                    <label class="wauto">
+                                        <input name="test8" type="checkbox" id="" [(ngModel)]="currentGLAccount.balanceTypeBudget" [ngModelOptions]="{standalone: true}">
+                                        Budget
+                                    </label>
+                                    <label class="wauto">
+                                        <input name="test9" type="checkbox" id="" [(ngModel)]="currentGLAccount.balanceTypeForecast" [ngModelOptions]="{standalone: true}">
+                                        Forecast
+                                    </label>
+                                </div>
+                            </div>
+                            <div class=" col-sm-12 allow-manual-je-block">
+                                <label class="control-label col-sm-4">Allow Manual JE</label>
+                                <div class="col-sm-7">
+                                    <input value="true" type="checkbox" [(ngModel)]="currentGLAccount.allowManualJE" [ngModelOptions]="{standalone: true}">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="control-label col-sm-4">C-Flows Classification<strong class="clr-red">*</strong></label>
+                                <div class="inner-addon col-sm-7 inline-block display-flex">
+                                    <select [(ngModel)]="currentGLAccount.glClassFlowClassificationId" [ngModelOptions]="{standalone: true}">
+                                        <option *ngFor="let classType of allGLCashFlowClassInfo" [ngValue]="classType.glClassFlowClassificationId">  {{classType.glClassFlowClassificationName}}</option>
+                                    </select>
+                                    <a href="#" data-toggle="modal" data-target="#addGl" class="add-icon" (click)="open(contentEdit)"><i class="fa fa-plus"></i></a>
+
+                                </div>
+                            </div>
+                            <div class=" col-sm-12">
+                                <label class="control-label col-sm-4">PO Category<strong class="clr-red">*</strong></label>
+                                <div class="col-sm-7">
+
+                                    <select [(ngModel)]="currentGLAccount.poroCategoryId">
+                                        <option *ngFor="let poCategory of poroCategoryList" [ngValue]="poCategory.poroCategoryId">  {{poCategory.categoryName}}</option>
+                                    </select>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+
+                        <div class="clear"></div>
+                        <hr>
+                        <button href="#" class="btn btn-success pull-right" (click)="addGLAccount()">Save</button>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="clear"></div>
+            <hr>
+            <div class="pull-right"> © <span class="currentyear">2019</span> <a href="#">PAS</a> </div>
+        </div>
+    </div>
+
+-->
+<!--
+    <ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
+        <div class="modal-header">
+            <h4 class="modal-title" *ngIf="isEditMode">Edit GL Cahs Flow Classification</h4>
+            <h4 class="modal-title" *ngIf="!isEditMode">Add  GL Cahs Flow Classification</h4>
+            <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveGlcahsFlow()">
+
+                <div class="form-group">
+                    <label for="netdays" class="control-label">Gl Cahs Flow Classification Name<span class="clr-red">*</span></label>
+                    <input type="text" id="glClassFlowClassificationName" [(ngModel)]="sourceglcashflowclassification.glClassFlowClassificationName">
+                </div>
+                <div class="modal-footer">
+
+                    <button class="btn btn-success" [disabled]="disableSave">Submit</button>
+                    <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+                </div>
+            </form>
+        </div>
+
+    </ng-template>
+    <p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
+              [width]="350" [minWidth]="200" [responsive]="true"
+              [minY]="1050" [baseZIndex]="1100000">
+
+
+        <h5 [ngStyle]="{'color':'red'}">
+            Please Enter (*) Mandatory Fields
+        </h5>
+        <p-footer>
+            <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
+        </p-footer>
+    </p-dialog>
+-->

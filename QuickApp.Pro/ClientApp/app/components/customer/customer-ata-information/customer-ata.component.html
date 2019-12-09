@@ -91,7 +91,7 @@
         <td>
           <button
             class="btn btn-danger nobg"
-            (click)="deleteATAMapping(rowData)"
+            (click)="deleteATAMapping(deleteContent,rowData)"
           >
             <i class="fa fa-trash"></i>
           </button>
@@ -118,6 +118,19 @@
     Previous
   </button>
 </div>
+<ng-template #deleteContent let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
+</ng-template>
 <!-- <div class="col-sm-12 mt8">
             <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveAircraftInformation(); changeOfTab('AircraftInfo');" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
             <button class="btn btn-primary-cstm float-right" pButton (click)="movePurchaseInformation(); changeOfTab('PurchaseSales');" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step" style="padding: 0 !important;"></button>

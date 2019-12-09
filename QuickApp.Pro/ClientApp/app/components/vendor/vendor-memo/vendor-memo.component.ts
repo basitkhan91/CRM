@@ -20,6 +20,7 @@ import { Vendor } from '../../../models/vendor.model';
 import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
 import { Message } from 'primeng/components/common/message';
 import { MenuItem } from 'primeng/components/common/menuitem';
+import { async } from '../../../../../node_modules/@angular/core/testing';
 
 
 @Component({
@@ -30,9 +31,41 @@ import { MenuItem } from 'primeng/components/common/menuitem';
 })
 /** VendorMemo component*/
 export class VendorMemoComponent implements OnInit{
-    /** VendorMemo ctor */
-	constructor(public workFlowtService: VendorService, private router: Router) {
+	loadingIndicator: boolean;
+	allVendorPOList:any[];
+	allVendorROList:any[];
+	allVendorPOROList: any[];
+	activeIndex: any;
+	
+	local: any;
+	private isEditMode: boolean = false;
+	private isSaving: boolean;
+			
+	memoCols = [
+		{ field: 'module', header: 'Module' },			
+		{ field: 'orderNumber', header: 'Id' },
+		//{ field: 'notes', header: 'Memo text' },      
 
+		// { field: 'module', header: 'Module' },			
+		// { field: 'RepairOrderNumber', header: 'Id' },
+		// { field: 'RoMemo', header: 'Memo text' },          
+
+
+	];       
+
+
+
+    //displayedColumns = ['capabilityName', 'capabilityId', 'createdDate', 'companyName'];	
+	
+
+    /** VendorMemo ctor */
+	constructor(public workFlowtService: VendorService, private router: Router,private alertService: AlertService,private authService: AuthService,) {
+		if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
+			
+			this.local = this.workFlowtService.listCollection;
+						
+		}
+		
 	}
 
 	ngOnInit(): void {
@@ -42,10 +75,77 @@ export class VendorMemoComponent implements OnInit{
 		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
 		this.workFlowtService.ShowPtab = true;
 		this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab);
+		if (this.local) {
+			this.VendorPOMemolist();
+			this.VendorROMemolist();
+        }
+		
 	}
+	get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
 
 	createnew(){
         this.workFlowtService.changeStep('General Information');
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
+	}
+
+
+	async  VendorPOMemolist() {			       
+	    await this.workFlowtService.getVendorPOMemolist(this.local.vendorId).subscribe(
+		 res => {
+			 this.allVendorPOList = res;
+			 this.allVendorPOROList = res;
+			 //this.allVendorPOROList.push(this.allVendorPOList);
+			 console.log(this.allVendorPOROList);
+		 });
+	}
+	
+	async  VendorROMemolist() {			       
+	    await this.workFlowtService.getVendorROMemolist(this.local.vendorId).subscribe(
+		 res => {
+			 this.allVendorROList = res;		 
+
+			 for (let value of this.allVendorROList) {
+				this.allVendorPOROList.push(value);
+			  }
+			 
+		 });
+
+	}	
+	
+	updateMemoTxext(row,e) {	
+        this.isEditMode = true;
+        this.isSaving = true;	
+		console.log(row);
+		var name= this.userName;		
+		this.workFlowtService.updateVendorPOROmemolist(row.orderNumberId,row.module,row.notes,name).subscribe(
+			res=>{
+				this.VendorPOMemolist();
+				this.VendorROMemolist();
+				this.alertService.showMessage(
+					'Success',
+					`Saved Memo Successfully `,
+					MessageSeverity.success
+				);
+			}
+			
+		)     
+	}
+	
+	NextClick() {
+        this.workFlowtService.contactCollection = this.local;
+        this.activeIndex = 9;
+        this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Documents');
+        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-documents');
+	}
+	
+	backClick()
+	{
+		this.activeIndex = 7;
+        this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Warnings');
+        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
 	}
 }   

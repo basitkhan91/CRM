@@ -1,4 +1,5 @@
-﻿<div id="mCSB_4_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position: relative; left: 0px; top: 0px;" dir="ltr">
+﻿<div class="card padding-10">
+<div id="mCSB_4_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position: relative; left: 0px; top: 0px;" dir="ltr">
     <fieldset class="sf-step-el">
         <div class="col-sm-12">
             <div class="form-group marginr50" style="display: inline-block;margin: 10px 5px 0 5px;">
@@ -165,7 +166,7 @@
                     <label class="control-label col-sm-4">Warranty Status</label>
                     <div class="col-sm-5">
                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentMaintenance.warrantyStatus">
-                            <option value="1">In forced</option>
+                            <option value="1">Enforced</option>
                             <option value="2">Expired</option>
                         </select>
                     </div>
@@ -183,6 +184,7 @@
     </fieldset>
 </div>
 <div>
-    <button [disabled]="currentMaintenance.isIntangible" type="submit" class="btn btn-success pull-right submit-btn" (click)="saveWarrenty()">Save</button>
-    <button type="button" class="btn btn-success pull-right submit-btn" (click)="backClick()">Previous</button>
+    <button [disabled]="currentMaintenance.isIntangible" type="submit" class="btn btn-primary-cstm pull-right submit-btn" (click)="saveWarrenty()">Save</button>
+    <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
+</div>
 </div>

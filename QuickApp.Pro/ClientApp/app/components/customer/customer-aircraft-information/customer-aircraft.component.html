@@ -28,6 +28,7 @@
               class="p-dropdown-custom "
               [(ngModel)]="selectAircraftManfacturer"
               (onChange)="getAircraftModelByManfacturerType($event.value)"
+                      
             ></p-dropdown>
             <!-- <p-multiSelect
               [options]="manufacturerData"
@@ -70,7 +71,7 @@
         <div class="col-md-2">
           <div class="form-group">
             <label class="fs12">Memo </label>
-            <input type="text" style="height: 27px !important" pInputText />
+            <input type="text" style="height: 27px !important" pInputText [(ngModel)]="selectedmemo" />
           </div>
         </div>
         <div class="col-md-1 add-new-align">
@@ -124,7 +125,7 @@
           <button
             class="btn btn-danger nobg"
             (click)="
-              deleteAircraftMappedInventory(rowData.customerAircraftMappingId)
+              deleteAircraftMappedInventory(deleteContent,rowData.customerAircraftMappingId)
             "
           matTooltip="Delete"
                   >
@@ -377,3 +378,16 @@
     </div>
   </div>
 </div>
+<ng-template #deleteContent let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
+</ng-template>

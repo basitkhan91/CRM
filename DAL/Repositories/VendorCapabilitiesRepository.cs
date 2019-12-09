@@ -14,7 +14,7 @@ namespace DAL.Repositories
 
     public IEnumerable<Models.VendorCapabiliy> GetVendorCapabilitiesData()
     {
-        return _appContext.VendorCapabiliy.Include("MasterCompany").Where(a => a.IsDelete == false || a.IsDelete == null).OrderByDescending(a => a.VendorCapabilityId).ToList();
+        return _appContext.VendorCapabiliy.Include("MasterCompany").Where(a => a.IsDeleted == false || a.IsDeleted == null).OrderByDescending(a => a.VendorCapabilityId).ToList();
 
     }
     //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);

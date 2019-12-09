@@ -59,7 +59,20 @@ namespace QuickApp.Pro.Controllers
         {
             if (asset != null)
             {
+                MasterParts masterpart = new MasterParts();
+                masterpart.PartNumber = asset.Name;
+                masterpart.Description = asset.Description;
+                masterpart.ManufacturerId = asset.ManufacturerId;
+                masterpart.MasterCompanyId = 1;
+                masterpart.CreatedDate = DateTime.Now;
+                masterpart.UpdatedDate = DateTime.Now;
+                masterpart.IsDeleted = false;
+                masterpart.IsActive = true;
+                _context.MasterParts.Add(masterpart);
+                _context.SaveChanges();
+
                 asset.IsActive = true;
+                asset.MasterPartId = masterpart.MasterPartId;
                 //asset.AssetRecordId = 0;
                 asset.CreatedDate = DateTime.Now;
                 asset.UpdatedDate = DateTime.Now;
@@ -84,6 +97,18 @@ namespace QuickApp.Pro.Controllers
                     asset.AssetAcquisitionTypeId = 1;
                 _unitOfWork.Repository<Asset>().Update(asset);
                 _unitOfWork.SaveChanges();
+
+                var masterpart = _unitOfWork.Repository<MasterParts>().Find(x => x.MasterPartId == asset.MasterPartId).FirstOrDefault();
+                if (masterpart != null)
+                {
+                    masterpart.PartNumber = asset.Name;
+                    masterpart.Description = asset.Description;
+                    masterpart.ManufacturerId = asset.ManufacturerId;
+                    masterpart.MasterCompanyId = 1;
+                    masterpart.UpdatedDate = DateTime.Now;
+                    _unitOfWork.Repository<MasterParts>().Update(masterpart);
+                    _unitOfWork.SaveChanges();
+                }
                 return Ok(asset);
             }
             else
@@ -110,7 +135,6 @@ namespace QuickApp.Pro.Controllers
                         asset.UpdatedDate = DateTime.Now;
                         _unitOfWork.Repository<Asset>().Update(asset);
                         _unitOfWork.SaveChanges();
-
                     }
                     else
                     {
@@ -137,6 +161,40 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
+        [HttpGet("removeCapesById/{id}")]
+
+        public IActionResult removeAssetCapesById(long id)
+        {
+            var assetcapesauditcount = _unitOfWork.Repository<AssetCapesAudit>().Find(x => x.AssetCapesId == id).Count();
+            var assetcapesaudit = _unitOfWork.Repository<AssetCapesAudit>().Find(x => x.AssetCapesId == id).FirstOrDefault();
+            var assetcapes = _unitOfWork.Repository<AssetCapes>().Find(x => x.AssetCapesId == id).FirstOrDefault();
+            if (assetcapes != null)
+            {
+                if (assetcapesaudit != null)
+                {
+                    if (assetcapesauditcount > 1)
+                    {
+                        assetcapes.MasterCompanyId = 1;
+                        assetcapes.IsDelete = true;
+                        assetcapes.UpdatedDate = DateTime.Now;
+                        _unitOfWork.Repository<AssetCapes>().Update(assetcapes);
+                        _unitOfWork.SaveChanges();
+                    }
+                    else
+                    {
+                        assetcapes.IsDelete = true;
+                        _unitOfWork.AssetCapes.Remove(assetcapes);
+                        _unitOfWork.SaveChanges();
+                    }
+                }
+                return Ok(id);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
         //capes Saving//
         [HttpPost("Mancapespost")]
         public IActionResult addCapes([FromBody] List<Capability> capabilities)
@@ -145,6 +203,7 @@ namespace QuickApp.Pro.Controllers
             {
                 for (var i = 0; i < capabilities.Count(); i++)
                 {
+                    AssetCapes assetcapes = new AssetCapes();
                     capabilities[i].IsActive = true;
                     if (capabilities[i].ItemMasterId == null)
                     {
@@ -157,12 +216,30 @@ namespace QuickApp.Pro.Controllers
                     {
                         capabilities[i].UpdatedDate = DateTime.Now;
                         _unitOfWork.Repository<Capability>().Update(capabilities[i]);
+                        _unitOfWork.SaveChanges();
                     }
                     else
                     {
                         _unitOfWork.Repository<Capability>().Add(capabilities[i]);
+                        _unitOfWork.SaveChanges();
+
+                        assetcapes.AssetRecordId = capabilities[i].AssetRecordId;
+                        assetcapes.CapabilityId = capabilities[i].CapabilityId;
+                        assetcapes.MasterCompanyId = capabilities[i].MasterCompanyId;
+                        assetcapes.CreatedBy = "1";
+                        assetcapes.UpdatedBy = "1";
+                        assetcapes.CreatedDate = DateTime.Today;
+                        assetcapes.UpdatedDate = DateTime.Today;
+                        assetcapes.IsActive = true;
+                        assetcapes.IsDelete = false;
+                        assetcapes.AircraftTypeId = capabilities[i].AircraftTypeId;
+                        assetcapes.AircraftModelId = capabilities[i].AircraftModelId;
+                        assetcapes.AircraftDashNumberId = capabilities[i].AircraftDashNumberId;
+                        assetcapes.ItemMasterId = capabilities[i].ItemMasterId;
+                        _unitOfWork.Repository<AssetCapes>().Add(assetcapes);
+                        _unitOfWork.SaveChanges();
                     }
-                    _unitOfWork.SaveChanges();
+                   
                 }
             }
             return Ok();
@@ -330,7 +407,7 @@ namespace QuickApp.Pro.Controllers
             newAssetCapes.CreatedDate = DateTime.Now;
             newAssetCapes.UpdatedDate = DateTime.Now;
             newAssetCapes.IsActive = true;
-            newAssetCapes.IsDeleted = false;
+            newAssetCapes.IsDelete = false;
             newAssetCapes.AircraftTypeId = assetCapes.AircraftTypeId;
             newAssetCapes.AircraftModelId = assetCapes.AircraftModelId;
             newAssetCapes.AircraftDashNumberId = assetCapes.AircraftDashNumberId;
@@ -354,13 +431,13 @@ namespace QuickApp.Pro.Controllers
                     newAssetCapes.UpdatedBy = capes.UpdatedBy;
                     newAssetCapes.UpdatedDate = DateTime.Now;
                     newAssetCapes.IsActive = capes.IsActive;
-                    newAssetCapes.IsDeleted = capes.IsDeleted;
+                    newAssetCapes.IsDelete = capes.IsDelete;
                     newAssetCapes.AircraftTypeId = capes.AircraftTypeId;
                     newAssetCapes.AircraftModelId = capes.AircraftModelId;
                     newAssetCapes.AircraftDashNumberId = capes.AircraftDashNumberId;
-                    newAssetCapes.AircraftType = capes.AircraftType;
-                    newAssetCapes.AircraftModel = capes.AircraftModel;
-                    newAssetCapes.AircraftDashNumber = capes.AircraftDashNumber;
+                    //newAssetCapes.AircraftType = capes.AircraftType;
+                    //newAssetCapes.AircraftModel = capes.AircraftModel;
+                    //newAssetCapes.AircraftDashNumber = capes.AircraftDashNumber;
                     _unitOfWork.Repository<AssetCapes>().Update(newAssetCapes);
                     _unitOfWork.SaveChanges();
                 }

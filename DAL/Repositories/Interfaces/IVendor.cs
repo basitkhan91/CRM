@@ -1,7 +1,5 @@
 ﻿using DAL.Models;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DAL.Repositories.Interfaces
 {
@@ -44,5 +42,12 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<Vendor> getVendorsForDropdown();
 
         IEnumerable<object> GetVendorBillingAddressAudit(long vendorId, long vendorBillingaddressId);
+
+        IEnumerable<object> GetVendorPOMemoList(long vendorId);
+        IEnumerable<object> GetVendorROMemoList(long vendorId);
+        void UpdateVendorMemoText(long id, string type, string memoText, string updatedBy);
+        VendorDocumentDetails GetVendorDocumentDetailById(long id);
+
+        IEnumerable<object> GetVendorProcessList(int companyId);
     }
 }

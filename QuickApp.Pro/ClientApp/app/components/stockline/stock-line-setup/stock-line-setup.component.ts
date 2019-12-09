@@ -540,7 +540,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	private loadGlAccountData() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-		this.glAccountService.getWorkFlows().subscribe(
+		this.glAccountService.getGlAccountClassList().subscribe(
 			results => this.onDataLoadGlAccountSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);

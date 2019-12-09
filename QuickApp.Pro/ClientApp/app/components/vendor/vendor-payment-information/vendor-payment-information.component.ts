@@ -86,6 +86,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
     ngOnInit(): void {
 		this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-payment-information';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
+		this.defaultSaveObj.defaultPaymentMethod=1;
 		if (this.local) {
 			this.loadData();
 			this.defaultPaymentValue = true;
@@ -100,6 +101,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			zoom: 12
 		};
 		this.getbencus();
+		
      }
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -112,7 +114,8 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
     public sourceVendor: any = {};
     public domesticSaveObj: any = {};
 	public internationalSaveObj: any = {};
-	public defaultSaveObj: any = {};
+	public defaultSaveObj: any={};
+	public defaultPaymentObj: any = {};
     public sourceAction: any = [];
     public auditHisory: AuditHistory[] = [];
     private bodyText: string;
@@ -409,10 +412,27 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.loadingIndicator = false;
 		this.dataSource.data = allWorkFlows;
 		this.defaultwithVendor = allWorkFlows;
+		
 		if (allWorkFlows) {
 			this.defaultSaveObj = allWorkFlows;
+			if (this.defaultSaveObj.defaultPaymentMethod == 1) {
+				this.showPament();
+			} 
+			else if (this.defaultSaveObj.defaultPaymentMethod == 2) {
+				this.showDomesticWire();
+			}
+			else if (this.defaultSaveObj.defaultPaymentMethod == 3) {
+				this.showInternational();
+			}
+			else
+			{
+				this.showPament();
+			}			
+		
 		}
 	}
+
+	
     private loadPaymentObject() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -718,26 +738,36 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	}
 	
 	saveDefaultPaymentInfo() {
-		if (!this.defaultSaveObj.vendorPaymentId) {
-				this.sourceVendor.createdBy = this.userName;
-				this.sourceVendor.updatedBy = this.userName;
-				this.sourceVendor.masterCompanyId = 1;
-			    this.defaultSaveObj.vendorId = this.local.vendorId;
-				this.workFlowtService.addDefaultinfo(this.defaultSaveObj).subscribe(data => {
-					this.activeIndex = 3;
-					this.workFlowtService.indexObj.next(this.activeIndex);
-					this.savesuccessCompleted(this.sourceVendor);
-				})
-			}
-			else {
+	
+		if (this.defaultSaveObj.vendorPaymentId >0) {			
 
-				this.sourceVendor.updatedBy = this.userName;
-				this.sourceVendor.masterCompanyId = 1;
-				this.workFlowtService.vendorDefaultUpdate(this.defaultSaveObj).subscribe(
+			    this.defaultPaymentObj.vendorPaymentId = this.defaultSaveObj.vendorPaymentId;
+			    this.defaultPaymentObj.vendorId = this.defaultSaveObj.vendorId;
+				this.defaultPaymentObj.updatedBy = this.userName;
+				this.defaultPaymentObj.masterCompanyId = 1;
+				this.defaultPaymentObj.isActive=true;
+				this.defaultPaymentObj.defaultPaymentMethod=this.defaultSaveObj.defaultPaymentMethod;
+
+				this.workFlowtService.vendorDefaultUpdate(this.defaultPaymentObj).subscribe(
 					data => {
 						this.workFlowtService.paymentCollection = this.local;
 						this.saveCompleted(this.sourceVendor);
 					})
+			}
+			else {
+			
+				this.defaultPaymentObj.createdBy = this.userName;
+				this.defaultPaymentObj.updatedBy = this.userName;
+				this.defaultPaymentObj.masterCompanyId = 1;
+				this.defaultPaymentObj.vendorId = this.local.vendorId;
+				this.defaultPaymentObj.defaultPaymentMethod=this.defaultSaveObj.defaultPaymentMethod;
+				this.defaultPaymentObj.isActive=true;
+			
+				this.workFlowtService.addDefaultinfo(this.defaultPaymentObj).subscribe(data => {
+					this.activeIndex = 3;
+					this.workFlowtService.indexObj.next(this.activeIndex);
+					this.savesuccessCompleted(this.sourceVendor);
+				})
 			}
 		}
 	

@@ -105,6 +105,7 @@ export class ChargesComponent implements OnInit {
         this.chargeService.getChargeList().subscribe(res => {
             const responseData = res[0];
              this.chargeData = responseData;//.columnData;
+			 console.log('response data :' , responseData);
             this.totalRecords = responseData==null?0: responseData.length;
             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
         })

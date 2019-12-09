@@ -23,8 +23,13 @@ namespace QuickApp.Pro.ViewModels
         public int VendorTypeId { get; set; }
         public string DoingBusinessAsName { get; set; }
        
-        public Int64? VendorClassificationId { get; set; }
-       
+        public long? VendorClassificationId { get; set; }
+        public long?[] VendorClassificationIds { get; set; }
+
+        public long?[] IntegrationPortalIds { get; set; }
+        
+
+
         public long Parent { get; set; }
         public string VendorContractReference { get; set; }
        
@@ -58,7 +63,7 @@ namespace QuickApp.Pro.ViewModels
         public Nullable<bool> v1099RoyaltiesDefault { get; set; }
         public long? capabilityId { get; set; }
         public Nullable<bool> v1099OtherIncome { get; set; }
-        public string v1099OtherIncomeDefault { get; set; }
+        public Nullable<bool> v1099OtherIncomeDefault { get; set; }
         public Nullable<bool> v1099MedicalHealthPayments { get; set; }
         public Nullable<bool> v1099MedicalHealthPaymentsDefault { get; set; }
         public Nullable<bool> v1099NonEmployeeComp { get; set; }
@@ -107,5 +112,6 @@ namespace QuickApp.Pro.ViewModels
         
         public IFormFile VendorFileCertified { get; set; }
         public IFormFile VendorFileAudit { get; set; }
+        public string VendorPhoneExt { get; set; }
     }
 }
