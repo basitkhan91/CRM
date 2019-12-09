@@ -19,6 +19,8 @@ export class SubWorkOrderComponent implements OnInit {
     mpnId: any;
     subWorkOrderId: any;
 
+    subWorkOrderGeneralInformation = {}
+
     constructor(private router: Router, private acRouter: ActivatedRoute, private workOrderService: WorkOrderService) { }
 
     ngOnInit() {

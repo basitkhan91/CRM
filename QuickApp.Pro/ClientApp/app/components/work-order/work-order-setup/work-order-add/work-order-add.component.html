@@ -2,8 +2,8 @@
     <div class="right_col" role="main">
        
         <div class="col-md-12">
-            <div class="card" style="">
-            <form #workOrderForm="ngForm" >
+            <div class="card" *ngIf="!isSubWorkOrder" style="">
+            <form  #workOrderForm="ngForm" >
                 <div class="x_content">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
@@ -538,7 +538,7 @@
             </form>
             </div>
 
-            <div class="card " *ngIf="showTableGrid">
+            <div class="card " *ngIf="showTableGrid || isSubWorkOrder">
                 <div class="card-header" *ngIf="!workOrderGeneralInformation.isSinglePN ">
                   Multiple  MPN
 
