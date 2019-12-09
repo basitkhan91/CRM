@@ -116,7 +116,7 @@ namespace DAL.Models
         [NotMapped]
         public long AttachmentId { get; set; }
 
-
+        public string VendorPhoneExt { get; set; }
 
 
 

@@ -112,5 +112,6 @@ namespace QuickApp.Pro.ViewModels
         
         public IFormFile VendorFileCertified { get; set; }
         public IFormFile VendorFileAudit { get; set; }
+        public string VendorPhoneExt { get; set; }
     }
 }
