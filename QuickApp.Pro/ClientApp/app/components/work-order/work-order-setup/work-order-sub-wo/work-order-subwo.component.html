@@ -41,8 +41,175 @@
   </div>
 </div>
 <div *ngIf="workOrderDetails">
-  <app-work-order-smart
-    [isSubWorkOrder]="issubWorkOrderState"
-    [paramsData]="workOrderDetails"
-  ></app-work-order-smart>
+  <div class="card">
+    <div class="card-body" *ngIf="subWorkOrderGeneralInformation">
+      <div class="form-row">
+        <div class="col-md-3">
+          <div class="form-group ">
+            <label> SubWO Num </label>
+            <input
+              class="form-control"
+              data-toggle="tooltip"
+              type="text"
+              name="workOrderNumber"
+              #workOrderNumber="ngModel"
+              disabled
+              [(ngModel)]="subWorkOrderGeneralInformation.subWorkOrderNo"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="opendate">Sub WO Open Date </label>
+            <p-calendar
+              [showIcon]="true"
+              class="calender-cstm"
+              name="openDate"
+              #openDate="ngModel"
+              [disabled]="true"
+              [(ngModel)]="subWorkOrderGeneralInformation.openDate"
+            ></p-calendar>
+          </div>
+          <div class="form-group">
+            <label for="opendate">Sub WO Need Date </label>
+            <p-calendar
+              [showIcon]="true"
+              class="calender-cstm"
+              name="needDate"
+              #needDate="ngModel"
+              [(ngModel)]="subWorkOrderGeneralInformation.needDate"
+            ></p-calendar>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="form-group ">
+            <label> Sub WO EST. COMP DATE </label>
+            <p-calendar
+              [disabled]="true"
+              [showIcon]="true"
+              class="calender-cstm"
+              name="needDate"
+              #needDate="ngModel"
+              [(ngModel)]="
+                subWorkOrderGeneralInformation.estimatedCompletionDate
+              "
+            ></p-calendar>
+          </div>
+
+          <div class="form-group">
+            <label for="opendate">Sub WO Stage </label>
+            <p-dropdown
+              [options]="workOrderStagesList"
+              name="stage{{ i }}"
+              #stage="ngModel"
+              placeholder="Select Stage"
+              class="p-dropdown-custom-md-Header"
+              [(ngModel)]="subWorkOrderGeneralInformation.stageId"
+            >
+            </p-dropdown>
+          </div>
+          <div class="form-group">
+            <label for="opendate">Sub WO Status </label>
+            <p-dropdown
+              [disabled]="true"
+              [options]="workOrderStatusList"
+              placeholder="Select Status"
+              name="status{{ i }}"
+              #status="ngModel"
+              class="p-dropdown-custom-md-Header"
+              [(ngModel)]="subWorkOrderGeneralInformation.statusId"
+            >
+            </p-dropdown>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="form-group ">
+            <label> Sub WO CMM </label>
+            <p-dropdown
+              placeholder="Select CMM"
+              name="cmm{{ i }}"
+              #cmm="ngModel"
+              [options]="cmmList"
+              class="p-dropdown-custom-md-Header"
+              [(ngModel)]="subWorkOrderGeneralInformation.cmmId"
+            >
+            </p-dropdown>
+          </div>
+
+          <div class="form-group">
+            <label for="opendate">Sub WO WorkFlow ID </label>
+            <p-dropdown
+              [options]="workFlowList"
+              name="stage{{ i }}"
+              #stage="ngModel"
+              placeholder="Select Stage"
+              class="p-dropdown-custom-md-Header"
+              [(ngModel)]="subWorkOrderGeneralInformation.workFlowId"
+            >
+            </p-dropdown>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="form-group">
+            <div class="checkbox-cstm">
+              <label>
+                <input
+                  type="checkbox"
+                  name="isPMA"
+                  #isPMA="ngModel"
+                  [(ngModel)]="subWorkOrderGeneralInformation.isPMA"
+                />
+                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                PMA
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="checkbox-cstm">
+              <label>
+                <input
+                  type="checkbox"
+                  name="isDER"
+                  #isDER="ngModel"
+                  [(ngModel)]="subWorkOrderGeneralInformation.isDER"
+                />
+                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                DER
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <button
+          class="btn btn-primary-cstm pull-right"
+          *ngIf="!isEdit"
+          type="button"
+          (click)="saveSubWorkOrder()"
+        >
+          Save
+        </button>
+        <button
+          class="btn btn-primary-cstm pull-right"
+          *ngIf="isEdit"
+          type="button"
+          (click)="saveSubWorkOrder()"
+        >
+          Update
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="subWorkOrderGeneralInformation">
+    <app-work-order-smart
+      [isSubWorkOrder]="issubWorkOrderState"
+      [paramsData]="workOrderDetails"
+      [showTabsGrid]="showTabsGrid"
+    ></app-work-order-smart>
+  </div>
 </div>

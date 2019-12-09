@@ -604,11 +604,15 @@ namespace DAL.Repositories
                             from pub in woppub.DefaultIfEmpty()
                             join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
                             join status in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals status.Id
-                            where wo.WorkOrderId == workOrderId && wop.ID == workOrderPartNumberId
+							join wowf in _appContext.WorkOrderWorkFlow  on wo.WorkOrderId equals wowf.WorkOrderId
+
+
+							where wo.WorkOrderId == workOrderId && wop.ID == workOrderPartNumberId
                             select new
                             {
                                 wo.WorkOrderNum,
-                                MCPN = im.PartNumber,
+								WorkFlowWorkOrderId = wowf.WorkFlowWorkOrderId,
+								MCPN = im.PartNumber,
                                 RevisedMCPN = im1.PartNumber,
                                 MCPNDescription = im.PartDescription,
                                 MCSerialNum = sl.SerialNumber,
@@ -619,16 +623,17 @@ namespace DAL.Repositories
                                 WorkFlowNo = wf == null ? "" : wf.WorkOrderNumber,
                                 wo.OpenDate,
                                 wop.EstimatedCompletionDate,
-                                wop.WorkOrderStageId,
+								StageId = wop.WorkOrderStageId,
                                 WorkOrderStage = stage.Description,
-                                wop.WorkOrderStatusId,
+                                StatusId =  wop.WorkOrderStatusId,
                                 WorkOrderStatus = status.Description,
-                                wop.CMMId,
+                                CMMId = wop.CMMId,
                                 WorkOrderCMM = pub.PublicationId,
                                 wop.IsDER,
                                 wop.IsPMA,
                                 wop.WorkOrderScopeId,
-                                SubWorkOrderNo = wo.WorkOrderNum + "-1"
+                                SubWorkOrderNo = wo.WorkOrderNum + "-1",
+								ItemMasterId = wop.MasterPartId
 
                             }).FirstOrDefault();
                 return data;
