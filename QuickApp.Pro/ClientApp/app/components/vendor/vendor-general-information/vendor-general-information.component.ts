@@ -132,6 +132,7 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
     intSelectedColumns: any[];
     dropDownVendorCapabilitiesList: any[];
     form: any;
+    //phoneNumberPattern = "[(][0-9]{3}[)] [0-9]{3}-[0-9]{4}";
     allvendorclassificationInfo;
     //@ViewChild('f') form: any;
 

@@ -182,7 +182,7 @@ export class VendorsListComponent implements OnInit {
             { field: 'vendorEmail', header: 'Vendor Email' },
             { field: 'city', header: 'Vendor City' },
             { field: 'stateOrProvince', header: 'Vendor State' },
-            { field: 'vendorPhone', header: 'Vendor Contact' }
+            { field: 'vendorPhoneContact', header: 'Vendor Contact' }
             // { field: 'createdBy', header: 'Created By' },
             // { field: 'updatedBy', header: 'Updated By' },
             // { field: 'updatedDate', header: 'Updated Date' },
