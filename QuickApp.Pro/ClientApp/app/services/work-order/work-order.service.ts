@@ -235,33 +235,6 @@ export class WorkOrderService {
     getBuildDetailsFromWorkFlow(partId, workScopeId){
         return this.workOrderEndpointService.getBuildDetailsFromWorkFlow(partId, workScopeId);
     }
-    getBuildDetailsFromHistoricalWorkOrder(partId, workScopeId){
-        return this.workOrderEndpointService.getBuildDetailsFromHistoricalWorkOrder(partId, workScopeId);
-    }
-
-    getWorkFlowDetails(workFlowId){
-        return this.workOrderEndpointService.getWorkFlowDetails(workFlowId);
-    }
-
-    getWorkOrderMaterialListForQuote(wfwoId){
-        return this.workOrderEndpointService.getWorkOrderMaterialListForQuote(wfwoId);
-    }
-
-    getWorkOrderLaborListForQuote(wfwoId){
-        return this.workOrderEndpointService.getWorkOrderLaborListForQuote(wfwoId);
-    }
-
-    getWorkOrderChargesListForQuote(wfwoId){
-        return this.workOrderEndpointService.getWorkOrderChargesListForQuote(wfwoId);
-    }
-
-    getWorkOrderExclutionsListForQuote(wfwoId){
-        return this.workOrderEndpointService.getWorkOrderExclutionsListForQuote(wfwoId);
-    }
-
-    getWorkOrderFreightListForQuote(wfwoId){
-        return this.workOrderEndpointService.getWorkOrderFreightListForQuote(wfwoId);
-    }
 
 
 }

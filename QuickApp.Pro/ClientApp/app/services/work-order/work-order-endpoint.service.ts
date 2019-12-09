@@ -389,6 +389,22 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.get(`${this.configurations.baseUrl}/api/workorder/workorderfreightlist?wfwoId=${wfwoId}`);
     }
 
+    saveMaterialListQuote(data){
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workorder/createquotematerials`, JSON.stringify(data), this.getRequestHeaders());
+    }
+
+    saveLaborListQuote(data){
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workorder/createquotelabor`, JSON.stringify(data), this.getRequestHeaders());
+    }
+
+    saveChargesQuote(data){
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workorder/createquotecharges`, JSON.stringify(data), this.getRequestHeaders());
+    }
+
+    saveExclusionsQuote(data){
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workorder/createquoteexclusions`, JSON.stringify(data), this.getRequestHeaders());
+    }
+
 
 
 }
