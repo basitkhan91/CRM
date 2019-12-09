@@ -31,6 +31,7 @@ import { EmployeeStepsPrimeNgComponent } from "../shared/components/employee/emp
 import { EmployeesManagementStructureComponent } from "../shared/components/employee/employee-management-structure/employees-management-structure.component";
 import { TreeStructureComponent } from "../shared/components/employee/employee-management-structure/tree-structure/tree-structure.component";
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import {TooltipModule} from 'primeng/tooltip';
 
 @NgModule({
     imports: [
@@ -52,6 +53,7 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 		, RadioButtonModule,
         CalendarModule, StepsModule, BreadcrumbModule,
         DialogModule,
+        TooltipModule,
         NgMultiSelectDropDownModule.forRoot()
     ],
     declarations: [
