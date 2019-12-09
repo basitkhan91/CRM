@@ -65,6 +65,8 @@ export class StocklineEndpoint extends EndpointFactory
 
     private readonly _stockLineAdjustmentDelete: string = "/api/StockLine/stockLineAdjustmentReasonDelete";
 
+	private readonly _stocklineGlobalSearch: string = '/api/StockLine/ListGlobalSearch'
+
     //get stocklineGetByIdUrl() { return this.configurations.baseUrl + this._stocklineGetById; }
 
     get adjustmentReasonUrl() { return this.configurations.baseUrl + this._adjustmentReasonUrl; }
@@ -92,13 +94,29 @@ export class StocklineEndpoint extends EndpointFactory
 			});
 	}
 
-    getStockLineEndpoint<T>(): Observable<T> {
-
-        return this.http.get<T>(this.actionsUrl, this.getRequestHeaders())
+	getStockLineEndpointList(data) {
+		return this.http.post(this.actionsUrl, JSON.stringify(data), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getStockLineEndpoint());
+				return this.handleError(error, () => this.getStockLineEndpointList(data));
             });
     }
+
+	
+	getStockLineEndpoint<T>(): Observable<T> {
+
+		return this.http.get<T>(this.actionsUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getStockLineEndpoint());
+			});
+	}
+
+	getGlobalStockLineRecords<T>(value, pageIndex, pageSize): Observable<T> {
+		// let endpointUrl = this.globalSearch;
+		return this.http.get<T>(`${this.configurations.baseUrl}${this._stocklineGlobalSearch}?value=${value}&pageNumber=${pageIndex}&pageSize=${pageSize}`, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getGlobalStockLineRecords(value, pageIndex, pageSize));
+			});
+	}
 
 	//for getting stocklineAdjustmentDatatype table Data
 	getStockLineAdjustmentDatatypeDataEndpoint<T>(): Observable<T> {

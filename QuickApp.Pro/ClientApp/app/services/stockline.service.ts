@@ -54,11 +54,14 @@ export class StocklineService {
 		private authService: AuthService,
 		private stocklineEndpoint: StocklineEndpoint) { }
 	//For getting the stockline List
-    getStockLineList() {
-        return Observable.forkJoin(
-            this.stocklineEndpoint.getStockLineEndpoint<any[]>());
+	getStockLineList(data) {
+		return this.stocklineEndpoint.getStockLineEndpointList(data);
 	}
-    
+
+	getGlobalSearch(value, pageIndex, pageSize) {
+		return this.stocklineEndpoint.getGlobalStockLineRecords<any>(value, pageIndex, pageSize);
+	}
+
 	getStockLineAdjustmentDatatypeList() {
 		return Observable.forkJoin(
 			this.stocklineEndpoint.getStockLineAdjustmentDatatypeDataEndpoint<any[]>());

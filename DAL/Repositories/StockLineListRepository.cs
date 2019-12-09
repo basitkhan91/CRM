@@ -18,42 +18,476 @@ namespace DAL.Repositories
             try
             {
                 var totalRecords = (from stl in _appContext.StockLine
-                                               join im in _appContext.ItemMaster on stl.ItemMasterId equals im.ItemMasterId
-                                               join co in _appContext.Condition on stl.ConditionId equals co.ConditionId
-                                               join ig in _appContext.Itemgroup on im.ItemGroupId equals ig.ItemGroupId into itemgroup
-                                               from ig in itemgroup.DefaultIfEmpty()
-                                               join si in _appContext.Site on stl.SiteId equals si.SiteId into sit
-                                               from si in sit.DefaultIfEmpty()
-                                               join w in _appContext.Warehouse on stl.WarehouseId equals w.WarehouseId into ware
-                                               from w in ware.DefaultIfEmpty()
-                                               join l in _appContext.Location on stl.LocationId equals l.LocationId into loc
-                                               from l in loc.DefaultIfEmpty()
-                                               join sh in _appContext.Shelf on stl.ShelfId equals sh.ShelfId into she
-                                               from sh in she.DefaultIfEmpty()
-                                               join bi in _appContext.Bin on stl.BinId equals bi.BinId into bin
-                                               from bi in bin.DefaultIfEmpty()
-                                               join po in _appContext.PurchaseOrder on stl.PurchaseOrderId equals po.PurchaseOrderId into purchase
-                                               from po in purchase.DefaultIfEmpty()
-                                               join ro in _appContext.RepairOrder on stl.RepairOrderId equals ro.RepairOrderId into repair
-                                               from ro in repair.DefaultIfEmpty()
-                                               join mana in _appContext.ManagementStructure on stl.ManagementStructureEntityId equals mana.ManagementStructureId into manage
-                                               from mana in manage.DefaultIfEmpty()
-                                               join managmentLegalEntity in _appContext.ManagementStructure on mana.ManagementStructureId equals managmentLegalEntity.ManagementStructureId into mainCompanyTree
-                                               from managmentLegalEntity in mainCompanyTree.DefaultIfEmpty()
-                                               join divmanagmentLegalEntity in _appContext.ManagementStructure on managmentLegalEntity.ParentId equals divmanagmentLegalEntity.ManagementStructureId into mainDivCompany
-                                               from divmanagmentLegalEntity in mainDivCompany.DefaultIfEmpty()
-                                               join biumanagmentLegalEntity in _appContext.ManagementStructure on divmanagmentLegalEntity.ParentId equals biumanagmentLegalEntity.ManagementStructureId into BIUDivCompany
-                                               from biumanagmentLegalEntity in BIUDivCompany.DefaultIfEmpty()
-                                               join compmanagmentLegalEntity in _appContext.ManagementStructure on biumanagmentLegalEntity.ParentId equals compmanagmentLegalEntity.ManagementStructureId into comivCompany
-                                               from compmanagmentLegalEntity in comivCompany.DefaultIfEmpty()
-                                               join ti in _appContext.TimeLife on stl.TimeLifeCyclesId equals ti.TimeLifeCyclesId into time
-                                               from ti in time.DefaultIfEmpty()
-                                               join man in _appContext.Manufacturer on stl.ManufacturerId equals man.ManufacturerId into manufa
-                                               from man in manufa.DefaultIfEmpty()
-                                               select new
-                                               {
-                                                   stl.StockLineNumber,
-                                               }).Count();
+                                    join im in _appContext.ItemMaster on stl.ItemMasterId equals im.ItemMasterId
+                                    join co in _appContext.Condition on stl.ConditionId equals co.ConditionId
+                                    join ig in _appContext.Itemgroup on im.ItemGroupId equals ig.ItemGroupId into itemgroup
+                                    from ig in itemgroup.DefaultIfEmpty()
+                                    join si in _appContext.Site on stl.SiteId equals si.SiteId into sit
+                                    from si in sit.DefaultIfEmpty()
+                                    join w in _appContext.Warehouse on stl.WarehouseId equals w.WarehouseId into ware
+                                    from w in ware.DefaultIfEmpty()
+                                    join l in _appContext.Location on stl.LocationId equals l.LocationId into loc
+                                    from l in loc.DefaultIfEmpty()
+                                    join sh in _appContext.Shelf on stl.ShelfId equals sh.ShelfId into she
+                                    from sh in she.DefaultIfEmpty()
+                                    join bi in _appContext.Bin on stl.BinId equals bi.BinId into bin
+                                    from bi in bin.DefaultIfEmpty()
+                                    join po in _appContext.PurchaseOrder on stl.PurchaseOrderId equals po.PurchaseOrderId into purchase
+                                    from po in purchase.DefaultIfEmpty()
+                                    join ro in _appContext.RepairOrder on stl.RepairOrderId equals ro.RepairOrderId into repair
+                                    from ro in repair.DefaultIfEmpty()
+                                    join mana in _appContext.ManagementStructure on stl.ManagementStructureEntityId equals mana.ManagementStructureId into manage
+                                    from mana in manage.DefaultIfEmpty()
+                                    join managmentLegalEntity in _appContext.ManagementStructure on mana.ManagementStructureId equals managmentLegalEntity.ManagementStructureId into mainCompanyTree
+                                    from managmentLegalEntity in mainCompanyTree.DefaultIfEmpty()
+                                    join divmanagmentLegalEntity in _appContext.ManagementStructure on managmentLegalEntity.ParentId equals divmanagmentLegalEntity.ManagementStructureId into mainDivCompany
+                                    from divmanagmentLegalEntity in mainDivCompany.DefaultIfEmpty()
+                                    join biumanagmentLegalEntity in _appContext.ManagementStructure on divmanagmentLegalEntity.ParentId equals biumanagmentLegalEntity.ManagementStructureId into BIUDivCompany
+                                    from biumanagmentLegalEntity in BIUDivCompany.DefaultIfEmpty()
+                                    join compmanagmentLegalEntity in _appContext.ManagementStructure on biumanagmentLegalEntity.ParentId equals compmanagmentLegalEntity.ManagementStructureId into comivCompany
+                                    from compmanagmentLegalEntity in comivCompany.DefaultIfEmpty()
+                                    join ti in _appContext.TimeLife on stl.TimeLifeCyclesId equals ti.TimeLifeCyclesId into time
+                                    from ti in time.DefaultIfEmpty()
+                                    join man in _appContext.Manufacturer on stl.ManufacturerId equals man.ManufacturerId into manufa
+                                    from man in manufa.DefaultIfEmpty()
+                                    select new
+                                    {
+                                        stl.StockLineNumber,
+                                    }).Count();
+
+                var result = (from stl in _appContext.StockLine
+
+                              join im in _appContext.ItemMaster on stl.ItemMasterId equals im.ItemMasterId
+
+                              join co in _appContext.Condition on stl.ConditionId equals co.ConditionId
+
+                              join ig in _appContext.Itemgroup on im.ItemGroupId equals ig.ItemGroupId into itemgroup
+                              from ig in itemgroup.DefaultIfEmpty()
+
+                              join si in _appContext.Site on stl.SiteId equals si.SiteId into sit
+                              from si in sit.DefaultIfEmpty()
+
+                              join w in _appContext.Warehouse on stl.WarehouseId equals w.WarehouseId into ware
+                              from w in ware.DefaultIfEmpty()
+
+                              join l in _appContext.Location on stl.LocationId equals l.LocationId into loc
+                              from l in loc.DefaultIfEmpty()
+
+                              join sh in _appContext.Shelf on stl.ShelfId equals sh.ShelfId into she
+                              from sh in she.DefaultIfEmpty()
+
+                              join bi in _appContext.Bin on stl.BinId equals bi.BinId into bin
+                              from bi in bin.DefaultIfEmpty()
+
+                              join po in _appContext.PurchaseOrder on stl.PurchaseOrderId equals po.PurchaseOrderId into purchase
+                              from po in purchase.DefaultIfEmpty()
+
+                              join ro in _appContext.RepairOrder on stl.RepairOrderId equals ro.RepairOrderId into repair
+                              from ro in repair.DefaultIfEmpty()
+
+                              join mana in _appContext.ManagementStructure on stl.ManagementStructureEntityId equals mana.ManagementStructureId into manage
+                              from mana in manage.DefaultIfEmpty()
+
+                              join managmentLegalEntity in _appContext.ManagementStructure on mana.ManagementStructureId equals managmentLegalEntity.ManagementStructureId into mainCompanyTree
+                              from managmentLegalEntity in mainCompanyTree.DefaultIfEmpty()
+
+                              join divmanagmentLegalEntity in _appContext.ManagementStructure on managmentLegalEntity.ParentId equals divmanagmentLegalEntity.ManagementStructureId into mainDivCompany
+                              from divmanagmentLegalEntity in mainDivCompany.DefaultIfEmpty()
+
+                              join biumanagmentLegalEntity in _appContext.ManagementStructure on divmanagmentLegalEntity.ParentId equals biumanagmentLegalEntity.ManagementStructureId into BIUDivCompany
+                              from biumanagmentLegalEntity in BIUDivCompany.DefaultIfEmpty()
+
+                              join compmanagmentLegalEntity in _appContext.ManagementStructure on biumanagmentLegalEntity.ParentId equals compmanagmentLegalEntity.ManagementStructureId into comivCompany
+                              from compmanagmentLegalEntity in comivCompany.DefaultIfEmpty()
+
+                              join ti in _appContext.TimeLife on stl.TimeLifeCyclesId equals ti.TimeLifeCyclesId into time
+                              from ti in time.DefaultIfEmpty()
+
+                              join man in _appContext.Manufacturer on stl.ManufacturerId equals man.ManufacturerId into manufa
+                              from man in manufa.DefaultIfEmpty()
+
+                              select new
+                              {
+                                  stl,
+                                  stl.StockLineId,
+                                  im,
+                                  man,
+                                  partNumber = stl.PartNumber,
+                                  stockLineNumber = stl.StockLineNumber,
+                                  stl.ControlNumber,
+                                  stl.TagDate,
+                                  glGLAccountId = stl.GLAccountId,
+                                  glAccountName = im.GLAccount.AccountName,
+                                  location = l.Name,
+                                  warehouse = w.Name,
+                                  im.ExpirationDate,
+                                  stl.SerialNumber,
+                                  conditionId = co.ConditionId,
+                                  itemGroup = ig.Description,
+                                  stl.IdNumber,
+                                  partDescription = im.PartDescription,
+                                  stl.ManagementStructureEntityId,
+                                  stl.QuantityOnOrder,
+                                  stl.QuantityAvailable,
+                                  stl.QuantityIssued,
+                                  stl.QuantityOnHand,
+                                  stl.QuantityTurnIn,
+                                  stl.QuantityReserved,
+                                  stl.Accident,
+                                  stl.AccidentReason,
+                                  stl.Incident,
+                                  stl.IncidentReason,
+                                  stl.BlackListed,
+                                  stl.BlackListedReason,
+                                  stl.EngineSerialNumber,
+                                  stl.AircraftTailNumber,
+                                  condition = co.Description,
+                                  stl.ShelfLifeExpirationDate,
+                                  siteName = si.Name,
+                                  shelfName = sh.Name,
+                                  binName = bi.Name,
+                                  siteId = stl.SiteId,
+                                  stl.ShelfId,
+                                  stl.BinId,
+                                  warehouseId = stl.WarehouseId,
+                                  locationId = stl.LocationId,
+                                  Receiver = stl.ReceiverNumber,
+                                  stl.ObtainFrom,
+                                  stl.Owner,
+                                  stl.TraceableTo,
+                                  stl.ManufacturerLotNumber,
+                                  stl.ManufacturingDate,
+                                  stl.ManufacturingBatchNumber,
+                                  stl.PartCertificationNumber,
+                                  stl.CertifiedBy,
+                                  stl.CertifiedDate,
+                                  stl.TagType,
+                                  stl.CertifiedDueDate,
+                                  stl.CalibrationMemo,
+                                  stl.OrderDate,
+                                  po.PurchaseOrderNumber,
+                                  stl.PurchaseOrderUnitCost,
+                                  ro.RepairOrderNumber,
+                                  stl.RepairOrderUnitCost,
+                                  stl.InventoryUnitCost,
+                                  stl.ReceivedDate,
+                                  man.Name,
+                                  stl.ReconciliationNumber,
+                                  stl.UnitSalesPrice,
+                                  stl.CoreUnitCost,
+                                  stl.GLAccountId,
+                                  stl.AssetId,
+                                  stl.IsPMA,
+                                  stl.IsDER,
+                                  stl.OEM,
+                                  stl.Memo,
+                                  stl.ObtainFromType,
+                                  stl.OwnerType,
+                                  stl.TraceableToType,
+                                  stl.ManufacturerId,
+                                  stl.ShelfLife,
+                                  stl.UnitCostAdjustmentReasonTypeId,
+                                  stl.UnitSalePriceAdjustmentReasonTypeId,
+                                  stl.TimeLifeCyclesId,
+                                  ti.CyclesRemaining,
+                                  ti.CyclesSinceNew,
+                                  ti.CyclesSinceOVH,
+                                  ti.CyclesSinceRepair,
+                                  ti.CyclesSinceInspection,
+                                  ti.TimeRemaining,
+                                  ti.TimeSinceInspection,
+                                  ti.TimeSinceNew,
+                                  ti.TimeSinceOVH,
+                                  ti.TimeSinceRepair,
+                                  ti.LastSinceInspection,
+                                  ti.LastSinceNew,
+                                  ti.LastSinceOVH,
+                                  mana.Code,
+                                  co,
+                                  w,
+                                  l,
+                                  po,
+                                  ro,
+                                  conditionType = co.Description,
+                                  im.ItemTypeId,
+                                  managmentLegalEntity,
+                                  divmanagmentLegalEntity,
+                                  biumanagmentLegalEntity,
+                                  compmanagmentLegalEntity,
+                                  mana,
+                                  totalRecords
+                              }).ToList();
+                return result;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public IEnumerable<object> GetListGlobalFilter(string value, int pageNumber, int pageSize)
+        {
+            var pageNumbers = pageNumber + 1;
+            var take = pageSize;
+            var skip = take * (pageNumbers - 1);
+
+            if (!string.IsNullOrEmpty(value))
+            {
+                var totalRecords = (from stl in _appContext.StockLine
+                                    join im in _appContext.ItemMaster on stl.ItemMasterId equals im.ItemMasterId
+                                    join co in _appContext.Condition on stl.ConditionId equals co.ConditionId
+                                    join ig in _appContext.Itemgroup on im.ItemGroupId equals ig.ItemGroupId into itemgroup
+                                    from ig in itemgroup.DefaultIfEmpty()
+                                    join si in _appContext.Site on stl.SiteId equals si.SiteId into sit
+                                    from si in sit.DefaultIfEmpty()
+                                    join w in _appContext.Warehouse on stl.WarehouseId equals w.WarehouseId into ware
+                                    from w in ware.DefaultIfEmpty()
+                                    join l in _appContext.Location on stl.LocationId equals l.LocationId into loc
+                                    from l in loc.DefaultIfEmpty()
+                                    join sh in _appContext.Shelf on stl.ShelfId equals sh.ShelfId into she
+                                    from sh in she.DefaultIfEmpty()
+                                    join bi in _appContext.Bin on stl.BinId equals bi.BinId into bin
+                                    from bi in bin.DefaultIfEmpty()
+                                    join po in _appContext.PurchaseOrder on stl.PurchaseOrderId equals po.PurchaseOrderId into purchase
+                                    from po in purchase.DefaultIfEmpty()
+                                    join ro in _appContext.RepairOrder on stl.RepairOrderId equals ro.RepairOrderId into repair
+                                    from ro in repair.DefaultIfEmpty()
+                                    join mana in _appContext.ManagementStructure on stl.ManagementStructureEntityId equals mana.ManagementStructureId into manage
+                                    from mana in manage.DefaultIfEmpty()
+                                    join managmentLegalEntity in _appContext.ManagementStructure on mana.ManagementStructureId equals managmentLegalEntity.ManagementStructureId into mainCompanyTree
+                                    from managmentLegalEntity in mainCompanyTree.DefaultIfEmpty()
+                                    join divmanagmentLegalEntity in _appContext.ManagementStructure on managmentLegalEntity.ParentId equals divmanagmentLegalEntity.ManagementStructureId into mainDivCompany
+                                    from divmanagmentLegalEntity in mainDivCompany.DefaultIfEmpty()
+                                    join biumanagmentLegalEntity in _appContext.ManagementStructure on divmanagmentLegalEntity.ParentId equals biumanagmentLegalEntity.ManagementStructureId into BIUDivCompany
+                                    from biumanagmentLegalEntity in BIUDivCompany.DefaultIfEmpty()
+                                    join compmanagmentLegalEntity in _appContext.ManagementStructure on biumanagmentLegalEntity.ParentId equals compmanagmentLegalEntity.ManagementStructureId into comivCompany
+                                    from compmanagmentLegalEntity in comivCompany.DefaultIfEmpty()
+                                    join ti in _appContext.TimeLife on stl.TimeLifeCyclesId equals ti.TimeLifeCyclesId into time
+                                    from ti in time.DefaultIfEmpty()
+                                    join man in _appContext.Manufacturer on stl.ManufacturerId equals man.ManufacturerId into manufa
+                                    from man in manufa.DefaultIfEmpty()
+                                    where (stl.PartNumber.Contains(value)
+                                     || stl.StockLineNumber.Contains(value)
+                                     || stl.SerialNumber.Contains(value))
+                                     //|| co.ConditionId.ToString() == value)
+                                    select new
+                                    {
+                                        stl.StockLineNumber,
+                                    }).Count();
+
+                var data = (from stl in _appContext.StockLine
+
+                            join im in _appContext.ItemMaster on stl.ItemMasterId equals im.ItemMasterId
+
+                            join co in _appContext.Condition on stl.ConditionId equals co.ConditionId
+
+                            join ig in _appContext.Itemgroup on im.ItemGroupId equals ig.ItemGroupId into itemgroup
+                            from ig in itemgroup.DefaultIfEmpty()
+
+                            join si in _appContext.Site on stl.SiteId equals si.SiteId into sit
+                            from si in sit.DefaultIfEmpty()
+
+                            join w in _appContext.Warehouse on stl.WarehouseId equals w.WarehouseId into ware
+                            from w in ware.DefaultIfEmpty()
+
+                            join l in _appContext.Location on stl.LocationId equals l.LocationId into loc
+                            from l in loc.DefaultIfEmpty()
+
+                            join sh in _appContext.Shelf on stl.ShelfId equals sh.ShelfId into she
+                            from sh in she.DefaultIfEmpty()
+
+                            join bi in _appContext.Bin on stl.BinId equals bi.BinId into bin
+                            from bi in bin.DefaultIfEmpty()
+
+                            join po in _appContext.PurchaseOrder on stl.PurchaseOrderId equals po.PurchaseOrderId into purchase
+                            from po in purchase.DefaultIfEmpty()
+
+                            join ro in _appContext.RepairOrder on stl.RepairOrderId equals ro.RepairOrderId into repair
+                            from ro in repair.DefaultIfEmpty()
+
+                            join mana in _appContext.ManagementStructure on stl.ManagementStructureEntityId equals mana.ManagementStructureId into manage
+                            from mana in manage.DefaultIfEmpty()
+
+                            join managmentLegalEntity in _appContext.ManagementStructure on mana.ManagementStructureId equals managmentLegalEntity.ManagementStructureId into mainCompanyTree
+                            from managmentLegalEntity in mainCompanyTree.DefaultIfEmpty()
+
+                            join divmanagmentLegalEntity in _appContext.ManagementStructure on managmentLegalEntity.ParentId equals divmanagmentLegalEntity.ManagementStructureId into mainDivCompany
+                            from divmanagmentLegalEntity in mainDivCompany.DefaultIfEmpty()
+
+                            join biumanagmentLegalEntity in _appContext.ManagementStructure on divmanagmentLegalEntity.ParentId equals biumanagmentLegalEntity.ManagementStructureId into BIUDivCompany
+                            from biumanagmentLegalEntity in BIUDivCompany.DefaultIfEmpty()
+
+                            join compmanagmentLegalEntity in _appContext.ManagementStructure on biumanagmentLegalEntity.ParentId equals compmanagmentLegalEntity.ManagementStructureId into comivCompany
+                            from compmanagmentLegalEntity in comivCompany.DefaultIfEmpty()
+
+                            join ti in _appContext.TimeLife on stl.TimeLifeCyclesId equals ti.TimeLifeCyclesId into time
+                            from ti in time.DefaultIfEmpty()
+
+                            join man in _appContext.Manufacturer on stl.ManufacturerId equals man.ManufacturerId into manufa
+                            from man in manufa.DefaultIfEmpty()
+                            where (stl.PartNumber.Contains(value)
+                            && stl.StockLineNumber.Contains(value)
+                            && stl.SerialNumber.Contains(value))
+                           //&& co.ConditionId.ToString() == value)
+                            select new
+                            {
+                                stl,
+                                stl.StockLineId,
+                                im,
+                                man,
+                                partNumber = stl.PartNumber,
+                                stockLineNumber = stl.StockLineNumber,
+                                stl.ControlNumber,
+                                stl.TagDate,
+                                glGLAccountId = stl.GLAccountId,
+                                glAccountName = im.GLAccount.AccountName,
+                                location = l.Name,
+                                warehouse = w.Name,
+                                im.ExpirationDate,
+                                stl.SerialNumber,
+                                conditionId = co.ConditionId,
+                                itemGroup = ig.Description,
+                                stl.IdNumber,
+                                partDescription = im.PartDescription,
+                                stl.ManagementStructureEntityId,
+                                stl.QuantityOnOrder,
+                                stl.QuantityAvailable,
+                                stl.QuantityIssued,
+                                stl.QuantityOnHand,
+                                stl.QuantityTurnIn,
+                                stl.QuantityReserved,
+                                stl.Accident,
+                                stl.AccidentReason,
+                                stl.Incident,
+                                stl.IncidentReason,
+                                stl.BlackListed,
+                                stl.BlackListedReason,
+                                stl.EngineSerialNumber,
+                                stl.AircraftTailNumber,
+                                condition = co.Description,
+                                stl.ShelfLifeExpirationDate,
+                                siteName = si.Name,
+                                shelfName = sh.Name,
+                                binName = bi.Name,
+                                siteId = stl.SiteId,
+                                stl.ShelfId,
+                                stl.BinId,
+                                warehouseId = stl.WarehouseId,
+                                locationId = stl.LocationId,
+                                Receiver = stl.ReceiverNumber,
+                                stl.ObtainFrom,
+                                stl.Owner,
+                                stl.TraceableTo,
+                                stl.ManufacturerLotNumber,
+                                stl.ManufacturingDate,
+                                stl.ManufacturingBatchNumber,
+                                stl.PartCertificationNumber,
+                                stl.CertifiedBy,
+                                stl.CertifiedDate,
+                                stl.TagType,
+                                stl.CertifiedDueDate,
+                                stl.CalibrationMemo,
+                                stl.OrderDate,
+                                po.PurchaseOrderNumber,
+                                stl.PurchaseOrderUnitCost,
+                                ro.RepairOrderNumber,
+                                stl.RepairOrderUnitCost,
+                                stl.InventoryUnitCost,
+                                stl.ReceivedDate,
+                                man.Name,
+                                stl.ReconciliationNumber,
+                                stl.UnitSalesPrice,
+                                stl.CoreUnitCost,
+                                stl.GLAccountId,
+                                stl.AssetId,
+                                stl.IsPMA,
+                                stl.IsDER,
+                                stl.OEM,
+                                stl.Memo,
+                                stl.ObtainFromType,
+                                stl.OwnerType,
+                                stl.TraceableToType,
+                                stl.ManufacturerId,
+                                stl.ShelfLife,
+                                stl.UnitCostAdjustmentReasonTypeId,
+                                stl.UnitSalePriceAdjustmentReasonTypeId,
+                                stl.TimeLifeCyclesId,
+                                ti.CyclesRemaining,
+                                ti.CyclesSinceNew,
+                                ti.CyclesSinceOVH,
+                                ti.CyclesSinceRepair,
+                                ti.CyclesSinceInspection,
+                                ti.TimeRemaining,
+                                ti.TimeSinceInspection,
+                                ti.TimeSinceNew,
+                                ti.TimeSinceOVH,
+                                ti.TimeSinceRepair,
+                                ti.LastSinceInspection,
+                                ti.LastSinceNew,
+                                ti.LastSinceOVH,
+                                mana.Code,
+                                co,
+                                w,
+                                l,
+                                po,
+                                ro,
+                                conditionType = co.Description,
+                                im.ItemTypeId,
+                                managmentLegalEntity,
+                                divmanagmentLegalEntity,
+                                biumanagmentLegalEntity,
+                                compmanagmentLegalEntity,
+                                mana,
+                                totalRecords
+                            }).Skip(skip)
+                                 .Take(take)
+                                 .ToList();
+
+
+
+                return (data);
+            }
+            else
+            {
+                var totalRecords = (from stl in _appContext.StockLine
+                                    join im in _appContext.ItemMaster on stl.ItemMasterId equals im.ItemMasterId
+                                    join co in _appContext.Condition on stl.ConditionId equals co.ConditionId
+                                    join ig in _appContext.Itemgroup on im.ItemGroupId equals ig.ItemGroupId into itemgroup
+                                    from ig in itemgroup.DefaultIfEmpty()
+                                    join si in _appContext.Site on stl.SiteId equals si.SiteId into sit
+                                    from si in sit.DefaultIfEmpty()
+                                    join w in _appContext.Warehouse on stl.WarehouseId equals w.WarehouseId into ware
+                                    from w in ware.DefaultIfEmpty()
+                                    join l in _appContext.Location on stl.LocationId equals l.LocationId into loc
+                                    from l in loc.DefaultIfEmpty()
+                                    join sh in _appContext.Shelf on stl.ShelfId equals sh.ShelfId into she
+                                    from sh in she.DefaultIfEmpty()
+                                    join bi in _appContext.Bin on stl.BinId equals bi.BinId into bin
+                                    from bi in bin.DefaultIfEmpty()
+                                    join po in _appContext.PurchaseOrder on stl.PurchaseOrderId equals po.PurchaseOrderId into purchase
+                                    from po in purchase.DefaultIfEmpty()
+                                    join ro in _appContext.RepairOrder on stl.RepairOrderId equals ro.RepairOrderId into repair
+                                    from ro in repair.DefaultIfEmpty()
+                                    join mana in _appContext.ManagementStructure on stl.ManagementStructureEntityId equals mana.ManagementStructureId into manage
+                                    from mana in manage.DefaultIfEmpty()
+                                    join managmentLegalEntity in _appContext.ManagementStructure on mana.ManagementStructureId equals managmentLegalEntity.ManagementStructureId into mainCompanyTree
+                                    from managmentLegalEntity in mainCompanyTree.DefaultIfEmpty()
+                                    join divmanagmentLegalEntity in _appContext.ManagementStructure on managmentLegalEntity.ParentId equals divmanagmentLegalEntity.ManagementStructureId into mainDivCompany
+                                    from divmanagmentLegalEntity in mainDivCompany.DefaultIfEmpty()
+                                    join biumanagmentLegalEntity in _appContext.ManagementStructure on divmanagmentLegalEntity.ParentId equals biumanagmentLegalEntity.ManagementStructureId into BIUDivCompany
+                                    from biumanagmentLegalEntity in BIUDivCompany.DefaultIfEmpty()
+                                    join compmanagmentLegalEntity in _appContext.ManagementStructure on biumanagmentLegalEntity.ParentId equals compmanagmentLegalEntity.ManagementStructureId into comivCompany
+                                    from compmanagmentLegalEntity in comivCompany.DefaultIfEmpty()
+                                    join ti in _appContext.TimeLife on stl.TimeLifeCyclesId equals ti.TimeLifeCyclesId into time
+                                    from ti in time.DefaultIfEmpty()
+                                    join man in _appContext.Manufacturer on stl.ManufacturerId equals man.ManufacturerId into manufa
+                                    from man in manufa.DefaultIfEmpty()
+                                    
+                                    select new
+                                    {
+                                        stl.StockLineNumber,
+                                    }).Count();
 
                 var result = (from stl in _appContext.StockLine
 
@@ -217,6 +651,230 @@ namespace DAL.Repositories
                                   mana,
                                   totalRecords
                               }).ToList();
+                
+                return result;
+            }
+        }
+
+        public IEnumerable<object> GetAllStockLinelistData(Filters<StockListFilters> stockListFilters)
+        {
+            try
+            {
+                if (stockListFilters.filters == null)
+                    stockListFilters.filters = new StockListFilters();
+                var pageNumber = stockListFilters.first + 1;
+                var take = stockListFilters.rows;
+                var skip = take * (pageNumber - 1);
+
+                var totalRecords = (from stl in _appContext.StockLine
+                                               join im in _appContext.ItemMaster on stl.ItemMasterId equals im.ItemMasterId
+                                               join co in _appContext.Condition on stl.ConditionId equals co.ConditionId
+                                               join ig in _appContext.Itemgroup on im.ItemGroupId equals ig.ItemGroupId into itemgroup
+                                               from ig in itemgroup.DefaultIfEmpty()
+                                               join si in _appContext.Site on stl.SiteId equals si.SiteId into sit
+                                               from si in sit.DefaultIfEmpty()
+                                               join w in _appContext.Warehouse on stl.WarehouseId equals w.WarehouseId into ware
+                                               from w in ware.DefaultIfEmpty()
+                                               join l in _appContext.Location on stl.LocationId equals l.LocationId into loc
+                                               from l in loc.DefaultIfEmpty()
+                                               join sh in _appContext.Shelf on stl.ShelfId equals sh.ShelfId into she
+                                               from sh in she.DefaultIfEmpty()
+                                               join bi in _appContext.Bin on stl.BinId equals bi.BinId into bin
+                                               from bi in bin.DefaultIfEmpty()
+                                               join po in _appContext.PurchaseOrder on stl.PurchaseOrderId equals po.PurchaseOrderId into purchase
+                                               from po in purchase.DefaultIfEmpty()
+                                               join ro in _appContext.RepairOrder on stl.RepairOrderId equals ro.RepairOrderId into repair
+                                               from ro in repair.DefaultIfEmpty()
+                                               join mana in _appContext.ManagementStructure on stl.ManagementStructureEntityId equals mana.ManagementStructureId into manage
+                                               from mana in manage.DefaultIfEmpty()
+                                               join managmentLegalEntity in _appContext.ManagementStructure on mana.ManagementStructureId equals managmentLegalEntity.ManagementStructureId into mainCompanyTree
+                                               from managmentLegalEntity in mainCompanyTree.DefaultIfEmpty()
+                                               join divmanagmentLegalEntity in _appContext.ManagementStructure on managmentLegalEntity.ParentId equals divmanagmentLegalEntity.ManagementStructureId into mainDivCompany
+                                               from divmanagmentLegalEntity in mainDivCompany.DefaultIfEmpty()
+                                               join biumanagmentLegalEntity in _appContext.ManagementStructure on divmanagmentLegalEntity.ParentId equals biumanagmentLegalEntity.ManagementStructureId into BIUDivCompany
+                                               from biumanagmentLegalEntity in BIUDivCompany.DefaultIfEmpty()
+                                               join compmanagmentLegalEntity in _appContext.ManagementStructure on biumanagmentLegalEntity.ParentId equals compmanagmentLegalEntity.ManagementStructureId into comivCompany
+                                               from compmanagmentLegalEntity in comivCompany.DefaultIfEmpty()
+                                               join ti in _appContext.TimeLife on stl.TimeLifeCyclesId equals ti.TimeLifeCyclesId into time
+                                               from ti in time.DefaultIfEmpty()
+                                               join man in _appContext.Manufacturer on stl.ManufacturerId equals man.ManufacturerId into manufa
+                                               from man in manufa.DefaultIfEmpty()
+                                               where (stl.PartNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartNumber) ? stockListFilters.filters.PartNumber : stl.PartNumber)
+                                                && stl.StockLineNumber.Contains(!String.IsNullOrEmpty(stockListFilters.filters.StocklineNumber) ? stockListFilters.filters.StocklineNumber : stl.StockLineNumber)
+                                                && stl.SerialNumber.Contains(!String.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber))
+                                               // && co.ConditionId == (stockListFilters.filters.ConditionId == 0 ? stockListFilters.filters.ConditionId : co.ConditionId))
+                                                select new
+                                                           {
+                                                               stl.StockLineNumber,
+                                                           }).Count();
+
+                                    var result = (from stl in _appContext.StockLine
+
+                                                  join im in _appContext.ItemMaster on stl.ItemMasterId equals im.ItemMasterId
+
+                                                  join co in _appContext.Condition on stl.ConditionId equals co.ConditionId
+
+                                                  join ig in _appContext.Itemgroup on im.ItemGroupId equals ig.ItemGroupId into itemgroup
+                                                  from ig in itemgroup.DefaultIfEmpty()
+
+                                                  join si in _appContext.Site on stl.SiteId equals si.SiteId into sit
+                                                  from si in sit.DefaultIfEmpty()
+
+                                                  join w in _appContext.Warehouse on stl.WarehouseId equals w.WarehouseId into ware
+                                                  from w in ware.DefaultIfEmpty()
+
+                                                  join l in _appContext.Location on stl.LocationId equals l.LocationId into loc
+                                                  from l in loc.DefaultIfEmpty()
+
+                                                  join sh in _appContext.Shelf on stl.ShelfId equals sh.ShelfId into she
+                                                  from sh in she.DefaultIfEmpty()
+
+                                                  join bi in _appContext.Bin on stl.BinId equals bi.BinId into bin
+                                                  from bi in bin.DefaultIfEmpty()
+
+                                                  join po in _appContext.PurchaseOrder on stl.PurchaseOrderId equals po.PurchaseOrderId into purchase
+                                                  from po in purchase.DefaultIfEmpty()
+
+                                                  join ro in _appContext.RepairOrder on stl.RepairOrderId equals ro.RepairOrderId into repair
+                                                  from ro in repair.DefaultIfEmpty()
+
+                                                  join mana in _appContext.ManagementStructure on stl.ManagementStructureEntityId equals mana.ManagementStructureId into manage
+                                                  from mana in manage.DefaultIfEmpty()
+
+                                                  join managmentLegalEntity in _appContext.ManagementStructure on mana.ManagementStructureId equals managmentLegalEntity.ManagementStructureId into mainCompanyTree
+                                                  from managmentLegalEntity in mainCompanyTree.DefaultIfEmpty()
+
+                                                  join divmanagmentLegalEntity in _appContext.ManagementStructure on managmentLegalEntity.ParentId equals divmanagmentLegalEntity.ManagementStructureId into mainDivCompany
+                                                  from divmanagmentLegalEntity in mainDivCompany.DefaultIfEmpty()
+
+                                                  join biumanagmentLegalEntity in _appContext.ManagementStructure on divmanagmentLegalEntity.ParentId equals biumanagmentLegalEntity.ManagementStructureId into BIUDivCompany
+                                                  from biumanagmentLegalEntity in BIUDivCompany.DefaultIfEmpty()
+
+                                                  join compmanagmentLegalEntity in _appContext.ManagementStructure on biumanagmentLegalEntity.ParentId equals compmanagmentLegalEntity.ManagementStructureId into comivCompany
+                                                  from compmanagmentLegalEntity in comivCompany.DefaultIfEmpty()
+
+                                                  join ti in _appContext.TimeLife on stl.TimeLifeCyclesId equals ti.TimeLifeCyclesId into time
+                                                  from ti in time.DefaultIfEmpty()
+
+                                                  join man in _appContext.Manufacturer on stl.ManufacturerId equals man.ManufacturerId into manufa
+                                                  from man in manufa.DefaultIfEmpty()
+                                                  where (stl.PartNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartNumber) ? stockListFilters.filters.PartNumber : stl.PartNumber)
+                                                  && stl.StockLineNumber.Contains(!String.IsNullOrEmpty(stockListFilters.filters.StocklineNumber) ? stockListFilters.filters.StocklineNumber : stl.StockLineNumber)
+                                                  && stl.SerialNumber.Contains(!String.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber))
+                                                  //&& co.ConditionId == (stockListFilters.filters.ConditionId == 0 ? stockListFilters.filters.ConditionId : co.ConditionId))
+                                                  select new
+                                                  {
+                                                      stl,
+                                                      stl.StockLineId,
+                                                      im,
+                                                      man,
+                                                      partNumber = stl.PartNumber,
+                                                      stockLineNumber = stl.StockLineNumber,
+                                                      stl.ControlNumber,
+                                                      stl.TagDate,
+                                                      glGLAccountId = stl.GLAccountId,
+                                                      glAccountName = im.GLAccount.AccountName,
+                                                      location = l.Name,
+                                                      warehouse = w.Name,
+                                                      im.ExpirationDate,
+                                                      stl.SerialNumber,
+                                                      conditionId = co.ConditionId,
+                                                      itemGroup = ig.Description,
+                                                      stl.IdNumber,
+                                                      partDescription = im.PartDescription,
+                                                      stl.ManagementStructureEntityId,
+                                                      stl.QuantityOnOrder,
+                                                      stl.QuantityAvailable,
+                                                      stl.QuantityIssued,
+                                                      stl.QuantityOnHand,
+                                                      stl.QuantityTurnIn,
+                                                      stl.QuantityReserved,
+                                                      stl.Accident,
+                                                      stl.AccidentReason,
+                                                      stl.Incident,
+                                                      stl.IncidentReason,
+                                                      stl.BlackListed,
+                                                      stl.BlackListedReason,
+                                                      stl.EngineSerialNumber,
+                                                      stl.AircraftTailNumber,
+                                                      condition = co.Description,
+                                                      stl.ShelfLifeExpirationDate,
+                                                      siteName = si.Name,
+                                                      shelfName = sh.Name,
+                                                      binName = bi.Name,
+                                                      siteId = stl.SiteId,
+                                                      stl.ShelfId,
+                                                      stl.BinId,
+                                                      warehouseId = stl.WarehouseId,
+                                                      locationId = stl.LocationId,
+                                                      Receiver = stl.ReceiverNumber,
+                                                      stl.ObtainFrom,
+                                                      stl.Owner,
+                                                      stl.TraceableTo,
+                                                      stl.ManufacturerLotNumber,
+                                                      stl.ManufacturingDate,
+                                                      stl.ManufacturingBatchNumber,
+                                                      stl.PartCertificationNumber,
+                                                      stl.CertifiedBy,
+                                                      stl.CertifiedDate,
+                                                      stl.TagType,
+                                                      stl.CertifiedDueDate,
+                                                      stl.CalibrationMemo,
+                                                      stl.OrderDate,
+                                                      po.PurchaseOrderNumber,
+                                                      stl.PurchaseOrderUnitCost,
+                                                      ro.RepairOrderNumber,
+                                                      stl.RepairOrderUnitCost,
+                                                      stl.InventoryUnitCost,
+                                                      stl.ReceivedDate,
+                                                      man.Name,
+                                                      stl.ReconciliationNumber,
+                                                      stl.UnitSalesPrice,
+                                                      stl.CoreUnitCost,
+                                                      stl.GLAccountId,
+                                                      stl.AssetId,
+                                                      stl.IsPMA,
+                                                      stl.IsDER,
+                                                      stl.OEM,
+                                                      stl.Memo,
+                                                      stl.ObtainFromType,
+                                                      stl.OwnerType,
+                                                      stl.TraceableToType,
+                                                      stl.ManufacturerId,
+                                                      stl.ShelfLife,
+                                                      stl.UnitCostAdjustmentReasonTypeId,
+                                                      stl.UnitSalePriceAdjustmentReasonTypeId,
+                                                      stl.TimeLifeCyclesId,
+                                                      ti.CyclesRemaining,
+                                                      ti.CyclesSinceNew,
+                                                      ti.CyclesSinceOVH,
+                                                      ti.CyclesSinceRepair,
+                                                      ti.CyclesSinceInspection,
+                                                      ti.TimeRemaining,
+                                                      ti.TimeSinceInspection,
+                                                      ti.TimeSinceNew,
+                                                      ti.TimeSinceOVH,
+                                                      ti.TimeSinceRepair,
+                                                      ti.LastSinceInspection,
+                                                      ti.LastSinceNew,
+                                                      ti.LastSinceOVH,
+                                                      mana.Code,
+                                                      co,
+                                                      w,
+                                                      l,
+                                                      po,
+                                                      ro,
+                                                      conditionType = co.Description,
+                                                      im.ItemTypeId,
+                                                      managmentLegalEntity,
+                                                      divmanagmentLegalEntity,
+                                                      biumanagmentLegalEntity,
+                                                      compmanagmentLegalEntity,
+                                                      mana,
+                                                      totalRecords
+                                                  }).Skip(skip)
+                             .Take(take)
+                             .ToList();
                 return result;
             }
             catch (Exception ex)
