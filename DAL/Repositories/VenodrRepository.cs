@@ -903,8 +903,15 @@ namespace DAL.Repositories
 
         public IEnumerable<object> GetVendorProcessList(int companyId)
         {
-            // _appContext.Master1099.Where(p=>p.MasterCompanyId== companyId).ToList();
-            return null;
+            var list = (from m in _appContext.Master1099
+                        where m.IsActive == true && m.MasterCompanyId == companyId
+                        select new
+                        {
+                            m.Master1099Id,
+                            m.Description
+                        }).Distinct().ToList();
+            return list;
+          
         }
 
     }
