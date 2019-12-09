@@ -27,8 +27,8 @@
                                         <i class="fa fa-search"></i>
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')">
                                     </div>
-                                    <button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    <button type="button" pTooltip="Download Data" tooltipPosition="top"pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" pTooltip="Download Selected Data" tooltipPosition="top"pButton icon="fa-download" iconPos="left" label="Export Selection Only"  (click)="dt.exportCSV({selectionOnly:true})"></button>
 
                                     <div class="excel-upload">
                                         <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">

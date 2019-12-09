@@ -27,9 +27,9 @@
                     </div>
 
 
-                    <button type="button" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left" label="Export All Data"
+                    <button type="button" pTooltip="Download Data" tooltipPosition="top" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left" label="Export All Data"
                             (click)="dt.exportCSV()" style="padding: 5px 12px !important;"></button>
-                    <button type="button" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left" label="Export Selected"
+                    <button type="button" pTooltip="Download Selected Data" tooltipPosition="top" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left" label="Export Selected"
                             (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 12px !important;"></button>
 
                     <div class="excel-upload excel-upload-cstm">
