@@ -71,7 +71,8 @@ namespace DAL.Repositories
                                 CreditTermsId = ct.Name,
                                 DiscountLevel = di == null ? 0 : di.DiscontValue,
                                 vc.ClassificationName,
-                                VendorCapabilityName = vca.capabilityDescription
+                                VendorCapabilityName = vca.capabilityDescription,
+                               VendorPhoneContact=t.VendorPhone+" - "+t.VendorPhoneExt
                             })/*.Where(t => t.IsActive == true)*/.OrderByDescending(c => c.CreatedDate).ToList();
                 return data;
 
@@ -801,7 +802,10 @@ namespace DAL.Repositories
                                 ad.StateOrProvince,
                                 ad.PostalCode,
                                 ad.Country,
-                                vba.CreatedDate
+                                vba.CreatedDate,
+                                vba.UpdatedBy,
+                                vba.UpdatedDate,
+                                vba.CreatedBy
                             }).OrderByDescending(p => p.AuditVendorBillingAddressId).ToList();
                 return list;
             }

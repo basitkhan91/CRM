@@ -108,22 +108,31 @@
                                 </div>
 
                                 <div class="form-group">
+
                                     <label for="vendorname">
                                         Phone
                                         <span class="clr-red">*</span>
+
                                     </label>
-                                    <input class="form-control" type="text" pKeyFilter="num" name="vendorPhone"
-                                           [(ngModel)]="sourceVendor.vendorPhone" required>
+                                    <div class="col-md-12">
+                                        <div class="col-md-7">
+                                            <input class="form-control" type="text" pKeyFilter="num" name="vendorPhone" 
+                                                   [(ngModel)]="sourceVendor.vendorPhone" required>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input type="text" name="phoneExt" pInputText maxlength="10" [(ngModel)]="sourceVendor.vendorPhoneExt" >
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="vendorname">
+                                            Email
+                                            <span class="clr-red">*</span>
+                                        </label>
+                                        <input class="form-control" type="email" email name="vendorEmail"
+                                               [(ngModel)]="sourceVendor.vendorEmail" required>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="vendorname">
-                                        Email
-                                        <span class="clr-red">*</span>
-                                    </label>
-                                    <input class="form-control" type="email" email name="vendorEmail"
-                                           [(ngModel)]="sourceVendor.vendorEmail" required>
-                                </div>
-                            </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="address1">
