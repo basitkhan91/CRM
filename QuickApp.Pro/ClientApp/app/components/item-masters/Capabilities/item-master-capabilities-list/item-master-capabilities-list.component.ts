@@ -940,7 +940,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
 
              capbilitiesObj.manufacturerId = capData.manufacturerId;
              capbilitiesObj.ataChapterId = capData.ataChapterId;
-             capbilitiesObj.atasubchapterId = capData.atasubchapterId;
+            capbilitiesObj.atasubchapterId = capData.ataSubChapterId.ataSubChapterId;
              capbilitiesObj.cmmId = capData.cmmId;
              capbilitiesObj.integrateWith = capData.integrateWith;
              capbilitiesObj.description = capData.description;
@@ -952,8 +952,8 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
                    capbilitiesObj.nteHrs = capData.nteHrs;
                     capbilitiesObj.tat = capData.tat;
             capbilitiesObj.aircraftModelName = 'Undefined';
-            capbilitiesObj.DashNumber = 'Undefined';
-           // capbilitiesObj.AircraftDashNumberId = capData.selectedDashNumbers;
+            //capbilitiesObj.DashNumber = 'Undefined';
+            capbilitiesObj.AircraftDashNumberId = capData.selectedDashNumbers;
             console.log(capData.selectedDashNumbers2);
 
             if(capData.selectedModel.length==0){
