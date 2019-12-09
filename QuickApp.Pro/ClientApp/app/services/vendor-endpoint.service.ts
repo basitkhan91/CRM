@@ -165,7 +165,10 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _getVendorDocumentAttachmentslist: string = "/api/FileUpload/getattachmentdetails";
 	private readonly _getVendorDeleteDocsDetailsById: string = "/api/Vendor/vendorDocumentDelete";
 	
-	
+    private readonly _getVendorShippingHistory: string = "/api/Vendor/getVendorShippingHistory";
+    private readonly _getVendorBillingHistory: string = "/api/Vendor/getVendorBillingHistory";
+    
+
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
 	get vendorlistsUrl() { return this.configurations.baseUrl + this._vendrUrl; }
 	get vendorBasicListUrl(){return this.configurations.baseUrl+ this._vendorLiteUrl}
@@ -223,8 +226,10 @@ export class VendorEndpointService extends EndpointFactory {
 	get capesdata() { return this.configurations.baseUrl + this._capesdata; }
 
 	get paginate() { return this.configurations.baseUrl + this.getVendor; }
-	get roListWithFiltersUrl() { return this.configurations.baseUrl + this._roListWithFiltersUrl; }
+    get roListWithFiltersUrl() { return this.configurations.baseUrl + this._roListWithFiltersUrl; }
+   
 
+    
 
 	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -1560,5 +1565,12 @@ GetUploadDocumentsList(attachmentId, vendorId,moduleId) {
 getdeleteDocumentListbyId(vendorDocumentId) {
 	return this.http.delete(`${this._getVendorDeleteDocsDetailsById}/${vendorDocumentId}`, this.getRequestHeaders())
 }
+    getVendorShippingAuditHistory(vendorId, vendorShippingAddressId) {
+        return this.http.get<any>(`${this._getVendorShippingHistory}?vendorId=${vendorId}&vendorShippingAddressId=${vendorShippingAddressId}`, this.getRequestHeaders())
+    }
 
+    getVendorBillingAuditHistory(vendorId, vendorBillingaddressId) {
+        return this.http.get<any>(`${this._getVendorBillingHistory}?vendorId=${vendorId}&vendorBillingaddressId=${vendorBillingaddressId}`, this.getRequestHeaders())
+    }
+    
 }
