@@ -873,8 +873,8 @@ namespace DAL.Repositories
                                                       mana,
                                                       totalRecords
                                                   }).Skip(skip)
-                             .Take(take)
-                             .ToList();
+                                                     .Take(take)
+                                                     .ToList();
                 return result;
             }
             catch (Exception ex)

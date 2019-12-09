@@ -106,14 +106,6 @@ export class StocklineEndpoint extends EndpointFactory {
 				return this.handleError(error, () => this.getStockLineEndpointList(data));
             });
   }
-	getStockLineEndpoint<T>(): Observable<T> {
-
-		return this.http.get<T>(this.actionsUrl, this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getStockLineEndpoint());
-			});
-	}
-
 	
 	getStockLineEndpoint<T>(): Observable<T> {
 
