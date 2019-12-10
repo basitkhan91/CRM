@@ -930,6 +930,26 @@ namespace DAL.Repositories
                 throw ex;
             }
         }
+        public IEnumerable<object> GetVendorCapabilityAudit(long VendorCapabilityId, long AuditVendorCapabilityId)
+        {
+            try
+            {
+                var list = (from vba in _appContext.VendorCapabiliyAudit
+                            where vba.VendorCapabilityId == VendorCapabilityId && vba.VendorCapabiliyAuditId == AuditVendorCapabilityId
+                            select new
+                            {
+                                
+                               vba,
+                               vba.VendorCapabiliyAuditId
+                            }).OrderByDescending(p => p.VendorCapabiliyAuditId).ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
     }
 }

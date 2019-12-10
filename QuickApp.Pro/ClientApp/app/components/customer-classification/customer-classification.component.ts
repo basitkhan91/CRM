@@ -40,6 +40,8 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
     /** CustomerClassification ctor */
     selectedActionName: any;
     disableSave: boolean;
+    descritpion: string = "";
+    customerClassificationId: number =0;
     actionamecolle: any[] = [];
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -191,6 +193,8 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
         //this.loadMasterCompanies();
         this.sourceAction = row;
         this.memo = row.memo;
+        this.descritpion = row.description;
+        this.customerClassificationId = row.customerClassificationId;
         this.isActive = row.isActive;
         //this.classificationName = this.sourceAction.description;
         //this.loadMasterCompanies();
@@ -309,6 +313,8 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
 
 
     editItemAndCloseModel() {
+        
+      
         this.isSaving = true;
         const data = {
             ...this.sourceAction,
@@ -326,6 +332,9 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
                 error => this.saveFailedHelper(error));
         }
         else {
+            
+            data.description = this.sourceAction;
+            data.customerClassificationId = this.customerClassificationId;
             this.CustomerClassificationService.updatecustomerclass(data).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
