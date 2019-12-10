@@ -71,7 +71,7 @@
                                                     <i class=" fa fa-chevron-down"></i>
                                                 </a>
                                             </span>
-                                            <span (click)="editStockLine(rowData)">
+                                            <span *ngIf="rowData.statusId == 3"  (click)="editStockLine(rowData)">
                                                 <a data-toggle="tooltip" pTooltip="Edit Received Parts" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="" edit="">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
