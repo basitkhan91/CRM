@@ -464,8 +464,10 @@ namespace DAL
         public DbSet<WorkOrderQuoteLaborHeader> WorkOrderQuoteLaborHeader { get; set; }
         public DbSet<WorkOrderQuoteMaterial> WorkOrderQuoteMaterial { get; set; }
         public DbSet<WorkOrderQuoteDetails> WorkOrderQuoteDetails { get; set; }
+        public DbSet<WorkOrderBillingInvoicing> WorkOrderBillingInvoicing { get; set; }
+        public DbSet<InvoiceType> InvoiceType { get; set; }
 
-
+        
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
