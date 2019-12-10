@@ -744,6 +744,10 @@ export class VendorService {
     getVendorContactAuditHistory(vendorId, vendorContactId) {
         return this.actionEndpoint.getVendorContactAuditHistory(vendorId, vendorContactId);
     }
+
+    getVendorDocumentAuditHistory(id) {
+        return this.actionEndpoint.getVendorDocumentAuditHistory(id);
+    }
       
 }
 
