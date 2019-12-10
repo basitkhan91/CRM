@@ -652,7 +652,7 @@ export class SingleComponent {
 			else if (this.currentUrl == '/singlepages/singlepages/app-vendor-classification') {
 				this.items = [
 					{ label: 'Single Screens' },
-					{ label: 'VendorClassification' }
+					{ label: 'Vendor Classification' }
 				];
 			}
 
