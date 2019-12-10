@@ -46,6 +46,7 @@ export class VendorContactsComponent implements OnInit {
     vendorCode: any = "";
     vendorname: any = "";
     allgeneralInfo: any[];
+    contactauditHisory: any[];
     collection: any;
     action_name: any = "";
     memo: any = "";
@@ -369,15 +370,43 @@ export class VendorContactsComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
 
+    //openHist(content, row) {
+    //    this.alertService.startLoadingMessage();
+    //    this.loadingIndicator = true;
+    //    this.sourceVendor = row;
+    //    this.isSaving = true;
+    //    this.workFlowtService.historyAcion(this.sourceVendor.contactId).subscribe(
+    //        results => this.onHistoryLoadSuccessful(results[0], content),
+    //        error => this.saveFailedHelper(error));
+    //}
     openHist(content, row) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.sourceVendor = row;
         this.isSaving = true;
-        this.workFlowtService.historyAcion(this.sourceVendor.contactId).subscribe(
-            results => this.onHistoryLoadSuccessful(results[0], content),
+        this.workFlowtService.getVendorContactAuditHistory(this.sourceVendor.vendorId, this.sourceVendor.contactId).subscribe(
+            results => this.onAuditHistoryLoadSuccessful(results, content),
             error => this.saveFailedHelper(error));
+
+
+
     }
+    private onAuditHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+
+        this.contactauditHisory = auditHistory;
+
+        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+
+
+
+
 
     onBlurMethod(data) {
         if (data == 'firstName') {

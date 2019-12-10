@@ -99,7 +99,7 @@ namespace DAL.Repositories
         {
             var data = (from c in _appContext.Contact
                         join vc in _appContext.VendorContactAudit on c.ContactId equals vc.ContactId
-                        where vc.VendorId == vendorId && vc.VendorContactId== vendorContactId
+                        where vc.VendorId == vendorId && vc.ContactId== vendorContactId
                         select new
                         {
                             c.ContactId,
