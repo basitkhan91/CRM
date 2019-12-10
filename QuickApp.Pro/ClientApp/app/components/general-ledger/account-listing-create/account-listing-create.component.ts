@@ -48,7 +48,7 @@ export class AccountListingCreateComponent implements OnInit {
     isEditMode: boolean;
     isSaving: boolean;
     isDeleteMode: boolean;
-    display: boolean = false; 
+    display: boolean = false;
     accountListCreateForm: FormGroup;
     accountId:any;
     editMode = false;
@@ -56,7 +56,7 @@ export class AccountListingCreateComponent implements OnInit {
     leafNodeNameObj:any[];
     entitiesObj:any[];
     accountTitle = "Create GL Accounts";
-    selectedBalanceType = [];    
+    selectedBalanceType = [];
     submittedForm = false;
     glAccountObj:any = {}
     ledgerNameObject: any[];
@@ -71,21 +71,21 @@ export class AccountListingCreateComponent implements OnInit {
 
     balanceTypeCheckBox = [{
         name: 'Actual',
-        value: true        
+        value: true
       }, {
         name: 'Budget',
-       value: false  
+       value: false
       }, {
         name: 'Forecast',
-        value: false  
+        value: false
     }];
 
-    constructor(private route: ActivatedRoute, 
+    constructor(private route: ActivatedRoute,
         private accountListingService: AccountListingService,
         private formBuilder: FormBuilder, private legalEntityservice: LegalEntityService, private modalService: NgbModal, private poroCategoryService: POROCategoryService, private nodeSetupService: NodeSetupService, private router: Router, private authService: AuthService, private glcashFlowClassifcationService: GlCashFlowClassificationService, private alertService: AlertService, private glAccountService: GlAccountService, private currencyService: CurrencyService, public glAccountClassService: GLAccountClassService) {
         if (this.glAccountService.glAccountEditCollection) {
             this.currentGLAccount = this.glAccountService.glAccountEditCollection;
-        }      
+        }
     }
 
     get userName(): string {
@@ -95,7 +95,7 @@ export class AccountListingCreateComponent implements OnInit {
     ngOnInit(): void {
         this.glAccountObj.isActiveFlag = true;
         this.route.paramMap.subscribe(params => {
-           
+
              this.accountId = params.get("id")
              if(this.accountId){
                 this.editMode = true
@@ -125,8 +125,8 @@ export class AccountListingCreateComponent implements OnInit {
 
         let current_datetime = new Date()
         let formatted_date = (current_datetime.getMonth() + 1) + "/" + current_datetime.getDate() +  "/" + current_datetime.getFullYear()
-   
-        
+
+
         this.accountListCreateForm = this.formBuilder.group({
             ledgerName: ['', Validators.required],
             oldAccountCode: '',
@@ -136,7 +136,7 @@ export class AccountListingCreateComponent implements OnInit {
             accountDescription: '',
             active: [true, Validators.required],
             leafNodeName: '',
-            interCompany: false,           
+            interCompany: false,
             category: null,
             entities: ['', Validators.required],
             allowManualJE: true,
@@ -155,7 +155,7 @@ export class AccountListingCreateComponent implements OnInit {
     get formdata() { return this.accountListCreateForm.controls; }
 
     onSubmitAccountForm(){
-        
+
         console.log('accountListCreateForm values :', this.accountListCreateForm.value)
          this.submittedForm = true;
 
@@ -169,7 +169,7 @@ export class AccountListingCreateComponent implements OnInit {
           ...this.accountListCreateForm.value,
           BalanceTypeActual: this.accountListCreateForm.value.balanceTypeCheckBox[0],
           BalanceTypeBudget: this.accountListCreateForm.value.balanceTypeCheckBox[1],
-          BalanceTypeForecast: this.accountListCreateForm.value.balanceTypeCheckBox[2]          
+          BalanceTypeForecast: this.accountListCreateForm.value.balanceTypeCheckBox[2]
         }
         this.submittedValue = formValue;
 
@@ -185,12 +185,12 @@ export class AccountListingCreateComponent implements OnInit {
                this.alertService.showMessage('GLAccount added successfully.');
                this.router.navigateByUrl('/generalledgermodule/generalledgerpage/app-account-listing');
             })
-        }    
+        }
     }
 
     loadLedgerNames(event){
-      
-        this.ledgerNameObject = [...this.ledgerNameObject.filter(x => {           
+
+        this.ledgerNameObject = [...this.ledgerNameObject.filter(x => {
             return x.name.toLowerCase().includes(event.query.toLowerCase())
         })]
     }
@@ -206,14 +206,14 @@ export class AccountListingCreateComponent implements OnInit {
         }
 
     }
-   
+
     selectedLedgerName() {
         this.ischeckLedgerNameExists = true;
     }
 
      loadAccountCode(event){
-       
-        this.accountCodeObject = [...this.accountCodeObject.filter(x => {           
+
+        this.accountCodeObject = [...this.accountCodeObject.filter(x => {
             return x.name.toLowerCase().includes(event.query.toLowerCase())
         })]
     }
@@ -229,14 +229,14 @@ export class AccountListingCreateComponent implements OnInit {
         }
 
     }
-   
+
     selectedAccountCode() {
         this.isAccountCodeExists = true;
     }
 
     loadAccountName(event){
 
-        this.accountNameObject = [...this.accountNameObject.filter(x => {           
+        this.accountNameObject = [...this.accountNameObject.filter(x => {
             return x.name.toLowerCase().includes(event.query.toLowerCase())
         })]
     }
@@ -252,15 +252,15 @@ export class AccountListingCreateComponent implements OnInit {
         }
 
     }
-   
+
     selectedAccountName() {
         this.isAccountNameExists = true;
     }
 
 
     loadAccountType(event){
-              
-        this.accountTypeObject = [...this.accountTypeObject.filter(x => {           
+
+        this.accountTypeObject = [...this.accountTypeObject.filter(x => {
             return x.name.toLowerCase().includes(event.query.toLowerCase())
         })]
     }
@@ -276,27 +276,27 @@ export class AccountListingCreateComponent implements OnInit {
         }
 
     }
-   
+
     selectedAccountType() {
         this.isAccountTypeExists = true;
     }
 
-    updateAccountData(id): void{        
+    updateAccountData(id): void{
         this.accountListingService.getAll().subscribe(
             datalist=> {
                 let data = datalist.accountList;
-                let obj = {}    
+                let obj = {}
                 const x = data.filter( (o, index) => {
                   if(o.id === 1)
-                     obj = data[index]  
+                     obj = data[index]
                 })
-                
-                if(Object.keys(obj).length > 0){                  
-                    this.accountListCreateForm.valueChanges.subscribe(  
-                       value=> {  
-                          console.log(JSON.stringify(value));  
-                       }  
-                    );  
+
+                if(Object.keys(obj).length > 0){
+                    this.accountListCreateForm.valueChanges.subscribe(
+                       value=> {
+                          console.log(JSON.stringify(value));
+                       }
+                    );
                 }
 
                 this.glAccountObj = {
@@ -307,7 +307,7 @@ export class AccountListingCreateComponent implements OnInit {
                     classificationId: 5,
                     poroCategoryId: 2
                 }
-                
+
                 console.log('obj :', obj)
 
             },
@@ -322,7 +322,7 @@ export class AccountListingCreateComponent implements OnInit {
         )) {
             this.display = true;
         }
-        if (!this.display) { 
+        if (!this.display) {
         this.currentGLAccount.createdBy = this.userName;
         this.currentGLAccount.updatedBy = this.userName;
         if (!this.currentGLAccount.glAccountId) {
@@ -353,11 +353,11 @@ export class AccountListingCreateComponent implements OnInit {
         })
     }
     private loadPOCategory() {
-    
+
         let poroCategoryList = [];
         this.poroCategoryService.getAll().subscribe(poroCategory => {
             this.poroCategoryList = poroCategory[0];
-            
+
         })
     }
     private loadcurrencyData() {
@@ -367,7 +367,7 @@ export class AccountListingCreateComponent implements OnInit {
     }
 
     private loadGLAccountTypeData() {
-        this.glAccountClassService.getWorkFlows().subscribe(Glaccountdata => {
+        this.glAccountClassService.getGlAccountClassList().subscribe(Glaccountdata => {
             this.allGLAccountClassInfo = Glaccountdata[0]['columnData'];
             console.log('loadGLAccountTypeData :', Glaccountdata)
             let accountTypeObj = {}
@@ -395,11 +395,11 @@ export class AccountListingCreateComponent implements OnInit {
             datalist=> {
 
                 console.log('datalist :', JSON.stringify(datalist))
-                 let accountNameObj = {}   
-                 let accountCodeObj = {}   
+                 let accountNameObj = {}
+                 let accountCodeObj = {}
 
-                 let accountNameCollection = [] 
-                 let accountCodeCollection = [] 
+                 let accountNameCollection = []
+                 let accountCodeCollection = []
 
                 const x = datalist.filter( (o, index) => {
                   accountNameObj = {
@@ -425,8 +425,8 @@ export class AccountListingCreateComponent implements OnInit {
          this.accountListingService.getLedgerData().subscribe(
             datalist=> {
                 console.log('getLedgerData :', JSON.stringify(datalist))
-                 let obj = {}   
-                 let collection = [] 
+                 let obj = {}
+                 let collection = []
                 const x = datalist.filter( (o, index) => {
                   obj = {
                     id: datalist[index]['ledgerName'],
@@ -442,8 +442,8 @@ export class AccountListingCreateComponent implements OnInit {
          this.accountListingService.getLeafNodeData().subscribe(
             datalist=> {
                 console.log('getLeafNodeData :', JSON.stringify(datalist))
-                 let obj = {}   
-                 let collection = [] 
+                 let obj = {}
+                 let collection = []
                 const x = datalist.filter( (o, index) => {
                   obj = {
                     label: datalist[index]['nodeName'],
@@ -460,8 +460,8 @@ export class AccountListingCreateComponent implements OnInit {
             this.companyList = entitydata[0];
             console.log('entitydata :', entitydata)
 
-            let entityObj = {}   
-            let entityCollection = [] 
+            let entityObj = {}
+            let entityCollection = []
             const x = this.companyList.filter( (o, index) => {
               entityObj = {
                 label: this.companyList[index]['name'],
@@ -480,9 +480,9 @@ export class AccountListingCreateComponent implements OnInit {
             this.miscData = miscData[0];
             console.log('misc :', miscData)
         });
-    } 
+    }
 
-   
+
     resetAssetStatus(): void {
         this.updateMode = false;
         this.currentGLAccount = new GlAccount();
@@ -536,7 +536,7 @@ export class AccountListingCreateComponent implements OnInit {
     onCheckboxChagen(event, value) {
         if (event.checked) {
           this.selectedBalanceType.push(value);
-        } 
+        }
 
         if (!event.checked) {
           let index = this.selectedBalanceType.indexOf(value);
