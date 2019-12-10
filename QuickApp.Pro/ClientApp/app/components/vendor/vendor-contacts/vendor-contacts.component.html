@@ -91,7 +91,7 @@
                                             <mat-icon color="warn">delete</mat-icon>
                                         </button>
 
-                                        <button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
+                                        <button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentAuditHist,rowData)">
                                             <mat-icon color="green">history</mat-icon>
                                         </button>
 
@@ -128,7 +128,7 @@
 </ng-template>
 
 
-<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
+<!--<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
     <div class="modal-header">
 
         <h4 class="modal-title">History of Action</h4>
@@ -165,8 +165,49 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
     </div>
-</ng-template>
+</ng-template>-->
 
+<ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto">
+    <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
+    <div class="modal-header">
+
+        <h4 class="modal-title">History of Contact Information</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+
+    </div>
+    <div class="modal-body">
+
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Memo</th>
+                        <th>Updated By</th>
+                        <th>Last Updated Time</th>
+                        <th>Created By</th>
+                        <th>Created Time</th>
+
+                    </tr>
+                </thead>
+                <tr *ngFor="let audit of contactauditHisory">
+                    <td>{{audit.siteName}}</td>
+                    <td>{{audit.updatedBy}}</td>
+                    <td>{{audit.updatedDate}}</td>
+                    <!--<td>{{audit.field == 'createdDate'?  (rowData[audit.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[audit.field] && audit.field == 'updatedDate'?  (rowData[audit.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[audit.field]}}</td>-->
+                    <td>{{audit.createdBy}}</td>
+                    <td>{{audit.createdDate}}</td>
+
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+    </div>
+</ng-template>
 
 <ng-template #view class="modal fade " id="view" role="dialog">
 
