@@ -43,6 +43,7 @@ export class ItemMasterCapabilitiesModel {
     ataSubchapterLabel:any;
     cmmLabel:any;
     integrateWithLabel:any;
+    capabilityTypeName:any;
 
     public constructor(init?: Partial<ItemMasterCapabilitiesModel>) {
         Object.assign(this, init);

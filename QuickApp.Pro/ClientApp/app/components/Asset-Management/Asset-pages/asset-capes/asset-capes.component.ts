@@ -18,6 +18,7 @@ import { Router } from '@angular/router';
 import { AssetService } from '../../../../services/asset/Assetservice';
 import { DashNumberService } from '../../../../services/dash-number/dash-number.service';
 import { AircraftModel } from "../../../../models/aircraft-model.model";
+import { CommonService } from '../../../../services/common.service';
 
 @Component({
     selector: 'app-asset-capes',
@@ -81,9 +82,10 @@ export class AssetCapesComponent implements OnInit {
     isSaving: boolean;
     currentCapes: any = {};
     search_AircraftDashNumberList: any;
+    capabilityTypeData:any[];
 
     constructor(private modalService: NgbModal, private alertService: AlertService, public itemMasterService: ItemMasterService, private route: Router,
-        private assetServices: AssetService, private dashnumberservices: DashNumberService, private formBuilder: FormBuilder) {
+        private assetServices: AssetService, private dashnumberservices: DashNumberService, private formBuilder: FormBuilder,private commonservice: CommonService) {
 
         if (this.assetServices.listCollection != null && this.assetServices.isEditMode == true) {
 
@@ -111,11 +113,11 @@ export class AssetCapesComponent implements OnInit {
     }
 
     capabilityForm: any ={
-        selectedCap:{},CapabilityTypeId: 0, selectedPartId: [], selectedAircraftDataModels: [],
+        selectedCap:"",CapabilityTypeId: 0, selectedPartId: [], selectedAircraftDataModels: [],
         selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: [],selectedDashNumbers2: []
     };
 
-    capabilityTypeData: any = [{
+  /*  capabilityTypeData: any = [{
         CapabilityTypeId: 1, Description: 'Manufacturing', formArrayName: 'mfgForm', selectedPartId: [], selectedAircraftDataModels: [],
         selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
     },
@@ -138,7 +140,7 @@ export class AssetCapesComponent implements OnInit {
     {
         CapabilityTypeId: 6, Description: 'Exchange', formArrayName: 'exchangeForm', selectedPartId: [], selectedAircraftDataModels: [],
         selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
-    }];
+    }];*/
 
     ngOnInit(): void {
         this.capabilitiesForm = this.formBuilder.group({
@@ -149,9 +151,9 @@ export class AssetCapesComponent implements OnInit {
             repairForm: this.formBuilder.array([]),
             exchangeForm: this.formBuilder.array([])
         });
-        this.capabilityTypeData.forEach(element => {
+       /* this.capabilityTypeData.forEach(element => {
             this.resetFormArray(element);
-        });
+        });*/
 
         this.getAssetsList(); //calling for getting Asset List Data
         this.ptnumberlistdata();
@@ -159,6 +161,14 @@ export class AssetCapesComponent implements OnInit {
         this.loadCapesData();
         this.manufacturerdata();
         this.getAllDashNumbers();
+        this.getCapabilityTypeData();
+    }
+
+    getCapabilityTypeData() {
+        this.commonservice.smartDropDownList('CapabilityType', 'CapabilityTypeId', 'Description').subscribe(res => {
+            this.capabilityTypeData = res;
+
+        })
     }
 
     private ptnumberlistdata() {
@@ -271,9 +281,16 @@ export class AssetCapesComponent implements OnInit {
 
 
     }
-    selectCap(cap) {
-        this.capabilityForm.selectedCap = cap;
+    onCapabilityTypeSelection(event) {
+        if (this.capabilityTypeData) {
+            for (let i = 0; i < this.capabilityTypeData.length; i++) {
+                if (event == this.capabilityTypeData[i].value) {
+                   this.capabilityForm.selectedCap = this.capabilityTypeData[i].label;
+                }
+            }
+        }
     }
+    
     partnmId(event) {
         //
         if (this.itemclaColl) {
@@ -781,7 +798,7 @@ export class AssetCapesComponent implements OnInit {
 
 
     addModels(capData) {
-        this.capabilityTypeData.for
+        //this.capabilityTypeData.for
         let capbilitiesObj = new ItemMasterCapabilitiesModel;
       // let selectedCap = capData.selectedCap;
         // this.resetFormArray(capData);
@@ -790,7 +807,7 @@ export class AssetCapesComponent implements OnInit {
             capbilitiesObj.aircraftTypeId = element1.value;
             capbilitiesObj.aircraftTypeName = element1.label;
             capbilitiesObj.capabilityTypeId = capData.CapabilityTypeId;
-           // capbilitiesObj.capabilityTypeName = capData.selectedCap;
+            capbilitiesObj.capabilityTypeName = capData.selectedCap;
             capbilitiesObj.aircraftManufacturer = element1.label;
             capbilitiesObj.PartId = capData.selectedPartId;
             capbilitiesObj.itemMasterId = this.itemMasterId;
@@ -798,7 +815,7 @@ export class AssetCapesComponent implements OnInit {
             capbilitiesObj.aircraftModelName = 'Undefined';
             capbilitiesObj.DashNumber = 'Undefined';
            // capbilitiesObj.AircraftDashNumberId = capData.selectedDashNumbers;
-            console.log(capData.selectedDashNumbers2);
+            console.log(capData);
 
             if(capData.selectedModel.length==0){
                 let mfObj = this.formBuilder.group(capbilitiesObj);
@@ -1082,6 +1099,7 @@ export class AssetCapesComponent implements OnInit {
         this.assetServices.indexObj.next(this.activeIndex);
         this.assetServices.isEditMode = true;
         this.isSaving = true;
-        this.route.navigateByUrl('/assetmodule/assetpages/app-create-asset');
+        const { assetId } = this.local;
+        this.route.navigateByUrl(`/assetmodule/assetpages/app-edit-asset/${assetId}`);
     }
 }
