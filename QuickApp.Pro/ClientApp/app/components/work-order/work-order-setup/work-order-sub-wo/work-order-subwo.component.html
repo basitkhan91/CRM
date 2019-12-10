@@ -205,11 +205,12 @@
     </div>
   </div>
 
-  <div *ngIf="subWorkOrderGeneralInformation">
+  <div *ngIf="subWorkOrderGeneralInformation && subWorkOrderId && workOrderId">
     <app-work-order-smart
       [isSubWorkOrder]="issubWorkOrderState"
       [paramsData]="workOrderDetails"
       [showTabsGrid]="showTabsGrid"
+      [subWorkOrderId]="subWorkOrderId"
     ></app-work-order-smart>
   </div>
 </div>
