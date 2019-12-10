@@ -430,13 +430,16 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
         this.sourceStockLineSetup.partDescription = allWorkFlows[0].partDescription; //Passing Part Description based on Change Part
         this.sourceStockLineSetup.shelfLife = allWorkFlows[0].t.shelfLife;
         this.sourceStockLineSetup.isSerialized = allWorkFlows[0].isSerialized;
-        this.sourceStockLineSetup.ITARNumber = allWorkFlows[0].t.ITARNumber;
+		this.sourceStockLineSetup.ITARNumber = allWorkFlows[0].t.itarNumber;
+		this.sourceStockLineSetup.nationalStockNumber = allWorkFlows[0].t.nationalStockNumber;
+		this.sourceStockLineSetup.ExportECCN = allWorkFlows[0].t.exportECCN;
+		this.sourceStockLineSetup.NHA = allWorkFlows[0].t.nha;
         this.sourceStockLineSetup.tagDate = allWorkFlows[0].t.TagDate;
-        this.sourceStockLineSetup.openDate = allWorkFlows[0].t.OpenDate;
-        this.sourceStockLineSetup.tagDays = allWorkFlows[0].t.TagDays;
-        this.sourceStockLineSetup.manufacturingDays = allWorkFlows[0].t.ManufacturingDays
-        this.sourceStockLineSetup.daysReceived = allWorkFlows[0].t.DaysReceived
-        this.sourceStockLineSetup.openDays = allWorkFlows[0].t.OpenDays;
+        this.sourceStockLineSetup.openDate = allWorkFlows[0].t.openDate;
+        this.sourceStockLineSetup.tagDays = allWorkFlows[0].t.tagDays;
+        this.sourceStockLineSetup.manufacturingDays = allWorkFlows[0].t.manufacturingDays
+		this.sourceStockLineSetup.daysReceived = allWorkFlows[0].t.daysReceived
+		this.sourceStockLineSetup.openDays = allWorkFlows[0].t.openDays
         this.sourceStockLineSetup.IsManufacturingDateAvailable = allWorkFlows[0].t.IsManufacturingDateAvailable;
 
 		if (this.sourceStockLineSetup.isSerialized == true) {

@@ -274,7 +274,7 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
             this.sourceStockLineSetup.accident = this.sourceStockLine.accident;
             this.sourceStockLineSetup.accidentReason = this.sourceStockLine.accidentReason;
             this.sourceStockLineSetup.engineSerialNumber = this.sourceStockLine.engineSerialNumber;
-            this.sourceStockLineSetup.aircraftTailNumber = this.sourceStockLineSetup.aircraftTailNumber;
+			this.sourceStockLineSetup.aircraftTailNumber = this.sourceStockLine.aircraftTailNumber;
             this.sourceStockLineSetup.quantityOnHand = this.sourceStockLine.quantityOnHand
             this.sourceStockLineSetup.quantityReserved = this.sourceStockLine.quantityReserved
             this.sourceStockLineSetup.quantityIssued = this.sourceStockLine.quantityIssued
