@@ -14141,6 +14141,15 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     width: 100px !important;
     float: none !important;
 }
+.popup-plusicon-cstm-caps {
+    width: 100% !important;
+    float: none !important;
+}
+.pop-up-caps-autocomplete p-autocomplete .ui-autocomplete {
+    display: flex;
+    min-width: 100px;
+    padding: 0;
+}
 .popup-plusicon-cstm a i {
     padding: 0 !important;
 }
