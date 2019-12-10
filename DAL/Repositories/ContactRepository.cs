@@ -50,7 +50,6 @@ namespace DAL.Repositories
                            c.WorkPhoneExtn,
                            vc.IsDefaultContact,
                            FullContactNo = string.Concat(c.WorkPhone, " - ", c.WorkPhoneExtn),
-
                         }).ToList();
             return data;
             //return _appContext.Contact.Include("MasterCompany").OrderByDescending(c => c.ContactId).ToList();
@@ -89,7 +88,6 @@ namespace DAL.Repositories
                             c.UpdatedDate,
                             c.WorkPhoneExtn,
                             FullContactNo = string.Concat(c.WorkPhone, " - ", c.WorkPhoneExtn),
-
                         }).ToList();
             return data;
             //return _appContext.Contact.Include("MasterCompany").OrderByDescending(c => c.ContactId).ToList();
