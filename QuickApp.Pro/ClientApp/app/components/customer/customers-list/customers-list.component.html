@@ -39,7 +39,7 @@
                 />
               </ng-template> -->
             <ng-template pTemplate="caption">
-                <div style="text-align: right;margin-left:-6px !important;">
+                <div style="text-align: right;margin-left:-6px !important; min-height: 30px;">
                     <p-multiSelect [maxSelectedLabels]="2"
                                    [options]="headers"
                                    optionLabel="header"
@@ -78,7 +78,7 @@
                             label="Export Selection Only"
                             style="left:-10px;"
                             (click)="dt.exportCSV({ selectionOnly: true })"></button>
-                    <div class="excel-upload  excel-upload-cstm">
+                    <!-- <div class="excel-upload  excel-upload-cstm">
                         <input type="file"
                                name="upload[]"
                                id="upload"
@@ -91,7 +91,7 @@
                                 <i class="fa fa-upload"></i>
                             </span>
                         </label>
-                    </div>
+                    </div> -->
                 </div>
             </ng-template>
 

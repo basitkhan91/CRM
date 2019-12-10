@@ -44,7 +44,7 @@ export class EmployeesListComponent implements OnInit {
     //viewempDetails: any = {};
     viewTraining: any = {};
     viewGeneralDetails: any = {};
-    allEmployeelist: any[] = [];
+    allEmployeelist: any;
     public originationCounty: any;
     public nationalCountry: any;
     public companyCode: any;
