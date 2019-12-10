@@ -557,7 +557,7 @@
                                                 <div class="card">
                                                     <div class="card-body">
                                                         <div>
-                                                        <div class="table-responsive default-bg clear">
+                                                        <div class="table-responsive default-bg clear" *ngIf="allEmployeelist.employeeLicensure">
                                                             <div class="col-sm-4">
                                                                 <p><span class="label"><b>Certification #: </b></span><span class="value">{{allEmployeelist.employeeLicensure?.licenseNumber}}</span></p>
                                                                 <p><span class="label"><b>Certification In Force? </b></span><span class="value">{{allEmployeelist.employeeLicensure?.isLicenseInForce}}</span></p>
@@ -585,7 +585,7 @@
                                                 <div class="card">
                                                     <div class="card-body">
                                                         <div>
-                                                        <div class="table-responsive default-bg clear">
+                                                        <div class="table-responsive default-bg clear" *ngIf="allEmployeelist.employeeTraining">
                                                             <div class="col-sm-4">
                                                                 <p><span class="label"><b>Aircraft Model: </b></span><span class="value">{{allEmployeelist.employeeTraining?.aircraftModelId}}</span></p>
                                                                 <p><span class="label"><b>Training Type: </b></span><span class="value">{{empTrainningInfo}}</span></p> 
