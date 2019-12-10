@@ -413,9 +413,25 @@ namespace QuickApp.Pro.Controllers
 
         private void setPurchaseOrderStatus(long purchaseOrderId)
         {
+            var filteredParts = new List<PurchaseOrderPart>();
+
             var parts = unitOfWork.Repository<PurchaseOrderPart>().Find(x => x.PurchaseOrderId == purchaseOrderId);
-            var isPOReceived = true;
+
             foreach (var part in parts)
+            {
+                if (parts.Count(x => x.ItemMasterId == part.ItemMasterId) > 1)
+                {
+                    var splitParts = unitOfWork.Repository<PurchaseOrderPart>().Find(x => x.isParent == false && x.ItemMasterId == part.ItemMasterId);
+                    if (!filteredParts.Any(x => x.ItemMasterId == part.ItemMasterId))
+                        filteredParts.AddRange(splitParts);
+                }
+                else {
+                    filteredParts.Add(part);
+                }
+            }
+
+            var isPOReceived = true;
+            foreach (var part in filteredParts)
             {
                 part.StockLine = unitOfWork.Repository<StockLine>().Find(x => x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId).ToList();
                 if (part.QuantityOrdered != (short?)(part.StockLine.Sum(x => x.Quantity)))
