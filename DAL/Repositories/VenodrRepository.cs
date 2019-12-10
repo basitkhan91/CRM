@@ -918,5 +918,18 @@ namespace DAL.Repositories
           
         }
 
+        public List<VendorDocumentDetailsAudit> GetVendorDocumentDetailsAudit(long id)
+        {
+            try
+            {
+                return _appContext.VendorDocumentDetailsAudit.Where(p => p.IsActive == true && p.VendorDocumentDetailId == id).ToList();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }
