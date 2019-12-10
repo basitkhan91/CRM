@@ -110,7 +110,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
     }
     
     capabilityForm: any ={
-        selectedCap:{},CapabilityTypeId: 0,companyId: 0,buId: 0,divisionId: 0,departmentId:0,manufacturerId:0,manufacturerLabel:'',ataChapterId:0,ataChapterLabel:'',atasubchapterId:0,ataSubchapterLabel:'',cmmId:0,cmmLabel:'',integrateWith:0,integrateWithLabel:'',description:'',entryDate:'',isVerified:false,managementStructureId:0,verifiedBy:'',dateVerified:'',nteHrs:0,tat:0, selectedPartId: [], selectedAircraftDataModels: [],
+        selectedCap:'',CapabilityTypeId: 0,companyId: 0,buId: 0,divisionId: 0,departmentId:0,manufacturerId:0,manufacturerLabel:'',ataChapterId:0,ataChapterLabel:'',atasubchapterId:0,ataSubchapterLabel:'',cmmId:0,cmmLabel:'',integrateWith:0,integrateWithLabel:'',description:'',entryDate:'',isVerified:false,managementStructureId:0,verifiedBy:'',dateVerified:'',nteHrs:0,tat:0, selectedPartId: [], selectedAircraftDataModels: [],
         selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: [], selectedDashNumbers2:[]
     };
 
@@ -612,6 +612,15 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
             }
         }
     }
+    onCapabilityTypeSelection(event) {
+        if (this.capabilityTypeData) {
+            for (let i = 0; i < this.capabilityTypeData.length; i++) {
+                if (event == this.capabilityTypeData[i].value) {
+                   this.capabilityForm.selectedCap = this.capabilityTypeData[i].label;
+                }
+            }
+        }
+    }
     onPartIdselection(event) {
         if (this.itemclaColl) {
 
@@ -927,7 +936,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
             capbilitiesObj.aircraftTypeId = element1.value;
             capbilitiesObj.aircraftTypeName = element1.label;
             capbilitiesObj.capabilityTypeId = capData.CapabilityTypeId;
-           // capbilitiesObj.capabilityTypeName = capData.selectedCap;
+            capbilitiesObj.capabilityTypeName = capData.selectedCap;
             capbilitiesObj.aircraftManufacturer = element1.label;
             capbilitiesObj.PartId = capData.selectedPartId;
             capbilitiesObj.itemMasterId = this.itemMasterId;
@@ -952,7 +961,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
                    capbilitiesObj.nteHrs = capData.nteHrs;
                     capbilitiesObj.tat = capData.tat;
             capbilitiesObj.aircraftModelName = 'Undefined';
-            //capbilitiesObj.DashNumber = 'Undefined';
+            capbilitiesObj.DashNumber = 'Undefined';
             capbilitiesObj.AircraftDashNumberId = capData.selectedDashNumbers;
             console.log(capData.selectedDashNumbers2);
 
