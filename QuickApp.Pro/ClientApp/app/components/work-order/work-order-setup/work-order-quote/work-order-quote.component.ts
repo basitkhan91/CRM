@@ -6,7 +6,7 @@ import {
   partsDetail
 } from '../../../../models/work-order-quote.modal';
 
-import { WorkOrderService } from '../../../../services/work-order/work-order.service';
+import { WorkOrderQuoteService } from '../../../../services/work-order/work-order-quote.service';
 import { CommonService } from '../../../../services/common.service';
 import { WorkFlowtService } from '../../../../services/workflow.service';
 import {
@@ -59,7 +59,7 @@ export class WorkOrderQuoteComponent implements OnInit {
 
 
 
-  constructor(private router: ActivatedRoute,private workOrderService: WorkOrderService, private commonService: CommonService, private _workflowService: WorkFlowtService, private alertService:AlertService) {}
+  constructor(private router: ActivatedRoute,private workOrderService: WorkOrderQuoteService, private commonService: CommonService, private _workflowService: WorkFlowtService, private alertService:AlertService) {}
   ngOnInit() {
     if(this.quoteForm == undefined){
       this.quoteForm = new WorkOrderQuote();
@@ -306,5 +306,40 @@ export class WorkOrderQuoteComponent implements OnInit {
     this.laborQuotation = [];
     this.chargesQuotation = [];
     this.exclusionsQuotation = [];
+  }
+
+  createMaterialQuote(){
+    this.workOrderService.saveMaterialListQuote(this.materialListQuotation)
+    .subscribe(
+      res => {
+        console.log(res);
+      }
+    )
+  }
+
+  createLaborQuote(){
+    this.workOrderService.saveLaborListQuote(this.laborQuotation)
+    .subscribe(
+      res => {
+        console.log(res);
+      }
+    )
+  }
+
+  createChargeQuote(){
+    this.workOrderService.saveChargesQuote(this.chargesQuotation)
+    .subscribe(
+      res => {
+        console.log(res);
+      }
+    )
+  }
+  createExclusionsQuote(){
+    this.workOrderService.saveExclusionsQuote(this.exclusionsQuotation)
+    .subscribe(
+      res => {
+        console.log(res);
+      }
+    )
   }
 }

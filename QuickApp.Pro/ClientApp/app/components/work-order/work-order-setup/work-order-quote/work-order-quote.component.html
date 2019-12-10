@@ -144,8 +144,8 @@
 
     </div>
     <div class="col-md-12">
-      <button class="btn btn-success pull-right" (click)="saveQuoteDetails()">Save Details</button>
-      <button class="btn btn-success pull-right">Edit Details</button>
+      <button class="btn btn-primary-cstm pull-right" (click)="saveQuoteDetails()">Save Details</button>
+      <button class="btn btn-primary-cstm pull-right">Edit Details</button>
     </div>
   </div>
 </div>
@@ -392,7 +392,14 @@
           <td>{{matQuotation.conditionCodeId}}</td>
           <td>{{matQuotation.isDeferred}}</td>
           <td>{{matQuotation.unitCost}}</td>
+          <td><input [(ngModel)]="matQuotation.totalPartCost" /></td>
+          <td><input [(ngModel)]="matQuotation.markup" /></td>
+          <td><input [(ngModel)]="matQuotation.costPlusAmount" /></td>
+          <td><input [(ngModel)]="matQuotation.fixedAmount" /></td>
         </tr>
+        <div class="col-md-12">
+          <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save Details</button>
+        </div>
       </tbody>
     </table>
 
@@ -425,7 +432,14 @@
           <td>{{matQuotation.condition}}</td>
           <td>{{matQuotation.oem}}</td>
           <td>{{matQuotation.unitCost}}</td>
+          <td><input [(ngModel)]="matQuotation.totalPartCost" /></td>
+          <td><input [(ngModel)]="matQuotation.markup" /></td>
+          <td><input [(ngModel)]="matQuotation.costPlusAmount" /></td>
+          <td><input [(ngModel)]="matQuotation.fixedAmount" /></td>
         </tr>
+        <div class="col-md-12">
+          <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save Details</button>
+        </div>
       </tbody>
     </table>
 
@@ -443,10 +457,6 @@
           <th>UOM</th>
           <th>COND TYPE</th>
           <th>UNIT COST</th>
-          <th>TOTAL PART COST</th>
-          <th>MARKUP</th>
-          <th>COST PLUS AMOUNT</th>
-          <th>FIXED AMOUNT</th>
         </tr>
       </thead>
       <tbody>
@@ -460,6 +470,9 @@
           <td>{{matQuotation.conditionCodeId}}</td>
           <td>{{matQuotation.unitCost}}</td>
         </tr>
+        <div class="col-md-12">
+          <button class="btn btn-primary-cstm pull-right" (click)="createExclusionsQuote()">Save Details</button>
+        </div>
       </tbody>
     </table>
 
@@ -475,10 +488,6 @@
           <th>COND TYPE</th>
           <th>OEM/PMA/DER</th>
           <th>UNIT COST</th>
-          <th>TOTAL PART COST</th>
-          <th>MARKUP</th>
-          <th>COST PLUS AMOUNT</th>
-          <th>FIXED AMOUNT</th>
         </tr>
       </thead>
       <tbody>
@@ -493,6 +502,9 @@
           <td>{{matQuotation.oem}}</td>
           <td>{{matQuotation.unitCost}}</td>
         </tr>
+        <div class="col-md-12">
+          <button class="btn btn-primary-cstm pull-right" (click)="createExclusionsQuote()">Save Details</button>
+        </div>
       </tbody>
     </table>
 
@@ -509,10 +521,6 @@
           <th>Labor Direct Rate</th>
           <th>Labor Overhead Cost</th>
           <th>Overhead Cost</th>
-          <th>TOTAL PART COST</th>
-          <th>MARKUP</th>
-          <th>COST PLUS AMOUNT</th>
-          <th>FIXED AMOUNT</th>
         </tr>
       </thead>
       <tbody>
@@ -525,6 +533,9 @@
           <td>{{matQuotation.laborOverheadCost}}</td>
           <td>{{matQuotation.overheadCost}}</td>
         </tr>
+        <div class="col-md-12">
+          <button class="btn btn-primary-cstm pull-right" (click)="createLaborQuote()">Save Details</button>
+        </div>
       </tbody>
     </table>
 
@@ -538,10 +549,6 @@
             <th>Labor Direct Rate</th>
             <th>Labor Overhead Cost</th>
             <th>Overhead Cost</th>
-            <th>TOTAL PART COST</th>
-            <th>MARKUP</th>
-            <th>COST PLUS AMOUNT</th>
-            <th>FIXED AMOUNT</th>
           </tr>
         </thead>
         <tbody>
@@ -554,6 +561,9 @@
             <td>{{matQuotation.laborOverheadCost}}</td>
             <td>{{matQuotation.overheadCost}}</td>
           </tr>
+          <div class="col-md-12">
+            <button class="btn btn-primary-cstm pull-right" (click)="createLaborQuote()">Save Details</button>
+          </div>
         </tbody>
     </table>
 
@@ -570,10 +580,6 @@
           <th>Extended Price</th>
           <th>Quantity</th>
           <th>Unit Cost</th>
-          <th>TOTAL PART COST</th>
-          <th>MARKUP</th>
-          <th>COST PLUS AMOUNT</th>
-          <th>FIXED AMOUNT</th>
         </tr>
       </thead>
       <tbody>
@@ -586,6 +592,9 @@
           <td>{{matQuotation.quantity}}</td>
           <td>{{matQuotation.unitCost}}</td>
         </tr>
+        <div class="col-md-12">
+          <button class="btn btn-primary-cstm pull-right" (click)="createChargeQuote()">Save Details</button>
+        </div>
       </tbody>
     </table>
 
@@ -599,10 +608,6 @@
             <th>Extended Price</th>
             <th>Quantity</th>
             <th>Unit Cost</th>
-            <th>TOTAL PART COST</th>
-            <th>MARKUP</th>
-            <th>COST PLUS AMOUNT</th>
-            <th>FIXED AMOUNT</th>
           </tr>
         </thead>
         <tbody>
@@ -615,6 +620,9 @@
             <td>{{matQuotation.quantity}}</td>
             <td>{{matQuotation.unitCost}}</td>
           </tr>
+          <div class="col-md-12">
+            <button class="btn btn-primary-cstm pull-right" (click)="createChargeQuote()">Save Details</button>
+          </div>
         </tbody>
     </table>
 
@@ -1055,7 +1063,7 @@
             <div class="col-sm-2 w100 mtop20">
               <p>
                 <span class="col-sm-12">
-                  <button type="button" id="" name="" class="btn btn-success show-pricing-btn">Show Pricing</button>
+                  <button type="button" id="" name="" class="btn btn-primary-cstm show-pricing-btn">Show Pricing</button>
                 </span>
               </p>
             </div>
