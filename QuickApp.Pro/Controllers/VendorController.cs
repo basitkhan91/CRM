@@ -320,6 +320,8 @@ namespace QuickApp.Pro.Controllers
                 var data = (from vc in _context.VendorCapabiliy
                             join v in _context.Vendor on vc.VendorId equals v.VendorId
                             join im in _context.ItemMaster on vc.ItemMasterId equals im.ItemMasterId
+                            join vct in _context.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId
+                            join vcat in _context.capabilityType on vct.CapabilityTypeId equals vcat.CapabilityTypeId
                             //join vct in _appContext.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId
                             //join vcat in _appContext.vendorCapabilityAircraftType on vc.VendorCapabilityId equals vcat.VendorCapabilityId
                             //join vcam in _appContext.vendorCapabiltiyAircraftModel on vc.VendorCapabilityId equals vcam.VendorCapabilityId
@@ -348,7 +350,8 @@ namespace QuickApp.Pro.Controllers
                                 vc.CreatedDate,
                                 vc.UpdatedDate,
                                 vc.capabilityDescription,
-                                vc.IsActive
+                                vc.IsActive,
+                                CapabilityType = vcat.Description
                                 //vct.CapabilityTypeId,
 
                                 //vcat.AircraftTypeId,
@@ -3611,6 +3614,8 @@ namespace QuickApp.Pro.Controllers
                         vendorDocObj.DocName = Request.Form["DocName"];
                         vendorDocObj.DocMemo = Request.Form["DocMemo"];
                         vendorDocObj.DocDescription = Request.Form["DocDescription"];
+                        //vendorDocObj.CreatedDate = DateTime.Now;
+                        vendorDocObj.UpdatedDate = DateTime.Now;
                         if (vendorDocObj.AttachmentId > 0)
                         {
                             vendorDocObj.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
@@ -3637,6 +3642,8 @@ namespace QuickApp.Pro.Controllers
                         objVendorDocumentDetail.DocDescription = Request.Form["DocDescription"];
                         objVendorDocumentDetail.IsActive = true;
                         objVendorDocumentDetail.IsDeleted = false;
+                        objVendorDocumentDetail.CreatedDate = DateTime.Now;
+                        objVendorDocumentDetail.UpdatedDate = DateTime.Now;
                         objVendorDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
                                                                             Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), objVendorDocumentDetail.UpdatedBy, objVendorDocumentDetail.MasterCompanyId);
                         _unitOfWork.VendorDocumentDetails.Add(objVendorDocumentDetail);
@@ -3703,9 +3710,7 @@ namespace QuickApp.Pro.Controllers
             var allvendorsDoc = _unitOfWork.Vendor.GetVendorDocumentDetailById(id);
             return Ok(allvendorsDoc);
 
-        }
-
-
+        }               
 
         [HttpDelete("vendorDocumentDelete/{id}")]
         [Produces(typeof(VendorDocumentDetails))]
@@ -3720,6 +3725,15 @@ namespace QuickApp.Pro.Controllers
             }
 
             return Ok(id);
+        }
+
+        [HttpGet("getVendorDocumentAudit/{id}")]
+        [Produces(typeof(VendorDocumentDetailsAudit))]
+        public IActionResult GetCustomerDocumentDetailAudit(long id)
+        {
+            var allvendorsDoc = _unitOfWork.Vendor.GetVendorDocumentDetailsAudit(id);
+            return Ok(allvendorsDoc);
+
         }
 
 

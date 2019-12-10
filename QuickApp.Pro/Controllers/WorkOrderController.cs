@@ -618,7 +618,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("createquoteexclusions")]
-        public IActionResult CreateWorkOrderQuoteExclusions([FromBody]List<WorkOrderQuoteExclusions> quoteExclusions)
+        public IActionResult CreateWorkOrderQuoteExclusions([FromBody]WorkOrderQuoteDetails quoteExclusions)
         {
             if (ModelState.IsValid)
             {
@@ -637,7 +637,7 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderQuoteExclusions(quoteExclusions);
+                var result = unitOfWork.WorkOrderRepository.UpdateWorkOrderQuoteExclusions(quoteExclusions);
                 return Ok(result);
             }
             else
@@ -1179,8 +1179,6 @@ namespace QuickApp.Pro.Controllers
             var result = unitOfWork.WorkOrderRepository.GetStockLineDetails(stockLineId);
             return Ok(result);
         }
-
-
 
         [HttpGet("gettechnicians")]
         public IActionResult GetTechnicians()

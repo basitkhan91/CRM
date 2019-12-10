@@ -27,9 +27,9 @@
                     </div>
 
 
-                    <button type="button" pTooltip="Download Data" tooltipPosition="top" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left" label="Export All Data"
+                    <button type="button" matTooltip="Download Data" matTooltipPosition="above" tooltipPosition="top" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left" label="Export All Data"
                             (click)="dt.exportCSV()" style="padding: 5px 12px !important;"></button>
-                    <button type="button" pTooltip="Download Selected Data" tooltipPosition="top" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left" label="Export Selected"
+                    <button type="button" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left" label="Export Selected"
                             (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 12px !important;"></button>
 
                     <div class="excel-upload excel-upload-cstm">
@@ -37,7 +37,7 @@
                                data-multiple-caption="{count} files selected"
                                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                         <label for="upload">
-                            <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above" ><i class="fa fa-upload"></i></span>
                         </label>
                     </div>
                 </div>
@@ -256,6 +256,7 @@
                                     <div class="col-sm-6">
                                             <p>
                                                     <span class="label"><b>Phone No: </b></span><span class="value">{{vendorPhoneNo}}</span>
+                                                <span class="label">Ext:</span><span class="value">{{vendorPhoneExt}}</span>
                                                 </p>
                                         <p>
                                             <span class="label"><b>Email: </b></span><span class="value">{{vendorEmail}}</span>
