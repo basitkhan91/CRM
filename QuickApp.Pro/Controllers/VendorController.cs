@@ -3611,6 +3611,8 @@ namespace QuickApp.Pro.Controllers
                         vendorDocObj.DocName = Request.Form["DocName"];
                         vendorDocObj.DocMemo = Request.Form["DocMemo"];
                         vendorDocObj.DocDescription = Request.Form["DocDescription"];
+                        //vendorDocObj.CreatedDate = DateTime.Now;
+                        vendorDocObj.UpdatedDate = DateTime.Now;
                         if (vendorDocObj.AttachmentId > 0)
                         {
                             vendorDocObj.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
@@ -3637,6 +3639,8 @@ namespace QuickApp.Pro.Controllers
                         objVendorDocumentDetail.DocDescription = Request.Form["DocDescription"];
                         objVendorDocumentDetail.IsActive = true;
                         objVendorDocumentDetail.IsDeleted = false;
+                        objVendorDocumentDetail.CreatedDate = DateTime.Now;
+                        objVendorDocumentDetail.UpdatedDate = DateTime.Now;
                         objVendorDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
                                                                             Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), objVendorDocumentDetail.UpdatedBy, objVendorDocumentDetail.MasterCompanyId);
                         _unitOfWork.VendorDocumentDetails.Add(objVendorDocumentDetail);
@@ -3703,9 +3707,7 @@ namespace QuickApp.Pro.Controllers
             var allvendorsDoc = _unitOfWork.Vendor.GetVendorDocumentDetailById(id);
             return Ok(allvendorsDoc);
 
-        }
-
-
+        }               
 
         [HttpDelete("vendorDocumentDelete/{id}")]
         [Produces(typeof(VendorDocumentDetails))]
@@ -3720,6 +3722,15 @@ namespace QuickApp.Pro.Controllers
             }
 
             return Ok(id);
+        }
+
+        [HttpGet("getVendorDocumentAudit/{id}")]
+        [Produces(typeof(VendorDocumentDetailsAudit))]
+        public IActionResult GetCustomerDocumentDetailAudit(long id)
+        {
+            var allvendorsDoc = _unitOfWork.Vendor.GetVendorDocumentDetailsAudit(id);
+            return Ok(allvendorsDoc);
+
         }
 
 

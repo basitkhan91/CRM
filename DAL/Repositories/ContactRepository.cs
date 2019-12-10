@@ -49,7 +49,7 @@ namespace DAL.Repositories
                            c.UpdatedDate,
                            c.WorkPhoneExtn,
                            vc.IsDefaultContact,
-                           FullContactNo= c.WorkPhoneExtn + " - "+ c.WorkPhone,
+                           FullContactNo = string.Concat(c.WorkPhone, " - ", c.WorkPhoneExtn),
 
                         }).ToList();
             return data;
@@ -88,7 +88,7 @@ namespace DAL.Repositories
                             c.CreatedDate,
                             c.UpdatedDate,
                             c.WorkPhoneExtn,
-                            FullContactNo = c.WorkPhoneExtn + " - " + c.WorkPhone,
+                            FullContactNo = string.Concat(c.WorkPhone, " - ", c.WorkPhoneExtn),
 
                         }).ToList();
             return data;
