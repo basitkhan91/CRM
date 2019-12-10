@@ -320,6 +320,8 @@ namespace QuickApp.Pro.Controllers
                 var data = (from vc in _context.VendorCapabiliy
                             join v in _context.Vendor on vc.VendorId equals v.VendorId
                             join im in _context.ItemMaster on vc.ItemMasterId equals im.ItemMasterId
+                            join vct in _context.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId
+                            join vcat in _context.capabilityType on vct.CapabilityTypeId equals vcat.CapabilityTypeId
                             //join vct in _appContext.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId
                             //join vcat in _appContext.vendorCapabilityAircraftType on vc.VendorCapabilityId equals vcat.VendorCapabilityId
                             //join vcam in _appContext.vendorCapabiltiyAircraftModel on vc.VendorCapabilityId equals vcam.VendorCapabilityId
@@ -348,7 +350,8 @@ namespace QuickApp.Pro.Controllers
                                 vc.CreatedDate,
                                 vc.UpdatedDate,
                                 vc.capabilityDescription,
-                                vc.IsActive
+                                vc.IsActive,
+                                CapabilityType = vcat.Description
                                 //vct.CapabilityTypeId,
 
                                 //vcat.AircraftTypeId,

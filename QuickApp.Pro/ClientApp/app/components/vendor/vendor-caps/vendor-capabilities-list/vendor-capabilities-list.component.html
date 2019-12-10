@@ -24,7 +24,7 @@
                                 <i class="fa fa-search"></i>
                                 <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter">
                             </div>
-                            <button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                            <button type="button" pButton icon="fa-download" iconPos="left" label="Export  Data" (click)="dt.exportCSV()" matTooltip="Download Data"></button>
                             <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
                             <a matTooltip="Add Vendor Capabilities" class="btn btn-success nobg" (click)="navigateTogeneralInfo()"><span><i class="fa fa-plus"></i></span></a>
                             <div class="excel-upload">
@@ -51,8 +51,12 @@
                                 {{col.header}}
                                 <p-sortIcon [field]="col.field"></p-sortIcon>
                             </th>
+                            <th style="width:200px;position:sticky"
+                                *ngIf="selectedColumns.length > 0">
+                                Actions
+                            </th>
 
-                            <th style="width:200px"></th>
+                            
 
                         </tr>
                         <tr>
@@ -60,6 +64,7 @@
                                 <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
 
                             </th>
+                            <th style="width:200px;position:sticky"></th>
                         </tr>
                     </ng-template>
 
