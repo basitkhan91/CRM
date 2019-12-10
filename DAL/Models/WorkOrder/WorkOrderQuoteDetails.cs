@@ -14,7 +14,7 @@ namespace DAL.Models
             WorkOrderQuoteFreight = new List<WorkOrderQuoteFreight>();
             WorkOrderQuoteCharges = new List<WorkOrderQuoteCharges>();
             WorkOrderQuoteMaterial = new List<WorkOrderQuoteMaterial>();
-            WorkOrderQuoteLaborHeader = new WorkOrderQuoteLaborHeader();
+            //WorkOrderQuoteLaborHeader = new WorkOrderQuoteLaborHeader();
         }
         [Key]
         public long WorkOrderQuoteDetailsId { get; set; }

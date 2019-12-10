@@ -67,7 +67,7 @@ namespace DAL.Repositories.Interfaces
         WorkOrderQuoteDetails CreateWorkOrderQuoteDetails(WorkOrderQuoteDetails workOrderQuoteDetails);
         WorkOrderQuoteDetails UpdateWorkOrderQuoteDetails(WorkOrderQuoteDetails workOrderQuoteDetails);
 
-        List<WorkOrderQuoteExclusions> CreateWorkOrderQuoteExclusions(List<WorkOrderQuoteExclusions> quoteExclusions);
+        WorkOrderQuoteDetails CreateWorkOrderQuoteExclusions(WorkOrderQuoteDetails quoteExclusions);
         List<WorkOrderQuoteExclusions> UpdateWorkOrderQuoteExclusions(List<WorkOrderQuoteExclusions> quoteExclusions);
         IEnumerable<object> GetWorkOrderQuoteExclusions(long WorkOrderQuoteId);
         void DeleteWorkOrderQuoteExclusion(long exclusionId, string updatedBy);

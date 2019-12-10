@@ -2643,11 +2643,19 @@ namespace DAL.Repositories
             }
         }
 
-        public List<WorkOrderQuoteExclusions> CreateWorkOrderQuoteExclusions(List<WorkOrderQuoteExclusions> quoteExclusions)
+        public WorkOrderQuoteDetails CreateWorkOrderQuoteExclusions(WorkOrderQuoteDetails quoteExclusions)
         {
             try
             {
-                _appContext.WorkOrderQuoteExclusions.AddRange(quoteExclusions);
+                if (quoteExclusions.WorkOrderQuoteDetailsId>0)
+                {
+                    _appContext.WorkOrderQuoteDetails.Update(quoteExclusions);
+                }
+                else
+                {
+                    _appContext.WorkOrderQuoteDetails.Add(quoteExclusions);
+                }
+                
                 _appContext.SaveChanges();
                 return quoteExclusions;
             }
