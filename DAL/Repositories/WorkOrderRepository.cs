@@ -553,6 +553,7 @@ namespace DAL.Repositories
                 var list = (from swo in _appContext.SubWorkOrder
                             join wo in _appContext.WorkOrder on swo.WorkOrderId equals wo.WorkOrderId
                             join wop in _appContext.WorkOrderPartNumber on swo.WorkOrderPartNumberId equals wop.ID
+                            join wowf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wowf.WorkOrderId
                             join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
                             join wos in _appContext.WorkScope on swo.StatusId equals wos.WorkScopeId
                             join stage in _appContext.WorkOrderStage on swo.StageId equals stage.ID
@@ -573,7 +574,8 @@ namespace DAL.Repositories
                                 swo.NeedDate,
                                 Stage = stage.Description,
                                 swo.WorkOrderId,
-                                swo.SubWorkOrderId
+                                swo.SubWorkOrderId,
+                                wowf.WorkFlowWorkOrderId
                             }).Distinct().ToList();
                 return list;
             }
@@ -604,15 +606,15 @@ namespace DAL.Repositories
                             from pub in woppub.DefaultIfEmpty()
                             join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
                             join status in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals status.Id
-							join wowf in _appContext.WorkOrderWorkFlow  on wo.WorkOrderId equals wowf.WorkOrderId
+                            join wowf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wowf.WorkOrderId
 
 
-							where wo.WorkOrderId == workOrderId && wop.ID == workOrderPartNumberId
+                            where wo.WorkOrderId == workOrderId && wop.ID == workOrderPartNumberId
                             select new
                             {
                                 wo.WorkOrderNum,
-								WorkFlowWorkOrderId = wowf.WorkFlowWorkOrderId,
-								MCPN = im.PartNumber,
+                                WorkFlowWorkOrderId = wowf.WorkFlowWorkOrderId,
+                                MCPN = im.PartNumber,
                                 RevisedMCPN = im1.PartNumber,
                                 MCPNDescription = im.PartDescription,
                                 MCSerialNum = sl.SerialNumber,
@@ -623,9 +625,9 @@ namespace DAL.Repositories
                                 WorkFlowNo = wf == null ? "" : wf.WorkOrderNumber,
                                 wo.OpenDate,
                                 wop.EstimatedCompletionDate,
-								StageId = wop.WorkOrderStageId,
+                                StageId = wop.WorkOrderStageId,
                                 WorkOrderStage = stage.Description,
-                                StatusId =  wop.WorkOrderStatusId,
+                                StatusId = wop.WorkOrderStatusId,
                                 WorkOrderStatus = status.Description,
                                 CMMId = wop.CMMId,
                                 WorkOrderCMM = pub.PublicationId,
@@ -633,7 +635,7 @@ namespace DAL.Repositories
                                 wop.IsPMA,
                                 wop.WorkOrderScopeId,
                                 SubWorkOrderNo = wo.WorkOrderNum + "-1",
-								ItemMasterId = wop.MasterPartId
+                                ItemMasterId = wop.MasterPartId
 
                             }).FirstOrDefault();
                 return data;
@@ -2647,7 +2649,7 @@ namespace DAL.Repositories
         {
             try
             {
-                if (quoteExclusions.WorkOrderQuoteDetailsId>0)
+                if (quoteExclusions.WorkOrderQuoteDetailsId > 0)
                 {
                     _appContext.WorkOrderQuoteDetails.Update(quoteExclusions);
                 }
@@ -2655,7 +2657,7 @@ namespace DAL.Repositories
                 {
                     _appContext.WorkOrderQuoteDetails.Add(quoteExclusions);
                 }
-                
+
                 _appContext.SaveChanges();
                 return quoteExclusions;
             }
@@ -2666,27 +2668,12 @@ namespace DAL.Repositories
             }
         }
 
-        public List<WorkOrderQuoteExclusions> UpdateWorkOrderQuoteExclusions(List<WorkOrderQuoteExclusions> quoteExclusions)
+        public WorkOrderQuoteDetails UpdateWorkOrderQuoteExclusions(WorkOrderQuoteDetails quoteExclusions)
         {
             try
             {
-                if (quoteExclusions != null && quoteExclusions.Count > 0)
-                {
-                    foreach(var item in quoteExclusions)
-                    {
-                        if(item.WorkOrderQuoteExclusionsId>0)
-                        {
-                            _appContext.WorkOrderQuoteExclusions.Update(item);
-                        }
-                        else
-                        {
-                            _appContext.WorkOrderQuoteExclusions.Add(item);
-                        }
-                        _appContext.SaveChanges();
-                    }
-                }
-                
-                
+                _appContext.WorkOrderQuoteDetails.Update(quoteExclusions);
+                _appContext.SaveChanges();
                 return quoteExclusions;
             }
             catch (Exception)
@@ -2769,11 +2756,11 @@ namespace DAL.Repositories
             }
         }
 
-        public List<WorkOrderQuoteFreight> CreateWorkOrderQuoteFreight(List<WorkOrderQuoteFreight> quoteFreight)
+        public WorkOrderQuoteDetails CreateWorkOrderQuoteFreight(WorkOrderQuoteDetails quoteFreight)
         {
             try
             {
-                _appContext.WorkOrderQuoteFreight.AddRange(quoteFreight);
+                _appContext.WorkOrderQuoteDetails.Add(quoteFreight);
                 _appContext.SaveChanges();
                 return quoteFreight;
             }
@@ -2784,27 +2771,12 @@ namespace DAL.Repositories
             }
         }
 
-        public List<WorkOrderQuoteFreight> UpdateWorkOrderQuoteFreight(List<WorkOrderQuoteFreight> quoteFreight)
+        public WorkOrderQuoteDetails UpdateWorkOrderQuoteFreight(WorkOrderQuoteDetails quoteFreight)
         {
             try
             {
-                if (quoteFreight != null && quoteFreight.Count > 0)
-                {
-                    foreach (var item in quoteFreight)
-                    {
-                        if (item.WorkOrderQuoteFreightId > 0)
-                        {
-                            _appContext.WorkOrderQuoteFreight.Update(item);
-                        }
-                        else
-                        {
-                            _appContext.WorkOrderQuoteFreight.Add(item);
-                        }
-                        _appContext.SaveChanges();
-                    }
-                }
-
-
+                _appContext.WorkOrderQuoteDetails.Update(quoteFreight);
+                _appContext.SaveChanges();
                 return quoteFreight;
             }
             catch (Exception)
@@ -2816,40 +2788,40 @@ namespace DAL.Repositories
 
         public IEnumerable<object> GetWorkOrderQuoteFreight(long WorkOrderQuoteId)
         {
-                try
-                {
-                    var workOrderFreightList = (from wf in _appContext.WorkOrderQuoteFreight
-                                                join wq in _appContext.WorkOrderQuoteDetails on wf.WorkOrderQuoteDetailsId equals wq.WorkOrderQuoteDetailsId
-                                                join car in _appContext.ShippingVia on wf.CarrierId equals car.ShippingViaId
-                                                join sv in _appContext.ShippingVia on wf.ShipViaId equals sv.ShippingViaId
-                                                where wf.IsDeleted == false && wq.WorkOrderQuoteId == WorkOrderQuoteId
-                                                select new
-                                                {
-                                                    wf.Amount,
-                                                    wf.CarrierId,
-                                                    wf.CreatedBy,
-                                                    wf.CreatedDate,
-                                                    wf.FixedAmount,
-                                                    wf.Height,
-                                                    wf.IsActive,
-                                                    wf.IsDeleted,
-                                                    wf.IsFixedFreight,
-                                                    wf.Length,
-                                                    wf.MasterCompanyId,
-                                                    wf.Memo,
-                                                    wf.ShipViaId,
-                                                    wf.UpdatedBy,
-                                                    wf.UpdatedDate,
-                                                    wf.Weight,
-                                                    wf.Width,
-                                                    wf.WorkOrderQuoteDetailsId,
-                                                    wf.WorkOrderQuoteFreightId,
-                                                    ShipViaName = sv.Name,
-                                                    CarrierName = car.Name
-                                                }).Distinct().ToList();
+            try
+            {
+                var workOrderFreightList = (from wf in _appContext.WorkOrderQuoteFreight
+                                            join wq in _appContext.WorkOrderQuoteDetails on wf.WorkOrderQuoteDetailsId equals wq.WorkOrderQuoteDetailsId
+                                            join car in _appContext.ShippingVia on wf.CarrierId equals car.ShippingViaId
+                                            join sv in _appContext.ShippingVia on wf.ShipViaId equals sv.ShippingViaId
+                                            where wf.IsDeleted == false && wq.WorkOrderQuoteId == WorkOrderQuoteId
+                                            select new
+                                            {
+                                                wf.Amount,
+                                                wf.CarrierId,
+                                                wf.CreatedBy,
+                                                wf.CreatedDate,
+                                                wf.FixedAmount,
+                                                wf.Height,
+                                                wf.IsActive,
+                                                wf.IsDeleted,
+                                                wf.IsFixedFreight,
+                                                wf.Length,
+                                                wf.MasterCompanyId,
+                                                wf.Memo,
+                                                wf.ShipViaId,
+                                                wf.UpdatedBy,
+                                                wf.UpdatedDate,
+                                                wf.Weight,
+                                                wf.Width,
+                                                wf.WorkOrderQuoteDetailsId,
+                                                wf.WorkOrderQuoteFreightId,
+                                                ShipViaName = sv.Name,
+                                                CarrierName = car.Name
+                                            }).Distinct().ToList();
 
-                    return workOrderFreightList;
-                }
+                return workOrderFreightList;
+            }
             catch (Exception)
             {
 
@@ -2880,11 +2852,11 @@ namespace DAL.Repositories
             }
         }
 
-        public List<WorkOrderQuoteCharges> CreateWorkOrderQuoteCharges(List<WorkOrderQuoteCharges> quoteCharges)
+        public WorkOrderQuoteDetails CreateWorkOrderQuoteCharges(WorkOrderQuoteDetails quoteCharges)
         {
             try
             {
-                _appContext.WorkOrderQuoteCharges.AddRange(quoteCharges);
+                _appContext.WorkOrderQuoteDetails.Add(quoteCharges);
                 _appContext.SaveChanges();
                 return quoteCharges;
             }
@@ -2895,27 +2867,12 @@ namespace DAL.Repositories
             }
         }
 
-        public List<WorkOrderQuoteCharges> UpdateWorkOrderQuoteCharges(List<WorkOrderQuoteCharges> quoteCharges)
+        public WorkOrderQuoteDetails UpdateWorkOrderQuoteCharges(WorkOrderQuoteDetails quoteCharges)
         {
             try
             {
-                if (quoteCharges != null && quoteCharges.Count > 0)
-                {
-                    foreach (var item in quoteCharges)
-                    {
-                        if (item.WorkOrderQuoteChargesId > 0)
-                        {
-                            _appContext.WorkOrderQuoteCharges.Update(item);
-                        }
-                        else
-                        {
-                            _appContext.WorkOrderQuoteCharges.Add(item);
-                        }
-                        _appContext.SaveChanges();
-                    }
-                }
-
-
+                _appContext.WorkOrderQuoteDetails.Update(quoteCharges);
+                _appContext.SaveChanges();
                 return quoteCharges;
             }
             catch (Exception)
@@ -2997,11 +2954,11 @@ namespace DAL.Repositories
         }
 
 
-        public List<WorkOrderQuoteMaterial> CreateWorkOrderQuoteMaterial(List<WorkOrderQuoteMaterial> quoteMaterials)
+        public WorkOrderQuoteDetails CreateWorkOrderQuoteMaterial(WorkOrderQuoteDetails quoteMaterials)
         {
             try
             {
-                _appContext.WorkOrderQuoteMaterial.AddRange(quoteMaterials);
+                _appContext.WorkOrderQuoteDetails.Add(quoteMaterials);
                 _appContext.SaveChanges();
                 return quoteMaterials;
             }
@@ -3012,25 +2969,12 @@ namespace DAL.Repositories
             }
         }
 
-        public List<WorkOrderQuoteMaterial> UpdateWorkOrderQuoteMaterial(List<WorkOrderQuoteMaterial> quoteMaterials)
+        public WorkOrderQuoteDetails UpdateWorkOrderQuoteMaterial(WorkOrderQuoteDetails quoteMaterials)
         {
             try
             {
-                if (quoteMaterials != null && quoteMaterials.Count > 0)
-                {
-                    foreach (var item in quoteMaterials)
-                    {
-                        if (item.WorkOrderQuoteMaterialId > 0)
-                        {
-                            _appContext.WorkOrderQuoteMaterial.Update(item);
-                        }
-                        else
-                        {
-                            _appContext.WorkOrderQuoteMaterial.Add(item);
-                        }
-                        _appContext.SaveChanges();
-                    }
-                }
+                _appContext.WorkOrderQuoteDetails.Update(quoteMaterials);
+                _appContext.SaveChanges();
                 return quoteMaterials;
             }
             catch (Exception)
@@ -3057,12 +3001,12 @@ namespace DAL.Repositories
                                               {
                                                   im.PartNumber,
                                                   im.PartDescription,
-                                                  AltPartNumber=string.Empty,
-                                                  Source= wq.BuildMethodId==1?"WF":(wq.BuildMethodId==2?"WO":(wq.BuildMethodId==3?"WF":"Third Party")),
+                                                  AltPartNumber = string.Empty,
+                                                  Source = wq.BuildMethodId == 1 ? "WF" : (wq.BuildMethodId == 2 ? "WO" : (wq.BuildMethodId == 3 ? "WF" : "Third Party")),
                                                   wq.ReferenceNo,
                                                   wom.Quantity,
                                                   wom.UnitOfMeasureId,
-                                                  UnitOfMeasure=uom.Description,
+                                                  UnitOfMeasure = uom.Description,
                                                   wom.ConditionCodeId,
                                                   ConditionType = c.Description,
                                                   OemPmaDer = im.PMA == true && im.DER == true ? "PMA&DER" : (im.PMA == true && im.DER == false ? "PMA" : (im.PMA == false && im.DER == true ? "DER" : "")),
@@ -3108,11 +3052,11 @@ namespace DAL.Repositories
             }
         }
 
-        public WorkOrderQuoteLaborHeader CreateWorkOrderQuoteLabor(WorkOrderQuoteLaborHeader quoteLabor)
+        public WorkOrderQuoteDetails CreateWorkOrderQuoteLabor(WorkOrderQuoteDetails quoteLabor)
         {
             try
             {
-                _appContext.WorkOrderQuoteLaborHeader.Add(quoteLabor);
+                _appContext.WorkOrderQuoteDetails.Add(quoteLabor);
                 _appContext.SaveChanges();
                 return quoteLabor;
             }
@@ -3123,11 +3067,11 @@ namespace DAL.Repositories
             }
         }
 
-        public WorkOrderQuoteLaborHeader UpdateWorkOrderQuoteLabor(WorkOrderQuoteLaborHeader quoteLabor)
+        public WorkOrderQuoteDetails UpdateWorkOrderQuoteLabor(WorkOrderQuoteDetails quoteLabor)
         {
             try
             {
-                _appContext.WorkOrderQuoteLaborHeader.Update(quoteLabor);
+                _appContext.WorkOrderQuoteDetails.Update(quoteLabor);
                 _appContext.SaveChanges();
                 return quoteLabor;
             }
@@ -3512,6 +3456,158 @@ namespace DAL.Repositories
         }
 
         #endregion
+
+        #region Billing and Invoicing
+
+        public WorkOrderBillingInvoicing CreateWorkOrderBillingInvoicing(WorkOrderBillingInvoicing billingInvoicing)
+        {
+            try
+            {
+                _appContext.WorkOrderBillingInvoicing.Add(billingInvoicing);
+                _appContext.SaveChanges();
+                return billingInvoicing;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public WorkOrderBillingInvoicing UpdateWorkOrderBillingInvoicing(WorkOrderBillingInvoicing billingInvoicing)
+        {
+            try
+            {
+                _appContext.WorkOrderBillingInvoicing.Update(billingInvoicing);
+                _appContext.SaveChanges();
+                return billingInvoicing;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public object GetBillingInvoicingDetails(long WorkOrderId, long workOrderPartNoId)
+        {
+            try
+            {
+                var data = (from bi in _appContext.WorkOrderBillingInvoicing
+                            join wo in _appContext.WorkOrder on bi.WorkOrderId equals wo.WorkOrderId
+                            join wop in _appContext.WorkOrderPartNumber on bi.WorkOrderPartNoId equals wop.ID
+                            join wowf in _appContext.WorkOrderWorkFlow on bi.WorkOrderWorkFlowId equals wowf.WorkFlowWorkOrderId
+                            join cust in _appContext.Customer on bi.CustomerId equals cust.CustomerId
+                            join it in _appContext.InvoiceType on bi.InvoiceTypeId equals it.InvoiceTypeId
+                            join emp in _appContext.Employee on bi.EmployeeId equals emp.EmployeeId
+                            join wos in _appContext.WorkScope on wop.WorkOrderScopeId equals wos.WorkScopeId
+                            join soc in _appContext.Customer on bi.SoldToCustomerId equals soc.CustomerId
+                            join sos in _appContext.CustomerShippingAddress on bi.SoldToSiteId equals sos.CustomerShippingAddressId
+                            join soa in _appContext.Address on sos.AddressId equals soa.AddressId
+
+                            join shc in _appContext.Customer on bi.SoldToCustomerId equals shc.CustomerId
+                            join shs in _appContext.CustomerShippingAddress on bi.SoldToSiteId equals shs.CustomerShippingAddressId
+                            join sha in _appContext.Address on sos.AddressId equals sha.AddressId
+                            join mnge in _appContext.Employee on bi.ManagementEmpId equals mnge.EmployeeId into bimnge
+                            from mnge in bimnge.DefaultIfEmpty()
+                            join sp in _appContext.Employee on wo.SalesPersonId equals sp.EmployeeId
+                            join cur in _appContext.Currency on cust.CurrencyId equals cur.CurrencyId into custcur
+                            from cur in custcur.DefaultIfEmpty()
+                            join ct in _appContext.CreditTerms on wo.CreditTermsId equals ct.CreditTermsId
+                            join sv in _appContext.CustomerShipping on bi.ShipViaId equals sv.CustomerShippingId into bisv
+                            from sv in bisv.DefaultIfEmpty()
+
+                            where bi.WorkOrderId == WorkOrderId && bi.WorkOrderPartNoId==workOrderPartNoId
+                            select new
+                            {
+                                bi.BillingInvoicingId,
+                                bi.WorkOrderId,
+                                bi.WorkOrderPartNoId,
+                                bi.WorkOrderWorkFlowId,
+                                bi.ItemMasterId,
+                                bi.InvoiceTypeId,
+
+                                InvoiceType = it.Description,
+                                bi.InvoiceNo,
+                                cust.ContractReference,
+                                cust.CustomerCode,
+                                bi.InvoiceDate,
+                                bi.InvoiceTime,
+                                bi.PrintDate,
+                                bi.ShipDate,
+                                bi.NoofPieces,
+                                bi.EmployeeId,
+                                EmployeeName = emp.FirstName,
+                                bi.RevType,
+                                wo.WorkOrderTypeId,
+                                WorkScope = wos.Description,
+                                wop.WorkOrderScopeId,
+                                wop.Quantity,
+                                wo.OpenDate,
+                                wo.SalesPersonId,
+                                SalesPerson = sp.FirstName,
+                                cust.CurrencyId,
+                                Currency = cur.DisplayName,
+                                wo.CreditLimit,
+                                wo.CreditTermsId,
+                                CreditTerm = ct.Name,
+                                bi.GateStatus,
+                                bi.SoldToCustomerId,
+                                SoldToCustomer = soc.Name,
+                                bi.SoldToSiteId,
+                                soa.City,
+                                soa.Country,
+                                soa.Line1,
+                                soa.Line2,
+                                soa.Line3,
+                                soa.PoBox,
+                                soa.PostalCode,
+                                soa.StateOrProvince,
+                                bi.ShipToCustomerId,
+                                ShipToCustomer = shc.Name,
+                                bi.ShipToSiteId,
+                                ShipToCity = sha.City,
+                                ShipToCountry = sha.Country,
+                                ShipToLine1 = sha.Line1,
+                                ShipToLine2 = sha.Line2,
+                                ShipToLine3 = sha.Line3,
+                                ShipToPoBox = sha.PoBox,
+                                ShipToPostalCode = sha.PostalCode,
+                                ShipToState = sha.StateOrProvince,
+                                bi.ShipToAttention,
+                                bi.ManagementStructureId,
+                                bi.ManagementEmpId,
+                                ManagementEmp = mnge.FirstName,
+                                bi.Notes,
+                                bi.CostPlusType,
+                                bi.TotalWorkOrder,
+                                bi.TotalWorkOrderValue,
+                                bi.Material,
+                                bi.MaterialValue,
+                                bi.LaborOverHead,
+                                bi.LaborOverHeadValue,
+                                bi.MiscCharges,
+                                bi.MiscChargesValue,
+                                bi.ProForma,
+                                bi.PartialInvoice,
+                                bi.CostPlusRateCombo,
+                                bi.ShipViaId,
+                                sv.ShipVia,
+                                sv.ShippingAccountinfo,
+                                bi.WayBillRef,
+                                bi.Tracking
+                            }).FirstOrDefault();
+                return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        #endregion
+
 
         #region Dropdowns
 
