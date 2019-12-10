@@ -1578,7 +1578,7 @@ getdeleteDocumentListbyId(vendorDocumentId) {
         return this.http.get<any>(`${this._getVendorContactHistory}?vendorId=${vendorId}&vendorContactId=${vendorContactId}`, this.getRequestHeaders())
     }
     getVendorDocumentAuditHistory(id) {
-        return this.http.get<any>(`${this._getVendorDocumentHistory}?id=${id}`, this.getRequestHeaders())
+        return this.http.get<any>(`${this._getVendorDocumentHistory}/${id}`, this.getRequestHeaders())
     }
 
 }
