@@ -2,10 +2,11 @@
 import { Params, ActivatedRoute } from '@angular/router';
 import {
   WorkOrderQuote,
-  multiParts
+  multiParts,
+  partsDetail
 } from '../../../../models/work-order-quote.modal';
 
-import { WorkOrderService } from '../../../../services/work-order/work-order.service';
+import { WorkOrderQuoteService } from '../../../../services/work-order/work-order-quote.service';
 import { CommonService } from '../../../../services/common.service';
 import { WorkFlowtService } from '../../../../services/workflow.service';
 import {
@@ -45,10 +46,20 @@ export class WorkOrderQuoteComponent implements OnInit {
   selectedPartNumber: string = "";
   dso: string;
   moduleName: string;
+  workOrderPartsDetail: partsDetail[];
+  selectedBuildMethod: string = "";
+  buildWorkOrderList: any[];
+  buildHistoricalList: any[];
+  gridActiveTab: string;
+  materialListQuotation: any[];
+  chargesQuotation: any[];
+  exclusionsQuotation: any[];
+  laborQuotation: any[];
+  selectedHistoricalList: any;
 
 
 
-  constructor(private router: ActivatedRoute,private workOrderService: WorkOrderService, private commonService: CommonService, private _workflowService: WorkFlowtService, private alertService:AlertService) {}
+  constructor(private router: ActivatedRoute,private workOrderService: WorkOrderQuoteService, private commonService: CommonService, private _workflowService: WorkFlowtService, private alertService:AlertService) {}
   ngOnInit() {
     if(this.quoteForm == undefined){
       this.quoteForm = new WorkOrderQuote();
@@ -57,7 +68,8 @@ export class WorkOrderQuoteComponent implements OnInit {
     console.log(this.quoteForm);
     this.router.queryParams.subscribe((params: Params) => {
       if(params['workorderid']){
-        this.getWorkOrderInfo(params['workorderid'])
+        this.getWorkOrderInfo(params['workorderid']);
+        this.getMPNDetails(params['workorderid']);
       }
     });
   }
@@ -65,6 +77,7 @@ export class WorkOrderQuoteComponent implements OnInit {
     this.workOrderService.createQuote(this.formQuoteInfo())
     .subscribe(
       res=>{
+        this.quoteForm.quoteNumber = res['quoteNumber'];
         this.alertService.showMessage(
           this.moduleName,
           'Quotation created  Succesfully',
@@ -103,7 +116,6 @@ export class WorkOrderQuoteComponent implements OnInit {
 
   getWorkOrderInfo(getWorkOrderInfo){
     this.workOrderService.getWorkOrderById(getWorkOrderInfo).subscribe(res => {
-      console.log(res);
       this.customerCode = res.customerDetails.customerId;
       this.customerName = res.customerDetails.customerName;
       this.customerContact = res.customerDetails.customerContact;
@@ -171,7 +183,8 @@ export class WorkOrderQuoteComponent implements OnInit {
             masterPartId: x.masterPartId,
             workflowId: x.workflowId,
             workflowNo: x.workflowNo,
-            partNumber: x.partNumber
+            partNumber: x.partNumber,
+            workOrderScopeId: x.workOrderScopeId
           },
           label: x.partNumber
         }
@@ -180,14 +193,153 @@ export class WorkOrderQuoteComponent implements OnInit {
   }
 
   partNumberSelected(){
-    console.log(this.selectedPartNumber);
-    for(let pn of this.mpnPartNumbersList){
-      if(pn['label'] == this.selectedPartNumber){
-        this._workflowService.getWorkFlowDataById(pn['value']['workflowId']).subscribe(data => {
-            console.log(data);
-        });
-      }
-    }
+    this.gridActiveTab = '';
+    this.clearQuoteData();
+    // for(let pn of this.mpnPartNumbersList){
+    //   if(pn['label'] == this.selectedPartNumber){
+    //     this._workflowService.getWorkFlowDataById(pn['value']['workflowId']).subscribe(data => {
+    //     });
+    //   }
+    // }
   
+  }
+
+  getMPNDetails(workOrderId){
+    this.workOrderService.getPartsDetail(workOrderId)
+    .subscribe(
+      (workOrderParts: partsDetail[])=>{
+        this.workOrderPartsDetail = workOrderParts;
+      }
+    )
+  }
+
+  buildMethodSelected(buildType: string){
+    this.selectedBuildMethod = buildType;
+    this.gridActiveTab = '';
+    var partId;
+    var workScopeId;
+    this.mpnPartNumbersList.forEach(element => {
+      if(element['label'] == this.selectedPartNumber){
+        partId = element['value']['masterPartId'];
+        workScopeId = element['value']['workOrderScopeId'];
+      }
+      
+    });
+    if(buildType == 'use work flow'){
+      this.workOrderService.getBuildDetailsFromWorkFlow(partId, workScopeId)
+      .subscribe(
+        (res: any[]) => {
+          this.buildWorkOrderList = res;
+        }
+      )
+    }
+    else if(buildType == 'use historical wos'){
+      this.workOrderService.getBuildDetailsFromHistoricalWorkOrder(partId, workScopeId)
+      .subscribe(
+        (res: any[]) => {
+          this.buildHistoricalList = res;
+        }
+      )
+    }
+    
+    
+  }
+  gridTabChange(value) {
+    this.gridActiveTab = value;
+    if(this.selectedBuildMethod == 'use historical wos' && this.selectedHistoricalList){
+        this.clearQuoteData();
+        if(value == 'materialList') {
+          this.workOrderService.getWorkOrderMaterialListForQuote(this.selectedHistoricalList.workFlowWorkOrderId)
+          .subscribe(
+            (res: any[]) =>{
+              this.materialListQuotation = res;
+            }
+          )
+        }
+        if(value ==  'labor') {
+          this.workOrderService.getWorkOrderLaborListForQuote(this.selectedHistoricalList.workFlowWorkOrderId)
+          .subscribe(
+            (res: any[]) =>{
+              this.laborQuotation = res;
+            }
+          )
+        }
+        if(value == 'charges') {
+          this.workOrderService.getWorkOrderChargesListForQuote(this.selectedHistoricalList.workFlowWorkOrderId)
+          .subscribe(
+            (res: any[]) =>{
+              this.chargesQuotation = res;
+            }
+          )
+        }
+        if(value == 'exclusions') {
+          this.workOrderService.getWorkOrderExclutionsListForQuote(this.selectedHistoricalList.workFlowWorkOrderId)
+          .subscribe(
+            (res: any[]) =>{
+              this.exclusionsQuotation = res;
+            }
+          )
+        }
+    }
+  }
+  getQuoteInfo(data) {
+    this.gridActiveTab = '';
+    if(this.selectedBuildMethod == 'use work flow'){
+      this.workOrderService.getWorkFlowDetails(data.workFlowId)
+      .subscribe(
+        res => {
+          this.materialListQuotation = res['materialList'];
+          this.laborQuotation = res['expertise'];
+          this.chargesQuotation = res['charges'];
+          this.exclusionsQuotation = res['exclusions'];
+        }
+      )
+    }
+    else{
+      this.selectedHistoricalList = data;
+      this.clearQuoteData();
+    }
+  }
+
+  clearQuoteData(){ 
+    this.materialListQuotation = [];
+    this.laborQuotation = [];
+    this.chargesQuotation = [];
+    this.exclusionsQuotation = [];
+  }
+
+  createMaterialQuote(){
+    this.workOrderService.saveMaterialListQuote(this.materialListQuotation)
+    .subscribe(
+      res => {
+        console.log(res);
+      }
+    )
+  }
+
+  createLaborQuote(){
+    this.workOrderService.saveLaborListQuote(this.laborQuotation)
+    .subscribe(
+      res => {
+        console.log(res);
+      }
+    )
+  }
+
+  createChargeQuote(){
+    this.workOrderService.saveChargesQuote(this.chargesQuotation)
+    .subscribe(
+      res => {
+        console.log(res);
+      }
+    )
+  }
+  createExclusionsQuote(){
+    this.workOrderService.saveExclusionsQuote(this.exclusionsQuotation)
+    .subscribe(
+      res => {
+        console.log(res);
+      }
+    )
   }
 }

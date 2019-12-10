@@ -112,6 +112,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("workordernos")]
+        public IActionResult GetWorkOrderNos(long partId, long workScopeId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderNos(partId, workScopeId);
+            return Ok(result);
+        }
+
         [HttpGet("workorderheaderview")]
         public IActionResult WorkOrderHeaderView(long workOrderId)
         {
@@ -126,9 +133,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-
         #endregion
-
 
         #region Sub Work Order
 
@@ -188,6 +193,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("subworkorderheaderdetails")]
+        public IActionResult SubWorkOrderHeaderDetails(long workOrderId, long workOrderPartNumberId)
+        {
+            var result = unitOfWork.WorkOrderRepository.SubWorkOrderHeaderDetails(workOrderId, workOrderPartNumberId);
+            return Ok(result);
+        }
+
         #endregion
 
         #region Work Flow Work Order
@@ -234,14 +246,6 @@ namespace QuickApp.Pro.Controllers
             var result = unitOfWork.WorkOrderRepository.WorkOrderWorkFlowView(workFlowWorkOrderId);
             return Ok(result);
         }
-
-        [HttpGet("subworkorderheaderdetails")]
-        public IActionResult SubWorkOrderHeaderDetails(long workOrderId, long workOrderPartNumberId)
-        {
-            var result = unitOfWork.WorkOrderRepository.SubWorkOrderHeaderDetails(workOrderId, workOrderPartNumberId);
-            return Ok(result);
-        }
-
 
 
         #endregion
@@ -583,6 +587,257 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpPost("createwoquotedetails")]
+        public IActionResult CreateWorkOrderQuoteDetails([FromBody]WorkOrderQuoteDetails workOrderQuoteDetails)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderQuoteDetails(workOrderQuoteDetails);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updatewoquotedetails")]
+        public IActionResult UpdateWorkOrderQuoteDetails([FromBody]WorkOrderQuoteDetails workOrderQuoteDetails)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = unitOfWork.WorkOrderRepository.UpdateWorkOrderQuoteDetails(workOrderQuoteDetails);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("createquoteexclusions")]
+        public IActionResult CreateWorkOrderQuoteExclusions([FromBody]WorkOrderQuoteDetails quoteExclusions)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderQuoteExclusions(quoteExclusions);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updatequoteexclusions")]
+        public IActionResult UpdateWorkOrderQuoteExclusions([FromBody]WorkOrderQuoteDetails quoteExclusions)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = unitOfWork.WorkOrderRepository.UpdateWorkOrderQuoteExclusions(quoteExclusions);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("quoteexclusions")]
+        public IActionResult GetWorkOrderQuoteExclusions(long workOrderQuoteId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteExclusions(workOrderQuoteId);
+            return Ok(result);
+        }
+
+        [HttpGet("deletequoteexclusions")]
+        public IActionResult DeleteWorkOrderQuoteExclusion(long exclusionId, string updatedBy)
+        {
+             unitOfWork.WorkOrderRepository.DeleteWorkOrderQuoteExclusion(exclusionId, updatedBy);
+            return Ok();
+        }
+
+        [HttpPost("createquotefreight")]
+        public IActionResult CreateWorkOrderQuoteFreight([FromBody]WorkOrderQuoteDetails quoteFreight)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderQuoteFreight(quoteFreight);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updatequotefreight")]
+        public IActionResult UpdateWorkOrderQuoteFreight([FromBody]WorkOrderQuoteDetails quoteFreight)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = unitOfWork.WorkOrderRepository.UpdateWorkOrderQuoteFreight(quoteFreight);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("quotefreights")]
+        public IActionResult GetWorkOrderQuoteFreight(long workOrderQuoteId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteFreight(workOrderQuoteId);
+            return Ok(result);
+        }
+
+        [HttpGet("deletequotefreight")]
+        public IActionResult DeleteWorkOrderQuoteFreight(long freightId, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.DeleteWorkOrderQuoteFreight(freightId, updatedBy);
+            return Ok();
+        }
+
+        [HttpPost("createquotecharges")]
+        public IActionResult CreateWorkOrderQuoteCharges([FromBody]WorkOrderQuoteDetails quoteCharges)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderQuoteCharges(quoteCharges);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updatequotecharges")]
+        public IActionResult UpdateWorkOrderQuoteCharges([FromBody]WorkOrderQuoteDetails quoteCharges)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = unitOfWork.WorkOrderRepository.UpdateWorkOrderQuoteCharges(quoteCharges);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("quotecharges")]
+        public IActionResult GetWorkOrderQuoteCharges(long WorkOrderQuoteId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteCharges(WorkOrderQuoteId);
+            return Ok(result);
+        }
+
+        [HttpGet("deletequotecharge")]
+        public IActionResult DeleteWorkOrderQuoteCharges(long workOrderChargeId, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.DeleteWorkOrderQuoteCharges(workOrderChargeId, updatedBy);
+            return Ok();
+        }
+
+        [HttpPost("createquotematerials")]
+        public IActionResult CreateWorkOrderQuoteMaterial([FromBody]WorkOrderQuoteDetails quoteMaterials)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderQuoteMaterial(quoteMaterials);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updatequotematerials")]
+        public IActionResult UpdateWorkOrderQuoteMaterial([FromBody]WorkOrderQuoteDetails quoteMaterials)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = unitOfWork.WorkOrderRepository.UpdateWorkOrderQuoteMaterial(quoteMaterials);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("quotematerials")]
+        public IActionResult GetWorkOrderQuoteMaterial(long WorkOrderQuoteId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteMaterial(WorkOrderQuoteId);
+            return Ok(result);
+        }
+
+        [HttpGet("deletequotematerial")]
+        public IActionResult DeleteWorkOrderQuoteMaterial(long workOrderMaterialsId, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.DeleteWorkOrderQuoteCharges(workOrderMaterialsId, updatedBy);
+            return Ok();
+        }
+
+        [HttpPost("createquotelabor")]
+        public IActionResult CreateWorkOrderQuoteLabor([FromBody]WorkOrderQuoteDetails quoteLabor)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderQuoteLabor(quoteLabor);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updatequotelabor")]
+        public IActionResult UpdateWorkOrderQuoteLabor([FromBody]WorkOrderQuoteDetails quoteLabor)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = unitOfWork.WorkOrderRepository.UpdateWorkOrderQuoteLabor(quoteLabor);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("quotelabor")]
+        public IActionResult GetWorkOrderQuoteLabor(long WorkOrderQuoteId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteLabor(WorkOrderQuoteId);
+            return Ok(result);
+        }
+
+        [HttpGet("deletequotelabor")]
+        public IActionResult DeleteWorkOrderQuoteLabor(long workOrderQuoteLaborId, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.DeleteWorkOrderQuoteLabor(workOrderQuoteLaborId, updatedBy);
+            return Ok();
+        }
+
+
         #endregion
 
         #region Work Order Freight
@@ -617,7 +872,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpGet("getworkflowworkorderfreightlist")]
+        [HttpGet("workorderfreightlist")]
         public IActionResult GetWorkFlowWorkOrderFreightList(long wfwoId = 0, long workOrderId = 0)
         {
             var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderFreightList(wfwoId, workOrderId);
@@ -792,6 +1047,47 @@ namespace QuickApp.Pro.Controllers
 
         #endregion
 
+        #region Billing and Invoicing
+
+        [HttpPost("createbillinginvoicing")]
+        public IActionResult CreateWorkOrderBillingInvoicing([FromBody]WorkOrderBillingInvoicing billingInvoicing)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderBillingInvoicing(billingInvoicing);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updatebillinginvoicing")]
+        public IActionResult UpdateWorkOrderBillingInvoicing([FromBody]WorkOrderBillingInvoicing billingInvoicing)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = unitOfWork.WorkOrderRepository.UpdateWorkOrderBillingInvoicing(billingInvoicing);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("billinginvoicingdetails")]
+        public IActionResult GetBillingInvoicingDetails(long workOrderId,long workOrderPartNoId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetBillingInvoicingDetails(workOrderId, workOrderPartNoId);
+            return Ok(result);
+        }
+
+        #endregion
+
         [HttpGet("getAll")]
         public IActionResult Index()
         {
@@ -924,8 +1220,6 @@ namespace QuickApp.Pro.Controllers
             var result = unitOfWork.WorkOrderRepository.GetStockLineDetails(stockLineId);
             return Ok(result);
         }
-
-
 
         [HttpGet("gettechnicians")]
         public IActionResult GetTechnicians()

@@ -250,8 +250,13 @@ export class TaxTypeComponent implements OnInit {
     selectedTaxType(object) {
         console.log('selectedTaxType', object);
         const exists = selectedValueValidate('description', object, this.selectedRecordForEdit)
-
-        this.disableSaveTaxtype = !exists;
+        if (!this.isEdit || this.isEdit && object.taxTypeId != this.selectedRecordForEdit.taxTypeId) {
+            this.disableSaveTaxtype = !exists;
+        }
+        else {
+            this.disableSaveTaxtype = false;
+        }
+        
     }
 
 
@@ -355,7 +360,7 @@ export class TaxTypeComponent implements OnInit {
     //Open the audit history modal.
     showHistory(rowData): void {
         this.currentModeOfOperation = ModeOfOperation.Audit;
-        this.taxTypeService.getTaxTypeAudit(rowData.assetIntangibleTypeId).subscribe(audits => {
+        this.taxTypeService.getTaxTypeAudit(rowData.taxTypeId).subscribe(audits => {
             if (audits[0].length > 0) {
                 this.auditHistory = audits[0];
             }
@@ -371,8 +376,17 @@ export class TaxTypeComponent implements OnInit {
         this.disableSaveTaxtype = false;
         for (let i = 0; i < this.originalData.length; i++) {
             let description = this.originalData[i].description;
+            let taxTypeId = this.originalData[i].taxTypeId;
             if (description.toLowerCase() == value.toLowerCase()) {
-                this.disableSaveTaxtype = true;
+                if (!this.isEdit) {
+                    this.disableSaveTaxtype = true;
+                }
+                else if (taxTypeId != this.selectedRecordForEdit.taxTypeId) {
+                    this.disableSaveTaxtype = true;
+                }
+                else {
+                    this.disableSaveTaxtype = false;
+                }
                 console.log('description :', description);
                 break;
             }

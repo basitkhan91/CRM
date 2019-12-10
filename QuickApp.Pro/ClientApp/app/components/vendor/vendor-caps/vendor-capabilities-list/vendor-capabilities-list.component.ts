@@ -79,18 +79,24 @@ export class VendorCapabilitiesListComponent implements OnInit{
         this.cols = [
             //{ field: 'actionId', header: 'Action Id' },
 
-            { field: 'vendorCapabilityId', header: 'VCID' },
+            //{ field: 'vendorCapabilityId', header: 'VCID' },
             { field: 'vendorCode', header: 'Vendor Code' },
             { field: 'vendorName', header: 'Vendor Name' },
+            { field: 'capabilityType', header: 'Cap Type' },
+            { field: 'capabilityDescription', header: 'Vendor Caps' },
+
+            
             //{ field: 'id', header: 'ID' },
             //{field: 'materialType', header: 'Material Type' },
-            { field: 'vendorRanking', header: 'Ranking' },
             { field: 'partNumber', header: 'PN' },
             { field: 'partDescription', header: 'PN Description' },
-            { field: 'cost', header: 'Cost' },
+            { field: 'vendorRanking', header: ' Vendor Ranking' },
+
+            //{ field: 'cost', header: 'Cost' },
             { field: 'tat', header: 'TAT' },
-            { field: 'manufacturerName', header: 'PN Mfg' },
-            { field: 'updatedDate', header: 'Updated Date' },
+           
+            //{ field: 'manufacturerName', header: 'PN Mfg' },
+            //{ field: 'updatedDate', header: 'Updated Date' },
             //{ field: 'partCertificationNumber', header: 'Part Certification Num' }
             //{ field: 'createdBy', header: 'Created By' },
             //{ field: 'updatedBy', header: 'Updated By' },

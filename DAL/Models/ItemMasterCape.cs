@@ -20,15 +20,32 @@ namespace DAL.Models
     {
         [Key]
         public long ItemMasterCapesId { get; set; }
-        public long ItemMasterId { get; set; }
         public Nullable<long> CapabilityId { get; set; }
+        public long ManagementStructureId { get; set; }
+        public Nullable<long> ManufacturerId { get; set; }
+        public int? AircraftTypeId { get; set; }
+        public Nullable<long> AircraftModelId { get; set; }
+        public Nullable<long> AircraftDashNumberId { get; set; }
+        public string Description { get; set; }
+        public long? ATAChapterId { get; set; }
+        public long ATASubChapterId { get; set; }
+        public Nullable<System.DateTime> EntryDate { get; set; }
+        public Nullable<long> CMMId { get; set; }
+        public bool? isIntegrateWith { get; set; }
+        public Nullable<bool> IsVerified { get; set; }
+        public string VerifiedBy { get; set; }
+        public Nullable<System.DateTime> DateVerified { get; set; }
+        public string ntehrs { get; set; }
+        public string TAT { get; set; }
+        public string Memo { get; set; }
+        public long ItemMasterId { get; set; }
         public Nullable<int> MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
-    
+        public Nullable<bool> IsDelete { get; set; }
         public virtual Capability Capability { get; set; }
     }
 }

@@ -211,6 +211,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     countrycollection: any[];
     allCountryinfo: any[];
     public sourceActions: any = {};
+    public sourceUomModel: any = {};
     allATAMaininfo: ATAChapter[];
     allPriorityInfo: Priority[] = [];
     allUnitOfMeasureinfo: any[];
@@ -3453,11 +3454,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.isSaving = true;
         if (this.isEditMode == false) {
             this.disableuomvalue = false;
-            this.sourceUOM.createdBy = this.userName;
-            this.sourceUOM.updatedBy = this.userName;
-            this.sourceUOM.description = this.unitName;
-            this.sourceUOM.masterCompanyId = 1;
-            this.unitService.newUnitOfMeasure(this.sourceUOM).subscribe(data => {
+            this.sourceUomModel.createdBy = this.userName;
+            this.sourceUomModel.updatedBy = this.userName;
+            this.sourceUomModel.description = this.unitName;
+            this.sourceUomModel.masterCompanyId = 1;
+            this.unitService.newUnitOfMeasure(this.sourceUomModel).subscribe(data => {
                 this.sourceItemMaster.consumeUnitOfMeasureId = data.unitOfMeasureId;
                 this.Consumeunitofmeasure()
             })
@@ -4651,6 +4652,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     saveItemMasterGeneralInformation() {
         if (!(this.sourceItemMaster.partNumber && this.sourceItemMaster.partDescription && this.sourceItemMaster.purchaseUnitOfMeasureId && this.sourceItemMaster.glAccountId && this.sourceItemMaster.manufacturerId && this.sourceItemMaster.itemClassificationId)) {
+            console.log("this.sourceItemMaster.itemClassificationId before form save:::", this.sourceItemMaster.itemClassificationId);
             this.display = true;
             this.modelValue = true;
         } else {
@@ -4837,6 +4839,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     saveitemclassification() {
         this.isSaving = true;
+        console.log("this:::", this);
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
@@ -4847,8 +4850,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.workFlowtService.newAction(this.sourceAction).subscribe(
                 data => {
                     this.sourceItemMaster.itemClassificationId = data.itemClassificationId;
+                    console.log(data);
                     this.itemclass();
                 })
+            console.log("this.sourceItemMaster.itemClassificationId after save::", this.sourceItemMaster.itemClassificationId);
+            console.log("this.sourceItemMaster::", this.sourceItemMaster)
         }
 
 
@@ -4875,6 +4881,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 for (let i = 0; i < this.allManufacturerInfo.length; i++) {
                     let name = this.allManufacturerInfo[i].name;
                     if (name) {
+
                         if (name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                             this.manufacturerNumber.push([{
                                 "manufacturerId": this.allManufacturerInfo[i].manufacturerId,
@@ -4960,6 +4967,13 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         }, () => { console.log('Backdrop click') })
     }
 
+    exportUOmOpen(content) {
+        console.log("In exportUOmOpen function!!");
+       // this.sourceUOM.isActive = true;
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+        }, () => { console.log('Backdrop click') })
+    }
     ProvisionHandler(event) {
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();

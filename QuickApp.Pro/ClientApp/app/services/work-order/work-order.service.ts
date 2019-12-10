@@ -18,7 +18,6 @@ import { WorkOrderEndpointService } from '../work-order/work-order-endpoint.serv
 export class WorkOrderService {
 
     creditTerms: any;
-    employeesOriginalData: any[];
     constructor(private workOrderEndpointService: WorkOrderEndpointService) {
     }
 
@@ -228,7 +227,24 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getSubWorkOrderHeaderByWorkOrderId(workOrderId, workOrderPartNumberId);
     }
 
+    createSubWorkOrderHeaderByWorkOrderId(data) {
+        return this.workOrderEndpointService.createSubWorkOrderHeaderByWorkOrderId(data);
+    }
+    updateSubWorkOrderHeaderBySubWorkOrderId(data) {
+        return this.workOrderEndpointService.updateSubWorkOrderHeaderBySubWorkOrderId(data);
+    }
 
+
+
+
+
+    getPartsDetail(workOrderId) {
+        return this.workOrderEndpointService.getPartsDetail(workOrderId);
+    }
+
+    getBuildDetailsFromWorkFlow(partId, workScopeId) {
+        return this.workOrderEndpointService.getBuildDetailsFromWorkFlow(partId, workScopeId);
+    }
 
 
 }

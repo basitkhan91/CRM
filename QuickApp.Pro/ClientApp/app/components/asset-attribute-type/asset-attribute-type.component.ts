@@ -27,7 +27,7 @@ import { CommonService } from '../../services/common.service';
     animations: [fadeInOut]
 })
 export class AssetAttributeTypeComponent implements OnInit {
-    itemList: any[];
+    itemList: any[] = [];
     columnHeaders: any[];
     itemDetails: any;
     currentRow: AssetAttributeType;
@@ -43,14 +43,14 @@ export class AssetAttributeTypeComponent implements OnInit {
     modal: NgbModalRef;
     selectedColumns: any[];
     auditHistory: any[];
-    allGlInfo: any[];
-    allAssetTypes: any[];
+    allGlInfo: any[] = [];
+    allAssetTypes: any[] = [];
     assetAttrType: any = {};
-    filteredGLAccountList: any[];
-    filteredAssetTypeList: any[];
-    filteredDepriciationMethod: any[];
-    percentageList: any[];
-    filteredPercentageList: any[];
+    filteredGLAccountList: any[] = [];
+    filteredAssetTypeList: any[] = [];
+    filteredDepriciationMethod: any[] = [];
+    percentageList: any[] = [];
+    filteredPercentageList: any[] = [];
 
     companyList: any[];
     buList: any[];
@@ -63,16 +63,16 @@ export class AssetAttributeTypeComponent implements OnInit {
     allmgmtData: any[];
     mgmtStructureId: any;
     disableForMgmtStructure: boolean;
-    depriciationMethodList: DepriciationMethod[];
-    conventionTypeList: any[];
+    depriciationMethodList: any[] = [];
+    conventionTypeList: any[] = [];
     objectKeys = Object.keys;
-    depreciationFreq: any[];
-    assetSaleList: any[];
-    filteredAssetSaleList: any[];
-    assetWriteOffList: any[];
-    filteredWriteOffList: any[];
-    assetWriteDownList: any[];
-    filteredAssetWriteDownList: any[];
+    depreciationFreq: any[] = [];
+    assetSaleList: any[] = [];
+    filteredAssetSaleList: any[] = [];
+    assetWriteOffList: any[] = [];
+    filteredWriteOffList: any[] = [];
+    assetWriteDownList: any[] = [];
+    filteredAssetWriteDownList: any[] = [];
 
     constructor(private breadCrumb: SingleScreenBreadcrumbService, private alertService: AlertService, private depriciationMethodService: DepriciationMethodService, private coreDataService: AssetAttributeTypeService, private assetTypeService: AssetTypeService, private glAccountService: GlAccountService, public legalEntityService: LegalEntityService, public percentService: PercentService, private modalService: NgbModal, private authService: AuthService
         ,private commonservice: CommonService) {
@@ -96,6 +96,7 @@ export class AssetAttributeTypeComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allGlInfo = getGlList;
+        this.loadSelectedNames();
     }
 
     //loading all AssetTypes//
@@ -112,6 +113,7 @@ export class AssetAttributeTypeComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allAssetTypes = getAssetTypeList;
+        this.loadSelectedNames();
     }
 
     private onDataLoadFailed(error: any) {
@@ -183,12 +185,13 @@ export class AssetAttributeTypeComponent implements OnInit {
     loadDepricationMethod() {
         this.depriciationMethodService.getAll().subscribe(depriciationmethods => {
             this.depriciationMethodList = depriciationmethods[0].columnData;
+            this.loadSelectedNames();
         });
-        //console.log(this.depriciationMethodList);
+        ////console.log(this.depriciationMethodList);
     }
 
     companySelected(): void {
-        //console.log(`Company Id :${this.selectedCompanyID}`);
+        ////console.log(`Company Id :${this.selectedCompanyID}`);
 
         if (this.selectedCompanyID != undefined && this.selectedCompanyID.toString() !== "0") {
             this.mgmtStructureId = this.selectedCompanyID;
@@ -206,7 +209,7 @@ export class AssetAttributeTypeComponent implements OnInit {
     }
 
     buSelected(): void {
-        //console.log(`BU :${this.selectedBUId}`);
+        ////console.log(`BU :${this.selectedBUId}`);
         this.mgmtStructureId = this.selectedBUId;
         if (this.selectedBUId.toString() !== "0") {
             this.mgmtStructureId = this.selectedBUId;
@@ -221,7 +224,7 @@ export class AssetAttributeTypeComponent implements OnInit {
     }
 
     divisionSelected(): void {
-        //console.log(`Division id :${this.selectedDivisionID}`);
+        ////console.log(`Division id :${this.selectedDivisionID}`);
         if (this.selectedDivisionID.toString() !== "0") {
             this.mgmtStructureId = this.selectedDivisionID;
         } else {
@@ -325,31 +328,33 @@ export class AssetAttributeTypeComponent implements OnInit {
 
     getAllPercentage() {
         this.commonservice.smartDropDownList('[Percent]', 'PercentId', 'PercentValue').subscribe(res => {
-            ////console.log('res: '+res);
+            //////console.log('res: '+res);
             this.percentageList = res;
         });
-        ////console.log('percentge list : ', this.percentageList);
+        //////console.log('percentge list : ', this.percentageList);
     }
 
     getAllFrequency() {
         this.commonservice.smartDropDownList('[AssetDepreciationFrequency]', 'AssetDepreciationFrequencyId', 'Name').subscribe(res => {
             this.depreciationFreq = res;
+            this.loadSelectedNames();
         })
     }
 
     getAllConventionTypes() {
         this.commonservice.smartDropDownList('[ConventionType]', 'ConventionTypeId', 'Name').subscribe(res => {
             this.conventionTypeList = res;
-            //console.log('conventionTypeList', this.conventionTypeList);
+            ////console.log('conventionTypeList', this.conventionTypeList);
+            this.loadSelectedNames();
         })
     }
 
     filterPercentage(event) {
-        //console.log(parseInt(event.query));
+        ////console.log(parseInt(event.query));
         this.filteredPercentageList = this.percentageList;
 
         this.filteredPercentageList = [...this.percentageList.filter(x => {
-            //console.log(x);
+            ////console.log(x);
 
             return x.percentValue.includes(parseInt(event.query))
         })]
@@ -364,8 +369,16 @@ export class AssetAttributeTypeComponent implements OnInit {
     //Step E1: Open row up for editing
     addNewItem(): void {
         this.currentRow = new AssetAttributeType();
-        //console.log(new AssetAttributeType().assetAttributeTypeName);
-        //console.log(this.currentRow.assetAttributeTypeName);
+        this.currentRow.isDelete = false;
+        this.currentRow.residualValue = 1;
+        this.currentRow.isActive = true;
+        //this.currentRow.managementStructureId= 1;
+        this.selectedCompanyID = 0;
+        this.selectedBUId = 0;
+        this.selectedDivisionID = 0;
+        this.selectedDeptID = 0;
+        ////console.log(new AssetAttributeType().assetAttributeTypeName);
+        ////console.log(this.currentRow.assetAttributeTypeName);
         this.currentModeOfOperation = ModeOfOperation.Add;
     }
 
@@ -378,12 +391,15 @@ export class AssetAttributeTypeComponent implements OnInit {
         this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
     }
 
-    //Check if asset type exists before add/delete
+    //Check if asset attr type exists before add/delete
     checkItemExists(rowData): boolean {
-        this.getItemList();
+        //this.getItemList();
+        return true;
+        /*
         let item = rowData as AssetAttributeType;
         const exists = this.itemList.some(existingItem =>
-            existingItem.assetTypeId == item.assetTypeId &&
+            existingItem.assetAttributeTypeId == item.assetAttributeTypeId
+            &&
             existingItem.assetAttributeTypeName == item.assetAttributeTypeName &&
             existingItem.description == item.description &&
             existingItem.conventionType == item.conventionType &&
@@ -399,7 +415,7 @@ export class AssetAttributeTypeComponent implements OnInit {
             existingItem.assetWriteOff == item.assetWriteOff &&
             existingItem.assetWriteDown == item.assetWriteDown
         );
-        return exists;
+        return exists; */
     }
 
     //Open the confirmation to delete
@@ -433,51 +449,19 @@ export class AssetAttributeTypeComponent implements OnInit {
 
     //Get the page's grid data
     getItemList() {
-        //TODO
-        /* Uncomment this part once API is developed
         this.coreDataService.getAll().subscribe(res => {
             const responseData = res[0];
             this.itemList = responseData;
             this.totalRecords = responseData.length;
             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
-        });*/
-        let testData: any[] = [];
-        //TODO - Comment this sample list once API is done
-        testData.push({
-            assetAttributeTypeId: "1",
-            assetTypeId: "6",
-            assetTypeName:"dsdf",
-            description: "description",
-            assetAttributeTypeName: "dsdf",
-            conventionType: "1",
-            conventionTypeName: "Mid Month",
-            depreciationMethod: "25",
-            depreciationMethodName: "111",
-            residualPercentage: "1",
-            residualValue: "100",
-            assetLife: "100",
-            depreciationFrequencyId: "1",
-            depreciationFrequencyName: "Monthly",
-            acquiredGLAccountId: "14",
-            acquiredGLAccountName: "Vehicle Repairs",
-            deprExpenseGLAccountId: "15",
-            deprExpenseGLAccountName: "test",
-            adDepsGLAccountId: "18",
-            adDepsGLAccountName: "snehakakarla",
-            assetSale: "15",
-            assetSaleName: "10100",
-            assetWriteOff: "15",
-            assetWriteOffName: "10100",
-            assetWriteDown: "17",
-            assetWriteDownName: "10100",
-            createdBy: "",
-            createdDate: "",
-            updatedDate: "",
-            updatedBy: "",
-            isActive: "true",
-            isDelete: "false",
+            this.loadDepricationMethod();
+            this.glList();
+            this.getAssetTypeList();
+            this.loadManagementdata();
+            this.getAllPercentage();
+            this.getAllFrequency();
+            this.getAllConventionTypes();
         });
-        this.itemList = testData;
     }
 
     newItem(rowData): AssetAttributeType {
@@ -496,19 +480,34 @@ export class AssetAttributeTypeComponent implements OnInit {
 
     /*
     openItemForEdit(rowData): void {
-        //console.log('adDepsGLAccountId = '+rowData.adDepsGLAccountId);
+        ////console.log('adDepsGLAccountId = '+rowData.adDepsGLAccountId);
         this.currentRow = {
             ...rowData,
             acquiredGLAccountId: getObjectById('acquiredGLAccountId', rowData.acquiredGLAccountId, this.allGlInfo)
         };
-        //console.log("acquiredGLAccountId = "+this.currentRow.acquiredGLAccountId);
+        ////console.log("acquiredGLAccountId = "+this.currentRow.acquiredGLAccountId);
         this.currentModeOfOperation = ModeOfOperation.Update;
     }*/
 
     saveNewItem(): void {
         this.currentModeOfOperation = ModeOfOperation.Add;
         //console.log(this.currentRow);
-        this.coreDataService.add(this.currentRow).subscribe(response => {
+        const data = {
+            ...this.currentRow, createdBy: this.userName, updatedBy: this.userName,
+            acquiredGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.acquiredGLAccountId),
+            adDepsGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.adDepsGLAccountId),
+            deprExpenseGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.deprExpenseGLAccountId),
+            assetTypeId: editValueAssignByCondition('assetTypeId', this.currentRow.assetTypeId),
+            conventionType: editValueAssignByCondition('value', this.currentRow.conventionType),
+            residualPercentage: editValueAssignByCondition('value', this.currentRow.residualPercentage),
+            depreciationFrequencyId: editValueAssignByCondition('value', this.currentRow.depreciationFrequencyId),
+            depreciationMethod: editValueAssignByCondition('assetDepreciationMethodId', this.currentRow.depreciationMethod),
+            assetSale: editValueAssignByCondition('glAccountId', this.currentRow.assetSale),
+            assetWriteOff: editValueAssignByCondition('glAccountId', this.currentRow.assetWriteOff),
+            assetWriteDown: editValueAssignByCondition('glAccountId', this.currentRow.assetWriteDown),
+            managementStructureId: editValueAssignByCondition('managementStructureId', this.mgmtStructureId),
+        };
+        this.coreDataService.add(data).subscribe(response => {
             this.alertService.showMessage('Success', this.rowName + " added successfully.", MessageSeverity.success);
             this.getItemList();
         });
@@ -517,16 +516,32 @@ export class AssetAttributeTypeComponent implements OnInit {
 
     saveExistingItem(rowData): void {
         let item = rowData as AssetAttributeType;
-        //console.log('saveExistingItem:',item);
+        ////console.log('saveExistingItem:',item);
         var itemExists = this.checkItemExists(item);
         if (itemExists) {
             this.currentModeOfOperation = ModeOfOperation.Update;
-            item.updatedBy = this.userName;
-            this.coreDataService.update(item).subscribe(response => {
+            const data = {
+                ...item, updatedBy: this.userName,
+                acquiredGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.acquiredGLAccountId),
+                adDepsGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.adDepsGLAccountId),
+                deprExpenseGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.deprExpenseGLAccountId),
+                assetTypeId: editValueAssignByCondition('assetTypeId', this.currentRow.assetTypeId),
+                conventionType: editValueAssignByCondition('value', this.currentRow.conventionType),
+                residualPercentage: editValueAssignByCondition('value', this.currentRow.residualPercentage),
+                depreciationFrequencyId: editValueAssignByCondition('value', this.currentRow.depreciationFrequencyId),
+                depreciationMethod: editValueAssignByCondition('assetDepreciationMethodId', this.currentRow.depreciationMethod),
+                assetSale: editValueAssignByCondition('glAccountId', this.currentRow.assetSale),
+                assetWriteOff: editValueAssignByCondition('glAccountId', this.currentRow.assetWriteOff),
+                assetWriteDown: editValueAssignByCondition('glAccountId', this.currentRow.assetWriteDown),
+                //managementStructureId: editValueAssignByCondition('managementStructureId', this.mgmtStructureId),
+            };
+            //console.log('saveExistingItem:', data);
+            this.coreDataService.update(data).subscribe(response => {
                 this.alertService.showMessage('Success', this.rowName + " updated successfully.", MessageSeverity.success);
                 this.getItemList();
             });
         } else {
+            //console.log('going for insert');
             this.saveNewItem();
         }
         this.dismissModal();
@@ -543,7 +558,15 @@ export class AssetAttributeTypeComponent implements OnInit {
         });
     }
 
+    selectedAssetType(object) {
+        //console.log('selectedAssetType.assetTypeName', object);
+        //console.log('selectedAssetType.memo', object.assetTypeMemo);
+        this.currentRow.description = object.assetTypeMemo;
+    }
+
     showItemEdit(rowData): void {
+        this.currentModeOfOperation = ModeOfOperation.Update;
+        //console.log('currentModeOfOperation', this.currentModeOfOperation);
         this.currentRow = {
             ...rowData,
             assetTypeId: getObjectById('assetTypeId', rowData.assetTypeId, this.allAssetTypes),
@@ -558,13 +581,10 @@ export class AssetAttributeTypeComponent implements OnInit {
             assetWriteOff: getObjectById('glAccountId', rowData.assetWriteOff, this.allGlInfo),
             assetWriteDown: getObjectById('glAccountId', rowData.assetWriteDown, this.allGlInfo)
         };
-        this.currentRow = { ...this.currentRow }
+        this.currentRow = { ...this.currentRow };
         this.mgmtStructureId = this.currentRow.managementStructureId;
         this.populateMgmtStructure(this.currentRow.managementStructureId);
-        //console.log("conventionType = " + this.currentRow.conventionType);
-        this.currentModeOfOperation = ModeOfOperation.Update;
-        //this.currentRow = rowData as AssetAttributeType;
-        this.currentModeOfOperation = ModeOfOperation.Update;
+        console.log("conventionType = " + this.currentRow);
     }
 
     //turn the item active/inActive
@@ -581,16 +601,87 @@ export class AssetAttributeTypeComponent implements OnInit {
         this.itemDetails = rowData;
     }
 
+    loadSelectedNames() {
+        //console.log('loadSelectedNames', this.itemList.length);
+        for (let i = 0; i < this.itemList.length; i++) {
+            this.itemList[i].assetTypeName = this.getAssetTypeNameById(this.itemList[i].assetTypeId);
+            //console.log(this.itemList[i].assetTypeName);
+            this.itemList[i].conventionTypeName = this.getConvNameById(this.itemList[i].conventionType);
+            this.itemList[i].depreciationMethodName = this.getDeprMethodNameById(this.itemList[i].depreciationMethod);
+            this.itemList[i].depreciationFrequencyName = this.getFreqLabelById(this.itemList[i].depreciationFrequencyId);
+            this.itemList[i].acquiredGLAccountName = this.getAccNameById(this.itemList[i].acquiredGLAccountId);
+            this.itemList[i].deprExpenseGLAccountName = this.getAccNameById(this.itemList[i].deprExpenseGLAccountId);
+            this.itemList[i].adDepsGLAccountName = this.getAccNameById(this.itemList[i].adDepsGLAccountId);
+            this.itemList[i].assetSaleName = this.getAccCodeById(this.itemList[i].assetSale);
+            this.itemList[i].assetWriteOffName = this.getAccCodeById(this.itemList[i].assetWriteOff);
+            this.itemList[i].assetWriteDownName = this.getAccCodeById(this.itemList[i].assetWriteDown);
+        }
+    }
+
+    getAccNameById(value) {
+        for (let i = 0; i < this.allGlInfo.length; i++) {
+            let accId = this.allGlInfo[i].glAccountId;
+            if (accId == value) {
+                return this.allGlInfo[i].accountName;
+            }
+        }
+        return "";
+    }
+
+    getAccCodeById(value) {
+        for (let i = 0; i < this.allGlInfo.length; i++) {
+            let accId = this.allGlInfo[i].glAccountId;
+            if (accId == value) {
+                return this.allGlInfo[i].accountCode;
+            }
+        }
+        return "";
+    }
+
+    getFreqLabelById(value) {
+        for (let i = 0; i < this.depreciationFreq.length; i++) {
+            let accId = this.depreciationFreq[i].value;
+            if (accId == value) {
+                return this.depreciationFreq[i].label;
+            }
+        }
+        return "";
+    }
+
+    getAssetTypeNameById(value) {
+        for (let i = 0; i < this.allAssetTypes.length; i++) {
+            let accId = this.allAssetTypes[i].assetTypeId;
+            if (accId == value) {
+                return this.allAssetTypes[i].assetTypeName;
+            }
+        }
+        return "";
+    }
+
+    getDeprMethodNameById(value) {
+        for (let i = 0; i < this.depriciationMethodList.length; i++) {
+            let accId = this.depriciationMethodList[i].assetDepreciationMethodId;
+            if (accId == value) {
+                return this.depriciationMethodList[i].name;
+            }
+        }
+        return "";
+    }
+
+    getConvNameById(value) {
+        for (let i = 0; i < this.conventionTypeList.length; i++) {
+            let accId = this.conventionTypeList[i].value;
+            if (accId == value) {
+                return this.conventionTypeList[i].label;
+            }
+        }
+        return "";
+    }
+
     //Step x: load all the required data for the page to function
     private loadData() {
-        this.loadDepricationMethod();
         this.getItemList();
-        this.glList();
-        this.getAssetTypeList();
-        this.loadManagementdata();
-        this.getAllPercentage();
-        this.getAllFrequency();
-        this.getAllConventionTypes();
+        console.log(this.itemList);
         this.rowName = "Asset Attribute Type";
         this.header = "Asset Attribute Type";
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-asset-attribute-type';
@@ -617,6 +708,8 @@ export class AssetAttributeTypeComponent implements OnInit {
         this.currentModeOfOperation = ModeOfOperation.None;
         this.selectedColumns = this.columnHeaders;
         this.currentRow = new AssetAttributeType();
+        this.currentRow.isActive = true;
+        this.getItemList();
     }
 
     resetFromData() {

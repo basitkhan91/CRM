@@ -274,12 +274,15 @@
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="assetTypeId" class="control-label">Asset Type</label>
+                                    <label for="assetTypeId" class="control-label">
+                                        Asset Type
+                                        <span class="clr-red">*</span>
+                                    </label>
                                 </div>
                                 <div class="col-sm-5">
                                     <p-autoComplete field="assetTypeName" [(ngModel)]="currentRow.assetTypeId" name="assetTypeId"
                                                     [suggestions]="filteredAssetTypeList" (completeMethod)="filterAssetType($event)"
-                                                    [forceSelection]="true" [size]="30" [minLength]="1"
+                                                    [forceSelection]="true" [size]="30" [minLength]="1" (onSelect)="selectedAssetType($event)"
                                                     [dropdown]="true" class="p-autoComplete-ctsm" [required]="true">
                                     </p-autoComplete>
                                 </div>
@@ -295,26 +298,26 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="assetAttributeTypeName" class="control-label">Name</label>
+                                    <label for="assetAttributeTypeName" class="control-label">Name <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
                                     <input type="text" name="assetAttributeTypeName" class="form-control"
-                                           [(ngModel)]="currentRow.assetAttributeTypeName">
+                                           [(ngModel)]="currentRow.assetAttributeTypeName" required>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="conventionType" class="control-label">Convention Type</label>
+                                    <label for="conventionType" class="control-label">Convention Type <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <select  name="conventionType" [(ngModel)]="currentRow.conventionType">
+                                    <select name="conventionType" [(ngModel)]="currentRow.conventionType" required>
                                         <option *ngFor="let convType of conventionTypeList" [ngValue]="convType">{{convType.label}}</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="depreciationMethod" class="control-label">Depreciation Method</label>
+                                    <label for="depreciationMethod" class="control-label">Depreciation Method <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
                                     <p-autoComplete field="name" [(ngModel)]="currentRow.depreciationMethod" name="depreciationMethod"
@@ -326,10 +329,10 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="residualPercentage" class="control-label">Residual Percentage</label>
+                                    <label for="residualPercentage" class="control-label">Residual Percentage <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <select name="residualPercentage" [(ngModel)]="currentRow.residualPercentage">
+                                    <select name="residualPercentage" [(ngModel)]="currentRow.residualPercentage" required>
                                         <option value="">Select Percentage</option>
                                         <option *ngFor="let Percentlist of percentageList" [ngValue]="Percentlist">{{Percentlist.value}}</option>
                                     </select>
@@ -337,35 +340,35 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="residualValue" class="control-label">Residual Value</label>
+                                    <label for="residualValue" class="control-label">Residual Value <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
                                     <input type="text" name="residualValue" class="form-control"
-                                           [(ngModel)]="currentRow.residualValue" readonly>
+                                           [(ngModel)]="currentRow.residualValue" min="1" required>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="assetLife" class="control-label">Asset Life</label>
+                                    <label for="assetLife" class="control-label">Asset Life <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
                                     <input type="text" name="assetLife" class="form-control"
-                                           [(ngModel)]="currentRow.assetLife">
+                                           [(ngModel)]="currentRow.assetLife" min="1" required>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="depreciationFrequencyId" class="control-label">Depreciation Frequency</label>
+                                    <label for="depreciationFrequencyId" class="control-label">Depreciation Frequency <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <select name="depreciationFrequencyId" [(ngModel)]="currentRow.depreciationFrequencyId">
+                                    <select name="depreciationFrequencyId" [(ngModel)]="currentRow.depreciationFrequencyId" required>
                                         <option *ngFor="let freq of depreciationFreq" [ngValue]="freq">{{freq.label}}</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="acquiredGLAccountId" class="control-label">Acquired GL Account</label>
+                                    <label for="acquiredGLAccountId" class="control-label">Acquired GL Account <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
                                     <p-autoComplete field="accountName" [(ngModel)]="currentRow.acquiredGLAccountId" name="acquiredGLAccountId"
@@ -379,7 +382,7 @@
 
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="deprExpenseGLAccountId" class="control-label">Depr Expense GL Account</label>
+                                    <label for="deprExpenseGLAccountId" class="control-label">Depr Expense GL Account <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
                                     <p-autoComplete field="accountName" [(ngModel)]="currentRow.deprExpenseGLAccountId" name="deprExpenseGLAccountId"
@@ -391,7 +394,7 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="adDepsGLAccountId" class="control-label">Ad Deps GL Account</label>
+                                    <label for="adDepsGLAccountId" class="control-label">Ad Deps GL Account <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
                                     <p-autoComplete field="accountName" [(ngModel)]="currentRow.adDepsGLAccountId" name="adDepsGLAccountId"
@@ -403,7 +406,7 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="assetSale" class="control-label">Asset Sale</label>
+                                    <label for="assetSale" class="control-label">Asset Sale <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
                                     <p-autoComplete field="accountCode" [(ngModel)]="currentRow.assetSale" name="assetSale"
@@ -415,7 +418,7 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="assetWriteOff" class="control-label">Asset Write Off</label>
+                                    <label for="assetWriteOff" class="control-label">Asset Write Off <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
                                     <p-autoComplete field="accountCode" [(ngModel)]="currentRow.assetWriteOff" name="assetWriteOff"
@@ -427,7 +430,7 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="assetWriteDown" class="control-label">Asset Write Down</label>
+                                    <label for="assetWriteDown" class="control-label">Asset Write Down <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
                                     <p-autoComplete field="accountCode" [(ngModel)]="currentRow.assetWriteDown" name="assetWriteDown"
@@ -440,7 +443,7 @@
                         </div>
                         <div class="col-sm-12">
                             <div class="col-sm-4">
-                                <label for="managementStructure" class="control-label">Management Structure</label>
+                                <label for="managementStructure" class="control-label">Management Structure <span class="clr-red">*</span></label>
                             </div>
                             <div class="col-sm-5">
                                 <div style="margin: 2px 0">

@@ -31,6 +31,7 @@ import { DBkeys } from '../../../../services/db-Keys';
 
 import { User } from '../../../../models/user.model';
 import { ItemMasterService } from '../../../../services/itemMaster.service';
+import { editValueAssignByCondition } from '../../../../generic/autocomplete';
 
 
 
@@ -113,8 +114,8 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
                 this.nextbuttonEnable = true;
 
             }
-            this.firstName = this.sourceEmployee.firstName;
-            this.lastName = this.sourceEmployee.lastName;
+            this.firstName = editValueAssignByCondition('firstName', this.sourceEmployee.firstName);
+            this.lastName = editValueAssignByCondition('lastName', this.sourceEmployee.lastName);
             console.log(this.sourceEmployee.employeeTrainingTypeId);
 
             console.log("traingi");

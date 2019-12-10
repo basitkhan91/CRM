@@ -49,5 +49,6 @@ namespace DAL.Repositories.Interfaces
         VendorDocumentDetails GetVendorDocumentDetailById(long id);
 
         IEnumerable<object> GetVendorProcessList(int companyId);
+        List<VendorDocumentDetailsAudit> GetVendorDocumentDetailsAudit(long id);
     }
 }

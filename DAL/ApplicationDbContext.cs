@@ -432,6 +432,7 @@ namespace DAL
         public DbSet<VendorBillingAddress> VendorBillingAddress { get; set; }
         public DbSet<VendorBillingAddressAudit> VendorBillingAddressAudit { get; set; }
         public DbSet<VendorDocumentDetails> VendorDocumentDetails { get; set; }
+        public DbSet<VendorDocumentDetailsAudit> VendorDocumentDetailsAudit { get; set; }        
         public DbSet<PurchaseOrderShipVia> PurchaseOrderShipVia { get; set; }
         public DbSet<LegalEntityBillingAddress> LegalEntityBillingAddress { get; set; }
         public DbSet<LegalEntityShippingAddress> LegalEntityShippingAddress { get; set; }
@@ -456,6 +457,18 @@ namespace DAL
         public DbSet<Master1099> Master1099 { get; set; }
         public DbSet<VendorProcess1099> VendorProcess1099 { get; set; }
 
+
+        public DbSet<WorkOrderQuoteExclusions> WorkOrderQuoteExclusions { get; set; }
+        public DbSet<WorkOrderQuoteFreight> WorkOrderQuoteFreight { get; set; }
+        public DbSet<WorkOrderQuoteCharges> WorkOrderQuoteCharges { get; set; }
+        public DbSet<WorkOrderQuoteLabor> WorkOrderQuoteLabor { get; set; }
+        public DbSet<WorkOrderQuoteLaborHeader> WorkOrderQuoteLaborHeader { get; set; }
+        public DbSet<WorkOrderQuoteMaterial> WorkOrderQuoteMaterial { get; set; }
+        public DbSet<WorkOrderQuoteDetails> WorkOrderQuoteDetails { get; set; }
+        public DbSet<WorkOrderBillingInvoicing> WorkOrderBillingInvoicing { get; set; }
+        public DbSet<InvoiceType> InvoiceType { get; set; }
+
+        
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

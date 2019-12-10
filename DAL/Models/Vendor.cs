@@ -64,7 +64,7 @@ namespace DAL.Models
         public Nullable<bool> v1099Royalties { get; set; }
         public Nullable<bool> v1099RoyaltiesDefault { get; set; }
         public Nullable<bool> v1099OtherIncome { get; set; }
-        public string v1099OtherIncomeDefault { get; set; }
+        public Nullable<bool> v1099OtherIncomeDefault { get; set; }
         public Nullable<bool> v1099MedicalHealthPayments { get; set; }
         public Nullable<bool> v1099MedicalHealthPaymentsDefault { get; set; }
         public Nullable<bool> v1099NonEmployeeComp { get; set; }
@@ -116,7 +116,7 @@ namespace DAL.Models
         [NotMapped]
         public long AttachmentId { get; set; }
 
-
+        public string VendorPhoneExt { get; set; }
 
 
 

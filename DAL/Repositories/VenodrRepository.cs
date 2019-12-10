@@ -71,7 +71,8 @@ namespace DAL.Repositories
                                 CreditTermsId = ct.Name,
                                 DiscountLevel = di == null ? 0 : di.DiscontValue,
                                 vc.ClassificationName,
-                                VendorCapabilityName = vca.capabilityDescription
+                                VendorCapabilityName = vca.capabilityDescription,
+                               VendorPhoneContact=t.VendorPhone+" - "+t.VendorPhoneExt
                             })/*.Where(t => t.IsActive == true)*/.OrderByDescending(c => c.CreatedDate).ToList();
                 return data;
 
@@ -801,7 +802,10 @@ namespace DAL.Repositories
                                 ad.StateOrProvince,
                                 ad.PostalCode,
                                 ad.Country,
-                                vba.CreatedDate
+                                vba.CreatedDate,
+                                vba.UpdatedBy,
+                                vba.UpdatedDate,
+                                vba.CreatedBy
                             }).OrderByDescending(p => p.AuditVendorBillingAddressId).ToList();
                 return list;
             }
@@ -903,8 +907,28 @@ namespace DAL.Repositories
 
         public IEnumerable<object> GetVendorProcessList(int companyId)
         {
-            // _appContext.Master1099.Where(p=>p.MasterCompanyId== companyId).ToList();
-            return null;
+            var list = (from m in _appContext.Master1099
+                        where m.IsActive == true && m.MasterCompanyId == companyId
+                        select new
+                        {
+                            m.Master1099Id,
+                            m.Description
+                        }).Distinct().ToList();
+            return list;
+          
+        }
+
+        public List<VendorDocumentDetailsAudit> GetVendorDocumentDetailsAudit(long id)
+        {
+            try
+            {
+                return _appContext.VendorDocumentDetailsAudit.Where(p => p.IsActive == true && p.VendorDocumentDetailId == id).ToList();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
     }

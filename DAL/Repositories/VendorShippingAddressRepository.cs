@@ -94,6 +94,8 @@ namespace DAL.Repositories
                             v.VendorShippingAddressId,
                             v.CreatedDate,
                             v.UpdatedDate,
+                            v.CreatedBy,
+                            v.UpdatedBy,
                             v.VendorId,
                             v.IsActive
                         }).OrderByDescending(c=>c.AuditVendorShippingAddressId).ToList();

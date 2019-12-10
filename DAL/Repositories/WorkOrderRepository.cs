@@ -485,12 +485,59 @@ namespace DAL.Repositories
             }
         }
 
-        public SubWorkOrder SubWorkOrderDetails(long subWorkOrderId)
+        public object SubWorkOrderDetails(long subWorkOrderId)
         {
             try
             {
-                var subWorkOrder = _appContext.Set<SubWorkOrder>().Where(x => x.SubWorkOrderId == subWorkOrderId).FirstOrDefault();
-                return subWorkOrder;
+                //var subWorkOrder = _appContext.Set<SubWorkOrder>().Where(x => x.SubWorkOrderId == subWorkOrderId).FirstOrDefault();
+                //return subWorkOrder;
+
+                var data = (from swo in _appContext.SubWorkOrder
+                            join wo in _appContext.WorkOrder on swo.WorkOrderId equals wo.WorkOrderId
+                            join wop in _appContext.WorkOrderPartNumber on swo.WorkOrderPartNumberId equals wop.ID
+                            join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
+                            join rp in _appContext.Nha_Tla_Alt_Equ_ItemMapping on wop.MappingItemMasterId equals rp.MappingItemMasterId into woprp
+                            from rp in woprp.DefaultIfEmpty()
+                            join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId into rpim1
+                            from im1 in rpim1.DefaultIfEmpty()
+                            join sl in _appContext.StockLine on wop.StockLineId equals sl.StockLineId
+                            join wos in _appContext.WorkScope on wop.WorkOrderScopeId equals wos.WorkScopeId
+                            join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
+                            join wf in _appContext.Workflow on swo.WorkFlowId equals wf.WorkflowId into wopwf
+                            from wf in wopwf.DefaultIfEmpty()
+                            join pub in _appContext.Publication on swo.CMMId equals pub.PublicationRecordId into woppub
+                            from pub in woppub.DefaultIfEmpty()
+                            join stage in _appContext.WorkOrderStage on swo.StageId equals stage.ID
+                            join status in _appContext.WorkOrderStatus on swo.StatusId equals status.Id
+                            where swo.SubWorkOrderId == subWorkOrderId
+                            select new
+                            {
+                                swo.SubWorkOrderId,
+                                swo.SubWorkOrderNo,
+                                swo.NeedDate,
+                                wo.WorkOrderNum,
+                                MCPN = im.PartNumber,
+                                RevisedMCPN = im1.PartNumber,
+                                MCPNDescription = im.PartDescription,
+                                MCSerialNum = sl.SerialNumber,
+                                CustName = cust.Name,
+                                WorkScope = wos.Description,
+                                Stockline = sl.StockLineNumber,
+                                WorkFlowId = wf == null ? 0 : wop.WorkflowId,
+                                WorkFlowNo = wf == null ? "" : wf.WorkOrderNumber,
+                                wo.OpenDate,
+                                swo.EstCompDate,
+                                swo.StageId,
+                                WorkOrderStage = stage.Description,
+                                swo.StatusId,
+                                WorkOrderStatus = status.Description,
+                                swo.CMMId,
+                                WorkOrderCMM = pub.PublicationId,
+                                swo.IsDER,
+                                swo.IsPMA,
+                                wop.WorkOrderScopeId,
+                            }).FirstOrDefault();
+                return data;
             }
             catch (Exception)
             {
@@ -505,22 +552,30 @@ namespace DAL.Repositories
             {
                 var list = (from swo in _appContext.SubWorkOrder
                             join wo in _appContext.WorkOrder on swo.WorkOrderId equals wo.WorkOrderId
-                            join wos in _appContext.WorkOrderStage on swo.StageId equals wos.ID into swowos
-                            from wos in swowos.DefaultIfEmpty()
+                            join wop in _appContext.WorkOrderPartNumber on swo.WorkOrderPartNumberId equals wop.ID
+                            join wowf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wowf.WorkOrderId
+                            join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
+                            join wos in _appContext.WorkScope on swo.StatusId equals wos.WorkScopeId
+                            join stage in _appContext.WorkOrderStage on swo.StageId equals stage.ID
+                            join rp in _appContext.Nha_Tla_Alt_Equ_ItemMapping on wop.MappingItemMasterId equals rp.MappingItemMasterId into woprp
+                            from rp in woprp.DefaultIfEmpty()
+                            join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId into rpim1
+                            from im1 in rpim1.DefaultIfEmpty()
                             where swo.WorkOrderId == workOrderId
                             select new
                             {
 
                                 swo.SubWorkOrderNo,
-                                Stage = wos.Description,
-                                swo.MasterPartNo,
-                                swo.RevisedPartNo,
-                                swo.MasterPartDescription,
-                                swo.OpenDate,
+                                WorkScope = wos.Description,
+                                MasterPartNo = im.PartNumber,
+                                RevisedPartNo = im1.PartNumber,
+                                MasterPartDescription = im.PartDescription,
+                                wo.OpenDate,
                                 swo.NeedDate,
-                                swo.WorkScope,
+                                Stage = stage.Description,
                                 swo.WorkOrderId,
-                                swo.SubWorkOrderId
+                                swo.SubWorkOrderId,
+                                wowf.WorkFlowWorkOrderId
                             }).Distinct().ToList();
                 return list;
             }
@@ -531,7 +586,68 @@ namespace DAL.Repositories
             }
         }
 
-        private long CreateSubWorkOrderWorkFlow(long workFlowId, long workOrderId, string createdBy, int masterCompanyId)
+        public object SubWorkOrderHeaderDetails(long workOrderId, long workOrderPartNumberId)
+        {
+            try
+            {
+                var data = (from wo in _appContext.WorkOrder
+                            join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
+                            join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
+                            join rp in _appContext.Nha_Tla_Alt_Equ_ItemMapping on wop.MappingItemMasterId equals rp.MappingItemMasterId into woprp
+                            from rp in woprp.DefaultIfEmpty()
+                            join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId into rpim1
+                            from im1 in rpim1.DefaultIfEmpty()
+                            join sl in _appContext.StockLine on wop.StockLineId equals sl.StockLineId
+                            join wos in _appContext.WorkScope on wop.WorkOrderScopeId equals wos.WorkScopeId
+                            join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
+                            join wf in _appContext.Workflow on wop.WorkflowId equals wf.WorkflowId into wopwf
+                            from wf in wopwf.DefaultIfEmpty()
+                            join pub in _appContext.Publication on wop.CMMId equals pub.PublicationRecordId into woppub
+                            from pub in woppub.DefaultIfEmpty()
+                            join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
+                            join status in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals status.Id
+                            join wowf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wowf.WorkOrderId
+
+
+                            where wo.WorkOrderId == workOrderId && wop.ID == workOrderPartNumberId
+                            select new
+                            {
+                                wo.WorkOrderNum,
+                                WorkFlowWorkOrderId = wowf.WorkFlowWorkOrderId,
+                                MCPN = im.PartNumber,
+                                RevisedMCPN = im1.PartNumber,
+                                MCPNDescription = im.PartDescription,
+                                MCSerialNum = sl.SerialNumber,
+                                CustName = cust.Name,
+                                WorkScope = wos.Description,
+                                Stockline = sl.StockLineNumber,
+                                WorkFlowId = wf == null ? 0 : wop.WorkflowId,
+                                WorkFlowNo = wf == null ? "" : wf.WorkOrderNumber,
+                                wo.OpenDate,
+                                wop.EstimatedCompletionDate,
+                                StageId = wop.WorkOrderStageId,
+                                WorkOrderStage = stage.Description,
+                                StatusId = wop.WorkOrderStatusId,
+                                WorkOrderStatus = status.Description,
+                                CMMId = wop.CMMId,
+                                WorkOrderCMM = pub.PublicationId,
+                                wop.IsDER,
+                                wop.IsPMA,
+                                wop.WorkOrderScopeId,
+                                SubWorkOrderNo = wo.WorkOrderNum + "-1",
+                                ItemMasterId = wop.MasterPartId
+
+                            }).FirstOrDefault();
+                return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        private long CreateSubWorkOrderWorkFlow(long? workFlowId, long workOrderId, string createdBy, int masterCompanyId)
         {
             try
             {
@@ -657,6 +773,8 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
+
         #endregion
 
         #region Work Flow Work Order
@@ -792,7 +910,7 @@ namespace DAL.Repositories
                                 NTE = (im.OverhaulHours == null ? 0 : im.OverhaulHours) + (im.RPHours == null ? 0 : im.RPHours) + (im.mfgHours == null ? 0 : im.mfgHours) + (im.TestHours == null ? 0 : im.TestHours),
                                 Qty = wop.Quantity,
                                 Stage = wop.Description,
-                                WorkOrderPartNumberId= wop.ID,
+                                WorkOrderPartNumberId = wop.ID,
                                 wop.WorkOrderScopeId
                             }
                           ).Distinct()
@@ -870,41 +988,6 @@ namespace DAL.Repositories
                                 wowf.ChargesCost,
                                 wowf.Total,
                                 wowf.PerOfBerThreshold,
-                            }).FirstOrDefault();
-                return data;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        public object SubWorkOrderHeaderDetails(long workOrderId,long workOrderPartNumberId)
-        {
-            try
-            {
-                var data = (from wo in _appContext.WorkOrder
-                            join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
-                            join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
-                            join rp in _appContext.Nha_Tla_Alt_Equ_ItemMapping on wop.MappingItemMasterId equals rp.MappingItemMasterId into woprp
-                            from rp in woprp.DefaultIfEmpty()
-                            join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId into rpim1
-                            from im1 in rpim1.DefaultIfEmpty()
-                            join sl in _appContext.StockLine on wop.StockLineId equals sl.StockLineId
-                            join wos in _appContext.WorkScope on wop.WorkOrderScopeId equals wos.WorkScopeId
-                            join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
-                            where wo.WorkOrderId== workOrderId && wop.ID == workOrderPartNumberId
-                            select new
-                            {
-                                wo.WorkOrderNum,
-                                MCPN =im.PartNumber,
-                                RevisedMCPN= im1.PartNumber,
-                                MCPNDescription=im.PartDescription,
-                                MCSerialNum=sl.SerialNumber,
-                                CustName=cust.Name,
-                                WorkScope=wos.Description,
-                                Stockline=sl.StockLineNumber
                             }).FirstOrDefault();
                 return data;
             }
@@ -1797,16 +1880,16 @@ namespace DAL.Repositories
         {
             try
             {
-                WorkOrderMaterials workOrderDocument = new WorkOrderMaterials();
-                workOrderDocument.WorkOrderMaterialsId = workOrderMaterialsId;
-                workOrderDocument.UpdatedDate = DateTime.Now;
-                workOrderDocument.IsDeleted = true;
-                workOrderDocument.UpdatedBy = updatedBy;
+                WorkOrderMaterials workOrderMaterials = new WorkOrderMaterials();
+                workOrderMaterials.WorkOrderMaterialsId = workOrderMaterialsId;
+                workOrderMaterials.UpdatedDate = DateTime.Now;
+                workOrderMaterials.IsDeleted = true;
+                workOrderMaterials.UpdatedBy = updatedBy;
 
-                _appContext.WorkOrderMaterials.Attach(workOrderDocument);
-                _appContext.Entry(workOrderDocument).Property(x => x.IsDeleted).IsModified = true;
-                _appContext.Entry(workOrderDocument).Property(x => x.UpdatedDate).IsModified = true;
-                _appContext.Entry(workOrderDocument).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.WorkOrderMaterials.Attach(workOrderMaterials);
+                _appContext.Entry(workOrderMaterials).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(workOrderMaterials).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(workOrderMaterials).Property(x => x.UpdatedBy).IsModified = true;
                 _appContext.SaveChanges();
             }
             catch (Exception)
@@ -2532,7 +2615,575 @@ namespace DAL.Repositories
             }
         }
 
+        public WorkOrderQuoteDetails CreateWorkOrderQuoteDetails(WorkOrderQuoteDetails workOrderQuoteDetails)
+        {
+            try
+            {
+                _appContext.WorkOrderQuoteDetails.Add(workOrderQuoteDetails);
+                _appContext.SaveChanges();
+                return workOrderQuoteDetails;
+            }
+            catch (Exception)
+            {
 
+                throw;
+            }
+        }
+
+        public WorkOrderQuoteDetails UpdateWorkOrderQuoteDetails(WorkOrderQuoteDetails workOrderQuoteDetails)
+        {
+            try
+            {
+                _appContext.WorkOrderQuoteDetails.Update(workOrderQuoteDetails);
+                _appContext.SaveChanges();
+                return workOrderQuoteDetails;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public WorkOrderQuoteDetails CreateWorkOrderQuoteExclusions(WorkOrderQuoteDetails quoteExclusions)
+        {
+            try
+            {
+                if (quoteExclusions.WorkOrderQuoteDetailsId > 0)
+                {
+                    _appContext.WorkOrderQuoteDetails.Update(quoteExclusions);
+                }
+                else
+                {
+                    _appContext.WorkOrderQuoteDetails.Add(quoteExclusions);
+                }
+
+                _appContext.SaveChanges();
+                return quoteExclusions;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public WorkOrderQuoteDetails UpdateWorkOrderQuoteExclusions(WorkOrderQuoteDetails quoteExclusions)
+        {
+            try
+            {
+                _appContext.WorkOrderQuoteDetails.Update(quoteExclusions);
+                _appContext.SaveChanges();
+                return quoteExclusions;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetWorkOrderQuoteExclusions(long WorkOrderQuoteId)
+        {
+            try
+            {
+                var workOrderExclusionsList = (from we in _appContext.WorkOrderQuoteExclusions
+                                               join wq in _appContext.WorkOrderQuoteDetails on we.WorkOrderQuoteDetailsId equals wq.WorkOrderQuoteDetailsId
+                                               join im in _appContext.ItemMaster on we.ItemMasterId equals im.ItemMasterId
+                                               join eo in _appContext.ExclusionEstimatedOccurances on we.ExstimtPercentOccuranceId equals eo.Id into weeo
+                                               from eo in weeo.DefaultIfEmpty()
+                                               join mp in _appContext.MarkUpPercentage on we.MarkUpPercentageId equals mp.MarkUpPercentageId into wemp
+                                               from mp in wemp.DefaultIfEmpty()
+                                               where we.IsDeleted == false && wq.WorkOrderQuoteId == WorkOrderQuoteId
+                                               select new
+                                               {
+                                                   we.CostPlusAmount,
+                                                   we.CreatedBy,
+                                                   we.CreatedDate,
+                                                   Epn = im.PartNumber,
+                                                   EpnDescription = im.PartDescription,
+                                                   we.ExstimtPercentOccuranceId,
+                                                   ExstimtPercentOccurance = eo.Name == null ? "" : eo.Name,
+                                                   we.ExtendedCost,
+                                                   we.FixedAmount,
+                                                   we.IsActive,
+                                                   we.IsDeleted,
+                                                   we.ItemMasterId,
+                                                   we.MarkUpPercentageId,
+                                                   MarkUpPercentage = mp.MarkUpValue == null ? "" : mp.MarkUpValue,
+                                                   we.MasterCompanyId,
+                                                   we.Memo,
+                                                   we.Quantity,
+                                                   we.Reference,
+                                                   we.SourceId,
+                                                   Source = we.SourceId == 0 ? "" : (we.SourceId == 1 ? "Manual" : "Workflow"),
+                                                   we.UnitCost,
+                                                   we.UpdatedBy,
+                                                   we.UpdatedDate,
+                                                   we.WorkOrderQuoteDetailsId,
+                                                   we.WorkOrderQuoteExclusionsId,
+                                               }).Distinct()
+                             .ToList();
+                return workOrderExclusionsList;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void DeleteWorkOrderQuoteExclusion(long exclusionId, string updatedBy)
+        {
+            WorkOrderQuoteExclusions workOrderQuoteExclusions = new WorkOrderQuoteExclusions();
+            try
+            {
+                workOrderQuoteExclusions.WorkOrderQuoteExclusionsId = exclusionId;
+                workOrderQuoteExclusions.IsDeleted = true;
+                workOrderQuoteExclusions.UpdatedBy = updatedBy;
+                workOrderQuoteExclusions.UpdatedDate = DateTime.Now;
+                _appContext.WorkOrderQuoteExclusions.Attach(workOrderQuoteExclusions);
+
+                _appContext.Entry(workOrderQuoteExclusions).Property(p => p.IsDeleted).IsModified = true;
+                _appContext.Entry(workOrderQuoteExclusions).Property(p => p.UpdatedBy).IsModified = true;
+                _appContext.Entry(workOrderQuoteExclusions).Property(p => p.UpdatedDate).IsModified = true;
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public WorkOrderQuoteDetails CreateWorkOrderQuoteFreight(WorkOrderQuoteDetails quoteFreight)
+        {
+            try
+            {
+                _appContext.WorkOrderQuoteDetails.Add(quoteFreight);
+                _appContext.SaveChanges();
+                return quoteFreight;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public WorkOrderQuoteDetails UpdateWorkOrderQuoteFreight(WorkOrderQuoteDetails quoteFreight)
+        {
+            try
+            {
+                _appContext.WorkOrderQuoteDetails.Update(quoteFreight);
+                _appContext.SaveChanges();
+                return quoteFreight;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetWorkOrderQuoteFreight(long WorkOrderQuoteId)
+        {
+            try
+            {
+                var workOrderFreightList = (from wf in _appContext.WorkOrderQuoteFreight
+                                            join wq in _appContext.WorkOrderQuoteDetails on wf.WorkOrderQuoteDetailsId equals wq.WorkOrderQuoteDetailsId
+                                            join car in _appContext.ShippingVia on wf.CarrierId equals car.ShippingViaId
+                                            join sv in _appContext.ShippingVia on wf.ShipViaId equals sv.ShippingViaId
+                                            where wf.IsDeleted == false && wq.WorkOrderQuoteId == WorkOrderQuoteId
+                                            select new
+                                            {
+                                                wf.Amount,
+                                                wf.CarrierId,
+                                                wf.CreatedBy,
+                                                wf.CreatedDate,
+                                                wf.FixedAmount,
+                                                wf.Height,
+                                                wf.IsActive,
+                                                wf.IsDeleted,
+                                                wf.IsFixedFreight,
+                                                wf.Length,
+                                                wf.MasterCompanyId,
+                                                wf.Memo,
+                                                wf.ShipViaId,
+                                                wf.UpdatedBy,
+                                                wf.UpdatedDate,
+                                                wf.Weight,
+                                                wf.Width,
+                                                wf.WorkOrderQuoteDetailsId,
+                                                wf.WorkOrderQuoteFreightId,
+                                                ShipViaName = sv.Name,
+                                                CarrierName = car.Name
+                                            }).Distinct().ToList();
+
+                return workOrderFreightList;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void DeleteWorkOrderQuoteFreight(long freightId, string updatedBy)
+        {
+            WorkOrderQuoteFreight workOrderQuoteFreight = new WorkOrderQuoteFreight();
+            try
+            {
+                workOrderQuoteFreight.WorkOrderQuoteFreightId = freightId;
+                workOrderQuoteFreight.IsDeleted = true;
+                workOrderQuoteFreight.UpdatedBy = updatedBy;
+                workOrderQuoteFreight.UpdatedDate = DateTime.Now;
+                _appContext.WorkOrderQuoteFreight.Attach(workOrderQuoteFreight);
+
+                _appContext.Entry(workOrderQuoteFreight).Property(p => p.IsDeleted).IsModified = true;
+                _appContext.Entry(workOrderQuoteFreight).Property(p => p.UpdatedBy).IsModified = true;
+                _appContext.Entry(workOrderQuoteFreight).Property(p => p.UpdatedDate).IsModified = true;
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public WorkOrderQuoteDetails CreateWorkOrderQuoteCharges(WorkOrderQuoteDetails quoteCharges)
+        {
+            try
+            {
+                _appContext.WorkOrderQuoteDetails.Add(quoteCharges);
+                _appContext.SaveChanges();
+                return quoteCharges;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public WorkOrderQuoteDetails UpdateWorkOrderQuoteCharges(WorkOrderQuoteDetails quoteCharges)
+        {
+            try
+            {
+                _appContext.WorkOrderQuoteDetails.Update(quoteCharges);
+                _appContext.SaveChanges();
+                return quoteCharges;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetWorkOrderQuoteCharges(long WorkOrderQuoteId)
+        {
+            try
+            {
+                var list = (from woc in _appContext.WorkOrderQuoteCharges
+                            join wq in _appContext.WorkOrderQuoteDetails on woc.WorkOrderQuoteDetailsId equals wq.WorkOrderQuoteDetailsId
+                            join ct in _appContext.ChargesTypes on woc.ChargesTypeId equals ct.Id
+                            join v in _appContext.Vendor on woc.VendorId equals v.VendorId into wocv
+                            from v in wocv.DefaultIfEmpty()
+                            where woc.IsDeleted == false && wq.WorkOrderQuoteId == WorkOrderQuoteId
+                            select new
+                            {
+                                woc.ChargesTypeId,
+                                ChargeType = ct.Name,
+                                woc.Description,
+                                woc.Quantity,
+                                woc.UnitCost,
+                                woc.ExtendedCost,
+                                woc.UnitPrice,
+                                woc.ExtendedPrice,
+                                woc.VendorId,
+                                v.VendorName,
+                                woc.Amount,
+                                woc.CostPlusAmount,
+                                woc.CreatedBy,
+                                woc.CreatedDate,
+                                woc.FixedAmount,
+                                woc.InvoiceNo,
+                                woc.IsActive,
+                                woc.IsDeleted,
+                                woc.MarkupPercentageId,
+                                woc.MasterCompanyId,
+                                woc.RoNumberId,
+                                woc.UpdatedBy,
+                                woc.UpdatedDate,
+                                woc.WorkOrderQuoteDetailsId,
+                                woc.WorkOrderQuoteChargesId,
+                                WorkflowChargeTypeId = woc.ChargesTypeId
+                            }
+                          ).Distinct().ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void DeleteWorkOrderQuoteCharges(long workOrderChargeId, string updatedBy)
+        {
+            WorkOrderQuoteCharges workOrderCharge = new WorkOrderQuoteCharges();
+            try
+            {
+                workOrderCharge.WorkOrderQuoteChargesId = workOrderChargeId;
+                workOrderCharge.IsDeleted = true;
+                workOrderCharge.UpdatedBy = updatedBy;
+                workOrderCharge.UpdatedDate = DateTime.Now;
+                _appContext.WorkOrderQuoteCharges.Attach(workOrderCharge);
+
+                _appContext.Entry(workOrderCharge).Property(p => p.IsDeleted).IsModified = true;
+                _appContext.Entry(workOrderCharge).Property(p => p.UpdatedBy).IsModified = true;
+                _appContext.Entry(workOrderCharge).Property(p => p.UpdatedDate).IsModified = true;
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+        public WorkOrderQuoteDetails CreateWorkOrderQuoteMaterial(WorkOrderQuoteDetails quoteMaterials)
+        {
+            try
+            {
+                _appContext.WorkOrderQuoteDetails.Add(quoteMaterials);
+                _appContext.SaveChanges();
+                return quoteMaterials;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public WorkOrderQuoteDetails UpdateWorkOrderQuoteMaterial(WorkOrderQuoteDetails quoteMaterials)
+        {
+            try
+            {
+                _appContext.WorkOrderQuoteDetails.Update(quoteMaterials);
+                _appContext.SaveChanges();
+                return quoteMaterials;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetWorkOrderQuoteMaterial(long WorkOrderQuoteId)
+        {
+
+            try
+            {
+                var workOrderMaterialsList = (from wom in _appContext.WorkOrderQuoteMaterial
+                                              join wq in _appContext.WorkOrderQuoteDetails on wom.WorkOrderQuoteDetailsId equals wq.WorkOrderQuoteDetailsId
+                                              join im in _appContext.ItemMaster on wom.ItemMasterId equals im.ItemMasterId
+                                              join p in _appContext.Provision on im.ProvisionId equals p.ProvisionId into pro
+                                              from p in pro.DefaultIfEmpty()
+                                              join c in _appContext.Condition on wom.ConditionCodeId equals c.ConditionId
+                                              join uom in _appContext.UnitOfMeasure on wom.UnitOfMeasureId equals uom.UnitOfMeasureId
+                                              where wom.IsDeleted == false && wq.WorkOrderQuoteId == WorkOrderQuoteId
+                                              select new
+                                              {
+                                                  im.PartNumber,
+                                                  im.PartDescription,
+                                                  AltPartNumber = string.Empty,
+                                                  Source = wq.BuildMethodId == 1 ? "WF" : (wq.BuildMethodId == 2 ? "WO" : (wq.BuildMethodId == 3 ? "WF" : "Third Party")),
+                                                  wq.ReferenceNo,
+                                                  wom.Quantity,
+                                                  wom.UnitOfMeasureId,
+                                                  UnitOfMeasure = uom.Description,
+                                                  wom.ConditionCodeId,
+                                                  ConditionType = c.Description,
+                                                  OemPmaDer = im.PMA == true && im.DER == true ? "PMA&DER" : (im.PMA == true && im.DER == false ? "PMA" : (im.PMA == false && im.DER == true ? "DER" : "")),
+                                                  wom.UnitCost,
+                                                  wom.MatMarkup,
+                                                  wom.TotalPartsCost,
+                                                  wom.Markup,
+                                                  wom.CostPlusAmount,
+                                                  wom.FixedAmount,
+                                                  wom.WorkOrderQuoteDetailsId,
+                                                  wom.WorkOrderQuoteMaterialId
+                                              }).Distinct().ToList();
+
+                return workOrderMaterialsList;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void DeleteWorkOrderQuoteMaterial(long workOrderMaterialsId, string updatedBy)
+        {
+            try
+            {
+                WorkOrderQuoteMaterial workOrderQuoteMaterial = new WorkOrderQuoteMaterial();
+                workOrderQuoteMaterial.WorkOrderQuoteMaterialId = workOrderMaterialsId;
+                workOrderQuoteMaterial.UpdatedDate = DateTime.Now;
+                workOrderQuoteMaterial.IsDeleted = true;
+                workOrderQuoteMaterial.UpdatedBy = updatedBy;
+
+                _appContext.WorkOrderQuoteMaterial.Attach(workOrderQuoteMaterial);
+                _appContext.Entry(workOrderQuoteMaterial).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(workOrderQuoteMaterial).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(workOrderQuoteMaterial).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public WorkOrderQuoteDetails CreateWorkOrderQuoteLabor(WorkOrderQuoteDetails quoteLabor)
+        {
+            try
+            {
+                _appContext.WorkOrderQuoteDetails.Add(quoteLabor);
+                _appContext.SaveChanges();
+                return quoteLabor;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public WorkOrderQuoteDetails UpdateWorkOrderQuoteLabor(WorkOrderQuoteDetails quoteLabor)
+        {
+            try
+            {
+                _appContext.WorkOrderQuoteDetails.Update(quoteLabor);
+                _appContext.SaveChanges();
+                return quoteLabor;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public object GetWorkOrderQuoteLabor(long WorkOrderQuoteId)
+        {
+            try
+            {
+                var laborList = (from lh in _appContext.WorkOrderQuoteLaborHeader
+                                 join wq in _appContext.WorkOrderQuoteDetails on lh.WorkOrderQuoteDetailsId equals wq.WorkOrderQuoteDetailsId
+                                 join l in _appContext.WorkOrderQuoteLabor on lh.WorkOrderQuoteLaborHeaderId equals l.WorkOrderQuoteLaborHeaderId
+                                 join deby in _appContext.Employee on lh.DataEnteredBy equals deby.EmployeeId into lhdeby
+                                 from deby in lhdeby.DefaultIfEmpty()
+                                 join exp in _appContext.ExpertiseType on lh.ExpertiseId equals exp.ExpertiseTypeId into lhexp
+                                 from exp in lhexp.DefaultIfEmpty()
+                                 join emp in _appContext.Employee on lh.EmployeeId equals emp.EmployeeId into lhemp
+                                 from emp in lhemp.DefaultIfEmpty()
+                                 where lh.IsDeleted == false && wq.WorkOrderQuoteId == WorkOrderQuoteId
+                                 select new
+                                 {
+                                     lh.CreatedBy,
+                                     lh.CreatedDate,
+                                     lh.DataEnteredBy,
+                                     lh.EmployeeId,
+                                     lh.HoursorClockorScan,
+                                     lh.IsActive,
+                                     lh.IsDeleted,
+                                     lh.IsTaskCompletedByOne,
+                                     lh.LabourMemo,
+                                     lh.MasterCompanyId,
+                                     lh.UpdatedBy,
+                                     lh.UpdatedDate,
+                                     lh.WorkOrderQuoteDetailsId,
+                                     lh.WorkOrderHoursType,
+                                     lh.WorkOrderQuoteLaborHeaderId,
+                                     lh.ExpertiseId,
+                                     lh.TotalWorkHours,
+                                     DataEnteredByName = deby.FirstName,
+                                     ExpertiseType = exp.Description,
+                                     EmployeeName = emp.FirstName,
+                                     LaborList = (from wol in _appContext.WorkOrderQuoteLabor
+                                                  join exp in _appContext.ExpertiseType on wol.ExpertiseId equals exp.ExpertiseTypeId into wolexp
+                                                  from exp in wolexp.DefaultIfEmpty()
+                                                  join emp in _appContext.Employee on wol.EmployeeId equals emp.EmployeeId into wolemp
+                                                  from emp in wolemp.DefaultIfEmpty()
+                                                  join task in _appContext.Task.Where(p => p.IsActive == true && p.IsDelete == false) on wol.TaskId equals task.TaskId into woltask
+                                                  from task in woltask.DefaultIfEmpty()
+                                                  where wol.WorkOrderQuoteLaborHeaderId == lh.WorkOrderQuoteLaborHeaderId
+                                                  select new
+                                                  {
+                                                      wol.AdjustedHours,
+                                                      wol.Adjustments,
+                                                      wol.BillableId,
+                                                      wol.CreatedBy,
+                                                      wol.CreatedDate,
+                                                      wol.EmployeeId,
+                                                      wol.EndDate,
+                                                      wol.ExpertiseId,
+                                                      Expertise = exp.Description,
+                                                      wol.Hours,
+                                                      wol.IsActive,
+                                                      wol.IsDeleted,
+                                                      wol.Memo,
+                                                      wol.StartDate,
+                                                      wol.TaskId,
+                                                      Task = task.Description,
+                                                      wol.UpdatedBy,
+                                                      wol.UpdatedDate,
+                                                      wol.WorkOrderQuoteLaborHeaderId,
+                                                      wol.WorkOrderQuoteLaborId,
+                                                      EmployeeName = emp.FirstName
+                                                  }
+                                                 ).Distinct().ToList()
+                                 }
+
+                               ).FirstOrDefault();
+                return laborList;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void DeleteWorkOrderQuoteLabor(long workOrderQuoteLaborId, string updatedBy)
+        {
+            WorkOrderQuoteLabor workOrderLabor = new WorkOrderQuoteLabor();
+            try
+            {
+                workOrderLabor.WorkOrderQuoteLaborId = workOrderQuoteLaborId;
+                workOrderLabor.IsDeleted = true;
+                workOrderLabor.UpdatedBy = updatedBy;
+                workOrderLabor.UpdatedDate = DateTime.Now;
+                _appContext.WorkOrderQuoteLabor.Attach(workOrderLabor);
+
+                _appContext.Entry(workOrderLabor).Property(p => p.IsDeleted).IsModified = true;
+                _appContext.Entry(workOrderLabor).Property(p => p.UpdatedBy).IsModified = true;
+                _appContext.Entry(workOrderLabor).Property(p => p.UpdatedDate).IsModified = true;
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         #endregion
 
@@ -2806,6 +3457,158 @@ namespace DAL.Repositories
 
         #endregion
 
+        #region Billing and Invoicing
+
+        public WorkOrderBillingInvoicing CreateWorkOrderBillingInvoicing(WorkOrderBillingInvoicing billingInvoicing)
+        {
+            try
+            {
+                _appContext.WorkOrderBillingInvoicing.Add(billingInvoicing);
+                _appContext.SaveChanges();
+                return billingInvoicing;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public WorkOrderBillingInvoicing UpdateWorkOrderBillingInvoicing(WorkOrderBillingInvoicing billingInvoicing)
+        {
+            try
+            {
+                _appContext.WorkOrderBillingInvoicing.Update(billingInvoicing);
+                _appContext.SaveChanges();
+                return billingInvoicing;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public object GetBillingInvoicingDetails(long WorkOrderId, long workOrderPartNoId)
+        {
+            try
+            {
+                var data = (from bi in _appContext.WorkOrderBillingInvoicing
+                            join wo in _appContext.WorkOrder on bi.WorkOrderId equals wo.WorkOrderId
+                            join wop in _appContext.WorkOrderPartNumber on bi.WorkOrderPartNoId equals wop.ID
+                            join wowf in _appContext.WorkOrderWorkFlow on bi.WorkOrderWorkFlowId equals wowf.WorkFlowWorkOrderId
+                            join cust in _appContext.Customer on bi.CustomerId equals cust.CustomerId
+                            join it in _appContext.InvoiceType on bi.InvoiceTypeId equals it.InvoiceTypeId
+                            join emp in _appContext.Employee on bi.EmployeeId equals emp.EmployeeId
+                            join wos in _appContext.WorkScope on wop.WorkOrderScopeId equals wos.WorkScopeId
+                            join soc in _appContext.Customer on bi.SoldToCustomerId equals soc.CustomerId
+                            join sos in _appContext.CustomerShippingAddress on bi.SoldToSiteId equals sos.CustomerShippingAddressId
+                            join soa in _appContext.Address on sos.AddressId equals soa.AddressId
+
+                            join shc in _appContext.Customer on bi.SoldToCustomerId equals shc.CustomerId
+                            join shs in _appContext.CustomerShippingAddress on bi.SoldToSiteId equals shs.CustomerShippingAddressId
+                            join sha in _appContext.Address on sos.AddressId equals sha.AddressId
+                            join mnge in _appContext.Employee on bi.ManagementEmpId equals mnge.EmployeeId into bimnge
+                            from mnge in bimnge.DefaultIfEmpty()
+                            join sp in _appContext.Employee on wo.SalesPersonId equals sp.EmployeeId
+                            join cur in _appContext.Currency on cust.CurrencyId equals cur.CurrencyId into custcur
+                            from cur in custcur.DefaultIfEmpty()
+                            join ct in _appContext.CreditTerms on wo.CreditTermsId equals ct.CreditTermsId
+                            join sv in _appContext.CustomerShipping on bi.ShipViaId equals sv.CustomerShippingId into bisv
+                            from sv in bisv.DefaultIfEmpty()
+
+                            where bi.WorkOrderId == WorkOrderId && bi.WorkOrderPartNoId==workOrderPartNoId
+                            select new
+                            {
+                                bi.BillingInvoicingId,
+                                bi.WorkOrderId,
+                                bi.WorkOrderPartNoId,
+                                bi.WorkOrderWorkFlowId,
+                                bi.ItemMasterId,
+                                bi.InvoiceTypeId,
+
+                                InvoiceType = it.Description,
+                                bi.InvoiceNo,
+                                cust.ContractReference,
+                                cust.CustomerCode,
+                                bi.InvoiceDate,
+                                bi.InvoiceTime,
+                                bi.PrintDate,
+                                bi.ShipDate,
+                                bi.NoofPieces,
+                                bi.EmployeeId,
+                                EmployeeName = emp.FirstName,
+                                bi.RevType,
+                                wo.WorkOrderTypeId,
+                                WorkScope = wos.Description,
+                                wop.WorkOrderScopeId,
+                                wop.Quantity,
+                                wo.OpenDate,
+                                wo.SalesPersonId,
+                                SalesPerson = sp.FirstName,
+                                cust.CurrencyId,
+                                Currency = cur.DisplayName,
+                                wo.CreditLimit,
+                                wo.CreditTermsId,
+                                CreditTerm = ct.Name,
+                                bi.GateStatus,
+                                bi.SoldToCustomerId,
+                                SoldToCustomer = soc.Name,
+                                bi.SoldToSiteId,
+                                soa.City,
+                                soa.Country,
+                                soa.Line1,
+                                soa.Line2,
+                                soa.Line3,
+                                soa.PoBox,
+                                soa.PostalCode,
+                                soa.StateOrProvince,
+                                bi.ShipToCustomerId,
+                                ShipToCustomer = shc.Name,
+                                bi.ShipToSiteId,
+                                ShipToCity = sha.City,
+                                ShipToCountry = sha.Country,
+                                ShipToLine1 = sha.Line1,
+                                ShipToLine2 = sha.Line2,
+                                ShipToLine3 = sha.Line3,
+                                ShipToPoBox = sha.PoBox,
+                                ShipToPostalCode = sha.PostalCode,
+                                ShipToState = sha.StateOrProvince,
+                                bi.ShipToAttention,
+                                bi.ManagementStructureId,
+                                bi.ManagementEmpId,
+                                ManagementEmp = mnge.FirstName,
+                                bi.Notes,
+                                bi.CostPlusType,
+                                bi.TotalWorkOrder,
+                                bi.TotalWorkOrderValue,
+                                bi.Material,
+                                bi.MaterialValue,
+                                bi.LaborOverHead,
+                                bi.LaborOverHeadValue,
+                                bi.MiscCharges,
+                                bi.MiscChargesValue,
+                                bi.ProForma,
+                                bi.PartialInvoice,
+                                bi.CostPlusRateCombo,
+                                bi.ShipViaId,
+                                sv.ShipVia,
+                                sv.ShippingAccountinfo,
+                                bi.WayBillRef,
+                                bi.Tracking
+                            }).FirstOrDefault();
+                return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        #endregion
+
+
         #region Dropdowns
 
         public IEnumerable<object> GetWorkFlowNos(long partId, long workScopeId)
@@ -2814,14 +3617,58 @@ namespace DAL.Repositories
             {
 
                 var workFlowNos = (from wf in _appContext.Workflow
+                                   join c in _appContext.Customer on wf.CustomerId equals c.CustomerId
+                                   join im in _appContext.ItemMaster on wf.ItemMasterId equals im.ItemMasterId
+                                   join ws in _appContext.WorkScope on wf.WorkScopeId equals ws.WorkScopeId
+                                   join cur in _appContext.Currency on wf.CurrencyId equals cur.CurrencyId
                                    where (wf.IsDelete == false || wf.IsDelete == null) && wf.IsActive == true && wf.ItemMasterId == partId && wf.WorkScopeId == workScopeId
                                    select new
                                    {
                                        WorkFlowNo = wf.WorkOrderNumber + "_" + wf.Version,
-                                       WorkFlowId = wf.WorkflowId
+                                       WorkFlowId = wf.WorkflowId,
+                                       CustomerName = c.Name,
+                                       im.PartNumber,
+                                       im.PartDescription,
+                                       WorkScope = ws.Description,
+                                       Currency = cur.DisplayName,
                                    }).Distinct().ToList();
 
                 return workFlowNos;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetWorkOrderNos(long partId, long workScopeId)
+        {
+            try
+            {
+
+                var workOrderNos = (from wo in _appContext.WorkOrder
+                                    join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
+                                    join c in _appContext.Customer on wo.CustomerId equals c.CustomerId
+                                    join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
+                                    join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
+                                    join wowf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wowf.WorkOrderId
+
+                                    where wo.IsDeleted == false && wo.IsActive == true && wop.MasterPartId == partId && wop.WorkOrderScopeId == workScopeId
+                                    select new
+                                    {
+                                        wo.WorkOrderNum,
+                                        wo.WorkOrderId,
+                                        WorkOrderPartNumberId = wop.ID,
+                                        wowf.WorkFlowWorkOrderId,
+                                        CustomerName = c.Name,
+                                        im.PartNumber,
+                                        im.PartDescription,
+                                        WorkScope = ws.Description,
+
+                                    }).Distinct().ToList();
+
+                return workOrderNos;
             }
             catch (Exception)
             {

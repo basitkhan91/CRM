@@ -22,6 +22,8 @@ import { workOrderGeneralInfo } from '../../../../models/work-order-generalInfor
 export class WorkOrderSmartComponent implements OnInit {
     @Input() isSubWorkOrder = false;
     @Input() paramsData;
+    @Input() showTabsGrid;
+
     creditTerms: any;
     employeesOriginalData: any;
     workScopesList: { label: string; value: number; }[];
@@ -62,8 +64,9 @@ export class WorkOrderSmartComponent implements OnInit {
         this.getAllPriority();
 
         // { workorderid: workorderid, mpnid: workorderid, subworkorderid: 0 }
-        if (this.isSubWorkOrder) {
-            this.workOrderId = this.paramsData.workorderid;
+        if (!this.isSubWorkOrder) {
+            this.workOrderId = this.acRouter.snapshot.params['id'];
+            // this.workOrderId = this.paramsData.workorderid;
         } else {
             this.workOrderId = this.acRouter.snapshot.params['id'];
         }

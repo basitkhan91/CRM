@@ -96,6 +96,7 @@ export class VendorBillingInformationComponent {
     selectedShipViaColumn: any[];
     selectedShipViaColumns: any[];
     cols: any[];
+    billingauditHisory: any[];
     shipViacols: any[];
     title: string = "Create";
     id: number;
@@ -392,14 +393,25 @@ export class VendorBillingInformationComponent {
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));
     }
-    openShipaddressHistory(content, row) {
+    openBilladdressHistory(content, row) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.sourceVendor = row;
         this.isSaving = true;
-        this.workFlowtService.shipaddressHistory(this.sourceVendor.vendorBillingAddressId).subscribe(
-            results => this.onHistoryLoadSuccessful(results[0], content),
+        this.workFlowtService.getVendorBillingAuditHistory(this.sourceVendor.vendorId,this.sourceVendor.vendorBillingAddressId).subscribe(
+            results => this.onAuditHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));
+    }
+    private onAuditHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+
+        this.billingauditHisory = auditHistory;
+
+        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
     }
 
     editItemAndCloseModel() {

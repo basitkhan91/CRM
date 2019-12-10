@@ -43,6 +43,7 @@ import { User } from '../../../../models/user.model';
 
 import { CompanyService } from '../../../../services/company.service';
 import { CurrencyService } from '../../../../services/currency.service';
+import { getObjectById } from '../../../../generic/autocomplete';
 
 
 
@@ -100,7 +101,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     disableSaveLastName: boolean;
     disableSaveLeaveName: boolean;
     selectedActionName: any;
-    disableJobTitle: boolean;
+    disableJobTitle: boolean = true;
+    disableJobType: boolean = true;
     disableExpTitle: boolean;
     display: boolean = false;
     modelValue: boolean = false;
@@ -147,6 +149,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     maincompanylist: any[] = [];
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
+    desableJobTypeSave: boolean = true;
     departmentList: any[] = [];
     bulist: any[] = [];
     divisionlist: any[] = [];
@@ -234,7 +237,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
 
-            this.sourceEmployee = this.employeeService.listCollection;
+            this.sourceEmployee = this.employeeService.listCollection;            
 
             this.empCreationForm.controls['jobTitleId'].setValue(this.sourceEmployee.jobTitleId);
 
@@ -250,7 +253,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             this.updateMode = true;
             this.sourceEmployee.startDate = new Date(this.sourceEmployee.startDate);
             this.sourceEmployee.startDate = new Date();
-            this.sourceEmployee.dateOfBirth = new Date(this.sourceEmployee.dateOfBirth);
+            this.sourceEmployee.dateOfBirth = this.sourceEmployee.dateOfBirth ? new Date(this.sourceEmployee.dateOfBirth) : '';
             if (this.local) {
                 this.employeeService.employeeCollection = this.local;
 
@@ -324,7 +327,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.EmployeeLeaveType();
         this.loadjobtypesData();
         this.loadLegalEntityData();
-        this.loadCurrencyData();
+        this.loadCurrencyData();        
 
     }
 
@@ -1089,6 +1092,16 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.allEmployeeinfo = getEmployeeCerficationList;
         console.log("this.allEmployeeinfo")
         console.log(this.allEmployeeinfo);
+        if(this.sourceEmployee.firstName) {
+            this.sourceEmployee.firstName = getObjectById('employeeId', this.sourceEmployee.employeeId, this.allEmployeeinfo);
+        }
+        if(this.sourceEmployee.middleName) {
+            this.sourceEmployee.middleName = getObjectById('employeeId', this.sourceEmployee.employeeId, this.allEmployeeinfo);
+        }
+        if(this.sourceEmployee.lastName) {
+            this.sourceEmployee.lastName = getObjectById('employeeId', this.sourceEmployee.employeeId, this.allEmployeeinfo);
+        }
+        
     }
     private onLeavedata(getEmployeeCerficationList: any[]) {
         console.log("on levae data");
@@ -1218,13 +1231,37 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     filterJobs(event) {
 
         this.localCollection = [];
-        for (let i = 0; i < this.allJobTitlesinfo.length; i++) {
-            let jobName = this.allJobTitlesinfo[i].description;
+        for (let i = 0; i < this.allJobTypesinfo.length; i++) {
+            let jobName = this.allJobTypesinfo[i].jobTypeName;
             if (jobName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                 this.localCollection.push(jobName);
             }
         }
     }
+
+    filterEMpExpertise(event) {
+
+        this.localCollection = [];
+        for (let i = 0; i < this.allEmployeeExpertiseInfo.length; i++) {
+            let empExpertise = this.allEmployeeExpertiseInfo[i].description;
+            if (empExpertise.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.localCollection.push(empExpertise);
+            }
+        }
+    }
+
+    filterJObTitles(event) {
+
+        this.localCollection = [];
+        for (let i = 0; i < this.allJobTitlesinfo.length; i++) {
+            let jobtitle = this.allJobTitlesinfo[i].description;
+            if (jobtitle.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.localCollection.push(jobtitle);
+            }
+        }
+    }
+
+
 
     filterLeaves(event) {
 
@@ -1455,7 +1492,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.sourceAction = new JobType();
         this.sourceAction.isActive = true;
         this.jobName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop : 'static', keyboard : false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1469,7 +1506,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.sourceAction = new JobTitle();
         this.sourceAction.isActive = true;
         this.jobName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop : 'static', keyboard : false  });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1498,7 +1535,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.sourceAction = new EmployeeExpertise();
         this.sourceAction.isActive = true;
         this.employeeName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop : 'static', keyboard : false  });
         this.modal.result.then(() => {
             //    console.log('When user closes');
             //}, () => { console.log('Backdrop click') })
@@ -1516,7 +1553,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.sourceAction = new EmployeeLeaveType();
         this.sourceAction.isActive = true;
         this.description = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop : 'static', keyboard : false  });
         this.modal.result.then(() => {
             //    console.log('When user closes');
             //}, () => { console.log('Backdrop click') 
@@ -2597,6 +2634,37 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             }
         }
     }
+
+    onJobTypeKeyUP() {
+        console.log(this.jobTypeName);
+        if (this.jobTypeName != "") {
+            this.disableJobType = false;
+        } else {
+            this.disableJobType = true;
+        }
+        
+    }
+    onEmpExpertiseKeyUP() {
+        console.log(this.jobTypeName);
+        if (this.employeeName != "") {
+            this.disableExpTitle = false;
+        } else {
+            this.disableExpTitle = true;
+        }
+
+    }
+
+    onjobTitleKeyUP() {
+        console.log(this.jobTypeName);
+        if (this.jobName != "") {
+            this.disableJobTitle = false;
+        } else {
+            this.disableJobTitle = true;
+        }
+
+    }
+
+    
 
     onKeyUpExp(event) {
         if (event.target.value != "") {

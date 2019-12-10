@@ -41,13 +41,13 @@
                                         <i class="fa fa-search"></i>
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
                                     </div>
-                                    <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding:5px 10px !important;"></button>
-                                    <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>
-                                    <!--<a (click)="open(contentEdit)" matTooltip="Add Item Group" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>-->
+                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding:5px 10px !important;"></button>
+                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>
+                                    
                                     <div class="excel-upload excel-upload-cstm">
                                         <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                         <label for="upload">
-                                            <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+                                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above"><i class="fa fa-upload"></i></span>
                                         </label>
                                     </div>
                                 </div>
@@ -91,7 +91,7 @@
                                             <mat-icon color="warn">delete</mat-icon>
                                         </button>
 
-                                        <button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
+                                        <button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentAuditHist,rowData)">
                                             <mat-icon color="green">history</mat-icon>
                                         </button>
 
@@ -128,7 +128,7 @@
 </ng-template>
 
 
-<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
+<!--<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
     <div class="modal-header">
 
         <h4 class="modal-title">History of Action</h4>
@@ -165,8 +165,56 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
     </div>
-</ng-template>
+</ng-template>-->
 
+<ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto">
+    <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
+    <div class="modal-header">
+
+        <h4 class="modal-title">History of Contact Information</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+
+    </div>
+    <div class="modal-body">
+
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Fist Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Mobile Phone</th>
+                        <th>Updated By</th>
+                        <th>Last Updated Time</th>
+                        <th>Created By</th>
+                        <th>Created Time</th>
+
+                    </tr>
+                </thead>
+                <tr *ngFor="let audit of contactauditHisory">
+                    <td>{{audit.firstName}}</td>
+                    <td>{{audit.lastName}}</td>
+                    <td>{{audit.email}}</td>
+                    <td>{{audit.mobilePhone}}</td>
+                    <td>{{audit.updatedBy}}</td>
+                    <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                    
+                    <!--<td>{{audit.field == 'createdDate'?  (rowData[audit.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[audit.field] && audit.field == 'updatedDate'?  (rowData[audit.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[audit.field]}}</td>-->
+                    <td>{{audit.createdBy}}</td>
+                    <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+    </div>
+</ng-template>
 
 <ng-template #view class="modal fade " id="view" role="dialog">
 
@@ -288,7 +336,7 @@
                                 <div>
                                     <input class="form-control" type="number" pKeyFilter="pnum" name="workPhone" [(ngModel)]="sourceVendor.workPhone" style="width: calc(100% - 63px) !important;" required>
                                     -
-                                    <input class="form-control w50" type="text" name="workPhoneExtn" [(ngModel)]="sourceVendor.workPhoneExtn">
+                                    <input class="form-control w50" type="text" name="workPhoneExtn" [(ngModel)]="sourceVendor.workPhoneExtn" maxlength="15">
                                 </div>
                             </div>
                         </div>

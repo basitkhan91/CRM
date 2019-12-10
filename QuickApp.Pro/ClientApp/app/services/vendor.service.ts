@@ -735,7 +735,19 @@ export class VendorService {
         return this.actionEndpoint.getdeleteDocumentListbyId(vendorDocumentId)
     }
     
-    
+    getShipaddressHistory(vendorId, vendorShippingAddressId) {
+        return this.actionEndpoint.getVendorShippingAuditHistory(vendorId, vendorShippingAddressId);
+    }
+    getVendorBillingAuditHistory(vendorId, vendorBillingaddressId) {
+        return this.actionEndpoint.getVendorBillingAuditHistory(vendorId, vendorBillingaddressId);
+    }
+    getVendorContactAuditHistory(vendorId, vendorContactId) {
+        return this.actionEndpoint.getVendorContactAuditHistory(vendorId, vendorContactId);
+    }
+
+    getVendorDocumentAuditHistory(id) {
+        return this.actionEndpoint.getVendorDocumentAuditHistory(id);
+    }
       
 }
 

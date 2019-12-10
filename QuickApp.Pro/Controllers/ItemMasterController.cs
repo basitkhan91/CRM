@@ -463,29 +463,52 @@ namespace QuickApp.Pro.Controllers
 
 
         [HttpPost("Mancapespost")]
-        public IActionResult addCharges([FromBody] List<Capability> capability)
+        public IActionResult addCharges([FromBody] List<ItemMasterCapes> capability)
         {
             if (ModelState.IsValid)
             {
                 for (var i = 0; i < capability.Count(); i++)
                 {
-                    // capability[i].CapabilityId = 0;
+                    ItemMasterCapes imc = new ItemMasterCapes();
+                    imc.ItemMasterId = capability[i].ItemMasterId;
+                    imc.CapabilityId = capability[i].CapabilityId;
+                    imc.MasterCompanyId = 1;
+                    imc.CreatedBy = "admin";
+                    imc.UpdatedBy = "admin";
+                    imc.IsActive = true;
+                    imc.IsDelete = false;
+                    imc.ManagementStructureId = capability[i].ManagementStructureId;
+                    imc.ManufacturerId = capability[i].ManufacturerId;
+                    imc.AircraftTypeId = capability[i].AircraftTypeId;
+                    imc.AircraftModelId = capability[i].AircraftModelId;
+                    imc.AircraftDashNumberId = capability[i].AircraftDashNumberId;
+                    imc.Description = capability[i].Description;
+                    imc.ATAChapterId = capability[i].ATAChapterId;
+                    imc.ATASubChapterId = capability[i].ATASubChapterId;
+                    imc.EntryDate = capability[i].EntryDate;
+                    imc.CMMId = capability[i].CMMId;
+                    imc.isIntegrateWith = capability[i].isIntegrateWith;
+                    imc.VerifiedBy = capability[i].VerifiedBy;
+                    imc.DateVerified = capability[i].DateVerified;
+                    imc.ntehrs = capability[i].ntehrs;
+                    imc.TAT = capability[i].TAT;
+                    imc.CreatedDate = DateTime.Now;
+                    imc.UpdatedDate = DateTime.Now;
                     capability[i].MasterCompanyId = 1;
                     capability[i].CreatedDate = DateTime.Now;
                     if (capability[i].CapabilityId > 0)
                     {
-                        _unitOfWork.Repository<Capability>().Update(capability[i]);
+                        _unitOfWork.Repository<ItemMasterCapes>().Update(imc);
                     }
                     else
                     {
-                        _unitOfWork.Repository<Capability>().Add(capability[i]);
+                        _unitOfWork.Repository<ItemMasterCapes>().Add(imc);
                     }
                     _unitOfWork.SaveChanges();
                 }
             }
             return Ok();
         }
-
         [ApiExplorerSettings(IgnoreApi = true)]
         public void saveItemcapes(long returnid, long itemid)
         {

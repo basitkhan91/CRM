@@ -12636,6 +12636,14 @@ table thead tr th:first-child input, table tr td:first-child input {
     padding: 6px 12px !important;
 }
 
+.btn-light-cstm {
+    color: #212529 !important;
+    background-color: #f8f9fa !important;
+    border-color: #2e6da4;
+    border-radius: 4px !important;
+    padding: 6px 12px !important;
+}
+
 .btn-success-cstm{
     color: #fff !important;
     background-color: green !important;
@@ -13747,24 +13755,29 @@ button {
 .p-table-cstm .ui-table-thead tr th, .wf-table-cstm .ui-table-thead tr th {
     padding: 8px 2px !important;
 }
-.p-table-cstm .ui-table .ui-table-tbody > tr, .rpo-table-cstm .ui-table .ui-table-tbody > tr, .wf-table-cstm .ui-table .ui-table-tbody > tr {
+.p-table-cstm .ui-table .ui-table-tbody > tr, .rpo-table-cstm .ui-table .ui-table-tbody > tr, .wf-table-cstm .ui-table .ui-table-tbody > tr, .ptable-custom .ui-table .ui-table-tbody > tr{
     background-color: #fff !important;
 }
 .p-table-cstm .ui-table-thead tr th:nth-child(4), .p-table-cstm .ui-table-thead tr th:nth-child(6) {
     width: 130px;
 }
-.p-table-cstm .ui-table .ui-table-tbody > tr > td, .rpo-table-cstm .ui-table .ui-table-tbody > tr > td, .wf-table-cstm .ui-table .ui-table-tbody > tr > td {
+.p-table-cstm .ui-table .ui-table-tbody > tr > td, .rpo-table-cstm .ui-table .ui-table-tbody > tr > td, .wf-table-cstm .ui-table .ui-table-tbody > tr > td, .ptable-custom .ui-table .ui-table-tbody > tr > td {
     padding: 5px 2px !important;
 }
 .p-table-cstm .ui-table .ui-table-tbody > tr.ui-state-highlight, 
 .rpo-table-cstm .ui-table .ui-table-tbody > tr.ui-state-highlight, 
-.wf-table-cstm .ui-table .ui-table-tbody > tr.ui-state-highlight {
+.wf-table-cstm .ui-table .ui-table-tbody > tr.ui-state-highlight,
+.ptable-custom .ui-table .ui-table-tbody > tr.ui-state-highlight {
     background-color: #f1f1f1 !important;
 }
 .p-table-cstm .ui-paginator, .p-table-cstm .ui-table-caption,
 .rpo-table-cstm .ui-paginator, .rpo-table-cstm .ui-table-caption,
-.wf-table-cstm .ui-paginator, .wf-table-cstm .ui-table-caption {
+.wf-table-cstm .ui-paginator, .wf-table-cstm .ui-table-caption,
+.ptable-custom .ui-paginator, .ptable-custom .ui-table-caption {
     background-color: transparent !important;
+}
+.ptable-custom th {
+    padding: 8px 5px !important;
 }
 .wfl-table-cstm tr th:nth-child(2) {
     width: 90px !important;
@@ -14071,6 +14084,10 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     margin-left: -4px !important;
     margin-top: -2px !important;   
 }
+.pautocomp-vendor-shipvia .ui-autocomplete {
+    width: 72% !important;
+    padding: 0 !important;
+}
 .pub-multi3 {
     width: 100%;
 }
@@ -14307,3 +14324,4 @@ margin-left: -6px;
 .add-glaccount .btn-success:disabled{
     cursor: no-drop
 }
+

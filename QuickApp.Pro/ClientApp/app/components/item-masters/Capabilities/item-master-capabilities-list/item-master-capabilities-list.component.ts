@@ -26,6 +26,7 @@ import { IntegrationService } from '../../../../services/integration-service';
 import { AtaMainService } from '../../../../services/atamain.service';
 import { AtaSubChapter1Service } from '../../../../services/atasubchapter1.service';
 import { WorkOrderService } from '../../../../services/work-order/work-order.service';
+import { CommonService } from '../../../../services/common.service';
 
 
 @Component({
@@ -99,8 +100,9 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
     atasubchapter = [];
     LoadAtachapter: any[] = [];
     cmmList: any[];
+    capabilityTypeData: any[];
     /** item-master-capabilities-list ctor */
-    constructor(private itemMasterService: ItemMasterService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService,private dashnumberservices: DashNumberService,private formBuilder: FormBuilder,public workFlowtService: LegalEntityService,private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService,public inteService: IntegrationService,private workOrderService: WorkOrderService,)
+    constructor(private itemMasterService: ItemMasterService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService,private dashnumberservices: DashNumberService,private formBuilder: FormBuilder,public workFlowtService: LegalEntityService,private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService,public inteService: IntegrationService,private workOrderService: WorkOrderService,private commonservice: CommonService)
     {
         this.dataSource = new MatTableDataSource();
         this.itemMasterService.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list';
@@ -108,11 +110,11 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
     }
     
     capabilityForm: any ={
-        selectedCap:{},CapabilityTypeId: 0,companyId: 0,buId: 0,divisionId: 0,departmentId:0,manufacturerId:0,ataChapterId:0,atasubchapter:0,cmmId:0,integrateWith:0,description:'',entryDate:'',isVerified:false,managementStructureId:0,verifiedBy:'',dateVerified:'',nteHrs:0,tat:0, selectedPartId: [], selectedAircraftDataModels: [],
+        selectedCap:{},CapabilityTypeId: 0,companyId: 0,buId: 0,divisionId: 0,departmentId:0,manufacturerId:0,manufacturerLabel:'',ataChapterId:0,ataChapterLabel:'',atasubchapterId:0,ataSubchapterLabel:'',cmmId:0,cmmLabel:'',integrateWith:0,integrateWithLabel:'',description:'',entryDate:'',isVerified:false,managementStructureId:0,verifiedBy:'',dateVerified:'',nteHrs:0,tat:0, selectedPartId: [], selectedAircraftDataModels: [],
         selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: [], selectedDashNumbers2:[]
     };
 
-    capabilityTypeData: any = [{
+    /*capabilityTypeData: any = [{
         CapabilityTypeId: 1, Description: 'Manufacturing', formArrayName: 'mfgForm', selectedPartId: [], selectedAircraftDataModels: [],
         selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
     },
@@ -135,7 +137,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
     {
         CapabilityTypeId: 6, Description: 'Exchange', formArrayName: 'exchangeForm', selectedPartId: [], selectedAircraftDataModels: [],
         selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
-    }];
+    }];*/
 
     ngOnInit()
     {
@@ -156,10 +158,19 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
         this.Integration();
         this.getAllATAChapter();
         this.getAllATASubChapter();
+        this.loadManagementdataForTree();
+        this.getCapabilityTypeData();
 
     }
     get mfgFormArray(): FormArray {
         return this.capabilitiesForm.get('mfgForm') as FormArray;
+    }
+   
+    getCapabilityTypeData() {
+        this.commonservice.smartDropDownList('CapabilityType', 'CapabilityTypeId', 'Description').subscribe(res => {
+            this.capabilityTypeData = res;
+
+        })
     }
 
     dataSource: MatTableDataSource<any>;
@@ -468,7 +479,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
                     //this.getAircraftDashNumber(selectedData);
 
 
-                    capData.selectedDashNumbers = []
+                    capData.selectedDashNumbers2 = [];
                     // checks where multi select is empty or not and calls the service
 
                     if (capData.selectedAircraftTypes !== '' && capData.selectedAircraftModelTypes !== '') {
@@ -490,6 +501,18 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
             })
         })
     }
+    dashNumberChange(event, capData) {
+        let selectedData = event.value;
+        capData.selectedDashNumbers2 = [];
+        selectedData.forEach(element1 => {
+            this.search_AircraftDashNumberList.forEach(element2 => {
+                if (element1 == element2.value) {
+                    capData.selectedDashNumbers2.push(element2);
+                }
+            })
+        })
+        console.log(capData.selectedDashNumbers2);
+    }
     manufacturerChange(event, capData) {
         let selectedData = event.value;
         capData.selectedManufacturer = [];
@@ -500,6 +523,25 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
                 }
             })
         })
+    }
+
+    partPNentHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedActionName) {
+                if (value == this.selectedActionName.toLowerCase()) {
+                    //alert("Action Name already Exists");
+                    this.disableSavepartNumber = true;
+
+                }
+                else {
+                    this.disableSavepartNumber = false;
+                    this.sourceItemMasterCap.partDescription = "";
+                    this.disableSavepartDescription = false;
+                }
+            }
+
+        }
     }
     partEventHandler(event) {
         if (event) {
@@ -578,6 +620,52 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
                     this.disableSave = true;
 
                     this.onSelectedId = event;
+                }
+            }
+        }
+    }
+    onManufacturerselection(event) {
+        if (this.allManufacturerInfo) {
+            for (let i = 0; i < this.allManufacturerInfo.length; i++) {
+                if (event == this.allManufacturerInfo[i].manufacturerId) {
+                   this.capabilityForm.manufacturerLabel = this.allManufacturerInfo[i].name;
+                }
+            }
+        }
+    }
+    onAtaChapterselection(event) {
+        if (this.LoadAtachapter) {
+            for (let i = 0; i < this.LoadAtachapter.length; i++) {
+                if (event == this.LoadAtachapter[i].value) {
+                   this.capabilityForm.ataChapterLabel = this.LoadAtachapter[i].label;
+                }
+            }
+        }
+    }
+     onAtaSubChapterselection(event) {
+        if (this.atasubchapter) {
+            for (let i = 0; i < this.atasubchapter.length; i++) {
+                if (event == this.atasubchapter[i].value) {
+                   this.capabilityForm.ataSubchapterLabel = this.atasubchapter[i].label;
+                }
+            }
+        }
+    }
+    onCmmselection(event) {
+        if (this.cmmList) {
+            for (let i = 0; i < this.cmmList.length; i++) {
+                if (event == this.cmmList[i].value) {
+                   this.capabilityForm.cmmLabel = this.cmmList[i].label;
+                }
+            }
+        }
+    }
+
+     onIntegrateWithselection(event) {
+        if (this.integrationvalues) {
+            for (let i = 0; i < this.integrationvalues.length; i++) {
+                if (event == this.integrationvalues[i].value) {
+                   this.capabilityForm.integrateWithLabel = this.integrationvalues[i].label;
                 }
             }
         }
@@ -831,7 +919,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
     }
 
     addModels(capData) {
-        this.capabilityTypeData.for
+       // this.capabilityTypeData.for
         let capbilitiesObj = new ItemMasterCapabilitiesModel;
       // let selectedCap = capData.selectedCap;
         // this.resetFormArray(capData);
@@ -844,10 +932,15 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
             capbilitiesObj.PartId = capData.selectedPartId;
             capbilitiesObj.itemMasterId = this.itemMasterId;
 
+            capbilitiesObj.manufacturerLabel = capData.manufacturerLabel;
+            capbilitiesObj.ataChapterLabel = capData.ataChapterLabel;
+            capbilitiesObj.ataSubchapterLabel = capData.ataSubchapterLabel;
+            capbilitiesObj.cmmLabel = capData.cmmLabel;
+            capbilitiesObj.integrateWithLabel = capData.integrateWithLabel;
 
              capbilitiesObj.manufacturerId = capData.manufacturerId;
              capbilitiesObj.ataChapterId = capData.ataChapterId;
-             capbilitiesObj.atasubchapterId = capData.atasubchapter;
+            capbilitiesObj.atasubchapterId = capData.ataSubChapterId.ataSubChapterId;
              capbilitiesObj.cmmId = capData.cmmId;
              capbilitiesObj.integrateWith = capData.integrateWith;
              capbilitiesObj.description = capData.description;
@@ -859,8 +952,8 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
                    capbilitiesObj.nteHrs = capData.nteHrs;
                     capbilitiesObj.tat = capData.tat;
             capbilitiesObj.aircraftModelName = 'Undefined';
-            capbilitiesObj.DashNumber = 'Undefined';
-           // capbilitiesObj.AircraftDashNumberId = capData.selectedDashNumbers;
+            //capbilitiesObj.DashNumber = 'Undefined';
+            capbilitiesObj.AircraftDashNumberId = capData.selectedDashNumbers;
             console.log(capData.selectedDashNumbers2);
 
             if(capData.selectedModel.length==0){
@@ -954,6 +1047,20 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
 
         });
         return itemExisted;
+    }
+    saveCapabilities() {
+        let capbilitiesForm = this.capabilitiesForm.value;
+        let capabilityCollection: any = [];
+        let mfgForm = capbilitiesForm.mfgForm;
+        mfgForm.forEach(element => {
+            capabilityCollection.push(element);
+        });
+        
+        this.itemMasterService.saveManfacturerinforcapes(capabilityCollection).subscribe(data11 => {
+            this.loadData();
+        })
+        this.mfgFormArray.controls = [];
+        this.modal.close();
     }
 
 }
