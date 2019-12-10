@@ -138,13 +138,13 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
 
     constructor(public vendorclassificationService: VendorClassificationService, private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public customerser: CustomerService, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, public commonService: CommonService,public integrationService: IntegrationService) {
         this.dataSource = new MatTableDataSource();
-
+       
         if (this.local) {
             this.vendorService.contactCollection = this.local;
         }
         if (this.vendorService.generalCollection) {
-            this.local = this.vendorService.generalCollection;
-        }
+            this.local = this.vendorService.generalCollection;          
+        }        
 
         if (this.vendorService.listCollection != null && this.vendorService.isEditMode == true) {
             this.showLable = true;
@@ -195,6 +195,7 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         
+        this.sourceVendor.vendorTypeId=2;
         this.matSpinner = false;
         this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-general-information';
         this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
@@ -240,9 +241,14 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
             this.intSelectedColumns = this.cols;
         }
         this.CreateVendorOnClick();
-        console.log(this.sourceVendor, this.isEditMode, this.viewName, "vendor Information ");
-        if (!this.vendorService.isReset) {
-            this.sourceVendor = {};
+        //console.log(this.sourceVendor, this.isEditMode, this.viewName, "vendor Information ");
+       
+        if (!this.vendorService.isReset) {   
+            if(this.viewName !="Edit")
+            {
+                this.sourceVendor = {};
+                this.sourceVendor.vendorTypeId=2;
+            }            
         }
     }
     ngOnDestroy(): void {
@@ -633,8 +639,8 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         }
         if (this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
             && this.sourceVendor.PostalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationIds) {
-debugger
-console.log(this.sourceVendor.integrationPortalIds);
+
+
             if (!this.sourceVendor.vendorId) {
                 this.sourceVendor.createdBy = this.userName;
                 this.sourceVendor.updatedBy = this.userName;
@@ -664,6 +670,8 @@ console.log(this.sourceVendor.integrationPortalIds);
                         this.vendorService.isVendorAlsoCustomer = this.sourceVendor.isVendorAlsoCustomer;
                         this.vendorService.localCollectiontoCustomer = this.sourceVendor;
                     }
+                    this.viewName="Edit";
+                    this.vendorService.isEditMode=true;
                     this.activeIndex = 0;
                     this.vendorService.indexObj.next(this.activeIndex);
                     this.savesuccessCompleted(this.sourceVendor, goNxt);
