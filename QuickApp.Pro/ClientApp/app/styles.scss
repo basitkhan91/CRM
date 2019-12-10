@@ -13061,6 +13061,15 @@ button {
         font-weight: normal !important;
         width: 194px !important;
       }
+      .p-checkbox-label-2 .ui-chkbox-label {
+        margin-top: 16px !important;
+        font-size: 12px !important;
+        font-weight: normal !important;
+        width: 194px !important;
+      }
+
+
+
       p-checkbox.checkbox-table .ui-chkbox.ui-widget {
 
         margin-top: -15px;
@@ -14057,10 +14066,27 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .p-dropdown-custom-md .ui-dropdown{
     width: 138px !important;
 }
+.p-dropdown-custom-md-2 .ui-dropdown{
+    width: 181px !important;
+}
+
+
+.p-checkbox-label-2 .ui-chkbox-label {
+    margin-top: 16px !important;
+    font-size: 12px !important;
+    font-weight: normal !important;
+    width: auto !important;
+    margin-left: 12px;
+}
 .p-dropdown-custom-md-Header .ui-dropdown{
     width: 100%!important;
 }
 .p-dropdown-custom-md-Header .ui-dropdown label.ui-dropdown-label {
+    text-align: left;
+    font-size: 12px !important;
+}
+
+.p-dropdown-custom-md-2 .ui-dropdown label.ui-dropdown-label {
     text-align: left;
     font-size: 12px !important;
 }
