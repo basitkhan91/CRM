@@ -901,7 +901,7 @@ export class AssetCapesComponent implements OnInit {
     
     removeAsset(): void {
         this.assetServices.removeCapesById(this.assetServices.CapeslistCollection.assetCapesId).subscribe(response => {
-            this.alertService.showMessage("Success", `Asset Cpaes removed successfully.`, MessageSeverity.success);
+            this.alertService.showMessage("Success", `Asset Capes removed successfully.`, MessageSeverity.success);
             this.assetServices.getcapabilityListData(this.assetServices.listCollection.assetRecordId).subscribe(asset => {
                 this.allCapesInfo = asset[0];
                 this.modal.close();
@@ -986,6 +986,7 @@ export class AssetCapesComponent implements OnInit {
         });
 
         this.assetServices.saveManfacturerinforcapes(capabilityCollection).subscribe(data11 => {
+            this.alertService.showMessage("Success", `Asset capes saved successfully.`, MessageSeverity.success);
             this.loadCapesData();
         })
         this.mfgFormArray.controls = [];
