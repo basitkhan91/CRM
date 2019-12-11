@@ -363,7 +363,7 @@
   </div>
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'materialList'">
-    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use work flow'">
+    <!-- <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use work flow'">
       <thead>
         <tr>
           <th>MC PN</th>
@@ -441,8 +441,12 @@
           <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save Details</button>
         </div>
       </tbody>
-    </table>
-
+    </table> -->
+    <app-work-order-complete-material-list 
+    [workFlowObject]="workFlowObject" 
+    [savedWorkOrderData]="savedWorkOrderData" 
+    [workOrderMaterialList]="workOrderMaterialList"
+   ></app-work-order-complete-material-list>
    
   </div>
 
@@ -455,67 +459,6 @@
       (refreshData)="getExclusionListByWorkOrderId()"
       [isQuote]="isQuote"
     ></app-work-order-exclusions> 
-    <!-- <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use work flow'">
-      <thead>
-        <tr>
-          <th>MC PN</th>
-          <th>MC Description</th>
-          <th>QTE/WO/WF/SL/M</th>
-          <th>REF</th>
-          <th>QTY</th>
-          <th>UOM</th>
-          <th>COND TYPE</th>
-          <th>UNIT COST</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="mpn-row" *ngFor="let matQuotation of exclusionsQuotation">
-          <td>{{matQuotation.partNumber}}</td>
-          <td>{{matQuotation.partDescription}}</td>
-          <td>{{matQuotation.partDescription}}</td>
-          <td>{{matQuotation.partDescription}}</td>
-          <td>{{matQuotation.quantity}}</td>
-          <td>{{matQuotation.unitOfMeasureId}}</td>
-          <td>{{matQuotation.conditionCodeId}}</td>
-          <td>{{matQuotation.unitCost}}</td>
-        </tr>
-        <div class="col-md-12">
-          <button class="btn btn-primary-cstm pull-right" (click)="createExclusionsQuote()">Save Details</button>
-        </div>
-      </tbody>
-    </table>
-
-    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use historical wos'">
-      <thead>
-        <tr>
-          <th>MC PN</th>
-          <th>MC Description</th>
-          <th>QTE/WO/WF/SL/M</th>
-          <th>REF</th>
-          <th>QTY</th>
-          <th>UOM</th>
-          <th>COND TYPE</th>
-          <th>OEM/PMA/DER</th>
-          <th>UNIT COST</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="mpn-row" *ngFor="let matQuotation of exclusionsQuotation">
-          <td>{{matQuotation.partNumber}}</td>
-          <td>{{matQuotation.partDescription}}</td>
-          <td>{{matQuotation.workOrderNumber}}</td>
-          <td>{{matQuotation.partDescription}}</td>
-          <td>{{matQuotation.quantity}}</td>
-          <td>{{matQuotation.unitOfMeasureId}}</td>
-          <td>{{matQuotation.condition}}</td>
-          <td>{{matQuotation.oem}}</td>
-          <td>{{matQuotation.unitCost}}</td>
-        </tr>
-        <div class="col-md-12">
-          <button class="btn btn-primary-cstm pull-right" (click)="createExclusionsQuote()">Save Details</button>
-        </div>
-      </tbody>
-    </table> -->
 
   </div>
 
