@@ -136,6 +136,10 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
     allvendorclassificationInfo;
     //@ViewChild('f') form: any;
 
+
+    
+
+
     constructor(public vendorclassificationService: VendorClassificationService, private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public customerser: CustomerService, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, public commonService: CommonService,public integrationService: IntegrationService) {
         this.dataSource = new MatTableDataSource();
        
@@ -954,6 +958,15 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
     onAddCapabilities() {
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-capabilities-list');
     }
+
+    patternMobilevalidationWithSpl(event: any) {
+        const pattern = /[0-9\+\-()\ ]/;
+    
+        let inputChar = String.fromCharCode(event.charCode);
+        if (event.keyCode != 8 && !pattern.test(inputChar)) {
+          event.preventDefault();
+        }
+      }
 
     
 
