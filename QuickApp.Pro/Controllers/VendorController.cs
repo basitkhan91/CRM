@@ -3828,6 +3828,14 @@ namespace QuickApp.Pro.Controllers
             return result.success;
         }
 
+        [HttpGet("getVendorCapabilityHistory")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IActionResult GetAllVendorCapabilityAudit(long VendorCapabilityId, long VendorId)
+        {
+
+            var allVendorBillingDetails = _unitOfWork.Vendor.GetVendorCapabilityAudit(VendorCapabilityId, VendorId);
+            return Ok(allVendorBillingDetails);
+        }
 
 
         #endregion Private Methods

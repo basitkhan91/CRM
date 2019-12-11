@@ -6,6 +6,7 @@
 using AutoMapper;
 using DAL.Core;
 using DAL.Models;
+using DAL.Models.Sales;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -57,6 +58,15 @@ namespace QuickApp.Pro.ViewModels
 
             CreateMap<Order, OrderViewModel>()
                 .ReverseMap();
+
+            CreateMap<DAL.Models.Sales.SalesOrderQuote.SalesOrderQuote
+                , ViewModels.SalesViews.SalesOrderQuoteView>()
+                .ReverseMap();
+
+            CreateMap<DAL.Models.Sales.SalesOrderQuoteApproverList
+                , ViewModels.SalesViews.SalesOrderQuoteApproverListView>()
+                .ReverseMap();
+
         }
     }
 }

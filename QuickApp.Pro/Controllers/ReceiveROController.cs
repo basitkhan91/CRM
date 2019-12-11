@@ -260,9 +260,26 @@ namespace QuickApp.Pro.Controllers
 
         private void setRepairOrderStatus(long repairOrderId)
         {
+            var filteredParts = new List<RepairOrderPart>();
+
             var parts = unitOfWork.Repository<RepairOrderPart>().Find(x => x.RepairOrderId == repairOrderId);
-            var isPOReceived = true;
+
             foreach (var part in parts)
+            {
+                if (parts.Count(x => x.ItemMasterId == part.ItemMasterId) > 1)
+                {
+                    var splitParts = unitOfWork.Repository<RepairOrderPart>().Find(x => x.IsParent == false && x.ItemMasterId == part.ItemMasterId);
+                    if (!filteredParts.Any(x => x.ItemMasterId == part.ItemMasterId))
+                        filteredParts.AddRange(splitParts);
+                }
+                else
+                {
+                    filteredParts.Add(part);
+                }
+            }
+
+            var isPOReceived = true;
+            foreach (var part in filteredParts)
             {
                 part.StockLine = unitOfWork.Repository<StockLine>().Find(x => x.RepairOrderPartRecordId == part.RepairOrderPartRecordId).ToList();
                 if (part.QuantityOrdered != (short?)(part.StockLine.Sum(x => x.Quantity)))

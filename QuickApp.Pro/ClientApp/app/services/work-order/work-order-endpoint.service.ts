@@ -353,6 +353,14 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.post(`${this.configurations.baseUrl}/api/workOrder/createworkorderquote`, JSON.stringify(data), this.getRequestHeaders())
     }
 
+    getSubWorkOrderListByWorkOrderId(workOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/WorkOrder/subworkorderlist?workOrderId=${workOrderId}`, this.getRequestHeaders())
+    }
+
+    getSubWorkOrderView(subWorkOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/WorkOrder/subworkorderdetails?subWorkOrderId=${subWorkOrderId}`, this.getRequestHeaders())
+    }
+
     getSubWorkOrderHeaderByWorkOrderId(workOrderId, workOrderPartNumberId) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/subworkorderheaderdetails?workOrderId=${workOrderId}&workOrderPartNumberId=${workOrderPartNumberId}`)
     }
@@ -401,19 +409,19 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.get(`${this.configurations.baseUrl}/api/workorder/workorderfreightlist?wfwoId=${wfwoId}`);
     }
 
-    saveMaterialListQuote(data){
+    saveMaterialListQuote(data) {
         return this.http.post<any>(`${this.configurations.baseUrl}/api/workorder/createquotematerials`, JSON.stringify(data), this.getRequestHeaders());
     }
 
-    saveLaborListQuote(data){
+    saveLaborListQuote(data) {
         return this.http.post<any>(`${this.configurations.baseUrl}/api/workorder/createquotelabor`, JSON.stringify(data), this.getRequestHeaders());
     }
 
-    saveChargesQuote(data){
+    saveChargesQuote(data) {
         return this.http.post<any>(`${this.configurations.baseUrl}/api/workorder/createquotecharges`, JSON.stringify(data), this.getRequestHeaders());
     }
 
-    saveExclusionsQuote(data){
+    saveExclusionsQuote(data) {
         return this.http.post<any>(`${this.configurations.baseUrl}/api/workorder/createquoteexclusions`, JSON.stringify(data), this.getRequestHeaders());
     }
 

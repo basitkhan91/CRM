@@ -23,6 +23,8 @@ import { Globals } from '../../../globals'
 import { LazyLoadEvent, SortEvent } from 'primeng/api';
 import { listSearchFilterObjectCreation } from '../../../generic/autocomplete';
 import { CommonService } from '../../../services/common.service';
+import { CustomerViewComponent } from '../../../shared/components/customer/customer-view/customer-view.component';
+
 
 
 
@@ -397,30 +399,15 @@ export class CustomersListComponent implements OnInit {
 
 
     viewSelectedRow(rowData) {
-
-
         const { customerId } = rowData;
-        this.customerService.getCustomerdataById(customerId).subscribe(res => {
-            this.viewDataGeneralInformation = res[0];
-        })
-        this.getAllCustomerContact(customerId);
-        this.getAircraftMappedDataByCustomerId(customerId);
-        this.getMappedATAByCustomerId(customerId);
-        this.getBillingDataById(customerId);
-        this.getDomesticShippingByCustomerId(customerId);
-        this.getInternationalShippingByCustomerId(customerId);
-        this.getCustomerWaringByCustomerId(customerId);
-        this.getCustomerDocumentsByCustomerId(customerId);
-        this.getMappedTaxTypeRateDetails(customerId);
-        this.getCustomerRestrictedPMAByCustomerId(customerId);
-        this.getCustomerRestrictedDERByCustomerId(customerId);
-        this.getCustomerClassificationByCustomerId(customerId) 
-        //this.modal = this.modalService.open(content, { size: 'sm' });
-        //this.modal.result.then(() => {
-        //    console.log('When user closes');
-        //}, () => { console.log('Backdrop click') })
+        this.modal = this.modalService.open(CustomerViewComponent, { size: 'lg' });
+        this.modal.componentInstance.customerId = customerId;
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
 
     }
+    
     viewSelectedRowdbl(content, rowData) {
 
 
