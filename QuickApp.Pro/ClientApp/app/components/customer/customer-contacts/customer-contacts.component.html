@@ -251,14 +251,14 @@
 	</div>
 </ng-template> -->
 
-<div #addContactDetails class="modal fade" id="addContactDetails" role="dialog">
-    <div class="modal-dialog">
+<div class="modal"   #addContactDetails class="modal fade" id="addContactDetails" role="dialog">
+    <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Add Contact Details</h4>
             </div>
-            <form #ccForm="ngForm" #addContactForm="ngForm" class="form-horizontal">
+            <form #addContactForm="ngForm" class="form-horizontal">
                 <div class="modal-body">
                     <div class="form-row">
                         <div class="col-md-6">
@@ -344,7 +344,7 @@
                             <div class="form-group">
                                 <label>Work Phone <span class="clr-red">*</span></label>
                                 <div>
-                                    <input class="form-control" type="number" pattern="[0-9]+([-\,][0-9]+)?"  name="workPhone" [(ngModel)]="contactInformation.workPhone" style="width: calc(100% - 63px) !important;">
+                                    <input class="form-control" type="number" pKeyFilter="pnum" name="workPhone" [(ngModel)]="contactInformation.workPhone" style="width: calc(100% - 63px) !important;" required>
                                     -
                                     <input class="form-control w50" type="text"  name="workPhoneExtn" [(ngModel)]="contactInformation.workPhoneExtn">
                                 </div>
@@ -364,7 +364,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Web Site</label>
-                                <input class="form-control" type="text" name="websiteURL" #url="ngModel" [(ngModel)]="contactInformation.websiteURL">
+                                <input class="form-control" type="text" name="websiteURL" #url="ngModel"  [(ngModel)]="contactInformation.websiteURL">
                                 <div *ngIf="url.errors" [ngClass]="'error'">
                                     <div *ngIf="url.errors.pattern">
                                         <span style="color:red">URL not valid</span>
@@ -383,13 +383,11 @@
                                 <label>Fax</label>
                                 <input class="form-control" pKeyFilter="pint" type="text" name="fax" [(ngModel)]="contactInformation.fax">
                             </div>
-                           
                             <div class="form-group">
                                 <label>Memo</label>
                                 <!--<input class="form-control" type="text" name="notes" [(ngModel)]="contactInformation.notes">-->
-                                <textarea  name="notes" [(ngModel)]="contactInformation.notes" placeholder="Tool Bar"></textarea>
+                                <textarea class="form-control" name="notes" [(ngModel)]="contactInformation.notes" placeholder="Tool Bar"></textarea>
                             </div>
-
                             <div class="form-group">
                                 <label>Email <span class="clr-red">*</span></label>
                                 <input class="form-control" email type="text" name="email" [pattern]="emailPattern" #contactEmail="ngModel" [(ngModel)]="contactInformation.email" required>

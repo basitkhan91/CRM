@@ -338,130 +338,129 @@
                                             </div>
                                             <div class="col-md-3">
                                                     
-                                                <div class="form-group" style="margin-top: 15px;clear: both;">
-                                                    <div class="label-cstm">Restrict PMA</div>
+                                                    <div class="form-group" style="margin-top: 15px;clear: both;">
+                                                            <div class="label-cstm">Restrict PMA</div>
 
-                                                    <span class="checkbox-cstm">
-                                                        <label style="width: 20px;">
-                                                            <input type="checkbox" id="rpma" name="rpma" [(ngModel)]="generalInformation.restrictPMA">
-                                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                        </label>
-                                                    </span>
+                                                                <span class="checkbox-cstm">
+                                                                        <label style="width: 20px;">
+                                                                            <input type="checkbox" id="rpma" name="rpma" [(ngModel)]="generalInformation.restrictPMA">
+                                                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                                        </label>
+                                                                    </span>
 
-                                                    <span>Except for</span>
+                                                            <div class="table-small" *ngIf="generalInformation.restrictPMA">
 
-                                                    <div class="table-small" *ngIf="generalInformation.restrictPMA">
+                                                                    <div class="col-sm-12">  
+                                                                        <div class="col-sm-9">     
+                                                                    <p-multiSelect 
+                                                                    name="isRestrict"
 
-                                                        <div class="col-sm-12">
-                                                            <div class="col-sm-9">
-                                                                <p-multiSelect name="isRestrict"
-                                                                               [(ngModel)]="restictPMAtempList"
-                                                                               [options]="partListForPMA"
-                                                                               [filter]="true"
-                                                                               itemSize="30"
-                                                                               defaultLabel="Except for Choose"></p-multiSelect>
-                                                            </div>
-                                                            <div class="col-sm-3">
-                                                                <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" (click)="addRestrictPMA()"></a></span>
-                                                            </div>
+                                                                     [(ngModel)]="restictPMAtempList"
+                                                                     [options]="partListForPMA" 
+                                                                     [filter]="true"
+                                                                     itemSize="30"
+                                                                      defaultLabel="Except for Choose"
+                                                                    ></p-multiSelect>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <span style="margin-left:3px;cursor:pointer;"><a  class="fa fa-plus-circle fa-lg" (click)="addRestrictPMA()" ></a></span>
+                                                                </div>
+                                                                </div>
+                                                                    <div *ngIf="disableRestrictedPMA">
+                                                                        <p-table class="table-responsive" [value]="generalInformation.restrictedPMAParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
+                                                                            <ng-template pTemplate="header" let-columns>
+                                                                                <tr>
+                                                                                    <th *ngFor="let col of columns">
+                                                                                        {{col.header}}
+                                                                                    </th>
+                                                                                    <th>Actions</th>
+                                                                                </tr>
+                                                                            </ng-template>
+                                                                            <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                                                                <tr>
+                                                                                    <td *ngFor="let col of columns">
+                                                                                        {{part[col.field]}}
+                                                                                    </td>
+                                                                                    <button class="btn-delete" (click)="deleteRestirctPMA(i, rowData)" mat-icon-button matTooltip="Delete">
+                                                                                        <mat-icon color="warn">delete</mat-icon>
+                                                                                    </button>
+                                                                                </tr>
+                                                                            </ng-template>
+                                                                        </p-table>
+                                                                    </div>
+
+
+        
                                                         </div>
-                                                        <div *ngIf="disableRestrictedPMA">
-                                                            <p-table class="table-responsive" [value]="generalInformation.restrictedPMAParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
-                                                                <ng-template pTemplate="header" let-columns>
-                                                                    <tr>
-                                                                        <th *ngFor="let col of columns">
-                                                                            {{col.header}}
-                                                                        </th>
-                                                                        <th>Actions</th>
-                                                                    </tr>
-                                                                </ng-template>
-                                                                <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
-                                                                    <tr>
-                                                                        <td *ngFor="let col of columns">
-                                                                            {{part[col.field]}}
-                                                                        </td>
-                                                                        <button class="btn-delete" (click)="deleteRestirctPMA(i, rowData)" mat-icon-button matTooltip="Delete">
-                                                                            <mat-icon color="warn">delete</mat-icon>
-                                                                        </button>
-                                                                    </tr>
-                                                                </ng-template>
-                                                            </p-table>
-                                                        </div>
+                                                           
 
+                                                            
+                                                        <!-- <p-autoComplete 
+                                                        
+                                                        field="partNumber" 
+                                                         [multiple]="true"
+                                                         [forceSelection]="true"
+                                                         (onSelect)="selectedPartForPMA($event)"
+                                                        name="partList" [suggestions]="partList"
+                                                        (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
+                                                        [dropdown]="true" class="autocomplete-customer">
+                                           
+                                                        </p-autoComplete> -->
+                                                        
 
-
+                                                            
                                                     </div>
 
+                                                    <div class="form-group" style="margin-top: 15px;clear: both;">
+                                                            <div class="label-cstm">Restrict DER</div>
+                                                            <span class="checkbox-cstm">
+                                                                <label style="width: 20px;">
+                                                                    <input type="checkbox" id="rber" name="rber" [(ngModel)]="generalInformation.restrictBER">
+                                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                                </label>
+                                                            </span>
 
+                                                            <div class="table-small" *ngIf="generalInformation.restrictBER">
 
-                                                    <!-- <p-autoComplete
+                                                                <div class="col-sm-12">
+                                                                    <div class="col-sm-9">
+                                                                        <p-multiSelect name="isRestrict"
+                                                                                       [(ngModel)]="restictDERtempList"
+                                                                                       [options]="partListForDER"
+                                                                                       [filter]="true"
+                                                                                       itemSize="30"
+                                                                                       defaultLabel="Except for Choose"></p-multiSelect>
+                                                                    </div>
+                                                                    <div class="col-sm-3">
+                                                                        <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" (click)="addRestrictBER()"></a></span>
+                                                                    </div>
+                                                                </div>
+                                                                <div *ngIf="disableRestrictedDER">
+                                                                    <p-table class="table-responsive" [value]="generalInformation.restrictedDERParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
+                                                                        <ng-template pTemplate="header" let-columns>
+                                                                            <tr>
+                                                                                <th *ngFor="let col of columns">
+                                                                                    {{col.header}}
+                                                                                </th>
+                                                                                <th>Actions</th>
+                                                                            </tr>
+                                                                        </ng-template>
+                                                                        <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                                                            <tr>
+                                                                                <td *ngFor="let col of columns">
+                                                                                    {{part[col.field]}}
+                                                                                </td>
+                                                                                <button class="btn-delete" (click)="deleteRestrictDER(i, rowData)" mat-icon-button matTooltip="Delete">
+                                                                                    <mat-icon color="warn">delete</mat-icon>
+                                                                                </button>
+                                                                            </tr>
+                                                                        </ng-template>
+                                                                    </p-table>
+                                                                </div>
 
-    field="partNumber"
-     [multiple]="true"
-     [forceSelection]="true"
-     (onSelect)="selectedPartForPMA($event)"
-    name="partList" [suggestions]="partList"
-    (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
-    [dropdown]="true" class="autocomplete-customer">
-
-    </p-autoComplete> -->
-
-
-
-                                                </div>
-
-                                                <div class="form-group" style="margin-top: 15px;clear: both;">
-                                                    <div class="label-cstm">Restrict DER</div>
-                                                    <span class="checkbox-cstm">
-                                                        <label style="width: 20px;">
-                                                            <input type="checkbox" id="rber" name="rber" [(ngModel)]="generalInformation.restrictBER">
-                                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                        </label>
-                                                    </span>
-
-                                                    <span>Except for</span>
-
-                                                    <div class="table-small" *ngIf="generalInformation.restrictBER">
-
-                                                        <div class="col-sm-12">
-                                                            <div class="col-sm-9">
-                                                                <p-multiSelect name="isRestrict"
-                                                                               [(ngModel)]="restictDERtempList"
-                                                                               [options]="partListForDER"
-                                                                               [filter]="true"
-                                                                               itemSize="30"
-                                                                               defaultLabel="Except for Choose"></p-multiSelect>
                                                             </div>
-                                                            <div class="col-sm-3">
-                                                                <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" (click)="addRestrictBER()"></a></span>
-                                                            </div>
-                                                        </div>
-                                                        <div *ngIf="disableRestrictedDER">
-                                                            <p-table class="table-responsive" [value]="generalInformation.restrictedDERParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
-                                                                <ng-template pTemplate="header" let-columns>
-                                                                    <tr>
-                                                                        <th *ngFor="let col of columns">
-                                                                            {{col.header}}
-                                                                        </th>
-                                                                        <th>Actions</th>
-                                                                    </tr>
-                                                                </ng-template>
-                                                                <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
-                                                                    <tr>
-                                                                        <td *ngFor="let col of columns">
-                                                                            {{part[col.field]}}
-                                                                        </td>
-                                                                        <button class="btn-delete" (click)="deleteRestrictDER(i, rowData)" mat-icon-button matTooltip="Delete">
-                                                                            <mat-icon color="warn">delete</mat-icon>
-                                                                        </button>
-                                                                    </tr>
-                                                                </ng-template>
-                                                            </p-table>
-                                                        </div>
-
+                                                            
                                                     </div>
-
-                                                </div>
                                                 <!-- <div class="form-group" style="margin-top: 15px;">
                                                     <div class="label-cstm">Scan Documents</div>
                                                     <span class="checkbox-cstm">
