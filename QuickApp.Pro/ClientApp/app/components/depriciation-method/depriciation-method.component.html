@@ -2,13 +2,13 @@
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_content">
-                <nav aria-label="breadcrumb">
+                <!--<nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item" aria-current="page">Asset Management</li>
                         <li class="breadcrumb-item" aria-current="page">Asset Management Maintanance</li>
                         <li class="breadcrumb-item active" aria-current="page">Depreciation Method</li>
                     </ol>
-                </nav>
+                </nav>-->
                 <div class="card">
                     <div class="card-body">
                         <div class="inline-block display-flex">
@@ -18,7 +18,7 @@
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
-                        <div class="form-row col-row col-row1">
+                        <div class="form-row col-row col-row1" *ngIf="this.updateMode || this.updateMode">
                             <div class="col-md-4 display-flex inline-block" style="margin-top: 25px;">
                                 <div>
                                     <button type="button" id="btnUpdatedepriciationMethod" *ngIf="this.updateMode" (click)="updatedepriciationmethod()" name="" class="btn btn-success nobg btn-cstm" data-toggle="tooltip" data-original-title="Update"><i class="fa fa-edit"></i></button>
@@ -35,9 +35,9 @@
                                 <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect [maxSelectedLabels]="2" [options]="selectedData" optionLabel="header" [(ngModel)]="selectedColumns"
                                                    [style]="{minWidth: '200px'}" style="float:left"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
-                                            iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
+                                            iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
                                             iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
                                         <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
@@ -69,7 +69,7 @@
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-rowData let-columns="columns">
-                                <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdits(rowData)">
+                                <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openView(view,rowData)">
                                     <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                         {{
 col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?
@@ -102,11 +102,11 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                 </tr>
                             </ng-template>
                             <!--<ng-template #auditContent let-c="close" let-d="dismiss">
-                                <div class="audit-template-launcher">
-                                    <bin-audit [Data]="AuditDetails" [Modal]="modal" *ngIf="HasAuditDetails"></bin-audit>
-                                    <audit-no-history [Modal]="modal" [Title]="AuditHistoryTitle" *ngIf="!HasAuditDetails"></audit-no-history>
-                                </div>
-                            </ng-template>-->
+                    <div class="audit-template-launcher">
+                        <bin-audit [Data]="AuditDetails" [Modal]="modal" *ngIf="HasAuditDetails"></bin-audit>
+                        <audit-no-history [Modal]="modal" [Title]="AuditHistoryTitle" *ngIf="!HasAuditDetails"></audit-no-history>
+                    </div>
+                </ng-template>-->
 
                             <ng-template #auditContent let-c="close" let-d="dismiss">
                                 <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
@@ -221,11 +221,11 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body editdepriciation">
         <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="SaveandEditDepreciaionMethod()">
             <div class="form-group">
                 <div class="col-sm-12">
-                    <div class="col-sm-4">
+                    <div class="col-sm-5">
                         <label for="description" class="control-label">
                             Depreciation Method Code
                             <span class="clr-red">*</span>
@@ -247,7 +247,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                     </div>
                 </div>
                 <div class="col-sm-12">
-                    <div class="col-sm-4">
+                    <div class="col-sm-5">
                         <label for="shortName" class="control-label">
                             Name
                             <span class="clr-red">*</span>
@@ -261,7 +261,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                     </div>
                 </div>
                 <div class="col-sm-12">
-                    <div class="col-sm-4">
+                    <div class="col-sm-5">
                         <label for="standard" class="control-label">
                             Depreciation Method
                             <span class="clr-red">*</span>
@@ -279,7 +279,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                     </div>
                 </div>
                 <div class="col-sm-12">
-                    <div class="col-sm-4">
+                    <div class="col-sm-5">
                         <label for="description" class="control-label">Memo</label>
                     </div>
                     <div class="col-sm-5">
