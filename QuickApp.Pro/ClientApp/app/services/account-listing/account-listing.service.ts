@@ -18,7 +18,8 @@ export class AccountListingService extends EndpointFactory {
    private readonly updateGlAccountUrl: string = "/api/GlAccount/update";
    private readonly editGlAccountUrl: string = "/api/GlAccount/getById";
    private readonly getGlAccountUrl: string = "/api/GlAccount/getAllGLAccount";
-   private readonly getGlAccountByIdUrl: string = "/api/nodesetup/getById";
+   //private readonly getGlAccountByIdUrl: string = "/api/nodesetup/getById";
+   private readonly getGlAccountByIdUrl: string = "/api/GlAccount/getById";
    private readonly getLedgerNamesUrl: string = "/api/nodesetup/getAll";
    private readonly getLeafNodeUrl: string = "/api/nodesetup/getAllLeafNode";
 

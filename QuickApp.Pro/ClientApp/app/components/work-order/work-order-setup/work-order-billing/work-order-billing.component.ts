@@ -25,6 +25,7 @@ export class WorkOrderBillingComponent implements OnInit {
     customerNamesList: Object;
     soldCustomerSiteList = [];
     shipCustomerSiteList = [];
+    shipToAttention;
     soldCustomerAddress = new AddressModel();
     shipCustomerAddress = new AddressModel();
     managementStructure = {
