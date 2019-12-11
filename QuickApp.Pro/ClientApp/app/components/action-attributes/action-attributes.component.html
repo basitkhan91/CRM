@@ -7,7 +7,7 @@
 							<div class="inline-block display-flex">
 								<h3 class="po-head lead">Task Attributes </h3>
 								&nbsp;&nbsp;
-								<a class="plusicon-cstm new-margin" pTooltip="Add Task Attributes" tooltipPosition="right" data-target="#add" data-toggle="modal" (click)="resetForm()">
+								<a class="plusicon-cstm new-margin" matTooltip="Add Task Attributes" matTooltipPosition="above" data-target="#add" data-toggle="modal" (click)="resetForm()">
 									<i class="fa fa-plus-circle fa-lg"></i>
 								</a>
 							</div>
@@ -16,14 +16,12 @@
 								(onPage)="changePage($event)" [resizableColumns]="true" [reorderableColumns]="true" [totalRecords]="totalRecords"
 								scrollHeight="450px">
 								<ng-template pTemplate="caption">
-									<div style="text-align: right;margin-left:-6px !important;">
+									<div style="text-align: right;margin-left:-6px !important;min-height: 30px;">
 										<p-multiSelect [maxSelectedLabels]="2" [options]="headers" optionLabel="header" [(ngModel)]="selectedColumns" [style]="{minWidth: '200px'}"
 											style="float:left" (onChange)="columnsChanges()"></p-multiSelect>
-										<button type="button" class="btn btn-primary-cstm " matTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
-											iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-										<button type="button" class="btn btn-primary-cstm " matTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
-											iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
-										<div class="excel-upload  excel-upload-cstm">
+										<button type="button" class="btn btn-primary-cstm " label="Export Data" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" (click)="dt.exportCSV()"></button>
+										<button type="button" class="btn btn-primary-cstm " label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left"  (click)="dt.exportCSV({selectionOnly:true})"></button>
+										<!-- <div class="excel-upload  excel-upload-cstm">
 	
 											<input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file" accept=".xlsx, .xls, .csv">
 											<label for="upload">
@@ -34,7 +32,7 @@
 											&nbsp; &nbsp;
 											<button class="btn btn-primary-cstm" matTooltip="Sample File download" (click)="sampleExcelDownload()">Sample File Download
 											</button>
-										</div>
+										</div> -->
 									</div>
 								</ng-template>
 	

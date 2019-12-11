@@ -13,7 +13,7 @@
 
 
             <div class="tab-pane active" id="home">
-                <div class="col-sm-3">
+               <!--  <div class="col-sm-3">
                     <div class="form-group col-sm-12">
                         <label class="control-label col-sm-4">Calendar Name<strong class="clr-red">*</strong></label>
                         <div class="col-sm-7">
@@ -30,10 +30,20 @@
                             <input class="form-control" type="text" [(ngModel)]="currentCalendarObj.description">
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="col-sm-3">
                     <div class=" col-sm-12">
                         <label class="control-label col-sm-4">Ledger Name<strong class="clr-red">*</strong></label>
+                        <div class="col-sm-7">
+                            <select [(ngModel)]="currentCalendarObj.legalEntityId" [ngModelOptions]="{standalone: true}">
+                                <option *ngFor="let entity of companyList" [ngValue]="entity.legalEntityId">  {{entity.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class=" col-sm-12">
+                        <label class="control-label col-sm-4">Ledger Description<strong class="clr-red">*</strong></label>
                         <div class="col-sm-7">
                             <select [(ngModel)]="currentCalendarObj.legalEntityId" [ngModelOptions]="{standalone: true}">
                                 <option *ngFor="let entity of companyList" [ngValue]="entity.legalEntityId">  {{entity.name}}</option>

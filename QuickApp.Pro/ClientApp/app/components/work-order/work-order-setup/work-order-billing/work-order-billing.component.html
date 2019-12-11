@@ -340,7 +340,7 @@
                              </label>
                   <p-dropdown
                     placeholder="Select Site Name"
-                    name="scope{{ i }}"
+                    name="scope"
                     #scope="ngModel"
                     [options]="soldCustomerSiteList"
                     class="p-dropdown-custom-md"
@@ -355,7 +355,7 @@
                              </label>
                   <p-dropdown
                     placeholder="Select Site Name"
-                    name="scope{{ i }}"
+                    name="scope"
                     #scope="ngModel"
                     [options]="soldCustomerSiteList"
                     class="p-dropdown-custom-md"
@@ -531,8 +531,8 @@
                         <input
                           type="text"
                           class="form-control wo-input"
-                          name="shipToAttention"
-                          #shipToAttention="ngModel"
+                          name="shipToAttentionLocal"
+                          #shipToAttentionLocal="ngModel"
                           [(ngModel)]="shipToAttention"
                         />
                       </div>
