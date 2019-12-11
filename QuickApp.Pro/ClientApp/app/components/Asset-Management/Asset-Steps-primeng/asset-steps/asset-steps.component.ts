@@ -144,14 +144,14 @@ export class AssetStepsComponent implements OnInit {
             }
         },
         {
-            label: 'Maintance & Warrenty',
+            label: 'Maintenance & Warranty',
             step:4,
             index:3,
             command: (event: any) => {
                 if(!this.isDisabledSteps){
                 this.activeIndex = 3;
                 this.msgs.length = 0;
-                this.msgs.push({ severity: 'info', summary: 'Maintance & Warrenty', detail: event.label });                
+                this.msgs.push({ severity: 'info', summary: 'Maintenance & Warranty', detail: event.label });                
                 this.route.navigateByUrl('/assetmodule/assetpages/app-asset-maintenance-warranty');
                 }
             }
