@@ -2,23 +2,23 @@
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_content">
-                <nav aria-label="breadcrumb">
+                <!--<nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item" aria-current="page">Asset Management</li>
                         <li class="breadcrumb-item" aria-current="page">Asset Management Maintanance</li>
                         <li class="breadcrumb-item active" aria-current="page"> Disposal Type</li>
                     </ol>
-                </nav>
+                </nav>-->
                 <div class="card">
                     <div class="card-body">
                         <div class="inline-block display-flex">
-                            <h3 class="po-head lead"> Disposal Type</h3>
+                            <h3 class="po-head lead">Asset Disposal Type</h3>
                             &nbsp;&nbsp;
                             <a class="plusicon-cstm new-margin" pTooltip="Add  Disposal Type" tooltipPosition="right" (click)="open(contentEdit)">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
-                        <div class="form-row col-row col-row1">
+                        <div class="form-row col-row col-row1" *ngIf="this.updateMode">
                             <div class="col-md-4 display-flex inline-block" style="margin-top: 25px;">
                                 <div>
                                     <button type="button" id="btnUpdatedepriciationMethod" *ngIf="this.updateMode" (click)="updatedepriciationmethod()" name="" class="btn btn-success nobg btn-cstm" data-toggle="tooltip" data-original-title="Update"><i class="fa fa-edit"></i></button>
@@ -35,9 +35,9 @@
                                 <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect [maxSelectedLabels]="2" [options]="selectedData" optionLabel="header" [(ngModel)]="selectedColumns"
                                                    [style]="{minWidth: '200px'}" style="float:left"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
-                                            iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
+                                            iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
                                             iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
 
@@ -70,7 +70,7 @@
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-rowData let-columns="columns">
-                                <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdit(rowData)">
+                                <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openView(view,rowData)">
                                     <td style="width:200px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                         {{
 col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?

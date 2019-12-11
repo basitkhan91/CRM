@@ -84,7 +84,7 @@
 
                             <!--body-->
                             <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                                <tr [pSelectableRow]="rowData" pReorderableRowHandle>
+                                <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="viewItemDetails(rowData)">
                                     <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                         {{rowData[col.field]}}
                                     </td>

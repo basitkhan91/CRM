@@ -56,7 +56,8 @@ import {
   MatSelectModule,
   MatTabsModule,
   MatProgressSpinnerModule,
-  MatToolbarModule
+  MatToolbarModule,
+  MatTooltipModule
 } from '@angular/material';
 import { StarComponent } from '../shared/star.component';
 import { AssetService } from '../services/asset/Assetservice';
@@ -119,6 +120,7 @@ import { WorkOrderEndpointService } from '../services/work-order/work-order-endp
     CalendarModule,
     AccordionModule,
     TabViewModule,
+    MatTooltipModule,
     NgMultiSelectDropDownModule.forRoot()
   ],
   declarations: [

@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { AlertService, MessageSeverity } from '../../services/alert.service';
 import { DepriciationMethodService } from '../../services/depriciation-method/depriciation.service';
 import { DepriciationMethod } from '../../models/depriciation-method.model';
@@ -24,6 +24,7 @@ import { ConfigurationService } from '../../services/configuration.service';
     selector: 'app-depriciation-method',
     templateUrl: './depriciation-method.component.html',
     styleUrls: ['./depriciation-method.component.scss'],
+    encapsulation: ViewEncapsulation.None,
     animations: [fadeInOut]
 })
 /** DepriciationMethod component*/
