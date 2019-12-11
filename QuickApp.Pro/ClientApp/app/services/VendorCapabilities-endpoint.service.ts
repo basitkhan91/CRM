@@ -14,8 +14,7 @@ export class VendorCapabilitiesEndpoint extends EndpointFactory {
     private readonly _vendorcapabilitiesUrlNew: string = "/api/VendorCapabilities/vendorcapabilitypost";
     private readonly _vendorcapabilitiesUrlAuditHistory: string = "/api/ActionAttribute/auditHistoryById";
     private readonly _auditUrl: string = '/api/VendorCapabilities/audits'
-    private readonly _getVendorCapabilityHistory: string = "/api/Vendor/getVendorCapabilityHistory";
-
+    
 
     get vendorcapabilitiesUrl() { return this.configurations.baseUrl + this._vendorcapabilitiesUrl; }
 
@@ -86,8 +85,6 @@ export class VendorCapabilitiesEndpoint extends EndpointFactory {
     getVendorCapesById(vendorId){
 		return this.http.get<any>(`${this.configurations.baseUrl}/api/purchaseorder/vendorcapabilities?vendorId=${vendorId}`)
     }
-    getVendorCapabilityAuditHistory(VendorCapabilityId, AuditVendorCapabilityId) {
-        return this.http.get<any>(`${this._getVendorCapabilityHistory}?VendorCapabilityId=${VendorCapabilityId}&AuditVendorCapabilityId=${AuditVendorCapabilityId}`, this.getRequestHeaders())
-    }
+   
 
 }
