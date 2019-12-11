@@ -26,6 +26,8 @@ import { PercentService } from '../../../../services/percent.service';
 import { VendorCapabilitiesService } from '../../../../services/vendorcapabilities.service';
 import { ItemMasterService } from '../../../../services/itemMaster.service';
 import { DatePipe } from '@angular/common';
+import { WorkOrderService } from '../../../../services/work-order/work-order.service';
+import { StocklineService } from '../../../../services/stockline.service';
 
 @Component({
 	selector: 'app-ro-setup',
@@ -220,7 +222,9 @@ export class RoSetupComponent implements OnInit {
 		private percentService: PercentService,
 		private vendorCapesService: VendorCapabilitiesService,
 		private itemser: ItemMasterService,
-		private datePipe: DatePipe) {
+		private datePipe: DatePipe,
+		private workOrderService: WorkOrderService,
+		private stocklineService: StocklineService) {
 		
 		this.vendorService.ShowPtab = false;
 		this.vendorService.alertObj.next(this.vendorService.ShowPtab);
@@ -1205,12 +1209,12 @@ export class RoSetupComponent implements OnInit {
 					//parentdata.partNumberId = this.partWithId.itemMasterId;
 					this.getConditionByItemMasterId(parentdata.itemMasterId);
 					if(parentdata.conditionId) {
-						this.commonService.getConditionByItemMasterId(parentdata.itemMasterId).subscribe(res => {
+						this.workOrderService.getConditionByItemMasterId(parentdata.itemMasterId).subscribe(res => {
 							this.allconditioninfo = res;						
 							parentdata.conditionId = getObjectById('conditionId', parentdata.conditionId, this.allconditioninfo);
 
 							if(parentdata.stockLineId) {
-								this.commonService.getStockLineByItemMasterId(parentdata.itemMasterId, parentdata.conditionId.conditionId).subscribe(resp => {
+								this.workOrderService.getStockLineByItemMasterId(parentdata.itemMasterId, parentdata.conditionId.conditionId).subscribe(resp => {
 									this.allStocklineInfo = resp;						
 									parentdata.stocklineId = getObjectById('stockLineId', parentdata.stockLineId, this.allStocklineInfo);
 									this.getStockLineDetails(parentdata);
@@ -1224,7 +1228,7 @@ export class RoSetupComponent implements OnInit {
 	}
 
 	getConditionByItemMasterId(itemMasterId) {
-		this.commonService.getConditionByItemMasterId(itemMasterId).subscribe(res => {
+		this.workOrderService.getConditionByItemMasterId(itemMasterId).subscribe(res => {
 			console.log(res);
 			this.allconditioninfo = res;			
 		});
@@ -3475,14 +3479,14 @@ export class RoSetupComponent implements OnInit {
 		partList.controlId = '';
 		partList.purchaseOrderNum = '';
 		partList.controlNumber = '';
-		this.commonService.getStockLineByItemMasterId(partList.itemMasterId, partList.conditionId.conditionId).subscribe(res => {
+		this.workOrderService.getStockLineByItemMasterId(partList.itemMasterId, partList.conditionId.conditionId).subscribe(res => {
 			console.log(res);
 			this.allStocklineInfo = res;
 		});
 	}
 
 	getStockLineDetails(partList) {
-		this.commonService.getStockLineDetailsByStockLineId(partList.stocklineId.stockLineId).subscribe(res => {
+		this.stocklineService.getStockLineDetailsByStockLineId(partList.stocklineId.stockLineId).subscribe(res => {
 			console.log(res);
 			partList.controlId = res.controlId;	
 			partList.purchaseOrderNum = res.purchaseOrderNo;	
