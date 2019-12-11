@@ -340,7 +340,7 @@
                              </label>
                   <p-dropdown
                     placeholder="Select Site Name"
-                    name="scope{{ i }}"
+                    name="scope"
                     #scope="ngModel"
                     [options]="soldCustomerSiteList"
                     class="p-dropdown-custom-md"
@@ -355,7 +355,7 @@
                              </label>
                   <p-dropdown
                     placeholder="Select Site Name"
-                    name="scope{{ i }}"
+                    name="scope"
                     #scope="ngModel"
                     [options]="soldCustomerSiteList"
                     class="p-dropdown-custom-md"
@@ -531,9 +531,9 @@
                         <input
                           type="text"
                           class="form-control wo-input"
-                          name="shipToAttention"
-                          #shipToAttention="ngModel"
-                          [(ngModel)]="soldCustomerAddress.shipToAttention"
+                          name="shipToAttentionLocal"
+                          #shipToAttentionLocal="ngModel"
+                          [(ngModel)]="shipToAttention"
                         />
                       </div>
                   </div>
@@ -607,14 +607,14 @@
                           name="HoursorClockorScan"
                           label="Labour hours"
                           value="Cost Plus"
-                          [(ngModel)]="billingorInvoiceForm.CostPlusType"
+                          [(ngModel)]="billingorInvoiceForm.costPlusType"
                         ></p-radioButton>
                         <p-radioButton
                           class="p-radiobutton-label-horizontal col-width"
                           name="HoursorClockorScan"
                           value="labourClock"
                           label="Flat Rate"
-                          [(ngModel)]="billingorInvoiceForm.CostPlusType"
+                          [(ngModel)]="billingorInvoiceForm.costPlusType"
                         ></p-radioButton>
                 
                        

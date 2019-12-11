@@ -1,8 +1,8 @@
-﻿import { OnInit, Component } from "@angular/core";
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { OnInit, Component } from "@angular/core";
+import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ActivatedRoute } from "@angular/router";
 import { fadeInOut } from "../../../services/animations";
-import { AlertService } from "../../../services/alert.service";
+import { AlertService, MessageSeverity } from "../../../services/alert.service";
 import { GlAccount } from "../../../models/GlAccount.model";
 import { GlAccountService } from "../../../services/glAccount/glAccount.service";
 import { CurrencyService } from "../../../services/currency.service";
@@ -48,7 +48,7 @@ export class AccountListingCreateComponent implements OnInit {
     isEditMode: boolean;
     isSaving: boolean;
     isDeleteMode: boolean;
-    display: boolean = false; 
+    display: boolean = false;
     accountListCreateForm: FormGroup;
     accountId:any;
     editMode = false;
@@ -56,40 +56,43 @@ export class AccountListingCreateComponent implements OnInit {
     leafNodeNameObj:any[];
     entitiesObj:any[];
     accountTitle = "Create GL Accounts";
-    selectedBalanceType = [];    
+    selectedBalanceType = [];
     submittedForm = false;
+    balanceTypeCheckBoxReq = false;
     glAccountObj:any = {}
     ledgerNameObject: any[];
     accountCodeObject: any[];
     accountNameObject: any[];
     accountTypeObject: any[];
+
+    ledgerNameObjectData: any[];
+    accountCodeObjectData: any[];
+    accountNameObjectData: any[];
+    accountTypeObjectData: any[];
+
     ischeckLedgerNameExists: boolean = false;
     isAccountCodeExists: boolean = false;
     isAccountNameExists: boolean = false;
     isAccountTypeExists: boolean = false;
-   
+    submittedValue: any;    
 
     balanceTypeCheckBox = [{
         name: 'Actual',
-        value: true        
+        value: true
       }, {
         name: 'Budget',
-       value: false  
+        value: false
       }, {
         name: 'Forecast',
-        value: false  
-      }];
+        value: false
+    }];
 
-
-
-
-submittedValue: any;
-    constructor(private route: ActivatedRoute, 
+    constructor(private route: ActivatedRoute,
         private accountListingService: AccountListingService,
         private formBuilder: FormBuilder, private legalEntityservice: LegalEntityService, private modalService: NgbModal, private poroCategoryService: POROCategoryService, private nodeSetupService: NodeSetupService, private router: Router, private authService: AuthService, private glcashFlowClassifcationService: GlCashFlowClassificationService, private alertService: AlertService, private glAccountService: GlAccountService, private currencyService: CurrencyService, public glAccountClassService: GLAccountClassService) {
         if (this.glAccountService.glAccountEditCollection) {
             this.currentGLAccount = this.glAccountService.glAccountEditCollection;
-        }      
+        }
     }
 
     get userName(): string {
@@ -97,9 +100,9 @@ submittedValue: any;
     }
 
     ngOnInit(): void {
-        this.glAccountObj.isActiveFlag = true;
+        
         this.route.paramMap.subscribe(params => {
-            //console.log('params :', params)
+
              this.accountId = params.get("id")
              if(this.accountId){
                 this.editMode = true
@@ -126,47 +129,24 @@ submittedValue: any;
             this.currentGLAccount.activeFlag = true;
             this.currentGLAccount.allowManualJE = true;
         }
-
-        let current_datetime = new Date()
-        let formatted_date = (current_datetime.getMonth() + 1) + "/" + current_datetime.getDate() +  "/" + current_datetime.getFullYear()
         
-        // this.leafNodeNameObj = [
-        //     {label:'Select', value:''},
-        //     {label: 'abc', value: '1'},
-        //     {label: 'sass', value: '2'},
-        //     {label: 'gtll', value: '3'},
-        //     {label: 'years', value: '4'},
-        //     {label: 'opo', value: '5'},
-        //     {label: 'wqw', value: '6'},
-        //     {label: 'sas', value: '7'}            
-        // ];
-
-        this.entitiesObj = [
-            //{label:'Select', value:''},
-            {label: 'abc', value: '1'},
-            {label: 'sass', value: '2'},
-            {label: 'gtll', value: '3'},
-            {label: 'years', value: '4'},
-            {label: 'opo', value: '5'},
-            {label: 'wqw', value: '6'},
-            {label: 'sas', value: '7'}            
-        ];
+        let formatted_date = this.formatDateTime(null)
 
         this.accountListCreateForm = this.formBuilder.group({
             ledgerName: ['', Validators.required],
             oldAccountCode: '',
             accountCode: ['', Validators.required],
             accountName: ['', Validators.required],
-            accountType: ['', Validators.required],
+            glAccountTypeId: ['', Validators.required],
             accountDescription: '',
-            active: [true, Validators.required],
+            activeFlag: [true, Validators.required],
             leafNodeName: '',
-            interCompany: false,           
+            interCompany: false,
             category: null,
-            entities: ['', Validators.required],
+            entities: null,
             allowManualJE: true,
             classification: [null, Validators.required],
-            poroCategory: [null, Validators.required],
+            poroCategory: null,
             createdBy: this.userName,
             createdDate: formatted_date,
             balanceTypeCheckBox: this.formBuilder.array(this.balanceTypeCheckBox.map(x => x.value))
@@ -175,26 +155,47 @@ submittedValue: any;
         this.getAccountObject()
         this.getLedgerObject()
         this.getLeafNodeObject()
+        this.onFormDataChanges()
+    }
+
+    onFormDataChanges(): void {        
+      
+        this.accountListCreateForm.get('glAccountTypeId').valueChanges
+        .subscribe(value => {           
+            this.accountListCreateForm.get('poroCategory').disable();
+            if (value != 1 || value != 5) {                
+                this.accountListCreateForm.get('poroCategory').disable();
+            } else {
+                if(this.accountListCreateForm.get('accountCode').value){
+                    this.accountListCreateForm.get('poroCategory').enable()
+                }                           
+            }
+        });
     }
 
     get formdata() { return this.accountListCreateForm.controls; }
 
     onSubmitAccountForm(){
-        
-        console.log('accountListCreateForm values :', this.accountListCreateForm.value)
-         this.submittedForm = true;
 
+         this.submittedForm = true;
+         this.balanceTypeCheckBoxReq = false;
         // stop here if form is invalid
         if (this.accountListCreateForm.invalid) {
             return;
         }
 
         const checkboxControl = (this.accountListCreateForm.controls.balanceTypeCheckBox as FormArray);
+        
+        if(!this.accountListCreateForm.value.balanceTypeCheckBox[0] && !this.accountListCreateForm.value.balanceTypeCheckBox[1] && !this.accountListCreateForm.value.balanceTypeCheckBox[2]){
+            this.balanceTypeCheckBoxReq = true;
+            return;
+        }
+
         const formValue = {
           ...this.accountListCreateForm.value,
           BalanceTypeActual: this.accountListCreateForm.value.balanceTypeCheckBox[0],
           BalanceTypeBudget: this.accountListCreateForm.value.balanceTypeCheckBox[1],
-          BalanceTypeForecast: this.accountListCreateForm.value.balanceTypeCheckBox[2]          
+          BalanceTypeForecast: this.accountListCreateForm.value.balanceTypeCheckBox[2]
         }
         this.submittedValue = formValue;
 
@@ -206,83 +207,56 @@ submittedValue: any;
             })
         }else{
             this.accountListingService.createGlAccount(formValue).subscribe(response => {
-               console.log('response received :', response)
-               this.alertService.showMessage('GLAccount added successfully.');
+               console.log('response received :', response)               
+               this.alertService.showMessage("Success", 'GLAccount Created successfully.', MessageSeverity.success);
                this.router.navigateByUrl('/generalledgermodule/generalledgerpage/app-account-listing');
             })
-        }        
+        }
+    }
 
-    console.log('chk :', this.submittedValue)
+    formatDateTime(dateTime){
+        let formattedDateTime;
+        if(dateTime){
+            dateTime = new Date(dateTime)           
+            if(dateTime instanceof Date)
+                formattedDateTime = (dateTime.getMonth() + 1) + "/" + dateTime.getDate() +  "/" + dateTime.getFullYear()
+            else
+                this.formatDateTime(null)
+        }else{
+            dateTime = new Date()
+            formattedDateTime = (dateTime.getMonth() + 1) + "/" + dateTime.getDate() +  "/" + dateTime.getFullYear()
+        }
+        return formattedDateTime
     }
 
     loadLedgerNames(event){
-
-        // this.ledgerNameObject = [
-        // {
-        //     id: 1,
-        //     name: 'ledger1'
-        // },
-        // {
-        //     id: 2,
-        //     name: 'ledger2'
-        // },
-        // {   
-        //     id: 3,
-        //     name: 'ledger3'
-        // },
-        // {
-        //     id: 4,
-        //     name: 'ledger4'
-        // } 
-        // ];        
-        this.ledgerNameObject = [...this.ledgerNameObject.filter(x => {           
+        this.ledgerNameObject = [...this.ledgerNameObjectData.filter(x => {
             return x.name.toLowerCase().includes(event.query.toLowerCase())
         })]
     }
 
     checkLedgerNameExists(field, value) {
-        const exists = validateRecordExistsOrNot(field, value, this.ledgerNameObject)
+        const exists = validateRecordExistsOrNot(field, value, this.ledgerNameObjectData)
         if (exists.length > 0) {
-
             this.ischeckLedgerNameExists = true;
         } else {
-
             this.ischeckLedgerNameExists = false;
         }
-
     }
-   
+
     selectedLedgerName() {
         this.ischeckLedgerNameExists = true;
     }
 
      loadAccountCode(event){
 
-        // this.accountCodeObject = [
-        // {
-        //     id: 1,
-        //     name: 'account1'
-        // },
-        // {
-        //     id: 2,
-        //     name: 'account2'
-        // },
-        // {   
-        //     id: 3,
-        //     name: 'account3'
-        // },
-        // {
-        //     id: 4,
-        //     name: 'account4'
-        // } 
-        // ];        
-        this.accountCodeObject = [...this.accountCodeObject.filter(x => {           
+        this.accountCodeObject = [...this.accountCodeObjectData.filter(x => {
             return x.name.toLowerCase().includes(event.query.toLowerCase())
         })]
     }
 
     checkAccountCodeExists(field, value) {
-        const exists = validateRecordExistsOrNot(field, value, this.accountCodeObject)
+        const exists = validateRecordExistsOrNot(field, value, this.accountCodeObjectData)
         if (exists.length > 0) {
 
             this.isAccountCodeExists = true;
@@ -292,20 +266,20 @@ submittedValue: any;
         }
 
     }
-   
+
     selectedAccountCode() {
         this.isAccountCodeExists = true;
     }
 
-loadAccountName(event){
-
-        this.accountNameObject = [...this.accountNameObject.filter(x => {           
+    loadAccountName(event){
+        
+        this.accountNameObject = [...this.accountNameObjectData.filter(x => {
             return x.name.toLowerCase().includes(event.query.toLowerCase())
         })]
     }
 
     checkAccountNameExists(field, value) {
-        const exists = validateRecordExistsOrNot(field, value, this.accountNameObject)
+        const exists = validateRecordExistsOrNot(field, value, this.accountNameObjectData)
         if (exists.length > 0) {
 
             this.isAccountNameExists = true;
@@ -315,39 +289,22 @@ loadAccountName(event){
         }
 
     }
-   
-    selectedAccountName() {
+
+    selectedAccountName() {       
+        //this.accountListCreateForm.get('accountName').patchValue(this.glAccountObj.accountCodeName);
         this.isAccountNameExists = true;
     }
 
 
-loadAccountType(event){
-
-        this.accountTypeObject = [
-        {
-            id: 1,
-            name: 'Assets'
-        },
-        {
-            id: 2,
-            name: 'Liabilities'
-        },
-        {   
-            id: 3,
-            name: 'Revenue'
-        },
-        {
-            id: 4,
-            name: 'Expenses'
-        } 
-        ];        
-        this.accountTypeObject = [...this.accountTypeObject.filter(x => {           
+    loadAccountType(event){
+        
+        this.accountTypeObject = [...this.accountTypeObjectData.filter(x => {
             return x.name.toLowerCase().includes(event.query.toLowerCase())
         })]
     }
 
     checkAccountTypeExists(field, value) {
-        const exists = validateRecordExistsOrNot(field, value, this.accountTypeObject)
+        const exists = validateRecordExistsOrNot(field, value, this.accountTypeObjectData)
         if (exists.length > 0) {
 
             this.isAccountTypeExists = true;
@@ -357,46 +314,56 @@ loadAccountType(event){
         }
 
     }
-   
+
     selectedAccountType() {
         this.isAccountTypeExists = true;
     }
 
-    updateAccountData(id): void{
-        console.log('id :', id) 
-        this.accountListingService.getAll().subscribe(
-            datalist=> {
-                let data = datalist.accountList;
-                let obj = {}    
-                const x = data.filter( (o, index) => {
-                  if(o.id === 1)
-                     obj = data[index]  
-                })
-                console.log('obj 12 :', obj)
-                if(Object.keys(obj).length > 0){                  
-                    this.accountListCreateForm.valueChanges.subscribe(  
-                       value=> {  
-                          console.log(JSON.stringify(value));  
-                       }  
-                    );  
-                }
+    updateAccountData(id:Number): void{
+        //this.poroCategoryDisable: boolean = true
 
-                this.glAccountObj = {
-                    ledgerId: 1,
-                    accountCodeId: 2,
-                    categoryId: 3,
-                    entityId: 4,
-                    classificationId: 5,
-                    poroCategoryId: 2
-                }
-                
-                console.log('obj :', obj)
+        this.accountListingService.getGlAccountById(id).subscribe(
+            glAccountData => {
+                const data = glAccountData[0];                             
+                if(data && Object.keys(data).length > 0){                   
+                    Object.keys(data).forEach(key => {
+                        let formControl = <FormControl>this.accountListCreateForm.controls[key];
+                        if(formControl){
+                            formControl.setValue(data[key]);
+                            if(key === "createdDate"){
+                                const format_date = this.formatDateTime(data[key])
+                                formControl.setValue(format_date);
+                            }
+                        }
+                    });
 
+                    this.glAccountObj = {
+                        ledgername: {
+                            id: data.ledgerName,
+                            name: data.ledgerName
+                        },
+                        accountCodeId: {
+                            id: data.accountCode,
+                            name: data.accountCode
+                        },
+                        accountCodeName: {
+                            id : data.accountName,
+                            name : data.accountName
+                        },
+                        accountTypeId: data.glAccountTypeId,
+                        leafNodeName: data.leafNodeName,                                             
+                        poroCategoryId: data.poroCategoryId,
+                        classificationId: data.glClassFlowClassificationId                       
+                    }
+                    this.accountListCreateForm.get('balanceTypeCheckBox').patchValue([data.balanceTypeActual, data.balanceTypeBudget, data.balanceTypeForecast])
+
+                }
             },
             error => {
                 console.log('error in getting information')
             }
-        );
+
+        );       
     }
 
     addGLAccount(): void {
@@ -404,7 +371,7 @@ loadAccountType(event){
         )) {
             this.display = true;
         }
-        if (!this.display) { 
+        if (!this.display) {
         this.currentGLAccount.createdBy = this.userName;
         this.currentGLAccount.updatedBy = this.userName;
         if (!this.currentGLAccount.glAccountId) {
@@ -435,11 +402,11 @@ loadAccountType(event){
         })
     }
     private loadPOCategory() {
-    
+
         let poroCategoryList = [];
         this.poroCategoryService.getAll().subscribe(poroCategory => {
             this.poroCategoryList = poroCategory[0];
-            
+
         })
     }
     private loadcurrencyData() {
@@ -450,7 +417,19 @@ loadAccountType(event){
 
     private loadGLAccountTypeData() {
         this.glAccountClassService.getGlAccountClassList().subscribe(Glaccountdata => {
-            this.allGLAccountClassInfo = Glaccountdata[0];
+            //this.allGLAccountClassInfo = Glaccountdata[0]['columnData'];
+            this.allGLAccountClassInfo = Glaccountdata[0];            
+            let accountTypeObj = {}
+            let accountTypeCollection = []
+
+            const x = this.allGLAccountClassInfo.filter( (o, index) => {               
+                accountTypeObj = {
+                    id: this.allGLAccountClassInfo[index]['glcid'],
+                    name: this.allGLAccountClassInfo[index]['glAccountClassName']
+                }
+                accountTypeCollection.push(accountTypeObj)
+            })
+            this.accountTypeObject = accountTypeCollection
         })
     }
 
@@ -463,11 +442,12 @@ loadAccountType(event){
     getAccountObject(){
          this.accountListingService.getAll().subscribe(
             datalist=> {
-                 let accountNameObj = {}   
-                 let accountCodeObj = {}   
+              
+                 let accountNameObj = {}
+                 let accountCodeObj = {}
 
-                 let accountNameCollection = [] 
-                 let accountCodeCollection = [] 
+                 let accountNameCollection = []
+                 let accountCodeCollection = []
 
                 const x = datalist.filter( (o, index) => {
                   accountNameObj = {
@@ -476,7 +456,7 @@ loadAccountType(event){
                   }
 
                   accountCodeObj = {
-                   id: datalist[index]['accountCode'],
+                    id: datalist[index]['accountCode'],
                     name: datalist[index]['accountCode']
                   }
 
@@ -484,16 +464,18 @@ loadAccountType(event){
                   accountCodeCollection.push(accountCodeObj)
 
                 })
-            this.accountNameObject = accountNameCollection
-            this.accountCodeObject = accountCodeCollection
+                this.accountNameObjectData = accountNameCollection           
+                this.accountCodeObjectData = accountCodeCollection
+           
             })
     }
 
     getLedgerObject(){
          this.accountListingService.getLedgerData().subscribe(
             datalist=> {
-                 let obj = {}   
-                 let collection = [] 
+                console.log('getLedgerData :', JSON.stringify(datalist))
+                 let obj = {}
+                 let collection = []
                 const x = datalist.filter( (o, index) => {
                   obj = {
                     id: datalist[index]['ledgerName'],
@@ -501,15 +483,16 @@ loadAccountType(event){
                   }
                   collection.push(obj)
                 })
-            this.ledgerNameObject = collection
+            this.ledgerNameObjectData = collection
             })
     }
 
     getLeafNodeObject(){
          this.accountListingService.getLeafNodeData().subscribe(
             datalist=> {
-                 let obj = {}   
-                 let collection = [] 
+                console.log('getLeafNodeData :', JSON.stringify(datalist))
+                 let obj = {}
+                 let collection = []
                 const x = datalist.filter( (o, index) => {
                   obj = {
                     label: datalist[index]['nodeName'],
@@ -524,16 +507,32 @@ loadAccountType(event){
     private loadCompaniesData() {
         this.legalEntityservice.getEntityList().subscribe(entitydata => {
             this.companyList = entitydata[0];
+            console.log('entitydata :', entitydata)
+
+            let entityObj = {}
+            let entityCollection = []
+            const x = this.companyList.filter( (o, index) => {
+              entityObj = {
+                label: this.companyList[index]['name'],
+                value: this.companyList[index]['legalEntityId']
+              }
+              entityCollection.push(entityObj)
+            })
+            this.entitiesObj = entityCollection
+            
+
         });
     }
 
     private load1099Miscdata() {
         this.glAccountService.getMiscdata().subscribe(miscData => {
+            console.log('misc 1 :', miscData)
             this.miscData = miscData[0];
+            
         });
-    } 
+    }
 
-   
+
     resetAssetStatus(): void {
         this.updateMode = false;
         this.currentGLAccount = new GlAccount();
@@ -587,7 +586,7 @@ loadAccountType(event){
     onCheckboxChagen(event, value) {
         if (event.checked) {
           this.selectedBalanceType.push(value);
-        } 
+        }
 
         if (!event.checked) {
           let index = this.selectedBalanceType.indexOf(value);

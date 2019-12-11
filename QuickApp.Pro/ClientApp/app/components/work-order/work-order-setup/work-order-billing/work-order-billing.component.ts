@@ -17,6 +17,7 @@ export class WorkOrderBillingComponent {
     customerNamesList: Object;
     soldCustomerSiteList = [];
     shipCustomerSiteList = [];
+    shipToAttention;
     soldCustomerAddress = new AddressModel();
     shipCustomerAddress = new AddressModel();
     managementStructure = {
@@ -118,6 +119,12 @@ export class WorkOrderBillingComponent {
         salesPerson: '',
         availableCredit: null,
         creditTerms: null,
+        woType: null,
+        salePerson: '',
+        currencyId: null,
+
+
+
 
 
 
