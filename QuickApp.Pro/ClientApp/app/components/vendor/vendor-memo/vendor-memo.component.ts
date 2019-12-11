@@ -48,9 +48,7 @@ export class VendorMemoComponent implements OnInit{
 
 		// { field: 'module', header: 'Module' },			
 		// { field: 'RepairOrderNumber', header: 'Id' },
-		// { field: 'RoMemo', header: 'Memo text' },          
-
-
+		// { field: 'RoMemo', header: 'Memo text' },  
 	];   
 	selectedColumns = this.memoCols;        
 
@@ -79,9 +77,10 @@ export class VendorMemoComponent implements OnInit{
 		if (this.local) {
 			this.VendorPOMemolist();
 			this.VendorROMemolist();
-        }
-		
+		}
+				
 	}
+
 	get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }

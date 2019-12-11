@@ -34,9 +34,9 @@ export class VendorDocumentsComponent implements OnInit {
 	vendorDocumentsData: any = [];
 	vendorDocumentsColumns = [
 		{ field: 'docName', header: 'Name' },
-		{ field: 'docDescription', header: 'Description' },
+		{ field: 'docDescription', header: 'Memo' },
 		//{ field: 'documents', header: 'Documents' },
-		{ field: 'docMemo', header: 'Memo' }
+		{ field: 'docMemo', header: 'Description' }
 	];
 	selectedColumns = this.vendorDocumentsColumns;
 
@@ -272,6 +272,18 @@ export class VendorDocumentsComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+	}
+	
+	getColorCodeForHistory(i, field, value) {
+        const data = this.documentauditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
     }
 
    
