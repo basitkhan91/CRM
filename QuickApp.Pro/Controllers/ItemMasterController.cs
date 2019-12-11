@@ -1062,15 +1062,81 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<ItemMasterViewModel>))]
         public IActionResult GetListforCapes()
         {
-            var allTaxrateInfo = _context.ItemMaster.Include("Manufacturer").Include("Provision").Include("Priority").Include("ItemClassification").Include("Currency").Include("ExportClassification").Where(a => a.ItemTypeId == 1 && (a.IsDeleted == true || a.IsDeleted == null) || a.ItemTypeId == 3 && (a.IsDeleted == true || a.IsDeleted == null)).ToList(); //.GetAllCustomersData();
-            return Ok(allTaxrateInfo);
+            //var allTaxrateInfo = _context.ItemMaster.Include("Manufacturer").Include("Provision").Include("Priority").Include("ItemClassification").Include("Currency").Include("ExportClassification").Where(a => a.ItemTypeId == 1 && (a.IsDeleted == true || a.IsDeleted == null) || a.ItemTypeId == 3 && (a.IsDeleted == true || a.IsDeleted == null)).ToList(); //.GetAllCustomersData();
+            var data = (from iM in _context.ItemMasterCapes
+                        where iM.IsDelete != true
+
+                        select new
+                        {
+                            iM.ItemMasterCapesId,
+                            iM.ItemMasterId,
+                            iM.CapabilityId,
+                            iM.MasterCompanyId,
+                            iM.CreatedBy,
+                            iM.UpdatedBy,
+                            iM.CreatedDate,
+                            iM.UpdatedDate,
+                            iM.IsActive,
+                            iM.ManagementStructureId,
+                            iM.ManufacturerId,
+                            iM.AircraftTypeId,
+                            iM.AircraftModelId,
+                            iM.AircraftDashNumberId,
+                            iM.Description,
+                            iM.ATAChapterId,
+                            iM.ATASubChapterId,
+                            iM.EntryDate,
+                            iM.CMMId,
+                            iM.isIntegrateWith,
+                            iM.IsVerified,
+                            iM.VerifiedBy,
+                            iM.DateVerified,
+                            iM.ntehrs,
+                            iM.TAT,
+                            iM.Memo,
+                            iM.IsDelete
+                        }).ToList();
+            return Ok(data);
 
         }
 
         [HttpGet("capabilityGet/{id}")]
         public IActionResult capabilityGet(int id)
         {
-            var capabilityData = _unitOfWork.itemMaster.getCapabilityData(id); //.GetAllCustomersData();
+            //var capabilityData = _unitOfWork.itemMaster.getCapabilityData(id); //.GetAllCustomersData();
+            var capabilityData = (from iM in _context.ItemMasterCapes
+                        where iM.ItemMasterCapesId != id
+
+                        select new
+                        {
+                            iM.ItemMasterCapesId,
+                            iM.ItemMasterId,
+                            iM.CapabilityId,
+                            iM.MasterCompanyId,
+                            iM.CreatedBy,
+                            iM.UpdatedBy,
+                            iM.CreatedDate,
+                            iM.UpdatedDate,
+                            iM.IsActive,
+                            iM.ManagementStructureId,
+                            iM.ManufacturerId,
+                            iM.AircraftTypeId,
+                            iM.AircraftModelId,
+                            iM.AircraftDashNumberId,
+                            iM.Description,
+                            iM.ATAChapterId,
+                            iM.ATASubChapterId,
+                            iM.EntryDate,
+                            iM.CMMId,
+                            iM.isIntegrateWith,
+                            iM.IsVerified,
+                            iM.VerifiedBy,
+                            iM.DateVerified,
+                            iM.ntehrs,
+                            iM.TAT,
+                            iM.Memo,
+                            iM.IsDelete
+                        }).ToList();
             return Ok(capabilityData);
 
         }
