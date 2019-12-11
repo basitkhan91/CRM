@@ -1922,7 +1922,7 @@ namespace DAL
             {
                 if (_receiveRepairOrder == null)
                 {
-                    _receiveRepairOrder = new ReceiveRepairOrderRepository(_context);
+                    _receiveRepairOrder = new ReceiveRepairOrderRepository(_context,_commonRepository);
                 }
                 return _receiveRepairOrder;
             }
