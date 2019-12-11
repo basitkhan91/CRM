@@ -67,7 +67,5 @@ export class VendorCapabilitiesService {
     getVendorCapesById(vendorId){
         return this.vendorCapabilitiesEndpoint.getVendorCapesById(vendorId);
     }
-    getVendorCapabilityAuditHistory(VendorCapabilityId, AuditVendorCapabilityId) {
-        return this.vendorCapabilitiesEndpoint.getVendorCapabilityAuditHistory(VendorCapabilityId, AuditVendorCapabilityId);
-    }
+    
 }
