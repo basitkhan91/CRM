@@ -79,7 +79,7 @@
 			<div class="form-group col-sm-12">
 				<label class="control-label col-sm-4">PMA/DER <strong style="color:red">*</strong> </label>
 				<div class="col-sm-7">
-					<select class="form-control" [ngModelOptions]="{standalone: true}" (change)="isPMAorDER(sourceVendorCap.PMA_DER)" [(ngModel)]="sourceVendorCap.PMA_DER">
+					<select class="autocomp-customer-cstm" [ngModelOptions]="{standalone: true}" (change)="isPMAorDER(sourceVendorCap.PMA_DER)" [(ngModel)]="sourceVendorCap.PMA_DER">
 						<option>-- Select --</option>
 						<option value="pma">PMA</option>
 						<option value="der">DER</option>

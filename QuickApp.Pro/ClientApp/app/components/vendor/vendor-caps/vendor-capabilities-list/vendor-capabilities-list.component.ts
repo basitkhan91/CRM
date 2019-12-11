@@ -42,6 +42,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
     allvendorCapsList: any[] = [];
     Active: string = "Active";
     selectedColumn: any;
+    capabilityauditHisory: any[];
     constructor(private vendorService: VendorService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService,)
     {
         this.dataSource = new MatTableDataSource();
@@ -252,5 +253,28 @@ export class VendorCapabilitiesListComponent implements OnInit{
             response => this.saveCompleted(this.sourceAction),
             error => this.saveFailedHelper(error));
         this.modal.close();
+    }
+    openHistory(content, row) {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+       
+        this.isSaving = true;
+        this.vendorService.getVendorCapabilityAuditHistory(row.vendorCapabilityId, row.vendorId).subscribe(
+            results => this.onAuditHistoryLoadSuccessful(results, content),
+            error => this.saveFailedHelper(error));
+
+
+
+    }
+    private onAuditHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+
+        this.capabilityauditHisory = auditHistory;
+
+        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
     }
 }
