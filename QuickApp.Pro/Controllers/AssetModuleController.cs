@@ -294,6 +294,7 @@ namespace QuickApp.Pro.Controllers
                 newAsset.Memo = asset.Memo;
                 newAsset.ExpirationDate = asset.ExpirationDate;
                 newAsset.ManufacturedDate = asset.ManufacturedDate;
+                newAsset.EntryDate = asset.EntryDate;
                 newAsset.AssetAcquisitionTypeId = asset.AssetAcquisitionTypeId;
                 newAsset.IsActive = true;
                 newAsset.IsDelete = false;
