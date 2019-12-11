@@ -7,12 +7,18 @@ import {
 } from '../../../../models/work-order-quote.modal';
 
 import { WorkOrderQuoteService } from '../../../../services/work-order/work-order-quote.service';
+import { WorkOrderService } from '../../../../services/work-order/work-order.service';
 import { CommonService } from '../../../../services/common.service';
 import { WorkFlowtService } from '../../../../services/workflow.service';
 import {
   AlertService,
   MessageSeverity
 } from '../../../../services/alert.service';
+import {
+  WorkOrderLabor,
+  AllTasks,
+  WorkOrderQuoteLabor
+} from '../../../../models/work-order-labor.modal';
 
 
 @Component({
@@ -56,10 +62,15 @@ export class WorkOrderQuoteComponent implements OnInit {
   exclusionsQuotation: any[];
   laborQuotation: any[];
   selectedHistoricalList: any;
+  workOrderLaborList: any;
+  labor = new WorkOrderLabor();
+  taskList: any;
+  savedWorkOrderData: any;
+  laborPayload = new WorkOrderQuoteLabor();
 
 
 
-  constructor(private router: ActivatedRoute,private workOrderService: WorkOrderQuoteService, private commonService: CommonService, private _workflowService: WorkFlowtService, private alertService:AlertService) {}
+  constructor(private router: ActivatedRoute,private workOrderService: WorkOrderQuoteService, private commonService: CommonService, private _workflowService: WorkFlowtService, private alertService:AlertService, private workorderMainService: WorkOrderService) {}
   ngOnInit() {
     if(this.quoteForm == undefined){
       this.quoteForm = new WorkOrderQuote();
@@ -70,6 +81,7 @@ export class WorkOrderQuoteComponent implements OnInit {
       if(params['workorderid']){
         this.getWorkOrderInfo(params['workorderid']);
         this.getMPNDetails(params['workorderid']);
+        this.getTaskList();
       }
     });
   }
@@ -78,9 +90,11 @@ export class WorkOrderQuoteComponent implements OnInit {
     .subscribe(
       res=>{
         this.quoteForm.quoteNumber = res['quoteNumber'];
+        this.laborPayload.WorkOrderQuoteId = res['workOrderQuoteId'];
+        this.laborPayload.StatusId = res['quoteStatusId']
         this.alertService.showMessage(
           this.moduleName,
-          'Quotation created  Succesfully',
+          'Labor quotation created  Succesfully',
           MessageSeverity.success
         );
       }
@@ -116,6 +130,7 @@ export class WorkOrderQuoteComponent implements OnInit {
 
   getWorkOrderInfo(getWorkOrderInfo){
     this.workOrderService.getWorkOrderById(getWorkOrderInfo).subscribe(res => {
+      this.savedWorkOrderData = res;
       this.customerCode = res.customerDetails.customerId;
       this.customerName = res.customerDetails.customerName;
       this.customerContact = res.customerDetails.customerContact;
@@ -195,6 +210,17 @@ export class WorkOrderQuoteComponent implements OnInit {
   partNumberSelected(){
     this.gridActiveTab = '';
     this.clearQuoteData();
+    this.savedWorkOrderData.partNumbers.forEach((pns)=>{
+      if(this.selectedPartNumber == pns['description']){
+        this.laborPayload.IsDER = pns['isDER'];
+        this.laborPayload.IsPMA = pns['isPMA'];
+        this.laborPayload.ItemMasterId = pns['masterPartId'];
+        this.laborPayload.CMMId = pns['cmmId'];
+        this.laborPayload.SelectedId = pns['id'];
+        this.laborPayload.EstCompDate = pns['estimatedCompletionDate'];
+        this.laborPayload.StatusId = pns['workOrderStatusId'];
+      }
+    })
     // for(let pn of this.mpnPartNumbersList){
     //   if(pn['label'] == this.selectedPartNumber){
     //     this._workflowService.getWorkFlowDataById(pn['value']['workflowId']).subscribe(data => {
@@ -292,6 +318,13 @@ export class WorkOrderQuoteComponent implements OnInit {
           this.laborQuotation = res['expertise'];
           this.chargesQuotation = res['charges'];
           this.exclusionsQuotation = res['exclusions'];
+          this.taskList.forEach((tl)=>{
+            res['expertise'].forEach((rt)=>{
+              if(rt['taskId'] == tl['taskId']){
+                this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(rt);
+              }
+            })
+          })
         }
       )
     }
@@ -318,10 +351,14 @@ export class WorkOrderQuoteComponent implements OnInit {
   }
 
   createLaborQuote(){
-    this.workOrderService.saveLaborListQuote(this.laborQuotation)
+    this.workOrderService.saveLaborListQuote(this.laborPayload)
     .subscribe(
       res => {
-        console.log(res);
+        this.alertService.showMessage(
+          this.moduleName,
+          'Quotation created  Succesfully',
+          MessageSeverity.success
+        );
       }
     )
   }
@@ -342,4 +379,67 @@ export class WorkOrderQuoteComponent implements OnInit {
       }
     )
   }
+
+  getTaskList() {
+    if (this.labor == undefined) {
+        this.labor = new WorkOrderLabor()
+    }
+    this.labor.workOrderLaborList = [];
+    this.labor.workOrderLaborList.push({})
+    this.workorderMainService.getAllTasks()
+        .subscribe(
+            (taskList) => {
+                this.labor.workOrderLaborList[0] = {}
+                this.taskList = taskList;
+                this.taskList.forEach(task => {
+                    this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [new AllTasks()];
+                });
+            },
+            (error) => {
+                console.log(error);
+            }
+        )
+}
+
+saveworkOrderLabor(data) {
+  console.log(data);
+  this.laborPayload.WorkOrderQuoteLaborHeader.WorkOrderQuoteLaborHeaderId = data.workOrderLaborHeaderId;
+  this.laborPayload.WorkOrderQuoteLaborHeader.WorkOrderQuoteDetailsId = 0;
+  this.laborPayload.WorkOrderQuoteLaborHeader.DataEnteredBy = data.dataEnteredBy;
+  this.laborPayload.WorkOrderQuoteLaborHeader.HoursorClockorScan = data.hoursorClockorScan;
+  this.laborPayload.WorkOrderQuoteLaborHeader.IsTaskCompletedByOne = data.isTaskCompletedByOne;
+  this.laborPayload.WorkOrderQuoteLaborHeader.WorkOrderHoursType = 1;
+  this.laborPayload.WorkOrderQuoteLaborHeader.LabourMemo = "";
+  this.laborPayload.WorkOrderQuoteLaborHeader.EmployeeId = data.employeeId;
+  this.laborPayload.WorkOrderQuoteLaborHeader.ExpertiseId = data.expertiseId;
+  this.laborPayload.WorkOrderQuoteLaborHeader.TotalWorkHours = data.totalWorkHours
+  this.laborPayload.WorkOrderQuoteLaborHeader.masterCompanyId = data.masterCompanyId; 
+  this.laborPayload.WorkOrderQuoteLaborHeader.CreatedBy = "admin"
+  this.laborPayload.WorkOrderQuoteLaborHeader.UpdatedBy = "admin" 
+  this.laborPayload.WorkOrderQuoteLaborHeader.IsActive = true 
+  this.laborPayload.WorkOrderQuoteLaborHeader.IsDeleted = false;
+  var laborList = [];
+  for (let labor in data.workOrderLaborList){
+    laborList = [...laborList, ...data.workOrderLaborList[labor]];
+  }
+  this.laborPayload.WorkOrderQuoteLaborHeader.WorkOrderQuoteLabor = laborList.map((labor)=>{
+    return {
+        "WorkOrderQuoteLaborId":0,
+		 		"WorkOrderQuoteLaborHeaderId":0,
+		 		"ExpertiseId":labor.expertiseId,
+		 		"EmployeeId":labor.employeeId,
+		 		"BillableId":labor.billableId,
+		 		"Hours":labor.hours,
+		 		"Adjustments":labor.adjustments,
+		 		"AdjustedHours":labor.adjustedHours,
+		 		"Memo":labor.memo,
+		 		"TaskId":labor.taskId,
+		 		"CreatedBy":"admin",
+        "UpdatedBy":"admin",
+        "IsActive":true,
+        "IsDeleted":false
+    }
+  }) 
+  this.createLaborQuote();
+}
 }
