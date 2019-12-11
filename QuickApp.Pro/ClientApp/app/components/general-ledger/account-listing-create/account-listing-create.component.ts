@@ -32,6 +32,7 @@ export class AccountListingCreateComponent implements OnInit {
  currentGLAccount: GlAccount;
     glAccountList: GlAccount[];
     updateMode: boolean;
+    poroCategoryReq: boolean;
     allCurrencyInfo: any[] = [];
     allGLAccountClassInfo: any[] = [];
     allGLCashFlowClassInfo: any[] = [];
