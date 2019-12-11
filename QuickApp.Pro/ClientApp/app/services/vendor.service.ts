@@ -748,6 +748,9 @@ export class VendorService {
     getVendorDocumentAuditHistory(id) {
         return this.actionEndpoint.getVendorDocumentAuditHistory(id);
     }
+    getVendorCapabilityAuditHistory(VendorCapabilityId, VendorId) {
+        return this.actionEndpoint.getVendorCapabilityAuditHistory(VendorCapabilityId, VendorId);
+    }
       
 }
 
