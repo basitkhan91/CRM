@@ -1104,6 +1104,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 							this.stocklineser.newStockLine(this.sourceStockLineSetup).subscribe(data => {
 								this.collectionofstockLine = data;
 								this.saveStocklineIntegrationPortalData(data.stockLineId, this.selectedModels); //for Saving Integration Data
+								this.saveItemMasterDetails(this.sourceStockLineSetup);
 								this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
 								this.value = 1;
 							})
@@ -1114,8 +1115,8 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 				{
 						this.stocklineser.newStockLine(this.sourceStockLineSetup).subscribe(data => {
 							this.collectionofstockLine = data;
-
 							this.saveStocklineIntegrationPortalData(data.stockLineId, this.selectedModels); //for Saving Integration Data
+							this.saveItemMasterDetails(this.sourceStockLineSetup);
 							this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
 							this.value = 1;
 
@@ -1191,6 +1192,9 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		return;
 	}
 
+	saveItemMasterDetails(sourceStockLine: any) {
+		this.stocklineser.updateItemMasterEndpoint(sourceStockLine);
+	}
 	//for Saving Integration Data
 
 	saveStocklineIntegrationPortalData(id,models)

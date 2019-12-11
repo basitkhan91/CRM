@@ -264,6 +264,31 @@ namespace QuickApp.Pro.Controllers
             return Ok(id);
         }
 
+        [HttpPost("updateItemMasterStockline")]
+        public IActionResult updateItemMasterStockline([FromBody] StockLineViewModel stockViewModel)
+        {
+            if (stockViewModel == null)
+                return BadRequest($"{nameof(stockViewModel)} cannot be null");
+            if (ModelState.IsValid)
+            {
+                var actionobject = _unitOfWork.itemMaster.GetSingleOrDefault(a => a.ItemMasterId == stockViewModel.ItemMasterId);
+                actionobject.NationalStockNumber = stockViewModel.NationalStockNumber;
+                actionobject.ExportECCN = stockViewModel.ExportECCN;
+                actionobject.NHA = stockViewModel.NHA;
+                actionobject.ITARNumber = stockViewModel.ITARNumber;
+                actionobject.CreatedDate = DateTime.Now;
+                actionobject.UpdatedDate = DateTime.Now;
+                actionobject.CreatedBy = stockViewModel.CreatedBy;
+                actionobject.UpdatedBy = stockViewModel.UpdatedBy;
+
+                _context.ItemMaster.Update(actionobject);
+                _context.SaveChanges();
+
+            }
+            return Ok(ModelState);
+
+        }
+
         [HttpPost("stockLineIntegration")]
         public IActionResult stockLineIntegration([FromBody] StockLineViewModel stockLineViewModel)
         {

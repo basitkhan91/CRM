@@ -612,6 +612,17 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 
 		this.sourceStockLineSetup.isSerialized = allWorkFlows[0].isSerialized;
 
+		this.sourceStockLineSetup.ITARNumber = allWorkFlows[0].t.itarNumber;
+		this.sourceStockLineSetup.nationalStockNumber = allWorkFlows[0].t.nationalStockNumber;
+		this.sourceStockLineSetup.ExportECCN = allWorkFlows[0].t.exportECCN;
+		this.sourceStockLineSetup.NHA = allWorkFlows[0].t.nha;
+		this.sourceStockLineSetup.tagDate = allWorkFlows[0].t.TagDate;
+		this.sourceStockLineSetup.openDate = allWorkFlows[0].t.openDate;
+		this.sourceStockLineSetup.tagDays = allWorkFlows[0].t.tagDays;
+		this.sourceStockLineSetup.manufacturingDays = allWorkFlows[0].t.manufacturingDays
+		this.sourceStockLineSetup.daysReceived = allWorkFlows[0].t.daysReceived
+		this.sourceStockLineSetup.openDays = allWorkFlows[0].t.openDays
+
 		if (this.sourceStockLineSetup.isSerialized == true) {
 			this.hideSerialNumber = true;
 			this.showRestrictQuantity = true;
@@ -1072,6 +1083,7 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 				this.sourceStockLine.itemTypeId = 1;
 				this.stocklineser.newStockLine(this.sourceStockLine).subscribe(data => {
 					this.collectionofstockLine = data;
+					this.saveItemMasterDetails(this.sourceStockLineSetup);
 					this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
 					this.value = 1;
 
@@ -1101,10 +1113,6 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
                     this.sourceStockLineSetup.managementStructureId = this.stocklineEditForm.get('companyId').value;
                 }
 
-				//Update Item Master
-				//this.stocklineser.updateItemMasterPartPost(this.sourceItemMaster).subscribe(data => { });
-				//Updating Part
-
 				this.stocklineser.updateStockSetupLine(this.sourceStockLineSetup).subscribe(
 					data => {
 						if (data) {
@@ -1114,6 +1122,7 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 							{
 								console.log("Update Timelife");
 								this.stocklineser.updateStockLineTimelife(this.sourceTimeLife).subscribe(data => {
+									this.saveItemMasterDetails(this.sourceStockLineSetup);
 									this.collectionofstockLine = data;
 									this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
 								})
@@ -1122,24 +1131,20 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 							else {
 								this.stocklineser.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
 									this.collectionofstockLine = data;
-
+									this.saveItemMasterDetails(this.sourceStockLineSetup);
 									this.value = 1;
 									this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
 								})
 							}
 							//for Saving Time Life End
-
 							//for Saving Integration Multiselect Start
-
 							if (this.selectedModels.length > 0) {
 								//in this while Edit if we unselect Check box that also treating as a select only
 								//so we have list before edi
 								//if list in previous and selected Model Data Has same PortalId then i will pop in Previous list
-
 								if (this.selectedModels.length > 0) {
 									this.stocklineser.deleteIntegrationById(this.sourceStockLineSetup.stockLineId).subscribe();
 								}
-
 								for (let i = 0; i < this.currentStocklineIntegrationPortalData.length; i++) {
 									for (let j = 0; j < this.selectedModels.length; j++) {
 										if (this.currentStocklineIntegrationPortalData[i].integrationPortalId == this.selectedModels[j].integrationPortalId) {
@@ -1149,10 +1154,7 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 										}
 									}
 								}
-
 								this.saveStocklineIntegrationPortalData(this.sourceStockLineSetup.stockLineId, this.selectedModels);
-
-								console.log(this.selectedModels);
 							}
 
 						}
@@ -1162,7 +1164,6 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 
 		else if (((this.sourceStockLineSetup.isSerialized == false) || (this.sourceStockLineSetup.isSerialized == undefined) || (this.sourceStockLineSetup.isSerialized == "undefined") || (this.sourceStockLineSetup.isSerialized == null)) && (!this.sourceStockLineSetup.serialNumber))
 		{
-
 			this.sourceStockLine.updatedBy = this.userName;
 			this.sourceStockLine.masterCompanyId = 1;
 			this.sourceItemMaster.itemMasterId = this.sourceStockLineSetup.itemMasterId;
@@ -1171,19 +1172,19 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 			this.stocklineser.updateStockSetupLine(this.sourceStockLineSetup).subscribe(
 				data => {
 					this.saveCompleted(this.sourceStockLineSetup);
-
 					if (this.sourceStockLineSetup.timeLifeCyclesId) {
 						console.log("Update Timelife");
 						this.stocklineser.updateStockLineTimelife(this.sourceTimeLife).subscribe(data => {
 							this.collectionofstockLine = data;
+							this.saveItemMasterDetails(this.sourceStockLineSetup);
 							this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
 						})
 					}
 					else {
 						this.stocklineser.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
 							this.collectionofstockLine = data;
-
 							this.value = 1;
+							this.saveItemMasterDetails(this.sourceStockLineSetup);
 							this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
 						})
 					}
@@ -1208,21 +1209,22 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 								}
 							}
 						}
-
 						this.saveStocklineIntegrationPortalData(this.sourceStockLineSetup.stockLineId, this.selectedModels);
-
-						console.log(this.selectedModels);
 					}
-
 				})
 		}
+	}
 
+	saveItemMasterDetails(sourceStockLine: any) {
+		this.stocklineser.updateItemMasterEndpoint(sourceStockLine);
 	}
 
 	closethis() {
 
 	}
+
 	ngAfterViewInit() {
+
 	}
 
 	private loadData() {
@@ -1285,11 +1287,8 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 		if (!ischange) {
 			this.selectedModels.push(selectedRow);
 		}
-
-		console.log(this.selectedModels);
 	}
 	public saveSelectedModel(selectedRow, indeex) {
-
 		selectedRow.isBoolean = indeex;
 		if (!selectedRow.isListed) {
 			selectedRow.isListed = false;
@@ -1306,7 +1305,6 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 						this.attempToDelete = true;
 						selectedRow.attempToDelete = true;
 						ischange = false;
-						
 					}
 				}
 			});
@@ -1314,11 +1312,8 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 		if (!ischange) {
 			this.selectedModels.push(selectedRow);
 		}
-		console.log(this.selectedModels);
-
 	}
 	dataSource: MatTableDataSource<any>;
-
     triggerSomeEvent() {
 		this.isDisabled = !this.isDisabled;
 		return;
