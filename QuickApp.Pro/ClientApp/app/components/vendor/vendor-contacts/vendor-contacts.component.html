@@ -233,9 +233,10 @@
             <p><span class="label"><b>Contact Title: </b></span><span class="value">{{sourceVendorforView.contactTitle}}</span></p>
             <p>
                 <span class="label"><b>Work Phone: </b></span><span class="value">
-                    {{sourceVendorforView.workPhoneExtn}}
-                    <span *ngIf="sourceVendorforView.workPhoneExtn">-</span>
                     {{sourceVendorforView.workPhone}}
+                    <span *ngIf="sourceVendorforView.workPhoneExtn">-</span>
+                    {{sourceVendorforView.workPhoneExtn}}
+                   
                 </span>
             </p>
             <p><span class="label"><b>Primary Contact: </b></span><span class="value">{{sourceVendorforView.isDefaultContact}}</span></p>

@@ -922,7 +922,7 @@ namespace DAL.Repositories
         {
             try
             {
-                return _appContext.VendorDocumentDetailsAudit.Where(p => p.IsActive == true && p.VendorDocumentDetailId == id).ToList();
+                return _appContext.VendorDocumentDetailsAudit.Where(p => p.IsActive == true && p.VendorDocumentDetailId == id).OrderByDescending(p=>p.UpdatedDate).ToList();
 
             }
             catch (Exception ex)

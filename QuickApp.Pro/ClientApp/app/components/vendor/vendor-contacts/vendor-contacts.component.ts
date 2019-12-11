@@ -662,6 +662,7 @@ export class VendorContactsComponent implements OnInit {
         if (event.keyCode != 8 && !pattern.test(inputChar)) {
           event.preventDefault();
         }
+        
       }
 
 }
