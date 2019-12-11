@@ -559,7 +559,7 @@ export class AssetAttributeTypeComponent implements OnInit {
     }
 
     selectedAssetType(object) {
-        console.log('selectedAssetType.assetTypeName', this.currentRow.assetTypeId);
+        //console.log('selectedAssetType.assetTypeName', this.currentRow.assetTypeId);
         //console.log('selectedAssetType.memo', object.assetTypeMemo);
         this.currentRow.description = object.assetTypeMemo;
     }

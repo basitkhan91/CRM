@@ -78,7 +78,7 @@
 
                             <!--body-->
                             <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                                <tr [pSelectableRow]="rowData" pReorderableRowHandle>
+                                <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="viewItemDetails(rowData)">
                                     <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                         {{rowData[col.field]}}
                                     </td>
@@ -130,7 +130,7 @@
                     <div class="col-sm-12">
                         <p>
                             <span class="label">
-                                <b>Asset Type: </b>
+                                <b>Asset Class: </b>
                             </span>
                             <span class="value">{{itemDetails.assetTypeName}}</span>
                         </p>
@@ -285,7 +285,7 @@
                                                     [forceSelection]="true" [size]="30" [minLength]="1" (onSelect)="selectedAssetType($event)"
                                                     [dropdown]="true" class="p-autoComplete-ctsm" [required]="true">
                                     </p-autoComplete> -->
-                                    <select name="assetTypeId" [(ngModel)]="currentRow.assetTypeId" (onSelect)="selectedAssetType($event)" required>
+                                    <select name="assetTypeId" [(ngModel)]="currentRow.assetTypeId" (ngModelChange)="selectedAssetType($event)" required>
                                         <option *ngFor="let allAssetType of allAssetTypes" [ngValue]="allAssetType" >{{allAssetType.assetTypeName}}</option>
                                     </select>
                                 </div>
@@ -543,7 +543,7 @@
                                 <!--<tr *ngFor="let item of currentRow | keyvalue">
                                     <th>{{item.key | titlecase}}</th>-->
                                 <tr>
-                                    <th>Asset Type</th>
+                                    <th>Asset Class</th>
                                     <th>Description</th>
                                     <th>Name</th>
                                     <th>Convention Type</th>
