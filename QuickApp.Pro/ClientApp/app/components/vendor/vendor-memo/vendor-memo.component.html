@@ -121,24 +121,6 @@
                              selectionMode="multiple"
                              [resizableColumns]="true" [reorderableColumns]="true">
 
-                             <ng-template pTemplate="caption">
-
-                                <div style="text-align: right">
-                                    <p-multiSelect [options]="memoCols" [(ngModel)]="memoCols" [ngModelOptions]="{standalone: true}" optionLabel="header"
-                                                   selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-                                    <div class="inner-addon right-addon w200 inline-block">
-                                        <i class="fa fa-search"></i>
-                                        <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')">
-                                    </div>
-                                    <button type="button" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
-                                   
-                                    
-                                </div>
-
-
-                            </ng-template>
-
                         <ng-template pTemplate="header" let-columns>
                             <tr>
                                 <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">

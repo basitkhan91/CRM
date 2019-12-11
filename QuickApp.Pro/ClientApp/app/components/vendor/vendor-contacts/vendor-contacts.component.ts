@@ -115,8 +115,7 @@ export class VendorContactsComponent implements OnInit {
         { field: 'lastName', header: 'Last Name' },
         { field: 'contactTitle', header: 'Contact Title' },
         { field: 'email', header: 'Email' },
-        { field: 'mobilePhone', header: 'Mobile Phone' },
-        { field: 'fullContactNo', header: 'Work Phone' },
+        { field: 'fullContactNo', header: 'Mobile Phone' },
         // { field: 'mobilePhone', header: 'Mobile Phone' },
         { field: 'fax', header: 'FAX' },
         // { field: 'isDefaultContact', header: 'Primary Contact' },
@@ -254,7 +253,6 @@ export class VendorContactsComponent implements OnInit {
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;      
         this.allActions = allWorkFlows;
-        //console.log(this.allActions);
         //const responseData = allWorkFlows;
         // this.allActions = allWorkFlows.map(x => {
         //   return {
