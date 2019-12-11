@@ -3830,10 +3830,10 @@ namespace QuickApp.Pro.Controllers
 
         [HttpGet("getVendorCapabilityHistory")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult GetAllVendorCapabilityAudit(long VendorCapabilityId, long VendorId)
+        public IActionResult GetAllVendorCapabilityAudit(long VendorCapabilityId, long AuditVendorCapabilityId)
         {
 
-            var allVendorBillingDetails = _unitOfWork.Vendor.GetVendorCapabilityAudit(VendorCapabilityId, VendorId);
+            var allVendorBillingDetails = _unitOfWork.Vendor.GetVendorCapabilityAudit(VendorCapabilityId, AuditVendorCapabilityId);
             return Ok(allVendorBillingDetails);
         }
 
