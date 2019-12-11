@@ -655,6 +655,7 @@ export class VendorContactsComponent implements OnInit {
         this.sourceVendor = {};
     }
 
+
     patternMobilevalidationWithSpl(event: any) {
         const pattern = /[0-9\+\-()\ ]/;
     
@@ -662,6 +663,7 @@ export class VendorContactsComponent implements OnInit {
         if (event.keyCode != 8 && !pattern.test(inputChar)) {
           event.preventDefault();
         }
+        
       }
 
 }
