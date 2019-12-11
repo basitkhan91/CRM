@@ -38,6 +38,7 @@ import { ActivatedRoute } from '@angular/router';
 import { WorkFlowtService } from '../../../../services/workflow.service';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
+import { Billing } from '../../../../models/work-order-billing.model';
 
 
 @Component({
@@ -161,6 +162,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     workOrderExclusionsList: Object;
     isEditLabor: boolean = false;
     mpnId: any;
+    billing: Billing;
 
 
 
@@ -191,7 +193,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         this.getTaskList();
     }
     async ngOnInit() {
-
+        this.billing = new Billing();
         //  this.showTabsGrid = true;
         this.workOrderService.creditTerms = this.creditTerms;
         // this.workOrderService.employeesOriginalData = this.employeesOriginalData;
@@ -290,57 +292,6 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
-    getTaskList() {
-        if (this.labor == undefined) {
-            this.labor = new WorkOrderLabor()
-        }
-        this.labor.workOrderLaborList = [];
-        this.labor.workOrderLaborList.push({})
-        this.workOrderService.getAllTasks()
-            .subscribe(
-                (taskList) => {
-                    this.labor.workOrderLaborList[0] = {}
-                    this.taskList = taskList;
-                    this.taskList.forEach(task => {
-                        this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [new AllTasks()];
-                    });
-                },
-                (error) => {
-                    console.log(error);
-                }
-            )
-    }
-
-    // loadMPNlist() {
-    //   if (this.savedWorkOrderData) {
-    //     this.savedWorkOrderData.partNumbers.forEach(pn => {
-    //       this.partNumberList.forEach(list => {
-    //         if (list.itemMasterId == pn.masterPartId) {
-    //           this.MPNList.push(list);
-    //         }
-    //       });
-    //     });
-    //   }
-
-    // }
-
-    saveworkOrderLabor(data) {
-        this.workOrderService.createWorkOrderLabor(this.formWorkerOrderLaborJson(data)).subscribe(res => {
-            this.alertService.showMessage(
-                this.moduleName,
-                'Saved Work Order Labor  Succesfully',
-                MessageSeverity.success
-            );
-        })
-    }
-
-
-    openCurrency(content) {
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
 
 
     // create all Forms in the Grid
@@ -350,6 +301,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         this.documents = [new Documents()];
         this.quote = new WorkOrderQuote();
         this.labor = new WorkOrderLabor();
+        this.billing = new Billing();
         // adding Form Object Dynamically
         // this.generateLaborForm();
     }
@@ -766,6 +718,60 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
         })
     }
+
+
+    getTaskList() {
+        if (this.labor == undefined) {
+            this.labor = new WorkOrderLabor()
+        }
+        this.labor.workOrderLaborList = [];
+        this.labor.workOrderLaborList.push({})
+        this.workOrderService.getAllTasks()
+            .subscribe(
+                (taskList) => {
+                    this.labor.workOrderLaborList[0] = {}
+                    this.taskList = taskList;
+                    this.taskList.forEach(task => {
+                        this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [new AllTasks()];
+                    });
+                },
+                (error) => {
+                    console.log(error);
+                }
+            )
+    }
+
+    // loadMPNlist() {
+    //   if (this.savedWorkOrderData) {
+    //     this.savedWorkOrderData.partNumbers.forEach(pn => {
+    //       this.partNumberList.forEach(list => {
+    //         if (list.itemMasterId == pn.masterPartId) {
+    //           this.MPNList.push(list);
+    //         }
+    //       });
+    //     });
+    //   }
+
+    // }
+
+    saveworkOrderLabor(data) {
+        this.workOrderService.createWorkOrderLabor(this.formWorkerOrderLaborJson(data)).subscribe(res => {
+            this.alertService.showMessage(
+                this.moduleName,
+                'Saved Work Order Labor  Succesfully',
+                MessageSeverity.success
+            );
+        })
+    }
+
+
+    openCurrency(content) {
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
 
 
 
