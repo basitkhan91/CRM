@@ -147,7 +147,7 @@ namespace DAL
         public DbSet<EmployeeUserRole> EmployeeUserRole { get; set; }
         public DbSet<EmployeeManagementStructure> EmployeeManagementStructure { get; set; }
         // public DbSet<EmployeeShift> EmployeeShift { get; set; }
-        
+
         public DbSet<CustomerBillingAddress> CustomerBillingAddress { get; set; }
         public DbSet<CustomerBillingAddressAudit> CustomerBillingAddressAudit { get; set; }
         public DbSet<ATAChapter> ATAChapter { get; set; }
@@ -467,8 +467,9 @@ namespace DAL
         public DbSet<WorkOrderQuoteDetails> WorkOrderQuoteDetails { get; set; }
         public DbSet<WorkOrderBillingInvoicing> WorkOrderBillingInvoicing { get; set; }
         public DbSet<InvoiceType> InvoiceType { get; set; }
-
-        
+        public DbSet<DAL.Models.Sales.SalesOrderQuote.SalesOrderQuote> SalesOrderQuote { get; set; }
+        public DbSet<DAL.Models.Sales.SalesOrderQuoteApproverList> SalesOrderQuoteApproverList { get; set; }
+        public DbSet<DAL.Models.Sales.SalesOrderQuotePart> SalesOrderQuotePart { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
