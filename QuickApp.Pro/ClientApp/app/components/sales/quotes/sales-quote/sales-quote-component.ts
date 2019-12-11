@@ -4,6 +4,8 @@ import { CustomerService } from "../../../../services/customer.service";
 import { Customer } from "../../../../models/customer.model";
 import { AlertService } from "../../../../services/alert.service";
 import { Router } from "@angular/router";
+import { NgbModal, NgbActiveModal, NgbModalRef, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { CustomerViewComponent } from '../../../../shared/components/customer/customer-view/customer-view.component';
 
 @Component({
   selector: "app-sales-quote-create",
@@ -18,15 +20,27 @@ export class SalesQuoteComponent implements OnInit {
   showPaginator: boolean = false;
     pageLinks: any;
     selectedColumns: any;
+    modal: NgbModalRef;
   constructor(
     private customerService: CustomerService,
     private alertService: AlertService,
+    private modalService: NgbModal,
     private router: Router
   ) {}
 
   ngOnInit() {
     this.query = new CustomerSearchQuery();
   }
+
+  viewSelectedRow(rowData) {
+    const { customerId } = rowData;
+    this.modal = this.modalService.open(CustomerViewComponent, { size: 'lg' });
+    this.modal.componentInstance.customerId = customerId;
+    this.modal.result.then(() => {
+        console.log('When user closes');
+    }, () => { console.log('Backdrop click') })
+
+}
 
   onSearch(event) {
     this.query.reset();
