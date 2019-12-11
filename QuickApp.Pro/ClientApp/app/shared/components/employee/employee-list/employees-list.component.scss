@@ -12,3 +12,12 @@
 .x_panel {
     border: none;
 }
+.modal-body-cstm p .label {
+    width: 40%;
+    padding: 0;
+    display: inline-block;
+}
+.modal-body-cstm p .value {
+    width: 60%;
+    display: inline-block;
+}

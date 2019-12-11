@@ -40,6 +40,8 @@ export class AssetListingComponent implements OnInit {
     ngOnInit(): void {
         this.loadData();
         this.activeIndex = 0;
+        this.assetService.ShowPtab = false;
+        this.assetService.alertObj.next(this.assetService.ShowPtab); //steps
         this.assetService.indexObj.next(this.activeIndex);
         if (this.isWorkOrder) {
             this.assetService.getAssetsById(this.assetsId).subscribe(res => {
@@ -103,7 +105,8 @@ export class AssetListingComponent implements OnInit {
         this.isSaving = true;
         // this.assetService.currentAssetId = row.assetRecordId;
         this.assetService.listCollection = row;
-        this._route.navigateByUrl('assetmodule/assetpages/app-create-asset');
+        const { assetId } = row;
+        this._route.navigateByUrl(`assetmodule/assetpages/app-edit-asset/${assetId}`);
     }
 
     dismissModel() {

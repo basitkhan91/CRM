@@ -918,5 +918,38 @@ namespace DAL.Repositories
           
         }
 
+        public List<VendorDocumentDetailsAudit> GetVendorDocumentDetailsAudit(long id)
+        {
+            try
+            {
+                return _appContext.VendorDocumentDetailsAudit.Where(p => p.IsActive == true && p.VendorDocumentDetailId == id).ToList();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public IEnumerable<object> GetVendorCapabilityAudit(long VendorCapabilityId, long AuditVendorCapabilityId)
+        {
+            try
+            {
+                var list = (from vba in _appContext.VendorCapabiliyAudit
+                            where vba.VendorCapabilityId == VendorCapabilityId && vba.VendorCapabiliyAuditId == AuditVendorCapabilityId
+                            select new
+                            {
+                                
+                               vba,
+                               vba.VendorCapabiliyAuditId
+                            }).OrderByDescending(p => p.VendorCapabiliyAuditId).ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
     }
 }

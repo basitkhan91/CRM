@@ -23,6 +23,7 @@ export class WorkOrderSmartComponent implements OnInit {
     @Input() isSubWorkOrder = false;
     @Input() paramsData;
     @Input() showTabsGrid;
+    @Input() subWorkOrderId;
 
     creditTerms: any;
     employeesOriginalData: any;
@@ -63,9 +64,9 @@ export class WorkOrderSmartComponent implements OnInit {
         this.getMultiplePartsNumbers();
         this.getAllPriority();
 
-        // { workorderid: workorderid, mpnid: workorderid, subworkorderid: 0 }
-        if (!this.isSubWorkOrder) {
-            this.workOrderId = this.acRouter.snapshot.params['id'];
+        if (this.isSubWorkOrder) {
+            this.subWorkOrderId = this.subWorkOrderId;
+            // this.workOrderId = this.acRouter.snapshot.params['id'];
             // this.workOrderId = this.paramsData.workorderid;
         } else {
             this.workOrderId = this.acRouter.snapshot.params['id'];

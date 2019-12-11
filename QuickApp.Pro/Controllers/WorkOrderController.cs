@@ -618,7 +618,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("createquoteexclusions")]
-        public IActionResult CreateWorkOrderQuoteExclusions([FromBody]List<WorkOrderQuoteExclusions> quoteExclusions)
+        public IActionResult CreateWorkOrderQuoteExclusions([FromBody]WorkOrderQuoteDetails quoteExclusions)
         {
             if (ModelState.IsValid)
             {
@@ -633,11 +633,11 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("updatequoteexclusions")]
-        public IActionResult UpdateWorkOrderQuoteExclusions([FromBody]List<WorkOrderQuoteExclusions> quoteExclusions)
+        public IActionResult UpdateWorkOrderQuoteExclusions([FromBody]WorkOrderQuoteDetails quoteExclusions)
         {
             if (ModelState.IsValid)
             {
-                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderQuoteExclusions(quoteExclusions);
+                var result = unitOfWork.WorkOrderRepository.UpdateWorkOrderQuoteExclusions(quoteExclusions);
                 return Ok(result);
             }
             else
@@ -662,7 +662,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("createquotefreight")]
-        public IActionResult CreateWorkOrderQuoteFreight([FromBody]List<WorkOrderQuoteFreight> quoteFreight)
+        public IActionResult CreateWorkOrderQuoteFreight([FromBody]WorkOrderQuoteDetails quoteFreight)
         {
             if (ModelState.IsValid)
             {
@@ -677,7 +677,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("updatequotefreight")]
-        public IActionResult UpdateWorkOrderQuoteFreight([FromBody]List<WorkOrderQuoteFreight> quoteFreight)
+        public IActionResult UpdateWorkOrderQuoteFreight([FromBody]WorkOrderQuoteDetails quoteFreight)
         {
             if (ModelState.IsValid)
             {
@@ -706,7 +706,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("createquotecharges")]
-        public IActionResult CreateWorkOrderQuoteCharges([FromBody]List<WorkOrderQuoteCharges> quoteCharges)
+        public IActionResult CreateWorkOrderQuoteCharges([FromBody]WorkOrderQuoteDetails quoteCharges)
         {
             if (ModelState.IsValid)
             {
@@ -721,7 +721,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("updatequotecharges")]
-        public IActionResult UpdateWorkOrderQuoteCharges([FromBody]List<WorkOrderQuoteCharges> quoteCharges)
+        public IActionResult UpdateWorkOrderQuoteCharges([FromBody]WorkOrderQuoteDetails quoteCharges)
         {
             if (ModelState.IsValid)
             {
@@ -750,7 +750,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("createquotematerials")]
-        public IActionResult CreateWorkOrderQuoteMaterial([FromBody]List<WorkOrderQuoteMaterial> quoteMaterials)
+        public IActionResult CreateWorkOrderQuoteMaterial([FromBody]WorkOrderQuoteDetails quoteMaterials)
         {
             if (ModelState.IsValid)
             {
@@ -765,7 +765,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("updatequotematerials")]
-        public IActionResult UpdateWorkOrderQuoteMaterial([FromBody]List<WorkOrderQuoteMaterial> quoteMaterials)
+        public IActionResult UpdateWorkOrderQuoteMaterial([FromBody]WorkOrderQuoteDetails quoteMaterials)
         {
             if (ModelState.IsValid)
             {
@@ -794,7 +794,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("createquotelabor")]
-        public IActionResult CreateWorkOrderQuoteMaterial([FromBody]WorkOrderQuoteLaborHeader quoteLabor)
+        public IActionResult CreateWorkOrderQuoteLabor([FromBody]WorkOrderQuoteDetails quoteLabor)
         {
             if (ModelState.IsValid)
             {
@@ -809,7 +809,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("updatequotelabor")]
-        public IActionResult UpdateWorkOrderQuoteMaterial([FromBody]WorkOrderQuoteLaborHeader quoteLabor)
+        public IActionResult UpdateWorkOrderQuoteLabor([FromBody]WorkOrderQuoteDetails quoteLabor)
         {
             if (ModelState.IsValid)
             {
@@ -1047,6 +1047,47 @@ namespace QuickApp.Pro.Controllers
 
         #endregion
 
+        #region Billing and Invoicing
+
+        [HttpPost("createbillinginvoicing")]
+        public IActionResult CreateWorkOrderBillingInvoicing([FromBody]WorkOrderBillingInvoicing billingInvoicing)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderBillingInvoicing(billingInvoicing);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpPost("updatebillinginvoicing")]
+        public IActionResult UpdateWorkOrderBillingInvoicing([FromBody]WorkOrderBillingInvoicing billingInvoicing)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = unitOfWork.WorkOrderRepository.UpdateWorkOrderBillingInvoicing(billingInvoicing);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("billinginvoicingdetails")]
+        public IActionResult GetBillingInvoicingDetails(long workOrderId,long workOrderPartNoId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetBillingInvoicingDetails(workOrderId, workOrderPartNoId);
+            return Ok(result);
+        }
+
+        #endregion
+
         [HttpGet("getAll")]
         public IActionResult Index()
         {
@@ -1179,8 +1220,6 @@ namespace QuickApp.Pro.Controllers
             var result = unitOfWork.WorkOrderRepository.GetStockLineDetails(stockLineId);
             return Ok(result);
         }
-
-
 
         [HttpGet("gettechnicians")]
         public IActionResult GetTechnicians()

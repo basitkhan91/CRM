@@ -6,6 +6,13 @@ using QuickApp.Pro.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using DAL.Models.Sales;
+using DAL.Models.Sales.SalesOrderQuote;
+using AutoMapper;
+using QuickApp.Pro.ViewModels.SalesViews;
+using System.Linq.Expressions;
+using DAL.Repositories;
+using DAL.Repositories.Interfaces;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -28,7 +35,7 @@ namespace QuickApp.Pro.Controllers
             this.Context = context;
 
         }
-            // GET: api/SalesQuote
+        // GET: api/SalesQuote
         [HttpGet]
         public IEnumerable<string> Get()
         {
@@ -46,25 +53,93 @@ namespace QuickApp.Pro.Controllers
 
             model = BindDefaultDataSources(model);
 
+
             return Ok(model);
         }
-        
+
         // POST: api/SalesQuote
         [HttpPost]
-        public void Post([FromBody]string value)
+        public IActionResult Post([FromBody]SalesQuoteView quoteView)
         {
+            SalesOrderQuote quote = Mapper.Map<SalesOrderQuoteView, SalesOrderQuote>(quoteView.SalesOrderQuote);
+
+            IEnumerable<SalesOrderQuoteApproverList> approverList = Mapper.Map<List<SalesOrderQuoteApproverListView>, List<SalesOrderQuoteApproverList>>(quoteView.ApproverList);
+
+            IEnumerable<SalesOrderQuotePart> parts = Mapper.Map<List<SalesOrderQuotePartView>, List<SalesOrderQuotePart>>(quoteView.Parts);
+
+            var q = this.UnitOfWork.SalesOrderQuote.Create(quote);
+
+            if (q != null && q.SalesOrderQuoteId.HasValue)
+            {
+                foreach (var list in approverList)
+                {
+                    list.SalesOrderQuoteId = q.SalesOrderQuoteId.Value;
+                }
+
+                foreach (var part in parts)
+                {
+                    part.SalesOrderQuoteId = q.SalesOrderQuoteId.Value;
+                }
+
+                this.UnitOfWork.SalesOrderQuoteApproverList.BulkCreate(approverList);
+
+                this.UnitOfWork.SalesOrderQuotePart.BulkCreate(parts);
+            }
+
+            var response = Mapper.Map<SalesOrderQuote, SalesOrderQuoteView>(q);
+
+            return Ok(response);
         }
-        
+
         // PUT: api/SalesQuote/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public IActionResult Put([FromBody]SalesQuoteView quoteView)
         {
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            SalesOrderQuote quote = Mapper.Map<SalesOrderQuoteView, SalesOrderQuote>(quoteView.SalesOrderQuote);
+
+            IEnumerable<SalesOrderQuoteApproverList> approverList = Mapper.Map<List<SalesOrderQuoteApproverListView>, List<SalesOrderQuoteApproverList>>(quoteView.ApproverList);
+
+            IEnumerable<SalesOrderQuotePart> parts = Mapper.Map<List<SalesOrderQuotePartView>, List<SalesOrderQuotePart>>(quoteView.Parts);
+
+            var q = this.UnitOfWork.SalesOrderQuote.UpdateSalesQuote(quote);
+
+            if (q != null && q.SalesOrderQuoteId.HasValue)
+            {
+                if (approverList != null)
+                {
+                    foreach (var list in approverList)
+                    {
+                        list.SalesOrderQuoteId = q.SalesOrderQuoteId.Value;
+                    }
+
+                    this.UnitOfWork.SalesOrderQuoteApproverList.BulkMerge(approverList);
+                }
+
+                if (parts != null)
+                {
+                    foreach (var part in parts)
+                    {
+                        part.SalesOrderQuoteId = q.SalesOrderQuoteId.Value;
+                    }
+
+                    this.UnitOfWork.SalesOrderQuotePart.BulkMege(parts);
+                }
+            }
+
+            return Ok(quoteView.SalesOrderQuote);
         }
-        
+
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+
+            this.UnitOfWork.SalesOrderQuote.Delete(id);
+
+            return Ok(true);
         }
     }
 }

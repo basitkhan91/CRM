@@ -221,11 +221,19 @@ export class WorkOrderService {
         return this.workOrderEndpointService.createQuotation(data);
     }
 
+    getSubWorkOrderListByWorkOrderId(workOrderId) {
+        return this.workOrderEndpointService.getSubWorkOrderListByWorkOrderId(workOrderId);
+    }
+
+    getSubWorkOrderView(subWorkOrderId) {
+        return this.workOrderEndpointService.getSubWorkOrderView(subWorkOrderId);
+    }
 
     // subWorkOrder 
     getSubWorkOrderHeaderByWorkOrderId(workOrderId, workOrderPartNumberId) {
         return this.workOrderEndpointService.getSubWorkOrderHeaderByWorkOrderId(workOrderId, workOrderPartNumberId);
     }
+
 
     createSubWorkOrderHeaderByWorkOrderId(data) {
         return this.workOrderEndpointService.createSubWorkOrderHeaderByWorkOrderId(data);

@@ -787,7 +787,7 @@
                       
 
                     <div [ngClass]="{hidedata : gridActiveTab !== 'billorInvoice'}">
-                        <app-work-order-billing></app-work-order-billing>
+                        <app-work-order-billing      [employeesOriginalData]="employeesOriginalData"  ></app-work-order-billing>
                     </div>
                     <div *ngIf="addresses" [ngClass]="{hidedata : gridActiveTab !== 'address'}">
                         <app-work-order-addresses [addressesForm]="addresses"></app-work-order-addresses>

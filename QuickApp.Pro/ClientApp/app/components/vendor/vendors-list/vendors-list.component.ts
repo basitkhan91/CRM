@@ -75,7 +75,8 @@ export class VendorsListComponent implements OnInit {
     creditTermsId: any = "";
     currencyId: any = "";
     discountLevel: any = "";
-    vendorPhoneNo:any="";
+    vendorPhoneNo: any = "";
+    vendorPhoneExt: any = "";
     is1099Required: any = "";      
     showGeneralData: boolean = true;
     showcontactdata: boolean = true;
@@ -528,6 +529,7 @@ export class VendorsListComponent implements OnInit {
         console.log(this.vendorClassificationName);
         this.doingBusinessAsName = row.t.doingBusinessAsName;
         this.parent = row.t.parent;
+      
         this.vendorParentName=row.t.vendorParentName;
         if (row.currency) {
             this.currencyId = row.currency.symbol;
@@ -550,7 +552,8 @@ export class VendorsListComponent implements OnInit {
         this.stateOrProvince = row.stateOrProvince;
         this.postalCode = row.postalCode;
         this.country = row.country;
-        this.vendorPhoneNo=row.t.vendorPhone;
+        this.vendorPhoneNo = row.t.vendorPhone;
+        this.vendorPhoneExt = row.t.vendorPhoneExt;
         this.vendorEmail = row.vendorEmail;
         //this.vendorClassificationId = row.t.vendorClassificationId;
         this.vendorClassificationName = row.classificationName;

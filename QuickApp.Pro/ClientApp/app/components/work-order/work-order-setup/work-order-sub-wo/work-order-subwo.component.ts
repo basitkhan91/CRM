@@ -42,14 +42,20 @@ export class SubWorkOrderComponent implements OnInit {
 
     ngOnInit() {
 
+        console.log(this.acRouter.snapshot.queryParams)
 
         const queryParamsData = this.acRouter.snapshot.queryParams;
 
 
-        this.workOrderId = queryParamsData.workorderid;
-        this.mpnId = queryParamsData.mpnid;
-        this.subWorkOrderId = queryParamsData.subworkorderid;
+        this.workOrderId = parseInt(queryParamsData.workorderid);
+        this.subWorkOrderId = parseInt(queryParamsData.subworkorderid);
+        this.mpnId = parseInt(queryParamsData.mpnid);
         this.workOrderDetails = queryParamsData;
+
+        if (this.subWorkOrderId !== 0) {
+            this.isEdit = true;
+            this.showTabsGrid = true;
+        }
 
 
 
@@ -67,25 +73,28 @@ export class SubWorkOrderComponent implements OnInit {
 
 
     getHeaderDetails() {
-        this.workOrderService.getSubWorkOrderHeaderByWorkOrderId(this.workOrderId, this.mpnId).subscribe(res => {
-            this.subWorkOrderHeader = res;
-            this.workOrderDetails = {
-                ...this.workOrderDetails,
-                workFlowId: res.workFlowId,
-                workFlowWorkOrderId: res.workFlowWorkOrderId
-            }
+        if (this.workOrderId && this.mpnId) {
+            this.workOrderService.getSubWorkOrderHeaderByWorkOrderId(this.workOrderId, this.mpnId).subscribe(res => {
+                this.subWorkOrderHeader = res;
+                this.workOrderDetails = {
+                    ...this.workOrderDetails,
+                    workFlowId: res.workFlowId,
+                    workFlowWorkOrderId: res.workFlowWorkOrderId
+                }
 
-            this.subWorkOrderGeneralInformation = {
-                ...res,
-                openDate: new Date(res.openDate),
-                estimatedCompletionDate: new Date(res.estimatedCompletionDate),
-                needDate: '',
-            };
-            this.getWorkFlowByPNandScope(res.itemMasterId, res.workOrderScopeId);
-            this.getPartPublicationByItemMasterId(res.itemMasterId);
+                this.subWorkOrderGeneralInformation = {
+                    ...res,
+                    openDate: new Date(res.openDate),
+                    estimatedCompletionDate: new Date(res.estimatedCompletionDate),
+                    needDate: '',
+                };
+                this.getWorkFlowByPNandScope(res.itemMasterId, res.workOrderScopeId);
+                this.getPartPublicationByItemMasterId(res.itemMasterId);
 
 
-        })
+            })
+        }
+
     }
 
     getAllWorkOrderStages(): void {

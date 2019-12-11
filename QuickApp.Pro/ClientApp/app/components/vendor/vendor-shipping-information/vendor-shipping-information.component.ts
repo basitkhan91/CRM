@@ -98,6 +98,7 @@ export class VendorShippingInformationComponent {
     selectedShipViaColumns: any[];
     cols: any[];
     shipViacols: any[];
+    shipViaColumns: any[];
     title: string = "Create";
     id: number;
     errorMessage: any;
@@ -215,8 +216,8 @@ export class VendorShippingInformationComponent {
             { field: 'stateOrProvince', header: 'State/Prov' },
             { field: 'postalCode', header: 'Postal Code' },
             { field: 'country', header: 'Country' }
-        ];
-        this.selectedColumns = this.cols;
+        ];  
+        this.selectedColumns = this.cols;            
     }
 
     private countrylist() {
@@ -249,7 +250,7 @@ export class VendorShippingInformationComponent {
             { field: 'shippingId', header: 'Shipping Id' },
             { field: 'memo', header: 'Memo' }
         ];
-        this.selectedShipViaColumn = this.shipViacols;
+        this.selectedShipViaColumns = this.shipViacols;
     }
     openShipViaEdit(rowObject) {
         this.isEditMode = true;
@@ -290,7 +291,7 @@ export class VendorShippingInformationComponent {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
-        this.allActions = allWorkFlows;
+        this.allActions = allWorkFlows;  
     }
     private onShipViadetails(allWorkFlows: any) {
         this.alertService.stopLoadingMessage();
