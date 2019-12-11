@@ -933,6 +933,7 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
             }
         }
     }
+    
     eventClassificationHandler(event) {
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();
