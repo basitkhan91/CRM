@@ -134,9 +134,8 @@
     </tr>
   </table>
 
-  <div *ngIf="isWorkOrder && !isEdit" style="float:right">
+  <div *ngIf="(isWorkOrder && !isEdit) || !isWorkOrder" style="float:right">
     <button
-      *ngIf="isWorkOrder"
       class="btn btn-primary btn-primary-cstm"
       (click)="saveExclusionsWorkOrder()"
       style="padding: 6px 12px !important;margin-top: 10px;"

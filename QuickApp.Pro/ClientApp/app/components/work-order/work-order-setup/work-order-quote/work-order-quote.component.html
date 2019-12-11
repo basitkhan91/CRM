@@ -447,7 +447,15 @@
   </div>
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'exclusions'">
-    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use work flow'">
+      <app-work-order-exclusions [workFlowObject]="workFlowObject" 
+      [isWorkOrder]="isWorkOrder"
+       [workOrderExclusionsList]="workOrderExclusionsList" 
+      (saveExclusionsListForWO)="saveWorkOrderExclusionsList($event)"
+      (updateExclusionsListForWO)="updateWorkOrderExclusionsList($event)"
+      (refreshData)="getExclusionListByWorkOrderId()"
+      [isQuote]="isQuote"
+    ></app-work-order-exclusions> 
+    <!-- <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use work flow'">
       <thead>
         <tr>
           <th>MC PN</th>
@@ -507,7 +515,7 @@
           <button class="btn btn-primary-cstm pull-right" (click)="createExclusionsQuote()">Save Details</button>
         </div>
       </tbody>
-    </table>
+    </table> -->
 
   </div>
 
