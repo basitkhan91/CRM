@@ -2760,7 +2760,15 @@ namespace DAL.Repositories
         {
             try
             {
-                _appContext.WorkOrderQuoteDetails.Add(quoteFreight);
+                if (quoteFreight.WorkOrderQuoteDetailsId > 0)
+                {
+                    _appContext.WorkOrderQuoteDetails.Update(quoteFreight);
+                }
+                else
+                {
+                    _appContext.WorkOrderQuoteDetails.Add(quoteFreight);
+                }
+
                 _appContext.SaveChanges();
                 return quoteFreight;
             }
@@ -2856,7 +2864,14 @@ namespace DAL.Repositories
         {
             try
             {
-                _appContext.WorkOrderQuoteDetails.Add(quoteCharges);
+                if (quoteCharges.WorkOrderQuoteDetailsId > 0)
+                {
+                    _appContext.WorkOrderQuoteDetails.Update(quoteCharges);
+                }
+                else
+                {
+                    _appContext.WorkOrderQuoteDetails.Add(quoteCharges);
+                }
                 _appContext.SaveChanges();
                 return quoteCharges;
             }
@@ -2958,7 +2973,14 @@ namespace DAL.Repositories
         {
             try
             {
-                _appContext.WorkOrderQuoteDetails.Add(quoteMaterials);
+                if (quoteMaterials.WorkOrderQuoteDetailsId > 0)
+                {
+                    _appContext.WorkOrderQuoteDetails.Update(quoteMaterials);
+                }
+                else
+                {
+                    _appContext.WorkOrderQuoteDetails.Add(quoteMaterials);
+                }
                 _appContext.SaveChanges();
                 return quoteMaterials;
             }
@@ -3056,7 +3078,14 @@ namespace DAL.Repositories
         {
             try
             {
-                _appContext.WorkOrderQuoteDetails.Add(quoteLabor);
+                if (quoteLabor.WorkOrderQuoteDetailsId > 0)
+                {
+                    _appContext.WorkOrderQuoteDetails.Update(quoteLabor);
+                }
+                else
+                {
+                    _appContext.WorkOrderQuoteDetails.Add(quoteLabor);
+                }
                 _appContext.SaveChanges();
                 return quoteLabor;
             }
