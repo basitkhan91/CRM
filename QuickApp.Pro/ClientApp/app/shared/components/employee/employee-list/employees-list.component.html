@@ -10,7 +10,7 @@
          <div class="inline-block display-flex">
              <h3 class="po-head lead">Employee List</h3>
              &nbsp;&nbsp;&nbsp;&nbsp;
-             <a matTooltip="Add Employee" (click)="navigateTogeneralInfo()" class="plusicon-cstm new-margin"><span><i class="fa fa-plus-circle fa-lg"></i></span></a>
+             <a matTooltip="Add Employee" matTooltipPosition="above" (click)="navigateTogeneralInfo()" class="plusicon-cstm new-margin"><span><i class="fa fa-plus-circle fa-lg"></i></span></a>
          </div>
 
          <p-table #dt class="ptable-custom" [value]="allVendorList" [rows]="10" [paginator]="true" (onLazyLoad)="loadCustomerPages($event)" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" [metaKeySelection]="true" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [scrollable]="true" [reorderableColumns]="true" scrollHeight="450px">
@@ -29,10 +29,9 @@
 
                      <!-- <button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button> -->
                     <!--  <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selected" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button> -->
-                     <button type="button" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left" label="Export All Data"
-                     (click)="dt.exportCSV()" pTooltip="Download All Data" tooltipPosition="top" style="padding: 5px 12px !important;"></button>
-                     <button type="button" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left" label="Export Selected"
-                     (click)="dt.exportCSV({selectionOnly:true})" pTooltip="Download Selected" tooltipPosition="top" style="padding: 5px 12px !important;"></button>
+                     <button type="button" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left"
+                     (click)="dt.exportCSV()" label="Export Data" matTooltip="Download Data" matTooltipPosition="above" style="padding: 5px 12px !important;"></button>
+                     <button type="button" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})"  style="padding: 5px 12px !important;"></button>
 
                      <!--<a matTooltip="Add Employee" (click)="navigateTogeneralInfo()" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>-->
 

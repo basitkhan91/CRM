@@ -25,7 +25,7 @@
   [dataKey]="workOrderPartListDataKeys"
 >
   <ng-template pTemplate="caption">
-    <div style="text-align: right;margin-left:-6px !important;">
+    <div style="text-align: right;margin-left:-6px !important;min-height: 30px;">
       <p-multiSelect
         [maxSelectedLabels]="2"
         [options]="headers"
@@ -51,27 +51,23 @@
       </div>
       <button
         type="button"
-        class="btn btn-primary-cstm "
-        pTooltip="Download Selected"
-        tooltipPosition="top"
+        class="btn btn-primary-cstm "        
         pButton
         icon="fa-download"
         iconPos="left"
-        label="Export All Data"
+        label="Export Data" matTooltip="Download Data" matTooltipPosition="above"
         (click)="dt.exportCSV()"
       ></button>
       <button
         type="button"
         class="btn btn-primary-cstm "
-        pTooltip="Download All Data"
-        tooltipPosition="top"
         pButton
         icon="fa-download"
         iconPos="left"
-        label="Export Selection Only"
+        label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above"
         (click)="dt.exportCSV({ selectionOnly: true })"
       ></button>
-      <div class="excel-upload  excel-upload-cstm">
+      <!-- <div class="excel-upload  excel-upload-cstm">
         <input
           type="file"
           name="upload[]"
@@ -94,7 +90,7 @@
           ]"
           ><span><i class="fa fa-plus"></i></span
         ></a>
-      </div>
+      </div> -->
     </div>
   </ng-template>
   <ng-template pTemplate="header" let-columns>

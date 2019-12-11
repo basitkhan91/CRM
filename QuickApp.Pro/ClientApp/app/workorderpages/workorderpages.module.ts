@@ -62,6 +62,7 @@ import { WorkOrderChargesComponent } from '../components/work-order/work-order-s
 import { WorkOrderExclusionsComponent } from '../components/work-order/work-order-setup/work-order-exclusions/work-order-exclusions.component';
 import { SubWorkOrderListComponent } from '../components/work-order/work-order-setup/work-order-subwo-list/work-order-subwo-list.component';
 import { SubWorkOrderComponent } from '../components/work-order/work-order-setup/work-order-sub-wo/work-order-subwo.component';
+import { MatTooltipModule } from '@angular/material';
 
 // import { MaterialListCreateComponent } from '../shared/Material-List-Create.component';
 // import { SharedModule } from '../shared/shared.module';
@@ -89,7 +90,8 @@ import { SubWorkOrderComponent } from '../components/work-order/work-order-setup
     TabViewModule,
     AccordionModule,
     AssetmanagementModule,
-    WorkFlowPagesModule
+    WorkFlowPagesModule,
+    MatTooltipModule
   ],
   declarations: [
     WorkOrderPagesComponent,
