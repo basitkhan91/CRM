@@ -91,20 +91,24 @@
                                 <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
-                               
+
                                 <!--<button class="btn-exposure" mat-icon-button matTooltip="stock Adjustment" (click)="openAdjustment(rowData)">
         <mat-icon>exposure</mat-icon>
     </button>-->
-                                <!--<button class="btn-add_circle" style="color:red" mat-icon-button matTooltip="Create PO" (click)="routeToPo()">
-        <mat-icon>add_circle</mat-icon>
-    </button>
-    <button class="btn-add_circle" style="color:forestgreen" mat-icon-button matTooltip="Create RO" (click)="routeToRo()">
-        <mat-icon>add_circle</mat-icon>
-    </button>-->
+                                <span data-toggle="modal" data-target="#contacts"> <a class="btn btn-primary boxed-float-btn nobg" data-toggle="tooltip" (click)="gotoCreatePO(rowData)" matTooltip="Create PO"><i class="fa fa-plus"></i></a> </span>
+
+                                <span data-toggle="modal" data-target="#contacts"> <a class="btn btn-primary boxed-float-btn nobg"  data-toggle="tooltip" (click)="gotoCreateRO(rowData)" matTooltip="Create RO"><i class="fa fa-plus" style="color:forestgreen"></i></a></span>
+
+                                <!--<button class="btn-add_circle" style="color:forestgreen" mat-icon-button matTooltip="Create RO" (click)="gotoCreateRO(rowData)">
+                                    <i class="fa fa-plus"></i>
+                                </button>-->
                             </td>
 
                         </tr>
                     </ng-template>
+
+
+
 
 
 
