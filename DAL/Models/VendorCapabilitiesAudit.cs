@@ -10,6 +10,7 @@ namespace DAL.Models
     {
         [Key]
         public long VendorCapabiliyAuditId { get; set; }
+        public long AuditVendorCapabilityId { get; set; }
         public long VendorCapabilityId { get; set; }
         public long CapabilityId { get; set; }
         public string CapabilityName { get; set; }
@@ -20,5 +21,8 @@ namespace DAL.Models
         public DateTime UpdatedDate { get; set; }
         public bool? IsActive { get; set; }
         public bool? IsDelete { get; set; }
+        public string Memo { get; set; }
+        public string capabilityDescription { get; set; }
+         public long VendorId { get; set; }
     }
 }
