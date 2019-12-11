@@ -588,7 +588,7 @@ namespace DAL.Repositories
         {
             foreach (var item in currencyList)
             {
-                var flag = _appContext.Currency.Any(p => p.IsDelete == false
+                var flag = _appContext.Currency.Any(p => p.IsDeleted == false
                                                     && (p.Code.ToLower() == item.Code.Trim().ToLower()
                                                     && p.Symbol.ToLower() == item.Symbol
                                                     && p.DisplayName.ToLower() == item.DisplayName.Trim().ToLower()));

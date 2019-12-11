@@ -88,7 +88,7 @@ namespace QuickApp.Pro.Controllers
                 curreobj.UpdatedDate = DateTime.Now;
                 curreobj.CreatedBy = currencyViewModel.CreatedBy;
                 curreobj.UpdatedBy = currencyViewModel.UpdatedBy;
-                curreobj.IsDelete = false;
+                curreobj.IsDeleted = false;
                 _unitOfWork.Currencys.Add(curreobj);
                 _unitOfWork.SaveChanges();
                 return Ok(curreobj);
@@ -131,7 +131,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult DeleteAction(long id)
         {
             var existingResult = _unitOfWork.Currencys.GetSingleOrDefault(c => c.CurrencyId == id);
-            existingResult.IsDelete = true;
+            existingResult.IsDeleted = true;
             _unitOfWork.Currencys.Update(existingResult);
 
             //_unitOfWork.Currencys.Remove(existingResult);

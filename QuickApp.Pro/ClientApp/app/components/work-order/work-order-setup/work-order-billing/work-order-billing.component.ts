@@ -1,8 +1,13 @@
-﻿import { Component, Input } from '@angular/core';
+﻿import { Component, Input, OnInit } from '@angular/core';
 import { fadeInOut } from '../../../../services/animations';
 import * as $ from 'jquery';
 import { CommonService } from '../../../../services/common.service';
 import { AddressModel } from '../../../../models/address.model';
+import { WorkOrderService } from '../../../../services/work-order/work-order.service';
+import { CustomerService } from '../../../../services/customer.service';
+import { getObjectById, editValueAssignByCondition } from '../../../../generic/autocomplete';
+import { Billing } from '../../../../models/work-order-billing.model';
+import { getModuleIdByName } from '../../../../generic/enums';
 
 @Component({
     selector: 'app-work-order-billing',
@@ -11,8 +16,11 @@ import { AddressModel } from '../../../../models/address.model';
     animations: [fadeInOut]
 })
 /** WorkOrderBilling component*/
-export class WorkOrderBillingComponent {
+export class WorkOrderBillingComponent implements OnInit {
     @Input() employeesOriginalData;
+    @Input() billingorInvoiceForm: Billing;
+    @Input() savedWorkOrderData;
+    @Input() currencyList;
     employeeList: any;
     customerNamesList: Object;
     soldCustomerSiteList = [];
@@ -26,26 +34,49 @@ export class WorkOrderBillingComponent {
         divisionId: null,
         departmentId: null,
     }
+    soldCustomerShippingOriginalData: any[];
+    shipCustomerShippingOriginalData: any[];
+    workOrderId: any;
+    shipViaList: Object;
+    customerId: any;
+    constructor(private commonService: CommonService, private workOrderService: WorkOrderService,
+        private customerService: CustomerService
 
+    ) {
 
-    //     this.addressId = addressId;
-    // this.line1 = line1;
-    // this.line2 = line2;
-    // this.country = country;
-    // this.postalCode = postalCode;
-    // this.recordModifiedDate = recordModifiedDate;
-    // this.stateOrProvince = stateOrProvince;
-    // this.city = city;
-    // this.masterCompanyId = masterCompanyId;
-    // this.createdBy = createdBy;
-    // this.createdDate = createdDate;
-    // this.updatedDate = updatedDate;
-    // this.updatedBy = updatedBy;
-    // this.masterCompany = masterCompany;
-    // this.isActive = isActive;
-    // this.memo = memo;
-    constructor(private commonService: CommonService) {
+    }
+    ngOnInit() {
+        this.workOrderId = this.savedWorkOrderData.workOrderId;
+        this.customerId = editValueAssignByCondition('customerId', this.savedWorkOrderData.customerId);
+        this.getCustomerDetailsFromHeader();
+        this.getShipViaByCustomerId();
+    }
 
+    getCustomerDetailsFromHeader() {
+        this.workOrderService.viewWorkOrderHeader(this.workOrderId).subscribe(res => {
+            const data = res;
+            this.billingorInvoiceForm = {
+                ...this.billingorInvoiceForm,
+                customerRef: data.customerReference,
+                employee: data.employee,
+                woOpenDate: new Date(data.openDate),
+                salesPerson: data.salesperson,
+                woType: data.workOrderType,
+                creditTerms: data.creditTerm
+
+            }
+        })
+    }
+
+    getShipViaByCustomerId() {
+        this.commonService.getShipViaDetailsByModule(getModuleIdByName('Customer'), this.customerId).subscribe(res => {
+            this.shipViaList = res.map(x => {
+                return {
+                    label: x.name,
+                    value: x.shippingId
+                }
+            });
+        })
     }
 
     filterEmployee(event): void {
@@ -67,75 +98,77 @@ export class WorkOrderBillingComponent {
             this.customerNamesList = res;
         })
     }
-    selectCustomer(event) {
+    selectSoldToCustomer(object) {
+        const { customerId } = object;
+        this.customerService.getCustomerShipAddressGet(customerId).subscribe(res => {
+            this.soldCustomerShippingOriginalData = res[0];
+            this.soldCustomerSiteList = res[0].map(x => {
+                return {
+                    label: x.siteName,
+                    value: x.customerShippingAddressId
 
+                }
+            });
+        })
     }
 
-    billingorInvoiceForm = {
-        billingInvoicingId: 0,
-        // "WorkOrderId":10074,
-        // "WorkOrderWorkFlowId":10064,
-        // "WorkOrderPartNoId":10068,
-        // "ItemMasterId":10633,
-        woOpenDate: null,
+    changeOfSoldSiteName(value) {
+        console.log(value);
 
-        customerRef: '',
-        workScope: '',
-        invoiceTypeId: 1,
-        invoiceNo: '',
-        customerId: null,
-        invoiceDate: null,
-        invoiceTime: null,
-        printDate: null,
-        shipDate: null,
-        noofPieces: null,
-        employee: 1,
-        revType: 1,
-        gateStatus: 60,
-        soldToCustomerId: 1,
-        soldToSiteId: 1,
-        shipToCustomerId: 2,
-        shipToSiteId: 3,
-        shipToAttention: '',
-        managementStructureId: 1,
-        managementEmpId: 10,
-        notes: '',
-        costPlusType: '',
-        totalWorkOrder: false,
-        totalWorkOrderValue: 0,
-        material: true,
-        materialValue: 10,
-        laborOverHead: true,
-        laborOverHeadValue: 12,
-        miscCharges: false,
-        miscChargesValue: 0,
-        proForma: false,
-        partialInvoice: false,
-        costPlusRateCombo: false,
-        shipViaId: 10,
-        wayBillRef: '',
-        tracking: '',
-        currenyId: null,
-        salesPerson: '',
-        availableCredit: null,
-        creditTerms: null,
-        woType: null,
-        salePerson: '',
-        currencyId: null,
+        const data = getObjectById('customerShippingAddressId', value, this.soldCustomerShippingOriginalData);
 
-
-
-
-
-
-        // "masterCompanyId":1,
-        // "CreatedBy":"admin",
-        // "UpdatedBy":"admin",
-        // "CreatedDate":"2019-10-31T09:06:59.68",
-        // "UpdatedDate":"2019-10-31T09:06:59.68",
-        // "IsActive":true,
-        // "IsDeleted":false
+        if (data) {
+            this.soldCustomerAddress.line1 = data.address1;
+            this.soldCustomerAddress.line2 = data.address2;
+            this.soldCustomerAddress.country = data.country;
+            this.soldCustomerAddress.postalCode = data.postalCode;
+            this.soldCustomerAddress.stateOrProvince = data.stateOrProvince;
+            this.soldCustomerAddress.city = data.city;
+        } else {
+            this.soldCustomerAddress = new AddressModel();
+        }
     }
+
+    selectShipToCustomer(object) {
+        const { customerId } = object;
+        this.customerService.getCustomerShipAddressGet(customerId).subscribe(res => {
+            this.shipCustomerShippingOriginalData = res[0];
+            this.shipCustomerSiteList = res[0].map(x => {
+                return {
+                    label: x.siteName,
+                    value: x.customerShippingAddressId
+
+                }
+            });
+        })
+    }
+
+    changeOfShipSiteName(value) {
+        console.log(value);
+
+        const data = getObjectById('customerShippingAddressId', value, this.shipCustomerShippingOriginalData);
+
+        if (data) {
+            this.shipCustomerAddress.line1 = data.address1;
+            this.shipCustomerAddress.line2 = data.address2;
+            this.shipCustomerAddress.country = data.country;
+            this.shipCustomerAddress.postalCode = data.postalCode;
+            this.shipCustomerAddress.stateOrProvince = data.stateOrProvince;
+            this.shipCustomerAddress.city = data.city;
+        } else {
+            this.shipCustomerAddress = new AddressModel();
+        }
+    }
+
+    clearAddress(type, value) {
+        if (value === '' && type === 'SoldTo') {
+            this.soldCustomerAddress = new AddressModel();
+        } else if (value === '' && type === 'shipTo') {
+            this.shipCustomerAddress = new AddressModel();
+        }
+    }
+
+
 
 
 }
