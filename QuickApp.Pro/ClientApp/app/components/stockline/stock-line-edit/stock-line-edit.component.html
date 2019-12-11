@@ -352,14 +352,21 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">ECCN</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.eccn">
+                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.ExportECCN">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">ITAR NUM</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.itarNum">
+                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.ITARNumber">
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-12">
+                    <label class="control-label col-sm-4">NHA</label>
+                    <div class="col-sm-7">
+                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.NHA">
                     </div>
                 </div>
 
@@ -371,9 +378,9 @@
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">MSN</label>
+                    <label class="control-label col-sm-4">NSN</label>
                     <div class="col-sm-7">
-                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.msn">
+                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.nationalStockNumber">
                     </div>
                 </div>
 
@@ -452,28 +459,28 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">DAYS SINCE RECIEVED</label>
                     <div class="col-sm-7">
-                        <input [disabled]="true" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.daysSinceRecieved">
+                        <input [disabled]="true" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.daysReceived">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">DAYS SINCE MFG</label>
                     <div class="col-sm-7">
-                        <input [disabled]="true" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.daysSinceMfg">
+                        <input [disabled]="true" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.manufacturingDays">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">DAYS SINCE TAGGED</label>
                     <div class="col-sm-7">
-                        <input [disabled]="true" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.daysSinceTagged">
+                        <input [disabled]="true" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.tagDays">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">DAYS SINCE OPEN</label>
                     <div class="col-sm-7">
-                        <input [disabled]="true" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.daysSinceOpen">
+                        <input [disabled]="true" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.openDays">
                     </div>
                 </div>
 

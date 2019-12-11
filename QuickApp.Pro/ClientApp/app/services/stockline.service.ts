@@ -152,6 +152,10 @@ export class StocklineService {
 		return this.stocklineEndpoint.saveStocklineIntegrationPortalDataEndpoint<any>(sourceIntegrationPortalData);
 	}
 
+	updateItemMasterEndpoint(sourceStockLine: any) {
+		return this.stocklineEndpoint.updateItemMasterEndpoint<any>(sourceStockLine);
+	}
+	
 	//For updating the stocklineadjustment values of Part-C
 	updateStockLineTimeAdjustment(sourceStockLine: any) {
 		return this.stocklineEndpoint.getUpdatestockLineTimeAdjustmentEndpoint<any>(sourceStockLine, sourceStockLine);

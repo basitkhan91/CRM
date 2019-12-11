@@ -122,9 +122,10 @@ namespace QuickApp.Pro.ViewModels
         public bool? IsListed { get; set; }
         public long? StocklineIntegrationPortalId { get; set; }
         public string AircraftTailNumber { get; set; }
-        public string eccn { get; set; }
-        public string itarNum { get; set; }
-        public string nha { get; set; }
+        public string ExportECCN { get; set; }
+        public string ITARNumber { get; set; }
+        public string NHA { get; set; }
         public string tla { get; set; }
+        public string NationalStockNumber { get; set; }
     }
 }

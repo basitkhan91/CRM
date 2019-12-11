@@ -44,6 +44,8 @@ export class StocklineEndpoint extends EndpointFactory {
 
 	private readonly _stockLineItemMasterPart: string = "/api/StockLine/itemMasterPartUpdate"; // Which will be specified in the Controller
 
+	private readonly _actionsStocklineItemMasterUpdate: string = "/api/StockLine/updateItemMasterStockline";
+
 	private readonly _stockLineTimeLifeUpdate: string = "/api/StockLine/timeLifeUpdate"; // Which will be specified in the Controller
 
 	private readonly _stockLineAdjustmentBinBeforeChange: string = "/api/StockLine/GetBinByShelfIdAdjustmentBeforeChange"; // for Stockline Adjustemnet Show Data before Select Site
@@ -281,6 +283,14 @@ export class StocklineEndpoint extends EndpointFactory {
 		return this.http.post<T>(this._actionsStocklineIntegrationUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.saveStocklineIntegrationPortalDataEndpoint(userObject));
+			});
+	}
+	
+
+	updateItemMasterEndpoint<T>(stocklineObject: any): Observable<T> {
+		return this.http.post<T>(this._actionsStocklineItemMasterUpdate, JSON.stringify(stocklineObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.updateItemMasterEndpoint(stocklineObject));
 			});
 	}
 
