@@ -16,7 +16,8 @@ import {
 } from '../../../../services/alert.service';
 import {
   WorkOrderLabor,
-  AllTasks
+  AllTasks,
+  WorkOrderQuoteLabor
 } from '../../../../models/work-order-labor.modal';
 
 
@@ -65,6 +66,7 @@ export class WorkOrderQuoteComponent implements OnInit {
   labor = new WorkOrderLabor();
   taskList: any;
   savedWorkOrderData: any;
+  laborPayload = new WorkOrderQuoteLabor();
 
 
 
@@ -88,9 +90,11 @@ export class WorkOrderQuoteComponent implements OnInit {
     .subscribe(
       res=>{
         this.quoteForm.quoteNumber = res['quoteNumber'];
+        this.laborPayload.WorkOrderQuoteId = res['workOrderQuoteId'];
+        this.laborPayload.StatusId = res['quoteStatusId']
         this.alertService.showMessage(
           this.moduleName,
-          'Quotation created  Succesfully',
+          'Labor quotation created  Succesfully',
           MessageSeverity.success
         );
       }
@@ -206,6 +210,17 @@ export class WorkOrderQuoteComponent implements OnInit {
   partNumberSelected(){
     this.gridActiveTab = '';
     this.clearQuoteData();
+    this.savedWorkOrderData.partNumbers.forEach((pns)=>{
+      if(this.selectedPartNumber == pns['description']){
+        this.laborPayload.IsDER = pns['isDER'];
+        this.laborPayload.IsPMA = pns['isPMA'];
+        this.laborPayload.ItemMasterId = pns['masterPartId'];
+        this.laborPayload.CMMId = pns['cmmId'];
+        this.laborPayload.SelectedId = pns['id'];
+        this.laborPayload.EstCompDate = pns['estimatedCompletionDate'];
+        this.laborPayload.StatusId = pns['workOrderStatusId'];
+      }
+    })
     // for(let pn of this.mpnPartNumbersList){
     //   if(pn['label'] == this.selectedPartNumber){
     //     this._workflowService.getWorkFlowDataById(pn['value']['workflowId']).subscribe(data => {
@@ -335,11 +350,15 @@ export class WorkOrderQuoteComponent implements OnInit {
     )
   }
 
-  createLaborQuote(data){
-    this.workOrderService.saveLaborListQuote(data)
+  createLaborQuote(){
+    this.workOrderService.saveLaborListQuote(this.laborPayload)
     .subscribe(
       res => {
-        console.log(res);
+        this.alertService.showMessage(
+          this.moduleName,
+          'Quotation created  Succesfully',
+          MessageSeverity.success
+        );
       }
     )
   }
@@ -384,6 +403,43 @@ export class WorkOrderQuoteComponent implements OnInit {
 
 saveworkOrderLabor(data) {
   console.log(data);
-  this.createLaborQuote(data);
+  this.laborPayload.WorkOrderQuoteLaborHeader.WorkOrderQuoteLaborHeaderId = data.workOrderLaborHeaderId;
+  this.laborPayload.WorkOrderQuoteLaborHeader.WorkOrderQuoteDetailsId = 0;
+  this.laborPayload.WorkOrderQuoteLaborHeader.DataEnteredBy = data.dataEnteredBy;
+  this.laborPayload.WorkOrderQuoteLaborHeader.HoursorClockorScan = data.hoursorClockorScan;
+  this.laborPayload.WorkOrderQuoteLaborHeader.IsTaskCompletedByOne = data.isTaskCompletedByOne;
+  this.laborPayload.WorkOrderQuoteLaborHeader.WorkOrderHoursType = 1;
+  this.laborPayload.WorkOrderQuoteLaborHeader.LabourMemo = "";
+  this.laborPayload.WorkOrderQuoteLaborHeader.EmployeeId = data.employeeId;
+  this.laborPayload.WorkOrderQuoteLaborHeader.ExpertiseId = data.expertiseId;
+  this.laborPayload.WorkOrderQuoteLaborHeader.TotalWorkHours = data.totalWorkHours
+  this.laborPayload.WorkOrderQuoteLaborHeader.masterCompanyId = data.masterCompanyId; 
+  this.laborPayload.WorkOrderQuoteLaborHeader.CreatedBy = "admin"
+  this.laborPayload.WorkOrderQuoteLaborHeader.UpdatedBy = "admin" 
+  this.laborPayload.WorkOrderQuoteLaborHeader.IsActive = true 
+  this.laborPayload.WorkOrderQuoteLaborHeader.IsDeleted = false;
+  var laborList = [];
+  for (let labor in data.workOrderLaborList){
+    laborList = [...laborList, ...data.workOrderLaborList[labor]];
+  }
+  this.laborPayload.WorkOrderQuoteLaborHeader.WorkOrderQuoteLabor = laborList.map((labor)=>{
+    return {
+        "WorkOrderQuoteLaborId":0,
+		 		"WorkOrderQuoteLaborHeaderId":0,
+		 		"ExpertiseId":labor.expertiseId,
+		 		"EmployeeId":labor.employeeId,
+		 		"BillableId":labor.billableId,
+		 		"Hours":labor.hours,
+		 		"Adjustments":labor.adjustments,
+		 		"AdjustedHours":labor.adjustedHours,
+		 		"Memo":labor.memo,
+		 		"TaskId":labor.taskId,
+		 		"CreatedBy":"admin",
+        "UpdatedBy":"admin",
+        "IsActive":true,
+        "IsDeleted":false
+    }
+  }) 
+  this.createLaborQuote();
 }
 }
