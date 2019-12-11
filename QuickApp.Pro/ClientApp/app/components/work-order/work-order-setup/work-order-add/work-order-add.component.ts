@@ -66,6 +66,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     @Input() subWorkOrderDetails;
     @Input() showTabsGrid = false;
     @Input() workOrderId;
+    @Input() currencyList;
     // @Output() viewWorkFlow = new EventEmitter();
 
     // workOrderTypes: WorkOrderType[];

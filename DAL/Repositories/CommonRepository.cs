@@ -901,7 +901,7 @@ namespace DAL.Repositories
 
                 var defaultCurrency = (from le in _appContext.LegalEntity
                                        join c in _appContext.Currency on le.FunctionalCurrencyId equals c.CurrencyId
-                                       where le.LegalEntityId == legalEntityId && c.IsActive == true && (c.IsDelete == false || c.IsDelete == null)
+                                       where le.LegalEntityId == legalEntityId && c.IsActive == true && (c.IsDeleted == false || c.IsDeleted == null)
                                        select new
                                        {
                                            currencyId = le.FunctionalCurrencyId,

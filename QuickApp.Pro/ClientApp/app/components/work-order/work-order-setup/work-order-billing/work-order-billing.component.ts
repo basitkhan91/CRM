@@ -5,8 +5,9 @@ import { CommonService } from '../../../../services/common.service';
 import { AddressModel } from '../../../../models/address.model';
 import { WorkOrderService } from '../../../../services/work-order/work-order.service';
 import { CustomerService } from '../../../../services/customer.service';
-import { getObjectById } from '../../../../generic/autocomplete';
+import { getObjectById, editValueAssignByCondition } from '../../../../generic/autocomplete';
 import { Billing } from '../../../../models/work-order-billing.model';
+import { getModuleIdByName } from '../../../../generic/enums';
 
 @Component({
     selector: 'app-work-order-billing',
@@ -19,6 +20,7 @@ export class WorkOrderBillingComponent implements OnInit {
     @Input() employeesOriginalData;
     @Input() billingorInvoiceForm: Billing;
     @Input() savedWorkOrderData;
+    @Input() currencyList;
     employeeList: any;
     customerNamesList: Object;
     soldCustomerSiteList = [];
@@ -34,6 +36,8 @@ export class WorkOrderBillingComponent implements OnInit {
     soldCustomerShippingOriginalData: any[];
     shipCustomerShippingOriginalData: any[];
     workOrderId: any;
+    shipViaList: Object;
+    customerId: any;
     constructor(private commonService: CommonService, private workOrderService: WorkOrderService,
         private customerService: CustomerService
 
@@ -42,7 +46,9 @@ export class WorkOrderBillingComponent implements OnInit {
     }
     ngOnInit() {
         this.workOrderId = this.savedWorkOrderData.workOrderId;
+        this.customerId = editValueAssignByCondition('customerId', this.savedWorkOrderData.customerId);
         this.getCustomerDetailsFromHeader();
+        this.getShipViaByCustomerId();
     }
 
     getCustomerDetailsFromHeader() {
@@ -52,12 +58,23 @@ export class WorkOrderBillingComponent implements OnInit {
                 ...this.billingorInvoiceForm,
                 customerRef: data.customerReference,
                 employee: data.employee,
-                woOpenDate: data.openDate,
+                woOpenDate: new Date(data.openDate),
                 salesPerson: data.salesperson,
                 woType: data.workOrderType,
                 creditTerms: data.creditTerm
 
             }
+        })
+    }
+
+    getShipViaByCustomerId() {
+        this.commonService.getShipViaDetailsByModule(getModuleIdByName('Customer'), this.customerId).subscribe(res => {
+            this.shipViaList = res.map(x => {
+                return {
+                    label: x.name,
+                    value: x.shippingId
+                }
+            });
         })
     }
 
