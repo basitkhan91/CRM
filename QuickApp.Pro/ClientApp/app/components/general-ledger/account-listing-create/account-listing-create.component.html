@@ -18,7 +18,7 @@
                         <div class="inner-addon right-addon inline-block">
                            <p-autoComplete  class="autocomp-customer-cstm" 
                             name="name"                            
-                             [(ngModel)]="glAccountObj.ledgename" [suggestions]="ledgerNameObject" formControlName="ledgerName" 
+                             [(ngModel)]="glAccountObj.ledgername" [suggestions]="ledgerNameObject" formControlName="ledgerName" 
                              field="name" emptyMessage="No results"
                              (completeMethod)="loadLedgerNames($event)" [size]="30"
                                             [minLength]="1" [dropdown]="true" required>
@@ -79,23 +79,14 @@
                     </div>
                     <div class="form-group col-sm-12">
                         <label class="">Account Type <span class="clr-red">*</span></label>
-
-
-                        <div class="inner-addon right-addon inline-block">
-                         <p-autoComplete  class="autocomp-customer-cstm" 
-                          name="name"
-                          (onKeyUp)="checkAccountTypeExists('name',$event.target.value)"
-                          (onSelect)="selectedAccountType()" 
-                           [(ngModel)]="glAccountObj.accountTypeId" [suggestions]="accountTypeObject" formControlName="accountType" 
-                           field="name" emptyMessage="No results"
-                           (completeMethod)="loadAccountType($event)" [size]="30"
-                                          [minLength]="1" [dropdown]="true" required>
-                              
-                          </p-autoComplete>
-                          <div *ngIf="isAccountNameExists" class="clr-red">Entry Already Exists</div>
+                        <div class="">
+                          <select formControlName="glAccountTypeId" [(ngModel)]="glAccountObj.accountTypeId">
+                           <option *ngFor="let accountType of accountTypeObject" [ngValue]="accountType.id">  {{accountType.name}}</option>
+                          </select> 
                         </div>
-                         <div *ngIf="submittedForm && formdata.accountType.errors" class="col-sm-12 invalid-feedback">
-                                <div *ngIf="formdata.accountType.errors">Account Type is required</div>
+
+                         <div *ngIf="submittedForm && formdata.glAccountTypeId.errors" class="col-sm-12 invalid-feedback">
+                                <div *ngIf="formdata.glAccountTypeId.errors">Account Type is required</div>
                          </div>                       
                     </div>
 
@@ -105,14 +96,19 @@
                     </div>
                       <div class="form-group col-sm-12">
                       <label class="">Active <span class="clr-red">*</span></label>
-                       <input formControlName="active" type="checkbox">
+                       <input formControlName="activeFlag" type="checkbox">
                     </div> 
                     
-                      <div class="form-group col-sm-12">
+                    <div class="form-group col-sm-12">
                       <label class="">Leaf Node Name</label>
-                         <div class="">                       
-                        <p-dropdown [options]="leafNodeNameObj" formControlName="leafNodeName" [filter]="true" styleClass="accountdropdown"></p-dropdown>                       
+                      <div class="">       
+                      
+                        <select formControlName="leafNodeName" [(ngModel)]="glAccountObj.leafNodeName">
+                          <option *ngFor="let leafNodeName of leafNodeNameObj" [ngValue]="leafNodeName.glAccountNodeId">  {{leafNodeName.nodeName}}</option>
+                        </select> 
                       </div>
+
+
                     </div>  
                       <div class="form-group col-sm-12">
                       <label for="interCompany" class="">InterCompany</label>
@@ -128,6 +124,9 @@
                                   
                                 </ng-container>                               
                           </div>
+                          <div *ngIf="submittedForm && balanceTypeCheckBoxReq" class="col-sm-12 invalid-feedback">
+                                <div *ngIf="balanceTypeCheckBoxReq">Atleast One Balance Type Should be checked</div>
+                         </div> 
                       </div> 
 
                       <div class="form-group col-sm-12">
@@ -161,27 +160,25 @@
                                            
                       
                       <div class="form-group col-sm-12">
-                          <label class="">Cash Flows Classification</label>
+                          <label class="">Cash Flows Classification <span class="clr-red">*</span></label>
                           <div class="">
-                             <select formControlName="classification" [(ngModel)]="glAccountObj.classificationId">
-                                  <option value="">--Select--</option>
+                             <select formControlName="classification" [(ngModel)]="glAccountObj.classificationId">                                 
                                   <option *ngFor="let classType of allGLCashFlowClassInfo" [ngValue]="classType.glClassFlowClassificationId">  {{classType.glClassFlowClassificationName}}</option>
                               </select>                              
-
+                              <div *ngIf="submittedForm && formdata.classification.errors" class="col-sm-12 invalid-feedback">
+                                <div *ngIf="formdata.classification.errors">Cash Flows Classification is required</div>
+                          </div>
                           </div>                      
                       </div>                         
                       
                       <div class="form-group col-sm-12">
-                      <label class="">PO Category <span class="clr-red">*</span></label>
+                      <label class="">PO Category</label>
                        <div class="">
-
-                        <select formControlName="poroCategory" [(ngModel)]="glAccountObj.poroCategoryId">
-                              <option value="">--Select--</option>
-                              <option *ngFor="let poCategory of poroCategoryList" [ngValue]="poCategory.poroCategoryId">  {{poCategory.categoryName}}</option>
+                        <select formControlName="poroCategory" [(ngModel)]="glAccountObj.poroCategoryId" >   <option *ngFor="let poCategory of poroCategoryList" [ngValue]="poCategory.poroCategoryId">  {{poCategory.categoryName}}</option>
                           </select>
-                          <div *ngIf="submittedForm && formdata.poroCategory.errors" class="col-sm-12 invalid-feedback">
-                                <div *ngIf="formdata.poroCategory.errors">PO Category is required</div>
-                              </div>
+                          <div *ngIf="submittedForm && poroCategoryReq" class="col-sm-12 invalid-feedback">
+                                <div *ngIf="poroCategoryReq">PO Category is required</div>
+                          </div>
                       </div>
                     </div>
                     <div class="form-group col-sm-12">
