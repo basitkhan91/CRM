@@ -24,5 +24,8 @@ namespace DAL.Models
         public string Memo { get; set; }
         public string capabilityDescription { get; set; }
          public long VendorId { get; set; }
+
+
+
     }
 }

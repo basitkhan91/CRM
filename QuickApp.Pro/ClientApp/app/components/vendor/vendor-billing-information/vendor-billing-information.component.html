@@ -98,20 +98,26 @@
                             <div class="" id="menu4">
                                 <div class="form-group row">
                                     <!--<div class="form-group vendor-details-heading marginr50">
-                                        <p class="fs10">
-                                            <label class="control-label text-left">Vendor Name:</label>
-                                            {{local?.vendorName}}
-                                        </p>
-                                    </div>
-                                    <div class="form-group vendor-details-heading">
-                                        <p class="fs10">
-                                            <label class="control-label text-left">Vendor Code:</label>
-                                            {{local?.vendorCode}}
-                                        </p>
-                                    </div>-->
+            <p class="fs10">
+                <label class="control-label text-left">Vendor Name:</label>
+                {{local?.vendorName}}
+            </p>
+        </div>
+        <div class="form-group vendor-details-heading">
+            <p class="fs10">
+                <label class="control-label text-left">Vendor Code:</label>
+                {{local?.vendorCode}}
+            </p>
+        </div>-->
                                 </div>
                                 <h5 class="heading">{{viewName}} Billing Info</h5>
                                 <div class="col-sm-6 w400 page-2blocks">
+                                    <div class="form-group col-sm-12">
+                                       
+                                            <input type="checkbox" name="isDefaultContact" [(ngModel)]="sourceVendor.isPrimary">
+                                            <label class="control-label col-sm-4">Primary </label>
+                                        
+                                    </div>
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Bill To <strong class="clr-red">*</strong> </label>
                                         <div class="col-sm-7">
@@ -169,14 +175,14 @@
                                             </div>
                                             <div *ngIf="disablesave" style="color:red">Please Select From DropDown</div>
                                         </div>
-                                    </div>
 
+                                    </div>
                                     <!-- <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">&nbsp;</label>
-                                        <div class="checkbox col-sm-7">
-                                            <button type="button" class="btn btn-warning" id="vbill-map-check" (click)="getlatlng(sourceVendor.address1+sourceVendor.address2)">Check Address</button>
-                                        </div>
-                                    </div> -->
+        <label class="control-label col-sm-4">&nbsp;</label>
+        <div class="checkbox col-sm-7">
+            <button type="button" class="btn btn-warning" id="vbill-map-check" (click)="getlatlng(sourceVendor.address1+sourceVendor.address2)">Check Address</button>
+        </div>
+    </div> -->
                                 </div>
                                 <div class="col-sm-6 vBill-map map page-2blocks" id="map" *ngIf="checkAddress">
                                     <p-gmap #gmap [style]="{'height':'320px'}" [options]="options" [overlays]="overlays"></p-gmap>
@@ -188,8 +194,11 @@
                                     </div>
                                 </div>
                                 <div class="clear"></div>
-                                <button type="button" [validate] moduleName="app-vendor-Billing-information" requirePermission="canAdd" [disabled]="disablesave" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()">Save</button>
-                                <button type="button" [validate] moduleName="app-vendor-Billing-information" requirePermission="canUpdate" [disabled]="disablesave" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()">Update</button>
+                                <!--<button type="button" [validate] moduleName="app-vendor-Billing-information" requirePermission="canAdd" [disabled]="disablesave" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()">Save</button>-->
+                                <button type="button"    moduleName="app-vendor-Billing-information"  *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()">Save</button>
+
+
+                                <button type="button"  moduleName="app-vendor-Billing-information" requirePermission="canUpdate" [disabled]="disablesave" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()">Update</button>
 
                                 <div class="clear"></div>
                                 <hr />

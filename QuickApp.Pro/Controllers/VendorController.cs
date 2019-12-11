@@ -1327,7 +1327,7 @@ namespace QuickApp.Pro.Controllers
                         actionobject.VendorId, actionobject.CreatedBy);
                 }
 
-                
+
 
 
                 //if (Request.Form.Files.Count > 0)
@@ -1455,7 +1455,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     var classificationList = _context.ClassificationMapping.Where(a => a.ReferenceId == id && a.ModuleId == Convert.ToInt32(ModuleEnum.Vendor)).ToList();
 
-                    if(classificationList.Count>0)
+                    if (classificationList.Count > 0)
                     {
                         foreach (var objData in classificationList)
                         {
@@ -1494,7 +1494,7 @@ namespace QuickApp.Pro.Controllers
                 }
 
 
-               
+
 
                 //if (Request.Form.Files.Count > 0)
                 //{
@@ -3378,7 +3378,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getVendorProcess1099List")]
         public IActionResult GetVendorProcess(int companyId)
         {
-           var result= _unitOfWork.Vendor.GetVendorProcessList(companyId);
+            var result = _unitOfWork.Vendor.GetVendorProcessList(companyId);
             return Ok(result);
         }
 
@@ -3498,20 +3498,115 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("createvendorbillingaddress")]
         public IActionResult CreateVendorBillingAddress([FromBody] VendorBillingAddress billingAddress)
         {
+
             if (ModelState.IsValid)
             {
-                billingAddress.VendorBillingAddressId = _unitOfWork.Vendor.CreateVendorBillingAddress(billingAddress);
+                if (billingAddress == null)
+                    return BadRequest($"{nameof(billingAddress)} cannot be null");
+                Address address = new Address();
+                address.Line1 = billingAddress.Address1;
+                address.Line2 = billingAddress.Address2;
+                address.Line3 = billingAddress.Address3;
+                address.PostalCode = billingAddress.PostalCode;
+                address.StateOrProvince = billingAddress.StateOrProvince;
+                address.City = billingAddress.City;
+                address.Country = billingAddress.Country;
+                address.MasterCompanyId = 1;
+                address.IsActive = true;
+                address.CreatedBy = billingAddress.CreatedBy ?? "Admin"; //Hotfix
+                address.UpdatedBy = billingAddress.UpdatedBy ?? "Admin";//Hotfix
+
+                address.UpdatedDate = DateTime.Now;
+                if (billingAddress.AddressId > 0)
+                {
+                    address.CreatedDate = billingAddress.CreatedDate;
+                    address.AddressId = billingAddress.AddressId;
+                    _context.Address.Update(address);
+
+                }
+                else
+                {
+                    address.CreatedDate = DateTime.Now;
+                    _context.Address.Add(address);
+                }
+                _context.SaveChanges();
+                _unitOfWork.Vendor.CreateVendorBillingAddress(billingAddress);
                 return Ok(billingAddress);
             }
-            return BadRequest(ModelState);
+            else
+            {
+                return BadRequest(ModelState);
+            }
+
         }
 
-        [HttpPost("updatevendorbillingaddress")]
-        public IActionResult UpdateVendorBillingAddress([FromBody] VendorBillingAddress billingAddress)
+        //[HttpPost("updatevendorbillingaddress")]
+        //public IActionResult UpdateVendorBillingAddress([FromBody] VendorBillingAddress billingAddress)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _unitOfWork.Vendor.UpdateVendorBillingAddress(billingAddress);
+        //        return Ok(billingAddress);
+        //    }
+        //    return BadRequest(ModelState);
+        //}
+        [HttpGet("vendorBillingAddressGet/{id}")]
+        [Produces(typeof(List<VendorBillingAddress>))]
+        public IActionResult VendorBillingAddressGet(long id, VendorBillingAddress vendorBillingAddress)
+        {
+            var allVendBillinghdetails = _unitOfWork.Vendor.GetAllBillingAddressDetails(id);
+            return Ok(allVendBillinghdetails);
+
+        }
+
+
+
+
+        [HttpPut("updatevendorbillingaddress/{id}")]
+        public IActionResult UpdateVendorBillingAddress(long id, [FromBody] VendorBillingAddress billingAddress)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.Vendor.UpdateVendorBillingAddress(billingAddress);
+                VendorBillingAddress billingAddressData = _context.VendorBillingAddress.Where(c => c.VendorBillingAddressId == id).FirstOrDefault();
+
+                Address address = new Address();
+                address.Line1 = billingAddress.Address1;
+                address.Line2 = billingAddress.Address2;
+                address.Line3 = billingAddress.Address3;
+                address.PostalCode = billingAddress.PostalCode;
+                address.StateOrProvince = billingAddress.StateOrProvince;
+                address.City = billingAddress.City;
+                address.Country = billingAddress.Country;
+                address.MasterCompanyId = 1;
+                address.IsActive = true;
+                address.CreatedBy = billingAddress.CreatedBy ?? "Admin"; //Hotfix
+                address.UpdatedBy = billingAddress.UpdatedBy ?? "Admin";//Hotfix
+
+                address.UpdatedDate = DateTime.Now;
+                if (billingAddress.AddressId > 0)
+                {
+                    address.CreatedDate = billingAddress.CreatedDate;
+                    address.AddressId = billingAddress.AddressId;
+                    _context.Address.Update(address);
+
+                }
+                else
+                {
+                    address.CreatedDate = DateTime.Now;
+                    _context.Address.Add(address);
+                }
+                _context.SaveChanges();
+                                            
+                billingAddressData.AddressId = billingAddress.AddressId;
+                billingAddressData.VendorId = billingAddress.VendorId;
+                billingAddressData.SiteName = billingAddress.SiteName;
+                billingAddressData.IsPrimary = billingAddress.IsPrimary;
+                billingAddressData.UpdatedBy = billingAddress.UpdatedBy;
+                billingAddressData.UpdatedDate = billingAddress.UpdatedDate;
+                billingAddressData.IsActive = billingAddress.IsActive;
+                billingAddressData.IsDeleted = billingAddress.IsDeleted;
+
+                _unitOfWork.Vendor.UpdateVendorBillingAddress(billingAddressData);
                 return Ok(billingAddress);
             }
             return BadRequest(ModelState);
@@ -3710,7 +3805,7 @@ namespace QuickApp.Pro.Controllers
             var allvendorsDoc = _unitOfWork.Vendor.GetVendorDocumentDetailById(id);
             return Ok(allvendorsDoc);
 
-        }               
+        }
 
         [HttpDelete("vendorDocumentDelete/{id}")]
         [Produces(typeof(VendorDocumentDetails))]
@@ -3836,7 +3931,6 @@ namespace QuickApp.Pro.Controllers
             var allVendorBillingDetails = _unitOfWork.Vendor.GetVendorCapabilityAudit(VendorCapabilityId, VendorId);
             return Ok(allVendorBillingDetails);
         }
-
 
         #endregion Private Methods
 

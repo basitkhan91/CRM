@@ -461,6 +461,8 @@ export class VendorService {
     updateBillinginfo(vendorbilling: any) {
         return this.actionEndpoint.updateShippinginfo(vendorbilling, vendorbilling.vendorBillingAddressId);
     }
+
+
     updateshippingViainfo(vendorshipping: any) {
         return this.actionEndpoint.updateShippingViainfo(vendorshipping, vendorshipping.vendorShippingId);
     }
@@ -751,7 +753,15 @@ export class VendorService {
     getVendorCapabilityAuditHistory(VendorCapabilityId, VendorId) {
         return this.actionEndpoint.getVendorCapabilityAuditHistory(VendorCapabilityId, VendorId);
     }
-      
+    createNewBillinginfo(action: any) {
+
+        return this.actionEndpoint.createNewBillinginfo<any>(action);
+    }
+
+      updateBillAddressdetails(action: any) {
+
+          return this.actionEndpoint.updateBillAddressDetails(action, action.vendorBillingAddressId);
+    }
 }
 
 

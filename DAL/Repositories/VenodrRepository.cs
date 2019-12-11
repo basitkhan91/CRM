@@ -983,6 +983,32 @@ namespace DAL.Repositories
                 throw;
             }
         }
+        public IEnumerable<object> GetAllBillingAddressDetails(long id)
+        {
+            var data = (from v in _appContext.VendorBillingAddress
+                        join ad in _appContext.Address on v.AddressId equals ad.AddressId
+                        where (v.IsDeleted == false && (v.VendorId == id))
+                        select new
+                        {
+                            Address1 = ad.Line1,
+                            Address2 = ad.Line2,
+                            Address3 = ad.Line3,
+                            ad.AddressId,
+                            ad.Country,
+                            ad.PostalCode,
+                            ad.City,
+                            ad.StateOrProvince,
+                            v.SiteName,
+                            v.VendorBillingAddressId,
+                            v.CreatedDate,
+                            v.UpdatedDate,
+                            v.VendorId,
+                            v.IsActive
+
+                        }).ToList();
+            return data;
+        }
+
 
     }
 }

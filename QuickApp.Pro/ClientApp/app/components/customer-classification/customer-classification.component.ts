@@ -60,6 +60,7 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
     selectedColumns: any[];
     isEditMode: boolean = false;
     isDeleteMode: boolean = false;
+    descmodified: boolean = false;
     allComapnies: MasterCompany[];
     private isSaving: boolean;
     modal: NgbModalRef;
@@ -187,6 +188,7 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
 
     }
     openEdit(row) {
+        this.descmodified = false;
         this.disableSave = false;
         this.isEditMode = true;
         this.isSaving = true;
@@ -236,6 +238,7 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
         }, () => { console.log('Backdrop click') })
     }
     checkIfClassificationExists(field, value) {
+        this.descmodified = true;
         const exists = validateRecordExistsOrNot(field, value, this.allcustomerclassificationInfo, this.sourceAction);
         if (exists.length > 0)
             this.disableSave = true;
@@ -332,9 +335,11 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
                 error => this.saveFailedHelper(error));
         }
         else {
-            
-            data.description = this.sourceAction;
+            if (this.descmodified == true) {
+                data.description = this.sourceAction;
+            }
             data.customerClassificationId = this.customerClassificationId;
+            data.memo = this.memo;
             this.CustomerClassificationService.updatecustomerclass(data).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
