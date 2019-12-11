@@ -277,4 +277,16 @@ export class VendorCapabilitiesListComponent implements OnInit{
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
+    gotoCreatePO(rowData) {
+       
+        console.log(rowData);
+        const { vendorId } = rowData;
+        this._route.navigateByUrl(`vendorsmodule/vendorpages/app-purchase-setup/vendor/${vendorId}`);
+    }
+    gotoCreateRO(rowData) {
+     
+        console.log(rowData);
+        const { vendorId } = rowData;
+        this._route.navigateByUrl(`vendorsmodule/vendorpages/app-ro-setup/vendor/${vendorId}`);
+    }
 }

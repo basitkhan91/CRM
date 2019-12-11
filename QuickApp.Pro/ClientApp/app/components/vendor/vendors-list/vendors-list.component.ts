@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, Input } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -97,15 +97,18 @@ export class VendorsListComponent implements OnInit {
     allVendorPOROList: any[];
     memoCols:any[];
     vendorDocumentsData: any=[];
-	vendorDocumentsColumns :any[];
-
-    ngOnInit() {
-        this.loadData();
-        this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendors-list';
-        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
-        this.workFlowtService.ShowPtab = false;
-        this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab);
-    }
+    vendorDocumentsColumns :any[];    
+    totalRecords: number = 0;
+    totalPages: number = 0;
+    pageSize: number = 10;
+    pageIndex: number = 0;
+    isVendorList: boolean;
+    @Input() isCreatePO: boolean;
+    @Input() isCreateRO: boolean;
+    purchaseOrderList: any = [];
+    poCols: any = [];
+    selectedPOColumns: any[];
+    selectedPOColumn: any[];
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -156,6 +159,28 @@ export class VendorsListComponent implements OnInit {
         this.workFlowtService.listCollection = null;
     }
 
+    ngOnInit() {
+        this.loadData();
+        this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendors-list';
+        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
+        this.workFlowtService.ShowPtab = false;
+        this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab);
+        this.isVendorList = true;
+
+        this.poCols = [
+            { field: 'status', header: 'Status' },            
+            { field: 'numOfItems', header: 'No of Items' },
+            { field: 'purchaseOrderNumber', header: 'PO Num' },
+            { field: 'openDate', header: 'Open Date' },
+            { field: 'closedDate', header: 'Closed/Cancelled Date' },
+            { field: 'vendorName', header: 'Vendor Name' },
+            { field: 'vendorCode', header: 'Vendor Code' },            
+            { field: 'requestedBy', header: 'Requested By' },
+            { field: 'approvedBy', header: 'Approved By' }
+        ];
+        this.selectedPOColumns = this.poCols;
+    }
+
     public navigateTogeneralInfo() {
         this.activeIndex = 0;
         this.workFlowtService.indexObj.next(this.activeIndex);
@@ -197,6 +222,10 @@ export class VendorsListComponent implements OnInit {
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allVendorList = allWorkFlows;
+        if (allWorkFlows.length > 0) {
+            this.totalRecords = allWorkFlows.length;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+        }
     }
 
     //load master Companies
@@ -777,6 +806,16 @@ export class VendorsListComponent implements OnInit {
 
         $('#step9').collapse('hide');
         $('#step10').collapse('hide');
+    }
+
+    gotoCreatePO(rowData) {
+		console.log(rowData);		
+        const { vendorId } = rowData;
+        this.route.navigateByUrl(`vendorsmodule/vendorpages/app-purchase-setup/vendor/${vendorId}`);
+    }    
+    gotoCreateRO(rowData) {
+        const { vendorId } = rowData;
+        this.route.navigateByUrl(`vendorsmodule/vendorpages/app-ro-setup/vendor/${vendorId}`);
     }
 
 }

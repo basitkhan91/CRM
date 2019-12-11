@@ -439,8 +439,9 @@ namespace DAL.Repositories
                                 biumanagmentLegalEntity,
                                 compmanagmentLegalEntity,
                                 mana,
+                                stl.CreatedDate,
                                 totalRecords
-                            }).Skip(skip)
+                            }).OrderByDescending(p => p.CreatedDate).Skip(skip)
                                  .Take(take)
                                  .ToList();
 
@@ -649,8 +650,9 @@ namespace DAL.Repositories
                                   biumanagmentLegalEntity,
                                   compmanagmentLegalEntity,
                                   mana,
+                                  stl.CreatedDate,
                                   totalRecords
-                              }).ToList();
+                              }).ToList().OrderByDescending(p => p.CreatedDate);
                 
                 return result;
             }
@@ -871,8 +873,9 @@ namespace DAL.Repositories
                                                       biumanagmentLegalEntity,
                                                       compmanagmentLegalEntity,
                                                       mana,
+                                                      stl.CreatedDate,
                                                       totalRecords
-                                                  }).Skip(skip)
+                                                  }).OrderByDescending(p => p.CreatedDate).Skip(skip)
                                                      .Take(take)
                                                      .ToList();
                 return result;

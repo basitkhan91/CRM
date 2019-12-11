@@ -26,7 +26,7 @@ export class CommonService {
     }
 
     getShipViaDetailsByModule(moduleId, referenceId) {
-        return this.http.get(`${this.baseUrl}/api/Common/bindshipviadetails?userType=${moduleId}&referenceId=${referenceId}`, this.authService.getRequestHeaders())
+        return this.http.get<any>(`${this.baseUrl}/api/Common/bindshipviadetails?userType=${moduleId}&referenceId=${referenceId}`, this.authService.getRequestHeaders())
     }
     getShipViaDetailsById(shipViaId) {
         return this.http.get<any>(`${this.baseUrl}/api/Common/shippingviadetails?shippingViaId=${shipViaId}`, this.authService.getRequestHeaders())
@@ -67,26 +67,26 @@ export class CommonService {
         return this.http.get<any>(`${this.baseUrl}/api/Common/defaultcurrency?legalEntityId=${id}`, this.authService.getRequestHeaders())
     }
 
-    getConditionByItemMasterId(itemMasterId) {
-        return this.http.get<any>(`${this.baseUrl}/api/workOrder/conditiondetailsbypartno?itemMasterId=${itemMasterId}`, this.authService.getRequestHeaders())
-    }
+    // getConditionByItemMasterId(itemMasterId) {
+    //     return this.http.get<any>(`${this.baseUrl}/api/workOrder/conditiondetailsbypartno?itemMasterId=${itemMasterId}`, this.authService.getRequestHeaders())
+    // }
 
-    getStockLineByItemMasterId(itemMasterId, conditionId) {
-        return this.http.get<any>(`${this.baseUrl}/api/workOrder/stocklinedetailsbypartno?itemMasterId=${itemMasterId}&conditionId=${conditionId}`, this.authService.getRequestHeaders())
-    }
+    // getStockLineByItemMasterId(itemMasterId, conditionId) {
+    //     return this.http.get<any>(`${this.baseUrl}/api/workOrder/stocklinedetailsbypartno?itemMasterId=${itemMasterId}&conditionId=${conditionId}`, this.authService.getRequestHeaders())
+    // }
 
-    getStockLineDetailsByStockLineId(stockLineId) {
-        return this.http.get<any>(`${this.baseUrl}/api/workOrder/stocklinedetails?stockLineId=${stockLineId}`, this.authService.getRequestHeaders())
-    }
+    // getStockLineDetailsByStockLineId(stockLineId) {
+    //     return this.http.get<any>(`${this.baseUrl}/api/workOrder/stocklinedetails?stockLineId=${stockLineId}`, this.authService.getRequestHeaders())
+    // }
 
-    getClassificationMapping(id,moduleId){
+    getClassificationMapping(id, moduleId) {
         return this.http.get<any>(`${this.baseUrl}/api/Common/classificationmappings?referenceId=${id}&moduleId=${moduleId}`, this.authService.getRequestHeaders())
     }
 
-    getIntegrationMapping(id,moduleId){
+    getIntegrationMapping(id, moduleId) {
         return this.http.get<any>(`${this.baseUrl}/api/Common/integrationmappings?referenceId=${id}&moduleId=${moduleId}`, this.authService.getRequestHeaders())
     }
-    
+
 
 
 }

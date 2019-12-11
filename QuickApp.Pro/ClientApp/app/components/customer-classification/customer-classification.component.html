@@ -181,7 +181,7 @@
                     <table class="table table-bordered" *ngIf="auditHistory.length> 0 else noDatavailable">
                         <thead>
                             <tr>
-                                <th>CCID</th>
+                                <!--<th>CCID</th>-->
                                 <th>Classification Name</th>
                                 <th>Memo</th>
                                 <th>Last Updated By</th>
@@ -190,7 +190,7 @@
                         </thead>
                         <tbody *ngIf="auditHistory.length> 0">
                             <tr *ngFor="let audit of auditHistory; let i = index;">
-                                <td [ngStyle]="{'color': 'black'}">{{audit.customerClassificationId}}</td>
+                                <!--<td [ngStyle]="{'color': 'black'}">{{audit.customerClassificationId}}</td>-->
                                 <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
                                 <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'memo', audit.description)  ? 'black' : 'red'  }">{{audit.memo}}</td>
                                 <td>{{audit.updatedBy}}</td>

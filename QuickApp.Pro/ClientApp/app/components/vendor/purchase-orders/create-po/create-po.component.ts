@@ -16,7 +16,18 @@ import $ from "jquery";
 })
 /** create-po component*/
 export class CreatePoComponent implements OnInit {
-    first: number = 0;
+
+	isCreatePO: boolean = true;
+	constructor()  {
+
+	}
+	ngOnInit() {
+
+	}
+
+}
+
+    /*first: number = 0;
 	isEditMode: boolean=false;
 	vendorCode: any = "";
 	vendorname: any = "";
@@ -64,7 +75,6 @@ export class CreatePoComponent implements OnInit {
 	is1099Required: any = "";
 	allPriorityInfo: any[]=[];
 	vendorList: any[]=[];
-    /** create-po ctor */
 	sourcePo: any = {};
     vendorCodes: any[];
     vendorNames: any[];
@@ -648,3 +658,4 @@ export class CreatePoComponent implements OnInit {
     }
 
 }
+*/
