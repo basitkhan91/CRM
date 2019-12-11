@@ -101,11 +101,10 @@ export class AccountListingComponent implements OnInit {
     columnsChanges() {
         this.refreshList();
     }
-    refreshList() {
-        console.log('table :', this.table)
-        this.table.reset();       
-
+    refreshList() {       
+        this.table.reset();  
     }
+    
     loadData(event) {
         this.lazyLoadEventData = event;
         const pageIndex = parseInt(event.first) / event.rows;;
@@ -126,19 +125,11 @@ export class AccountListingComponent implements OnInit {
         })
 
     }
-    edit(rowData) {
-        const { customerId } = rowData.id;
-        console.log('rowData :', rowData)
-        console.log('id :', rowData.id)
-        this._route.navigateByUrl(`generalledgermodule/generalledgerpage/app-account-listing-create/${rowData.id}`);
+    edit(rowData) {        
+        this._route.navigateByUrl(`generalledgermodule/generalledgerpage/app-account-listing-create/${rowData.glAccountId}`);
     }
     delete(rowData) {
-        console.log('rowData dele :', rowData)
-        // this.customerService.updateListstatus(rowData.customerId).subscribe(res => {
-        //     this.getList(this.lazyLoadEventData);
-        //     this.alertService.showMessage("Success", `Successfully Deleted Record`, MessageSeverity.success);
-
-        // })
+        console.log('rowData dele :', rowData)      
     }
 
     /*
