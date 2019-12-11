@@ -169,7 +169,6 @@ export class VendorEndpointService extends EndpointFactory {
     private readonly _getVendorBillingHistory: string = "/api/Vendor/getVendorBillingHistory";
     private readonly _getVendorContactHistory: string = "/api/Vendor/getVendorContactHistory";
     private readonly _getVendorDocumentHistory: string = "/api/Vendor/getVendorDocumentAudit";
-    private readonly _getVendorCapabilityHistory: string = "/api/Vendor/getVendorCapabilityHistory";
 
 
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
@@ -1581,7 +1580,5 @@ getdeleteDocumentListbyId(vendorDocumentId) {
     getVendorDocumentAuditHistory(id) {
         return this.http.get<any>(`${this._getVendorDocumentHistory}/${id}`, this.getRequestHeaders())
     }
-    getVendorCapabilityAuditHistory(VendorCapabilityId, VendorId) {
-        return this.http.get<any>(`${this._getVendorCapabilityHistory}?VendorCapabilityId=${VendorCapabilityId}&VendorId=${VendorId}`, this.getRequestHeaders())
-    }
+
 }

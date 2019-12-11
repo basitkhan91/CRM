@@ -930,51 +930,18 @@ namespace DAL.Repositories
                 throw ex;
             }
         }
-        public IEnumerable<object> GetVendorCapabilityAudit(long VendorCapabilityId, long VendorId)
+        public IEnumerable<object> GetVendorCapabilityAudit(long VendorCapabilityId, long AuditVendorCapabilityId)
         {
             try
             {
-                var list = (from vc in _appContext.VendorCapabiliy
-                          join vca in _appContext.VendorCapabiliyAudit on vc.VendorCapabilityId equals vca.AuditVendorCapabilityId 
-                            join v in _appContext.Vendor on vc.VendorId equals v.VendorId
-                            into vcc from v in vcc.DefaultIfEmpty()
-                            join vct in _appContext.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId
-                            into vctt from vct in vctt.DefaultIfEmpty()
-
-                            join vcat in _appContext.capabilityType on vct.CapabilityTypeId equals vcat.CapabilityTypeId
-                            into vcatt from vcat in vcatt.DefaultIfEmpty()
-                            where vca.VendorCapabilityId==VendorCapabilityId && vca.VendorId==VendorId
+                var list = (from vba in _appContext.VendorCapabiliyAudit
+                            where vba.VendorCapabilityId == VendorCapabilityId && vba.VendorCapabiliyAuditId == AuditVendorCapabilityId
                             select new
                             {
-                                v.VendorName,
-                                v.VendorCode,
-                                vc.VendorCapabilityId,
-                                vc.VendorId,
-                                vc.VendorRanking,
-                                vc.PMA_DER,
-                                vc.ItemMasterId,
-                                vc.TAT,
-                                vc.Cost,
-                                vc.AlternatePartId,
-                                vc.ATAChapterId,
-                                vc.ATASubchapterId,
-                                vca.Memo,
-                                vca.CreatedDate,
-                                vca.UpdatedDate,
-                                vca.CreatedBy,
-                                vca.UpdatedBy,
-                                vca.capabilityDescription,
-                                vc.IsActive,
-                                CapabilityType = vcat.Description
-                               
-                                //vct.CapabilityTypeId,
-
-                                //vcat.AircraftTypeId,
-
-                                //vcam.AircraftModelId
-
-
-                            }).ToList();
+                                
+                               vba,
+                               vba.VendorCapabiliyAuditId
+                            }).OrderByDescending(p => p.VendorCapabiliyAuditId).ToList();
                 return list;
             }
             catch (Exception)
