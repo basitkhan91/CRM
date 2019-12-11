@@ -35,6 +35,7 @@ export class VendorMemoComponent implements OnInit{
 	allVendorPOList:any[];
 	allVendorROList:any[];
 	allVendorPOROList: any[];
+	activeIndex: any;
 	
 	local: any;
 	private isEditMode: boolean = false;
@@ -113,8 +114,7 @@ export class VendorMemoComponent implements OnInit{
 
 	}	
 	
-	updateMemoTxext(row,e) {
-		debugger
+	updateMemoTxext(row,e) {	
         this.isEditMode = true;
         this.isSaving = true;	
 		console.log(row);
@@ -123,9 +123,29 @@ export class VendorMemoComponent implements OnInit{
 			res=>{
 				this.VendorPOMemolist();
 				this.VendorROMemolist();
+				this.alertService.showMessage(
+					'Success',
+					`Saved Memo Successfully `,
+					MessageSeverity.success
+				);
 			}
-		)
-		
-     
-    }
+			
+		)     
+	}
+	
+	NextClick() {
+        this.workFlowtService.contactCollection = this.local;
+        this.activeIndex = 9;
+        this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Documents');
+        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-documents');
+	}
+	
+	backClick()
+	{
+		this.activeIndex = 7;
+        this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Warnings');
+        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
+	}
 }   

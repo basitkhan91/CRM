@@ -60,7 +60,7 @@ namespace DAL.Repositories
         {
             var data = (from cs in _appContext.CustomerShipping
                         join csa in _appContext.CustomerShippingAddress on cs.CustomerShippingAddressId equals csa.CustomerShippingAddressId
-                        where ((cs.CustomerShippingAddressId == Selectedrow) && (cs.IsActive == true))
+                        where ((cs.CustomerShippingAddressId == Selectedrow)  && (cs.IsDeleted==false||cs.IsDeleted==null))
 
                         // select new { t, ad, vt }).ToList();
                         select new
@@ -69,7 +69,7 @@ namespace DAL.Repositories
                             cs.CustomerShippingId,
                             cs.Memo,
                             cs.ShipVia,
-                            cs.ShippingAccountinfo,
+                            ShippingAccountInfo = cs.ShippingAccountinfo,
                             cs.ShippingURL,
                             cs.ShippingId,
                             cs.IsActive,

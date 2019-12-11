@@ -108,6 +108,7 @@ namespace DAL
         IAddress Address { get; }
         IContactRepository ContactRepository { get; }
         IVendorContactRepository vendorContactRepository { get; }
+        IVendorDocumentDetailRepository VendorDocumentDetails { get; }
         IFinance Finance { get; }
         //IContactRepository Contact { get; }
         //IPayment Payment { get; }
@@ -126,6 +127,7 @@ namespace DAL
 
         IVendorInternationalWirePaymentRepository vendorInternationalWirePaymentRepository { get; }
         IVendorShippingAddress VendorShippingAddress { get; }
+
 
 
         //IVendorShippingDetailsRepository VendorShippingDetailsRepository { get;  }
@@ -164,6 +166,7 @@ namespace DAL
 
         ICustomerAircraftType customerAircraftType { get; }
         ICustomerDocumentDetail CreateDocumentDetails { get; }
+       
 
         IItemMaster itemMaster { get; }
 

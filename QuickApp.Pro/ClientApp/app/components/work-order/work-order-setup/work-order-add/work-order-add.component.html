@@ -1,20 +1,20 @@
 ﻿<div [@fadeInOut] class="page-content">
     <div class="right_col" role="main">
-        <span class="management-icon" data-original-title="Management" data-toggle="tooltip"><i
-                class="fa fa-sitemap"></i></span><span class="help-icon" data-original-title="Help"
-            data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span>
+       
         <div class="col-md-12">
-            <div class="card" style="">
-            <form #workOrderForm="ngForm" >
+            <div class="card" *ngIf="!isSubWorkOrder" style="">
+            <form  #workOrderForm="ngForm" >
                 <div class="x_content">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item" aria-current="page">Work Order</li>
                             <li class="breadcrumb-item active" aria-current="page">Work Order Setup</li>
+                            <li *ngIf="isSubWorkOrder" class="breadcrumb-item active" aria-current="page">Sub WOrkOrder </li>
                         </ol>
                     </nav>
                     <div class="pheading">
-                        <h4 class="page-heading">Work Order Setup</h4>
+                        <h4 *ngIf="!isSubWorkOrder" class="page-heading">Work Order Setup</h4>
+                        <h4 *ngIf="isSubWorkOrder" class="page-heading">Sub Work Order Setup</h4>
                     </div>
                     <div class="clear"></div>
                     <div class="card">
@@ -336,7 +336,7 @@
                                 <!-- <th rowspan="2">Qty *</th> -->
                                 <th rowspan="2">Condition Id *</th>
                                 <th rowspan="2">Stock Line Num *</th>
-                                <th rowspan="2">Serial Num *</th>
+                                <th rowspan="2">Serial Num </th>
                                 <th rowspan="2">CMM/Pub Ref</th>
                                 <th rowspan="2">Workflow ID </th>
                                 <th rowspan="2">Stage *</th>
@@ -433,7 +433,7 @@
 
                                 <td><input type="text" class="form-control w100"
                                   name="serialNumber{{i}}"  #serialNumber="ngModel" 
-                                  [(ngModel)]="workOrderPartNumber.serialNumber"  required disabled >
+                                  [(ngModel)]="workOrderPartNumber.serialNumber"   disabled >
                                 </td>
                                 <td>
                                     <p-dropdown placeholder="Select CMM" 
@@ -464,7 +464,7 @@
                                       </p-dropdown>
                                 </td>
                                 <td>
-                                    <p-dropdown [options]="priorityList"  name="priority{{i}}"  #priority="ngModel"  placeholder="Select Priority" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.workOrderPriorityId"  required>
+                                    <p-dropdown [options]="priorityList"  name="priority{{i}}"  #priority="ngModel"  class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.workOrderPriorityId"  required>
                                       </p-dropdown>
                                 </td>
                                 <td>
@@ -531,14 +531,15 @@
                   
                 </div>
                 <div>
-                  <button class="btn btn-primary-cstm pull-right" *ngIf="!showTableGrid && !isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Save</button>
+                  <button class="btn btn-primary-cstm pull-right" *ngIf="!showTabsGrid && !isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Save</button>
                   <button class="btn btn-primary-cstm pull-right" *ngIf="isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Update</button>
-                  <button  *ngIf="showTableGrid && workOrderGeneralInformation.isSinglePN " class="btn btn-success pull-right" [routerLink]="['/workordersmodule/workorderspages/app-work-order-quote']"  >Create Quote</button>
+                  <button  *ngIf="showTabsGrid && workOrderGeneralInformation.isSinglePN " class="btn btn-success pull-right" [routerLink]="['/workordersmodule/workorderspages/app-work-order-quote']"[queryParams]="{workOrderId: savedWorkOrderData['workOrderId']}"  >Create Quote</button>
                 </div>
             </form>
             </div>
 
-            <div class="card " *ngIf="showTableGrid">
+ 
+            <div class="card " *ngIf="showTabsGrid ">
                 <div class="card-header" *ngIf="!workOrderGeneralInformation.isSinglePN ">
                   Multiple  MPN
 
@@ -607,6 +608,12 @@
                                 </div>
                             </li>
                             <li class="nav-item">
+                              <a id="pills-contact-tab" role="tab"
+                                  [ngClass]="{active : gridActiveTab === 'materialList'}"
+                             
+                                  (click)="gridTabChange('materialList'); getMaterialListByWorkOrderId();">Material List </a>
+                          </li>
+                            <li class="nav-item">
                                 <a id="pills-home-tab" role="tab" aria-controls="pills-home" aria-selected="true"
                                     [ngClass]="{active : gridActiveTab === 'labor'}"
                                 
@@ -616,7 +623,7 @@
                                 <a id="pills-profile-tab" role="tab" aria-controls="pills-profile"
                                     [ngClass]="{active : gridActiveTab === 'equipment'}"
                                    
-                                    (click)="gridTabChange('equipment');getEquipmentByWorkOrderId();">Equipment</a>
+                                    (click)="gridTabChange('equipment');getEquipmentByWorkOrderId();">Assets</a>
                             </li>
                             <li class="nav-item" [hidden]="workOrderGeneralInformation.isSinglePN">
                                 <a id="pills-contact-tab" role="tab" aria-controls="pills-contact"
@@ -624,77 +631,94 @@
                                   
                                     (click)="gridTabChange('quote')">Quote</a>
                             </li>
-                            <li class="nav-item">
-                                <a id="pills-contact-tab" role="tab"
-                                    [ngClass]="{active : gridActiveTab === 'materialList'}"
-                               
-                                    (click)="gridTabChange('materialList'); getMaterialListByWorkOrderId();">Material List </a>
-                            </li>
-                            <li class="nav-item">
+                            <li class="nav-item dropdown">
+                              <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                                  aria-haspopup="true" [ngClass]="{active : gridActiveTab === 'main'}"
+                                  (click)="gridTabChange('main')">Main
+                                  Component </a>
+                              <div class="dropdown-menu">
+                                  <a class="dropdown-item">Add to an Existing RO</a>
+                                  <a class="dropdown-item">Create New RO</a>
+                                  <a class="dropdown-item">Convert Internal to External </a>
+                                  <a class="dropdown-item">Return MC to Customer </a>
+                              </div>
+                          </li>
+                          <li class="nav-item">
+                            <a id="pills-contact-tab" role="tab"
+                                [ngClass]="{active : gridActiveTab === 'billorInvoice'}"
+                                (click)="gridTabChange('billorInvoice')">Billing/Invoicing</a>
+                        </li>
+                        <li class="nav-item">
+                          <a id="pills-contact-tab" role="tab" [ngClass]="{active : gridActiveTab === 'shipping'}"
+                              (click)="gridTabChange('shipping')">Shipping</a>
+                      </li>
+                      <li class="nav-item">
+                        <a id="pills-contact-tab" role="tab" [ngClass]="{active : gridActiveTab === 'subWO'}"
+                            (click)="gridTabChange('subWO')">Sub-WO</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                          aria-haspopup="true" aria-expanded="false"
+                          [ngClass]="{active : gridActiveTab === 'communication'}"
+                          (click)="gridTabChange('communication')">Communication</a>
+                      <div class="dropdown-menu">
+                          <a class="dropdown-item">Memo</a>
+                          <a class="dropdown-item">Email</a>
+                          <a class="dropdown-item">Phone</a>
+                          <a class="dropdown-item">Text</a>
+                          <a class="dropdown-item">Chat</a>
+                      </div>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="pills-contact-tab" role="tab"
+                        [ngClass]="{active : gridActiveTab === 'documents'}"
+                        (click)="gridTabChange('documents')">Documents</a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                      aria-haspopup="true" aria-expanded="false"
+                      [ngClass]="{active : gridActiveTab === 'workComplete'}"
+                      (click)="gridTabChange('workComplete')">Work Complete</a>
+                  <div class="dropdown-menu">
+                      <a class="dropdown-item">Move to Finished Goods</a>
+                      <a class="dropdown-item">No Work Performed -Return to Customer</a>
+              <li class="dropdown-submenu">
+                  <a class="test">Another dropdown <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                      <li><a>3rd level dropdown</a></li>
+                      <li><a>3rd level dropdown</a></li>
+                  </ul>
+              </li>
+      </div>
+      </li>
+      
+      <li class="nav-item">
+        <a class="nav-link" id="pills-contact-tab" role="tab"
+            [ngClass]="{active : gridActiveTab === 'woanalysis'}"
+            (click)="gridTabChange('woanalysis')">Wo Analysis</a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" id="pills-contact-tab" role="tab"
+          [ngClass]="{active : gridActiveTab === 'laboranalysis'}"
+          (click)="gridTabChange('laboranalysis')"> Labor Analysis</a>
+  </li>
+
+                            <!-- <li class="nav-item">
                                 <a id="pills-contact-tab" role="tab" [ngClass]="{active : gridActiveTab === 'address'}"
                                     (click)="gridTabChange('address')">Addresses</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
-                                    aria-haspopup="true" [ngClass]="{active : gridActiveTab === 'main'}"
-                                    (click)="gridTabChange('main')">Main
-                                    Component </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item">Add to an Existing RO</a>
-                                    <a class="dropdown-item">Create New RO</a>
-                                    <a class="dropdown-item">Convert Internal to External </a>
-                                    <a class="dropdown-item">Return MC to Customer </a>
-                                </div>
-                            </li>
+                            </li> -->
+
                             <li class="nav-item">
-                                <a id="pills-contact-tab" role="tab"
-                                    [ngClass]="{active : gridActiveTab === 'billorInvoice'}"
-                                    (click)="gridTabChange('billorInvoice')">Billing/Invoicing</a>
-                            </li>
-                            <li class="nav-item">
-                                <a id="pills-contact-tab" role="tab" [ngClass]="{active : gridActiveTab === 'subWO'}"
-                                    (click)="gridTabChange('subWO')">Sub-WO</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
-                                    aria-haspopup="true" aria-expanded="false"
-                                    [ngClass]="{active : gridActiveTab === 'communication'}"
-                                    (click)="gridTabChange('communication')">Communication</a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item">Memo</a>
-                                    <a class="dropdown-item">Email</a>
-                                    <a class="dropdown-item">Phone</a>
-                                    <a class="dropdown-item">Text</a>
-                                    <a class="dropdown-item">Chat</a>
-                                </div>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="pills-contact-tab" role="tab"
-                                    [ngClass]="{active : gridActiveTab === 'documents'}"
-                                    (click)="gridTabChange('documents')">Documents</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
-                                    aria-haspopup="true" aria-expanded="false"
-                                    [ngClass]="{active : gridActiveTab === 'workComplete'}"
-                                    (click)="gridTabChange('workComplete')">Work Complete</a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item">Move to Finished Goods</a>
-                                    <a class="dropdown-item">No Work Performed -Return to Customer</a>
-                            <li class="dropdown-submenu">
-                                <a class="test">Another dropdown <span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-                                    <li><a>3rd level dropdown</a></li>
-                                    <li><a>3rd level dropdown</a></li>
-                                </ul>
-                            </li>
-                    </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="pills-contact-tab" role="tab"
-                            [ngClass]="{active : gridActiveTab === 'analysis'}"
-                            (click)="gridTabChange('analysis')">Analysis</a>
-                    </li>
+                              <a id="pills-contact-tab" role="tab" [ngClass]="{active : gridActiveTab === 'tearDown'}"
+                                  (click)="gridTabChange('tearDown')">Tear Down</a>
+                          </li>
+
+
+
+
+
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                             aria-expanded="false" [ngClass]="{active : gridActiveTab === 'otherOptions'}"
@@ -705,7 +729,7 @@
                             <a class="dropdown-item" (click)="otherOptionSelected('contactGrid')">Contact Grid</a>
                             <a class="dropdown-item" (click)="otherOptionSelected('accounting')" >Accounting</a>
                             <a class="dropdown-item" (click)="otherOptionSelected('charges')">Charges</a>
-                            <a class="dropdown-item" (click)="otherOptionSelected('exclusion')" >Exclusion </a>
+                            <a class="dropdown-item" (click)="otherOptionSelected('exclusions')" >Exclusion </a>
                         </div>
                     </li>
                     </ul>
@@ -729,27 +753,41 @@
                         ></app-work-order-labor>
                     </div>
 
+
                     <div [ngClass]="{hidedata : gridActiveTab !== 'equipment'}">
-                        <app-work-order-assets (saveEquipmentListForWO)="saveWorkOrderEquipmentList($event)" 
-                         (getEquipmentData)="getEquipmentByWorkOrderId($event)" 
+                        <app-work-order-assets (saveEquipmentListForWO)="saveWorkOrderEquipmentList($event)"
+                         (updateEquipmentListForWO)="updateWorkOrderEquipmentList($event)"
+                         (refreshData)="getEquipmentByWorkOrderId($event)" 
                          [employeesOriginalData]="employeesOriginalData" 
                           [isWorkOrder]="isWorkOrder" 
                           [workFlowObject]="workFlowObject"
                           [workOrderAssetList]="workOrderAssetList" [savedWorkOrderData]="savedWorkOrderData" ></app-work-order-assets>
                     </div>
 
+                    <div  *ngIf="workOrderId && (gridActiveTab === 'subWO') " [ngClass]="{hidedata : gridActiveTab !== 'subWO'}">
+                        <app-sub-work-orderlist [workOrderId]="workOrderId" [mpnId]="mpnId" ></app-sub-work-orderlist>
+                     
+                    </div>
+
                     <div  *ngIf="quote" [ngClass]="{hidedata : gridActiveTab !== 'quote' }" >
                             <app-work-order-quote [quoteForm]="quote"></app-work-order-quote>
                         </div>
                     <div *ngIf="workOrderId" [ngClass]="{hidedata : gridActiveTab !== 'materialList' }" >  
-                      <app-work-order-complete-material-list [materialStatus]="materialStatus" [isWorkOrder]="isWorkOrder" [workFlow]="workFlowObject" [savedWorkOrderData]="savedWorkOrderData" [workOrderMaterialList]="workOrderMaterialList"
+                      <app-work-order-complete-material-list [materialStatus]="materialStatus"
+                       [isWorkOrder]="isWorkOrder" 
+                       [workFlowObject]="workFlowObject" 
+                       [savedWorkOrderData]="savedWorkOrderData" 
+                       [workOrderMaterialList]="workOrderMaterialList"
                       (saveRIParts)="saveReservedPartorIssue($event)"
-                      (saveMaterialListForWO)="saveWorkOrderMaterialList($event)"></app-work-order-complete-material-list>
+                      (saveMaterialListForWO)="saveWorkOrderMaterialList($event)"
+                      (updateMaterialListForWO)="updateWorkOrderMaterialList($event)"
+                      (refreshData)="getMaterialListByWorkOrderId()"
+                      ></app-work-order-complete-material-list>
                     </div>
                       
 
                     <div [ngClass]="{hidedata : gridActiveTab !== 'billorInvoice'}">
-                        <app-work-order-billing></app-work-order-billing>
+                        <app-work-order-billing      [employeesOriginalData]="employeesOriginalData"  ></app-work-order-billing>
                     </div>
                     <div *ngIf="addresses" [ngClass]="{hidedata : gridActiveTab !== 'address'}">
                         <app-work-order-addresses [addressesForm]="addresses"></app-work-order-addresses>
@@ -763,8 +801,27 @@
                     </div>
 
 
-                    <div  class="wf-label-cstm" [ngClass]="{hidedataCharges :  subTabOtherOptions !== 'charges'} ">
-                        <app-work-order-charges [workOrderChargesList]="workOrderChargesList" ></app-work-order-charges>
+                    <div *ngIf="workOrderId" class="wf-label-cstm" [ngClass]="{hidedataOthers :  subTabOtherOptions !== 'charges'} ">
+                      <app-work-order-charges [workFlowObject]="workFlowObject" 
+                          [isWorkOrder]="isWorkOrder"
+                           [workOrderChargesList]="workOrderChargesList" 
+                        (saveChargesListForWO)="saveWorkOrderChargesList($event)"
+                        (updateChargesListForWO)="updateWorkOrderChargesList($event)"
+                        (refreshData)="getChargesListByWorkOrderId()" 
+                        
+                        ></app-work-order-charges> 
+                    </div>
+
+
+                    <div *ngIf="workOrderId" class="wf-label-cstm" [ngClass]="{hidedataOthers :  subTabOtherOptions !== 'exclusions'} ">
+                      <app-work-order-exclusions [workFlowObject]="workFlowObject" 
+                          [isWorkOrder]="isWorkOrder"
+                           [workOrderExclusionsList]="workOrderExclusionsList" 
+                        (saveExclusionsListForWO)="saveWorkOrderExclusionsList($event)"
+                        (updateExclusionsListForWO)="updateWorkOrderExclusionsList($event)"
+                        (refreshData)="getExclusionListByWorkOrderId()"
+                        
+                        ></app-work-order-exclusions> 
                     </div>
 
 

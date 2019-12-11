@@ -287,6 +287,7 @@ export class ItemMasterNonStockComponent {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allManufacturerInfo = allWorkFlows;
+        console.log("this.allManufacturerInfo", this.allManufacturerInfo)
 	}
 
 
@@ -538,6 +539,7 @@ export class ItemMasterNonStockComponent {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allitemgroupobjInfo = allWorkFlows;
+        console.log("this.allitemgroupobjInfo::", this.allitemgroupobjInfo)
     }
 
 
@@ -1052,6 +1054,7 @@ export class ItemMasterNonStockComponent {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allUnitOfMeasureinfo = getUnitOfMeasureList;
+        console.log("this.allUnitOfMeasureinfo::", this.allUnitOfMeasureinfo)
     }
 
 
@@ -1451,6 +1454,7 @@ export class ItemMasterNonStockComponent {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allitemNonStockclassificationInfo = allNonstockItems;
+        console.log("this.allitemNonStockclassificationInfo", this.allitemNonStockclassificationInfo)
     }
 
     private itemNonStockclassification() {

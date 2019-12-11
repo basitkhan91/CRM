@@ -65,6 +65,7 @@ export class VendorShippingInformationComponent {
     country: any;
     selectedShipVia: any;
     shipviacollection: any[];
+    shippingauditHisory: any[];
     ngOnInit(): void {
         this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-shipping-information';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
@@ -97,6 +98,7 @@ export class VendorShippingInformationComponent {
     selectedShipViaColumns: any[];
     cols: any[];
     shipViacols: any[];
+    shipViaColumns: any[];
     title: string = "Create";
     id: number;
     errorMessage: any;
@@ -214,8 +216,8 @@ export class VendorShippingInformationComponent {
             { field: 'stateOrProvince', header: 'State/Prov' },
             { field: 'postalCode', header: 'Postal Code' },
             { field: 'country', header: 'Country' }
-        ];
-        this.selectedColumns = this.cols;
+        ];  
+        this.selectedColumns = this.cols;            
     }
 
     private countrylist() {
@@ -248,7 +250,7 @@ export class VendorShippingInformationComponent {
             { field: 'shippingId', header: 'Shipping Id' },
             { field: 'memo', header: 'Memo' }
         ];
-        this.selectedShipViaColumn = this.shipViacols;
+        this.selectedShipViaColumns = this.shipViacols;
     }
     openShipViaEdit(rowObject) {
         this.isEditMode = true;
@@ -289,7 +291,7 @@ export class VendorShippingInformationComponent {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
-        this.allActions = allWorkFlows;
+        this.allActions = allWorkFlows;  
     }
     private onShipViadetails(allWorkFlows: any) {
         this.alertService.stopLoadingMessage();
@@ -317,7 +319,17 @@ export class VendorShippingInformationComponent {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-
+    private onAuditHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+       
+        this.shippingauditHisory = auditHistory;
+       
+        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
     private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
@@ -398,9 +410,12 @@ export class VendorShippingInformationComponent {
         this.loadingIndicator = true;
         this.sourceVendor = row;
         this.isSaving = true;
-        this.workFlowtService.shipaddressHistory(this.sourceVendor.vendorShippingAddressId).subscribe(
-            results => this.onHistoryLoadSuccessful(results[0], content),
+        this.workFlowtService.getShipaddressHistory(this.sourceVendor.vendorId, this.sourceVendor.vendorShippingAddressId).subscribe(
+            results => this.onAuditHistoryLoadSuccessful(results, content),
             error => this.saveFailedHelper(error));
+
+
+       
     }
 
     editItemAndCloseModel() {

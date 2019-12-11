@@ -51,6 +51,8 @@ namespace DAL.Repositories.Interfaces
         Dictionary<string, long> GetManagementStructure(long manmgStrucId);
         Dictionary<string, string> GetManagementStructureCodes(long manmgStrucId);
 
-
+        IEnumerable<object> GetDefaultCurrency(long legalEntityId);
+        void CreateIntegrationMappings(List<IntegrationPortalMapping> integrationMappings, int moduleId, long referenceId, string createdBy);
+        IEnumerable<object> GetIntegrationMappings(long referenceId, int moduleId);
     }
 }

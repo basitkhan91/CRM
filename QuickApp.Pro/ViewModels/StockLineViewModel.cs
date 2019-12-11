@@ -99,7 +99,7 @@ namespace QuickApp.Pro.ViewModels
         public bool? IsDER { get; set; }
         public bool? OEM { get; set; }
         public string Memo { get; set; }
-        public long? ManagementStructureEntityId { get; set; }
+        public long? ManagementStructureId { get; set; }
         public long? TimeLifeCyclesId { get; set; }
         public bool? TimeLife { get; set; }
         public long? TimeLifeId { get; set; }

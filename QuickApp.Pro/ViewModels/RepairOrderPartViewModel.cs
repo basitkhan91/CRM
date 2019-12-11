@@ -46,8 +46,8 @@ namespace QuickApp.Pro.ViewModels
         public string RoPartSplitStateOrProvince { get; set; }
         public int? RoPartSplitUserId { get; set; }
         public int? RoPartSplitUserTypeId { get; set; }
-
         public List<RoPartSplits> RoPartSplits { get; set; }
+        public long? StockLineId { get; set; }
     }
 
     public class RoPartSplits
@@ -71,6 +71,7 @@ namespace QuickApp.Pro.ViewModels
         public int? ManagementStructureId { get; set; }
         public DateTime? NeedByDate { get; set; }
         public long RepairOrderPartRecordId { get; set; }
+        public long? StockLineId { get; set; }
     }
 
     public class RepairOrderPartDto
@@ -105,5 +106,6 @@ namespace QuickApp.Pro.ViewModels
         public string UpdatedBy { get; set; }
         public long RepairOrderPartRecordId { get; set; }
         public List<RoPartSplits> RoPartSplits { get; set; }
+        public long? StockLineId { get; set; }
     }
 }

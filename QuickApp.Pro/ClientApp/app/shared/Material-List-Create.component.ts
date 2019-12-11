@@ -27,9 +27,14 @@ export class MaterialListCreateComponent implements OnInit {
     allconditioninfo: any[] = [];
     partListData: any[] = [];
     @Input() isWorkOrder;
+    @Input() isEdit = false;
+    @Input() editData;
     @Input() workFlow: IWorkFlow;
     @Input() UpdateMode: boolean;
     @Output() workFlowChange = new EventEmitter();
+    @Output() saveMaterialListForWO = new EventEmitter();
+    @Output() updateMaterialListForWO = new EventEmitter();
+
     @Output() notify: EventEmitter<IWorkFlow> =
         new EventEmitter<IWorkFlow>();
     materialCondition: any[] = [];
@@ -46,7 +51,8 @@ export class MaterialListCreateComponent implements OnInit {
     itemsPerPage: number = 10;
     variableIdOfNew: any[];
     defaultUOMId: number;
-    defaultConditionId: number;
+    defaultConditionId: any;
+
     constructor(private actionService: ActionService, private itemser: ItemMasterService, private vendorService: VendorService, private conditionService: ConditionService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private alertService: AlertService) {
 
     }
@@ -55,22 +61,54 @@ export class MaterialListCreateComponent implements OnInit {
 
     ngOnInit(): void {
 
+        // this.row = this.workFlow.materialList[0];
+        // if (this.row == undefined) {
+        //     this.row = {};
+        // }
+        // this.row.taskId = this.workFlow.taskId;
+
+
+        if (this.isWorkOrder) {
+            this.row = this.workFlow.materialList[0];
+            if (this.isEdit) {
+                this.workFlow.materialList = [];
+                // const data = {
+                //     ...this.editData,
+                //     partDescription: this.editData.epnDescription,
+                //     partNumber: this.editData.epn,
+
+                // }
+                this.workFlow.materialList.push(this.editData);
+                this.reCalculate();
+            } else {
+                this.workFlow.materialList = [];
+                this.row = this.workFlow.materialList[0];
+                this.addRow();
+            }
+
+        } else {
             this.row = this.workFlow.materialList[0];
             if (this.row == undefined) {
                 this.row = {};
             }
             this.row.taskId = this.workFlow.taskId;
-            this.actionService.GetMaterialMandatory().subscribe(
-                mandatory => {
-                    this.materialMandatory = mandatory;
-                    this.defaultMaterialMandatory = 'Mandatory';
-                    if (this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') {
-                        this.workFlow.materialList[0].mandatoryOrSupplemental = this.defaultMaterialMandatory;
-                    }
-                },
-                error => this.errorMessage = <any>error
-            );
-        
+        }
+
+
+
+
+
+        this.actionService.GetMaterialMandatory().subscribe(
+            mandatory => {
+                this.materialMandatory = mandatory;
+                this.defaultMaterialMandatory = 'Mandatory';
+                if (this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') {
+                    this.workFlow.materialList[0].mandatoryOrSupplemental = this.defaultMaterialMandatory;
+                }
+            },
+            error => this.errorMessage = <any>error
+        );
+
 
 
 
@@ -176,8 +214,11 @@ export class MaterialListCreateComponent implements OnInit {
     private loadConditionData() {
         this.conditionService.getConditionList().subscribe(data => {
             this.materialCondition = data[0];
-            this.defaultConditionId = this.materialCondition.filter(x => x.description.trim() == "NEW")[0].conditionId;
-            if (this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') {
+            var defaultCondition = this.materialCondition.find(x => x.description.trim().toLowerCase() == "new");
+
+            this.defaultConditionId = defaultCondition != undefined ? defaultCondition.conditionId : 0;
+
+            if ((this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') && !this.isEdit) {
                 this.workFlow.materialList[0].conditionCodeId = this.defaultConditionId;
             }
         })
@@ -190,8 +231,10 @@ export class MaterialListCreateComponent implements OnInit {
     private loadUOMData() {
         this.unitofmeasureService.getUnitOfMeasureList().subscribe(uomdata => {
             this.materialUOM = uomdata[0];
-            this.defaultUOMId = this.materialUOM.filter(x => x.shortName.trim() == "Ea")[0].unitOfMeasureId;
-            if (this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') {
+            var defaultUOM = this.materialUOM.find(x => x.shortName.trim().toLowerCase() == "ea".toLowerCase());
+            this.defaultUOMId = defaultUOM != undefined ? defaultUOM.defaultUOMId : 0;
+
+            if ((this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') && !this.isEdit) {
                 this.workFlow.materialList[0].unitOfMeasureId = this.defaultUOMId;
             }
         });
@@ -232,7 +275,7 @@ export class MaterialListCreateComponent implements OnInit {
         this.reCalculate();
     }
 
-    
+
     calculateExtendedCost(material): void {
         if (material.quantity != "" && material.unitCost) {
             material.extendedCost = parseFloat((material.quantity * material.unitCost).toString()).toFixed(2);
@@ -286,8 +329,14 @@ export class MaterialListCreateComponent implements OnInit {
     }
 
     validateQuantity(event, material): void {
-        event.target.value = parseInt(material.quantity);
-        material.quantity = parseInt(material.quantity);
+
+        if (material.quantity != "") {
+            event.target.value = parseInt(material.quantity);
+            material.quantity = parseInt(material.quantity);
+        }
+        else {
+            material.quantity = 0;
+        }
     }
 
     // calculate the price summation 
@@ -317,6 +366,14 @@ export class MaterialListCreateComponent implements OnInit {
             })]
             this.isDeferredBoolean = false;
         }
+    }
+
+    saveMaterialsWorkOrder() {
+        this.saveMaterialListForWO.emit(this.workFlow)
+    }
+
+    updateMaterialsWorkOrder() {
+        this.updateMaterialListForWO.emit(this.workFlow);
     }
 
 

@@ -16,6 +16,9 @@ import { GlAccountService } from '../../../../services/glAccount/glAccount.servi
 import { GlAccount } from '../../../../models/GlAccount.model';
 import { ShippingService } from '../../../../services/shipping/shipping-service';
 import { CommonService } from '../../../../services/common.service';
+import { forEach } from '@angular/router/src/utils/collection';
+import { CustomerService } from '../../../../services/customer.service';
+import { Dropdown } from 'primeng/dropdown';
 
 @Component({
     selector: 'app-edit-ro',
@@ -62,10 +65,12 @@ export class EditRoComponent implements OnInit {
     SiteList: any[];
     GLAccountList: GlAccount[];
     currentDate: Date;
-    ShippingViaList : DropDownData[];
+    ShippingViaList: DropDownData[];
     repairOrderId: number;
     repairOrderHeaderData: any;
     headerManagementStructure: any = {};
+    CustomerList: DropDownData[] = [];
+    VendorList: DropDownData[] = [];
 
     /** edit-ro ctor */
     constructor(public receivingService: ReceivingService,
@@ -82,7 +87,8 @@ export class EditRoComponent implements OnInit {
         private glAccountService: GlAccountService,
         private shippingService: ShippingService,
         private _actRoute: ActivatedRoute,
-        private commonService: CommonService
+        private commonService: CommonService,
+        private customerService: CustomerService,
     ) {
 
         this.localPoData = this.vendorService.selectedPoCollection;
@@ -91,30 +97,20 @@ export class EditRoComponent implements OnInit {
     }
 
     ngOnInit() {
-        // if (this.receivingService.purchaseOrderId == undefined && this.receivingService.purchaseOrderId == null ) {
-        //     this.alertService.showMessage(this.pageTitle, "No purchase order is selected to edit.", MessageSeverity.error);
-        //     return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
-        // }
-
         this.repairOrderId = this._actRoute.snapshot.queryParams['repairorderid'];
         this.receivingService.getReceivingROHeaderById(this.repairOrderId).subscribe(res => {
-            console.log(res);
             this.repairOrderHeaderData = res;
             this.repairOrderHeaderData.openDate = this.repairOrderHeaderData.openDate ? new Date(this.repairOrderHeaderData.openDate) : '';
             this.repairOrderHeaderData.closedDate = this.repairOrderHeaderData.closedDate ? new Date(this.repairOrderHeaderData.closedDate) : '';
             this.repairOrderHeaderData.dateApproved = this.repairOrderHeaderData.dateApproved ? new Date(this.repairOrderHeaderData.dateApproved) : '';
             this.repairOrderHeaderData.needByDate = this.repairOrderHeaderData.needByDate ? new Date(this.repairOrderHeaderData.needByDate) : '';
             this.getManagementStructureCodes(this.repairOrderHeaderData.managementStructureId);
-                
         });
 
-        this.receivingService.getPurchaseOrderDataForEditById(this.receivingService.purchaseOrderId).subscribe(
+        this.receivingService.getReceivingROPartsForEditById(this.repairOrderId).subscribe(
             results => {
-                this.repairOrderData = results[0];
-                // this.purchaseOrderData.openDate = new Date(results[0].openDate).toLocaleDateString();
-                // this.purchaseOrderData.needByDate = new Date(results[0].needByDate);
-                // this.purchaseOrderData.dateApproved = new Date(results[0].dateApproved).toLocaleDateString();
 
+                this.repairOrderData = results;
                 this.getManagementStructure().subscribe(
                     results => {
                         this.managementStructure = results[0];
@@ -137,7 +133,6 @@ export class EditRoComponent implements OnInit {
                                 parent.hasChildren = false;
                             }
                         }
-
 
                         for (let part of this.repairOrderData) {
                             part.isEnabled = false;
@@ -168,6 +163,7 @@ export class EditRoComponent implements OnInit {
                                     part.BusinessUnitList.push(dropdown);
                                 }
                             }
+
                             if (managementHierarchy[2] != undefined && managementHierarchy[2].length > 0) {
                                 part.divisionId = selectedManagementStructure[2].managementStructureId;
                                 part.DivisionList = [];
@@ -191,6 +187,10 @@ export class EditRoComponent implements OnInit {
 
                             if (part.stockLine != null) {
                                 for (var SL of part.stockLine) {
+                                    SL.obtainFromObject = new DropDownData();
+                                    SL.ownerObject = new DropDownData();
+                                    SL.traceableToObject = new DropDownData();
+
                                     SL.isEnabled = false;
                                     let stockLinemanagementHierarchy: ManagementStructure[][] = [];
                                     let stockLineSelectedManagementStructure: ManagementStructure[] = [];
@@ -239,30 +239,12 @@ export class EditRoComponent implements OnInit {
                                         }
                                     }
 
-                                    // TODO : Async call not setting proper values.
-                                    //debugger;
-                                    //if (SL.siteId > 0) {
-                                    //    this.getStockLineWareHouse(SL, true);
-                                    //}
-                                    //if (SL.warehouseId > 0) {
-                                    //    this.getStockLineLocation(SL, true);
-                                    //}
-                                    //if (SL.locationId > 0) {
-                                    //    this.getStockLineShelf(SL, true);
-                                    //}
-                                    //if (SL.shelfId > 0) {
-                                    //    this.getStockLineBin(SL, true);
-                                    //}
-
                                 }
 
                             }
 
                         }
 
-                        // this.purchaseOrderData.dateRequested = new Date(); //new Date(this.purchaseOrderData.dateRequested);
-                        // this.purchaseOrderData.dateApprovied = new Date(this.purchaseOrderData.dateApprovied);
-                        // this.purchaseOrderData.needByDate = new Date(); //new Date(this.purchaseOrderData.needByDate);
                         this.getManufacturers();
                         this.getStatus();
                         this.getUOMList();
@@ -272,6 +254,8 @@ export class EditRoComponent implements OnInit {
                         this.getAllSite();
                         this.getAllGLAccount();
                         this.getShippingVia();
+                        this.getCustomers();
+                        this.getVendors();
                     },
                     error => this.onDataLoadFailed(error)
                 );
@@ -290,20 +274,91 @@ export class EditRoComponent implements OnInit {
     }
 
     getManagementStructureCodes(id) {
-        this.commonService.getManagementStructureCodes(id).subscribe(res => {       
-			if (res.Level1) {
-				this.headerManagementStructure.level1 = res.Level1;
+        this.commonService.getManagementStructureCodes(id).subscribe(res => {
+            if (res.Level1) {
+                this.headerManagementStructure.level1 = res.Level1;
             }
             if (res.Level2) {
-				this.headerManagementStructure.level2 = res.Level2;
+                this.headerManagementStructure.level2 = res.Level2;
             }
             if (res.Level3) {
-				this.headerManagementStructure.level3 = res.Level3;
+                this.headerManagementStructure.level3 = res.Level3;
             }
             if (res.Level4) {
-				this.headerManagementStructure.level4 = res.Level4;
-			}
-		})
+                this.headerManagementStructure.level4 = res.Level4;
+            }
+        })
+    }
+
+    getCustomers(): void {
+
+        this.customerService.getCustomers().subscribe(
+            results => {
+                for (let customer of results[0]) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = customer.customerId.toLocaleString();
+                    dropdown.Value = customer.name;
+                    this.CustomerList.push(dropdown);
+                }
+
+                for (let part of this.repairOrderData) {
+                    for (let SL of part.stockLine) {
+                        if (SL.owner != null && SL.owner != '' && SL.ownerType == 1) {
+                            SL.ownerObject = this.CustomerList.find(x => x.Key == SL.owner);
+                        }
+                        if (SL.obtainFrom != null && SL.obtainFrom != '' && SL.obtainFromType == 1) {
+                            SL.obtainFromObject = this.CustomerList.find(x => x.Key == SL.obtainFrom);
+                        }
+                        if (SL.traceableTo != null && SL.traceableTo != '' && SL.traceableToType == 1) {
+                            SL.traceableToObject = this.CustomerList.find(x => x.Key == SL.traceableTo);
+                        }
+                    }
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    getVendors(): void {
+        //stockLine.VendorList = [];
+        this.vendorService.getVendors().subscribe(
+            vendors => {
+                for (let vendor of vendors[0]) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = vendor.vendorId.toLocaleString();
+                    dropdown.Value = vendor.vendorName;
+                    this.VendorList.push(dropdown);
+                }
+
+                for (let part of this.repairOrderData) {
+                    for (let SL of part.stockLine) {
+
+                        if (SL.owner != null && SL.owner != '' && SL.ownerType == 3) {
+                            SL.ownerObject = this.VendorList.find(x => x.Key == SL.owner);
+                        }
+                        if (SL.obtainFrom != null && SL.obtainFrom != '' && SL.obtainFromType == 3) {
+                            SL.obtainFromObject = this.VendorList.find(x => x.Key == SL.obtainFrom);
+                        }
+                        if (SL.traceableTo != null && SL.traceableTo != '' && SL.traceableToType == 3) {
+                            SL.traceableToObject = this.VendorList.find(x => x.Key == SL.traceableTo);
+                        }
+                    }
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    onFilter(event, stockLine, type): void {
+        stockLine.filteredRecords = [];
+        var dropdownSource = type == 1 ? this.CustomerList : this.VendorList;
+        if (dropdownSource != undefined && dropdownSource.length > 0) {
+            for (let row of dropdownSource) {
+                if (row.Value != undefined && row.Value.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    stockLine.filteredRecords.push(row);
+                }
+            }
+        }
     }
 
     private getManagementStructure() {
@@ -582,16 +637,16 @@ export class EditRoComponent implements OnInit {
                                 SL.SiteList.push(row);
                             }
 
-                            if (SL.warehouseId > 0) {
+                            if (SL.siteId > 0) {
                                 this.getStockLineWareHouse(SL, true);
                             }
-                            if (SL.locationId > 0) {
+                            if (SL.warehouseId > 0) {
                                 this.getStockLineLocation(SL, true);
                             }
-                            if (SL.shelfId > 0) {
+                            if (SL.locationId > 0) {
                                 this.getStockLineShelf(SL, true);
                             }
-                            if (SL.binId > 0) {
+                            if (SL.shelfId > 0) {
                                 this.getStockLineBin(SL, true);
                             }
                         }
@@ -626,6 +681,7 @@ export class EditRoComponent implements OnInit {
     }
 
     private getStockLineWareHouse(stockLine: StockLine, onPageLoad: boolean): void {
+
         stockLine.WareHouseList = [];
         stockLine.LocationList = [];
         stockLine.ShelfList = [];
@@ -904,14 +960,14 @@ export class EditRoComponent implements OnInit {
     }
 
     calculateExtendedCost(part: any, stockLine: any): void {
-        if (stockLine.purchaseOrderUnitCost == undefined || stockLine.purchaseOrderUnitCost == '') {
+        if (stockLine.repairOrderUnitCost == undefined || stockLine.repairOrderUnitCost == '') {
             return;
         }
         if (part.itemMaster.isSerialized) {
-            stockLine.purchaseOrderExtendedCost = stockLine.purchaseOrderUnitCost;
+            stockLine.repairOrderExtendedCost = stockLine.repairOrderUnitCost;
         }
         else {
-            stockLine.purchaseOrderExtendedCost = stockLine.purchaseOrderUnitCost * part.quantityActuallyReceived;
+            stockLine.repairOrderExtendedCost = stockLine.repairOrderUnitCost * part.quantityActuallyReceived;
         }
     }
 
@@ -944,7 +1000,11 @@ export class EditRoComponent implements OnInit {
     private onDataLoadFailed(error: any) {
     }
 
-    onObtainFromChange(event) {
+    onObtainFromChange(event, stockLine) {
+        stockLine.obtainFromObject = {};
+        stockLine.obtainFrom = '';
+
+
         if (event.target.value === '1') {
             this.obtainfromcustomer = true;
             this.obtainfromother = false;
@@ -962,8 +1022,11 @@ export class EditRoComponent implements OnInit {
         }
     }
 
-    onOwnerChange(event) {
-        if (event.target.value === '1') {
+    onOwnerChange(event, stockLine) {
+        stockLine.ownerObject = {};
+        stockLine.owner = '';
+
+        if (event.target.value === '1') {            
             this.ownercustomer = true;
             this.ownerother = false;
             this.ownervendor = false;
@@ -980,7 +1043,10 @@ export class EditRoComponent implements OnInit {
         }
     }
 
-    onTraceableToChange(event) {
+    onTraceableToChange(event, stockLine) {
+        stockLine.traceableToObject = '';
+        stockLine.traceableTo = '';
+
         if (event.target.value === '1') {
             this.traceabletocustomer = true;
             this.traceabletoother = false;
@@ -998,16 +1064,28 @@ export class EditRoComponent implements OnInit {
         }
     }
 
+    onObtainSelect(stockLine: StockLine): void {
+        stockLine.obtainFrom = stockLine.obtainFromObject.Key;
+    }
+
+    onOwnerSelect(stockLine: StockLine): void {
+        stockLine.owner = stockLine.ownerObject.Key;
+    }
+
+    onTraceableToSelect(stockLine: StockLine): void {
+        stockLine.traceableTo = stockLine.traceableToObject.Key;
+    }
+
     //remove once add dynamic content
-    // editPart(part: RepairOrderPart) {
-    //     part.isEnabled = !part.isEnabled;
-    //     if (part.stockLine) {
-    //         for (var sl of part.stockLine) {
-    //             sl.isEnabled = part.isEnabled;
-    //             sl.quantityRejected = 0;
-    //         }
-    //     }
-    // }
+    editPart(part: RepairOrderPart) {
+        part.isEnabled = !part.isEnabled;
+        if (part.stockLine) {
+            for (var sl of part.stockLine) {
+                sl.isEnabled = part.isEnabled;
+                sl.quantityRejected = 0;
+            }
+        }
+    }
 
     editStockLine(stockLine: StockLine) {
         stockLine.isEnabled = !stockLine.isEnabled;
@@ -1025,13 +1103,25 @@ export class EditRoComponent implements OnInit {
                 var stockLineToUpdate = part.stockLine.filter(x => x.isEnabled);
 
                 for (var stockLine of stockLineToUpdate) {
+
+
+                    if (stockLine.conditionId == undefined || stockLine.conditionId == 0) {
+                        this.alertService.showMessage(this.pageTitle, "Please select Condition in Part No. " + part.itemMaster.partNumber + " at stockline " + stockLine.stockLineNumber, MessageSeverity.error);
+                        return;
+                    }
+
+                    if (stockLine.siteId == undefined || stockLine.siteId == 0) {
+                        this.alertService.showMessage(this.pageTitle, "Please select Site in Part No. " + part.itemMaster.partNumber + " of stockline " + stockLine.stockLineNumber, MessageSeverity.error);
+                        return;
+                    }
+
                     for (var tl of part.timeLife) {
-                        if (tl.stockLineId == stockLine.stockLineId) {                            
+                        if (tl.stockLineId == stockLine.stockLineId) {
                             timeLife.push(tl);
                         }
                     }
                 }
-                
+
                 if (stockLineToUpdate.length > 0) {
                     let receivePart: ReceiveParts = new ReceiveParts();
                     receivePart.repairOrderPartRecordId = part.repairOrderPartRecordId;
@@ -1042,9 +1132,10 @@ export class EditRoComponent implements OnInit {
             }
         }
         if (receiveParts.length > 0) {
-            this.shippingService.updateStockLine(receiveParts).subscribe(data => {
+            this.receivingService.updateStockLine(receiveParts).subscribe(data => {
                 this.alertService.showMessage(this.pageTitle, 'Stock Line updated successfully.', MessageSeverity.success);
-                return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
+                this.route.navigateByUrl(`/receivingmodule/receivingpages/app-view-ro?repairOrderId=${this.repairOrderId}`);
+                //return this.route.navigate(['/receivingmodule/receivingpages/app-view-po']);
             },
                 error => {
                     var message = '';
@@ -1065,8 +1156,6 @@ export class EditRoComponent implements OnInit {
         //this.alertService.showMessage(this.pageTitle, 'Stock Lines update successfully.', MessageSeverity.success)
         //return this.route.navigate(['/receivingmodule/receivingpages/app-view-po']);
     }
-
- 
 
     private getShippingVia(): void {
         this.shippingService.getAllShippingVia().subscribe(results => {
@@ -1093,6 +1182,13 @@ export class EditRoComponent implements OnInit {
             },
             error => this.onDataLoadFailed(error)
         );
+    }
+
+    SetStockLineUnitCost(part: RepairOrderPart): void {
+        for (var SL of part.stockLine) {
+            SL.repairOrderUnitCost = part.unitCost;
+            SL.repairOrderExtendedCost = SL.quantity * SL.repairOrderUnitCost;
+        }
     }
 }
 

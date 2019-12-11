@@ -176,6 +176,15 @@
                   {{ customer.stateOrProvince }}
                 </td>
                 <td>
+                    <span>
+                        <a class="btn btn-info boxed-float-btn nobg"
+                           data-toggle="tooltip"
+                           (click)="viewSelectedRow(customer.customerId)"
+                           
+                           matTooltip="View">
+                            <i class="fa fa-eye"></i>
+                        </a>
+                    </span>
                   <button
                     class="btn-add"
                     mat-icon-button

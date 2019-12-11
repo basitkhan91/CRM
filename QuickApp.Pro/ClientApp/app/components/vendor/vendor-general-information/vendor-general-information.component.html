@@ -10,8 +10,8 @@
         <div class="col-md-12">
 
             <div class="card">
-                <div class="card-header">
-                    <h5 class="po-head" style="padding: 0px 10px;"> General Info</h5>
+                <div>
+                    <h4 class="page-heading clr-green"> General Info</h4>
                 </div>
                 <div class="card-body">
                     <div class="col-md-4">
@@ -108,22 +108,31 @@
                                 </div>
 
                                 <div class="form-group">
+
                                     <label for="vendorname">
                                         Phone
                                         <span class="clr-red">*</span>
+
                                     </label>
-                                    <input class="form-control" type="text" pKeyFilter="num" name="vendorPhone"
-                                           [(ngModel)]="sourceVendor.vendorPhone" required>
+                                    <div class="col-md-12">
+                                        <div class="col-md-7">
+                                            <input class="form-control" type="text" pKeyFilter="num" name="vendorPhone" 
+                                                   [(ngModel)]="sourceVendor.vendorPhone" required>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input type="text" name="phoneExt" pInputText maxlength="10" [(ngModel)]="sourceVendor.vendorPhoneExt" >
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="vendorname">
+                                            Email
+                                            <span class="clr-red">*</span>
+                                        </label>
+                                        <input class="form-control" type="email" email name="vendorEmail"
+                                               [(ngModel)]="sourceVendor.vendorEmail" required>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="vendorname">
-                                        Email
-                                        <span class="clr-red">*</span>
-                                    </label>
-                                    <input class="form-control" type="email" email name="vendorEmail"
-                                           [(ngModel)]="sourceVendor.vendorEmail" required>
-                                </div>
-                            </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="address1">
@@ -149,7 +158,7 @@
                                     </label>
                                     <input class="form-control" type="text" id="vmaddress3" name="address3"
                                            [(ngModel)]="sourceVendor.address3">
-                                </div>
+                                </div> 
 
 
                                 <div class="form-group">
@@ -212,12 +221,17 @@
                                                 </span>
 
                                             </label>
-                                            <select [(ngModel)]="sourceVendor.vendorClassificationId" name="vendorClassificationId" required>
+                                            <p-multiSelect [options]="allvendorclassificationInfo" [(ngModel)]="sourceVendor.vendorClassificationIds"  name="vendorClassificationIds" required>
+
+                                            </p-multiSelect>
+                                            <!-- <select [(ngModel)]="sourceVendor.vendorClassificationId" name="vendorClassificationId" required>
                                                 <option *ngFor="let venclassName of allVendorClassInfo"
                                                         [ngValue]="venclassName.vendorClassificationId">
                                                     {{venclassName.classificationName}}
                                                 </option>
-                                            </select>
+                                            </select> -->
+
+                                            
                                         </div>
 
                                         <div class="form-group">
@@ -243,9 +257,13 @@
                                                 <span class="pull-left">Integration With</span>
                                                 <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" (click)="onAddIntegrationWith()"></a></span>
                                             </label>
-                                            <p-multiSelect [options]="integrationCols" [(ngModel)]="intSelectedColumns" optionLabel="header"
+                                            <!-- <p-multiSelect [options]="integrationCols" [(ngModel)]="intSelectedColumns" optionLabel="header"
                                                            selectedItemsLabel="{0} columns selected" name="integrationCols"
-                                                           [style]="{minWidth: '200px'}" defaultLabel="Choose Columns"></p-multiSelect>
+                                                           [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
+                                            </p-multiSelect> -->
+                                           
+                                            <p-multiSelect [options]="integrationOriginalList" [(ngModel)]="sourceVendor.integrationPortalIds"  name="integrationPortalIds" defaultLabel="Choose Columns">
+                                            </p-multiSelect>
                                         </div>
 
                                         <div class="form-group">

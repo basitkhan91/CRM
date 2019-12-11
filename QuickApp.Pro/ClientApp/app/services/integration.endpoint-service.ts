@@ -16,7 +16,8 @@ export class IntegrationEndpointService extends EndpointFactory {
 	private readonly _integrationPostUrl: string = "/api/Integration/IntegrationPost";
     private readonly _getAuditById: string = "/api/Integration/audits";
 
-	private readonly _actionsUrlNewAuditHistory: string = "/api/Integration/auditHistoryById";
+    private readonly _actionsUrlNewAuditHistory: string = "/api/Integration/auditHistoryById";
+    private readonly excelUpload: string = "/api/Integration/UploadIntegrationCustomData";
     get integrationUrl() { return this.configurations.baseUrl + this._integrationUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -91,6 +92,11 @@ export class IntegrationEndpointService extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getAuditById(integrationPortalId));
             });
+    }
+
+    IntegrationCustomUpload(file) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}`, file)
+
     }
 
 }

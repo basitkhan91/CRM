@@ -50,11 +50,13 @@ export class VendorsListComponent implements OnInit {
     mobilePhone: number;
     fax: any = "";
     vendorTypeId: any = "";
+    description: any = "";
     doingBusinessAsName: any = "";
     parent: any = "";
+    vendorParentName: any = "";
     address1: any = "";
     address2: any = "";
-    address3: any = "";
+    //address3: any = "";
     city: any = "";
     stateOrProvince: any = "";
     postal: any = "";
@@ -64,13 +66,17 @@ export class VendorsListComponent implements OnInit {
     vendorContractReference: any = "";
     licenseNumber: any = "";
     capabilityId: any = "";
+    vendorCapabilityName: any = "";
     vendorURL: any = "";
     postalCode: any = "";
     vendorClassificationId: any = "";
+    vendorClassificationName: any = "";
     creditlimit: any = "";
     creditTermsId: any = "";
     currencyId: any = "";
     discountLevel: any = "";
+    vendorPhoneNo: any = "";
+    vendorPhoneExt: any = "";
     is1099Required: any = "";      
     showGeneralData: boolean = true;
     showcontactdata: boolean = true;
@@ -78,10 +84,21 @@ export class VendorsListComponent implements OnInit {
     allContacts: any[] = [];
     allpayments: any[] = [];
     selectedPaymentColumns: any[];
-    allShippings: any[];
+    allShippings: any[];  
     shippingCol: any[];
     selectedShippingColumns: any[];
     selectedRow: any;
+    billingInfoList: any[];
+    selectedBillingColumns: any[];
+    billingCol: any[];
+    warningInfoList: any[];
+    selectedWarningColumns: any[];
+    warninggCol: any[];
+    allVendorPOROList: any[];
+    memoCols:any[];
+    vendorDocumentsData: any=[];
+	vendorDocumentsColumns :any[];
+
     ngOnInit() {
         this.loadData();
         this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendors-list';
@@ -121,7 +138,14 @@ export class VendorsListComponent implements OnInit {
     actionName: string;
     Active: string = "Active";
     length: number;
-    localCollection: any;
+    localCollection: any;  
+    //updateActiveData: any;
+    updateActiveData = {
+		vendorId:0,
+		updatedBy: '',
+        isActive: false,
+        isdelete:false
+	}
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
     public allWorkFlows: any[] = [];
@@ -152,14 +176,14 @@ export class VendorsListComponent implements OnInit {
         );
 
         this.cols = [
-            { field: 'vendorName', header: 'VENDOR NAME' },
-            { field: 'vendorCode', header: 'VENDOR CODE' },
-            { field: 'description', header: 'VENDOR TYPE' },
-            { field: 'stateOrProvince', header: 'VENDOR CLASSIFICATION' },
-            { field: 'vendorEmail', header: 'VENDOR EMAIL' },
-            { field: 'city', header: 'VENDOR CITY' },
-            { field: 'stateOrProvince', header: 'VENDOR STATE' },
-            { field: 'vendorPhone', header: 'VENDOR CONTACT' }
+            { field: 'vendorName', header: 'Vendor Name' },
+            { field: 'vendorCode', header: 'Vendor Code' },
+            { field: 'description', header: 'Vendor Type' },
+            { field: 'stateOrProvince', header: 'Vendor Classification' },
+            { field: 'vendorEmail', header: 'Vendor Email' },
+            { field: 'city', header: 'Vendor City' },
+            { field: 'stateOrProvince', header: 'Vendor State' },
+            { field: 'vendorPhoneContact', header: 'Vendor Contact' }
             // { field: 'createdBy', header: 'Created By' },
             // { field: 'updatedBy', header: 'Updated By' },
             // { field: 'updatedDate', header: 'Updated Date' },
@@ -213,21 +237,27 @@ export class VendorsListComponent implements OnInit {
     }
 
     handleChanges(rowData, e) {
+      
+        this.updateActiveData.updatedBy = this.userName;
+        this.updateActiveData.vendorId = rowData.vendorId;
+      
         if (e.checked == false) {
             this.sourceVendor = rowData;
-            this.sourceVendor.updatedBy = this.userName;
+           // this.sourceVendor.updatedBy = this.userName;
             this.Active = "In Active";
-            this.sourceVendor.isActive == false;
-            this.workFlowtService.updateActionforActive(this.sourceVendor).subscribe(
+            this.updateActiveData.isActive = false;
+            //this.sourceVendor.isActive == false;
+            this.workFlowtService.updateActionforActive(this.updateActiveData).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
         }
         else {
-            this.sourceVendor = rowData;
-            this.sourceVendor.updatedBy = this.userName;
+            //this.sourceVendor = rowData;
+            //this.sourceVendor.updatedBy = this.userName;
             this.Active = "Active";
-            this.sourceVendor.isActive == true;
-            this.workFlowtService.updateActionforActive(this.sourceVendor).subscribe(
+            //this.sourceVendor.isActive == true;
+            this.updateActiveData.isActive = true;
+            this.workFlowtService.updateActionforActive(this.updateActiveData).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
         }
@@ -310,6 +340,7 @@ export class VendorsListComponent implements OnInit {
         this.workFlowtService.isEditMode = true;
         this.isSaving = true;
         this.sourceVendor = row;
+        this.workFlowtService.isReset = true;
         this.loadMasterCompanies();
         this.workFlowtService.listCollection = this.sourceVendor;
         this.activeIndex = 0;
@@ -352,7 +383,7 @@ export class VendorsListComponent implements OnInit {
             { field: 'siteName', header: 'Site Name' },
             { field: 'address1', header: 'Address1' },
             { field: 'address2', header: 'Address2' },
-            { field: 'address3', header: 'Address3' },
+            //{ field: 'address3', header: 'Address3' },
             { field: 'city', header: 'City' },
             { field: 'stateOrProvince', header: 'State/Prov' },
             { field: 'postalCode', header: 'Postal Code' },
@@ -360,6 +391,96 @@ export class VendorsListComponent implements OnInit {
         ];
 
         this.selectedShippingColumns = this.shippingCol;
+    }
+
+   private loadBillingData(vendorId) {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.workFlowtService.getVendorBillAddressGet(vendorId).subscribe(
+            results => this.onBillingDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+      
+
+        this.billingCol = [
+            { field: 'siteName', header: 'Site Name' },
+            { field: 'address1', header: 'Address1' },
+            { field: 'address2', header: 'Address2' },           
+            { field: 'city', header: 'City' },
+            { field: 'stateOrProvince', header: 'State/Prov' },
+            { field: 'postalCode', header: 'Postal Code' },
+            { field: 'country', header: 'Country' }
+        ];
+
+        this.selectedBillingColumns = this.billingCol;
+    }
+
+     private loadWarningsData(vendorId) {
+        this.workFlowtService.getVendorWarnings(vendorId).subscribe(
+            data => {
+             this.warningInfoList = data[0].map(x => {
+            return {
+                ...x,
+                sourceModule: `${x.t.sourceModule == null ?'': x.t.sourceModule}`, 
+                warningMessage: `${x.t.warningMessage == null ?'': x.t.warningMessage}`,    
+                restrictMessage: `${x.t.restrictMessage == null ?'': x.t.restrictMessage}`   
+                };
+            });
+              
+            });
+
+            this.warninggCol = [
+                { field: 'sourceModule', header: 'Module' },
+                { field: 'warningMessage', header: 'Warning Message' },
+                { field: 'restrictMessage', header: 'Restrict Message' }          
+              
+            ];    
+            this.selectedWarningColumns = this.warninggCol;
+
+
+    }
+
+    private loadMemosData(vendorId) {
+
+      this.workFlowtService.getVendorPOMemolist(vendorId).subscribe(
+            res => {             
+                this.allVendorPOROList = res;              
+        });
+
+        this.workFlowtService.getVendorROMemolist(vendorId).subscribe(
+            res => {        
+                for (let value of res) {
+                    this.allVendorPOROList.push(value);
+                }                    
+        });
+
+    this.memoCols = [
+		{ field: 'module', header: 'Module' },			
+		{ field: 'orderNumber', header: 'Id' },
+        { field: 'notes', header: 'Memo text' }  
+        ];    
+   }  
+
+
+   private loadVendorDocumentsData(vendorId){
+
+    this.workFlowtService.getDocumentList(vendorId).subscribe(res => {
+        this.vendorDocumentsData = res;			
+    });
+
+    this.vendorDocumentsColumns = [
+		{ field: 'docName', header: 'Name' },
+		{ field: 'docDescription', header: 'Description' },
+		//{ field: 'documents', header: 'Documents' },
+		{ field: 'docMemo', header: 'Memo' }
+	];
+   }
+
+    private onBillingDataLoadSuccessful(allWorkFlows: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.billingInfoList = allWorkFlows;      
     }
 
     private onShippingDataLoadSuccessful(allWorkFlows: any[]) {
@@ -400,13 +521,16 @@ export class VendorsListComponent implements OnInit {
         this.allpayments = allWorkFlows;
     }
 
-    openView(content, row) {
-        
+    openView(content, row) {       
         this.vendorCode = row.vendorCode;
         this.vendorName = row.vendorName;
         this.vendorTypeId = row.t.vendorTypeId;
+        this.description=row.description;
+        console.log(this.vendorClassificationName);
         this.doingBusinessAsName = row.t.doingBusinessAsName;
         this.parent = row.t.parent;
+      
+        this.vendorParentName=row.t.vendorParentName;
         if (row.currency) {
             this.currencyId = row.currency.symbol;
         }
@@ -423,17 +547,21 @@ export class VendorsListComponent implements OnInit {
        
         this.address1 = row.address1;
         this.address2 = row.address2;
-        this.address3 = row.address3;
+       // this.address3 = row.address3;
         this.city = row.city;
         this.stateOrProvince = row.stateOrProvince;
         this.postalCode = row.postalCode;
         this.country = row.country;
+        this.vendorPhoneNo = row.t.vendorPhone;
+        this.vendorPhoneExt = row.t.vendorPhoneExt;
         this.vendorEmail = row.vendorEmail;
-        this.vendorClassificationId = row.t.vendorClassificationId;
+        //this.vendorClassificationId = row.t.vendorClassificationId;
+        this.vendorClassificationName = row.classificationName;
         this.vendorContractReference = row.t.vendorContractReference;
         this.isPreferredVendor = row.t.isPreferredVendor;
         this.licenseNumber = row.t.licenseNumber;
         this.capabilityId = row.capabilityId;
+        this.vendorCapabilityName=row.vendorCapabilityName;
         this.vendorURL = row.t.vendorURL;
         this.creditlimit = row.t.creditLimit;        
         this.discountLevel = row.discountLevel;
@@ -441,6 +569,10 @@ export class VendorsListComponent implements OnInit {
         this.loadContactDataData(row.vendorId);
         this.loadPayamentData(row.vendorId);
         this.loadShippingData(row.vendorId);
+        this.loadBillingData(row.vendorId);
+        this.loadWarningsData(row.vendorId);
+        this.loadMemosData(row.vendorId);
+        this.loadVendorDocumentsData(row.vendorId);
         this.modal = this.modalService.open(content, { size: 'lg' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -466,13 +598,16 @@ export class VendorsListComponent implements OnInit {
     AddPage() {
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
     }
-    deleteItemAndCloseModel() {
+    deleteItemAndCloseModel() {       
+       
         this.isSaving = true;
         this.isDeleteMode = true;
-        this.sourceVendor.isdelete = true;
+        this.updateActiveData.vendorId=this.sourceVendor.vendorId;
+        //this.sourceVendor.isdelete = true;
+        this.updateActiveData.isdelete=true;
         //this.sourceVendor = content;
-        this.sourceVendor.updatedBy = this.userName;
-        this.workFlowtService.updatevendorstatus(this.sourceVendor).subscribe(
+        this.updateActiveData.updatedBy = this.userName;
+        this.workFlowtService.updatevendorstatus(this.updateActiveData).subscribe(
             response => this.saveCompleted(this.sourceVendor),
             error => this.saveFailedHelper(error));
         this.modal.close();
@@ -624,6 +759,11 @@ export class VendorsListComponent implements OnInit {
         $('#step3').collapse('show');
         $('#step4').collapse('show');
         $('#step5').collapse('show');
+        $('#step6').collapse('show');
+        $('#step7').collapse('show');
+
+        $('#step9').collapse('show');
+        $('#step10').collapse('show');
     }
     CloseAllVenodrDetailsModel()
     {
@@ -632,5 +772,11 @@ export class VendorsListComponent implements OnInit {
         $('#step3').collapse('hide');
         $('#step4').collapse('hide');
         $('#step5').collapse('hide');
+        $('#step6').collapse('hide');
+        $('#step7').collapse('hide');
+
+        $('#step9').collapse('hide');
+        $('#step10').collapse('hide');
     }
+
 }

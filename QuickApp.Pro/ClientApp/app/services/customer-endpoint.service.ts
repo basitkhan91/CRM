@@ -115,18 +115,27 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _addShipViaDetails: string = '/api/Customer/addShipViaDetails';
     private readonly _addDocumentDetails: string = '/api/Customer/customerDocumentUpload';
     private readonly _addRemoveDetails: string = '/api/Customer/customerDocumentDelete';
+
+    private readonly _deleteCustomerDocuments: string = '/api/Customer/deleteCustomerDocuments';
+    
     private readonly _customerContactHistory: string = '/api/Customer/customercontactauditdetails'
     private readonly _customerGlobalSearch: string = '/api/Customer/ListGlobalSearch'
     private readonly _customerGetWarning: string = '/api/Customer/GetCustomerWarnings';
     private readonly _customerBillingHistory: string = "/api/Customer/getCustomerBillingHistory"
     private readonly _customerclassificationMapUrl: string = "/api/Customer/customerclassificationmappings";
     private readonly _deleteInternationalShippingViaMapUrl: string = '/api/Customer/deleteshippingviadetails';
+    private readonly _deleteShipVia: string = '/api/Customer/deleteshipviadetails';
+
     private readonly _deleteRestrictedParts: string = '/api/Customer/deletesRestrictedParts';
 
-    private readonly _shippingDetailsStatus: string = '/api/Customer/shippingdetailsstatus'
+    private readonly _shippingDetailsStatus: string = '/api/Customer/shippingdetailsstatus';
+    private readonly _shippingdetailsviastatus: string = '/api/Customer/shippingdetailsviastatus'
+
+    
 
     private readonly _customersBillingUpdateforActive: string = '/api/Customer/customersBillingUpdateStatus'
-
+    private readonly _getCustomerDocumentAttachmentslist: string = "/api/FileUpload/getattachmentdetails";
+    private readonly _updateCustomerDocument: string = '/api/Customer/customerDocumentUpdate';
 
 
 
@@ -188,11 +197,18 @@ export class CustomerEndpoint extends EndpointFactory {
     get deleteTaxTypeRateMapped() { return this.configurations.baseUrl + this._deleteTaxTypeRateMapped }
     get domesticShipVia() { return this.configurations.baseUrl + this._addShipViaDetails }
     get customerclassificationMapUrl() { return this.configurations.baseUrl + this._customerclassificationMapUrl; }
+    
     get deleteInternationalShippingViaMapUrl() { return this.configurations.baseUrl + this._deleteInternationalShippingViaMapUrl; }
     get deleteRestrictedParts() { return this.configurations.baseUrl + this._deleteRestrictedParts; }
     get ShippingDetailsStatus() { return this.configurations.baseUrl + this._shippingDetailsStatus }
+    get shippingdetailsviastatus() { return this.configurations.baseUrl + this._shippingdetailsviastatus }
+
 
     get customersBillingUpdateforActive() { return this.configurations.baseUrl + this._customersBillingUpdateforActive }
+    get deleteShipVia() { return this.configurations.baseUrl + this._deleteShipVia; }
+    get deleteCustomerDocuments() { return this.configurations.baseUrl + this._addRemoveDetails; }
+  
+    
 
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -1246,6 +1262,13 @@ export class CustomerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.deleteInternationalShipViaId(id, updatedBy));
             });
     }
+
+    deleteShipViaDetails<T>(id, updatedBy) {
+        return this.http.get<T>(`${this._deleteShipVia}?id=${id}&updatedBy=${updatedBy}`)
+            .catch(error => {
+                return this.handleError(error, () => this.deleteShipViaDetails(id, updatedBy));
+            });
+    }
     deleteRestrictedPartsById<T>(id, updatedBy) {
         return this.http.get<T>(`${this._deleteRestrictedParts}?id=${id}&updatedBy=${updatedBy}`)
             .catch(error => {
@@ -1258,12 +1281,32 @@ export class CustomerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.updateStatusForShippingDetails(id, status, updatedBy));
             });
     }  
+    Shippingdetailsviastatus<T>(id, status, updatedBy) {
+        return this.http.get<T>(`${this.shippingdetailsviastatus}?id=${id}&status=${status}&updatedBy=${updatedBy}`)
+            .catch(error => {
+                return this.handleError(error, () => this.Shippingdetailsviastatus(id, status, updatedBy));
+            });
+    }  
+
     CustomersBillingUpdateforActive<T>(id, status, updatedBy) {
         return this.http.get<T>(`${this.customersBillingUpdateforActive}?id=${id}&status=${status}&updatedBy=${updatedBy}`)
             .catch(error => {
                 return this.handleError(error, () => this.CustomersBillingUpdateforActive(id, status, updatedBy));
             });
     }  
+    GetUploadDocumentsList(attachmentId, customerId, moduleId) {
+        return this.http.get<any>(`${this._getCustomerDocumentAttachmentslist}?attachmentId=${attachmentId}&referenceId=${customerId}&moduleId=${moduleId}`, this.getRequestHeaders())
+    }
+
+    getdeleteDocumentListbyId(customerDocumentId) {
+        return this.http.delete(`${this._deleteCustomerDocuments}/${customerDocumentId}`, this.getRequestHeaders())
+    }
+    UpdateDocumentUpload<T>(file: any): Observable<T> {
+        const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
+        return this.http.put<T>(`${this._updateCustomerDocument}`, file);
+    }
+
+
 
 }
 

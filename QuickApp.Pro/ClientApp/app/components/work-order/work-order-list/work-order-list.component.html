@@ -1,4 +1,9 @@
-﻿<p-table
+﻿
+
+
+
+
+<p-table
   #dt
   class="rpo-table-cstm rro-table-cstm"
   [value]="workOrderData"
@@ -145,8 +150,7 @@
             class="btn btn-info boxed-float-btn nobg"
             data-toggle="tooltip"
             (click)="view(rowData)"
-            data-target="#view"
-            data-toggle="modal"
+
           >
             <i class="fa fa-eye"></i>
           </a>
@@ -935,7 +939,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">
+        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">
           Close
         </button>
       </div>

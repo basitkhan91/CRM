@@ -237,6 +237,7 @@ export class AssetCalibrationComponent implements OnInit {
         this.assetService.listCollection = this.local;
         this.activeIndex = 1;
         this.assetService.indexObj.next(this.activeIndex);
-        this.route.navigateByUrl('/assetmodule/assetpages/app-asset-capes');
+        const { assetId } = this.local;
+        this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-capes/${assetId}`);
     }
 }

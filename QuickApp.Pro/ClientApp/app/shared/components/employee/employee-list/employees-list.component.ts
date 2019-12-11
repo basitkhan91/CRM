@@ -24,6 +24,7 @@ import { EmployeeService } from '../../../../services/employee.service';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Router } from '@angular/router';
 import { AppTranslationService } from '../../../../services/app-translation.service';
+import $ from "jquery";
 
 
 
@@ -43,7 +44,7 @@ export class EmployeesListComponent implements OnInit {
     //viewempDetails: any = {};
     viewTraining: any = {};
     viewGeneralDetails: any = {};
-    allEmployeelist: any[] = [];
+    allEmployeelist: any = {};
     public originationCounty: any;
     public nationalCountry: any;
     public companyCode: any;
@@ -67,6 +68,7 @@ export class EmployeesListComponent implements OnInit {
     public empTrainningInfo: any;
     public leaveMapArray: any;
     public shiftMapArray: any;
+    auditHistory: AuditHistory[] = [];
 
     ngOnInit(): void {
 
@@ -116,8 +118,7 @@ export class EmployeesListComponent implements OnInit {
             this.shiftId = allWorkFlows[0].employeeShiftMapping.shiftId;
             this.leaveMapArray = allWorkFlows[0].employeeLeaveTypeMapping;
             this.shiftMapArray = allWorkFlows[0].employeeShiftMapping;
-
-            console.log("leaveMapArray" + this.leaveMapArray);
+           
 
         }
         //debugger;
@@ -142,10 +143,8 @@ export class EmployeesListComponent implements OnInit {
     }
     openEdit(row) {
 
-        console.log(row);
-
-        console.log("row");
-
+       //console.log(row);
+        
         //this.isEditMode = true;
         this.empService.isEditMode = true;
         //this.isSaving = true;
@@ -187,19 +186,19 @@ export class EmployeesListComponent implements OnInit {
         );
 
         this.cols = [
-            { field: 'firstName', header: 'FIRST NAME' },
-            { field: 'lastName', header: 'LAST NAME' },
-            { field: 'employeeId', header: 'EMP ID' },
+            { field: 'firstName', header: 'First Name' },
+            { field: 'lastName', header: 'Last Name' },
+            { field: 'employeeId', header: 'Emp Id' },
             // { field: 'email', header: 'Email' },
             //{ field: 'businessUnitId', header: 'BU' },
             //{ field: 'divisionId', header: 'Division' },
             //{ field: 'departmentId', header: 'Department' },
-            { field: 'jobtitle', header: 'JOB TITLE' },
-            { field: 'employeeExpertise', header: 'EMP EXPERTISE'},
-            { field: 'jobtype', header: 'JOB TYPE'},
-            { field: 'startDate', header: 'START DATE'},
-            { field: 'company', header: 'COMPANY' },
-            { field: 'paytype', header: 'PAY TYPE'}
+            { field: 'jobtitle', header: 'Job Title' },
+            { field: 'employeeExpertise', header: 'Emp Expertise'},
+            { field: 'jobtype', header: 'Job Type'},
+            { field: 'startDate', header: 'Start Date'},
+            { field: 'company', header: 'Company' },
+            { field: 'paytype', header: 'Pay Type'}
             // { field: 'createdBy', header: 'Created By' },
             // { field: 'updatedBy', header: 'Updated By' },
             // { field: 'updatedDate', header: 'Updated Date' },
@@ -239,13 +238,13 @@ export class EmployeesListComponent implements OnInit {
 
     openDelete(content, row) {
 
-        console.log(row);
+        //console.log(row);
         this.deleteEmployeeId = row.employeeId
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceEmployee = row;
 
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -364,10 +363,10 @@ export class EmployeesListComponent implements OnInit {
             error => this.onDataLoadFailed(error)
         );
 
-        this.modal = this.modalService.open(content, { size: 'lg' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+        // this.modal = this.modalService.open(content, { size: 'lg' });
+        // this.modal.result.then(() => {
+        //     console.log('When user closes');
+        // }, () => { console.log('Backdrop click') })
     }
 
     dismissModel() {
@@ -410,5 +409,40 @@ export class EmployeesListComponent implements OnInit {
         }
 
     }
+
+    ExpandAllEmployeeDetailsModel()
+    {
+        $('#step1').collapse('show');
+        $('#step2').collapse('show');
+        $('#step3').collapse('show');
+        //$('#step4').collapse('show');      
+    }
+    CloseAllEmployeerDetailsModel()
+    {
+        $('#step1').collapse('hide');
+        $('#step2').collapse('hide');
+        $('#step3').collapse('hide');
+        //$('#step4').collapse('hide');
+      
+    }
+
+    getAuditHistoryById(rowData) {
+        // this.empService.getPublicationAuditDetails(rowData.publicationRecordId).subscribe(res => {
+        //     console.log(res);            
+        //     this.auditHistory = res;
+        // })
+    }
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+
 
 }

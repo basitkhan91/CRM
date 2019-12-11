@@ -17,6 +17,7 @@ export class ItemgroupEndpointService extends EndpointFactory {
     private readonly _actionsUrlAuditHistory: string = "/api/Itemgroup/auditHistoryById";
     private readonly getItemGroupAuditDataById: string = "/api/Itemgroup/audits";
     private readonly getItemGroup: string = "/api/Itemgroup/pagination";
+    private readonly excelUpload: string = "/api/Itemgroup/UploadItemGroupCustomData";
 
     get paginate() { return this.configurations.baseUrl + this.getItemGroup; }
 
@@ -94,5 +95,9 @@ export class ItemgroupEndpointService extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getItemGroupPagination(pageSearch));
             });
+    }
+    ItemGroupCustomUpload(file) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}`, file)
+
     }
 }

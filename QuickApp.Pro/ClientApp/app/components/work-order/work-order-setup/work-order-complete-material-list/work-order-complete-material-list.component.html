@@ -4,183 +4,64 @@
 
 <!-- <div  >
 
-    <grd-material  [isWorkOrder]="isWorkOrder" [workFlowObject]="workFlowObject" (saveMaterialList)="saveMaterialListForWO.emit($event)" ></grd-material>
+   
 </div> -->
 
 
-<div>
-    <button *ngIf="!addNewMaterial" data-target="#addNewMaterials" data-toggle="modal" class="btn btn-primary btn-primary-cstm"  (click)="addNew(); " style="padding: 6px 12px !important;">Add New Material</button>
-    <button *ngIf="addNewMaterial" data-toggle="modal" data-toggle="modal" class="btn btn-primary btn-primary-cstm"  (click)="closeAddNew()" style="padding: 6px 12px !important;">Close Add New  Material</button>
+    <div>
+        <button  data-target="#addNewMaterials" data-toggle="modal" class="btn btn-primary btn-primary-cstm" (click)="createNew(); " style="padding: 6px 12px !important;">Add New Material</button>
+        <!-- <button *ngIf="addNewMaterial" data-toggle="modal" data-toggle="modal" class="btn btn-primary btn-primary-cstm" (click)="closeAddNew()" style="padding: 6px 12px !important;">Close Add New  Material</button> -->
 
 
-    <button *ngIf="(materialStatus === null || materialStatus === 4)" class="btn btn-primary btn-primary-cstm"  style="padding: 6px 12px !important;" (click)="partsIssueRI(1)" data-toggle="modal" data-target="#reserve" >Reserve Stock</button>
+        <!--<button *ngIf="(materialStatus === null || materialStatus === 4)" class="btn btn-primary btn-primary-cstm"  style="padding: 6px 12px !important;" (click)="partsIssueRI(1)" data-toggle="modal" data-target="#reserve" >Reserve Stock</button>
     <button  *ngIf="materialStatus === 1" class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(2)" data-toggle="modal" data-target="#reserve" > Issue </button>
     <button *ngIf="(materialStatus === null  || materialStatus === 4)" class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(3)" data-toggle="modal" data-target="#reserve" > Reserve & Issue </button>
     <button *ngIf="(materialStatus === 1 || materialStatus === 5)" class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(4)" data-toggle="modal" data-target="#reserve" > Unreserve </button>
-    <button *ngIf="materialStatus === 2" class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(5)" data-toggle="modal" data-target="#reserve" > UnIssue </button>
+    <button *ngIf="materialStatus === 2" class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(5)" data-toggle="modal" data-target="#reserve" > UnIssue </button>-->
 
-</div>
+        <button class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important;" (click)="partsIssueRI(1)" data-toggle="modal" data-target="#reserve">Reserve </button>
+        <button class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(2)" data-toggle="modal" data-target="#reserve"> Issue </button>
+        <button class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(3)" data-toggle="modal" data-target="#reserve"> Reserve & Issue </button>
+        <button class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(4)" data-toggle="modal" data-target="#reserve"> UnIssue </button>
+        <button class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(5)" data-toggle="modal" data-target="#reserve"> UnReserve </button>
+        
+
+    </div>
 
 
 
-<div id="addNewMaterials" class="modal fade" role="dialog">
+    <div id="addNewMaterials" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg">
       
           <!-- Modal content-->
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" (click)="closeAddNew()">&times;</button>
-              <h4 class="modal-title">Add New Material</h4>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Add Material</h4>
             </div>
             <div class="modal-body">
-                    <div *ngIf="addNewMaterial" class="fixed-table-container-inner table-responsive cat4-table fixed-column-table column-r1-fixed">
-                            <div>
-                                <span class="cat-heading cat4">
-                                    Add New Material List<i (click)="addRow()" class="fa fa-plus"></i>
-                                    <span class="float-right">
-                                        Deferred &nbsp;<input type="checkbox" (click)="isDeferredEnable($event)" />
-                                    </span>
-                                </span>
-                                
-                            </div>
-                           
-                            <table class="table table-bordered table-fixed workflow-table-material">
-                                <thead>
-                                    <tr>
-                                        <th>S.No</th>
-                                        <th>PN *</th>
-                                        <th>Description *</th>
-                                        <th>Cond *</th>
-                                        <th>Mandatory / Supplemental *</th>
-                                        <th>Item Classification</th>
-                                        <th>QTY *</th>
-                                        <th>UOM *</th>
-                                        <th>Unit Cost *</th>
-                                        <th>Extended Cost *</th>
-                                        <th>Unit Price *</th>
-                                        <th>Extended Price</th>
-                                        <th>Memo</th>
-                                        <th>Deferred</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>       
-                                <tbody>
-                                    <tr class="material-tr" [hidden]="material.isDelete" *ngFor="let material of workFlow.materialList;let i = index">
-                                        <td>{{(currentPage - 1) * itemsPerPage + i + 1}}</td>
-                                        <td>
-                                            <p-autoComplete (onSelect)="onPartSelect($event, material)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [(ngModel)]="material.partNumber"
-                                                            [minLength]="1" [dropdown]="true" class="workflow-measurement-select">
-                                                <ng-template let-partName pTemplate="part">
-                                                    <div class="ui-helper-clearfix">{{partName}}</div>
-                                                </ng-template>
-                                            </p-autoComplete>
-                                        </td>
-                                        <td>
-                                            <input rows="1" value="{{material.partDescription}}" [disabled]="true" [(ngModel)]="material.partDescription">
-                                        </td>
-                                        <td>
-                                            <select class="form-control custom-select wf-pub-id" id="ddlMaterialCondition" [(ngModel)]="material.conditionCodeId">
-                                                <option value="">Select</option>
-                                                <option *ngFor="let condition of materialCondition" value="{{condition.conditionId}}">
-                                                    {{condition.description}}
-                                                </option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <select class="form-control custom-select wf-pub-id" id="ddlMandatoryOrSupplemental" [(ngModel)]="material.mandatoryOrSupplemental" name="mandatoryOrSupplemental{{i}}" style="margin:auto;">
-                                                <option value="">Select</option>
-                                                <option *ngFor="let mandatory of materialMandatory" value="{{mandatory.name}}">
-                                                    {{mandatory.name}}
-                                                </option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <select class="form-control custom-select dropdown-select wf-pub-id" [(ngModel)]="material.itemClassificationId" [disabled]="true">
-                                                <option *ngFor="let item of itemClassInfo" value="{{item.itemClassificationId}}">
-                                                    {{item.description}}
-                                                </option>
-                                            </select>
-                                        </td>
-                                        <td style="width: 200px">
-                                            <input type="text" maxlength="10" pInputText pKeyFilter="pnum" class="form-control" value="{{material.quantity}}"  (input)="validateQuantity($event, material);calculateQtySummation();calculateExtendedCost(material);calculateExtendedPrice(material);" [(ngModel)]="material.quantity" />
-                                        </td>
-                                        <td>
-                                            <select class="form-control custom-select wf-pub-id" id="ddlMaterialUOM" [(ngModel)]="material.unitOfMeasureId">
-                                                <option value="">Select</option>
-                                                <option *ngFor="let uom of materialUOM" value="{{uom.unitOfMeasureId}}">
-                                                    {{uom.shortName}}
-                                                </option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" pInputText pKeyFilter="money" value="{{material.unitCost}}" (input)="calculateExtendedCost(material)" [(ngModel)]="material.unitCost" />
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" pInputText pKeyFilter="money" [disabled]="true" value="{{material.extendedCost}}" [(ngModel)]="material.extendedCost" />
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" pInputText pKeyFilter="money" value="{{material.price}}" [(ngModel)]="material.price" (input)="calculatePriceSummation();calculateExtendedPrice(material);" />
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control" disabled pInputText pKeyFilter="money" value="{{material.extendedPrice}}" [(ngModel)]="material.extendedPrice" />
-                                        </td>
-                                        <td>
-                                            <textarea style="height: 25px;margin-top: 5px;min-width: 130px !important;" class="form-control" [(ngModel)]="material.memo" value="{{material.memo}}"></textarea>
-                                        </td>
-                                        <td style="width:30px;">
-                                            <div class="custom-checkbox-box">
-                                                <input class="filled-in" id="PMS" type="checkbox" value="{{material.isDeferred}}" [(ngModel)]="material.isDeferred">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-danger nobg" (click)="deleteRow(i)">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                <tfoot *ngIf="workFlow.materialList.length > 0" >
-                                    <tr>
-                                        <td>
-                                            Total
-                                        </td>
-                                        <td> &nbsp;</td>
-                        
-                                        <td> &nbsp;</td>
-                                        <td> &nbsp;</td>
-                                        <td> &nbsp;</td>
-                                        <td> &nbsp;</td>
-                                        <td> {{workFlow.materialQtySummation}}</td>
-                                        <td> &nbsp;</td>
-                                        <td> &nbsp;</td>
-                                        <td>{{workFlow.materialExtendedCostSummation}}</td>
-                                        <td>{{workFlow.totalMaterialCost}}</td>
-                                        <td>{{workFlow.materialExtendedPriceSummation}}</td>
-                                        <td> &nbsp;</td>
-                                        <td> &nbsp;</td>
-                                        <td> &nbsp;</td>
-                                    </tr>
-                                </tfoot>
-                        
-                        
-                                
-                            </table>
-                        
-                    
-                            <div style="float:right"> 
-                    
-                                    <button *ngIf="isWorkOrder" class="btn btn-primary btn-primary-cstm"  (click)="saveMaterialListForWorkOrder(); closeAddNew();" style="padding: 6px 12px !important;">Save</button>
-                            </div>
-                        
-                    </div>
+                <grd-material  *ngIf="!isEdit" 
+                [isWorkOrder]="isWorkOrder" 
+                [workFlow]="workFlowObject" 
+                (saveMaterialListForWO)="saveMaterialList($event)" ></grd-material>
+            
+              <grd-material *ngIf="isEdit && editData"
+                [isEdit]="isEdit"
+                [editData]="editData"
+                [isWorkOrder]="isWorkOrder" 
+                [workFlow]="workFlowObject" 
+                (updateMaterialListForWO)="updateMaterialList($event)" >
+            </grd-material> 
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal" (click)="closeAddNew()">Close</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
           </div>
       
         </div>
       </div>
+
+
 
 
     
@@ -224,6 +105,7 @@
                                 <th class="text-center">Location</th>
                                 <th class="text-center">Shelf</th>
                                 <th class="text-center">Bin</th>
+                                <th colspan="4" class="text-center"></th>
 
                             </tr>
                         </thead>
@@ -240,10 +122,10 @@
                                 <td>{{m.condition}}</td>
                                 <td>{{m.itemType}}</td>
                                 <td>{{m.qunatityRequried}}</td>
-                                <td>{{m.qunatityReserved}}</td>
-                                <td>{{m.qunatityTurnIn}}</td>
-                                <td>{{m.qunatityIssued}}</td>
-                                <td>{{m.qunatityBackOrder}}</td>
+                                <td>{{m.quantityReserved}}</td>
+                                <td>{{m.quantityTurnIn}}</td>
+                                <td>{{m.quantityIssued}}</td>
+                                <td>{{m.quantityBackOrder}}</td>
                                 <td>{{m.qunatityRemaining}}</td>
                                 <td>{{m.unitCost}}</td>
                                 <td>{{m.extendedCost}}</td>
@@ -262,25 +144,30 @@
                                 <td>{{m.location}}</td>
                                 <td>{{m.shelf}}</td>
                                 <td>{{m.bin}}</td>
+                                <td>
+                                    <button
+                                      class="btn-edit ptable-wo-btns"
+                                      mat-icon-button
+                                      data-target="#addNewMaterials" 
+                                      data-toggle="modal"
+                                      (click)="edit(m)"
+                                      matTooltip="Edit"
+                                    >
+                                      <mat-icon>edit</mat-icon>
+                                    </button>
+                                  </td>
+                                  <td>
+                                    <button
+                                      class="btn-delete ptable-wo-btns"
+                                      mat-icon-button
+                                      matTooltip="Delete"
+                                      (click)="delete(m)"
+                                    >
+                                      <mat-icon color="warn">delete</mat-icon>
+                                    </button>
+                                  </td>
                            
                             </tr>
-                             
-                                <!-- <td>
-                                    <span data-toggle="modal" data-target="#delete">
-                                        <a class="btn btn-success boxed-float-btn nobg" data-toggle="tooltip"
-                                            title="Delete Material"><i class="fa fa-trash"></i></a>
-                                    </span>
-                                </td> -->
-                            <!-- <div class="text-right">
-                                    <button class="btn btn-primary" (click)="saveAssets()" >
-                                            save Assets
-                                        </button>
-                            </div> -->
-    
-                            <!-- <div *ngIf="workOrderAssetList" class="text-right save-work-btn" >
-                                    <button class="btn btn-primary btn-primary-cstm"  style="padding: 6px 12px !important;">Save Assets</button>
-                                </div> -->
-     
                         </tbody>
                     </table>
                 </div>
@@ -311,61 +198,62 @@
                                             <thead>
                                                 <tr>
                                                     <th class="text-center"></th>
-                                                    <th colspan="6" class="text-center"> Materials</th>
+                                                    <th colspan="8" class="text-center"> Materials</th>
                                                     <th colspan="4" class="text-center"> StockLine</th>
                                                     <th  class="text-center" colspan="3"></th>
                                                     <th class="text-center" colspan="3"></th>
 
                                                 </tr>
                                                 <tr>
-                                                    <th class="text-center"> 
-                                                      Alternate Parts
+                                                    <th class="text-center">
+                                                        Alternate Parts
                                                     </th>
                                                     <th class="text-center">PN </th>
                                                     <th class="text-center">Description</th>
 
                                                     <th class="text-center">Qty Requried</th>
+                                                    <th class="text-center">Qty Already Reserved</th>
                                                     <th class="text-center">Qty Reserved</th>
                                                     <th class="text-center">Qty Turn IN </th>
+                                                    <th class="text-center">Qty Already Issued</th>
                                                     <th class="text-center">Qty Issued</th>
-
                                                     <th class="text-center"> Qty ON Hand </th>
                                                     <th class="text-center"> Qty ON Available </th>
                                                     <th class="text-center"> Qty ON  ORDER  </th>
-                                                 
- 
-
                                                     <th class="text-center">Reserved By</th>
                                                     <th class="text-center">Reserved Date</th>
                                                     <th class="text-center">Issued By</th>
                                                     <th class="text-center">Issed Date</th>
-            
-
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr *ngFor="let x of reservedList; let i=index;">
 
                                                     <td>
-                                                        <input type="checkbox" name="isParentChecked{{i}}" (ngModelChange)="showAlternateParts($event , x.woReservedIssuedAltParts)" [(ngModel)]="x.isParentChecked">
+                                                        <input type="checkbox" name="isParentChecked{{i}}" (ngModelChange)="showAlternateParts($event , x.woReservedIssuedAltParts)" [(ngModel)]="x.isParentChecked" (change)="selectedParts()">
                                                     </td>
 
-                                                      
+
                                                     <td>{{x.partNumber}}</td>
                                                     <td>{{x.partDescription}}</td>
                                                     <td>
                                                         <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantity">
                                                     </td>
                                                     <td>
-                                                            <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityReserved">
-                                                        </td>
-                                                    <td>
-                                                            <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityTurnIn">
-                                                      
+                                                        {{x.quantityAlreadyReserved}}
                                                     </td>
                                                     <td>
-                                                            <input type="number" name="quantity{{i}}" [(ngModel)]="x.qunatityIssued">
-                                                      
+                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityReserved" (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 2 ||  statusId === 3 ">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityTurnIn">
+
+                                                    </td>
+                                                    <td>
+                                                        {{x.quantityAlreadyIssued}}
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityIssued"  (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 1 || statusId === 3 ">
                                                     </td>
 
                                                     <td></td>
@@ -373,94 +261,98 @@
                                                     <td></td>
 
                                                     <td>
-                                                      {{x.reservedBy}}
+                                                        {{x.reservedBy}}
                                                     </td>
                                                     <td>
-                                                      {{x.reservedDate | date:'MM-dd-yyyy'}}
+                                                        {{x.reservedDate | date:'MM-dd-yyyy'}}
                                                     </td>
                                                     <td>
-                                                    {{x.issuedBy}}
+                                                        {{x.issuedBy}}
                                                     </td>
                                                     <td>
-                                                     {{x.issuedDate | date:'MM-dd-yyyy'}}
+                                                        {{x.issuedDate | date:'MM-dd-yyyy'}}
                                                     </td>
-                                              
+
                                                 </tr>
 
                                             
                                                 <tr [hidden]="alternatePartData.length === 0">
-    
-                                                        <th class="text-center"> 
-                                                               
-                                                        </th>
-                                                        <th class="text-center">PN </th>
-                                                        <th class="text-center">Description</th>
-                                                        <th class="text-center">Qty Requried</th>
-                                                        <th class="text-center">Qty Reserved</th>
-                                                        <th class="text-center">Qty Turn IN </th>
-                                                        <th class="text-center">Qty Issued</th>
-    
-                                                        <th class="text-center"> Qty ON Hand </th>
-                                                        <th class="text-center"> Qty ON Available </th>
-                                                        <th class="text-center"> Qty ON  ORDER  </th>
-                                                     
-    
-        
-    
-                                                        <th class="text-center">Reserved By</th>
-                                                        <th class="text-center">Reserved Date</th>
-                                                        <th class="text-center">Issued By</th>
-                                                        <th class="text-center">Issed Date</th>
 
-    
-                                                    </tr>
+                                                    <th class="text-center">
+
+                                                    </th>
+                                                    <th class="text-center">PN </th>
+                                                    <th class="text-center">Description</th>
+                                                    <th class="text-center">Qty Requried</th>
+                                                    <th class="text-center">Qty Already Reserved</th>
+                                                    <th class="text-center">Qty Reserved</th>
+                                                    <th class="text-center">Qty Turn IN </th>
+                                                    <th class="text-center">Qty Already Issued</th>
+                                                    <th class="text-center">Qty Issued</th>
+
+                                                    <th class="text-center"> Qty ON Hand </th>
+                                                    <th class="text-center"> Qty ON Available </th>
+                                                    <th class="text-center"> Qty ON  ORDER  </th>
+
+
+
+
+                                                    <th class="text-center">Reserved By</th>
+                                                    <th class="text-center">Reserved Date</th>
+                                                    <th class="text-center">Issued By</th>
+                                                    <th class="text-center">Issed Date</th>
+
+
+                                                </tr>
                                              
-                                                <tr   *ngFor="let x of alternatePartData; "  >
-                                       
-                                                        <td>
-                                                            <input type="checkbox" [(ngModel)]="x.isChildChecked" name="isChildChecked{{i}}" >
-                                                        </td>
-                                                        <td>{{x.altPartNumber}}</td>
-                                                        <td>{{x.altPartDescription}}</td>
-                                                        <td>
-                                                            <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantity">
-                                                        </td>
-                                                        <td>
-                                                                <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityReserved">
-                                                            </td>
-                                                        <td>
-                                                                <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityTurnIn">
-                                                          
-                                                        </td>
-                                                        <td>
-                                                                <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityIssued">
-                                                          
-                                                        </td>
-    
-                                                        <td>
-                                                            {{x.quantityOnHand}}
-                                                            <!-- <input type="number" name="alterHand{{i}}" [(ngModel)]="x.quantityOnHand"> -->
-                                                        </td>
-                                                        <td>
+                                                <tr *ngFor="let x of alternatePartData; ">
+
+                                                    <td>
+                                                        <input type="checkbox" [(ngModel)]="x.isChildChecked" name="isChildChecked{{i}}" (change)="selectedParts()">
+                                                    </td>
+                                                    <td>{{x.altPartNumber}}</td>
+                                                    <td>{{x.altPartDescription}}</td>
+                                                    <td>
+                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantity">
+                                                    </td>
+                                                    <td>{{x.quantityAlreadyReserved}}</td>
+                                                    <td>
+                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityReserved" (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 2 ||  statusId === 3 ">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityTurnIn">
+
+                                                    </td>
+                                                    <td>{{x.quantityAlreadyReserved}}</td>
+                                                    <td>
+                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityIssued" (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 1 || statusId === 3 ">
+
+                                                    </td>
+
+                                                    <td>
+                                                        {{x.quantityOnHand}}
+                                                        <!-- <input type="number" name="alterHand{{i}}" [(ngModel)]="x.quantityOnHand"> -->
+                                                    </td>
+                                                    <td>
                                                         {{x.quantityAvailable}}
-                                                          <!-- <input type="number" name="alterAvailable{{i}}" [(ngModel)]="x.quantityAvailable"> -->
-                                                        </td>
-                                                        <td>
-                                                            {{x.quantityOnOrder}}
-                                                          <!-- <input type="number" name="alterOrder{{i}}" [(ngModel)]="x.quantityOnOrder"> -->
-                                                        </td>
-                                                        <td>
-                                                          {{x.reservedBy}}
-                                                        </td>
-                                                        <td>
-                                                          {{x.reservedDate | date:'MM-dd-yyyy'}}
-                                                        </td>
-                                                        <td>
+                                                        <!-- <input type="number" name="alterAvailable{{i}}" [(ngModel)]="x.quantityAvailable"> -->
+                                                    </td>
+                                                    <td>
+                                                        {{x.quantityOnOrder}}
+                                                        <!-- <input type="number" name="alterOrder{{i}}" [(ngModel)]="x.quantityOnOrder"> -->
+                                                    </td>
+                                                    <td>
+                                                        {{x.reservedBy}}
+                                                    </td>
+                                                    <td>
+                                                        {{x.reservedDate | date:'MM-dd-yyyy'}}
+                                                    </td>
+                                                    <td>
                                                         {{x.issuedBy}}
-                                                        </td>
-                                                        <td>
-                                                         {{x.issuedDate | date:'MM-dd-yyyy'}}
-                                                        </td>
+                                                    </td>
+                                                    <td>
+                                                        {{x.issuedDate | date:'MM-dd-yyyy'}}
+                                                    </td>
                                                 </tr>
                                                 
 
@@ -471,7 +363,7 @@
                                             </tbody>
                                         </table>
                                         <div style="float:right"> 
-                                                <button  class="btn btn-primary btn-primary-cstm"  (click)="saveRIPart()" style="padding: 6px 12px !important;">Save </button>
+                                                <button  class="btn btn-primary btn-primary-cstm" data-dismiss="modal"  (click)="saveRIPart()" [disabled]="!checkedParts.length > 0" style="padding: 6px 12px !important;">Save </button>
                                             </div>  
                                         
       
@@ -480,7 +372,7 @@
 
    
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
             </div>
           </div>
       

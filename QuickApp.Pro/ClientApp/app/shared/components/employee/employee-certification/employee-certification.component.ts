@@ -25,6 +25,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AppTranslationService } from '../../../../services/app-translation.service';
 import { CertificationtypeService } from '../../../../services/certificationtype.service';
 import { CertificationType } from '../../../../models/certificationtype.model';
+import { editValueAssignByCondition } from '../../../../generic/autocomplete';
 
 
 
@@ -109,9 +110,7 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
 
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
-
-        console.log(this.employeeService.generalCollection);
-        console.log(this.local);
+      
         if (this.employeeService.generalCollection) {
 
             this.local = this.employeeService.generalCollection;
@@ -125,11 +124,11 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
                 this.nextbuttonEnable = true;
 
             }
-            console.log("this.sourceemployee")
-            console.log(this.sourceEmployee);
+           
+            console.log(this.sourceEmployee);            
             this.empId = this.sourceEmployee.employeeId;
-            this.firstName = this.sourceEmployee.firstName;
-            this.lastName = this.sourceEmployee.lastName;
+            this.firstName = editValueAssignByCondition('firstName', this.sourceEmployee.firstName);
+            this.lastName = editValueAssignByCondition('lastName', this.sourceEmployee.lastName);
             this.local = this.employeeService.listCollection;
             // this.sourceEmployee.certificationDate = new Date();
             this.getwithemployeeLicensureId();
@@ -144,9 +143,7 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
         this.dataSource.sort = this.sort;
     }
 
-    loadCerertifcationByempId() {
-        console.log(this.empId)
-
+    loadCerertifcationByempId() {       
         this.employeeService.getEmployeeCertifications(this.empId).subscribe(
             data => {
                 this.bindData(data);
@@ -155,7 +152,7 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
 
     bindData(data: any) {
 
-        var newData: any = console.log(data[0]);
+        //var newData: any = console.log(data[0]);
 
 
 
@@ -165,10 +162,24 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
 
         // console.log(data[0].t.isExpirationDate);
         // console.log(data[0].t.expirationDate);
-        this.sourceEmployee.ExpirationDate = new Date(this.sourceEmployee.expirationDate);
+      
+if (this.sourceEmployee.expirationDate == undefined) {
+    this.sourceEmployee.expirationDate = "";
+}
+  else{
+    this.sourceEmployee.expirationDate = new Date(this.sourceEmployee.expirationDate);
+  }
+      
+  if(this.sourceEmployee.isExpirationDate == undefined)
+  {
+    this.sourceEmployee.isExpirationDate = false;
+  }
+  else{
+    this.sourceEmployee.isExpirationDate = this.sourceEmployee.isExpirationDate;
+  }
        
-        this.sourceEmployee.IsExpirationDate = data[0].t.isExpirationDate;
-              // console.log(this.sourceEmployee);
+     
+             //  console.log(this.sourceEmployee);
 
 
     }
@@ -176,17 +187,10 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.employeeService.currentUrl = '/employeesmodule/employeepages/app-employee-certification';
-        console.log('Passing Params');
+        
         this.route.queryParams
             .filter(params => params.order)
-            .subscribe(params => {
-                console.log(params); // {order: "popular"}
-                //  console.log(params.order);
-                // var decodeString = atob(params.order);
-
-                //   var myNewObj = JSON.parse(decodeString);
-
-                //    console.log(myNewObj);
+            .subscribe(params => {               
                 this.empId = params.order;
 
                 if (this.empId) {
@@ -199,9 +203,8 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
                 //this.nextEnable();
                 this.firstName = params.firstname;
                 this.lastName = params.lastname;
-                console.log(this.empId);
-            });
-
+                
+            });      
 
         this.employeeService.bredcrumbObj.next(this.employeeService.currentUrl);
         this.employeeService.ShowPtab = true;
@@ -215,16 +218,12 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
 
     saveCertificateData() {
         console.log(this.sourceEmployee);
-        if (this.sourceEmployee.IsExpirationDate == undefined) {
-            this.sourceEmployee.IsExpirationDate = false;
+        if (this.sourceEmployee.isExpirationDate == undefined) {
+            this.sourceEmployee.isExpirationDate = false;
         }
         if (this.sourceEmployee.isLicenseInForce == undefined) {
             this.sourceEmployee.isLicenseInForce = false;
-        }
-
-        console.log("EmpLicenseId" + this.sourceEmployee.EmployeeLicenseTypeId);
-
-
+        }       
 
         this.isSaving = true;
         if (!this.sourceEmployee.employeeLicensureId) {
@@ -237,10 +236,8 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
             this.sourceEmployee.employeeId = this.empId;
             this.employeeService.newAddCertification(this.sourceEmployee).subscribe(
                
-                data => {
-                  
-                    console.log(data);
-                    //this.alertService.showMessage('Employee Certification Added successfully.');
+                data => {                  
+                                       //this.alertService.showMessage('Employee Certification Added successfully.');
                     this.alertService.showMessage("Success",'Employee Certification Added successfully.', MessageSeverity.success);
                     this.localCollection = data;
                     this.nextClick();
@@ -352,11 +349,11 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
     }
 
     private onDataLoadSuccessfulforCertification(allWorkFlows: any[]) {
-        console.log(allWorkFlows);
+       
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.allCertification = allWorkFlows;
-        console.log(this.allCertification);
+        this.allCertification = allWorkFlows;     
+        console.log("this.allCertification::", this.allCertification);
 
     }
 
@@ -594,8 +591,7 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
         this.router.navigate(['/employeesmodule/employeepages/app-employee-training'], { queryParams: { order: this.empId, 'firstName': this.firstName, 'lastName': this.lastName } });
 
     }
-    previousClick() {
-        console.log(this.local);
+    previousClick() {        
         this.employeeService.listCollection = this.local;
         this.activeIndex = 0;
         this.employeeService.indexObj.next(this.activeIndex);
@@ -686,7 +682,7 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
         this.loadMasterCompanies();
         this.description = "";
         this.sourceEmployee.isActive = true;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop : 'static', keyboard : false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })

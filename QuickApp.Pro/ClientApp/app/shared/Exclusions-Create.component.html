@@ -1,67 +1,158 @@
-<div class="fixed-table-container-inner table-responsive cat4-table" style="height:380px;">
-    <div style="position: absolute; width: 100%; z-index: 1;">
-        <span class="cat-heading cat4" >Add New Exclusions <i (click)="addRow()" class="fa fa-plus"></i></span>
-    </div>
-    <table class="table table-bordered table-fixed workflow-table-exclusion" style="margin-top:31px;" >
-        
-        <tr >
-                <th><label>S.No</label></th>
-            <th><label>EPN *</label></th>
-            <th><label>EPN Description *</label></th>
-            <th><label>QTY </label></th>
-            <th><label>Unit Cost</label></th>
-            <th><label>Extended </label></th>
-            <th><label>Estimated % Occurance</label></th>
-            <th><label>Memo</label></th>
-            <th><label>Action </label></th>
-        </tr>
+<div
+  class="fixed-table-container-inner table-responsive cat4-table"
+  style="height:380px;"
+>
+  <div style="width: 100%; z-index: 1;" *ngIf="!isEdit">
+    <span class="cat-heading cat4"
+      >Add New Exclusions <i (click)="addRow()" class="fa fa-plus"></i
+    ></span>
+  </div>
+  <table class="table table-bordered table-fixed workflow-table-exclusion">
+    <tr>
+      <th><label>S.No</label></th>
+      <th><label>EPN *</label></th>
+      <th><label>EPN Description *</label></th>
+      <th><label>QTY </label></th>
+      <th><label>Unit Cost</label></th>
+      <th><label>Extended </label></th>
+      <th><label>Estimated % Occurance</label></th>
+      <th><label>Memo</label></th>
+      <th><label>Action </label></th>
+    </tr>
 
-        <tr  [hidden]="exclusion.isDelete" *ngFor="let exclusion of workFlow.exclusions; let i = index">
-                <td>{{(currentPage - 1) * itemsPerPage + i + 1}}</td>
-            <td>
-                <p-autoComplete (onSelect)="onPartSelect($event, exclusion)"
-                                [suggestions]="partCollection"
-                                (completeMethod)="filterpartItems($event)"
-                                [size]="30"
-                                [(ngModel)]="exclusion.partNumber"
-                                [minLength]="1" [dropdown]="true" class="workflow-measurement-select">
-                    <ng-template let-partName pTemplate="part">
-                        <div class="ui-helper-clearfix">{{partName}}</div>
-                    </ng-template>
-                </p-autoComplete>
-            </td>
-            <td><input type="text" class="form-control" [(ngModel)]="exclusion.partDescription" value="{{exclusion.partDescription}}" [disabled]="true"></td>
-            <td><input type="text" class="form-control" pInputText pKeyFilter="pnum" maxlength="10" (input)="validateQuantity($event, exclusion);calculateExtendedCost(exclusion); calculateQtySummation();" [(ngModel)]="exclusion.quantity" value="{{exclusion.quantity}}" ></td>
-            <td><input type="text" class="form-control" pInputText pKeyFilter="money" (input)="calculateExtendedCost(exclusion)"  [(ngModel)]="exclusion.unitCost" value="{{exclusion.unitCost}}"></td>
-            <td><input type="text" class="form-control" pInputText pKeyFilter="money"  [(ngModel)]="exclusion.extendedCost" value="{{exclusion.extendedCost}}" disabled></td>
-            <td style="padding: 4px 8px;">
-                <select class="form-control custom-select wf-pub-id" id="ddlEstimatedOccurance" [(ngModel)]="exclusion.estimtPercentOccurrance">
-                    <option value="">select</option>
-                    <option value="{{occurance.id}}" *ngFor="let occurance of exclusionEstimatedOccurances;let i= index">{{occurance.name + '%'}}</option>
-                </select>
-            </td>
-            <td>
-                <!--<input type="text" class="form-control" pInputText [(ngModel)]="exclusion.memo" value="{{exclusion.memo}}" style="width:90px;">-->
-                <textarea style="height: 25px; margin-top: 5px;width: 130px;" class="form-control" [(ngModel)]="exclusion.memo" value="{{exclusion.memo}}"></textarea>
-            </td>
-            <td>
-                <button class="btn btn-danger nobg" (click)="deleteRow(i)">
-                    <i class="fa fa-trash"></i>
-                </button>
-            </td>
-        </tr>
-    
-        <tr>
-            <td>Total</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-             <td>{{workFlow.sumofQty}}</td>
-            <td>&nbsp;</td>
-            <td>{{workFlow.sumofExtendedCost}}</td>   
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-        </tr>
+    <tr
+      [hidden]="exclusion.isDelete"
+      *ngFor="let exclusion of workFlow.exclusions; let i = index"
+    >
+      <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+      <td>
+        <p-autoComplete
+          (onSelect)="onPartSelect($event, exclusion)"
+          [suggestions]="partCollection"
+          (completeMethod)="filterpartItems($event)"
+          [size]="30"
+          [(ngModel)]="exclusion.partNumber"
+          [minLength]="1"
+          [dropdown]="true"
+          class="workflow-measurement-select"
+        >
+          <ng-template let-partName pTemplate="part">
+            <div class="ui-helper-clearfix">{{ partName }}</div>
+          </ng-template>
+        </p-autoComplete>
+      </td>
+      <td>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="exclusion.partDescription"
+          value="{{ exclusion.partDescription }}"
+          [disabled]="true"
+        />
+      </td>
+      <td>
+        <input
+          type="text"
+          class="form-control"
+          pInputText
+          pKeyFilter="pnum"
+          maxlength="10"
+          (input)="
+            validateQuantity($event, exclusion);
+            calculateExtendedCost(exclusion);
+            calculateQtySummation()
+          "
+          [(ngModel)]="exclusion.quantity"
+          value="{{ exclusion.quantity }}"
+        />
+      </td>
+      <td>
+        <input
+          type="text"
+          class="form-control"
+          pInputText
+          pKeyFilter="money"
+          (input)="calculateExtendedCost(exclusion)"
+          [(ngModel)]="exclusion.unitCost"
+          value="{{ exclusion.unitCost }}"
+        />
+      </td>
+      <td>
+        <input
+          type="text"
+          class="form-control"
+          pInputText
+          pKeyFilter="money"
+          [(ngModel)]="exclusion.extendedCost"
+          value="{{ exclusion.extendedCost }}"
+          disabled
+        />
+      </td>
+      <td style="padding: 4px 8px;">
+        <select
+          class="form-control custom-select wf-pub-id"
+          id="ddlEstimatedOccurance"
+          [(ngModel)]="exclusion.estimtPercentOccurrance"
+        >
+          <option value="">select</option>
+          <option
+            value="{{ occurance.id }}"
+            *ngFor="
+              let occurance of exclusionEstimatedOccurances;
+              let i = index
+            "
+            >{{ occurance.name + '%' }}</option
+          >
+        </select>
+      </td>
+      <td>
+        <!--<input type="text" class="form-control" pInputText [(ngModel)]="exclusion.memo" value="{{exclusion.memo}}" style="width:90px;">-->
+        <textarea
+          style="height: 25px; margin-top: 5px;width: 130px;"
+          class="form-control"
+          [(ngModel)]="exclusion.memo"
+          value="{{ exclusion.memo }}"
+        ></textarea>
+      </td>
+      <td>
+        <button class="btn btn-danger nobg" (click)="deleteRow(i)">
+          <i class="fa fa-trash"></i>
+        </button>
+      </td>
+    </tr>
 
-    </table>
+    <tr>
+      <td>Total</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>{{ workFlow.sumofQty }}</td>
+      <td>&nbsp;</td>
+      <td>{{ workFlow.sumofExtendedCost }}</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+  </table>
+
+  <div *ngIf="isWorkOrder && !isEdit" style="float:right">
+    <button
+      *ngIf="isWorkOrder"
+      class="btn btn-primary btn-primary-cstm"
+      (click)="saveExclusionsWorkOrder()"
+      style="padding: 6px 12px !important;margin-top: 10px;"
+    >
+      Save
+    </button>
+  </div>
+
+  <div *ngIf="isWorkOrder && isEdit" style="float:right">
+    <button
+      *ngIf="isWorkOrder"
+      class="btn btn-primary btn-primary-cstm"
+      (click)="updateExclusionsWorkOrder()"
+      style="padding: 6px 12px !important;margin-top: 10px;"
+    >
+      Update
+    </button>
+  </div>
 </div>

@@ -61,7 +61,7 @@ namespace QuickApp.Pro.Controllers
 
         [HttpPost("itemgrouppost")]
         //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
-        public IActionResult CreateAction([FromBody] Itemgroup itemgroupViewModel)
+        public IActionResult CreateAction([FromBody] ItemgroupViewModel itemgroupViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
         [HttpPut("itemgrouppost/{id}")]
-        public IActionResult UpdateAction(long id, [FromBody] Itemgroup itemgroupViewModel)
+        public IActionResult UpdateAction(long id, [FromBody] ItemgroupViewModel itemgroupViewModel)
         {
 
             if (ModelState.IsValid)
@@ -226,6 +226,14 @@ namespace QuickApp.Pro.Controllers
         {
             public int TotalRecordsCount { get; set; }
             public List<ItemGroupViewModel> ItemGroupList { get; set; }
+        }
+
+        [HttpPost("UploadItemGroupCustomData")]
+        public IActionResult UploadItemGroupCustomData()
+        {
+
+            _unitOfWork.FileUploadRepository.UploadCustomFile(Convert.ToString("ItemGroup"), Request.Form.Files[0]);
+            return Ok();
         }
 
 

@@ -68,7 +68,8 @@ export class ROViewListComponent implements OnInit {
     }
 
     toggleExpandIcon(part: RepairOrderPart) {
-        part.showStockLineGrid = part.showStockLineGrid != undefined ? true : !part.showStockLineGrid; 
+        part.showStockLineGrid = !part.showStockLineGrid; 
+        //part.showStockLineGrid = part.showStockLineGrid != undefined ? true : !part.showStockLineGrid; 
         //this.toggleIcon = !this.toggleIcon;
     }
 

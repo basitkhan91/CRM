@@ -33,7 +33,7 @@ export class GLAccountClassService {
 		private authService: AuthService,
 		private glaccountclassEndpoint: GLAccountClassEndpoint) { }
 
-	getWorkFlows() {
+    getGlAccountClassList() {
 		return Observable.forkJoin(
 			this.glaccountclassEndpoint.getGLAccountclassEndpoint<any>());
 	}

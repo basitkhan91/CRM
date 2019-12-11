@@ -36,6 +36,7 @@ export class VendorService {
     purchasepartcollection: any[] = [];
     repairecollection: any;
     isEditMode: boolean = false;
+    isReset: boolean = false;
     paymentCollection: any;
     listCollection: any;
     generalCollection: any;
@@ -172,7 +173,7 @@ export class VendorService {
     }
     getVendorWarnings(vendorId: any) {
         return Observable.forkJoin(
-            this.actionEndpoint.getVendorwarnigs<any[]>(vendorId));
+            this.actionEndpoint.getVendorwarnigs<any>(vendorId));
     }
     getVendorShipViaDetails(rowData) {
         return Observable.forkJoin(
@@ -707,6 +708,46 @@ export class VendorService {
         return this.actionEndpoint.updateVendorPOROmemolist(id, type, memoText,updatedBy);
     }
     
+    getDocumentList(vendorId) {
+        return this.actionEndpoint.getDocumentList(vendorId)
+    }
+	
+	
+	 documentUploadAction(action: any) {
+        return this.actionEndpoint.getDocumentUploadEndpoint<any>(action);
+    }
+
+    getDocumentListbyId(vendorDocumentId) {
+        return this.actionEndpoint.getDocumentListbyId(vendorDocumentId)
+    }
+	
+	
+	 documentUpdateUploadAction(action: any) {
+        return this.actionEndpoint.getUpdateDocumentUploadEndpoint<any>(action);
+    }
+
+    toGetUploadDocumentsList(attachmentId, vendorId,moduleId)
+    {
+        return this.actionEndpoint.GetUploadDocumentsList(attachmentId, vendorId,moduleId);
+    }
+
+    getDeleteDocumentListbyId(vendorDocumentId) {
+        return this.actionEndpoint.getdeleteDocumentListbyId(vendorDocumentId)
+    }
+    
+    getShipaddressHistory(vendorId, vendorShippingAddressId) {
+        return this.actionEndpoint.getVendorShippingAuditHistory(vendorId, vendorShippingAddressId);
+    }
+    getVendorBillingAuditHistory(vendorId, vendorBillingaddressId) {
+        return this.actionEndpoint.getVendorBillingAuditHistory(vendorId, vendorBillingaddressId);
+    }
+    getVendorContactAuditHistory(vendorId, vendorContactId) {
+        return this.actionEndpoint.getVendorContactAuditHistory(vendorId, vendorContactId);
+    }
+
+    getVendorDocumentAuditHistory(id) {
+        return this.actionEndpoint.getVendorDocumentAuditHistory(id);
+    }
       
 }
 

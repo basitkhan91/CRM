@@ -16,6 +16,7 @@ export class ItemClassificationEndpointService extends EndpointFactory {
     private readonly _actionsUrlAuditHistory: string = "/api/ItemClassification/auditHistoryById";
     private readonly getItemClassificationAuditById: string = "/api/ItemClassification/audits";
     private readonly getItemClassification: string = "/api/ItemClassification/pagination";
+    private readonly excelUpload: string = "/api/ItemClassification/UploadItemClassCustomData";
 
     get paginate() { return this.configurations.baseUrl + this.getItemClassification; }
     get getCodeUrl() { return this.configurations.baseUrl + this._itemclassificationGetUrl; }
@@ -91,5 +92,9 @@ export class ItemClassificationEndpointService extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getItemClassificationPagination(pageSearch));
             });
+    }
+    ItemClassCustomUpload(file) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}`, file)
+
     }
 }

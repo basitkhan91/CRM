@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { VendorService } from '../../../../services/vendor.service';
 import { ConditionService } from '../../../../services/condition.service';
 import { LegalEntityService } from '../../../../services/legalentity.service';
@@ -15,6 +15,8 @@ import { UnitOfMeasureService } from '../../../../services/unitofmeasure.service
 import { GlAccountService } from '../../../../services/glAccount/glAccount.service';
 import { GlAccount } from '../../../../models/GlAccount.model';
 import { ShippingService } from '../../../../services/shipping/shipping-service';
+import { CommonService } from '../../../../services/common.service';
+import { CustomerService } from '../../../../services/customer.service';
 
 @Component({
     selector: 'app-edit-po',
@@ -48,7 +50,7 @@ export class EditPoComponent implements OnInit {
     rpoEditPF: boolean = true; //remove once add dynamic content
     rpoEditCF: boolean = true; //remove once add dynamic content
     memoNotes: string;
-    purchaseOrderData: PurchaseOrder;
+    purchaseOrderData: any = {};
     pageTitle: string = 'Edit Receieve PO';
     poStatus: DropDownData[];
     poUserType: DropDownData[];
@@ -61,7 +63,12 @@ export class EditPoComponent implements OnInit {
     SiteList: any[];
     GLAccountList: GlAccount[];
     currentDate: Date;
-    ShippingViaList : DropDownData[];
+    ShippingViaList: DropDownData[];
+    purchaseOrderId: number;
+    purchaseOrderHeaderData: any;
+    headerManagementStructure: any = {};
+    CustomerList: DropDownData[] = [];
+    VendorList: DropDownData[] = [];
     /** edit-po ctor */
     constructor(public receivingService: ReceivingService,
         public priority: PriorityService,
@@ -76,6 +83,9 @@ export class EditPoComponent implements OnInit {
         private uomService: UnitOfMeasureService,
         private glAccountService: GlAccountService,
         private shippingService: ShippingService,
+        private _actRoute: ActivatedRoute,
+        private commonService: CommonService,
+        private customerService: CustomerService,      
     ) {
 
         this.localPoData = this.vendorService.selectedPoCollection;
@@ -84,17 +94,33 @@ export class EditPoComponent implements OnInit {
     }
 
     ngOnInit() {
-        if (this.receivingService.purchaseOrderId == undefined && this.receivingService.purchaseOrderId == null ) {
+        this.receivingService.purchaseOrderId = this._actRoute.snapshot.queryParams['purchaseorderid'];
+        if (this.receivingService.purchaseOrderId == undefined && this.receivingService.purchaseOrderId == null) {
             this.alertService.showMessage(this.pageTitle, "No purchase order is selected to edit.", MessageSeverity.error);
             return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
         }
 
+        this.receivingService.getReceivingPOHeaderById(this.receivingService.purchaseOrderId).subscribe(
+            res => {
+                this.purchaseOrderData = res;
+                this.purchaseOrderData.openDate = this.purchaseOrderData.openDate ? new Date(this.purchaseOrderData.openDate) : '';
+                this.purchaseOrderData.closedDate = this.purchaseOrderData.closedDate ? new Date(this.purchaseOrderData.closedDate) : '';
+                this.purchaseOrderData.dateApproved = this.purchaseOrderData.dateApproved ? new Date(this.purchaseOrderData.dateApproved) : '';
+                this.purchaseOrderData.needByDate = this.purchaseOrderData.needByDate ? new Date(this.purchaseOrderData.needByDate) : '';
+                this.getManagementStructureCodes(this.purchaseOrderData.managementStructureId);
+
+            },
+            error => { }
+        );
+
         this.receivingService.getPurchaseOrderDataForEditById(this.receivingService.purchaseOrderId).subscribe(
             results => {
-                this.purchaseOrderData = results[0];
-                this.purchaseOrderData.openDate = new Date(results[0].openDate).toLocaleDateString();
-                this.purchaseOrderData.needByDate = new Date(results[0].needByDate);
-                this.purchaseOrderData.dateApproved = new Date(results[0].dateApproved).toLocaleDateString();
+                if (results[0] == null || results[0] == undefined) {
+                    this.alertService.showMessage(this.pageTitle, "No purchase order is selected to edit.", MessageSeverity.error);
+                    return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
+                }
+                this.purchaseOrderId = results[0][0].purchaseOrderId;
+                this.purchaseOrderData.purchaseOderPart = results[0];
 
                 this.getManagementStructure().subscribe(
                     results => {
@@ -220,20 +246,6 @@ export class EditPoComponent implements OnInit {
                                         }
                                     }
 
-                                    // TODO : Async call not setting proper values.
-                                    //debugger;
-                                    //if (SL.siteId > 0) {
-                                    //    this.getStockLineWareHouse(SL, true);
-                                    //}
-                                    //if (SL.warehouseId > 0) {
-                                    //    this.getStockLineLocation(SL, true);
-                                    //}
-                                    //if (SL.locationId > 0) {
-                                    //    this.getStockLineShelf(SL, true);
-                                    //}
-                                    //if (SL.shelfId > 0) {
-                                    //    this.getStockLineBin(SL, true);
-                                    //}
 
                                 }
 
@@ -253,6 +265,8 @@ export class EditPoComponent implements OnInit {
                         this.getAllSite();
                         this.getAllGLAccount();
                         this.getShippingVia();
+                        this.getCustomers();
+                        this.getVendors();
                     },
                     error => this.onDataLoadFailed(error)
                 );
@@ -269,6 +283,66 @@ export class EditPoComponent implements OnInit {
             { partNumber: 'PN123' }
         ]
     }
+
+    getCustomers(): void {
+
+        this.customerService.getCustomers().subscribe(
+            results => {
+                for (let customer of results[0]) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = customer.customerId.toLocaleString();
+                    dropdown.Value = customer.name;
+                    this.CustomerList.push(dropdown);
+                }
+
+                for (let part of this.purchaseOrderData.purchaseOderPart) {
+                    for (let SL of part.stockLine) {
+                        if (SL.owner != null && SL.owner != '' && SL.ownerType == 1) {
+                            SL.ownerObject = this.CustomerList.find(x => x.Key == SL.owner);
+                        }
+                        if (SL.obtainFrom != null && SL.obtainFrom != '' && SL.obtainFromType == 1) {
+                            SL.obtainFromObject = this.CustomerList.find(x => x.Key == SL.obtainFrom);
+                        }
+                        if (SL.traceableTo != null && SL.traceableTo != '' && SL.traceableToType == 1) {
+                            SL.traceableToObject = this.CustomerList.find(x => x.Key == SL.traceableTo);
+                        }
+                    }
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    getVendors(): void {
+        //stockLine.VendorList = [];
+        this.vendorService.getVendors().subscribe(
+            vendors => {
+                for (let vendor of vendors[0]) {
+                    var dropdown = new DropDownData();
+                    dropdown.Key = vendor.vendorId.toLocaleString();
+                    dropdown.Value = vendor.vendorName;
+                    this.VendorList.push(dropdown);
+                }
+
+                for (let part of this.purchaseOrderData.purchaseOderPart) {
+                    for (let SL of part.stockLine) {
+
+                        if (SL.owner != null && SL.owner != '' && SL.ownerType == 3) {
+                            SL.ownerObject = this.VendorList.find(x => x.Key == SL.owner);
+                        }
+                        if (SL.obtainFrom != null && SL.obtainFrom != '' && SL.obtainFromType == 3) {
+                            SL.obtainFromObject = this.VendorList.find(x => x.Key == SL.obtainFrom);
+                        }
+                        if (SL.traceableTo != null && SL.traceableTo != '' && SL.traceableToType == 3) {
+                            SL.traceableToObject = this.VendorList.find(x => x.Key == SL.traceableTo);
+                        }
+                    }
+                }
+            },
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
 
     private getManagementStructure() {
         return this.legalEntityService.getManagemententity();
@@ -546,16 +620,16 @@ export class EditPoComponent implements OnInit {
                                 SL.SiteList.push(row);
                             }
 
-                            if (SL.warehouseId > 0) {
+                            if (SL.siteId > 0) {
                                 this.getStockLineWareHouse(SL, true);
                             }
-                            if (SL.locationId > 0) {
+                            if (SL.warehouseId > 0) {
                                 this.getStockLineLocation(SL, true);
                             }
-                            if (SL.shelfId > 0) {
+                            if (SL.locationId > 0) {
                                 this.getStockLineShelf(SL, true);
                             }
-                            if (SL.binId > 0) {
+                            if (SL.shelfId > 0) {
                                 this.getStockLineBin(SL, true);
                             }
                         }
@@ -908,7 +982,10 @@ export class EditPoComponent implements OnInit {
     private onDataLoadFailed(error: any) {
     }
 
-    onObtainFromChange(event) {
+    onObtainFromChange(event, stockLine) {
+        stockLine.obtainFromObject = {};
+        stockLine.obtainFrom = '';
+
         if (event.target.value === '1') {
             this.obtainfromcustomer = true;
             this.obtainfromother = false;
@@ -926,7 +1003,10 @@ export class EditPoComponent implements OnInit {
         }
     }
 
-    onOwnerChange(event) {
+    onOwnerChange(event, stockLine) {
+        stockLine.ownerObject = {};
+        stockLine.owner = '';
+
         if (event.target.value === '1') {
             this.ownercustomer = true;
             this.ownerother = false;
@@ -944,7 +1024,10 @@ export class EditPoComponent implements OnInit {
         }
     }
 
-    onTraceableToChange(event) {
+    onTraceableToChange(event, stockLine) {
+        stockLine.traceableToObject = '';
+        stockLine.traceableTo = '';
+
         if (event.target.value === '1') {
             this.traceabletocustomer = true;
             this.traceabletoother = false;
@@ -960,6 +1043,30 @@ export class EditPoComponent implements OnInit {
             this.traceabletocustomer = false;
             this.traceabletoother = false;
         }
+    }
+
+    onFilter(event, stockLine, type): void {
+        stockLine.filteredRecords = [];
+        var dropdownSource = type == 1 ? this.CustomerList : this.VendorList;
+        if (dropdownSource != undefined && dropdownSource.length > 0) {
+            for (let row of dropdownSource) {
+                if (row.Value != undefined && row.Value.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    stockLine.filteredRecords.push(row);
+                }
+            }
+        }
+    }
+
+    onObtainSelect(stockLine: StockLine): void {
+        stockLine.obtainFrom = stockLine.obtainFromObject.Key;
+    }
+
+    onOwnerSelect(stockLine: StockLine): void {
+        stockLine.owner = stockLine.ownerObject.Key;
+    }
+
+    onTraceableToSelect(stockLine: StockLine): void {
+        stockLine.traceableTo = stockLine.traceableToObject.Key;
     }
 
     //remove once add dynamic content
@@ -986,15 +1093,27 @@ export class EditPoComponent implements OnInit {
 
                 var timeLife = [];
                 var stockLineToUpdate = part.stockLine.filter(x => x.isEnabled);
-
+                var index = 1;
                 for (var stockLine of stockLineToUpdate) {
+
+                    if (stockLine.conditionId == undefined || stockLine.conditionId == 0) {
+                        this.alertService.showMessage(this.pageTitle, "Please select Condition in Part No. " + part.itemMaster.partNumber + " at stockline " + stockLine.stockLineNumber, MessageSeverity.error);
+                        return;
+                    }
+
+                    if (stockLine.siteId == undefined || stockLine.siteId == 0) {
+                        this.alertService.showMessage(this.pageTitle, "Please select Site in Part No. " + part.itemMaster.partNumber + " of stockline " + stockLine.stockLineNumber, MessageSeverity.error);
+                        return;
+                    }
+
                     for (var tl of part.timeLife) {
-                        if (tl.stockLineId == stockLine.stockLineId) {                            
+                        if (tl.stockLineId == stockLine.stockLineId) {
                             timeLife.push(tl);
                         }
                     }
+                    index += 1;
                 }
-                
+
                 if (stockLineToUpdate.length > 0) {
                     let receivePart: ReceiveParts = new ReceiveParts();
                     receivePart.purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
@@ -1007,7 +1126,8 @@ export class EditPoComponent implements OnInit {
         if (receiveParts.length > 0) {
             this.shippingService.updateStockLine(receiveParts).subscribe(data => {
                 this.alertService.showMessage(this.pageTitle, 'Stock Line updated successfully.', MessageSeverity.success);
-                return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
+                //return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
+                this.route.navigateByUrl(`/receivingmodule/receivingpages/app-view-po?purchaseOrderId=${this.purchaseOrderId}`);
             },
                 error => {
                     var message = '';
@@ -1028,8 +1148,6 @@ export class EditPoComponent implements OnInit {
         //this.alertService.showMessage(this.pageTitle, 'Stock Lines update successfully.', MessageSeverity.success)
         //return this.route.navigate(['/receivingmodule/receivingpages/app-view-po']);
     }
-
- 
 
     private getShippingVia(): void {
         this.shippingService.getAllShippingVia().subscribe(results => {
@@ -1056,6 +1174,23 @@ export class EditPoComponent implements OnInit {
             },
             error => this.onDataLoadFailed(error)
         );
+    }
+
+    getManagementStructureCodes(id) {
+        this.commonService.getManagementStructureCodes(id).subscribe(res => {
+            if (res.Level1) {
+                this.headerManagementStructure.level1 = res.Level1;
+            }
+            if (res.Level2) {
+                this.headerManagementStructure.level2 = res.Level2;
+            }
+            if (res.Level3) {
+                this.headerManagementStructure.level3 = res.Level3;
+            }
+            if (res.Level4) {
+                this.headerManagementStructure.level4 = res.Level4;
+            }
+        })
     }
 }
 

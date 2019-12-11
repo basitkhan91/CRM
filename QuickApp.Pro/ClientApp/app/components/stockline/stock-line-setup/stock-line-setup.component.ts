@@ -122,7 +122,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
     disableSavepartNumber: boolean;
 
     alllegalEntityInfo: any[] = [];
-    sourceEmployee: any = {};
+    //sourceEmployee: any = {};
     managementStructureData: any[];
     updateMode: boolean = false;
     quantityAvailable: any;
@@ -133,15 +133,12 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	{
         this.stocklineser.currentUrl = '/stocklinemodule/stocklinepages/app-stock-line-setup';
         this.stocklineser.bredcrumbObj.next(this.stocklineser.currentUrl);
+        this.loadManagementdata();
         this.loadData();
         this.loadEmployeeData();
-        
         this.loadSiteData();
         this.Integration();
         this.loadManufacturerData();
-        //this.loadPoData();
-        //this.loadRoData();
-        
         this.loadIntegrationPortal();
         this.glAccountlistdata();
         this.customerList();
@@ -156,7 +153,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	selectedObtainFromValue: string = '';
 	selectedTracableToValue: string = '';
 	showLable: boolean;
-	sourceStockLine: any = {};
+	//sourceStockLine: any = {};
 	sourceStockLineSetup: any = {};
 	sourceTimeLife: any = {};
 	sourceItemMaster: any = {};
@@ -174,9 +171,23 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
     availableQty: number;
     invalidQty: boolean;
     invalidQtyError: boolean;
-	constructor(public integrationService: IntegrationService,private empService: EmployeeService,public vendorservice: VendorService,public manufacturerService: ManufacturerService,public itemser: ItemMasterService,public glAccountService: GLAccountClassService,public vendorService: VendorService,public customerService: CustomerService,public inteService: IntegrationService,public workFlowtService1: LegalEntityService,public workFlowtService: BinService,public siteService: SiteService,public integration: IntegrationService, public stocklineser: StocklineService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public conditionService: ConditionService, private dialog: MatDialog)
+
+    stocklineCreationForm = new FormGroup({
+        companyId: new FormControl('companyId', Validators.minLength(1)),
+
+    });
+
+    constructor(private fb: FormBuilder, public integrationService: IntegrationService,private empService: EmployeeService,public vendorservice: VendorService,public manufacturerService: ManufacturerService,public itemser: ItemMasterService,public glAccountService: GLAccountClassService,public vendorService: VendorService,public customerService: CustomerService,public inteService: IntegrationService,public workFlowtService1: LegalEntityService,public workFlowtService: BinService,public siteService: SiteService,public integration: IntegrationService, public stocklineser: StocklineService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public conditionService: ConditionService, private dialog: MatDialog)
 	{
         this.dataSource = new MatTableDataSource();
+
+        this.stocklineCreationForm = fb.group({
+            'companyId': [0, Validators.compose([Validators.required, Validators.minLength(1)])],
+            'BusinessUnitId': [0],
+            'divisionId': [0],
+            'departmentId': [0],
+        });
+
 	}
 
 	private ptnumberlistdata() {
@@ -419,11 +430,16 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
         this.sourceStockLineSetup.partDescription = allWorkFlows[0].partDescription; //Passing Part Description based on Change Part
         this.sourceStockLineSetup.shelfLife = allWorkFlows[0].t.shelfLife;
         this.sourceStockLineSetup.isSerialized = allWorkFlows[0].isSerialized;
-        this.sourceStockLineSetup.ITARNumber = allWorkFlows[0].t.ITARNumber;
-        this.sourceStockLine.tagDate = allWorkFlows[0].t.TagDate;
-        this.sourceStockLine.daysSinceTagged = allWorkFlows[0].t.TagDays;
-        this.sourceStockLine.daysSinceOpen = allWorkFlows[0].t.OpenDays;
-        this.sourceStockLine.openDate = allWorkFlows[0].t.OpenDate;
+		this.sourceStockLineSetup.ITARNumber = allWorkFlows[0].t.itarNumber;
+		this.sourceStockLineSetup.nationalStockNumber = allWorkFlows[0].t.nationalStockNumber;
+		this.sourceStockLineSetup.ExportECCN = allWorkFlows[0].t.exportECCN;
+		this.sourceStockLineSetup.NHA = allWorkFlows[0].t.nha;
+        this.sourceStockLineSetup.tagDate = allWorkFlows[0].t.TagDate;
+        this.sourceStockLineSetup.openDate = allWorkFlows[0].t.openDate;
+        this.sourceStockLineSetup.tagDays = allWorkFlows[0].t.tagDays;
+        this.sourceStockLineSetup.manufacturingDays = allWorkFlows[0].t.manufacturingDays
+		this.sourceStockLineSetup.daysReceived = allWorkFlows[0].t.daysReceived
+		this.sourceStockLineSetup.openDays = allWorkFlows[0].t.openDays
         this.sourceStockLineSetup.IsManufacturingDateAvailable = allWorkFlows[0].t.IsManufacturingDateAvailable;
 
 		if (this.sourceStockLineSetup.isSerialized == true) {
@@ -447,6 +463,9 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
         this.sourceStockLineSetup.isDER = allWorkFlows[0].IsDER;
         this.sourceStockLineSetup.oem = allWorkFlows[0].OEM;
         this.sourceStockLineSetup.oem = true;
+        this.sourceStockLineSetup.certifiedDate = this.minDateValue;
+        this.sourceStockLineSetup.tagDate = this.minDateValue;
+        this.sourceStockLineSetup.certifiedDueDate = this.minDateValue;
 
 		this.sourceTimeLife.timeLife = allWorkFlows[0].isTimeLife;
 
@@ -514,8 +533,8 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	onDataLoadEmployeeSuccessful(allWorkFlows: any[])
 	{
         this.dataSource.data = allWorkFlows;
-        this.sourceEmployee = allWorkFlows;
-
+       // this.sourceEmployee = allWorkFlows;
+        this.allEmployeeList = allWorkFlows;
         this.loadCompanyData();
 
 	}
@@ -524,7 +543,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	private loadGlAccountData() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-		this.glAccountService.getWorkFlows().subscribe(
+		this.glAccountService.getGlAccountClassList().subscribe(
 			results => this.onDataLoadGlAccountSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -723,7 +742,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			results => this.onManagemtntdataLoad(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
-		
 	}
 
 	makeNestedObj(arr, parent) {
@@ -742,7 +760,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	}
 
     private onManagemtntdataLoad(getAtaMainList: any[]) {
-        // alert('success');
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = getAtaMainList;
@@ -751,41 +768,63 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
             if (this.allManagemtninfo[i].parentId == null) {
                 this.maincompanylist.push(this.allManagemtninfo[i]);
             }
-            this.setManagementStrucureData(this.sourceEmployee[i]);
         }
-        
+        if (this.sourceStockLineSetup.managmentLegalEntity != null && this.sourceStockLineSetup.divmanagmentLegalEntity != null && this.sourceStockLineSetup.biumanagmentLegalEntity != null && this.sourceStockLineSetup.compmanagmentLegalEntity != null) {
+            this.stocklineCreationForm.controls['companyId'].setValue(this.sourceStockLineSetup.compmanagmentLegalEntity.managementStructureId);
+            this.stocklineCreationForm.controls['BusinessUnitId'].setValue(this.sourceStockLineSetup.biumanagmentLegalEntity.managementStructureId);
+            this.stocklineCreationForm.controls['divisionId'].setValue(this.sourceStockLineSetup.divmanagmentLegalEntity.managementStructureId);
+            this.stocklineCreationForm.controls['departmentId'].setValue(this.sourceStockLineSetup.managementStructeInfo.managementStructureId);
+        }
+        else if (this.sourceStockLineSetup.biumanagmentLegalEntity != null && this.sourceStockLineSetup.divmanagmentLegalEntity != null && this.sourceStockLineSetup.managmentLegalEntity != null) {
+            this.stocklineCreationForm.controls['companyId'].setValue(this.sourceStockLineSetup.biumanagmentLegalEntity.managementStructureId);
+            this.stocklineCreationForm.controls['BusinessUnitId'].setValue(this.sourceStockLineSetup.divmanagmentLegalEntity.managementStructureId);
+            this.stocklineCreationForm.controls['divisionId'].setValue(this.sourceStockLineSetup.managmentLegalEntity.managementStructureId);
+        }
+        else if (this.sourceStockLineSetup.divmanagmentLegalEntity != null && this.sourceStockLineSetup.managmentLegalEntity != null) {
+            this.stocklineCreationForm.controls['companyId'].setValue(this.sourceStockLineSetup.divmanagmentLegalEntity.managementStructureId);
+            this.stocklineCreationForm.controls['BusinessUnitId'].setValue(this.sourceStockLineSetup.managmentLegalEntity.managementStructureId);
+        }
+        else if (this.sourceStockLineSetup.managementStructeInfo != null) {
+            this.stocklineCreationForm.controls['companyId'].setValue(this.sourceStockLineSetup.managmentLegalEntity.managementStructureId);
+        }
+        else {
+            console.log("no Info Presnts")
+        }
+        this.setManagementStrucureData(this.sourceStockLineSetup);
     }
 
     setManagementStrucureData(obj) {
         this.managementStructureData = [];
-        this.checkMSParents(obj.ManagementStructureEntityId);
+        this.checkMSParents(obj.managementStructureId);
         if (this.managementStructureData.length == 4) {
-            this.sourceEmployee.companyId = this.managementStructureData[3];
-            this.sourceEmployee.buisinessUnitId = this.managementStructureData[2];
-            this.sourceEmployee.departmentId = this.managementStructureData[1];
-            this.sourceEmployee.divisionId = this.managementStructureData[0];
-            this.getBUList2(this.sourceEmployee.companyId);
-            this.getDepartmentlist2(this.sourceEmployee.buisinessUnitId);
-            this.getDivisionlist(this.sourceEmployee.departmentId);
+            this.sourceStockLineSetup.companyId = this.managementStructureData[3];
+            this.sourceStockLineSetup.buisinessUnitId = this.managementStructureData[2];
+            this.sourceStockLineSetup.departmentId = this.managementStructureData[1];
+            this.sourceStockLineSetup.divisionId = this.managementStructureData[0];
+            this.getBUList2(this.sourceStockLineSetup.companyId);
+            this.getDepartmentlist2(this.sourceStockLineSetup.buisinessUnitId);
+            this.getDivisionlist(this.sourceStockLineSetup.departmentId);
         }
         if (this.managementStructureData.length == 3) {
-            this.sourceEmployee.companyId = this.managementStructureData[2];
-            this.sourceEmployee.buisinessUnitId = this.managementStructureData[1];
-            this.sourceEmployee.departmentId = this.managementStructureData[0];
-            this.getBUList2(this.sourceEmployee.companyId);
-            this.getDepartmentlist2(this.sourceEmployee.buisinessUnitId);
+            this.sourceStockLineSetup.companyId = this.managementStructureData[2];
+            this.sourceStockLineSetup.buisinessUnitId = this.managementStructureData[1];
+            this.sourceStockLineSetup.departmentId = this.managementStructureData[0];
+            this.getBUList2(this.sourceStockLineSetup.companyId);
+            this.getDepartmentlist2(this.sourceStockLineSetup.buisinessUnitId);
         }
         if (this.managementStructureData.length == 2) {
-            this.sourceEmployee.companyId = this.managementStructureData[1];
-            this.sourceEmployee.buisinessUnitId = this.managementStructureData[0];
-            this.getBUList2(this.sourceEmployee.companyId);
+            this.sourceStockLineSetup.companyId = this.managementStructureData[1];
+            this.sourceStockLineSetup.buisinessUnitId = this.managementStructureData[0];
+            this.getBUList2(this.sourceStockLineSetup.companyId);
         }
         if (this.managementStructureData.length == 1) {
-            this.sourceEmployee.companyId = this.managementStructureData[0];
+            this.sourceStockLineSetup.companyId = this.managementStructureData[0];
         }
-
     }
     getDepartmentlist2(value) {
+            this.sourceStockLineSetup.departmentId = "";
+            this.sourceStockLineSetup.divisionId = "";
+            this.sourceStockLineSetup.managementStructureId = value;
             this.departmentList = [];
             this.divisionlist = [];
             for (let i = 0; i < this.allManagemtninfo.length; i++) {
@@ -794,17 +833,23 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
                 }
             }
     }
+
     getBUList2(id) {
         var companyId = id;
-        this.bulist = [];
-        this.departmentList = [];
-        this.divisionlist = [];
-        for (let i = 0; i < this.allManagemtninfo.length; i++) {
-            if (this.allManagemtninfo[i].parentId == companyId) {
-                this.bulist.push(this.allManagemtninfo[i])
+            this.sourceStockLineSetup.buisinessUnitId = "";
+            this.sourceStockLineSetup.departmentId = "";
+            this.sourceStockLineSetup.divisionId = "";
+            this.sourceStockLineSetup.managementStructureId = companyId;
+            this.departmentList = [];
+            this.divisionlist = [];
+            this.bulist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == companyId) {
+                    this.bulist.push(this.allManagemtninfo[i])
+                }
             }
-        }
     }
+
     checkMSParents(msId) {
         this.managementStructureData.push(msId);
         for (let a = 0; a < this.allManagemtninfo.length; a++) {
@@ -817,29 +862,32 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
         }
     }
 
-	getBUList(companyId)
-    {
-            this.sourceEmployee.buisinessUnitId = "";
-            this.sourceEmployee.departmentId = "";
-        this.sourceEmployee.divisionId = "";
-        this.sourceStockLineSetup.LegalEntityId = companyId;
-            this.sourceStockLineSetup.ManagementStructureEntityId = companyId;
-            this.sourceStockLineSetup.masterCompanyId = 1;
-            this.departmentList = [];
-            this.divisionlist = [];
-            this.bulist = [];
-            for (let i = 0; i < this.allManagemtninfo.length; i++) {
-                if (this.allManagemtninfo[i].parentId == companyId) {
-                    this.bulist.push(this.allManagemtninfo[i])
-                }
+    getBUList(event) {
+
+        var companyId = this.stocklineCreationForm.controls['companyId'].value;
+
+        this.sourceStockLineSetup.buisinessUnitId = "";
+        this.sourceStockLineSetup.departmentId = "";
+        this.sourceStockLineSetup.divisionId = "";
+        this.sourceStockLineSetup.managementStructureId = companyId;
+        this.departmentList = [];
+        this.divisionlist = [];
+        this.bulist = [];
+        for (let i = 0; i < this.allManagemtninfo.length; i++) {
+            if (this.allManagemtninfo[i].parentId == companyId) {
+                this.bulist.push(this.allManagemtninfo[i])
+            }
         }
-	}
+    }
 
 	getDepartmentlist(businessUnitId)
     {
-            this.sourceEmployee.departmentId = "";
-            this.sourceEmployee.divisionId = "";
-            this.sourceEmployee.ManagementStructureEntityId = businessUnitId;
+        var businessUnitId = this.stocklineCreationForm.controls['BusinessUnitId'].value;
+        console.log(businessUnitId);
+        if (this.updateMode == false) {
+            this.sourceStockLineSetup.departmentId = "";
+            this.sourceStockLineSetup.divisionId = "";
+            this.sourceStockLineSetup.managementStructureId = businessUnitId;
             this.departmentList = [];
             this.divisionlist = [];
             for (let i = 0; i < this.allManagemtninfo.length; i++) {
@@ -847,12 +895,14 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
                     this.departmentList.push(this.allManagemtninfo[i]);
                 }
             }
+
+        }
 	}
 
-	getDivisionlist(departmentId)
-	{
-            this.sourceEmployee.divisionId = "";
-        this.sourceEmployee.ManagementStructureEntityId = departmentId;
+    getDivisionlist(value) {
+        var departmentId = this.stocklineCreationForm.controls['divisionId'].value;;
+        this.sourceStockLineSetup.divisionId = "";
+        this.sourceStockLineSetup.managementStructureId = departmentId;
             this.divisionlist = [];
             for (let i = 0; i < this.allManagemtninfo.length; i++) {
                 if (this.allManagemtninfo[i].parentId == departmentId) {
@@ -861,10 +911,9 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
             }
     }
 
-	getDivisionChangeManagementCode(divisionId)
-	{
-        this.sourceEmployee.ManagementStructureEntityId = divisionId;
-	}
+    divisionChange(divisionId) {
+        this.sourceStockLineSetup.managementStructureId = divisionId;
+    }
 
     POValueChange(purchaseOrderId)
     {
@@ -1025,11 +1074,25 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
             || (this.invalidQty)
 		)
 		{
-			if (!this.sourceStockLine.stockLineId) {
-				this.sourceStockLine.createdBy = this.userName;
-                this.sourceStockLine.updatedBy = this.userName;
-                this.sourceStockLine.masterCompanyId = 1;
-                this.sourceStockLine.itemTypeId = 1;
+            if (!this.sourceStockLineSetup.stockLineId) {
+                this.sourceStockLineSetup.createdBy = this.userName;
+                this.sourceStockLineSetup.updatedBy = this.userName;
+                this.sourceStockLineSetup.masterCompanyId = 1;
+                this.sourceStockLineSetup.itemTypeId = 1;
+
+                if (this.stocklineCreationForm.get('departmentId').value != null && this.stocklineCreationForm.get('departmentId').value > 0) {
+                    this.sourceStockLineSetup.managementStructureId = this.stocklineCreationForm.get('departmentId').value;
+                }
+                else if (this.stocklineCreationForm.get('divisionId').value != null && this.sourceStockLineSetup.departmentId == '' && this.sourceStockLineSetup.departmentId > 0) {
+                    this.sourceStockLineSetup.managementStructureId = this.stocklineCreationForm.get('divisionId').value;
+                }
+                else if (this.stocklineCreationForm.get('BusinessUnitId').value != null && this.sourceStockLineSetup.departmentId == '' && this.sourceStockLineSetup.divisionId == '' && this.sourceStockLineSetup.divisionId > 0) {
+                    this.sourceStockLineSetup.managementStructureId = this.stocklineCreationForm.get('BusinessUnitId').value;
+                }
+                else {
+                    this.sourceStockLineSetup.managementStructureId = this.stocklineCreationForm.get('companyId').value;
+                }
+                this.sourceStockLineSetup.legalEntityId = this.stocklineCreationForm.get('companyId').value;
 				//for Saving timeLife,Stockline,Integration
 				if ((this.sourceTimeLife != null) || (this.sourceTimeLife != "null"))
 					{
@@ -1111,8 +1174,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		this.loadingIndicator = false;
 		this.dataSource.data = getCompanyListList;
         this.allCompanys = getCompanyListList;
-
-        this.loadManagementdata();
 	}
 
 	private onDataLoadSuccessful(getConditionList: Condition[])

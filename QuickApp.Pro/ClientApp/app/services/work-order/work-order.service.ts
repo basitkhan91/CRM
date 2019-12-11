@@ -17,6 +17,7 @@ import { WorkOrderEndpointService } from '../work-order/work-order-endpoint.serv
 @Injectable()
 export class WorkOrderService {
 
+    creditTerms: any;
     constructor(private workOrderEndpointService: WorkOrderEndpointService) {
     }
 
@@ -127,8 +128,31 @@ export class WorkOrderService {
     createWorkOrderMaterialList(data) {
         return this.workOrderEndpointService.createWorkOrderMaterialList(data);
     }
-    createWorkOrderEquipmentList(data){
+    updateWorkOrderMaterialList(data) {
+        return this.workOrderEndpointService.updateWorkOrderMaterialList(data);
+    }
+    deleteWorkOrderMaterialListById(workOrderMaterialId, updatedBy) {
+        return this.workOrderEndpointService.deleteWorkOrderMaterialListById(workOrderMaterialId, updatedBy);
+    }
+    createWorkOrderEquipmentList(data) {
         return this.workOrderEndpointService.createWorkOrderEquipmentList(data);
+    }
+    updateWorkOrderEquipmentList(data) {
+        return this.workOrderEndpointService.updateWorkOrderEquipmentList(data);
+    }
+    createWorkOrderChargesList(data) {
+        return this.workOrderEndpointService.createWorkOrderChargesList(data);
+    }
+
+    updateWorkOrderChargesList(data) {
+        return this.workOrderEndpointService.updateWorkOrderChargesList(data);
+    }
+
+    createWorkOrderExclusionList(data) {
+        return this.workOrderEndpointService.createWorkOrderExclusionList(data);
+    }
+    updateWorkOrderExclusionList(data) {
+        return this.workOrderEndpointService.updateWorkOrderExclusionList(data);
     }
     getAllTasks() {
         return this.workOrderEndpointService.getTasks();
@@ -136,6 +160,10 @@ export class WorkOrderService {
     getWorkOrderMaterialList(workFlowWorkOrderId, workOrderId) {
         return this.workOrderEndpointService.getWorkOrderMaterialList(workFlowWorkOrderId, workOrderId)
     }
+    deleteWorkOrderMaterialList(workOrderMaterialsId, updatedBy) {
+        return this.workOrderEndpointService.deleteWorkOrderMaterialList(workOrderMaterialsId, updatedBy)
+    }
+
     getWorkOrderPublicationList(workFlowWorkOrderId, workOrderId) {
         return this.workOrderEndpointService.getWorkOrderPublicationList(workFlowWorkOrderId, workOrderId)
     }
@@ -144,14 +172,21 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getWorkOrderChargesList(workFlowWorkOrderId, workOrderId)
     }
 
+    deleteWorkOrderChargesByChargesId(workOrderChargeId, updatedBy) {
+        return this.workOrderEndpointService.deleteWorkOrderChargesByChargesId(workOrderChargeId, updatedBy)
+    }
+
     getWorkOrderExclusionsList(workFlowWorkOrderId, workOrderId) {
         return this.workOrderEndpointService.getWorkOrderExclusionsList(workFlowWorkOrderId, workOrderId)
+    }
+    deleteWorkOrderExclusionByExclusionId(workOrderExclusionsId, updatedBy) {
+        return this.workOrderEndpointService.deleteWorkOrderExclusionByExclusionId(workOrderExclusionsId, updatedBy)
     }
     getWorkOrderLaborList(workFlowWorkOrderId, workOrderId) {
         return this.workOrderEndpointService.getWorkOrderLaborList(workFlowWorkOrderId, workOrderId)
     }
 
-    getWorkOrderDirectionList(workFlowWorkOrderId, workOrderId){
+    getWorkOrderDirectionList(workFlowWorkOrderId, workOrderId) {
         return this.workOrderEndpointService.getWorkOrderDirectionList(workFlowWorkOrderId, workOrderId)
     }
 
@@ -166,17 +201,57 @@ export class WorkOrderService {
         return this.workOrderEndpointService.viewWorkOrderPartNumber(workOrderId);
     }
 
-    getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId) {
-        return this.workOrderEndpointService.getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId);
+    getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId, statusId) {
+        return this.workOrderEndpointService.getReservedPartsByWorkFlowWOId(WorkFlowWorkOrderId, statusId);
     }
-    saveReservedPartorIssue(alternatePart){
+    saveReservedPartorIssue(alternatePart) {
         return this.workOrderEndpointService.saveReservedPartorIssue(alternatePart)
     }
-    assetsCheckInByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy){
-        return this.workOrderEndpointService.assetsCheckInByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy);
+    assetsCheckInByWorkOrderAssetsId(assetcheckin) {
+        return this.workOrderEndpointService.assetsCheckInByWorkOrderAssetsId(assetcheckin);
     }
-    assetsCheckOutByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy){ 
-        return this.workOrderEndpointService.assetsCheckOutByWorkOrderAssetsId(workOrderAssetId,employeeId,checkedInDate,updatedBy);
+    assetsCheckOutByWorkOrderAssetsId(assetcheckout) {
+        return this.workOrderEndpointService.assetsCheckOutByWorkOrderAssetsId(assetcheckout);
+    }
+    deleteWorkOrderAssetByAssetId(workOrderAssetId, updatedBy) {
+        return this.workOrderEndpointService.deleteWorkOrderAssetByAssetId(workOrderAssetId, updatedBy);
+    }
+
+    createQuote(data) {
+        return this.workOrderEndpointService.createQuotation(data);
+    }
+
+    getSubWorkOrderListByWorkOrderId(workOrderId) {
+        return this.workOrderEndpointService.getSubWorkOrderListByWorkOrderId(workOrderId);
+    }
+
+    getSubWorkOrderView(subWorkOrderId) {
+        return this.workOrderEndpointService.getSubWorkOrderView(subWorkOrderId);
+    }
+
+    // subWorkOrder 
+    getSubWorkOrderHeaderByWorkOrderId(workOrderId, workOrderPartNumberId) {
+        return this.workOrderEndpointService.getSubWorkOrderHeaderByWorkOrderId(workOrderId, workOrderPartNumberId);
+    }
+
+
+    createSubWorkOrderHeaderByWorkOrderId(data) {
+        return this.workOrderEndpointService.createSubWorkOrderHeaderByWorkOrderId(data);
+    }
+    updateSubWorkOrderHeaderBySubWorkOrderId(data) {
+        return this.workOrderEndpointService.updateSubWorkOrderHeaderBySubWorkOrderId(data);
+    }
+
+
+
+
+
+    getPartsDetail(workOrderId) {
+        return this.workOrderEndpointService.getPartsDetail(workOrderId);
+    }
+
+    getBuildDetailsFromWorkFlow(partId, workScopeId) {
+        return this.workOrderEndpointService.getBuildDetailsFromWorkFlow(partId, workScopeId);
     }
 
 

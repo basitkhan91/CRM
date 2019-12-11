@@ -86,7 +86,7 @@
                                         <mat-icon>edit</mat-icon>
                                     </button>
 
-                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteContact(rowData.contactId)">
+                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="openDelete(deleteContent,rowData.contactId)">
                                         <mat-icon color="warn">delete</mat-icon>
                                     </button>
 
@@ -346,7 +346,7 @@
                                 <div>
                                     <input class="form-control" type="number" pKeyFilter="pnum" name="workPhone" [(ngModel)]="contactInformation.workPhone" style="width: calc(100% - 63px) !important;" required>
                                     -
-                                    <input class="form-control w50" type="number"  name="workPhoneExtn" [(ngModel)]="contactInformation.workPhoneExtn">
+                                    <input class="form-control w50" type="text"  name="workPhoneExtn" [(ngModel)]="contactInformation.workPhoneExtn">
                                 </div>
                             </div>
                         </div>
@@ -364,7 +364,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Web Site</label>
-                                <input class="form-control" type="text" name="websiteURL" #url="ngModel" [pattern]="urlPattern" [(ngModel)]="contactInformation.websiteURL">
+                                <input class="form-control" type="text" name="websiteURL" #url="ngModel"  [(ngModel)]="contactInformation.websiteURL">
                                 <div *ngIf="url.errors" [ngClass]="'error'">
                                     <div *ngIf="url.errors.pattern">
                                         <span style="color:red">URL not valid</span>
@@ -423,26 +423,28 @@
               <h4 class="modal-title">Details of Customer Contact</h4>
             </div>
             <div class="modal-body">
-                    <div class="col-sm-12">
-                            <p><span class="label"><b>Tag: </b></span><span class="value">{{sourceViewforContact.tag}}</span></p>
-                            <p><span class="label"><b>Prefix: </b></span><span class="value">{{sourceViewforContact.prefix}}</span></p>
-                            <p><span class="label"><b>First Name: </b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
-                            <p><span class="label"><b>Middle Name: </b></span><span class="value">{{sourceViewforContact.middleName}}</span></p>
-                            <p><span class="label"><b>Last Name: </b></span><span class="value">{{sourceViewforContact.lastName}}</span></p>
-                            <p><span class="label"><b>Suffix: </b></span><span class="value">{{sourceViewforContact.suffix}}</span></p>
-                            <p><span class="label"><b>Title: </b></span><span class="value">{{sourceViewforContact.contactTitle}}</span></p>
-                            <p><span class="label"><b>Work Phone: </b></span><span class="value">{{sourceViewforContact.workPhone}}</span></p>
-                            <p><span class="label"><b>Primary Contact </b></span><span class="value">{{sourceViewforContact.isDefaultContact}}</span></p>
-        
-                            <p><span class="label"><b>Email: </b></span><span class="value">{{sourceViewforContact.email}}</span></p>
-                            <p><span class="label"><b>WebSite: </b></span><span class="value">{{sourceViewforContact.websiteURL}}</span></p>
-                            <p><span class="label"><b>Mobile Phone: </b></span><span class="value">{{sourceViewforContact.mobilePhone}}</span></p>
-                            <p><span class="label"><b>Alternate Phone:</b></span><span class="value">{{sourceViewforContact.alternatePhone}}</span></p>
-        
-                            <p><span class="label"><b>Fax: </b></span><span class="value">{{sourceViewforContact.fax}}</span></p>
-                            <p><span class="label"><b>Memo: </b></span><span class="value">{{sourceViewforContact.notes}}</span></p>
-                            <div class="clear"></div>
-                        </div>
+                <div class="col-sm-12">
+                    <p><span class="label"><b>Tag: </b></span><span class="value">{{sourceViewforContact.tag}}</span></p>
+                    <p><span class="label"><b>Prefix: </b></span><span class="value">{{sourceViewforContact.prefix}}</span></p>
+                    <p><span class="label"><b>First Name: </b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
+                    <p><span class="label"><b>Middle Name: </b></span><span class="value">{{sourceViewforContact.middleName}}</span></p>
+                    <p><span class="label"><b>Last Name: </b></span><span class="value">{{sourceViewforContact.lastName}}</span></p>
+                    <p><span class="label"><b>Suffix: </b></span><span class="value">{{sourceViewforContact.suffix}}</span></p>
+                    <p><span class="label"><b>Title: </b></span><span class="value">{{sourceViewforContact.contactTitle}}</span></p>
+                    <p><span class="label"><b>Work Phone: </b></span><span class="value">{{sourceViewforContact.workPhone}}</span></p>
+                    <p><span class="label"><b>Primary Contact </b></span><span class="value">{{sourceViewforContact.isDefaultContact}}</span></p>
+
+                    <p><span class="label"><b>Email: </b></span><span class="value">{{sourceViewforContact.email}}</span></p>
+                    <p><span class="label"><b>WebSite: </b></span><span class="value">{{sourceViewforContact.websiteURL}}</span></p>
+                    <p><span class="label"><b>Mobile Phone: </b></span><span class="value">{{sourceViewforContact.mobilePhone}}</span></p>
+                    <p><span class="label"><b>Alternate Phone:</b></span><span class="value">{{sourceViewforContact.alternatePhone}}</span></p>
+
+                    <p><span class="label"><b>Fax: </b></span><span class="value">{{sourceViewforContact.fax}}</span></p>
+                    <p><span class="label"><b>Memo: </b></span><span class="value">{{sourceViewforContact.notes}}</span></p>
+                    <p><span class="label"><b>Active: </b></span><span class="value">{{sourceViewforContact.isActive}}</span></p>
+
+                    <div class="clear"></div>
+                </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger-cstm"  data-dismiss="modal">Close</button>
@@ -454,7 +456,7 @@
 
 
 
-<div id="ATAADD" class="modal fade custom-popup" role="dialog">
+<div id="ATAADD" class="modal fade custom-popup" role="dialog" #ATAADD>
     <div class="modal-dialog modal-full">
     
       <div class="modal-content">
@@ -516,7 +518,7 @@
                   class="btn btn-primary-cstm"
                   (click)="addATAMapping()"
                 >
-                  Add
+                  Save
                 </button>
               </div>
             </div>
@@ -551,7 +553,7 @@
               <td>
                 <button
                   class="btn btn-danger nobg"
-                  (click)="deleteATAMapped(rowData)"
+                  (click)="deleteATAMapped(deleteContent1,rowData)"
                 >
                   <i class="fa fa-trash"></i>
                 </button>
@@ -569,7 +571,32 @@
       </div>
     </div>
   </div>
+<ng-template #deleteContent let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
 
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
+</ng-template>
+<ng-template #deleteContent1 let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel1()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
+</ng-template>
 <!-- <ng-template #view class="modal fade" role="dialog">
 
         <div class="modal-content">

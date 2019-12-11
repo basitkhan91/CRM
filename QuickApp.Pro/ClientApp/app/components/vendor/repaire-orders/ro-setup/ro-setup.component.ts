@@ -234,7 +234,7 @@ export class RoSetupComponent implements OnInit {
 		this.loadManagementdata();
 		this.loadData();
 		this.loadCurrencyData();
-		this.loadConditionData();
+		// this.loadConditionData();
 		this.loadUOMData();
 		this.employeedata();
 		this.ptnumberlistdata();
@@ -242,7 +242,7 @@ export class RoSetupComponent implements OnInit {
 		this.glAccountData();
 		this.getLegalEntity();
 		this.getCountriesList();
-		this.getStocklineList();
+		//this.getStocklineList();
 		this.loadPercentData();
 		this.sourceRoApproval.companyId = 0;
 		this.sourceRoApproval.buId = 0;
@@ -265,6 +265,7 @@ export class RoSetupComponent implements OnInit {
 
 		this.sourceRoApproval.statusId = 1;
 		this.sourceRoApproval.openDate = new Date();
+		this.sourceRoApproval.closedDate = '';
 		//this.sourceRoApproval.closedDate = new Date();
 		//this.sourceRoApproval.dateRequested = new Date();
 		this.sourceRoApproval.shipToUserTypeId = 3;
@@ -433,11 +434,11 @@ export class RoSetupComponent implements OnInit {
 						this.newPartsList = {
 							...x,
 							partNumberId: getObjectById('value', x.itemMasterId, this.allPartnumbersInfo),					
-							ifSplitShip: x.roPartSplits.length > 0 ? true : false,
+							ifSplitShip: x.roPartSplits ? true : false,
 							partNumber: x.partNumber,
 							partDescription: x.partDescription,
 							needByDate: new Date(x.needByDate),
-							conditionId: getObjectById('conditionId', x.conditionId, this.allconditioninfo),
+							//conditionId: getObjectById('conditionId', x.conditionId, this.allconditioninfo),
 							discountPercent: getObjectById('percentId', x.discountPercent, this.allPercentData),
 							discountPerUnit: x.discountPerUnit,
 							functionalCurrencyId: getObjectById('currencyId', x.functionalCurrencyId, this.allCurrencyData),
@@ -447,9 +448,10 @@ export class RoSetupComponent implements OnInit {
 							childList: this.getRepairOrderSplitPartsEdit(x, pindex),
 		
 						}
-						this.getManagementStructureForParentEdit(this.newPartsList);
-						console.log(this.newPartsList);
+						this.getManagementStructureForParentEdit(this.newPartsList);						
 						this.getPNDetailsById(this.newPartsList);
+						console.log(this.newPartsList);
+						//this.getStockLineByItemMasterId(this.newPartsList);
 						if(!this.newPartsList.childList) {
 							this.newPartsList.childList = [];
 						}
@@ -706,11 +708,11 @@ export class RoSetupComponent implements OnInit {
 		})
 	}
 
-	getStocklineList() {
-		this.commonService.smartDropDownList('Stockline', 'StockLineId', 'StockLineNumber').subscribe(res => {
-			this.allStocklineInfo = res;
-		})
-	}
+	// getStocklineList() {
+	// 	this.commonService.smartDropDownList('Stockline', 'StockLineId', 'StockLineNumber').subscribe(res => {
+	// 		this.allStocklineInfo = res;
+	// 	})
+	// }
 
 	filterCompanyNameforgrid(event) {
 		this.legalEntityList_Forgrid = this.legalEntity;
@@ -890,6 +892,8 @@ export class RoSetupComponent implements OnInit {
 				if (childDataList.length > 0) {
 					console.log(childDataList);
 					for (let j = 0; j < childDataList.length; j++) {
+						this["splitAddressData"+i+j] = this["splitAddressData"+i+j] ? this["splitAddressData"+i+j] : [];
+						console.log(this["splitAddressData"+i+j]);
 						this.childObject = {
 							repairOrderId: repId,
 							//isParent: false,
@@ -910,7 +914,7 @@ export class RoSetupComponent implements OnInit {
 							UOMId: this.partListData[i].UOMId ? this.partListData[i].UOMId : 0,
 							quantityOrdered: childDataList[j].quantityOrdered ? childDataList[j].quantityOrdered : 0,
 							needByDate: this.datePipe.transform(childDataList[j].needByDate, "MM/dd/yyyy"),
-							stocklineId: childDataList[j].stocklineId ? this.getValueByObj(childDataList[j].stocklineId) : null,
+							//stocklineId: childDataList[j].stocklineId ? this.getValueByObj(childDataList[j].stocklineId) : null,
 							managementStructureId: childDataList[j].managementStructureId ? childDataList[j].managementStructureId : 0, //109
 							//createdBy: this.userName,
 							//updatedBy: this.userName,
@@ -952,7 +956,7 @@ export class RoSetupComponent implements OnInit {
 					reportCurrencyId: this.partListData[i].reportCurrencyId ? this.getCurrencyIdByObject(this.partListData[i].reportCurrencyId) : 1,
 					workOrderId: this.partListData[i].workOrderId ? this.partListData[i].workOrderId : 0,
 					salesOrderId: this.partListData[i].salesOrderId ? this.partListData[i].salesOrderId : 0,
-					stocklineId: this.partListData[i].stocklineId ? this.getValueByObj(this.partListData[i].stocklineId) : null,
+					stocklineId: this.partListData[i].stocklineId ? this.getValueByStocklineObj(this.partListData[i].stocklineId) : null,
 					managementStructureId: this.partListData[i].managementStructureId ? this.partListData[i].managementStructureId : 0,
 					memo: this.partListData[i].memo,
 					masterCompanyId: 1,
@@ -1175,6 +1179,11 @@ export class RoSetupComponent implements OnInit {
 		this.sourceRoApproval.itemMasterId = itemMasterId;
 		this.partWithId = [];
 		this.itemTypeId = 1;
+		//parentdata.conditionId = null;
+		//parentdata.stocklineId = null;
+		parentdata.controlId = '';
+		parentdata.purchaseOrderNum = '';
+		parentdata.controlNumber = '';
 
 		//For Getting Data After Part Selected
 		this.vendorService.getPartDetailsWithidForSinglePart(itemMasterId).subscribe(
@@ -1194,9 +1203,32 @@ export class RoSetupComponent implements OnInit {
 					parentdata.partNumber = this.partWithId.partNumber;
 					parentdata.itemMasterId = this.partWithId.itemMasterId;
 					//parentdata.partNumberId = this.partWithId.itemMasterId;
+					this.getConditionByItemMasterId(parentdata.itemMasterId);
+					if(parentdata.conditionId) {
+						this.commonService.getConditionByItemMasterId(parentdata.itemMasterId).subscribe(res => {
+							this.allconditioninfo = res;						
+							parentdata.conditionId = getObjectById('conditionId', parentdata.conditionId, this.allconditioninfo);
+
+							if(parentdata.stockLineId) {
+								this.commonService.getStockLineByItemMasterId(parentdata.itemMasterId, parentdata.conditionId.conditionId).subscribe(resp => {
+									this.allStocklineInfo = resp;						
+									parentdata.stocklineId = getObjectById('stockLineId', parentdata.stockLineId, this.allStocklineInfo);
+									this.getStockLineDetails(parentdata);
+								});
+							}		
+						});
+					}					
 				}
 			})
-	}	
+			console.log(parentdata);					
+	}
+
+	getConditionByItemMasterId(itemMasterId) {
+		this.commonService.getConditionByItemMasterId(itemMasterId).subscribe(res => {
+			console.log(res);
+			this.allconditioninfo = res;			
+		});
+	}
 	
 	filterNames(event) {
 		this.customerNames = this.allCustomers;
@@ -1992,11 +2024,11 @@ export class RoSetupComponent implements OnInit {
 		this.allcreditTermInfo = getCreditTermsList;
 	}
 
-	private loadConditionData() {
-		this.conditionService.getConditionList().subscribe(data => {
-			this.allconditioninfo = data[0];
-		})
-	}
+	// private loadConditionData() {
+	// 	this.conditionService.getConditionList().subscribe(data => {
+	// 		this.allconditioninfo = data[0];
+	// 	})
+	// }
 	private loadUOMData() {
 		this.unitofmeasureService.getUnitOfMeasureList().subscribe(uomdata => {
 			this.allUomdata = uomdata[0];
@@ -2073,6 +2105,7 @@ export class RoSetupComponent implements OnInit {
 	}
 
 	addPartNumber() {
+		this.inputValidCheck = false;
 		if (this.vendorService.isEditMode == false) {
 			this.partListData.push(new CreatePOPartsList()); //CreatePOPartsListParent
 			//grid childlist disable on load
@@ -2421,7 +2454,7 @@ export class RoSetupComponent implements OnInit {
 
 		if (event.query !== undefined && event.query !== null) {
 			const stockline = [...this.allStocklineInfo.filter(x => {
-				return x.label.toLowerCase().includes(event.query.toLowerCase())
+				return x.stockLineNumber.toLowerCase().includes(event.query.toLowerCase())
 			})]
 			this.allStocklineDetails = stockline;
 		}
@@ -2637,6 +2670,14 @@ export class RoSetupComponent implements OnInit {
 	getValueByObj(obj) {
 		if (obj.value) {
 			return obj.value;
+		} else {
+			return 0;
+		}
+	}
+
+	getValueByStocklineObj(obj) {
+		if (obj.stockLineId) {
+			return obj.stockLineId;
 		} else {
 			return 0;
 		}
@@ -3417,7 +3458,7 @@ export class RoSetupComponent implements OnInit {
 				this.approver5 = response;
 			}
 		})
-	}
+	}	
 
 	// getShipToSiteName(data, id) {
 	// 	this.shipToAddress = {};
@@ -3427,4 +3468,25 @@ export class RoSetupComponent implements OnInit {
 	// 		this.shipToAddress = getObjectById('vendorShippingAddressId', id, this.vendorSelected);
 	// 	}
 	// }
+
+	getStockLineByItemMasterId(partList) {
+		console.log(partList);
+		partList.stocklineId = null;
+		partList.controlId = '';
+		partList.purchaseOrderNum = '';
+		partList.controlNumber = '';
+		this.commonService.getStockLineByItemMasterId(partList.itemMasterId, partList.conditionId.conditionId).subscribe(res => {
+			console.log(res);
+			this.allStocklineInfo = res;
+		});
+	}
+
+	getStockLineDetails(partList) {
+		this.commonService.getStockLineDetailsByStockLineId(partList.stocklineId.stockLineId).subscribe(res => {
+			console.log(res);
+			partList.controlId = res.controlId;	
+			partList.purchaseOrderNum = res.purchaseOrderNo;	
+			partList.controlNumber = res.controlNumber;	
+		});
+	}
 }

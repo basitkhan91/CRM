@@ -1,518 +1,684 @@
-﻿<div [@fadeInOut] class="page-content">
+﻿﻿<div class="card">
+     <div class="card-body">
 
-    <div class="right_col" role="main">
-        <div class="x_content">
-            <!--<nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Vendor's List</li>
-                </ol>
-            </nav>-->
-            <h4 class="page-heading clr-green">Employee's List</h4>
-            <div class="right_col" role="main">
+         <!--<nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Vendor's List</li>
+        </ol>
+    </nav>-->
+         <div class="inline-block display-flex">
+             <h3 class="po-head lead">Employee List</h3>
+             &nbsp;&nbsp;&nbsp;&nbsp;
+             <a matTooltip="Add Employee" (click)="navigateTogeneralInfo()" class="plusicon-cstm new-margin"><span><i class="fa fa-plus-circle fa-lg"></i></span></a>
+         </div>
 
-                <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="allVendorList" [rows]="10" [paginator]="true" (onLazyLoad)="loadCustomerPages($event)" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" [metaKeySelection]="true" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
-                    <ng-template pTemplate="caption">
+         <p-table #dt class="ptable-custom" [value]="allVendorList" [rows]="10" [paginator]="true" (onLazyLoad)="loadCustomerPages($event)" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" [metaKeySelection]="true" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [scrollable]="true" [reorderableColumns]="true" scrollHeight="450px">
+             <ng-template pTemplate="caption" style="min-height: 40px;">
 
-                        <div style="text-align: right">
-                            <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
-                                           selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-
-
-                            <div class="inner-addon right-addon w200 inline-block">
-                                <i class="fa fa-search"></i>
-                                <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter">
-                            </div>
+                 <div style="text-align: right; min-height: 30px;">
+                     <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+                                    selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
 
 
-                            <button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                            <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selected" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
-                            <a matTooltip="Add Employee" (click)="navigateTogeneralInfo()" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>
-
-                            <div class="excel-upload">
-                                <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                <label for="upload">
-                                    <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-                                </label>
-                            </div>
-                        </div>
+                     <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
+                         <i class="fa fa-search"></i>
+                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter">
+                     </div>
 
 
-                    </ng-template>
-                    <ng-template pTemplate="header" let-columns>
-                        <tr>
+                     <!-- <button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button> -->
+                    <!--  <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selected" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button> -->
+                     <button type="button" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left" label="Export All Data"
+                     (click)="dt.exportCSV()" pTooltip="Download All Data" tooltipPosition="top" style="padding: 5px 12px !important;"></button>
+                     <button type="button" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left" label="Export Selected"
+                     (click)="dt.exportCSV({selectionOnly:true})" pTooltip="Download Selected" tooltipPosition="top" style="padding: 5px 12px !important;"></button>
 
-                            <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
-                                {{col.header}}
-                                <p-sortIcon [field]="col.field"></p-sortIcon>
-                            </th>
+                     <!--<a matTooltip="Add Employee" (click)="navigateTogeneralInfo()" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>-->
 
-                            <th></th>
+                     <!-- <div class="excel-upload excel-upload-cstm">
+                         <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                         <label for="upload">
+                             <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+                         </label>
+                     </div> -->
+                 </div>
+             </ng-template>
 
-                        </tr>
+             <ng-template pTemplate="colgroup" let-columns>
+                    <colgroup>
+                        <col *ngFor="let col of columns">
+                    </colgroup>
+                </ng-template>
 
-                        <tr>
-                            <th *ngFor="let col of columns" [ngSwitch]="col.field">
-                                    <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
-                                <!-- <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)"> -->
-                            </th>
-                            <th></th>
-                        </tr>
-                    </ng-template>
+             <ng-template pTemplate="header" let-columns>
+                 <tr>
 
-                    <ng-template pTemplate="body" let-rowData let-columns="columns">
-                        <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdit(rowData)">
-                            <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                {{col.field == 'startDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):getData(rowData, col.field)}}
-                            </td>
+                     <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                         {{col.header}}
+                         <p-sortIcon [field]="col.field"></p-sortIcon>
+                     </th>
 
-                            <td>
-                                <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-                                <button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="Edit">
-                                    <mat-icon>edit</mat-icon>
-                                </button>
+                     <th style="width: 130px;"></th>
 
-                                <!--
-                                <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="deleteItemAndCloseModel(rowData)">
+                 </tr>
 
-                                                                   <mat-icon color="warn">delete</mat-icon>
-                                                               </button>
-                                   -->
+                 <tr>
+                     <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                         <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+                         <!-- <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)"> -->
+                     </th>
+                     <th style="width: 130px;"></th>
+                 </tr>
+             </ng-template>
 
-                                <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
+             <ng-template pTemplate="body" let-rowData let-columns="columns">
+                 <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdit(rowData)">
+                     <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                         {{col.field == 'startDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):getData(rowData, col.field)}}
+                     </td>
 
-                                    <mat-icon color="warn">delete</mat-icon>
-                                </button>
+                     <td style="width: 130px;">
+                         <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                         <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                         <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                         <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                         <button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="Edit">
+                             <mat-icon>edit</mat-icon>
+                         </button>
+
+                         <!--
+                    <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="deleteItemAndCloseModel(rowData)">
+
+                                                       <mat-icon color="warn">delete</mat-icon>
+                                                   </button>
+                       -->
+
+                         <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
+
+                             <mat-icon color="warn">delete</mat-icon>
+                         </button>
 
 
-                                <button class="btn-history" mat-icon-button matTooltip="History">
-                                    <mat-icon color="green">history</mat-icon>
-                                    <!--(click)="openHist(contentHist,rowData)"-->
-                                </button>
+                         <button class="btn-history" mat-icon-button matTooltip="History" data-target="#employeeHistory" data-toggle="modal" (click)="getAuditHistoryById(rowData)">
+                             <mat-icon color="green">history</mat-icon>
+                             <!--(click)="openHist(contentHist,rowData)"-->
+                         </button>
 
-                            </td>
-                        </tr>
-                    </ng-template>
-
-
+                     </td>
+                 </tr>
+             </ng-template>
 
 
-                    <ng-template pTemplate="summary" id="footer">
-                        <label id="footer" class="footer">No'of records:</label>
-                        <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-                        <label id="footer" class="footer1">Pages Count:</label>
-                        <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
-                    </ng-template>
 
-                </p-table>
 
-            </div>
-            <ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
-                <div class="modal-header">
+             <ng-template pTemplate="summary" id="footer">
+                 <label id="footer" class="footer">No'of records:</label>
+                 <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                 <label id="footer" class="footer1">Pages Count:</label>
+                 <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
+             </ng-template>
 
-                    <h4 class="modal-title">History of VendorList</h4>
-                    <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+         </p-table>
 
+         <!-- <ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
+             <div class="modal-header">
+
+                 <h4 class="modal-title">History of VendorList</h4>
+                 <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+                     <span aria-hidden="true">&times;</span>
+                 </button>
+
+
+             </div>
+             <div class="modal-body">
+
+                 <div class="table-responsive">
+                     <table class="table table-bordered">
+                         <thead>
+                             <tr>
+                                 <th>PID</th>
+                                 <th>Description</th>
+                                 <th>previousValue</th>
+                                 <th>newValue</th>
+                                 <th>Last Updated By</th>
+                                 <th>Last Updated Time</th>
+                             </tr>
+                         </thead>
+                         <tr *ngFor="let audit of auditHisory">
+                             <td>{{audit.auditHistoryId}}</td>
+                             <td>{{audit.columnName}}</td>
+                             <td>{{audit.previousValue}}</td>
+                             <td>{{audit.newValue}}</td>
+                             <td>{{audit.updatedBy}}</td>
+                             <td>{{audit.updatedDate}}</td>
+                         </tr>
+                     </table>
+                 </div>
+             </div>
+             <div class="modal-footer">
+                 <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+             </div>
+         </ng-template> -->
+
+         <!-- <ng-template #view class="modal fade " id="view" role="dialog">
+             <div role="dialog">
+                 <div class="modal-dialog modal-lg">
+                     <div class="modal-content">
+                         <div class="modal-header">
+                             <button type="button" class="close" (click)="dismissModel()">
+                                 &times;
+                             </button>
+                             <h4 class="modal-title">Employer Details</h4>
+                 <div>
+                    <button type="button" class="btn btn-success" (click)="ExpandAllEmployeeDetailsModel()">Expand All</button>
+                    <button type="button" class="btn btn-info" (click)="CloseAllEmployeerDetailsModel()">Collapse All</button>
 
                 </div>
-                <div class="modal-body">
+                         </div>
+                         <div class="modal-body" >
+                             <div class="panel-group" id="accordion">
 
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
+                                 <div class="panel panel-default">
+                                     <div class="panel-heading">
+                                         <h4 class="panel-title">
+                                     
+                                             <a class="collapsed" data-toggle="collapse" href="#step11">General Information</a>
+                                         </h4>
+                                     </div>
+
+                                     <div id="step11" class="panel-collapse collapse in">
+                                         <div class="panel-body">
+                                             <div class="col-sm-6 left-block">
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Employee First Name</label>
+                                                     <span class="value">{{allEmployeelist.firstName }}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Employee Last Name</label>
+                                                     <span class="value">{{allEmployeelist.lastName}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Employee Id</label>
+                                                     <span class="value">{{allEmployeelist.employeeId}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Employee Id (per Payroll)</label>
+                                                     <span class="value">{{allEmployeelist.employeeIdAsPerPayroll}}</span>
+                                                 </div>
+
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Legal Entity</label>
+                                                     <span class="value">{{compnayname}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">BU</label>
+                                                     <span class="value">{{biuName}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Division</label>
+                                                     <span class="value">{{divsioname}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Dept</label>
+                                                     <span class="value">{{departname}}</span>
+                                                 </div>
+
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Job Title</label>
+
+                                                     <span class="value">{{jobTitleName}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Job Type</label>
+
+                                                     <span class="value">{{jobTypeName}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Employee Expertise</label>
+                                                     <span class="value">{{empExpertisedescription}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Station ID</label>
+                                                     <span class="value">{{allEmployeelist.stationId}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Date of Birth</label>
+                                                     <span class="value">{{allEmployeelist.dateOfBirth | date:'MM-dd-yyyy'}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Country of Origin</label>
+                                                     <span class="value">{{originationCounty ? originationCounty : ''}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Start Date</label>
+                                                     <span class="value">{{allEmployeelist.startDate | date:'MM-dd-yyyy'}}</span>
+                                                 </div>
+                                             </div>
+                                             <div class="col-sm-6 right-block">
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Cell</label>
+                                                     <span class="value">{{allEmployeelist.mobilePhone}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Business Phone</label>
+                                                     <span class="value">{{allEmployeelist.workPhone}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Fax</label>
+                                                     <span class="value">{{allEmployeelist.fax}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Email</label>
+                                                     <span class="value">{{allEmployeelist.email}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">SS</label>
+                                                     <span class="value">{{allEmployeelist.ssn}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Shift</label>
+                                                     <span class="value" *ngIf="allEmployeelist.inMultipleShifts == true">Multiple Shift</span>
+                                                     <span class="value" *ngIf="allEmployeelist.inMultipleShifts == false">Single Shift</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Shift Type</label>
+                                                     <div style="text-align:center;" *ngFor="let shift of shiftMapArray">
+                                                         <span class="value">{{shift.shiftId}}</span>
+                                                     </div>
+
+
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Extra Hours</label>
+                                                     <span class="value">{{allEmployeelist.allowOvertime}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label *ngIf="allEmployeelist.isHourly == true" class="w150">Hourly Pay</label>
+                                                     <label *ngIf="allEmployeelist.isHourly == false" class="w150">Monthly Pay</label>
+                                                     <span class="value">{{allEmployeelist.hourlyPay}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Leave</label>
+                                                     <div style="text-align:center;" *ngFor="let leave of leaveMapArray">
+                                                         <span class="value">{{leave.employeeLeaveTypeId}}</span>
+                                                     </div>
+
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Employee Certifying Staff?</label>
+                                                     <span class="value">{{allEmployeelist.employeeCertifyingStaff}}</span>
+                                                 </div>
+                                                 
+
+             <div class="col-sm-12">
+            <label class="w150">Supervisor Name</label>
+            <span class="value">{{supervisiorname}}</span>
+        </div>
+            
+
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div>
+
+                                 <div class="panel panel-default">
+                                     <div class="panel-heading">
+                                         <h4 class="panel-title">
+                                             <div>
+
+                                             </div>
+                                             <a class="collapsed" data-toggle="collapse" href="#step12">Certification</a>
+                                         </h4>
+                                     </div>
+
+                                     <div id="step12" class="panel-collapse collapse in">
+                                         <div class="panel-body">
+                                             <div class="col-sm-6 left-block">
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Certification #</label>
+                                                     <span class="value">{{allEmployeelist.employeeLicensure?.licenseNumber}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Certifying Institution</label>
+                                                     <span class="value">{{allEmployeelist.employeeLicensure?.certifyingInstitution}}</span>
+                                                 </div>
+                                             </div>
+                                             <div class="col-sm-6 right-block">
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Certification Date</label>
+                                                     <span class="value">{{allEmployeelist.employeeLicensure?.certificationDate}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Certification In Force?</label>
+                                                     <span class="value">{{allEmployeelist.employeeLicensure?.isLicenseInForce}}</span>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div>
+
+                                 <div class="panel panel-default">
+                                     <div class="panel-heading">
+                                         <h4 class="panel-title">
+                                             <div>
+
+                                             </div>
+                                             <a class="collapsed" data-toggle="collapse" href="#step13">Training</a>
+                                         </h4>
+                                     </div>
+
+                                     <div id="step13" class="panel-collapse collapse in">
+                                         <div class="panel-body">
+
+                                             <div class="col-sm-6 left-block">
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Aircraft Model</label>
+                                                     <span class="value">{{allEmployeelist.employeeTraining?.aircraftModelId}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Training Type</label>
+                                                     <span class="value">{{empTrainningInfo }}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Schedule Date</label>
+                                                     <span class="value">{{allEmployeelist.employeeTraining?.scheduleDate}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Frequency of Training</label>
+                                                     <span class="value">{{allEmployeelist.employeeTraining?.frequencyOfTraining }}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Completion Date</label>
+                                                     <span class="value">{{allEmployeelist.employeeTraining?.completionDate }}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Cost</label>
+                                                     <span class="value">{{allEmployeelist.employeeTraining?.cost }}</span>
+                                                 </div>
+                                             </div>
+                                             <div class="col-sm-6 right-block">
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Duration</label>
+                                                     <span class="value">{{allEmployeelist.employeeTraining?.duration}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Provider</label>
+                                                     <span class="value">{{allEmployeelist.employeeTraining?.provider}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Industry Code</label>
+                                                     <span class="value">{{allEmployeelist.employeeTraining?.industryCode}}</span>
+                                                 </div>
+                                                 <div class="col-sm-12">
+                                                     <label class="w150">Expiration Date</label>
+                                                     <span class="value">{{allEmployeelist.employeeTraining?.expirationDate}}</span>
+                                                 </div>
+                                             </div>
+
+                                         </div>
+                                     </div>
+                                 </div>
+
+                             </div>
+                         </div>
+                         <div class="modal-footer">
+                             <button type="button" class="btn btn-danger" (click)="dismissModel()">
+                                 Close
+                             </button>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </ng-template> -->
+
+         <ng-template #content let-c="close" let-d="dismiss">
+             <div class="modal-header">
+                 <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+                 <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+                     <span aria-hidden="true">&times;</span>
+                 </button>
+             </div>
+
+             <div class="modal-footer">
+                 <button type="button" class="btn btn-primary-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
+                 <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
+             </div>
+         </ng-template>
+         <!--<ng-template #content let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h4 class="modal-title">Are You Sure Want to Delete 'Receive' Action ?</h4>
+            <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
+            <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+        </div>
+    </ng-template>-->
+     </div>
+</div>
+
+<div id="view" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+      
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+                    <button type="button" class="close"  data-dismiss="modal" >×</button>
+                    <h4 class="modal-title">Employer Details</h4>
+            </div>
+            <div class="modal-body modal-body-cstm">
+                    <div class="table-responsive default-bg clear">
+                    
+                    
+                            <!--<a href="#" class="btn btn-primary openall">open all</a> <a href="#" class="btn btn-warning closeall">close all</a>-->
+                            <div class="panel-group" id="accordion">
+                                <div class="panel panel-default">
+                                    <div>
+                                        <button type="button" class="btn btn-primary-cstm" data-toggle="collapse" (click)="ExpandAllEmployeeDetailsModel()" >Expand All</button>
+                                        <button type="button" class="btn btn-primary-cstm collapsed" data-toggle="collapse" (click)="CloseAllEmployeerDetailsModel()" >Collapse All</button>
+                                        <hr />
+                                    </div>
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step1" >General Information</a> </h4>
+                                    </div>
+                                    <div id="step1" class="panel-collapse  collapse" *ngIf="allEmployeelist">
+                                        <div class="panel-body">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div>
+                                                    <div class="table-responsive default-bg clear">
+                                                        <div class="col-sm-4">
+                                                            <p><span class="label"><b>First Name: </b></span><span class="value">{{allEmployeelist.firstName ? allEmployeelist.firstName : '-'}}</span></p>
+                                                            <p><span class="label"><b>Last Name: </b></span><span class="value">{{allEmployeelist.lastName ? allEmployeelist.lastName : '-'}}</span></p>
+                                                            <p><span class="label"><b>Employee Id: </b></span><span class="value">{{allEmployeelist.employeeId ? allEmployeelist.employeeId : '-'}}</span></p>
+                                                            <p><span class="label"><b>Employee Id (per Payroll): </b></span><span class="value">{{allEmployeelist.employeeIdAsPerPayroll ? allEmployeelist.employeeIdAsPerPayroll : '-'}}</span></p>
+                                                            <p><span class="label"><b>Legal Entity: </b></span><span class="value">{{compnayname ? compnayname : '-'}}</span></p>    
+                                                            <p><span class="label"><b>BU: </b></span><span class="value">{{biuName ? biuName : '-'}}</span></p>
+                                                            <p><span class="label"><b>Division: </b></span><span class="value">{{divsioname ? divsioname : '-'}}</span></p>   
+                                                            <p><span class="label"><b>Dept: </b></span><span class="value">{{departname ? departname : '-'}}</span></p>    
+                                                            <p><span class="label"><b>Job Title: </b></span><span class="value">{{jobTitleName ? jobTitleName : '-'}}</span></p>    
+                                                            <p><span class="label"><b>Job Type: </b></span><span class="value">{{jobTypeName ? jobTypeName : '-'}}</span></p>                                                                                       
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <p><span class="label"><b>Employee Expertise: </b></span><span class="value">{{empExpertisedescription ? empExpertisedescription : '-'}}</span></p>
+                                                            <p><span class="label"><b>Station ID: </b></span><span class="value">{{allEmployeelist.stationId ? allEmployeelist.stationId : '-'}}</span></p>
+                                                            <p><span class="label"><b>Date of Birth: </b></span><span class="value">{{allEmployeelist.dateOfBirth | date:'MM-dd-yyyy'}}</span></p>
+                                                            <p><span class="label"><b>Country of Origin: </b></span><span class="value">{{originationCounty ? originationCounty : '-'}}</span></p>
+                                                            <p><span class="label"><b>Start Date: </b></span><span class="value">{{allEmployeelist.startDate | date: 'dd/MM/yyyy'}}</span></p>
+                                                            <p><span class="label"><b>Cell: </b></span><span class="value">{{allEmployeelist.mobilePhone ? allEmployeelist.mobilePhone : '-'}}</span></p>
+                                                            <p><span class="label"><b>Business Phone: </b></span><span class="value">{{allEmployeelist.workPhone ? allEmployeelist.workPhone : '-'}}</span></p>
+                                                            <p><span class="label"><b>Fax: </b></span><span class="value">{{allEmployeelist.fax ? allEmployeelist.fax : '-'}}</span></p>
+                                                            <p><span class="label"><b>Email: </b></span><span class="value">{{allEmployeelist.email ? allEmployeelist.email : '-'}}</span></p>
+                                                            <p><span class="label"><b>SS: </b></span><span class="value">{{allEmployeelist.ssn ? allEmployeelist.ssn : '-'}}</span></p>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <p><span class="label"><b>Shift: </b></span>
+                                                                <span class="value" *ngIf="allEmployeelist.inMultipleShifts == true">Multiple Shift</span>
+                                                                <span class="value" *ngIf="allEmployeelist.inMultipleShifts == false">Single Shift</span>
+                                                            </p>
+                                                            <p><span class="label"><b>Shift Type: </b></span><span class="value">
+                                                                <div *ngFor="let shift of shiftMapArray">
+                                                                    <span class="value">{{shift.shiftId}}</span>
+                                                                </div>
+                                                            </span></p>
+                                                            <p><span class="label"><b>Extra Hours: </b></span><span class="value">{{allEmployeelist.allowOvertime ? allEmployeelist.allowOvertime : '-'}}</span></p>
+                                                            <p>
+                                                                <span *ngIf="allEmployeelist.isHourly == true" class="label"><b>Hourly Pay: </b></span>
+                                                                <span *ngIf="allEmployeelist.isHourly == false" class="label"><b>Monthly Pay: </b></span>
+                                                                <span *ngIf="!allEmployeelist.isHourly" class="label"><b>Pay: </b></span>
+                                                                <span class="value">{{allEmployeelist.hourlyPay ? allEmployeelist.hourlyPay : '-'}}</span>
+                                                            </p>   
+                                                            <p><span class="label"><b>Leave: </b></span><span class="value">
+                                                                <div *ngFor="let leave of leaveMapArray">
+                                                                    <span class="value">{{leave.employeeLeaveTypeId}}</span>
+                                                                </div>
+                                                            </span></p>
+                                                            <p><span class="label"><b>Employee Certifying Staff?: </b></span><span class="value">{{allEmployeelist.employeeCertifyingStaff ? allEmployeelist.employeeCertifyingStaff : '-'}}</span></p>
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+        
+                                        </div>
+                                    </div>
+        
+                                     <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step2">Certification</a> </h4>
+                                        </div>
+                                        <div id="step2" class="panel-collapse  collapse">
+                                            <div class="panel-body">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <div>
+                                                        <div class="table-responsive default-bg clear" *ngIf="allEmployeelist.employeeLicensure">
+                                                            <div class="col-sm-4">
+                                                                <p><span class="label"><b>Certification #: </b></span><span class="value">{{allEmployeelist.employeeLicensure?.licenseNumber}}</span></p>
+                                                                <p><span class="label"><b>Certification In Force? </b></span><span class="value">{{allEmployeelist.employeeLicensure?.isLicenseInForce}}</span></p>
+                                                            </div>
+                                                            <div class="col-sm-4">
+                                                                <p><span class="label"><b>Certifying Institution: </b></span><span class="value">{{allEmployeelist.employeeLicensure?.certifyingInstitution}}</span></p>                                                                
+                                                            </div>
+                                                            <div class="col-sm-4">
+                                                                <p><span class="label"><b>Certification Date: </b></span><span class="value">{{allEmployeelist.employeeLicensure?.certificationDate | date:'MM-dd-yyyy'}}</span></p>
+                                                            </div>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title"><a class="collapsed" data-toggle="collapse" href="#step3">Training</a> </h4>
+                                        </div>
+                                        <div id="step3" class="panel-collapse  collapse">
+                                            <div class="panel-body">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <div>
+                                                        <div class="table-responsive default-bg clear" *ngIf="allEmployeelist.employeeTraining">
+                                                            <div class="col-sm-4">
+                                                                <p><span class="label"><b>Aircraft Model: </b></span><span class="value">{{allEmployeelist.employeeTraining?.aircraftModelId}}</span></p>
+                                                                <p><span class="label"><b>Training Type: </b></span><span class="value">{{empTrainningInfo}}</span></p> 
+                                                                <p><span class="label"><b>Schedule Date: </b></span><span class="value">{{allEmployeelist.employeeTraining?.scheduleDate | date:'MM-dd-yyyy'}}</span></p> 
+                                                                <p><span class="label"><b>Frequency of Training: </b></span><span class="value">{{allEmployeelist.employeeTraining?.frequencyOfTraining}}</span></p>
+                                                            </div>
+                                                            <div class="col-sm-4">
+                                                                <p><span class="label"><b>Completion Date: </b></span><span class="value">{{allEmployeelist.employeeTraining?.completionDate | date:'MM-dd-yyyy'}}</span></p>                                                           
+                                                                <p><span class="label"><b>Cost: </b></span><span class="value">{{allEmployeelist.employeeTraining?.cost}}</span></p>
+                                                                <p><span class="label"><b>Duration: </b></span><span class="value">{{allEmployeelist.employeeTraining?.duration}}</span></p>
+                                                            </div>
+                                                            <div class="col-sm-4">
+                                                                <p><span class="label"><b>Provider: </b></span><span class="value">{{allEmployeelist.employeeTraining?.provider}}</span></p>                                                           
+                                                                <p><span class="label"><b>Industry Code: </b></span><span class="value">{{allEmployeelist.employeeTraining?.industryCode}}</span></p>
+                                                                <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{allEmployeelist.employeeTraining?.expirationDate | date:'MM-dd-yyyy'}}</span></p>
+                                                            </div>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>     
+                                </div>
+                            </div>
+                        </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+      
+        </div>
+      </div>
+
+      <div id="employeeHistory" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-lg">
+          
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">History of Employee</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive rro-table-cstm">
+                        <table class="table table-bordered" *ngIf="auditHistory.length> 0 else noDatavailable">
                             <thead>
                                 <tr>
-                                    <th>PID</th>
-                                    <th>Description</th>
-                                    <th>previousValue</th>
-                                    <th>newValue</th>
-                                    <th>Last Updated By</th>
-                                    <th>Last Updated Time</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Emp Id</th>
+                                    <th>Job Title</th>
+                                    <th>Emp Expertise</th>
+                                    <th>Job Type</th>
+                                    <th>Start Date</th>
+                                    <th>Company</th>
+                                    <th>Pay Type</th>
+                                    <th>IsActive</th>
+                                    <th>Updated By</th>
+                                    <th>Updated Time</th>
                                 </tr>
                             </thead>
-                            <tr *ngFor="let audit of auditHisory">
-                                <td>{{audit.auditHistoryId}}</td>
-                                <td>{{audit.columnName}}</td>
-                                <td>{{audit.previousValue}}</td>
-                                <td>{{audit.newValue}}</td>
-                                <td>{{audit.updatedBy}}</td>
-                                <td>{{audit.updatedDate}}</td>
-                            </tr>
+                            <tbody class="audithistory-cstm"> <!--*ngIf="auditHistory.length> 0"-->
+                                <tr *ngFor="let audit of auditHistory; let i = index;">
+                                    <!-- auditHistory[i>0 ? i-1 : i] -->          
+                                        <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'firstName', audit.firstName)  ? 'black' : 'red'  }">{{audit.firstName}}</td>
+                                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'lastName', audit.lastName)  ? 'black' : 'red'  }">{{audit.lastName}}</td>
+                                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'employeeId', audit.employeeId)  ? 'black' : 'red'  }">{{audit.employeeId}}</td>
+                                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'jobtitle', audit.jobtitle)  ? 'black' : 'red'  }">{{audit.jobtitle}}</td>
+                                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'employeeExpertise', audit.employeeExpertise)  ? 'black' : 'red'  }">{{audit.employeeExpertise}}</td>
+                                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'jobType', audit.jobType)  ? 'black' : 'red'  }">{{audit.jobType}}</td>
+                                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'startDate', audit.startDate)  ? 'black' : 'red'  }">{{audit.startDate}}</td>
+                                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'company', audit.company)  ? 'black' : 'red'  }">{{audit.company}}</td>
+                                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'payType', audit.payType)  ? 'black' : 'red'  }">{{audit.payType}}</td>
+                                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+                                        <td >{{audit.updatedBy}}</td>
+                                        <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                                    </tr>
+                            </tbody>                        
                         </table>
+                        <ng-template #noDatavailable>
+                            <div class="text-center"> 
+                                    <img src="../../../../assets/images/binoculars.png" style="height: 100px; width: 100px;">
+                                    <h4 style="color: #ff5663;">No History Found </h4>
+                            </div>
+                        </ng-template>  
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+                  <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                 </div>
-            </ng-template>
-        </div>
-        <ng-template #view class="modal fade " id="view" role="dialog">
-            <div class="modal-body viewform">
-                <div id="adminsearchlocationajax" class="table-responsive default-bg clear">
-                    <div class="modal-header">
-                        <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-                        <h4 class="modal-title">Employer Details</h4>
-                    </div>
-                    <form id="" class="workflow-view lgrey-bg workflow-form" name="" action="#" method="post" onsubmit="return false;">
-                        <div class="col-sm-12">
-                            <h4>General Information</h4>
-                            <div class="clear"></div>
-                            <hr>
-                        </div>
-                        <div class="col-sm-6 left-block">
-                            <div class="col-sm-12">
-                                <label class="w150">Employee First Name</label>
-                                <span class="value">{{allEmployeelist.firstName }}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Employee Last Name</label>
-                                <span class="value">{{allEmployeelist.lastName}}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Employee Id</label>
-                                <span class="value">{{allEmployeelist.employeeId}}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Employee Id (per Payroll)</label>
-                                <span class="value">{{allEmployeelist.employeeIdAsPerPayroll}}</span>
-                            </div>
-
-                            <div class="col-sm-12">
-                                <label class="w150">Legal Entity</label>
-                                <span class="value">{{compnayname}}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">BU</label>
-                                <span class="value">{{biuName}}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Division</label>
-                                <span class="value">{{divsioname}}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Dept</label>
-                                <span class="value">{{departname}}</span>
-                            </div>
-
-                            <div class="col-sm-12">
-                                <label class="w150">Job Title</label>
-
-                                <span class="value">{{jobTitleName}}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Job Type</label>
-
-                                <span class="value">{{jobTypeName}}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Employee Expertise</label>
-                                <span class="value">{{empExpertisedescription}}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Station ID</label>
-                                <span class="value">{{allEmployeelist.stationId}}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Date of Birth</label>
-                                <span class="value">{{allEmployeelist.dateOfBirth | date:'MM-dd-yyyy'}}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Country of Origin</label>
-                                <span class="value">{{originationCounty ? originationCounty : ''}}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Start Date</label>
-                                <span class="value">{{allEmployeelist.startDate | date:'MM-dd-yyyy'}}</span>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 right-block">
-                            <div class="col-sm-12">
-                                <label class="w150">Nationality</label>
-                                <span class="value">{{nationalCountry}}</span>
-
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Cell</label>
-                                <span class="value">{{allEmployeelist.mobilePhone}}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Business Phone</label>
-                                <span class="value">{{allEmployeelist.workPhone}}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Fax</label>
-                                <span class="value">{{allEmployeelist.fax}}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Email</label>
-                                <span class="value">{{allEmployeelist.email}}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">SS</label>
-                                <span class="value">{{allEmployeelist.ssn}}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Shift</label>
-                                <span class="value" *ngIf="allEmployeelist.inMultipleShifts == true">Multiple Shift</span>
-                                <span class="value" *ngIf="allEmployeelist.inMultipleShifts == false">Single Shift</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Shift Type</label>
-                                <div style="text-align:center;" *ngFor="let shift of shiftMapArray">
-                                    <span class="value">{{shift.shiftId}}</span>
-                                </div>
-
-
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Extra Hours</label>
-                                <span class="value">{{allEmployeelist.allowOvertime}}</span>
-                            </div>
-                            <!--<div class="col-sm-12">
-                                <label class="w150">Pay Type</label>
-                                <span class="value">{{allEmployeelist.yearlypayType}}</span>
-                            </div>-->
-                        <div class="col-sm-12">
-                            <label *ngIf="allEmployeelist.isHourly == true" class="w150">Hourly Pay</label>
-                            <label *ngIf="allEmployeelist.isHourly == false" class="w150">Monthly Pay</label>
-                            <span class="value">{{allEmployeelist.hourlyPay}}</span>
-                        </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Leave</label>
-                                <div style="text-align:center;" *ngFor="let leave of leaveMapArray">
-                                    <span class="value">{{leave.employeeLeaveTypeId}}</span>
-                                </div>
-
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Employee Certifying Staff?</label>
-                                <span class="value">{{allEmployeelist.employeeCertifyingStaff}}</span>
-                            </div>
-                            <!--
-
-                                 <div class="col-sm-12">
-                                <label class="w150">Supervisor Name</label>
-                                <span class="value">{{supervisiorname}}</span>
-                            </div>
-                                -->
-
-                        </div>
-                        <div class="clear"></div>
-                        <hr>
-                        <div class="col-sm-12">
-                            <h4>Certification</h4>
-                            <div class="clear"></div>
-                            <hr>
-
-                        </div>
-                        <hr>
-
-                        <div class="col-sm-6 left-block">
-                            <div class="col-sm-12">
-                                <label class="w150">Certification #</label>
-                                <span class="value">{{allEmployeelist.employeeLicensure?.licenseNumber}}</span>
-                            </div>
-                            <!--<div class="col-sm-12">
-                                <label class="w150">Certification Type</label>
-                                <span class="value">{{allEmployeelist.employeeLicensure?.employeeCertifyingStaff}}</span>
-                            </div>-->
-                            <div class="col-sm-12">
-                                <label class="w150">Certifying Institution</label>
-                                <span class="value">{{allEmployeelist.employeeLicensure?.certifyingInstitution}}</span>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 right-block">
-                            <div class="col-sm-12">
-                                <label class="w150">Certification Date</label>
-                                <span class="value">{{allEmployeelist.employeeLicensure?.certificationDate}}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Certification In Force?</label>
-                                <span class="value">{{allEmployeelist.employeeLicensure?.isLicenseInForce}}</span>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
-                        <hr>
-                        <div class="col-sm-12">
-                            <h4>Training</h4>
-                            <div class="clear"></div>
-                            <hr>
-                        </div>
-                        <div class="col-sm-6 left-block">
-                            <div class="col-sm-12">
-                                <label class="w150">Aircraft Model</label>
-                                <span class="value">{{allEmployeelist.employeeTraining?.aircraftModelId}}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Training Type</label>
-                                <span class="value">{{empTrainningInfo }}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Schedule Date</label>
-                                <span class="value">{{allEmployeelist.employeeTraining?.scheduleDate}}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Frequency of Training</label>
-                                <span class="value">{{allEmployeelist.employeeTraining?.frequencyOfTraining }}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Completion Date</label>
-                                <span class="value">{{allEmployeelist.employeeTraining?.completionDate }}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Cost</label>
-                                <span class="value">{{allEmployeelist.employeeTraining?.cost }}</span>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 right-block">
-                            <div class="col-sm-12">
-                                <label class="w150">Duration</label>
-                                <span class="value">{{allEmployeelist.employeeTraining?.duration}}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Provider</label>
-                                <span class="value">{{allEmployeelist.employeeTraining?.provider}}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Industry Code</label>
-                                <span class="value">{{allEmployeelist.employeeTraining?.industryCode}}</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Expiration Date</label>
-                                <span class="value">{{allEmployeelist.employeeTraining?.expirationDate}}</span>
-                            </div>
-                            <!--<div class="col-sm-12">
-                                <label class="w150">Certification Received</label>
-                                <span>Certification</span>
-                            </div>-->
-                        </div>
-                        <div class="clear"></div>
-                        <hr>
-                        <!--<div class="col-sm-12">
-                            <h4>Management Structure</h4>
-                            <div class="clear"></div>
-                            <hr>
-                        </div>
-                        <div class="col-sm-5 left-block">
-                            <div class="col-sm-12">
-                                <label class="w150">Roles</label>
-                                <span>Accountant, HR, Legal, Mechanic</span>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="w150">Memo</label>
-                                <span>Sample Memo</span>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 right-block">
-
-                            <div class="tree-structure col-sm-12">
-                                <h4 style="margin-bottom: -10px;">ABC Holding Inc. (Management Structure)</h4>
-                                <ul style="margin-top: 13px;">
-                                    <li class="hasSubmenu">
-                                        <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a class="addBorderBefore">Total Management View ( 2 )</a>
-                                        <ul style="margin-top: 13px;">
-                                            <li class="hasSubmenu" style="border-left: 1px solid gray;">
-                                                <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a>Total Operation - ( 2 )</a>
-                                                <ul style="margin-top: 13px;">
-                                                    <li class="hasSubmenu" style="border-left: 1px solid gray;">
-                                                        <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a>456-AirFrame - ( 2 )</a>
-                                                        <ul style="margin-top: 13px;">
-                                                            <li class="hasSubmenu" style="border-left: 1px solid gray;">
-                                                                <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a>1234-Repair - ( 2 )</a>
-                                                                <ul style="margin-top: 13px; border-left: 1px solid gray;">
-                                                                    <li><a>9999-Flight Controls - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
-                                                                    <li><a>2345-Hydraulic Power - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">TXH Inc.</span></a></li>
-                                                                </ul>
-                                                            </li>
-                                                            <li class="hasSubmenu">
-                                                                <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a class="addBorderBefore">5678-Parts Sales - ( 1 )</a>
-                                                                <ul style="margin-top: 13px; border-left: 1px solid gray;">
-                                                                    <li><a>9999-Flight Controls - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
-                                                                </ul>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                    <li class="hasSubmenu">
-                                                        <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a class="addBorderBefore">123-Structure - ( 1 )</a>
-                                                        <ul style="margin-top: 13px;">
-                                                            <li class="hasSubmenu">
-                                                                <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a class="addBorderBefore">5678-Parts Sales - ( 2 )</a>
-                                                                <ul style="margin-top: 13px; border-left: 1px solid gray;">
-                                                                    <li><a>3333-Doors - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
-                                                                    <li><a>1111-Fuselage - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
-                                                                </ul>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li class="hasSubmenu">
-                                                <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a class="addBorderBefore">Admin and Sales - ( 2 )</a>
-                                                <ul style="margin-top: 13px;">
-                                                    <li class="hasSubmenu" style="border-left: 1px solid gray;">
-                                                        <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a>654-Administration - ( 3 )</a>
-                                                        <ul style="margin-top: 13px; border-left: 1px solid gray;">
-                                                            <li><a>1100-Information Technology Dept - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
-                                                            <li><a>2200-Accounting and Finance - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
-                                                            <li><a>3300-Legal - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li class="hasSubmenu">
-                                                        <a href="#" class="toogle"><i class="fa fa-minus-circle"></i><i style="display:none;" class="fa fa-plus-circle"></i></a><a class="addBorderBefore">987-Sales and Marketing - ( 1 )</a>
-                                                        <ul style="margin-top: 13px; border-left: 1px solid gray;">
-                                                            <li><a>4040-Corporate Sales - <span class="market-tags">Tag 1, Tag 2, Tag 3</span> - <span class="le-tags">GBB Inc</span></a></li>
-                                                        </ul>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                                <br>
-                                <br>
-                                <br>
-                            </div>
-
-                        </div>-->
-
-                        <div class="clear"></div>
-                    </form>
-                    <!--<button type="button" style="text-align:right" class="btn btn-default" (click)="dismissModel()" data-dismiss="modal" id="" name="">Close</button>-->
-                </div>
+              </div>
+          
             </div>
-        </ng-template>
-
-        <ng-template #content let-c="close" let-d="dismiss">
-            <div class="modal-header">
-                <h4 class="modal-title">Are You Sure Want to Delete?</h4>
-                <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
-            </div>
-        </ng-template>
-        <!--<ng-template #content let-c="close" let-d="dismiss">
-            <div class="modal-header">
-                <h4 class="modal-title">Are You Sure Want to Delete 'Receive' Action ?</h4>
-                <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
-            </div>
-        </ng-template>-->
-
-    </div>
-
-</div>
+          </div>

@@ -118,6 +118,12 @@
 			  </div>
 			</ng-template>
 	  
+			<ng-template pTemplate="colgroup" let-columns>
+				<colgroup>
+					<col *ngFor="let col of columns">
+				</colgroup>
+			</ng-template>
+
 			<ng-template pTemplate="header" let-columns>
 			  <tr>
 				<th
@@ -330,7 +336,7 @@
 						<div class="modal-body">
 						  <div>
 							<div class="card">
-								<div class="card-body">
+								<div class="card-body" *ngIf="roHeaderAdd">
 									<div class="table-responsive default-bg clear">
 										<div class="col-sm-3">
 											<p><span class="label"><b>RO Num: </b></span><span class="value">{{roHeaderAdd.repairOrderNumber ? roHeaderAdd.repairOrderNumber : '-'}}</span></p>
@@ -391,6 +397,10 @@
 															<th>Functional CUR</th>
 															<th>FX Rate</th>
 															<th>Report CUR</th>
+															<th>Stockline Num</th>
+															<th>Control Id</th>
+															<th>Control Num</th>
+															<th>PO</th>
 															<th>WO</th>
 															<th>RO</th>
 															<th>SO</th>
@@ -419,13 +429,17 @@
 																<td>{{partList?.functionalCurrency}}</td>
 																<td>{{partList?.foreignExchangeRate}}</td>
 																<td>{{partList?.reportCurrency}}</td>
+																<td>{{partList?.stockLineNumber}}</td>
+																<td>{{partList?.controlId}}</td>
+																<td>{{partList?.controlNumber}}</td>
+																<td>{{partList?.po}}</td>
 																<td>{{partList?.workOrderNo}}</td>
 																<td>{{partList?.reapairOrderNo}}</td>
 																<td>{{partList?.salesOrderNo}}</td>
 																<td colspan="4">{{partList?.level1}},{{partList?.level2}},{{partList?.level3}},{{partList?.level4}}</td>
 																<td>{{partList?.memo}}</td>
 															</tr>
-															<tr class="child-header splitship-head" *ngIf="partList.repairOrderSplitParts.length > 0">
+															<tr class="child-header splitship-head" *ngIf="partList.repairOrderSplitParts">
 																<th></th>
 																<th></th>
 																<th>PN</th>

@@ -24,9 +24,9 @@ namespace DAL.Models
         public long TaskId { get; set; }
         public string Description { get; set; }
         public decimal? UnitCost { get; set; }
-        public decimal? ExtentedCost { get; set; }
+        public decimal? ExtendedCost { get; set; }
         public decimal? UnitPrice { get; set; }
-        public decimal? ExtentedPrice { get; set; }
+        public decimal? ExtendedPrice { get; set; }
 
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
@@ -41,5 +41,7 @@ namespace DAL.Models
         public string VendorName { get; set; }
         [NotMapped]
         public string ChargeType { get; set; }
+        [NotMapped]
+        public long workflowChargeTypeId { get; set; }
     }
 }

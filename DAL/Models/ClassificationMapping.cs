@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
-    public class ClassificationMapping
+    public partial class ClassificationMapping
     {
         [Key]
         public long ClassificationMappingId { get; set; }
@@ -17,7 +17,7 @@ namespace DAL.Models
         public string UpdatedBy { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
-        public long CustomerId { get; set; }
+        //public long CustomerId { get; set; }
 
         [NotMapped]
         public string Description { get; set; }

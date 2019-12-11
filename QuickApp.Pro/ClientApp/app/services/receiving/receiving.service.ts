@@ -85,7 +85,15 @@ export class ReceivingService {
 
     getReceivingRODataById(repairOrderId){
         return this.receivingEndpoing.getReceivingRODataById(repairOrderId);
-      }
+    }
+
+    getReceivingPOHeaderById(repairOrderId){
+        return this.receivingEndpoing.getReceivingPOHeaderById(repairOrderId);
+    }
+
+    getReceivingPOPartsForViewById(repairOrderId){
+        return this.receivingEndpoing.getReceivingPOPartsForViewById(repairOrderId);
+    }
 
     getReceivingROHeaderById(repairOrderId){
         return this.receivingEndpoing.getReceivingROHeaderById(repairOrderId);
@@ -97,6 +105,18 @@ export class ReceivingService {
 
     receiveParts(receiveParts: ReceiveParts[]) {
         return this.receivingEndpoing.receiveParts<any>(receiveParts);
+    }
+
+    getReceivingROPartsForViewById(repairOrderId){
+        return this.receivingEndpoing.getReceivingROPartsForViewById(repairOrderId);
+    }
+
+    getReceivingROPartsForEditById(repairOrderId){
+        return this.receivingEndpoing.getReceivingROPartsForEditById(repairOrderId);
+    }
+
+    updateStockLine(receiveParts: ReceiveParts[]) {
+        return this.receivingEndpoing.updateStockLine<any>(receiveParts);
     }
 
 }

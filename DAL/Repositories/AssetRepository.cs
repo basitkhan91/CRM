@@ -45,8 +45,23 @@ namespace DAL.Repositories
         public IEnumerable<object> getCapesList(long id)
         {
             {
-                var data = _appContext.Capability.Where(a => a.AssetRecordId == id).Include("Asset").Include("AircraftModel").Include("AircraftType").Include("CapabilityType").ToList();
-                  
+                //var data = _appContext.AssetCapes.Where(a => a.AssetRecordId == id).ToList();
+
+                var data = (from ac in _appContext.AssetCapes join im 
+                            in _appContext.ItemMaster on ac.ItemMasterId equals im.ItemMasterId
+                            join cap in _appContext.Capability on ac.CapabilityId equals cap.CapabilityId
+                            join captype in _appContext.capabilityType on cap.CapabilityTypeId equals captype.CapabilityTypeId 
+                            join act in _appContext.AircraftType on ac.AircraftTypeId equals act.AircraftTypeId
+                            join acm in _appContext.AircraftModel on ac.AircraftModelId equals acm.AircraftModelId
+                            join dn in _appContext.AircraftDashNumber on ac.AircraftDashNumberId equals dn.DashNumberId
+                            where ac.AssetRecordId == id && (ac.IsDelete == false || ac.IsDelete == null)
+
+                            select new
+                            {
+                                ac.AssetCapesId,ac.ItemMasterId,im.PartNumber,im.PartDescription,captypedescription = captype.Description,
+                                manufacturer = act.Description,modelname = acm.ModelName,dashnumber= dn.DashNumber
+
+                            }).ToList();
                 return data;
             }
         }

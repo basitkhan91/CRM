@@ -18,6 +18,7 @@ export class ItemMasterCapabilitiesModel {
     aircraftManufacturer: any;
     PartId: any;
     DashNumber: any;
+    AircraftDashNumberId: number;
     itemMasterId: any = NaN;
     entryDate: Date = new Date();
     isCMMExist: any;
@@ -31,6 +32,18 @@ export class ItemMasterCapabilitiesModel {
     componentDescription: any;
     clcfNumber: any;
     assetRecordId: number;
+    AssetCapesId: number;
+    atasubchapterId:any;
+    cmmId:any;
+    integrateWith:any;
+    nteHrs:number;
+    tat:number;
+    manufacturerLabel:any;
+    ataChapterLabel:any;
+    ataSubchapterLabel:any;
+    cmmLabel:any;
+    integrateWithLabel:any;
+    capabilityTypeName:any;
 
     public constructor(init?: Partial<ItemMasterCapabilitiesModel>) {
         Object.assign(this, init);

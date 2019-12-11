@@ -226,6 +226,8 @@ export class EmployeesManagementStructureComponent implements OnInit,AfterViewIn
     getLegalEntityList(){
         let result = [];
         this.employeeService.legalEnityList.forEach((ele, index)=>{
+            this.employeeService.legalEnityList[index]['isActive'] = true;
+            this.employeeService.legalEnityList[index]['isDeleted'] = false;
             this.employeeService.legalEnityList[index]['employeeId'] = this.empId;
         })
         return this.employeeService.legalEnityList;

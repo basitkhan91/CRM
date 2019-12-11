@@ -23,10 +23,10 @@
                                         optionLabel="header" [(ngModel)]="selectedColumns" [style]="{minWidth: '200px'}"
                                         style="float:left" (onChange)="columnsChanges()"></p-multiSelect>
 
-                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download Selected"
+                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download All Data"
                                         tooltipPosition="top" pButton icon="fa-download" iconPos="left"
                                         label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download All Data"
+                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download Selected"
                                         tooltipPosition="top" pButton icon="fa-download" iconPos="left"
                                         label="Export Selection Only"
                                         (click)="dt.exportCSV({selectionOnly:true})"></button>

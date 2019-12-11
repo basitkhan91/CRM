@@ -25,13 +25,13 @@ namespace DAL.Repositories
         {
 
             var data = (from v in _appContext.CustomerDocumentDetails
-                join x in _appContext.AttachmentDetails on v.AttachmentId equals x.AttachmentId 
-                where v.CustomerId == Id
+               // join x in _appContext.AttachmentDetails on v.AttachmentId equals x.AttachmentId 
+                where v.CustomerId == Id && v.IsDeleted==false
                 select new
                 {
                     v.CustomerDocumentDetailId,
                     v.AttachmentId,
-                    x.Link,
+                   // x.Link,
                     v.MasterCompanyId,
                     v.CreatedBy,
                     v.UpdatedBy,

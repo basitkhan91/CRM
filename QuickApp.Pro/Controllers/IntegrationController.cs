@@ -146,6 +146,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(auditResult);
         }
 
+        [HttpPost("UploadIntegrationCustomData")]
+        public IActionResult UploadIntegrationCustomData()
+        {
+
+            _unitOfWork.FileUploadRepository.UploadCustomFile(Convert.ToString("Integration"), Request.Form.Files[0]);
+            return Ok();
+        }
+
     }
 }
 

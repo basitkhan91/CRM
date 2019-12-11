@@ -602,7 +602,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                         this.setCurrentPanel(this.selectedItems[0].Name, this.selectedItems[0].Id);
                                     }
                                 }, 1000);
-                                this.calculateTotalWorkFlowCost();
+                                this.calculateTotalWorkFlowCost(false);
                             },
                             error => this.errorMessage = <any>error
                         );
@@ -1118,17 +1118,16 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     private getDefaultConditionId(name: string): string {
 
         if (this.allconditioninfo != undefined && this.allconditioninfo.length > 0) {
-            let defaultConditionId: any = this.allconditioninfo.filter(x => x.description.trim() == name)[0].conditionId;
-            //this.workFlow.materialList[0].conditionCodeId = defaultConditionId;
-            return defaultConditionId;
+            let defaultCondition: any = this.allconditioninfo.find(x => x.description.trim().toLowerCase() == name.toLowerCase())
+           
+            return defaultCondition != undefined ? defaultCondition.conditionId : 0;           
         }
         else {
             this.conditionService.getConditionList().subscribe(data => {
                 this.allconditioninfo = data[0];
-                let defaultConditionId: any = this.allconditioninfo.filter(x => x.description.trim() == name)[0].conditionId;
-                return defaultConditionId;
-                //this.workFlow.materialList[0].conditionCodeId = defaultConditionId;
+                let defaultCondition: any = this.allconditioninfo.find(x => x.description.trim().toLowerCase() == name.toLowerCase())
 
+                return defaultCondition != undefined ? defaultCondition.conditionId : 0;                
             })
         }
 
@@ -1814,7 +1813,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         var material = [{
             workflowMaterialListId: "0",
             itemMasterId: '',
-            conditionCodeId: this.getDefaultConditionId('NEW'),
+            conditionCodeId: this.getDefaultConditionId('new'),
             mandatoryOrSupplemental: 'Mandatory',
             itemClassificationId: '',
             quantity: "",
@@ -1928,7 +1927,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     addWorkFlow(isHeaderUpdate: boolean): void {
         this.sourceWorkFlow.workflowId = undefined;
 
-        if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
+        if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost(false)) {
             var OkCancel = confirm("Work Flow total cost exceed the BER threshold amount. Do you still want to continue?");
             if (OkCancel == false) {
                 return;
@@ -1982,7 +1981,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     updateWorkFlow(isHeaderUpdate: boolean): void {
 
-        if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost()) {
+        if (!this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost(false)) {
             var OkCancel = confirm("Work Flow total cost exceed the BER threshold amount. Do you still want to continue?");
             if (OkCancel == false) {
                 return;
@@ -2239,19 +2238,19 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             const saveWorkFlowWorkOrderData = {
                 ...this.sourceWorkFlow,
                 // ...tasks[0],
-                isSaveToWorkFlow : isSaveToWorkFlow,
-                workflowId: 0 , 
+                isSaveToWorkFlow: isSaveToWorkFlow,
+                workflowId: 0,
                 workOrderId: this.savedWorkOrderData.workOrderId,
                 workFlowWorkOrderId: this.workFlowWorkOrderId,
-                existingWorkFlowId : this.sourceWorkFlow.workflowId,
-                charges: data.charges.map(x => { return { ...x, workflowChargesListId:0 , workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
-                directions: data.directions.map(x => { return { ...x, workflowDirectionId : 0, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
-                equipments: data.equipments.map(x => { return { ...x, workflowEquipmentListId : 0 , workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
-                exclusions: data.exclusions.map(x => { return { ...x, workflowExclusionId:0 , workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
-                expertise: data.expertise.map(x => { return { ...x, workflowExpertiseListId : 0 ,  workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
-                materialList: data.materialList.map(x => { return { ...x, workflowMaterialListId: 0 , workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                existingWorkFlowId: this.sourceWorkFlow.workflowId,
+                charges: data.charges.map(x => { return { ...x, workflowChargesListId: 0, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                directions: data.directions.map(x => { return { ...x, workflowDirectionId: 0, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                equipments: data.equipments.map(x => { return { ...x, workflowEquipmentListId: 0, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                exclusions: data.exclusions.map(x => { return { ...x, workflowExclusionId: 0, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                expertise: data.expertise.map(x => { return { ...x, workflowExpertiseListId: 0, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
+                materialList: data.materialList.map(x => { return { ...x, workflowMaterialListId: 0, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
                 measurements: data.measurements.map(x => { return { ...x, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } }),
-                publication: data.publication.map(x => { return { ...x, Id: 0 , workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } })
+                publication: data.publication.map(x => { return { ...x, Id: 0, workOrderId: this.savedWorkOrderData.workOrderId, ...excessParams } })
 
 
             }
@@ -2392,7 +2391,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     Total: number;
     PercentBERThreshold: number;
-    calculateTotalWorkFlowCost(): boolean {
+    calculateTotalWorkFlowCost(isDisplayErrorMesage): boolean {
         if (this.sourceWorkFlow.berThresholdAmount == undefined || this.sourceWorkFlow.berThresholdAmount == 0) {
             this.sourceWorkFlow.berThresholdAmount = 0;
         }
@@ -2415,7 +2414,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.Total = parseFloat((this.MaterialCost + this.TotalCharges + this.TotalExpertiseCost + parseFloat(((this.sourceWorkFlow.otherCost == undefined || this.sourceWorkFlow.otherCost == '') ? 0 : this.sourceWorkFlow.otherCost).toFixed(2))).toFixed(2));
         this.PercentBERThreshold = parseFloat((this.Total / this.sourceWorkFlow.berThresholdAmount).toFixed(2));
 
-        if (this.Total > this.sourceWorkFlow.berThresholdAmount) {
+        if (this.Total > this.sourceWorkFlow.berThresholdAmount && isDisplayErrorMesage && (this.sourceWorkFlow.isFixedAmount == true || this.sourceWorkFlow.isPercentageOfNew == true || this.sourceWorkFlow.percentageOfReplacement == true)) {
             this.alertService.showMessage(this.title, 'Work Flow total cost can not exceed the BER Threshold Amount', MessageSeverity.error);
             return false;
         }
