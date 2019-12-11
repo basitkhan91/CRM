@@ -363,7 +363,7 @@
   </div>
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'materialList'">
-    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use work flow'">
+    <!-- <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use work flow'">
       <thead>
         <tr>
           <th>MC PN</th>
@@ -401,9 +401,9 @@
           <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save Details</button>
         </div>
       </tbody>
-    </table>
+    </table> -->
 
-    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use historical wos'">
+    <!-- <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use historical wos'">
       <thead>
         <tr>
           <th>MC PN</th>
@@ -441,8 +441,11 @@
           <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save Details</button>
         </div>
       </tbody>
-    </table>
+    </table> -->
 
+    <app-work-order-labor [taskList]="taskList" [laborForm]="labor" [workOrderLaborList]="workOrderLaborList" [workOrderWorkFlowOriginalData]="workOrderWorkFlowOriginalData" [savedWorkOrderData]="savedWorkOrderData"
+                        (saveworkOrderLabor)="saveworkOrderLabor($event)"
+                        ></app-work-order-labor>
   </div>
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'exclusions'">
