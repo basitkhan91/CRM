@@ -796,18 +796,18 @@ namespace DAL.Repositories
             ManagementStructure level1 = null;
             try
             {
-                level4 = _appContext.ManagementStructure.Where(p => p.IsDelete == false && p.ManagementStructureId == manmgStrucId).FirstOrDefault();
+                level4 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == manmgStrucId).FirstOrDefault();
                 if (level4 != null && level4.ParentId > 0)
                 {
-                    level3 = _appContext.ManagementStructure.Where(p => p.IsDelete == false && p.ManagementStructureId == level4.ParentId).FirstOrDefault();
+                    level3 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == level4.ParentId).FirstOrDefault();
                 }
                 if (level3 != null && level3.ParentId > 0)
                 {
-                    level2 = _appContext.ManagementStructure.Where(p => p.IsDelete == false && p.ManagementStructureId == level3.ParentId).FirstOrDefault();
+                    level2 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == level3.ParentId).FirstOrDefault();
                 }
                 if (level2 != null && level2.ParentId > 0)
                 {
-                    level1 = _appContext.ManagementStructure.Where(p => p.IsDelete == false && p.ManagementStructureId == level2.ParentId).FirstOrDefault();
+                    level1 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == level2.ParentId).FirstOrDefault();
                 }
 
 
