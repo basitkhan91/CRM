@@ -3382,6 +3382,27 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpPost("vendorProcessSave")]
+        public IActionResult VendorProcessSave(Master1099 vendorProcess1099)
+        {
+            _unitOfWork.Vendor.VendorProcess1099Save(vendorProcess1099);
+            return Ok();
+        }
+
+        [HttpPut("vendorProcessStatus")]
+        public IActionResult VendorProcesStatusUpdate(long id, bool status, string updatedBy)
+        {
+            _unitOfWork.Vendor.VendorProcess1099StatusUpdate(id,status,updatedBy);
+            return Ok();
+        }
+
+        [HttpPut("vendorProcessDelete")]
+        public IActionResult VendorProcesDelete(long id, string updatedBy)
+        {
+            _unitOfWork.Vendor.VendorProcess1099Delete(id, updatedBy);
+            return Ok();
+        }
+
 
 
         #region Capes
