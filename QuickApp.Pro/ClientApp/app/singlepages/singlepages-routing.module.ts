@@ -18,6 +18,7 @@ import { DocumentsComponent } from "../components/documents/documents.component"
 import { EmployeeExpertiseComponent } from "../components/employee-expertise/employee-expertise.component";
 import { FindingsComponent } from "../components/findings/findings.component";
 import { AssetIntangibleTypeComponent } from "../components/asset-intangible-type/asset-intangible-type.component";
+import { AssetIntangibleAttributeTypeComponent } from "../components/asset-intangible-attribute-type/asset-intangible-attribute-type.component";
 import { AssetTypeComponent } from "../components/asset-type/asset-type.component";
 import { StageCodeComponent } from "../components/stage-code/stage-code.component";
 import { GLAccountCategoryComponent } from "../components/gl-account-category/gl-account-category.component";
@@ -181,6 +182,11 @@ const singlePagesRoutes: Routes = [
                 path: "app-asset-attribute-type",
                 component: AssetAttributeTypeComponent,
                 data: { title: "Asset Attribute Type" }
+            },
+			{
+                path: "app-asset-intangible-attribute-type",
+                component: AssetIntangibleAttributeTypeComponent,
+                data: { title: "Asset Intangible Attribute Type" }
             },
             {
                 path: "app-integration",
