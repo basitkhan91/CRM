@@ -353,7 +353,7 @@ namespace DAL.Repositories
                                            wo.CustomerReference,
                                            workFlowWorkOrderId = wo.IsSinglePN == true ? wf.WorkFlowWorkOrderId : 0,
                                            workFlowId = wo.IsSinglePN == true ? wf.WorkflowId : 0,
-                                       }).FirstOrDefault();
+									   }).FirstOrDefault();
                 return workOrderHeader;
             }
             catch (Exception)
@@ -3522,111 +3522,111 @@ namespace DAL.Repositories
         {
             try
             {
-                var data = (from bi in _appContext.WorkOrderBillingInvoicing
-                            join wo in _appContext.WorkOrder on bi.WorkOrderId equals wo.WorkOrderId
-                            join wop in _appContext.WorkOrderPartNumber on bi.WorkOrderPartNoId equals wop.ID
-                            join wowf in _appContext.WorkOrderWorkFlow on bi.WorkOrderWorkFlowId equals wowf.WorkFlowWorkOrderId
-                            join cust in _appContext.Customer on bi.CustomerId equals cust.CustomerId
-                            join it in _appContext.InvoiceType on bi.InvoiceTypeId equals it.InvoiceTypeId
-                            join emp in _appContext.Employee on bi.EmployeeId equals emp.EmployeeId
-                            join wos in _appContext.WorkScope on wop.WorkOrderScopeId equals wos.WorkScopeId
-                            join soc in _appContext.Customer on bi.SoldToCustomerId equals soc.CustomerId
-                            join sos in _appContext.CustomerShippingAddress on bi.SoldToSiteId equals sos.CustomerShippingAddressId
-                            join soa in _appContext.Address on sos.AddressId equals soa.AddressId
+				var data = (from bi in _appContext.WorkOrderBillingInvoicing
+							join wo in _appContext.WorkOrder on bi.WorkOrderId equals wo.WorkOrderId
+							join wop in _appContext.WorkOrderPartNumber on bi.WorkOrderPartNoId equals wop.ID
+							join wowf in _appContext.WorkOrderWorkFlow on bi.WorkOrderWorkFlowId equals wowf.WorkFlowWorkOrderId
+							join cust in _appContext.Customer on bi.CustomerId equals cust.CustomerId
+							join it in _appContext.InvoiceType on bi.InvoiceTypeId equals it.InvoiceTypeId
+							join emp in _appContext.Employee on bi.EmployeeId equals emp.EmployeeId
+							join wos in _appContext.WorkScope on wop.WorkOrderScopeId equals wos.WorkScopeId
+							join soc in _appContext.Customer on bi.SoldToCustomerId equals soc.CustomerId
+							join sos in _appContext.CustomerShippingAddress on bi.SoldToSiteId equals sos.CustomerShippingAddressId
+							join soa in _appContext.Address on sos.AddressId equals soa.AddressId
 
-                            join shc in _appContext.Customer on bi.SoldToCustomerId equals shc.CustomerId
-                            join shs in _appContext.CustomerShippingAddress on bi.SoldToSiteId equals shs.CustomerShippingAddressId
-                            join sha in _appContext.Address on sos.AddressId equals sha.AddressId
-                            join mnge in _appContext.Employee on bi.ManagementEmpId equals mnge.EmployeeId into bimnge
-                            from mnge in bimnge.DefaultIfEmpty()
-                            join sp in _appContext.Employee on wo.SalesPersonId equals sp.EmployeeId
-                            join cur in _appContext.Currency on cust.CurrencyId equals cur.CurrencyId into custcur
-                            from cur in custcur.DefaultIfEmpty()
-                            join ct in _appContext.CreditTerms on wo.CreditTermsId equals ct.CreditTermsId
-                            join sv in _appContext.CustomerShipping on bi.ShipViaId equals sv.CustomerShippingId into bisv
-                            from sv in bisv.DefaultIfEmpty()
+							join shc in _appContext.Customer on bi.SoldToCustomerId equals shc.CustomerId
+							join shs in _appContext.CustomerShippingAddress on bi.SoldToSiteId equals shs.CustomerShippingAddressId
+							join sha in _appContext.Address on sos.AddressId equals sha.AddressId
+							join mnge in _appContext.Employee on bi.ManagementEmpId equals mnge.EmployeeId into bimnge
+							from mnge in bimnge.DefaultIfEmpty()
+							join sp in _appContext.Employee on wo.SalesPersonId equals sp.EmployeeId
+							join cur in _appContext.Currency on cust.CurrencyId equals cur.CurrencyId into custcur
+							from cur in custcur.DefaultIfEmpty()
+							join ct in _appContext.CreditTerms on wo.CreditTermsId equals ct.CreditTermsId
+							join sv in _appContext.CustomerShipping on bi.ShipViaId equals sv.CustomerShippingId into bisv
+							from sv in bisv.DefaultIfEmpty()
 
-                            where bi.WorkOrderId == WorkOrderId && bi.WorkOrderPartNoId==workOrderPartNoId
-                            select new
-                            {
-                                bi.BillingInvoicingId,
-                                bi.WorkOrderId,
-                                bi.WorkOrderPartNoId,
-                                bi.WorkOrderWorkFlowId,
-                                bi.ItemMasterId,
-                                bi.InvoiceTypeId,
+							where bi.WorkOrderId == WorkOrderId && bi.WorkOrderPartNoId == workOrderPartNoId
+							select new
+							{
+								bi.BillingInvoicingId,
+								bi.WorkOrderId,
+								bi.WorkOrderPartNoId,
+								bi.WorkOrderWorkFlowId,
+								bi.ItemMasterId,
+								bi.InvoiceTypeId,
 
-                                InvoiceType = it.Description,
-                                bi.InvoiceNo,
-                                cust.ContractReference,
-                                cust.CustomerCode,
-                                bi.InvoiceDate,
-                                bi.InvoiceTime,
-                                bi.PrintDate,
-                                bi.ShipDate,
-                                bi.NoofPieces,
-                                bi.EmployeeId,
-                                EmployeeName = emp.FirstName,
-                                bi.RevType,
-                                wo.WorkOrderTypeId,
-                                WorkScope = wos.Description,
-                                wop.WorkOrderScopeId,
-                                wop.Quantity,
-                                wo.OpenDate,
-                                wo.SalesPersonId,
-                                SalesPerson = sp.FirstName,
-                                cust.CurrencyId,
-                                Currency = cur.DisplayName,
-                                wo.CreditLimit,
-                                wo.CreditTermsId,
-                                CreditTerm = ct.Name,
-                                bi.GateStatus,
-                                bi.SoldToCustomerId,
-                                SoldToCustomer = soc.Name,
-                                bi.SoldToSiteId,
-                                soa.City,
-                                soa.Country,
-                                soa.Line1,
-                                soa.Line2,
-                                soa.Line3,
-                                soa.PoBox,
-                                soa.PostalCode,
-                                soa.StateOrProvince,
-                                bi.ShipToCustomerId,
-                                ShipToCustomer = shc.Name,
-                                bi.ShipToSiteId,
-                                ShipToCity = sha.City,
-                                ShipToCountry = sha.Country,
-                                ShipToLine1 = sha.Line1,
-                                ShipToLine2 = sha.Line2,
-                                ShipToLine3 = sha.Line3,
-                                ShipToPoBox = sha.PoBox,
-                                ShipToPostalCode = sha.PostalCode,
-                                ShipToState = sha.StateOrProvince,
-                                bi.ShipToAttention,
-                                bi.ManagementStructureId,
-                                bi.ManagementEmpId,
-                                ManagementEmp = mnge.FirstName,
-                                bi.Notes,
-                                bi.CostPlusType,
-                                bi.TotalWorkOrder,
-                                bi.TotalWorkOrderValue,
-                                bi.Material,
-                                bi.MaterialValue,
-                                bi.LaborOverHead,
-                                bi.LaborOverHeadValue,
-                                bi.MiscCharges,
-                                bi.MiscChargesValue,
-                                bi.ProForma,
-                                bi.PartialInvoice,
-                                bi.CostPlusRateCombo,
-                                bi.ShipViaId,
-                                sv.ShipVia,
-                                sv.ShippingAccountinfo,
-                                bi.WayBillRef,
-                                bi.Tracking
-                            }).FirstOrDefault();
-                return data;
+								InvoiceType = it.Description,
+								bi.InvoiceNo,
+								cust.ContractReference,
+								cust.CustomerCode,
+								bi.InvoiceDate,
+								bi.InvoiceTime,
+								bi.PrintDate,
+								bi.ShipDate,
+								bi.NoofPieces,
+								bi.EmployeeId,
+								EmployeeName = emp.FirstName,
+								bi.RevType,
+								wo.WorkOrderTypeId,
+								WorkScope = wos.Description,
+								wop.WorkOrderScopeId,
+								wop.Quantity,
+								wo.OpenDate,
+								wo.SalesPersonId,
+								SalesPerson = sp.FirstName,
+								cust.CurrencyId,
+								Currency = cur.DisplayName,
+								wo.CreditLimit,
+								wo.CreditTermsId,
+								CreditTerm = ct.Name,
+								bi.GateStatus,
+								bi.SoldToCustomerId,
+								SoldToCustomer = soc.Name,
+								bi.SoldToSiteId,
+								soa.City,
+								soa.Country,
+								soa.Line1,
+								soa.Line2,
+								soa.Line3,
+								soa.PoBox,
+								soa.PostalCode,
+								soa.StateOrProvince,
+								bi.ShipToCustomerId,
+								ShipToCustomer = shc.Name,
+								bi.ShipToSiteId,
+								ShipToCity = sha.City,
+								ShipToCountry = sha.Country,
+								ShipToLine1 = sha.Line1,
+								ShipToLine2 = sha.Line2,
+								ShipToLine3 = sha.Line3,
+								ShipToPoBox = sha.PoBox,
+								ShipToPostalCode = sha.PostalCode,
+								ShipToState = sha.StateOrProvince,
+								bi.ShipToAttention,
+								bi.ManagementStructureId,
+								bi.ManagementEmpId,
+								ManagementEmp = mnge.FirstName,
+								bi.Notes,
+								bi.CostPlusType,
+								bi.TotalWorkOrder,
+								bi.TotalWorkOrderValue,
+								bi.Material,
+								bi.MaterialValue,
+								bi.LaborOverHead,
+								bi.LaborOverHeadValue,
+								bi.MiscCharges,
+								bi.MiscChargesValue,
+								bi.ProForma,
+								bi.PartialInvoice,
+								bi.CostPlusRateCombo,
+								bi.ShipViaId,
+								sv.ShipVia,
+								sv.ShippingAccountinfo,
+								bi.WayBillRef,
+								bi.Tracking
+							}).FirstOrDefault();
+					return data;
             }
             catch (Exception)
             {

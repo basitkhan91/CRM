@@ -243,6 +243,11 @@ export class WorkOrderService {
     }
 
 
+    createBillingByWorkOrderId(data) {
+        return this.workOrderEndpointService.createBillingByWorkOrderId(data);
+    }
+
+
 
 
 
@@ -252,6 +257,10 @@ export class WorkOrderService {
 
     getBuildDetailsFromWorkFlow(partId, workScopeId) {
         return this.workOrderEndpointService.getBuildDetailsFromWorkFlow(partId, workScopeId);
+    }
+
+    getBillingEditData(workOrderId, workOrderPartNoId) {
+        return this.workOrderEndpointService.getBillingEditData(workOrderId, workOrderPartNoId);
     }
 
 
