@@ -629,7 +629,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     {
                         label: 'Asset Mgmt Maintenance', items: [
                             { label: 'Depreciation Method', routerLink: '/singlepages/singlepages/app-depriciation-method' },
-                            { label: 'Disposal Type', routerLink: '/singlepages/singlepages/app-disposal-type' },
+                            { label: 'Asset Disposal Type', routerLink: '/singlepages/singlepages/app-disposal-type' },
                             { label: 'Asset Status', routerLink: '/singlepages/singlepages/asset-status' },
                             { label: 'Asset Type', routerLink: '/singlepages/singlepages/app-asset-type' },
                             { label: 'Asset Intangible Type', routerLink: '/singlepages/singlepages/app-asset-intangible-type' },
