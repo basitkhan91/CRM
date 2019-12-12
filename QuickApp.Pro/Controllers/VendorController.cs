@@ -3392,7 +3392,7 @@ namespace QuickApp.Pro.Controllers
         [HttpPut("vendorProcessStatus")]
         public IActionResult VendorProcesStatusUpdate(long id, bool status, string updatedBy)
         {
-            _unitOfWork.Vendor.VendorProcess1099StatusUpdate(id,status,updatedBy);
+            _unitOfWork.Vendor.VendorProcess1099StatusUpdate(id, status, updatedBy);
             return Ok();
         }
 
@@ -3617,7 +3617,7 @@ namespace QuickApp.Pro.Controllers
                     _context.Address.Add(address);
                 }
                 _context.SaveChanges();
-                                            
+
                 billingAddressData.AddressId = billingAddress.AddressId;
                 billingAddressData.VendorId = billingAddress.VendorId;
                 billingAddressData.SiteName = billingAddress.SiteName;
@@ -3705,7 +3705,7 @@ namespace QuickApp.Pro.Controllers
         #endregion
 
 
-        #region VendorDocument
+        #region VendorDocument      
         [HttpPost("vendorDocumentUpload")]
         [Produces("application/json")]
         public IActionResult DocumentUploadAction()
@@ -3734,18 +3734,21 @@ namespace QuickApp.Pro.Controllers
                         vendorDocObj.UpdatedDate = DateTime.Now;
                         if (vendorDocObj.AttachmentId > 0)
                         {
+                            _unitOfWork.VendorDocumentDetails.Update(vendorDocObj);
+                            _unitOfWork.SaveChanges();
                             vendorDocObj.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
-                          Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), vendorDocObj.UpdatedBy, vendorDocObj.MasterCompanyId, vendorDocObj.AttachmentId);
+                                                         Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), vendorDocObj.UpdatedBy, vendorDocObj.MasterCompanyId, vendorDocObj.AttachmentId);
 
                         }
                         else
                         {
                             vendorDocObj.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
                              Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), vendorDocObj.UpdatedBy, vendorDocObj.MasterCompanyId);
+                            _unitOfWork.VendorDocumentDetails.Update(vendorDocObj);
+                            _unitOfWork.SaveChanges();
                         }
 
-                        _unitOfWork.VendorDocumentDetails.Update(vendorDocObj);
-                        _unitOfWork.SaveChanges();
+
                     }
                     else
                     {
