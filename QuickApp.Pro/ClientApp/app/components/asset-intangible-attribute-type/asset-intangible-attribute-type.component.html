@@ -200,7 +200,7 @@
     </div>
 
     <!--Step x: Modal for Edit-->
-    <div #editItem id="editItem" class="modal fade" role="dialog" *ngIf="currentModeOfOperation === 2 || currentModeOfOperation === 3">
+    <div #editItem id="editItem" class="modal fade editModal" role="dialog" *ngIf="currentModeOfOperation === 2 || currentModeOfOperation === 3">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -211,7 +211,7 @@
                     <form #IntangibleAttrType="ngForm">
                         <div class="form-group">
                             <div class="col-sm-12">
-                                <div class="col-sm-4">
+                                <div class="col-sm-5">
                                     <label for="description" class="control-label">
                                         Name
                                         <span class="clr-red">*</span>
@@ -241,7 +241,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-12">
-                                <div class="col-sm-4">
+                                <div class="col-sm-5">
                                     <label for="description" class="control-label">
                                         Amort Expense GL
                                         <span class="clr-red">*</span>
@@ -261,7 +261,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-12">
-                                <div class="col-sm-4">
+                                <div class="col-sm-5">
                                     <label for="description" class="control-label">
                                         Acc Amort Depr GL
                                         <span class="clr-red">*</span>
@@ -281,7 +281,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-12">
-                                <div class="col-sm-4">
+                                <div class="col-sm-5">
                                     <label for="description" class="control-label">
                                         Intangible GL
                                         <span class="clr-red">*</span>
@@ -301,7 +301,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-12">
-                                <div class="col-sm-4">
+                                <div class="col-sm-5">
                                     <label for="description" class="control-label">
                                         Intangible Write Down GL
                                         <span class="clr-red">*</span>
@@ -321,7 +321,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-12">
-                                <div class="col-sm-4">
+                                <div class="col-sm-5">
                                     <label for="description" class="control-label">
                                         Intangible Write Off GL
                                         <span class="clr-red">*</span>
@@ -341,14 +341,35 @@
                                 </div>
                             </div>
                             <div class="col-sm-12">
-                                <div class="col-sm-4">
-                                    <label for="description" class="control-label">
-                                        Memo
-                                    </label>
+                                <div class="col-sm-5">
+                                    <label for="managementStructure" class="control-label">Management Structure <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="memo"
-                                              name="memodescription" [(ngModel)]="currentRow.assetIntangibleMemo" minlength="2"></textarea>
+                                    <div style="margin: 2px 0">
+                                        <select name="primaryCompany"
+                                                (change)="companySelected()" [(ngModel)]="selectedCompanyID" required>
+                                            <option value="0">Select Company</option>
+                                            <option *ngFor="let name of companyList" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                        </select>
+                                    </div>
+                                    <div style="margin: 2px 0">
+                                        <select name="primaryBU" [(ngModel)]="selectedBUId" (change)="buSelected()" [disabled]="selectedCompanyID == 0">
+                                            <option value="0">Select BU</option>
+                                            <option *ngFor="let name of buList" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                        </select>
+                                    </div>
+                                    <div style="margin: 2px 0">
+                                        <select name="primaryDivision" (change)="divisionSelected()" [(ngModel)]="selectedDivisionID" [disabled]="selectedBUId == 0">
+                                            <option value="0">Select Division</option>
+                                            <option *ngFor="let name of divisionList" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                        </select>
+                                    </div>
+                                    <div style="margin: 2px 0">
+                                        <select name="primaryDept" [(ngModel)]="selectedDeptID" (change)="departmentSelected()" [disabled]="selectedDivisionID == 0">
+                                            <option value="0">Select Dept</option>
+                                            <option *ngFor="let name of departmentList" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
