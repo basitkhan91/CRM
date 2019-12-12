@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+﻿import { Component, OnInit, AfterViewInit, ViewChild, Input, EventEmitter, Output } from '@angular/core';
 import { AuditHistory } from '../../../../models/audithistory.model';
 import { MatPaginator, MatSort, MatTableDataSource, MatDialog } from '@angular/material';
 import { FormGroup, FormBuilder } from '@angular/forms';
@@ -14,6 +14,7 @@ import { Table } from 'primeng/table';
 import { PurchaseOrderService } from '../../../../services/purchase-order.service';
 import { VendorCapabilitiesService } from '../../../../services/vendorcapabilities.service';
 import { CommonService } from '../../../../services/common.service';
+import * as $ from 'jquery';
 
 @Component({
 	selector: 'app-polist',
@@ -60,6 +61,9 @@ export class PolistComponent implements OnInit {
     statusIdInput: any;
     requestedByInput: any;
     approvedByInput: any;
+    // isPOList: boolean;
+    @Input() isEnablePOList: boolean;
+    @Input() vendorId: boolean;
 
     constructor(private _route: Router,
         private authService: AuthService,
@@ -91,7 +95,7 @@ export class PolistComponent implements OnInit {
 			{ field: 'cost', header: 'Cost' },
 			{ field: 'tat', header: 'TAT' },
 			{ field: 'name', header: 'PN Mfg' },
-		];
+        ];
 
     }
 
@@ -180,8 +184,11 @@ export class PolistComponent implements OnInit {
         this.pageSize = event.rows;
         event.first = pageIndex;
         this.lazyLoadEventDataInput = event;
-        this.getList(event)
-        console.log(event);        
+        if(this.isEnablePOList) {
+            this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, vendorId: this.vendorId }
+        }
+        this.getList(event);
+        console.log(event);
     }
 
     onChangeInputField(value, field) {
@@ -344,6 +351,10 @@ export class PolistComponent implements OnInit {
                 return data[i + 1][field] === value
             }
         }
+    }
+
+    closeViewModal() {
+        $("#poView").modal("hide");
     }
 
 }

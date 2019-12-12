@@ -306,9 +306,11 @@ export class RoSetupComponent implements OnInit {
 		//this.sourceRoApproval.vendorName = value.vendorName;
 		this.sourceRoApproval.vendorId = getObjectById('vendorId', vendorId, this.allActions);
 		this.sourceRoApproval.vendorCode = getObjectById('vendorId', vendorId, this.allActions);
-		//this.sourceRoApproval.creditLimit = value.creditLimit;
-		//this.sourceRoApproval.creditTermsId = value.creditTermsId;
-		//this.sourceRoApproval.creditTerms = getValueFromArrayOfObjectById('name', 'creditTermsId', value.creditTermsId, this.allcreditTermInfo);
+		this.sourceRoApproval.creditLimit = getValueFromArrayOfObjectById('creditLimit', 'vendorId', vendorId, this.allActions);
+		this.sourceRoApproval.creditTermsId = getValueFromArrayOfObjectById('creditTermsId', 'vendorId', vendorId, this.allActions);
+		if(this.sourceRoApproval.creditTermsId) {
+			this.sourceRoApproval.creditTerms = getValueFromArrayOfObjectById('name', 'creditTermsId', this.sourceRoApproval.creditTermsId, this.allcreditTermInfo);
+		}
 		});		
 	}
 
@@ -2609,7 +2611,7 @@ export class RoSetupComponent implements OnInit {
 			const isDefaultContact = this.vendorContactList.filter(x => {
 				if (x.isDefaultContact === true) {
 					return x;
-				}
+				} else return x;
 			})
 			this.sourceRoApproval.vendorContactId = isDefaultContact[0];
 			this.sourceRoApproval.vendorContactPhone = isDefaultContact[0];
