@@ -1088,6 +1088,18 @@ namespace QuickApp.Pro.Controllers
 
         #endregion
 
+
+        #region Work Order Main Component
+
+        [HttpGet("workorderrolist")]
+        public IActionResult WorkOrderROlist()
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrderROlist();
+            return Ok(result);
+        }
+
+        #endregion
+
         [HttpGet("getAll")]
         public IActionResult Index()
         {
