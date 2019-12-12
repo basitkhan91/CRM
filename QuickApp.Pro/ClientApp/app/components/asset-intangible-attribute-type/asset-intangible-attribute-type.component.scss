@@ -1,13 +1,16 @@
-﻿.modal {
-    .modal-body.editModal label {
-        font-weight: normal !important;
-        width: 100% !important;
-        text-align: left;
-        margin-top: 0;
-    }
+﻿control-label {
+    margin-top: 10px;
+    text-align: left;
+    font-size: 12px !important;
+    width: 100% !important;
+    font-weight: 500;
+}
 
-    .modal-body.editModal .form-group {
-        margin-bottom: 10px;
+.modal.editModal {
+    .modal-body div.form-group label, label {
+        font-weight: normal;
+        width: 100%;
+        text-align: left;
     }
 }
 

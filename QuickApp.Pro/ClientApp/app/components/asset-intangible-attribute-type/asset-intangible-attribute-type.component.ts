@@ -7,6 +7,7 @@ import { AuditHistory } from '../../models/audithistory.model';
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { AssetIntangibleAttributeType } from "../../models/asset-intangible-attribute-type.model";
 import { AssetIntangibleType } from "../../models/asset-intangible-type.model";
+import { AssetIntangibleTypeService } from "../../services/asset-intangible-type/asset-intangible-type.service";
 import { AssetIntangibleAttributeTypeService } from "../../services/asset-intangible-attribute-type/asset-intangible-attribute-type.service";
 import { ModeOfOperation } from "../../models/ModeOfOperation.enum";
 import { ConfigurationService } from '../../services/configuration.service';
@@ -14,6 +15,7 @@ import { validateRecordExistsOrNot, editValueAssignByCondition, getObjectById, s
 import { CommonService } from '../../services/common.service';
 import { GlAccountService } from '../../services/glAccount/glAccount.service';
 import { GlAccount } from '../../models/GlAccount.model';
+import { LegalEntityService } from '../../services/legalentity.service';
 
 @Component({
     selector: 'app-asset-intangible-attribute-type',
@@ -71,7 +73,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     mgmtStructureId: any;
     disableForMgmtStructure: boolean;
 
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private commonservice: CommonService, private glAccountService: GlAccountService, private configurations: ConfigurationService, private alertService: AlertService, private coreDataService: AssetIntangibleAttributeTypeService, private modalService: NgbModal, private authService: AuthService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private commonservice: CommonService, private glAccountService: GlAccountService, public legalEntityService: LegalEntityService, private configurations: ConfigurationService, private alertService: AlertService, private coreDataService: AssetIntangibleAttributeTypeService, private modalService: NgbModal, private authService: AuthService, private assetIntangibleTypeService: AssetIntangibleTypeService) {
     }
     ngOnInit(): void {
         //gather up all the required data to be displayed on the screen 
@@ -88,6 +90,22 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     addNewItem(): void {
         this.currentRow = this.newItem(0);
         this.currentModeOfOperation = ModeOfOperation.Add;
+    }
+
+    //loading all IntangibleType list//
+    private getIntangibleTypeList() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.assetIntangibleTypeService.getAll().subscribe(
+            results => this.onIntangibleTypeLoad(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private onIntangibleTypeLoad(getAssetTypeList: AssetIntangibleType[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allAssetIntangibleTypes = getAssetTypeList;
     }
 
     //loading GlAccount from generalLedger//
@@ -113,6 +131,14 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
         //this.loadSelectedNames();
     }
 
+    filterIntangibleType(event): void {
+        this.filteredAssetIntangibleTypes = this.allGlInfo;
+        const GLADATA = [...this.allAssetIntangibleTypes.filter(x => {
+            return x.assetIntangibleName.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.filteredAssetIntangibleTypes = GLADATA;
+    }
+
     filterGLAccount(event): void {
         this.filteredGLAccountList = this.allGlInfo;
         const GLADATA = [...this.allGlInfo.filter(x => {
@@ -124,7 +150,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     filterAssetSale(event): void {
         this.filteredAssetSaleList = this.allGlInfo;
         const GLADATA = [...this.allGlInfo.filter(x => {
-            return x.accountCode.toLowerCase().includes(event.query.toLowerCase())
+            return x.accountName.toLowerCase().includes(event.query.toLowerCase())
         })]
         this.filteredAssetSaleList = GLADATA;
     }
@@ -132,7 +158,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     filterAssetWriteOff(event): void {
         this.filteredWriteOffList = this.allGlInfo;
         const GLADATA = [...this.allGlInfo.filter(x => {
-            return x.accountCode.toLowerCase().includes(event.query.toLowerCase())
+            return x.accountName.toLowerCase().includes(event.query.toLowerCase())
         })]
         this.filteredWriteOffList = GLADATA;
     }
@@ -140,7 +166,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     filterAssetWriteDown(event): void {
         this.filteredAssetWriteDownList = this.allGlInfo;
         const GLADATA = [...this.allGlInfo.filter(x => {
-            return x.accountCode.toLowerCase().includes(event.query.toLowerCase())
+            return x.accountName.toLowerCase().includes(event.query.toLowerCase())
         })]
         this.filteredAssetWriteDownList = GLADATA;
     }
@@ -366,6 +392,10 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
         }
         else {
             item.isActive = true;
+            this.selectedCompanyID = 0;
+            this.selectedBUId = 0;
+            this.selectedDivisionID = 0;
+            this.selectedDivisionID = 0;
         }
         return item;
     }
@@ -447,9 +477,25 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
         this.itemDetails = rowData;
     }
 
+    loadManagementdata() {
+        this.legalEntityService.getManagemententity().subscribe(
+            res => {
+                this.loadHierarchy(res[0])
+            });
+    }
+
+    loadHierarchy(mgmtStructureData) {
+        this.allmgmtData = mgmtStructureData;
+        this.companyList = this.allmgmtData.filter(c => c.parentId == null);
+    }
+
     //Step x: load all the required data for the page to function
     private loadData() {
-        this.getItemList();
+        //this.getItemList();
+        this.glList();
+        this.getAllFrequency();
+        this.loadManagementdata();
+        this.getIntangibleTypeList();
         this.rowName = "Intangible Attribute Type";
         this.header = "Intangible Attribute  Type";
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-asset-intangible-attribute-type';
@@ -457,7 +503,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
         //Step x: Add the required details for dropdown options/column header
         this.columnHeaders = [
             { field: 'companyName', header: 'Company', index: 1, showByDefault: true },
-            { field: 'buName', header: 'Bu', index: 2, showByDefault: true },
+            { field: 'buName', header: 'BU', index: 2, showByDefault: true },
             { field: 'divisionName', header: 'Division', index: 3, showByDefault: true },
             { field: 'deptName', header: 'Dept', index: 4, showByDefault: true },
             { field: 'intangibleTypeName', header: 'Intangible Type', index: 5, showByDefault: true },

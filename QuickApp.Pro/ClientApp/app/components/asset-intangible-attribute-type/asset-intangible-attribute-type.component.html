@@ -48,7 +48,7 @@
                                                    defaultLabel="Choose Columns">
                                     </p-multiSelect>
                                     <button type="button" class="btn btn-primary-cstm" pTooltip="Download All Data" tooltipPosition="top"
-                                            pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                            pButton icon="fa-download" iconPos="left" label="Export Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm" pTooltip="Download Selected" tooltipPosition="top"
                                             pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <!--
@@ -213,7 +213,7 @@
                             <div class="col-sm-12">
                                 <div class="col-sm-5">
                                     <label for="description" class="control-label">
-                                        Name
+                                        Intangible Type
                                         <span class="clr-red">*</span>
                                     </label>
 
@@ -222,12 +222,10 @@
                                     <p-autoComplete field="assetIntangibleName"
                                                     [(ngModel)]="currentRow.assetIntangibleTypeId"
                                                     name="assetIntangibleTypeId"
-                                                    [suggestions]="filteredItemList" (completeMethod)="filterAssetIntangibleName($event)"
+                                                    [suggestions]="filteredAssetIntangibleTypes" (completeMethod)="filterIntangibleType($event)"
                                                     [size]="30" [minLength]="1"
                                                     [dropdown]="true" class="p-autoComplete-ctsm" required>
                                     </p-autoComplete>
-                                    <div *ngIf="disableSave" class="clr-red">Already Exists</div>
-                                    <div class="clear"></div>
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -249,15 +247,13 @@
 
                                 </div>
                                 <div class="col-sm-5">
-                                    <p-autoComplete field="assetIntangibleName"
+                                    <p-autoComplete field="accountName"
                                                     [(ngModel)]="currentRow.amortExpenseGLAccountId"
                                                     name="amortExpenseGLAccountId"
-                                                    [suggestions]="filteredItemList" (completeMethod)="filterAssetIntangibleName($event)"
+                                                    [suggestions]="filteredGLAccountList" (completeMethod)="filterGLAccount($event)"
                                                     [size]="30" [minLength]="1"
                                                     [dropdown]="true" class="p-autoComplete-ctsm" required>
                                     </p-autoComplete>
-                                    <div *ngIf="disableSave" class="clr-red">Already Exists</div>
-                                    <div class="clear"></div>
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -269,15 +265,13 @@
 
                                 </div>
                                 <div class="col-sm-5">
-                                    <p-autoComplete field="assetIntangibleName"
+                                    <p-autoComplete field="accountName"
                                                     [(ngModel)]="currentRow.accAmortDeprGLAccountId"
                                                     name="accAmortDeprGLAccountId"
-                                                    [suggestions]="filteredItemList" (completeMethod)="filterAssetIntangibleName($event)"
+                                                    [suggestions]="filteredGLAccountList" (completeMethod)="filterGLAccount($event)"
                                                     [size]="30" [minLength]="1"
                                                     [dropdown]="true" class="p-autoComplete-ctsm" required>
                                     </p-autoComplete>
-                                    <div *ngIf="disableSave" class="clr-red">Already Exists</div>
-                                    <div class="clear"></div>
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -289,15 +283,13 @@
 
                                 </div>
                                 <div class="col-sm-5">
-                                    <p-autoComplete field="assetIntangibleName"
+                                    <p-autoComplete field="accountName"
                                                     [(ngModel)]="currentRow.intangibleGLAccountId"
                                                     name="intangibleGLAccountId"
-                                                    [suggestions]="filteredItemList" (completeMethod)="filterAssetIntangibleName($event)"
+                                                    [suggestions]="filteredGLAccountList" (completeMethod)="filterGLAccount($event)"
                                                     [size]="30" [minLength]="1"
                                                     [dropdown]="true" class="p-autoComplete-ctsm" required>
                                     </p-autoComplete>
-                                    <div *ngIf="disableSave" class="clr-red">Already Exists</div>
-                                    <div class="clear"></div>
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -309,15 +301,13 @@
 
                                 </div>
                                 <div class="col-sm-5">
-                                    <p-autoComplete field="assetIntangibleName"
+                                    <p-autoComplete field="accountName"
                                                     [(ngModel)]="currentRow.intangibleWriteDownGLAccountId"
                                                     name="intangibleWriteDownGLAccountId"
-                                                    [suggestions]="filteredItemList" (completeMethod)="filterAssetIntangibleName($event)"
+                                                    [suggestions]="filteredGLAccountList" (completeMethod)="filterGLAccount($event)"
                                                     [size]="30" [minLength]="1"
                                                     [dropdown]="true" class="p-autoComplete-ctsm" required>
                                     </p-autoComplete>
-                                    <div *ngIf="disableSave" class="clr-red">Already Exists</div>
-                                    <div class="clear"></div>
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -329,15 +319,13 @@
 
                                 </div>
                                 <div class="col-sm-5">
-                                    <p-autoComplete field="assetIntangibleName"
+                                    <p-autoComplete field="accountName"
                                                     [(ngModel)]="currentRow.intangibleWriteOffGLAccountId"
                                                     name="intangibleWriteOffGLAccountId"
-                                                    [suggestions]="filteredItemList" (completeMethod)="filterAssetIntangibleName($event)"
+                                                    [suggestions]="filteredGLAccountList" (completeMethod)="filterGLAccount($event)"
                                                     [size]="30" [minLength]="1"
                                                     [dropdown]="true" class="p-autoComplete-ctsm" required>
                                     </p-autoComplete>
-                                    <div *ngIf="disableSave" class="clr-red">Already Exists</div>
-                                    <div class="clear"></div>
                                 </div>
                             </div>
                             <div class="col-sm-12">
