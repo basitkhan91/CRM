@@ -17,7 +17,8 @@ import {
 import {
   WorkOrderLabor,
   AllTasks,
-  WorkOrderQuoteLabor
+  WorkOrderQuoteLabor,
+  ExclusionQuote
 } from '../../../../models/work-order-labor.modal';
 
 
@@ -67,6 +68,19 @@ export class WorkOrderQuoteComponent implements OnInit {
   taskList: any;
   savedWorkOrderData: any;
   laborPayload = new WorkOrderQuoteLabor();
+  exclusionPayload = new ExclusionQuote();
+  workFlowWorkOrderId: number = 0;
+  workOrderId: number = 0;
+  workOrderExclusionsList: Object;
+  workOrderMaterialList: any;
+  workFlowObject = {
+    materialList: [],
+    equipments: [],
+    charges: [],
+    exclusions: []
+}
+isQuote: boolean = true;
+
 
 
 
@@ -90,8 +104,8 @@ export class WorkOrderQuoteComponent implements OnInit {
     .subscribe(
       res=>{
         this.quoteForm.quoteNumber = res['quoteNumber'];
-        this.laborPayload.WorkOrderQuoteId = res['workOrderQuoteId'];
-        this.laborPayload.StatusId = res['quoteStatusId']
+        this.laborPayload.WorkOrderQuoteId, this.exclusionPayload.WorkOrderQuoteId = res['workOrderQuoteId'];
+        this.laborPayload.StatusId, this.exclusionPayload.StatusId = res['quoteStatusId']
         this.alertService.showMessage(
           this.moduleName,
           'Labor quotation created  Succesfully',
@@ -212,13 +226,13 @@ export class WorkOrderQuoteComponent implements OnInit {
     this.clearQuoteData();
     this.savedWorkOrderData.partNumbers.forEach((pns)=>{
       if(this.selectedPartNumber == pns['description']){
-        this.laborPayload.IsDER = pns['isDER'];
-        this.laborPayload.IsPMA = pns['isPMA'];
-        this.laborPayload.ItemMasterId = pns['masterPartId'];
-        this.laborPayload.CMMId = pns['cmmId'];
-        this.laborPayload.SelectedId = pns['id'];
-        this.laborPayload.EstCompDate = pns['estimatedCompletionDate'];
-        this.laborPayload.StatusId = pns['workOrderStatusId'];
+        this.laborPayload.IsDER, this.exclusionPayload.IsDER = pns['isDER'];
+        this.laborPayload.IsPMA, this.exclusionPayload.IsPMA = pns['isPMA'];
+        this.laborPayload.ItemMasterId, this.exclusionPayload.ItemMasterId = pns['masterPartId'];
+        this.laborPayload.CMMId, this.exclusionPayload.CMMId = pns['cmmId'];
+        this.laborPayload.SelectedId, this.exclusionPayload.SelectedId = pns['id'];
+        this.laborPayload.EstCompDate, this.exclusionPayload.EstCompDate = pns['estimatedCompletionDate'];
+        this.laborPayload.StatusId, this.exclusionPayload.StatusId = pns['workOrderStatusId'];
       }
     })
     // for(let pn of this.mpnPartNumbersList){
@@ -279,6 +293,7 @@ export class WorkOrderQuoteComponent implements OnInit {
           .subscribe(
             (res: any[]) =>{
               this.materialListQuotation = res;
+              this.workOrderMaterialList = res;
             }
           )
         }
@@ -303,6 +318,7 @@ export class WorkOrderQuoteComponent implements OnInit {
           .subscribe(
             (res: any[]) =>{
               this.exclusionsQuotation = res;
+              this.workOrderExclusionsList = res;
             }
           )
         }
@@ -315,9 +331,23 @@ export class WorkOrderQuoteComponent implements OnInit {
       .subscribe(
         res => {
           this.materialListQuotation = res['materialList'];
+          this.workOrderMaterialList = res['materialList'];
           this.laborQuotation = res['expertise'];
           this.chargesQuotation = res['charges'];
-          this.exclusionsQuotation = res['exclusions'];
+          this.exclusionsQuotation = res['exclusions'].map(exclusion=>{
+            return {
+              ...exclusion,
+              epn: exclusion.partNumber,
+              epnDescription: exclusion.partDescription
+            }
+          });
+          this.workOrderExclusionsList = res['exclusions'].map(exclusion=>{
+            return {
+              ...exclusion,
+              epn: exclusion.partNumber,
+              epnDescription: exclusion.partDescription
+            }
+          });
           this.taskList.forEach((tl)=>{
             res['expertise'].forEach((rt)=>{
               if(rt['taskId'] == tl['taskId']){
@@ -441,5 +471,71 @@ saveworkOrderLabor(data) {
     }
   }) 
   this.createLaborQuote();
+}
+
+saveWorkOrderExclusionsList(data) {
+  this.exclusionPayload.WorkOrderQuoteExclusions = data.map(ex=>{
+    return {
+      "WorkOrderQuoteExclusionsId":0,
+      "WorkOrderQuoteDetailsId":0,
+      "ItemMasterId":ex.itemMasterId,
+      "SourceId":1,
+      "Reference":2,
+      "ExstimtPercentOccuranceId":ex.estimtPercentOccurrance,
+      "Memo":ex.memo,
+      "Quantity":ex.quantity,
+      "UnitCost":ex.unitCost,
+      "ExtendedCost":ex.extendedCost,
+      "MarkUpPercentageId":1,
+      "CostPlusAmount":20,
+      "FixedAmount":25,
+      "masterCompanyId":ex.masterCompanyId,
+      "CreatedBy":"admin",
+      "UpdatedBy":"admin",
+      "IsActive":true,
+      "IsDeleted":false
+    }
+  })
+  this.workOrderService.saveExclusionsQuote(this.exclusionPayload)
+    .subscribe(
+      res => {
+        this.alertService.showMessage(
+          this.moduleName,
+          'Quotation created  Succesfully',
+          MessageSeverity.success
+        );
+      }
+    )
+  console.log(data);
+}
+
+updateWorkOrderExclusionsList(data) {
+  const exclusionsArr = data.exclusions.map(x => {
+      return {
+          ...x,
+          masterCompanyId: 1,
+          isActive: true,
+          workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId
+      }
+  });
+  this.workorderMainService.updateWorkOrderExclusionList(exclusionsArr).subscribe(res => {
+      this.workFlowObject.materialList = [];
+      this.alertService.showMessage(
+          this.moduleName,
+          'Update Work Order Exclusions  Succesfully',
+          MessageSeverity.success
+      );
+      this.getExclusionListByWorkOrderId();
+  })
+}
+
+getExclusionListByWorkOrderId(){
+  if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
+    this.workorderMainService.getWorkOrderExclusionsList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
+        this.workFlowObject.materialList = [];
+        this.workOrderExclusionsList = res;
+    })
+
+  }
 }
 }
