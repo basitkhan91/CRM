@@ -3546,7 +3546,7 @@ namespace DAL.Repositories
                             join sv in _appContext.CustomerShipping on bi.ShipViaId equals sv.CustomerShippingId into bisv
                             from sv in bisv.DefaultIfEmpty()
 
-                            where bi.WorkOrderId == WorkOrderId && bi.WorkOrderPartNoId==workOrderPartNoId
+                            where bi.WorkOrderId == WorkOrderId && bi.WorkOrderPartNoId == workOrderPartNoId
                             select new
                             {
                                 bi.BillingInvoicingId,
@@ -3633,6 +3633,48 @@ namespace DAL.Repositories
 
                 throw;
             }
+        }
+
+
+        #endregion
+
+        #region Work Order Main Component
+
+        public IEnumerable<object> WorkOrderROlist()
+        {
+            var roList = (from ro in _appContext.RepairOrder
+                          join rop in _appContext.RepairOrderPart on ro.RepairOrderId equals rop.RepairOrderId
+                          join im in _appContext.ItemMaster on rop.ItemMasterId equals im.ItemMasterId
+                          join sl in _appContext.StockLine on rop.StockLineId equals sl.StockLineId
+                          into ropsl
+                          from sl in ropsl.DefaultIfEmpty()
+                          join v in _appContext.Vendor on ro.VendorId equals v.VendorId
+                          join cur in _appContext.Currency on rop.ReportCurrencyId equals cur.CurrencyId
+                          where ro.IsDeleted == false && ro.IsActive == true && rop.IsParent == true
+                          && ro.StatusId == 1
+                          select new
+                          {
+                              ro.RepairOrderId,
+                              rop.RepairOrderPartRecordId,
+                              im.PartNumber,
+                              im.PartDescription,
+                              sl.SerialNumber,
+                              ro.RepairOrderNumber,
+                              rop.QuantityOrdered,
+                              sl.ControlNumber,
+                              ControllerId = sl.IdNumber,
+                              rop.UnitCost,
+                              rop.ExtendedCost,
+                              Currency = cur.DisplayName,
+                              v.VendorName,
+                              Status = "Open",
+                              ro.OpenDate,
+                              ro.NeedByDate
+
+                          }).Distinct().ToList();
+
+            return roList;
+
         }
 
         #endregion
