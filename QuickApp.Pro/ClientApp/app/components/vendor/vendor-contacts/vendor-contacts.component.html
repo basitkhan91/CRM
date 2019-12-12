@@ -335,7 +335,7 @@
                             <div class="form-group">
                                 <label>Work Phone <span class="clr-red">*</span></label>
                                 <div>
-                                    <input class="form-control" type="number" pKeyFilter="pnum" name="workPhone" [(ngModel)]="sourceVendor.workPhone" style="width: calc(100% - 63px) !important;" required>
+                                    <input class="form-control" type="text" maxlength="20" (keypress)="patternMobilevalidationWithSpl($event)" name="workPhone" [(ngModel)]="sourceVendor.workPhone" style="width: calc(100% - 63px) !important;" required>
                                     -
                                     <input class="form-control w50" type="text" name="workPhoneExtn" [(ngModel)]="sourceVendor.workPhoneExtn" maxlength="15">
                                 </div>
@@ -359,15 +359,15 @@
                             </div>
                             <div class="form-group">
                                 <label>Mobile Phone</label>
-                                <input class="form-control" pKeyFilter="pint" type="text" name="mobilePhone" [(ngModel)]="sourceVendor.mobilePhone">
+                                <input class="form-control" type="text" maxlength="20" (keypress)="patternMobilevalidationWithSpl($event)" name="mobilePhone" [(ngModel)]="sourceVendor.mobilePhone">
                             </div>
                             <div class="form-group">
                                 <label>Alternate Phone</label>
-                                <input class="form-control" pKeyFilter="pint" type="text" name="alternatePhone" [(ngModel)]="sourceVendor.alternatePhone">
+                                <input class="form-control" type="text" maxlength="20" (keypress)="patternMobilevalidationWithSpl($event)" name="alternatePhone" [(ngModel)]="sourceVendor.alternatePhone">
                             </div>
                             <div class="form-group">
                                 <label>Fax</label>
-                                <input class="form-control" pKeyFilter="pint" type="text" name="fax" [(ngModel)]="sourceVendor.fax">
+                                <input class="form-control" type="text" maxlength="20" (keypress)="patternMobilevalidationWithSpl($event)" name="fax" [(ngModel)]="sourceVendor.fax">
                             </div>
                             <div class="form-group">
                                 <label>Memo</label>
