@@ -365,6 +365,10 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/subworkorderheaderdetails?workOrderId=${workOrderId}&workOrderPartNumberId=${workOrderPartNumberId}`)
     }
 
+    getSubWorkOrderDataBySubWorkOrderId(subWorkOrderId){
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/subworkorderdetails?subWorkOrderId=${subWorkOrderId}`, this.getRequestHeaders())
+    }
+
     createSubWorkOrderHeaderByWorkOrderId(data) {
         return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/createsubworkorder`, JSON.stringify(data), this.getRequestHeaders())
     }
@@ -375,6 +379,10 @@ export class WorkOrderEndpointService extends EndpointFactory {
 
     createBillingByWorkOrderId(data) {
         return this.http.post<any>(`${this.configurations.baseUrl}/api/workorder/createbillinginvoicing `, JSON.stringify(data), this.getRequestHeaders())
+    }
+
+    updateBillingByWorkOrderId(data){
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/updatesubworkorder`, JSON.stringify(data), this.getRequestHeaders())
     }
 
     getBillingEditData(workOrderId, workOrderPartNoId) {

@@ -98,7 +98,16 @@
 
           <div class="form-group">
             <label for="opendate">Sub WO Stage </label>
-            <p-dropdown
+            <input
+              class="form-control"
+              data-toggle="tooltip"
+              type="text"
+              name="stage"
+              #stage="ngModel"
+              disabled
+              [(ngModel)]="subWorkOrderGeneralInformation.workOrderStage"
+            />
+            <!-- <p-dropdown
               [options]="workOrderStagesList"
               name="stage{{ i }}"
               #stage="ngModel"
@@ -106,7 +115,7 @@
               class="p-dropdown-custom-md-Header"
               [(ngModel)]="subWorkOrderGeneralInformation.stageId"
             >
-            </p-dropdown>
+            </p-dropdown> -->
           </div>
           <div class="form-group">
             <label for="opendate">Sub WO Status </label>
@@ -139,7 +148,16 @@
 
           <div class="form-group">
             <label for="opendate">Sub WO WorkFlow ID </label>
-            <p-dropdown
+            <input
+              class="form-control"
+              data-toggle="tooltip"
+              type="text"
+              name="workflowNo"
+              #workflowNo="ngModel"
+              disabled
+              [(ngModel)]="subWorkOrderGeneralInformation.workFlowNo"
+            />
+            <!-- <p-dropdown
               [options]="workFlowList"
               name="stage{{ i }}"
               #stage="ngModel"
@@ -147,7 +165,7 @@
               class="p-dropdown-custom-md-Header"
               [(ngModel)]="subWorkOrderGeneralInformation.workFlowId"
             >
-            </p-dropdown>
+            </p-dropdown> -->
           </div>
         </div>
 
@@ -160,6 +178,7 @@
                   name="isPMA"
                   #isPMA="ngModel"
                   [(ngModel)]="subWorkOrderGeneralInformation.isPMA"
+                  disabled
                 />
                 <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                 PMA
@@ -175,6 +194,7 @@
                   name="isDER"
                   #isDER="ngModel"
                   [(ngModel)]="subWorkOrderGeneralInformation.isDER"
+                  disabled
                 />
                 <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                 DER

@@ -234,6 +234,10 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getSubWorkOrderHeaderByWorkOrderId(workOrderId, workOrderPartNumberId);
     }
 
+    getSubWorkOrderDataBySubWorkOrderId(subWorkOrderId) {
+        return this.workOrderEndpointService.getSubWorkOrderDataBySubWorkOrderId(subWorkOrderId);
+    }
+
 
     createSubWorkOrderHeaderByWorkOrderId(data) {
         return this.workOrderEndpointService.createSubWorkOrderHeaderByWorkOrderId(data);
@@ -245,6 +249,9 @@ export class WorkOrderService {
 
     createBillingByWorkOrderId(data) {
         return this.workOrderEndpointService.createBillingByWorkOrderId(data);
+    }
+    updateBillingByWorkOrderId(data){
+        return this.workOrderEndpointService.updateBillingByWorkOrderId(data);
     }
 
 

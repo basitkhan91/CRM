@@ -164,7 +164,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     workOrderExclusionsList: Object;
     isEditLabor: boolean = false;
     // mpnId: any;
-    billing: Billing = new Billing();
+    billing: Billing;
     loginDetailsForCreate: any;
     workOrderPartNumberId: any;
     isEditBilling: boolean = false;
@@ -229,6 +229,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
             } else { // edit WorkOrder
+                console.log(this.workOrderGeneralInformation);
+
                 const data = this.workOrderGeneralInformation;
                 this.workOrderGeneralInformation = {
                     ...data,
@@ -396,6 +398,9 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         // }
         this.subTabWorkFlow = '';
         this.subTabOtherOptions = '';
+        if(value !== 'billorInvoice' ){
+            this.billing = undefined;
+        }
 
     }
 
@@ -518,13 +523,15 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         if (this.workFlowWorkOrderId !== 0) {
             this.isDisabledSteps = true;
         }
+        console.log(result);
 
-
+        console.log(data);
         this.getWorkOrderWorkFlowNos();
         if (this.workOrderGeneralInformation.isSinglePN == true) {
             // get WOrkFlow Equipment Details if WorFlow Exists
+
             this.getWorkFlowTabsData();
-            this.workOrderPartNumberId = getValueFromObjectByKey('itemMasterId', data.partNumbers[0].id);
+            this.workOrderPartNumberId = data.partNumbers[0].id;
             this.workFlowId = data.partNumbers[0].workflowId;
             this.workFlowWorkOrderId = result.workFlowWorkOrderId;
 
@@ -1215,13 +1222,13 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
     saveWorkOrderBilling(object) {
-        console.log(this.workOrderId);
-        console.log(this.workFlowWorkOrderId);
+
+
         const data = {
             ...object,
             ...this.loginDetailsForCreate,
             workOrderId: this.workOrderId,
-            workFlowWorkOrderId: this.workFlowWorkOrderId,
+            workOrderWorkFlowId: this.workFlowWorkOrderId,
             workOrderPartNoId: this.workOrderPartNumberId,
             itemMasterId: this.workOrderPartNumberId,
             customerId: editValueAssignByCondition('customerId', this.savedWorkOrderData.customerId),
@@ -1231,13 +1238,24 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             invoiceTime: moment(object.invoiceTime).format('HH:mm')
         }
 
-        this.workOrderService.createBillingByWorkOrderId(data).subscribe(res => {
-            this.alertService.showMessage(
-                this.moduleName,
-                'Work Order Billing Succesfully',
-                MessageSeverity.success
-            );
-        })
+        if(this.isEditBilling){
+            this.workOrderService.updateBillingByWorkOrderId(data).subscribe(res => {
+                this.alertService.showMessage(
+                    this.moduleName,
+                    'Updated Work Order Billing Succesfully',
+                    MessageSeverity.success
+                );
+            })
+        }else {
+            this.workOrderService.createBillingByWorkOrderId(data).subscribe(res => {
+                this.alertService.showMessage(
+                    this.moduleName,
+                    'Saved Work Order Billing Succesfully',
+                    MessageSeverity.success
+                );
+            })
+        }
+
     }
 
     billingCreateOrEdit() {
@@ -1248,8 +1266,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 printDate: new Date(res.printDate),
                 woOpenDate: new Date(res.openDate),
                 invoiceDate: new Date(res.invoiceDate),
-                soldToCustomerId: this.getCustomerNameandCodeById(res.soldToCustomerId, res, 'soldToCustomerId'),
-                shipToCustomerId: this.getCustomerNameandCodeById(res.shipToCustomerId, res, 'shipToCustomerId'),
+                soldToCustomerId: { customerId: res.soldToCustomerId, customerName: res.soldToCustomer },
+                shipToCustomerId: { customerId: res.shipToCustomerId, customerName: res.shipToCustomer }
             }
             this.isEditBilling = true;
             console.log(this.billing);
@@ -1274,14 +1292,14 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             }
         })
     }
-    getCustomerNameandCodeById(customerId, object, field) {
-        if (customerId !== null || customerId !== undefined) {
-            this.commonService.getCustomerNameandCodeById(customerId).subscribe(res => {
-                object[field] = res[0];
-            })
-        }
+    // getCustomerNameandCodeById(customerId, object, field) {
+    //     if (customerId !== null || customerId !== undefined) {
+    //         this.commonService.getCustomerNameandCodeById(customerId).subscribe(res => {
+    //             object[field] = res[0];
+    //         })
+    //     }
 
-    }
+    // }
 
 
 

@@ -652,7 +652,7 @@
                           <a id="pills-contact-tab" role="tab" [ngClass]="{active : gridActiveTab === 'shipping'}"
                               (click)="gridTabChange('shipping')">Shipping</a>
                       </li>
-                      <li class="nav-item">
+                      <li class="nav-item" *ngIf="!isSubWorkOrder">
                         <a id="pills-contact-tab" role="tab" [ngClass]="{active : gridActiveTab === 'subWO'}"
                             (click)="gridTabChange('subWO')">Sub-WO</a>
                     </li>
@@ -794,6 +794,7 @@
                          [employeesOriginalData]="employeesOriginalData"
                          [isEditBilling]="isEditBilling"
                          (saveWOBilling)="saveWorkOrderBilling($event)"
+                         (updateWOBilling)="saveWorkOrderBilling($event)"
                          ></app-work-order-billing>
                     </div>
                     <div *ngIf="addresses" [ngClass]="{hidedata : gridActiveTab !== 'address'}">
