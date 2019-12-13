@@ -19,6 +19,7 @@ import { MasterComapnyService } from '../../../services/mastercompany.service';
 import { Vendor } from '../../../models/vendor.model';
 import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
 import $ from "jquery";
+import { ConfigurationService } from '../../../services/configuration.service';
 
 @Component({
     selector: 'app-vendors-list',
@@ -78,6 +79,9 @@ export class VendorsListComponent implements OnInit {
     vendorPhoneNo: any = "";
     vendorPhoneExt: any = "";
     is1099Required: any = "";      
+    isCertified: any = "";
+    isVendorAudit: any = "";
+    isVendorCustomer:any="";
     showGeneralData: boolean = true;
     showcontactdata: boolean = true;
     showfinancialdata: boolean = true;
@@ -142,6 +146,7 @@ export class VendorsListComponent implements OnInit {
     Active: string = "Active";
     length: number;
     localCollection: any;  
+    allVendorGeneralDocumentsList: any = [];
     //updateActiveData: any;
     updateActiveData = {
 		vendorId:0,
@@ -153,7 +158,7 @@ export class VendorsListComponent implements OnInit {
     private isDeleteMode: boolean = false;
     public allWorkFlows: any[] = [];
 
-    constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService,private configurations: ConfigurationService) {
         this.local = this.workFlowtService.financeCollection;
         this.dataSource = new MatTableDataSource();
         this.workFlowtService.listCollection = null;
@@ -550,7 +555,8 @@ export class VendorsListComponent implements OnInit {
         this.allpayments = allWorkFlows;
     }
 
-    openView(content, row) {       
+    openView(content, row) {     
+        this.toGetVendorGeneralDocumentsList(row.vendorId)  
         this.vendorCode = row.vendorCode;
         this.vendorName = row.vendorName;
         this.vendorTypeId = row.t.vendorTypeId;
@@ -558,6 +564,8 @@ export class VendorsListComponent implements OnInit {
         console.log(this.vendorClassificationName);
         this.doingBusinessAsName = row.t.doingBusinessAsName;
         this.parent = row.t.parent;
+
+        console.log(row);
       
         this.vendorParentName=row.t.vendorParentName;
         if (row.currency) {
@@ -595,6 +603,11 @@ export class VendorsListComponent implements OnInit {
         this.creditlimit = row.t.creditLimit;        
         this.discountLevel = row.discountLevel;
         this.is1099Required = row.t.is1099Required;
+
+        this.isCertified= row.t.isCertified;
+        this.isVendorAudit= row.t.vendorAudit;
+        this.isVendorCustomer= row.t.isVendorAlsoCustomer;
+
         this.loadContactDataData(row.vendorId);
         this.loadPayamentData(row.vendorId);
         this.loadShippingData(row.vendorId);
@@ -816,6 +829,19 @@ export class VendorsListComponent implements OnInit {
     gotoCreateRO(rowData) {
         const { vendorId } = rowData;
         this.route.navigateByUrl(`vendorsmodule/vendorpages/app-ro-setup/vendor/${vendorId}`);
+    }
+
+    toGetVendorGeneralDocumentsList(vendorId)
+	{       
+        var moduleId=3;
+        this.workFlowtService.GetVendorGeneralDocumentsList(vendorId,moduleId).subscribe(res => {
+			this.allVendorGeneralDocumentsList = res;
+			
+		})
+    }
+    downloadFileUpload(rowData) {	
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
+		window.location.assign(url);       
     }
 
 }

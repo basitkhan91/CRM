@@ -56,6 +56,9 @@ namespace DAL.Repositories.Interfaces
         void VendorProcess1099StatusUpdate(long id, bool status, string updatedBy);
         void VendorProcess1099Delete(long id, string updatedBy);
 
+        IEnumerable<object> GetVendorGeneralDocumentDetailById(long id, int moduleId);
+        bool GetVendorGeneralDocumentDelete(long id, string updatedBy);
+
 
     }
 }

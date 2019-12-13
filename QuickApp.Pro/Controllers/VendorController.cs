@@ -3705,7 +3705,69 @@ namespace QuickApp.Pro.Controllers
         #endregion
 
 
-        #region VendorDocument      
+        #region VendorDocument    
+
+
+        [HttpPost("vendorGeneralDocumentUpload")]
+        [Produces("application/json")]
+        public IActionResult VendorDocumentUploadAction()
+        {
+
+            try
+            {
+                VendorDocumentDetails objVendorDocumentDetail = new VendorDocumentDetails();
+                if (ModelState.IsValid)
+                {
+                    if (Request.Form == null)
+                        return BadRequest($"{nameof(objVendorDocumentDetail)} cannot be null");
+                    objVendorDocumentDetail.MasterCompanyId = 1;
+                    objVendorDocumentDetail.UpdatedBy = Request.Form["UpdatedBy"];
+                    objVendorDocumentDetail.VendorId = Convert.ToInt64(Request.Form["VendorId"]);
+
+                    if (objVendorDocumentDetail.VendorId > 0)
+                    {
+                        var attachmentData = _context.Attachment.Where(p => p.ReferenceId == objVendorDocumentDetail.VendorId && p.ModuleId == Convert.ToInt32(ModuleEnum.Vendor)).FirstOrDefault();
+
+                        if (attachmentData != null)
+                        {
+                            objVendorDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
+                                                         Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), objVendorDocumentDetail.UpdatedBy, objVendorDocumentDetail.MasterCompanyId, attachmentData.AttachmentId);
+
+
+                        }
+                        else
+                        {
+                            objVendorDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
+                                                                       Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), objVendorDocumentDetail.UpdatedBy, objVendorDocumentDetail.MasterCompanyId);
+
+                        }
+
+                    }
+
+                    return Ok(objVendorDocumentDetail);
+                }
+                return Ok(ModelState);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("getVendorGeneralDocumentDetail/{id}")]
+        public IActionResult GetVendorGeneralDocumentDetail(long id, int moduleId)
+        {
+            var allvendorsGenralDocs = _unitOfWork.Vendor.GetVendorGeneralDocumentDetailById(id, moduleId);
+            return Ok(allvendorsGenralDocs);
+        }
+
+        [HttpDelete("vendorAttachmentDelete/{id}")]
+        public IActionResult GetVendorGeneralDocumentDelete(long id, string updatedBy)
+        {
+            var deleteStatus = _unitOfWork.Vendor.GetVendorGeneralDocumentDelete(id, updatedBy);
+            return Ok(deleteStatus);
+        }
+
         [HttpPost("vendorDocumentUpload")]
         [Produces("application/json")]
         public IActionResult DocumentUploadAction()

@@ -1,4 +1,5 @@
 ﻿
+using DAL.Common;
 using DAL.Models;
 using DAL.Repositories.Interfaces;
 using System;
@@ -1064,6 +1065,44 @@ namespace DAL.Repositories
             _appContext.Entry(vMaster1099).Property(x => x.UpdatedBy).IsModified = true;
             _appContext.SaveChanges();
         }
+
+        public IEnumerable<object> GetVendorGeneralDocumentDetailById(long id, int moduleId)
+        {
+            var result = (from at in _appContext.Attachment
+                          join atd in _appContext.AttachmentDetails on at.AttachmentId equals atd.AttachmentId
+                          where at.ReferenceId == id && at.ModuleId == moduleId && atd.IsActive == true && atd.IsDeleted == false
+                          select atd).ToList();
+
+            return result;
+
+        }
+        public bool GetVendorGeneralDocumentDelete(long id, string updatedBy)
+        {
+            bool result = false;
+            try
+            {
+                AttachmentDetails attachmentDetails = new AttachmentDetails();
+                attachmentDetails.AttachmentDetailId = id;
+                attachmentDetails.UpdatedDate = DateTime.Now;
+                attachmentDetails.UpdatedBy = updatedBy;
+                attachmentDetails.IsDeleted = true;
+
+                _appContext.AttachmentDetails.Attach(attachmentDetails);
+                _appContext.Entry(attachmentDetails).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(attachmentDetails).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(attachmentDetails).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+                result = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
+
+        }
+
 
 
     }

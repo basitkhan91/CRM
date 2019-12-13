@@ -299,6 +299,69 @@
                                             <span class="label"><b>URL to Vendor site: </b></span><span class="value">{{vendorURL}}</span>
                                         </p>
                                     </div>
+                                   
+                                    <div class="col-sm-6">
+                                            
+                                            <p>
+                                                    <span class="label"><b>Certified: </b></span><span class="value">{{isCertified}}</span>
+                                                </p>
+                                            <div *ngIf="isCertified" class="table-responsive table-overflow">
+                                                    <h5 class="panel-title">Attachment Details:</h5>
+                                                    <table class="table table-bordered ">
+                                                        <thead>                                                          
+                                                                <tr>
+                                                                        <th>File Name</th>
+                                                                        <th>Download</th>                                                                        
+                                                                    </tr>
+                                                        </thead>                                                      
+                                                        <tbody *ngFor="let f of allVendorGeneralDocumentsList">
+                                                                <tr *ngIf="f.description == 'isCertifiedFile'">                                                                        
+                                                                    <td>{{f.fileName}}</td>
+                                                                    <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a> </td>
+                                                                    
+                                                                </tr>
+                                                        </tbody>                                                       
+                        
+                                                    </table>
+                                                </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                            <p>
+                                                    <span class="label"><b>Vendor Audit: </b></span><span class="value">{{isVendorAudit}}</span>
+                                                </p>
+                                            <div *ngIf="isVendorAudit" class="table-responsive table-overflow">
+                                                    <h5 class="panel-title" >Attachment Details:</h5>
+                                                    <table class="table table-bordered ">
+                                                            <thead>                                                          
+                                                                    <tr>
+                                                                            <th>File Name</th>
+                                                                            <th>Download</th>                                                                            
+                                                                    </tr>
+                                                            </thead>
+    
+                                                        <tbody *ngFor="let f of allVendorGeneralDocumentsList">
+                                                                <tr *ngIf="f.description == 'vendorAuditFile'">                                                             
+                                                                    <td>{{f.fileName}}</td>
+                                                                    <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a> </td>
+                                                                    
+                                                                </tr>
+                                                               
+                                                        </tbody>
+                        
+                                                    </table>
+                                                   
+                                                </div>
+                                                
+                                               
+                                               
+
+                                                
+                                    </div>
+                                    <div class="col-sm-6">
+                                            <p>
+                                                    <span class="label"><b>Is this Vendor also a Customer: </b></span><span class="value">{{isVendorCustomer}}</span>
+                                                </p>
+                                    </div>
 
 
                                     <div class="clear"></div>
