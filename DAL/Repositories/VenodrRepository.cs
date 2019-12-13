@@ -917,7 +917,7 @@ namespace DAL.Repositories
         public IEnumerable<object> GetVendorProcessList(int companyId)
         {
             var list = (from m in _appContext.Master1099
-                        where m.IsActive == true && m.MasterCompanyId == companyId
+                        where m.MasterCompanyId == companyId && m.IsDeleted !=true
                         select m).Distinct().ToList();
             return list;
 
@@ -1027,14 +1027,17 @@ namespace DAL.Repositories
             {
                 _appContext.Master1099.Attach(vendorProcess1099);
                 _appContext.Entry(vendorProcess1099).Property(x => x.Description).IsModified = true;
+                _appContext.Entry(vendorProcess1099).Property(x => x.Memo).IsModified = true;
                 _appContext.Entry(vendorProcess1099).Property(x => x.UpdatedDate).IsModified = true;
                 _appContext.Entry(vendorProcess1099).Property(x => x.UpdatedBy).IsModified = true;
-                _appContext.SaveChanges();
+                _appContext.Entry(vendorProcess1099).Property(x => x.IsActive).IsModified = true;
+
             }
             else
             {
                 _appContext.Master1099.Add(vendorProcess1099);
             }
+            _appContext.SaveChanges();
         }
         public void VendorProcess1099StatusUpdate(long id, bool status, string updatedBy)
         {
@@ -1104,6 +1107,17 @@ namespace DAL.Repositories
         }
 
 
+        public List<Master1099Audit> GetVendorProcess1099Audit(long id)
+        {
+            try
+            {
+                return _appContext.Master1099Audit.Where(p => p.Master1099Id == id).OrderByDescending(p => p.UpdatedDate).ToList();
 
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

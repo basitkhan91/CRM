@@ -3522,10 +3522,13 @@ namespace DAL.Repositories
         {
             try
             {
+
+
+
                 var data = (from bi in _appContext.WorkOrderBillingInvoicing
                             join wo in _appContext.WorkOrder on bi.WorkOrderId equals wo.WorkOrderId
                             join wop in _appContext.WorkOrderPartNumber on bi.WorkOrderPartNoId equals wop.ID
-                            join wowf in _appContext.WorkOrderWorkFlow on bi.WorkOrderWorkFlowId equals wowf.WorkFlowWorkOrderId
+                            join wowf in _appContext.WorkOrderWorkFlow on bi.WorkFlowWorkOrderId equals wowf.WorkFlowWorkOrderId
                             join cust in _appContext.Customer on bi.CustomerId equals cust.CustomerId
                             join it in _appContext.InvoiceType on bi.InvoiceTypeId equals it.InvoiceTypeId
                             join emp in _appContext.Employee on bi.EmployeeId equals emp.EmployeeId
@@ -3540,19 +3543,19 @@ namespace DAL.Repositories
                             join mnge in _appContext.Employee on bi.ManagementEmpId equals mnge.EmployeeId into bimnge
                             from mnge in bimnge.DefaultIfEmpty()
                             join sp in _appContext.Employee on wo.SalesPersonId equals sp.EmployeeId
-                            join cur in _appContext.Currency on cust.CurrencyId equals cur.CurrencyId into custcur
+                            join cur in _appContext.Currency on bi.CurrencyId equals cur.CurrencyId into custcur
                             from cur in custcur.DefaultIfEmpty()
                             join ct in _appContext.CreditTerms on wo.CreditTermsId equals ct.CreditTermsId
                             join sv in _appContext.CustomerShipping on bi.ShipViaId equals sv.CustomerShippingId into bisv
                             from sv in bisv.DefaultIfEmpty()
 
-                            where bi.WorkOrderId == WorkOrderId && bi.WorkOrderPartNoId==workOrderPartNoId
+                            where bi.WorkOrderId == WorkOrderId && bi.WorkOrderPartNoId == workOrderPartNoId
                             select new
                             {
                                 bi.BillingInvoicingId,
                                 bi.WorkOrderId,
                                 bi.WorkOrderPartNoId,
-                                bi.WorkOrderWorkFlowId,
+                                bi.WorkFlowWorkOrderId,
                                 bi.ItemMasterId,
                                 bi.InvoiceTypeId,
 
@@ -3569,6 +3572,7 @@ namespace DAL.Repositories
                                 EmployeeName = emp.FirstName,
                                 bi.RevType,
                                 wo.WorkOrderTypeId,
+                                WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Shop(Internal)" : (wo.WorkOrderTypeId == 3 ? "Liquidation" : "Services")),
                                 WorkScope = wos.Description,
                                 wop.WorkOrderScopeId,
                                 wop.Quantity,
@@ -3624,15 +3628,67 @@ namespace DAL.Repositories
                                 sv.ShipVia,
                                 sv.ShippingAccountinfo,
                                 bi.WayBillRef,
-                                bi.Tracking
+                                bi.Tracking,
+                                wo.CSR,
+                                wo.CustomerReference,
+                                CustomerName = cust.Name,
+                                wo.CustomerId,
+                                cust.Email,
+                                cust.CustomerPhone,
                             }).FirstOrDefault();
+
+                 
+
                 return data;
+
             }
             catch (Exception)
             {
 
                 throw;
             }
+        }
+
+
+        #endregion
+
+        #region Work Order Main Component
+
+        public IEnumerable<object> WorkOrderROlist()
+        {
+            var roList = (from ro in _appContext.RepairOrder
+                          join rop in _appContext.RepairOrderPart on ro.RepairOrderId equals rop.RepairOrderId
+                          join im in _appContext.ItemMaster on rop.ItemMasterId equals im.ItemMasterId
+                          join sl in _appContext.StockLine on rop.StockLineId equals sl.StockLineId
+                          into ropsl
+                          from sl in ropsl.DefaultIfEmpty()
+                          join v in _appContext.Vendor on ro.VendorId equals v.VendorId
+                          join cur in _appContext.Currency on rop.ReportCurrencyId equals cur.CurrencyId
+                          where ro.IsDeleted == false && ro.IsActive == true && rop.IsParent == true
+                          && ro.StatusId == 1
+                          select new
+                          {
+                              ro.RepairOrderId,
+                              rop.RepairOrderPartRecordId,
+                              im.PartNumber,
+                              im.PartDescription,
+                              sl.SerialNumber,
+                              ro.RepairOrderNumber,
+                              rop.QuantityOrdered,
+                              sl.ControlNumber,
+                              ControllerId = sl.IdNumber,
+                              rop.UnitCost,
+                              rop.ExtendedCost,
+                              Currency = cur.DisplayName,
+                              v.VendorName,
+                              Status = "Open",
+                              ro.OpenDate,
+                              ro.NeedByDate
+
+                          }).Distinct().ToList();
+
+            return roList;
+
         }
 
         #endregion
@@ -3805,7 +3861,8 @@ namespace DAL.Repositories
             {
 
                 var list = (from a in _appContext.Attachment
-                            join ad in _appContext.AttachmentDetails on a.AttachmentId equals ad.AttachmentId
+                            join ad in _appContext.AttachmentDetails on a.AttachmentId equals ad.AttachmentId into aad
+                            from ad in aad.DefaultIfEmpty()
                             join p in _appContext.Publication on a.ReferenceId equals p.PublicationRecordId
                             join pim in _appContext.PublicationItemMasterMapping on p.PublicationRecordId equals pim.PublicationRecordId
                             where a.IsDeleted == false && ad.IsDeleted == false && a.ModuleId == Convert.ToInt32(ModuleEnum.Publication)
@@ -3814,9 +3871,9 @@ namespace DAL.Repositories
                             {
                                 p.PublicationId,
                                 p.PublicationRecordId,
-                                ad.FileName,
-                                ad.Link,
-                                ad.CreatedDate
+                                FileName = ad == null ? "" : ad.FileName,
+                                Link = ad == null ? "" : ad.Link,
+                                CreatedDate = p.CreatedDate
                             }).ToList();
                 return list;
             }

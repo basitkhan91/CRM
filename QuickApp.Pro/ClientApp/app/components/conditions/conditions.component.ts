@@ -124,6 +124,24 @@ export class ConditionsComponent implements OnInit {
         })
 
     }
+
+    /*checkConditionExist(value) {
+
+        this.isCustomerNameAlreadyExists = false;
+        this.disableSaveCustomerName = false;
+        for (let i = 0; i < this.customerListOriginal.length; i++) {
+
+            if (this.generalInformation.name == this.customerListOriginal[i].name || value == this.customerListOriginal[i].name) {
+                this.isCustomerNameAlreadyExists = true;
+                // this.disableSave = true;
+                this.disableSaveCustomerName = true;
+                this.selectedActionName = event;
+                return;
+            }
+
+        }
+
+    }*/
    
     filterConditions(event) {
         this.conditionList = this.conditionData;
@@ -135,13 +153,28 @@ export class ConditionsComponent implements OnInit {
     }
 
     checkConditionExists(field, value) {
+        for (var i = 0; i < this.conditionData.length; i++) {
+            if (value.toLowerCase() == this.conditionData[i].description.toLowerCase()) {
+                this.disableSaveForCondition = true;
+            } else {
+                this.disableSaveForCondition = false;
+            }
+        }
+        
+        /*console.log("field:", field);
+        console.log("value::", value);
         const exists = validateRecordExistsOrNot(field, value, this.conditionData, this.selectedRecordForEdit);
+        console.log("this.conditionData::", this.conditionData)
+        console.log("this.conditionData::", this.selectedRecordForEdit)
+        console.log("exists:", exists);
         if (exists.length > 0) {
-            this.disableSaveForCondition = true;
+            console.log("COndition Success!!")
+           // this.disableSaveForCondition = true;
         }
         else {
-            this.disableSaveForCondition = false;
-        }
+            console.log("COndition failss!!")
+           // this.disableSaveForCondition = false;
+        } */
 
     }
     selectedCondition(object) {

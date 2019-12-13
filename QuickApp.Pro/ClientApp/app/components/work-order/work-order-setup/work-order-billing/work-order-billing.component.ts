@@ -1,4 +1,4 @@
-﻿import { Component, Input, OnInit } from '@angular/core';
+﻿import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { fadeInOut } from '../../../../services/animations';
 import * as $ from 'jquery';
 import { CommonService } from '../../../../services/common.service';
@@ -21,6 +21,8 @@ export class WorkOrderBillingComponent implements OnInit {
     @Input() billingorInvoiceForm: Billing;
     @Input() savedWorkOrderData;
     @Input() currencyList;
+    @Input() isEditBilling = false;
+    @Output() saveWOBilling = new EventEmitter();
     employeeList: any;
     customerNamesList: Object;
     soldCustomerSiteList = [];
@@ -39,6 +41,14 @@ export class WorkOrderBillingComponent implements OnInit {
     workOrderId: any;
     shipViaList: Object;
     customerId: any;
+    legalEntityList: any;
+    businessUnitList: any;
+    divisionList: any;
+    departmentList: any;
+    numberData = [{ label: 1, value: 1 }];
+    invoiceTypeList: any;
+
+
     constructor(private commonService: CommonService, private workOrderService: WorkOrderService,
         private customerService: CustomerService
 
@@ -46,34 +56,60 @@ export class WorkOrderBillingComponent implements OnInit {
 
     }
     ngOnInit() {
+        console.log(this.billingorInvoiceForm);
+
         this.workOrderId = this.savedWorkOrderData.workOrderId;
         this.customerId = editValueAssignByCondition('customerId', this.savedWorkOrderData.customerId);
-        this.getCustomerDetailsFromHeader();
+        // this.getCustomerDetailsFromHeader();
         this.getShipViaByCustomerId();
+        this.getLegalEntity();
+        this.generateNumbers();
+        this.getInvoiceList();
+        if (this.isEditBilling) {
+            this.commonService.getManagementStructureDetails(this.billingorInvoiceForm.managementStructureId).subscribe(res => {
+                this.selectedLegalEntity(res.Level1);
+                this.selectedBusinessUnit(res.Level2);
+                this.selectedDivision(res.Level3);
+                this.selectedDepartment(res.Level4);
+                this.managementStructure = {
+                    companyId: res.Level1 !== undefined ? res.Level1 : null,
+                    buId: res.Level2 !== undefined ? res.Level2 : null,
+                    divisionId: res.Level3 !== undefined ? res.Level3 : null,
+                    departmentId: res.Level4 !== undefined ? res.Level4 : null,
+                }
+
+            })
+
+        }
     }
 
-    getCustomerDetailsFromHeader() {
-        this.workOrderService.viewWorkOrderHeader(this.workOrderId).subscribe(res => {
-            const data = res;
-            this.billingorInvoiceForm = {
-                ...this.billingorInvoiceForm,
-                customerRef: data.customerReference,
-                employee: data.employee,
-                woOpenDate: new Date(data.openDate),
-                salesPerson: data.salesperson,
-                woType: data.workOrderType,
-                creditTerms: data.creditTerm
+    generateNumbers() {
+        for (var i = 1; i <= 10; i++) {
+            this.numberData.push({ label: i * 10, value: i * 10 });
 
-            }
+        }
+
+    }
+    getInvoiceList() {
+        this.commonService.smartDropDownList('InvoiceType', 'InvoiceTypeId', 'Description').subscribe(res => {
+            this.invoiceTypeList = res;
         })
     }
+
+    getLegalEntity() {
+        this.commonService.getLegalEntityList().subscribe(res => {
+            this.legalEntityList = res;
+        })
+    }
+
+
 
     getShipViaByCustomerId() {
         this.commonService.getShipViaDetailsByModule(getModuleIdByName('Customer'), this.customerId).subscribe(res => {
             this.shipViaList = res.map(x => {
                 return {
                     label: x.name,
-                    value: x.shippingId
+                    value: x.shippingViaId
                 }
             });
         })
@@ -166,6 +202,42 @@ export class WorkOrderBillingComponent implements OnInit {
         } else if (value === '' && type === 'shipTo') {
             this.shipCustomerAddress = new AddressModel();
         }
+    }
+
+    selectedLegalEntity(legalEntityId) {
+        if (legalEntityId) {
+            this.billingorInvoiceForm.managementStructureId = legalEntityId;
+            this.commonService.getBusinessUnitListByLegalEntityId(legalEntityId).subscribe(res => {
+                this.businessUnitList = res;
+            })
+        }
+
+    }
+    selectedBusinessUnit(businessUnitId) {
+        if (businessUnitId) {
+            this.billingorInvoiceForm.managementStructureId = businessUnitId;
+            this.commonService.getDivisionListByBU(businessUnitId).subscribe(res => {
+                this.divisionList = res;
+            })
+        }
+
+    }
+    selectedDivision(divisionUnitId) {
+        if (divisionUnitId) {
+            this.billingorInvoiceForm.managementStructureId = divisionUnitId;
+            this.commonService.getDepartmentListByDivisionId(divisionUnitId).subscribe(res => {
+                this.departmentList = res;
+            })
+        }
+
+    }
+    selectedDepartment(departmentId) {
+        if (departmentId) {
+            this.billingorInvoiceForm.managementStructureId = departmentId;
+        }
+    }
+    saveWorkOrderBilling() {
+        this.saveWOBilling.emit(this.billingorInvoiceForm);
     }
 
 

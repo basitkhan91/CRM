@@ -18,6 +18,7 @@ import { DocumentsComponent } from "../components/documents/documents.component"
 import { EmployeeExpertiseComponent } from "../components/employee-expertise/employee-expertise.component";
 import { FindingsComponent } from "../components/findings/findings.component";
 import { AssetIntangibleTypeComponent } from "../components/asset-intangible-type/asset-intangible-type.component";
+import { AssetIntangibleAttributeTypeComponent } from "../components/asset-intangible-attribute-type/asset-intangible-attribute-type.component";
 import { AssetTypeComponent } from "../components/asset-type/asset-type.component";
 import { StageCodeComponent } from "../components/stage-code/stage-code.component";
 import { GLAccountCategoryComponent } from "../components/gl-account-category/gl-account-category.component";
@@ -86,6 +87,10 @@ import { FileUploadModule } from "primeng/fileupload";
 import { CheckboxModule } from "primeng/checkbox";
 import { PercentComponent } from "../components/percent/percent.component";
 import { JobTypeComponent } from '../components/job-type/job-type.component';
+import { VendorProcess1099Component } from "../components/vendor-process1099/vendor-process1099.component";
+import { CapsReportComponent } from "../components/caps-report/caps-report.component";
+
+
 const singlePagesRoutes: Routes = [
     {
         path: "singlepages",
@@ -181,6 +186,11 @@ const singlePagesRoutes: Routes = [
                 path: "app-asset-attribute-type",
                 component: AssetAttributeTypeComponent,
                 data: { title: "Asset Attribute Type" }
+            },
+			{
+                path: "app-asset-intangible-attribute-type",
+                component: AssetIntangibleAttributeTypeComponent,
+                data: { title: "Asset Intangible Attribute Type" }
             },
             {
                 path: "app-integration",
@@ -409,7 +419,17 @@ const singlePagesRoutes: Routes = [
                 path: "app-create-publication/edit/:id",
                 component: CreatePublicationComponent,
                 data: { title: "create publication" }
-            }
+            },
+            {
+                path: "app-vendor-process1099",
+                component: VendorProcess1099Component,
+                data: { title: "Vendor Process1099" }
+            },
+            {
+                path: "app-caps-report",
+                component: CapsReportComponent,
+                data: { title: "Caps Report" }
+            },
         ]
     }
 ];
@@ -423,6 +443,6 @@ const singlePagesRoutes: Routes = [
         FileUploadModule,
         CheckboxModule
     ],
-    providers: [AuthService, AuthGuard]
+    providers: [AuthService, AuthGuard ]
 })
 export class SinglePagesRoutingModule { }

@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, ViewChild } from '@angular/core';
+﻿import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { AuditHistory } from '../../../../models/audithistory.model';
 import { AuthService } from '../../../../services/auth.service';
 import { AlertService, MessageSeverity } from '../../../../services/alert.service';
@@ -56,6 +56,8 @@ export class RoListComponent implements OnInit {
     statusIdInput: any;
     requestedByInput: any;
     approvedByInput: any;
+    @Input() isEnableROList: boolean;
+    @Input() vendorId: boolean;
 
     constructor(private _route: Router,
         private authService: AuthService,
@@ -177,6 +179,9 @@ export class RoListComponent implements OnInit {
         this.pageSize = event.rows;
         event.first = pageIndex;
         this.lazyLoadEventDataInput = event;
+        if(this.isEnableROList) {
+            this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, vendorId: this.vendorId }
+        }
         this.getList(event)
         console.log(event);        
     }

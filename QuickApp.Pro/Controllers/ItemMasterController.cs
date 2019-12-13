@@ -487,7 +487,8 @@ namespace QuickApp.Pro.Controllers
                     imc.ATASubChapterId = capability[i].ATASubChapterId;
                     imc.EntryDate = capability[i].EntryDate;
                     imc.CMMId = capability[i].CMMId;
-                    imc.isIntegrateWith = capability[i].isIntegrateWith;
+                    //imc.isIntegrateWith = capability[i].isIntegrateWith;
+                    imc.IntegrateWith = capability[i].IntegrateWith;
                     imc.VerifiedBy = capability[i].VerifiedBy;
                     imc.DateVerified = capability[i].DateVerified;
                     imc.ntehrs = capability[i].ntehrs;
@@ -496,7 +497,7 @@ namespace QuickApp.Pro.Controllers
                     imc.UpdatedDate = DateTime.Now;
                     capability[i].MasterCompanyId = 1;
                     capability[i].CreatedDate = DateTime.Now;
-                    if (capability[i].CapabilityId > 0)
+                    if (capability[i].ItemMasterCapesId > 0)
                     {
                         _unitOfWork.Repository<ItemMasterCapes>().Update(imc);
                     }
@@ -1087,7 +1088,8 @@ namespace QuickApp.Pro.Controllers
                             iM.ATASubChapterId,
                             iM.EntryDate,
                             iM.CMMId,
-                            iM.isIntegrateWith,
+                            //iM.isIntegrateWith,
+                            iM.IntegrateWith,
                             iM.IsVerified,
                             iM.VerifiedBy,
                             iM.DateVerified,
@@ -1128,7 +1130,8 @@ namespace QuickApp.Pro.Controllers
                             iM.ATASubChapterId,
                             iM.EntryDate,
                             iM.CMMId,
-                            iM.isIntegrateWith,
+                            //iM.isIntegrateWith,
+                            iM.IntegrateWith,
                             iM.IsVerified,
                             iM.VerifiedBy,
                             iM.DateVerified,

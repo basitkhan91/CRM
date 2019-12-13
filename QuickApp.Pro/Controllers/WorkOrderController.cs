@@ -1083,6 +1083,24 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetBillingInvoicingDetails(long workOrderId,long workOrderPartNoId)
         {
             var result = unitOfWork.WorkOrderRepository.GetBillingInvoicingDetails(workOrderId, workOrderPartNoId);
+			if(result != null) {
+				return Ok(result);
+			}
+			else
+			{
+				return NotFound();
+			}
+        }
+
+        #endregion
+
+
+        #region Work Order Main Component
+
+        [HttpGet("workorderrolist")]
+        public IActionResult WorkOrderROlist()
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrderROlist();
             return Ok(result);
         }
 
