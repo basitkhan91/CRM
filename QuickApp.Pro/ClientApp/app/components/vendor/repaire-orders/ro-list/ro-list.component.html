@@ -1,6 +1,6 @@
 ﻿<div class="card">
 		<div class="card-body">
-		  <div class="inline-block display-flex">
+		  <div class="inline-block display-flex" *ngIf="!isEnableROList">
 			<h3 class="po-head lead">Repair Order List</h3>
 			&nbsp;&nbsp;
 			<a class="plusicon-cstm new-margin" matTooltip="Create RO"
@@ -179,12 +179,12 @@
 					matTooltip="{{rowData['isActive']==true ? 'Active' : 'In Active'}}"
 				  ></p-inputSwitch>
 	  
-				  <span data-toggle="modal" data-target="#view">
+				  <span> <!--data-toggle="modal" data-target="#view"-->
 					<a
 					  class="btn btn-info boxed-float-btn nobg"
 					  data-toggle="tooltip"
 					  (click)="viewSelectedRow(rowData)"
-					  data-target="#view"
+					  data-target="#roView"
 					  data-toggle="modal"
 					  matTooltip="View"
 					>
@@ -204,7 +204,7 @@
 					class="btn-delete"
 					mat-icon-button
 					matTooltip="Delete"
-					data-target="#delete"
+					data-target="#roDelete"
 					data-toggle="modal"
 					(click)="delete(rowData)">
 					<mat-icon color="warn">delete</mat-icon>
@@ -299,7 +299,7 @@
 			</div>
 		  </div>
 
-		  <div class="modal fade" id="delete" role="dialog">
+		  <div class="modal fade" id="roDelete" role="dialog">
 				<div class="modal-dialog modal-sm">
 				  <div class="modal-content">
 					<div class="modal-header">
@@ -314,7 +314,7 @@
 				</div>
 			  </div>
 
-			  <div class="modal fade" id="view" role="dialog">
+			  <div class="modal fade" id="roView" role="dialog">
 					<div class="modal-dialog modal-lg">
 					  <div class="modal-content">
 						<div class="modal-header">

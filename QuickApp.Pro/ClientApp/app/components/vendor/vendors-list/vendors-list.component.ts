@@ -152,6 +152,12 @@ export class VendorsListComponent implements OnInit {
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
     public allWorkFlows: any[] = [];
+    isEnablePOList: boolean = true;
+    isEnableROList: boolean = true;
+    vendorId: number;
+    // purchaseOrderData: any;
+    // poPageSize: number = 10;
+    // poPageIndex: number = 0;
 
     constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.local = this.workFlowtService.financeCollection;
@@ -167,18 +173,17 @@ export class VendorsListComponent implements OnInit {
         this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab);
         this.isVendorList = true;
 
-        this.poCols = [
-            { field: 'status', header: 'Status' },            
-            { field: 'numOfItems', header: 'No of Items' },
-            { field: 'purchaseOrderNumber', header: 'PO Num' },
-            { field: 'openDate', header: 'Open Date' },
-            { field: 'closedDate', header: 'Closed/Cancelled Date' },
-            { field: 'vendorName', header: 'Vendor Name' },
-            { field: 'vendorCode', header: 'Vendor Code' },            
-            { field: 'requestedBy', header: 'Requested By' },
-            { field: 'approvedBy', header: 'Approved By' }
-        ];
-        this.selectedPOColumns = this.poCols;
+        // this.poCols = [
+        //     { field: 'purchaseOrderNumber', header: 'PO Num' },
+        //     { field: 'openDate', header: 'Open Date' },
+        //     { field: 'closedDate', header: 'Closed/Cancelled Date' },
+        //     { field: 'vendorName', header: 'Vendor Name' },
+        //     { field: 'vendorCode', header: 'Vendor Code' },
+        //     { field: 'status', header: 'Status' },
+        //     { field: 'requestedBy', header: 'Requested By' },
+        //     { field: 'approvedBy', header: 'Approved By' }
+        // ];
+        // this.selectedPOColumns = this.poCols;
     }
 
     public navigateTogeneralInfo() {
@@ -817,5 +822,14 @@ export class VendorsListComponent implements OnInit {
         const { vendorId } = rowData;
         this.route.navigateByUrl(`vendorsmodule/vendorpages/app-ro-setup/vendor/${vendorId}`);
     }
+
+    getVendorId(rowData) {
+        this.vendorId = rowData.vendorId;
+    }
+
+    resetVendorId() {
+        this.vendorId = null;
+    }
+
 
 }
