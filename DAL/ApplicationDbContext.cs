@@ -470,6 +470,7 @@ namespace DAL
         public DbSet<DAL.Models.Sales.SalesOrderQuote.SalesOrderQuote> SalesOrderQuote { get; set; }
         public DbSet<DAL.Models.Sales.SalesOrderQuoteApproverList> SalesOrderQuoteApproverList { get; set; }
         public DbSet<DAL.Models.Sales.SalesOrderQuotePart> SalesOrderQuotePart { get; set; }
+        public DbSet<Master1099Audit> Master1099Audit { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
