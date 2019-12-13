@@ -503,6 +503,7 @@ export class AccountingCalendarComponent implements OnInit {
         let year = date.getFullYear();
         let addDetails = false;
         let showDiff = true;
+        this.loadCompaniesData();
         if (this.calendarArray && this.calendarArray.length > 0) {
             let index = 0;
             for (let i = 0; i < this.calendarArray.length; i++) {
@@ -533,9 +534,9 @@ export class AccountingCalendarComponent implements OnInit {
         if (showDiff) {
             if (this.completeCalendarData.length > 0) {
                 for (let i = 0; i < this.completeCalendarData.length; i++) {
-                    if (year == this.completeCalendarData[i].fiscalYear) {
+                    if (year == this.completeCalendarData[i].fiscalYear && name == this.completeCalendarData[i].name) {
                         addDetails = true;
-                        this.alertService.showMessage("We already have data with this Calendar Year");
+                        this.alertService.showMessage("Calendar Year already Exists!");
                         break;
 
                     }
