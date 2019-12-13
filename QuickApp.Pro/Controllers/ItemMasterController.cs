@@ -506,9 +506,10 @@ namespace QuickApp.Pro.Controllers
                         _unitOfWork.Repository<ItemMasterCapes>().Add(imc);
                     }
                     _unitOfWork.SaveChanges();
+                    capability[i].ItemMasterCapesId = imc.ItemMasterCapesId;
                 }
             }
-            return Ok();
+            return Ok(capability);
         }
         [ApiExplorerSettings(IgnoreApi = true)]
         public void saveItemcapes(long returnid, long itemid)
