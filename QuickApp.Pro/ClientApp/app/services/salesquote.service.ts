@@ -17,6 +17,8 @@ import { SalesQuoteEndpointService } from "./salesquote-endpoint.service";
 import { ISalesQuote } from "../models/sales/ISalesQuote.model";
 import { ISalesQuoteView } from "../models/sales/ISalesQuoteView";
 import { ISalesOrderQuote } from "../models/sales/ISalesOrderQuote";
+import { ISalesSearchParameters } from "../models/sales/ISalesSearchParameters";
+import { ISalesQuoteListView } from "../models/sales/ISalesQuoteListView";
 
 export type RolesChangedOperation = "add" | "delete" | "modify";
 export type RolesChangedEventArg = {
@@ -48,6 +50,14 @@ export class SalesQuoteService {
     return Observable.forkJoin(
       this.salesQuoteEndPointSevice.update(
         salesquote
+      )
+    );
+  }
+
+  search(salesQuoteSearchParameters: ISalesSearchParameters): Observable<ISalesQuoteListView[]> {
+    return Observable.forkJoin(
+      this.salesQuoteEndPointSevice.search(
+        salesQuoteSearchParameters
       )
     );
   }
