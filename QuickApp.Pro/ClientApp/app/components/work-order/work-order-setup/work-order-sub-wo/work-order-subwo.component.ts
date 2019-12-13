@@ -76,6 +76,7 @@ export class SubWorkOrderComponent implements OnInit {
         this.workOrderService.getSubWorkOrderDataBySubWorkOrderId(this.subWorkOrderId).subscribe(res => {
             this.getDataFormating(res);
             this.isEdit = true;
+            this.getHeaderDetailsForCreateSubWO();
         }, error => {
             this.getHeaderDetailsForCreateSubWO();
             this.isEdit = false;
@@ -83,9 +84,12 @@ export class SubWorkOrderComponent implements OnInit {
 
     }
     getHeaderDetailsForCreateSubWO() {
+        console.log('test');
+
         if (this.workOrderId && this.mpnId) {
             this.workOrderService.getSubWorkOrderHeaderByWorkOrderId(this.workOrderId, this.mpnId).subscribe(res => {
                 this.subWorkOrderHeader = res;
+                this.workFlowWorkOrderId = res.workFlowWorkOrderId;
                 this.workOrderDetails = {
                     ...this.workOrderDetails,
                     workFlowId: res.workFlowId,

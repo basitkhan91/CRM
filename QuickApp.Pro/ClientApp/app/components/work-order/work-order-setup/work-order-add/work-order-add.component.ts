@@ -68,6 +68,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     @Input() showTabsGrid = false;
     @Input() workOrderId;
     @Input() currencyList;
+    @Input() workFlowWorkOrderId = 0;
     // @Output() viewWorkFlow = new EventEmitter();
 
     // workOrderTypes: WorkOrderType[];
@@ -140,7 +141,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     workFlowWorkOrderData: any;
     workOrderAssetList: any = [];
     // workOrderId;
-    workFlowWorkOrderId: any = 0;
+    // workFlowWorkOrderId: any = 0;
     workOrderMaterialList: any;
     mpnPartNumbersList: any = [];
     stockLineList: any;
@@ -168,6 +169,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     loginDetailsForCreate: any;
     workOrderPartNumberId: any;
     isEditBilling: boolean = false;
+    isWorkOrderMainView: boolean = false;
+    mainWorkOrderId: any = 0;
 
 
 
@@ -276,16 +279,19 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             }
         } else {
             console.log(this.subWorkOrderDetails);
-            // this.workOrderId = this.subWorkOrderDetails.workorderid;
-            this.workOrderPartNumberId = this.subWorkOrderDetails.mpnid;
-            this.workFlowWorkOrderId = this.subWorkOrderDetails.workFlowWorkOrderId;
-            this.workFlowId = this.subWorkOrderDetails.workFlowId;
-            this.savedWorkOrderData = {
-                ...this.workOrderId,
-                ...this.workFlowId,
-                ...this.workFlowWorkOrderId
 
+            this.workOrderPartNumberId = this.subWorkOrderDetails.mpnid;
+            this.workFlowId = this.subWorkOrderDetails.workFlowId;
+            this.mainWorkOrderId = this.subWorkOrderDetails.workorderid;
+            this.savedWorkOrderData = {
+                workOrderId: this.workOrderId,
+                workFlowId: this.workFlowId,
+                workFlowWorkOrderId: this.workFlowWorkOrderId
             }
+            console.log(this.workFlowWorkOrderId);
+
+            console.log(this.savedWorkOrderData);
+
         }
 
 
@@ -401,6 +407,9 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         if (value !== 'billorInvoice') {
             this.billing = undefined;
         }
+        if (value == 'workOrderMain') {
+            this.isWorkOrderMainView = true;
+        }
 
     }
 
@@ -448,6 +457,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     deleteMPN(index) {
         this.workOrderGeneralInformation.partNumber = this.workOrderGeneralInformation.partNumber.splice(index, 1);
     }
+
 
 
     saveWorkOrder(): void {
@@ -752,6 +762,9 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     //   })
     // }
 
+    closeWorkOrderMainView(value) {
+        this.isWorkOrderMainView = value;
+    }
 
     savedWorkFlowData(workFlowDataObject) {
         this.workOrderService.createWorkFlowWorkOrder(workFlowDataObject).subscribe(res => {
@@ -1270,6 +1283,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 soldToCustomerId: { customerId: res.soldToCustomerId, customerName: res.soldToCustomer },
                 shipToCustomerId: { customerId: res.shipToCustomerId, customerName: res.shipToCustomer },
                 customerRef: res.customerReference,
+                woType: res.workOrderType
             }
             this.isEditBilling = true;
             console.log(this.billing);
