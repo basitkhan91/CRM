@@ -503,9 +503,11 @@ export class AccountingCalendarComponent implements OnInit {
         let year = date.getFullYear();
         let addDetails = false;
         let showDiff = true;
+        var name;
         this.loadCompaniesData();
         if (this.calendarArray && this.calendarArray.length > 0) {
             let index = 0;
+
             for (let i = 0; i < this.calendarArray.length; i++) {
                 index = i + 1;
                 if (this.calendarArray[i].adjusting && this.calendarArray[i].adjusting == 'yes') {
@@ -529,6 +531,7 @@ export class AccountingCalendarComponent implements OnInit {
                     }
 
                 }
+                name = this.calendarArray[i].name;
             }
         }
         if (showDiff) {
