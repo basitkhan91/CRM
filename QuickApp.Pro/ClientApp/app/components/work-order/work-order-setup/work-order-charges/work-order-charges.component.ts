@@ -15,9 +15,12 @@ export class WorkOrderChargesComponent {
   @Input() workOrderChargesList;
   @Input() workFlowObject;
   @Input() isWorkOrder;
+  @Input() isQuote = false;
   @Output() saveChargesListForWO = new EventEmitter();
   @Output() updateChargesListForWO = new EventEmitter();
   @Output() refreshData = new EventEmitter();
+  @Output() createQuote = new EventEmitter(); 
+
 
   isEdit: boolean = false;
   editData: any;
@@ -64,6 +67,10 @@ export class WorkOrderChargesComponent {
     this.updateChargesListForWO.emit(event);
     $('#addNewCharges').modal('hide');
     this.isEdit = false;
+  }
+
+  createChargeQuote(){
+    this.createQuote.emit(this.workOrderChargesList);
   }
 
 }
