@@ -470,7 +470,7 @@
   </div>
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'charges'">
-    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use work flow'">
+    <!-- <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use work flow'">
       <thead>
         <tr>
           <th>Task id</th>
@@ -524,8 +524,15 @@
             <button class="btn btn-primary-cstm pull-right" (click)="createChargeQuote()">Save Details</button>
           </div>
         </tbody>
-    </table>
-
+    </table> -->
+    <app-work-order-charges [workFlowObject]="workFlowObject" 
+                          isWorkOrder="false"
+                           [workOrderChargesList]="workOrderChargesList" 
+                        (saveChargesListForWO)="saveWorkOrderChargesList($event)"
+                        (updateChargesListForWO)="updateWorkOrderChargesList($event)"
+                        (refreshData)="getChargesListByWorkOrderId()" 
+                        
+                        ></app-work-order-charges>
   </div>
 
 

@@ -73,6 +73,7 @@ export class WorkOrderQuoteComponent implements OnInit {
   workOrderId: number = 0;
   workOrderExclusionsList: Object;
   workOrderMaterialList: any;
+  workOrderChargesList: any;
   workFlowObject = {
     materialList: [],
     equipments: [],
@@ -310,6 +311,7 @@ isQuote: boolean = true;
           .subscribe(
             (res: any[]) =>{
               this.chargesQuotation = res;
+              this.workOrderChargesList = res;
             }
           )
         }
@@ -333,7 +335,7 @@ isQuote: boolean = true;
           this.materialListQuotation = res['materialList'];
           this.workOrderMaterialList = res['materialList'];
           this.laborQuotation = res['expertise'];
-          this.chargesQuotation = res['charges'];
+          this.chargesQuotation, this.workOrderChargesList = res['charges'];
           this.exclusionsQuotation = res['exclusions'].map(exclusion=>{
             return {
               ...exclusion,
@@ -537,5 +539,10 @@ getExclusionListByWorkOrderId(){
     })
 
   }
+}
+
+saveWorkOrderChargesList(data){
+  console.log(data);
+  this.workOrderChargesList = [...this.workOrderChargesList, ...data['charges']];
 }
 }
