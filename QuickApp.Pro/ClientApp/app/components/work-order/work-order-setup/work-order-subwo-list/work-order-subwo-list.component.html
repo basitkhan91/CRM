@@ -36,11 +36,11 @@
             }}
           </td>
           <td style="width:200px" *ngIf="subWorkOrderData">
-            <p-inputSwitch
+            <!-- <p-inputSwitch
               [(ngModel)]="rowData['isActive']"
               name="isActive{{ rowIndex }}"
               (onChange)="changeStatus(rowData)"
-            ></p-inputSwitch>
+            ></p-inputSwitch> -->
 
             <span data-toggle="modal" data-target="#viewSubWOrkOrder">
               <a
@@ -70,7 +70,7 @@
             >
               <mat-icon color="warn">delete</mat-icon>
             </button>
-            <button
+            <!-- <button
               class="btn-history ptable-wo-btns"
               mat-icon-button
               matTooltip="History"
@@ -79,7 +79,7 @@
               (click)="getAuditHistoryById(rowData)"
             >
               <mat-icon color="green">history</mat-icon>
-            </button>
+            </button> -->
           </td>
         </tr>
       </ng-template>
