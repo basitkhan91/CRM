@@ -796,18 +796,18 @@ namespace DAL.Repositories
             ManagementStructure level1 = null;
             try
             {
-                level4 = _appContext.ManagementStructure.Where(p => p.IsDelete == false && p.ManagementStructureId == manmgStrucId).FirstOrDefault();
+                level4 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == manmgStrucId).FirstOrDefault();
                 if (level4 != null && level4.ParentId > 0)
                 {
-                    level3 = _appContext.ManagementStructure.Where(p => p.IsDelete == false && p.ManagementStructureId == level4.ParentId).FirstOrDefault();
+                    level3 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == level4.ParentId).FirstOrDefault();
                 }
                 if (level3 != null && level3.ParentId > 0)
                 {
-                    level2 = _appContext.ManagementStructure.Where(p => p.IsDelete == false && p.ManagementStructureId == level3.ParentId).FirstOrDefault();
+                    level2 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == level3.ParentId).FirstOrDefault();
                 }
                 if (level2 != null && level2.ParentId > 0)
                 {
-                    level1 = _appContext.ManagementStructure.Where(p => p.IsDelete == false && p.ManagementStructureId == level2.ParentId).FirstOrDefault();
+                    level1 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == level2.ParentId).FirstOrDefault();
                 }
 
 
@@ -894,22 +894,32 @@ namespace DAL.Repositories
                 throw ex;
             }
         }
-        public IEnumerable<object> GetDefaultCurrency(long legalEntityId)
+        public object GetDefaultCurrency(long legalEntityId)
         {
             try
             {
 
                 var defaultCurrency = (from le in _appContext.LegalEntity
                                        join c in _appContext.Currency on le.FunctionalCurrencyId equals c.CurrencyId
-                                       where le.LegalEntityId == legalEntityId && c.IsActive == true && (c.IsDelete == false || c.IsDelete == null)
+                                       where le.LegalEntityId == legalEntityId && c.IsActive == true && (c.IsDeleted == false || c.IsDeleted == null)
                                        select new
                                        {
                                            currencyId = le.FunctionalCurrencyId,
                                            currencyName = c.DisplayName
-                                       })
-                           .Distinct()
-                           .ToList();
+                                       }).FirstOrDefault();
 
+
+                if (defaultCurrency == null)
+                {
+                    defaultCurrency = (from le in _appContext.LegalEntity
+                                       join c in _appContext.Currency on le.FunctionalCurrencyId equals c.CurrencyId
+                                     where c.IsActive == true && (c.IsDeleted == false || c.IsDeleted == null)
+                                     select new
+                                     {
+                                         currencyId = le.FunctionalCurrencyId,
+                                         currencyName = c.DisplayName
+                                     }).FirstOrDefault();
+                }
 
                 return defaultCurrency;
             }
@@ -947,20 +957,74 @@ namespace DAL.Repositories
         public IEnumerable<object> GetIntegrationMappings(long referenceId, int moduleId)
         {
             var integrationnMappingList = (from im in _appContext.IntegrationPortalMapping
-                                             join vc in _appContext.IntegrationPortal on im.IntegrationPortalId equals Convert.ToInt64(vc.IntegrationPortalId)
-                                             where im.IsDeleted == false && im.ModuleId == moduleId && im.ReferenceId == referenceId
-                                             select new
-                                             {
-                                                 im.IntegrationPortalMappingId,
-                                                 im.IntegrationPortalId,
-                                                 vc.Description                                                
-                                             })
+                                           join vc in _appContext.IntegrationPortal on im.IntegrationPortalId equals Convert.ToInt64(vc.IntegrationPortalId)
+                                           where im.IsDeleted == false && im.ModuleId == moduleId && im.ReferenceId == referenceId
+                                           select new
+                                           {
+                                               im.IntegrationPortalMappingId,
+                                               im.IntegrationPortalId,
+                                               vc.Description
+                                           })
                          .Distinct()
                          .ToList();
 
 
             return integrationnMappingList;
         }
+
+        public IEnumerable<object> ManagementStructureLevelOneData()
+        {
+            var list = (from ms in _appContext.ManagementStructure
+                        where ms.IsDelete == false && ms.IsActive == true && ms.ParentId == null
+                        select new
+                        {
+                            label = ms.Code,
+                            value = ms.ManagementStructureId
+                        }).Distinct().ToList().OrderBy(p => p.label);
+            return list;
+        }
+
+        public IEnumerable<object> ManagementStructureLevelTwoData(long parentId)
+        {
+            var list = (from ms in _appContext.ManagementStructure
+                        where ms.IsDelete == false && ms.IsActive == true 
+                        && ms.ParentId==parentId
+                        select new
+                        {
+                            label = ms.Code,
+                            value = ms.ManagementStructureId
+                        }).Distinct().ToList().OrderBy(p=>p.label);
+            return list;
+        }
+
+        public IEnumerable<object> ManagementStructureLevelThreeData(long parentId)
+        {
+            var list = (from ms in _appContext.ManagementStructure
+                        where ms.IsDelete == false && ms.IsActive == true
+                        && ms.ParentId == parentId
+                        select new
+                        {
+                            label = ms.Code,
+                            value = ms.ManagementStructureId
+                        }).Distinct().ToList().OrderBy(p => p.label);
+            return list;
+        }
+
+
+        public IEnumerable<object> ManagementStructureLevelFourData(long parentId)
+        {
+            var list = (from ms in _appContext.ManagementStructure
+                        where ms.IsDelete == false && ms.IsActive == true
+                        && ms.ParentId == parentId
+                        select new
+                        {
+                            label = ms.Code,
+                            value = ms.ManagementStructureId
+                        }).Distinct().ToList().OrderBy(p => p.label);
+            return list;
+        }
+
+
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }

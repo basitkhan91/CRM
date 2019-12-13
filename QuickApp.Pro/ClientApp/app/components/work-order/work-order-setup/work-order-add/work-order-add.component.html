@@ -646,7 +646,7 @@
                           <li class="nav-item">
                             <a id="pills-contact-tab" role="tab"
                                 [ngClass]="{active : gridActiveTab === 'billorInvoice'}"
-                                (click)="gridTabChange('billorInvoice')">Billing/Invoicing</a>
+                                (click)="gridTabChange('billorInvoice'); billingCreateOrEdit();">Billing/Invoicing</a>
                         </li>
                         <li class="nav-item">
                           <a id="pills-contact-tab" role="tab" [ngClass]="{active : gridActiveTab === 'shipping'}"
@@ -765,7 +765,7 @@
                     </div>
 
                     <div  *ngIf="workOrderId && (gridActiveTab === 'subWO') " [ngClass]="{hidedata : gridActiveTab !== 'subWO'}">
-                        <app-sub-work-orderlist [workOrderId]="workOrderId" [mpnId]="mpnId" ></app-sub-work-orderlist>
+                        <app-sub-work-orderlist [workOrderId]="workOrderId" [mpnId]="workOrderPartNumberId" ></app-sub-work-orderlist>
                      
                     </div>
 
@@ -786,8 +786,15 @@
                     </div>
                       
 
-                    <div [ngClass]="{hidedata : gridActiveTab !== 'billorInvoice'}">
-                        <app-work-order-billing></app-work-order-billing>
+                    <div *ngIf="billing" [ngClass]="{hidedata : gridActiveTab !== 'billorInvoice'}">
+                        <app-work-order-billing   
+                         [billingorInvoiceForm]="billing" 
+                         [currencyList]="currencyList"
+                         [savedWorkOrderData]="savedWorkOrderData"    
+                         [employeesOriginalData]="employeesOriginalData"
+                         [isEditBilling]="isEditBilling"
+                         (saveWOBilling)="saveWorkOrderBilling($event)"
+                         ></app-work-order-billing>
                     </div>
                     <div *ngIf="addresses" [ngClass]="{hidedata : gridActiveTab !== 'address'}">
                         <app-work-order-addresses [addressesForm]="addresses"></app-work-order-addresses>

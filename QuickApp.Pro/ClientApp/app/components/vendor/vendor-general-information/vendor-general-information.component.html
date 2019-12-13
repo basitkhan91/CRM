@@ -112,15 +112,14 @@
                                     <label for="vendorname">
                                         Phone
                                         <span class="clr-red">*</span>
-
                                     </label>
                                     <div class="col-md-12">
                                         <div class="col-md-7">
-                                            <input class="form-control" type="text" pKeyFilter="num" name="vendorPhone" 
+                                            <input class="form-control" type="text" maxlength="20" (keypress)="patternMobilevalidationWithSpl($event)" name="vendorPhone" 
                                                    [(ngModel)]="sourceVendor.vendorPhone" required>
                                         </div>
                                         <div class="col-md-5">
-                                            <input type="text" name="phoneExt" pInputText maxlength="10" [(ngModel)]="sourceVendor.vendorPhoneExt" >
+                                            <input type="text" name="phoneExt" pInputText maxlength="15" [(ngModel)]="sourceVendor.vendorPhoneExt" >
                                         </div>
                                     </div>
                                     </div>

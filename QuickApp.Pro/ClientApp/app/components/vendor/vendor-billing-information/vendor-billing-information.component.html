@@ -17,7 +17,7 @@
                     </div>
                     <div class="table-responsive">
                         <p></p>
-                        <p-table #dt [value]="allActions" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
+                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="allActions" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
                             <ng-template pTemplate="caption">
 
                                 <div style="text-align: right">
@@ -27,13 +27,13 @@
                                         <i class="fa fa-search"></i>
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')">
                                     </div>
-                                    <button type="button" pTooltip="Download Data" tooltipPosition="top" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" pTooltip="Download Selected Data" tooltipPosition="top" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    <button type="button" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
 
                                     <div class="excel-upload">
                                         <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                         <label for="upload">
-                                            <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+                                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above"><i class="fa fa-upload"></i></span>
                                         </label>
                                     </div>
                                 </div>
@@ -76,7 +76,7 @@
                                             <mat-icon color="warn">delete</mat-icon>
                                         </button>
 
-                                        <button (click)="openBillVia(contentBillVia,rowData)" data-target="#VBillVia" class="btn btn-danger nobg" data-toggle="tooltip" matTooltip="Add Bill Via" data-original-title="View Billing Via Information"><i class="fa fa-truck"></i></button>
+                                        <!--<button (click)="openBillVia(contentBillVia,rowData)" data-target="#VBillVia" class="btn btn-danger nobg" data-toggle="tooltip" matTooltip="Add Bill Via" data-original-title="View Billing Via Information"><i class="fa fa-truck"></i></button>-->
                                         <button class="btn-history" mat-icon-button matTooltip="history" (click)="openBilladdressHistory(contentAuditHist,rowData)">
                                             <mat-icon color="green">history</mat-icon>
                                         </button>
@@ -98,20 +98,26 @@
                             <div class="" id="menu4">
                                 <div class="form-group row">
                                     <!--<div class="form-group vendor-details-heading marginr50">
-                                        <p class="fs10">
-                                            <label class="control-label text-left">Vendor Name:</label>
-                                            {{local?.vendorName}}
-                                        </p>
-                                    </div>
-                                    <div class="form-group vendor-details-heading">
-                                        <p class="fs10">
-                                            <label class="control-label text-left">Vendor Code:</label>
-                                            {{local?.vendorCode}}
-                                        </p>
-                                    </div>-->
+            <p class="fs10">
+                <label class="control-label text-left">Vendor Name:</label>
+                {{local?.vendorName}}
+            </p>
+        </div>
+        <div class="form-group vendor-details-heading">
+            <p class="fs10">
+                <label class="control-label text-left">Vendor Code:</label>
+                {{local?.vendorCode}}
+            </p>
+        </div>-->
                                 </div>
                                 <h5 class="heading">{{viewName}} Billing Info</h5>
                                 <div class="col-sm-6 w400 page-2blocks">
+                                    <div class="form-group col-sm-12">
+                                       
+                                            <input type="checkbox" name="isDefaultContact" [(ngModel)]="sourceVendor.isPrimary">
+                                            <label class="control-label col-sm-4">Primary </label>
+                                        
+                                    </div>
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Bill To <strong class="clr-red">*</strong> </label>
                                         <div class="col-sm-7">
@@ -169,14 +175,14 @@
                                             </div>
                                             <div *ngIf="disablesave" style="color:red">Please Select From DropDown</div>
                                         </div>
-                                    </div>
 
+                                    </div>
                                     <!-- <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">&nbsp;</label>
-                                        <div class="checkbox col-sm-7">
-                                            <button type="button" class="btn btn-warning" id="vbill-map-check" (click)="getlatlng(sourceVendor.address1+sourceVendor.address2)">Check Address</button>
-                                        </div>
-                                    </div> -->
+        <label class="control-label col-sm-4">&nbsp;</label>
+        <div class="checkbox col-sm-7">
+            <button type="button" class="btn btn-warning" id="vbill-map-check" (click)="getlatlng(sourceVendor.address1+sourceVendor.address2)">Check Address</button>
+        </div>
+    </div> -->
                                 </div>
                                 <div class="col-sm-6 vBill-map map page-2blocks" id="map" *ngIf="checkAddress">
                                     <p-gmap #gmap [style]="{'height':'320px'}" [options]="options" [overlays]="overlays"></p-gmap>
@@ -188,8 +194,11 @@
                                     </div>
                                 </div>
                                 <div class="clear"></div>
-                                <button type="button" [validate] moduleName="app-vendor-Billing-information" requirePermission="canAdd" [disabled]="disablesave" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()">Save</button>
-                                <button type="button" [validate] moduleName="app-vendor-Billing-information" requirePermission="canUpdate" [disabled]="disablesave" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()">Update</button>
+                                <!--<button type="button" [validate] moduleName="app-vendor-Billing-information" requirePermission="canAdd" [disabled]="disablesave" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()">Save</button>-->
+                                <button type="button"    moduleName="app-vendor-Billing-information"  *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()">Save</button>
+
+
+                                <button type="button"  moduleName="app-vendor-Billing-information" requirePermission="canUpdate" [disabled]="disablesave" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()">Update</button>
 
                                 <div class="clear"></div>
                                 <hr />
@@ -437,7 +446,7 @@
     <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
     <div class="modal-header">
 
-        <h4 class="modal-title">History of Shipping Information</h4>
+        <h4 class="modal-title">History of Billing Information</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -483,14 +492,15 @@
             <h4 class="modal-title">Vendor Details</h4>
         </div>
         <div class="modal-body viewform">
-            <p><span class="label"><b>site Name: </b></span><span class="value">{{siteName}}</span></p>
-            <p><span class="label"><b> address 1: </b></span><span class="value">{{address1}}</span></p>
-            <p><span class="label"><b> address 2: </b></span><span class="value">{{address2}}</span></p>
-            <p><span class="label"><b> address 3: </b></span><span class="value">{{address3}}</span></p>
-            <p><span class="label"><b> city </b></span><span class="value">{{city}}</span></p>
-            <p><span class="label"><b>state Or Province: </b></span><span class="value">{{stateOrProvince}}</span></p>
-            <p><span class="label"><b>postal Code : </b></span><span class="value">{{postalCode}}</span></p>
-            <p><span class="label"><b>country : </b></span><span class="value">{{country}}</span></p>
+            <p><span class="label"><b>Site Name: </b></span><span class="value">{{siteName}}</span></p>
+            <p><span class="label"><b>Address 1: </b></span><span class="value">{{address1}}</span></p>
+            <p><span class="label"><b>Address 2: </b></span><span class="value">{{address2}}</span></p>
+            <p><span class="label"><b>Address 3: </b></span><span class="value">{{address3}}</span></p>
+            <p><span class="label"><b>City </b></span><span class="value">{{city}}</span></p>
+            <p><span class="label"><b>State Or Province: </b></span><span class="value">{{stateOrProvince}}</span></p>
+            <p><span class="label"><b>Postal Code : </b></span><span class="value">{{postalCode}}</span></p>
+            <p><span class="label"><b>Country : </b></span><span class="value">{{country}}</span></p>
+            <p><span class="label"><b>Primary : </b></span><span class="value">{{isPrimary}}</span></p>
 
             <div class="clear"></div>
         </div>

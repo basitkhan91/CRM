@@ -44,7 +44,7 @@ export class EmployeesListComponent implements OnInit {
     //viewempDetails: any = {};
     viewTraining: any = {};
     viewGeneralDetails: any = {};
-    allEmployeelist: any[] = [];
+    allEmployeelist: any = {};
     public originationCounty: any;
     public nationalCountry: any;
     public companyCode: any;
@@ -68,6 +68,7 @@ export class EmployeesListComponent implements OnInit {
     public empTrainningInfo: any;
     public leaveMapArray: any;
     public shiftMapArray: any;
+    auditHistory: AuditHistory[] = [];
 
     ngOnInit(): void {
 
@@ -243,7 +244,7 @@ export class EmployeesListComponent implements OnInit {
         this.isDeleteMode = true;
         this.sourceEmployee = row;
 
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -362,10 +363,10 @@ export class EmployeesListComponent implements OnInit {
             error => this.onDataLoadFailed(error)
         );
 
-        this.modal = this.modalService.open(content, { size: 'lg' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+        // this.modal = this.modalService.open(content, { size: 'lg' });
+        // this.modal.result.then(() => {
+        //     console.log('When user closes');
+        // }, () => { console.log('Backdrop click') })
     }
 
     dismissModel() {
@@ -411,18 +412,36 @@ export class EmployeesListComponent implements OnInit {
 
     ExpandAllEmployeeDetailsModel()
     {
-        $('#step11').collapse('show');
-        $('#step12').collapse('show');
-        $('#step13').collapse('show');
+        $('#step1').collapse('show');
+        $('#step2').collapse('show');
+        $('#step3').collapse('show');
         //$('#step4').collapse('show');      
     }
     CloseAllEmployeerDetailsModel()
     {
-        $('#step11').collapse('hide');
-        $('#step12').collapse('hide');
-        $('#step13').collapse('hide');
+        $('#step1').collapse('hide');
+        $('#step2').collapse('hide');
+        $('#step3').collapse('hide');
         //$('#step4').collapse('hide');
       
+    }
+
+    getAuditHistoryById(rowData) {
+        // this.empService.getPublicationAuditDetails(rowData.publicationRecordId).subscribe(res => {
+        //     console.log(res);            
+        //     this.auditHistory = res;
+        // })
+    }
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
     }
 
 

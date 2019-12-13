@@ -5,13 +5,14 @@
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_content">
+				<!--
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item" aria-current="page">Asset Management</li>
                         <li class="breadcrumb-item" aria-current="page">Asset Management Maintanance</li>
                         <li class="breadcrumb-item active" aria-current="page">Asset Status</li>
                     </ol>
-                </nav>
+                </nav> -->
                 <div class="card">
                     <div class="card-body">
                         <div class="inline-block display-flex">
@@ -73,7 +74,7 @@
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-rowData let-columns="columns">
-                                <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdit(rowData)">
+                                <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openView(view,rowData)">
                                     <td style="width:200px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                         {{
 col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?

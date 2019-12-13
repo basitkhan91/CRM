@@ -7,12 +7,12 @@ export class AddressModel {
         line2?: string, line3?: string,
         postalCode?: string, country?: string,
         recordCreateDate?: Date,
-        recordModifiedDate?:Date,
+        recordModifiedDate?: Date,
         city?: string, stateOrProvince?: string, masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, isActive?: boolean, memo?: string) {
 
         this.addressId = addressId;
         this.line1 = line1;
-        this.line3 = line2;
+        this.line2 = line2;
         this.country = country;
         this.postalCode = postalCode;
         this.recordModifiedDate = recordModifiedDate;

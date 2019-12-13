@@ -18,10 +18,11 @@ const assetPagesRoutes: Routes = [
         children: [
             { path: "app-asset-listing", component: AssetListingComponent, data: { title: "Asset List" } },
             { path: "app-asset-calibration", component: AssetCalibrationComponent, data: { title: "Asset Calibration" } },
-            { path: "app-asset-capes", component: AssetCapesComponent, data: { title: "Asset Capes" } },
+            { path: "app-asset-capes/:id", component: AssetCapesComponent, data: { title: "Asset Capes" } },
             { path: "app-asset-general-information", component: AssetGeneralInformationComponent, data: { title: "Asset GeneralInformation" } },
             { path: "app-asset-maintenance-warranty", component: AssetMaintenanceWarrantyComponent, data: { title: "Asset Maintenance-Warranty" } },
             { path: "app-create-asset", component: CreateAssetComponent, data: { title: "Asset Create" } },
+            { path: "app-edit-asset/:id", component: CreateAssetComponent, data: { title: "Asset Edit" } },
             { path: "app-view-asset", component: ViewAssetComponent, data: { title: "Asset View" } },
         ]
     }

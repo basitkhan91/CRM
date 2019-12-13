@@ -26,6 +26,8 @@ import { PercentService } from '../../../../services/percent.service';
 import { VendorCapabilitiesService } from '../../../../services/vendorcapabilities.service';
 import { ItemMasterService } from '../../../../services/itemMaster.service';
 import { DatePipe } from '@angular/common';
+import { WorkOrderService } from '../../../../services/work-order/work-order.service';
+import { StocklineService } from '../../../../services/stockline.service';
 
 @Component({
 	selector: 'app-ro-setup',
@@ -220,7 +222,9 @@ export class RoSetupComponent implements OnInit {
 		private percentService: PercentService,
 		private vendorCapesService: VendorCapabilitiesService,
 		private itemser: ItemMasterService,
-		private datePipe: DatePipe) {
+		private datePipe: DatePipe,
+		private workOrderService: WorkOrderService,
+		private stocklineService: StocklineService) {
 		
 		this.vendorService.ShowPtab = false;
 		this.vendorService.alertObj.next(this.vendorService.ShowPtab);
@@ -302,9 +306,11 @@ export class RoSetupComponent implements OnInit {
 		//this.sourceRoApproval.vendorName = value.vendorName;
 		this.sourceRoApproval.vendorId = getObjectById('vendorId', vendorId, this.allActions);
 		this.sourceRoApproval.vendorCode = getObjectById('vendorId', vendorId, this.allActions);
-		//this.sourceRoApproval.creditLimit = value.creditLimit;
-		//this.sourceRoApproval.creditTermsId = value.creditTermsId;
-		//this.sourceRoApproval.creditTerms = getValueFromArrayOfObjectById('name', 'creditTermsId', value.creditTermsId, this.allcreditTermInfo);
+		this.sourceRoApproval.creditLimit = getValueFromArrayOfObjectById('creditLimit', 'vendorId', vendorId, this.allActions);
+		this.sourceRoApproval.creditTermsId = getValueFromArrayOfObjectById('creditTermsId', 'vendorId', vendorId, this.allActions);
+		if(this.sourceRoApproval.creditTermsId) {
+			this.sourceRoApproval.creditTerms = getValueFromArrayOfObjectById('name', 'creditTermsId', this.sourceRoApproval.creditTermsId, this.allcreditTermInfo);
+		}
 		});		
 	}
 
@@ -1205,12 +1211,12 @@ export class RoSetupComponent implements OnInit {
 					//parentdata.partNumberId = this.partWithId.itemMasterId;
 					this.getConditionByItemMasterId(parentdata.itemMasterId);
 					if(parentdata.conditionId) {
-						this.commonService.getConditionByItemMasterId(parentdata.itemMasterId).subscribe(res => {
+						this.workOrderService.getConditionByItemMasterId(parentdata.itemMasterId).subscribe(res => {
 							this.allconditioninfo = res;						
 							parentdata.conditionId = getObjectById('conditionId', parentdata.conditionId, this.allconditioninfo);
 
 							if(parentdata.stockLineId) {
-								this.commonService.getStockLineByItemMasterId(parentdata.itemMasterId, parentdata.conditionId.conditionId).subscribe(resp => {
+								this.workOrderService.getStockLineByItemMasterId(parentdata.itemMasterId, parentdata.conditionId.conditionId).subscribe(resp => {
 									this.allStocklineInfo = resp;						
 									parentdata.stocklineId = getObjectById('stockLineId', parentdata.stockLineId, this.allStocklineInfo);
 									this.getStockLineDetails(parentdata);
@@ -1224,7 +1230,7 @@ export class RoSetupComponent implements OnInit {
 	}
 
 	getConditionByItemMasterId(itemMasterId) {
-		this.commonService.getConditionByItemMasterId(itemMasterId).subscribe(res => {
+		this.workOrderService.getConditionByItemMasterId(itemMasterId).subscribe(res => {
 			console.log(res);
 			this.allconditioninfo = res;			
 		});
@@ -2605,7 +2611,7 @@ export class RoSetupComponent implements OnInit {
 			const isDefaultContact = this.vendorContactList.filter(x => {
 				if (x.isDefaultContact === true) {
 					return x;
-				}
+				} else return x;
 			})
 			this.sourceRoApproval.vendorContactId = isDefaultContact[0];
 			this.sourceRoApproval.vendorContactPhone = isDefaultContact[0];
@@ -3475,14 +3481,14 @@ export class RoSetupComponent implements OnInit {
 		partList.controlId = '';
 		partList.purchaseOrderNum = '';
 		partList.controlNumber = '';
-		this.commonService.getStockLineByItemMasterId(partList.itemMasterId, partList.conditionId.conditionId).subscribe(res => {
+		this.workOrderService.getStockLineByItemMasterId(partList.itemMasterId, partList.conditionId.conditionId).subscribe(res => {
 			console.log(res);
 			this.allStocklineInfo = res;
 		});
 	}
 
 	getStockLineDetails(partList) {
-		this.commonService.getStockLineDetailsByStockLineId(partList.stocklineId.stockLineId).subscribe(res => {
+		this.stocklineService.getStockLineDetailsByStockLineId(partList.stocklineId.stockLineId).subscribe(res => {
 			console.log(res);
 			partList.controlId = res.controlId;	
 			partList.purchaseOrderNum = res.purchaseOrderNo;	

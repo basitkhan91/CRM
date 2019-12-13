@@ -320,6 +320,8 @@ namespace QuickApp.Pro.Controllers
                 var data = (from vc in _context.VendorCapabiliy
                             join v in _context.Vendor on vc.VendorId equals v.VendorId
                             join im in _context.ItemMaster on vc.ItemMasterId equals im.ItemMasterId
+                            join vct in _context.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId
+                            join vcat in _context.capabilityType on vct.CapabilityTypeId equals vcat.CapabilityTypeId
                             //join vct in _appContext.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId
                             //join vcat in _appContext.vendorCapabilityAircraftType on vc.VendorCapabilityId equals vcat.VendorCapabilityId
                             //join vcam in _appContext.vendorCapabiltiyAircraftModel on vc.VendorCapabilityId equals vcam.VendorCapabilityId
@@ -348,7 +350,8 @@ namespace QuickApp.Pro.Controllers
                                 vc.CreatedDate,
                                 vc.UpdatedDate,
                                 vc.capabilityDescription,
-                                vc.IsActive
+                                vc.IsActive,
+                                CapabilityType = vcat.Description
                                 //vct.CapabilityTypeId,
 
                                 //vcat.AircraftTypeId,
@@ -1324,7 +1327,7 @@ namespace QuickApp.Pro.Controllers
                         actionobject.VendorId, actionobject.CreatedBy);
                 }
 
-                
+
 
 
                 //if (Request.Form.Files.Count > 0)
@@ -1452,7 +1455,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     var classificationList = _context.ClassificationMapping.Where(a => a.ReferenceId == id && a.ModuleId == Convert.ToInt32(ModuleEnum.Vendor)).ToList();
 
-                    if(classificationList.Count>0)
+                    if (classificationList.Count > 0)
                     {
                         foreach (var objData in classificationList)
                         {
@@ -1491,7 +1494,7 @@ namespace QuickApp.Pro.Controllers
                 }
 
 
-               
+
 
                 //if (Request.Form.Files.Count > 0)
                 //{
@@ -3375,8 +3378,29 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getVendorProcess1099List")]
         public IActionResult GetVendorProcess(int companyId)
         {
-           var result= _unitOfWork.Vendor.GetVendorProcessList(companyId);
+            var result = _unitOfWork.Vendor.GetVendorProcessList(companyId);
             return Ok(result);
+        }
+
+        [HttpPost("vendorProcessSave")]
+        public IActionResult VendorProcessSave([FromBody]Master1099 vendorProcess1099)
+        {
+            _unitOfWork.Vendor.VendorProcess1099Save(vendorProcess1099);
+            return Ok();
+        }
+
+        [HttpPut("vendorProcessStatus")]
+        public IActionResult VendorProcesStatusUpdate(long id, bool status, string updatedBy)
+        {
+            _unitOfWork.Vendor.VendorProcess1099StatusUpdate(id, status, updatedBy);
+            return Ok();
+        }
+
+        [HttpPut("vendorProcessDelete")]
+        public IActionResult VendorProcesDelete(long id, string updatedBy)
+        {
+            _unitOfWork.Vendor.VendorProcess1099Delete(id, updatedBy);
+            return Ok();
         }
 
 
@@ -3495,20 +3519,115 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("createvendorbillingaddress")]
         public IActionResult CreateVendorBillingAddress([FromBody] VendorBillingAddress billingAddress)
         {
+
             if (ModelState.IsValid)
             {
-                billingAddress.VendorBillingAddressId = _unitOfWork.Vendor.CreateVendorBillingAddress(billingAddress);
+                if (billingAddress == null)
+                    return BadRequest($"{nameof(billingAddress)} cannot be null");
+                Address address = new Address();
+                address.Line1 = billingAddress.Address1;
+                address.Line2 = billingAddress.Address2;
+                address.Line3 = billingAddress.Address3;
+                address.PostalCode = billingAddress.PostalCode;
+                address.StateOrProvince = billingAddress.StateOrProvince;
+                address.City = billingAddress.City;
+                address.Country = billingAddress.Country;
+                address.MasterCompanyId = 1;
+                address.IsActive = true;
+                address.CreatedBy = billingAddress.CreatedBy ?? "Admin"; //Hotfix
+                address.UpdatedBy = billingAddress.UpdatedBy ?? "Admin";//Hotfix
+
+                address.UpdatedDate = DateTime.Now;
+                if (billingAddress.AddressId > 0)
+                {
+                    address.CreatedDate = billingAddress.CreatedDate;
+                    address.AddressId = billingAddress.AddressId;
+                    _context.Address.Update(address);
+
+                }
+                else
+                {
+                    address.CreatedDate = DateTime.Now;
+                    _context.Address.Add(address);
+                }
+                _context.SaveChanges();
+                _unitOfWork.Vendor.CreateVendorBillingAddress(billingAddress);
                 return Ok(billingAddress);
             }
-            return BadRequest(ModelState);
+            else
+            {
+                return BadRequest(ModelState);
+            }
+
         }
 
-        [HttpPost("updatevendorbillingaddress")]
-        public IActionResult UpdateVendorBillingAddress([FromBody] VendorBillingAddress billingAddress)
+        //[HttpPost("updatevendorbillingaddress")]
+        //public IActionResult UpdateVendorBillingAddress([FromBody] VendorBillingAddress billingAddress)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _unitOfWork.Vendor.UpdateVendorBillingAddress(billingAddress);
+        //        return Ok(billingAddress);
+        //    }
+        //    return BadRequest(ModelState);
+        //}
+        [HttpGet("vendorBillingAddressGet/{id}")]
+        [Produces(typeof(List<VendorBillingAddress>))]
+        public IActionResult VendorBillingAddressGet(long id, VendorBillingAddress vendorBillingAddress)
+        {
+            var allVendBillinghdetails = _unitOfWork.Vendor.GetAllBillingAddressDetails(id);
+            return Ok(allVendBillinghdetails);
+
+        }
+
+
+
+
+        [HttpPut("updatevendorbillingaddress/{id}")]
+        public IActionResult UpdateVendorBillingAddress(long id, [FromBody] VendorBillingAddress billingAddress)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.Vendor.UpdateVendorBillingAddress(billingAddress);
+                VendorBillingAddress billingAddressData = _context.VendorBillingAddress.Where(c => c.VendorBillingAddressId == id).FirstOrDefault();
+
+                Address address = new Address();
+                address.Line1 = billingAddress.Address1;
+                address.Line2 = billingAddress.Address2;
+                address.Line3 = billingAddress.Address3;
+                address.PostalCode = billingAddress.PostalCode;
+                address.StateOrProvince = billingAddress.StateOrProvince;
+                address.City = billingAddress.City;
+                address.Country = billingAddress.Country;
+                address.MasterCompanyId = 1;
+                address.IsActive = true;
+                address.CreatedBy = billingAddress.CreatedBy ?? "Admin"; //Hotfix
+                address.UpdatedBy = billingAddress.UpdatedBy ?? "Admin";//Hotfix
+
+                address.UpdatedDate = DateTime.Now;
+                if (billingAddress.AddressId > 0)
+                {
+                    address.CreatedDate = billingAddress.CreatedDate;
+                    address.AddressId = billingAddress.AddressId;
+                    _context.Address.Update(address);
+
+                }
+                else
+                {
+                    address.CreatedDate = DateTime.Now;
+                    _context.Address.Add(address);
+                }
+                _context.SaveChanges();
+
+                billingAddressData.AddressId = billingAddress.AddressId;
+                billingAddressData.VendorId = billingAddress.VendorId;
+                billingAddressData.SiteName = billingAddress.SiteName;
+                billingAddressData.IsPrimary = billingAddress.IsPrimary;
+                billingAddressData.UpdatedBy = billingAddress.UpdatedBy;
+                billingAddressData.UpdatedDate = billingAddress.UpdatedDate;
+                billingAddressData.IsActive = billingAddress.IsActive;
+                billingAddressData.IsDeleted = billingAddress.IsDeleted;
+
+                _unitOfWork.Vendor.UpdateVendorBillingAddress(billingAddressData);
                 return Ok(billingAddress);
             }
             return BadRequest(ModelState);
@@ -3586,7 +3705,7 @@ namespace QuickApp.Pro.Controllers
         #endregion
 
 
-        #region VendorDocument
+        #region VendorDocument      
         [HttpPost("vendorDocumentUpload")]
         [Produces("application/json")]
         public IActionResult DocumentUploadAction()
@@ -3611,20 +3730,25 @@ namespace QuickApp.Pro.Controllers
                         vendorDocObj.DocName = Request.Form["DocName"];
                         vendorDocObj.DocMemo = Request.Form["DocMemo"];
                         vendorDocObj.DocDescription = Request.Form["DocDescription"];
+                        //vendorDocObj.CreatedDate = DateTime.Now;
+                        vendorDocObj.UpdatedDate = DateTime.Now;
                         if (vendorDocObj.AttachmentId > 0)
                         {
+                            _unitOfWork.VendorDocumentDetails.Update(vendorDocObj);
+                            _unitOfWork.SaveChanges();
                             vendorDocObj.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
-                          Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), vendorDocObj.UpdatedBy, vendorDocObj.MasterCompanyId, vendorDocObj.AttachmentId);
+                                                         Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), vendorDocObj.UpdatedBy, vendorDocObj.MasterCompanyId, vendorDocObj.AttachmentId);
 
                         }
                         else
                         {
                             vendorDocObj.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
                              Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), vendorDocObj.UpdatedBy, vendorDocObj.MasterCompanyId);
+                            _unitOfWork.VendorDocumentDetails.Update(vendorDocObj);
+                            _unitOfWork.SaveChanges();
                         }
 
-                        _unitOfWork.VendorDocumentDetails.Update(vendorDocObj);
-                        _unitOfWork.SaveChanges();
+
                     }
                     else
                     {
@@ -3637,6 +3761,8 @@ namespace QuickApp.Pro.Controllers
                         objVendorDocumentDetail.DocDescription = Request.Form["DocDescription"];
                         objVendorDocumentDetail.IsActive = true;
                         objVendorDocumentDetail.IsDeleted = false;
+                        objVendorDocumentDetail.CreatedDate = DateTime.Now;
+                        objVendorDocumentDetail.UpdatedDate = DateTime.Now;
                         objVendorDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
                                                                             Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), objVendorDocumentDetail.UpdatedBy, objVendorDocumentDetail.MasterCompanyId);
                         _unitOfWork.VendorDocumentDetails.Add(objVendorDocumentDetail);
@@ -3705,8 +3831,6 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-
-
         [HttpDelete("vendorDocumentDelete/{id}")]
         [Produces(typeof(VendorDocumentDetails))]
         public IActionResult DeleteDocumentAction(long id)
@@ -3722,7 +3846,24 @@ namespace QuickApp.Pro.Controllers
             return Ok(id);
         }
 
+        [HttpGet("getVendorDocumentAudit/{id}")]
+        [Produces(typeof(VendorDocumentDetailsAudit))]
+        public IActionResult GetCustomerDocumentDetailAudit(long id)
+        {
+            var allvendorsDoc = _unitOfWork.Vendor.GetVendorDocumentDetailsAudit(id);
+            return Ok(allvendorsDoc);
 
+        }
+        [HttpGet("getVendorProcess1099Audit")]
+        [Produces(typeof(Master1099Audit))]
+        public IActionResult GetVendorProcess1099Audit(long id)
+        {
+            var allvendorsDoc = _unitOfWork.Vendor.GetVendorProcess1099Audit(id);
+            return Ok(allvendorsDoc);
+
+        }
+
+        
         #endregion
 
         #region Private Methods
@@ -3814,7 +3955,14 @@ namespace QuickApp.Pro.Controllers
             return result.success;
         }
 
+        [HttpGet("getVendorCapabilityHistory")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IActionResult GetAllVendorCapabilityAudit(long VendorCapabilityId, long VendorId)
+        {
 
+            var allVendorBillingDetails = _unitOfWork.Vendor.GetVendorCapabilityAudit(VendorCapabilityId, VendorId);
+            return Ok(allVendorBillingDetails);
+        }
 
         #endregion Private Methods
 

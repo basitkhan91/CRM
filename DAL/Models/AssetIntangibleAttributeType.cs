@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DAL.Core;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
@@ -25,6 +26,7 @@ namespace DAL.Models
 
         public bool? IsDeleted { get; set; }
 
-       
+        [NotMapped]
+        public UploadTag UploadTag { get; set; }
     }
 }

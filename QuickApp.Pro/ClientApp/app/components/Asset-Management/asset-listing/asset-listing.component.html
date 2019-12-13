@@ -21,21 +21,19 @@
                                     (input)="dt.filterGlobal($event.target.value, 'contains')"
                                     placeholder="Filter">
                             </div>
-                            <button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data"
-                                (click)="dt.exportCSV()"></button>
+                            <button type="button" pButton icon="fa-download" iconPos="left" label="Export Data" matTooltip="Download Data" matTooltipPosition="above" (click)="dt.exportCSV()"></button>
                             <button type="button" pButton icon="fa-download" iconPos="left"
-                                label="Export Selection Only" *ngIf="selectedColumn"
-                                (click)="dt.exportCSV({selectionOnly:true})"></button>
-                            <a matTooltip="Add Asset" class="btn btn-success nobg"
+                                label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                            <a matTooltip="Add Asset" matTooltipPosition="above" class="btn btn-success nobg"
                                 (click)="navigateTogeneralInfo()"><span><i class="fa fa-plus"></i></span></a>
-                            <div class="excel-upload">
+                            <!-- <div class="excel-upload">
                                 <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file"
                                     data-multiple-caption="{count} files selected"
                                     accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                 <label for="upload">
                                     <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
                                 </label>
-                            </div>
+                            </div> -->
                         </div>
                     </ng-template>
                     <ng-template pTemplate="header" let-columns>

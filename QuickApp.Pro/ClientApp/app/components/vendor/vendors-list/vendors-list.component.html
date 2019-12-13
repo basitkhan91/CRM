@@ -1,6 +1,6 @@
 ﻿﻿<div class="card">
     <div class="card-body">
-        <div class="inline-block display-flex">
+        <div class="inline-block display-flex" *ngIf="isVendorList && !isCreatePO && !isCreateRO">
             <h4 _ngcontent-c24="" class="po-head" style="padding: 0px 8px;"> Vendor List </h4>
             <a matTooltip="Add Vendor" (click)="navigateTogeneralInfo()" class="plusicon-cstm ">
                 <i class="fa fa-plus-circle fa-lg"></i>
@@ -10,10 +10,10 @@
         <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="allVendorList" [rows]="10" [paginator]="true" [pageLinks]="3"
                  [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" [metaKeySelection]="true"
                  selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true"
-                 [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
+                 [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px" [totalRecords]="totalRecords">
             <ng-template pTemplate="caption">
 
-                <div style="text-align: right">
+                <div style="text-align: right; min-height: 30px;">
                     <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
                                    selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}"
                                    defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
@@ -27,19 +27,19 @@
                     </div>
 
 
-                    <button type="button" pTooltip="Download Data" tooltipPosition="top" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left" label="Export All Data"
+                    <button type="button" matTooltip="Download Data" matTooltipPosition="above" tooltipPosition="top" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left" label="Export Data"
                             (click)="dt.exportCSV()" style="padding: 5px 12px !important;"></button>
-                    <button type="button" pTooltip="Download Selected Data" tooltipPosition="top" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left" label="Export Selected"
+                    <button type="button" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left" label="Export Selected Data"
                             (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 12px !important;"></button>
 
-                    <div class="excel-upload excel-upload-cstm">
+                    <!-- <div class="excel-upload excel-upload-cstm">
                         <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file"
                                data-multiple-caption="{count} files selected"
                                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                         <label for="upload">
-                            <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above" ><i class="fa fa-upload"></i></span>
                         </label>
-                    </div>
+                    </div> -->
                 </div>
 
 
@@ -120,17 +120,36 @@
                                 (click)="openHist(contentHist,rowData)">
                             <mat-icon color="green">history</mat-icon>
                         </button>
-                        <button class="btn-pos" mat-icon-button matTooltip="PO's">
+                        <button *ngIf="(isVendorList && isCreatePO) || (!isCreatePO && !isCreateRO)" class="btn-pos" mat-icon-button matTooltip="PO's" data-toggle="modal" data-target="#purchaseOrderList" (click)="getVendorId(rowData)">
                             <mat-icon color="green">format_list_bulleted</mat-icon>
                         </button>
-                        <button class="btn-ros" mat-icon-button matTooltip="RO's">
+                            
+                        <button *ngIf="(isVendorList && isCreateRO) || (!isCreatePO && !isCreateRO)" class="btn-ros" mat-icon-button matTooltip="RO's" data-toggle="modal" data-target="#repairOrderList" (click)="getVendorId(rowData)">
                             <mat-icon color="green">view_list</mat-icon>
                         </button>
+                        <a *ngIf="isCreatePO" (click)="gotoCreatePO(rowData)" matTooltip="Create PO" class="btn btn-success nobg btn-cstm"><span><i class="fa fa-plus"></i></span></a>
+                        <a *ngIf="isCreateRO" (click)="gotoCreateRO(rowData)" matTooltip="Create RO" class="btn btn-success nobg btn-cstm"><span><i class="fa fa-plus"></i></span></a>
 
                     </td>
                 </tr>
             </ng-template>
-
+            <ng-template pTemplate="summary" id="footer">
+                <div style="text-align: right;">
+                    <label id="footer" class="footer">No'of records:</label>
+                    <input style="width: 5%;"
+                            [(ngModel)]="totalRecords"
+                            [disabled]="true"
+                            pInputText
+                            type="text" />
+                    &nbsp;&nbsp;
+                    <label id="footer" class="footer1">Pages Count:</label>
+                    <input style="width: 5%;"
+                            [(ngModel)]="totalPages"
+                            [disabled]="true"
+                            pInputText
+                            type="text" />
+                </div>                    
+                </ng-template>
 
         </p-table>
 
@@ -255,7 +274,8 @@
                                     </div>
                                     <div class="col-sm-6">
                                             <p>
-                                                    <span class="label"><b>Phone No: </b></span><span class="value">{{vendorPhoneNo}}</span>
+                                                    <span class="label"><b>Phone No: </b></span><span class="value">{{vendorPhoneNo}}-{{vendorPhoneExt}}</span>
+                                                <!-- <span class="label">Ext:</span><span class="value">{{vendorPhoneExt}}</span> -->
                                                 </p>
                                         <p>
                                             <span class="label"><b>Email: </b></span><span class="value">{{vendorEmail}}</span>
@@ -693,3 +713,37 @@
 
 
 </ng-template>
+
+<div class="modal fade" id="purchaseOrderList" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" (click)="resetVendorId()">&times;</button>
+            <h4 class="modal-title">Purchase Orders</h4>
+        </div>
+        <div class="modal-body" *ngIf="vendorId && isEnablePOList">
+            <app-polist [isEnablePOList]="isEnablePOList" [vendorId]="vendorId"></app-polist>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetVendorId()">Close</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="repairOrderList" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" (click)="resetVendorId()">&times;</button>
+            <h4 class="modal-title">Repair Orders</h4>
+        </div>
+        <div class="modal-body" *ngIf="vendorId && isEnableROList">
+            <app-ro-list [isEnableROList]="isEnableROList" [vendorId]="vendorId"></app-ro-list>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetVendorId()">Close</button>
+        </div>
+        </div>          
+    </div>
+</div>

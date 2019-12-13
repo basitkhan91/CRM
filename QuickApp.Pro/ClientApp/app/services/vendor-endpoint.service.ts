@@ -73,6 +73,7 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _vendorFinanceUrl: string = "/api/Vendor/vendorFinancePost";
 	private readonly _shippingInfoUrl: string = "/api/Vendor/vendorShippingPost";
     private readonly _billingInfoUrl: string = "/api/Vendor/vendorBillingPost";
+    private readonly _billingInfoNew: string = "/api/Vendor/createvendorbillingaddress";
 	private readonly _saveShipViaDetails: string = "/api/Vendor/addShipViaDetails";
     private readonly _saveBillViaDetails: string = "/api/Vendor/addBillViaDetails";
 	private readonly _addShipViaDetails: string = "/api/Vendor/updateShipviaAddress";
@@ -81,7 +82,7 @@ export class VendorEndpointService extends EndpointFactory {
     private readonly _updateBillingViaDetails: string = "/api/Vendor/updateBillViaDetails";
 	private readonly _actionsUrlAuditHistory: string = "/api/Vendor/auditHistoryById";
     private readonly _vendorShipAddressGetUrl: string = "/api/Vendor/vendorAddressGet";
-    private readonly _vendorBillAddressGetUrl: string = "/api/Vendor/vendorAddressGet";
+    private readonly _vendorBillAddressGetUrl: string = "/api/Vendor/vendorBillingAddressGet";
     private readonly _getSitesAddress: string = "/api/Vendor/getSitesAddress";
 	private readonly _vendorwarningsUrl: string = "/api/Vendor/vendorWarningsget";
 	private readonly _vendorShipViaDetilas: string = "/api/Vendor/getVendorShipViaDetails";
@@ -167,7 +168,11 @@ export class VendorEndpointService extends EndpointFactory {
 	
     private readonly _getVendorShippingHistory: string = "/api/Vendor/getVendorShippingHistory";
     private readonly _getVendorBillingHistory: string = "/api/Vendor/getVendorBillingHistory";
-    
+    private readonly _getVendorContactHistory: string = "/api/Vendor/getVendorContactHistory";
+    private readonly _getVendorDocumentHistory: string = "/api/Vendor/getVendorDocumentAudit";
+    private readonly _getVendorCapabilityHistory: string = "/api/Vendor/getVendorCapabilityHistory";
+    private readonly _updateVendorBillAddressDetails: string = "/api/Vendor/updatevendorbillingaddress";
+
 
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
 	get vendorlistsUrl() { return this.configurations.baseUrl + this._vendrUrl; }
@@ -657,6 +662,18 @@ export class VendorEndpointService extends EndpointFactory {
         // post request to create new book
         return this.http
             .post(this._billingInfoUrl, body, this.getRequestHeaders())
+            .map((res: Response) => res)
+            .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+    }
+    createNewBillinginfo<T>(param: any): Observable<T> {
+
+        let body = JSON.stringify(param);
+        let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+        //let options = new RequestOptions({ headers: headers });  // create a request option
+
+        // post request to create new book
+        return this.http
+            .post(this._billingInfoNew, body, this.getRequestHeaders())
             .map((res: Response) => res)
             .catch((error: any) => Observable.throw(error.json().error || 'Server error'));
     }
@@ -1572,5 +1589,25 @@ getdeleteDocumentListbyId(vendorDocumentId) {
     getVendorBillingAuditHistory(vendorId, vendorBillingaddressId) {
         return this.http.get<any>(`${this._getVendorBillingHistory}?vendorId=${vendorId}&vendorBillingaddressId=${vendorBillingaddressId}`, this.getRequestHeaders())
     }
-    
+    getVendorContactAuditHistory(vendorId, vendorContactId) {
+        return this.http.get<any>(`${this._getVendorContactHistory}?vendorId=${vendorId}&vendorContactId=${vendorContactId}`, this.getRequestHeaders())
+    }
+    getVendorDocumentAuditHistory(id) {
+        return this.http.get<any>(`${this._getVendorDocumentHistory}/${id}`, this.getRequestHeaders())
+    }
+    getVendorCapabilityAuditHistory(VendorCapabilityId, VendorId) {
+        return this.http.get<any>(`${this._getVendorCapabilityHistory}?VendorCapabilityId=${VendorCapabilityId}&VendorId=${VendorId}`, this.getRequestHeaders())
+    }
+   
+
+
+    updateBillAddressDetails<T>(roleObject: any, vendorBillingAddressId: number): Observable<T> {
+        let endpointUrl = `${this._updateVendorBillAddressDetails}/${roleObject.vendorBillingAddressId}`;
+
+        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.updateBillAddressDetails(roleObject, vendorBillingAddressId));
+            });
+    }
+
 }

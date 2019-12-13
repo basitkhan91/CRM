@@ -211,4 +211,8 @@ export class StocklineService {
 	search(searchParameters: any) {
 		return this.stocklineEndpoint.searchItemMaster(searchParameters);
 	}
+
+	getStockLineDetailsByStockLineId(stockLineId) {
+        return this.stocklineEndpoint.getStockLineDetailsByStockLineId(stockLineId);
+    }
 }

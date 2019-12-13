@@ -214,7 +214,10 @@ namespace DAL
 
         IItemMasterExchangeLoanRepository itemMasterExchangeLoanRepository;
         IReceiveRepairOrderRepository _receiveRepairOrder;
+        ISalesOrderQuoteRepository _salesOrderQuoteRepository;
+        ISalesOrderQuoteApproverList _salesOrderQuoteApproverListRepository;
 
+        ISalesOrderQuotePartRepository _salesOrderQuotePartRepository;
         public UnitOfWork(ApplicationDbContext context, IOptions<AppSettings> appSettings)
         {
             _context = context;
@@ -1725,7 +1728,7 @@ namespace DAL
             get
             {
                 if (_assetIntangibleAttributeType == null)
-                    _assetIntangibleAttributeType = new AssetIntangibleAttributeTypeRepository(_context);
+                    _assetIntangibleAttributeType = new AssetIntangibleAttributeTypeRepository(_context, _appSettings);
                 return _assetIntangibleAttributeType;
             }
         }
@@ -1919,9 +1922,40 @@ namespace DAL
             {
                 if (_receiveRepairOrder == null)
                 {
-                    _receiveRepairOrder = new ReceiveRepairOrderRepository(_context, CommonRepository);
+                    _receiveRepairOrder = new ReceiveRepairOrderRepository(_context,_commonRepository);
                 }
                 return _receiveRepairOrder;
+            }
+        }
+
+
+        public ISalesOrderQuoteRepository SalesOrderQuote
+        {
+            get
+            {
+                if (_salesOrderQuoteRepository == null)
+                    _salesOrderQuoteRepository = new SalesOrderQuoteRepository(_context);
+                return _salesOrderQuoteRepository;
+            }
+        }
+
+        public ISalesOrderQuoteApproverList SalesOrderQuoteApproverList
+        {
+            get
+            {
+                if (_salesOrderQuoteApproverListRepository == null)
+                    _salesOrderQuoteApproverListRepository = new SalesOrderQuoteApproverListRepository(_context);
+                return _salesOrderQuoteApproverListRepository;
+            }
+        }
+
+        public ISalesOrderQuotePartRepository SalesOrderQuotePart
+        {
+            get
+            {
+                if (_salesOrderQuotePartRepository == null)
+                    _salesOrderQuotePartRepository = new SalesOrderQuotePartRepository(_context);
+                return _salesOrderQuotePartRepository;
             }
         }
     }

@@ -1,6 +1,6 @@
 ﻿<div class="card">
 		<div class="card-body">
-		  <div class="inline-block display-flex">
+		  <div class="inline-block display-flex" *ngIf="!isEnablePOList">
 			<h3 class="po-head lead">Purchase Order List</h3>
 			&nbsp;&nbsp;
 			<a class="plusicon-cstm new-margin" matTooltip="Create PO"
@@ -42,7 +42,7 @@
 				/>
 			  </ng-template> -->
 			<ng-template pTemplate="caption">
-			  <div style="text-align: right;margin-left:-6px !important;">
+			  <div style="text-align: right;margin-left:-6px !important; min-height: 30px;">
 				<p-multiSelect
 				  [maxSelectedLabels]="2"
 				  [options]="headers"
@@ -68,29 +68,25 @@
 				</div>
 				<button
 				  type="button"
-				  class="btn btn-primary-cstm "
-				  pTooltip="Download All Data"
-				  tooltipPosition="top"
+				  class="btn btn-primary-cstm"
 				  pButton
 				  icon="fa-download"
 				  iconPos="left"
-				  label="Export All Data"
+				  label="Export Data" matTooltip="Download Data" matTooltipPosition="above"
 				  style="padding: 5px 12px !important;"
 				  (click)="dt.exportCSV()"
 				></button>
 				<button
 				  type="button"
 				  class="btn btn-primary-cstm "
-				  pTooltip="Download Selected"
-				  tooltipPosition="top"
 				  pButton
 				  icon="fa-download"
 				  iconPos="left"
-				  label="Export Selection Only"
+				  label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above"
 				  style="padding: 5px 12px !important;"
 				  (click)="dt.exportCSV({ selectionOnly: true })"
 				></button>
-				<div class="excel-upload  excel-upload-cstm">
+				<!-- <div class="excel-upload  excel-upload-cstm">
 				  <input
 					type="file"
 					name="upload[]"
@@ -105,15 +101,7 @@
 					</span>
 				  </label>
 				  &nbsp; &nbsp;
-				  <!-- <a
-					matTooltip="Create PO"
-					class="btn btn-success nobg btn-cstm"
-					[routerLink]="[
-					  '/vendorsmodule/vendorpages/app-purchase-setup'
-					]"
-					><span><i class="fa fa-plus"></i></span
-				  ></a> -->
-				</div>
+				</div> -->
 				
 			  </div>
 			</ng-template>
@@ -190,12 +178,12 @@
 					matTooltip="{{rowData['isActive']==true ? 'Active' : 'In Active'}}"
 				  ></p-inputSwitch>
 	  
-				  <span data-toggle="modal" data-target="#view">
+				  <span> <!--data-toggle="modal" data-target="#view"-->					
 					<a
 					  class="btn btn-info boxed-float-btn nobg"
 					  data-toggle="tooltip"
 					  (click)="viewSelectedRow(rowData)"
-					  data-target="#view"
+					  data-target="#poView"
 					  data-toggle="modal"
 					  matTooltip="View"
 					>
@@ -215,7 +203,7 @@
 					class="btn-delete"
 					mat-icon-button
 					matTooltip="Delete"
-					data-target="#delete"
+					data-target="#poDelete"
 					data-toggle="modal"
 					(click)="delete(rowData)">
 					<mat-icon color="warn">delete</mat-icon>
@@ -309,7 +297,7 @@
 			</div>
 		  </div>
 
-		  <div class="modal fade" id="delete" role="dialog">
+		  <div class="modal fade" id="poDelete" role="dialog">
 				<div class="modal-dialog modal-sm">
 				  <div class="modal-content">
 					<div class="modal-header">
@@ -324,11 +312,11 @@
 				</div>
 			  </div>
 
-			  <div class="modal fade" id="view" role="dialog">
+			  <div class="modal fade" id="poView" role="dialog">
 					<div class="modal-dialog modal-lg">
 					  <div class="modal-content">
 						<div class="modal-header">
-						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <button type="button" class="close" (click)="closeViewModal()">&times;</button> <!--data-dismiss="modal"-->
 						  <h4 class="modal-title">Details of Purchase Order</h4>
 						</div>
 						<div class="modal-body">
@@ -561,7 +549,7 @@
 						  </div>
 						</div>
 						<div class="modal-footer">
-						  <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+						  <button type="button" class="btn btn-danger-cstm" (click)="closeViewModal()">Close</button>
 						</div>
 					  </div>
 					</div>

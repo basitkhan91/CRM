@@ -52,6 +52,7 @@ export class VendorBillingInformationComponent {
     updatedBy: any = "";
     createddate: any = "";
     updatedDate: any = "";
+    isPrimary: boolean = false;
     shipViaObj: any = {};
     checkAddress: boolean = false;
     viewName: string = "Create";
@@ -139,6 +140,7 @@ export class VendorBillingInformationComponent {
             this.sourceVendor.country = this.local.country;
             this.sourceVendor.stateOrProvince = this.local.stateOrProvince;
             this.sourceVendor.postalCode = this.local.PostalCode;
+
         }
         if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
             this.viewName = "Edit";
@@ -202,7 +204,7 @@ export class VendorBillingInformationComponent {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getVendorShipAddressGet(this.local.vendorId).subscribe(
+        this.workFlowtService.getVendorBillAddressGet(this.local.vendorId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -352,6 +354,7 @@ export class VendorBillingInformationComponent {
     }
 
     openEdit(row) {
+        debugger
         this.isEditMode = true;
         this.isSaving = true;
         this.sourceVendor = row;
@@ -371,6 +374,7 @@ export class VendorBillingInformationComponent {
         this.updatedBy = row.updatedBy;
         this.createddate = row.createdDate;
         this.updatedDate = row.updatedDate;
+        this.isPrimary = row.isPrimary;
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
@@ -429,7 +433,13 @@ export class VendorBillingInformationComponent {
                 this.sourceVendor.updatedBy = this.userName;
                 this.sourceVendor.masterCompanyId = 1;
                 this.sourceVendor.vendorId = this.local.vendorId;
-                this.workFlowtService.newBillingAdd(this.sourceVendor).subscribe(data => {
+                //this.workFlowtService.newBillingAdd(this.sourceVendor).subscribe(data => {
+                //    this.localCollection = data;
+                //    this.loadData();
+                //    this.savesuccessCompleted(this.sourceVendor);
+                //    this.sourceVendor = {};
+                //})
+                this.workFlowtService.createNewBillinginfo(this.sourceVendor).subscribe(data => {
                     this.localCollection = data;
                     this.loadData();
                     this.savesuccessCompleted(this.sourceVendor);
@@ -441,7 +451,7 @@ export class VendorBillingInformationComponent {
                 this.sourceVendor.updatedBy = this.userName;
 
                 this.sourceVendor.masterCompanyId = 1;
-                this.workFlowtService.updateBillinginfo(this.sourceVendor).subscribe(data => {
+                this.workFlowtService.updateBillAddressdetails(this.sourceVendor).subscribe(data => {
                     this.updatedCollection = data;
                     this.loadData();
                     this.sourceVendor = {};

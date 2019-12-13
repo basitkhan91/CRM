@@ -79,9 +79,11 @@ export class SalesQuoteCreateComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.newSalesQuoteForm.valid);
-    console.log(this.salesQuote);
+    //##TODO call below service to create sales quote 
+    //this.salesQuoteService.create
+    //input parameter: ISalesQuoteView
   }
+
   quote: any = {
     quoteTypeId: null,
     quoteDate: Date

@@ -29,7 +29,7 @@ namespace DAL.Repositories
            
             try
             {
-                var result=_appContext.Currency.Where(c => ((c.IsDelete == null || c.IsDelete==false) && (c.IsActive==true))).OrderBy(c => c.Code).ToList();
+                var result=_appContext.Currency.Where(c => ((c.IsDeleted == null || c.IsDeleted==false) && (c.IsActive==true))).OrderBy(c => c.Code).ToList();
                 //var result = _appContext.Currency.Include("MasterCompany").Where(c => c.IsDelete == null).ToList();
                 //var result = _appContext.Currency.Include("MasterCompany").ToList();
                 return result;
@@ -43,7 +43,7 @@ namespace DAL.Repositories
         override
        public IQueryable<DAL.Models.Currency> GetPaginationData()
         {
-            return _appContext.Currency.Where(c => (c.IsDelete == false || c.IsDelete == null))
+            return _appContext.Currency.Where(c => (c.IsDeleted == false || c.IsDeleted == null))
                 .OrderByDescending(c => c.CurrencyId).ToList().AsQueryable();
         }
 

@@ -10,10 +10,13 @@ import { ConfigurationService } from './configuration.service';
 export class VendorCapabilitiesEndpoint extends EndpointFactory {
 
 
+
+
     private readonly _vendorcapabilitiesUrl: string = "/api/VendorCapabilities/Get";
     private readonly _vendorcapabilitiesUrlNew: string = "/api/VendorCapabilities/vendorcapabilitypost";
     private readonly _vendorcapabilitiesUrlAuditHistory: string = "/api/ActionAttribute/auditHistoryById";
     private readonly _auditUrl: string = '/api/VendorCapabilities/audits'
+    
 
     get vendorcapabilitiesUrl() { return this.configurations.baseUrl + this._vendorcapabilitiesUrl; }
 
@@ -83,6 +86,7 @@ export class VendorCapabilitiesEndpoint extends EndpointFactory {
 
     getVendorCapesById(vendorId){
 		return this.http.get<any>(`${this.configurations.baseUrl}/api/purchaseorder/vendorcapabilities?vendorId=${vendorId}`)
-	}
+    }
+   
 
 }

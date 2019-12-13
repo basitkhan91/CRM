@@ -42,6 +42,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
     allvendorCapsList: any[] = [];
     Active: string = "Active";
     selectedColumn: any;
+    capabilityauditHisory: any[];
     constructor(private vendorService: VendorService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService,)
     {
         this.dataSource = new MatTableDataSource();
@@ -79,18 +80,24 @@ export class VendorCapabilitiesListComponent implements OnInit{
         this.cols = [
             //{ field: 'actionId', header: 'Action Id' },
 
-            { field: 'vendorCapabilityId', header: 'VCID' },
+            //{ field: 'vendorCapabilityId', header: 'VCID' },
             { field: 'vendorCode', header: 'Vendor Code' },
             { field: 'vendorName', header: 'Vendor Name' },
+            { field: 'capabilityType', header: 'Cap Type' },
+            { field: 'capabilityDescription', header: 'Vendor Caps' },
+
+            
             //{ field: 'id', header: 'ID' },
             //{field: 'materialType', header: 'Material Type' },
-            { field: 'vendorRanking', header: 'Ranking' },
             { field: 'partNumber', header: 'PN' },
             { field: 'partDescription', header: 'PN Description' },
-            { field: 'cost', header: 'Cost' },
+            { field: 'vendorRanking', header: ' Vendor Ranking' },
+
+            //{ field: 'cost', header: 'Cost' },
             { field: 'tat', header: 'TAT' },
-            { field: 'manufacturerName', header: 'PN Mfg' },
-            { field: 'updatedDate', header: 'Updated Date' },
+           
+            //{ field: 'manufacturerName', header: 'PN Mfg' },
+            //{ field: 'updatedDate', header: 'Updated Date' },
             //{ field: 'partCertificationNumber', header: 'Part Certification Num' }
             //{ field: 'createdBy', header: 'Created By' },
             //{ field: 'updatedBy', header: 'Updated By' },
@@ -246,5 +253,40 @@ export class VendorCapabilitiesListComponent implements OnInit{
             response => this.saveCompleted(this.sourceAction),
             error => this.saveFailedHelper(error));
         this.modal.close();
+    }
+    openHistory(content, row) {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+       
+        this.isSaving = true;
+        this.vendorService.getVendorCapabilityAuditHistory(row.vendorCapabilityId, row.vendorId).subscribe(
+            results => this.onAuditHistoryLoadSuccessful(results, content),
+            error => this.saveFailedHelper(error));
+
+
+
+    }
+    private onAuditHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+
+        this.capabilityauditHisory = auditHistory;
+
+        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+    gotoCreatePO(rowData) {
+       
+        console.log(rowData);
+        const { vendorId } = rowData;
+        this._route.navigateByUrl(`vendorsmodule/vendorpages/app-purchase-setup/vendor/${vendorId}`);
+    }
+    gotoCreateRO(rowData) {
+     
+        console.log(rowData);
+        const { vendorId } = rowData;
+        this._route.navigateByUrl(`vendorsmodule/vendorpages/app-ro-setup/vendor/${vendorId}`);
     }
 }

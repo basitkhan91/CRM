@@ -21,8 +21,8 @@
                                         <i class="fa fa-search"></i>
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter">
                                     </div>
-                                    <button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    <button type="button" pButton icon="fa-download" iconPos="left" label="Export Data" matTooltip="Download Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" matTooltip="Download Selected Data" (click)="dt.exportCSV({selectionOnly:true})"></button>
 
 
                                 </div>
@@ -181,7 +181,7 @@
                     <table class="table table-bordered" *ngIf="auditHistory.length> 0 else noDatavailable">
                         <thead>
                             <tr>
-                                <th>CCID</th>
+                                <!--<th>CCID</th>-->
                                 <th>Classification Name</th>
                                 <th>Memo</th>
                                 <th>Last Updated By</th>
@@ -190,7 +190,7 @@
                         </thead>
                         <tbody *ngIf="auditHistory.length> 0">
                             <tr *ngFor="let audit of auditHistory; let i = index;">
-                                <td [ngStyle]="{'color': 'black'}">{{audit.customerClassificationId}}</td>
+                                <!--<td [ngStyle]="{'color': 'black'}">{{audit.customerClassificationId}}</td>-->
                                 <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
                                 <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'memo', audit.description)  ? 'black' : 'red'  }">{{audit.memo}}</td>
                                 <td>{{audit.updatedBy}}</td>

@@ -262,11 +262,11 @@ namespace DAL
         IAssetStatus AssetStatus { get; }
 
         IAssetDepConvention AssetDepConvention { get; }
-        
+
         IPublicationTypesRepository PublicationTypesRepository { get; }
-      
+
         ICommunicationRepository CommunicationRepository { get; }
-      
+
         IPercentageRepository PercentageRepository { get; }
 
         IMasterSalesOrderQuoteTypesRepository MasterSalesOrderQuoteTypesRepository { get; }
@@ -275,12 +275,19 @@ namespace DAL
 
         IMasterSalesLeadSourcesRepository MasterSalesLeadSourcesRepository { get; }
 
-        IMasterSalesProbablityRepository MasterSalesProbablityRepository { get;  }
+        IMasterSalesProbablityRepository MasterSalesProbablityRepository { get; }
 
         IItemMasterExchangeLoanRepository ItemMasterExchangeLoan { get; }
-      
+
         void SaveChanges(Employee employeeobject);
 
         IReceiveRepairOrderRepository ReceiveRepairOrder { get; }
+
+        ISalesOrderQuoteRepository SalesOrderQuote { get; }
+
+        ISalesOrderQuoteApproverList SalesOrderQuoteApproverList { get; }
+
+        ISalesOrderQuotePartRepository SalesOrderQuotePart { get; }
+
     }
 }

@@ -64,6 +64,9 @@ export class SingleComponent {
                 case '/singlepages/singlepages/app-asset-attribute-type':
                     itemLabel = 'Asset Attribute Type';
                     break;
+				case '/singlepages/singlepages/app-asset-intangible-attribute-type':
+                    itemLabel = 'Intangible Attribute Type';
+                    break;
                 default:
             }
             this.items = [
@@ -441,6 +444,18 @@ export class SingleComponent {
 
                 ];
             }
+            else if (this.currentUrl == '/singlepages/singlepages/app-vendor-process1099') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Vendor Process1099' }
+                ];
+            }
+            else if (this.currentUrl == '/singlepages/singlepages/app-caps-report') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Caps Report' }
+                ];
+            }
 		}
 
 		
@@ -465,6 +480,9 @@ export class SingleComponent {
                     break;
                 case '/singlepages/singlepages/app-asset-attribute-type':
                     itemLabel = 'Asset Attribute Type';
+                    break;
+				case '/singlepages/singlepages/app-asset-intangible-attribute-type':
+                    itemLabel = 'Intangible Attribute Type';
                     break;
                 default:
             }
@@ -652,7 +670,7 @@ export class SingleComponent {
 			else if (this.currentUrl == '/singlepages/singlepages/app-vendor-classification') {
 				this.items = [
 					{ label: 'Single Screens' },
-					{ label: 'VendorClassification' }
+					{ label: 'Vendor Classification' }
 				];
 			}
 
@@ -862,6 +880,18 @@ export class SingleComponent {
                 this.items = [
                     { label: 'Single Screens' },
                     { label: 'Nodes' }
+                ];
+            }
+            else if (this.currentUrl == '/singlepages/singlepages/app-vendor-process1099') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Vendor Process1099' }
+                ];
+            }
+            else if (this.currentUrl == '/singlepages/singlepages/app-caps-report') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Caps Report' }
                 ];
             }
 		}

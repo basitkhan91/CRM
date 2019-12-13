@@ -40,6 +40,8 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
     /** CustomerClassification ctor */
     selectedActionName: any;
     disableSave: boolean;
+    descritpion: string = "";
+    customerClassificationId: number =0;
     actionamecolle: any[] = [];
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -58,6 +60,7 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
     selectedColumns: any[];
     isEditMode: boolean = false;
     isDeleteMode: boolean = false;
+    descmodified: boolean = false;
     allComapnies: MasterCompany[];
     private isSaving: boolean;
     modal: NgbModalRef;
@@ -185,12 +188,15 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
 
     }
     openEdit(row) {
+        this.descmodified = false;
         this.disableSave = false;
         this.isEditMode = true;
         this.isSaving = true;
         //this.loadMasterCompanies();
         this.sourceAction = row;
         this.memo = row.memo;
+        this.descritpion = row.description;
+        this.customerClassificationId = row.customerClassificationId;
         this.isActive = row.isActive;
         //this.classificationName = this.sourceAction.description;
         //this.loadMasterCompanies();
@@ -232,6 +238,7 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
         }, () => { console.log('Backdrop click') })
     }
     checkIfClassificationExists(field, value) {
+        this.descmodified = true;
         const exists = validateRecordExistsOrNot(field, value, this.allcustomerclassificationInfo, this.sourceAction);
         if (exists.length > 0)
             this.disableSave = true;
@@ -309,6 +316,8 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
 
 
     editItemAndCloseModel() {
+        
+      
         this.isSaving = true;
         const data = {
             ...this.sourceAction,
@@ -326,6 +335,11 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
                 error => this.saveFailedHelper(error));
         }
         else {
+            if (this.descmodified == true) {
+                data.description = this.sourceAction;
+            }
+            data.customerClassificationId = this.customerClassificationId;
+            data.memo = this.memo;
             this.CustomerClassificationService.updatecustomerclass(data).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));

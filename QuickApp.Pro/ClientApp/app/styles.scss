@@ -13061,6 +13061,15 @@ button {
         font-weight: normal !important;
         width: 194px !important;
       }
+      .p-checkbox-label-2 .ui-chkbox-label {
+        margin-top: 16px !important;
+        font-size: 12px !important;
+        font-weight: normal !important;
+        width: 194px !important;
+      }
+
+
+
       p-checkbox.checkbox-table .ui-chkbox.ui-widget {
 
         margin-top: -15px;
@@ -14057,10 +14066,27 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .p-dropdown-custom-md .ui-dropdown{
     width: 138px !important;
 }
+.p-dropdown-custom-md-2 .ui-dropdown{
+    width: 181px !important;
+}
+
+
+.p-checkbox-label-2 .ui-chkbox-label {
+    margin-top: 16px !important;
+    font-size: 12px !important;
+    font-weight: normal !important;
+    width: auto !important;
+    margin-left: 12px;
+}
 .p-dropdown-custom-md-Header .ui-dropdown{
     width: 100%!important;
 }
 .p-dropdown-custom-md-Header .ui-dropdown label.ui-dropdown-label {
+    text-align: left;
+    font-size: 12px !important;
+}
+
+.p-dropdown-custom-md-2 .ui-dropdown label.ui-dropdown-label {
     text-align: left;
     font-size: 12px !important;
 }
@@ -14083,6 +14109,10 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     position: relative;
     margin-left: -4px !important;
     margin-top: -2px !important;   
+}
+.pautocomp-vendor-shipvia .ui-autocomplete {
+    width: 72% !important;
+    padding: 0 !important;
 }
 .pub-multi3 {
     width: 100%;
@@ -14153,6 +14183,15 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .popup-plusicon-cstm {
     width: 100px !important;
     float: none !important;
+}
+.popup-plusicon-cstm-caps {
+    width: 100% !important;
+    float: none !important;
+}
+.pop-up-caps-autocomplete p-autocomplete .ui-autocomplete {
+    display: flex;
+    min-width: 100px;
+    padding: 0;
 }
 .popup-plusicon-cstm a i {
     padding: 0 !important;
@@ -14237,6 +14276,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .alert-danger-cstm {
     padding: 0px 0px 2px !important;
     margin: 0 !important;
+}
+.modal .modal-body p-multiselect .ui-chkbox .ui-chkbox-box .ui-chkbox-icon {    
+    font-size: 18px !important;
 }
 .modal-full {
     max-width: 700px !important;

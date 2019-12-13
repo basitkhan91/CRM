@@ -422,4 +422,8 @@ export class StocklineEndpoint extends EndpointFactory {
 			})
 	}
 
+	getStockLineDetailsByStockLineId(stockLineId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/stocklinedetails?stockLineId=${stockLineId}`, this.getRequestHeaders())
+    }
+
 }

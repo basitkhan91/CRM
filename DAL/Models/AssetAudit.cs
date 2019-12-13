@@ -25,6 +25,7 @@ namespace DAL.Models
         public Nullable<byte> AssetAcquisitionTypeId { get; set; }
         public Nullable<long> ManufacturerId { get; set; }
         public Nullable<System.DateTime> ManufacturedDate { get; set; }
+        public Nullable<System.DateTime> EntryDate { get; set; }
         public string Model { get; set; }
         public Nullable<bool> IsSerialized { get; set; }
         public Nullable<long> UnitOfMeasureId { get; set; }

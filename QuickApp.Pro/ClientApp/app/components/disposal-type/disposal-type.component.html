@@ -2,23 +2,23 @@
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_content">
-                <nav aria-label="breadcrumb">
+                <!--<nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item" aria-current="page">Asset Management</li>
                         <li class="breadcrumb-item" aria-current="page">Asset Management Maintanance</li>
                         <li class="breadcrumb-item active" aria-current="page"> Disposal Type</li>
                     </ol>
-                </nav>
+                </nav>-->
                 <div class="card">
                     <div class="card-body">
                         <div class="inline-block display-flex">
-                            <h3 class="po-head lead"> Disposal Type</h3>
+                            <h3 class="po-head lead">Asset Disposal Type</h3>
                             &nbsp;&nbsp;
-                            <a class="plusicon-cstm new-margin" pTooltip="Add  Disposal Type" tooltipPosition="right" (click)="open(contentEdit)">
+                            <a class="plusicon-cstm new-margin" pTooltip="Add Asset Disposal Type" tooltipPosition="right" (click)="open(contentEdit)">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
-                        <div class="form-row col-row col-row1">
+                        <div class="form-row col-row col-row1" *ngIf="this.updateMode">
                             <div class="col-md-4 display-flex inline-block" style="margin-top: 25px;">
                                 <div>
                                     <button type="button" id="btnUpdatedepriciationMethod" *ngIf="this.updateMode" (click)="updatedepriciationmethod()" name="" class="btn btn-success nobg btn-cstm" data-toggle="tooltip" data-original-title="Update"><i class="fa fa-edit"></i></button>
@@ -35,9 +35,9 @@
                                 <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect [maxSelectedLabels]="2" [options]="selectedData" optionLabel="header" [(ngModel)]="selectedColumns"
                                                    [style]="{minWidth: '200px'}" style="float:left"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
-                                            iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
+                                            iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
                                             iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
 
@@ -70,7 +70,7 @@
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-rowData let-columns="columns">
-                                <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdit(rowData)">
+                                <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openView(view,rowData)">
                                     <td style="width:200px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                         {{
 col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?
@@ -125,26 +125,26 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-            <h4 class="modal-title"> Disposal Type Details</h4>
+            <h4 class="modal-title"> Asset Disposal Type Details</h4>
         </div>
         <div class="modal-body viewform">
             <div class="col-sm-12">
                 <p>
                     <span class="label">
-                        <b> Disposal Type Code: </b>
+                        <b> Asset Disposal Type Code: </b>
                     </span>
                     <span class="value">{{code}}</span>
                 </p>
                 <p>
                     <span class="label">
-                        <b> Disposal Name: </b>
+                        <b> Asset Disposal Name: </b>
                     </span>
                     <span class="value">{{name}}</span>
                 </p>
 
                 <p>
                     <span class="label">
-                        <b> Disposal Type Memo: </b>
+                        <b> Asset Disposal Type Memo: </b>
                     </span>
                     <span class="value">{{memo}}</span>
                 </p>
@@ -191,7 +191,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     </div>
     <div class="modal-body">
         <strong>
-            Disposal Type Code:
+            Asset Disposal Type Code:
             <span class="new-label">{{code_Name}}</span>
         </strong>
     </div>
@@ -203,19 +203,19 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
 
 <ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
     <div class="modal-header">
-        <h4 class="modal-title" *ngIf="isEditMode">Edit Disposal Type</h4>
-        <h4 class="modal-title" *ngIf="!isEditMode">Add Disposal Type</h4>
+        <h4 class="modal-title" *ngIf="isEditMode">Edit Asset Disposal Type</h4>
+        <h4 class="modal-title" *ngIf="!isEditMode">Add Asset Disposal Type</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body editdepriciation">
         <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="SaveandEditDisposalType()">
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="col-sm-4">
                         <label for="name" class="control-label">
-                            Disposal Type
+                            Asset Disposal Type
                             <span class="clr-red">*</span>
                         </label>
                     </div>
@@ -244,10 +244,10 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                     <div class="col-sm-5">
                         <input type="text" name="name" class="form-control" required #Name="ngModel" [(ngModel)]="sourceAction.name" minlength="2">
                         <div *ngIf="Name.dirty && Name.errors?.required && Name.errors" class="invalid-form-error-message">
-                            Disposal Type Name required.
+                            Asset Disposal Type Name required.
                         </div>
                         <div *ngIf="Name.dirty && Name.errors?.minlength && Name.errors" class="invalid-form-error-message">
-                            Disposal Type Name must be at least 2 characters long.
+                            Asset Disposal Type Name must be at least 2 characters long.
                         </div>
                         <div class="clear"></div>
                     </div>
@@ -290,7 +290,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">History of Disposal Type</h4>
+                <h4 class="modal-title">History of Asset Disposal Type</h4>
             </div>
             <div class="modal-body">
                 <div class="table-responsive rro-table-cstm">

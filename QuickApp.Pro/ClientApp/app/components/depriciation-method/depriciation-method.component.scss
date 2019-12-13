@@ -22,3 +22,21 @@
 .new-margin {
     margin-top: 10px;
 }
+.modal {
+    .modal-body.editdepriciation label {
+        font-weight: normal !important;
+        width: 100% !important;
+        text-align: left;
+        margin-top: 0;
+    }
+
+    .modal-body.editdepriciation .form-group{
+        margin-bottom:10px;
+    }
+}
+.ui-button.ui-button-text-icon-left.btn-primary-cstm .ui-button-text, .ui-button.ui-button-text-icon-left {
+    font-family: 'Open Sans', sans-serif !important;
+}
+.ui-button.ui-button-text-icon-left .ui-button-icon-left {
+    font-family: FontAwesome !important
+}

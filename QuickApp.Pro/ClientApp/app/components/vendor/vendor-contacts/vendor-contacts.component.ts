@@ -46,6 +46,7 @@ export class VendorContactsComponent implements OnInit {
     vendorCode: any = "";
     vendorname: any = "";
     allgeneralInfo: any[];
+    contactauditHisory: any[];
     collection: any;
     action_name: any = "";
     memo: any = "";
@@ -114,7 +115,8 @@ export class VendorContactsComponent implements OnInit {
         { field: 'lastName', header: 'Last Name' },
         { field: 'contactTitle', header: 'Contact Title' },
         { field: 'email', header: 'Email' },
-        { field: 'fullContactNo', header: 'Mobile Phone' },
+        { field: 'mobilePhone', header: 'Mobile Phone' },
+        { field: 'fullContactNo', header: 'Work Phone' },
         // { field: 'mobilePhone', header: 'Mobile Phone' },
         { field: 'fax', header: 'FAX' },
         // { field: 'isDefaultContact', header: 'Primary Contact' },
@@ -252,6 +254,7 @@ export class VendorContactsComponent implements OnInit {
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;      
         this.allActions = allWorkFlows;
+        //console.log(this.allActions);
         //const responseData = allWorkFlows;
         // this.allActions = allWorkFlows.map(x => {
         //   return {
@@ -369,15 +372,43 @@ export class VendorContactsComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
 
+    //openHist(content, row) {
+    //    this.alertService.startLoadingMessage();
+    //    this.loadingIndicator = true;
+    //    this.sourceVendor = row;
+    //    this.isSaving = true;
+    //    this.workFlowtService.historyAcion(this.sourceVendor.contactId).subscribe(
+    //        results => this.onHistoryLoadSuccessful(results[0], content),
+    //        error => this.saveFailedHelper(error));
+    //}
     openHist(content, row) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.sourceVendor = row;
         this.isSaving = true;
-        this.workFlowtService.historyAcion(this.sourceVendor.contactId).subscribe(
-            results => this.onHistoryLoadSuccessful(results[0], content),
+        this.workFlowtService.getVendorContactAuditHistory(this.sourceVendor.vendorId, this.sourceVendor.contactId).subscribe(
+            results => this.onAuditHistoryLoadSuccessful(results, content),
             error => this.saveFailedHelper(error));
+
+
+
     }
+    private onAuditHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+
+        this.contactauditHisory = auditHistory;
+
+        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+
+
+
+
 
     onBlurMethod(data) {
         if (data == 'firstName') {
@@ -623,5 +654,16 @@ export class VendorContactsComponent implements OnInit {
     onAddContactInfo() {
         this.sourceVendor = {};
     }
+
+
+    patternMobilevalidationWithSpl(event: any) {
+        const pattern = /[0-9\+\-()\ ]/;
+    
+        let inputChar = String.fromCharCode(event.charCode);
+        if (event.keyCode != 8 && !pattern.test(inputChar)) {
+          event.preventDefault();
+        }
+        
+      }
 
 }

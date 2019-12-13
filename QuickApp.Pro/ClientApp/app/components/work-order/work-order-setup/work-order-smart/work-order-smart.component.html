@@ -24,6 +24,7 @@
     [workScopesList]="workScopesList"
     [workOrderStagesList]="workOrderStagesList"
     [priorityList]="priorityList"
+    [currencyList]="currencyList"
     [partNumberOriginalData]="partNumberOriginalData"
     [workOrderGeneralInformation]="editWorkOrderGeneralInformation"
   ></app-work-order-add>
@@ -46,10 +47,12 @@
   <app-work-order-add
     [isSubWorkOrder]="isSubWorkOrder"
     [subWorkOrderDetails]="paramsData"
+    [workOrderId]="subWorkOrderId"
     [showTabsGrid]="showTabsGrid"
     [workOrderTypes]="workOrderTypes"
     [workOrderStatusList]="workOrderStatusList"
     [creditTerms]="creditTerms"
+    [currencyList]="currencyList"
     [employeesOriginalData]="employeesOriginalData"
     [workScopesList]="workScopesList"
     [workOrderStagesList]="workOrderStagesList"

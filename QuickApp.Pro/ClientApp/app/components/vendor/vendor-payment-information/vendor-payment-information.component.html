@@ -28,13 +28,13 @@
                                         <i class="fa fa-search"></i>
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')">
                                     </div>
-                                    <button type="button" pTooltip="Download Data" tooltipPosition="top" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" pTooltip="Download Selected Data" tooltipPosition="top" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    <button type="button" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <!--<a (click)="open(contentEdit)" matTooltip="Add Item Group" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>-->
                                     <div class="excel-upload">
                                         <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                         <label for="upload">
-                                            <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+                                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above" ><i class="fa fa-upload"></i></span>
                                         </label>
                                     </div>
                                 </div>
@@ -610,12 +610,12 @@
                 <h4 class="modal-title">Vendor Details</h4>
             </div>
             <div class="modal-body viewform">
-                <p><span class="label"><b>vendor Name: </b></span><span class="value">{{siteName}}</span></p>
-                <p><span class="label"><b> address 1: </b></span><span class="value">{{address1}}</span></p>
-                <p><span class="label"><b> city </b></span><span class="value">{{city}}</span></p>
-                <p><span class="label"><b>state Or Province: </b></span><span class="value">{{stateOrProvince}}</span></p>
-                <p><span class="label"><b>postal Code : </b></span><span class="value">{{postalCode}}</span></p>
-                <p><span class="label"><b>country : </b></span><span class="value">{{country}}</span></p>
+                <p><span class="label"><b>Vendor Name: </b></span><span class="value">{{siteName}}</span></p>
+                <p><span class="label"><b> Address 1: </b></span><span class="value">{{address1}}</span></p>
+                <p><span class="label"><b> City </b></span><span class="value">{{city}}</span></p>
+                <p><span class="label"><b>State Or Province: </b></span><span class="value">{{stateOrProvince}}</span></p>
+                <p><span class="label"><b>Postal Code : </b></span><span class="value">{{postalCode}}</span></p>
+                <p><span class="label"><b>Country : </b></span><span class="value">{{country}}</span></p>
 
                 <div class="clear"></div>
             </div>

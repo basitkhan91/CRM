@@ -1,4 +1,26 @@
-﻿<div class="x_panel" style="">
+﻿<div class="x_panel">
+	<div class="x_content add-customer-work">
+		<div class="card">
+			<div class="card-header">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb rpo-bcrumb" style="background-color: transparent;">
+						<li class="breadcrumb-item active" aria-current="page">RO Setup
+							<a class="new-margin" matTooltip="Create PO"
+							[routerLink]="['/vendorsmodule/vendorpages/app-ro-setup']"><i class="fa fa-plus-circle fa-lg"></i>
+							</a>
+						</li>
+					</ol>
+				</nav>
+			</div>
+			<div>
+				<app-vendors-list [isCreateRO]="isCreateRO"></app-vendors-list>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!--<div class="x_panel" style="">
 		<div class="x_content add-customer-work">
 			<div class="card">
 				<div class="card-header">
@@ -23,14 +45,9 @@
 								<i class="fa fa-search"></i>
 								<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter">
 							</div>
-							<!--<button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-					<button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>-->
 							<a (click)="onCreateRO()" matTooltip="Create RO" class="btn btn-success nobg btn-cstm"><span><i class="fa fa-plus"></i></span></a>
 							<div class="excel-upload">
 								<input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-								<!--<label for="upload">
-							<span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-						</label>-->
 							</div>
 						</div>
 					</ng-template>
@@ -80,7 +97,6 @@
 					<h4 class="modal-title">Details of Vendor</h4>
 	
 				</div>
-				<!--<a href="#" class="btn btn-primary openall">open all</a> <a href="#" class="btn btn-warning closeall">close all</a>-->
 				<hr>
 				<div class="panel-group" id="accordion">
 					<div class="panel panel-default">

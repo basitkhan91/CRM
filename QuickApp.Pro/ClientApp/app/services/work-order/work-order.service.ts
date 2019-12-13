@@ -221,17 +221,30 @@ export class WorkOrderService {
         return this.workOrderEndpointService.createQuotation(data);
     }
 
+    getSubWorkOrderListByWorkOrderId(workOrderId) {
+        return this.workOrderEndpointService.getSubWorkOrderListByWorkOrderId(workOrderId);
+    }
+
+    getSubWorkOrderView(subWorkOrderId) {
+        return this.workOrderEndpointService.getSubWorkOrderView(subWorkOrderId);
+    }
 
     // subWorkOrder 
     getSubWorkOrderHeaderByWorkOrderId(workOrderId, workOrderPartNumberId) {
         return this.workOrderEndpointService.getSubWorkOrderHeaderByWorkOrderId(workOrderId, workOrderPartNumberId);
     }
 
+
     createSubWorkOrderHeaderByWorkOrderId(data) {
         return this.workOrderEndpointService.createSubWorkOrderHeaderByWorkOrderId(data);
     }
     updateSubWorkOrderHeaderBySubWorkOrderId(data) {
         return this.workOrderEndpointService.updateSubWorkOrderHeaderBySubWorkOrderId(data);
+    }
+
+
+    createBillingByWorkOrderId(data) {
+        return this.workOrderEndpointService.createBillingByWorkOrderId(data);
     }
 
 
@@ -245,33 +258,12 @@ export class WorkOrderService {
     getBuildDetailsFromWorkFlow(partId, workScopeId) {
         return this.workOrderEndpointService.getBuildDetailsFromWorkFlow(partId, workScopeId);
     }
-    getBuildDetailsFromHistoricalWorkOrder(partId, workScopeId) {
-        return this.workOrderEndpointService.getBuildDetailsFromHistoricalWorkOrder(partId, workScopeId);
+
+    getBillingEditData(workOrderId, workOrderPartNoId) {
+        return this.workOrderEndpointService.getBillingEditData(workOrderId, workOrderPartNoId);
     }
 
-    getWorkFlowDetails(workFlowId) {
-        return this.workOrderEndpointService.getWorkFlowDetails(workFlowId);
-    }
 
-    getWorkOrderMaterialListForQuote(wfwoId) {
-        return this.workOrderEndpointService.getWorkOrderMaterialListForQuote(wfwoId);
-    }
-
-    getWorkOrderLaborListForQuote(wfwoId) {
-        return this.workOrderEndpointService.getWorkOrderLaborListForQuote(wfwoId);
-    }
-
-    getWorkOrderChargesListForQuote(wfwoId) {
-        return this.workOrderEndpointService.getWorkOrderChargesListForQuote(wfwoId);
-    }
-
-    getWorkOrderExclutionsListForQuote(wfwoId) {
-        return this.workOrderEndpointService.getWorkOrderExclutionsListForQuote(wfwoId);
-    }
-
-    getWorkOrderFreightListForQuote(wfwoId) {
-        return this.workOrderEndpointService.getWorkOrderFreightListForQuote(wfwoId);
-    }
 
 
 }

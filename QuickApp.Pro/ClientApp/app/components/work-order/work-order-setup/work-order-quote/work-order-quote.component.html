@@ -144,8 +144,8 @@
 
     </div>
     <div class="col-md-12">
-      <button class="btn btn-success pull-right" (click)="saveQuoteDetails()">Save Details</button>
-      <button class="btn btn-success pull-right">Edit Details</button>
+      <button class="btn btn-primary-cstm pull-right" (click)="saveQuoteDetails()">Save Details</button>
+      <button class="btn btn-primary-cstm pull-right">Edit Details</button>
     </div>
   </div>
 </div>
@@ -363,7 +363,7 @@
   </div>
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'materialList'">
-    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use work flow'">
+    <!-- <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use work flow'">
       <thead>
         <tr>
           <th>MC PN</th>
@@ -392,7 +392,14 @@
           <td>{{matQuotation.conditionCodeId}}</td>
           <td>{{matQuotation.isDeferred}}</td>
           <td>{{matQuotation.unitCost}}</td>
+          <td><input [(ngModel)]="matQuotation.totalPartCost" /></td>
+          <td><input [(ngModel)]="matQuotation.markup" /></td>
+          <td><input [(ngModel)]="matQuotation.costPlusAmount" /></td>
+          <td><input [(ngModel)]="matQuotation.fixedAmount" /></td>
         </tr>
+        <div class="col-md-12">
+          <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save Details</button>
+        </div>
       </tbody>
     </table>
 
@@ -425,142 +432,45 @@
           <td>{{matQuotation.condition}}</td>
           <td>{{matQuotation.oem}}</td>
           <td>{{matQuotation.unitCost}}</td>
+          <td><input [(ngModel)]="matQuotation.totalPartCost" /></td>
+          <td><input [(ngModel)]="matQuotation.markup" /></td>
+          <td><input [(ngModel)]="matQuotation.costPlusAmount" /></td>
+          <td><input [(ngModel)]="matQuotation.fixedAmount" /></td>
         </tr>
+        <div class="col-md-12">
+          <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save Details</button>
+        </div>
       </tbody>
-    </table>
-
+    </table> -->
+    <app-work-order-complete-material-list 
+    [workFlowObject]="workFlowObject" 
+    [savedWorkOrderData]="savedWorkOrderData" 
+    [workOrderMaterialList]="workOrderMaterialList"
+   ></app-work-order-complete-material-list>
+   
   </div>
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'exclusions'">
-    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use work flow'">
-      <thead>
-        <tr>
-          <th>MC PN</th>
-          <th>MC Description</th>
-          <th>QTE/WO/WF/SL/M</th>
-          <th>REF</th>
-          <th>QTY</th>
-          <th>UOM</th>
-          <th>COND TYPE</th>
-          <th>UNIT COST</th>
-          <th>TOTAL PART COST</th>
-          <th>MARKUP</th>
-          <th>COST PLUS AMOUNT</th>
-          <th>FIXED AMOUNT</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="mpn-row" *ngFor="let matQuotation of exclusionsQuotation">
-          <td>{{matQuotation.partNumber}}</td>
-          <td>{{matQuotation.partDescription}}</td>
-          <td>{{matQuotation.partDescription}}</td>
-          <td>{{matQuotation.partDescription}}</td>
-          <td>{{matQuotation.quantity}}</td>
-          <td>{{matQuotation.unitOfMeasureId}}</td>
-          <td>{{matQuotation.conditionCodeId}}</td>
-          <td>{{matQuotation.unitCost}}</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use historical wos'">
-      <thead>
-        <tr>
-          <th>MC PN</th>
-          <th>MC Description</th>
-          <th>QTE/WO/WF/SL/M</th>
-          <th>REF</th>
-          <th>QTY</th>
-          <th>UOM</th>
-          <th>COND TYPE</th>
-          <th>OEM/PMA/DER</th>
-          <th>UNIT COST</th>
-          <th>TOTAL PART COST</th>
-          <th>MARKUP</th>
-          <th>COST PLUS AMOUNT</th>
-          <th>FIXED AMOUNT</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="mpn-row" *ngFor="let matQuotation of exclusionsQuotation">
-          <td>{{matQuotation.partNumber}}</td>
-          <td>{{matQuotation.partDescription}}</td>
-          <td>{{matQuotation.workOrderNumber}}</td>
-          <td>{{matQuotation.partDescription}}</td>
-          <td>{{matQuotation.quantity}}</td>
-          <td>{{matQuotation.unitOfMeasureId}}</td>
-          <td>{{matQuotation.condition}}</td>
-          <td>{{matQuotation.oem}}</td>
-          <td>{{matQuotation.unitCost}}</td>
-        </tr>
-      </tbody>
-    </table>
+      <app-work-order-exclusions [workFlowObject]="workFlowObject" 
+      [isWorkOrder]="isWorkOrder"
+       [workOrderExclusionsList]="workOrderExclusionsList" 
+      (saveExclusionsListForWO)="saveWorkOrderExclusionsList($event)"
+      (updateExclusionsListForWO)="updateWorkOrderExclusionsList($event)"
+      (refreshData)="getExclusionListByWorkOrderId()"
+      [isQuote]="isQuote"
+    ></app-work-order-exclusions> 
 
   </div>
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'labor'">
-    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use work flow'">
-      <thead>
-        <tr>
-          <th>Task id</th>
-          <th>Direct Labor Rate</th>
-          <th>Estimated Hours</th>
-          <th>Expertise Type Id</th>
-          <th>Labor Direct Rate</th>
-          <th>Labor Overhead Cost</th>
-          <th>Overhead Cost</th>
-          <th>TOTAL PART COST</th>
-          <th>MARKUP</th>
-          <th>COST PLUS AMOUNT</th>
-          <th>FIXED AMOUNT</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="mpn-row" *ngFor="let matQuotation of laborQuotation">
-          <td>{{matQuotation.taskId}}</td>
-          <td>{{matQuotation.directLaborRate}}</td>
-          <td>{{matQuotation.estimatedHours}}</td>
-          <td>{{matQuotation.expertiseTypeId}}</td>
-          <td>{{matQuotation.laborDirectRate}}</td>
-          <td>{{matQuotation.laborOverheadCost}}</td>
-          <td>{{matQuotation.overheadCost}}</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use historical wos'">
-        <thead>
-          <tr>
-            <th>Task id</th>
-            <th>Direct Labor Rate</th>
-            <th>Estimated Hours</th>
-            <th>Expertise Type Id</th>
-            <th>Labor Direct Rate</th>
-            <th>Labor Overhead Cost</th>
-            <th>Overhead Cost</th>
-            <th>TOTAL PART COST</th>
-            <th>MARKUP</th>
-            <th>COST PLUS AMOUNT</th>
-            <th>FIXED AMOUNT</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="mpn-row" *ngFor="let matQuotation of laborQuotation">
-            <td>{{matQuotation.taskId}}</td>
-            <td>{{matQuotation.directLaborRate}}</td>
-            <td>{{matQuotation.estimatedHours}}</td>
-            <td>{{matQuotation.expertiseTypeId}}</td>
-            <td>{{matQuotation.laborDirectRate}}</td>
-            <td>{{matQuotation.laborOverheadCost}}</td>
-            <td>{{matQuotation.overheadCost}}</td>
-          </tr>
-        </tbody>
-    </table>
+      <app-work-order-labor [taskList]="taskList" [laborForm]="labor" [workOrderLaborList]="workOrderLaborList" [workOrderWorkFlowOriginalData]="workOrderWorkFlowOriginalData" [savedWorkOrderData]="savedWorkOrderData"
+      (saveworkOrderLabor)="saveworkOrderLabor($event)"
+      ></app-work-order-labor>
 
   </div>
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'charges'">
-    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use work flow'">
+    <!-- <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use work flow'">
       <thead>
         <tr>
           <th>Task id</th>
@@ -570,10 +480,6 @@
           <th>Extended Price</th>
           <th>Quantity</th>
           <th>Unit Cost</th>
-          <th>TOTAL PART COST</th>
-          <th>MARKUP</th>
-          <th>COST PLUS AMOUNT</th>
-          <th>FIXED AMOUNT</th>
         </tr>
       </thead>
       <tbody>
@@ -586,6 +492,9 @@
           <td>{{matQuotation.quantity}}</td>
           <td>{{matQuotation.unitCost}}</td>
         </tr>
+        <div class="col-md-12">
+          <button class="btn btn-primary-cstm pull-right" (click)="createChargeQuote()">Save Details</button>
+        </div>
       </tbody>
     </table>
 
@@ -599,10 +508,6 @@
             <th>Extended Price</th>
             <th>Quantity</th>
             <th>Unit Cost</th>
-            <th>TOTAL PART COST</th>
-            <th>MARKUP</th>
-            <th>COST PLUS AMOUNT</th>
-            <th>FIXED AMOUNT</th>
           </tr>
         </thead>
         <tbody>
@@ -615,9 +520,20 @@
             <td>{{matQuotation.quantity}}</td>
             <td>{{matQuotation.unitCost}}</td>
           </tr>
+          <div class="col-md-12">
+            <button class="btn btn-primary-cstm pull-right" (click)="createChargeQuote()">Save Details</button>
+          </div>
         </tbody>
-    </table>
-
+    </table> -->
+    <app-work-order-charges [workFlowObject]="workFlowObject" 
+                          isWorkOrder="false"
+                           [workOrderChargesList]="workOrderChargesList" 
+                        (saveChargesListForWO)="saveWorkOrderChargesList($event)"
+                        (updateChargesListForWO)="updateWorkOrderChargesList($event)"
+                        (createQuote)="createChargeQuote($event)"
+                        (refreshData)="getChargesListByWorkOrderId()" 
+                        [isQuote]="isQuote"
+                        ></app-work-order-charges>
   </div>
 
 
@@ -1055,7 +971,7 @@
             <div class="col-sm-2 w100 mtop20">
               <p>
                 <span class="col-sm-12">
-                  <button type="button" id="" name="" class="btn btn-success show-pricing-btn">Show Pricing</button>
+                  <button type="button" id="" name="" class="btn btn-primary-cstm show-pricing-btn">Show Pricing</button>
                 </span>
               </p>
             </div>

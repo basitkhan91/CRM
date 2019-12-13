@@ -12,7 +12,7 @@ import { MatDialog } from '@angular/material';
 import { getObjectByValue, getObjectById, getValueFromObjectByKey } from '../../../generic/autocomplete';
 import { VendorService } from '../../../services/vendor.service';
 import { ConfigurationService } from '../../../services/configuration.service';
-
+import { AuditHistory } from '../../../models/audithistory.model';
 
 @Component({
 	selector: 'app-vendor-documents',
@@ -34,9 +34,9 @@ export class VendorDocumentsComponent implements OnInit {
 	vendorDocumentsData: any = [];
 	vendorDocumentsColumns = [
 		{ field: 'docName', header: 'Name' },
-		{ field: 'docDescription', header: 'Description' },
+		{ field: 'docDescription', header: 'Memo' },
 		//{ field: 'documents', header: 'Documents' },
-		{ field: 'docMemo', header: 'Memo' }
+		{ field: 'docMemo', header: 'Description' }
 	];
 	selectedColumns = this.vendorDocumentsColumns;
 
@@ -59,8 +59,9 @@ export class VendorDocumentsComponent implements OnInit {
 	private isEditMode: boolean = false;
 	private isSaving: boolean;
 	modal: NgbModalRef;
-	
-
+    public auditHisory: AuditHistory[] = [];
+    loadingIndicator: boolean;
+    documentauditHisory: any[];
 	constructor(public workFlowtService: VendorService,private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService,
 		private dialog: MatDialog, private masterComapnyService: MasterComapnyService,private configurations: ConfigurationService) {
 			if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
@@ -243,7 +244,48 @@ export class VendorDocumentsComponent implements OnInit {
 		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
        
 	}
+    openHistory(content, row) {
+        
+        this.alertService.startLoadingMessage();
+        
+        this.isSaving = true;
+        this.workFlowtService.getVendorDocumentAuditHistory(row.vendorDocumentDetailId).subscribe(
+            results => this.onAuditHistoryLoadSuccessful(results, content),
+            error => this.saveFailedHelper(error));
+
+
+
+    }
+    private onAuditHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+
+        this.documentauditHisory = auditHistory;
+
+        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+    private saveFailedHelper(error: any) {
+        this.isSaving = false;
+        this.alertService.stopLoadingMessage();
+        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+	}
 	
+	getColorCodeForHistory(i, field, value) {
+        const data = this.documentauditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+
    
 }
 

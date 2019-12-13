@@ -89,13 +89,14 @@
 
                             <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                 {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
+                               
                             </td>
 
                             <td style="width:200px">
 
-                                <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>
+                                <span> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(editContent,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>
 
-                                <button class="btn-edit" mat-icon-button (click)="openEdits(rowData)" matTooltip="edit">
+                                <button class="btn-edit" mat-icon-button (click)="openEdits(editContent,rowData)" matTooltip="edit">
                                     <mat-icon>edit</mat-icon>
                                 </button>
 
@@ -139,16 +140,16 @@
                     <div class="form-row">
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label class="popup-plusicon-cstm">Capability Types </label>
-                                     <select [(ngModel)]="capabilityForm.CapabilityTypeId" [ngModelOptions]="{standalone: true}">
+                                <label class="popup-plusicon-cstm-caps">Capability Types </label>
+                                     <select [(ngModel)]="capabilityForm.CapabilityTypeId" [ngModelOptions]="{standalone: true}" (change)="onCapabilityTypeSelection(capabilityForm.CapabilityTypeId)">
                                                         <option>--Select--</option>
                                                         <option *ngFor="let cap of capabilityTypeData" [ngValue]="cap.value">{{cap.label}}</option>
                                      </select>
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="form-group">
-                                <label class="popup-plusicon-cstm">PN </label>
+                            <div class="form-group pop-up-caps-autocomplete">
+                                <label class="popup-plusicon-cstm-caps">PN </label>
                                       <p-autoComplete [(ngModel)]="capabilityForm.selectedPartId" (onKeyUp)=partPNentHandler($event)
                                                                                (onSelect)="partnmId($event)" [ngModelOptions]="{standalone: true}"
                                                                                [suggestions]="partCollection" (completeMethod)="filterPNpartItems($event)" [size]="30"
@@ -161,7 +162,7 @@
                         </div>
                         <div class="col-md-2">
                                 <div class="form-group">
-                                    <label class="popup-plusicon-cstm">Company</label>
+                                    <label class="popup-plusicon-cstm-caps">Company</label>
                                     <select [(ngModel)]="capabilityForm.companyId" (change)="getBUList(capabilityForm.companyId)" [ngModelOptions]="{standalone: true}">
                                             <option>--Select--</option>
                                             <option *ngFor="let name of maincompanylist" [ngValue]="name.managementStructureId">{{name.code}}</option>
@@ -171,7 +172,7 @@
                         </div>
                             <div class="col-md-2">
                                 <div class="form-group">
-                                     <label class="popup-plusicon-cstm">BU </label>
+                                     <label class="popup-plusicon-cstm-caps">BU </label>
                                     <select [(ngModel)]="capabilityForm.buId" (change)="getDivisionlist(capabilityForm.buId)" [ngModelOptions]="{standalone: true}" >
                                         <option>Select BU</option>
                                         <option *ngFor="let name of bulist" [ngValue]="name.managementStructureId">{{name.code}}</option>
@@ -180,7 +181,7 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
-                                     <label class="popup-plusicon-cstm">Division </label>
+                                     <label class="popup-plusicon-cstm-caps">Division </label>
                                     <select [(ngModel)]="capabilityForm.divisionId" (change)="getDepartmentlist(capabilityForm.divisionId)" [ngModelOptions]="{standalone: true}">
                                         <option>Select Division</option>
                                         <option *ngFor="let name of divisionlist" [ngValue]="name.managementStructureId">{{name.code}}</option>
@@ -189,7 +190,7 @@
                             </div>
                              <div class="col-md-2">                               
                                 <div class="form-group">
-                                     <label class="popup-plusicon-cstm">Dept </label>
+                                     <label class="popup-plusicon-cstm-caps">Dept </label>
                                     <select [(ngModel)]="capabilityForm.departmentId" (change)="getDepartmentId(capabilityForm.departmentId)" [ngModelOptions]="{standalone: true}">
                                         <option>Select Dept</option>
                                         <option *ngFor="let name of departmentList" [ngValue]="name.managementStructureId">{{name.code}}</option>
@@ -198,7 +199,7 @@
                             </div>
                             <div class="col-md-2">
                                     <div class="form-group">
-                                        <label class="popup-plusicon-cstm">Manufacturer </label>
+                                        <label class="popup-plusicon-cstm-caps">Manufacturer </label>
                                         <select [ngModelOptions]="{standalone: true}"
                                                         [(ngModel)]="capabilityForm.manufacturerId"
                                                         (change)="onManufacturerselection(capabilityForm.manufacturerId)">
@@ -213,7 +214,7 @@
                            
                          <div class="col-md-2">
                             <div class="">
-                                <label class="popup-plusicon-cstm text-left">Aircraft Manufacturer </label>
+                                <label class="popup-plusicon-cstm-caps text-left">Aircraft Manufacturer </label>
                                      <p-multiSelect [options]="manufacturerData"
                                                                [ngModelOptions]="{standalone: true}"
                                                                [(ngModel)]="capabilityForm.selectedAircraftTypes" [panelStyle]="{minWidth:'12em'}"
@@ -223,7 +224,7 @@
                         </div>
                          <div class="col-md-2">
                             <div class="">
-                                <label class="popup-plusicon-cstm text-left">Model </label>
+                                <label class="popup-plusicon-cstm-caps text-left">Model </label>
                                    <p-multiSelect [options]="capabilityForm.selectedAircraftDataModels"
                                                                [ngModelOptions]="{standalone: true}"
                                                                [(ngModel)]="capabilityForm.selectedAircraftModelTypes"
@@ -234,7 +235,7 @@
                         </div>
                          <div class="col-md-2">
                             <div class="">
-                                <label class="popup-plusicon-cstm text-left">Dash Number </label>
+                                <label class="popup-plusicon-cstm-caps text-left">Dash Number </label>
                                 <p-multiSelect [options]="search_AircraftDashNumberList"
                                         [ngModelOptions]="{standalone: true}"
                                         [(ngModel)]="capabilityForm.selectedDashNumbers"
@@ -245,14 +246,14 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label class="popup-plusicon-cstm">DESCRIPTION </label>
+                                <label class="popup-plusicon-cstm-caps">DESCRIPTION </label>
                                 <input class="form-control input-value" type="text" [ngModelOptions]="{standalone: true}"
                                 [(ngModel)]="capabilityForm.description">
                             </div>
                         </div>
                         <div class="col-md-2">
                                 <div class="form-group">
-                                    <label class="popup-plusicon-cstm">ATA CHAPTER </label>
+                                    <label class="popup-plusicon-cstm-caps">ATA CHAPTER </label>
                                        <select [(ngModel)]="capabilityForm.ataChapterId" [ngModelOptions]="{standalone: true}" (change)="onAtaChapterselection(capabilityForm.ataChapterId)">
                                                         <option>--Select--</option>
                                                         <option *ngFor="let atachapter of LoadAtachapter" [ngValue]="atachapter.value">{{atachapter.label}}</option>
@@ -262,7 +263,7 @@
                        
                             <div class="col-md-2">
                                     <div class="form-group">
-                                        <label class="popup-plusicon-cstm">ATA Sub CHAPTER </label>
+                                        <label class="popup-plusicon-cstm-caps">ATA Sub CHAPTER </label>
                                            <select [(ngModel)]="capabilityForm.ataSubChapterId" [ngModelOptions]="{standalone: true}" (change)="onAtaSubChapterselection(capabilityForm.ataSubChapterId)">
                                                 <option>--Select--</option>
                                                 <option *ngFor="let ata of atasubchapter" [ngValue]="ata.value">{{ata.label}}</option>
@@ -272,14 +273,14 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label class="popup-plusicon-cstm">ENTRY DATE</label>
+                                    <label class="popup-plusicon-cstm-caps">ENTRY DATE</label>
                                     <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}"
                                     [(ngModel)]="capabilityForm.entryDate"></p-calendar>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label class="popup-plusicon-cstm">CMM ID </label>
+                                    <label class="popup-plusicon-cstm-caps">CMM ID </label>
                                      <select [(ngModel)]="capabilityForm.cmmId" [ngModelOptions]="{standalone: true}" (change)="onCmmselection(capabilityForm.cmmId)">
                                           <option>--Select--</option>
                                            <option *ngFor="let cmm of cmmList" [ngValue]="cmm.value">{{cmm.label}}</option>
@@ -289,7 +290,7 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label class="popup-plusicon-cstm">INTEGRATE WITH </label>
+                                    <label class="popup-plusicon-cstm-caps">INTEGRATE WITH </label>
                                       <select [(ngModel)]="capabilityForm.integrateWith" [ngModelOptions]="{standalone: true}" (change)="onIntegrateWithselection(capabilityForm.integrateWith)">
                                             <option>--Select--</option>
                                             <option *ngFor="let integration of integrationvalues" [ngValue]="integration.value">{{integration.label}}</option>
@@ -298,7 +299,7 @@
                             </div>
                             <div class="col-md-1">
                                 <div class="form-group">
-                                    <label class="popup-plusicon-cstm">VERIFIED</label>
+                                    <label class="popup-plusicon-cstm-caps">VERIFIED</label>
                                     <input type="checkbox"
                                                [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="capabilityForm.isVerified">
@@ -306,29 +307,29 @@
                             </div>
                             <div class="col-md-1">
                                 <div class="form-group">
-                                    <label class="popup-plusicon-cstm">VERIFIED BY</label>
+                                    <label class="popup-plusicon-cstm-caps">BY</label>
                                     <input class="form-control input-value"  type="text" [ngModelOptions]="{standalone: true}"
                                     [(ngModel)]="capabilityForm.verifiedBy">
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label class="popup-plusicon-cstm">DATE VERIFIED</label>
+                                    <label class="popup-plusicon-cstm-caps">DATE VERIFIED</label>
                                     <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}"
                                     [(ngModel)]="capabilityForm.dateVerified"></p-calendar>
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label class="popup-plusicon-cstm">NTE HRS</label>
-                                    <input class="form-control input-value" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==10) return false;" type="number" pKeyFilter="int" [ngModelOptions]="{standalone: true}"
+                                    <label class="popup-plusicon-cstm-caps">NTE HRS</label>
+                                    <input class="form-control input-value" pattern="/^-?\d+\.?\d*$/" type="number" pKeyFilter="int" [ngModelOptions]="{standalone: true}"
                                     [(ngModel)]="capabilityForm.nteHrs">
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label class="popup-plusicon-cstm">TAT</label>
-                                    <input class="form-control input-value" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==10) return false;" type="number" pKeyFilter="int" [ngModelOptions]="{standalone: true}"
+                                    <label class="popup-plusicon-cstm-caps">TAT</label>
+                                    <input class="form-control input-value" pattern="/^-?\d+\.?\d*$/" type="number" pKeyFilter="int" [ngModelOptions]="{standalone: true}"
                                     [(ngModel)]="capabilityForm.tat">
                                 </div>
                             </div>
@@ -366,7 +367,7 @@
  
                                 <tr *ngIf="mfgFormArray.controls[i].controls['isDelete'].value != true">
                                     <td>
-                                       <!-- <input type="text" formControlName="capabilityTypeId" isabled="true" /> --> 
+                                        <input type="text" formControlName="capabilityTypeName" disabled="true" />  
                                     </td>
                                     <td>
                                         <input type="text" formControlName="PartId" disabled="true" />
@@ -387,7 +388,7 @@
                                        <input type="text" formControlName="ataChapterLabel" disabled="true" />
                                    </td>
                                    <td>
-                                       <input type="text" formControlName="atasubchapterLable" disabled="true" />
+                                       <input type="text" formControlName="ataSubchapterLabel" disabled="true" />
                                    </td>
                                    <td>
                                        <input type="text" formControlName="cmmLabel" disabled="true" />
@@ -428,6 +429,231 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="saveCapabilities()">Save</button>
+                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #editContent let-c="close" let-d="dismiss">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" (click)="dismissModel()">×</button>
+                    <h4 class="modal-title" *ngIf="!isEditMode">Edit Capability</h4>
+                   <!-- <h4 class="modal-title" *ngIf="isEditMode==false">View Capability</h4> --> 
+                </div>
+                <div class="modal-body">
+                     <form [formGroup]="capabilitiesForm">
+                <div formArrayName="mfgForm">
+                    <div class="form-row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="popup-plusicon-cstm-caps">Capability Types </label>
+                                     <select [(ngModel)]="capabilityEditForm.CapabilityTypeId" [ngModelOptions]="{standalone: true}" (change)="onCapabilityTypeSelection(capabilityEditForm.CapabilityTypeId)">
+                                                        <option>--Select--</option>
+                                                        <option *ngFor="let cap of capabilityTypeData" [ngValue]="cap.value">{{cap.label}}</option>
+                                     </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group pop-up-caps-autocomplete">
+                                <label class="popup-plusicon-cstm-caps">PN </label>
+                                <select [(ngModel)]="capabilityEditForm.selectedPartId" [ngModelOptions]="{standalone: true}" (change)="onPartNumberSelection(capabilityEditForm.selectedPartId)" [attr.disabled] = "isEditMode === false ? 'disabled' : null">
+                                        <option>--Select--</option>
+                                        <option *ngFor="let part of allPartnumbersInfo" [ngValue]="part.itemMasterId">{{part.partNumber}}</option>
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="popup-plusicon-cstm-caps">Company</label>
+                                    <select [(ngModel)]="capabilityEditForm.companyId" (change)="getBUList(capabilityEditForm.companyId)" [ngModelOptions]="{standalone: true}">
+                                            <option>--Select--</option>
+                                            <option *ngFor="let name of maincompanylist" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                    </select>
+                                   
+                                </div>
+                        </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                     <label class="popup-plusicon-cstm-caps">BU </label>
+                                    <select [(ngModel)]="capabilityEditForm.buId" (change)="getDivisionlist(capabilityEditForm.buId)" [ngModelOptions]="{standalone: true}" >
+                                        <option>Select BU</option>
+                                        <option *ngFor="let name of bulist" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                     <label class="popup-plusicon-cstm-caps">Division </label>
+                                    <select [(ngModel)]="capabilityEditForm.divisionId" (change)="getDepartmentlist(capabilityEditForm.divisionId)" [ngModelOptions]="{standalone: true}">
+                                        <option>Select Division</option>
+                                        <option *ngFor="let name of divisionlist" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                             <div class="col-md-2">                               
+                                <div class="form-group">
+                                     <label class="popup-plusicon-cstm-caps">Dept </label>
+                                    <select [(ngModel)]="capabilityEditForm.departmentId" (change)="getDepartmentId(capabilityEditForm.departmentId)" [ngModelOptions]="{standalone: true}">
+                                        <option>Select Dept</option>
+                                        <option *ngFor="let name of departmentList" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="popup-plusicon-cstm-caps">Manufacturer </label>
+                                        <select [ngModelOptions]="{standalone: true}"
+                                                        [(ngModel)]="capabilityEditForm.manufacturerId"
+                                                        (change)="onManufacturerselection(capabilityEditForm.manufacturerId)">
+                                                    <ng-container *ngFor="let manufacturer of allManufacturerInfo">
+                                                        <option [ngValue]="manufacturer.manufacturerId" *ngIf="manufacturer.isActive">
+                                                            {{manufacturer.name}}
+                                                        </option>
+                                                    </ng-container>
+                                                </select>
+                                    </div>
+                                </div>
+                           
+                         <div class="col-md-2">
+                            <div class="">
+                                <label class="popup-plusicon-cstm-caps text-left">Aircraft Manufacturer </label>
+                                     <select
+                                                               [ngModelOptions]="{standalone: true}"
+                                                               [(ngModel)]="capabilityEditForm.selectedAircraftType"
+                                                               (onChange)="manufacturerChange($event,capabilityEditForm)">
+                                           <option>--Select--</option>
+                                           <option *ngFor="let manufacturer of manufacturerData" [ngValue]="manufacturer.value">{{manufacturer.label}}</option>
+                                     </select>
+                            </div>
+                        </div>
+                         <div class="col-md-2">
+                            <div class="">
+                                <label class="popup-plusicon-cstm-caps text-left">Model </label>
+                                   <select [ngModelOptions]="{standalone: true}"
+                                                               [(ngModel)]="capabilityEditForm.selectedAircraftModelType"
+                                                               (onChange)="aircraftModalChange($event,capabilityEditForm)">
+                                                               <option>--Select--</option>
+                                                               <option *ngFor="let aircraftModel of capabilityEditForm.selectedAircraftDataModels" [ngValue]="aircraftModel.value">{{aircraftModel.label}}</option>
+                                                </select>
+                            </div>
+                        </div>
+                         <div class="col-md-2">
+                            <div class="">
+                                <label class="popup-plusicon-cstm-caps text-left">Dash Number </label>
+                                <select
+                                        [ngModelOptions]="{standalone: true}"
+                                        [(ngModel)]="capabilityEditForm.selectedDashNumber"
+                                        (onChange)="dashNumberChange($event,capabilityEditForm)">
+                                        <option>--Select--</option>
+                                        <option *ngFor="let dashNumber of search_AircraftDashNumberList" [ngValue]="dashNumber.value">{{dashNumber.label}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="popup-plusicon-cstm-caps">DESCRIPTION </label>
+                                <input class="form-control input-value" type="text" [ngModelOptions]="{standalone: true}"
+                                [(ngModel)]="capabilityEditForm.description">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="popup-plusicon-cstm-caps">ATA CHAPTER </label>
+                                       <select [(ngModel)]="capabilityEditForm.ataChapterId" [ngModelOptions]="{standalone: true}" (change)="onAtaChapterselection(capabilityEditForm.ataChapterId)">
+                                                        <option>--Select--</option>
+                                                        <option *ngFor="let atachapter of LoadAtachapter" [ngValue]="atachapter.value">{{atachapter.label}}</option>
+                                                    </select>
+                                </div>
+                            </div>
+                       
+                            <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label class="popup-plusicon-cstm-caps">ATA Sub CHAPTER </label>
+                                           <select [(ngModel)]="capabilityEditForm.ataSubChapterId" [ngModelOptions]="{standalone: true}" (change)="onAtaSubChapterselection(capabilityEditForm.ataSubChapterId)">
+                                                <option>--Select--</option>
+                                                <option *ngFor="let ata of atasubchapter" [ngValue]="ata.value">{{ata.label}}</option>
+                                           </select>
+                                          
+                                    </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="popup-plusicon-cstm-caps">ENTRY DATE</label>
+                                    <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="capabilityEditForm.entryDate"></p-calendar>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="popup-plusicon-cstm-caps">CMM ID </label>
+                                     <select [(ngModel)]="capabilityEditForm.cmmId" [ngModelOptions]="{standalone: true}" (change)="onCmmselection(capabilityEditForm.cmmId)">
+                                          <option>--Select--</option>
+                                           <option *ngFor="let cmm of cmmList" [ngValue]="cmm.value">{{cmm.label}}</option>
+                                     </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="popup-plusicon-cstm-caps">INTEGRATE WITH </label>
+                                      <select [(ngModel)]="capabilityEditForm.integrateWith" [ngModelOptions]="{standalone: true}" (change)="onIntegrateWithselection(capabilityEditForm.integrateWith)">
+                                            <option>--Select--</option>
+                                            <option *ngFor="let integration of integrationvalues" [ngValue]="integration.value">{{integration.label}}</option>
+                                      </select>
+                               </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                    <label class="popup-plusicon-cstm-caps">VERIFIED</label>
+                                    <input type="checkbox"
+                                               [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="capabilityEditForm.isVerified">
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                    <label class="popup-plusicon-cstm-caps">BY</label>
+                                    <input class="form-control input-value"  type="text" [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="capabilityEditForm.verifiedBy">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="popup-plusicon-cstm-caps">DATE VERIFIED</label>
+                                    <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="capabilityEditForm.dateVerified"></p-calendar>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="popup-plusicon-cstm-caps">NTE HRS</label>
+                                    <input class="form-control input-value" pattern="/^-?\d+\.?\d*$/" type="number" pKeyFilter="int" [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="capabilityEditForm.nteHrs">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label class="popup-plusicon-cstm-caps">TAT</label>
+                                    <input class="form-control input-value" pattern="/^-?\d+\.?\d*$/" type="number" pKeyFilter="int" [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="capabilityEditForm.tat">
+                                </div>
+                            </div>
+                           
+ 
+                       
+                       
+                    </div>
+                   
+                 </div>
+                      </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="updateCapabilities()">Update</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
                 </div>
             </div>

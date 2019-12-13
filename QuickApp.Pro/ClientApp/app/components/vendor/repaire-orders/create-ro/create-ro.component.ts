@@ -14,7 +14,17 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 /** create-ro component*/
 export class CreateRoComponent implements OnInit {
 
-	first: number = 0;
+	isCreateRO: boolean = true;
+	constructor()  {
+
+	}
+	ngOnInit() {
+
+	}
+
+}
+
+	/*first: number = 0;
 	isEditMode: boolean=false;
 	vendorCode: any = "";
 	vendorname: any = "";
@@ -62,7 +72,6 @@ export class CreateRoComponent implements OnInit {
 	is1099Required: any = "";
 	allPriorityInfo: any[]=[];
 	vendorList: any = [];
-    /** create-po ctor */
 	sourcePo: any = {};
     vendorCodes: any[];
     vendorNames: any[];

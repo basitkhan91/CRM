@@ -2,6 +2,7 @@ import { FormControl, Validators } from "@angular/forms";
 
 export class ItemMasterCapabilitiesModel {
 
+    itemMasterCapesId:any;
     capabilityId: any;
     capabilityTypeId: any;
     companyId:FormControl = new FormControl("", [Validators.required])
@@ -43,6 +44,7 @@ export class ItemMasterCapabilitiesModel {
     ataSubchapterLabel:any;
     cmmLabel:any;
     integrateWithLabel:any;
+    capabilityTypeName:any;
 
     public constructor(init?: Partial<ItemMasterCapabilitiesModel>) {
         Object.assign(this, init);

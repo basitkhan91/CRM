@@ -24,7 +24,7 @@
                                 <i class="fa fa-search"></i>
                                 <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter">
                             </div>
-                            <button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                            <button type="button" pButton icon="fa-download" iconPos="left" label="Export  Data" (click)="dt.exportCSV()" matTooltip="Download Data"></button>
                             <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
                             <a matTooltip="Add Vendor Capabilities" class="btn btn-success nobg" (click)="navigateTogeneralInfo()"><span><i class="fa fa-plus"></i></span></a>
                             <div class="excel-upload">
@@ -51,8 +51,12 @@
                                 {{col.header}}
                                 <p-sortIcon [field]="col.field"></p-sortIcon>
                             </th>
+                            <th style="width:200px;position:sticky"
+                                *ngIf="selectedColumns.length > 0">
+                                Actions
+                            </th>
 
-                            <th style="width:200px"></th>
+
 
                         </tr>
                         <tr>
@@ -60,6 +64,7 @@
                                 <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
 
                             </th>
+                            <th style="width:200px;position:sticky"></th>
                         </tr>
                     </ng-template>
 
@@ -80,25 +85,30 @@
                                 <button class="btn-edit" mat-icon-button (click)="openEdits(rowData)" matTooltip="edit">
                                     <mat-icon>edit</mat-icon>
                                 </button>
-                                <button class="btn-history" mat-icon-button matTooltip="History">
+                                <button class="btn-history" mat-icon-button matTooltip="History" (click)="openHistory(contentAuditHist,rowData)">
                                     <mat-icon color="green">history</mat-icon>
                                 </button>
                                 <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
+
                                 <!--<button class="btn-exposure" mat-icon-button matTooltip="stock Adjustment" (click)="openAdjustment(rowData)">
         <mat-icon>exposure</mat-icon>
     </button>-->
-                                <!--<button class="btn-add_circle" style="color:red" mat-icon-button matTooltip="Create PO" (click)="routeToPo()">
-        <mat-icon>add_circle</mat-icon>
-    </button>
-    <button class="btn-add_circle" style="color:forestgreen" mat-icon-button matTooltip="Create RO" (click)="routeToRo()">
-        <mat-icon>add_circle</mat-icon>
-    </button>-->
+                                <span data-toggle="modal" data-target="#contacts"> <a class="btn btn-primary boxed-float-btn nobg" data-toggle="tooltip" (click)="gotoCreatePO(rowData)" matTooltip="Create PO"><i class="fa fa-plus"></i></a> </span>
+
+                                <span data-toggle="modal" data-target="#contacts"> <a class="btn btn-primary boxed-float-btn nobg"  data-toggle="tooltip" (click)="gotoCreateRO(rowData)" matTooltip="Create RO"><i class="fa fa-plus" style="color:forestgreen"></i></a></span>
+
+                                <!--<button class="btn-add_circle" style="color:forestgreen" mat-icon-button matTooltip="Create RO" (click)="gotoCreateRO(rowData)">
+                                    <i class="fa fa-plus"></i>
+                                </button>-->
                             </td>
 
                         </tr>
                     </ng-template>
+
+
+
 
 
 
@@ -158,6 +168,59 @@
                     <td>{{audit.newValue}}</td>
                     <td>{{audit.updatedBy}}</td>
                     <td>{{audit.updatedDate}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+    </div>
+</ng-template>
+<ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto">
+    <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
+    <div class="modal-header">
+
+        <h4 class="modal-title">History of Vendor Capability</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+
+    </div>
+    <div class="modal-body">
+
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Vendor Name</th>
+                        <th>Vendor Code</th>
+                        <th>Cap Type</th>
+                        <th>Capability Description</th>
+                     <th>Memo</th>
+                        <th>Updated By</th>
+                        <th>Last Updated Time</th>
+                        <th>Created By</th>
+                        <th>Created Time</th>
+
+                    </tr>
+                </thead>
+                <tr *ngFor="let audit of capabilityauditHisory">
+
+
+                    <td>{{audit.vendorName}}</td>
+                    <td>{{audit.vendorCode}}</td>
+                    <td>{{audit.capabilityType}}</td>
+                    <td>{{audit.capabilityDescription}}</td>
+                    <td>{{audit.memo}}</td>
+                 
+                    <td>{{audit.updatedBy}}</td>
+
+                    <td>{{audit.updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</td>
+                    <!--<td>{{audit.field == 'createdDate'?  (rowData[audit.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[audit.field] && audit.field == 'updatedDate'?  (rowData[audit.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[audit.field]}}</td>-->
+                    <td>{{audit.createdBy}}</td>
+                    <td>{{audit.createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</td>
+
                 </tr>
             </table>
         </div>

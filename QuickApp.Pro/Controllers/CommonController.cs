@@ -181,5 +181,33 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("levelonedata")]
+        public IActionResult ManagementStructureLevelOneData()
+        {
+            var result = _unitOfWork.CommonRepository.ManagementStructureLevelOneData();
+            return Ok(result);
+        }
+
+        [HttpGet("leveltwodata")]
+        public IActionResult ManagementStructureLevelTwoData(long parentId)
+        {
+            var result = _unitOfWork.CommonRepository.ManagementStructureLevelTwoData(parentId);
+            return Ok(result);
+        }
+
+        [HttpGet("levelthreedata")]
+        public IActionResult ManagementStructureLevelThreeData(long parentId)
+        {
+            var result = _unitOfWork.CommonRepository.ManagementStructureLevelThreeData(parentId);
+            return Ok(result);
+        }
+
+        [HttpGet("levelfourdata")]
+        public IActionResult ManagementStructureLevelFourData(long parentId)
+        {
+            var result = _unitOfWork.CommonRepository.ManagementStructureLevelFourData(parentId);
+            return Ok(result);
+        }
+
     }
 }

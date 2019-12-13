@@ -5,6 +5,13 @@
     width: 150px !important;
     font-weight: 500;
 }
+/deep/.ui-button.ui-button-text-icon-left.btn-primary-cstm .ui-button-text, .ui-button.ui-button-text-icon-left {
+    font-family: 'Open Sans', sans-serif !important;
+}
+
+/deep/.ui-button.ui-button-text-icon-left .ui-button-icon-left {
+    font-family: FontAwesome !important
+}
 
 .clr-red {
     color: red;
@@ -25,4 +32,33 @@
 
 .new-margin {
     margin-top: 10px;
+}
+
+.modal {
+    .modal-body.editdisposaltype label {
+        font-weight: normal !important;
+        width: 100% !important;
+        text-align: left;
+        margin-top: 0;
+    }
+
+    .modal-body.editdisposaltype .form-group {
+        margin-bottom: 10px;
+    }
+}
+
+.modal.editdisposaltype {
+    .modal-body div.form-group label, label {
+        font-weight: normal;
+        width: 100%;
+        text-align: left;
+    }
+}
+
+.ui-button.ui-button-text-icon-left.btn-primary-cstm .ui-button-text, .ui-button.ui-button-text-icon-left {
+    font-family: 'Open Sans', sans-serif !important;
+}
+
+.ui-button.ui-button-text-icon-left .ui-button-icon-left {
+    font-family: FontAwesome !important
 }

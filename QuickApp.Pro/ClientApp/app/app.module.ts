@@ -196,6 +196,7 @@ import { SpinnerComponent } from './shared/spinner/spinner.component';
 import { CardModule } from 'primeng/card';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { WorkOrderService } from './services/work-order/work-order.service';
+import { WorkOrderQuoteService } from './services/work-order/work-order-quote.service';
 import { WorkOrderEndpointService } from './services/work-order/work-order-endpoint.service';
 import { JobTypeService } from './services/job-type.service';
 import { JobTypeEndpontService } from './services/job-type-endpoint.service';
@@ -213,6 +214,8 @@ import { DashNumberService } from './services/dash-number/dash-number.service';
 import { DashNumberEndpointService } from './services/dash-number/dash-number-endpoint.service';
 //import { AuditComponent } from "./components/Audit/audit.component";
 import { AccountListingService } from './services/account-listing/account-listing.service'
+import { CustomerViewComponent } from './shared/components/customer/customer-view/customer-view.component';
+import { CommonService } from "./services/common.service";
 
 @NgModule({
     imports: [
@@ -261,7 +264,8 @@ import { AccountListingService } from './services/account-listing/account-listin
         ActionsButtonsComponent,
         UnauthorizedAccessComponent,
         LoginComponent,
-        SpinnerComponent
+        SpinnerComponent,
+        CustomerViewComponent
     ],
     providers: [
         { provide: 'BASE_URL', useFactory: getBaseUrl },
@@ -421,6 +425,7 @@ import { AccountListingService } from './services/account-listing/account-listin
         CompanyService,
         CompanyEndpoint,
         WorkOrderService,
+        WorkOrderQuoteService,
         WorkOrderEndpointService,
         JobTypeService,
         JobTypeEndpontService,
@@ -430,9 +435,10 @@ import { AccountListingService } from './services/account-listing/account-listin
         PurchaseOrderEndpoint,
         GLAccountService,
         GLAccountEndpoint,
-        AccountListingService
+        AccountListingService,
+        CommonService
     ],
-    entryComponents: [LoginDialogComponent, AddTaskDialogComponent],
+    entryComponents: [LoginDialogComponent, AddTaskDialogComponent,CustomerViewComponent],
     bootstrap: [AppComponent],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

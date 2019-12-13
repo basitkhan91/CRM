@@ -463,29 +463,54 @@ namespace QuickApp.Pro.Controllers
 
 
         [HttpPost("Mancapespost")]
-        public IActionResult addCharges([FromBody] List<Capability> capability)
+        public IActionResult addCharges([FromBody] List<ItemMasterCapes> capability)
         {
             if (ModelState.IsValid)
             {
                 for (var i = 0; i < capability.Count(); i++)
                 {
-                    // capability[i].CapabilityId = 0;
+                    ItemMasterCapes imc = new ItemMasterCapes();
+                    imc.ItemMasterId = capability[i].ItemMasterId;
+                    imc.CapabilityId = capability[i].CapabilityId;
+                    imc.MasterCompanyId = 1;
+                    imc.CreatedBy = "admin";
+                    imc.UpdatedBy = "admin";
+                    imc.IsActive = true;
+                    imc.IsDelete = false;
+                    imc.ManagementStructureId = capability[i].ManagementStructureId;
+                    imc.ManufacturerId = capability[i].ManufacturerId;
+                    imc.AircraftTypeId = capability[i].AircraftTypeId;
+                    imc.AircraftModelId = capability[i].AircraftModelId;
+                    imc.AircraftDashNumberId = capability[i].AircraftDashNumberId;
+                    imc.Description = capability[i].Description;
+                    imc.ATAChapterId = capability[i].ATAChapterId;
+                    imc.ATASubChapterId = capability[i].ATASubChapterId;
+                    imc.EntryDate = capability[i].EntryDate;
+                    imc.CMMId = capability[i].CMMId;
+                    //imc.isIntegrateWith = capability[i].isIntegrateWith;
+                    imc.IntegrateWith = capability[i].IntegrateWith;
+                    imc.VerifiedBy = capability[i].VerifiedBy;
+                    imc.DateVerified = capability[i].DateVerified;
+                    imc.ntehrs = capability[i].ntehrs;
+                    imc.TAT = capability[i].TAT;
+                    imc.CreatedDate = DateTime.Now;
+                    imc.UpdatedDate = DateTime.Now;
                     capability[i].MasterCompanyId = 1;
                     capability[i].CreatedDate = DateTime.Now;
-                    if (capability[i].CapabilityId > 0)
+                    if (capability[i].ItemMasterCapesId > 0)
                     {
-                        _unitOfWork.Repository<Capability>().Update(capability[i]);
+                        _unitOfWork.Repository<ItemMasterCapes>().Update(imc);
                     }
                     else
                     {
-                        _unitOfWork.Repository<Capability>().Add(capability[i]);
+                        _unitOfWork.Repository<ItemMasterCapes>().Add(imc);
                     }
                     _unitOfWork.SaveChanges();
+                    capability[i].ItemMasterCapesId = imc.ItemMasterCapesId;
                 }
             }
-            return Ok();
+            return Ok(capability);
         }
-
         [ApiExplorerSettings(IgnoreApi = true)]
         public void saveItemcapes(long returnid, long itemid)
         {
@@ -1039,15 +1064,83 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<ItemMasterViewModel>))]
         public IActionResult GetListforCapes()
         {
-            var allTaxrateInfo = _context.ItemMaster.Include("Manufacturer").Include("Provision").Include("Priority").Include("ItemClassification").Include("Currency").Include("ExportClassification").Where(a => a.ItemTypeId == 1 && (a.IsDeleted == true || a.IsDeleted == null) || a.ItemTypeId == 3 && (a.IsDeleted == true || a.IsDeleted == null)).ToList(); //.GetAllCustomersData();
-            return Ok(allTaxrateInfo);
+            //var allTaxrateInfo = _context.ItemMaster.Include("Manufacturer").Include("Provision").Include("Priority").Include("ItemClassification").Include("Currency").Include("ExportClassification").Where(a => a.ItemTypeId == 1 && (a.IsDeleted == true || a.IsDeleted == null) || a.ItemTypeId == 3 && (a.IsDeleted == true || a.IsDeleted == null)).ToList(); //.GetAllCustomersData();
+            var data = (from iM in _context.ItemMasterCapes
+                        where iM.IsDelete != true
+
+                        select new
+                        {
+                            iM.ItemMasterCapesId,
+                            iM.ItemMasterId,
+                            iM.CapabilityId,
+                            iM.MasterCompanyId,
+                            iM.CreatedBy,
+                            iM.UpdatedBy,
+                            iM.CreatedDate,
+                            iM.UpdatedDate,
+                            iM.IsActive,
+                            iM.ManagementStructureId,
+                            iM.ManufacturerId,
+                            iM.AircraftTypeId,
+                            iM.AircraftModelId,
+                            iM.AircraftDashNumberId,
+                            iM.Description,
+                            iM.ATAChapterId,
+                            iM.ATASubChapterId,
+                            iM.EntryDate,
+                            iM.CMMId,
+                            //iM.isIntegrateWith,
+                            iM.IntegrateWith,
+                            iM.IsVerified,
+                            iM.VerifiedBy,
+                            iM.DateVerified,
+                            iM.ntehrs,
+                            iM.TAT,
+                            iM.Memo,
+                            iM.IsDelete
+                        }).ToList();
+            return Ok(data);
 
         }
 
         [HttpGet("capabilityGet/{id}")]
         public IActionResult capabilityGet(int id)
         {
-            var capabilityData = _unitOfWork.itemMaster.getCapabilityData(id); //.GetAllCustomersData();
+            //var capabilityData = _unitOfWork.itemMaster.getCapabilityData(id); //.GetAllCustomersData();
+            var capabilityData = (from iM in _context.ItemMasterCapes
+                        where iM.ItemMasterCapesId != id
+
+                        select new
+                        {
+                            iM.ItemMasterCapesId,
+                            iM.ItemMasterId,
+                            iM.CapabilityId,
+                            iM.MasterCompanyId,
+                            iM.CreatedBy,
+                            iM.UpdatedBy,
+                            iM.CreatedDate,
+                            iM.UpdatedDate,
+                            iM.IsActive,
+                            iM.ManagementStructureId,
+                            iM.ManufacturerId,
+                            iM.AircraftTypeId,
+                            iM.AircraftModelId,
+                            iM.AircraftDashNumberId,
+                            iM.Description,
+                            iM.ATAChapterId,
+                            iM.ATASubChapterId,
+                            iM.EntryDate,
+                            iM.CMMId,
+                            //iM.isIntegrateWith,
+                            iM.IntegrateWith,
+                            iM.IsVerified,
+                            iM.VerifiedBy,
+                            iM.DateVerified,
+                            iM.ntehrs,
+                            iM.TAT,
+                            iM.Memo,
+                            iM.IsDelete
+                        }).ToList();
             return Ok(capabilityData);
 
         }

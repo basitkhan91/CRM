@@ -49,8 +49,7 @@ namespace DAL.Repositories
                            c.UpdatedDate,
                            c.WorkPhoneExtn,
                            vc.IsDefaultContact,
-                           FullContactNo= c.WorkPhoneExtn + " - "+ c.WorkPhone,
-
+                           FullContactNo = string.Concat(c.WorkPhone, " - ", c.WorkPhoneExtn),
                         }).ToList();
             return data;
             //return _appContext.Contact.Include("MasterCompany").OrderByDescending(c => c.ContactId).ToList();
@@ -88,8 +87,7 @@ namespace DAL.Repositories
                             c.CreatedDate,
                             c.UpdatedDate,
                             c.WorkPhoneExtn,
-                            FullContactNo = c.WorkPhoneExtn + " - " + c.WorkPhone,
-
+                            FullContactNo = string.Concat(c.WorkPhone, " - ", c.WorkPhoneExtn),
                         }).ToList();
             return data;
             //return _appContext.Contact.Include("MasterCompany").OrderByDescending(c => c.ContactId).ToList();
@@ -99,7 +97,7 @@ namespace DAL.Repositories
         {
             var data = (from c in _appContext.Contact
                         join vc in _appContext.VendorContactAudit on c.ContactId equals vc.ContactId
-                        where vc.VendorId == vendorId && vc.VendorContactId== vendorContactId
+                        where vc.VendorId == vendorId && vc.ContactId== vendorContactId
                         select new
                         {
                             c.ContactId,

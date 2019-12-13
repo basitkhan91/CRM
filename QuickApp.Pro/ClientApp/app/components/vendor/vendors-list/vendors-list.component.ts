@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, Input } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -75,7 +75,8 @@ export class VendorsListComponent implements OnInit {
     creditTermsId: any = "";
     currencyId: any = "";
     discountLevel: any = "";
-    vendorPhoneNo:any="";
+    vendorPhoneNo: any = "";
+    vendorPhoneExt: any = "";
     is1099Required: any = "";      
     showGeneralData: boolean = true;
     showcontactdata: boolean = true;
@@ -96,15 +97,18 @@ export class VendorsListComponent implements OnInit {
     allVendorPOROList: any[];
     memoCols:any[];
     vendorDocumentsData: any=[];
-	vendorDocumentsColumns :any[];
-
-    ngOnInit() {
-        this.loadData();
-        this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendors-list';
-        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
-        this.workFlowtService.ShowPtab = false;
-        this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab);
-    }
+    vendorDocumentsColumns :any[];    
+    totalRecords: number = 0;
+    totalPages: number = 0;
+    pageSize: number = 10;
+    pageIndex: number = 0;
+    isVendorList: boolean;
+    @Input() isCreatePO: boolean;
+    @Input() isCreateRO: boolean;
+    purchaseOrderList: any = [];
+    poCols: any = [];
+    selectedPOColumns: any[];
+    selectedPOColumn: any[];
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -148,11 +152,38 @@ export class VendorsListComponent implements OnInit {
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
     public allWorkFlows: any[] = [];
+    isEnablePOList: boolean = true;
+    isEnableROList: boolean = true;
+    vendorId: number;
+    // purchaseOrderData: any;
+    // poPageSize: number = 10;
+    // poPageIndex: number = 0;
 
     constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.local = this.workFlowtService.financeCollection;
         this.dataSource = new MatTableDataSource();
         this.workFlowtService.listCollection = null;
+    }
+
+    ngOnInit() {
+        this.loadData();
+        this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendors-list';
+        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
+        this.workFlowtService.ShowPtab = false;
+        this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab);
+        this.isVendorList = true;
+
+        // this.poCols = [
+        //     { field: 'purchaseOrderNumber', header: 'PO Num' },
+        //     { field: 'openDate', header: 'Open Date' },
+        //     { field: 'closedDate', header: 'Closed/Cancelled Date' },
+        //     { field: 'vendorName', header: 'Vendor Name' },
+        //     { field: 'vendorCode', header: 'Vendor Code' },
+        //     { field: 'status', header: 'Status' },
+        //     { field: 'requestedBy', header: 'Requested By' },
+        //     { field: 'approvedBy', header: 'Approved By' }
+        // ];
+        // this.selectedPOColumns = this.poCols;
     }
 
     public navigateTogeneralInfo() {
@@ -196,6 +227,10 @@ export class VendorsListComponent implements OnInit {
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allVendorList = allWorkFlows;
+        if (allWorkFlows.length > 0) {
+            this.totalRecords = allWorkFlows.length;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+        }
     }
 
     //load master Companies
@@ -528,6 +563,7 @@ export class VendorsListComponent implements OnInit {
         console.log(this.vendorClassificationName);
         this.doingBusinessAsName = row.t.doingBusinessAsName;
         this.parent = row.t.parent;
+      
         this.vendorParentName=row.t.vendorParentName;
         if (row.currency) {
             this.currencyId = row.currency.symbol;
@@ -550,7 +586,8 @@ export class VendorsListComponent implements OnInit {
         this.stateOrProvince = row.stateOrProvince;
         this.postalCode = row.postalCode;
         this.country = row.country;
-        this.vendorPhoneNo=row.t.vendorPhone;
+        this.vendorPhoneNo = row.t.vendorPhone;
+        this.vendorPhoneExt = row.t.vendorPhoneExt;
         this.vendorEmail = row.vendorEmail;
         //this.vendorClassificationId = row.t.vendorClassificationId;
         this.vendorClassificationName = row.classificationName;
@@ -775,5 +812,24 @@ export class VendorsListComponent implements OnInit {
         $('#step9').collapse('hide');
         $('#step10').collapse('hide');
     }
+
+    gotoCreatePO(rowData) {
+		console.log(rowData);		
+        const { vendorId } = rowData;
+        this.route.navigateByUrl(`vendorsmodule/vendorpages/app-purchase-setup/vendor/${vendorId}`);
+    }    
+    gotoCreateRO(rowData) {
+        const { vendorId } = rowData;
+        this.route.navigateByUrl(`vendorsmodule/vendorpages/app-ro-setup/vendor/${vendorId}`);
+    }
+
+    getVendorId(rowData) {
+        this.vendorId = rowData.vendorId;
+    }
+
+    resetVendorId() {
+        this.vendorId = null;
+    }
+
 
 }

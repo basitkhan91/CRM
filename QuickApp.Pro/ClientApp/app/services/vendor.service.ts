@@ -20,6 +20,7 @@ import { Vendor } from '../models/vendor.model';
 import { DiscountValue } from '../models/discountvalue';
 import { ATASubChapter } from '../models/atasubchapter.model';
 import { BehaviorSubject } from 'rxjs';
+import { VendorProcess1099 } from '../models/vendorprocess1099.model';
 
 
 export type RolesChangedOperation = "add" | "delete" | "modify";
@@ -461,6 +462,8 @@ export class VendorService {
     updateBillinginfo(vendorbilling: any) {
         return this.actionEndpoint.updateShippinginfo(vendorbilling, vendorbilling.vendorBillingAddressId);
     }
+
+
     updateshippingViainfo(vendorshipping: any) {
         return this.actionEndpoint.updateShippingViainfo(vendorshipping, vendorshipping.vendorShippingId);
     }
@@ -741,8 +744,29 @@ export class VendorService {
     getVendorBillingAuditHistory(vendorId, vendorBillingaddressId) {
         return this.actionEndpoint.getVendorBillingAuditHistory(vendorId, vendorBillingaddressId);
     }
-    
-      
+    getVendorContactAuditHistory(vendorId, vendorContactId) {
+        return this.actionEndpoint.getVendorContactAuditHistory(vendorId, vendorContactId);
+    }
+
+    getVendorDocumentAuditHistory(id) {
+        return this.actionEndpoint.getVendorDocumentAuditHistory(id);
+    }
+    getVendorCapabilityAuditHistory(VendorCapabilityId, VendorId) {
+        return this.actionEndpoint.getVendorCapabilityAuditHistory(VendorCapabilityId, VendorId);
+    }
+    createNewBillinginfo(action: any) {
+
+        return this.actionEndpoint.createNewBillinginfo<any>(action);
+    }
+
+      updateBillAddressdetails(action: any) {
+
+          return this.actionEndpoint.updateBillAddressDetails(action, action.vendorBillingAddressId);
+    }
+   
+
+
+
 }
 
 
