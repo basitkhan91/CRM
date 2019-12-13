@@ -213,7 +213,7 @@
                             <div class="col-sm-12">
                                 <div class="col-sm-5">
                                     <label for="description" class="control-label">
-                                        Intangible Type
+                                        Intangible Class
                                         <span class="clr-red">*</span>
                                     </label>
 
@@ -226,6 +226,25 @@
                                                     [size]="30" [minLength]="1"
                                                     [dropdown]="true" class="p-autoComplete-ctsm" required>
                                     </p-autoComplete>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-5">
+                                    <label for="depreciationMethodId" class="control-label">Amortization Method <span class="clr-red">*</span></label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <select name="depreciationMethod" [(ngModel)]="currentRow.depreciationMethod" required>
+                                        <option *ngFor="let depMethod of depreciationMethod" [ngValue]="depMethod">{{depMethod.label}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-5">
+                                    <label for="assetLife" class="control-label">Intangible Life <span class="clr-red">*</span></label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="number" min="0" max="12" name="intangibleLifeYears" class="form-control"
+                                           [(ngModel)]="currentRow.intangibleLifeYears" required>
                                 </div>
                             </div>
                             <div class="col-sm-12">

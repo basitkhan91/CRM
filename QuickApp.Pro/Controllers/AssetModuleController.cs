@@ -197,14 +197,14 @@ namespace QuickApp.Pro.Controllers
 
         //capes Saving//
         [HttpPost("Mancapespost")]
-        public IActionResult addCapes([FromBody] List<Capability> capabilities)
+        public IActionResult addCapes([FromBody] List<AssetCapes> capabilities)
         {
             if (ModelState.IsValid)
             {
                 for (var i = 0; i < capabilities.Count(); i++)
                 {
                     AssetCapes assetcapes = new AssetCapes();
-                    capabilities[i].IsActive = true;
+                    //capabilities[i].IsActive = true;
                     if (capabilities[i].ItemMasterId == null)
                     {
                         capabilities[i].ItemMasterId = null;
@@ -215,13 +215,13 @@ namespace QuickApp.Pro.Controllers
                     if (capabilities[i].CapabilityId > 0)
                     {
                         capabilities[i].UpdatedDate = DateTime.Now;
-                        _unitOfWork.Repository<Capability>().Update(capabilities[i]);
+                        _unitOfWork.Repository<AssetCapes>().Update(capabilities[i]);
                         _unitOfWork.SaveChanges();
                     }
                     else
                     {
-                        _unitOfWork.Repository<Capability>().Add(capabilities[i]);
-                        _unitOfWork.SaveChanges();
+                        //_unitOfWork.Repository<Capability>().Add(capabilities[i]);
+                        //_unitOfWork.SaveChanges();
 
                         assetcapes.AssetRecordId = capabilities[i].AssetRecordId;
                         assetcapes.CapabilityId = capabilities[i].CapabilityId;
@@ -230,8 +230,8 @@ namespace QuickApp.Pro.Controllers
                         assetcapes.UpdatedBy = "1";
                         assetcapes.CreatedDate = DateTime.Today;
                         assetcapes.UpdatedDate = DateTime.Today;
-                        assetcapes.IsActive = true;
-                        assetcapes.IsDelete = false;
+                        assetcapes.IsActive = capabilities[i].IsActive;
+                        assetcapes.IsDelete = capabilities[i].IsDelete;
                         assetcapes.AircraftTypeId = capabilities[i].AircraftTypeId;
                         assetcapes.AircraftModelId = capabilities[i].AircraftModelId;
                         assetcapes.AircraftDashNumberId = capabilities[i].AircraftDashNumberId;
