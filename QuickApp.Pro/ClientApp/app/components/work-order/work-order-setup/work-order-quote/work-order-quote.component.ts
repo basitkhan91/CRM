@@ -18,7 +18,8 @@ import {
   WorkOrderLabor,
   AllTasks,
   WorkOrderQuoteLabor,
-  ExclusionQuote
+  ExclusionQuote,
+  ChargesQuote
 } from '../../../../models/work-order-labor.modal';
 
 
@@ -69,6 +70,7 @@ export class WorkOrderQuoteComponent implements OnInit {
   savedWorkOrderData: any;
   laborPayload = new WorkOrderQuoteLabor();
   exclusionPayload = new ExclusionQuote();
+  chargesPayload = new ChargesQuote();
   workFlowWorkOrderId: number = 0;
   workOrderId: number = 0;
   workOrderExclusionsList: Object;
@@ -105,8 +107,8 @@ isQuote: boolean = true;
     .subscribe(
       res=>{
         this.quoteForm.quoteNumber = res['quoteNumber'];
-        this.laborPayload.WorkOrderQuoteId, this.exclusionPayload.WorkOrderQuoteId = res['workOrderQuoteId'];
-        this.laborPayload.StatusId, this.exclusionPayload.StatusId = res['quoteStatusId']
+        this.laborPayload.WorkOrderQuoteId, this.exclusionPayload.WorkOrderQuoteId, this.chargesPayload.WorkOrderQuoteId = res['workOrderQuoteId'];
+        this.laborPayload.StatusId, this.exclusionPayload.StatusId, this.chargesPayload.StatusId = res['quoteStatusId']
         this.alertService.showMessage(
           this.moduleName,
           'Labor quotation created  Succesfully',
@@ -227,13 +229,13 @@ isQuote: boolean = true;
     this.clearQuoteData();
     this.savedWorkOrderData.partNumbers.forEach((pns)=>{
       if(this.selectedPartNumber == pns['description']){
-        this.laborPayload.IsDER, this.exclusionPayload.IsDER = pns['isDER'];
-        this.laborPayload.IsPMA, this.exclusionPayload.IsPMA = pns['isPMA'];
-        this.laborPayload.ItemMasterId, this.exclusionPayload.ItemMasterId = pns['masterPartId'];
-        this.laborPayload.CMMId, this.exclusionPayload.CMMId = pns['cmmId'];
-        this.laborPayload.SelectedId, this.exclusionPayload.SelectedId = pns['id'];
-        this.laborPayload.EstCompDate, this.exclusionPayload.EstCompDate = pns['estimatedCompletionDate'];
-        this.laborPayload.StatusId, this.exclusionPayload.StatusId = pns['workOrderStatusId'];
+        this.laborPayload.IsDER, this.exclusionPayload.IsDER, this.chargesPayload.IsDER = pns['isDER'];
+        this.laborPayload.IsPMA, this.exclusionPayload.IsPMA, this.chargesPayload.IsPMA = pns['isPMA'];
+        this.laborPayload.ItemMasterId, this.exclusionPayload.ItemMasterId, this.chargesPayload.ItemMasterId = pns['masterPartId'];
+        this.laborPayload.CMMId, this.exclusionPayload.CMMId, this.chargesPayload.CMMId = pns['cmmId'];
+        this.laborPayload.SelectedId, this.exclusionPayload.SelectedId, this.chargesPayload.SelectedId = pns['id'];
+        this.laborPayload.EstCompDate, this.exclusionPayload.EstCompDate, this.chargesPayload.EstCompDate = pns['estimatedCompletionDate'];
+        this.laborPayload.StatusId, this.exclusionPayload.StatusId, this.chargesPayload.StatusId = pns['workOrderStatusId'];
       }
     })
     // for(let pn of this.mpnPartNumbersList){
@@ -395,11 +397,40 @@ isQuote: boolean = true;
     )
   }
 
-  createChargeQuote(){
-    this.workOrderService.saveChargesQuote(this.chargesQuotation)
+  createChargeQuote(data){
+    this.chargesPayload.WorkOrderQuoteCharges = data.map(charge=>{
+      return {
+        "WorkOrderQuoteChargesId":0,
+        "WorkOrderQuoteDetailsId":0,
+        "ChargesTypeId":charge.workflowChargeTypeId,
+        "VendorId":charge.vendorId,
+        "Quantity":charge.quantity,
+        "RoNumberId":1,
+        "InvoiceNo":"InvoiceNo 123456",
+        "Amount":100,
+        "MarkupPercentageId":1,
+        "CostPlusAmount":charge.quantity*charge.unitPrice,
+        "FixedAmount":charge.fixedAmount,
+        "Description":charge.description,
+        "UnitCost":charge.unitCost,
+        "ExtendedCost":charge.extendedCost,
+        "UnitPrice":charge.unitPrice,
+        "ExtendedPrice":charge.extendedPrice,
+        "masterCompanyId":charge.masterCompanyId,
+        "CreatedBy":"admin",
+        "UpdatedBy":"admin",
+        "IsActive":true,
+        "IsDeleted":false
+      }
+    })
+    this.workOrderService.saveChargesQuote(this.chargesPayload)
     .subscribe(
       res => {
-        console.log(res);
+        this.alertService.showMessage(
+          this.moduleName,
+          'Quotation created  Succesfully',
+          MessageSeverity.success
+        );
       }
     )
   }

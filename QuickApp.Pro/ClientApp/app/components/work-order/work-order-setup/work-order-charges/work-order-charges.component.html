@@ -64,6 +64,10 @@
               <th class="text-center">Unit Price</th>
               <th class="text-center">Extended Price</th>
               <th class="text-center">vendorName</th>
+              <ng-container *ngIf="isQuote">
+                <th>Cost plus amount</th>
+                <th>Fixed Amount</th>
+              </ng-container>
               <th colspan="4" class="text-center"></th>
             </tr>
           </thead>
@@ -78,6 +82,10 @@
               <td>{{ w.unitPrice }}</td>
               <td>{{ w.extendedPrice }}</td>
               <td>{{ w.vendorName }}</td>
+              <ng-container *ngIf="isQuote">
+                  <th>{{w.quantity*w.unitPrice}}</th>
+                  <th><input [(ngModel)]="w.fixedAmount" /></th>
+              </ng-container>
               <td>
                 <button
                   class="btn-edit ptable-wo-btns"
@@ -103,6 +111,7 @@
             </tr>
           </tbody>
         </table>
+        <button class="btn btn-primary-cstm pull-right" (click)="createChargeQuote()">Save</button>
       </div>
     </div>
     <div class="clear"></div>

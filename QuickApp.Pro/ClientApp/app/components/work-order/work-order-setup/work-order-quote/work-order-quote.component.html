@@ -530,8 +530,9 @@
                            [workOrderChargesList]="workOrderChargesList" 
                         (saveChargesListForWO)="saveWorkOrderChargesList($event)"
                         (updateChargesListForWO)="updateWorkOrderChargesList($event)"
+                        (createQuote)="createChargeQuote($event)"
                         (refreshData)="getChargesListByWorkOrderId()" 
-                        
+                        [isQuote]="isQuote"
                         ></app-work-order-charges>
   </div>
 
