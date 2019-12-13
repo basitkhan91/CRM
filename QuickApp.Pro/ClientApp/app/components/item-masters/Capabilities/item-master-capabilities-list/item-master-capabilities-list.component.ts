@@ -101,6 +101,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
     LoadAtachapter: any[] = [];
     cmmList: any[];
     capabilityTypeData: any[];
+    managementStructureData: any = [];
     /** item-master-capabilities-list ctor */
     constructor(private itemMasterService: ItemMasterService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService,private dashnumberservices: DashNumberService,private formBuilder: FormBuilder,public workFlowtService: LegalEntityService,private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService,public inteService: IntegrationService,private workOrderService: WorkOrderService,private commonservice: CommonService)
     {
@@ -112,6 +113,10 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
     capabilityForm: any ={
         selectedCap:'',CapabilityTypeId: 0,companyId: 0,buId: 0,divisionId: 0,departmentId:0,manufacturerId:0,manufacturerLabel:'',ataChapterId:0,ataChapterLabel:'',atasubchapterId:0,ataSubchapterLabel:'',cmmId:0,cmmLabel:'',integrateWith:0,integrateWithLabel:'',description:'',entryDate:'',isVerified:false,managementStructureId:0,verifiedBy:'',dateVerified:'',nteHrs:0,tat:0, selectedPartId: [], selectedAircraftDataModels: [],
         selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: [], selectedDashNumbers2:[]
+    };
+    capabilityEditForm: any ={
+        itemMasterCapesId:0,selectedCap:'',CapabilityTypeId: 0,companyId: 0,buId: 0,divisionId: 0,departmentId:0,manufacturerId:0,manufacturerLabel:'',ataChapterId:0,ataChapterLabel:'',atasubchapterId:0,ataSubchapterLabel:'',cmmId:0,cmmLabel:'',integrateWith:0,integrateWithLabel:'',description:'',entryDate:'',isVerified:false,managementStructureId:0,verifiedBy:'',dateVerified:'',nteHrs:0,tat:0,memo:'', selectedPartId: 0, selectedAircraftDataModels: [],
+        selectedAircraftModelType: 0, selectedAircraftType: 0, selectedManufacturer: 0, selectedModel: 0, selectedDashNumber: 0
     };
 
     /*capabilityTypeData: any = [{
@@ -195,11 +200,14 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
 
             { field: 'partNumber', header: 'PN' },
             { field: 'partDescription', header: 'Description' },
-            { field: 'isHazardousMaterial', header: 'Hazardous Material' },
+            { field: 'manufacturerId', header: 'Manufacturer' },
             { field: 'itemMasterId', header: 'Item Master Id' },
-            //{field: 'materialType', header: 'Material Type' },
-            { field: 'vendorRanking', header: 'Material Type' },
-            { field: 'glAccountId', header: 'Gl Account' },
+            { field: 'aircraftTypeId', header: 'aircraftType' },
+            { field: 'aircraftModelId', header: 'aircraftModel' },
+            { field: 'aircraftDashNumberId', header: 'aircraftDashNumber' },
+            {field: 'description', header: 'description' },
+            { field: 'ataChapterId', header: 'ataChapter' },
+            { field: 'ataSubChapterId', header: 'ataSubChapterId' },
            
             //{ field: 'partCertificationNumber', header: 'Part Certification Num' }
             //{ field: 'createdBy', header: 'Created By' },
@@ -268,17 +276,110 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
         }, () => { console.log('Backdrop click') })
     }
 
-    openEdits(row) //this is for Edit Data get
+    checkMSParents(msId) {
+        this.managementStructureData.push(msId);
+        for (let a = 0; a < this.allManagemtninfo.length; a++) {
+            if (this.allManagemtninfo[a].managementStructureId == msId) {
+                if (this.allManagemtninfo[a].parentId) {
+                    this.checkMSParents(this.allManagemtninfo[a].parentId);
+                    break;
+                }
+            }
+        }
+
+    }
+
+    setManagementStrucureData(obj) {
+        this.managementStructureData = [];
+        this.checkMSParents(obj.managementStructureId);
+        if (this.managementStructureData.length == 4) {
+            this.capabilityEditForm.companyId = this.managementStructureData[3];
+            this.capabilityEditForm.buId = this.managementStructureData[2];
+            this.capabilityEditForm.departmentId = this.managementStructureData[1];
+            this.capabilityEditForm.divisionId = this.managementStructureData[0];
+            this.getBUList(this.capabilityEditForm.companyId);
+            this.getDivisionlist(this.capabilityEditForm.buId);
+            this.getDepartmentlist(this.capabilityEditForm.divisionId);
+        }
+        if (this.managementStructureData.length == 3) {
+            this.capabilityEditForm.companyId = this.managementStructureData[2];
+            this.capabilityEditForm.buId = this.managementStructureData[1];
+            this.capabilityEditForm.departmentId = this.managementStructureData[0];
+            this.getBUList(this.capabilityEditForm.companyId);
+            this.getDivisionlist(this.capabilityEditForm.buId);
+        }
+        if (this.managementStructureData.length == 2) {
+            this.capabilityEditForm.companyId = this.managementStructureData[1];
+            this.capabilityEditForm.buId = this.managementStructureData[0];
+            this.getBUList(this.capabilityEditForm.companyId);
+        }
+        if (this.managementStructureData.length == 1) {
+            this.capabilityEditForm.companyId = this.managementStructureData[0];
+        }
+
+    }
+    openView(content,row) //this is for Edit Data get
+    {
+        this.itemMasterService.isCapsEditMode = false;
+        this.isEditMode = false;
+        console.log(this.isEditMode);
+        this.openPopUpWithData(content,row);
+    }
+
+    openEdits(content,row) //this is for Edit Data get
     {
         this.itemMasterService.isCapsEditMode = true;
+        this.isEditMode = true;
         this.isSaving = true;
         this.itemMasterService.listCollection = row; //Storing Row Data  and saving Data in Service that will used in StockLine Setup
+        console.log(this.isEditMode);
+        this.openPopUpWithData(content,row);
+    }
+    openPopUpWithData(content,row) //this is for Edit Data get
+    {
+       
+        this.getAircraftModel(row.aircraftTypeId,this.capabilityEditForm);
+        this.getPartPublicationByItemMasterId(row.itemMasterId);
+        this.setManagementStrucureData(row);
+        
+        this.capabilityEditForm.itemMasterCapesId = row.itemMasterCapesId;
+        this.capabilityEditForm.CapabilityTypeId = row.capabilityId;
+        this.capabilityEditForm.selectedPartId = row.itemMasterId;
+        this.itemMasterId = row.itemMasterId;
+        this.capabilityEditForm.selectedAircraftType = row.aircraftTypeId;
+        this.capabilityEditForm.selectedAircraftModelType = row.aircraftModelId;
+        this.capabilityEditForm.selectedDashNumber = row.aircraftDashNumberId;
+        this.capabilityEditForm.description = row.description;
+        this.capabilityEditForm.manufacturerId = row.manufacturerId;
+        this.capabilityEditForm.cmmId = row.cmmId;
+        this.capabilityEditForm.ataChapterId = row.ataChapterId;
+        this.capabilityEditForm.ataSubChapterId = row.ataSubChapterId;
+        //if(row.entryDate)
+        this.capabilityEditForm.entryDate = new Date(row.entryDate);
+        this.capabilityEditForm.integrateWith = row.isIntegrateWith;
+        this.capabilityEditForm.isVerified = row.isVerified;
+        this.capabilityEditForm.verifiedBy = row.verifiedBy;
+        this.capabilityEditForm.dateVerified = new Date(row.dateVerified);
+        this.capabilityEditForm.ntehrs = row.ntehrs;
+        this.capabilityEditForm.tat = row.tat;
+        this.capabilityEditForm.memo = row.memo;
+        this.itemMasterService.capabilityCollection = this.getSelectedCollection;
+        this.isEditMode = false;
+        this.isDeleteMode = true;
+        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
 
-        this.itemMasterService.getCapabilityData(row.itemMasterId).subscribe(data => {
+
+       /* this.itemMasterService.getCapabilityData(row.itemMasterId).subscribe(data => {
             this.getSelectedCollection = data;
-            this.itemMasterService.capabilityCollection = this.getSelectedCollection;
-            this._route.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-create-capabilities');
-        });
+           // console.log(data);
+            let cap = data[0];
+           // console.log(cap);
+          
+            //this._route.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-create-capabilities');
+        });*/
        
 
        
@@ -374,6 +475,14 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
             else {
                 this.allAircraftinfo = []; //Making empty if selecting is null
             }
+        }
+    }
+    getAircraftModel(selectedAircraftType,capData) {
+        if (this.itemMasterService.isEditMode == false) {
+            this.itemMasterService.getAircraftTypes(selectedAircraftType).subscribe(
+                results => this.onDataLoadaircrafttypeSuccessful(results[0], capData),
+                error => this.onDataLoadFailed(error)
+            );
         }
     }
 
@@ -621,6 +730,9 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
             }
         }
     }
+    onPartNumberSelection(event) {
+        this.getPartPublicationByItemMasterId(event);
+    }
     onPartIdselection(event) {
         if (this.itemclaColl) {
 
@@ -704,7 +816,10 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
 	}
 
 	getBUList(companyId) {
-		this.capabilityForm.managementStructureId = companyId;
+        if(this.isEditMode)
+            this.capabilityForm.managementStructureId = companyId;
+        else
+            this.capabilityEditForm.managementStructureId = companyId;
 		this.bulist = [];
 		this.divisionlist = [];
 		this.departmentList = [];
@@ -727,7 +842,10 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
 	}
 
 	getDivisionlist(buId) {
-		this.capabilityForm.managementStructureId = buId;
+        if(this.isEditMode)
+            this.capabilityForm.managementStructureId = buId;
+        else
+            this.capabilityEditForm.managementStructureId = buId;
 		this.divisionlist = [];
 		this.departmentList = [];
 		for (let i = 0; i < this.allManagemtninfo.length; i++) {
@@ -748,7 +866,10 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
 	}
 
 	getDepartmentlist(divisionId) {
-		this.capabilityForm.managementStructureId = divisionId;
+        if(this.isEditMode)
+            this.capabilityForm.managementStructureId = divisionId;
+        else
+            this.capabilityEditForm.managementStructureId = divisionId;
 		this.departmentList = [];
 		for (let i = 0; i < this.allManagemtninfo.length; i++) {
 			if (this.allManagemtninfo[i].parentId == divisionId) {
@@ -768,7 +889,10 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
 	}
 
 	getDepartmentId(departmentId) {
-		this.capabilityForm.managementStructureId = departmentId;
+        if(this.isEditMode)
+            this.capabilityForm.managementStructureId = departmentId;
+        else
+            this.capabilityEditForm.managementStructureId = departmentId;
 		for (let i = 0; i < this.partListData.length; i++) {
 			this.partListData[i].parentDeptId = departmentId;
 		}
@@ -877,7 +1001,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
             this.atasubchapter = res[0].map(x => {
                 return {
                     label: x.description,
-                    value: x
+                    value: x.ataSubChapterId
                 }
             })
         })
@@ -888,7 +1012,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
             this.atasubchapter = responseData.map(x => {
                 return {
                     label: x.description,
-                    value: x
+                    value: x.ataSubChapterId
                 }
             })
         })
@@ -935,7 +1059,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
         capData.selectedManufacturer.forEach(element1 => {
             capbilitiesObj.aircraftTypeId = element1.value;
             capbilitiesObj.aircraftTypeName = element1.label;
-            capbilitiesObj.capabilityTypeId = capData.CapabilityTypeId;
+            capbilitiesObj.capabilityId = capData.CapabilityTypeId;
             capbilitiesObj.capabilityTypeName = capData.selectedCap;
             capbilitiesObj.aircraftManufacturer = element1.label;
             capbilitiesObj.PartId = capData.selectedPartId;
@@ -997,8 +1121,6 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
         
                             capbilitiesObj.DashNumber = element3.label;
                             capbilitiesObj.AircraftDashNumberId = element3.value;
-                           
-                            let index = capData.CapabilityTypeId - 1;
                             let mfObj = this.formBuilder.group(capbilitiesObj);
                             let mfgItemExisted = this.checkIsExisted(capData.CapabilityTypeId,element1.value, element2.value, this.mfgFormArray, capData);
                             if (mfgItemExisted == false) {
@@ -1058,6 +1180,44 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
         return itemExisted;
     }
     saveCapabilities() {
+        let capbilitiesForm = this.capabilitiesForm.value;
+        let capabilityCollection: any = [];
+        let mfgForm = capbilitiesForm.mfgForm;
+        mfgForm.forEach(element => {
+            capabilityCollection.push(element);
+        });
+        
+        this.itemMasterService.saveManfacturerinforcapes(capabilityCollection).subscribe(data11 => {
+            this.loadData();
+        })
+        this.mfgFormArray.controls = [];
+        this.modal.close();
+    }
+    updateCapabilities() {
+        let capbilitiesObj = new ItemMasterCapabilitiesModel;
+        capbilitiesObj.itemMasterCapesId = this.capabilityEditForm.capabilityId;
+        capbilitiesObj.capabilityId = this.capabilityEditForm.CapabilityTypeId;
+        capbilitiesObj.PartId = this.capabilityEditForm.selectedPartId;
+        capbilitiesObj.itemMasterId = this.itemMasterId;
+        capbilitiesObj.manufacturerId = this.capabilityEditForm.manufacturerId;
+        capbilitiesObj.ataChapterId = this.capabilityEditForm.ataChapterId;
+        capbilitiesObj.atasubchapterId = this.capabilityEditForm.ataSubChapterId;
+        capbilitiesObj.cmmId = this.capabilityEditForm.cmmId;
+        capbilitiesObj.integrateWith = this.capabilityEditForm.integrateWith;
+        capbilitiesObj.description = this.capabilityEditForm.description;
+        capbilitiesObj.entryDate = this.capabilityEditForm.entryDate;
+        capbilitiesObj.isVerified = this.capabilityEditForm.isVerified;
+        capbilitiesObj.managementStructureId = this.capabilityEditForm.managementStructureId;
+        capbilitiesObj.verifiedBy = this.capabilityEditForm.verifiedBy;
+        capbilitiesObj.dateVerified = this.capabilityEditForm.dateVerified;       
+        capbilitiesObj.aircraftTypeId = this.capabilityEditForm.selectedAircraftType;
+        capbilitiesObj.aircraftModelId = this.capabilityEditForm.selectedAircraftModelType;
+        capbilitiesObj.AircraftDashNumberId = this.capabilityEditForm.selectedDashNumber;
+        capbilitiesObj.nteHrs = this.capabilityEditForm.nteHrs;
+        capbilitiesObj.tat = this.capabilityEditForm.tat;
+        capbilitiesObj.memo = this.capabilityEditForm.memo;
+        let mfObj = this.formBuilder.group(capbilitiesObj);
+        this.mfgFormArray.push(mfObj);
         let capbilitiesForm = this.capabilitiesForm.value;
         let capabilityCollection: any = [];
         let mfgForm = capbilitiesForm.mfgForm;
