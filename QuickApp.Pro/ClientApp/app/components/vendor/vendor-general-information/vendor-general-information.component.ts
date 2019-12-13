@@ -661,9 +661,9 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
                 }
                 
                 this.vendorService.newAction(this.sourceVendor).subscribe(data => {
-
+                  
                     const vdata = {                           
-                        vendorId: this.sourceVendor.vendorId,
+                        vendorId:data.vendorId,
                         masterCompanyId: 1,
                         createdBy: this.userName,
                         updatedBy: this.userName
