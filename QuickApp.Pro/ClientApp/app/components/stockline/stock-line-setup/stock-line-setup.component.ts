@@ -481,7 +481,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		this.sourceStockLineSetup.itemMasterId = allWorkFlows[0].itemMasterId;
         this.sourceStockLineSetup.glAccountId = allWorkFlows[0].glAccountId;
         this.sourceStockLineSetup.glAccountName = allWorkFlows[0].accountName;
-        this.sourceStockLineSetup.NHA = allWorkFlows[0].NHA;
+        //this.sourceStockLineSetup.NHA = allWorkFlows[0].NHA;
        
 	}
 
