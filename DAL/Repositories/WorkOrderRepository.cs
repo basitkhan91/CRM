@@ -3578,7 +3578,7 @@ namespace DAL.Repositories
                                 wo.OpenDate,
                                 wo.SalesPersonId,
                                 SalesPerson = sp.FirstName,
-                                cust.CurrencyId,
+                                bi.CurrencyId,
                                 Currency = cur.DisplayName,
                                 wo.CreditLimit,
                                 wo.CreditTermsId,
