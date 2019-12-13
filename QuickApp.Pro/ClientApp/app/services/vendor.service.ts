@@ -759,14 +759,31 @@ export class VendorService {
         return this.actionEndpoint.createNewBillinginfo<any>(action);
     }
 
-      updateBillAddressdetails(action: any) {
+    updateBillAddressdetails(action: any) {
 
           return this.actionEndpoint.updateBillAddressDetails(action, action.vendorBillingAddressId);
     }
-   
 
+    vendorGeneralDocumentUploadEndpoint(action: any,vendorId,moduleId,moduleName,uploadedBy,masterCompanyId)
+    {        
+        return this.actionEndpoint.vendorGeneralDocumentUploadEndpoint(action,vendorId,moduleId,moduleName,uploadedBy,masterCompanyId);
+    }
 
+    vendorGeneralFileUpload(action: any) {
+      
+        return this.actionEndpoint.vendorGeneralFileUploadEndpoint<any>(action);
+    }
 
+    GetVendorGeneralDocumentsList(vendorId,moduleId)
+    {
+        return this.actionEndpoint.GetVendorGeneralDocumentsListEndpoint(vendorId,moduleId);
+    }
+
+    GetVendorAttachmentDelete(attachmentDetailId,updatedBy)
+    {
+        return this.actionEndpoint.GetVendorAttachmentDeleteEndpoint(attachmentDetailId,updatedBy);
+    }
+    
 }
 
 
