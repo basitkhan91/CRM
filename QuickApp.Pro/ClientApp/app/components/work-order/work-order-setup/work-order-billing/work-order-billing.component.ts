@@ -18,18 +18,19 @@ import { getModuleIdByName } from '../../../../generic/enums';
 /** WorkOrderBilling component*/
 export class WorkOrderBillingComponent implements OnInit {
     @Input() employeesOriginalData;
-    @Input() billingorInvoiceForm: Billing;
+    @Input() billingorInvoiceForm  ;
     @Input() savedWorkOrderData;
     @Input() currencyList;
     @Input() isEditBilling = false;
     @Output() saveWOBilling = new EventEmitter();
+    @Output() updateWOBilling = new EventEmitter();
     employeeList: any;
     customerNamesList: Object;
     soldCustomerSiteList = [];
     shipCustomerSiteList = [];
     shipToAttention;
-    soldCustomerAddress = new AddressModel();
-    shipCustomerAddress = new AddressModel();
+    soldCustomerAddress: any = new AddressModel();
+    shipCustomerAddress: any = new AddressModel();
     managementStructure = {
         companyId: null,
         buId: null,
@@ -56,8 +57,7 @@ export class WorkOrderBillingComponent implements OnInit {
 
     }
     ngOnInit() {
-        console.log(this.billingorInvoiceForm);
-
+        const data = this.billingorInvoiceForm;
         this.workOrderId = this.savedWorkOrderData.workOrderId;
         this.customerId = editValueAssignByCondition('customerId', this.savedWorkOrderData.customerId);
         // this.getCustomerDetailsFromHeader();
@@ -65,8 +65,11 @@ export class WorkOrderBillingComponent implements OnInit {
         this.getLegalEntity();
         this.generateNumbers();
         this.getInvoiceList();
+        console.log(this.isEditBilling)
         if (this.isEditBilling) {
-            this.commonService.getManagementStructureDetails(this.billingorInvoiceForm.managementStructureId).subscribe(res => {
+            this.getSiteNamesBySoldCustomerId(data.soldToCustomerId);
+            this.getSiteNamesByShipCustomerId(data.shipToCustomerId);
+            this.commonService.getManagementStructureDetails(data.managementStructureId).subscribe(res => {
                 this.selectedLegalEntity(res.Level1);
                 this.selectedBusinessUnit(res.Level2);
                 this.selectedDivision(res.Level3);
@@ -79,6 +82,32 @@ export class WorkOrderBillingComponent implements OnInit {
                 }
 
             })
+            if (this.billingorInvoiceForm.soldToCustomerId) {
+                this.soldCustomerAddress = {
+                    city: data.city,
+                    country: data.country,
+                    line1: data.line1,
+                    line2: data.line2,
+                    postalCode: parseInt(data.postalCode),
+                    stateOrProvince: data.stateOrProvince
+                }
+
+            }
+            if (this.billingorInvoiceForm.shipToCustomerId) {
+                this.shipCustomerAddress = {
+                    city: data.shipToCity,
+                    country: data.country,
+                    line1: data.line1,
+                    line2: data.shipToLine2,
+                    postalCode: parseInt(data.shipToPostalCode),
+                    stateOrProvince: data.shipToState
+                }
+
+            }
+
+
+
+
 
         }
     }
@@ -134,9 +163,13 @@ export class WorkOrderBillingComponent implements OnInit {
             this.customerNamesList = res;
         })
     }
-    selectSoldToCustomer(object) {
+    async getSiteNamesBySoldCustomerId(object) {
+        console.log(object);
+
         const { customerId } = object;
-        this.customerService.getCustomerShipAddressGet(customerId).subscribe(res => {
+        await this.customerService.getCustomerShipAddressGet(customerId).subscribe(res => {
+            console.log(res);
+
             this.soldCustomerShippingOriginalData = res[0];
             this.soldCustomerSiteList = res[0].map(x => {
                 return {
@@ -165,9 +198,9 @@ export class WorkOrderBillingComponent implements OnInit {
         }
     }
 
-    selectShipToCustomer(object) {
+    async  getSiteNamesByShipCustomerId(object) {
         const { customerId } = object;
-        this.customerService.getCustomerShipAddressGet(customerId).subscribe(res => {
+        await this.customerService.getCustomerShipAddressGet(customerId).subscribe(res => {
             this.shipCustomerShippingOriginalData = res[0];
             this.shipCustomerSiteList = res[0].map(x => {
                 return {
@@ -238,6 +271,9 @@ export class WorkOrderBillingComponent implements OnInit {
     }
     saveWorkOrderBilling() {
         this.saveWOBilling.emit(this.billingorInvoiceForm);
+    }
+    updateWorkOrderBilling(){
+        this.updateWOBilling.emit(this.billingorInvoiceForm);
     }
 
 

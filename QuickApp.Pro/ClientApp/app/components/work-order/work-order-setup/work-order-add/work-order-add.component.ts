@@ -68,6 +68,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     @Input() showTabsGrid = false;
     @Input() workOrderId;
     @Input() currencyList;
+    @Input() workFlowWorkOrderId = 0;
     // @Output() viewWorkFlow = new EventEmitter();
 
     // workOrderTypes: WorkOrderType[];
@@ -140,7 +141,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     workFlowWorkOrderData: any;
     workOrderAssetList: any = [];
     // workOrderId;
-    workFlowWorkOrderId: any = 0;
+    // workFlowWorkOrderId: any = 0;
     workOrderMaterialList: any;
     mpnPartNumbersList: any = [];
     stockLineList: any;
@@ -164,10 +165,12 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     workOrderExclusionsList: Object;
     isEditLabor: boolean = false;
     // mpnId: any;
-    billing: Billing = new Billing();
+    billing: Billing;
     loginDetailsForCreate: any;
     workOrderPartNumberId: any;
     isEditBilling: boolean = false;
+    isWorkOrderMainView: boolean = false;
+    mainWorkOrderId: any = 0;
 
 
 
@@ -229,6 +232,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
             } else { // edit WorkOrder
+                console.log(this.workOrderGeneralInformation);
+
                 const data = this.workOrderGeneralInformation;
                 this.workOrderGeneralInformation = {
                     ...data,
@@ -274,16 +279,19 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             }
         } else {
             console.log(this.subWorkOrderDetails);
-            // this.workOrderId = this.subWorkOrderDetails.workorderid;
-            this.workOrderPartNumberId = this.subWorkOrderDetails.mpnid;
-            this.workFlowWorkOrderId = this.subWorkOrderDetails.workFlowWorkOrderId;
-            this.workFlowId = this.subWorkOrderDetails.workFlowId;
-            this.savedWorkOrderData = {
-                ...this.workOrderId,
-                ...this.workFlowId,
-                ...this.workFlowWorkOrderId
 
+            this.workOrderPartNumberId = this.subWorkOrderDetails.mpnid;
+            this.workFlowId = this.subWorkOrderDetails.workFlowId;
+            this.mainWorkOrderId = this.subWorkOrderDetails.workorderid;
+            this.savedWorkOrderData = {
+                workOrderId: this.workOrderId,
+                workFlowId: this.workFlowId,
+                workFlowWorkOrderId: this.workFlowWorkOrderId
             }
+            console.log(this.workFlowWorkOrderId);
+
+            console.log(this.savedWorkOrderData);
+
         }
 
 
@@ -396,6 +404,12 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         // }
         this.subTabWorkFlow = '';
         this.subTabOtherOptions = '';
+        if (value !== 'billorInvoice') {
+            this.billing = undefined;
+        }
+        if (value == 'workOrderMain') {
+            this.isWorkOrderMainView = true;
+        }
 
     }
 
@@ -443,6 +457,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     deleteMPN(index) {
         this.workOrderGeneralInformation.partNumber = this.workOrderGeneralInformation.partNumber.splice(index, 1);
     }
+
 
 
     saveWorkOrder(): void {
@@ -518,13 +533,15 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         if (this.workFlowWorkOrderId !== 0) {
             this.isDisabledSteps = true;
         }
+        console.log(result);
 
-
+        console.log(data);
         this.getWorkOrderWorkFlowNos();
         if (this.workOrderGeneralInformation.isSinglePN == true) {
             // get WOrkFlow Equipment Details if WorFlow Exists
+
             this.getWorkFlowTabsData();
-            this.workOrderPartNumberId = getValueFromObjectByKey('itemMasterId', data.partNumbers[0].id);
+            this.workOrderPartNumberId = data.partNumbers[0].id;
             this.workFlowId = data.partNumbers[0].workflowId;
             this.workFlowWorkOrderId = result.workFlowWorkOrderId;
 
@@ -745,6 +762,9 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     //   })
     // }
 
+    closeWorkOrderMainView(value) {
+        this.isWorkOrderMainView = value;
+    }
 
     savedWorkFlowData(workFlowDataObject) {
         this.workOrderService.createWorkFlowWorkOrder(workFlowDataObject).subscribe(res => {
@@ -1215,29 +1235,41 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
     saveWorkOrderBilling(object) {
-        console.log(this.workOrderId);
-        console.log(this.workFlowWorkOrderId);
+
+
         const data = {
             ...object,
             ...this.loginDetailsForCreate,
             workOrderId: this.workOrderId,
-            workFlowWorkOrderId: this.workFlowWorkOrderId,
+            workOrderWorkFlowId: this.workFlowWorkOrderId,
             workOrderPartNoId: this.workOrderPartNumberId,
             itemMasterId: this.workOrderPartNumberId,
             customerId: editValueAssignByCondition('customerId', this.savedWorkOrderData.customerId),
             employeeId: editValueAssignByCondition('value', this.savedWorkOrderData.employeeId),
             soldToCustomerId: editValueAssignByCondition('customerId', object.soldToCustomerId),
             shipToCustomerId: editValueAssignByCondition('customerId', object.shipToCustomerId),
-            invoiceTime: moment(object.invoiceTime).format('HH:mm')
+
+            invoiceTime: moment(object.invoiceTime, ["h:mm A"]).format("HH:mm")
         }
 
-        this.workOrderService.createBillingByWorkOrderId(data).subscribe(res => {
-            this.alertService.showMessage(
-                this.moduleName,
-                'Work Order Billing Succesfully',
-                MessageSeverity.success
-            );
-        })
+        if (this.isEditBilling) {
+            this.workOrderService.updateBillingByWorkOrderId(data).subscribe(res => {
+                this.alertService.showMessage(
+                    this.moduleName,
+                    'Updated Work Order Billing Succesfully',
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            this.workOrderService.createBillingByWorkOrderId(data).subscribe(res => {
+                this.alertService.showMessage(
+                    this.moduleName,
+                    'Saved Work Order Billing Succesfully',
+                    MessageSeverity.success
+                );
+            })
+        }
+
     }
 
     billingCreateOrEdit() {
@@ -1248,8 +1280,10 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 printDate: new Date(res.printDate),
                 woOpenDate: new Date(res.openDate),
                 invoiceDate: new Date(res.invoiceDate),
-                soldToCustomerId: this.getCustomerNameandCodeById(res.soldToCustomerId, res, 'soldToCustomerId'),
-                shipToCustomerId: this.getCustomerNameandCodeById(res.shipToCustomerId, res, 'shipToCustomerId'),
+                soldToCustomerId: { customerId: res.soldToCustomerId, customerName: res.soldToCustomer },
+                shipToCustomerId: { customerId: res.shipToCustomerId, customerName: res.shipToCustomer },
+                customerRef: res.customerReference,
+                woType: res.workOrderType
             }
             this.isEditBilling = true;
             console.log(this.billing);
@@ -1274,14 +1308,14 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             }
         })
     }
-    getCustomerNameandCodeById(customerId, object, field) {
-        if (customerId !== null || customerId !== undefined) {
-            this.commonService.getCustomerNameandCodeById(customerId).subscribe(res => {
-                object[field] = res[0];
-            })
-        }
+    // getCustomerNameandCodeById(customerId, object, field) {
+    //     if (customerId !== null || customerId !== undefined) {
+    //         this.commonService.getCustomerNameandCodeById(customerId).subscribe(res => {
+    //             object[field] = res[0];
+    //         })
+    //     }
 
-    }
+    // }
 
 
 
