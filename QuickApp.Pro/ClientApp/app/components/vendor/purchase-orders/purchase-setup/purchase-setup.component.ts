@@ -371,7 +371,7 @@ export class PurchaseSetupComponent implements OnInit {
 						shipToSiteName: res.shipToSiteName,
 						shipToAddress1: res.shipToAddress1,
 						shipToAddress2: res.shipToAddress2,
-						shipToAddress3: res.shipToAddress3,
+						// shipToAddress3: res.shipToAddress3,
 						shipToCity: res.shipToCity,
 						shipToStateOrProvince: res.shipToStateOrProvince,
 						shipToPostalCode: res.shipToPostalCode,
@@ -389,7 +389,7 @@ export class PurchaseSetupComponent implements OnInit {
 						//billToUserId: res.billToUserId,
 						billToAddress1: res.billToAddress1,
 						billToAddress2: res.billToAddress2,
-						billToAddress3: res.billToAddress3,
+						// billToAddress3: res.billToAddress3,
 						billToCity: res.billToCity,
 						billToStateOrProvince: res.billToState,
 						billToPostalCode: res.billToPostalCode,
@@ -593,7 +593,7 @@ export class PurchaseSetupComponent implements OnInit {
 		
 							this.shipToAddress.address1 = data.shipToAddress1;
 							this.shipToAddress.address2 = data.shipToAddress2;
-							this.shipToAddress.address3 = data.shipToAddress3;
+							// this.shipToAddress.address3 = data.shipToAddress3;
 							this.shipToAddress.city = data.shipToCity;
 							this.shipToAddress.stateOrProvince = data.shipToState;
 							this.shipToAddress.postalCode = data.shipToPostalCode;
@@ -652,7 +652,7 @@ export class PurchaseSetupComponent implements OnInit {
 		
 							this.billToAddress.address1 = data.billToAddress1;
 							this.billToAddress.address2 = data.billToAddress2;
-							this.billToAddress.address3 = data.billToAddress3;
+							// this.billToAddress.address3 = data.billToAddress3;
 							this.billToAddress.city = data.billToCity;
 							this.billToAddress.stateOrProvince = data.billToState;
 							this.billToAddress.postalCode = data.billToPostalCode;
@@ -806,7 +806,7 @@ export class PurchaseSetupComponent implements OnInit {
 			shipToSiteName: this.postSiteNameForShipping(this.sourcePoApproval.shipToUserTypeId, this.sourcePoApproval.shipToAddressId),
 			shipToAddress1: this.shipToAddress.address1,
 			shipToAddress2: this.shipToAddress.address2,
-			shipToAddress3: this.shipToAddress.address3,
+			// shipToAddress3: this.shipToAddress.address3,
 			shipToCity: this.shipToAddress.city,
 			shipToStateOrProvince: this.shipToAddress.stateOrProvince,
 			shipToPostalCode: this.shipToAddress.postalCode,
@@ -814,7 +814,7 @@ export class PurchaseSetupComponent implements OnInit {
 			billToSiteName: this.postSiteNameForBilling(this.sourcePoApproval.billToUserTypeId, this.sourcePoApproval.billToAddressId),
 			billToAddress1: this.billToAddress.address1,
 			billToAddress2: this.billToAddress.address2,
-			billToAddress3: this.billToAddress.address3,
+			// billToAddress3: this.billToAddress.address3,
 			billToCity: this.billToAddress.city,
 			billToStateOrProvince: this.billToAddress.stateOrProvince,
 			billToPostalCode: this.billToAddress.postalCode,
@@ -894,7 +894,7 @@ export class PurchaseSetupComponent implements OnInit {
 							poPartSplitAddressId: childDataList[j].partListAddressId ? childDataList[j].partListAddressId : 0,
 							poPartSplitAddress1: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('address1', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
 							poPartSplitAddress2: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('address2', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
-							poPartSplitAddress3: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('address3', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
+							// poPartSplitAddress3: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('address3', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
 							poPartSplitCity: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('city', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
 							poPartSplitStateOrProvince: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('stateOrProvince', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
 							poPartSplitPostalCode: this["splitAddressData"+i+j].length > 0 ? getValueFromArrayOfObjectById('postalCode', 'addressId', childDataList[j].partListAddressId, this["splitAddressData"+i+j]) : '',
@@ -1221,7 +1221,7 @@ export class PurchaseSetupComponent implements OnInit {
 			 this["splitAddressData"+pindex+cindex] = returnedcustomerAddressses[0];
 			if(this.isEditMode) {
 				if(data.poPartSplitAddressId == 0) {
-					this["splitAddressData"+pindex+cindex].push({addressId: 0, address1: data.poPartSplitAddress1, address2: data.poPartSplitAddress2, address3: data.poPartSplitAddress3, city: data.poPartSplitCity, stateOrProvince: data.poPartSplitState, postalCode: data.poPartSplitPostalCode, country: data.poPartSplitCountry})
+					this["splitAddressData"+pindex+cindex].push({addressId: 0, address1: data.poPartSplitAddress1, address2: data.poPartSplitAddress2, city: data.poPartSplitCity, stateOrProvince: data.poPartSplitState, postalCode: data.poPartSplitPostalCode, country: data.poPartSplitCountry})
 				}
 				this["splitAddressData"+pindex+cindex].map(x => {
 					if(x.addressId == 0) {
@@ -1264,7 +1264,7 @@ export class PurchaseSetupComponent implements OnInit {
 				//this.splitAddressData = vendorAddresses[0];
 				if(this.isEditMode) {
 					if(data.poPartSplitAddressId == 0) {
-						this["splitAddressData"+pindex+cindex].push({addressId: 0, address1: data.poPartSplitAddress1, address2: data.poPartSplitAddress2, address3: data.poPartSplitAddress3, city: data.poPartSplitCity, stateOrProvince: data.poPartSplitState, postalCode: data.poPartSplitPostalCode, country: data.poPartSplitCountry})
+						this["splitAddressData"+pindex+cindex].push({addressId: 0, address1: data.poPartSplitAddress1, address2: data.poPartSplitAddress2, city: data.poPartSplitCity, stateOrProvince: data.poPartSplitState, postalCode: data.poPartSplitPostalCode, country: data.poPartSplitCountry})
 					}
 					//this.onShipToGetAddress(data, data.poPartSplitAddressId);
 				}
@@ -1281,12 +1281,12 @@ export class PurchaseSetupComponent implements OnInit {
 					...x,
 					address1: x.line1,
 					address2: x.line2,
-					address3: x.line3,
+					// address3: x.line3,
 				}
 			});
 			if(this.isEditMode) {
 				if(data.poPartSplitAddressId == 0) {
-					this["splitAddressData"+pindex+cindex].push({addressId: 0, address1: data.poPartSplitAddress1, address2: data.poPartSplitAddress2, address3: data.poPartSplitAddress3, city: data.poPartSplitCity, country: data.poPartSplitCountry, postalCode: data.poPartSplitPostalCode, stateOrProvince: data.poPartSplitState});
+					this["splitAddressData"+pindex+cindex].push({addressId: 0, address1: data.poPartSplitAddress1, address2: data.poPartSplitAddress2, city: data.poPartSplitCity, country: data.poPartSplitCountry, postalCode: data.poPartSplitPostalCode, stateOrProvince: data.poPartSplitState});
 				}
 			} else {
 				this.onShipToGetCompanyAddress(this.companySiteList_Shipping[0].legalEntityShippingAddressId);
@@ -1401,7 +1401,7 @@ export class PurchaseSetupComponent implements OnInit {
 				}
 				if(this.isEditMode) {
 					if(res.shipToAddressId == 0) {
-						this.shipToCusData.push({customerShippingAddressId: 0, address1: res.shipToAddress1, address2: res.shipToAddress2, address3: res.shipToAddress3, city: res.shipToCity, stateOrProvince: res.shipToStateOrProvince, postalCode: res.shipToPostalCode, country: res.shipToCountry, siteName: res.shipToSiteName})
+						this.shipToCusData.push({customerShippingAddressId: 0, address1: res.shipToAddress1, address2: res.shipToAddress2, city: res.shipToCity, stateOrProvince: res.shipToStateOrProvince, postalCode: res.shipToPostalCode, country: res.shipToCountry, siteName: res.shipToSiteName})
 					}					
 				}
 				this.onShipToGetAddress(res, res.shipToAddressId);
@@ -1428,7 +1428,7 @@ export class PurchaseSetupComponent implements OnInit {
 				}
 				if(this.isEditMode) {
 					if(res.shipToAddressId == 0) {
-						this.vendorSelected.push({vendorShippingAddressId: 0, address1: res.shipToAddress1, address2: res.shipToAddress2, address3: res.shipToAddress3, city: res.shipToCity, stateOrProvince: res.shipToStateOrProvince, postalCode: res.shipToPostalCode, country: res.shipToCountry, siteName: res.shipToSiteName})
+						this.vendorSelected.push({vendorShippingAddressId: 0, address1: res.shipToAddress1, address2: res.shipToAddress2, city: res.shipToCity, stateOrProvince: res.shipToStateOrProvince, postalCode: res.shipToPostalCode, country: res.shipToCountry, siteName: res.shipToSiteName})
 					}					
 				}
 				this.onShipToGetAddress(res, res.shipToAddressId);
@@ -1470,6 +1470,8 @@ export class PurchaseSetupComponent implements OnInit {
 
 		if (data.shipToUserTypeId == 1 || data.shipToUserType == 1) {
 			this.shipToAddress = getObjectById('customerShippingAddressId', id, this.shipToCusData);
+			this.shipToAddress = {...this.shipToAddress, country: this.shipToAddress.countryName ? this.shipToAddress.countryName : this.shipToAddress.country}
+
 		} else if (data.shipToUserTypeId == 2 || data.shipToUserType == 2) {
 			this.shipToAddress = getObjectById('vendorShippingAddressId', id, this.vendorSelected);
 		}
@@ -1490,7 +1492,7 @@ export class PurchaseSetupComponent implements OnInit {
 			if (resp) {
 				this.shipToAddress.address1 = resp.line1;
 				this.shipToAddress.address2 = resp.line2;
-				this.shipToAddress.address3 = resp.line3;
+				// this.shipToAddress.address3 = resp.line3;
 				this.shipToAddress.city = resp.city;
 				this.shipToAddress.stateOrProvince = resp.stateOrProvince;
 				this.shipToAddress.postalCode = resp.postalCode;
@@ -1498,7 +1500,7 @@ export class PurchaseSetupComponent implements OnInit {
 			} else {
 				this.shipToAddress.address1 = '';
 				this.shipToAddress.address2 = '';
-				this.shipToAddress.address3 = '';
+				// this.shipToAddress.address3 = '';
 				this.shipToAddress.city = '';
 				this.shipToAddress.stateOrProvince = '';
 				this.shipToAddress.postalCode = '';
@@ -1542,8 +1544,14 @@ export class PurchaseSetupComponent implements OnInit {
 			this.addressSiteNameHeader = 'Edit Ship To Customer Details';
 			this.isEditModeShipping = true;
 			this.tempshipToAddress = getObjectById('customerShippingAddressId', data.shipToAddressId, this.shipToCusData);
-			const countryName = this.tempshipToAddress.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
-			this.addressFormForShipping = {...this.tempshipToAddress, country: getObjectByValue('label', countryName, this.allCountriesList)};
+			// this.tempshipToAddress.country = this.tempshipToAddress.country ?  getValueFromArrayOfObjectById('label', 'value', this.tempshipToAddress.country, this.countriesList) : '';
+			// const countryName = this.tempshipToAddress.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+			if(typeof this.tempshipToAddress.country == 'number') {
+				this.addressFormForShipping = {...this.tempshipToAddress, country: getObjectByValue('value', this.tempshipToAddress.country, this.allCountriesList)};
+			} else {
+				this.addressFormForShipping = {...this.tempshipToAddress, country: getObjectByValue('label', this.tempshipToAddress.country, this.allCountriesList)};
+			}
+			
 		}
 		if (value === 'AddVenSiteName') {
 			this.addressSiteNameHeader = 'Add Ship To Vendor Details';
@@ -1570,7 +1578,7 @@ export class PurchaseSetupComponent implements OnInit {
 					const resp = res;
 						this.shipToAddress.address1 = resp.line1;
 						this.shipToAddress.address2 = resp.line2;
-						this.shipToAddress.address3 = resp.line3;
+						// this.shipToAddress.address3 = resp.line3;
 						this.shipToAddress.city = resp.city;
 						this.shipToAddress.stateOrProvince = resp.stateOrProvince;
 						this.shipToAddress.postalCode = resp.postalCode;
@@ -1599,7 +1607,7 @@ export class PurchaseSetupComponent implements OnInit {
 				}
 				if(this.isEditMode) {
 					if(res.billToAddressId == 0) {
-						this.billToCusData.push({customerBillingAddressId: 0, address1: res.billToAddress1, address2: res.billToAddress2, address3: res.billToAddress3, city: res.billToCity, stateOrProvince: res.billToStateOrProvince, postalCode: res.billToPostalCode, country: res.billToCountry, siteName: res.billToSiteName})
+						this.billToCusData.push({customerBillingAddressId: 0, address1: res.billToAddress1, address2: res.billToAddress2, city: res.billToCity, stateOrProvince: res.billToStateOrProvince, postalCode: res.billToPostalCode, country: res.billToCountry, siteName: res.billToSiteName})
 					}					
 				}
 				this.onBillToGetAddress(res, res.billToAddressId);
@@ -1629,7 +1637,7 @@ export class PurchaseSetupComponent implements OnInit {
 
 						this.billToAddress.address1 = res.billToAddress1;
 						this.billToAddress.address2 = res.billToAddress2;
-						this.billToAddress.address3 = res.billToAddress3;
+						// this.billToAddress.address3 = res.billToAddress3;
 						this.billToAddress.city = res.billToCity;
 						this.billToAddress.stateOrProvince = res.billToState;
 						this.billToAddress.postalCode = res.billToPostalCode;
@@ -1678,15 +1686,16 @@ export class PurchaseSetupComponent implements OnInit {
 				if (resp) {
 					this.billToAddress.address1 = resp.address1;
 					this.billToAddress.address2 = resp.address2;
-					this.billToAddress.address3 = resp.address3;
+					// this.billToAddress.address3 = resp.address3;
 					this.billToAddress.city = resp.city;
 					this.billToAddress.stateOrProvince = resp.stateOrProvince;
 					this.billToAddress.postalCode = resp.postalCode;
-					this.billToAddress.country = resp.country;
+					this.billToAddress.country = resp.country ? getValueFromArrayOfObjectById('label', 'value', resp.country, this.countriesList) : '';
+					//this.billToAddress.country = resp.country;
 				} else {
 					this.billToAddress.address1 = '';
 					this.billToAddress.address2 = '';
-					this.billToAddress.address3 = '';
+					// this.billToAddress.address3 = '';
 					this.billToAddress.city = '';
 					this.billToAddress.stateOrProvince = '';
 					this.billToAddress.postalCode = '';
@@ -1700,7 +1709,7 @@ export class PurchaseSetupComponent implements OnInit {
 				if (resp) {
 					this.billToAddress.address1 = resp.line1;
 					this.billToAddress.address2 = resp.line2;
-					this.billToAddress.address3 = resp.line3;
+					// this.billToAddress.address3 = resp.line3;
 					this.billToAddress.city = resp.city;
 					this.billToAddress.stateOrProvince = resp.stateOrProvince;
 					this.billToAddress.postalCode = resp.postalCode;
@@ -1708,7 +1717,7 @@ export class PurchaseSetupComponent implements OnInit {
 				} else {
 					this.billToAddress.address1 = '';
 					this.billToAddress.address2 = '';
-					this.billToAddress.address3 = '';
+					// this.billToAddress.address3 = '';
 					this.billToAddress.city = '';
 					this.billToAddress.stateOrProvince = '';
 					this.billToAddress.postalCode = '';
@@ -1724,7 +1733,7 @@ export class PurchaseSetupComponent implements OnInit {
 			if (resp) {
 				this.billToAddress.address1 = resp.line1;
 				this.billToAddress.address2 = resp.line2;
-				this.billToAddress.address3 = resp.line3;
+				// this.billToAddress.address3 = resp.line3;
 				this.billToAddress.city = resp.city;
 				this.billToAddress.stateOrProvince = resp.stateOrProvince;
 				this.billToAddress.postalCode = resp.postalCode;
@@ -1732,7 +1741,7 @@ export class PurchaseSetupComponent implements OnInit {
 			} else {
 				this.billToAddress.address1 = '';
 				this.billToAddress.address2 = '';
-				this.billToAddress.address3 = '';
+				// this.billToAddress.address3 = '';
 				this.billToAddress.city = '';
 				this.billToAddress.stateOrProvince = '';
 				this.billToAddress.postalCode = '';
@@ -1755,9 +1764,15 @@ export class PurchaseSetupComponent implements OnInit {
 			this.addressSiteNameHeader = 'Edit Bill To Customer Details';
 			this.isEditModeBilling = true;
 			this.tempbillToAddress = getObjectById('customerBillingAddressId', data.billToAddressId, this.billToCusData);
-			const countryName = this.tempbillToAddress.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
-			this.addressFormForBilling = {...this.tempbillToAddress, country: getObjectByValue('label', countryName, this.allCountriesList)};
+			// this.tempshipToAddress.country = this.tempshipToAddress.country ?  getValueFromArrayOfObjectById('label', 'value', this.tempshipToAddress.country, this.countriesList) : '';
+			// const countryName = this.tempbillToAddress.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');			
+			if(typeof this.tempshipToAddress.country == 'number') {
+				this.addressFormForBilling = {...this.tempbillToAddress, country: getObjectByValue('value', this.tempbillToAddress.country, this.allCountriesList)};
+			} else {
+				this.addressFormForBilling = {...this.tempbillToAddress, country: getObjectByValue('label', this.tempbillToAddress.country, this.allCountriesList)};
+			}
 		}
+
 		if (value === 'AddVenSiteName') {
 			this.addressSiteNameHeader = 'Add Bill To Vendor Details';
 		}
@@ -1785,7 +1800,7 @@ export class PurchaseSetupComponent implements OnInit {
 					const resp = res;				
 						this.billToAddress.address1 = resp.line1;
 						this.billToAddress.address2 = resp.line2;
-						this.billToAddress.address3 = resp.line3;
+						// this.billToAddress.address3 = resp.line3;
 						this.billToAddress.city = resp.city;
 						this.billToAddress.stateOrProvince = resp.stateOrProvince;
 						this.billToAddress.postalCode = resp.postalCode;
@@ -2880,7 +2895,7 @@ export class PurchaseSetupComponent implements OnInit {
 						`Saved  Billing Information Sucessfully `,
 						MessageSeverity.success
 					);
-				})
+				})				
 			} else {
 					await this.customerService.newBillingAdd(customerData).subscribe(response => {
 						this.onBillToCustomerSelected(customerData.customerId, this.sourcePoApproval, response.customerBillingAddressId);
@@ -3141,7 +3156,7 @@ export class PurchaseSetupComponent implements OnInit {
 			...this.addNewAddress,
 			address1: this.addNewAddress.line1,
 			address2: this.addNewAddress.line2,
-			address3: this.addNewAddress.line3,
+			// address3: this.addNewAddress.line3,
 			createdBy: this.userName,
 			updatedBy: this.userName,
 			masterCompanyId: 1,
@@ -3226,10 +3241,11 @@ export class PurchaseSetupComponent implements OnInit {
 			const addressInfo = {
 				...this.addNewAddress,
 				country: getValueFromObjectByKey('label', this.addNewAddress.country),
+				countryName: getValueFromObjectByKey('label', this.addNewAddress.country),
 				addressId: 0,
 				address1: this.addNewAddress.line1,
 				address2: this.addNewAddress.line2,
-				address3: this.addNewAddress.line3,
+				// address3: this.addNewAddress.line3,
 			}
 			this.tempSplitAddressData.push(addressInfo);
 			this.tempSplitAddressData.map(x => {
@@ -3356,17 +3372,24 @@ export class PurchaseSetupComponent implements OnInit {
 			this.addressHeader = 'Edit Split Shipment Address';
 			this.isEditModeSplitAddress = true;
 				this.tempSplitAddress = getObjectById('addressId', splitPart.partListAddressId, this["splitAddressData"+pindex+cindex]);
-				const countryName = this.tempSplitAddress.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+				// const countryName = this.tempSplitAddress.country.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
 				this.addNewAddress = {
 					...this.tempSplitAddress,
 					line1: this.tempSplitAddress.address1,
 					line2: this.tempSplitAddress.address2,
-					line3: this.tempSplitAddress.address3,
-					country: getObjectByValue('label', countryName, this.allCountriesList)
+					// line3: this.tempSplitAddress.address3,
+					//country: getObjectByValue('value', this.tempSplitAddress.country, this.allCountriesList)
 				};
+				if(typeof this.tempSplitAddress.country == 'number') {
+					this.addNewAddress = {...this.addNewAddress, country: getObjectByValue('value', this.tempSplitAddress.country, this.allCountriesList)}
+				} else {
+					this.addNewAddress = {...this.addNewAddress, country: getObjectByValue('label', this.tempSplitAddress.country, this.allCountriesList)}
+				}
 
 		}
 	}
+
+	
 
 	onChangeParentQtyOrdered(event, partList) {
 		console.log(partList);		
