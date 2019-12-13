@@ -3528,7 +3528,7 @@ namespace DAL.Repositories
                 var data = (from bi in _appContext.WorkOrderBillingInvoicing
                             join wo in _appContext.WorkOrder on bi.WorkOrderId equals wo.WorkOrderId
                             join wop in _appContext.WorkOrderPartNumber on bi.WorkOrderPartNoId equals wop.ID
-                            join wowf in _appContext.WorkOrderWorkFlow on bi.WorkOrderWorkFlowId equals wowf.WorkFlowWorkOrderId
+                            join wowf in _appContext.WorkOrderWorkFlow on bi.WorkFlowWorkOrderId equals wowf.WorkFlowWorkOrderId
                             join cust in _appContext.Customer on bi.CustomerId equals cust.CustomerId
                             join it in _appContext.InvoiceType on bi.InvoiceTypeId equals it.InvoiceTypeId
                             join emp in _appContext.Employee on bi.EmployeeId equals emp.EmployeeId
@@ -3543,7 +3543,7 @@ namespace DAL.Repositories
                             join mnge in _appContext.Employee on bi.ManagementEmpId equals mnge.EmployeeId into bimnge
                             from mnge in bimnge.DefaultIfEmpty()
                             join sp in _appContext.Employee on wo.SalesPersonId equals sp.EmployeeId
-                            join cur in _appContext.Currency on cust.CurrencyId equals cur.CurrencyId into custcur
+                            join cur in _appContext.Currency on bi.CurrencyId equals cur.CurrencyId into custcur
                             from cur in custcur.DefaultIfEmpty()
                             join ct in _appContext.CreditTerms on wo.CreditTermsId equals ct.CreditTermsId
                             join sv in _appContext.CustomerShipping on bi.ShipViaId equals sv.CustomerShippingId into bisv
@@ -3555,7 +3555,7 @@ namespace DAL.Repositories
                                 bi.BillingInvoicingId,
                                 bi.WorkOrderId,
                                 bi.WorkOrderPartNoId,
-                                bi.WorkOrderWorkFlowId,
+                                bi.WorkFlowWorkOrderId,
                                 bi.ItemMasterId,
                                 bi.InvoiceTypeId,
 
