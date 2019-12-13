@@ -247,12 +247,20 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		this.allPolistInfo = getCreditTermsList;
 	}
 
+	onRoListDataLoadSuccessful(getCreditTermsList: any[]) {
+		this.alertService.stopLoadingMessage();
+		this.loadingIndicator = false;
+		this.dataSource.data = getCreditTermsList;
+
+		this.allRolistInfo = getCreditTermsList;
+	}
+
 	loadRoData()
 	{
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.vendorservice.getRepairOrderByItemId(this.sourceItemMaster.partId).subscribe(
-            results => this.onPoListDataLoadSuccessful(results[0]),
+			results => this.onRoListDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
 	}
@@ -932,7 +940,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
         
     }
 
-    onROUnitCostLoadSuccessful(getROCost: any[]) {
+    onROUnitCostLoadSuccessful(getROCost: any) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
 
@@ -944,7 +952,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.stocklineser.getRepairOrderUnitCost(RoId).subscribe(
-            results => this.onROUnitCostLoadSuccessful(results[0]),
+            results => this.onROUnitCostLoadSuccessful(results),
             error => this.onDataLoadFailed(error)
         );
 	}
