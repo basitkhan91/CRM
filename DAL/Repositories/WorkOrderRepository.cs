@@ -353,7 +353,7 @@ namespace DAL.Repositories
                                            wo.CustomerReference,
                                            workFlowWorkOrderId = wo.IsSinglePN == true ? wf.WorkFlowWorkOrderId : 0,
                                            workFlowId = wo.IsSinglePN == true ? wf.WorkflowId : 0,
-									   }).FirstOrDefault();
+                                       }).FirstOrDefault();
                 return workOrderHeader;
             }
             catch (Exception)
@@ -3522,6 +3522,9 @@ namespace DAL.Repositories
         {
             try
             {
+
+
+
                 var data = (from bi in _appContext.WorkOrderBillingInvoicing
                             join wo in _appContext.WorkOrder on bi.WorkOrderId equals wo.WorkOrderId
                             join wop in _appContext.WorkOrderPartNumber on bi.WorkOrderPartNoId equals wop.ID
@@ -3624,8 +3627,17 @@ namespace DAL.Repositories
                                 sv.ShipVia,
                                 sv.ShippingAccountinfo,
                                 bi.WayBillRef,
-                                bi.Tracking
+                                bi.Tracking,
+                                wo.CSR,
+                                wo.CustomerReference,
+                                CustomerName = cust.Name,
+                                wo.CustomerId,
+                                cust.Email,
+                                cust.CustomerPhone,
                             }).FirstOrDefault();
+
+                 
+
                 return data;
 
             }
@@ -3848,7 +3860,8 @@ namespace DAL.Repositories
             {
 
                 var list = (from a in _appContext.Attachment
-                            join ad in _appContext.AttachmentDetails on a.AttachmentId equals ad.AttachmentId
+                            join ad in _appContext.AttachmentDetails on a.AttachmentId equals ad.AttachmentId into aad
+                            from ad in aad.DefaultIfEmpty()
                             join p in _appContext.Publication on a.ReferenceId equals p.PublicationRecordId
                             join pim in _appContext.PublicationItemMasterMapping on p.PublicationRecordId equals pim.PublicationRecordId
                             where a.IsDeleted == false && ad.IsDeleted == false && a.ModuleId == Convert.ToInt32(ModuleEnum.Publication)
@@ -3857,9 +3870,9 @@ namespace DAL.Repositories
                             {
                                 p.PublicationId,
                                 p.PublicationRecordId,
-                                ad.FileName,
-                                ad.Link,
-                                ad.CreatedDate
+                                FileName = ad == null ? "" : ad.FileName,
+                                Link = ad == null ? "" : ad.Link,
+                                CreatedDate = p.CreatedDate
                             }).ToList();
                 return list;
             }
