@@ -649,13 +649,15 @@ export class AccountingCalendarComponent implements OnInit {
                   collection.push(obj)
                 })
             this.ledgerNameObjectData = collection
-            
+            })
     }
 
     loadLedgerNames(event){
-        this.ledgerNameObject = [...this.ledgerNameObjectData.filter(x => {
-            return x.name.toLowerCase().includes(event.query.toLowerCase())
-        })]
+        if(this.ledgerNameObjectData){
+            this.ledgerNameObject = [...this.ledgerNameObjectData.filter(x => {
+                return x.name.toLowerCase().includes(event.query.toLowerCase())
+            })]
+        }        
     }
   
 }
