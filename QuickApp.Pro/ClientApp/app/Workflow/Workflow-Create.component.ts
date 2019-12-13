@@ -1430,7 +1430,6 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                             direction[0].taskId = this.currenttaskId;
                         }
                         this.workFlowList[0].directions = direction;
-                        //this.workFlowList[0].directions = this.GetDirections();
                     }
                     if (this.selectedItems[i].Name == 'Equipment') {
                         var equipment: any[];
@@ -1441,8 +1440,6 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                             equipment[0].taskId = this.currenttaskId;
                         }
                         this.workFlowList[0].equipments = equipment;
-
-                        //this.workFlowList[0].equipments = this.GetEquipmentList();
                     }
                     if (this.selectedItems[i].Name == 'Expertise') {
                         var expertise: any[];
@@ -1488,8 +1485,6 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                             this.workFlowList[0].totalMaterialCost = 0;
                         }
                         this.workFlowList[0].publication = publication;
-
-                        //this.workFlowList[0].publication = this.GetPublication();
                     }
                     if (this.selectedItems[i].Name == 'Exclusions') {
                         var exclusion: any[];
@@ -1504,8 +1499,6 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                             this.workFlowList[0].sumofExtendedCost = 0;
                         }
                         this.workFlowList[0].exclusions = exclusion;
-
-                        //this.workFlowList[0].exclusions = this.GetExclusions();
                     }
                     if (this.selectedItems[i].Name == 'Measurements') {
                         var measurement: any[];
@@ -1516,13 +1509,10 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                             measurement[0].taskId = this.currenttaskId;
                         }
                         this.workFlowList[0].measurements = measurement;
-
-
                     }
                 }
                 this.workFlow = this.workFlowList[0];
             }
-
         }
         else {
             var wf = this.workFlowList.filter(x => x.taskId == this.currenttaskId);
@@ -1551,9 +1541,6 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                 this.setCurrentPanel("", this.currentPanelId);
             }, 1000);
         }
-
-        //this.currenttaskId = "0";
-        //this.selectedItems = [];
     }
 
     GetWorkFlow(): any {
@@ -1841,13 +1828,16 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     addWorkFlow(isHeaderUpdate: boolean): void {
         this.sourceWorkFlow.workflowId = undefined;
 
-        if (this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost(false)) {
+        if (!this.validateWorkFlowHeader()) {
+            return;
+        }
+
+        if (!this.calculateTotalWorkFlowCost(false)) {
             var OkCancel = confirm("Work Flow total cost exceed the BER threshold amount. Do you still want to continue?");
             if (OkCancel == false) {
                 return;
             }
         }
-
 
         this.SaveWorkFlow();
         if (isHeaderUpdate) {
@@ -1887,19 +1877,22 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                 this.alertService.showMessage(this.title, message, MessageSeverity.error);
             }
         )
-        // }
-
     }
+
     title: string = "Work Flow";
 
     updateWorkFlow(isHeaderUpdate: boolean): void {
+        if (!this.validateWorkFlowHeader()) {
+            return;
+        }
 
-        if (this.validateWorkFlowHeader() || !this.calculateTotalWorkFlowCost(false)) {
+        if (!this.calculateTotalWorkFlowCost(false)) {
             var OkCancel = confirm("Work Flow total cost exceed the BER threshold amount. Do you still want to continue?");
             if (OkCancel == false) {
                 return;
             }
         }
+
         this.SaveWorkFlow();
         if (isHeaderUpdate) {
             this.sourceWorkFlow.charges = [];
@@ -1919,12 +1912,13 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
             return;
         }
+
         if (this.workFlowList.length == 0) {
             this.alertService.showMessage(this.title, "Atleast one task is required.", MessageSeverity.error);
         }
+
         this.actionService.getNewWorkFlow(this.sourceWorkFlow).subscribe(
             result => {
-
                 this.alertService.showMessage(this.title, "Work Flow updated successfully.", MessageSeverity.success);
                 this.route.navigateByUrl('/workflowmodule/workflowpages/app-workflow-list');
             },
@@ -1938,8 +1932,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                 }
                 this.alertService.showMessage(this.title, message, MessageSeverity.error);
             }
-        )
-        // }
+        );
     }
 
     SaveWorkFlow(): void {
@@ -2032,10 +2025,6 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                     }
                 }
             }
-
-
-
-
         }
     }
 
@@ -2332,8 +2321,11 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        return true;
+        if (this.Total > this.sourceWorkFlow.berThresholdAmount && (this.sourceWorkFlow.isFixedAmount == true || this.sourceWorkFlow.isPercentageOfNew == true || this.sourceWorkFlow.percentageOfReplacement == true)) {
+            return false;
+        }
 
+        return true;
     }
 
 }
