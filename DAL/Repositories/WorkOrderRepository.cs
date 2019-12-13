@@ -3572,6 +3572,7 @@ namespace DAL.Repositories
                                 EmployeeName = emp.FirstName,
                                 bi.RevType,
                                 wo.WorkOrderTypeId,
+                                WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Shop(Internal)" : (wo.WorkOrderTypeId == 3 ? "Liquidation" : "Services")),
                                 WorkScope = wos.Description,
                                 wop.WorkOrderScopeId,
                                 wop.Quantity,
