@@ -856,7 +856,7 @@
 
       <div style="float: right;">
         <button class="btn btn-primary-cstm pull-right"  *ngIf="!isEditBilling" (click)="saveWorkOrderBilling()">Save</button>
-        <button class="btn btn-primary-cstm pull-right"  *ngIf="!isEditBilling" (click)="updateWorkOrderBilling()">Update</button>
+        <button class="btn btn-primary-cstm pull-right"  *ngIf="isEditBilling" (click)="updateWorkOrderBilling()">Update</button>
       </div>
 
 

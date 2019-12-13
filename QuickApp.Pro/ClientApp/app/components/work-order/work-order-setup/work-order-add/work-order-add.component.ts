@@ -398,7 +398,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         // }
         this.subTabWorkFlow = '';
         this.subTabOtherOptions = '';
-        if(value !== 'billorInvoice' ){
+        if (value !== 'billorInvoice') {
             this.billing = undefined;
         }
 
@@ -1235,10 +1235,11 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             employeeId: editValueAssignByCondition('value', this.savedWorkOrderData.employeeId),
             soldToCustomerId: editValueAssignByCondition('customerId', object.soldToCustomerId),
             shipToCustomerId: editValueAssignByCondition('customerId', object.shipToCustomerId),
-            invoiceTime: moment(object.invoiceTime).format('HH:mm')
+
+            invoiceTime: moment(object.invoiceTime, ["h:mm A"]).format("HH:mm")
         }
 
-        if(this.isEditBilling){
+        if (this.isEditBilling) {
             this.workOrderService.updateBillingByWorkOrderId(data).subscribe(res => {
                 this.alertService.showMessage(
                     this.moduleName,
@@ -1246,7 +1247,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                     MessageSeverity.success
                 );
             })
-        }else {
+        } else {
             this.workOrderService.createBillingByWorkOrderId(data).subscribe(res => {
                 this.alertService.showMessage(
                     this.moduleName,
@@ -1267,7 +1268,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 woOpenDate: new Date(res.openDate),
                 invoiceDate: new Date(res.invoiceDate),
                 soldToCustomerId: { customerId: res.soldToCustomerId, customerName: res.soldToCustomer },
-                shipToCustomerId: { customerId: res.shipToCustomerId, customerName: res.shipToCustomer }
+                shipToCustomerId: { customerId: res.shipToCustomerId, customerName: res.shipToCustomer },
+                customerRef: res.customerReference,
             }
             this.isEditBilling = true;
             console.log(this.billing);
