@@ -46,7 +46,7 @@ export class ProvisionComponent implements OnInit{
     pageSize: number = 10;
     totalPages: number;
     provisionHeader = [
-        { field: 'description', header: 'Provison Name' },
+        { field: 'description', header: 'Provision Name' },
         { field: 'memo', header: 'Memo' },
     ]
     selectedColumns = this.provisionHeader;

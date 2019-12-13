@@ -10,7 +10,7 @@ namespace DAL.Models
         public long BillingInvoicingId { get; set; }
         [ForeignKey("WorkOrderId")]
         public long WorkOrderId { get; set; }
-        public long WorkOrderWorkFlowId { get; set; }
+        public long WorkFlowWorkOrderId { get; set; }
         public long WorkOrderPartNoId { get; set; }
         public long ItemMasterId { get; set; }
         public long InvoiceTypeId { get; set; }
@@ -47,6 +47,7 @@ namespace DAL.Models
         public long? ShipViaId { get; set; }
         public string WayBillRef { get; set; }
         public string Tracking { get; set; }
+        public int? CurrencyId { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
