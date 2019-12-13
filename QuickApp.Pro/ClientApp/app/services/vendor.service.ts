@@ -20,6 +20,7 @@ import { Vendor } from '../models/vendor.model';
 import { DiscountValue } from '../models/discountvalue';
 import { ATASubChapter } from '../models/atasubchapter.model';
 import { BehaviorSubject } from 'rxjs';
+import { VendorProcess1099 } from '../models/vendorprocess1099.model';
 
 
 export type RolesChangedOperation = "add" | "delete" | "modify";
@@ -762,6 +763,10 @@ export class VendorService {
 
           return this.actionEndpoint.updateBillAddressDetails(action, action.vendorBillingAddressId);
     }
+   
+
+
+
 }
 
 

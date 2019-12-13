@@ -3383,7 +3383,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("vendorProcessSave")]
-        public IActionResult VendorProcessSave(Master1099 vendorProcess1099)
+        public IActionResult VendorProcessSave([FromBody]Master1099 vendorProcess1099)
         {
             _unitOfWork.Vendor.VendorProcess1099Save(vendorProcess1099);
             return Ok();
@@ -3851,8 +3851,16 @@ namespace QuickApp.Pro.Controllers
             return Ok(allvendorsDoc);
 
         }
+        [HttpGet("getVendorProcess1099Audit")]
+        [Produces(typeof(Master1099Audit))]
+        public IActionResult GetVendorProcess1099Audit(long id)
+        {
+            var allvendorsDoc = _unitOfWork.Vendor.GetVendorProcess1099Audit(id);
+            return Ok(allvendorsDoc);
 
+        }
 
+        
         #endregion
 
         #region Private Methods
