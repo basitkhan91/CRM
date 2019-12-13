@@ -4,6 +4,7 @@ import { AccountCalenderService } from '../../../services/account-calender/accou
 import { AuthService } from '../../../services/auth.service';
 import { AlertService } from '../../../services/alert.service';
 import { LegalEntityService } from '../../../services/legalentity.service';
+import { AccountListingService } from '../../../services/account-listing/account-listing.service'
 
 @Component({
     selector: 'app-accounting-calendar',
@@ -28,9 +29,12 @@ export class AccountingCalendarComponent implements OnInit {
     showDefualt: boolean = true;
     completeCalendarData: any[] = [];
     isBoolean: boolean = false;
+    ledgerNameObjectData: any[];
+    ledgerNameObject: any[];
     public minDate: any;
     companyList: any[] = [];
-    constructor(private legalEntityservice:LegalEntityService,private calendarService: AccountCalenderService, private authService: AuthService, private alertService:AlertService) {
+    constructor(private legalEntityservice:LegalEntityService,
+            private accountListingService: AccountListingService, private calendarService: AccountCalenderService, private authService: AuthService, private alertService:AlertService) {
         //this.currentCalendarObj.fromDate = new Date('2019-01-01');
     }
     //add Legal Entity///
@@ -40,9 +44,10 @@ export class AccountingCalendarComponent implements OnInit {
         this.minDate= new Date(year + '-' + '01-01');
         this.loadCompleteCalendarData();
         this.loadCompaniesData();
-        this.currentCalendarObj.fiscalYear = "2019";
-        this.currentCalendarObj.fromDate = "01/01/2019";
-        this.currentCalendarObj.toDate= "12/31/2019";
+        this.currentCalendarObj.fiscalYear = year;
+        this.currentCalendarObj.fromDate = new Date('01-01' + '-' + year );
+        this.currentCalendarObj.toDate= new Date('12-31' + '-' + year );
+        this.getLedgerObject()
     }
     loadCompleteCalendarData() {
         this.calendarService.getAll().subscribe(data => {
@@ -402,11 +407,13 @@ export class AccountingCalendarComponent implements OnInit {
         
     }
     addCalendar() {
-        this.isBoolean = false;
-        if (!(this.currentCalendarObj.name && this.currentCalendarObj.legalEntityId && this.currentCalendarObj.fiscalYear && this.currentCalendarObj.fromDate && this.currentCalendarObj.toDate && this.currentCalendarObj.periodType && this.currentCalendarObj.fiscalYear
+        this.isBoolean = false;        
+
+        if (!(this.currentCalendarObj.ledgername && this.currentCalendarObj.fiscalYear && this.currentCalendarObj.fromDate && this.currentCalendarObj.toDate && this.currentCalendarObj.periodType 
             && this.currentCalendarObj.noOfPeriods)) {
             this.display = true;
         }
+        
         if (!this.display) {
             this.calendarArray = [];
             var date2 = new Date(this.currentCalendarObj.fromDate);
@@ -487,7 +494,8 @@ export class AccountingCalendarComponent implements OnInit {
     }
     setMonthDate() {
         this.currentCalendarObj.fromDate = new Date('01-01' + '-' + this.currentCalendarObj.fiscalYear );
-        this.currentCalendarObj.toDate = "";
+        //this.currentCalendarObj.toDate = "";
+        this.currentCalendarObj.toDate = new Date('12-31' + '-' + this.currentCalendarObj.fiscalYear );;
     }
     saveCalendar() {
       
@@ -625,6 +633,37 @@ export class AccountingCalendarComponent implements OnInit {
             this.showCalendarMonths = false;
             this.showFiscal = false;
         }
+    }
+
+    getLedgerObject(){
+         this.accountListingService.getLedgerData().subscribe(
+            datalist=> {
+                console.log('getLedgerData :', JSON.stringify(datalist))
+                 let obj = {}
+                 let collection = []
+                const x = datalist.filter( (o, index) => {
+                  obj = {
+                    id: datalist[index]['ledgerName'],
+                    name: datalist[index]['ledgerName']
+                  }
+                  collection.push(obj)
+                })
+            //this.ledgerNameObjectData = collection
+            this.ledgerNameObjectData = [{
+                id: 1,
+                name: 'abcc'
+            },
+            {
+                id: 2,
+                name: 'defff'
+            }]
+            })
+    }
+
+    loadLedgerNames(event){
+        this.ledgerNameObject = [...this.ledgerNameObjectData.filter(x => {
+            return x.name.toLowerCase().includes(event.query.toLowerCase())
+        })]
     }
   
 }
