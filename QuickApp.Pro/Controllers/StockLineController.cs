@@ -264,30 +264,30 @@ namespace QuickApp.Pro.Controllers
             return Ok(id);
         }
 
-        [HttpPost("updateItemMasterStockline")]
-        public IActionResult updateItemMasterStockline([FromBody] StockLineViewModel stockViewModel)
-        {
-            if (stockViewModel == null)
-                return BadRequest($"{nameof(stockViewModel)} cannot be null");
-            if (ModelState.IsValid)
-            {
-                var actionobject = _unitOfWork.itemMaster.GetSingleOrDefault(a => a.ItemMasterId == stockViewModel.ItemMasterId);
-                actionobject.NationalStockNumber = stockViewModel.NationalStockNumber;
-                actionobject.ExportECCN = stockViewModel.ExportECCN;
-                actionobject.NHA = stockViewModel.NHA;
-                actionobject.ITARNumber = stockViewModel.ITARNumber;
-                actionobject.CreatedDate = DateTime.Now;
-                actionobject.UpdatedDate = DateTime.Now;
-                actionobject.CreatedBy = stockViewModel.CreatedBy;
-                actionobject.UpdatedBy = stockViewModel.UpdatedBy;
+        //[HttpPut("updateItemMasterStockline/{id}")]
+        //public IActionResult updateItemMasterStockline(long id, [FromBody] StockLineViewModel stockViewModel)
+        //{
+        //    if (stockViewModel == null)
+        //        return BadRequest($"{nameof(stockViewModel)} cannot be null");
+        //    if (ModelState.IsValid)
+        //    {
+        //        var actionobject = _unitOfWork.itemMaster.GetSingleOrDefault(a => a.ItemMasterId == id);
+        //        actionobject.NationalStockNumber = stockViewModel.NationalStockNumber;
+        //        actionobject.ExportECCN = stockViewModel.ExportECCN;
+        //        actionobject.NHA = stockViewModel.NHA;
+        //        actionobject.ITARNumber = stockViewModel.ITARNumber;
+        //        actionobject.CreatedDate = DateTime.Now;
+        //        actionobject.UpdatedDate = DateTime.Now;
+        //        actionobject.CreatedBy = stockViewModel.CreatedBy;
+        //        actionobject.UpdatedBy = stockViewModel.UpdatedBy;
 
-                _context.ItemMaster.Update(actionobject);
-                _context.SaveChanges();
+        //        _context.ItemMaster.Update(actionobject);
+        //        _context.SaveChanges();
 
-            }
-            return Ok(ModelState);
+        //    }
+        //    return Ok(ModelState);
 
-        }
+        //}
 
         [HttpPost("stockLineIntegration")]
         public IActionResult stockLineIntegration([FromBody] StockLineViewModel stockLineViewModel)
@@ -320,6 +320,19 @@ namespace QuickApp.Pro.Controllers
             if (ModelState.IsValid)
             {
                 if (stockLineViewModel == null) return BadRequest($"{nameof(stockLineViewModel)} cannot be null");
+
+                var itemobject = _unitOfWork.itemMaster.GetSingleOrDefault(a => a.ItemMasterId == stockLineViewModel.ItemMasterId);
+                itemobject.NationalStockNumber = stockLineViewModel.NationalStockNumber;
+                itemobject.ExportECCN = stockLineViewModel.ExportECCN;
+                itemobject.NHA = stockLineViewModel.NHA;
+                itemobject.ITARNumber = stockLineViewModel.ITARNumber;
+                itemobject.CreatedDate = DateTime.Now;
+                itemobject.UpdatedDate = DateTime.Now;
+                itemobject.CreatedBy = stockLineViewModel.CreatedBy;
+                itemobject.UpdatedBy = stockLineViewModel.UpdatedBy;
+
+                _context.ItemMaster.Update(itemobject);
+                _context.SaveChanges();
 
                 var entityobject = _context.ManagementStructure.Where(a => a.ManagementStructureId == stockLineViewModel.ManagementStructureId).SingleOrDefault();
                 StockLine actionobject1 = new StockLine();
@@ -435,6 +448,19 @@ namespace QuickApp.Pro.Controllers
         [HttpPut("stockLinepost/{id}")]
         public IActionResult UpdateStockline(long id, [FromBody] StockLineViewModel stockLineViewModel)
         {
+            var itemobject = _unitOfWork.itemMaster.GetSingleOrDefault(a => a.ItemMasterId == stockLineViewModel.ItemMasterId);
+            itemobject.NationalStockNumber = stockLineViewModel.NationalStockNumber;
+            itemobject.ExportECCN = stockLineViewModel.ExportECCN;
+            itemobject.NHA = stockLineViewModel.NHA;
+            itemobject.ITARNumber = stockLineViewModel.ITARNumber;
+            itemobject.CreatedDate = DateTime.Now;
+            itemobject.UpdatedDate = DateTime.Now;
+            itemobject.CreatedBy = stockLineViewModel.CreatedBy;
+            itemobject.UpdatedBy = stockLineViewModel.UpdatedBy;
+
+            _context.ItemMaster.Update(itemobject);
+            _context.SaveChanges();
+
             var entityobject = _context.ManagementStructure.Where(a => a.ManagementStructureId == stockLineViewModel.ManagementStructureId).SingleOrDefault();
             var actionobject1 = _unitOfWork.stockLineList.GetSingleOrDefault(a => a.StockLineId == id);
             actionobject1.PartNumber = stockLineViewModel.PartNumber;

@@ -2,6 +2,7 @@ import { FormControl, Validators } from "@angular/forms";
 
 export class ItemMasterCapabilitiesModel {
 
+    itemMasterCapesId:any;
     capabilityId: any;
     capabilityTypeId: any;
     companyId:FormControl = new FormControl("", [Validators.required])

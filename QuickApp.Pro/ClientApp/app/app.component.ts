@@ -253,11 +253,11 @@ export class AppComponent implements OnInit, AfterViewInit {
                      { label: 'Create Vendor', routerLink: '/vendorsmodule/vendorpages/app-vendor-general-information' },
                     //{ label: 'Create Vendor',  command: (event?: any) => { this.newVendorClick(); } },
                     { label: 'Vendor Classification', routerLink: '/singlepages/singlepages/app-vendor-classification' },
-                    { label: 'Process 1099', routerLink: '/#' },
+                    { label: 'Process 1099', routerLink: '/singlepages/singlepages/app-vendor-process1099' },
                     {
                         label: 'Vendor Capabilities', items: [{ label: 'Vendor Caps List', routerLink: '/vendorsmodule/vendorpages/app-vendor-capabilities-list' },
                         { label: 'Add Vendor Caps', routerLink: '/vendorsmodule/vendorpages/app-add-vendor-capabilities' },
-                        { label: 'Reports and Forms', items: [{ label: 'Caps Report', routerLink: '/#' }] }],
+                            { label: 'Reports and Forms', items: [{ label: 'Caps Report', routerLink: '/singlepages/singlepages/app-caps-report' }] }],
                     },
                     {
                         label: 'Purchase Order', items: [{ label: 'PO List', routerLink: '/vendorsmodule/vendorpages/app-polist' },

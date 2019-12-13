@@ -594,6 +594,13 @@
                     </div>
                     <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;">
                         <ul class="nav nav-pills nav-pills-cstm" id="pills-tab" role="tablist">
+
+                            <li class="nav-item" *ngIf="isSubWorkOrder">
+                                <a id="pills-home-tab" role="tab" aria-controls="pills-home" aria-selected="true"
+                                    [ngClass]="{active : gridActiveTab === 'workOrderMain'}"
+                                
+                                    (click)="gridTabChange('workOrderMain');  ">WorkOrder Main</a>
+                            </li>
                             <li class="nav-item dropdown" *ngIf="workFlowId !==0" >
                                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
                                     aria-haspopup="true" aria-expanded="false"
@@ -652,7 +659,7 @@
                           <a id="pills-contact-tab" role="tab" [ngClass]="{active : gridActiveTab === 'shipping'}"
                               (click)="gridTabChange('shipping')">Shipping</a>
                       </li>
-                      <li class="nav-item">
+                      <li class="nav-item" *ngIf="!isSubWorkOrder">
                         <a id="pills-contact-tab" role="tab" [ngClass]="{active : gridActiveTab === 'subWO'}"
                             (click)="gridTabChange('subWO')">Sub-WO</a>
                     </li>
@@ -715,10 +722,6 @@
                                   (click)="gridTabChange('tearDown')">Tear Down</a>
                           </li>
 
-
-
-
-
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                             aria-expanded="false" [ngClass]="{active : gridActiveTab === 'otherOptions'}"
@@ -734,6 +737,10 @@
                     </li>
                     </ul>
                     <br>
+                    <div *ngIf="isWorkOrderMainView" [ngClass]="{hidedata :  gridActiveTab !== 'workOrderMain' }">
+                        <app-work-order-list [isSubWorkOrder]="isSubWorkOrder" [workOrderId]="mainWorkOrderId"   [isWorkOrderMainView]="isWorkOrderMainView" (closeView)="closeWorkOrderMainView($event)"></app-work-order-list>
+                    </div>
+
                     <div [ngClass]="{hidedata :  subTabWorkFlow !== 'createworkFlow' }">
                         <!-- <wf-create [isWorkOrder]="isWorkOrder" [savedWorkOrderData]="savedWorkOrderData" (savedWorkFlowWorkOrderData)="savedWorkFlowData($event)" > </wf-create> -->
                     </div>
@@ -748,7 +755,7 @@
 
 
                     <div *ngIf="labor" [ngClass]="{hidedata : gridActiveTab !== 'labor'}">
-                        <app-work-order-labor [taskList]="taskList" [laborForm]="labor" [workOrderLaborList]="workOrderLaborList" [workOrderWorkFlowOriginalData]="workOrderWorkFlowOriginalData" [savedWorkOrderData]="savedWorkOrderData"
+                         <app-work-order-labor [taskList]="taskList" [laborForm]="labor" [workOrderLaborList]="workOrderLaborList" [workOrderWorkFlowOriginalData]="workOrderWorkFlowOriginalData" [savedWorkOrderData]="savedWorkOrderData"
                         (saveworkOrderLabor)="saveworkOrderLabor($event)"
                         ></app-work-order-labor>
                     </div>
@@ -765,7 +772,7 @@
                     </div>
 
                     <div  *ngIf="workOrderId && (gridActiveTab === 'subWO') " [ngClass]="{hidedata : gridActiveTab !== 'subWO'}">
-                        <app-sub-work-orderlist [workOrderId]="workOrderId" [mpnId]="workOrderPartNumberId" ></app-sub-work-orderlist>
+                        <app-sub-work-orderlist [workOrderId]="workOrderId"  [mpnId]="workOrderPartNumberId" ></app-sub-work-orderlist>
                      
                     </div>
 
@@ -794,6 +801,7 @@
                          [employeesOriginalData]="employeesOriginalData"
                          [isEditBilling]="isEditBilling"
                          (saveWOBilling)="saveWorkOrderBilling($event)"
+                         (updateWOBilling)="saveWorkOrderBilling($event)"
                          ></app-work-order-billing>
                     </div>
                     <div *ngIf="addresses" [ngClass]="{hidedata : gridActiveTab !== 'address'}">

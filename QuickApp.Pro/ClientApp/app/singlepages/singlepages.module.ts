@@ -144,6 +144,10 @@ import { JobTypeComponent } from '../components/job-type/job-type.component';
 import { PercentService } from "../services/percent.service";
 import { PercentEndpoint } from "../services/percent-endpoint.service";
 import { CommonService } from "../services/common.service";
+import { VendorProcess1099Component } from "../components/vendor-process1099/vendor-process1099.component";
+import { VendorProcess1099Service } from "../services/vendorprocess1099.service";
+import { CapsReportComponent } from "../components/caps-report/caps-report.component";
+
 
 @NgModule({
     imports: [
@@ -234,7 +238,9 @@ import { CommonService } from "../services/common.service";
         AircraftManufacturerComponent,
         AircraftModelComponent,
         DashnumberComponent,
-        PaginationComponent
+        PaginationComponent,
+        VendorProcess1099Component,
+        CapsReportComponent
     ],
     providers: [
         PercentService,
@@ -272,18 +278,23 @@ import { CommonService } from "../services/common.service";
         DashNumberService,
         DashNumberEndpointService,
         PaginationService,
-        CommonService
+        CommonService,
+        VendorProcess1099Service
+
+      
+       
+        
     ],
     exports: [
         FlexLayoutModule,
         FormsModule,
         ReactiveFormsModule,
         QuickAppProMaterialModule,
-        TranslateModule,
-        VendorClassificationComponent
+        TranslateModule
     ],
     entryComponents: [
     ],
+
 
 })
 export class SinglePgesModule {

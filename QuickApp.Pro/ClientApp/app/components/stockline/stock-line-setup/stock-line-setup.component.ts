@@ -247,12 +247,20 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		this.allPolistInfo = getCreditTermsList;
 	}
 
+	onRoListDataLoadSuccessful(getCreditTermsList: any[]) {
+		this.alertService.stopLoadingMessage();
+		this.loadingIndicator = false;
+		this.dataSource.data = getCreditTermsList;
+
+		this.allRolistInfo = getCreditTermsList;
+	}
+
 	loadRoData()
 	{
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.vendorservice.getRepairOrderByItemId(this.sourceItemMaster.partId).subscribe(
-            results => this.onPoListDataLoadSuccessful(results[0]),
+			results => this.onRoListDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
 	}
@@ -481,7 +489,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		this.sourceStockLineSetup.itemMasterId = allWorkFlows[0].itemMasterId;
         this.sourceStockLineSetup.glAccountId = allWorkFlows[0].glAccountId;
         this.sourceStockLineSetup.glAccountName = allWorkFlows[0].accountName;
-        this.sourceStockLineSetup.NHA = allWorkFlows[0].NHA;
+        //this.sourceStockLineSetup.NHA = allWorkFlows[0].NHA;
        
 	}
 
@@ -932,7 +940,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
         
     }
 
-    onROUnitCostLoadSuccessful(getROCost: any[]) {
+    onROUnitCostLoadSuccessful(getROCost: any) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
 
@@ -944,7 +952,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.stocklineser.getRepairOrderUnitCost(RoId).subscribe(
-            results => this.onROUnitCostLoadSuccessful(results[0]),
+            results => this.onROUnitCostLoadSuccessful(results),
             error => this.onDataLoadFailed(error)
         );
 	}
@@ -1104,7 +1112,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 							this.stocklineser.newStockLine(this.sourceStockLineSetup).subscribe(data => {
 								this.collectionofstockLine = data;
 								this.saveStocklineIntegrationPortalData(data.stockLineId, this.selectedModels); //for Saving Integration Data
-								this.saveItemMasterDetails(this.sourceStockLineSetup);
+								//this.saveItemMasterDetails(this.sourceStockLineSetup);
 								this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
 								this.value = 1;
 							})
@@ -1116,7 +1124,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 						this.stocklineser.newStockLine(this.sourceStockLineSetup).subscribe(data => {
 							this.collectionofstockLine = data;
 							this.saveStocklineIntegrationPortalData(data.stockLineId, this.selectedModels); //for Saving Integration Data
-							this.saveItemMasterDetails(this.sourceStockLineSetup);
+							//this.saveItemMasterDetails(this.sourceStockLineSetup);
 							this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
 							this.value = 1;
 
@@ -1192,9 +1200,9 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		return;
 	}
 
-	saveItemMasterDetails(sourceStockLine: any) {
-		this.stocklineser.updateItemMasterEndpoint(sourceStockLine);
-	}
+	//saveItemMasterDetails(sourceStockLine: any) {
+	//	this.stocklineser.updateItemMasterEndpoint(sourceStockLine);
+	//}
 	//for Saving Integration Data
 
 	saveStocklineIntegrationPortalData(id,models)

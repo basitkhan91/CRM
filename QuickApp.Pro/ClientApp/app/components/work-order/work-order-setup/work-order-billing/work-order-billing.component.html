@@ -139,8 +139,8 @@
                     <input
                       type="text"
                       class="form-control wo-input"
-                      name="salePerson"
-                      #salePerson="ngModel"
+                      name="salesPerson"
+                      #salesPerson="ngModel"
                       disabled
                       [(ngModel)]="billingorInvoiceForm.salesPerson"
                     />
@@ -303,7 +303,7 @@
                       name="soldcustomerName"
                       errorMessage="Records not found"
                       [forceSelection]="true"
-                      (onSelect)="selectSoldToCustomer($event)"
+                      (onSelect)="getSiteNamesBySoldCustomerId($event)"
                       [suggestions]="customerNamesList"
                       (completeMethod)="filterCustomerName($event)"
                       (onKeyUp)="clearAddress('SoldTo' , $event.target.value)"
@@ -329,7 +329,7 @@
                       name="shipcustomerName"
                       errorMessage="Records not found"
                       [forceSelection]="true"
-                      (onSelect)="selectShipToCustomer($event)"
+                      (onSelect)="getSiteNamesByShipCustomerId($event)"
                       [suggestions]="customerNamesList"
                       (completeMethod)="filterCustomerName($event)"
                       (onKeyUp)="clearAddress('ShipTo', $event.target.value)"
@@ -818,7 +818,8 @@
                             class="form-control wo-input"
                             name="shipAccount"
                             #shipAccount="ngModel"
-                            [(ngModel)]="billingorInvoiceForm.shipAccount"
+                            disable
+                            [(ngModel)]="billingorInvoiceForm.shipAccountInfo"
                           />
                           </div>
                       </div>
@@ -854,8 +855,8 @@
       </div>
 
       <div style="float: right;">
-        <button class="btn btn-primary-cstm pull-right" (click)="saveWorkOrderBilling()">Save</button>
-        
+        <button class="btn btn-primary-cstm pull-right"  *ngIf="!isEditBilling" (click)="saveWorkOrderBilling()">Save</button>
+        <button class="btn btn-primary-cstm pull-right"  *ngIf="isEditBilling" (click)="updateWorkOrderBilling()">Update</button>
       </div>
 
 

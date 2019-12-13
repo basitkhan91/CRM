@@ -286,13 +286,15 @@ export class StocklineEndpoint extends EndpointFactory {
 			});
 	}
 	
+	////for updating stockline
+	//getUpdateItemMasterDetEndpoint<T>(stocklineObject: any): Observable<T> {
+	//	let endpointUrl = `${this._actionsStocklineItemMasterUpdate}/${stocklineObject.itemMasterId}`;
 
-	updateItemMasterEndpoint<T>(stocklineObject: any): Observable<T> {
-		return this.http.post<T>(this._actionsStocklineItemMasterUpdate, JSON.stringify(stocklineObject), this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.updateItemMasterEndpoint(stocklineObject));
-			});
-	}
+	//	return this.http.put<T>(endpointUrl, JSON.stringify(stocklineObject), this.getRequestHeaders())
+	//		.catch(error => {
+	//			return this.handleError(error, () => this.getUpdateItemMasterDetEndpoint(stocklineObject));
+	//		});
+	//}
 
 	getUpdatestockLineTimeAdjustmentEndpoint<T>(roleObject: any, stockLineId: number): Observable<T> {
 		let endpointUrl = `${this._adjustmentUrlNew}/${roleObject.stockLineId}`;
