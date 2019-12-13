@@ -211,60 +211,21 @@
         </div>
       </div>
 
-<!-- <ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
-	<div class="modal-header">
-
-		<h4 class="modal-title">History of Action</h4>
-		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-			<span aria-hidden="true">&times;</span>
-		</button>
-
-
-	</div>
-	<div class="modal-body">
-
-		<div class="table-responsive">
-			<table class="table table-bordered cus-contact-table">
-				<thead>
-					<tr>
-						<th>AID</th>
-						<th>Colum Name</th>
-						<th>Previous Value</th>
-						<th>New Value</th>
-						<th>Last Updated By</th>
-						<th>Last Updated Time</th>
-					</tr>
-				</thead>
-				<tr *ngFor="let audit of auditHisory">
-					<td>{{audit.auditHistoryId}}</td>
-					<td>{{audit.columnName}}</td>
-					<td>{{audit.previousValue}}</td>
-					<td>{{audit.newValue}}</td>
-					<td>{{audit.updatedBy}}</td>
-					<td>{{audit.updatedDate | date: 'MM/dd/yyyy'}}</td>
-				</tr>
-			</table>
-		</div>
-	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
-	</div>
-</ng-template> -->
 
 <div #addContactDetails class="modal fade" id="addContactDetails" role="dialog">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Add Contact Details</h4>
-            </div>
-            <form #ccForm="ngForm" #addContactForm="ngForm" class="form-horizontal">
+        <form #ccForm="ngForm" #addContactForm="ngForm" class="form-horizontal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add Contact Details</h4>
+                </div>
                 <div class="modal-body">
                     <div class="form-row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="tag">Tag <span class="clr-red">*</span></label>
-                                <input type="text" class="form-control" [(ngModel)]="contactInformation.tag"  name="tag" required>
+                                <input type="text" class="form-control" [(ngModel)]="contactInformation.tag" name="tag" required>
 
                             </div>
                             <div class="form-group">
@@ -280,30 +241,30 @@
                             <div class="form-group">
                                 <label>First Name <span class="clr-red">*</span></label>
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                    <input type="text" class="form-control" [(ngModel)]="contactInformation.firstName"  name="firstName" required>
-                                    <!-- <p-autoComplete class="autocomp-customer-cstm" 
-                                                    [(ngModel)]="contactInformation.firstName"  name="firstName" field="firstName" [suggestions]="firstNamesList" (completeMethod)="filterFirstNames($event)" [size]="30"
-                                                    [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required>
+                                    <input type="text" class="form-control" [(ngModel)]="contactInformation.firstName" name="firstName" required>
+                                    <!-- <p-autoComplete class="autocomp-customer-cstm"
+                                                [(ngModel)]="contactInformation.firstName"  name="firstName" field="firstName" [suggestions]="firstNamesList" (completeMethod)="filterFirstNames($event)" [size]="30"
+                                                [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required>
 
 
-                                    </p-autoComplete> -->
+                                </p-autoComplete> -->
                                 </div>
                                 <!-- <div *ngIf="disableSaveFirstName" class="clr-red">Entry Already Exists</div> -->
                                 <!-- <div class="form-group col-sm-12 Customer-details-heading" *ngIf="showFirstName">
-                                    <p class="fs10">
-                                        Please Enter Required fields
-                                    </p>
-                                </div> -->
+                                <p class="fs10">
+                                    Please Enter Required fields
+                                </p>
+                            </div> -->
                             </div>
                             <div class="form-group">
                                 <label>Middle Name</label>
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                    <input type="text" class="form-control" [(ngModel)]="contactInformation.middleName"  name="middleName">
-                                    <!-- <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="contactInformation.middleName" 
-                                                    name="middleName"  [suggestions]="middleNamesList" field="middleName" (completeMethod)="filterMiddleNames($event)" [size]="30"
-                                                    [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}">
+                                    <input type="text" class="form-control" [(ngModel)]="contactInformation.middleName" name="middleName">
+                                    <!-- <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="contactInformation.middleName"
+                                                name="middleName"  [suggestions]="middleNamesList" field="middleName" (completeMethod)="filterMiddleNames($event)" [size]="30"
+                                                [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}">
 
-                                    </p-autoComplete> -->
+                                </p-autoComplete> -->
                                 </div>
 
                                 <!-- <div *ngIf="disableSaveMiddleName" class="clr-red">Entry Already Exists</div> -->
@@ -311,25 +272,25 @@
                             <div class="form-group">
                                 <label>Last Name <span class="clr-red">*</span></label>
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                    <input type="text" class="form-control" [(ngModel)]="contactInformation.lastName"  name="lastName" required>
+                                    <input type="text" class="form-control" [(ngModel)]="contactInformation.lastName" name="lastName" required>
                                     <!-- <p-autoComplete class="autocomp-customer-cstm"  [(ngModel)]="contactInformation.lastName"
-                                     name="lastName" [suggestions]="lastNamesList" field="lastName" (completeMethod)="filterLastNames($event)"
-                                                          
-                                                    [size]="30" [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required>
+                                 name="lastName" [suggestions]="lastNamesList" field="lastName" (completeMethod)="filterLastNames($event)"
 
-                                    </p-autoComplete> -->
+                                                [size]="30" [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required>
+
+                                </p-autoComplete> -->
                                     <!-- <div *ngIf="disableSaveLastName" class="clr-red">Entry Already Exists</div> -->
                                 </div>
                                 <!-- <div class="form-group col-sm-12 Customer-details-heading" *ngIf="showLastName">
-                                    <p class="fs10">
-                                        Please Enter Required fields
-                                    </p>
-                                </div> -->
+                                <p class="fs10">
+                                    Please Enter Required fields
+                                </p>
+                            </div> -->
                             </div>
                             <div class="form-group">
                                 <label>Suffix</label>
                                 <select name="suffix" [(ngModel)]="contactInformation.suffix">
-                                  <option value="">None selected</option>
+                                    <option value="">None selected</option>
                                     <option value="II">II</option>
                                     <option value="III">III</option>
                                     <option value="Jr.">Jr.</option>
@@ -344,9 +305,9 @@
                             <div class="form-group">
                                 <label>Work Phone <span class="clr-red">*</span></label>
                                 <div>
-                                    <input class="form-control" type="number" pattern="[0-9]+([-\,][0-9]+)?"  name="workPhone" [(ngModel)]="contactInformation.workPhone" style="width: calc(100% - 63px) !important;">
+                                    <input class="form-control" type="number" pattern="[0-9]+([-\,][0-9]+)?" name="workPhone" [(ngModel)]="contactInformation.workPhone" style="width: calc(100% - 63px) !important;">
                                     -
-                                    <input class="form-control w50" type="text"  name="workPhoneExtn" [(ngModel)]="contactInformation.workPhoneExtn">
+                                    <input class="form-control w50" type="text" name="workPhoneExtn" [(ngModel)]="contactInformation.workPhoneExtn">
                                 </div>
                             </div>
                         </div>
@@ -383,11 +344,11 @@
                                 <label>Fax</label>
                                 <input class="form-control" pKeyFilter="pint" type="text" name="fax" [(ngModel)]="contactInformation.fax">
                             </div>
-                           
+
                             <div class="form-group">
                                 <label>Memo</label>
                                 <!--<input class="form-control" type="text" name="notes" [(ngModel)]="contactInformation.notes">-->
-                                <textarea  name="notes" [(ngModel)]="contactInformation.notes" placeholder="Tool Bar"></textarea>
+                                <textarea name="notes" [(ngModel)]="contactInformation.notes" placeholder="Tool Bar"></textarea>
                             </div>
 
                             <div class="form-group">
@@ -405,12 +366,12 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button"  *ngIf="!isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" [disabled]="!addContactForm.valid ||contactEmail.errors" (click)="saveContactInformation()" data-dismiss="modal">Save</button>
-                    <button type="button"  *ngIf="isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" (click)="updateCustomerContact()" [disabled]="!addContactForm.valid ||contactEmail.errors" data-dismiss="modal">Update</button>
+                    <button type="button" *ngIf="!isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" [disabled]="!addContactForm.valid ||contactEmail.errors" (click)="saveContactInformation()" data-dismiss="modal">Save</button>
+                    <button type="button" *ngIf="isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" (click)="updateCustomerContact()" [disabled]="!addContactForm.valid ||contactEmail.errors" data-dismiss="modal">Update</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </div>
 
