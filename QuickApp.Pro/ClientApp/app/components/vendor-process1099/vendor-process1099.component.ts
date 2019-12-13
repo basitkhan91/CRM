@@ -9,6 +9,7 @@ import { Table } from 'primeng/table';
 import { ConfigurationService } from '../../services/configuration.service';
 import { VendorService } from '../../services/vendor.service';
 import { VendorProcess1099Service } from '../../services/vendorprocess1099.service';
+import { CommonService } from '../../services/common.service';
 
 @Component({
     selector: 'app-vendor-process1099',
@@ -61,7 +62,8 @@ export class VendorProcess1099Component implements OnInit {
          private authService: AuthService, 
          private alertService: AlertService,
          private vendor1099Service: VendorProcess1099Service,
-          private vendorservice: VendorService
+        private vendorservice: VendorService,
+        private commonService: CommonService
    ) {
 
     }
@@ -86,37 +88,36 @@ export class VendorProcess1099Component implements OnInit {
          this.getVendorProcess1099List();
      }
 
-     customExcelUpload(event) {
-         const file = event.target.files;
+   
+    customExcelUpload(event) {
+        const file = event.target.files;
 
-         console.log(file);
-         if (file.length > 0) {
+        console.log(file);
+        if (file.length > 0) {
 
-             this.formData.append('file', file[0])
-             //this.vendorclassificationService.vendorClassificationFileUpload(this.formData).subscribe(res => {
-             //    event.target.value = '';
+            this.formData.append('ModuleName', 'Master1099')
+            this.formData.append('file', file[0])
 
-             //    this.formData = new FormData();
-             //    this.existingRecordsResponse = res;
-             //    this.getvendorClassificationList();
-             //    this.alertService.showMessage(
-             //        'Success',
-             //        `Successfully Uploaded  `,
-             //        MessageSeverity.success
-             //    );
 
-             //    // $('#duplicateRecords').modal('show');
-             //    // document.getElementById('duplicateRecords').click();
+            this.commonService.smartExcelFileUpload(this.formData).subscribe(res => {
 
-             //})
-         }
+                this.formData = new FormData();
+                this.getVendorProcess1099List();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
 
+            })
+        }
+
+    }
+
+     sampleExcelDownload() {
+         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=Master1099&fileName=Master1099.xlsx`;
+         window.location.assign(url);
      }
-
-     //sampleExcelDownload() {
-     //    const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=VendorClassification&fileName=VendorClassification.xlsx`;
-     //    window.location.assign(url);
-     //}
 
     getVendorProcess1099List() {
         let companyId = 1;

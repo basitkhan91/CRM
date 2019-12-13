@@ -447,7 +447,7 @@ export class SingleComponent {
             else if (this.currentUrl == '/singlepages/singlepages/app-vendor-process1099') {
                 this.items = [
                     { label: 'Single Screens' },
-                    { label: 'Vendor Process1099' }
+                    { label: 'Vendor Process 1099' }
                 ];
             }
             else if (this.currentUrl == '/singlepages/singlepages/app-caps-report') {
@@ -885,7 +885,7 @@ export class SingleComponent {
             else if (this.currentUrl == '/singlepages/singlepages/app-vendor-process1099') {
                 this.items = [
                     { label: 'Single Screens' },
-                    { label: 'Vendor Process1099' }
+                    { label: 'Vendor Process 1099' }
                 ];
             }
             else if (this.currentUrl == '/singlepages/singlepages/app-caps-report') {
