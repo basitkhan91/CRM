@@ -297,9 +297,11 @@ export class PurchaseSetupComponent implements OnInit {
 		//this.sourcePoApproval.vendorName = value.vendorName;
 		this.sourcePoApproval.vendorId = getObjectById('vendorId', vendorId, this.allActions);
 		this.sourcePoApproval.vendorCode = getObjectById('vendorId', vendorId, this.allActions);
-		//this.sourcePoApproval.creditLimit = value.creditLimit;
-		//this.sourcePoApproval.creditTermsId = value.creditTermsId;
-		//this.sourcePoApproval.creditTerms = getValueFromArrayOfObjectById('name', 'creditTermsId', value.creditTermsId, this.allcreditTermInfo);
+		this.sourcePoApproval.creditLimit = getValueFromArrayOfObjectById('creditLimit', 'vendorId', vendorId, this.allActions);
+		this.sourcePoApproval.creditTermsId = getValueFromArrayOfObjectById('creditTermsId', 'vendorId', vendorId, this.allActions);
+		if(this.sourcePoApproval.creditTermsId) {
+			this.sourcePoApproval.creditTerms = getValueFromArrayOfObjectById('name', 'creditTermsId', this.sourcePoApproval.creditTermsId, this.allcreditTermInfo);
+		}
 		});		
 	}
 
@@ -2566,7 +2568,7 @@ export class PurchaseSetupComponent implements OnInit {
 			const isDefaultContact = this.vendorContactList.filter(x => {
 				if (x.isDefaultContact === true) {
 					return x;
-				}
+				} else return x;
 			})
 			this.sourcePoApproval.vendorContactId = isDefaultContact[0];
 			this.sourcePoApproval.vendorContactPhone = isDefaultContact[0];

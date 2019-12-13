@@ -234,12 +234,24 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getSubWorkOrderHeaderByWorkOrderId(workOrderId, workOrderPartNumberId);
     }
 
+    getSubWorkOrderDataBySubWorkOrderId(subWorkOrderId) {
+        return this.workOrderEndpointService.getSubWorkOrderDataBySubWorkOrderId(subWorkOrderId);
+    }
+
 
     createSubWorkOrderHeaderByWorkOrderId(data) {
         return this.workOrderEndpointService.createSubWorkOrderHeaderByWorkOrderId(data);
     }
     updateSubWorkOrderHeaderBySubWorkOrderId(data) {
         return this.workOrderEndpointService.updateSubWorkOrderHeaderBySubWorkOrderId(data);
+    }
+
+
+    createBillingByWorkOrderId(data) {
+        return this.workOrderEndpointService.createBillingByWorkOrderId(data);
+    }
+    updateBillingByWorkOrderId(data){
+        return this.workOrderEndpointService.updateBillingByWorkOrderId(data);
     }
 
 
@@ -252,6 +264,10 @@ export class WorkOrderService {
 
     getBuildDetailsFromWorkFlow(partId, workScopeId) {
         return this.workOrderEndpointService.getBuildDetailsFromWorkFlow(partId, workScopeId);
+    }
+
+    getBillingEditData(workOrderId, workOrderPartNoId) {
+        return this.workOrderEndpointService.getBillingEditData(workOrderId, workOrderPartNoId);
     }
 
 

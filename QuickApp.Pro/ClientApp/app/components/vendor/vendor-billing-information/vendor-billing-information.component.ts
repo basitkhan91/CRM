@@ -52,6 +52,7 @@ export class VendorBillingInformationComponent {
     updatedBy: any = "";
     createddate: any = "";
     updatedDate: any = "";
+    isPrimary: boolean = false;
     shipViaObj: any = {};
     checkAddress: boolean = false;
     viewName: string = "Create";
@@ -373,6 +374,7 @@ export class VendorBillingInformationComponent {
         this.updatedBy = row.updatedBy;
         this.createddate = row.createdDate;
         this.updatedDate = row.updatedDate;
+        this.isPrimary = row.isPrimary;
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {

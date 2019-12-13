@@ -134,3 +134,88 @@ export class WorkOrderQuoteLabor{
           };
         }
 }
+
+export class ExclusionQuote{
+   
+    WorkOrderQuoteDetailsId:number;
+    WorkOrderQuoteId:number;
+    ItemMasterId:number;
+    BuildMethodId:number;
+    SelectedId:number;
+    ReferenceNo:string;
+    EstCompDate:string;
+    StageId:number;
+    StatusId:number;
+    CMMId:number;
+    IsPMA:boolean;
+    IsDER:boolean;
+    masterCompanyId:number;
+    CreatedBy:string = 'admin';
+    UpdatedBy: string = 'admin';
+    IsActive:boolean = true;
+    IsDeleted:boolean = false;
+    WorkOrderQuoteExclusions: any[];				
+ 
+    constructor(){
+      this.WorkOrderQuoteDetailsId = 0;
+      this.WorkOrderQuoteId = 0;
+      this.ItemMasterId = 0;
+      this.BuildMethodId = 0
+      this.SelectedId = 0;
+      this.ReferenceNo = "";
+      this.EstCompDate = "";
+      this.StageId = 0;
+      this.StatusId = 0;
+      this.CMMId = 0;
+      this.IsPMA = false;
+      this.IsDER = false;
+      this.masterCompanyId = 0;
+      this.CreatedBy = 'admin';
+      this.UpdatedBy = 'admin';
+      this.IsActive = true;
+      this.IsDeleted = true;
+      this.WorkOrderQuoteExclusions = [];
+    }
+}
+
+export class ChargesQuote{ 
+    WorkOrderQuoteDetailsId:number;
+    WorkOrderQuoteId:number;
+    ItemMasterId:number;
+    BuildMethodId:number;
+    SelectedId:number;
+    ReferenceNo:string;
+    EstCompDate:string;
+    StageId:number;
+    StatusId:number;
+    CMMId:number;
+    IsPMA:boolean;
+    IsDER:boolean;
+    masterCompanyId:number;
+    CreatedBy: string = 'admin';
+    UpdatedBy:string = 'admin';
+    IsActive:boolean = true;
+    IsDeleted:boolean = false;
+    WorkOrderQuoteCharges:any[];
+    
+    constructor(){
+      this.WorkOrderQuoteDetailsId = 0;
+      this.WorkOrderQuoteId = 0;
+      this.ItemMasterId = 0;
+      this.BuildMethodId = 0
+      this.SelectedId = 0;
+      this.ReferenceNo = "";
+      this.EstCompDate = "";
+      this.StageId = 0;
+      this.StatusId = 0;
+      this.CMMId = 0;
+      this.IsPMA = false;
+      this.IsDER = false;
+      this.masterCompanyId = 0;
+      this.CreatedBy = 'admin';
+      this.UpdatedBy = 'admin';
+      this.IsActive = true;
+      this.IsDeleted = true;
+      this.WorkOrderQuoteCharges = [];
+    }
+}

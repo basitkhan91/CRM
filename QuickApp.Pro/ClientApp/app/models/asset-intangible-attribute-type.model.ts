@@ -4,12 +4,13 @@ export class AssetIntangibleAttributeType {
 
     constructor(assetintangibleAttributeTypeId?: number, assetIntangibleTypeId?: number, assetDepreciationMethodId?: number, intangibleLife?: number,
         amortizationFrequency?: string, intangibleGLAccountId?: number, amortExpenseGLAccountId?: number, accAmortDeprGLAccountId?: number, intangibleWriteDownGLAccountId?: number,
-        intangibleWriteOffGLAccountId?: number, managementStructureId?: number, masterCompanyId?: number, createdBy?: string, updatedBy?: string, createdDate?: Date, updatedDate?: Date,
+        intangibleWriteOffGLAccountId?: number, amortizationMethod?: number, managementStructureId?: number, masterCompanyId?: number, createdBy?: string, updatedBy?: string, createdDate?: Date, updatedDate?: Date,
         isActive?: boolean, isDelete?: boolean) {
 
         this.assetintangibleAttributeTypeId = assetintangibleAttributeTypeId;
         this.assetIntangibleTypeId = assetIntangibleTypeId || 0;
         this.assetDepreciationMethodId = assetDepreciationMethodId || 0;
+        this.amortizationMethod = amortizationMethod || 0;
         this.intangibleLife = intangibleLife || 0;
         this.amortizationFrequency = amortizationFrequency || "";
         this.intangibleGLAccountId = intangibleGLAccountId || 0;
@@ -32,6 +33,7 @@ export class AssetIntangibleAttributeType {
     assetDepreciationMethodId: number;
     intangibleLife: number;
     amortizationFrequency: string;
+    amortizationMethod: number;
     intangibleGLAccountId: number;
     amortExpenseGLAccountId: number;
     accAmortDeprGLAccountId: number;

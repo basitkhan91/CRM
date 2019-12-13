@@ -107,6 +107,9 @@ import { AssetTypeComponent } from "../components/asset-type/asset-type.componen
 import { AssetIntangibleTypeEndpointService } from "../services/asset-intangible-type/asset-intangible-type-endpoint.service";
 import { AssetIntangibleTypeService } from "../services/asset-intangible-type/asset-intangible-type.service";
 import { AssetIntangibleTypeComponent } from "../components/asset-intangible-type/asset-intangible-type.component";
+import { AssetIntangibleAttributeTypeEndpointService } from "../services/asset-intangible-attribute-type/asset-intangible-attribute-type-endpoint.service";
+import { AssetIntangibleAttributeTypeService } from "../services/asset-intangible-attribute-type/asset-intangible-attribute-type.service";
+import { AssetIntangibleAttributeTypeComponent } from "../components/asset-intangible-attribute-type/asset-intangible-attribute-type.component";
 import { StageCodeEndpointService } from "../services/stage-code/stage-code-endpoint.service";
 import { StageCodeService } from "../services/stage-code/stage-code.service";
 import { StageCodeComponent } from "../components/stage-code/stage-code.component";
@@ -141,6 +144,10 @@ import { JobTypeComponent } from '../components/job-type/job-type.component';
 import { PercentService } from "../services/percent.service";
 import { PercentEndpoint } from "../services/percent-endpoint.service";
 import { CommonService } from "../services/common.service";
+import { VendorProcess1099Component } from "../components/vendor-process1099/vendor-process1099.component";
+import { VendorProcess1099Service } from "../services/vendorprocess1099.service";
+import { CapsReportComponent } from "../components/caps-report/caps-report.component";
+
 
 @NgModule({
     imports: [
@@ -176,6 +183,7 @@ import { CommonService } from "../services/common.service";
         EmployeeExpertiseComponent,
         FindingsComponent,
         AssetIntangibleTypeComponent,
+		AssetIntangibleAttributeTypeComponent,
         AssetTypeComponent,
         StageCodeComponent,
         GLAccountCategoryComponent,
@@ -230,7 +238,9 @@ import { CommonService } from "../services/common.service";
         AircraftManufacturerComponent,
         AircraftModelComponent,
         DashnumberComponent,
-        PaginationComponent
+        PaginationComponent,
+        VendorProcess1099Component,
+        CapsReportComponent
     ],
     providers: [
         PercentService,
@@ -251,6 +261,8 @@ import { CommonService } from "../services/common.service";
         AssetTypeEndpointService,
         AssetIntangibleTypeService,
         AssetIntangibleTypeEndpointService,
+		AssetIntangibleAttributeTypeService,
+        AssetIntangibleAttributeTypeEndpointService,
         StageCodeService,
         StageCodeEndpointService,
         GLAccountCategoryService,
@@ -266,18 +278,23 @@ import { CommonService } from "../services/common.service";
         DashNumberService,
         DashNumberEndpointService,
         PaginationService,
-        CommonService
+        CommonService,
+        VendorProcess1099Service
+
+      
+       
+        
     ],
     exports: [
         FlexLayoutModule,
         FormsModule,
         ReactiveFormsModule,
         QuickAppProMaterialModule,
-        TranslateModule,
-        VendorClassificationComponent
+        TranslateModule
     ],
     entryComponents: [
     ],
+
 
 })
 export class SinglePgesModule {

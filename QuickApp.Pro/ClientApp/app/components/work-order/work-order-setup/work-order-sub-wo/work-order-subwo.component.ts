@@ -59,8 +59,8 @@ export class SubWorkOrderComponent implements OnInit {
 
 
 
-        this.getHeaderDetails();
-        this.getAllWorkOrderStages();
+        this.getSubWorkOrderEditData();
+        // this.getAllWorkOrderStages(); // for stages dropdown
         this.getAllWorkOrderStatus();
 
 
@@ -72,23 +72,41 @@ export class SubWorkOrderComponent implements OnInit {
     }
 
 
-    getHeaderDetails() {
+    getSubWorkOrderEditData() {
+        this.workOrderService.getSubWorkOrderDataBySubWorkOrderId(this.subWorkOrderId).subscribe(res => {
+            this.getDataFormating(res);
+            this.isEdit = true;
+            this.getHeaderDetailsForCreateSubWO();
+        }, error => {
+            this.getHeaderDetailsForCreateSubWO();
+            this.isEdit = false;
+        })
+
+    }
+    getHeaderDetailsForCreateSubWO() {
+        console.log('test');
+
         if (this.workOrderId && this.mpnId) {
             this.workOrderService.getSubWorkOrderHeaderByWorkOrderId(this.workOrderId, this.mpnId).subscribe(res => {
                 this.subWorkOrderHeader = res;
+                this.workFlowWorkOrderId = res.workFlowWorkOrderId;
                 this.workOrderDetails = {
                     ...this.workOrderDetails,
                     workFlowId: res.workFlowId,
                     workFlowWorkOrderId: res.workFlowWorkOrderId
                 }
+                if (this.isEdit === false) {
+                    this.getDataFormating(res);
+                }
 
-                this.subWorkOrderGeneralInformation = {
-                    ...res,
-                    openDate: new Date(res.openDate),
-                    estimatedCompletionDate: new Date(res.estimatedCompletionDate),
-                    needDate: '',
-                };
-                this.getWorkFlowByPNandScope(res.itemMasterId, res.workOrderScopeId);
+
+                // this.subWorkOrderGeneralInformation = {
+                //     ...res,
+                //     openDate: new Date(res.openDate),
+                //     estimatedCompletionDate: new Date(res.estimatedCompletionDate),
+                //     needDate: new Date(res.needDate),
+                // };
+                // this.getWorkFlowByPNandScope(res.itemMasterId, res.workOrderScopeId);
                 this.getPartPublicationByItemMasterId(res.itemMasterId);
 
 
@@ -96,6 +114,19 @@ export class SubWorkOrderComponent implements OnInit {
         }
 
     }
+
+    getDataFormating(res) {
+        this.subWorkOrderGeneralInformation = {
+            ...res,
+            openDate: new Date(res.openDate),
+            estimatedCompletionDate: new Date(res.estimatedCompletionDate),
+            needDate: new Date(res.needDate),
+        };
+    }
+
+
+
+
 
     getAllWorkOrderStages(): void {
         this.commonService.smartDropDownList('WorkOrderStage', 'ID', 'Description').subscribe(res => {
@@ -122,8 +153,6 @@ export class SubWorkOrderComponent implements OnInit {
 
 
     getWorkFlowByPNandScope(itemMasterId, workOrderScopeId) {
-
-
         if ((itemMasterId !== 0 && itemMasterId !== null) && (workOrderScopeId !== null && workOrderScopeId !== 0)) {
             this.workOrderService.getWorkFlowByPNandScope(itemMasterId, workOrderScopeId).subscribe(res => {
                 this.workFlowList = res.map(x => {
@@ -167,12 +196,7 @@ export class SubWorkOrderComponent implements OnInit {
                 this.showTabsGrid = true;
                 this.subWorkOrderGeneralInformation = res;
                 this.subWorkOrderId = res.subWorkOrderId;
-
-                // this.workOrderDetails = {
-                //     ...this.workOrderDetails,
-                //     workOrderId: res.subWorkOrderId,
-                // }
-
+                this.updateURLParams();
                 this.alertService.showMessage(
                     '',
                     'Sub WorkOrder Saved Successfully',
@@ -186,11 +210,7 @@ export class SubWorkOrderComponent implements OnInit {
                 this.showTabsGrid = true;
                 this.subWorkOrderGeneralInformation = res;
                 this.subWorkOrderId = res.subWorkOrderId;
-                // this.workOrderDetails = {
-                //     ...this.workOrderDetails,
-                //     workOrderId: res.subWorkOrderId,
-                // }
-
+                this.updateURLParams();
                 this.alertService.showMessage(
                     '',
                     'Sub WorkOrder Updated Successfully',
@@ -198,9 +218,13 @@ export class SubWorkOrderComponent implements OnInit {
                 );
             })
         }
+        console.log(this.subWorkOrderId);
 
 
 
+    }
+    updateURLParams() {
+        window.history.replaceState({}, '', `/workordersmodule/workorderspages/app-sub-work-order?workorderid=${this.workOrderId}&mpnid=${this.mpnId}&subworkorderid=${this.subWorkOrderId}`);
     }
 
 }

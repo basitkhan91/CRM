@@ -1083,7 +1083,7 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 				this.sourceStockLine.itemTypeId = 1;
 				this.stocklineser.newStockLine(this.sourceStockLine).subscribe(data => {
 					this.collectionofstockLine = data;
-					this.saveItemMasterDetails(this.sourceStockLineSetup);
+					//this.saveItemMasterDetails(this.sourceStockLineSetup);
 					this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
 					this.value = 1;
 
@@ -1122,7 +1122,7 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 							{
 								console.log("Update Timelife");
 								this.stocklineser.updateStockLineTimelife(this.sourceTimeLife).subscribe(data => {
-									this.saveItemMasterDetails(this.sourceStockLineSetup);
+									//this.saveItemMasterDetails(this.sourceStockLineSetup);
 									this.collectionofstockLine = data;
 									this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
 								})
@@ -1131,7 +1131,7 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 							else {
 								this.stocklineser.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
 									this.collectionofstockLine = data;
-									this.saveItemMasterDetails(this.sourceStockLineSetup);
+									//this.saveItemMasterDetails(this.sourceStockLineSetup);
 									this.value = 1;
 									this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
 								})
@@ -1176,7 +1176,7 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 						console.log("Update Timelife");
 						this.stocklineser.updateStockLineTimelife(this.sourceTimeLife).subscribe(data => {
 							this.collectionofstockLine = data;
-							this.saveItemMasterDetails(this.sourceStockLineSetup);
+							//this.saveItemMasterDetails(this.sourceStockLineSetup);
 							this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
 						})
 					}
@@ -1184,7 +1184,7 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 						this.stocklineser.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
 							this.collectionofstockLine = data;
 							this.value = 1;
-							this.saveItemMasterDetails(this.sourceStockLineSetup);
+							//this.saveItemMasterDetails(this.sourceStockLineSetup);
 							this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
 						})
 					}
@@ -1215,9 +1215,9 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 		}
 	}
 
-	saveItemMasterDetails(sourceStockLine: any) {
-		this.stocklineser.updateItemMasterEndpoint(sourceStockLine);
-	}
+	//saveItemMasterDetails(sourceStockLine: any) {
+	//	this.stocklineser.updateItemMasterEndpoint(sourceStockLine);
+	//}
 
 	closethis() {
 

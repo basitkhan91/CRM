@@ -3382,6 +3382,27 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpPost("vendorProcessSave")]
+        public IActionResult VendorProcessSave([FromBody]Master1099 vendorProcess1099)
+        {
+            _unitOfWork.Vendor.VendorProcess1099Save(vendorProcess1099);
+            return Ok();
+        }
+
+        [HttpPut("vendorProcessStatus")]
+        public IActionResult VendorProcesStatusUpdate(long id, bool status, string updatedBy)
+        {
+            _unitOfWork.Vendor.VendorProcess1099StatusUpdate(id, status, updatedBy);
+            return Ok();
+        }
+
+        [HttpPut("vendorProcessDelete")]
+        public IActionResult VendorProcesDelete(long id, string updatedBy)
+        {
+            _unitOfWork.Vendor.VendorProcess1099Delete(id, updatedBy);
+            return Ok();
+        }
+
 
 
         #region Capes
@@ -3596,7 +3617,7 @@ namespace QuickApp.Pro.Controllers
                     _context.Address.Add(address);
                 }
                 _context.SaveChanges();
-                                            
+
                 billingAddressData.AddressId = billingAddress.AddressId;
                 billingAddressData.VendorId = billingAddress.VendorId;
                 billingAddressData.SiteName = billingAddress.SiteName;
@@ -3684,7 +3705,69 @@ namespace QuickApp.Pro.Controllers
         #endregion
 
 
-        #region VendorDocument
+        #region VendorDocument    
+
+
+        [HttpPost("vendorGeneralDocumentUpload")]
+        [Produces("application/json")]
+        public IActionResult VendorDocumentUploadAction()
+        {
+
+            try
+            {
+                VendorDocumentDetails objVendorDocumentDetail = new VendorDocumentDetails();
+                if (ModelState.IsValid)
+                {
+                    if (Request.Form == null)
+                        return BadRequest($"{nameof(objVendorDocumentDetail)} cannot be null");
+                    objVendorDocumentDetail.MasterCompanyId = 1;
+                    objVendorDocumentDetail.UpdatedBy = Request.Form["UpdatedBy"];
+                    objVendorDocumentDetail.VendorId = Convert.ToInt64(Request.Form["VendorId"]);
+
+                    if (objVendorDocumentDetail.VendorId > 0)
+                    {
+                        var attachmentData = _context.Attachment.Where(p => p.ReferenceId == objVendorDocumentDetail.VendorId && p.ModuleId == Convert.ToInt32(ModuleEnum.Vendor)).FirstOrDefault();
+
+                        if (attachmentData != null)
+                        {
+                            objVendorDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
+                                                         Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), objVendorDocumentDetail.UpdatedBy, objVendorDocumentDetail.MasterCompanyId, attachmentData.AttachmentId);
+
+
+                        }
+                        else
+                        {
+                            objVendorDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
+                                                                       Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), objVendorDocumentDetail.UpdatedBy, objVendorDocumentDetail.MasterCompanyId);
+
+                        }
+
+                    }
+
+                    return Ok(objVendorDocumentDetail);
+                }
+                return Ok(ModelState);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("getVendorGeneralDocumentDetail/{id}")]
+        public IActionResult GetVendorGeneralDocumentDetail(long id, int moduleId)
+        {
+            var allvendorsGenralDocs = _unitOfWork.Vendor.GetVendorGeneralDocumentDetailById(id, moduleId);
+            return Ok(allvendorsGenralDocs);
+        }
+
+        [HttpDelete("vendorAttachmentDelete/{id}")]
+        public IActionResult GetVendorGeneralDocumentDelete(long id, string updatedBy)
+        {
+            var deleteStatus = _unitOfWork.Vendor.GetVendorGeneralDocumentDelete(id, updatedBy);
+            return Ok(deleteStatus);
+        }
+
         [HttpPost("vendorDocumentUpload")]
         [Produces("application/json")]
         public IActionResult DocumentUploadAction()
@@ -3713,18 +3796,21 @@ namespace QuickApp.Pro.Controllers
                         vendorDocObj.UpdatedDate = DateTime.Now;
                         if (vendorDocObj.AttachmentId > 0)
                         {
+                            _unitOfWork.VendorDocumentDetails.Update(vendorDocObj);
+                            _unitOfWork.SaveChanges();
                             vendorDocObj.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
-                          Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), vendorDocObj.UpdatedBy, vendorDocObj.MasterCompanyId, vendorDocObj.AttachmentId);
+                                                         Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), vendorDocObj.UpdatedBy, vendorDocObj.MasterCompanyId, vendorDocObj.AttachmentId);
 
                         }
                         else
                         {
                             vendorDocObj.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
                              Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), vendorDocObj.UpdatedBy, vendorDocObj.MasterCompanyId);
+                            _unitOfWork.VendorDocumentDetails.Update(vendorDocObj);
+                            _unitOfWork.SaveChanges();
                         }
 
-                        _unitOfWork.VendorDocumentDetails.Update(vendorDocObj);
-                        _unitOfWork.SaveChanges();
+
                     }
                     else
                     {
@@ -3830,8 +3916,16 @@ namespace QuickApp.Pro.Controllers
             return Ok(allvendorsDoc);
 
         }
+        [HttpGet("getVendorProcess1099Audit")]
+        [Produces(typeof(Master1099Audit))]
+        public IActionResult GetVendorProcess1099Audit(long id)
+        {
+            var allvendorsDoc = _unitOfWork.Vendor.GetVendorProcess1099Audit(id);
+            return Ok(allvendorsDoc);
 
+        }
 
+        
         #endregion
 
         #region Private Methods

@@ -33,9 +33,10 @@ export class SalesQuoteComponent implements OnInit {
   }
 
   viewSelectedRow(rowData) {
-    const { customerId } = rowData;
+   
+    console.log(rowData);
     this.modal = this.modalService.open(CustomerViewComponent, { size: 'lg' });
-    this.modal.componentInstance.customerId = customerId;
+    this.modal.componentInstance.customerId = rowData.customerId;
     this.modal.result.then(() => {
         console.log('When user closes');
     }, () => { console.log('Backdrop click') })

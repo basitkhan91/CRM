@@ -10,13 +10,15 @@
                 <div class="col-md-6">
                   <div class="form-group ">
                     <label> Invoice Type </label>
-                    <input
-                      type="number"
-                      class="form-control wo-input"
-                      name="invoiceType"
-                      #invoiceType="ngModel"
-                      [(ngModel)]="billingorInvoiceForm.invoiceTypeId"
-                    />
+                    <p-dropdown
+                    [options]="invoiceTypeList"
+                    name="invoiceType"
+                    #invoiceType="ngModel"
+                    placeholder="Select Status"
+                    class="p-dropdown-custom-md-Header"
+                    [(ngModel)]="billingorInvoiceForm.invoiceTypeId"
+                  >
+                  </p-dropdown>
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -137,11 +139,12 @@
                     <input
                       type="text"
                       class="form-control wo-input"
-                      name="salePerson"
-                      #salePerson="ngModel"
+                      name="salesPerson"
+                      #salesPerson="ngModel"
                       disabled
                       [(ngModel)]="billingorInvoiceForm.salesPerson"
                     />
+
                   </div>
                 </div>
               </div>
@@ -227,7 +230,7 @@
                       name="creditTerms"
                       #creditTerms="ngModel"
                       disabled
-                      [(ngModel)]="billingorInvoiceForm.creditTerms"
+                      [(ngModel)]="billingorInvoiceForm.creditTerm"
                     />
                   </div>
                 </div>
@@ -246,7 +249,7 @@
                       name="employee"
                       #employee="ngModel"
                       disabled
-                      [(ngModel)]="billingorInvoiceForm.employee"
+                      [(ngModel)]="billingorInvoiceForm.employeeName"
                     />
 
                     <!-- <p-autoComplete
@@ -300,7 +303,7 @@
                       name="soldcustomerName"
                       errorMessage="Records not found"
                       [forceSelection]="true"
-                      (onSelect)="selectSoldToCustomer($event)"
+                      (onSelect)="getSiteNamesBySoldCustomerId($event)"
                       [suggestions]="customerNamesList"
                       (completeMethod)="filterCustomerName($event)"
                       (onKeyUp)="clearAddress('SoldTo' , $event.target.value)"
@@ -326,7 +329,7 @@
                       name="shipcustomerName"
                       errorMessage="Records not found"
                       [forceSelection]="true"
-                      (onSelect)="selectShipToCustomer($event)"
+                      (onSelect)="getSiteNamesByShipCustomerId($event)"
                       [suggestions]="customerNamesList"
                       (completeMethod)="filterCustomerName($event)"
                       (onKeyUp)="clearAddress('ShipTo', $event.target.value)"
@@ -571,11 +574,12 @@
                 <div class="col-md-12">
                     <div class="form-group">
                   <p-dropdown
-                    placeholder="Select Leagal Entity"
-            name="company"
+                    placeholder="Select Legal Entity"
+                    name="company"
                     #companyId="ngModel"
-                    [options]="soldCustomerSiteList"
+                    [options]="legalEntityList"
                     class="p-dropdown-custom-md-2"
+                    (onChange)="selectedLegalEntity($event.value)"
                     [(ngModel)]="managementStructure.companyId"
                   >
                   </p-dropdown>
@@ -583,10 +587,11 @@
                   <div class="form-group">
                       <p-dropdown
                         placeholder="Select "
-                     name="bu"
+                        name="bu"
                         #bu="ngModel"
-                        [options]="soldCustomerSiteList"
+                        [options]="businessUnitList"
                         class="p-dropdown-custom-md-2"
+                        (onChange)="selectedBusinessUnit($event.value)"
                         [(ngModel)]="managementStructure.buId"
                       >
                       </p-dropdown>
@@ -596,8 +601,9 @@
                             placeholder="Select "
                             name="division"
                             #division="ngModel"
-                            [options]="soldCustomerSiteList"
+                            [options]="divisionList"
                             class="p-dropdown-custom-md-2"
+                            (onChange)="selectedDivision($event.value)"
                             [(ngModel)]="managementStructure.divisionId"
                           >
                           </p-dropdown>
@@ -605,10 +611,11 @@
                           <div class="form-group">
                               <p-dropdown
                                 placeholder="Select "
-                            name="department"
+                                name="department"
                                 #department="ngModel"
-                                [options]="soldCustomerSiteList"
+                                [options]="departmentList"
                                 class="p-dropdown-custom-md-2"
+                                (onChange)="selectedDepartment($event.value)"
                                 [(ngModel)]="managementStructure.departmentId"
                               >
                               </p-dropdown>
@@ -664,7 +671,7 @@
                           placeholder="Select "
                        name="bu"
                           #bu="ngModel"
-                          [options]="soldCustomerSiteList"
+                          [options]="numberData"
                           class="p-dropdown-custom-md-2"
                           [(ngModel)]="billingorInvoiceForm.totalWorkOrderValue"
                         >
@@ -689,9 +696,9 @@
                       <div class="form-group">
                           <p-dropdown
                             placeholder="Select "
-                         name="bu"
-                            #bu="ngModel"
-                            [options]="soldCustomerSiteList"
+                            name="materialValue"
+                            #materialValue="ngModel"
+                            [options]="numberData"
                             class="p-dropdown-custom-md-2"
                             [(ngModel)]="billingorInvoiceForm.materialValue"
                           >
@@ -716,9 +723,9 @@
                         <div class="form-group">
                             <p-dropdown
                               placeholder="Select "
-                           name="bu"
-                              #bu="ngModel"
-                              [options]="soldCustomerSiteList"
+                              name="head"
+                              #head="ngModel"
+                              [options]="numberData"
                               class="p-dropdown-custom-md-2"
                               [(ngModel)]="billingorInvoiceForm.laborOverHeadValue"
                             >
@@ -743,9 +750,9 @@
                           <div class="form-group">
                               <p-dropdown
                                 placeholder="Select "
-                             name="bu"
-                                #bu="ngModel"
-                                [options]="soldCustomerSiteList"
+                                name="misc"
+                                #misc="ngModel"
+                                [options]="numberData"
                                 class="p-dropdown-custom-md-2"
                                 [(ngModel)]="billingorInvoiceForm.miscChargesValue"
                               >
@@ -811,7 +818,8 @@
                             class="form-control wo-input"
                             name="shipAccount"
                             #shipAccount="ngModel"
-                            [(ngModel)]="billingorInvoiceForm.shipAccount"
+                            disable
+                            [(ngModel)]="billingorInvoiceForm.shipAccountInfo"
                           />
                           </div>
                       </div>
@@ -845,6 +853,14 @@
           </div>
         </div>
       </div>
+
+      <div style="float: right;">
+        <button class="btn btn-primary-cstm pull-right"  *ngIf="!isEditBilling" (click)="saveWorkOrderBilling()">Save</button>
+        <button class="btn btn-primary-cstm pull-right"  *ngIf="isEditBilling" (click)="updateWorkOrderBilling()">Update</button>
+      </div>
+
+
     </form>
+
   </div>
 </div>

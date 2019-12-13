@@ -2,6 +2,7 @@
 import { fadeInOut } from '../../../../services/animations';
 import { CustomerService } from '../../../../services/customer.service';
 import { CommonService } from '../../../../services/common.service';
+import { NgbModal, NgbActiveModal, NgbModalRef, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import * as $ from 'jquery';
 
 
@@ -108,7 +109,7 @@ export class CustomerViewComponent implements OnInit {
     restrictedDERParts: any;
     disableRestrictedPMA: boolean = false;
     classificationIds: any[];
-    constructor(public customerService: CustomerService,private commonService: CommonService) {
+    constructor(public customerService: CustomerService,private commonService: CommonService,private activeModal: NgbActiveModal,) {
       
 
     }
@@ -241,6 +242,11 @@ export class CustomerViewComponent implements OnInit {
             
             // console.log(this.generalInformation.customerClassificationIds);
         });
+    }
+    dismissModel() {
+        //this.isDeleteMode = false;
+      
+        this.activeModal.close();
     }
 
     ExpandAllCustomerDetailsModel() {

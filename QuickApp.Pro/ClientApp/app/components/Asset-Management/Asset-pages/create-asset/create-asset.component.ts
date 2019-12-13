@@ -114,6 +114,12 @@ export class CreateAssetComponent implements OnInit {
         //else {
         //    this.currentAsset.manufacturedDate = new Date();
         //}
+        if (this.currentAsset.entryDate) {
+            this.currentAsset.entryDate = new Date(this.currentAsset.entryDate);
+        }
+        else {
+            this.currentAsset.entryDate = new Date();
+        }
 
     }
 
@@ -575,30 +581,33 @@ export class CreateAssetComponent implements OnInit {
     saveAsset(): void {
 
         if (this.currentAsset.isDepreciable == true) {
-            if (!(this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
+            if (!(this.currentAsset.assetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
                 && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId
-                && this.currentAsset.companyId && this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId
-                && this.currentAsset.manufacturerId)) {
+                && this.currentAsset.companyId && this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId)) {
                 this.display = true;
                 this.modelValue = true;
             }
         }
-        if (this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
+        if (this.currentAsset.assetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
             && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId)
 
             if (this.currentAsset.isIntangible == true) {
                 if (!(this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.assetIntangibleTypeId
-                    && this.currentAsset.companyId && this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId
-                    && this.currentAsset.manufacturerId)) {
+                    && this.currentAsset.companyId && this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId)) {
                     this.display = true;
                     this.modelValue = true;
                 }
             }
-        if ((this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.assetIntangibleTypeId)
-            || (this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
+        if (this.currentAsset.assetId == this.currentAsset.assetParentId) {
+            this.isSaving = false;
+            this.alertService.stopLoadingMessage();
+            this.alertService.showMessage("", `Parent Asset cannot be equal to Asset ID.`, MessageSeverity.error);
+        }
+        if ((this.currentAsset.assetId && this.currentAsset.name && this.currentAsset.assetIntangibleTypeId)
+            || (this.currentAsset.assetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
                 && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId
                 && this.currentAsset.companyId && this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId
-                && this.currentAsset.manufacturerId)) {
+            && this.currentAsset.assetId != this.currentAsset.assetParentId)) {
             this.isSaving = true;
 
             if (!this.currentAsset.assetRecordId) {
@@ -621,6 +630,7 @@ export class CreateAssetComponent implements OnInit {
                     this.currentAsset.model = "";
                     this.currentAsset.assetAcquisitionTypeId = "";
                     this.currentAsset.manufacturedDate = "";
+                    this.currentAsset.entryDate = "";
                     this.currentAsset.asset_Location = "";
                     this.currentAsset.assetTypeId = "";
                     this.currentSelectedAssetType.selectedObj = "";
@@ -711,6 +721,7 @@ export class CreateAssetComponent implements OnInit {
                     this.currentAsset.model = "";
                     this.currentAsset.assetAcquisitionTypeId = "";
                     this.currentAsset.manufacturedDate = "";
+                    this.currentAsset.entryDate = "";
                     this.currentAsset.asset_Location = "";
                     this.currentAsset.assetTypeId = "";
                     this.currentSelectedAssetType.selectedObj = "";

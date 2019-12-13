@@ -1728,7 +1728,7 @@ namespace DAL
             get
             {
                 if (_assetIntangibleAttributeType == null)
-                    _assetIntangibleAttributeType = new AssetIntangibleAttributeTypeRepository(_context);
+                    _assetIntangibleAttributeType = new AssetIntangibleAttributeTypeRepository(_context, _appSettings);
                 return _assetIntangibleAttributeType;
             }
         }

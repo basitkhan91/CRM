@@ -32,6 +32,7 @@ namespace DAL.Repositories
             var skip = take * (pageNumber - 1);
 
             short statusId = 0;
+            long vendorId = 0;
 
             var open = "open";
             var pending = "pending";
@@ -56,6 +57,13 @@ namespace DAL.Repositories
                     statusId = 4;
                 }
 
+                
+
+            }
+
+            if (poFilters.filters.VendorId != null)
+            {
+                vendorId = poFilters.filters.VendorId.Value;
             }
 
             var totalRecords = (from po in _appContext.PurchaseOrder
@@ -64,6 +72,7 @@ namespace DAL.Repositories
                                 join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
                                 from appr in approver.DefaultIfEmpty()
                                 where po.IsDeleted == false
+                                && po.VendorId==(vendorId>0?vendorId:po.VendorId)
                                 && po.PurchaseOrderNumber.Contains(!String.IsNullOrEmpty(poFilters.filters.PurchaseOrderNo) ? poFilters.filters.PurchaseOrderNo : po.PurchaseOrderNumber)
                                 //&& Convert.ToString(po.OpenDate) == (Convert.ToString(poFilters.filters.OpenDate) == "1/1/0001 12:00:00 AM" ? Convert.ToString(po.OpenDate) : Convert.ToString(poFilters.filters.OpenDate))
                                 //&& Convert.ToString(po.ClosedDate) == (Convert.ToString(poFilters.filters.ClosedDate) == "1/1/0001 12:00:00 AM" ? Convert.ToString(po.ClosedDate) : Convert.ToString(poFilters.filters.ClosedDate))
@@ -84,6 +93,7 @@ namespace DAL.Repositories
                                      join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
                                      from appr in approver.DefaultIfEmpty()
                                      where po.IsDeleted == false
+                                     && po.VendorId == (vendorId > 0 ? vendorId : po.VendorId)
                                      && po.PurchaseOrderNumber.Contains(!String.IsNullOrEmpty(poFilters.filters.PurchaseOrderNo) ? poFilters.filters.PurchaseOrderNo : po.PurchaseOrderNumber)
                                      && v.VendorName.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorName) ? poFilters.filters.VendorName : v.VendorName)
                                      && v.VendorCode.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorCode) ? poFilters.filters.VendorCode : v.VendorCode)
@@ -754,7 +764,7 @@ namespace DAL.Repositories
                                      join v in _appContext.Vendor on po.VendorId equals v.VendorId
                                      join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
                                      from appr in approver.DefaultIfEmpty()
-                                     
+
                                      where po.IsDeleted == false && po.VendorId == vendorId
                                      select new
                                      {
@@ -825,24 +835,18 @@ namespace DAL.Repositories
             {
                 var data = (from po in _appContext.PurchaseOrder
                             join v in _appContext.Vendor on po.VendorId equals v.VendorId
-                            //join VAddr in _appContext.VendorShippingAddress on po.VendorId equals VAddr.VendorId
-                            // join Addr in _appContext.Address on VAddr.AddressId equals Addr.AddressId
                             join req in _appContext.Employee on po.RequestedBy equals req.EmployeeId
-
                             join app in _appContext.Employee on po.ApproverId equals app.EmployeeId into approver
                             from app in approver.DefaultIfEmpty()
-
                             join pr in _appContext.Priority on po.PriorityId equals pr.PriorityId
                             join vc in _appContext.VendorContact on v.VendorId equals vc.VendorId
                             join con in _appContext.Contact on vc.ContactId equals con.ContactId
-
                             join shcont in _appContext.Contact on po.ShipToContactId equals shcont.ContactId into shipToCont
                             from shcont in shipToCont.DefaultIfEmpty()
-
                             join blcont in _appContext.Contact on po.BillToContactId equals blcont.ContactId into billToCont
                             from blcont in billToCont.DefaultIfEmpty()
-
-                            join ct in _appContext.CreditTerms on v.CreditTermsId equals ct.CreditTermsId
+                            join ct in _appContext.CreditTerms on v.CreditTermsId equals ct.CreditTermsId into vct
+                            from ct in vct.DefaultIfEmpty()
                             join shcust in _appContext.Customer on po.ShipToUserId equals shcust.CustomerId into shipToCust
                             from shcust in shipToCust.DefaultIfEmpty()
                             join shcomp in _appContext.LegalEntity on po.ShipToUserId equals shcomp.LegalEntityId into shipToComp
@@ -866,18 +870,15 @@ namespace DAL.Repositories
                                 Requisitioner = req.FirstName,
                                 po.OpenDate,
                                 v.VendorCode,
-
                                 Priority = pr.Description,
                                 Approver = app.FirstName,
                                 po.ClosedDate,
                                 con.WorkPhone,
-
                                 VendorContact = con.FirstName,
-
                                 Status = po.StatusId == 1 ? "Open" : (po.StatusId == 2 ? "Pending" : (po.StatusId == 3 ? "Fulfilling" : "Closed")),
                                 pr.Description,
                                 v.CreditLimit,
-                                CreditTerm = ct.Name,
+                                CreditTerm = ct == null ? "" : ct.Name,
                                 po.Resale,
                                 po.Notes,
                                 po.DeferredReceiver,
