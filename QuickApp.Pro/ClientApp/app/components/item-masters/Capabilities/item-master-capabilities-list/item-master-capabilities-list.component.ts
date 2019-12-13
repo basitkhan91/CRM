@@ -197,11 +197,10 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
         // To display the values in header and column name values
         this.cols = [
             //{ field: 'actionId', header: 'Action Id' },
-
+            { field: 'capabilityId', header: 'Capability' },
             { field: 'partNumber', header: 'PN' },
             { field: 'partDescription', header: 'Description' },
             { field: 'manufacturerId', header: 'Manufacturer' },
-            { field: 'itemMasterId', header: 'Item Master Id' },
             { field: 'aircraftTypeId', header: 'aircraftType' },
             { field: 'aircraftModelId', header: 'aircraftModel' },
             { field: 'aircraftDashNumberId', header: 'aircraftDashNumber' },
