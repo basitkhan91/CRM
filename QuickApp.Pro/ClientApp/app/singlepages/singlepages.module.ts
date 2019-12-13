@@ -107,6 +107,9 @@ import { AssetTypeComponent } from "../components/asset-type/asset-type.componen
 import { AssetIntangibleTypeEndpointService } from "../services/asset-intangible-type/asset-intangible-type-endpoint.service";
 import { AssetIntangibleTypeService } from "../services/asset-intangible-type/asset-intangible-type.service";
 import { AssetIntangibleTypeComponent } from "../components/asset-intangible-type/asset-intangible-type.component";
+import { AssetIntangibleAttributeTypeEndpointService } from "../services/asset-intangible-attribute-type/asset-intangible-attribute-type-endpoint.service";
+import { AssetIntangibleAttributeTypeService } from "../services/asset-intangible-attribute-type/asset-intangible-attribute-type.service";
+import { AssetIntangibleAttributeTypeComponent } from "../components/asset-intangible-attribute-type/asset-intangible-attribute-type.component";
 import { StageCodeEndpointService } from "../services/stage-code/stage-code-endpoint.service";
 import { StageCodeService } from "../services/stage-code/stage-code.service";
 import { StageCodeComponent } from "../components/stage-code/stage-code.component";
@@ -176,6 +179,7 @@ import { CommonService } from "../services/common.service";
         EmployeeExpertiseComponent,
         FindingsComponent,
         AssetIntangibleTypeComponent,
+		AssetIntangibleAttributeTypeComponent,
         AssetTypeComponent,
         StageCodeComponent,
         GLAccountCategoryComponent,
@@ -251,6 +255,8 @@ import { CommonService } from "../services/common.service";
         AssetTypeEndpointService,
         AssetIntangibleTypeService,
         AssetIntangibleTypeEndpointService,
+		AssetIntangibleAttributeTypeService,
+        AssetIntangibleAttributeTypeEndpointService,
         StageCodeService,
         StageCodeEndpointService,
         GLAccountCategoryService,

@@ -639,12 +639,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     {
                         label: 'Asset Attributes', items: [
                             { label: 'Asset Attribute Type', routerLink: '/singlepages/singlepages/app-asset-attribute-type' },
-                            {
-                                label: 'Intangible Type', items: [
-                                    { label: 'Intangible Type List', routerLink: '/#' },
-                                    { label: 'Create Intagible Type', routerLink: '/#' },
-                                ]
-                            },
+                            { label: 'Intangible Attribute Type', routerLink: '/singlepages/singlepages/app-asset-intangible-attribute-type' },
                             { label: 'Depreciation - Book', routerLink: '/#' },
                             { label: 'Depreciaiton - Tax', routerLink: '/#' },
                             { label: 'Depreciaiton Start Date', routerLink: '/#' },

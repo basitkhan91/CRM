@@ -64,6 +64,9 @@ export class SingleComponent {
                 case '/singlepages/singlepages/app-asset-attribute-type':
                     itemLabel = 'Asset Attribute Type';
                     break;
+				case '/singlepages/singlepages/app-asset-intangible-attribute-type':
+                    itemLabel = 'Intangible Attribute Type';
+                    break;
                 default:
             }
             this.items = [
@@ -465,6 +468,9 @@ export class SingleComponent {
                     break;
                 case '/singlepages/singlepages/app-asset-attribute-type':
                     itemLabel = 'Asset Attribute Type';
+                    break;
+				case '/singlepages/singlepages/app-asset-intangible-attribute-type':
+                    itemLabel = 'Intangible Attribute Type';
                     break;
                 default:
             }

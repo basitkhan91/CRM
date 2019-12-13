@@ -48,7 +48,7 @@
                                                    defaultLabel="Choose Columns">
                                     </p-multiSelect>
                                     <button type="button" class="btn btn-primary-cstm" pTooltip="Download All Data" tooltipPosition="top"
-                                            pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                            pButton icon="fa-download" iconPos="left" label="Export Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm" pTooltip="Download Selected" tooltipPosition="top"
                                             pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <!--
@@ -149,7 +149,7 @@
                             <span class="label">
                                 <b>Id: </b>
                             </span>
-                            <span class="value">{{itemDetails.assetIntangibleTypeId}}</span>
+                            <span class="value">{{itemDetails.IntangibleAttrTypeId}}</span>
                         </p>
                         <p>
                             <span class="label">
@@ -208,39 +208,156 @@
                     <h4 class="modal-title">{{currentModeOfOperation === 3 ? "Edit" : "Add"}} {{rowName}} </h4>
                 </div>
                 <div class="modal-body">
-                    <form #AssetIntangibleType="ngForm">
+                    <form #IntangibleAttrType="ngForm">
                         <div class="form-group">
                             <div class="col-sm-12">
-                                <div class="col-sm-4">
+                                <div class="col-sm-5">
                                     <label for="description" class="control-label">
-                                        Name
+                                        Intangible Type
                                         <span class="clr-red">*</span>
                                     </label>
 
                                 </div>
                                 <div class="col-sm-5">
-                                    <p-autoComplete field="assetIntangibleName" 
-                                                    [(ngModel)]="currentRow.assetIntangibleName" 
-                                                    (onSelect)="selectedName($event)" 
-                                                    (onKeyUp)="checkReasonCodeExists('assetIntangibleName', $event.target.value)" 
-                                                    name="assetIntangibleName"
-                                                    [suggestions]="filteredItemList" (completeMethod)="filterAssetIntangibleName($event)" 
+                                    <p-autoComplete field="assetIntangibleName"
+                                                    [(ngModel)]="currentRow.assetIntangibleTypeId"
+                                                    name="assetIntangibleTypeId"
+                                                    [suggestions]="filteredAssetIntangibleTypes" (completeMethod)="filterIntangibleType($event)"
                                                     [size]="30" [minLength]="1"
                                                     [dropdown]="true" class="p-autoComplete-ctsm" required>
                                     </p-autoComplete>
-                                    <div *ngIf="disableSave" class="clr-red">Already Exists</div>
-                                    <div class="clear"></div>
                                 </div>
                             </div>
                             <div class="col-sm-12">
-                                <div class="col-sm-4">
-                                    <label for="description" class="control-label">
-                                        Memo
-                                    </label>
+                                <div class="col-sm-5">
+                                    <label for="depreciationFrequencyId" class="control-label">Amort Frequency <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="memo" 
-                                              name="memodescription" [(ngModel)]="currentRow.assetIntangibleMemo" minlength="2"></textarea>
+                                    <select name="depreciationFrequencyId" [(ngModel)]="currentRow.amortizationFrequency" required>
+                                        <option *ngFor="let freq of depreciationFreq" [ngValue]="freq">{{freq.label}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-5">
+                                    <label for="description" class="control-label">
+                                        Amort Expense GL
+                                        <span class="clr-red">*</span>
+                                    </label>
+
+                                </div>
+                                <div class="col-sm-5">
+                                    <p-autoComplete field="accountName"
+                                                    [(ngModel)]="currentRow.amortExpenseGLAccountId"
+                                                    name="amortExpenseGLAccountId"
+                                                    [suggestions]="filteredGLAccountList" (completeMethod)="filterGLAccount($event)"
+                                                    [size]="30" [minLength]="1"
+                                                    [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                    </p-autoComplete>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-5">
+                                    <label for="description" class="control-label">
+                                        Acc Amort Depr GL
+                                        <span class="clr-red">*</span>
+                                    </label>
+
+                                </div>
+                                <div class="col-sm-5">
+                                    <p-autoComplete field="accountName"
+                                                    [(ngModel)]="currentRow.accAmortDeprGLAccountId"
+                                                    name="accAmortDeprGLAccountId"
+                                                    [suggestions]="filteredGLAccountList" (completeMethod)="filterGLAccount($event)"
+                                                    [size]="30" [minLength]="1"
+                                                    [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                    </p-autoComplete>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-5">
+                                    <label for="description" class="control-label">
+                                        Intangible GL
+                                        <span class="clr-red">*</span>
+                                    </label>
+
+                                </div>
+                                <div class="col-sm-5">
+                                    <p-autoComplete field="accountName"
+                                                    [(ngModel)]="currentRow.intangibleGLAccountId"
+                                                    name="intangibleGLAccountId"
+                                                    [suggestions]="filteredGLAccountList" (completeMethod)="filterGLAccount($event)"
+                                                    [size]="30" [minLength]="1"
+                                                    [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                    </p-autoComplete>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-5">
+                                    <label for="description" class="control-label">
+                                        Intangible Write Down GL
+                                        <span class="clr-red">*</span>
+                                    </label>
+
+                                </div>
+                                <div class="col-sm-5">
+                                    <p-autoComplete field="accountName"
+                                                    [(ngModel)]="currentRow.intangibleWriteDownGLAccountId"
+                                                    name="intangibleWriteDownGLAccountId"
+                                                    [suggestions]="filteredGLAccountList" (completeMethod)="filterGLAccount($event)"
+                                                    [size]="30" [minLength]="1"
+                                                    [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                    </p-autoComplete>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-5">
+                                    <label for="description" class="control-label">
+                                        Intangible Write Off GL
+                                        <span class="clr-red">*</span>
+                                    </label>
+
+                                </div>
+                                <div class="col-sm-5">
+                                    <p-autoComplete field="accountName"
+                                                    [(ngModel)]="currentRow.intangibleWriteOffGLAccountId"
+                                                    name="intangibleWriteOffGLAccountId"
+                                                    [suggestions]="filteredGLAccountList" (completeMethod)="filterGLAccount($event)"
+                                                    [size]="30" [minLength]="1"
+                                                    [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                    </p-autoComplete>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-5">
+                                    <label for="managementStructure" class="control-label">Management Structure <span class="clr-red">*</span></label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div style="margin: 2px 0">
+                                        <select name="primaryCompany"
+                                                (change)="companySelected()" [(ngModel)]="selectedCompanyID" required>
+                                            <option value="0">Select Company</option>
+                                            <option *ngFor="let name of companyList" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                        </select>
+                                    </div>
+                                    <div style="margin: 2px 0">
+                                        <select name="primaryBU" [(ngModel)]="selectedBUId" (change)="buSelected()" [disabled]="selectedCompanyID == 0">
+                                            <option value="0">Select BU</option>
+                                            <option *ngFor="let name of buList" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                        </select>
+                                    </div>
+                                    <div style="margin: 2px 0">
+                                        <select name="primaryDivision" (change)="divisionSelected()" [(ngModel)]="selectedDivisionID" [disabled]="selectedBUId == 0">
+                                            <option value="0">Select Division</option>
+                                            <option *ngFor="let name of divisionList" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                        </select>
+                                    </div>
+                                    <div style="margin: 2px 0">
+                                        <select name="primaryDept" [(ngModel)]="selectedDeptID" (change)="departmentSelected()" [disabled]="selectedDivisionID == 0">
+                                            <option value="0">Select Dept</option>
+                                            <option *ngFor="let name of departmentList" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -261,9 +378,9 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-primary-cstm" data-dismiss="modal" 
-                            [disabled]="AssetIntangibleType.invalid || disableSave "
+                            [disabled]="IntangibleAttrType.invalid || disableSave "
                             (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();"
-                            ng-disabled="AssetIntangibleType.$pristine"
+                            ng-disabled="IntangibleAttrType.$pristine"
                             > {{currentModeOfOperation == 3 ? 'Update' : 'Save' }}</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
 
