@@ -648,16 +648,8 @@ export class AccountingCalendarComponent implements OnInit {
                   }
                   collection.push(obj)
                 })
-            //this.ledgerNameObjectData = collection
-            this.ledgerNameObjectData = [{
-                id: 1,
-                name: 'abcc'
-            },
-            {
-                id: 2,
-                name: 'defff'
-            }]
-            })
+            this.ledgerNameObjectData = collection
+            
     }
 
     loadLedgerNames(event){
