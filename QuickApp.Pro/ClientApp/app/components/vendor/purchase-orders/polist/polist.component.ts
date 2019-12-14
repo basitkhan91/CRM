@@ -64,6 +64,7 @@ export class PolistComponent implements OnInit {
     // isPOList: boolean;
     @Input() isEnablePOList: boolean;
     @Input() vendorId: boolean;
+    currentStatus: string = 'open';
 
     constructor(private _route: Router,
         private authService: AuthService,
@@ -97,6 +98,29 @@ export class PolistComponent implements OnInit {
 			{ field: 'name', header: 'PN Mfg' },
         ];
 
+    }
+
+    getPOListByStatus(status) {
+        const pageIndex = parseInt(this.lazyLoadEventDataInput.first) / this.lazyLoadEventDataInput.rows;;
+        this.pageIndex = pageIndex;
+        this.pageSize = this.lazyLoadEventDataInput.rows;
+        this.lazyLoadEventDataInput.first = pageIndex;
+        if(status == 'open') {            
+            this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'open' };            
+        } 
+        else if(status == 'closed') {
+            this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'closed' };
+        }
+        else if(status == 'pending') {
+            this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'pending' };
+        }
+        else if(status == 'fulfilling') {
+            this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'fulfilling' };
+        }
+        else if(status == 'canceled') {
+            this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'canceled' };
+        }
+        this.getList(this.lazyLoadEventDataInput);
     }
 
     getList(data) {
@@ -178,16 +202,18 @@ export class PolistComponent implements OnInit {
 
     }
     loadData(event) {
+        //this.lazyLoadEventData = null;
         this.lazyLoadEventData = event;
         const pageIndex = parseInt(event.first) / event.rows;;
         this.pageIndex = pageIndex;
         this.pageSize = event.rows;
         event.first = pageIndex;
         this.lazyLoadEventDataInput = event;
+        this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'open' }
         if(this.isEnablePOList) {
             this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, vendorId: this.vendorId }
         }
-        this.getList(event);
+        this.getList(this.lazyLoadEventDataInput);
         console.log(event);
     }
 
@@ -356,6 +382,14 @@ export class PolistComponent implements OnInit {
     closeViewModal() {
         $("#poView").modal("hide");
     }
+
+    closeHistoryModal() {
+        $("#poHistory").modal("hide");
+    }
+
+    closeDeleteModal() {
+        $("#poDelete").modal("hide");
+    }    
 
 }
 

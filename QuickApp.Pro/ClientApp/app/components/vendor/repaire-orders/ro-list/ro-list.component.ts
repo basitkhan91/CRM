@@ -10,6 +10,7 @@ import { PurchaseOrderService } from '../../../../services/purchase-order.servic
 import { VendorCapabilitiesService } from '../../../../services/vendorcapabilities.service';
 import { CommonService } from '../../../../services/common.service';
 import { listSearchFilterObjectCreation } from '../../../../generic/autocomplete';
+import * as $ from 'jquery';
 
 
 @Component({
@@ -58,6 +59,7 @@ export class RoListComponent implements OnInit {
     approvedByInput: any;
     @Input() isEnableROList: boolean;
     @Input() vendorId: boolean;
+    currentStatus: string = 'open';
 
     constructor(private _route: Router,
         private authService: AuthService,
@@ -86,6 +88,29 @@ export class RoListComponent implements OnInit {
 			{ field: 'name', header: 'PN Mfg' },
 		];
 
+    }
+
+    getROListByStatus(status) {
+        const pageIndex = parseInt(this.lazyLoadEventDataInput.first) / this.lazyLoadEventDataInput.rows;;
+        this.pageIndex = pageIndex;
+        this.pageSize = this.lazyLoadEventDataInput.rows;
+        this.lazyLoadEventDataInput.first = pageIndex;
+        if(status == 'open') {            
+            this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'open' };            
+        } 
+        else if(status == 'closed') {
+            this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'closed' };
+        }
+        else if(status == 'pending') {
+            this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'pending' };
+        }
+        else if(status == 'fulfilling') {
+            this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'fulfilling' };
+        }
+        else if(status == 'canceled') {
+            this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'canceled' };
+        }
+        this.getList(this.lazyLoadEventDataInput);
     }
 
     // getList(data) {
@@ -179,11 +204,12 @@ export class RoListComponent implements OnInit {
         this.pageSize = event.rows;
         event.first = pageIndex;
         this.lazyLoadEventDataInput = event;
+        this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'open' };
         if(this.isEnableROList) {
             this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, vendorId: this.vendorId }
         }
-        this.getList(event)
-        console.log(event);        
+        this.getList(this.lazyLoadEventDataInput);
+        console.log(event);
     }
 
     onChangeInputField(value, field) {
@@ -346,5 +372,17 @@ export class RoListComponent implements OnInit {
                 return data[i + 1][field] === value
             }
         }
+    }
+
+    closeViewModal() {
+        $("#roView").modal("hide");
+    }
+
+    closeHistoryModal() {
+        $("#roHistory").modal("hide");
+    }
+
+    closeDeleteModal() {
+        $("#roDelete").modal("hide");
     }
 }
