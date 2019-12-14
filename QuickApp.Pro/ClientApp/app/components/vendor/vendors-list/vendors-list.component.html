@@ -54,12 +54,12 @@
                 <tr>
 
                     <th *ngFor="let col of columns" pResizableColumn pReorderableColumn
-                        [pSortableColumn]="col.field">
+                        [pSortableColumn]="col.field" style="text-align:center;">
                         {{col.header}}
                         <p-sortIcon [field]="col.field"></p-sortIcon>
                     </th>
 
-                    <th style="width:200px"></th>
+                    <th style="width:200px; text-align: center;">Actions</th>
 
                 </tr>
 
