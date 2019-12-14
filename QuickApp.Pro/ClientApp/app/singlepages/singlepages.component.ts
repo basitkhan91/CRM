@@ -47,7 +47,7 @@ export class SingleComponent {
             let itemLabel = '';
             switch (this.currentUrl) {
                 case '/singlepages/singlepages/app-asset-type':
-                    itemLabel = 'Asset Type';
+                    itemLabel = 'Asset Class';
                     break;
                 case '/singlepages/singlepages/app-asset-intangible-type':
                     itemLabel = 'Asset Intangible Type';
@@ -464,7 +464,7 @@ export class SingleComponent {
             let itemLabel = '';
             switch (this.currentUrl) {
                 case '/singlepages/singlepages/app-asset-type':
-                    itemLabel = 'Asset Type';
+                    itemLabel = 'Asset Class';
                     break;
                 case '/singlepages/singlepages/app-asset-intangible-type':
                     itemLabel = 'Asset Intangible Type';
