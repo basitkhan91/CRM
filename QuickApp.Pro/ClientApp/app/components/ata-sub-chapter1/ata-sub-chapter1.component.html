@@ -20,20 +20,20 @@
                                 <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect [maxSelectedLabels]="2" [options]="headers" optionLabel="header" [(ngModel)]="selectedColumns" [style]="{minWidth: '200px'}"
                                         style="float:left" (onChange)="columnsChanges()"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download All Data" matTooltipPosition="above" pButton icon="fa-download"
                                         iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download Selected" matTooltipPosition="above" pButton icon="fa-download"
                                         iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
 
                                         <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file" accept=".xlsx, .xls, .csv">
                                         <label for="upload">
-                                            <span matTooltip="Upload Data (Excel)">
+                                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
                                                 <i class="fa fa-upload"></i>
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" matTooltip="Sample File download" (click)="sampleExcelDownload()">Sample File Download
+                                        <button class="btn btn-primary-cstm"  matTooltipPosition="above" matTooltip="Sample File download" (click)="sampleExcelDownload()">Sample File Download
                                         </button>
                                     </div>
                                 </div>
@@ -63,11 +63,14 @@
                                         (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                     </td>
                                     <td style="width:200px" *ngIf="selectedColumns.length> 0">
-                                        <p-inputSwitch [(ngModel)]="rowData['isActive']" matTooltip="Update" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>
+                                        <!--<p-inputSwitch [(ngModel)]="rowData['isActive']" matTooltip="Update" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>-->
+                                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 
                                         <span data-toggle="modal" data-target="#view">
                                             <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" matTooltip="view" data-target="#view"
-                                                data-toggle="modal">
+                                               data-toggle="modal">
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         </span>
@@ -139,7 +142,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">{{isEdit ? 'Edit' : 'Add' }} Aircraft Model</h4>
+                <h4 class="modal-title">{{isEdit ? 'Edit' : 'Add' }} ATA Sub Chapter</h4>
             </div>
             <div class="modal-body">
                 <form #create="ngForm">
