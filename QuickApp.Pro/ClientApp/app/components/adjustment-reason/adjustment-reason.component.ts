@@ -2,17 +2,17 @@
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import * as $ from 'jquery';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { fadeInOut } from '../../../services/animations';
-import { PageHeaderComponent } from '../../../shared/page-header.component';
-import { ActionService } from '../../../services/action.service';
-import { MasterComapnyService } from '../../../services/mastercompany.service';
-import { AlertService, DialogType, MessageSeverity } from '../../../services/alert.service';
-import { Action } from '../../../models/action.model';
-import { AuditHistory } from '../../../models/audithistory.model';
-import { AuthService } from '../../../services/auth.service';
+import { fadeInOut } from '../../services/animations';
+import { PageHeaderComponent } from '../../shared/page-header.component';
+import { ActionService } from '../../services/action.service';
+import { MasterComapnyService } from '../../services/mastercompany.service';
+import { AlertService, DialogType, MessageSeverity } from '../../services/alert.service';
+import { Action } from '../../models/action.model';
+import { AuditHistory } from '../../models/audithistory.model';
+import { AuthService } from '../../services/auth.service';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
-import { MasterCompany } from '../../../models/mastercompany.model';
+import { MasterCompany } from '../../models/mastercompany.model';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
@@ -20,20 +20,20 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { MenuItem } from 'primeng/api';//bread crumb
-import { StocklineAdjustReasonService } from '../../../services/stockLineAdjustmentReason.service';
-import { SingleScreenBreadcrumbService } from "../../../services/single-screens-breadcrumb.service";
-import { SingleScreenAuditDetails } from '../../../models/single-screen-audit-details.model';
-import { ConfigurationService } from '../../../services/configuration.service';
-import { StocklineAdjustmentReason } from '../../../models/stocklineadjustmentreason.model';
+import { StocklineAdjustReasonService } from '../../services/stockLineAdjustmentReason.service';
+import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
+import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
+import { ConfigurationService } from '../../services/configuration.service';
+import { StocklineAdjustmentReason } from '../../models/stocklineadjustmentreason.model';
 
 @Component({
-    selector: 'app-stockline-adjustment-reason',
-    templateUrl: './stockline-adjustment-reason.component.html',
-    styleUrls: ['./stockline-adjustment-reason.component.scss'],
+    selector: 'app-adjustment-reason',
+    templateUrl: './adjustment-reason.component.html',
+    styleUrls: ['./adjustment-reason.component.scss'],
     animations: [fadeInOut]
 })
 /** stockline-adjustment-reason component*/
-export class StocklineAdjustmentReasonComponent implements OnInit, AfterViewInit
+export class AdjustmentReasonComponent implements OnInit, AfterViewInit
 {
     public sourceAdjustmentReason: any = {};
     dataSource: MatTableDataSource<StocklineAdjustmentReason>;
@@ -111,7 +111,7 @@ export class StocklineAdjustmentReasonComponent implements OnInit, AfterViewInit
 
     ngOnInit(): void {
         this.loadData();
-        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-stockline-adjustment-reason';
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/app-adjustment-reason';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
     }
     ngAfterViewInit() {

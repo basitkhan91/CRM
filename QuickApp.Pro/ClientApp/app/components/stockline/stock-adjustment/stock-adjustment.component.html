@@ -346,7 +346,7 @@
 											<option value='select'>Select</option>
 											<option *ngFor="let adjustmentReason of allAdjustmentReasons" [ngValue]="adjustmentReason.adjustmentReasonId">{{adjustmentReason.description}}</option>
 										</select>
-										<a routerLink="/stocklinemodule/stocklinepages/app-stockline-adjustment-reason" class="add-icon"><i class="fa fa-plus"></i></a>
+										<a routerLink="/singlepages/singlepages/app-adjustment-reason" class="add-icon"><i class="fa fa-plus"></i></a>
 										<input type="number" [(ngModel)]="sourceStockLineSetup.AfterUnitCost" (keyup)="UnitCostNumberValuechange(11,sourceStockLineSetup.BeforecoreUnitCost,sourceStockLineSetup.AfterUnitCost,sourceStockLineSetup.UnitCostAdjustmentReason)" [ngModelOptions]="{standalone: true}" class="w100 form-control editable-field" style="display: inline-block;">
 									</td>
 									<td *ngIf="showUnit">
@@ -367,7 +367,7 @@
 										<select [(ngModel)]="sourceStockLineSetup.unitSalePriceAdjustmentReasonTypeId" [ngModelOptions]="{standalone: true}" (change)="unitSalesAdjustmentType(sourceStockLineSetup.unitSalePriceAdjustmentReasonTypeId)">
 											<option *ngFor="let adjustmentReason of allAdjustmentReasons" [ngValue]="adjustmentReason.adjustmentReasonId">{{adjustmentReason.description}}</option>
 										</select>
-										<a routerLink="/stocklinemodule/stocklinepages/app-stockline-adjustment-reason" class="add-icon"><i class="fa fa-plus"></i></a>
+										<a routerLink="/singlepages/singlepages/app-adjustment-reason" class="add-icon"><i class="fa fa-plus"></i></a>
 										<input [(ngModel)]="sourceStockLineSetup.AfterunitSalesPrice" (keyup)="UnitSalePriceNumberValuechange(12,sourceStockLineSetup.BeforeunitSalesPrice,sourceStockLineSetup.AfterunitSalesPrice,sourceStockLineSetup.unitSalesPriceAdjustmentReason)" [ngModelOptions]="{standalone: true}" type="number" class="w100 form-control editable-field" style="display: inline-block;">
 									</td>
 									<td *ngIf="showUnitSale">

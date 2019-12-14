@@ -73,13 +73,6 @@ export class StocklinepagesComponent {
 				{ label: 'StockLine-Adjustment' }
 				];
 			}
-			else if (this.currentUrl == '/stocklinemodule/stocklinepages/app-stockline-adjustment-reason') {
-				this.items = [
-					{ label: 'Stock Line' },
-					{ label: 'Adjustment Reason' }
-				];
-			}
-
 		}
 		
 
@@ -106,12 +99,6 @@ export class StocklinepagesComponent {
 				this.items = [
 					{ label: 'Stock Line' },
 					{ label: 'StockLine-Adjustment' }
-				];
-			}
-			else if (this.currentUrl == '/stocklinemodule/stocklinepages/app-stockline-adjustment-reason') {
-				this.items = [
-					{ label: 'Stock Line' },
-					{ label: 'Adjustment Reason' }
 				];
 			}
 		}
