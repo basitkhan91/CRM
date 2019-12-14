@@ -493,9 +493,13 @@ export class AccountingCalendarComponent implements OnInit {
         this.calendarArray.splice(index, 1);
     }
     setMonthDate() {
-        this.currentCalendarObj.fromDate = new Date('01-01' + '-' + this.currentCalendarObj.fiscalYear );
+
+        if (!isNaN(new Date('01-01' + '-' + this.currentCalendarObj.fiscalYear).getTime())
+            && !this.isEmptyOrSpaces(this.currentCalendarObj.fiscalYear)) {
+            this.currentCalendarObj.fromDate = new Date('01-01' + '-' + this.currentCalendarObj.fiscalYear);
         //this.currentCalendarObj.toDate = "";
-        this.currentCalendarObj.toDate = new Date('12-31' + '-' + this.currentCalendarObj.fiscalYear );;
+        this.currentCalendarObj.toDate = new Date('12-31' + '-' + this.currentCalendarObj.fiscalYear);
+        };
     }
     saveCalendar() {
 
@@ -662,6 +666,9 @@ export class AccountingCalendarComponent implements OnInit {
                 return x.name.toLowerCase().includes(event.query.toLowerCase())
             })]
         }
+    }
+    isEmptyOrSpaces(str) {
+        return !str || str.trim() === '';
     }
 
 }
