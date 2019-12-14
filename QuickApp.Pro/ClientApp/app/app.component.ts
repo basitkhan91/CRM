@@ -233,7 +233,6 @@ export class AppComponent implements OnInit, AfterViewInit {
                 items: [
                     { label: 'Stock List', routerLink: '/stocklinemodule/stocklinepages/app-stock-line-list' },
                     { label: 'Add Stock Line', routerLink: '/stocklinemodule/stocklinepages/app-stock-line-setup' },
-                    { label: 'Adjustment Reason', routerLink: '/stocklinemodule/stocklinepages/app-stockline-adjustment-reason' },
                     {
                         label: 'Reports and Forms', items: [
                             { label: 'Item Aging', routerLink: '/#' },
@@ -647,7 +646,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
                     {
                         label: 'Stockline', items: [
-                            { label: 'Adjustment Reason', routerLink: '/singlepages/singlepages/app-stockline-adjustment-reason' },
+                            { label: 'Adjustment Reason', routerLink: '/singlepages/singlepages/app-adjustment-reason' },
                             { label: 'Ware House', routerLink: '/singlepages/singlepages/app-warehouse' },
                             { label: 'Location', routerLink: '/singlepages/singlepages/app-location' },
                             { label: 'Shelf', routerLink: '/singlepages/singlepages/app-shelf' },

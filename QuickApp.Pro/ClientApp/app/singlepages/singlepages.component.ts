@@ -114,7 +114,7 @@ export class SingleComponent {
                 ];
             }
 
-            else if (this.currentUrl == '/singlepages/singlepages/app-stockline-adjustment-reason') {
+            else if (this.currentUrl == '/singlepages/singlepages/app-adjustment-reason') {
                 this.items = [
                     { label: 'Single Screens' },
                     { label: 'Adjustment Reason' }
@@ -817,7 +817,7 @@ export class SingleComponent {
                 ];
             }
 
-            else if (this.currentUrl == '/singlepages/singlepages/app-stockline-adjustment-reason') {
+            else if (this.currentUrl == '/singlepages/singlepages/app-adjustment-reason') {
                 this.items = [
                     { label: 'Single Screens' },
                     { label: 'Adjustment Reason' }

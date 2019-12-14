@@ -30,7 +30,6 @@ import { StockAdjustmentComponent } from "../components/stockline/stock-adjustme
 import { StocklinePagesRoutingModule } from "./stocklinepages-routing.module";
 import { StocklinepagesComponent } from './stocklinepages.component';
 import { StockLineEditComponent } from '../components/stockline/stock-line-edit/stock-line-edit.component';
-import { StocklineAdjustmentReasonComponent } from "../components/stockline/stockline-adjustment-reason/stockline-adjustment-reason.component";
 import { AuditModule } from "../audit/audit.module";
 
 @NgModule({
@@ -67,10 +66,6 @@ import { AuditModule } from "../audit/audit.module";
 		StockAdjustmentComponent,
 		StocklinepagesComponent,
 		StockLineEditComponent,
-		StocklineAdjustmentReasonComponent
-
-
-
 	],
 	providers: [
 
