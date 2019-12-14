@@ -5,12 +5,10 @@
 
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-
 import { SingleComponent } from "./singlepages.component";
 import { ActionsComponent } from "../components/actions/actions.component";
 import { ActionAttributesComponent } from "../components/action-attributes/action-attributes.component";
 import { AtaMainComponent } from "../components/ata-main/ata-main.component";
-//import { ConditionsComponent } from '../components/conditions/conditions.component';
 import { CreditTermsComponent } from "../components/credit-terms/credit-terms.component";
 import { CurrencyComponent } from "../components/currency/currency.component";
 import { CustomerClassificationComponent } from "../components/customer-classification/customer-classification.component";
@@ -18,12 +16,12 @@ import { DocumentsComponent } from "../components/documents/documents.component"
 import { EmployeeExpertiseComponent } from "../components/employee-expertise/employee-expertise.component";
 import { FindingsComponent } from "../components/findings/findings.component";
 import { AssetIntangibleTypeComponent } from "../components/asset-intangible-type/asset-intangible-type.component";
+import { AssetIntangibleAttributeTypeComponent } from "../components/asset-intangible-attribute-type/asset-intangible-attribute-type.component";
 import { AssetTypeComponent } from "../components/asset-type/asset-type.component";
 import { StageCodeComponent } from "../components/stage-code/stage-code.component";
 import { GLAccountCategoryComponent } from "../components/gl-account-category/gl-account-category.component";
 import { ExpenditureCategoryComponent } from "../components/expenditure-category/expenditure-category.component";
 import { AssetAttributeTypeComponent } from "../components/asset-attribute-type/asset-attribute-type.component";
-
 import { IntegrationComponent } from "../components/integration/integration.component";
 import { ItemClassificationComponent } from "../components/item-classification/item-classification.component";
 import { ItemGroupComponent } from "../components/item-group/item-group.component";
@@ -31,18 +29,15 @@ import { JobTitleComponent } from "../components/job-title/job-title.component";
 import { PriorityComponent } from "../components/priority/priority.component";
 import { ProvisionComponent } from "../components/provision/provision.component";
 import { PublicationComponent } from "../components/publication/publication.component";
-//import { DefaultMessagesComponent } from '../components/default-messages/default-messages.component';
 import { ReasonComponent } from "../components/reason/reason.component";
 import { TaxRateComponent } from "../components/tax-rate/tax-rate.component";
 import { UnitOfMeasureComponent } from "../components/unit-of-measure/unit-of-measure.component";
 import { VendorClassificationComponent } from "../components/vendor-classification/vendor-classification.component";
 import { WorkPerformedComponent } from "../components/work-performed/work-performed.component";
 import { WorkScopeComponent } from "../components/work-scope/work-scope.component";
-
 import { ActionAttributeMappingComponent } from "../components/action-attribute-mapping/action-attribute-mapping.component";
 import { AtaSubChapter1Component } from "../components/ata-sub-chapter1/ata-sub-chapter1.component";
 import { AtaSubChapter2Component } from "../components/ata-sub-chapter2/ata-sub-chapter2.component";
-
 import { LocationComponent } from "../components/location/location.component";
 import { ShelfComponent } from "../components/shelf/shelf.component";
 import { BinComponent } from "../components/bin/bin.component";
@@ -53,20 +48,16 @@ import { GlCashFlowClassificationComponent } from "../components/gl-cash-flow-cl
 import { GlFinancialStatementComponent } from "../components/gl-financial-statement/gl-financial-statement.component";
 import { JournalApprovalsComponent } from "../components/journal-approvals/journal-approvals.component";
 import { RfqEngineComponent } from "../components/rfq-engine/rfq-engine.component";
-
 import { ActionsEditorComponent } from "../components/actions/actions-editor.component";
-
 import { AuthService } from "../services/auth.service";
 import { AuthGuard } from "../services/auth-guard.service";
 import { ChargesComponent } from "../components/charges/charges.component";
 import { DefaultMessageComponent } from "../components/default-message/default-message.component";
 import { TaxTypeComponent } from "../components/tax-type/tax-type.component";
 import { ConditionsComponent } from "../components/conditions/conditions.component";
+import { AdjustmentReasonComponent } from "../components/adjustment-reason/adjustment-reason.component";
 import { SiteComponent } from "../components/site/site.component";
-//import { Warehouse } from '../models/warehouse.model';
 import { WarehouseComponent } from "../components/warehouse/warehouse.component";
-//import { StocklineAdjustmentReasonComponent } from "../components/stockline/stockline-adjustment-reason/stockline-adjustment-reason.component";
-
 import { ManufacturerComponent } from "../components/manufacturer/manufacturer.component";
 import { VendorcapabilitiesComponent } from "../components/vendorcapabilities/vendorcapabilities.component";
 import { LaberAndOverheadCostSetupComponent } from "../components/laber-and-overhead-cost-setup/laber-and-overhead-cost-setup.component";
@@ -86,6 +77,11 @@ import { FileUploadModule } from "primeng/fileupload";
 import { CheckboxModule } from "primeng/checkbox";
 import { PercentComponent } from "../components/percent/percent.component";
 import { JobTypeComponent } from '../components/job-type/job-type.component';
+import { VendorProcess1099Component } from "../components/vendor-process1099/vendor-process1099.component";
+import { CapsReportComponent } from "../components/caps-report/caps-report.component";
+import { StockAdjustmentComponent } from "../components/stockline/stock-adjustment/stock-adjustment.component";
+
+
 const singlePagesRoutes: Routes = [
     {
         path: "singlepages",
@@ -181,6 +177,11 @@ const singlePagesRoutes: Routes = [
                 path: "app-asset-attribute-type",
                 component: AssetAttributeTypeComponent,
                 data: { title: "Asset Attribute Type" }
+            },
+			{
+                path: "app-asset-intangible-attribute-type",
+                component: AssetIntangibleAttributeTypeComponent,
+                data: { title: "Asset Intangible Attribute Type" }
             },
             {
                 path: "app-integration",
@@ -359,11 +360,11 @@ const singlePagesRoutes: Routes = [
                 component: DepriciationMethodComponent,
                 data: { title: "Depreciation Method" }
             },
-            //{
-            //    path: "app-stockline-adjustment-reason",
-            //    component: StocklineAdjustmentReasonComponent,
-            //    data: { title: "Adjustment Reason" }
-            //},
+            {
+                path: "app-adjustment-reason",
+                component: AdjustmentReasonComponent,
+                data: { title: "Adjustment Reason" }
+            },
             {
                 path: "app-disposal-type",
                 component: DisposalTypeComponent,
@@ -409,7 +410,17 @@ const singlePagesRoutes: Routes = [
                 path: "app-create-publication/edit/:id",
                 component: CreatePublicationComponent,
                 data: { title: "create publication" }
-            }
+            },
+            {
+                path: "app-vendor-process1099",
+                component: VendorProcess1099Component,
+                data: { title: "Vendor Process1099" }
+            },
+            {
+                path: "app-caps-report",
+                component: CapsReportComponent,
+                data: { title: "Caps Report" }
+            },
         ]
     }
 ];
@@ -423,6 +434,6 @@ const singlePagesRoutes: Routes = [
         FileUploadModule,
         CheckboxModule
     ],
-    providers: [AuthService, AuthGuard]
+    providers: [AuthService, AuthGuard ]
 })
 export class SinglePagesRoutingModule { }

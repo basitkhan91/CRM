@@ -35,11 +35,33 @@ namespace QuickApp.Pro.Controllers
             this.Context = context;
 
         }
-        // GET: api/SalesQuote
-        [HttpGet]
-        public IEnumerable<string> Get()
+        // POST: api/salesquote/search
+        /// <summary>
+        /// Currenty we will return all the sales quote data
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        [HttpPost("search")]
+
+        public IActionResult Search([FromBody] SalesQuoteSearchParameters parameters)
         {
-            return new string[] { "value1", "value2" };
+            IEnumerable<SalesQuoteListView> list = Enumerable.Empty<SalesQuoteListView>();
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            list = from q in this.Context.SalesOrderQuote
+                   join c in this.Context.Customer
+                   on q.CustomerId equals c.CustomerId
+                   select new SalesQuoteListView
+                   {
+                       SalesQuoteId = q.SalesOrderQuoteId,
+                       QuoteDate = q.OpenDate,
+                       CustomerId = c.CustomerId,
+                       CustomerName = c.Name,
+                       CustomerCode = c.CustomerCode,
+                       Status = "Open",  // Hardcoded for time being, will be removed in next version  
+                   };
+            return Ok(list);
         }
 
         // GET: api/SalesQuote/5

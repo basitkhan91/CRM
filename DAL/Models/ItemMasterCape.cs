@@ -31,7 +31,7 @@ namespace DAL.Models
         public long ATASubChapterId { get; set; }
         public Nullable<System.DateTime> EntryDate { get; set; }
         public Nullable<long> CMMId { get; set; }
-        public bool? isIntegrateWith { get; set; }
+        
         public Nullable<bool> IsVerified { get; set; }
         public string VerifiedBy { get; set; }
         public Nullable<System.DateTime> DateVerified { get; set; }
@@ -39,6 +39,7 @@ namespace DAL.Models
         public string TAT { get; set; }
         public string Memo { get; set; }
         public long ItemMasterId { get; set; }
+        public int? IntegrateWith { get; set; }
         public Nullable<int> MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

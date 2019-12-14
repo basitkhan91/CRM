@@ -20,6 +20,7 @@
         StageCode,
         GLAccountCategory,
         ExpenditureCategory,
-        AssetAttributeType
+        AssetAttributeType,
+        AssetIntangibleAttributeType
     }
 }

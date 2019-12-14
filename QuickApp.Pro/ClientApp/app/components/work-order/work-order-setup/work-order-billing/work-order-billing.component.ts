@@ -1,4 +1,4 @@
-﻿import { Component, Input, OnInit } from '@angular/core';
+﻿import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { fadeInOut } from '../../../../services/animations';
 import * as $ from 'jquery';
 import { CommonService } from '../../../../services/common.service';
@@ -18,16 +18,19 @@ import { getModuleIdByName } from '../../../../generic/enums';
 /** WorkOrderBilling component*/
 export class WorkOrderBillingComponent implements OnInit {
     @Input() employeesOriginalData;
-    @Input() billingorInvoiceForm: Billing;
+    @Input() billingorInvoiceForm  ;
     @Input() savedWorkOrderData;
     @Input() currencyList;
+    @Input() isEditBilling = false;
+    @Output() saveWOBilling = new EventEmitter();
+    @Output() updateWOBilling = new EventEmitter();
     employeeList: any;
     customerNamesList: Object;
     soldCustomerSiteList = [];
     shipCustomerSiteList = [];
     shipToAttention;
-    soldCustomerAddress = new AddressModel();
-    shipCustomerAddress = new AddressModel();
+    soldCustomerAddress: any = new AddressModel();
+    shipCustomerAddress: any = new AddressModel();
     managementStructure = {
         companyId: null,
         buId: null,
@@ -39,6 +42,14 @@ export class WorkOrderBillingComponent implements OnInit {
     workOrderId: any;
     shipViaList: Object;
     customerId: any;
+    legalEntityList: any;
+    businessUnitList: any;
+    divisionList: any;
+    departmentList: any;
+    numberData = [{ label: 1, value: 1 }];
+    invoiceTypeList: any;
+    shipViaData: any;
+
     constructor(private commonService: CommonService, private workOrderService: WorkOrderService,
         private customerService: CustomerService
 
@@ -46,34 +57,89 @@ export class WorkOrderBillingComponent implements OnInit {
 
     }
     ngOnInit() {
+        const data = this.billingorInvoiceForm;
         this.workOrderId = this.savedWorkOrderData.workOrderId;
         this.customerId = editValueAssignByCondition('customerId', this.savedWorkOrderData.customerId);
-        this.getCustomerDetailsFromHeader();
+        // this.getCustomerDetailsFromHeader();
         this.getShipViaByCustomerId();
-    }
+        this.getLegalEntity();
+        this.generateNumbers();
+        this.getInvoiceList();
+        console.log(this.isEditBilling)
+        if (this.isEditBilling) {
+            this.getSiteNamesBySoldCustomerId(data.soldToCustomerId);
+            this.getSiteNamesByShipCustomerId(data.shipToCustomerId);
+            this.commonService.getManagementStructureDetails(data.managementStructureId).subscribe(res => {
+                this.selectedLegalEntity(res.Level1);
+                this.selectedBusinessUnit(res.Level2);
+                this.selectedDivision(res.Level3);
+                this.selectedDepartment(res.Level4);
+                this.managementStructure = {
+                    companyId: res.Level1 !== undefined ? res.Level1 : null,
+                    buId: res.Level2 !== undefined ? res.Level2 : null,
+                    divisionId: res.Level3 !== undefined ? res.Level3 : null,
+                    departmentId: res.Level4 !== undefined ? res.Level4 : null,
+                }
 
-    getCustomerDetailsFromHeader() {
-        this.workOrderService.viewWorkOrderHeader(this.workOrderId).subscribe(res => {
-            const data = res;
-            this.billingorInvoiceForm = {
-                ...this.billingorInvoiceForm,
-                customerRef: data.customerReference,
-                employee: data.employee,
-                woOpenDate: new Date(data.openDate),
-                salesPerson: data.salesperson,
-                woType: data.workOrderType,
-                creditTerms: data.creditTerm
+            })
+            if (this.billingorInvoiceForm.soldToCustomerId) {
+                this.soldCustomerAddress = {
+                    city: data.city,
+                    country: data.country,
+                    line1: data.line1,
+                    line2: data.line2,
+                    postalCode: parseInt(data.postalCode),
+                    stateOrProvince: data.stateOrProvince
+                }
 
             }
+            if (this.billingorInvoiceForm.shipToCustomerId) {
+                this.shipCustomerAddress = {
+                    city: data.shipToCity,
+                    country: data.country,
+                    line1: data.line1,
+                    line2: data.shipToLine2,
+                    postalCode: parseInt(data.shipToPostalCode),
+                    stateOrProvince: data.shipToState
+                }
+
+            }
+
+
+
+
+
+        }
+    }
+
+    generateNumbers() {
+        for (var i = 1; i <= 10; i++) {
+            this.numberData.push({ label: i * 10, value: i * 10 });
+
+        }
+
+    }
+    getInvoiceList() {
+        this.commonService.smartDropDownList('InvoiceType', 'InvoiceTypeId', 'Description').subscribe(res => {
+            this.invoiceTypeList = res;
         })
     }
 
+    getLegalEntity() {
+        this.commonService.getLegalEntityList().subscribe(res => {
+            this.legalEntityList = res;
+        })
+    }
+
+
+
     getShipViaByCustomerId() {
         this.commonService.getShipViaDetailsByModule(getModuleIdByName('Customer'), this.customerId).subscribe(res => {
+            this.shipViaData = res;
             this.shipViaList = res.map(x => {
                 return {
                     label: x.name,
-                    value: x.shippingId
+                    value: x.shippingViaId
                 }
             });
         })
@@ -98,9 +164,13 @@ export class WorkOrderBillingComponent implements OnInit {
             this.customerNamesList = res;
         })
     }
-    selectSoldToCustomer(object) {
+    async getSiteNamesBySoldCustomerId(object) {
+        console.log(object);
+
         const { customerId } = object;
-        this.customerService.getCustomerShipAddressGet(customerId).subscribe(res => {
+        await this.customerService.getCustomerShipAddressGet(customerId).subscribe(res => {
+            console.log(res);
+
             this.soldCustomerShippingOriginalData = res[0];
             this.soldCustomerSiteList = res[0].map(x => {
                 return {
@@ -129,9 +199,19 @@ export class WorkOrderBillingComponent implements OnInit {
         }
     }
 
-    selectShipToCustomer(object) {
+    changeOfShipVia(value) {
+        console.log(value);
+
+        const data = getObjectById('shippingViaId', value, this.shipViaData);
+
+        if (data) {
+            this.billingorInvoiceForm.shipAccountInfo = data.ShippingAccountInfo;
+        }  
+    }
+
+    async  getSiteNamesByShipCustomerId(object) {
         const { customerId } = object;
-        this.customerService.getCustomerShipAddressGet(customerId).subscribe(res => {
+        await this.customerService.getCustomerShipAddressGet(customerId).subscribe(res => {
             this.shipCustomerShippingOriginalData = res[0];
             this.shipCustomerSiteList = res[0].map(x => {
                 return {
@@ -166,6 +246,45 @@ export class WorkOrderBillingComponent implements OnInit {
         } else if (value === '' && type === 'shipTo') {
             this.shipCustomerAddress = new AddressModel();
         }
+    }
+
+    selectedLegalEntity(legalEntityId) {
+        if (legalEntityId) {
+            this.billingorInvoiceForm.managementStructureId = legalEntityId;
+            this.commonService.getBusinessUnitListByLegalEntityId(legalEntityId).subscribe(res => {
+                this.businessUnitList = res;
+            })
+        }
+
+    }
+    selectedBusinessUnit(businessUnitId) {
+        if (businessUnitId) {
+            this.billingorInvoiceForm.managementStructureId = businessUnitId;
+            this.commonService.getDivisionListByBU(businessUnitId).subscribe(res => {
+                this.divisionList = res;
+            })
+        }
+
+    }
+    selectedDivision(divisionUnitId) {
+        if (divisionUnitId) {
+            this.billingorInvoiceForm.managementStructureId = divisionUnitId;
+            this.commonService.getDepartmentListByDivisionId(divisionUnitId).subscribe(res => {
+                this.departmentList = res;
+            })
+        }
+
+    }
+    selectedDepartment(departmentId) {
+        if (departmentId) {
+            this.billingorInvoiceForm.managementStructureId = departmentId;
+        }
+    }
+    saveWorkOrderBilling() {
+        this.saveWOBilling.emit(this.billingorInvoiceForm);
+    }
+    updateWorkOrderBilling(){
+        this.updateWOBilling.emit(this.billingorInvoiceForm);
     }
 
 

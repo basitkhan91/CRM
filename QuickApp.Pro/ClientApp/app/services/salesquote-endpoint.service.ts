@@ -8,11 +8,15 @@ import { ConfigurationService } from "./configuration.service";
 import { ISalesQuote } from "../models/sales/ISalesQuote.model";
 import { ISalesQuoteView } from "../models/sales/ISalesQuoteView";
 import { ISalesOrderQuote } from "../models/sales/ISalesOrderQuote";
+import { ISalesSearchParameters } from "../models/sales/ISalesSearchParameters";
+import { ISalesQuoteListView } from "../models/sales/ISalesQuoteListView";
+
 
 @Injectable()
 export class SalesQuoteEndpointService extends EndpointFactory {
   private readonly getNewSalesQuoteInstanceUrl: string = "/api/salesquote/new";
   private readonly saleQuote: string = "/api/salesquote";
+  private readonly searchSalesQuote: string = "/api/salesquote/search";
 
 
   constructor(
@@ -51,6 +55,15 @@ export class SalesQuoteEndpointService extends EndpointFactory {
     return this.http.put(this.saleQuote, JSON.stringify(salesQuote), this.getRequestHeaders())
       .catch(error => {
         return this.handleError(error, () => this.create(salesQuote));
+      });
+  }
+
+  search(
+    salesQuoteSearchParameters: ISalesSearchParameters
+  ): Observable<ISalesQuoteListView> {
+    return this.http.post(this.searchSalesQuote, JSON.stringify(salesQuoteSearchParameters), this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () => this.search(salesQuoteSearchParameters));
       });
   }
 

@@ -55,6 +55,10 @@ namespace DAL.Repositories.Interfaces
         void VendorProcess1099Save(Master1099 vendorProcess1099);
         void VendorProcess1099StatusUpdate(long id, bool status, string updatedBy);
         void VendorProcess1099Delete(long id, string updatedBy);
+        List<Master1099Audit> GetVendorProcess1099Audit(long id);
+
+        IEnumerable<object> GetVendorGeneralDocumentDetailById(long id, int moduleId);
+        bool GetVendorGeneralDocumentDelete(long id, string updatedBy);
 
 
     }

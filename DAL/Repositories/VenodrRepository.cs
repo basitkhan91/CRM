@@ -1,4 +1,5 @@
 ﻿
+using DAL.Common;
 using DAL.Models;
 using DAL.Repositories.Interfaces;
 using System;
@@ -916,7 +917,7 @@ namespace DAL.Repositories
         public IEnumerable<object> GetVendorProcessList(int companyId)
         {
             var list = (from m in _appContext.Master1099
-                        where m.IsActive == true && m.MasterCompanyId == companyId
+                        where m.MasterCompanyId == companyId && m.IsDeleted !=true
                         select m).Distinct().ToList();
             return list;
 
@@ -1026,14 +1027,17 @@ namespace DAL.Repositories
             {
                 _appContext.Master1099.Attach(vendorProcess1099);
                 _appContext.Entry(vendorProcess1099).Property(x => x.Description).IsModified = true;
+                _appContext.Entry(vendorProcess1099).Property(x => x.Memo).IsModified = true;
                 _appContext.Entry(vendorProcess1099).Property(x => x.UpdatedDate).IsModified = true;
                 _appContext.Entry(vendorProcess1099).Property(x => x.UpdatedBy).IsModified = true;
-                _appContext.SaveChanges();
+                _appContext.Entry(vendorProcess1099).Property(x => x.IsActive).IsModified = true;
+
             }
             else
             {
                 _appContext.Master1099.Add(vendorProcess1099);
             }
+            _appContext.SaveChanges();
         }
         public void VendorProcess1099StatusUpdate(long id, bool status, string updatedBy)
         {
@@ -1065,6 +1069,55 @@ namespace DAL.Repositories
             _appContext.SaveChanges();
         }
 
+        public IEnumerable<object> GetVendorGeneralDocumentDetailById(long id, int moduleId)
+        {
+            var result = (from at in _appContext.Attachment
+                          join atd in _appContext.AttachmentDetails on at.AttachmentId equals atd.AttachmentId
+                          where at.ReferenceId == id && at.ModuleId == moduleId && atd.IsActive == true && atd.IsDeleted == false
+                          select atd).ToList();
 
+            return result;
+
+        }
+        public bool GetVendorGeneralDocumentDelete(long id, string updatedBy)
+        {
+            bool result = false;
+            try
+            {
+                AttachmentDetails attachmentDetails = new AttachmentDetails();
+                attachmentDetails.AttachmentDetailId = id;
+                attachmentDetails.UpdatedDate = DateTime.Now;
+                attachmentDetails.UpdatedBy = updatedBy;
+                attachmentDetails.IsDeleted = true;
+
+                _appContext.AttachmentDetails.Attach(attachmentDetails);
+                _appContext.Entry(attachmentDetails).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(attachmentDetails).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(attachmentDetails).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+                result = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
+
+        }
+
+
+        public List<Master1099Audit> GetVendorProcess1099Audit(long id)
+        {
+            try
+            {
+                return _appContext.Master1099Audit.Where(p => p.Master1099Id == id).OrderByDescending(p => p.UpdatedDate).ToList();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
