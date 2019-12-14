@@ -48,7 +48,7 @@ export class WorkOrderBillingComponent implements OnInit {
     departmentList: any;
     numberData = [{ label: 1, value: 1 }];
     invoiceTypeList: any;
-
+    shipViaData: any;
 
     constructor(private commonService: CommonService, private workOrderService: WorkOrderService,
         private customerService: CustomerService
@@ -135,6 +135,7 @@ export class WorkOrderBillingComponent implements OnInit {
 
     getShipViaByCustomerId() {
         this.commonService.getShipViaDetailsByModule(getModuleIdByName('Customer'), this.customerId).subscribe(res => {
+            this.shipViaData = res;
             this.shipViaList = res.map(x => {
                 return {
                     label: x.name,
@@ -196,6 +197,16 @@ export class WorkOrderBillingComponent implements OnInit {
         } else {
             this.soldCustomerAddress = new AddressModel();
         }
+    }
+
+    changeOfShipVia(value) {
+        console.log(value);
+
+        const data = getObjectById('shippingViaId', value, this.shipViaData);
+
+        if (data) {
+            this.billingorInvoiceForm.shipAccountInfo = data.ShippingAccountInfo;
+        }  
     }
 
     async  getSiteNamesByShipCustomerId(object) {

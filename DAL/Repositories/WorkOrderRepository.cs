@@ -3546,7 +3546,7 @@ namespace DAL.Repositories
                             join cur in _appContext.Currency on bi.CurrencyId equals cur.CurrencyId into custcur
                             from cur in custcur.DefaultIfEmpty()
                             join ct in _appContext.CreditTerms on wo.CreditTermsId equals ct.CreditTermsId
-                            join sv in _appContext.CustomerShipping on bi.ShipViaId equals sv.CustomerShippingId into bisv
+                            join sv in _appContext.ShippingVia on bi.ShipViaId equals sv.ShippingViaId into bisv
                             from sv in bisv.DefaultIfEmpty()
 
                             where bi.WorkOrderId == WorkOrderId && bi.WorkOrderPartNoId == workOrderPartNoId
@@ -3625,8 +3625,8 @@ namespace DAL.Repositories
                                 bi.PartialInvoice,
                                 bi.CostPlusRateCombo,
                                 bi.ShipViaId,
-                                sv.ShipVia,
-                                sv.ShippingAccountinfo,
+                                ShipVia = sv.Name,
+                                ShippingAccountinfo = sv.ShippingAccountInfo,
                                 bi.WayBillRef,
                                 bi.Tracking,
                                 wo.CSR,
@@ -3635,6 +3635,7 @@ namespace DAL.Repositories
                                 wo.CustomerId,
                                 cust.Email,
                                 cust.CustomerPhone,
+                                bi.AvailableCredit
                             }).FirstOrDefault();
 
                  
