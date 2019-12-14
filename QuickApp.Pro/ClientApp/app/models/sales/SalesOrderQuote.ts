@@ -1,4 +1,6 @@
-export interface ISalesOrderQuote {
+import { ISalesOrderQuote } from "./ISalesOrderQuote";
+
+export class SalesOrderQuote implements ISalesOrderQuote {
     salesOrderQuoteId: number;
     quoteTypeId: number;
     openDate: string;
@@ -38,6 +40,7 @@ export interface ISalesOrderQuote {
     shipToPostalCode: string;
     shipToCountry: string;
     shipToContactId: number;
+    shipToContactName: number;
     shipViaName: string;
     shipViaShippingAccountInfo: string;
     shippingId: string;
@@ -53,6 +56,7 @@ export interface ISalesOrderQuote {
     billToPostalCode: string;
     billToCountry: string;
     billToContactId: number;
+    billToContactName: number;
     billToMemo: string;
     masterCompanyId: number;
     createdBy: string;
@@ -60,4 +64,6 @@ export interface ISalesOrderQuote {
     updatedBy: string;
     updatedOn: string;
     isDeleted: boolean;
+
+    constructor() {}
 }

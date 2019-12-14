@@ -4,88 +4,19 @@
   </div>
 </div>
 
-<div class="row">
+<div class="row" *ngFor="let approver of approvers; let i = index">
   <div class="col-md-1">
-    <label>Approver 1</label>
+    <label>Approver {{ i }}</label>
   </div>
   <div class="col-md-2">
-    <p-dropdown
-      [options]="approvers"
-      [(ngModel)]="selectedApprover1"
-      filter="true"
-      [showClear]="true"
-      [autoWidth]="false"
-      class="p-dropdown-custom"
-    >
-    </p-dropdown>
+    <select [(ngModel)]="approver.employeeId" name="shipToSiteName" (change)="onApproverSelect(approver)" required>
+        <option>--Select</option>
+        <option *ngFor="let employee of allEmployeeinfo" [ngValue]="employee.employeeId">
+          {{employee.firstName}}
+          </option>
+      </select>
   </div>
   <div class="col-md-8"></div>
 </div>
-<div class="row">
-  <div class="col-md-1">
-    <label>Approver 2</label>
-  </div>
-  <div class="col-md-2">
-    <p-dropdown
-      [options]="approvers"
-      [(ngModel)]="selectedApprover1"
-      filter="true"
-      [showClear]="true"
-      [autoWidth]="false"
-      class="p-dropdown-custom "
-    >
-    </p-dropdown>
-  </div>
-  <div class="col-md-8"></div>
-</div>
-<div class="row">
-  <div class="col-md-1">
-    <label>Approver 3</label>
-  </div>
-  <div class="col-md-2">
-    <p-dropdown
-      [options]="approvers"
-      [(ngModel)]="selectedApprover1"
-      filter="true"
-      [showClear]="true"
-      [autoWidth]="false"
-      class="p-dropdown-custom "
-    >
-    </p-dropdown>
-  </div>
-  <div class="col-md-8"></div>
-</div>
-<div class="row">
-  <div class="col-md-1">
-    <label>Approver 4</label>
-  </div>
-  <div class="col-md-2">
-    <p-dropdown
-      [options]="approvers"
-      [(ngModel)]="selectedApprover1"
-      filter="true"
-      [showClear]="true"
-      [autoWidth]="false"
-      class="p-dropdown-custom "
-    >
-    </p-dropdown>
-  </div>
-  <div class="col-md-8"></div>
-</div>
-<div class="row">
-  <div class="col-md-1">
-    <label>Approver 5</label>
-  </div>
-  <div class="col-md-2">
-    <p-dropdown
-      [options]="approvers"
-      [(ngModel)]="selectedApprover1"
-      filter="true"
-      [showClear]="true"
-      [autoWidth]="false"
-      class="p-dropdown-custom "
-    >
-    </p-dropdown>
-  </div>
-  <div class="col-md-8"></div>
-</div>
+
+
