@@ -218,7 +218,7 @@ export class WorkOrderService {
     }
 
     createQuote(data) {
-        return this.workOrderEndpointService.createQuotation(data);
+        return this.workOrderEndpointService.createOrUpdateQuotation(data);
     }
 
     getSubWorkOrderListByWorkOrderId(workOrderId) {

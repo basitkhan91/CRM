@@ -65,6 +65,7 @@
               <th class="text-center">Extended Price</th>
               <th class="text-center">vendorName</th>
               <ng-container *ngIf="isQuote">
+                <th>MARKUP</th>
                 <th>Cost plus amount</th>
                 <th>Fixed Amount</th>
               </ng-container>
@@ -83,8 +84,15 @@
               <td>{{ w.extendedPrice }}</td>
               <td>{{ w.vendorName }}</td>
               <ng-container *ngIf="isQuote">
-                  <th>{{w.quantity*w.unitPrice}}</th>
-                  <th><input [(ngModel)]="w.fixedAmount" /></th>
+                  <td>
+                    <!-- <input [(ngModel)]="matQuotation.markup" /> -->
+                    <select (change)="markupChanged(w)" [(ngModel)]="w.markup">
+                      <option value="">Select</option>
+                      <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+                    </select>
+                  </td>
+                  <td>{{w.costPlusAmount}}</td>
+                  <td><input [(ngModel)]="w.fixedAmount" /></td>
               </ng-container>
               <td>
                 <button

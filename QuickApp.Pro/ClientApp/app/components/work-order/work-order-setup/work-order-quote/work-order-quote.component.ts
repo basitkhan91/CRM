@@ -10,6 +10,7 @@ import { WorkOrderQuoteService } from '../../../../services/work-order/work-orde
 import { WorkOrderService } from '../../../../services/work-order/work-order.service';
 import { CommonService } from '../../../../services/common.service';
 import { WorkFlowtService } from '../../../../services/workflow.service';
+import * as $ from 'jquery'
 import {
   AlertService,
   MessageSeverity
@@ -19,7 +20,8 @@ import {
   AllTasks,
   WorkOrderQuoteLabor,
   ExclusionQuote,
-  ChargesQuote
+  ChargesQuote,
+  QuoteMaterialList
 } from '../../../../models/work-order-labor.modal';
 
 
@@ -59,6 +61,7 @@ export class WorkOrderQuoteComponent implements OnInit {
   buildWorkOrderList: any[];
   buildHistoricalList: any[];
   gridActiveTab: string;
+  quotationHeader: any;
   materialListQuotation: any[];
   chargesQuotation: any[];
   exclusionsQuotation: any[];
@@ -71,11 +74,13 @@ export class WorkOrderQuoteComponent implements OnInit {
   laborPayload = new WorkOrderQuoteLabor();
   exclusionPayload = new ExclusionQuote();
   chargesPayload = new ChargesQuote();
+  materialListPayload = new QuoteMaterialList();
   workFlowWorkOrderId: number = 0;
   workOrderId: number = 0;
   workOrderExclusionsList: Object;
   workOrderMaterialList: any;
   workOrderChargesList: any;
+  markupList: any;
   workFlowObject = {
     materialList: [],
     equipments: [],
@@ -99,16 +104,21 @@ isQuote: boolean = true;
         this.getWorkOrderInfo(params['workorderid']);
         this.getMPNDetails(params['workorderid']);
         this.getTaskList();
+        this.getMarkup();
       }
     });
   }
   saveQuoteDetails() {
-    this.workOrderService.createQuote(this.formQuoteInfo())
+    if(this.quotationHeader == undefined || this.quotationHeader.workOrderQuoteId == undefined){
+      this.formQuoteInfo()
+    }
+    this.workOrderService.createOrUpdateQuotation(this.quotationHeader)
     .subscribe(
       res=>{
+        this.quotationHeader = res;
         this.quoteForm.quoteNumber = res['quoteNumber'];
-        this.laborPayload.WorkOrderQuoteId, this.exclusionPayload.WorkOrderQuoteId, this.chargesPayload.WorkOrderQuoteId = res['workOrderQuoteId'];
-        this.laborPayload.StatusId, this.exclusionPayload.StatusId, this.chargesPayload.StatusId = res['quoteStatusId']
+        this.laborPayload.WorkOrderQuoteId = this.exclusionPayload.WorkOrderQuoteId = this.chargesPayload.WorkOrderQuoteId = this.materialListPayload.WorkOrderQuoteId = res['workOrderQuoteId'];
+        this.laborPayload.StatusId = this.exclusionPayload.StatusId = this.chargesPayload.StatusId = this.materialListPayload.StatusId = res['quoteStatusId']
         this.alertService.showMessage(
           this.moduleName,
           'Labor quotation created  Succesfully',
@@ -122,7 +132,7 @@ isQuote: boolean = true;
   // }
 
   formQuoteInfo(){
-    let result = {
+    this.quotationHeader = {
       WorkOrderId: this.quoteForm.WorkOrderId,
       WorkFlowWorkOrderId: this.quoteForm.WorkFlowWorkOrderId,
       openDate:this.quoteForm.openDate,
@@ -142,7 +152,7 @@ isQuote: boolean = true;
       IsDeleted:false,
       DSO: this.dso
     }
-    return result;
+    return this.quotationHeader;
   }
 
   getWorkOrderInfo(getWorkOrderInfo){
@@ -229,13 +239,13 @@ isQuote: boolean = true;
     this.clearQuoteData();
     this.savedWorkOrderData.partNumbers.forEach((pns)=>{
       if(this.selectedPartNumber == pns['description']){
-        this.laborPayload.IsDER, this.exclusionPayload.IsDER, this.chargesPayload.IsDER = pns['isDER'];
-        this.laborPayload.IsPMA, this.exclusionPayload.IsPMA, this.chargesPayload.IsPMA = pns['isPMA'];
-        this.laborPayload.ItemMasterId, this.exclusionPayload.ItemMasterId, this.chargesPayload.ItemMasterId = pns['masterPartId'];
-        this.laborPayload.CMMId, this.exclusionPayload.CMMId, this.chargesPayload.CMMId = pns['cmmId'];
-        this.laborPayload.SelectedId, this.exclusionPayload.SelectedId, this.chargesPayload.SelectedId = pns['id'];
-        this.laborPayload.EstCompDate, this.exclusionPayload.EstCompDate, this.chargesPayload.EstCompDate = pns['estimatedCompletionDate'];
-        this.laborPayload.StatusId, this.exclusionPayload.StatusId, this.chargesPayload.StatusId = pns['workOrderStatusId'];
+        this.laborPayload.IsDER = this.exclusionPayload.IsDER = this.chargesPayload.IsDER = this.materialListPayload.IsDER = pns['isDER'];
+        this.laborPayload.IsPMA = this.exclusionPayload.IsPMA = this.chargesPayload.IsPMA = this.materialListPayload.IsPMA = pns['isPMA'];
+        this.laborPayload.ItemMasterId = this.exclusionPayload.ItemMasterId = this.chargesPayload.ItemMasterId = this.materialListPayload.ItemMasterId = pns['masterPartId'];
+        this.laborPayload.CMMId = this.exclusionPayload.CMMId = this.chargesPayload.CMMId = this.materialListPayload.CMMId = pns['cmmId'];
+        this.laborPayload.SelectedId = this.exclusionPayload.SelectedId = this.chargesPayload.SelectedId = this.materialListPayload.SelectedId = pns['id'];
+        this.laborPayload.EstCompDate = this.exclusionPayload.EstCompDate = this.chargesPayload.EstCompDate = this.materialListPayload.EstCompDate = pns['estimatedCompletionDate'];
+        this.laborPayload.StatusId = this.exclusionPayload.StatusId = this.chargesPayload.StatusId = this.materialListPayload.StatusId = pns['workOrderStatusId'];
       }
     })
     // for(let pn of this.mpnPartNumbersList){
@@ -352,10 +362,14 @@ isQuote: boolean = true;
               epnDescription: exclusion.partDescription
             }
           });
+          this.labor.workOrderLaborList[0] = {};
           this.taskList.forEach((tl)=>{
+            this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
             res['expertise'].forEach((rt)=>{
               if(rt['taskId'] == tl['taskId']){
-                this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(rt);
+                let labor = {}
+                labor = {...rt, expertiseId: rt.expertiseTypeId, hours: rt.estimatedHours}
+                this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(labor);
               }
             })
           })
@@ -376,7 +390,35 @@ isQuote: boolean = true;
   }
 
   createMaterialQuote(){
-    this.workOrderService.saveMaterialListQuote(this.materialListQuotation)
+    this.materialListPayload.WorkOrderQuoteMaterial = this.materialListQuotation.map(mList=>{
+      return {
+                  "WorkOrderQuoteMaterialId":0,
+                  "WorkOrderQuoteDetailsId":0,
+                  "ItemMasterId":mList.itemMasterId,
+                  "ConditionCodeId":mList.conditionCodeId,
+                  "MandatoryOrSupplemental":mList.mandatoryOrSupplemental,
+                  "ItemClassificationId":mList.itemClassificationId,
+                  "Quantity":mList.quantity,
+                  "UnitOfMeasureId":mList.unitOfMeasureId,
+                  "UnitCost":mList.unitCost,
+                  "ExtendedCost":mList.extendedCost,
+                  "Price":mList.price,
+                  "ExtendedPrice":mList.extendedPrice,
+                  "Memo":mList.memo,
+                  "IsDefered":mList.isDeferred,
+                  "MatMarkup":1,
+                  "TotalPartsCost":155,
+                  "Markup":mList.markup,
+                  "CostPlusAmount":mList.quantity * mList.unitCost,
+                  "FixedAmount":mList.masterCompanyId,
+                  "masterCompanyId":mList.masterCompanyId,
+              "CreatedBy":"admin",
+              "UpdatedBy":"admin",
+              "IsActive":true,
+              "IsDeleted":false
+                }
+    })
+    this.workOrderService.saveMaterialListQuote(this.materialListPayload)
     .subscribe(
       res => {
         console.log(res);
@@ -575,5 +617,32 @@ getExclusionListByWorkOrderId(){
 saveWorkOrderChargesList(data){
   console.log(data);
   this.workOrderChargesList = [...this.workOrderChargesList, ...data['charges']];
+}
+
+saveMaterialListForWO(data){
+  this.materialListQuotation = [...this.materialListQuotation, ...data['materialList']];
+  $('#addNewMaterials').modal('hide');
+}
+
+getMarkup(){
+  this.commonService.smartDropDownList('MarkUpPercentage', 'MarkUpPercentageId', 'MarkupValue')
+  .subscribe(
+    res=>{
+      this.markupList = res;
+    }
+  )
+}
+
+markupChanged(matData){
+  try{
+    this.markupList.forEach((markup)=>{
+      if(markup.value == matData.markup){
+        matData.costPlusAmount = (matData.quantity * matData.unitCost) + ( ((matData.quantity * matData.unitCost)/100) *  Number(markup.label))
+      }
+    })
+  }
+  catch(e){
+    console.log(e);
+  }
 }
 }
