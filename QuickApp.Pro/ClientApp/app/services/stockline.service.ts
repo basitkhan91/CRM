@@ -56,7 +56,7 @@ export class StocklineService {
 	//For getting the stockline List
   
 	getStockLineList(data) {
-		return this.stocklineEndpoint.getStockLineEndpointList(data);
+		return this.stocklineEndpoint.getStockLineListEndpoint(data);
 	}
 
 	getGlobalSearch(value, pageIndex, pageSize) {

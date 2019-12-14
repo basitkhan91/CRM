@@ -21,9 +21,6 @@ const StocklinePagesRoutes: Routes = [
 			{ path: "app-stock-adjustment", component: StockAdjustmentComponent, data: { title: "StockLine adjustment" } },
 			{ path: "app-stockline-adjustment-reason", component: StocklineAdjustmentReasonComponent, data: { title: "StockLine adjustment Reason" } },
 			{ path: "app-stock-line-edit", component: StockLineEditComponent, data: { title: "StockLine Edit" } },
-
-
-
 		]
 	}
 ];
