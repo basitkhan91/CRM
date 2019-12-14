@@ -808,6 +808,7 @@
                           [options]="shipViaList"
                           class="p-dropdown-custom-md-2"
                           [(ngModel)]="billingorInvoiceForm.shipViaId"
+                           (onChange)="changeOfShipVia($event.value)"
                         >
                         </p-dropdown>
                         </div>

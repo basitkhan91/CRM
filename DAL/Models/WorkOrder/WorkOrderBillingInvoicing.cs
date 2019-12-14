@@ -48,6 +48,7 @@ namespace DAL.Models
         public string WayBillRef { get; set; }
         public string Tracking { get; set; }
         public int? CurrencyId { get; set; }
+        public decimal? AvailableCredit { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

@@ -1241,7 +1241,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             ...object,
             ...this.loginDetailsForCreate,
             workOrderId: this.workOrderId,
-            workOrderWorkFlowId: this.workFlowWorkOrderId,
+            workFlowWorkOrderId: this.workFlowWorkOrderId,
             workOrderPartNoId: this.workOrderPartNumberId,
             itemMasterId: this.workOrderPartNumberId,
             customerId: editValueAssignByCondition('customerId', this.savedWorkOrderData.customerId),
@@ -1283,7 +1283,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 soldToCustomerId: { customerId: res.soldToCustomerId, customerName: res.soldToCustomer },
                 shipToCustomerId: { customerId: res.shipToCustomerId, customerName: res.shipToCustomer },
                 customerRef: res.customerReference,
-                woType: res.workOrderType
+                woType: res.workOrderType,
+                shipAccountInfo: res.shippingAccountinfo
             }
             this.isEditBilling = true;
             console.log(this.billing);
@@ -1299,7 +1300,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             this.billing = {
                 ...this.billing,
                 customerRef: data.customerReference,
-                employeeName: data.employeeName,
+                employeeName: data.employee,
                 woOpenDate: new Date(data.openDate),
                 salesPerson: data.salesperson,
                 woType: data.workOrderType,
