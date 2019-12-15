@@ -40,7 +40,7 @@ export class SalesOrderQuote implements ISalesOrderQuote {
     shipToPostalCode: string;
     shipToCountry: string;
     shipToContactId: number;
-    shipToContactName: number;
+    shipToContactName: string;
     shipViaName: string;
     shipViaShippingAccountInfo: string;
     shippingId: string;
@@ -56,7 +56,7 @@ export class SalesOrderQuote implements ISalesOrderQuote {
     billToPostalCode: string;
     billToCountry: string;
     billToContactId: number;
-    billToContactName: number;
+    billToContactName: string;
     billToMemo: string;
     masterCompanyId: number;
     createdBy: string;
