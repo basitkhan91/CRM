@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { SalesQuoteService } from "../../../../services/salesquote.service";
 import { ISalesSearchParameters } from "../../../../models/sales/ISalesSearchParameters";
+import { SalesSearchParameters } from "../../../../models/sales/SalesSearchParameters";
 
 @Component({
   selector: "app-sales-quote-list",
@@ -8,11 +9,26 @@ import { ISalesSearchParameters } from "../../../../models/sales/ISalesSearchPar
   styleUrls: ["./sales-quote-list.component.css"]
 })
 export class SalesQuoteListComponent implements OnInit {
+
+  searchParameters:ISalesSearchParameters;
+  salesQuoteList:any[];
+  totalRecords: number = 0;
+  totalPages: number = 0;
+  showPaginator: boolean = false;
+  pageLinks: any;
+  selectedColumns: any;
   constructor(private salesQuoteService: SalesQuoteService) { }
 
   ngOnInit() {
 
-
+    this.searchParameters = new SalesSearchParameters();
+  }
+  onPaging(event) {
+    if (this.totalRecords > 0) {
+      this.searchParameters.first = event.first;
+      this.searchParameters.rows = event.rows;
+      this.onSearch();
+    }
   }
 
   /* 
@@ -45,5 +61,13 @@ export class SalesQuoteListComponent implements OnInit {
 
     this.salesQuoteService.search(searchParameters);
     */
+
+    
+   this.salesQuoteService
+   .search(this.searchParameters)
+   .subscribe(data => {
+     this.salesQuoteList = data;
+     console.log(this.salesQuoteList);
+   });
   }
 }
