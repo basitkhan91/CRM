@@ -192,8 +192,29 @@ export class StockAdjustmentComponent implements OnInit {
 	previousIsSerialized: any;
 	partSerializedAdjustmentReasonError: boolean;
     serializedValue: any;
-    disableSavepartNumber: boolean;
-	//collectionofstockLine: any;
+	disableSavepartNumber: boolean;
+	CompanyIdDataType: any;
+	BusinessUnitIdDataType: any;
+	DivisionIdDataType: any;
+	DepartmentIdDataType: any;
+	PartNumberDataType: any;
+	QuantityonHandDataType: any;
+	RevaluedStockCostDataType: any;
+	SerialNumberDataType: any;
+	ShelfDataType: any;
+	SiteDataType: any;
+	UnitCostDataType: any;
+	UnitSalePriceDataType: any;
+	WarehouseDataType: any;
+	TimeLifeDataType: any;
+	TimeLifeIdDataType: any;
+	BinDataType: any;
+	LocationDataType: any;
+	CategoryDataType: any;
+	DiscountSalePriceDataType: any;
+	LotCostAdjustmentDataType: any;
+	ManagementStructureIdDataType: any;
+	
 	ngOnInit(): void {
 		
 		this.loadData(); //for Loading StockLine Adjustment Data
@@ -346,6 +367,27 @@ export class StockAdjustmentComponent implements OnInit {
 		this.loadingIndicator = false;
 		this.dataSource.data = allWorkFlows;
 		this.adjustmentDatatypeData = allWorkFlows;
+		this.CompanyIdDataType = allWorkFlows[0].stocklineAdjustmentDataTypeId;
+		this.BusinessUnitIdDataType = allWorkFlows[1].stocklineAdjustmentDataTypeId;
+		this.DivisionIdDataType = allWorkFlows[2].stocklineAdjustmentDataTypeId;
+		this.DepartmentIdDataType = allWorkFlows[3].stocklineAdjustmentDataTypeId;
+		this.PartNumberDataType = allWorkFlows[4].stocklineAdjustmentDataTypeId;
+		this.QuantityonHandDataType = allWorkFlows[5].stocklineAdjustmentDataTypeId;
+		this.RevaluedStockCostDataType = allWorkFlows[6].stocklineAdjustmentDataTypeId;
+		this.SerialNumberDataType = allWorkFlows[7].stocklineAdjustmentDataTypeId;
+		this.ShelfDataType = allWorkFlows[8].stocklineAdjustmentDataTypeId;
+		this.SiteDataType = allWorkFlows[9].stocklineAdjustmentDataTypeId;
+		this.UnitCostDataType = allWorkFlows[10].stocklineAdjustmentDataTypeId;
+		this.UnitSalePriceDataType = allWorkFlows[11].stocklineAdjustmentDataTypeId;
+		this.WarehouseDataType = allWorkFlows[12].stocklineAdjustmentDataTypeId;
+		this.TimeLifeDataType = allWorkFlows[13].stocklineAdjustmentDataTypeId;
+		this.TimeLifeIdDataType = allWorkFlows[14].stocklineAdjustmentDataTypeId;
+		this.BinDataType = allWorkFlows[15].stocklineAdjustmentDataTypeId;
+		this.LocationDataType = allWorkFlows[16].stocklineAdjustmentDataTypeId;
+		this.CategoryDataType = allWorkFlows[17].stocklineAdjustmentDataTypeId;
+		this.DiscountSalePriceDataType = allWorkFlows[18].stocklineAdjustmentDataTypeId;
+		this.LotCostAdjustmentDataType = allWorkFlows[19].stocklineAdjustmentDataTypeId;
+		this.ManagementStructureIdDataType = allWorkFlows[20].stocklineAdjustmentDataTypeId;
 		console.log(allWorkFlows);
 	}
 
