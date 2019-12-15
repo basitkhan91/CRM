@@ -47,7 +47,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
 
     
     this.workOrderWorkFlowList = this.workOrderWorkFlowOriginalData;
-
+console.log(this.workOrderLaborList);
     if(this.workOrderLaborList){
       this.laborForm.workFlowWorkOrderId = this.workOrderLaborList['workFlowWorkOrderId'];
       this.laborForm.dataEnteredBy = this.workOrderLaborList['dataEnteredBy'];

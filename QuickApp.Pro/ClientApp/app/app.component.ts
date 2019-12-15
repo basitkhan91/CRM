@@ -233,7 +233,6 @@ export class AppComponent implements OnInit, AfterViewInit {
                 items: [
                     { label: 'Stock List', routerLink: '/stocklinemodule/stocklinepages/app-stock-line-list' },
                     { label: 'Add Stock Line', routerLink: '/stocklinemodule/stocklinepages/app-stock-line-setup' },
-                    { label: 'Adjustment Reason', routerLink: '/stocklinemodule/stocklinepages/app-stockline-adjustment-reason' },
                     {
                         label: 'Reports and Forms', items: [
                             { label: 'Item Aging', routerLink: '/#' },
@@ -253,11 +252,11 @@ export class AppComponent implements OnInit, AfterViewInit {
                      { label: 'Create Vendor', routerLink: '/vendorsmodule/vendorpages/app-vendor-general-information' },
                     //{ label: 'Create Vendor',  command: (event?: any) => { this.newVendorClick(); } },
                     { label: 'Vendor Classification', routerLink: '/singlepages/singlepages/app-vendor-classification' },
-                    { label: 'Process 1099', routerLink: '/#' },
+                    { label: 'Process 1099', routerLink: '/singlepages/singlepages/app-vendor-process1099' },
                     {
                         label: 'Vendor Capabilities', items: [{ label: 'Vendor Caps List', routerLink: '/vendorsmodule/vendorpages/app-vendor-capabilities-list' },
                         { label: 'Add Vendor Caps', routerLink: '/vendorsmodule/vendorpages/app-add-vendor-capabilities' },
-                        { label: 'Reports and Forms', items: [{ label: 'Caps Report', routerLink: '/#' }] }],
+                            { label: 'Reports and Forms', items: [{ label: 'Caps Report', routerLink: '/singlepages/singlepages/app-caps-report' }] }],
                     },
                     {
                         label: 'Purchase Order', items: [{ label: 'PO List', routerLink: '/vendorsmodule/vendorpages/app-polist' },
@@ -395,12 +394,9 @@ export class AppComponent implements OnInit, AfterViewInit {
                 items: [
                     {
                         label: 'General Ledger', items: [
-                            //{ label: 'GL Account List', routerLink: '/generalledgermodule/generalledgerpage/app-glaccount-list' },
                             { label: 'GL Account List', routerLink: '/generalledgermodule/generalledgerpage/app-account-listing' },
                             { label: 'Create GL Account', routerLink: '/generalledgermodule/generalledgerpage/app-account-listing-create' },
-                            //{ label: 'Create GL Account', routerLink: '/generalledgermodule/generalledgerpage/app-glaccount-create' },
-                            { label: 'Setup Accounting', routerLink: '/generalledgermodule/generalledgerpage/app-accounting-calendar' },
-                           // { label: 'Edit Accounting', routerLink: '/#' },
+                            { label: 'Create Accounting Calendar', routerLink: '/generalledgermodule/generalledgerpage/app-accounting-calendar' },
                             { label: 'Open/Close Ledger', routerLink: '/#' },
                             { label: 'Intercompany', routerLink: '/#' },
                             {
@@ -629,9 +625,9 @@ export class AppComponent implements OnInit, AfterViewInit {
                     {
                         label: 'Asset Mgmt Maintenance', items: [
                             { label: 'Depreciation Method', routerLink: '/singlepages/singlepages/app-depriciation-method' },
-                            { label: 'Disposal Type', routerLink: '/singlepages/singlepages/app-disposal-type' },
+                            { label: 'Asset Disposal Type', routerLink: '/singlepages/singlepages/app-disposal-type' },
                             { label: 'Asset Status', routerLink: '/singlepages/singlepages/asset-status' },
-                            { label: 'Asset Type', routerLink: '/singlepages/singlepages/app-asset-type' },
+                            { label: 'Asset Class', routerLink: '/singlepages/singlepages/app-asset-type' },
                             { label: 'Asset Intangible Type', routerLink: '/singlepages/singlepages/app-asset-intangible-type' },
                             { label: 'Depreciation Convension', routerLink: '/singlepages/singlepages/app-asset-dep-convention-type' },
                             { label: 'Depreciation Intervals', routerLink: '/singlepages/singlepages/app-depreciation-intervals' },]
@@ -639,23 +635,17 @@ export class AppComponent implements OnInit, AfterViewInit {
                     {
                         label: 'Asset Attributes', items: [
                             { label: 'Asset Attribute Type', routerLink: '/singlepages/singlepages/app-asset-attribute-type' },
-                            {
-                                label: 'Intangible Type', items: [
-                                    { label: 'Intangible Type List', routerLink: '/#' },
-                                    { label: 'Create Intagible Type', routerLink: '/#' },
-                                ]
-                            },
+                            { label: 'Intangible Attribute Type', routerLink: '/singlepages/singlepages/app-asset-intangible-attribute-type' },
                             { label: 'Depreciation - Book', routerLink: '/#' },
                             { label: 'Depreciaiton - Tax', routerLink: '/#' },
                             { label: 'Depreciaiton Start Date', routerLink: '/#' },
-                            { label: 'Asset Class', routerLink: '/#' },
 
                         ]
                     },
 
                     {
                         label: 'Stockline', items: [
-                            { label: 'Adjustment Reason', routerLink: '/singlepages/singlepages/app-stockline-adjustment-reason' },
+                            { label: 'Adjustment Reason', routerLink: '/singlepages/singlepages/app-adjustment-reason' },
                             { label: 'Ware House', routerLink: '/singlepages/singlepages/app-warehouse' },
                             { label: 'Location', routerLink: '/singlepages/singlepages/app-location' },
                             { label: 'Shelf', routerLink: '/singlepages/singlepages/app-shelf' },

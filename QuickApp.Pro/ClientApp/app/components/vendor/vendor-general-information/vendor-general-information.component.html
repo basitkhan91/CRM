@@ -115,11 +115,11 @@
                                     </label>
                                     <div class="col-md-12">
                                         <div class="col-md-7">
-                                            <input class="form-control" type="text" pKeyFilter="num" name="vendorPhone" 
+                                            <input class="form-control" type="text" maxlength="20" (keypress)="patternMobilevalidationWithSpl($event)" name="vendorPhone" 
                                                    [(ngModel)]="sourceVendor.vendorPhone" required>
                                         </div>
                                         <div class="col-md-5">
-                                            <input type="text" name="phoneExt" pInputText maxlength="10" [(ngModel)]="sourceVendor.vendorPhoneExt" >
+                                            <input type="text" name="phoneExt" pInputText maxlength="15" [(ngModel)]="sourceVendor.vendorPhoneExt" >
                                         </div>
                                     </div>
                                     </div>
@@ -317,9 +317,36 @@
 
                                         <div *ngIf="sourceVendor.isCertified" style="width: 97%">
                                             <div class="form-group">
-                                                <p-fileUpload name="myfile[]" multiple="multiple" [showCancelButton]="false">
+                                                    <!-- <p-fileUpload name="fileupload[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event)">
+                                                    </p-fileUpload> -->
+                                                <p-fileUpload name="isCertifiedFile[]" multiple="multiple" [showCancelButton]="false" customUpload="true" (onSelect)="fileUpload($event,'isCertifiedFile')">
                                                 </p-fileUpload>
                                             </div>
+
+                                            <div class="table-responsive table-overflow">
+                                                    <h4 class="panel-title" style="padding-left: 10px;">Attachment Details:</h4>
+                                                    <table class="table table-bordered ">
+                                                        <thead>                                                          
+                                                                <tr>
+                                                                        <th>File Name</th>
+                                                                        <th>Download</th>
+                                                                        <th>Delete</th>
+                                                                    </tr>
+                                                        </thead>                                                      
+                                                        <tbody *ngFor="let f of allVendorGeneralDocumentsList">
+                                                                <tr *ngIf="f.description == 'isCertifiedFile'">                                                                        
+                                                                    <td>{{f.fileName}}</td>
+                                                                    <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a> </td>
+                                                                    <td>  <button [validate] moduleName="app-vendors-list" requirePermission="canDelete"
+                                                                        class="btn-delete" mat-icon-button matTooltip="Delete"
+                                                                        (click)="VendorAttachmentDelete(f)">
+                                                                    <mat-icon color="warn">delete</mat-icon> </button> 
+                                                                </td>
+                                                                </tr>
+                                                        </tbody>                                                       
+                        
+                                                    </table>
+                                                </div>
 
                                         </div>
                                         <div class="form-group" style="width: 100%;">
@@ -336,8 +363,35 @@
                                         <div *ngIf="sourceVendor.vendorAudit" style="width: 97%">
                                             <div class="form-group">
 
-                                                <p-fileUpload name="myfile[]" multiple="multiple" [showCancelButton]="false">
+                                                <p-fileUpload name="vendorAuditFile[]" multiple="multiple" [showCancelButton]="false" customUpload="true" (onSelect)="fileUpload($event,'vendorAuditFile')">
                                                 </p-fileUpload>
+                                            </div>
+
+                                            <div class="table-responsive table-overflow">
+                                                <h4 class="panel-title" style="padding-left: 10px;">Attachment Details:</h4>
+                                                <table class="table table-bordered ">
+                                                        <thead>                                                          
+                                                                <tr>
+                                                                        <th>File Name</th>
+                                                                        <th>Download</th>
+                                                                        <th>Delete</th>
+                                                                </tr>
+                                                        </thead>
+
+                                                    <tbody *ngFor="let f of allVendorGeneralDocumentsList">
+                                                            <tr *ngIf="f.description == 'vendorAuditFile'">                                                             
+                                                                <td>{{f.fileName}}</td>
+                                                                <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a> </td>
+                                                                <td>  <button [validate] moduleName="app-vendors-list" requirePermission="canDelete"
+                                                                    class="btn-delete" mat-icon-button matTooltip="Delete"
+                                                                    (click)="VendorAttachmentDelete(f)">
+                                                                <mat-icon color="warn">delete</mat-icon> </button>
+                                                             </td>
+                                                            </tr>
+                                                           
+                                                    </tbody>
+                    
+                                                </table>
                                             </div>
                                         </div>
 

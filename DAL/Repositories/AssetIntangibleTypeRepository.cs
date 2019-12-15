@@ -66,8 +66,7 @@ namespace DAL.Repositories
         public bool IsValid(AssetIntangibleType item)
         {
             return
-                !string.IsNullOrWhiteSpace(item.AssetIntangibleName) &&
-                !string.IsNullOrWhiteSpace(item.AssetIntangibleMemo);
+                !string.IsNullOrWhiteSpace(item.AssetIntangibleName); //&&                 !string.IsNullOrWhiteSpace(item.AssetIntangibleMemo);
         }
 
         private IEnumerable<AssetIntangibleType> TagItems(IEnumerable<AssetIntangibleType> items)

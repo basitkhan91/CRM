@@ -29,6 +29,7 @@ export class MaterialListCreateComponent implements OnInit {
     @Input() isWorkOrder;
     @Input() isEdit = false;
     @Input() editData;
+    @Input() isQuote = false;
     @Input() workFlow: IWorkFlow;
     @Input() UpdateMode: boolean;
     @Output() workFlowChange = new EventEmitter();
@@ -102,7 +103,7 @@ export class MaterialListCreateComponent implements OnInit {
             mandatory => {
                 this.materialMandatory = mandatory;
                 this.defaultMaterialMandatory = 'Mandatory';
-                if (this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') {
+                if ((this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') && this.workFlow.materialList[0] != undefined) {
                     this.workFlow.materialList[0].mandatoryOrSupplemental = this.defaultMaterialMandatory;
                 }
             },
@@ -218,7 +219,7 @@ export class MaterialListCreateComponent implements OnInit {
 
             this.defaultConditionId = defaultCondition != undefined ? defaultCondition.conditionId : 0;
 
-            if ((this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') && !this.isEdit) {
+            if ((this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') && !this.isEdit && this.workFlow.materialList[0] != undefined) {
                 this.workFlow.materialList[0].conditionCodeId = this.defaultConditionId;
             }
         })
@@ -234,7 +235,7 @@ export class MaterialListCreateComponent implements OnInit {
             var defaultUOM = this.materialUOM.find(x => x.shortName.trim().toLowerCase() == "ea".toLowerCase());
             this.defaultUOMId = defaultUOM != undefined ? defaultUOM.defaultUOMId : 0;
 
-            if ((this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') && !this.isEdit) {
+            if ((this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') && !this.isEdit && this.workFlow.materialList[0] != undefined) {
                 this.workFlow.materialList[0].unitOfMeasureId = this.defaultUOMId;
             }
         });

@@ -24,7 +24,7 @@ export class StocklineEndpoint extends EndpointFactory {
 
 	private readonly _actionsUrl: string = "/api/StockLine/Get";//which will be specified in the Controller
 
-	private readonly _stockLineListUrl: string = "/api/StockLine/List";//which will be specified in the Controller
+	private readonly _stockLineListUrl: string = "/api/StockLine/Get";//which will be specified in the Controller
 
 	private readonly _actionsUrl1: string = "/api/StocklineAdjustment/Get";//which will be specified in the Controller
 
@@ -80,6 +80,7 @@ export class StocklineEndpoint extends EndpointFactory {
 
 	get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 
+	get stockListUrl() { return this.configurations.baseUrl + this._stockLineListUrl; }
 	//get adjustmentWarehouseUrl() { return this.configurations.baseUrl + this._stockLineAdjustmentWarehouseBeforeChange; }
 
 	get adjustmentUrl() { return this.configurations.baseUrl + this._actionsUrl1; }
@@ -95,7 +96,7 @@ export class StocklineEndpoint extends EndpointFactory {
 	}
 	//for getting stockline
 	getStockLineListEndpoint(data) {
-		return this.http.post(this._stockLineListUrl, JSON.stringify(data), this.getRequestHeaders())
+		return this.http.post(this.stockListUrl, JSON.stringify(data), this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.getStockLineListEndpoint(data));
 			});
@@ -286,13 +287,15 @@ export class StocklineEndpoint extends EndpointFactory {
 			});
 	}
 	
+	////for updating stockline
+	//getUpdateItemMasterDetEndpoint<T>(stocklineObject: any): Observable<T> {
+	//	let endpointUrl = `${this._actionsStocklineItemMasterUpdate}/${stocklineObject.itemMasterId}`;
 
-	updateItemMasterEndpoint<T>(stocklineObject: any): Observable<T> {
-		return this.http.post<T>(this._actionsStocklineItemMasterUpdate, JSON.stringify(stocklineObject), this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.updateItemMasterEndpoint(stocklineObject));
-			});
-	}
+	//	return this.http.put<T>(endpointUrl, JSON.stringify(stocklineObject), this.getRequestHeaders())
+	//		.catch(error => {
+	//			return this.handleError(error, () => this.getUpdateItemMasterDetEndpoint(stocklineObject));
+	//		});
+	//}
 
 	getUpdatestockLineTimeAdjustmentEndpoint<T>(roleObject: any, stockLineId: number): Observable<T> {
 		let endpointUrl = `${this._adjustmentUrlNew}/${roleObject.stockLineId}`;

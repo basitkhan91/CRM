@@ -23,3 +23,19 @@
 .col-row1 {
     margin-left: 2px
 }
+
+.modal.editModal {
+    .modal-body div.form-group label, label {
+        font-weight: normal;
+        width: 100%;
+        text-align: left;
+    }
+}
+
+.ui-button.ui-button-text-icon-left.btn-primary-cstm .ui-button-text, .ui-button.ui-button-text-icon-left {
+    font-family: 'Open Sans', sans-serif !important;
+}
+
+.ui-button.ui-button-text-icon-left .ui-button-icon-left {
+    font-family: FontAwesome !important
+}

@@ -64,6 +64,11 @@
               <th class="text-center">Unit Price</th>
               <th class="text-center">Extended Price</th>
               <th class="text-center">vendorName</th>
+              <ng-container *ngIf="isQuote">
+                <th>MARKUP</th>
+                <th>Cost plus amount</th>
+                <th>Fixed Amount</th>
+              </ng-container>
               <th colspan="4" class="text-center"></th>
             </tr>
           </thead>
@@ -78,6 +83,17 @@
               <td>{{ w.unitPrice }}</td>
               <td>{{ w.extendedPrice }}</td>
               <td>{{ w.vendorName }}</td>
+              <ng-container *ngIf="isQuote">
+                  <td>
+                    <!-- <input [(ngModel)]="matQuotation.markup" /> -->
+                    <select (change)="markupChanged(w)" [(ngModel)]="w.markup">
+                      <option value="">Select</option>
+                      <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+                    </select>
+                  </td>
+                  <td>{{w.costPlusAmount}}</td>
+                  <td><input [(ngModel)]="w.fixedAmount" /></td>
+              </ng-container>
               <td>
                 <button
                   class="btn-edit ptable-wo-btns"
@@ -103,6 +119,7 @@
             </tr>
           </tbody>
         </table>
+        <button class="btn btn-primary-cstm pull-right" (click)="createChargeQuote()">Save</button>
       </div>
     </div>
     <div class="clear"></div>

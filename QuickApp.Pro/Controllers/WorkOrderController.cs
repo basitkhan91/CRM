@@ -183,7 +183,14 @@ namespace QuickApp.Pro.Controllers
         public IActionResult SubWorkOrderDetails(long subWorkOrderId)
         {
             var result = unitOfWork.WorkOrderRepository.SubWorkOrderDetails(subWorkOrderId);
-            return Ok(result);
+			if(result != null)
+			{
+				return Ok(result);
+			}else
+			{
+				return NotFound();
+			}
+           
         }
 
         [HttpGet("subworkorderlist")]
@@ -197,7 +204,14 @@ namespace QuickApp.Pro.Controllers
         public IActionResult SubWorkOrderHeaderDetails(long workOrderId, long workOrderPartNumberId)
         {
             var result = unitOfWork.WorkOrderRepository.SubWorkOrderHeaderDetails(workOrderId, workOrderPartNumberId);
-            return Ok(result);
+			if(result != null)
+			{
+				return Ok(result);
+			}else
+			{
+				return NotFound();
+			}
+        
         }
 
         #endregion
@@ -1083,6 +1097,24 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetBillingInvoicingDetails(long workOrderId,long workOrderPartNoId)
         {
             var result = unitOfWork.WorkOrderRepository.GetBillingInvoicingDetails(workOrderId, workOrderPartNoId);
+			if(result != null) {
+				return Ok(result);
+			}
+			else
+			{
+				return NotFound();
+			}
+        }
+
+        #endregion
+
+
+        #region Work Order Main Component
+
+        [HttpGet("workorderrolist")]
+        public IActionResult WorkOrderROlist()
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrderROlist();
             return Ok(result);
         }
 

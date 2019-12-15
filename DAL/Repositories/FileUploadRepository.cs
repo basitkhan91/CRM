@@ -326,6 +326,9 @@ namespace DAL.Repositories
                 case "Integration":
                     UploadIntegration(BindCustomData<IntegrationPortal>(file, "IntegrationPortalId", moduleName));
                     break;
+                case "Master1099":
+                    UploadMaster1099(BindCustomData<Master1099>(file, "Master1099Id", moduleName));
+                    break;
 
                 default:
                     break;
@@ -843,6 +846,23 @@ namespace DAL.Repositories
                 }
             }
         }
+
+        private void UploadMaster1099(List<Master1099> master1099List)
+        {
+
+            foreach (var item in master1099List)
+            {
+
+                var flag = _appContext.Master1099.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.Description)
+                && p.Description.ToLower() == item.Description.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.Master1099.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
 
         private static PropertyInfo[] GetProperties(object obj)
         {

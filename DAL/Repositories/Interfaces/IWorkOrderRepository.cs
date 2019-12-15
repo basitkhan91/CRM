@@ -144,5 +144,7 @@ namespace DAL.Repositories.Interfaces
         WorkOrderBillingInvoicing CreateWorkOrderBillingInvoicing(WorkOrderBillingInvoicing billingInvoicing);
         WorkOrderBillingInvoicing UpdateWorkOrderBillingInvoicing(WorkOrderBillingInvoicing billingInvoicing);
         object GetBillingInvoicingDetails(long WorkOrderId, long workOrderPartNoId);
+
+        IEnumerable<object> WorkOrderROlist();
     }
 }

@@ -17,5 +17,6 @@ namespace DAL.Models
         public string Status { get; set; }
         public string RequestedBy { get; set; }
         public string ApprovedBy { get; set; }
+        public long? VendorId { get; set; }
     }
 }

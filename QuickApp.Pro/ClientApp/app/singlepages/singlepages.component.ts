@@ -47,7 +47,7 @@ export class SingleComponent {
             let itemLabel = '';
             switch (this.currentUrl) {
                 case '/singlepages/singlepages/app-asset-type':
-                    itemLabel = 'Asset Type';
+                    itemLabel = 'Asset Class';
                     break;
                 case '/singlepages/singlepages/app-asset-intangible-type':
                     itemLabel = 'Asset Intangible Type';
@@ -63,6 +63,9 @@ export class SingleComponent {
                     break;
                 case '/singlepages/singlepages/app-asset-attribute-type':
                     itemLabel = 'Asset Attribute Type';
+                    break;
+				case '/singlepages/singlepages/app-asset-intangible-attribute-type':
+                    itemLabel = 'Intangible Attribute Type';
                     break;
                 default:
             }
@@ -111,7 +114,7 @@ export class SingleComponent {
                 ];
             }
 
-            else if (this.currentUrl == '/singlepages/singlepages/app-stockline-adjustment-reason') {
+            else if (this.currentUrl == '/singlepages/singlepages/app-adjustment-reason') {
                 this.items = [
                     { label: 'Single Screens' },
                     { label: 'Adjustment Reason' }
@@ -441,6 +444,18 @@ export class SingleComponent {
 
                 ];
             }
+            else if (this.currentUrl == '/singlepages/singlepages/app-vendor-process1099') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Vendor Process 1099' }
+                ];
+            }
+            else if (this.currentUrl == '/singlepages/singlepages/app-caps-report') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Caps Report' }
+                ];
+            }
 		}
 
 		
@@ -449,7 +464,7 @@ export class SingleComponent {
             let itemLabel = '';
             switch (this.currentUrl) {
                 case '/singlepages/singlepages/app-asset-type':
-                    itemLabel = 'Asset Type';
+                    itemLabel = 'Asset Class';
                     break;
                 case '/singlepages/singlepages/app-asset-intangible-type':
                     itemLabel = 'Asset Intangible Type';
@@ -465,6 +480,9 @@ export class SingleComponent {
                     break;
                 case '/singlepages/singlepages/app-asset-attribute-type':
                     itemLabel = 'Asset Attribute Type';
+                    break;
+				case '/singlepages/singlepages/app-asset-intangible-attribute-type':
+                    itemLabel = 'Intangible Attribute Type';
                     break;
                 default:
             }
@@ -799,7 +817,7 @@ export class SingleComponent {
                 ];
             }
 
-            else if (this.currentUrl == '/singlepages/singlepages/app-stockline-adjustment-reason') {
+            else if (this.currentUrl == '/singlepages/singlepages/app-adjustment-reason') {
                 this.items = [
                     { label: 'Single Screens' },
                     { label: 'Adjustment Reason' }
@@ -862,6 +880,18 @@ export class SingleComponent {
                 this.items = [
                     { label: 'Single Screens' },
                     { label: 'Nodes' }
+                ];
+            }
+            else if (this.currentUrl == '/singlepages/singlepages/app-vendor-process1099') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Vendor Process 1099' }
+                ];
+            }
+            else if (this.currentUrl == '/singlepages/singlepages/app-caps-report') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Caps Report' }
                 ];
             }
 		}

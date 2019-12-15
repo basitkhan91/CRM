@@ -24,6 +24,7 @@ export class WorkOrderSmartComponent implements OnInit {
     @Input() paramsData;
     @Input() showTabsGrid;
     @Input() subWorkOrderId;
+    @Input() workFlowWorkOrderId;
 
     creditTerms: any;
     employeesOriginalData: any;

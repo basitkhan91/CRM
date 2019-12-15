@@ -47,7 +47,7 @@ namespace DAL.Repositories
         {
 
             var data = (from v in _appContext.AttachmentDetails
-                        where v.AttachmentId == id
+                        where v.AttachmentId == id && v.IsActive==true && v.IsDeleted==false
                         select new
                         {
                             v.Link
