@@ -18,6 +18,7 @@ import { Currency } from '../../../../models/currency.model';
 import { CurrencyService } from '../../../../services/currency.service';
 import { EmployeeService } from '../../../../services/employee.service';
 import { AuthService } from '../../../../services/auth.service';
+import { Router } from "@angular/router";
 
 
 @Component({
@@ -62,7 +63,8 @@ export class SalesQuoteCreateComponent implements OnInit {
     private commonservice: CommonService,
     public currencyService: CurrencyService,
     public employeeService: EmployeeService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {
 
     this.salesQuote = new SalesQuote();
@@ -212,6 +214,16 @@ onCustomerServiceRepSelect(event) {
       }
   }
 }
+onEmployeeNameSelect(event) {
+  console.log(event);
+  if (this.allEmployeeinfo) {
+      for (let i = 0; i < this.allEmployeeinfo.length; i++) {
+          if (event == this.allEmployeeinfo[i].firstName) {
+             this.salesQuote.employeeId = this.allEmployeeinfo[i].employeeId;  
+          }
+      }
+  }
+}
 
 onWarningSelect(event) {
   console.log(event);
@@ -274,11 +286,12 @@ onWarningSelect(event) {
     this.salesOrderQuote.customerId = this.salesQuote.customerId;
     this.salesOrderQuote.customerContactId = this.salesQuote.customerContactId;
     this.salesOrderQuote.customerReference = this.salesQuote.customerReferenceName;
-    this.salesOrderQuote.contractReference = this.salesQuote.customerReferenceName;
+    this.salesOrderQuote.contractReference = this.salesQuote.contractReferenceName;
     this.salesOrderQuote.salesPersonId = this.salesQuote.salesPersonId;
     this.salesOrderQuote.agentName = this.salesQuote.agentName;
      this.salesOrderQuote.customerSeviceRepId = this.salesQuote.customerServiceRepId;
     this.salesOrderQuote.probabilityId = this.salesQuote.probabilityId;
+    this.salesOrderQuote.employeeId = this.salesQuote.employeeId;
     this.salesOrderQuote.leadSourceId = this.salesQuote.leadSourceId;
     this.salesOrderQuote.creditLimit = this.salesQuote.creditLimit;
     this.salesOrderQuote.creditTermId = this.salesQuote.creditLimitTermsId;
@@ -300,6 +313,9 @@ onWarningSelect(event) {
     .create(this.salesQuoteView)
     .subscribe(data => { 
       console.log(data);
+      this.router.navigateByUrl(
+        `salesmodule/salespages/sales-quote-list`
+      );
     });
     console.log(this.salesQuote);
     console.log(this.salesOrderQuote);
