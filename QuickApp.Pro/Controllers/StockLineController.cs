@@ -733,14 +733,9 @@ namespace QuickApp.Pro.Controllers
                 if (stockLAdjustmentViewModel == null)
                     return BadRequest($"{nameof(stockLAdjustmentViewModel)} cannot be null");
 
-                //for Getting StockLine Adjustment Data
-                //var collection = _unitOfWork.stocklineAdjustmentRepository.GetSingleOrDefault(a => a.StockLineId == stockLAdjustmentViewModel.StockLineId);
-
-                DAL.Models.StocklineAdjustment actionobject = new DAL.Models.StocklineAdjustment();
-                //st.StockLineId = 1;
+                
+                StocklineAdjustment actionobject = new StocklineAdjustment();
                 stockLAdjustmentViewModel.MasterCompanyId = 1;
-                //actionobject.IsSerialized = true;
-
                 actionobject.StockLineId = stockLAdjustmentViewModel.StockLineId;
                 actionobject.StocklineAdjustmentDataTypeId = stockLAdjustmentViewModel.AdjustmentDataTypeId;
 
@@ -750,6 +745,8 @@ namespace QuickApp.Pro.Controllers
                 actionobject.StockLineId = stockLAdjustmentViewModel.StockLineId;
                 actionobject.AdjustmentMemo = stockLAdjustmentViewModel.AdjustmentMemo;
                 actionobject.MasterCompanyId = 1;
+                actionobject.UpdatedDate = DateTime.Now;
+                actionobject.UpdatedBy = stockLAdjustmentViewModel.UpdatedBy;
                 actionobject.IsActive = true;
 
 
