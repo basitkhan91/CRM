@@ -291,12 +291,14 @@
         </label>
         <button type="button" class="btn btn-primary-cstm" (click)="buildMethodSelected('use work flow')">Use Work Flow</button>
         <button type="button" class="btn btn-primary-cstm" (click)="buildMethodSelected('use historical wos')">Use Historical WOs</button>
-        <button type="button" class="btn btn-primary-cstm"(click)="buildMethodSelected('use historical wos')">Build From Scratch</button>
+        <button type="button" class="btn btn-primary-cstm"(click)="buildMethodSelected('build from scratch')">Build From Scratch</button>
         <button type="button" class="btn btn-primary-cstm" data-toggle="modal" data-target="#quote-details" (click)="buildMethodSelected('use historical wos')">Display 3rd
           Party Pricing</button>
       </div>
 
-
+      <div class="table-responsive" *ngIf="selectedBuildMethod == 'build from scratch'">
+        <wf-create [isQuote]="isQuote" (saveData)="saveBuildFromScratch($event)"></wf-create>
+      </div>
 
     </div>
     <div class="table-responsive" *ngIf="selectedBuildMethod == 'use work flow'">
@@ -352,7 +354,7 @@
 
     </div>
   </div>
-  <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;">
+  <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;" *ngIf="selectedBuildMethod != 'build from scratch' && selectedBuildMethod != ''">
       <div class="form-group ">
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'materialList'?'btn-primary-cstm':'btn-light-cstm'" (click)="gridTabChange('materialList');">Material List</button>
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'labor'?'btn-primary-cstm':'btn-light-cstm'" (click)="gridTabChange('labor');">Labor</button>

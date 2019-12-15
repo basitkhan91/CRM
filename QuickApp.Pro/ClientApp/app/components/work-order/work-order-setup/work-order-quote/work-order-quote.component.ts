@@ -313,7 +313,18 @@ isQuote: boolean = true;
         if(value ==  'labor') {
           this.workOrderService.getWorkOrderLaborListForQuote(this.selectedHistoricalList.workFlowWorkOrderId)
           .subscribe(
-            (res: any[]) =>{
+            (res: any) =>{
+              this.labor = {...res, workOrderLaborList: [{}]};
+              this.taskList.forEach((tl)=>{
+                this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
+                res.laborList.forEach((rt)=>{
+                  if(rt['taskId'] == tl['taskId']){
+                    let labor = {}
+                    labor = {...rt, expertiseId: rt.expertiseTypeId, hours: rt.estimatedHours}
+                    this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(labor);
+                  }
+                })
+              })
               this.laborQuotation = res;
             }
           )
@@ -421,7 +432,11 @@ isQuote: boolean = true;
     this.workOrderService.saveMaterialListQuote(this.materialListPayload)
     .subscribe(
       res => {
-        console.log(res);
+        this.alertService.showMessage(
+            this.moduleName,
+            'Quotation for material list created successfully',
+            MessageSeverity.success
+        );
       }
     )
   }
@@ -644,5 +659,9 @@ markupChanged(matData){
   catch(e){
     console.log(e);
   }
+}
+
+saveBuildFromScratch(data){
+  console.log(data);
 }
 }
