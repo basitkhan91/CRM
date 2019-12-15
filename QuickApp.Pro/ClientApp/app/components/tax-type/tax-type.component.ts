@@ -359,13 +359,17 @@ export class TaxTypeComponent implements OnInit {
 
     //Open the audit history modal.
     showHistory(rowData): void {
-        this.currentModeOfOperation = ModeOfOperation.Audit;
-        this.taxTypeService.getTaxTypeAudit(rowData.taxTypeId).subscribe(audits => {
-            if (audits[0].length > 0) {
-                this.auditHistory = audits[0];
-            }
-        });
-        console.log(this.auditHistory);
+        //this.currentModeOfOperation = ModeOfOperation.Audit;
+        //this.taxTypeService.getTaxTypeAudit(rowData.taxTypeId).subscribe(audits => {
+        //    if (audits[0].length > 0) {
+        //        this.auditHistory = audits[0];
+        //    }
+        //});
+        //console.log(this.auditHistory);
+
+        this.taxTypeService.getTaxTypeAudit(rowData.taxTypeId).subscribe(res => {
+            this.auditHistory = res;
+        })
     }
 
     onBlur(event) {

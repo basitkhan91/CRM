@@ -29,6 +29,13 @@ namespace DAL.Repositories
                 .OrderByDescending(c => c.TaxTypeId).ToList().AsQueryable();
         }
 
+
+        public IEnumerable<DAL.Models.TaxTypeAudit> GetTaxTypeAuditDetails(long Id)
+        {
+            return _appContext.TaxTypeAudit.Where(c => c.TaxTypeId == Id).OrderByDescending(p => p.UpdatedDate).ToList();
+
+        }
+
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
