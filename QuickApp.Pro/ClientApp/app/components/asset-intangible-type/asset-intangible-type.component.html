@@ -136,7 +136,7 @@
     <!--to-do:use same modal to view, add, update, and delete-->
     <!--Modal for view only-->
 
-    <div #view *ngIf="itemDetails" class="modal fade" id="view" role="dialog">
+    <div #view *ngIf="itemDetails" class="modal fade editModal" id="view" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -239,8 +239,8 @@
                                     </label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="memo" 
-                                              name="memodescription" [(ngModel)]="currentRow.assetIntangibleMemo" minlength="2"></textarea>
+                                    <textarea class="text-item" #memo="ngModel" id="assetIntangibleMemo" 
+                                              name="assetIntangibleMemo" [(ngModel)]="currentRow.assetIntangibleMemo" minlength="2"></textarea>
                                 </div>
                             </div>
                         </div>
