@@ -52,12 +52,13 @@ export class SalesApproveComponent {
   get userName(): string {
     return this.authService.currentUser ? this.authService.currentUser.userName : "";
 }
-  onApproverSelect(approver) {
+  onApproverSelect(approver,index) {
     console.log(approver);
     if (this.allEmployeeinfo) {
         for (let i = 0; i < this.allEmployeeinfo.length; i++) {
             if (approver.employeeId == this.allEmployeeinfo[i].employeeId) {
-              approver.level = this.allEmployeeinfo[i].managementStructureId;
+              //approver.level = this.allEmployeeinfo[i].managementStructureId;
+              approver.level = index+1;
               approver.masterCompanyId = this.allEmployeeinfo[i].masterCompanyId;
               approver.statusId = 1;
               approver.createdBy=this.userName;

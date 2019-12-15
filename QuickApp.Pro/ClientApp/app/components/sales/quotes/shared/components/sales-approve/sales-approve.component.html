@@ -6,17 +6,19 @@
 
 <div class="row" *ngFor="let approver of approvers; let i = index">
   <div class="col-md-1">
-    <label>Approver {{ i }}</label>
+    <label>Approver {{ i+1 }}</label>
   </div>
   <div class="col-md-2">
-    <select [(ngModel)]="approver.employeeId" name="shipToSiteName" (change)="onApproverSelect(approver)" required>
+    <select [(ngModel)]="approver.employeeId" name="shipToSiteName" (change)="onApproverSelect(approver,i)" required>
         <option>--Select</option>
         <option *ngFor="let employee of allEmployeeinfo" [ngValue]="employee.employeeId">
           {{employee.firstName}}
           </option>
       </select>
   </div>
-  <div class="col-md-8"></div>
+  <div class="col-md-8">
+    
+  </div>
 </div>
 
 

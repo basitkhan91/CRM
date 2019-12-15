@@ -11,25 +11,14 @@ import { SalesSearchParameters } from "../../../../models/sales/SalesSearchParam
 export class SalesQuoteListComponent implements OnInit {
 
   searchParameters:ISalesSearchParameters;
-  salesQuoteList:any[];
-  totalRecords: number = 0;
-  totalPages: number = 0;
-  showPaginator: boolean = false;
-  pageLinks: any;
-  selectedColumns: any;
+  sales:any[];
   constructor(private salesQuoteService: SalesQuoteService) { }
 
   ngOnInit() {
 
     this.searchParameters = new SalesSearchParameters();
   }
-  onPaging(event) {
-    if (this.totalRecords > 0) {
-      this.searchParameters.first = event.first;
-      this.searchParameters.rows = event.rows;
-      this.onSearch();
-    }
-  }
+
 
   /* 
     #TODO: Kishan
@@ -65,9 +54,9 @@ export class SalesQuoteListComponent implements OnInit {
     
    this.salesQuoteService
    .search(this.searchParameters)
-   .subscribe(data => {
-     this.salesQuoteList = data;
-     console.log(this.salesQuoteList);
+   .subscribe((data: any) => {
+     this.sales = data[0];
+     console.log(this.sales);
    });
   }
 }
