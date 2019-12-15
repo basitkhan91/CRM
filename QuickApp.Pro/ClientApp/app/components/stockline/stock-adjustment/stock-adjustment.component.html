@@ -147,7 +147,7 @@
 										</div>
 									</td>
 									<td>
-										<textarea *ngIf="showSite" style="height: 80px; display: inline-block;" class="editable-field" [(ngModel)]="sourceStockLineSetup.siteAdjustmentReason" (change)="siteValueChange1(10,sourceStockLineSetup.Beforesite,sourceStockLineSetup.AftersiteId,sourceStockLineSetup.siteAdjustmentReason)" [ngModelOptions]="{standalone: true}"></textarea>
+										<textarea *ngIf="showSite" style="height: 80px; display: inline-block;" class="editable-field" [(ngModel)]="sourceStockLineSetup.siteAdjustmentReason" [ngModelOptions]="{standalone: true}"></textarea>
 										<textarea *ngIf="hideSite" style="height: 80px; display: none;" class="editable-field"></textarea>
 									</td>
 								</tr>
