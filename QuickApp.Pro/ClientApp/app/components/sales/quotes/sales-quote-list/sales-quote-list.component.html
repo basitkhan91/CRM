@@ -93,24 +93,7 @@
       
               <div style="margin-top:15px;">
                 <h4 class="po-head">Quote List</h4>
-                <p-table
-                    #dt
-                    class="rpo-table-cstm rro-table-cstm"
-                    [value]="salesQuoteList"
-                    [rows]="10"
-                    [lazy]="true"
-                    [paginator]="showPaginator"
-                    [rowsPerPageOptions]="[10, 20, 30]"
-                    [totalRecords]="totalRecords"
-                    [pageLinks]="pageLinks"
-                    [columns]="selectedColumns"
-                    [resizableColumns]="true"
-                    [reorderableColumns]="false"
-                    [scrollable]="true"
-                    scrollHeight="450px"
-                    (onLazyLoad)="onPaging($event)"
-                >
-
+                <p-table [value]="sales">
             <ng-template pTemplate="header">
               <tr>
                 <th>Quote number</th>
@@ -127,40 +110,40 @@
                 </th>
               </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-quote>
+            <ng-template pTemplate="body" let-sale>
               <tr>
                 <td>
-                    {{ quote.salesQuoteId }}
+                    {{ sale.salesQuoteId }}
                 </td>
                 <td>
-                    {{ quote.quoteDate }}
+                    {{ sale.quoteDate }}
                 </td>
                 <td>
-                    {{ quote.versionNumber }}
+                    {{ sale.versionNumber }}
                 </td>
                 <td>
-                    {{ quote.customerName }}
+                    {{ sale.customerName }}
                 </td>
                 <td>
-                    {{ quote.customerCode }}
+                    {{ sale.customerCode }}
                 </td>
                 <td>
-                    {{ quote.status }}
+                    {{ sale.status }}
                 </td>
                 <td>
-                    {{ quote.salesPrice }}
+                    {{ sale.salesPrice }}
                 </td>
                 <td>
-                    {{ quote.cost }}
+                    {{ sale.cost }}
                 </td>
                 <td>
-                    {{ quote.numberOfItems }}
+                    {{ sale.numberOfItems }}
                 </td>
                 <td>
                     <span>
                         <a class="btn btn-info boxed-float-btn nobg"
                            data-toggle="tooltip"
-                           (click)="viewSelectedRow(quote)"
+                           (click)="viewSelectedRow(sale)"
                            
                            matTooltip="View">
                             <i class="fa fa-eye"></i>
@@ -170,25 +153,7 @@
                 </td>
               </tr>
             </ng-template>
-            <ng-template pTemplate="summary" id="footer">
-              <label id="footer" class="footer-t-rec">No'of records:</label>
-              <input
-                style="width: 5%;"
-                [(ngModel)]="totalRecords"
-                [disabled]="true"
-                pInputText
-                type="text"
-              />
-              &nbsp;&nbsp;
-              <label id="footer" class="footer-p-count">Pages Count:</label>
-              <input
-                style="width: 5%;"
-                [(ngModel)]="totalPages"
-                [disabled]="true"
-                pInputText
-                type="text"
-              />
-            </ng-template>
+           
           </p-table>
       
               </div>

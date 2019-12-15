@@ -64,7 +64,7 @@ export interface ISalesQuote {
 
   employeeId: number;
 
-  eployeeName: string;
+  employeeName: string;
 
   restrictPMA: boolean;
 
