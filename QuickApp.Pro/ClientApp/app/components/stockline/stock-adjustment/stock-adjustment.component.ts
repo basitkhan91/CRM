@@ -206,7 +206,7 @@ export class StockAdjustmentComponent implements OnInit {
 		this.loadAdjustmentReasonData();//for Stock Adjustment Reason Data
 		this.disableSave = true;
 		this.loadManagementdata();
-		
+		this.LoadStocklineAdjustmentDatatypeData()
 		this.ptnumberlistdata();
 		this.activeIndex = 0;
 		this.stocklineser.currentUrl = '/stocklinemodule/stocklinepages/app-stock-adjustment';
@@ -261,7 +261,7 @@ export class StockAdjustmentComponent implements OnInit {
 			this.sourceStockLineSetup.stockLineId = this.sourceStockAdjustment.stockLineId;
 			this.sourceStockLineSetup.BeforepartId = this.sourceStockAdjustment.partId;
 			this.sourceStockLineSetup.BeforepartNumber = this.sourceStockAdjustment.partNumber;
-			this.sourceStockLineSetup.Beforequantity = this.sourceStockAdjustment.quantity;
+			this.sourceStockLineSetup.Beforequantity = this.sourceStockAdjustment.quantityOnHand;
 			this.sourceStockLineSetup.BeforeserialNumber = this.sourceStockAdjustment.serialNumber;
 			this.sourceStockLineSetup.Beforesite = this.sourceStockAdjustment.siteName;
 			this.sourceStockLineSetup.Beforewarehouse = this.sourceStockAdjustment.warehouse;
@@ -332,7 +332,7 @@ export class StockAdjustmentComponent implements OnInit {
 		}
 	}
 
-	private onStocklineAdjustmentDatatypeData()
+	private LoadStocklineAdjustmentDatatypeData()
 	{
 		this.stocklineser.getStockLineAdjustmentDatatypeList().subscribe(   //Getting Site List Hear
 			results => this.onAdjustmentDataLoadSuccessful(results[0]), //Pasing first Array and calling Method
@@ -392,9 +392,6 @@ export class StockAdjustmentComponent implements OnInit {
 				k++;
 			}
 		}
-		console.log(out1);
-		console.log(out);
-		console.log(this.testManagementStructure);
 		return this.testManagementStructure;
 	}
 
@@ -1363,7 +1360,6 @@ export class StockAdjustmentComponent implements OnInit {
 				if (event == this.itemclaColl[i][0].partName) {
 					//this.sourceItemMaster.partId = this.itemclaColl[i][0].partId;
 					this.selectedPartId = this.itemclaColl[i][0].partId; //Storing PartId in Local
-
 					console.log(this.selectedPartId);
 					this.selectedActionName = event;
 				}
@@ -1372,9 +1368,7 @@ export class StockAdjustmentComponent implements OnInit {
 				if (data) {
 					this.descriptionbyPart = data[0]
 					//this.sourcePartAction = this.descriptionbyPart;
-
 					this.sourceStockLineSetup.partDescription = data[0][0].partDescription; //Passing Part Description based on Change Part
-
 					this.sourceStockLineSetup.isSerialized = data[0][0].isSerialized;
 					//this.serializedValue = this.sourceStockLineSetup.isSerialized;
 
