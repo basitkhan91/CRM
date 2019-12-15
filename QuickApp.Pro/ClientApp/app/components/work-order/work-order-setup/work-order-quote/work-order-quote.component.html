@@ -144,8 +144,7 @@
 
     </div>
     <div class="col-md-12">
-      <button class="btn btn-primary-cstm pull-right" (click)="saveQuoteDetails()">Save Details</button>
-      <button class="btn btn-primary-cstm pull-right">Edit Details</button>
+      <button class="btn btn-primary-cstm pull-right" (click)="saveQuoteDetails()">{{quotationHeader && quotationHeader.workOrderQuoteId?'Update':'Save'}}</button>
     </div>
   </div>
 </div>
@@ -363,7 +362,10 @@
   </div>
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'materialList'">
-    <!-- <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use work flow'">
+    <div>
+        <button  data-target="#addNewMaterials" data-toggle="modal" class="btn btn-primary btn-primary-cstm"  style="padding: 6px 12px !important;">Add New Material</button>
+    </div>
+    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use work flow'">
       <thead>
         <tr>
           <th>MC PN</th>
@@ -392,9 +394,15 @@
           <td>{{matQuotation.conditionCodeId}}</td>
           <td>{{matQuotation.isDeferred}}</td>
           <td>{{matQuotation.unitCost}}</td>
-          <td><input [(ngModel)]="matQuotation.totalPartCost" /></td>
-          <td><input [(ngModel)]="matQuotation.markup" /></td>
-          <td><input [(ngModel)]="matQuotation.costPlusAmount" /></td>
+          <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
+          <td>
+            <!-- <input [(ngModel)]="matQuotation.markup" /> -->
+            <select (change)="markupChanged(matQuotation)" [(ngModel)]="matQuotation.markup">
+              <option value="">Select</option>
+              <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+            </select>
+          </td>
+          <td>{{matQuotation.costPlusAmount}}</td>
           <td><input [(ngModel)]="matQuotation.fixedAmount" /></td>
         </tr>
         <div class="col-md-12">
@@ -432,21 +440,27 @@
           <td>{{matQuotation.condition}}</td>
           <td>{{matQuotation.oem}}</td>
           <td>{{matQuotation.unitCost}}</td>
-          <td><input [(ngModel)]="matQuotation.totalPartCost" /></td>
-          <td><input [(ngModel)]="matQuotation.markup" /></td>
-          <td><input [(ngModel)]="matQuotation.costPlusAmount" /></td>
+          <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
+          <td>
+            <!-- <input [(ngModel)]="matQuotation.markup" /> -->
+            <select (change)="markupChanged(matQuotation)" [(ngModel)]="matQuotation.markup">
+              <option value="">Select</option>
+              <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+            </select>
+          </td>
+          <td>{{matQuotation.costPlusAmount}}</td>
           <td><input [(ngModel)]="matQuotation.fixedAmount" /></td>
         </tr>
         <div class="col-md-12">
           <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save Details</button>
         </div>
       </tbody>
-    </table> -->
-    <app-work-order-complete-material-list 
+    </table>
+    <!-- <app-work-order-complete-material-list 
     [workFlowObject]="workFlowObject" 
     [savedWorkOrderData]="savedWorkOrderData" 
     [workOrderMaterialList]="workOrderMaterialList"
-   ></app-work-order-complete-material-list>
+   ></app-work-order-complete-material-list> -->
    
   </div>
 
@@ -533,6 +547,7 @@
                         (createQuote)="createChargeQuote($event)"
                         (refreshData)="getChargesListByWorkOrderId()" 
                         [isQuote]="isQuote"
+                        [markupList]="markupList"
                         ></app-work-order-charges>
   </div>
 
@@ -898,159 +913,37 @@
       </div>
     </div>
   </div> 
-  <div class="modal fade" id="quote-details" role="dialog">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">×</button>
-          <h4 class="modal-title"> 3rd Party Pricing details</h4>
-        </div>
-        <div class="modal-body">
-  
-          <form method="post" id="" name="">
-  
-            <div class="col-sm-3 w150">
-              <p>
-                <span class="col-sm-12"><b>Site Name: </b></span>
-                <span class="col-sm-12 right-addon inner-addon w200">
-                  <select id="" name="" multiple="multiple" class="multiselect" style="display: none;">
-                    <option value="" class=""></option>
-                    <option value="145.com" class="">145.com</option>
-                    <option value="Aeroxchange" class="">Aeroxchange</option>
-                    <option value="AvRef" class="">AvRef</option>
-                    <option value="ILS" class="">ILS</option>
-                    <option value="Parts base" class="">Parts base</option>
-                  </select>
-  
-                </span>
-              </p>
-            </div>
-            <div class="col-sm-2 w100 mtop25">
-              <p>
-                <span class="col-sm-12">
-                  <label class="text-left mleft10"><input type="checkbox"> PMA</label>
-                </span>
-              </p>
-            </div>
-            <div class="col-sm-2 w100 mtop25">
-              <p>
-                <span class="col-sm-12">
-                  <label class="text-left mleft10"><input type="checkbox"> DRE</label>
-                </span>
-              </p>
-            </div>
-            <div class="col-sm-3 w150">
-              <p>
-                <span class="col-sm-12"><b>Date Range: </b></span>
-                <span class="col-sm-12 right-addon inner-addon">
-                  <select class="quote-3rd-party-date-range-select">
-                    <option value="6">6 Mths</option>
-                    <option value="12">12 Mths</option>
-                    <option value="18">18 Mths</option>
-                    <option value="custom">Custom</option>
-                  </select>
-                </span>
-              </p>
-            </div>
-            <div class="col-sm-3 w100 quote-3rd-party-date-range" style="display: none;">
-              <p>
-                <span class="col-sm-12"><b>Date From: </b></span>
-                <span class="col-sm-12">
-                  <input type="text" class="form-control datepicker hasDatepicker" id="dp1565007891243">
-                </span>
-              </p>
-            </div>
-            <div class="col-sm-3 w100 quote-3rd-party-date-range" style="display: none;">
-              <p>
-                <span class="col-sm-12"><b>Date From: </b></span>
-                <span class="col-sm-12">
-                  <input type="text" class="form-control datepicker hasDatepicker" id="dp1565007891244">
-                </span>
-              </p>
-            </div>
-            <div class="col-sm-2 w100 mtop20">
-              <p>
-                <span class="col-sm-12">
-                  <button type="button" id="" name="" class="btn btn-primary-cstm show-pricing-btn">Show Pricing</button>
-                </span>
-              </p>
-            </div>
-          </form>
-          <div class="table-responsive pricing-3rd-party" style="display: none;">
-            <hr>
-            <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled">
-              <thead>
-                <tr>
-                  <th colspan="8"></th>
-                  <th colspan="4">Average Unit Price</th>
-                  <th colspan="4">Number of Units</th>
-                </tr>
-                <tr>
-                  <th>Provider</th>
-                  <th>PN</th>
-                  <th>Alternate PN</th>
-                  <th>PN Description</th>
-                  <th>Cond Type</th>
-                  <th>UOM</th>
-                  <th>OEM/PMA/DER</th>
-                  <th>Date Parameters</th>
-                  <th>High</th>
-                  <th>Mid</th>
-                  <th>Low</th>
-                  <th>Average</th>
-                  <th>High</th>
-                  <th>Mid</th>
-                  <th>Low</th>
-                  <th>Average</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="mpn-row">
-                  <td>ILS</td>
-                  <td>12345435</td>
-                  <td></td>
-                  <td>IDG</td>
-                  <td>Overhaul</td>
-                  <td>EA</td>
-                  <td>OEM</td>
-                  <td>12 Mths</td>
-                  <td> 40,000 </td>
-                  <td> 37,000 </td>
-                  <td> 32,000 </td>
-                  <td> 38,000 </td>
-                  <td> 50 </td>
-                  <td> 150 </td>
-                  <td> 150 </td>
-                  <td></td>
-                </tr>
-                <tr class="mpn-row">
-                  <td>AEX</td>
-                  <td>12345435</td>
-                  <td></td>
-                  <td>IDG</td>
-                  <td>AR</td>
-                  <td>EA</td>
-                  <td>OEM</td>
-                  <td>12 Mths</td>
-                  <td> 40,000 </td>
-                  <td> 37,000 </td>
-                  <td></td>
-                  <td> 38,000 </td>
-                  <td> 50 </td>
-                  <td> 123 </td>
-                  <td> 126 </td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
-  
+  <div id="addNewMaterials" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-lg">
+    
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Add Material</h4>
+          </div>
+          <div class="modal-body">
+              <grd-material  *ngIf="!isEdit" 
+              [isWorkOrder]="isWorkOrder" 
+              [workFlow]="workFlowObject" 
+              [isQuote]="isQuote"
+              (saveMaterialListForWO)="saveMaterialListForWO($event)" ></grd-material>
+          
+            <grd-material *ngIf="isEdit && editData"
+              [isEdit]="isEdit"
+              [editData]="editData"
+              [isQuote]="isQuote"
+              [isWorkOrder]="isWorkOrder" 
+              [workFlow]="workFlowObject" 
+              (updateMaterialListForWO)="updateMaterialList($event)" >
+          </grd-material> 
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-        </div>
+    
       </div>
     </div>
-  </div>
 </div>
 

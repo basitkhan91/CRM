@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectorRef, OnChanges } from '@angular/core';
 import * as $ from 'jquery'
 import { AlertService, MessageSeverity } from '../../../../services/alert.service';
 import { WorkOrderService } from '../../../../services/work-order/work-order.service';
@@ -11,11 +11,12 @@ import { AuthService } from '../../../../services/auth.service';
 
 })
 /** WorkOrderDocuments component*/
-export class WorkOrderChargesComponent {
+export class WorkOrderChargesComponent implements OnChanges{
   @Input() workOrderChargesList;
   @Input() workFlowObject;
   @Input() isWorkOrder;
   @Input() isQuote = false;
+  @Input() markupList;
   @Output() saveChargesListForWO = new EventEmitter();
   @Output() updateChargesListForWO = new EventEmitter();
   @Output() refreshData = new EventEmitter();
@@ -31,6 +32,9 @@ export class WorkOrderChargesComponent {
 
   }
 
+  ngOnChanges(){
+    console.log(this.markupList);
+  }
 
   get userName(): string {
     return this.authService.currentUser ? this.authService.currentUser.userName : "";
@@ -71,6 +75,19 @@ export class WorkOrderChargesComponent {
 
   createChargeQuote(){
     this.createQuote.emit(this.workOrderChargesList);
+  }
+
+  markupChanged(matData){
+    try{
+      this.markupList.forEach((markup)=>{
+        if(markup.value == matData.markup){
+          matData.costPlusAmount = (matData.quantity * matData.unitCost) + ( ((matData.quantity * matData.unitCost)/100) *  Number(markup.label))
+        }
+      })
+    }
+    catch(e){
+      console.log(e);
+    }
   }
 
 }

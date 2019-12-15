@@ -22,8 +22,8 @@ export class WorkOrderQuoteService {
     constructor(private workOrderEndpointService: WorkOrderEndpointService) {
     }
 
-    createQuote(data) {
-        return this.workOrderEndpointService.createQuotation(data);
+    createOrUpdateQuotation(data) {
+        return this.workOrderEndpointService.createOrUpdateQuotation(data);
     }
 
     getWorkOrderById(workOrderId) {
