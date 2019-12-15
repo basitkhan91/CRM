@@ -47,7 +47,9 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     @Input() WorkOrderType;
     @Input() workFlowId;
     @Input() workFlowWorkOrderId;
-    @Output() savedWorkFlowWorkOrderData = new EventEmitter()
+    @Input() isQuote = false;
+    @Output() savedWorkFlowWorkOrderData = new EventEmitter();
+    @Output() saveData = new EventEmitter();
     UpdateMode: boolean;
     workFlow: any;
     workFlowList: any[];
@@ -2326,6 +2328,10 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         }
 
         return true;
+    }
+
+    saveBuildFromScratchData(){
+        this.saveData.emit(this.workFlowList);
     }
 
 }
