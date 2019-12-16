@@ -39,28 +39,28 @@ namespace QuickApp.Pro.Controllers
 
 
 
-       //[HttpGet("auditHistoryById/{id}", Name = "GetAuditHostoryById")]
-       // [Produces(typeof(List<AuditHistory>))]
-       // public IActionResult GetAuditHostoryById(long id)
-       // {
-       //     var result = _unitOfWork.AuditHistory.GetAllHistory("TaxType", id); //.GetAllCustomersData();
+        [HttpGet("auditHistoryById/{id}", Name = "GetAuditHostoryById")]
+        [Produces(typeof(List<AuditHistory>))]
+        public IActionResult GetAuditHostoryById(long id)
+        {
+            var result = _unitOfWork.AuditHistory.GetAllHistory("TaxType", id); //.GetAllCustomersData();
 
 
-       //     try
-       //     {
-       //         var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
+            try
+            {
+                var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
 
-       //         return Ok(resul1);
-       //     }
-       //     catch (Exception ex)
-       //     {
+                return Ok(resul1);
+            }
+            catch (Exception ex)
+            {
 
-       //         throw;
-       //     }
+                throw;
+            }
 
 
 
-       // }
+        }
 
         [HttpPost("taxType")]
         //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
@@ -142,19 +142,28 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("audits/{Id}")]
         public IActionResult GetTextTypeAuditDetails(long Id)
         {
-            var audits = _unitOfWork.Repository<TaxTypeAudit>().Find(x => x.TaxTypeId == Id)
-                .OrderByDescending(x => x.TaxTypeAuditId).ToList();
-
-            var auditResult = new List<AuditResult<TaxTypeAudit>>();
-
-            auditResult.Add(new AuditResult<TaxTypeAudit>
+            try
             {
-                AreaName = "Tax Type",
-                Memo = "Tax Type",
-                Result = audits
+                var result = _unitOfWork.TaxType.GetTaxTypeAuditDetails(Id);
+                return Ok(result);
             }
-            );
-            return Ok(auditResult);
+            catch (Exception)
+            {
+                throw;
+            }
+            //var audits = _unitOfWork.Repository<TaxTypeAudit>().Find(x => x.TaxTypeId == Id)
+            //    .OrderByDescending(x => x.TaxTypeAuditId).ToList();
+
+            //var auditResult = new List<AuditResult<TaxTypeAudit>>();
+
+            //auditResult.Add(new AuditResult<TaxTypeAudit>
+            //{
+            //    AreaName = "Tax Type",
+            //    Memo = "Tax Type",
+            //    Result = audits
+            //}
+            //);
+            //return Ok(auditResult);
         }
 
         //[HttpPost("pagination")]
