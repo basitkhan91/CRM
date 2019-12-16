@@ -19,6 +19,7 @@ import { CurrencyService } from '../../../../services/currency.service';
 import { EmployeeService } from '../../../../services/employee.service';
 import { AuthService } from '../../../../services/auth.service';
 import { Router } from "@angular/router";
+import { getValueFromObjectByKey, getObjectById, editValueAssignByCondition, getObjectByValue } from '../../../../generic/autocomplete';
 
 
 @Component({
@@ -29,6 +30,7 @@ import { Router } from "@angular/router";
 export class SalesQuoteCreateComponent implements OnInit {
   query: CustomerSearchQuery;
   customers: Customer[];
+  customerDetails:any;
   totalRecords: number = 0;
   totalPages: number = 0;
   showPaginator: boolean = false;
@@ -87,7 +89,7 @@ export class SalesQuoteCreateComponent implements OnInit {
     });
     this.getCreditTerms();
     this.getCurrencyData();
-    //this.getCustomerList();
+    this.getCustomerDetails();
     this.getEmployeedata();
     this.getAllCustomerContact();
     this.getCustomerWarningsData();
@@ -97,6 +99,7 @@ export class SalesQuoteCreateComponent implements OnInit {
   get userName(): string {
     return this.authService.currentUser ? this.authService.currentUser.userName : "";
 }
+
   getCreditTerms() {
     this.commonservice.smartDropDownList('CreditTerms', 'CreditTermsId', 'Name').subscribe(res => {
         this.creditTerms = res;
@@ -138,15 +141,14 @@ private onempDataLoadSuccessful(getEmployeeCerficationList: any[]) {
   this.allEmployeeinfo = getEmployeeCerficationList;
 }
 
-filterfirstName(event) {
 
-  this.firstCollection = [];
-  for (let i = 0; i < this.allEmployeeinfo.length; i++) {
-    let firstName = this.allEmployeeinfo[i].firstName;
-    if (firstName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-      this.firstCollection.push(firstName);
-    }
-  }
+filterfirstName(event) {
+  this.firstCollection = this.allEmployeeinfo;
+
+  const employeeListData = [...this.allEmployeeinfo.filter(x => {
+      return x.firstName.toLowerCase().includes(event.query.toLowerCase())
+  })]
+  this.firstCollection = employeeListData;
 }
   private onCustomerDataLoadSuccessful(allCustomerFlows: any[]) {
   this.allCustomer = allCustomerFlows;
@@ -167,6 +169,31 @@ private getCustomerList() {
                   let name = this.allCustomer[i].name;
                   if (name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                       this.customerNames.push(name);
+                  }
+              }
+          }
+      }
+  }
+ /* this.salesInfo = {
+    ...this.editGeneralInformationData,
+    primarySalesPersonId: getObjectById('employeeId', this.editGeneralInformationData.primarySalesPersonId, this.employeeListOriginal),
+    secondarySalesPersonId: getObjectById('employeeId', this.editGeneralInformationData.secondarySalesPersonId, this.employeeListOriginal),
+    csrId: getObjectById('employeeId', this.editGeneralInformationData.csrId, this.employeeListOriginal),
+    saId: getObjectById('employeeId', this.editGeneralInformationData.saId, this.employeeListOriginal),
+};*/
+  getCustomerDetails() {
+    this.customerService.getCustomerdataById(this.customerId).subscribe(res => {
+      this.customerDetails = res[0];
+      console.log(this.customerDetails);
+    })
+    }
+    getDefaultContact() {
+      if (this.customerContactList) {
+          if (this.customerContactList.length > 0) {
+              for (let i = 0; i < this.customerContactList.length; i++) {
+                  let isDefaultContact = this.customerContactList[i].isDefaultContact;
+                  if (isDefaultContact) {
+                     this.salesQuote.customerContactId = this.customerContactList[i].contactId;
                   }
               }
           }
@@ -242,7 +269,20 @@ onWarningSelect(event) {
     this.salesQuoteService
       .getNewSalesQuoteInstance(customerId)
       .subscribe(data => {
+        console.log(this.customerDetails);
         this.salesQuote = data && data.length ? data[0] : null;
+        this.salesQuote.creditLimit = this.customerDetails.creditLimit;
+        this.salesQuote.creditLimitTermsId = this.customerDetails.creditTermsId;
+        this.salesQuote.contractReferenceName = this.customerDetails.contractReference;
+        this.salesQuote.restrictPMA = this.customerDetails.restrictPMA;
+        this.salesQuote.restrictDER = this.customerDetails.restrictBER;
+        this.salesQuote.accountTypeId = this.customerDetails.customerTypeId;
+        this.salesQuote.salesPersonName =  getObjectById('employeeId', this.customerDetails.primarySalesPersonId, this.allEmployeeinfo),
+       // this.salesQuote.secondarySalesPersonId: getObjectById('employeeId', this.customerDetails.secondarySalesPersonId, this.employeeListOriginal),
+        this.salesQuote.customerServiceRepName = getObjectById('employeeId', this.customerDetails.csrId, this.allEmployeeinfo),
+        this.salesQuote.agentName = getObjectById('employeeId', this.customerDetails.saId, this.allEmployeeinfo),
+        this.getDefaultContact();
+       console.log(this.salesQuote);
         this.customer = {
           customerName: this.salesQuote.customerName,
           customerCode: this.salesQuote.customerCode,
@@ -287,11 +327,12 @@ onWarningSelect(event) {
     this.salesOrderQuote.customerContactId = this.salesQuote.customerContactId;
     this.salesOrderQuote.customerReference = this.salesQuote.customerReferenceName;
     this.salesOrderQuote.contractReference = this.salesQuote.contractReferenceName;
-    this.salesOrderQuote.salesPersonId = this.salesQuote.salesPersonId;
-    this.salesOrderQuote.agentName = this.salesQuote.agentName;
-     this.salesOrderQuote.customerSeviceRepId = this.salesQuote.customerServiceRepId;
+    this.salesOrderQuote.salesPersonId = editValueAssignByCondition('employeeId', this.salesQuote.salesPersonName);
+    this.salesOrderQuote.agentName = editValueAssignByCondition('firstName', this.salesQuote.agentName);
+     this.salesOrderQuote.customerSeviceRepId = editValueAssignByCondition('employeeId', this.salesQuote.customerServiceRepName);
+
     this.salesOrderQuote.probabilityId = this.salesQuote.probabilityId;
-    this.salesOrderQuote.employeeId = this.salesQuote.employeeId;
+    this.salesOrderQuote.employeeId = editValueAssignByCondition('employeeId', this.salesQuote.employeeId);
     this.salesOrderQuote.leadSourceId = this.salesQuote.leadSourceId;
     this.salesOrderQuote.creditLimit = this.salesQuote.creditLimit;
     this.salesOrderQuote.creditTermId = this.salesQuote.creditLimitTermsId;
