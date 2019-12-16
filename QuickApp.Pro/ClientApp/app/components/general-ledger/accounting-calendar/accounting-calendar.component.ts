@@ -58,7 +58,7 @@ export class AccountingCalendarComponent implements OnInit {
         this.getLedgerObject()
                 
         this.editedData = this.calendarService.editedDetailsObject.subscribe(result => {
-            if (result && result.length) {
+            if (result && Object.keys(result).length) {
                 this.editCalendarPage = true;
                 this.loadEditCalendarData(result);
             }
