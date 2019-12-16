@@ -15,6 +15,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Text;
 using System.Threading.Tasks;
+
 using RepairOrderPartDto = QuickApp.Pro.ViewModels.RepairOrderPartDto;
 
 namespace QuickApp.Pro.Controllers
@@ -1301,6 +1302,9 @@ namespace QuickApp.Pro.Controllers
                 actionobject.UpdatedDate = DateTime.Now;
                 actionobject.CreatedBy = vendorViewModel.CreatedBy;
                 actionobject.UpdatedBy = vendorViewModel.UpdatedBy;
+                actionobject.IsAddressForBilling = vendorViewModel.IsAddressForBilling;
+                actionobject.IsAddressForShipping = vendorViewModel.IsAddressForShipping;
+
                 //actionobject.vendorc
                 AddAddress(vendorViewModel);
                 actionobject.AddressId = vendorViewModel.AddressId.Value;
@@ -1328,6 +1332,97 @@ namespace QuickApp.Pro.Controllers
                 }
 
 
+                if (actionobject.VendorId > 0)
+                {
+                    if (Convert.ToBoolean(actionobject.IsAddressForShipping))
+                    {
+                        //_appContext.CustomerShippingAddress.detch
+                        VendorShippingAddress data = _context.VendorShippingAddress.AsNoTracking().Where(p => p.AddressId == actionobject.AddressId && p.VendorId == actionobject.VendorId).FirstOrDefault();
+                        //_appContext.CustomerShippingAddress.detach(objCustomerShippingAddress);
+                        if (data != null)
+                        {
+                            if (data.VendorShippingAddressId > 0)
+                            {
+                                data.VendorId = actionobject.VendorId;
+                                data.AddressId = actionobject.AddressId;
+                                data.MasterCompanyId = actionobject.MasterCompanyId;
+                                data.SiteName = actionobject.VendorCode;
+                                data.CreatedDate = DateTime.Now;
+                                data.UpdatedDate = DateTime.Now;
+                                data.CreatedBy = actionobject.CreatedBy;
+                                data.UpdatedBy = actionobject.UpdatedBy;
+                                data.IsActive = actionobject.IsActive;
+                                //data.IsPrimary = true;
+                                data.IsDelete = false;
+                                _unitOfWork.VendorShippingAddress.Update(data);
+                            }
+                        }
+                        else
+                        {
+                            VendorShippingAddress objVendorrShippingAddress = new VendorShippingAddress();
+
+                            objVendorrShippingAddress.VendorId = actionobject.VendorId;
+                            objVendorrShippingAddress.AddressId = actionobject.AddressId;
+                            objVendorrShippingAddress.MasterCompanyId = actionobject.MasterCompanyId;
+                            objVendorrShippingAddress.SiteName = actionobject.VendorCode;
+                            objVendorrShippingAddress.CreatedDate = DateTime.Now;
+                            objVendorrShippingAddress.UpdatedDate = DateTime.Now;
+                            objVendorrShippingAddress.CreatedBy = actionobject.CreatedBy;
+                            objVendorrShippingAddress.UpdatedBy = actionobject.UpdatedBy;
+                            objVendorrShippingAddress.IsActive = actionobject.IsActive;
+                            //objVendorrShippingAddress.IsPrimary = true;
+                            objVendorrShippingAddress.IsDelete = false;
+
+                            _context.VendorShippingAddress.Add(objVendorrShippingAddress);
+                        }
+
+                        _context.SaveChanges();
+                    }
+
+                    if (Convert.ToBoolean(actionobject.IsAddressForBilling))
+                    {
+                        VendorBillingAddress data = _context.VendorBillingAddress.AsNoTracking().Where(p => p.AddressId == actionobject.AddressId && p.VendorId == actionobject.VendorId).FirstOrDefault();
+
+                        if (data != null)
+                        {
+                            if (data.VendorBillingAddressId > 0)
+                            {
+                                data.VendorId = actionobject.VendorId;
+                                data.MasterCompanyId = actionobject.MasterCompanyId;
+                                data.AddressId = Convert.ToInt64(actionobject.AddressId);
+                                data.SiteName = actionobject.VendorCode;
+                                data.CreatedDate = DateTime.Now;
+                                data.UpdatedDate = DateTime.Now;
+                                data.CreatedBy = actionobject.CreatedBy;
+                                data.UpdatedBy = actionobject.UpdatedBy;
+                                data.IsPrimary = true;
+                                data.IsActive = true;
+                                data.IsDeleted = false;
+                                _context.VendorBillingAddress.Update(data);
+                            }
+                        }
+                        else
+                        {
+                            VendorBillingAddress objVendorBillingAddress = new VendorBillingAddress();
+
+                            objVendorBillingAddress.VendorId = actionobject.VendorId;
+                            objVendorBillingAddress.MasterCompanyId = actionobject.MasterCompanyId;
+                            objVendorBillingAddress.AddressId = Convert.ToInt64(actionobject.AddressId);
+                            objVendorBillingAddress.SiteName = actionobject.VendorCode;
+                            objVendorBillingAddress.CreatedDate = DateTime.Now;
+                            objVendorBillingAddress.UpdatedDate = DateTime.Now;
+                            objVendorBillingAddress.CreatedBy = actionobject.CreatedBy;
+                            objVendorBillingAddress.UpdatedBy = actionobject.UpdatedBy;
+                            objVendorBillingAddress.IsPrimary = true;
+                            objVendorBillingAddress.IsActive = true;
+                            objVendorBillingAddress.IsDeleted = false;
+
+                            _context.VendorBillingAddress.Add(objVendorBillingAddress);
+                        }
+
+                        _context.SaveChanges();
+                    }
+                }
 
 
                 //if (Request.Form.Files.Count > 0)
@@ -1432,6 +1527,8 @@ namespace QuickApp.Pro.Controllers
                 actionobject.CreatedBy = vendorViewModel.CreatedBy;
                 actionobject.CreditTermsId = vendorViewModel.CreditTermsId;
                 actionobject.UpdatedBy = vendorViewModel.UpdatedBy;
+                actionobject.IsAddressForBilling = vendorViewModel.IsAddressForBilling;
+                actionobject.IsAddressForShipping = vendorViewModel.IsAddressForShipping;
                 address.Line1 = vendorViewModel.Address1;
                 address.Line2 = vendorViewModel.Address2;
                 address.Line3 = vendorViewModel.Address3;
@@ -1444,6 +1541,8 @@ namespace QuickApp.Pro.Controllers
                 address.CreatedBy = vendorViewModel.CreatedBy ?? "Admin"; //Hotfix
                 address.UpdatedBy = vendorViewModel.UpdatedBy ?? "Admin";//Hotfix
                 address.CreatedDate = DateTime.Now;
+             
+
                 address.UpdatedDate = DateTime.Now;
                 _unitOfWork.Address.Update(address);
                 _unitOfWork.SaveChanges();
@@ -1493,6 +1592,98 @@ namespace QuickApp.Pro.Controllers
                         actionobject.VendorId, actionobject.CreatedBy);
                 }
 
+
+                if (actionobject.VendorId > 0)
+                {
+                    if (Convert.ToBoolean(actionobject.IsAddressForShipping))
+                    {
+                        //_appContext.CustomerShippingAddress.detch
+                        VendorShippingAddress data = _context.VendorShippingAddress.AsNoTracking().Where(p => p.AddressId == actionobject.AddressId && p.VendorId == actionobject.VendorId).FirstOrDefault();
+                        //_appContext.CustomerShippingAddress.detach(objCustomerShippingAddress);
+                        if (data != null)
+                        {
+                            if (data.VendorShippingAddressId > 0)
+                            {
+                                data.VendorId = actionobject.VendorId;
+                                data.AddressId = actionobject.AddressId;
+                                data.MasterCompanyId = actionobject.MasterCompanyId;
+                                data.SiteName = actionobject.VendorCode;
+                                data.CreatedDate = DateTime.Now;
+                                data.UpdatedDate = DateTime.Now;
+                                data.CreatedBy = actionobject.CreatedBy;
+                                data.UpdatedBy = actionobject.UpdatedBy;
+                                data.IsActive = actionobject.IsActive;
+                                //data.IsPrimary = true;
+                                data.IsDelete = false;
+                                _unitOfWork.VendorShippingAddress.Update(data);
+                            }
+                        }
+                        else
+                        {
+                            VendorShippingAddress objVendorrShippingAddress = new VendorShippingAddress();
+
+                            objVendorrShippingAddress.VendorId = actionobject.VendorId;
+                            objVendorrShippingAddress.AddressId = actionobject.AddressId;
+                            objVendorrShippingAddress.MasterCompanyId = actionobject.MasterCompanyId;
+                            objVendorrShippingAddress.SiteName = actionobject.VendorCode;
+                            objVendorrShippingAddress.CreatedDate = DateTime.Now;
+                            objVendorrShippingAddress.UpdatedDate = DateTime.Now;
+                            objVendorrShippingAddress.CreatedBy = actionobject.CreatedBy;
+                            objVendorrShippingAddress.UpdatedBy = actionobject.UpdatedBy;
+                            objVendorrShippingAddress.IsActive = actionobject.IsActive;
+                            //objVendorrShippingAddress.IsPrimary = true;
+                            objVendorrShippingAddress.IsDelete = false;
+
+                            _context.VendorShippingAddress.Add(objVendorrShippingAddress);
+                        }
+
+                        _context.SaveChanges();
+                    }
+
+                    if (Convert.ToBoolean(actionobject.IsAddressForBilling))
+                    {
+                        VendorBillingAddress data = _context.VendorBillingAddress.AsNoTracking().Where(p => p.AddressId == actionobject.AddressId && p.VendorId == actionobject.VendorId).FirstOrDefault();
+
+                        if (data != null)
+                        {
+                            if (data.VendorBillingAddressId > 0)
+                            {
+                                data.VendorId = actionobject.VendorId;
+                                data.MasterCompanyId = actionobject.MasterCompanyId;
+                                data.AddressId = Convert.ToInt64(actionobject.AddressId);
+                                data.SiteName = actionobject.VendorCode;
+                                data.CreatedDate = DateTime.Now;
+                                data.UpdatedDate = DateTime.Now;
+                                data.CreatedBy = actionobject.CreatedBy;
+                                data.UpdatedBy = actionobject.UpdatedBy;
+                                data.IsPrimary = true;
+                                data.IsActive = true;
+                                data.IsDeleted = false;
+                                _context.VendorBillingAddress.Update(data);
+                            }
+                        }
+                        else
+                        {
+                            VendorBillingAddress objVendorBillingAddress = new VendorBillingAddress();
+
+                            objVendorBillingAddress.VendorId = actionobject.VendorId;
+                            objVendorBillingAddress.MasterCompanyId = actionobject.MasterCompanyId;
+                            objVendorBillingAddress.AddressId = Convert.ToInt64(actionobject.AddressId);
+                            objVendorBillingAddress.SiteName = actionobject.VendorCode;
+                            objVendorBillingAddress.CreatedDate = DateTime.Now;
+                            objVendorBillingAddress.UpdatedDate = DateTime.Now;
+                            objVendorBillingAddress.CreatedBy = actionobject.CreatedBy;
+                            objVendorBillingAddress.UpdatedBy = actionobject.UpdatedBy;
+                            objVendorBillingAddress.IsPrimary = true;
+                            objVendorBillingAddress.IsActive = true;
+                            objVendorBillingAddress.IsDeleted = false;
+
+                            _context.VendorBillingAddress.Add(objVendorBillingAddress);
+                        }
+
+                        _context.SaveChanges();
+                    }
+                }
 
 
 
@@ -1839,6 +2030,34 @@ namespace QuickApp.Pro.Controllers
                 vendorObj.UpdatedDate = DateTime.Now;
                 vendorObj.CreatedBy = vendorViewModel.CreatedBy;
                 vendorObj.UpdatedBy = vendorViewModel.UpdatedBy;
+                if (vendorViewModel.Master1099s.Count > 0)
+                {
+                    foreach (var item in vendorViewModel.Master1099s)
+                    {
+                        VendorProcess1099 vendorprocess = new VendorProcess1099();
+                        vendorprocess.IsActive = true;
+                        vendorprocess.VendorId = vendorViewModel.VendorId;
+                        vendorprocess.Master1099Id = item.Master1099Id;
+                        if (item.VendorProcess1099Id != 0)
+                        {
+                            vendorprocess.VendorProcess1099Id = item.VendorProcess1099Id;
+                        }
+                        vendorprocess.CreatedBy = vendorViewModel.CreatedBy;
+                        vendorprocess.UpdatedBy = vendorViewModel.UpdatedBy;
+                        vendorprocess.CreatedDate = DateTime.Now;
+                        vendorprocess.UpdatedDate = DateTime.Now;
+                        vendorprocess.IsDefaultRadio = item.IsDefaultRadio;
+                        vendorprocess.IsDefaultCheck = item.IsDefaultCheck;
+                        if (vendorprocess.VendorProcess1099Id>0)
+                        {
+                            _context.VendorProcess1099.Update(vendorprocess);
+                        }
+                        else
+                        _context.VendorProcess1099.Add(vendorprocess);
+
+                    }
+                }
+
                 _unitOfWork.Vendor.Update(vendorObj);
                 _unitOfWork.SaveChanges();
                 return Ok(vendorObj);
@@ -3403,7 +3622,18 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
-
+        [HttpGet("getVendorProcess1099ListForFinance")]
+        public IActionResult GetVendorProcessList(int companyId)
+        {
+            var result = _unitOfWork.Vendor.GetVendorProcessListForFinance(companyId);
+            return Ok(result);
+        }
+        [HttpGet("getVendorProcess1099ListFromTransaction")]
+        public IActionResult GetVendorProcessListFromTransaction(long vendorId)
+        {
+            var result = _unitOfWork.Vendor.GetVendorProcessListFromTransaction(vendorId);
+            return Ok(result);
+        }
 
         #region Capes
 

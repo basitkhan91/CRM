@@ -1119,5 +1119,33 @@ namespace DAL.Repositories
                 throw ex;
             }
         }
+        public IEnumerable<object> GetVendorProcessListForFinance(int companyId)
+        {
+            var list = (from m in _appContext.Master1099
+                        where m.MasterCompanyId == companyId && m.IsDeleted != true && m.IsActive == true
+                        select m).Distinct().ToList();
+            return list;
+
+        }
+        public IEnumerable<object> GetVendorProcessListFromTransaction(long vendorId)
+        {
+            var list = (from mst in _appContext.Master1099 
+                        join m in _appContext.VendorProcess1099 on mst.Master1099Id equals m.Master1099Id
+                          into master
+                        from m in master.DefaultIfEmpty()
+
+                        where m.VendorId == vendorId && m.IsDeleted != true && m.IsActive == true
+                        select new {
+                            m.VendorProcess1099Id, 
+                            m.Master1099Id,
+                            m.IsDefaultCheck,
+                            m.IsDefaultRadio,
+                            mst.Description 
+                        }).Distinct().ToList();
+
+       
+            return list;
+
+        }
     }
 }

@@ -59,7 +59,8 @@ namespace DAL.Repositories.Interfaces
 
         IEnumerable<object> GetVendorGeneralDocumentDetailById(long id, int moduleId);
         bool GetVendorGeneralDocumentDelete(long id, string updatedBy);
-
+        IEnumerable<object> GetVendorProcessListForFinance(int companyId);
+        IEnumerable<object> GetVendorProcessListFromTransaction(long vendorId);
 
     }
 }
