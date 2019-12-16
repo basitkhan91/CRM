@@ -660,8 +660,7 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
 	}
 	openView(content, row) {
-
-		this.viewItemMaster = row;
+        this.viewItemMaster = row;
 		this.partNumber = row.partNumber;
 		this.description = row.partDescription;
 		if (row.isAlternatePartChecked) {

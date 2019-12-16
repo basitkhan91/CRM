@@ -40,6 +40,7 @@ import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { Billing } from '../../../../models/work-order-billing.model';
 import * as moment from 'moment';
+import { WorkOrderQuoteService } from '../../../../services/work-order/work-order-quote.service';
 
 
 @Component({
@@ -69,6 +70,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     @Input() workOrderId;
     @Input() currencyList;
     @Input() workFlowWorkOrderId = 0;
+
     // @Output() viewWorkFlow = new EventEmitter();
 
     // workOrderTypes: WorkOrderType[];
@@ -171,6 +173,13 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     isEditBilling: boolean = false;
     isWorkOrderMainView: boolean = false;
     mainWorkOrderId: any = 0;
+    quoteData: any;
+    workOrderQuoteId: any;
+    quoteExclusionList: any;
+    quoteMaterialList: any;
+    quoteFreightsList: any;
+    quoteChargesList: any;
+    quoteLaborList: any;
 
 
 
@@ -186,7 +195,9 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         private commonService: CommonService,
         private authService: AuthService,
         private acRouter: ActivatedRoute,
-        private workFlowtService: WorkFlowtService, private modalService: NgbModal
+        private workFlowtService: WorkFlowtService,
+        private modalService: NgbModal,
+        private quoteService: WorkOrderQuoteService
 
     ) {
         // this.workOrderPartNumbers = [];
@@ -521,6 +532,12 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
     }
+    createQuote() {
+        window.open(` /workordersmodule/workorderspages/app-work-order-quote?workorderid=${this.workOrderId}`);
+        // [routerLink]="['/workordersmodule/workorderspages/app-work-order-quote']"[queryParams]="{workOrderId: savedWorkOrderData['workOrderId']}"
+
+    }
+
 
     saveWorkOrderGridLogic(result, data) {
         this.savedWorkOrderData = result;
@@ -533,16 +550,16 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         if (this.workFlowWorkOrderId !== 0) {
             this.isDisabledSteps = true;
         }
-        console.log(result);
 
-        console.log(data);
+
+        console.log(result);
         this.getWorkOrderWorkFlowNos();
         if (this.workOrderGeneralInformation.isSinglePN == true) {
             // get WOrkFlow Equipment Details if WorFlow Exists
-
+            console.log(data);
             this.getWorkFlowTabsData();
-            this.workOrderPartNumberId = data.partNumbers[0].id;
-            this.workFlowId = data.partNumbers[0].workflowId;
+            this.workOrderPartNumberId = result.partNumbers[0].id;
+            this.workFlowId = result.partNumbers[0].workflowId;
             this.workFlowWorkOrderId = result.workFlowWorkOrderId;
 
         }
@@ -1254,6 +1271,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
         if (this.isEditBilling) {
             this.workOrderService.updateBillingByWorkOrderId(data).subscribe(res => {
+
+                this.getQuoteIdByWfandWorkOrderId();
                 this.alertService.showMessage(
                     this.moduleName,
                     'Updated Work Order Billing Succesfully',
@@ -1262,6 +1281,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             })
         } else {
             this.workOrderService.createBillingByWorkOrderId(data).subscribe(res => {
+                this.getQuoteIdByWfandWorkOrderId();
                 this.alertService.showMessage(
                     this.moduleName,
                     'Saved Work Order Billing Succesfully',
@@ -1317,6 +1337,61 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     //     }
 
     // }
+
+    getQuoteIdByWfandWorkOrderId() {
+        // this.workFlowWorkOrderId, this.workOrderId
+        this.quoteService.getQuoteIdByWfandWorkOrderId(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
+            this.quoteData = res;
+            this.workOrderQuoteId = res.workOrderQuote.workOrderQuoteId;
+            console.log(this.workOrderQuoteId, res.workOrderQuoteId, res);
+
+            this.getQuoteCostingData();
+        })
+    }
+
+
+    getQuoteCostingData() {
+        // if(this.workOrderQuoteId){
+        this.getQuoteExclusionListByWorkOrderQuoteId();
+        this.getQuoteMaterialListByWorkOrderQuoteId();
+        this.getQuoteFreightsListByWorkOrderQuoteId();
+        this.getQuoteChargesListByWorkOrderQuoteId();
+        this.getQuoteLaborListByWorkOrderQuoteId();
+        // }
+
+    }
+
+    getQuoteExclusionListByWorkOrderQuoteId() {
+
+        this.quoteService.getQuoteExclusionList(this.workOrderQuoteId).subscribe(res => {
+            this.quoteExclusionList = res;
+        })
+    }
+
+    getQuoteMaterialListByWorkOrderQuoteId() {
+        this.quoteService.getQuoteMaterialList(this.workOrderQuoteId).subscribe(res => {
+            this.quoteMaterialList = res;
+        })
+    }
+    getQuoteFreightsListByWorkOrderQuoteId() {
+        this.quoteService.getQuoteFreightsList(this.workOrderQuoteId).subscribe(res => {
+            this.quoteFreightsList = res;
+        })
+    }
+    getQuoteChargesListByWorkOrderQuoteId() {
+        this.quoteService.getQuoteChargesList(this.workOrderQuoteId).subscribe(res => {
+            this.quoteChargesList = res;
+        })
+    }
+    getQuoteLaborListByWorkOrderQuoteId() {
+        this.quoteService.getQuoteLaborList(this.workOrderQuoteId).subscribe(res => {
+            this.quoteLaborList = res.laborList;
+        })
+    }
+
+
+
+
 
 
 
