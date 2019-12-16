@@ -13,7 +13,7 @@ namespace DAL.Repositories
         { }
         public IEnumerable<DAL.Models.StocklineAdjustmentReason> GetAllAdjustmentReasonData(long adjustmentReasonId)
         {
-            return _appContext.stocklineAdjustmentReason.Where(c => c.AdjustmentReasonId == adjustmentReasonId).OrderByDescending(p => p.UpdatedDate).ToList();
+            return _appContext.stocklineAdjustmentReason.OrderByDescending(p => p.UpdatedDate).ToList();
         }
         public IEnumerable<DAL.Models.StocklineAdjustmentReasonAudit> GetStocklineAdjustmentReasonAuditDetails(long iD)
         {

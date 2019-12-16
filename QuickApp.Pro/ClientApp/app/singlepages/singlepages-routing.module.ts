@@ -151,7 +151,7 @@ const singlePagesRoutes: Routes = [
             {
                 path: "app-asset-type",
                 component: AssetTypeComponent,
-                data: { title: "Asset Type" }
+                data: { title: "Asset Class" }
             },
             {
                 path: "app-asset-intangible-type",

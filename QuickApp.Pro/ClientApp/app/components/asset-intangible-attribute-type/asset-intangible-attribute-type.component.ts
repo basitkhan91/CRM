@@ -20,7 +20,7 @@ import { LegalEntityService } from '../../services/legalentity.service';
 @Component({
     selector: 'app-asset-intangible-attribute-type',
     templateUrl: './asset-intangible-attribute-type.component.html',
-    styleUrls: [],
+    styleUrls: ['asset-intangible-attribute-type.component.scss'],
     animations: [fadeInOut]
 })
 export class AssetIntangibleAttributeTypeComponent implements OnInit {

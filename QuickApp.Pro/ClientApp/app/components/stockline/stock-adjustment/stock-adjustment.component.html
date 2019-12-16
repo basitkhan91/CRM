@@ -32,7 +32,7 @@
 									</td>
 									<td>
 										<div *ngIf="showCompany" class="inner-addon col-sm-7 inline-block display-flex" style="display: table;">
-											<select [(ngModel)]="sourceStockLineSetup.comId" [ngModelOptions]="{standalone: true}" (change)="getComtoBusList(22,sourceStockLineSetup.comId,sourceStockLineSetup.ManagementStructureReason)">
+											<select [(ngModel)]="sourceStockLineSetup.comId" [ngModelOptions]="{standalone: true}" (change)="getComtoBusList(ManagementStructureIdDataType,sourceStockLineSetup.comId,sourceStockLineSetup.ManagementStructureReason)">
 												<option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 											</select>
 										</div>
@@ -45,7 +45,7 @@
 										</div>
 									</td>
 									<td>
-										<textarea *ngIf="showCompany" style="height: 80px; display: inline-block;" class="editable-field" [(ngModel)]="sourceStockLineSetup.ManagementStructureReason" (change)="getBUList(22,sourceStockLineSetup.managementStructureEntityId,sourceStockLineSetup.ManagementStructureReason)" [ngModelOptions]="{standalone: true}"></textarea>
+										<textarea *ngIf="showCompany" style="height: 80px; display: inline-block;" class="editable-field" [(ngModel)]="sourceStockLineSetup.ManagementStructureReason" (change)="getBUList(ManagementStructureIdDataType,sourceStockLineSetup.managementStructureEntityId,sourceStockLineSetup.ManagementStructureReason)" [ngModelOptions]="{standalone: true}"></textarea>
 										<textarea *ngIf="hideCompany" style="height: 80px; display: none;" class="editable-field"></textarea>
 									</td>
 								</tr>
@@ -59,7 +59,7 @@
 									</td>
 									<td>
 										<div *ngIf="showBusiness" class="inner-addon col-sm-7 inline-block display-flex" style="display: table;">
-											<select [(ngModel)]="sourceStockLineSetup.buId" [ngModelOptions]="{standalone: true}" (change)="getBustoDepList(22,sourceStockLineSetup.buId,sourceStockLineSetup.ManagementStructureReason)">
+											<select [(ngModel)]="sourceStockLineSetup.buId" [ngModelOptions]="{standalone: true}" (change)="getBustoDepList(ManagementStructureIdDataType,sourceStockLineSetup.buId,sourceStockLineSetup.ManagementStructureReason)">
 												<option *ngFor="let ataName of bulist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 											</select>
 										</div>
@@ -84,7 +84,7 @@
 									</td>
 									<td>
 										<div *ngIf="showDepartment" class="inner-addon col-sm-7 inline-block display-flex" style="display: table;">
-											<select [(ngModel)]="sourceStockLineSetup.deId" [ngModelOptions]="{standalone: true}" (change)="getDepoDivList(22,sourceStockLineSetup.deId,sourceStockLineSetup.ManagementStructureReason)">
+											<select [(ngModel)]="sourceStockLineSetup.deId" [ngModelOptions]="{standalone: true}" (change)="getDepoDivList(ManagementStructureIdDataType,sourceStockLineSetup.deId,sourceStockLineSetup.ManagementStructureReason)">
 												<option *ngFor="let ataName of departmentList " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 											</select>
 										</div>
@@ -107,7 +107,7 @@
 									</td>
 									<td>
 										<div *ngIf="showDivision" class="inner-addon col-sm-7 inline-block display-flex" style="display: table;">
-											<select [(ngModel)]="sourceStockLineSetup.managementStructureEntityId" [ngModelOptions]="{standalone: true}" (change)="getDivFinalList(22,sourceStockLineSetup.managementStructureEntityId,sourceStockLineSetup.ManagementStructureReason)">
+											<select [(ngModel)]="sourceStockLineSetup.managementStructureEntityId" [ngModelOptions]="{standalone: true}" (change)="getDivFinalList(ManagementStructureIdDataType,sourceStockLineSetup.managementStructureEntityId,sourceStockLineSetup.ManagementStructureReason)">
 												<option *ngFor="let ataName of divisionlist " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
 											</select>
 										</div>
@@ -133,7 +133,7 @@
 									<td>{{sourceStockLineSetup.Beforesite}}</td>
 									<td>
 										<div *ngIf="showSite" class="inner-addon col-sm-7 inline-block display-flex" style="display: table;">
-											<select [(ngModel)]="sourceStockLineSetup.AftersiteId" [ngModelOptions]="{standalone: true}" (change)="siteValueChange(10,sourceStockLineSetup.Beforesite,sourceStockLineSetup.AftersiteId,sourceStockLineSetup.siteAdjustmentReason)">
+											<select [(ngModel)]="sourceStockLineSetup.AftersiteId" [ngModelOptions]="{standalone: true}" (change)="siteValueChange(SiteDataType,sourceStockLineSetup.Beforesite,sourceStockLineSetup.AftersiteId,sourceStockLineSetup.siteAdjustmentReason)">
 												<option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option>
 											</select>
 											<a routerLink="/singlepages/singlepages/app-site" class="add-icon"><i class="fa fa-plus"></i></a>
@@ -147,7 +147,7 @@
 										</div>
 									</td>
 									<td>
-										<textarea *ngIf="showSite" style="height: 80px; display: inline-block;" class="editable-field" [(ngModel)]="sourceStockLineSetup.siteAdjustmentReason" (change)="siteValueChange1(10,sourceStockLineSetup.Beforesite,sourceStockLineSetup.AftersiteId,sourceStockLineSetup.siteAdjustmentReason)" [ngModelOptions]="{standalone: true}"></textarea>
+										<textarea *ngIf="showSite" style="height: 80px; display: inline-block;" class="editable-field" [(ngModel)]="sourceStockLineSetup.siteAdjustmentReason" [ngModelOptions]="{standalone: true}"></textarea>
 										<textarea *ngIf="hideSite" style="height: 80px; display: none;" class="editable-field"></textarea>
 									</td>
 								</tr>
@@ -158,7 +158,7 @@
 									<td>{{sourceStockLineSetup.Beforewarehouse}}</td>
 									<td>
 										<div *ngIf="showWarehouse" class="inner-addon col-sm-7 inline-block display-flex" style="display: table;">
-											<select [(ngModel)]="sourceStockLineSetup.AfterwarehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(13,sourceStockLineSetup.Beforewarehouse,sourceStockLineSetup.AfterwarehouseId,sourceStockLineSetup.warehouseAdjustmentReason)">
+											<select [(ngModel)]="sourceStockLineSetup.AfterwarehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(WarehouseDataType,sourceStockLineSetup.Beforewarehouse,sourceStockLineSetup.AfterwarehouseId,sourceStockLineSetup.warehouseAdjustmentReason)">
 												<option *ngFor="let site of allWareHouses" [ngValue]="site.warehouseId">{{site.warehouseName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
 
 											</select>
@@ -180,7 +180,7 @@
 									<td>{{sourceStockLineSetup.Beforelocation}}</td>
 									<td>
 										<div *ngIf="showLocation" class="inner-addon col-sm-7 inline-block display-flex" style="display: table;">
-											<select [(ngModel)]="sourceStockLineSetup.afterlocationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(17,sourceStockLineSetup.Beforelocation,sourceStockLineSetup.afterlocationId,sourceStockLineSetup.locationAdjustmentReason)">
+											<select [(ngModel)]="sourceStockLineSetup.afterlocationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(LocationDataType,sourceStockLineSetup.Beforelocation,sourceStockLineSetup.afterlocationId,sourceStockLineSetup.locationAdjustmentReason)">
 												<option *ngFor="let site of allLocations" [ngValue]="site.locationId">{{site.name}}</option>
 											</select>
 											<a routerLink="/singlepages/singlepages/app-location" class="add-icon"><i class="fa fa-plus"></i></a>
@@ -201,7 +201,7 @@
 									<td>{{sourceStockLineSetup.Beforeshelf}}</td>
 									<td>
 										<div *ngIf="showShelf" class="inner-addon col-sm-7 inline-block display-flex" style="display: table;">
-											<select [(ngModel)]="sourceStockLineSetup.aftershelfId" [ngModelOptions]="{standalone: true}" (change)="shelfValueChange(9,sourceStockLineSetup.Beforeshelf,sourceStockLineSetup.aftershelfId,sourceStockLineSetup.shelfAdjustmentReason)">
+											<select [(ngModel)]="sourceStockLineSetup.aftershelfId" [ngModelOptions]="{standalone: true}" (change)="shelfValueChange(ShelfDataType,sourceStockLineSetup.Beforeshelf,sourceStockLineSetup.aftershelfId,sourceStockLineSetup.shelfAdjustmentReason)">
 												<option *ngFor="let site of allShelfs" [ngValue]="site.shelfId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
 											</select>
 											<a routerLink="/singlepages/singlepages/app-shelf" class="add-icon"><i class="fa fa-plus"></i></a>
@@ -222,7 +222,7 @@
 									<td>{{sourceStockLineSetup.Beforebin}}</td>
 									<td>
 										<div *ngIf="showBin" class="inner-addon col-sm-7 inline-block display-flex" style="display: table;">
-											<select [(ngModel)]="sourceStockLineSetup.afterbinId" [ngModelOptions]="{standalone: true}" (change)="binValueSelect(16,sourceStockLineSetup.Beforebin,sourceStockLineSetup.afterbinId,sourceStockLineSetup.BinAdjustmentReason)">
+											<select [(ngModel)]="sourceStockLineSetup.afterbinId" [ngModelOptions]="{standalone: true}" (change)="binValueSelect(BinDataType,sourceStockLineSetup.Beforebin,sourceStockLineSetup.afterbinId,sourceStockLineSetup.BinAdjustmentReason)">
 												<option *ngFor="let site of allBins" [ngValue]="site.binId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
 											</select>
 											<a routerLink="/singlepages/singlepages/app-bin" class="add-icon"><i class="fa fa-plus"></i></a>
@@ -255,7 +255,7 @@
                                     </td>
                                     <td *ngIf="hideCategory"><textarea style="height: 80px; display: none;" class="editable-field"></textarea></td>
                                     <td *ngIf="showCategory">
-                                        <select class="w100 editable-field" style="display: inline-block;" [(ngModel)]="sourceStockLineSetup.afterItemTypeId" (change)="categoryChange(18,sourceStockLineSetup.itemTypeId,sourceStockLineSetup.afterItemTypeId,sourceStockLineSetup.StockAdjustmentReason)" [ngModelOptions]="{standalone: true}">
+                                        <select class="w100 editable-field" style="display: inline-block;" [(ngModel)]="sourceStockLineSetup.afterItemTypeId" (change)="categoryChange(CategoryDataType,sourceStockLineSetup.itemTypeId,sourceStockLineSetup.afterItemTypeId,sourceStockLineSetup.StockAdjustmentReason)" [ngModelOptions]="{standalone: true}">
                                             <option value="1">Stock</option>
                                             <option value="2">Non-Stock</option>
                                             <option value="3">Equipment</option>
@@ -263,7 +263,7 @@
                                             <option value="5">Loan</option>
                                         </select>
                                     </td>
-                                    <td *ngIf="showCategory"><textarea style="height: 80px; display: inline-block;" class="editable-field" [(ngModel)]="sourceStockLineSetup.StockAdjustmentReason" (change)="categoryChange(18,sourceStockLineSetup.itemTypeId,sourceStockLineSetup.afterItemTypeId,sourceStockLineSetup.StockAdjustmentReason)" [ngModelOptions]="{standalone: true}"></textarea></td>
+                                    <td *ngIf="showCategory"><textarea style="height: 80px; display: inline-block;" class="editable-field" [(ngModel)]="sourceStockLineSetup.StockAdjustmentReason" (change)="categoryChange(CategoryDataType,sourceStockLineSetup.itemTypeId,sourceStockLineSetup.afterItemTypeId,sourceStockLineSetup.StockAdjustmentReason)" [ngModelOptions]="{standalone: true}"></textarea></td>
                                 </tr>
 
 								<!-- Part Number Start -->
@@ -280,22 +280,23 @@
 											</div>
 										</div>
 										<div *ngIf="showPart">
-                                            <div class="col-sm-7">
-                                                <div class="inner-addon right-addon inline-block">
-                                                    <p-autoComplete [(ngModel)]="sourceStockLineSetup.AfterpartNumber" (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event,5,sourceStockLineSetup.BeforepartNumber,sourceStockLineSetup.AfterpartNumber,sourceStockLineSetup.PartAdjustmentReason)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
-                                                                    [minLength]="1" [dropdown]="true">
-                                                        <ng-template let-partName pTemplate="part">
-                                                            <div class="ui-helper-clearfix">{{partName}}</div>
-                                                        </ng-template>
-                                                    </p-autoComplete>
-                                                    <div *ngIf="disableSavepartNumber" style="color:red">Please select From DropDown</div>
-                                                </div>
-                                            </div>
+											<div class="col-sm-7">
+												<div class="inner-addon right-addon inline-block">
+													<p-autoComplete [(ngModel)]="sourceStockLineSetup.AfterpartNumber" (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event,PartNumberDataType,sourceStockLineSetup.BeforepartNumber,sourceStockLineSetup.AfterpartNumber,sourceStockLineSetup.PartAdjustmentReason)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
+																	[minLength]="1" [dropdown]="true">
+														<ng-template let-partName pTemplate="part">
+															<div class="ui-helper-clearfix">{{partName}}</div>
+														</ng-template>
+													</p-autoComplete>
+													<div *ngIf="disableSavepartNumber" style="color:red">Please select From DropDown</div>
+												</div>
 											</div>
+											<a routerLink="/itemmastersmodule/itemmasterpages/app-item-master-stock" class="add-icon"><i class="fa fa-plus"></i></a>
+										</div>
                                     </td>
 									<td>
 										<textarea *ngIf="hidePart" style="height: 80px; display: none;" class="editable-field"></textarea>
-										<textarea *ngIf="showPart" (change)="partValueSelect(5,sourceStockLineSetup.BeforepartNumber,sourceStockLineSetup.afterpartNumber,sourceStockLineSetup.PartAdjustmentReason)" [(ngModel)]="sourceStockLineSetup.PartAdjustmentReason" [ngModelOptions]="{standalone: true}" style="height: 80px; display: inline-block;" class="editable-field"></textarea>
+										<textarea *ngIf="showPart" (change)="partValueSelect(PartNumberDataType,sourceStockLineSetup.BeforepartNumber,sourceStockLineSetup.afterpartNumber,sourceStockLineSetup.PartAdjustmentReason)" [(ngModel)]="sourceStockLineSetup.PartAdjustmentReason" [ngModelOptions]="{standalone: true}" style="height: 80px; display: inline-block;" class="editable-field"></textarea>
 									</td>
 
 								</tr>
@@ -308,11 +309,11 @@
 									<td>{{sourceStockLineSetup.BeforeserialNumber}}</td>
 									<td>
 										<input *ngIf="hideSerial" type="text" class="w100 form-control editable-field" style="display: none;">
-										<input *ngIf="showSerial" [(ngModel)]="sourceStockLineSetup.AfterserialNumber" (keyup)="serialNumberValuechange(8,sourceStockLineSetup.BeforeserialNumber,sourceStockLineSetup.AfterserialNumber,sourceStockLineSetup.SerialNumberAdjustmentReason)" [ngModelOptions]="{standalone: true}" type="text" class="w100 form-control editable-field" placeholder="" style="display: inline-block;">
+										<input *ngIf="showSerial" [(ngModel)]="sourceStockLineSetup.AfterserialNumber" (keyup)="serialNumberValuechange(SerialNumberDataType,sourceStockLineSetup.BeforeserialNumber,sourceStockLineSetup.AfterserialNumber,sourceStockLineSetup.SerialNumberAdjustmentReason)" [ngModelOptions]="{standalone: true}" type="text" class="w100 form-control editable-field" placeholder="" style="display: inline-block;">
 									</td>
 									<td>
 										<textarea *ngIf="hideSerial" style="height: 80px; display: none;" class="editable-field"></textarea>
-										<textarea *ngIf="showSerial" [(ngModel)]="sourceStockLineSetup.SerialNumberAdjustmentReason" (change)="serialNumberValuechange(8,sourceStockLineSetup.BeforeserialNumber,sourceStockLineSetup.AfterserialNumber,sourceStockLineSetup.SerialNumberAdjustmentReason)" [ngModelOptions]="{standalone: true}" style="height: 80px; display: inline-block;" class="editable-field"></textarea>
+										<textarea *ngIf="showSerial" [(ngModel)]="sourceStockLineSetup.SerialNumberAdjustmentReason" (change)="serialNumberValuechange(SerialNumberDataType,sourceStockLineSetup.BeforeserialNumber,sourceStockLineSetup.AfterserialNumber,sourceStockLineSetup.SerialNumberAdjustmentReason)" [ngModelOptions]="{standalone: true}" style="height: 80px; display: inline-block;" class="editable-field"></textarea>
 									</td>
 
 								</tr>
@@ -325,11 +326,11 @@
 									<td  *ngIf="hideQuantity"></td>
 									<td *ngIf="hideQuantity"></td>
 									<td *ngIf="showQuantity">
-									<input *ngIf="!showFreeQuantity" [(ngModel)]="sourceStockLineSetup.Afterquantity" (change)="QuantityNumberValuechange(6,sourceStockLineSetup.Beforequantity,sourceStockLineSetup.Afterquantity,sourceStockLineSetup.QuantityAdjustmentReason)" (keyup)="QuantityNumberValuechange(6,sourceStockLineSetup.Beforequantity,sourceStockLineSetup.Afterquantity,sourceStockLineSetup.QuantityAdjustmentReason)" [ngModelOptions]="{standalone: true}" type="number" class="w100 form-control editable-field" min="0" max="1" >
-									<input *ngIf="showFreeQuantity" [(ngModel)]="sourceStockLineSetup.Afterquantity" (change)="QuantityNumberValuechange(6,sourceStockLineSetup.Beforequantity,sourceStockLineSetup.Afterquantity,sourceStockLineSetup.QuantityAdjustmentReason)" (keyup)="QuantityNumberValuechange(6,sourceStockLineSetup.Beforequantity,sourceStockLineSetup.Afterquantity,sourceStockLineSetup.QuantityAdjustmentReason)" [ngModelOptions]="{standalone: true}" type="number" class="w100 form-control editable-field" min="0" >
+									<input *ngIf="!showFreeQuantity" [(ngModel)]="sourceStockLineSetup.Afterquantity" (change)="QuantityNumberValuechange(QuantityonHandDataType,sourceStockLineSetup.Beforequantity,sourceStockLineSetup.Afterquantity,sourceStockLineSetup.QuantityAdjustmentReason)" (keyup)="QuantityNumberValuechange(QuantityonHandDataType,sourceStockLineSetup.Beforequantity,sourceStockLineSetup.Afterquantity,sourceStockLineSetup.QuantityAdjustmentReason)" [ngModelOptions]="{standalone: true}" type="number" class="w100 form-control editable-field" min="0" max="1" >
+									<input *ngIf="showFreeQuantity" [(ngModel)]="sourceStockLineSetup.Afterquantity" (change)="QuantityNumberValuechange(QuantityonHandDataType,sourceStockLineSetup.Beforequantity,sourceStockLineSetup.Afterquantity,sourceStockLineSetup.QuantityAdjustmentReason)" (keyup)="QuantityNumberValuechange(QuantityonHandDataType,sourceStockLineSetup.Beforequantity,sourceStockLineSetup.Afterquantity,sourceStockLineSetup.QuantityAdjustmentReason)" [ngModelOptions]="{standalone: true}" type="number" class="w100 form-control editable-field" min="0" >
 
 									</td>
-									<td *ngIf="showQuantity"><textarea [(ngModel)]="sourceStockLineSetup.QuantityAdjustmentReason" (change)="QuantityNumberValuechange(6,sourceStockLineSetup.Beforequantity,sourceStockLineSetup.Afterquantity,sourceStockLineSetup.QuantityAdjustmentReason)" [ngModelOptions]="{standalone: true}" style="height: 80px;" class="editable-field"></textarea></td>
+									<td *ngIf="showQuantity"><textarea [(ngModel)]="sourceStockLineSetup.QuantityAdjustmentReason" (change)="QuantityNumberValuechange(QuantityonHandDataType,sourceStockLineSetup.Beforequantity,sourceStockLineSetup.Afterquantity,sourceStockLineSetup.QuantityAdjustmentReason)" [ngModelOptions]="{standalone: true}" style="height: 80px;" class="editable-field"></textarea></td>
 								</tr>
 								<tr>
 									<td colspan="5">&nbsp;</td>
@@ -343,16 +344,15 @@
 									<td *ngIf="hideUnit"><textarea style="height: 80px; display: none;" class="editable-field"></textarea></td>
 									<td *ngIf="showUnit">
 										<select [(ngModel)]="sourceStockLineSetup.unitCostAdjustmentReasonTypeId" [ngModelOptions]="{standalone: true}" (change)="unitCostAdjustmentType(sourceStockLineSetup.unitCostAdjustmentReasonTypeId)" [value]='select'>
-											<option value='select'>Select</option>
 											<option *ngFor="let adjustmentReason of allAdjustmentReasons" [ngValue]="adjustmentReason.adjustmentReasonId">{{adjustmentReason.description}}</option>
 										</select>
 										<a routerLink="/singlepages/singlepages/app-adjustment-reason" class="add-icon"><i class="fa fa-plus"></i></a>
-										<input type="number" [(ngModel)]="sourceStockLineSetup.AfterUnitCost" (keyup)="UnitCostNumberValuechange(11,sourceStockLineSetup.BeforecoreUnitCost,sourceStockLineSetup.AfterUnitCost,sourceStockLineSetup.UnitCostAdjustmentReason)" [ngModelOptions]="{standalone: true}" class="w100 form-control editable-field" style="display: inline-block;">
+										<input type="number" [(ngModel)]="sourceStockLineSetup.AfterUnitCost" (keyup)="UnitCostNumberValuechange(UnitCostDataType,sourceStockLineSetup.BeforecoreUnitCost,sourceStockLineSetup.AfterUnitCost,sourceStockLineSetup.UnitCostAdjustmentReason)" [ngModelOptions]="{standalone: true}" class="w100 form-control editable-field" style="display: inline-block;">
 									</td>
 									<td *ngIf="showUnit">
-										<textarea *ngIf="showUnitDiscountSalePrice" placeholder="Discount Saleprice *" [(ngModel)]="sourceStockLineSetup.UnitCostAdjustmentReason" (change)="UnitCostNumberValuechange1(11,sourceStockLineSetup.BeforecoreUnitCost,sourceStockLineSetup.AfterUnitCost,sourceStockLineSetup.UnitCostAdjustmentReason)" [ngModelOptions]="{standalone: true}" style="height: 80px; display: inline-block;" class="editable-field"></textarea>
-										<textarea *ngIf="showUnitRevalueStockCost" placeholder="Revalue StockCost *" [(ngModel)]="sourceStockLineSetup.UnitCostAdjustmentReason" (change)="UnitCostNumberValuechange1(11,sourceStockLineSetup.BeforecoreUnitCost,sourceStockLineSetup.AfterUnitCost,sourceStockLineSetup.UnitCostAdjustmentReason)" [ngModelOptions]="{standalone: true}" style="height: 80px; display: inline-block;" class="editable-field"></textarea>
-										<textarea *ngIf="showUnitOther" [(ngModel)]="sourceStockLineSetup.UnitCostAdjustmentReason" (change)="UnitCostNumberValuechange1(11,sourceStockLineSetup.BeforecoreUnitCost,sourceStockLineSetup.AfterUnitCost,sourceStockLineSetup.UnitCostAdjustmentReason)" [ngModelOptions]="{standalone: true}" style="height: 80px; display: inline-block;" class="editable-field"></textarea>
+										<textarea *ngIf="showUnitDiscountSalePrice" placeholder="Discount Saleprice *" [(ngModel)]="sourceStockLineSetup.UnitCostAdjustmentReason" (change)="UnitCostNumberValuechange1(UnitCostDataType,sourceStockLineSetup.BeforecoreUnitCost,sourceStockLineSetup.AfterUnitCost,sourceStockLineSetup.UnitCostAdjustmentReason)" [ngModelOptions]="{standalone: true}" style="height: 80px; display: inline-block;" class="editable-field"></textarea>
+										<textarea *ngIf="showUnitRevalueStockCost" placeholder="Revalue StockCost *" [(ngModel)]="sourceStockLineSetup.UnitCostAdjustmentReason" (change)="UnitCostNumberValuechange1(UnitCostDataType,sourceStockLineSetup.BeforecoreUnitCost,sourceStockLineSetup.AfterUnitCost,sourceStockLineSetup.UnitCostAdjustmentReason)" [ngModelOptions]="{standalone: true}" style="height: 80px; display: inline-block;" class="editable-field"></textarea>
+										<textarea *ngIf="showUnitOther" [(ngModel)]="sourceStockLineSetup.UnitCostAdjustmentReason" (change)="UnitCostNumberValuechange1(UnitCostDataType,sourceStockLineSetup.BeforecoreUnitCost,sourceStockLineSetup.AfterUnitCost,sourceStockLineSetup.UnitCostAdjustmentReason)" [ngModelOptions]="{standalone: true}" style="height: 80px; display: inline-block;" class="editable-field"></textarea>
 									</td>
 								</tr>
 
@@ -368,12 +368,12 @@
 											<option *ngFor="let adjustmentReason of allAdjustmentReasons" [ngValue]="adjustmentReason.adjustmentReasonId">{{adjustmentReason.description}}</option>
 										</select>
 										<a routerLink="/singlepages/singlepages/app-adjustment-reason" class="add-icon"><i class="fa fa-plus"></i></a>
-										<input [(ngModel)]="sourceStockLineSetup.AfterunitSalesPrice" (keyup)="UnitSalePriceNumberValuechange(12,sourceStockLineSetup.BeforeunitSalesPrice,sourceStockLineSetup.AfterunitSalesPrice,sourceStockLineSetup.unitSalesPriceAdjustmentReason)" [ngModelOptions]="{standalone: true}" type="number" class="w100 form-control editable-field" style="display: inline-block;">
+										<input [(ngModel)]="sourceStockLineSetup.AfterunitSalesPrice" (keyup)="UnitSalePriceNumberValuechange(UnitSalePriceDataType,sourceStockLineSetup.BeforeunitSalesPrice,sourceStockLineSetup.AfterunitSalesPrice,sourceStockLineSetup.unitSalesPriceAdjustmentReason)" [ngModelOptions]="{standalone: true}" type="number" class="w100 form-control editable-field" style="display: inline-block;">
 									</td>
 									<td *ngIf="showUnitSale">
-										<textarea *ngIf="showSalesDiscountSalePrice" placeholder="Discount Saleprice *" [(ngModel)]="sourceStockLineSetup.unitSalesPriceAdjustmentReason" (change)="UnitSalePriceNumberValuechange1(12,sourceStockLineSetup.BeforeunitSalesPrice,sourceStockLineSetup.AfterunitSalesPrice,sourceStockLineSetup.unitSalesPriceAdjustmentReason)" [ngModelOptions]="{standalone: true}" style="height: 80px; display: inline-block;" class="editable-field"></textarea>
-										<textarea *ngIf="showSalesRevalueStockCost" placeholder="Revalue StockCost *" [(ngModel)]="sourceStockLineSetup.unitSalesPriceAdjustmentReason" (change)="UnitSalePriceNumberValuechange1(12,sourceStockLineSetup.BeforeunitSalesPrice,sourceStockLineSetup.AfterunitSalesPrice,sourceStockLineSetup.unitSalesPriceAdjustmentReason)" [ngModelOptions]="{standalone: true}" style="height: 80px; display: inline-block;" class="editable-field"></textarea>
-										<textarea *ngIf="showSalesOther" [(ngModel)]="sourceStockLineSetup.unitSalesPriceAdjustmentReason" (change)="UnitSalePriceNumberValuechange1(12,sourceStockLineSetup.BeforeunitSalesPrice,sourceStockLineSetup.AfterunitSalesPrice,sourceStockLineSetup.unitSalesPriceAdjustmentReason)" [ngModelOptions]="{standalone: true}" style="height: 80px; display: inline-block;" class="editable-field"></textarea>
+										<textarea *ngIf="showSalesDiscountSalePrice" placeholder="Discount Saleprice *" [(ngModel)]="sourceStockLineSetup.unitSalesPriceAdjustmentReason" (change)="UnitSalePriceNumberValuechange1(UnitSalePriceDataType,sourceStockLineSetup.BeforeunitSalesPrice,sourceStockLineSetup.AfterunitSalesPrice,sourceStockLineSetup.unitSalesPriceAdjustmentReason)" [ngModelOptions]="{standalone: true}" style="height: 80px; display: inline-block;" class="editable-field"></textarea>
+										<textarea *ngIf="showSalesRevalueStockCost" placeholder="Revalue StockCost *" [(ngModel)]="sourceStockLineSetup.unitSalesPriceAdjustmentReason" (change)="UnitSalePriceNumberValuechange1(UnitSalePriceDataType,sourceStockLineSetup.BeforeunitSalesPrice,sourceStockLineSetup.AfterunitSalesPrice,sourceStockLineSetup.unitSalesPriceAdjustmentReason)" [ngModelOptions]="{standalone: true}" style="height: 80px; display: inline-block;" class="editable-field"></textarea>
+										<textarea *ngIf="showSalesOther" [(ngModel)]="sourceStockLineSetup.unitSalesPriceAdjustmentReason" (change)="UnitSalePriceNumberValuechange1(UnitSalePriceDataType,sourceStockLineSetup.BeforeunitSalesPrice,sourceStockLineSetup.AfterunitSalesPrice,sourceStockLineSetup.unitSalesPriceAdjustmentReason)" [ngModelOptions]="{standalone: true}" style="height: 80px; display: inline-block;" class="editable-field"></textarea>
 									</td>
 								</tr>
 								<tr>

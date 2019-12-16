@@ -192,8 +192,29 @@ export class StockAdjustmentComponent implements OnInit {
 	previousIsSerialized: any;
 	partSerializedAdjustmentReasonError: boolean;
     serializedValue: any;
-    disableSavepartNumber: boolean;
-	//collectionofstockLine: any;
+	disableSavepartNumber: boolean;
+	CompanyIdDataType: any;
+	BusinessUnitIdDataType: any;
+	DivisionIdDataType: any;
+	DepartmentIdDataType: any;
+	PartNumberDataType: any;
+	QuantityonHandDataType: any;
+	RevaluedStockCostDataType: any;
+	SerialNumberDataType: any;
+	ShelfDataType: any;
+	SiteDataType: any;
+	UnitCostDataType: any;
+	UnitSalePriceDataType: any;
+	WarehouseDataType: any;
+	TimeLifeDataType: any;
+	TimeLifeIdDataType: any;
+	BinDataType: any;
+	LocationDataType: any;
+	CategoryDataType: any;
+	DiscountSalePriceDataType: any;
+	LotCostAdjustmentDataType: any;
+	ManagementStructureIdDataType: any;
+	
 	ngOnInit(): void {
 		
 		this.loadData(); //for Loading StockLine Adjustment Data
@@ -206,7 +227,7 @@ export class StockAdjustmentComponent implements OnInit {
 		this.loadAdjustmentReasonData();//for Stock Adjustment Reason Data
 		this.disableSave = true;
 		this.loadManagementdata();
-		
+		this.LoadStocklineAdjustmentDatatypeData()
 		this.ptnumberlistdata();
 		this.activeIndex = 0;
 		this.stocklineser.currentUrl = '/stocklinemodule/stocklinepages/app-stock-adjustment';
@@ -261,7 +282,7 @@ export class StockAdjustmentComponent implements OnInit {
 			this.sourceStockLineSetup.stockLineId = this.sourceStockAdjustment.stockLineId;
 			this.sourceStockLineSetup.BeforepartId = this.sourceStockAdjustment.partId;
 			this.sourceStockLineSetup.BeforepartNumber = this.sourceStockAdjustment.partNumber;
-			this.sourceStockLineSetup.Beforequantity = this.sourceStockAdjustment.quantity;
+			this.sourceStockLineSetup.Beforequantity = this.sourceStockAdjustment.quantityOnHand;
 			this.sourceStockLineSetup.BeforeserialNumber = this.sourceStockAdjustment.serialNumber;
 			this.sourceStockLineSetup.Beforesite = this.sourceStockAdjustment.siteName;
 			this.sourceStockLineSetup.Beforewarehouse = this.sourceStockAdjustment.warehouse;
@@ -332,7 +353,7 @@ export class StockAdjustmentComponent implements OnInit {
 		}
 	}
 
-	private onStocklineAdjustmentDatatypeData()
+	private LoadStocklineAdjustmentDatatypeData()
 	{
 		this.stocklineser.getStockLineAdjustmentDatatypeList().subscribe(   //Getting Site List Hear
 			results => this.onAdjustmentDataLoadSuccessful(results[0]), //Pasing first Array and calling Method
@@ -346,6 +367,27 @@ export class StockAdjustmentComponent implements OnInit {
 		this.loadingIndicator = false;
 		this.dataSource.data = allWorkFlows;
 		this.adjustmentDatatypeData = allWorkFlows;
+		this.CompanyIdDataType = allWorkFlows[0].stocklineAdjustmentDataTypeId;
+		this.BusinessUnitIdDataType = allWorkFlows[1].stocklineAdjustmentDataTypeId;
+		this.DivisionIdDataType = allWorkFlows[2].stocklineAdjustmentDataTypeId;
+		this.DepartmentIdDataType = allWorkFlows[3].stocklineAdjustmentDataTypeId;
+		this.PartNumberDataType = allWorkFlows[4].stocklineAdjustmentDataTypeId;
+		this.QuantityonHandDataType = allWorkFlows[5].stocklineAdjustmentDataTypeId;
+		this.RevaluedStockCostDataType = allWorkFlows[6].stocklineAdjustmentDataTypeId;
+		this.SerialNumberDataType = allWorkFlows[7].stocklineAdjustmentDataTypeId;
+		this.ShelfDataType = allWorkFlows[8].stocklineAdjustmentDataTypeId;
+		this.SiteDataType = allWorkFlows[9].stocklineAdjustmentDataTypeId;
+		this.UnitCostDataType = allWorkFlows[10].stocklineAdjustmentDataTypeId;
+		this.UnitSalePriceDataType = allWorkFlows[11].stocklineAdjustmentDataTypeId;
+		this.WarehouseDataType = allWorkFlows[12].stocklineAdjustmentDataTypeId;
+		this.TimeLifeDataType = allWorkFlows[13].stocklineAdjustmentDataTypeId;
+		this.TimeLifeIdDataType = allWorkFlows[14].stocklineAdjustmentDataTypeId;
+		this.BinDataType = allWorkFlows[15].stocklineAdjustmentDataTypeId;
+		this.LocationDataType = allWorkFlows[16].stocklineAdjustmentDataTypeId;
+		this.CategoryDataType = allWorkFlows[17].stocklineAdjustmentDataTypeId;
+		this.DiscountSalePriceDataType = allWorkFlows[18].stocklineAdjustmentDataTypeId;
+		this.LotCostAdjustmentDataType = allWorkFlows[19].stocklineAdjustmentDataTypeId;
+		this.ManagementStructureIdDataType = allWorkFlows[20].stocklineAdjustmentDataTypeId;
 		console.log(allWorkFlows);
 	}
 
@@ -392,9 +434,6 @@ export class StockAdjustmentComponent implements OnInit {
 				k++;
 			}
 		}
-		console.log(out1);
-		console.log(out);
-		console.log(this.testManagementStructure);
 		return this.testManagementStructure;
 	}
 
@@ -1363,7 +1402,6 @@ export class StockAdjustmentComponent implements OnInit {
 				if (event == this.itemclaColl[i][0].partName) {
 					//this.sourceItemMaster.partId = this.itemclaColl[i][0].partId;
 					this.selectedPartId = this.itemclaColl[i][0].partId; //Storing PartId in Local
-
 					console.log(this.selectedPartId);
 					this.selectedActionName = event;
 				}
@@ -1372,9 +1410,7 @@ export class StockAdjustmentComponent implements OnInit {
 				if (data) {
 					this.descriptionbyPart = data[0]
 					//this.sourcePartAction = this.descriptionbyPart;
-
 					this.sourceStockLineSetup.partDescription = data[0][0].partDescription; //Passing Part Description based on Change Part
-
 					this.sourceStockLineSetup.isSerialized = data[0][0].isSerialized;
 					//this.serializedValue = this.sourceStockLineSetup.isSerialized;
 

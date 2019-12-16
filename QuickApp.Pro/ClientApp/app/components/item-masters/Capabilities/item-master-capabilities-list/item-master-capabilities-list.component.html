@@ -111,7 +111,7 @@
                                 <ng-container *ngIf="col.field=='partDescription'">
                                     <select [attr.disabled]='true' [(ngModel)]="rowData['itemMasterId']">
                                         <option>--Select--</option>
-                                        <option *ngFor="let part of allPartnumbersInfo" [ngValue]="part.itemMasterId">{{part.partNumber}}</option>
+                                        <option *ngFor="let part of allPartnumbersInfo" [ngValue]="part.itemMasterId">{{part.partDescription}}</option>
                                     </select>
                                     </ng-container>
                                     <ng-container *ngIf="col.field=='manufacturerId'">

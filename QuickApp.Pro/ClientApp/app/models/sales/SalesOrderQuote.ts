@@ -1,4 +1,6 @@
-export interface ISalesOrderQuote {
+import { ISalesOrderQuote } from "./ISalesOrderQuote";
+
+export class SalesOrderQuote implements ISalesOrderQuote {
     salesOrderQuoteId: number;
     quoteTypeId: number;
     openDate: string;
@@ -62,4 +64,6 @@ export interface ISalesOrderQuote {
     updatedBy: string;
     updatedOn: string;
     isDeleted: boolean;
+
+    constructor() {}
 }

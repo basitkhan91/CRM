@@ -29,6 +29,7 @@ export class MaterialListCreateComponent implements OnInit {
     @Input() isWorkOrder;
     @Input() isEdit = false;
     @Input() editData;
+    @Input() isQuote = false;
     @Input() workFlow: IWorkFlow;
     @Input() UpdateMode: boolean;
     @Output() workFlowChange = new EventEmitter();

@@ -18,15 +18,11 @@ namespace DAL.Repositories
             try
             { 
                 var result = (from slad in _appContext.StocklineAdjustmentDataType
-
-                                  // select new { t, ad, vt }).ToList();
                               select new
                               {
                                   slad.StocklineAdjustmentDataTypeId,
                                   slad.Description,
                                   slad.CreatedBy
-
-
                               }).ToList();
                 
                 return result;
