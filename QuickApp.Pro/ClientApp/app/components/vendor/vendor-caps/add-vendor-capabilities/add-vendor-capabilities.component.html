@@ -1,7 +1,376 @@
 ﻿
 <div class="x_content">
+	<div class="card">
+		<div class="card-header">
+			<nav aria-label="breadcrumb">
+				<ol class="breadcrumb rpo-bcrumb" style="background-color: transparent;">
+					<li class="breadcrumb-item" aria-current="page">Add Vendor Capabilities</li>
+				</ol>
+			</nav>
+		</div>
+		<div class="card-body">
+			<p-tabView class="pas-tabview">
+					<p-tabPanel header="General Info">
+						<h4 class="po-head">Create General Information</h4>
+						<form #addVendorCapForm="ngForm" class="form-horizontal ro-grid-form mtop10">
+						<div class="form-row">
+							<div class="col-md-3">
+								<div class="form-group">
+									<label>Vendor Name <span class="clr-red">*</span>
+									</label>
+									<div class="inner-addon right-addon inline-block">
+										<p-autoComplete field="vendorName" class="pautocomp-cstm" [(ngModel)]="sourceVendorCap.vendorId" name="vendorName" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" #vendorName=ngModel (onSelect)="selectedVendorName($event)" required>
+										</p-autoComplete>
+										<!-- <p-autoComplete  class="autocomp-customer-cstm" name="vendorName" (onSelect)="onVendorCodeselected($event)" (onKeyUp)=codeEventHandler($event) [(ngModel)]="sourceVendorCap.vendorCode" [suggestions]="vendorCodes" (completeMethod)="filterVendorCodes($event)" [size]="30" [minLength]="1" [dropdown]="true" [forceSelection]="true" #vendorName=ngModel required>
+											<ng-template let-vendorCode pTemplate="item">
+												<div class="ui-helper-clearfix">{{vendorCode}}</div>
+											</ng-template> 
+										</p-autoComplete>-->
+										<div *ngIf="vendorName.invalid && (vendorName.dirty || vendorName.touched)" class="alert alert-danger alert-danger-cstm">
+											<div *ngIf="vendorName.errors.required">
+												<small> Vendor Name is required </small>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label>Vendor Code <span class="clr-red">*</span></label>
+									<div class="inner-addon right-addon inline-block">
+										<p-autoComplete field="vendorCode" class="pautocomp-cstm" [(ngModel)]="sourceVendorCap.vendorCode" name="vendorCode" [suggestions]="vendorCodes" (completeMethod)="filterVendorCodes($event)"  [size]="30" [minLength]="1" [dropdown]="true" #vendorCode="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
+										<!-- <p-autoComplete  class="autocomp-customer-cstm" name="vendorCode" (onSelect)="onVendorCodeselected($event)" (onKeyUp)=codeEventHandler($event) [(ngModel)]="sourceVendorCap.vendorCode" [suggestions]="vendorCodes" (completeMethod)="filterVendorCodes($event)" [size]="30" [minLength]="1" [dropdown]="true" #vendorCode="ngModel" [forceSelection]="true" required>
+											<ng-template let-vendorCode pTemplate="item">
+												<div class="ui-helper-clearfix">{{vendorCode}}</div>
+											</ng-template>
+										</p-autoComplete> -->
+										<div *ngIf="vendorCode.invalid && (vendorCode.dirty || vendorCode.touched)" class="alert alert-danger alert-danger-cstm">
+											<div *ngIf="vendorCode.errors.required">
+												<small> Vendor Code is required </small>
+											</div>
+										</div>
+									</div>
+									</div>
+									<div class="form-group">
+										<label>PN <span class="clr-red">*</span></label>
+										<div class="inner-addon right-addon inline-block">
+										<p-autoComplete field="label" [(ngModel)]="sourceVendorCap.partNumberId"  name="partNumber" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" #partNum="ngModel" errorMessage="Records not found" (onSelect)="getPNDetailsById($event)" [forceSelection]="true"  required>                       
+										</p-autoComplete>
+										<div *ngIf="partNum.invalid && (partNum.dirty || partNum.touched)" class="alert alert-danger alert-danger-cstm">
+												<div *ngIf="partNum.errors.required">
+													<small> PartNumber is required </small>
+												</div>
+										</div>
+										<!-- <p-autoComplete  class="autocomp-customer-cstm" name="partNumber" [(ngModel)]="sourceVendorCap.partName"  (onKeyUp)=partEventHandler($event) (onSelect)="partnmId($event)" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1" [dropdown]="true" #partNumber="ngModel" [forceSelection]="true" required>
+											<ng-template let-partName pTemplate="part">
+												<div class="ui-helper-clearfix">{{partName}}</div>
+											</ng-template>
+										</p-autoComplete> -->
+										</div>
+									</div>
+									<div class="form-group memo-popup-cstm">
+										<label>PN Description <span class="clr-red">*</span></label>
+										<span pTooltip="{{sourceVendorCap.partDescription}}" tooltipPosition="top"><input type="text" name="partDescription" pInputText class="form-control" value="{{sourceVendorCap.partDescription}}" disabled></span>
+										<i class="fa fa-info-circle fa-lg" pTooltip="{{sourceVendorCap.partDescription}}" tooltipPosition="top"></i>
+									</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label>PN Mfg <span class="clr-red">*</span></label>
+									<input class="form-control" type="text" name="manufacturerId" [(ngModel)]="sourceVendorCap.manufacturerName" disabled>
+									<!-- <select class="form-control" name="manufacturerId" [(ngModel)]="sourceVendorCap.manufacturerId" #manufacturerId="ngModel" required>
+										<option *ngFor="let name of allManufacturerInfo" [ngValue]="name.manufacturerId">{{name.name}}</option>
+									</select>
+									<div *ngIf="manufacturerId.invalid && (manufacturerId.dirty || manufacturerId.touched)" class="alert alert-danger alert-danger-cstm">
+											<div *ngIf="manufacturerId.errors.required">
+												<small> PN Mfg is required </small>
+											</div>
+									</div> -->
+								</div>
+								<div class="form-group">
+									<label>Capability Type <span class="clr-red">*</span></label>
+									<p-multiSelect [options]="capabilityTypeList" name="capabilityType" [(ngModel)]="sourceVendorCap.capabilityTypes" [panelStyle]="{minWidth:'12em'}" #capabilityType="ngModel" required></p-multiSelect>
+									<div *ngIf="capabilityType.invalid && (capabilityType.dirty || capabilityType.touched)" class="alert alert-danger alert-danger-cstm">
+											<div *ngIf="capabilityType.errors.required">
+												<small> Capability Type is required </small>
+											</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label>Vendor Ranking <span class="clr-red">*</span></label>
+									<input class="form-control" type="number" name="vendorRanking" pKeyFilter="pint" [(ngModel)]="sourceVendorCap.vendorRanking" #vendorRanking="ngModel" required>
+									<div *ngIf="vendorRanking.invalid && (vendorRanking.dirty || vendorRanking.touched)" class="alert alert-danger alert-danger-cstm">
+											<div *ngIf="vendorRanking.errors.required">
+												<small> Vendor Ranking is required </small>
+											</div>
+									</div> 
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<div class="checkbox-cstm" style="margin-top: 22px;">
+										<label>
+											<input type="checkbox" name="pma" [(ngModel)]="sourceVendorCap.isPMA" class="form-control">
+											<span class="cr"><i class="cr-icon pi pi-check"></i></span>
+											PMA
+										</label>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="checkbox-cstm" style="margin-top: 35px;">
+										<label>
+											<input type="checkbox" name="der" [(ngModel)]="sourceVendorCap.isDER" class="form-control">
+											<span class="cr"><i class="cr-icon pi pi-check"></i></span>
+											DER
+										</label>
+									</div>
+								</div>
+								<div class="form-group" style="margin-top: 15px;">
+									<label>Cost <span class="clr-red">*</span></label>
+									<input class="form-control" type="number" name="cost" pKeyFilter="pint" [(ngModel)]="sourceVendorCap.cost" #cost="ngModel" required>
+									<div *ngIf="cost.invalid && (cost.dirty || cost.touched)" class="alert alert-danger alert-danger-cstm">
+											<div *ngIf="cost.errors.required">
+												<small> Cost is required </small>
+											</div>
+									</div> 
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<label>TAT <span class="clr-red">*</span></label>
+									<input class="form-control" type="number" name="tat" pKeyFilter="pint" [(ngModel)]="sourceVendorCap.tat" #tat="ngModel" required>
+									<div *ngIf="tat.invalid && (tat.dirty || tat.touched)" class="alert alert-danger alert-danger-cstm">
+											<div *ngIf="tat.errors.required">
+												<small> TAT is required </small>
+											</div>
+									</div> 
+								</div>
+								<div class="form-group memo-popup-cstm" style="margin-top: 12px;">
+									<label>Cap Description</label>
+									<span pTooltip="{{sourceVendorCap.capabilityDescription}}" tooltipPosition="top"><input type="text" name="capabilityDescription" pInputText class="form-control" value="{{sourceVendorCap.capabilityDescription}}" disabled /></span>
+									<i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#add-description" pTooltip="{{sourceVendorCap.capabilityDescription}}" tooltipPosition="top" (click)="onAddDescription('capDesc')"></i>
+								</div>
+								<div class="form-group memo-popup-cstm" style="margin-top: 12px;">
+									<label>Memo</label>
+									<span pTooltip="{{sourceVendorCap.memo}}" tooltipPosition="top"><input type="text" name="memo" pInputText class="form-control" value="{{sourceVendorCap.memo}}" disabled /></span>
+									<i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#add-description" pTooltip="{{sourceVendorCap.memo}}" tooltipPosition="top" (click)="onAddDescription('memo')"></i>
+								</div>
+							</div>
+						</div>
+						<div class="form-row pull-right">
+							<button type="submit" class="btn btn-primary-cstm submit-btn" [disabled]="!addVendorCapForm.valid" (click)="saveVendorCapsGeneralInfo()">{{isEditMode ? 'Update' : 'Save'}}</button>
+						</div>
+						</form>
+					</p-tabPanel>
+					<p-tabPanel header="Aircraft Info">
+						<div class="card">
+								<div class="col-sm-12 font-padding">
+									<div class="col-sm-2">
+										PN: <span style="color:red">{{'pnvalue'}}</span>
+									</div>
+									<div class="col-sm-3">
+										PN Description: <span style="color:red">{{'pnDescription'}}</span>
+									</div>
+									<div class="col-sm-3">
+										Manufacturer: <span style="color:red">{{'ManufacturerValue'}}</span>
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="col-md-12 ">
+										<div class="shadow-Box">
+											<div class="col-sm-12">
+												<h4 class="float-left">Search Aircraft Information</h4>
+												<h4 class="float-right">
+													Add Aircraft Information
+													<a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ModalDashNumber"><i class="fa fa-plus-circle fa-lg"></i></a>
+												</h4>
+											</div>
+											<div class="col-md-3">
+												<div class="form-group ">
+													<label class="fs12">Aircraft </label>
+													<p-multiSelect [options]="manufacturerData" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectAircraftManfacturer" (onChange)="getAircraftModelByManfacturerType()" class="pub-multi"></p-multiSelect>
+												</div>
+											</div>
+											<div class="col-md-3">
+												<div class="form-group">
+													<label class="fs12">
+														Aircraft Model
+													</label>
+													<p-multiSelect [maxSelectedLabels]="2" [options]="aircraftModelList" [(ngModel)]="selectedAircraftModel" [ngModelOptions]="{standalone: true}"
+																	class="pub-multi" (onChange)="getDashNumberByManfacturerandModel()" [selectionLimit]="30"></p-multiSelect>
+												</div>
+											</div>
+											<div class="col-md-3">
+												<div class="form-group">
+													<label class="fs12">DashNumber </label>
+													<p-multiSelect [maxSelectedLabels]="2" [options]="dashNumberList" [(ngModel)]="selectedDashNumbers" [ngModelOptions]="{standalone: true}"
+																	class="pub-multi" [selectionLimit]="30"></p-multiSelect>
+												</div>
+											</div>
+											<div class="col-md-2">
+												<div class="form-group">
+													<label class="fs12">Memo </label>
+													<input type="text" style="height: 27px !important" pInputText />
+												</div>
+											</div>
+											<div class="col-md-1 add-new-align">
+												<div class="form-group">
+													<button class="btn btn-primary mtop20" (click)="searchAircraftInformation()">
+														<i class="pi pi-search pi-search"></i>
+													</button>
+												</div>
+											</div>
+											<div class="clear"></div>
+										</div>
+									</div>
+								</div>
+						</div>
+						<br />
+						<div class="card">
+							<p-table [value]="aircraftListDataValues" [rows]="6" [columns]="colsaircraftLD" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+								<ng-template pTemplate="header" let-columns>
+									<tr>
+										<th>Id</th>
+										<th *ngFor="let col of columns">
+											{{col.header}}
+										</th>
+										<th>Action</th>
+									</tr>
+								</ng-template>
+								<ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+									<tr>
+										<td>{{i+1}}</td>
+										<td *ngFor="let col of columns">
+											{{rowData[col.field]}}
+										</td>
+										<td>
+											<button class="btn btn-danger nobg" (click)="deleteAircraftMapped(rowData)">
+												<i class="fa fa-trash"></i>
+											</button>
+										</td>
+									</tr>
+								</ng-template>
+							</p-table>
+	
+						</div>
+					</p-tabPanel>
+			</p-tabView>
+		</div>
+	</div>
 
-	<h4 class="page-heading clr-green">Add Vendor Capabilities</h4>
+	<div class="modal fade" id="add-description" role="dialog" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-sm" style="max-width: 400px !important;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title">Edit {{tempMemoLabel}}</h4>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label>{{tempMemoLabel}}</label>
+							<textarea class="form-control" name="tempMemo" [(ngModel)]="tempMemo" value={{tempMemo}}></textarea>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="onSaveDescription()">Save</button>
+						<button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="ModalDashNumber"
+         class="modal fade custom-popup"
+         role="dialog">
+        <div class="modal-dialog modal-full">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title">Add Aircraft Info</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label class="popup-plusicon-cstm">Aircraft Type <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
+                                <!-- <p-dropdown class="imstock-pddowm" [options]="manufacturerData" filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftId" (onChange)="getAircraftModelByManfacturer($event)" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>  -->
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="popup-plusicon-cstm" style="width: 150px !important">
+                                    Model <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-aircraft-model']"><i class="fa fa-plus-circle fa-lg"></i></a>
+                                    <input type="checkbox" name="unknownmodel" [(ngModel)]="modelUnknown" style="width: 20px !important;
+                                 margin-left: 7px; " (change)="resetAircraftModelsorDashNumbers()"> Unknown
+                                </label>
+
+                                <p-multiSelect *ngIf="!modelUnknown" [maxSelectedLabels]="2" [disabled]="!selectedAircraftId" class="imstock-pmselect" [options]="LoadValues" [(ngModel)]="selectedModelId" [ngModelOptions]="{standalone: true}" (onChange)="getDashNumberByTypeandModel($event)"></p-multiSelect>
+                            </div>
+                        </div>
+                        <div class="col-md-3" *ngIf="!modelUnknown">
+                            <div class="form-group">
+                                <label class="popup-plusicon-cstm" style="width: 190px !important">
+                                    DashNumber
+                                    <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-dashnumber']"><i class="fa fa-plus-circle fa-lg"></i></a>
+                                    <input type="checkbox" name="unknownDashNumber" [(ngModel)]="dashNumberUnknown" style="width: 20px !important;
+                                    margin-left: 7px; " (change)="resetAircraftModelsorDashNumbers()"> Unknown
+                                </label>
+
+                                <p-multiSelect *ngIf=" !modelUnknown && !dashNumberUnknown" [maxSelectedLabels]="2" [disabled]="!selectedAircraftId" class="imstock-pmselect" [options]="loadDashnumber" [(ngModel)]="selectedDashnumber" [ngModelOptions]="{standalone: true}" (onChange)="selectedDashnumbervalue($event)"></p-multiSelect>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button style="margin-top: 20px;" type="button" class="btn btn-primary-cstm" (click)="mapAircraftInformation()">Add</button>
+                        </div>
+                    </div>
+
+
+
+                    <div class="card" *ngIf="viewTable">
+                        <p-table class="p-table-cstm" [value]="aircraftData" [rows]="6" [columns]="colaircraft" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th></th>
+                                    <th *ngFor="let col of columns">
+                                        {{col.header}}
+                                    </th>
+                                    <th>Memo</th>
+
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                                <tr>
+                                    <td>
+                                        <span class="checkbox-cstm">
+                                            <label style="width: 10px;">
+                                                <input type="checkbox" [(ngModel)]="rowData.IsChecked">
+
+                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                            </label>
+                                        </span>
+                                    </td>
+
+                                    <td *ngFor="let col of columns">
+                                        {{rowData[col.field]}}
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control input-value" [(ngModel)]="rowData.Memo" name="Memo" [disabled]="!rowData.IsChecked" />
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="saveAircraft()">Save</button>
+                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+        </div>
+
+	
+
+	<!-- <h4 class="page-heading clr-green">Add Vendor Capabilities</h4>
 	<div class="clear"></div>
 
 	<form action="#" method="post" id="" name="" class="form-horizontal ro-grid-form mtop10">
@@ -69,9 +438,6 @@
 			<div class="form-group col-sm-12">
 				<label class="control-label col-sm-4">Capability Type <strong style="color:red">*</strong> </label>
 				<div class="col-sm-7">
-					<!--<select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendorCap.conditionId">
-		<option *ngFor="let condition of allConditionInfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
-	</select>-->
 					<p-multiSelect [options]="capabilityTypeList" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedCapabulityTypesListData" [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
 				</div>
 			</div>
@@ -84,9 +450,6 @@
 						<option value="pma">PMA</option>
 						<option value="der">DER</option>
 					</select>
-					<!--<select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendorCap.conditionId">
-						<option *ngFor="let condition of allConditionInfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
-					</select>-->
 				</div>
 			</div>
 
@@ -121,11 +484,6 @@
 					<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendorCap.manufacturerId">
 						<option *ngFor="let name of allManufacturerInfo" [ngValue]="name.manufacturerId">{{name.name}}</option>
 					</select>
-					<!--<select>
-						<option value="1">Customer</option>
-						<option value="2">Vendor</option>
-						<option value="3">Company</option>
-					</select>-->
 				</div>
 			</div>
 			<div class="form-group col-sm-12">
@@ -155,9 +513,6 @@
 					<select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendorCap.aTAChapterId" (change)="getATASubChapterData(sourceVendorCap.aTAChapterId)">
 						<option *ngFor="let ataName of allATAMaininfo1" [ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
 					</select>
-					<!--<select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendorCap.ataChapterId">
-						<option *ngFor="let condition of allConditionInfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
-					</select>-->
 				</div>
 			</div>
 			<div class="form-group col-sm-12">
@@ -202,8 +557,6 @@
 </p-dialog>
 
 
-
-
 <ng-template #contentModel let-c="close" let-d="dismiss" style="width:auto">
 
 	<div class="modal-content">
@@ -234,19 +587,6 @@
 								</td>
 								<td>
 									<input class="form-control w100" type="number" [(ngModel)]="col.dashNumber" [ngModelOptions]="{standalone: true}" (change)="getSelectedItem(col,$event)">
-									<!--<select class="form-control w100" [(ngModel)]="col.priority" [ngModelOptions]="{standalone: true}" (change)="getSelectedItem(col,$event)">
-										<option>Select</option>
-										<option value="10">10</option>
-										<option value="20">20</option>
-										<option value="30">30</option>
-										<option>40</option>
-										<option>50</option>
-										<option>60</option>
-										<option>70</option>
-										<option>80</option>
-										<option>90</option>
-										<option>100</option>
-									</select>-->
 								</td>
 							</tr>
 						</tbody>
@@ -258,4 +598,5 @@
 			</form>
 		</div>
 	</div>
-</ng-template>
+</ng-template> -->
+
