@@ -7,6 +7,6 @@ namespace DAL.Repositories.Interfaces
 {
   public interface IAssetIntangibleAttributeType : IRepository<AssetIntangibleAttributeType>
     {
-
+        IEnumerable<AssetIntangibleAttributeType> GetAllItems();
     }
 }
