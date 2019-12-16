@@ -8,6 +8,7 @@ import { CustomerService } from '../../../../services/customer.service';
 import { getObjectById, editValueAssignByCondition } from '../../../../generic/autocomplete';
 import { Billing } from '../../../../models/work-order-billing.model';
 import { getModuleIdByName } from '../../../../generic/enums';
+import { WorkOrderQuoteService } from '../../../../services/work-order/work-order-quote.service';
 
 @Component({
     selector: 'app-work-order-billing',
@@ -16,12 +17,20 @@ import { getModuleIdByName } from '../../../../generic/enums';
     animations: [fadeInOut]
 })
 /** WorkOrderBilling component*/
+
 export class WorkOrderBillingComponent implements OnInit {
     @Input() employeesOriginalData;
-    @Input() billingorInvoiceForm  ;
+    @Input() billingorInvoiceForm;
     @Input() savedWorkOrderData;
     @Input() currencyList;
     @Input() isEditBilling = false;
+    @Input() workOrderQuoteId;
+    @Input() quoteExclusionList;
+    @Input() quoteMaterialList;
+    @Input() quoteFreightsList;
+    @Input() quoteChargesList;
+    @Input() quoteLaborList;
+
     @Output() saveWOBilling = new EventEmitter();
     @Output() updateWOBilling = new EventEmitter();
     employeeList: any;
@@ -51,7 +60,7 @@ export class WorkOrderBillingComponent implements OnInit {
     shipViaData: any;
 
     constructor(private commonService: CommonService, private workOrderService: WorkOrderService,
-        private customerService: CustomerService
+        private customerService: CustomerService, private quoteService: WorkOrderQuoteService
 
     ) {
 
@@ -206,7 +215,7 @@ export class WorkOrderBillingComponent implements OnInit {
 
         if (data) {
             this.billingorInvoiceForm.shipAccountInfo = data.ShippingAccountInfo;
-        }  
+        }
     }
 
     async  getSiteNamesByShipCustomerId(object) {
@@ -282,10 +291,17 @@ export class WorkOrderBillingComponent implements OnInit {
     }
     saveWorkOrderBilling() {
         this.saveWOBilling.emit(this.billingorInvoiceForm);
+
+        // this.getQuoteCostingData();
     }
-    updateWorkOrderBilling(){
+    updateWorkOrderBilling() {
         this.updateWOBilling.emit(this.billingorInvoiceForm);
+        // this.getQuoteCostingData();
     }
+
+
+
+
 
 
 

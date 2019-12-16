@@ -533,7 +533,7 @@
                 <div>
                   <button class="btn btn-primary-cstm pull-right" *ngIf="!showTabsGrid && !isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Save</button>
                   <button class="btn btn-primary-cstm pull-right" *ngIf="isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Update</button>
-                  <button  *ngIf="showTabsGrid && workOrderGeneralInformation.isSinglePN " class="btn btn-success pull-right" [routerLink]="['/workordersmodule/workorderspages/app-work-order-quote']"[queryParams]="{workOrderId: savedWorkOrderData['workOrderId']}"  >Create Quote</button>
+                  <button  *ngIf="showTabsGrid && workOrderGeneralInformation.isSinglePN " class="btn btn-success pull-right" (click)="createQuote()"  >Create Quote</button>
                 </div>
             </form>
             </div>
@@ -802,6 +802,12 @@
                          [isEditBilling]="isEditBilling"
                          (saveWOBilling)="saveWorkOrderBilling($event)"
                          (updateWOBilling)="saveWorkOrderBilling($event)"
+                        [workOrderQuoteId]="workOrderQuoteId"
+                         [quoteExclusionList]="quoteExclusionList"
+                          [quoteMaterialList]="quoteMaterialList"
+                          [quoteFreightsList]="quoteFreightsList"
+                          [quoteChargesList]="quoteChargesList"
+                          [quoteLaborList]="quoteLaborList"
                          ></app-work-order-billing>
                     </div>
                     <div *ngIf="addresses" [ngClass]="{hidedata : gridActiveTab !== 'address'}">

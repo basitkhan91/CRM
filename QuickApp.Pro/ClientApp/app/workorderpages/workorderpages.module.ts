@@ -63,6 +63,8 @@ import { WorkOrderExclusionsComponent } from '../components/work-order/work-orde
 import { SubWorkOrderListComponent } from '../components/work-order/work-order-setup/work-order-subwo-list/work-order-subwo-list.component';
 import { SubWorkOrderComponent } from '../components/work-order/work-order-setup/work-order-sub-wo/work-order-subwo.component';
 import { MatTooltipModule } from '@angular/material';
+import { WorkOrderQuoteService } from '../services/work-order/work-order-quote.service';
+import { QuoteEndpointService } from '../services/work-order/work-order-quote.endpoint.service';
 
 // import { MaterialListCreateComponent } from '../shared/Material-List-Create.component';
 // import { SharedModule } from '../shared/shared.module';
@@ -134,7 +136,9 @@ import { MatTooltipModule } from '@angular/material';
     WorkOrderEndpointService,
     WorkOrderPartNumberService,
     WorkOrderPartNumberEndpointService,
-    CommonService
+    CommonService,
+    WorkOrderQuoteService,
+    QuoteEndpointService
   ],
   exports: [SubWorkOrderComponent]
 })
