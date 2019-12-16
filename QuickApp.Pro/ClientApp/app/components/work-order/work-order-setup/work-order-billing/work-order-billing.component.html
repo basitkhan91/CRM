@@ -859,9 +859,202 @@
         <button class="btn btn-primary-cstm pull-right"  *ngIf="!isEditBilling" (click)="saveWorkOrderBilling()">Save</button>
         <button class="btn btn-primary-cstm pull-right"  *ngIf="isEditBilling" (click)="updateWorkOrderBilling()">Update</button>
       </div>
-
-
     </form>
+  </div>
+</div>
 
+<div class="card" >
+  <div class="card-body" *ngIf="workOrderQuoteId">
+
+            <p-tabView  class="pas-tabview" [activeIndex]="activeIndex">
+                <p-tabPanel header="Material List">
+                    <div class="equipment-tab-content"  >
+                        <div class="x_panel" *ngIf="quoteMaterialList">
+                            <div class="tab-content">
+                                <div class="table-responsive table-overflow" id="workflow-attributes-block">
+                                    <table class="table table-bordered ">
+                                        <thead>
+                                            <tr>
+        
+                                                <th class="text-center">Part Number </th>
+                                                <th class="text-center">Part Description</th>
+                                                <th class="text-center">Alternate PN</th>
+                                                <th class="text-center">Source</th>
+                                                <th class="text-center">Reference Num</th>
+                                                <th class="text-center">Quantity</th>
+                                                <th class="text-center">Unit of Measure</th>
+                                                <th class="text-center">Condition Type</th>
+                                                <th class="text-center">OemPmaDer</th>
+                                                <th class="text-center">UnitCost</th>
+                                                <th class="text-center">Mat Markup</th>
+                                                <th class="text-center">Total Parts Cost</th>
+                                                <th class="text-center">Markup</th>
+                                                <th class="text-center">CostPlusAmount</th>
+                                                <th class="text-center">Fixed Amount</th>
+        
+                                            </tr>
+                                        </thead>
+                                    
+                                        <tbody>
+                                            <tr *ngFor="let m  of quoteMaterialList; let i=index;">
+                                                <td>{{m.partNumber}}</td>
+                                                <td>{{m.partDescription}}</td>
+                                                <td>{{m.altPartNumber}}</td>
+                                                <td>{{m.source}}</td>
+                                                <td>{{m.referenceNo}}</td>
+                                                <td>{{m.quantity}}</td>
+                                                <td>{{m.unitOfMeasure}}</td>
+                                                <td>{{m.conditionType}}</td>
+                                                <td>{{m.oemPmaDer}}</td>
+                                                <td>{{m.unitCost}}</td>
+                                                <td>{{m.matMarkup}}</td>
+                                                <td>{{m.totalPartsCost}}</td>
+                                                <td>{{m.markup}}</td>
+                                                <td>{{m.costPlusAmount}}</td>
+                                                <td>{{m.fixedAmount}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                        </div>
+                    </div>
+                  </p-tabPanel> 
+              <p-tabPanel header="charges">
+                  <div class="equipment-tab-content"  >
+                      <div class="x_panel" *ngIf="quoteChargesList">
+                          <div class="tab-content">
+                              <div class="table-responsive table-overflow" id="workflow-attributes-block">
+                                  <table class="table table-bordered ">
+                                      <thead>
+                                          <tr>
+                                              <th class="text-center">Charge Type </th>
+                                              <th class="text-center">Description</th>
+                                              <th class="text-center">Quantity</th>
+                                              <th class="text-center">Unit Cost</th>
+                                              <th class="text-center">Extented Cost</th>
+                                              <th class="text-center">Unit Price</th>
+                                              <th class="text-center">Extended Price</th>
+                                              <th class="text-center">vendorName</th>
+                                          </tr> 
+                                      </thead>
+                                  
+                                      <tbody>
+                                        <tr *ngFor="let w  of quoteChargesList; let i=index;">
+                                              <td>{{w.chargeType}}</td>
+                                              <td>{{w.description}}</td>
+                                              <td>{{w.quantity}}</td>
+                                              <td>{{w.unitCost}}</td>
+                                              <td>{{w.extendedCost}}</td>
+                                              <td>{{w.unitPrice}}</td>
+                                              <td>{{w.extendedPrice}}</td>
+                                              <td>{{w.vendorName}}</td>
+                                          </tr> 
+                                      </tbody>
+                                  </table>
+                              </div>
+                          </div>
+                          <div class="clear"></div>
+                          <br />
+                          <br />
+                          <br />
+                          <br />
+                      </div>
+                  </div>
+              </p-tabPanel>
+              <p-tabPanel header="Exclusions">
+  
+                  <div class="equipment-tab-content" >
+                      <div class="x_panel" *ngIf="quoteExclusionList">
+                          <div class="tab-content">
+                              <div class="table-responsive table-overflow" id="workflow-attributes-block">
+                                  <table class="table table-bordered ">
+                                      <thead>
+                                          <tr>
+                                              <th class="text-center">EPN</th>
+                                              <th class="text-center">EPN Description</th>
+                                              <th class="text-center">Quantity</th>
+                                              <th class="text-center">Unit Cost</th>
+                                              <th class="text-center">Extended Cost</th>
+                                              <th class="text-center">Memo</th>
+                                          </tr> 
+                                      </thead>
+                                  
+                                      <tbody>
+                                        <tr *ngFor="let w  of quoteExclusionList; let i=index;">
+                                              <td>{{w.epn}}</td>
+                                              <td>{{w.epnDescription}}</td>
+                                              <td>{{w.quantity}}</td>
+                                              <td>{{w.unitCost}}</td>
+                                              <td>{{w.extendedCost}}</td>
+                                              <td>{{w.memo}}</td>
+     
+                                          </tr> 
+                                      </tbody>
+                                  </table>
+                              </div>
+                          </div>
+                          <div class="clear"></div>
+                          <br />
+                          <br />
+                          <br />
+                          <br />
+                      </div>
+                  </div>
+              </p-tabPanel>
+
+
+
+              <p-tabPanel  header="Labor">
+  
+                  <p-accordion [multiple]="true">
+ 
+                        <p-accordionTab header="{{x.task}}" *ngFor="let x of quoteLaborList; let i = index;" >
+            
+                            <div class="equipment-tab-content" >
+                                <div class="x_panel" *ngIf="quoteLaborList">
+                                    <div class="tab-content">
+                                        <div class="table-responsive table-overflow" id="workflow-attributes-block">
+                                            <table class="table table-bordered ">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center">Expertise</th>
+                                                        <th class="text-center">Description</th>
+     
+                                                    </tr> 
+                                                </thead>
+                                            
+                                                <tbody>
+                                                  <tr >
+                                                        <td>{{x.expertise}}</td>
+                                                        <td>{{x.hours}}</td>
+                                                    </tr> 
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                </div>
+                            </div> 
+                          </p-accordionTab>
+      
+     
+                    
+                    
+                  </p-accordion>
+               
+ 
+ 
+              </p-tabPanel> 
+                </p-tabView>
   </div>
 </div>
