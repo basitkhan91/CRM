@@ -1644,14 +1644,14 @@ export class StockAdjustmentComponent implements OnInit {
 			this.serialError = false;
 		}
 
-		//if ((this.quantityValueTryChange == true) && (this.sourceStockLineSetup.Afterquantity >= 0))
-		//{
-		//	this.quantityError = false;
-		//}
-		//else if (this.quantityValueTryChange == true)
-		//{
-		//	this.quantityError = true;
-		//}
+		if ((this.quantityValueTryChange == true) && (this.sourceStockLineSetup.Afterquantity >= 0))
+		{
+			this.quantityError = false;
+		}
+		else if (this.quantityValueTryChange == true)
+		{
+			this.quantityError = true;
+		}
 
 		if ((this.unitcostValueTryChange == true) && (!this.sourceStockLineSetup.AfterUnitCost)) {
 			
@@ -1802,28 +1802,7 @@ export class StockAdjustmentComponent implements OnInit {
 					this.sourceStockLine.updatedBy = this.userName;
 					this.sourceStockLine.masterCompanyId = 1;
 
-					//sitetryChange: this.siteValueTrytoChnage,
-					//	warehousetryChange: this.warehouseValueTrytoChange,
-					//		locationtryChange: this.locationValueTrytoChange,
-					//			shelftryChange: this.shelfValueTrytoChange,
-					//				bintryChnage: this.binValueTrytoChange,
-					//					StockLineId: this.sourceStockLineSetup.stockLineId,
-					//						SiteId: this.sourceStockLineSetup.AftersiteId,
-					//							WarehouseId: this.sourceStockLineSetup.AfterwarehouseId,
-					//								LocationId: this.sourceStockLineSetup.afterlocationId,
-					//									ShelfId: this.sourceStockLineSetup.aftershelfId,
-					//										BinId: this.sourceStockLineSetup.afterbinId,
-					//											SerialNumber: this.sourceStockLineSetup.AfterserialNumber,
-					//												partNumber: this.sourceStockLineSetup.AfterpartNumber,
-					//													Quantity: this.sourceStockLineSetup.Afterquantity,
-					//														CoreUnitCost: this.sourceStockLineSetup.AfterUnitCost,
-					//															UnitSalesPrice: this.sourceStockLineSetup.AfterunitSalesPrice,
-					//																DiscountSalesPrice: this.sourceStockLineSetup.AfterDiscountSalesPrice,
-					//																	LotCostAdjustment: this.sourceStockLineSetup.AfterLotCostAdjustment,
-					//																		RevalueStockCost: this.sourceStockLineSetup.AfterRevalueStockCost,
-					//																			UnitCostAdjustmentReasonTypeId: this.sourceStockLineSetup.unitCostAdjustmentReasonTypeId,
-					//																				UnitSalePriceAdjustmentReasonTypeId: this.sourceStockLineSetup.unitSalePriceAdjustmentReasonTypeId
-
+					
 					//for Stocklist Update Storing in Object
 					let Data = [{
 						sitetryChange: this.siteValueTrytoChnage,
@@ -1899,6 +1878,7 @@ export class StockAdjustmentComponent implements OnInit {
 
 			this.sourceItemMaster.itemMasterId = this.sourceStockAdjustment.im.itemMasterId;
 			this.sourceItemMaster.partId = this.selectedPartId;
+			this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list');
 		}
 
 		
@@ -1953,88 +1933,6 @@ export class StockAdjustmentComponent implements OnInit {
 
 		}
 
-	// debugger;
-
-
-
-	//	if (!this.sourceStockLine.stockLineId) {
-	//		this.sourceStockLine.createdBy = this.userName;
-	//		this.sourceStockLine.updatedBy = this.userName;
-	//		// this.sourceAction.defaultMessageCode = this.messageName;
-	//		this.sourceStockLine.masterCompanyId = 1;
-	//		//this.sourceStockLine.itemTypeId = 1;
-	//		this.stocklineser.newStockLineAdjustment(this.sourceStockLine).subscribe(data => {
-	//			this.collectionofstockLine = data;
-	//			this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-adjustment')
-	//			this.value = 1;
-
-	//		})
-
-
-	//	}
-	//	else {
-
-	//		this.sourceStockLine.updatedBy = this.userName;
-	//		//this.sourceItemMaster.defaultMessageCode = this.messageName;
-	//		this.sourceStockLine.masterCompanyId = 1;
-	//		this.stocklineser.updateStockLineAdjustment(this.sourceStockLine).subscribe(
-	//			response => this.saveCompleted(this.sourceStockLine),
-	//			error => this.saveFailedHelper(error));
-	//	}
-
-	//	// this.modal.close();
-	//}
-
-
-	//private saveSuccessHelper(role?: any) {
-	//	this.isSaving = false;
-	//	this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-
-	//	this.loadData();
-
-	//}
-	
-
-
-
-
-
-
-
-
-	// debugger;
-
-
-
-	//	if (!this.sourceStockLine.stockLineId) {
-	//		this.sourceStockLine.createdBy = this.userName;
-	//		this.sourceStockLine.updatedBy = this.userName;
-	//		// this.sourceAction.defaultMessageCode = this.messageName;
-	//		this.sourceStockLine.masterCompanyId = 1;
-	//		//this.sourceStockLine.itemTypeId = 1;
-	//		this.stocklineser.newStockLineAdjustment(this.sourceStockLine).subscribe(data => {
-	//			this.collectionofstockLine = data;
-	//			this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-adjustment')
-	//			this.value = 1;
-
-	//		})
-
-
-	//	}
-	//	else {
-
-	//		this.sourceStockLine.updatedBy = this.userName;
-	//		//this.sourceItemMaster.defaultMessageCode = this.messageName;
-	//		this.sourceStockLine.masterCompanyId = 1;
-	//		this.stocklineser.updateStockLineAdjustment(this.sourceStockLine).subscribe(
-	//			response => this.saveCompleted(this.sourceStockLine),
-	//			error => this.saveFailedHelper(error));
-	//	}
-
-	//	// this.modal.close();
-	//}
-
-
 	private saveSuccessHelper(role?: any) {
 		this.isSaving = false;
 		this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
@@ -2053,9 +1951,6 @@ export class StockAdjustmentComponent implements OnInit {
 	
 	savestocklineadsaveclose()
 	{
-
-		// debugger;
-
 		this.isSaving = true;
 
 		if (this.isEditMode == false)
@@ -2159,9 +2054,7 @@ export class StockAdjustmentComponent implements OnInit {
 				}
 
 			}
-
 			this.stockAdjustmentDataArray.push(data);
-
 		}
 
 
