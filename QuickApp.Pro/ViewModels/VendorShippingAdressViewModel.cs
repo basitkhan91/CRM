@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace QuickApp.Pro.ViewModels
 {
@@ -28,5 +25,6 @@ namespace QuickApp.Pro.ViewModels
         public string Email { get; set; }
         public string Phone { get; set; }
         public bool? AddressStatus { get; set; }
+        public bool IsPrimary { get; set; }
     }
 }

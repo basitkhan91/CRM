@@ -533,7 +533,7 @@ namespace DAL.Repositories
 
                 _appContext.SaveChanges();
 
-
+               
                 billingAddress.AddressId = Convert.ToInt64(address.AddressId);
 
                 billingAddress.UpdatedDate = DateTime.Now;
@@ -547,6 +547,19 @@ namespace DAL.Repositories
                 else
                 {
                     billingAddress.IsPrimary = billingAddress.IsPrimary;
+                }
+
+
+                if (billingAddress.IsPrimary == true)
+                {
+                    var vendorConcatData = _appContext.VendorBillingAddress.Where(p => p.VendorId == billingAddress.VendorId).ToList();
+
+                    foreach (var objContactdata in vendorConcatData)
+                    {
+                        objContactdata.IsPrimary = false;
+                        _appContext.VendorBillingAddress.Update(objContactdata);
+                    }
+                    _appContext.SaveChanges();
                 }
 
                 if (billingAddress.VendorBillingAddressId > 0)

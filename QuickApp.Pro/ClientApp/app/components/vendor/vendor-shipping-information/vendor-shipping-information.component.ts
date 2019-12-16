@@ -66,6 +66,7 @@ export class VendorShippingInformationComponent {
     selectedShipVia: any;
     shipviacollection: any[];
     shippingauditHisory: any[];
+    isPrimary: boolean = false;
     ngOnInit(): void {
         this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-shipping-information';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
@@ -371,6 +372,7 @@ export class VendorShippingInformationComponent {
     }
     openView(content, row) {
         this.sourceVendor = row;
+        this.isPrimary = row.isPrimary;
         this.siteName = row.siteName;
         this.address1 = row.address1;
         this.city = row.city;
