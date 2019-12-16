@@ -533,7 +533,7 @@ namespace DAL.Repositories
 
                 _appContext.SaveChanges();
 
-
+               
                 billingAddress.AddressId = Convert.ToInt64(address.AddressId);
 
                 billingAddress.UpdatedDate = DateTime.Now;
@@ -547,6 +547,19 @@ namespace DAL.Repositories
                 else
                 {
                     billingAddress.IsPrimary = billingAddress.IsPrimary;
+                }
+
+
+                if (billingAddress.IsPrimary == true)
+                {
+                    var vendorConcatData = _appContext.VendorBillingAddress.Where(p => p.VendorId == billingAddress.VendorId).ToList();
+
+                    foreach (var objContactdata in vendorConcatData)
+                    {
+                        objContactdata.IsPrimary = false;
+                        _appContext.VendorBillingAddress.Update(objContactdata);
+                    }
+                    _appContext.SaveChanges();
                 }
 
                 if (billingAddress.VendorBillingAddressId > 0)
@@ -1118,6 +1131,34 @@ namespace DAL.Repositories
             {
                 throw ex;
             }
+        }
+        public IEnumerable<object> GetVendorProcessListForFinance(int companyId)
+        {
+            var list = (from m in _appContext.Master1099
+                        where m.MasterCompanyId == companyId && m.IsDeleted != true && m.IsActive == true
+                        select m).Distinct().ToList();
+            return list;
+
+        }
+        public IEnumerable<object> GetVendorProcessListFromTransaction(long vendorId)
+        {
+            var list = (from mst in _appContext.Master1099 
+                        join m in _appContext.VendorProcess1099 on mst.Master1099Id equals m.Master1099Id
+                          into master
+                        from m in master.DefaultIfEmpty()
+
+                        where m.VendorId == vendorId && m.IsDeleted != true && m.IsActive == true
+                        select new {
+                            m.VendorProcess1099Id, 
+                            m.Master1099Id,
+                            m.IsDefaultCheck,
+                            m.IsDefaultRadio,
+                            mst.Description 
+                        }).Distinct().ToList();
+
+       
+            return list;
+
         }
     }
 }

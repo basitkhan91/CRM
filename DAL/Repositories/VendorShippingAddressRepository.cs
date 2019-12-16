@@ -39,7 +39,8 @@ namespace DAL.Repositories
                             v.CreatedDate,
                             v.UpdatedDate,
                             v.VendorId,
-                            v.IsActive
+                            v.IsActive,
+                            v.IsPrimary
                           
 
 

@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace DAL.Models
 {
-   public  class VendorShippingAddress
+    public class VendorShippingAddress
     {
         [Key]
         public long? VendorShippingAddressId { get; set; }
@@ -19,9 +17,8 @@ namespace DAL.Models
         public System.DateTime UpdatedDate { get; set; }
         public bool? IsActive { get; set; }
         public bool? IsDelete { get; set; }
-
-
-
+        public bool? IsPrimary { get; set; }
+        
     }
 
 }

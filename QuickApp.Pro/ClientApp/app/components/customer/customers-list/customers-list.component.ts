@@ -178,7 +178,7 @@ export class CustomersListComponent implements OnInit {
         { field: 'lastName', header: 'Last Name' },
         { field: 'contactTitle', header: 'Contact Title' },
         { field: 'email', header: 'Email' },
-       
+
         { field: 'workPhone', header: 'Work Phone' },
         { field: 'mobilePhone', header: 'Mobile Phone' },
         { field: 'fax', header: 'Fax' },
@@ -261,6 +261,7 @@ export class CustomersListComponent implements OnInit {
     restrictedDERParts: any;
     disableRestrictedPMA: boolean = false;
     classificationIds: any[];
+    filteredText: string;
     //     NameInput:any;
     //     customerCodeInput:any;
     //     customerClassificationInput:any;
@@ -318,7 +319,12 @@ export class CustomersListComponent implements OnInit {
         this.refreshList();
     }
     refreshList() {
-        this.table.reset();
+        if (this.filteredText != "" && this.filteredText != null && this.filteredText != undefined) {
+            this.globalSearch(this.filteredText);
+        }
+        else {
+            this.table.reset();
+        }
         // this.getList();
         // this.table.sortOrder = 0;
         // this.table.sortField = '';
@@ -407,7 +413,7 @@ export class CustomersListComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
 
     }
-    
+
     viewSelectedRowdbl(content, rowData) {
 
 
@@ -426,7 +432,7 @@ export class CustomersListComponent implements OnInit {
         this.getMappedTaxTypeRateDetails(customerId);
         this.getCustomerRestrictedPMAByCustomerId(customerId);
         this.getCustomerRestrictedDERByCustomerId(customerId);
-        this.getCustomerClassificationByCustomerId(customerId) 
+        this.getCustomerClassificationByCustomerId(customerId)
         this.modal = this.modalService.open(content, { size: 'lg' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -515,20 +521,20 @@ export class CustomersListComponent implements OnInit {
         })
     }
 
-        getCustomerRestrictedPMAByCustomerId(customerId) {
+    getCustomerRestrictedPMAByCustomerId(customerId) {
 
-            this.commonService.getRestrictedParts(1, customerId, 'PMA').subscribe(res => {
-             
+        this.commonService.getRestrictedParts(1, customerId, 'PMA').subscribe(res => {
+
             this.restrictedPMAParts = res;
-            
-           
-    })
+
+
+        })
     }
 
 
     getCustomerRestrictedDERByCustomerId(customerId) {
-     
-            this.commonService.getRestrictedParts(1, customerId, 'DER').subscribe(res => {
+
+        this.commonService.getRestrictedParts(1, customerId, 'DER').subscribe(res => {
 
             this.restrictedDERParts = res;
 
@@ -536,11 +542,11 @@ export class CustomersListComponent implements OnInit {
         })
     }
 
-      getCustomerClassificationByCustomerId(customerId) {
+    getCustomerClassificationByCustomerId(customerId) {
 
-         this.customerService.getCustomerClassificationMapping(customerId).subscribe(res => {
-             this.viewDataclassification = res.map(x => x.description);
-            
+        this.customerService.getCustomerClassificationMapping(customerId).subscribe(res => {
+            this.viewDataclassification = res.map(x => x.description);
+
             // console.log(this.generalInformation.customerClassificationIds);
         });
     }
@@ -553,6 +559,7 @@ export class CustomersListComponent implements OnInit {
     // }
     globalSearch(value) {
         this.pageIndex = 0;
+        this.filteredText = value;
         this.customerService.getGlobalSearch(value, this.pageIndex, this.pageSize).subscribe(res => {
             this.data = res;
             if (res.length > 0) {
@@ -562,6 +569,7 @@ export class CustomersListComponent implements OnInit {
         })
     }
     getAuditHistoryById(rowData) {
+        //alert('This functionality is not implemented');
     }
     ExpandAllCustomerDetailsModel() {
         $('#step1').collapse('show');
@@ -627,11 +635,11 @@ export class CustomersListComponent implements OnInit {
     //}
     dismissModel() {
         this.isDeleteMode = false;
-      
+
         this.modal.close();
     }
     delete(content, rowData) {
-       
+
         this.isDeleteMode = true;
 
 

@@ -783,7 +783,14 @@ export class VendorService {
     {
         return this.actionEndpoint.GetVendorAttachmentDeleteEndpoint(attachmentDetailId,updatedBy);
     }
-    
+    getVendorProcess1099Data(companyId: number) {
+        return Observable.forkJoin(
+            this.actionEndpoint.getVendorProcess1099id<any>(companyId));
+    }
+    getVendorProcess1099DataFromTransaction(vendorId: number) {
+        return Observable.forkJoin(
+            this.actionEndpoint.getVendorProcess1099idFromTransaction<any>(vendorId));
+    }
 }
 
 
