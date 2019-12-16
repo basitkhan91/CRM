@@ -72,6 +72,10 @@ import { KeyFilterModule } from "primeng/keyfilter";
 import { TooltipModule } from 'primeng/tooltip';
 import { CommonService } from "../services/common.service";
 import { VendorDocumentsComponent } from "../components/vendor/vendor-documents/vendor-documents.component";
+import { AircraftModelService } from "../services/aircraft-model/aircraft-model.service";
+import { DashNumberService } from "../services/dash-number/dash-number.service";
+import { AircraftModelEndpointService } from "../services/aircraft-model/aircraft-model-endpoint.service";
+import { DashNumberEndpointService } from "../services/dash-number/dash-number-endpoint.service";
 
 
 @NgModule({
@@ -137,7 +141,11 @@ import { VendorDocumentsComponent } from "../components/vendor/vendor-documents/
 	],
 	providers: [
 		VendorClassificationComponent,
-		
+		AircraftModelService,
+		AircraftModelEndpointService,
+		DashNumberService,
+		DashNumberEndpointService,
+		AuthService		
 	],
     entryComponents: [
         AddActionsDialogComponent

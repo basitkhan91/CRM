@@ -176,8 +176,8 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _addVendorFileUpload: string = "/api/Vendor/vendorGeneralDocumentUpload";
 	private readonly _addVendorgeneralFileDetails: string = "/api/Vendor/getVendorGeneralDocumentDetail";
 	private readonly _vendorDeleteAttachment: string = "/api/Vendor/vendorAttachmentDelete";
-	
-	
+    private readonly _vendorProcess1099Id: string = "/api/Vendor/getVendorProcess1099ListForFinance";
+    private readonly _vendorProcess1099IdFromTransaction: string = "/api/Vendor/getVendorProcess1099ListFromTransaction";
 
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
 	get vendorlistsUrl() { return this.configurations.baseUrl + this._vendrUrl; }
@@ -237,7 +237,8 @@ export class VendorEndpointService extends EndpointFactory {
 
 	get paginate() { return this.configurations.baseUrl + this.getVendor; }
     get roListWithFiltersUrl() { return this.configurations.baseUrl + this._roListWithFiltersUrl; }
-   
+    get vendorProcess1099Id() { return this.configurations.baseUrl + this._vendorProcess1099Id; }
+    get vendorProcess1099IdFromTransaction() { return this.configurations.baseUrl + this._vendorProcess1099IdFromTransaction; }
 
     
 
@@ -1632,5 +1633,18 @@ getdeleteDocumentListbyId(vendorDocumentId) {
 	}
 
 	
-
+    getVendorProcess1099id<T>(companyId: number): Observable<T> {
+        let endpointurl = `${this.vendorProcess1099Id}?companyId=${companyId}`;
+        return this.http.get<T>(endpointurl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getVendorsDatawithid(companyId));
+            });
+    }
+    getVendorProcess1099idFromTransaction<T>(vendorId: number): Observable<T> {
+        let endpointurl = `${this.vendorProcess1099IdFromTransaction}?vendorId=${vendorId}`;
+        return this.http.get<T>(endpointurl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getVendorProcess1099idFromTransaction(vendorId));
+            });
+    }
 }

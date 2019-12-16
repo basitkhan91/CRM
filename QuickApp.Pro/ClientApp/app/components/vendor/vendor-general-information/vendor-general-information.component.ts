@@ -201,7 +201,8 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         
-        this.sourceVendor.vendorTypeId=2;
+        this.sourceVendor.vendorTypeId = 2;
+      
         this.matSpinner = false;
         this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-general-information';
         this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
@@ -227,6 +228,9 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         if (this.vendorService.isEditMode == false) {
             this.sourceVendor.vendorTypeId = 2;
             this.viewName = "Create";
+            this.sourceVendor.isAddressForBilling = true;
+            this.sourceVendor.isAddressForShipping = true;
+           
         }
         if (this.vendorService.enableExternal == false) {
             this.sourceVendor.vendorTypeId = 2;
@@ -253,7 +257,9 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
             if(this.viewName !="Edit")
             {
                 this.sourceVendor = {};
-                this.sourceVendor.vendorTypeId=2;
+                this.sourceVendor.vendorTypeId = 2;
+                this.sourceVendor.isAddressForBilling = true;
+                this.sourceVendor.isAddressForShipping = true;
             }            
         }
     }

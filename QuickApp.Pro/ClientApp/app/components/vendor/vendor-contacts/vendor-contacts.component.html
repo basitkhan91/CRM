@@ -122,8 +122,8 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+        <button type="button" class="btn btn-primary-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
+        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
     </div>
 </ng-template>
 
@@ -212,7 +212,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>
 
@@ -264,7 +264,7 @@
 
 </p-dialog>
 
-<div class="modal fade" id="addContactInfo" role="dialog">
+<div class="modal fade" id="addContactInfo" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
