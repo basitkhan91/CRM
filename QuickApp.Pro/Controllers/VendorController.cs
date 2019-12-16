@@ -1934,6 +1934,18 @@ namespace QuickApp.Pro.Controllers
             {
                 if (vendorshippingAddressViewModel == null)
                     return BadRequest($"{nameof(vendorshippingAddressViewModel)} cannot be null");
+
+                if (vendorshipping.IsPrimary == true)
+                {
+                    var vendorConcatData = _unitOfWork.VendorShippingAddress.GetAll().Where(p => p.VendorId == vendorshipping.VendorId).ToList();
+
+                    foreach (var objContactdata in vendorConcatData)
+                    {
+                        objContactdata.IsPrimary = false;
+                        _unitOfWork.VendorShippingAddress.Update(objContactdata);
+                    }
+                    _unitOfWork.SaveChanges();
+                }
                 VendorShippingAddress vendorShippingAddressObj = new VendorShippingAddress();
                 vendorShippingAddressObj.IsActive = true;
                 vendorShippingAddressObj.VendorId = vendorshipping.VendorId;
@@ -1941,11 +1953,10 @@ namespace QuickApp.Pro.Controllers
                 vendorShippingAddressObj.MasterCompanyId = 1;
                 vendorShippingAddressObj.IsActive = vendorshippingAddressViewModel.IsActive;
                 vendorShippingAddressObj.AddressId = id;
-
                 vendorShippingAddressObj.UpdatedDate = DateTime.Now;
-                vendorShippingAddressObj.CreatedBy = vendorshippingAddressViewModel.CreatedBy;
-                vendorShippingAddressObj.UpdatedBy = vendorshippingAddressViewModel.UpdatedBy;
-
+                vendorShippingAddressObj.CreatedBy = vendorshipping.CreatedBy;
+                vendorShippingAddressObj.UpdatedBy = vendorshipping.UpdatedBy;
+                vendorShippingAddressObj.IsPrimary = vendorshipping.IsPrimary;
                 if (vendorshipping.VendorShippingAddressId > 0)
                 {
                     vendorShippingAddressObj.CreatedDate = vendorshipping.CreatedDate;
@@ -2434,6 +2445,20 @@ namespace QuickApp.Pro.Controllers
                     return BadRequest($"{nameof(vendorShippingViewModel)} cannot be null");
                 var checkPaymentObj = _unitOfWork.VendorShippingAddress.GetSingleOrDefault(c => c.VendorShippingAddressId == id);
 
+
+                if (vendorShippingViewModel.IsPrimary == true)
+                {
+                    var vendorConcatData = _unitOfWork.VendorShippingAddress.GetAll().Where(p => p.VendorId == vendorShippingViewModel.VendorId).ToList();
+
+                    foreach (var objContactdata in vendorConcatData)
+                    {
+                        objContactdata.IsPrimary = false;
+                        _unitOfWork.VendorShippingAddress.Update(objContactdata);
+                    }
+                    _unitOfWork.SaveChanges();
+                }
+
+
                 if (checkPaymentObj != null)
                 {
                     var addressObj = _unitOfWork.Address.GetSingleOrDefault(c => c.AddressId == checkPaymentObj.AddressId);
@@ -2446,6 +2471,7 @@ namespace QuickApp.Pro.Controllers
                     checkPaymentObj.CreatedBy = vendorShippingViewModel.CreatedBy;
                     checkPaymentObj.UpdatedBy = vendorShippingViewModel.UpdatedBy;
                     checkPaymentObj.MasterCompanyId = vendorShippingViewModel.MasterCompanyId;
+                    checkPaymentObj.IsPrimary = vendorShippingViewModel.IsPrimary;
                     //checkPaymentObj.VendorShippingAddressId = vendorShippingViewModel.VendorShippingAddressId;
                     _unitOfWork.VendorShippingAddress.Update(checkPaymentObj);
                     _unitOfWork.SaveChanges();
@@ -3550,6 +3576,8 @@ namespace QuickApp.Pro.Controllers
                     address.CreatedDate = DateTime.Now;
                     _context.Address.Add(address);
                 }
+               
+
                 _context.SaveChanges();
                 _unitOfWork.Vendor.CreateVendorBillingAddress(billingAddress);
                 return Ok(billingAddress);
@@ -3618,6 +3646,18 @@ namespace QuickApp.Pro.Controllers
                 }
                 _context.SaveChanges();
 
+                if (billingAddress.IsPrimary == true)
+                {
+                    var vendorConcatData = _context.VendorBillingAddress.Where(p => p.VendorId == billingAddress.VendorId).ToList();
+
+                    foreach (var objContactdata in vendorConcatData)
+                    {
+                        objContactdata.IsPrimary = false;
+                        _context.VendorBillingAddress.Update(objContactdata);
+                    }
+                    _context.SaveChanges();
+                }
+
                 billingAddressData.AddressId = billingAddress.AddressId;
                 billingAddressData.VendorId = billingAddress.VendorId;
                 billingAddressData.SiteName = billingAddress.SiteName;
@@ -3626,8 +3666,10 @@ namespace QuickApp.Pro.Controllers
                 billingAddressData.UpdatedDate = billingAddress.UpdatedDate;
                 billingAddressData.IsActive = billingAddress.IsActive;
                 billingAddressData.IsDeleted = billingAddress.IsDeleted;
+                              
 
                 _unitOfWork.Vendor.UpdateVendorBillingAddress(billingAddressData);
+                _context.SaveChanges();
                 return Ok(billingAddress);
             }
             return BadRequest(ModelState);
@@ -3925,7 +3967,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        
+
         #endregion
 
         #region Private Methods
