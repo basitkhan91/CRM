@@ -83,6 +83,7 @@ export class EmployeesListComponent implements OnInit {
         this.empService.alertObj.next(this.empService.ShowPtab);
 
     }
+
     allVendorList: any[];
     dataSource: MatTableDataSource<any>;
     selectedColumn: any[];
@@ -188,7 +189,7 @@ export class EmployeesListComponent implements OnInit {
         this.cols = [
             { field: 'firstName', header: 'First Name' },
             { field: 'lastName', header: 'Last Name' },
-            { field: 'employeeId', header: 'Emp Id' },
+            { field: 'employeeId', header: 'EmpID' },
             // { field: 'email', header: 'Email' },
             //{ field: 'businessUnitId', header: 'BU' },
             //{ field: 'divisionId', header: 'Division' },
@@ -211,9 +212,30 @@ export class EmployeesListComponent implements OnInit {
     }
 
     getData(rowData, field) {
-        if(field === 'jobtitle') return rowData['jobtitle'] ? rowData['jobtitle']['description'] : 'NA';
-        else if(field === 'jobtype') return rowData['jobtype'] ? rowData['jobtype']['jobTypeName'] : 'NA';
-        else if(field === 'company') return rowData['masterCompany'] ? rowData['masterCompany']['companyName'] : 'NA';
+        if (field === 'jobtitle') return rowData['jobtitle'] ? rowData['jobtitle']['description'] : 'NA';
+        else if (field === 'jobtype') return rowData['jobtype'] ? rowData['jobtype']['jobTypeName'] : 'NA';
+        else if (field === 'company') {
+           // return rowData['masterCompany'] ? rowData['masterCompany']['companyName'] : 'NA';
+
+            if (rowData.managmentLegalEntity != null && rowData.divmanagmentLegalEntity != null && rowData.biumanagmentLegalEntity != null && rowData.compmanagmentLegalEntity != null) {
+                return rowData.compmanagmentLegalEntity.name;
+
+            }
+            else if (rowData.biumanagmentLegalEntity != null && rowData.divmanagmentLegalEntity != null && rowData.managmentLegalEntity != null) {
+                return rowData.biumanagmentLegalEntity.name;
+
+            }
+            else if (rowData.divmanagmentLegalEntity != null && rowData.managmentLegalEntity != null) {
+                return rowData.divmanagmentLegalEntity.name;
+            }
+            else if (rowData.managementStructeInfo != null) {
+                return rowData.managmentLegalEntity.name;
+            } else {
+                return 'NA';
+            }
+
+
+        }
         else if (field === 'employeeExpertise') return rowData['employeeExpertise'] ? rowData['employeeExpertise']['description'] : 'NA';
         else if (field === 'employeeId') return `EMP ${rowData[field]}`;
         else if (field === 'paytype') return rowData['isHourly'] ? 'Hourly' : 'Yearly';

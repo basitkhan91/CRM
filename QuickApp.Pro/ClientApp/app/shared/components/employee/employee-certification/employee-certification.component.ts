@@ -74,6 +74,7 @@ export class EmployeeCertificationComponent implements OnInit, AfterViewInit {
     filteredBrands: any[];
     localCollection: any[] = [];
     public nextbuttonEnable = false;
+    today = new Date();
     /** Actions ctor */
 
     private isEditMode: boolean = false;
