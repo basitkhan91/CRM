@@ -108,6 +108,16 @@ isQuote: boolean = true;
       }
     });
   }
+
+  calculateExpiryDate() {
+    console.log(this.validFor);
+    console.log(this.quoteDueDate);
+    if(this.validFor && this.quoteDueDate){
+      this.expirationDate = new Date();
+      this.expirationDate.setDate(this.quoteDueDate.getDate() + this.validFor);
+    }
+  }
+
   saveQuoteDetails() {
     if(this.quotationHeader == undefined || this.quotationHeader.workOrderQuoteId == undefined){
       this.formQuoteInfo()

@@ -14,15 +14,15 @@
             </div>
             <div class="form-group ">
               <label>Quote Due Date <span class="clr-red">*</span></label>
-              <p-calendar [showIcon]="true" [(ngModel)]="quoteDueDate" name="QuoteDueDate" aria-readonly></p-calendar>
+              <p-calendar [showIcon]="true" (onSelect)="calculateExpiryDate()" [(ngModel)]="quoteDueDate" name="QuoteDueDate" aria-readonly></p-calendar>
             </div>
             <div class="form-group ">
               <label> Valid For Days <span class="clr-red">*</span></label>
-              <input class="form-control" type="number" [(ngModel)]="validFor" name="ValidForDays" />
+              <input class="form-control" (change)="calculateExpiryDate()" type="number" [(ngModel)]="validFor" name="ValidForDays" />
             </div>
             <div class="form-group ">
               <label> Expiration Date <span class="clr-red">*</span></label>
-              <p-calendar [showIcon]="true" [(ngModel)]="expirationDate" name="ExpDate"></p-calendar>
+              <p-calendar [showIcon]="true" [(ngModel)]="expirationDate" name="ExpDate" [disabled]="true"></p-calendar>
             </div>
 
             <div class="form-group">
@@ -158,8 +158,8 @@
           <th rowspan="2">MPN Description</th>
           <th rowspan="2">Revised MPN</th>
           <th rowspan="2">NTE</th>
-          <th rowspan="2">Condition Id *</th>
-          <th rowspan="2">Stock Line Num *</th>
+          <th rowspan="2">Condition Id</th>
+          <th rowspan="2">Stock Line Num</th>
           <th rowspan="2">Serial Number</th>
           <!-- <th rowspan="2">Qty *</th> -->
           <th rowspan="2">Work Order Stage</th>
@@ -406,6 +406,28 @@
           </td>
           <td>{{matQuotation.costPlusAmount}}</td>
           <td><input [(ngModel)]="matQuotation.fixedAmount" /></td>
+          <td>
+              <button
+                class="btn-edit ptable-wo-btns"
+                mat-icon-button
+                data-target="#addNewMaterials"
+                data-toggle="modal"
+                (click)="edit(w)"
+                matTooltip="Edit"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+          </td>
+          <td>
+              <button
+                class="btn-delete ptable-wo-btns"
+                mat-icon-button
+                matTooltip="Delete"
+                (click)="delete(w)"
+              >
+                <mat-icon color="warn">delete</mat-icon>
+              </button>
+          </td>
         </tr>
         <div class="col-md-12">
           <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save Details</button>
@@ -429,6 +451,7 @@
           <th>MARKUP</th>
           <th>COST PLUS AMOUNT</th>
           <th>FIXED AMOUNT</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -452,6 +475,28 @@
           </td>
           <td>{{matQuotation.costPlusAmount}}</td>
           <td><input [(ngModel)]="matQuotation.fixedAmount" /></td>
+          <td>
+              <button
+                class="btn-edit ptable-wo-btns"
+                mat-icon-button
+                data-target="#addNewMaterials"
+                data-toggle="modal"
+                (click)="edit(w)"
+                matTooltip="Edit"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+          </td>
+          <td>
+              <button
+                class="btn-delete ptable-wo-btns"
+                mat-icon-button
+                matTooltip="Delete"
+                (click)="delete(w)"
+              >
+                <mat-icon color="warn">delete</mat-icon>
+              </button>
+          </td>
         </tr>
         <div class="col-md-12">
           <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save Details</button>
