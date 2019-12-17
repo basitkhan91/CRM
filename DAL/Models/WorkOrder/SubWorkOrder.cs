@@ -13,10 +13,11 @@ namespace DAL.Models
         public long? WorkFlowId { get; set; }
         public long? CMMId { get; set; }
         public string SubWorkOrderNo { get; set; }
-        public DateTime? NeedDate { get; set; }
-        public DateTime? EstCompDate { get; set; }
-        public long? StageId { get; set; }
-        public long? StatusId { get; set; }
+        public DateTime NeedDate { get; set; }
+        public DateTime EstCompDate { get; set; }
+        public DateTime OpenDate { get; set; }
+        public long StageId { get; set; }
+        public long StatusId { get; set; }
         public bool IsPMA { get; set; }
         public bool IsDER { get; set; }
         public int MasterCompanyId { get; set; }
@@ -26,10 +27,8 @@ namespace DAL.Models
         public DateTime UpdatedDate { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
-
         [NotMapped]
         public string WorkOrderNum { get; set; }
-        
         [NotMapped]
         public long WorkFlowWorkOrderId { get; set; }
 
