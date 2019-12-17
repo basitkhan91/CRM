@@ -14,34 +14,37 @@ import { AuthService } from '../../../../services/auth.service';
 })
 /** WorkOrderShipping component*/
 export class WorkOrderROCreateComponent implements OnInit {
-    workOrderROPartsList: any;
+    workOrderROPartsList: any = [];
     constructor(private workOrderService: WorkOrderService) { }
     @Input() mpnId;
     roListColumns = [
-        { field: 'partNumber', header: 'MCPN' },
-        { field: 'partDescription', header: 'MCPN Description' },
-        { field: 'serialNumber', header: 'MC Serial #' },
-        { field: 'repairOrderNumber', header: 'RO Num' },
-        { field: 'quantityOrdered', header: '# of Items' },
-        { field: 'controlNumber', header: 'Control #' },
+        { field: 'mcpn', header: 'MCPN' },
+        { field: 'mcpndescription', header: 'MCPN Description' },
+        { field: 'mcserial', header: 'MC Serial #' },
+        { field: 'stockline', header: 'Stock Line ' },
+        { field: 'control', header: 'Control' },
+        { field: 'controlid', header: 'Control #' },
         { field: 'controllerId', header: 'Control Id' },
-        { field: 'unitCost', header: 'Unit Cost' },
-        { field: 'extendedCost', header: 'Extended Cost' },
-        { field: 'currency', header: 'Currency' },
-        { field: 'vendorName', header: 'Vendor Name' },
-        { field: 'status', header: 'Status' },
-        { field: 'openDate', header: 'Open Date' },
-        { field: 'needByDate', header: 'Need By Date' },
+        { field: 'qtytorepair', header: 'Qty to Repair' },
+        { field: 'qtyreserved', header: 'Qty to Reserved' },
+
     ]
 
 
+
+
+
+
     ngOnInit() {
+        console.log(this.mpnId)
         this.getNewROCreate();
     }
 
+
     getNewROCreate() {
+
         this.workOrderService.createNewWORO(this.mpnId).subscribe(res => {
-            this.workOrderROPartsList = res;
+            this.workOrderROPartsList = [res];
         })
     }
 

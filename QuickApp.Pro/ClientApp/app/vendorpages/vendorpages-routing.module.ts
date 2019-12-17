@@ -70,7 +70,7 @@ const vendorPagesRoutes: Routes = [
 			{ path: "app-ro-setup", component: RoSetupComponent, data: { title: "RO Setup" } },
 			{ path: "app-ro-setup/edit/:id", component: RoSetupComponent, data: { title: "RO Setup" } },
 			{ path: "workorder-ro-edit/:id/:mpnid", component: RoSetupComponent, data: { title: "RO Setup" } },
-			{ path: "workorder-ro-create/:id/:mpnId", component: RoSetupComponent, data: { title: "RO Setup" } },
+			{ path: "workorder-ro-create/:id/:mpnid", component: RoSetupComponent, data: { title: "RO Setup" } },
 			{ path: "app-ro-setup/vendor/:vendorId", component: RoSetupComponent, data: { title: "RO Setup" } },
 			{ path: "app-vendor-capabilities-list", component: VendorCapabilitiesListComponent, data: { title: "capabilities-list" } },
 			{ path: "app-add-vendor-capabilities", component: AddVendorCapabilitiesComponent, data: { title: "capabilities-add" } },
