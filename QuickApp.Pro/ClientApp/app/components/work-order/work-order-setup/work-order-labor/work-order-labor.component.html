@@ -167,6 +167,7 @@
           <th class="text-center" style="padding: 7px 53px !important;">
             Memo
           </th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -288,6 +289,16 @@
                 </td>
                 <td>
                   <input type="text" [(ngModel)]="rec.memo" />
+                </td>
+                <td>
+                    <button
+                    class="btn-delete ptable-wo-btns"
+                    mat-icon-button
+                    matTooltip="Delete"
+                    (click)="deleteLabor(task.description, i)"
+                  >
+                    <mat-icon color="warn">delete</mat-icon>
+                  </button>
                 </td>
             </tr>
           <!-- </ng-container> -->

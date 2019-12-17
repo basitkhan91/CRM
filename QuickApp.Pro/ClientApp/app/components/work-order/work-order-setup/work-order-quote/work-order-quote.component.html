@@ -42,37 +42,31 @@
           <div class="col-md-6">
             <div class="form-group">
               <label for="customerName">Customer Name
-                <span class="clr-red">*</span>
               </label>
               <input class="form-control" type="text" [(ngModel)]="customerName" name="customerName" readonly/>
             </div>
             <div class="form-group ">
               <label for="customerCode">Customer Code
-                <span class="clr-red">*</span>
               </label>
               <input class="form-control" type="text" [(ngModel)]="customerCode" name="customerCode" readonly/>
             </div>
             <div class="form-group ">
               <label for="customerContact">Customer Contact
-                <span class="clr-red">*</span>
               </label>
               <input class="form-control" type="text" [(ngModel)]="customerContact" name="customerContact" readonly/>
             </div>
             <div class="form-group ">
               <label for="customerEmail">Customer email
-                <span class="clr-red">*</span>
               </label>
-              <input class="form-control" type="email" [(ngModel)]="customerEmail" name="customerEmail" />
+              <input class="form-control" type="email" [(ngModel)]="customerEmail" name="customerEmail" readonly/>
             </div>
             <div class="form-group ">
               <label for="customerPhone">Customer phone
-                <span class="clr-red">*</span>
               </label>
-              <input class="form-control" type="number" [(ngModel)]="customerPhone" name="customerPhone" />
+              <input class="form-control" type="number" [(ngModel)]="customerPhone" name="customerPhone" readonly/>
             </div>
             <div class="form-group ">
               <label for="customerRef">Customer Ref
-                <span class="clr-red">*</span>
               </label>
               <input class="form-control" type="text" [(ngModel)]="customerRef" name="customerRef" readonly/>
             </div>
@@ -98,19 +92,16 @@
             </div>
             <div class="form-group ">
               <label for="salesPerson">Sales Person
-                <span class="clr-red">*</span>
               </label>
               <input class="form-control" type="text" [(ngModel)]="salesPerson" name="salesPerson" readonly/>
             </div>
             <div class="form-group ">
               <label for="csr">CSR
-                <span class="clr-red">*</span>
               </label>
               <input class="form-control" type="text" [(ngModel)]="csr" name="csr" readonly/>
             </div>
             <div class="form-group ">
               <label for="Employee">Employee
-                <span class="clr-red">*</span>
               </label>
               <input class="form-control" type="text" [(ngModel)]="employeeName" name="Employee" readonly/>
             </div>
@@ -144,7 +135,7 @@
 
     </div>
     <div class="col-md-12">
-      <button class="btn btn-primary-cstm pull-right" (click)="saveQuoteDetails()">{{quotationHeader && quotationHeader.workOrderQuoteId?'Update':'Save'}}</button>
+      <button class="btn btn-primary-cstm pull-right" (click)="saveQuoteDetails()" [disabled]="checkValidQuote()">{{quotationHeader && quotationHeader.workOrderQuoteId?'Update':'Save'}}</button>
     </div>
   </div>
 </div>
@@ -383,6 +374,8 @@
           <th>MARKUP</th>
           <th>COST PLUS AMOUNT</th>
           <th>FIXED AMOUNT</th>
+          <th></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -401,7 +394,7 @@
             <!-- <input [(ngModel)]="matQuotation.markup" /> -->
             <select (change)="markupChanged(matQuotation)" [(ngModel)]="matQuotation.markup">
               <option value="">Select</option>
-              <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+              <option *ngFor="let markUp of markupList; let index=index" [value]="markUp.value">{{markUp.label}}</option>
             </select>
           </td>
           <td>{{matQuotation.costPlusAmount}}</td>
@@ -412,7 +405,7 @@
                 mat-icon-button
                 data-target="#addNewMaterials"
                 data-toggle="modal"
-                (click)="edit(w)"
+                (click)="editMaterialList(matQuotation, index)"
                 matTooltip="Edit"
               >
                 <mat-icon>edit</mat-icon>
@@ -423,14 +416,14 @@
                 class="btn-delete ptable-wo-btns"
                 mat-icon-button
                 matTooltip="Delete"
-                (click)="delete(w)"
+                (click)="deleteMaterialList(index)"
               >
                 <mat-icon color="warn">delete</mat-icon>
               </button>
           </td>
         </tr>
         <div class="col-md-12">
-          <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save Details</button>
+          <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save</button>
         </div>
       </tbody>
     </table>
@@ -452,10 +445,11 @@
           <th>COST PLUS AMOUNT</th>
           <th>FIXED AMOUNT</th>
           <th></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
-        <tr class="mpn-row" *ngFor="let matQuotation of materialListQuotation">
+        <tr class="mpn-row" *ngFor="let matQuotation of materialListQuotation; let index=index;">
           <td>{{matQuotation.partNumber}}</td>
           <td>{{matQuotation.partDescription}}</td>
           <td>{{matQuotation.workOrderNumber}}</td>
@@ -468,7 +462,7 @@
           <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
           <td>
             <!-- <input [(ngModel)]="matQuotation.markup" /> -->
-            <select (change)="markupChanged(matQuotation)" [(ngModel)]="matQuotation.markup">
+            <select (change)="markupChanged(matQuotation, index)" [(ngModel)]="matQuotation.markup">
               <option value="">Select</option>
               <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
             </select>
@@ -481,7 +475,7 @@
                 mat-icon-button
                 data-target="#addNewMaterials"
                 data-toggle="modal"
-                (click)="edit(w)"
+                (click)="editMaterialList(matQuotation)"
                 matTooltip="Edit"
               >
                 <mat-icon>edit</mat-icon>
@@ -492,22 +486,17 @@
                 class="btn-delete ptable-wo-btns"
                 mat-icon-button
                 matTooltip="Delete"
-                (click)="delete(w)"
+                (click)="deleteMaterialList(index)"
               >
                 <mat-icon color="warn">delete</mat-icon>
               </button>
           </td>
         </tr>
         <div class="col-md-12">
-          <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save Details</button>
+          <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save</button>
         </div>
       </tbody>
     </table>
-    <!-- <app-work-order-complete-material-list 
-    [workFlowObject]="workFlowObject" 
-    [savedWorkOrderData]="savedWorkOrderData" 
-    [workOrderMaterialList]="workOrderMaterialList"
-   ></app-work-order-complete-material-list> -->
    
   </div>
 
@@ -531,61 +520,6 @@
   </div>
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'charges'">
-    <!-- <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use work flow'">
-      <thead>
-        <tr>
-          <th>Task id</th>
-          <th>Description</th>
-          <th>Vendor Name</th>
-          <th>Extended Cost</th>
-          <th>Extended Price</th>
-          <th>Quantity</th>
-          <th>Unit Cost</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="mpn-row" *ngFor="let matQuotation of chargesQuotation">
-          <td>{{matQuotation.taskId}}</td>
-          <td>{{matQuotation.description}}</td>
-          <td>{{matQuotation.vendorName}}</td>
-          <td>{{matQuotation.extendedCost}}</td>
-          <td>{{matQuotation.extendedPrice}}</td>
-          <td>{{matQuotation.quantity}}</td>
-          <td>{{matQuotation.unitCost}}</td>
-        </tr>
-        <div class="col-md-12">
-          <button class="btn btn-primary-cstm pull-right" (click)="createChargeQuote()">Save Details</button>
-        </div>
-      </tbody>
-    </table>
-
-    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="selectedBuildMethod == 'use historical wos'">
-        <thead>
-          <tr>
-            <th>Task id</th>
-            <th>Description</th>
-            <th>Vendor Name</th>
-            <th>Extended Cost</th>
-            <th>Extended Price</th>
-            <th>Quantity</th>
-            <th>Unit Cost</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="mpn-row" *ngFor="let matQuotation of chargesQuotation">
-            <td>{{matQuotation.taskId}}</td>
-            <td>{{matQuotation.description}}</td>
-            <td>{{matQuotation.vendorName}}</td>
-            <td>{{matQuotation.extendedCost}}</td>
-            <td>{{matQuotation.extendedPrice}}</td>
-            <td>{{matQuotation.quantity}}</td>
-            <td>{{matQuotation.unitCost}}</td>
-          </tr>
-          <div class="col-md-12">
-            <button class="btn btn-primary-cstm pull-right" (click)="createChargeQuote()">Save Details</button>
-          </div>
-        </tbody>
-    </table> -->
     <app-work-order-charges [workFlowObject]="workFlowObject" 
                           isWorkOrder="false"
                            [workOrderChargesList]="workOrderChargesList" 
@@ -970,20 +904,13 @@
             <h4 class="modal-title">Add Material</h4>
           </div>
           <div class="modal-body">
-              <grd-material  *ngIf="!isEdit" 
+              <grd-material 
+              [isEdit]="editMatData.length>0"
+              [editData]="editMatData"
               [isWorkOrder]="isWorkOrder" 
               [workFlow]="workFlowObject" 
               [isQuote]="isQuote"
               (saveMaterialListForWO)="saveMaterialListForWO($event)" ></grd-material>
-          
-            <grd-material *ngIf="isEdit && editData"
-              [isEdit]="isEdit"
-              [editData]="editData"
-              [isQuote]="isQuote"
-              [isWorkOrder]="isWorkOrder" 
-              [workFlow]="workFlowObject" 
-              (updateMaterialListForWO)="updateMaterialList($event)" >
-          </grd-material> 
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

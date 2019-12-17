@@ -17,7 +17,7 @@ import { AlertService, MessageSeverity } from "../services/alert.service";
     templateUrl: './Material-List-Create.component.html',
     styleUrls: ['./Material-List-Create.component.css']
 })
-export class MaterialListCreateComponent implements OnInit {
+export class MaterialListCreateComponent implements OnInit, OnChanges {
     @Input() workFlowObject;
     partCollection: any[] = [];
     itemclaColl: any[] = [];
@@ -123,6 +123,16 @@ export class MaterialListCreateComponent implements OnInit {
         if (this.UpdateMode) {
             this.reCalculate();
 
+        }
+    }
+
+    ngOnChanges(){
+        if(this.isQuote && this.editData.length > 0){
+            this.workFlow.materialList = this.editData;
+        }
+        else if(this.isQuote){
+            this.workFlow.materialList = [];
+            this.addRow();
         }
     }
 
@@ -254,7 +264,7 @@ export class MaterialListCreateComponent implements OnInit {
         newRow.itemMasterId = "";
         newRow.mandatoryOrSupplemental = 'Mandatory';
         newRow.partDescription = "";
-        newRow.partNumber = " ";
+        newRow.partNumber = "";
         newRow.isDeferred = this.isDeferredBoolean;
         newRow.memo = "";
         newRow.price = "";

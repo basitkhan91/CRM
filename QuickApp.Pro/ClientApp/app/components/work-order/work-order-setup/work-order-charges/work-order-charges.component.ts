@@ -25,6 +25,7 @@ export class WorkOrderChargesComponent implements OnChanges{
 
   isEdit: boolean = false;
   editData: any;
+  editingIndex: number;
 
   constructor(private workOrderService: WorkOrderService, private authService: AuthService,
     private alertService: AlertService, private cdRef: ChangeDetectorRef) {
@@ -44,22 +45,28 @@ export class WorkOrderChargesComponent implements OnChanges{
     this.isEdit = false;
     this.editData = undefined;
   }
-  edit(rowData) {
+  edit(rowData, i) {
+    this.editingIndex = i;
     this.createNew();
     this.cdRef.detectChanges();
     this.isEdit = true;
     this.editData = rowData;
   }
-  delete(rowData) {
-    const { workOrderChargeId } = rowData;
-    this.workOrderService.deleteWorkOrderChargesByChargesId(workOrderChargeId, this.userName).subscribe(res => {
-      this.refreshData.emit();
-      this.alertService.showMessage(
-        '',
-        'Deleted WorkOrder Charges Successfully',
-        MessageSeverity.success
-      );
-    })
+  delete(rowData, i) {
+    if(this.isQuote){
+      this.workOrderChargesList.splice(i, 1);
+    }
+    else{
+      const { workOrderChargeId } = rowData;
+      this.workOrderService.deleteWorkOrderChargesByChargesId(workOrderChargeId, this.userName).subscribe(res => {
+        this.refreshData.emit();
+        this.alertService.showMessage(
+          '',
+          'Deleted WorkOrder Charges Successfully',
+          MessageSeverity.success
+        );
+      })
+    }
   }
 
   saveChargesList(event) {
@@ -68,9 +75,16 @@ export class WorkOrderChargesComponent implements OnChanges{
   }
 
   updateChargesList(event) {
-    this.updateChargesListForWO.emit(event);
-    $('#addNewCharges').modal('hide');
-    this.isEdit = false;
+    if(this.isQuote && this.isEdit){
+      this.workOrderChargesList[this.editingIndex] = event.charges[0];
+      $('#addNewCharges').modal('hide');
+      this.isEdit = false;
+    }
+    else{
+      this.updateChargesListForWO.emit(event);
+      $('#addNewCharges').modal('hide');
+      this.isEdit = false;
+    }
   }
 
   createChargeQuote(){

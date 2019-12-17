@@ -16,6 +16,7 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     @Input() workFlow: IWorkFlow;
     @Input() UpdateMode: boolean;
     @Input() isEdit = false;
+    @Input() isQuote = false;
     @Input() editData;
     @Output() saveExclusionsListForWO = new EventEmitter();
     @Output() updateExclusionsListForWO = new EventEmitter();
@@ -41,25 +42,25 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
 
+        if (this.isEdit) {
+            this.workFlow.exclusions = [];
+            const data = {
+                ...this.editData,
+                partDescription: this.editData.epnDescription,
+                partNumber: this.editData.epn,
+                estimtPercentOccurrance: this.editData.estimtPercentOccurranceId
 
+            }
+            this.workFlow.exclusions.push(data);
+            this.reCalculate();
+        } else {
+            this.workFlow.exclusions = [];
+            this.row = this.workFlow.exclusions[0];
+            this.addRow();
+        }
         if (this.isWorkOrder) {
             this.row = this.workFlow.exclusions[0];
-            if (this.isEdit) {
-                this.workFlow.exclusions = [];
-                const data = {
-                    ...this.editData,
-                    partDescription: this.editData.epnDescription,
-                    partNumber: this.editData.epn,
-                    estimtPercentOccurrance: this.editData.estimtPercentOccurranceId
-
-                }
-                this.workFlow.exclusions.push(data);
-                this.reCalculate();
-            } else {
-                this.workFlow.exclusions = [];
-                this.row = this.workFlow.exclusions[0];
-                this.addRow();
-            }
+            
             // this.row = this.workFlow.exclusions[0];
             // this.addRow();
         } else {
@@ -78,6 +79,8 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
 
 
     ngOnChanges(): void {
+        console.log(this.isEdit);
+        console.log(this.isQuote);
     }
     reCalculate() {
         this.calculateQtySummation();
