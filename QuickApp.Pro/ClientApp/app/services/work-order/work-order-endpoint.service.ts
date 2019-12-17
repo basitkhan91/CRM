@@ -350,7 +350,7 @@ export class WorkOrderEndpointService extends EndpointFactory {
     }
 
     createOrUpdateQuotation(data) {
-        return this.http.post(`${this.configurations.baseUrl}/api/workOrder/${data.workOrderQuoteId==undefined?'createworkorderquote':'updateworkorderquote'}`, JSON.stringify(data), this.getRequestHeaders())
+        return this.http.post(`${this.configurations.baseUrl}/api/workOrder/${data.workOrderQuoteId == undefined ? 'createworkorderquote' : 'updateworkorderquote'}`, JSON.stringify(data), this.getRequestHeaders())
     }
 
     getSubWorkOrderListByWorkOrderId(workOrderId) {
@@ -383,6 +383,9 @@ export class WorkOrderEndpointService extends EndpointFactory {
 
     updateBillingByWorkOrderId(data) {
         return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/updatebillinginvoicing`, JSON.stringify(data), this.getRequestHeaders())
+    }
+    getExistingWOROList() {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderrolist`, this.getRequestHeaders())
     }
 
     getBillingEditData(workOrderId, workOrderPartNoId) {

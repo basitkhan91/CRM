@@ -250,8 +250,12 @@ export class WorkOrderService {
     createBillingByWorkOrderId(data) {
         return this.workOrderEndpointService.createBillingByWorkOrderId(data);
     }
-    updateBillingByWorkOrderId(data){
+    updateBillingByWorkOrderId(data) {
         return this.workOrderEndpointService.updateBillingByWorkOrderId(data);
+    }
+
+    getExistingWOROList() {
+        return this.workOrderEndpointService.getExistingWOROList();
     }
 
 

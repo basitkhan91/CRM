@@ -644,10 +644,10 @@
                                   (click)="gridTabChange('main')">Main
                                   Component </a>
                               <div class="dropdown-menu">
-                                  <a class="dropdown-item">Add to an Existing RO</a>
-                                  <a class="dropdown-item">Create New RO</a>
-                                  <a class="dropdown-item">Convert Internal to External </a>
-                                  <a class="dropdown-item">Return MC to Customer </a>
+                                  <a class="dropdown-item" (click)="mainComponentTabSelected('existingRO')">Add to an Existing RO</a>
+                                  <a class="dropdown-item" (click)="mainComponentTabSelected('createNewRO')" >Create New RO</a>
+                                  <a class="dropdown-item" (click)="mainComponentTabSelected('interOrexternal')" >Convert Internal to External </a>
+                                  <a class="dropdown-item" (click)="mainComponentTabSelected('returnmc')" >Return MC to Customer </a>
                               </div>
                           </li>
                           <li class="nav-item">
@@ -728,11 +728,11 @@
                             (click)="gridTabChange('otherOptions')">Other Options</a>
                         <div class="dropdown-menu">
               
-                            <a class="dropdown-item" (click)="otherOptionSelected('freight')" >Freight</a>
-                            <a class="dropdown-item" (click)="otherOptionSelected('contactGrid')">Contact Grid</a>
-                            <a class="dropdown-item" (click)="otherOptionSelected('accounting')" >Accounting</a>
-                            <a class="dropdown-item" (click)="otherOptionSelected('charges')">Charges</a>
-                            <a class="dropdown-item" (click)="otherOptionSelected('exclusions')" >Exclusion </a>
+                            <a class="dropdown-item" (click)="otherOptionTabSelected('freight')" >Freight</a>
+                            <a class="dropdown-item" (click)="otherOptionTabSelected('contactGrid')">Contact Grid</a>
+                            <a class="dropdown-item" (click)="otherOptionTabSelected('accounting')" >Accounting</a>
+                            <a class="dropdown-item" (click)="otherOptionTabSelected('charges')">Charges</a>
+                            <a class="dropdown-item" (click)="otherOptionTabSelected('exclusions')" >Exclusion </a>
                         </div>
                     </li>
                     </ul>
@@ -779,6 +779,12 @@
                     <div  *ngIf="quote" [ngClass]="{hidedata : gridActiveTab !== 'quote' }" >
                             <app-work-order-quote [quoteForm]="quote"></app-work-order-quote>
                         </div>
+
+                    
+                      <div  *ngIf="workOrderId"  [ngClass]="{hidedataMain :  subTabMainComponent !== 'existingRO'} "  >
+                        <app-workorder-ro-list></app-workorder-ro-list>
+                      </div>
+
                     <div *ngIf="workOrderId" [ngClass]="{hidedata : gridActiveTab !== 'materialList' }" >  
                       <app-work-order-complete-material-list [materialStatus]="materialStatus"
                        [isWorkOrder]="isWorkOrder" 

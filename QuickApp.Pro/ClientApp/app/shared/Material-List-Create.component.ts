@@ -36,6 +36,7 @@ export class MaterialListCreateComponent implements OnInit {
     @Output() saveMaterialListForWO = new EventEmitter();
     @Output() updateMaterialListForWO = new EventEmitter();
 
+
     @Output() notify: EventEmitter<IWorkFlow> =
         new EventEmitter<IWorkFlow>();
     materialCondition: any[] = [];
