@@ -496,7 +496,11 @@ namespace DAL.Repositories
                         StockLineId = woPartNo.StockLineId,
                     };
 
-                    repairOrderDtoList.Add(repairOrderPartDto);
+					if (repairOrderDtoList == null)
+						repairOrderDtoList = new List<RepairOrderPartDto>();
+
+
+					repairOrderDtoList.Add(repairOrderPartDto);
                 }
             }
 
