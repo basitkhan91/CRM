@@ -339,7 +339,7 @@ namespace DAL
         public DbSet<ConditionAudit> ConditionAudit { get; set; }
         public DbSet<CreditTermsAudit> CreditTermsAudit { get; set; }
         public DbSet<CurrencyAudit> CurrencyAudit { get; set; }
-        public DbSet<ItemClassficationAudit> ItemClassficationAudit { get; set; }
+        public DbSet<ItemClassficationAudit> ItemClassificationAudit { get; set; }
         public DbSet<ItemgroupAudit> ItemGroupAudit { get; set; }
         public DbSet<JobTitleAudit> JobTitleAudit { get; set; }
         public DbSet<JobTypeAudit> JobTypeAudit { get; set; }
