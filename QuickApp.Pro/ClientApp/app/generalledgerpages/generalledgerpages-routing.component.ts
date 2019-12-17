@@ -23,6 +23,7 @@ import { InterCompanySetupComponent } from '../components/general-ledger/interco
 //import { GLAccountCategoryComponent } from '../components/gl-account-categories/gl-account-categories.component';
 import { AccountListingComponent } from '../components/general-ledger/account-listing/account-listing.component';
 import { AccountListingCreateComponent } from '../components/general-ledger/account-listing-create/account-listing-create.component';
+import { AccountingListingCalendarComponent } from '../components/general-ledger/accounting-listing-calendar/accounting-listing-calendar.component';
 
 
 const generalledgerpageRoutes: Routes = [
@@ -49,7 +50,8 @@ const generalledgerpageRoutes: Routes = [
             { path: "app-intercompany-setup", component: InterCompanySetupComponent, data: { title: "InterCompanySetup" } },
             { path: "app-account-listing", component: AccountListingComponent, data: { title: "AccountListing" } },
             { path: "app-account-listing-create", component: AccountListingCreateComponent, data: { title: "AccountListingCreate" } },
-            { path: "app-account-listing-create/:id", component: AccountListingCreateComponent, data: { title: "AccountListingEdit" } }
+            { path: "app-account-listing-create/:id", component: AccountListingCreateComponent, data: { title: "AccountListingEdit" } },
+            { path: "app-accounting-listing-calendar", component: AccountingListingCalendarComponent, data: { title: "AccountingCalendarList", mode: "listing" } }
         ]
     }
 ];

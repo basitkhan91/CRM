@@ -23,7 +23,19 @@
                                     </div>
                                     <button type="button" pButton icon="fa-download" iconPos="left" label="Export Data" matTooltip="Download Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" matTooltip="Download Selected Data" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    <div class="excel-upload  excel-upload-cstm">
 
+                                        <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
+                                               accept=".xlsx, .xls, .csv">
+                                        <label for="upload">
+                                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
+                                                <i class="fa fa-upload"></i>
+                                            </span>
+                                        </label>
+                                        &nbsp; &nbsp;
+
+                                        <button class="btn btn-primary-cstm" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownload()">Sample File Download</button>
+                                    </div>
 
                                 </div>
                             </ng-template>

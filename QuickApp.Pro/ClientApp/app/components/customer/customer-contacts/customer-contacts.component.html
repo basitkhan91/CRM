@@ -212,14 +212,14 @@
       </div>
 
 
-<div #addContactDetails class="modal fade" id="addContactDetails" role="dialog">
-    <div class="modal-dialog">
-        <form #ccForm="ngForm" #addContactForm="ngForm" class="form-horizontal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Add Contact Details</h4>
-                </div>
+<div class="modal fade" id="addContactDetails" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add Contact Details</h4>
+            </div>
+            <form #ccForm="ngForm" #addContactForm="ngForm" class="form-horizontal">
                 <div class="modal-body">
                     <div class="form-row">
                         <div class="col-md-6">
@@ -243,28 +243,28 @@
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
                                     <input type="text" class="form-control" [(ngModel)]="contactInformation.firstName" name="firstName" required>
                                     <!-- <p-autoComplete class="autocomp-customer-cstm"
-                                                [(ngModel)]="contactInformation.firstName"  name="firstName" field="firstName" [suggestions]="firstNamesList" (completeMethod)="filterFirstNames($event)" [size]="30"
-                                                [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required>
+                                        [(ngModel)]="contactInformation.firstName"  name="firstName" field="firstName" [suggestions]="firstNamesList" (completeMethod)="filterFirstNames($event)" [size]="30"
+                                        [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required>
 
 
-                                </p-autoComplete> -->
+                        </p-autoComplete> -->
                                 </div>
                                 <!-- <div *ngIf="disableSaveFirstName" class="clr-red">Entry Already Exists</div> -->
                                 <!-- <div class="form-group col-sm-12 Customer-details-heading" *ngIf="showFirstName">
-                                <p class="fs10">
-                                    Please Enter Required fields
-                                </p>
-                            </div> -->
+                        <p class="fs10">
+                            Please Enter Required fields
+                        </p>
+                    </div> -->
                             </div>
                             <div class="form-group">
                                 <label>Middle Name</label>
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
                                     <input type="text" class="form-control" [(ngModel)]="contactInformation.middleName" name="middleName">
                                     <!-- <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="contactInformation.middleName"
-                                                name="middleName"  [suggestions]="middleNamesList" field="middleName" (completeMethod)="filterMiddleNames($event)" [size]="30"
-                                                [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}">
+                                        name="middleName"  [suggestions]="middleNamesList" field="middleName" (completeMethod)="filterMiddleNames($event)" [size]="30"
+                                        [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}">
 
-                                </p-autoComplete> -->
+                        </p-autoComplete> -->
                                 </div>
 
                                 <!-- <div *ngIf="disableSaveMiddleName" class="clr-red">Entry Already Exists</div> -->
@@ -274,18 +274,18 @@
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
                                     <input type="text" class="form-control" [(ngModel)]="contactInformation.lastName" name="lastName" required>
                                     <!-- <p-autoComplete class="autocomp-customer-cstm"  [(ngModel)]="contactInformation.lastName"
-                                 name="lastName" [suggestions]="lastNamesList" field="lastName" (completeMethod)="filterLastNames($event)"
+                         name="lastName" [suggestions]="lastNamesList" field="lastName" (completeMethod)="filterLastNames($event)"
 
-                                                [size]="30" [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required>
+                                        [size]="30" [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required>
 
-                                </p-autoComplete> -->
+                        </p-autoComplete> -->
                                     <!-- <div *ngIf="disableSaveLastName" class="clr-red">Entry Already Exists</div> -->
                                 </div>
                                 <!-- <div class="form-group col-sm-12 Customer-details-heading" *ngIf="showLastName">
-                                <p class="fs10">
-                                    Please Enter Required fields
-                                </p>
-                            </div> -->
+                        <p class="fs10">
+                            Please Enter Required fields
+                        </p>
+                    </div> -->
                             </div>
                             <div class="form-group">
                                 <label>Suffix</label>
@@ -370,8 +370,9 @@
                     <button type="button" *ngIf="isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" (click)="updateCustomerContact()" [disabled]="!addContactForm.valid ||contactEmail.errors" data-dismiss="modal">Update</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
+        
     </div>
 </div>
 

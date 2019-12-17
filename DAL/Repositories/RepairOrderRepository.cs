@@ -455,8 +455,8 @@ namespace DAL.Repositories
             {
                 repairOrderDtoList = null;
             }
-
-            if(workOrderPartNoId>0)
+            // Create RO From Work Order
+            if (workOrderPartNoId>0)
             {
                 var woPartNo = _appContext.WorkOrderPartNumber.Where(p => p.ID == workOrderPartNoId).FirstOrDefault();
                 if(woPartNo!=null)
@@ -496,7 +496,11 @@ namespace DAL.Repositories
                         StockLineId = woPartNo.StockLineId,
                     };
 
-                    repairOrderDtoList.Add(repairOrderPartDto);
+					if (repairOrderDtoList == null)
+						repairOrderDtoList = new List<RepairOrderPartDto>();
+
+
+					repairOrderDtoList.Add(repairOrderPartDto);
                 }
             }
 

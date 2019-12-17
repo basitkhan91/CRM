@@ -5,29 +5,12 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
 import { WorkOrderPagesComponent } from './workorderpages.component';
-import { WorkOrderAddComponent } from '../components/work-order/work-order-setup/work-order-add/work-order-add.component';
-import { ManualEntryLaborHoursComponent } from '../components/work-order/work-order-setup/labor/manual-entry-labor-hours/manual-entry-labor-hours.component';
-import { SystemGeneratedLaborHoursComponent } from '../components/work-order/work-order-setup/labor/system-generated-labor-hours/system-generated-labor-hours.component';
-import { BarCodeScannedLaborHoursComponent } from '../components/work-order/work-order-setup/labor/bar-code-scanned-labor-hours/bar-code-scanned-labor-hours.component';
-import { WorkOrderEquipmentListComponent } from '../components/work-order/work-order-setup/work-order-equipment/work-order-equipment-list/work-order-equipment-list.component';
-import { WorkOrderEquipmentCheckInOutComponent } from '../components/work-order/work-order-setup/work-order-equipment/work-order-equipment-check-in-out/work-order-equipment-check-in-out.component';
-import { WorkOrderCompleteMaterialListComponent } from '../components/work-order/work-order-setup/work-order-complete-material-list/work-order-complete-material-list.component';
-import { WorkOrderReserveIssueComponent } from '../components/work-order/work-order-setup/work-order-reserve-issue/work-order-reserve-issue.component';
-import { WorkOrderMainComponentComponent } from '../components/work-order/work-order-setup/work-order-main-component/work-order-main-component.component';
-import { WorkOrderMemoComponent } from '../components/work-order/work-order-setup/work-order-memo/work-order-memo.component';
-import { WorkOrderDocumentsComponent } from '../components/work-order/work-order-setup/work-order-documents/work-order-documents.component';
-import { WorkOrderAnalysisComponent } from '../components/work-order/work-order-setup/work-order-analysis/work-order-analysis.component';
-import { WorkOrderBillingComponent } from '../components/work-order/work-order-setup/work-order-billing/work-order-billing.component';
 import { WorkOrderQuoteComponent } from '../components/work-order/work-order-setup/work-order-quote/work-order-quote.component';
-import { WorkOrderShippingComponent } from '../components/work-order/work-order-setup/work-order-shipping/work-order-shipping.component';
 import { WorkOrderListComponent } from '../components/work-order/work-order-list/work-order-list.component';
 import { AuthService } from '../services/auth.service';
 import { AuthGuard } from '../services/auth-guard.service';
-import { DirectLabourComponent } from '../components/work-order/direct-labour/direct-labour.component';
 import { WorkOrderSmartComponent } from '../components/work-order/work-order-setup/work-order-smart/work-order-smart.component';
-import { SubWorkOrderListComponent } from '../components/work-order/work-order-setup/work-order-subwo-list/work-order-subwo-list.component';
 import { SubWorkOrderComponent } from '../components/work-order/work-order-setup/work-order-sub-wo/work-order-subwo.component';
 
 const workorderPagesRoutes: Routes = [

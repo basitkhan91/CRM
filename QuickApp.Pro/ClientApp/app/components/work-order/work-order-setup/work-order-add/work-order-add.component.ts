@@ -180,6 +180,9 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     quoteFreightsList: any;
     quoteChargesList: any;
     quoteLaborList: any;
+    // workScope: any;
+    workScope: any;
+    subTabMainComponent: any = '';
 
 
 
@@ -415,6 +418,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         // }
         this.subTabWorkFlow = '';
         this.subTabOtherOptions = '';
+        this.subTabMainComponent = '';
         if (value !== 'billorInvoice') {
             this.billing = undefined;
         }
@@ -555,12 +559,14 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         console.log(result);
         this.getWorkOrderWorkFlowNos();
         if (this.workOrderGeneralInformation.isSinglePN == true) {
-            // get WOrkFlow Equipment Details if WorFlow Exists
-            console.log(data);
-            this.getWorkFlowTabsData();
+            // get WorkFlow Equipment Details if WorFlow Exists
+
             this.workOrderPartNumberId = result.partNumbers[0].id;
             this.workFlowId = result.partNumbers[0].workflowId;
             this.workFlowWorkOrderId = result.workFlowWorkOrderId;
+            this.workScope = result.partNumbers[0].workscope;
+            this.getWorkFlowTabsData();
+
 
         }
         this.showTabsGrid = true; // Show Grid Boolean
@@ -754,6 +760,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         this.workFlowId = data.workflowId,
             this.workFlowWorkOrderId = data.workOrderWorkFlowId;
         this.workOrderPartNumberId = data.workOrderPartNumberId;
+        this.workScope = data.workscope;
         // console.log(workFlowWorkOrderId);
 
         this.getWorkFlowTabsData();
@@ -823,7 +830,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                             workflowId: x.workflowId,
                             workflowNo: x.workflowNo,
                             partNumber: x.partNumber,
-                            workOrderPartNumberId: x.workOrderPartNumberId
+                            workOrderPartNumberId: x.workOrderPartNumberId,
+                            workScope: x.workscope
                         },
                         label: x.partNumber
                     }
@@ -1019,7 +1027,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     formWorkerOrderLaborJson(data) {
 
         let result = {
-            "workFlowWorkOrderId": data['workFlowWorkOrderId'],
+            "workFlowWorkOrderId":this.workFlowWorkOrderId,
+            //"workFlowWorkOrderId": data['workFlowWorkOrderId'],
             "workOrderId": data['workOrderId'],
             "dataEnteredBy": data['dataEnteredBy'],
             "expertiseId": data['expertiseId'],
@@ -1113,14 +1122,15 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             this.workOrderService.getWorkOrderLaborList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
                 this.data = {};
                 this.data = res;
-                console.log('aaaa');
-                console.log(this.data);
-                this.workOrderLaborList = {
-                    ...this.data,
-                    workFlowWorkOrderId: getObjectById('value', this.data.workFlowWorkOrderId, this.workOrderWorkFlowOriginalData),
-                    employeeId: getObjectById('value', this.data.employeeId, this.employeesOriginalData),
-                    dataEnteredBy: getObjectById('value', this.data.employeeId, this.employeesOriginalData),
-                };
+                if (res) {
+                    this.workOrderLaborList = {
+                        ...this.data,
+                        workFlowWorkOrderId: getObjectById('value', this.data.workFlowWorkOrderId, this.workOrderWorkFlowOriginalData),
+                        employeeId: getObjectById('value', this.data.employeeId, this.employeesOriginalData),
+                        dataEnteredBy: getObjectById('value', this.data.employeeId, this.employeesOriginalData),
+                    };
+                }
+
 
                 if (res) {
 
@@ -1156,14 +1166,17 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
 
 
-    otherOptionSelected(value) {
+    otherOptionTabSelected(value) {
         this.subTabOtherOptions = value;
         if (value === 'charges') {
             this.getChargesListByWorkOrderId();
         } else if (value === 'exclusions') {
             this.getExclusionListByWorkOrderId();
         }
+    }
 
+    mainComponentTabSelected(value) {
+        this.subTabMainComponent = value;
 
     }
 
@@ -1252,8 +1265,6 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
     saveWorkOrderBilling(object) {
-
-
         const data = {
             ...object,
             ...this.loginDetailsForCreate,
@@ -1265,7 +1276,6 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             employeeId: editValueAssignByCondition('value', this.savedWorkOrderData.employeeId),
             soldToCustomerId: editValueAssignByCondition('customerId', object.soldToCustomerId),
             shipToCustomerId: editValueAssignByCondition('customerId', object.shipToCustomerId),
-
             invoiceTime: moment(object.invoiceTime, ["h:mm A"]).format("HH:mm")
         }
 
@@ -1300,6 +1310,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 printDate: new Date(res.printDate),
                 woOpenDate: new Date(res.openDate),
                 invoiceDate: new Date(res.invoiceDate),
+                workScope: this.workScope,
                 soldToCustomerId: { customerId: res.soldToCustomerId, customerName: res.soldToCustomer },
                 shipToCustomerId: { customerId: res.shipToCustomerId, customerName: res.shipToCustomer },
                 customerRef: res.customerReference,
@@ -1385,7 +1396,10 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
     getQuoteLaborListByWorkOrderQuoteId() {
         this.quoteService.getQuoteLaborList(this.workOrderQuoteId).subscribe(res => {
-            this.quoteLaborList = res.laborList;
+            if (res.length > 0) {
+                this.quoteLaborList = res.laborList;
+            }
+
         })
     }
 

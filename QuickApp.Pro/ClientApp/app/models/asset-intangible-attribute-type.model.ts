@@ -2,12 +2,12 @@
 
 export class AssetIntangibleAttributeType {
 
-    constructor(assetintangibleAttributeTypeId?: number, assetIntangibleTypeId?: number, assetDepreciationMethodId?: number, intangibleLife?: number,
+    constructor(assetIntangibleAttributeTypeId?: number, assetIntangibleTypeId?: number, assetDepreciationMethodId?: number, intangibleLife?: number,
         amortizationFrequency?: string, assetAmortizationIntervalId?: number, intangibleGLAccountId?: number, amortExpenseGLAccountId?: number, accAmortDeprGLAccountId?: number, depreciationMethod?: number, intangibleWriteDownGLAccountId?: number,
         intangibleWriteOffGLAccountId?: number, amortizationMethod?: number, managementStructureId?: number, masterCompanyId?: number, intangibleLifeYears?: number, createdBy?: string, updatedBy?: string, createdDate?: Date, updatedDate?: Date,
         isActive?: boolean, isDelete?: boolean) {
 
-        this.assetintangibleAttributeTypeId = assetintangibleAttributeTypeId;
+        this.assetIntangibleAttributeTypeId = assetIntangibleAttributeTypeId;
         this.assetIntangibleTypeId = assetIntangibleTypeId || 0;
         this.assetDepreciationMethodId = assetDepreciationMethodId || 0;
         this.amortizationMethod = amortizationMethod || 0;
@@ -31,7 +31,7 @@ export class AssetIntangibleAttributeType {
         this.isDelete = isDelete;
     }
 
-    assetintangibleAttributeTypeId: number;
+    assetIntangibleAttributeTypeId: number;
     assetIntangibleTypeId: number;
     assetDepreciationMethodId: number;
     intangibleLife: number;

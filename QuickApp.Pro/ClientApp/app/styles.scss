@@ -12482,7 +12482,7 @@ table thead tr th:first-child input, table tr td:first-child input {
 
     body .ui-table .ui-table-thead > tr > th {
         font-weight: 600 !important;
-        font-size: 10px !important;
+        font-size: 12px !important;
         color: #fff !important;
     }
 
@@ -13940,6 +13940,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .capes-view-btn .fa {
     color: blue !important;
 }
+.ptable-cus-pma .ui-table-wrapper {
+    padding: 0 !important;
+}
 .multi-general p-multiselect[_ngcontent-c234]{
     width: 207px !important;
     height: 27px !important;
@@ -14290,6 +14293,11 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     display: flex;
     flex-wrap: wrap;
     padding: 10px 5px;
+}
+.sales-quote-shipping-label{
+    width: 100% !important;
+    text-align: left !important;
+    padding-left: 10px !important;
 }
 @media only screen and (max-width: 1024px) {
     .md-stepper-horizontal .md-step.active.done .md-step-title, .md-stepper-horizontal .md-step.active.editable .md-step-title {

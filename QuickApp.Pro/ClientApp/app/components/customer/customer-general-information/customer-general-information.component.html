@@ -139,12 +139,12 @@
                                                     <label>Phone <span class="clr-red">*</span></label>
                                                     <div class="col-md-12">
                                                         <div class="col-md-6">
-                                                                      <input type="text" id="phone" name="phone" pInputText pKeyFilter="num"  minlength=10 maxlength=13 class="form-control" [(ngModel)]="generalInformation.customerPhone" required>
+                                                                      <input type="text" id="phone" name="phone"   minlength=10 class="form-control" maxlength="20" (keypress)="patternMobilevalidationWithSpl($event)" [(ngModel)]="generalInformation.customerPhone" required>
                                                            
                                                         </div>
                                                         
                                                         <div class="col-md-6">
-                                                                <input type="text"  name="phoneExt" pInputText  maxlength="10" [(ngModel)]="generalInformation.customerPhoneExt">
+                                                                <input type="text"  name="phoneExt" pInputText  maxlength="15" [(ngModel)]="generalInformation.customerPhoneExt">
                                                         </div>
 
                                                     </div>
@@ -368,7 +368,7 @@
                                                             </div>
                                                         </div>
                                                         <div *ngIf="disableRestrictedPMA">
-                                                            <p-table class="table-responsive" [value]="generalInformation.restrictedPMAParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
+                                                            <p-table class="table-responsive ptable-cus-pma" [value]="generalInformation.restrictedPMAParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
                                                                 <ng-template pTemplate="header" let-columns>
                                                                     <tr>
                                                                         <th *ngFor="let col of columns">
@@ -439,7 +439,7 @@
                                                             </div>
                                                         </div>
                                                         <div *ngIf="disableRestrictedDER">
-                                                            <p-table class="table-responsive" [value]="generalInformation.restrictedDERParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
+                                                            <p-table class="table-responsive ptable-cus-pma" [value]="generalInformation.restrictedDERParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
                                                                 <ng-template pTemplate="header" let-columns>
                                                                     <tr>
                                                                         <th *ngFor="let col of columns">
