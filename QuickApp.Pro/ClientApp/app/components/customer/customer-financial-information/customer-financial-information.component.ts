@@ -15,6 +15,7 @@ import { CommonService } from '../../../services/common.service';
 import { PercentService } from '../../../services/percent.service';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { NgbModal, NgbActiveModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { ConfigurationService } from '../../../services/configuration.service';
 @Component({
     selector: 'app-customer-financial-information',
     templateUrl: './customer-financial-information.component.html',
@@ -107,6 +108,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
     namecolle: any[] = [];
     modal: NgbModalRef;
     localcollection: any;
+    formData = new FormData();
+    allCustomerFinanceDocumentsList: any = [];
     // discountNew = {
 
 
@@ -226,7 +229,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
         private alertService: AlertService,
         private commonservice: CommonService,
         public percentService: PercentService,
-        private modalService: NgbModal, private activeModal: NgbActiveModal
+        private modalService: NgbModal, private activeModal: NgbActiveModal,
+        private configurations: ConfigurationService
       
 
     ) {
@@ -259,6 +263,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 this.getDefaultCurrency();
             }
             this.getMappedTaxTypeRateDetails();
+            this.toGetCustomerFinanceDocumentsList(this.id);
         } else {
             this.id = this.savedGeneralInformationData.customerId;
             this.customerCode = this.savedGeneralInformationData.customerCode;
@@ -313,7 +318,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.legalEntityId = 19;
         this.commonservice.getDefaultCurrency(this.legalEntityId).subscribe(res => {
             console.log(res);
-            this.savedGeneralInformationData.generalCurrencyId = res[0].currencyId;
+            this.savedGeneralInformationData.generalCurrencyId = res.currencyId;
         })
     }
 
@@ -565,7 +570,16 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.selectedTaxType = undefined;
         }
     }
+    fileUpload(event, fileType) {
+        if (event.files.length === 0)
+            return;
 
+        for (let file of event.files) {        // console.log(fileType);   
+            this.formData.append(fileType, file);
+            console.log(this.formData);
+        }
+
+    }
 
     saveFinancialInformation() {
         
@@ -574,6 +588,24 @@ export class CustomerFinancialInformationComponent implements OnInit {
             CustomerTaxTypeRateMapping: this.taxTypeRateMapping,
             updatedBy: this.userName
         }, this.id).subscribe(res => {
+
+
+            const vdata = {
+                customerId: this.savedGeneralInformationData.customerId,
+                masterCompanyId: 1,
+                createdBy: this.userName,
+                updatedBy: this.userName
+            }
+
+            for (var key in vdata) {
+                this.formData.append(key, vdata[key]);
+            }
+            //this.vendorService.vendorGeneralDocumentUploadEndpoint(this.formData, this.sourceVendor.vendorId,3,'Vendor',this.userName,1);
+            this.customerService.customerFinanceFileUpload(this.formData).subscribe(res => {
+                this.formData = new FormData();
+                this.toGetCustomerFinanceDocumentsList(this.savedGeneralInformationData.customerId);
+            });
+
             this.alertService.showMessage(
                 'Success',
                 `Saved Financal Infromation`,
@@ -582,6 +614,30 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.nextClick();
         })
     }
+    downloadFileUpload(rowData) {
+     
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
+        window.location.assign(url);
+    }
+
+    toGetCustomerFinanceDocumentsList(customerId) {
+        var moduleId = 1;
+        this.customerService.GetCustomerFinanceDocumentsList(customerId, moduleId).subscribe(res => {
+            this.allCustomerFinanceDocumentsList = res;
+            console.log(this.allCustomerFinanceDocumentsList);
+        })
+    }
+
+    CustomerAttachmentDelete(rowData) {
+        let attachmentDetailId = rowData.attachmentDetailId;
+        let updatedBy = this.userName;
+
+        this.customerService.GetCustomerAttachmentDelete(attachmentDetailId, updatedBy).subscribe(res => {
+            this.toGetCustomerFinanceDocumentsList(this.id);
+        
+        })
+    }
+
     saveMarkUpPercentage() {
         const data = {
             ...this.addNewIntergration,
@@ -778,6 +834,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     dismissModel() {
         this.modal.close();
     }
+   
 
    // deleteTaxTypeRate(i) {
     //    debugger

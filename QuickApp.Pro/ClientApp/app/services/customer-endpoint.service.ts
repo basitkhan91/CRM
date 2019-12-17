@@ -136,8 +136,11 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _customersBillingUpdateforActive: string = '/api/Customer/customersBillingUpdateStatus'
     private readonly _getCustomerDocumentAttachmentslist: string = "/api/FileUpload/getattachmentdetails";
     private readonly _updateCustomerDocument: string = '/api/Customer/customerDocumentUpdate';
+    private readonly _addCustomerFileUpload: string = "/api/Customer/customerFinanceDocumentUpload";
 
+    private readonly _addCustomerFinanceFileDetails: string = "/api/Customer/getCustmerFinanceDocumentDetail";
 
+    private readonly _customerDeleteAttachment: string = "/api/Customer/customerAttachmentDelete";
 
 
     get globalSearch() { return this.configurations.baseUrl + this.getGlobalCustomer; }
@@ -1306,8 +1309,17 @@ export class CustomerEndpoint extends EndpointFactory {
         return this.http.put<T>(`${this._updateCustomerDocument}`, file);
     }
 
+    customerFinanceFileUploadEndpoint<T>(file: any): Observable<T> {
+        const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
+        return this.http.post<T>(`${this._addCustomerFileUpload}`, file);
+    }
+    GetCustomerFinanceDocumentsListEndpoint(customerId, moduleId) {
+        return this.http.get<any>(`${this._addCustomerFinanceFileDetails}/${customerId}?moduleId=${moduleId}`, this.getRequestHeaders())
+    }
 
-
+    GetCustomerAttachmentDeleteEndpoint(attachmentDetailId, updatedBy) {
+        return this.http.delete(`${this._customerDeleteAttachment}/${attachmentDetailId}?updatedBy=${updatedBy}`, this.getRequestHeaders())
+    }
 }
 
 

@@ -2863,7 +2863,7 @@ namespace QuickApp.Pro.Controllers
                         objCustomerDocumentDetail.IsActive = true;
                         objCustomerDocumentDetail.IsDeleted = false;
                         objCustomerDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objCustomerDocumentDetail.CustomerId,
-                                                                                Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), objCustomerDocumentDetail.UpdatedBy, objCustomerDocumentDetail.MasterCompanyId);
+                                                                                Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), objCustomerDocumentDetail.UpdatedBy, objCustomerDocumentDetail.MasterCompanyId);
                         _unitOfWork.CreateDocumentDetails.Add(objCustomerDocumentDetail);
                         _unitOfWork.SaveChanges();
                     }
@@ -3094,6 +3094,64 @@ namespace QuickApp.Pro.Controllers
             _unitOfWork.Repository<CustomerDocumentDetail>().Update(existingResult);
             _unitOfWork.SaveChanges();
             return Ok(id);
+        }
+
+        [HttpPost("customerFinanceDocumentUpload")]
+        [Produces("application/json")]
+        public IActionResult CustomerDocumentUploadAction()
+        {
+
+            try
+            {
+                CustomerDocumentDetail objCustomerDocumentDetail = new CustomerDocumentDetail();
+                if (ModelState.IsValid)
+                {
+                    if (Request.Form == null)
+                        return BadRequest($"{nameof(objCustomerDocumentDetail)} cannot be null");
+                    objCustomerDocumentDetail.MasterCompanyId = 1;
+                    objCustomerDocumentDetail.UpdatedBy = Request.Form["UpdatedBy"];
+                    objCustomerDocumentDetail.CustomerId = Convert.ToInt64(Request.Form["CustomerId"]);
+
+                    if (objCustomerDocumentDetail.CustomerId > 0)
+                    {
+                        var attachmentData = _context.Attachment.Where(p => p.ReferenceId == objCustomerDocumentDetail.CustomerId && p.ModuleId == Convert.ToInt32(ModuleEnum.Customer)).FirstOrDefault();
+
+                        if (attachmentData != null)
+                        {
+                            objCustomerDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objCustomerDocumentDetail.CustomerId,
+                                                         Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), objCustomerDocumentDetail.UpdatedBy, objCustomerDocumentDetail.MasterCompanyId, attachmentData.AttachmentId);
+
+
+                        }
+                        else
+                        {
+                            objCustomerDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objCustomerDocumentDetail.CustomerId,
+                                                                       Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), objCustomerDocumentDetail.UpdatedBy, objCustomerDocumentDetail.MasterCompanyId);
+
+                        }
+
+                    }
+
+                    return Ok(objCustomerDocumentDetail);
+                }
+                return Ok(ModelState);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("getCustmerFinanceDocumentDetail/{id}")]
+        public IActionResult GetCustomerFinanceDocumentDetail(long id, int moduleId)
+        {
+            var allcustomerFinanceDocs = _unitOfWork.Customer.GetCustomerFinanceDocumentDetailById(id, moduleId);
+            return Ok(allcustomerFinanceDocs);
+        }
+        [HttpDelete("customerAttachmentDelete/{id}")]
+        public IActionResult GetCustomerFinanceDocumentDelete(long id, string updatedBy)
+        {
+            var deleteStatus = _unitOfWork.Customer.GetCustomerFinanceDocumentDelete(id, updatedBy);
+            return Ok(deleteStatus);
         }
     }
 
