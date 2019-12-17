@@ -1019,7 +1019,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     formWorkerOrderLaborJson(data) {
 
         let result = {
-            "workFlowWorkOrderId": data['workFlowWorkOrderId'],
+            "workFlowWorkOrderId":this.workFlowWorkOrderId,
+            //"workFlowWorkOrderId": data['workFlowWorkOrderId'],
             "workOrderId": data['workOrderId'],
             "dataEnteredBy": data['dataEnteredBy'],
             "expertiseId": data['expertiseId'],
