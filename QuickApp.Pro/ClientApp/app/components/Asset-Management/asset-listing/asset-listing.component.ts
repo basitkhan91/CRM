@@ -7,6 +7,8 @@ import { fadeInOut } from '../../../services/animations';
 import { SingleScreenAuditDetails } from '../../../models/single-screen-audit-details.model';
 import { AlertService, DialogType, MessageSeverity } from '../../../services/alert.service';
 import { GlAccountService } from '../../../services/glAccount/glAccount.service';
+import { VendorEndpointService } from '../../../services/vendor-endpoint.service';
+import { Vendor } from '../../../models/vendor.model';
 import { GlAccount } from '../../../models/GlAccount.model';
 
 @Component({
@@ -57,7 +59,10 @@ export class AssetListingComponent implements OnInit {
     allAssetInfo: any[] = [];
     cols: { field: string; header: string; }[];
     selectedColumns: { field: string; header: string; }[];
-    constructor(private alertService: AlertService, private assetService: AssetService, private _route: Router, private modalService: NgbModal, private glAccountService: GlAccountService) {
+    constructor(private alertService: AlertService, private assetService: AssetService, private _route: Router,
+        private modalService: NgbModal, private glAccountService: GlAccountService,
+        private vendorEndpointService: VendorEndpointService
+    ) {
         this.assetService.isEditMode = false;
         this.assetService.listCollection = null;
     }
@@ -111,11 +116,29 @@ export class AssetListingComponent implements OnInit {
     }
 
     private onGlAccountLoad(getGl: GlAccount) {
-        console.log(getGl);
-        console.log(getGl[0]);
+        //console.log(getGl);
+        //console.log(getGl[0]);
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.assetViewList.inspectionGlaAccountName = getGl[0].accountName;
+    }
+
+    private getInsecVendorName() {
+        //console.log('107', this.assetViewList.inspectionDefaultVendorId);
+        this.vendorEndpointService.getVendorsDatawithid(this.assetViewList.inspectionDefaultVendorId).subscribe(
+            results => this.onVendorLoad(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private onVendorLoad(vendor: Vendor) {
+        console.log(vendor);
+        if (vendor) {
+            //console.log(vendor);
+            this.alertService.stopLoadingMessage();
+            this.loadingIndicator = false;
+            this.assetViewList.inspectionDefaultVendorName = vendor.vendorName;
+        }
     }
 
     openAssetToEdit(row) {
@@ -220,6 +243,7 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.inspectionDefaultCost = row.inspectionDefaultCost;
         this.assetViewList.inspectionGlaAccountId = row.inspectionGlaAccountId;
         this.getInsecGLAccName();
+        this.getInsecVendorName();
         this.assetViewList.inspectionMemo = row.inspectionMemo;
         this.assetViewList.manufacturedDate = row.manufacturedDate;
         this.assetViewList.isSerialized = row.isSerialized;
