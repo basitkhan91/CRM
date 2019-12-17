@@ -455,8 +455,8 @@ namespace DAL.Repositories
             {
                 repairOrderDtoList = null;
             }
-
-            if(workOrderPartNoId>0)
+            // Create RO From Work Order
+            if (workOrderPartNoId>0)
             {
                 var woPartNo = _appContext.WorkOrderPartNumber.Where(p => p.ID == workOrderPartNoId).FirstOrDefault();
                 if(woPartNo!=null)
