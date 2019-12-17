@@ -17,12 +17,12 @@
 						<label style="float:left; width:auto; margin-right:20px; padding-top:3px;">Status:</label>
 						<div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
 							<label class="radio-cstm wauto">
-								<input type="radio" name="postatus" class="form-control" value="open" (click)="getPOListByStatus('open')" [(ngModel)]="currentStatus">
+								<input type="radio" name="postatus" class="form-control" value="open" (click)="getPOListByStatus('open')" [(ngModel)]="currentStatusPO">
 								<span class="checkmark"></span>Open</label>
 						</div>
 						<div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
 							<label class="radio-cstm wauto">
-								<input type="radio" name="postatus" class="form-control" value="closed" (click)="getPOListByStatus('closed')">
+								<input type="radio" name="postatus" class="form-control" value="closed" (click)="getPOListByStatus('closed')" >
 								<span class="checkmark"></span>Closed</label>
 						</div>
 						<div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
@@ -62,7 +62,7 @@
 			[scrollable]="true"
 			[totalRecords]="totalRecords"
 			scrollHeight="450px"
-		  > <!--[scrollable]="true"-->
+		  >
 			<!-- <ng-template pTemplate="caption">
 				   (onPage)="changePage($event)"
 				<i class="fa fa-search" style="margin:4px 4px 0 0"></i>
