@@ -50,6 +50,13 @@ namespace DAL.Repositories
                 _appContext.WorkOrder.Update(workOrder);
                 _appContext.SaveChanges();
 
+                foreach (var item in workOrder.PartNumbers)
+                {
+                    var workScope = _appContext.WorkScope.Where(p => p.WorkScopeId == item.WorkOrderScopeId).FirstOrDefault();
+                    if (workScope != null)
+                        item.WorkScope = workScope.Description;
+                }
+
                 // Creating WorkflowWorkOrder From Work Flow
                 workOrder.WorkFlowWorkOrderId = CreateWorkFlowWorkOrderFromWorkFlow(workOrder.PartNumbers, workOrder.WorkOrderId, workOrder.CreatedBy);
 
@@ -523,7 +530,7 @@ namespace DAL.Repositories
                                 CustName = cust.Name,
                                 WorkScope = wos.Description,
                                 Stockline = sl.StockLineNumber,
-                                WorkFlowId =swo.WorkFlowId,
+                                WorkFlowId = swo.WorkFlowId,
                                 WorkFlowNo = wf == null ? "" : wf.WorkOrderNumber,
                                 swo.OpenDate,
                                 swo.EstCompDate,
@@ -1311,10 +1318,10 @@ namespace DAL.Repositories
                 {
                     foreach (var asset in workOrderAssets)
                     {
-                        workOrderAssets.ForEach(p =>
-                        {
-                            p.AssetRecordId = Convert.ToInt64(p.AssetId);
-                        });
+                        //workOrderAssets.ForEach(p =>
+                        //{
+                        //    p.AssetRecordId = Convert.ToInt64(p.AssetId);
+                        //});
 
                         if (asset.WorkOrderAssetId > 0)
                         {
@@ -1557,7 +1564,7 @@ namespace DAL.Repositories
                                                join im in _appContext.ItemMaster on we.ItemMasterId equals im.ItemMasterId
                                                join task in _appContext.Task on we.TaskId equals task.TaskId into wetask
                                                from task in wetask.DefaultIfEmpty()
-                                               join eo in _appContext.ExclusionEstimatedOccurances on we.ExstimtPercentOccuranceId equals eo.Id into weeo
+                                               join eo in _appContext.ExclusionEstimatedOccurances on we.EstimtPercentOccurranceId equals eo.Id into weeo
                                                from eo in weeo.DefaultIfEmpty()
                                                join mp in _appContext.MarkUpPercentage on we.MarkUpPercentageId equals mp.MarkUpPercentageId into wemp
                                                from mp in wemp.DefaultIfEmpty()
@@ -1569,7 +1576,7 @@ namespace DAL.Repositories
                                                    we.CreatedDate,
                                                    Epn = im.PartNumber,
                                                    EpnDescription = im.PartDescription,
-                                                   we.ExstimtPercentOccuranceId,
+                                                   we.EstimtPercentOccurranceId,
                                                    ExstimtPercentOccurance = eo.Name == null ? "" : eo.Name,
                                                    we.ExtendedCost,
                                                    we.FixedAmount,
@@ -3638,7 +3645,7 @@ namespace DAL.Repositories
                                 bi.AvailableCredit
                             }).FirstOrDefault();
 
-                 
+
 
                 return data;
 

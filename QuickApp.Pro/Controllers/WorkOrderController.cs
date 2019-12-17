@@ -985,7 +985,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("deleteworkordermaterial")]
         public IActionResult DeleteWorkOrderMaterials(long workOrderMaterialsId, string updatedBy)
         {
-            unitOfWork.WorkOrderRepository.DeleteWorkOrderPublication(workOrderMaterialsId, updatedBy);
+            unitOfWork.WorkOrderRepository.DeleteWorkOrderMaterials(workOrderMaterialsId, updatedBy);
             return Ok();
         }
 
