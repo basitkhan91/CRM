@@ -60,7 +60,7 @@ export class SubWorkOrderComponent implements OnInit {
 
 
         this.getSubWorkOrderEditData();
-        // this.getAllWorkOrderStages(); // for stages dropdown
+        this.getAllWorkOrderStages(); // for stages dropdown
         this.getAllWorkOrderStatus();
 
 
@@ -92,6 +92,7 @@ export class SubWorkOrderComponent implements OnInit {
                 this.workFlowWorkOrderId = res.workFlowWorkOrderId;
                 this.workOrderDetails = {
                     ...this.workOrderDetails,
+
                     workFlowId: res.workFlowId,
                     workFlowWorkOrderId: res.workFlowWorkOrderId
                 }
@@ -106,7 +107,7 @@ export class SubWorkOrderComponent implements OnInit {
                 //     estimatedCompletionDate: new Date(res.estimatedCompletionDate),
                 //     needDate: new Date(res.needDate),
                 // };
-                // this.getWorkFlowByPNandScope(res.itemMasterId, res.workOrderScopeId);
+                this.getWorkFlowByPNandScope(res.itemMasterId, res.workOrderScopeId);
                 this.getPartPublicationByItemMasterId(res.itemMasterId);
 
 
@@ -116,12 +117,14 @@ export class SubWorkOrderComponent implements OnInit {
     }
 
     getDataFormating(res) {
+        console.log(res);
         this.subWorkOrderGeneralInformation = {
             ...res,
-            openDate: new Date(res.openDate),
-            estimatedCompletionDate: new Date(res.estimatedCompletionDate),
-            needDate: new Date(res.needDate),
+            openDate: res.openDate !== undefined ? new Date(res.openDate) : new Date(),
+            estimatedCompletionDate: res.estCompDate !== undefined ? new Date(res.estCompDate) : new Date(),
+            needDate: res.needDate !== undefined ? new Date(res.needDate) : new Date(),
         };
+        console.log(res);
     }
 
 
@@ -174,6 +177,7 @@ export class SubWorkOrderComponent implements OnInit {
             workFlowId: this.subWorkOrderGeneralInformation.workFlowId,
             workOrderPartNumberId: this.mpnId,
             subWorkOrderNo: this.subWorkOrderGeneralInformation.subWorkOrderNo,
+            openDate: this.subWorkOrderGeneralInformation.openDate,
             needDate: this.subWorkOrderGeneralInformation.needDate,
             estCompDate: this.subWorkOrderGeneralInformation.estimatedCompletionDate,
             stageId: this.subWorkOrderGeneralInformation.stageId,

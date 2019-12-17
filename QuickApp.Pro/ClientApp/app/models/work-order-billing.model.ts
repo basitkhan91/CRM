@@ -49,10 +49,10 @@ export class Billing {
         this.invoiceTypeId = null;
         this.invoiceNo = '';
         this.customerId = null;
-        this.invoiceDate = null;
+        this.invoiceDate = new Date();
         this.invoiceTime = null;
-        this.printDate = null;
-        this.shipDate = null;
+        this.printDate = new Date();
+        this.shipDate = new Date();
         this.noofPieces = null;
         this.employeeId = null;
         this.employeeName = '';
@@ -82,7 +82,7 @@ export class Billing {
         this.wayBillRef = '';
         this.tracking = '';
         this.currencyId = null;
-        this.salesPerson = ''; 
+        this.salesPerson = '';
         this.availableCredit = null;
         this.creditTerm = '';
         this.shipAccountInfo = '';

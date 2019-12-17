@@ -214,7 +214,7 @@ export class WorkOrderBillingComponent implements OnInit {
         const data = getObjectById('shippingViaId', value, this.shipViaData);
 
         if (data) {
-            this.billingorInvoiceForm.shipAccountInfo = data.ShippingAccountInfo;
+            this.billingorInvoiceForm.shipAccountInfo = data.shippingAccountInfo;
         }
     }
 
