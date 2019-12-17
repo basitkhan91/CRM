@@ -8,6 +8,7 @@ using DAL;
 using DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -88,7 +89,12 @@ namespace QuickApp.Pro.Controllers
         {
             var calendarData = unitOfWork.Repository<AccountingCalendar>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.AccountingCalendarId);
             var calendarListData = calendarData.GroupBy(item => new { item.Name, item.FiscalYear })
-                .OrderBy(group => group.Key.FiscalYear).Select(group => ValueTuple.Create(group.First(), group.Count())).ToList();
+                .OrderBy(group => group.Key.FiscalYear).Select(group => new
+                {
+                    calendarListData = group.OrderBy(x => x.AccountingCalendarId),
+                    periodYear = group.Key.FiscalYear,
+                    periodCount = group.Count()
+                }).ToList();
             return Ok(calendarListData);
         }
 

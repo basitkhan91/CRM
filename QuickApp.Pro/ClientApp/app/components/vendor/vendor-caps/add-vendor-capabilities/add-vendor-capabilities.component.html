@@ -255,6 +255,7 @@
 			</p-tabView>
 		</div>
 	</div>
+</div>
 
 	<div class="modal fade" id="add-description" role="dialog" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-sm" style="max-width: 400px !important;">
@@ -291,7 +292,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="popup-plusicon-cstm">Aircraft Type <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
-                                <!-- <p-dropdown class="imstock-pddowm" [options]="manufacturerData" filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftId" (onChange)="getAircraftModelByManfacturer($event)" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>  -->
+                                <p-dropdown class="imstock-pddowm" [options]="manufacturerData" filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftId" (onChange)="getAircraftModelByManfacturer($event)" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>
                             </div>
                         </div>
 
@@ -469,7 +470,7 @@
 				<label class="control-label col-sm-4">TAT  (Days)<strong class="clr-red">*</strong></label>
                 <div class="col-sm-7">
                     <input class="form-control" type="text" pKeyFilter="num" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendorCap.tat" maxlength="5">
-                    <!--<label style="margin-right: -75px;margin-left: -44px;">Days</label>-->
+                    <label style="margin-right: -75px;margin-left: -44px;">Days</label>
                 </div>
 			</div>
 
