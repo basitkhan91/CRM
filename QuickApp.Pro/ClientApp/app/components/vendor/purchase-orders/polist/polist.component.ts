@@ -64,7 +64,7 @@ export class PolistComponent implements OnInit {
     // isPOList: boolean;
     @Input() isEnablePOList: boolean;
     @Input() vendorId: boolean;
-    currentStatus: string = 'open';
+    currentStatusPO: string = 'open';
 
     constructor(private _route: Router,
         private authService: AuthService,
@@ -86,7 +86,7 @@ export class PolistComponent implements OnInit {
 
     }
     ngOnInit() {
-        // this.getList();
+        // this.getList();        
         this.vendorCapesCols = [
 			//{ field: 'vcId', header: 'VCID' },
 			{ field: 'ranking', header: 'Ranking' },

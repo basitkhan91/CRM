@@ -120,6 +120,20 @@ export class StockLineListComponent implements OnInit {
     idNumber: any;
     manufacturerId: any;
 
+    cyclesRemaining:any;
+    cyclesSinceNew: any;
+    cyclesSinceOVH: any;
+    cyclesSinceInspection: any;
+    cyclesSinceRepair : any;
+    timeRemaining: any;
+    timeSinceNew: any;
+    timeSinceOVH: any;
+    timeSinceInspection: any;
+    lastSinceInspection: any;
+    lastSinceOVH: any;
+    lastSinceNew: any;
+    timeSinceRepair: any;
+
     totalRecords: number = 0;
     totalPages: number = 0;
     pageSize: number = 20;
@@ -348,7 +362,19 @@ export class StockLineListComponent implements OnInit {
         this.idNumber = row.idNumber;
 
 
-
+        this.cyclesRemaining = row.cyclesRemaining;
+        this.cyclesSinceNew = row.cyclesSinceNew;
+        this.cyclesSinceOVH = row.cyclesSinceOVH;
+        this.cyclesSinceInspection = row.cyclesSinceInspection;
+        this.cyclesSinceRepair = row.cyclesSinceRepair;
+        this.timeRemaining = row.timeRemaining;
+        this.timeSinceNew = row.timeSinceNew;
+        this.timeSinceOVH = row.timeSinceOVH;
+        this.timeSinceInspection = row.timeSinceInspection;
+        this.lastSinceInspection = row.lastSinceInspection;
+        this.lastSinceOVH = row.lastSinceOVH;
+        this.lastSinceNew = row.lastSinceNew;
+        this.timeSinceRepair = row.timeSinceRepair;
 
         this.createdBy = row.createdBy;
         this.updatedBy = row.updatedBy;
