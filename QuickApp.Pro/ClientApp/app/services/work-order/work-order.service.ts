@@ -258,6 +258,10 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getExistingWOROList();
     }
 
+    createNewWORO(workOrderPartNoId) {
+        return this.workOrderEndpointService.createNewWORO(workOrderPartNoId);
+    }
+
 
 
 

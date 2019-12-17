@@ -44,17 +44,17 @@ const vendorPagesRoutes: Routes = [
 		path: 'vendorpages',
 		component: VendorpagesComponent,
 		children: [
-            { path: "app-vendor-edit", component: VendorEditComponent, data: { title: "Vendor's Edit" } },
-            { path: "app-vendors-list", component: VendorsListComponent, canActivate: [RolesGuardService], data: { name: ['app-vendors-list'], title: "Vendor's List" } },
-            { path: "app-vendor-setup", component: VendorSetupComponent, data: { name: ['app-vendor-setup'], title: "Vendor's Setup" } },
+			{ path: "app-vendor-edit", component: VendorEditComponent, data: { title: "Vendor's Edit" } },
+			{ path: "app-vendors-list", component: VendorsListComponent, canActivate: [RolesGuardService], data: { name: ['app-vendors-list'], title: "Vendor's List" } },
+			{ path: "app-vendor-setup", component: VendorSetupComponent, data: { name: ['app-vendor-setup'], title: "Vendor's Setup" } },
 
-            { path: "app-vendor-general-information", component: VendorGeneralInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-general-information'], title: "Vendor's General Information" } },
-            { path: "app-vendor-contacts", component: VendorContactsComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-contacts'], title: "Vendor's Contact" } },
-            { path: "app-vendor-financial-information", component: VendorFinancialInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-financial-information'],title: "Vendor's Financial Information" } },
-            { path: "app-vendor-payment-information", component: VendorPaymentInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-payment-information'], title: "Vendor's Payment Information" } },
-            { path: "app-vendor-billing-information", component: VendorBillingInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-billing-information'], title: "Vendor's Billing Information" } },
-            { path: "app-vendor-shipping-information", component: VendorShippingInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-shipping-information'], title: "Vendor's Shipping Information" } },
-            { path: "app-vendor-warnings", component: VendorWarningsComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-warnings'], title: "Vendor Warnings" } },
+			{ path: "app-vendor-general-information", component: VendorGeneralInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-general-information'], title: "Vendor's General Information" } },
+			{ path: "app-vendor-contacts", component: VendorContactsComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-contacts'], title: "Vendor's Contact" } },
+			{ path: "app-vendor-financial-information", component: VendorFinancialInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-financial-information'], title: "Vendor's Financial Information" } },
+			{ path: "app-vendor-payment-information", component: VendorPaymentInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-payment-information'], title: "Vendor's Payment Information" } },
+			{ path: "app-vendor-billing-information", component: VendorBillingInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-billing-information'], title: "Vendor's Billing Information" } },
+			{ path: "app-vendor-shipping-information", component: VendorShippingInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-shipping-information'], title: "Vendor's Shipping Information" } },
+			{ path: "app-vendor-warnings", component: VendorWarningsComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-warnings'], title: "Vendor Warnings" } },
 			{ path: "app-vendor-memo", component: VendorMemoComponent, data: { title: "Vendor Memo" } },
 			{ path: "app-vendor-documents", component: VendorDocumentsComponent, data: { title: "Vendor Documents" } },
 			{ path: "app-vendor-emails", component: VendorEmailsComponent, data: { title: "Vendor Emails" } },
@@ -69,10 +69,12 @@ const vendorPagesRoutes: Routes = [
 			{ path: "app-ro-list", component: RoListComponent, data: { title: "Ro-List" } },
 			{ path: "app-ro-setup", component: RoSetupComponent, data: { title: "RO Setup" } },
 			{ path: "app-ro-setup/edit/:id", component: RoSetupComponent, data: { title: "RO Setup" } },
+			{ path: "workorder-ro-edit/:id/:mpnid", component: RoSetupComponent, data: { title: "RO Setup" } },
+			{ path: "workorder-ro-create/:id/:mpnId", component: RoSetupComponent, data: { title: "RO Setup" } },
 			{ path: "app-ro-setup/vendor/:vendorId", component: RoSetupComponent, data: { title: "RO Setup" } },
 			{ path: "app-vendor-capabilities-list", component: VendorCapabilitiesListComponent, data: { title: "capabilities-list" } },
 			{ path: "app-add-vendor-capabilities", component: AddVendorCapabilitiesComponent, data: { title: "capabilities-add" } },
-            { path: "app-edit-vendor-capabilities", component: EditVendorCapabilitiesComponent, data: { title: "capabilities-edit" } },
+			{ path: "app-edit-vendor-capabilities", component: EditVendorCapabilitiesComponent, data: { title: "capabilities-edit" } },
 
 		]
 	}
@@ -86,7 +88,7 @@ const vendorPagesRoutes: Routes = [
 		RouterModule
 	],
 	providers: [
-		AuthService, AuthGuard,CommonService
+		AuthService, AuthGuard, CommonService
 	]
 })
 export class VendorPagesRoutingModule { }

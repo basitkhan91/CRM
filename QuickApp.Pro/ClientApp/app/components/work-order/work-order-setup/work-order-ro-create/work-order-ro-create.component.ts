@@ -8,14 +8,15 @@ import { AuthService } from '../../../../services/auth.service';
 
 
 @Component({
-    selector: 'app-workorder-ro-list',
-    templateUrl: './work-order-ro-list.component.html',
+    selector: 'app-workorder-ro-create',
+    templateUrl: './work-order-ro-create.component.html',
 
 })
 /** WorkOrderShipping component*/
-export class WorkOrderROListComponent implements OnInit {
+export class WorkOrderROCreateComponent implements OnInit {
+    workOrderROPartsList: any;
+    constructor(private workOrderService: WorkOrderService) { }
     @Input() mpnId;
-    workOrderRoList: any;
     roListColumns = [
         { field: 'partNumber', header: 'MCPN' },
         { field: 'partDescription', header: 'MCPN Description' },
@@ -34,26 +35,19 @@ export class WorkOrderROListComponent implements OnInit {
     ]
 
 
-
-
-    constructor(private workOrderService: WorkOrderService) { }
-
     ngOnInit() {
-        this.getExistingRoList();
+        this.getNewROCreate();
+    }
+
+    getNewROCreate() {
+        this.workOrderService.createNewWORO(this.mpnId).subscribe(res => {
+            this.workOrderROPartsList = res;
+        })
+    }
+
+    createNewRoWorkOrder() {
+        window.open(`/vendorsmodule/vendorpages/workorder-ro-create/${0}/${this.mpnId}`)
     }
 
 
-
-
-    getExistingRoList() {
-        this.workOrderService.getExistingWOROList().subscribe(res => {
-            this.workOrderRoList = res;
-            console.log(res);
-
-        });
-    }
-    edit(rowData) {
-        const { repairOrderId } = rowData;
-        window.open(`/vendorsmodule/vendorpages/workorder-ro-edit/${repairOrderId}/${this.mpnId}`);
-    }
 }

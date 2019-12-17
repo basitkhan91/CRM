@@ -387,6 +387,9 @@ export class WorkOrderEndpointService extends EndpointFactory {
     getExistingWOROList() {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderrolist`, this.getRequestHeaders())
     }
+    createNewWORO(workOrderPartNoId){
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/wopartdetailsbyid?workOrderPartNoId=${workOrderPartNoId} ` , this.getRequestHeaders())
+    }
 
     getBillingEditData(workOrderId, workOrderPartNoId) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/billinginvoicingdetails?workOrderId=${workOrderId}&workOrderPartNoId=${workOrderPartNoId}`, this.getRequestHeaders())

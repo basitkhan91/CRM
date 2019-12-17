@@ -63,6 +63,8 @@ import { MatTooltipModule } from '@angular/material';
 import { WorkOrderQuoteService } from '../services/work-order/work-order-quote.service';
 import { QuoteEndpointService } from '../services/work-order/work-order-quote.endpoint.service';
 import { WorkOrderROListComponent } from '../components/work-order/work-order-setup/work-order-ro-list/work-order-ro-list.component';
+import { WorkOrderROCreateComponent } from '../components/work-order/work-order-setup/work-order-ro-create/work-order-ro-create.component';
+
 
 // import { MaterialListCreateComponent } from '../shared/Material-List-Create.component';
 // import { SharedModule } from '../shared/shared.module';
@@ -120,7 +122,8 @@ import { WorkOrderROListComponent } from '../components/work-order/work-order-se
     WorkOrderSmartComponent,
     SubWorkOrderListComponent,
     SubWorkOrderComponent,
-    WorkOrderROListComponent
+    WorkOrderROListComponent,
+    WorkOrderROCreateComponent
 
 
 

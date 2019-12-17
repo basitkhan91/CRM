@@ -3,7 +3,7 @@
     <p-table
       class="rpo-table-cstm rro-table-cstm"
       [columns]="roListColumns"
-      [value]="workOrderRoList"
+      [value]="workOrderROPartsList"
     >
       <ng-template pTemplate="header" let-columns>
         <tr>
@@ -21,14 +21,13 @@
             {{ rowData[col.field] }}
           </td>
           <td>
-            <button
-              class="btn-edit ptable-wo-btns"
-              mat-icon-button
-              (click)="edit(rowData)"
-              matTooltip="Edit"
+            <a
+              (click)="createNewRoWorkOrder(rowData)"
+              matTooltip="Create PO"
+              class="btn btn-success nobg btn-cstm"
             >
-              <mat-icon>edit</mat-icon>
-            </button>
+              <span><i class="fa fa-plus"></i></span
+            ></a>
           </td>
         </tr>
       </ng-template>
