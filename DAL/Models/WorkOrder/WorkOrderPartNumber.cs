@@ -47,7 +47,8 @@ namespace DAL.Models
         public string Description { get; set; }
         [NotMapped]
         public string SerialNumber { get; set; }
-
+        [NotMapped]
+        public string WorkScope { get; set; }
     }
 
     public class RevisedPart

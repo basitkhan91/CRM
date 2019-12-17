@@ -49,6 +49,7 @@ import { AccountListingCreateComponent } from "../components/general-ledger/acco
 import {DropdownModule} from 'primeng/dropdown';
 
 import { CommonService } from "../services/common.service";
+import { AccountingListingCalendarComponent } from '../components/general-ledger/accounting-listing-calendar/accounting-listing-calendar.component';
 
 
 @NgModule({
@@ -89,8 +90,8 @@ import { CommonService } from "../services/common.service";
         PoRoCategoryComponent,
         InterCompanySetupComponent,
         AccountListingComponent,
-        AccountListingCreateComponent
-
+        AccountListingCreateComponent,
+        AccountingListingCalendarComponent
     ],
     providers: [
         NodeSetupService,

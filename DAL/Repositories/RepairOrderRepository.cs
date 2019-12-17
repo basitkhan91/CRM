@@ -88,6 +88,7 @@ namespace DAL.Repositories
             var skip = take * (pageNumber - 1);
 
             short statusId = 0;
+            long vendorId = 0;
 
             var open = "open";
             var pending = "pending";
@@ -114,12 +115,18 @@ namespace DAL.Repositories
 
             }
 
+            if (roFilters.filters.VendorId != null)
+            {
+                vendorId = roFilters.filters.VendorId.Value;
+            }
+
             var totalRecords = (from ro in _appContext.RepairOrder
                                 join emp in _appContext.Employee on ro.RequisitionerId equals emp.EmployeeId
                                 join v in _appContext.Vendor on ro.VendorId equals v.VendorId
                                 join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
                                 from appr in approver.DefaultIfEmpty()
                                 where ro.IsDeleted == false
+                                      && ro.VendorId == (vendorId > 0 ? vendorId : ro.VendorId)
                                       && ro.RepairOrderNumber.Contains(!string.IsNullOrEmpty(roFilters.filters.RepairOrderNo) ? roFilters.filters.RepairOrderNo : ro.RepairOrderNumber)
                                       && v.VendorName.Contains(!string.IsNullOrEmpty(roFilters.filters.VendorName) ? roFilters.filters.VendorName : v.VendorName)
                                       && v.VendorCode.Contains(!string.IsNullOrEmpty(roFilters.filters.VendorCode) ? roFilters.filters.VendorCode : v.VendorCode)
@@ -139,6 +146,7 @@ namespace DAL.Repositories
                                    join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
                                    from appr in approver.DefaultIfEmpty()
                                    where ro.IsDeleted == false
+                                   && ro.VendorId == (vendorId > 0 ? vendorId : ro.VendorId)
                                    && ro.RepairOrderNumber.Contains(!string.IsNullOrEmpty(roFilters.filters.RepairOrderNo) ? roFilters.filters.RepairOrderNo : ro.RepairOrderNumber)
                                    && v.VendorName.Contains(!string.IsNullOrEmpty(roFilters.filters.VendorName) ? roFilters.filters.VendorName : v.VendorName)
                                    && v.VendorCode.Contains(!string.IsNullOrEmpty(roFilters.filters.VendorCode) ? roFilters.filters.VendorCode : v.VendorCode)
@@ -253,7 +261,8 @@ namespace DAL.Repositories
                             join pr in _appContext.Priority on ro.PriorityId equals pr.PriorityId
                             join vc in _appContext.VendorContact on v.VendorId equals vc.VendorId
                             join con in _appContext.Contact on vc.ContactId equals con.ContactId
-                            join ct in _appContext.CreditTerms on v.CreditTermsId equals ct.CreditTermsId
+                            join ct in _appContext.CreditTerms on v.CreditTermsId equals ct.CreditTermsId into vct
+                            from ct in vct.DefaultIfEmpty()
                             join shcust in _appContext.Customer on ro.ShipToUserId equals shcust.CustomerId into shipToCust
                             from shcust in shipToCust.DefaultIfEmpty()
                             join shcomp in _appContext.LegalEntity on ro.ShipToUserId equals shcomp.LegalEntityId into shipToComp
@@ -275,14 +284,14 @@ namespace DAL.Repositories
                                 Requisitioner = req.FirstName,
                                 ro.OpenDate,
                                 v.VendorCode,
-                                Approver = app==null?"": app.FirstName,
+                                Approver = app == null ? "" : app.FirstName,
                                 ro.ClosedDate,
                                 con.WorkPhone,
                                 ContactName = con.FirstName,
                                 Status = ro.StatusId == 1 ? "Open" : (ro.StatusId == 2 ? "Pending" : (ro.StatusId == 3 ? "Fulfilling" : "Closed")),
                                 pr.Description,
                                 v.CreditLimit,
-                                CreditTerm = ct.Name,
+                                CreditTerm = ct == null ? "" : ct.Name,
                                 ro.Resale,
                                 ro.RoMemo,
                                 ro.DeferredReceiver,
@@ -347,7 +356,7 @@ namespace DAL.Repositories
             return repairOrder;
         }
 
-        public object RepairOrderPartsById(long repairOrderId)
+        public object RepairOrderPartsById(long repairOrderId,long workOrderPartNoId)
         {
             var roPartsList = _appContext.RepairOrder
                 .Include("RepairOrderPart")
@@ -446,8 +455,64 @@ namespace DAL.Repositories
             {
                 repairOrderDtoList = null;
             }
+            // Create RO From Work Order
+            if (workOrderPartNoId>0)
+            {
+                var woPartNo = _appContext.WorkOrderPartNumber.Where(p => p.ID == workOrderPartNoId).FirstOrDefault();
+                if(woPartNo!=null)
+                {
+                    var itemMaster = ItemMasterDetails(woPartNo.MasterPartId);
+                    repairOrderPartDto = new RepairOrderPartDto
+                    {
+                        RepairOrderPartRecordId = 0,
+                        RepairOrderId = repairOrderId,
+                        AltPartNumberId = 0,
+                        AssetId = 0,
+                        ConditionId = woPartNo.ConditionId,
+                        CreatedBy = woPartNo.CreatedBy,
+                        DiscountAmount = 0,
+                        DiscountPercent = 0,
+                        DiscountPerUnit = 0,
+                        ExtendedCost = 0,
+                        ForeignExchangeRate = (repairOrderDtoList != null && repairOrderDtoList.Count > 0) ? repairOrderDtoList[0].ForeignExchangeRate : "",
+                        FunctionalCurrencyId = (repairOrderDtoList != null && repairOrderDtoList.Count > 0) ? repairOrderDtoList[0].FunctionalCurrencyId : 0,
+                        GlAccountId =Convert.ToInt32(itemMaster.GLAccountId),
+                        IsParent = true,
+                        ItemMasterId = woPartNo.MasterPartId,
+                        ItemTypeId = itemMaster.ItemTypeId,
+                        ManagementStructureId = (repairOrderDtoList!=null && repairOrderDtoList.Count>0)? repairOrderDtoList[0].ManagementStructureId:0,
+                        ManufacturerId = Convert.ToInt32(itemMaster.ManufacturerId),
+                        MasterCompanyId = woPartNo.MasterCompanyId,
+                        Memo = "",
+                        NeedByDate = (repairOrderDtoList != null && repairOrderDtoList.Count > 0) ? repairOrderDtoList[0].NeedByDate : DateTime.Now,
+                        PartNumberId = Convert.ToInt32(woPartNo.MasterPartId),
+                        QuantityOrdered = woPartNo.Quantity,
+                        ReportCurrencyId = (repairOrderDtoList != null && repairOrderDtoList.Count > 0) ? repairOrderDtoList[0].ReportCurrencyId : 0,
+                        SalesOrderId = 0,
+                        UnitCost = 0,
+                        UOMId = itemMaster.PurchaseUnitOfMeasureId,
+                        UpdatedBy = woPartNo.UpdatedBy,
+                        WorkOrderId = woPartNo.WorkOrderId,
+                        StockLineId = woPartNo.StockLineId,
+                    };
+
+					if (repairOrderDtoList == null)
+						repairOrderDtoList = new List<RepairOrderPartDto>();
+
+
+					repairOrderDtoList.Add(repairOrderPartDto);
+                }
+            }
 
             return repairOrderDtoList;
+        }
+
+        private ItemMaster ItemMasterDetails(long itemMasterId)
+        {
+          var itemMaster=  _appContext.ItemMaster.Where(p => p.ItemMasterId == itemMasterId).FirstOrDefault();
+            if (itemMaster == null)
+                itemMaster = new ItemMaster();
+            return itemMaster;
         }
 
         public List<RepairOrderPartViewDto> GetRepairOrderPartsView(long repairOrderId)

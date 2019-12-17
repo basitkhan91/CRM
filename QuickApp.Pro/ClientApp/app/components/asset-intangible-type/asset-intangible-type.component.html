@@ -47,9 +47,9 @@
                                                    selectedItemsLabel="{0} columns selected"
                                                    defaultLabel="Choose Columns">
                                     </p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm" pTooltip="Download Selected" tooltipPosition="top"
-                                            pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm" pTooltip="Download All Data" tooltipPosition="top"
+                                            pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary-cstm" pTooltip="Download Selected" tooltipPosition="top"
                                             pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <!--
                                     <div class="excel-upload excel-upload-cstm">
@@ -136,7 +136,7 @@
     <!--to-do:use same modal to view, add, update, and delete-->
     <!--Modal for view only-->
 
-    <div #view *ngIf="itemDetails" class="modal fade" id="view" role="dialog">
+    <div #view *ngIf="itemDetails" class="modal fade editModal" id="view" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -200,7 +200,7 @@
     </div>
 
     <!--Step x: Modal for Edit-->
-    <div #editItem id="editItem" class="modal fade" role="dialog" *ngIf="currentModeOfOperation === 2 || currentModeOfOperation === 3">
+    <div #editItem id="editItem" class="modal fade editModal" role="dialog" *ngIf="currentModeOfOperation === 2 || currentModeOfOperation === 3">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -239,8 +239,8 @@
                                     </label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="memo" 
-                                              name="memodescription" [(ngModel)]="currentRow.assetIntangibleMemo" minlength="2"></textarea>
+                                    <textarea class="text-item" #memo="ngModel" id="assetIntangibleMemo" 
+                                              name="assetIntangibleMemo" [(ngModel)]="currentRow.assetIntangibleMemo" minlength="2"></textarea>
                                 </div>
                             </div>
                         </div>

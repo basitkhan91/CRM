@@ -23,7 +23,7 @@ import { CommonService } from '../../services/common.service';
 @Component({
     selector: 'app-asset-attribute-type',
     templateUrl: './asset-attribute-type.component.html',
-    styleUrls: [],
+    styleUrls: ['asset-attribute-type.component.scss'],
     animations: [fadeInOut]
 })
 export class AssetAttributeTypeComponent implements OnInit {
@@ -560,6 +560,7 @@ export class AssetAttributeTypeComponent implements OnInit {
 
     selectedAssetType(object) {
         //console.log('selectedAssetType.assetTypeName', this.currentRow.assetTypeId);
+        //console.log('selectedAssetType.memo', object.assetTypeMemo);
         this.currentRow.description = object.assetTypeMemo;
     }
 

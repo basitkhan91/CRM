@@ -1,4 +1,4 @@
-﻿﻿<div class="card">
+﻿f﻿<div class="card">
     <div class="card-body">
         <div class="inline-block display-flex">
             <h3 class="po-head lead">Customer List</h3>
@@ -76,20 +76,29 @@
                             label="Export Selected Data"
                             style="left:-10px;"
                             (click)="dt.exportCSV({ selectionOnly: true })"></button>
+                    <button type="button"
+                            class="btn btn-primary-cstm "
+                            matTooltip="Refsresh Data" matTooltipPosition="above"
+                            pButton
+                            icon="fa-refresh"
+                            iconPos="left"
+                            label="Refresh"
+                            style="left:-10px;"
+                            (click)="refreshList();"></button>
                     <!-- <div class="excel-upload  excel-upload-cstm">
-                        <input type="file"
-                               name="upload[]"
-                               id="upload"
-                               (change)="customExcelUpload($event)"
-                               class="uploaddoc upload-file"
-                               style="left:-10px;"
-                               accept=".xlsx, .xls, .csv" />
-                        <label for="upload">
-                            <span matTooltip="Upload Data (Excel)">
-                                <i class="fa fa-upload"></i>
-                            </span>
-                        </label>
-                    </div> -->
+        <input type="file"
+               name="upload[]"
+               id="upload"
+               (change)="customExcelUpload($event)"
+               class="uploaddoc upload-file"
+               style="left:-10px;"
+               accept=".xlsx, .xls, .csv" />
+        <label for="upload">
+            <span matTooltip="Upload Data (Excel)">
+                <i class="fa fa-upload"></i>
+            </span>
+        </label>
+    </div> -->
                 </div>
             </ng-template>
 
@@ -143,8 +152,8 @@
                         <span>
                             <a class="btn btn-info boxed-float-btn nobg"
                                data-toggle="tooltip"
-                               (click)="viewSelectedRow(rowData)"
-                               
+                              
+                               (click)="viewSelectedRowdbl(viewdbl,rowData)"
                                matTooltip="View">
                                 <i class="fa fa-eye"></i>
                             </a>
@@ -310,6 +319,13 @@
                           viewDataGeneralInformation.countryName
                                                         }}
                                                     </span>
+                                                </p>
+                                                <p>
+                                                    <span class="label"><b>Phone: </b></span><span class="value">
+    {{
+                          viewDataGeneralInformation.customerPhone
+    }}
+</span>
                                                 </p>
                                                 <p>
                                                     <span class="label"><b>Email: </b></span><span class="value">

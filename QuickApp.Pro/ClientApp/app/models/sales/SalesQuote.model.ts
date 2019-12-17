@@ -65,7 +65,7 @@ export class SalesQuote implements ISalesQuote {
 
   employeeId: number;
 
-  eployeeName: string;
+  employeeName: string;
 
   restrictPMA: boolean;
 

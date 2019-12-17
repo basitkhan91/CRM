@@ -326,7 +326,15 @@ namespace DAL.Repositories
                 case "Integration":
                     UploadIntegration(BindCustomData<IntegrationPortal>(file, "IntegrationPortalId", moduleName));
                     break;
-
+                case "Master1099":
+                    UploadMaster1099(BindCustomData<Master1099>(file, "Master1099Id", moduleName));
+                    break;
+                case "CustomerClassification":
+                    UploadCustomerClassification(BindCustomData<CustomerClassification>(file, "CustomerClassificationId", moduleName));
+                    break;
+                case "VendorClassification":
+                    UploadVendorClassification(BindCustomData<VendorClassification>(file, "VendorClassificationId", moduleName));
+                    break;
                 default:
                     break;
             }
@@ -843,6 +851,55 @@ namespace DAL.Repositories
                 }
             }
         }
+
+        private void UploadMaster1099(List<Master1099> master1099List)
+        {
+
+            foreach (var item in master1099List)
+            {
+
+                var flag = _appContext.Master1099.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.Description)
+                && p.Description.ToLower() == item.Description.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.Master1099.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadCustomerClassification(List<CustomerClassification> classificationList)
+        {
+
+            foreach (var item in classificationList)
+            {
+
+                var flag = _appContext.CustomerClassification.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.Description)
+                && p.Description.ToLower() == item.Description.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.CustomerClassification.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+        private void UploadVendorClassification(List<VendorClassification> classificationList)
+        {
+
+            foreach (var item in classificationList)
+            {
+
+                var flag = _appContext.VendorClassification.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.ClassificationName)
+                && p.ClassificationName.ToLower() == item.ClassificationName.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.VendorClassification.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        
 
         private static PropertyInfo[] GetProperties(object obj)
         {

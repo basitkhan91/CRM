@@ -13,7 +13,7 @@ namespace QuickApp.Pro.Controllers
     {
         #region Private Members
 
-        private IUnitOfWork unitOfWork;
+        private readonly IUnitOfWork unitOfWork;
 
         #endregion Private Members
 
@@ -39,9 +39,10 @@ namespace QuickApp.Pro.Controllers
             {
                 if(ModelState.IsValid)
                 {
-                    assetIntangibleAttributeType.MasterCompanyId = assetIntangibleAttributeType.MasterCompanyId;
+                    assetIntangibleAttributeType.MasterCompanyId = 1;
                     assetIntangibleAttributeType.CreatedDate = DateTime.Now;
                     assetIntangibleAttributeType.UpdatedDate = DateTime.Now;
+                    assetIntangibleAttributeType.IsDeleted = false;
                     unitOfWork.Repository<AssetIntangibleAttributeType>().Add(assetIntangibleAttributeType);
                     unitOfWork.SaveChanges();
                     return Ok(assetIntangibleAttributeType);
@@ -78,7 +79,7 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest();
             }
         }
-        [HttpGet("remove/{id}")]
+        [HttpGet("removeById/{id}")]
         public IActionResult RemoveAssetIntangibleAttributeType(long id)
         {
             var intangibleAttributeType = unitOfWork.Repository<AssetIntangibleAttributeType>().Find(x => x.AssetIntangibleAttributeTypeId == id).FirstOrDefault();
@@ -97,20 +98,30 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getAll")]
         public IActionResult GetAll()
         {
-            List<ColumHeader> columHeaders = new List<ColumHeader>();
-            PropertyInfo[] propertyInfos = typeof(AssetIntangibleAttributeTypeModel).GetProperties();
-            ColumHeader columnHeader;
-            DynamicGridData<dynamic> dynamicGridData = new DynamicGridData<dynamic>();
-            foreach (PropertyInfo property in propertyInfos)
-            {
-                columnHeader = new ColumHeader();
-                columnHeader.field = char.ToLower(property.Name[0]) + property.Name.Substring(1);
-                columnHeader.header = property.Name;
-                columHeaders.Add(columnHeader);
-            }
-            dynamicGridData.columHeaders = columHeaders;
-            dynamicGridData.ColumnData = unitOfWork.Repository<AssetIntangibleAttributeType>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.AssetIntangibleAttributeTypeId);
-            return Ok(dynamicGridData);
+            //List<ColumHeader> columHeaders = new List<ColumHeader>();
+            //PropertyInfo[] propertyInfos = typeof(AssetIntangibleAttributeTypeModel).GetProperties();
+            //ColumHeader columnHeader;
+            //DynamicGridData<dynamic> dynamicGridData = new DynamicGridData<dynamic>();
+            //foreach (PropertyInfo property in propertyInfos)
+            //{
+            //    columnHeader = new ColumHeader();
+            //    columnHeader.field = char.ToLower(property.Name[0]) + property.Name.Substring(1);
+            //    columnHeader.header = property.Name;
+            //    columHeaders.Add(columnHeader);
+            //}
+            //dynamicGridData.columHeaders = columHeaders;
+            //dynamicGridData.ColumnData = unitOfWork.Repository<AssetIntangibleAttributeType>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.AssetIntangibleAttributeTypeId);
+            //return Ok(dynamicGridData);
+
+            //var item = unitOfWork.Repository<AssetIntangibleAttributeType>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.AssetIntangibleAttributeTypeId);
+            //return Ok(item);
+
+            
+
+            IEnumerable<AssetIntangibleAttributeType> items = unitOfWork.AssetIntangibleAttributeType.GetAllItems();
+            return Ok(items);
+            //IEnumerable<AssetIntangibleAttributeType> items = unitOfWork.Repository<AssetIntangibleAttributeType>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.AssetIntangibleAttributeTypeId);
+            //return Ok(items);
         }
         #endregion
     }

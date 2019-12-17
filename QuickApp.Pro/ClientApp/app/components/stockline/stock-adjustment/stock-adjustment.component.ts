@@ -192,8 +192,29 @@ export class StockAdjustmentComponent implements OnInit {
 	previousIsSerialized: any;
 	partSerializedAdjustmentReasonError: boolean;
     serializedValue: any;
-    disableSavepartNumber: boolean;
-	//collectionofstockLine: any;
+	disableSavepartNumber: boolean;
+	CompanyIdDataType: any;
+	BusinessUnitIdDataType: any;
+	DivisionIdDataType: any;
+	DepartmentIdDataType: any;
+	PartNumberDataType: any;
+	QuantityonHandDataType: any;
+	RevaluedStockCostDataType: any;
+	SerialNumberDataType: any;
+	ShelfDataType: any;
+	SiteDataType: any;
+	UnitCostDataType: any;
+	UnitSalePriceDataType: any;
+	WarehouseDataType: any;
+	TimeLifeDataType: any;
+	TimeLifeIdDataType: any;
+	BinDataType: any;
+	LocationDataType: any;
+	CategoryDataType: any;
+	DiscountSalePriceDataType: any;
+	LotCostAdjustmentDataType: any;
+	ManagementStructureIdDataType: any;
+	
 	ngOnInit(): void {
 		
 		this.loadData(); //for Loading StockLine Adjustment Data
@@ -206,7 +227,7 @@ export class StockAdjustmentComponent implements OnInit {
 		this.loadAdjustmentReasonData();//for Stock Adjustment Reason Data
 		this.disableSave = true;
 		this.loadManagementdata();
-		
+		this.LoadStocklineAdjustmentDatatypeData()
 		this.ptnumberlistdata();
 		this.activeIndex = 0;
 		this.stocklineser.currentUrl = '/stocklinemodule/stocklinepages/app-stock-adjustment';
@@ -261,7 +282,7 @@ export class StockAdjustmentComponent implements OnInit {
 			this.sourceStockLineSetup.stockLineId = this.sourceStockAdjustment.stockLineId;
 			this.sourceStockLineSetup.BeforepartId = this.sourceStockAdjustment.partId;
 			this.sourceStockLineSetup.BeforepartNumber = this.sourceStockAdjustment.partNumber;
-			this.sourceStockLineSetup.Beforequantity = this.sourceStockAdjustment.quantity;
+			this.sourceStockLineSetup.Beforequantity = this.sourceStockAdjustment.quantityOnHand;
 			this.sourceStockLineSetup.BeforeserialNumber = this.sourceStockAdjustment.serialNumber;
 			this.sourceStockLineSetup.Beforesite = this.sourceStockAdjustment.siteName;
 			this.sourceStockLineSetup.Beforewarehouse = this.sourceStockAdjustment.warehouse;
@@ -332,7 +353,7 @@ export class StockAdjustmentComponent implements OnInit {
 		}
 	}
 
-	private onStocklineAdjustmentDatatypeData()
+	private LoadStocklineAdjustmentDatatypeData()
 	{
 		this.stocklineser.getStockLineAdjustmentDatatypeList().subscribe(   //Getting Site List Hear
 			results => this.onAdjustmentDataLoadSuccessful(results[0]), //Pasing first Array and calling Method
@@ -346,6 +367,27 @@ export class StockAdjustmentComponent implements OnInit {
 		this.loadingIndicator = false;
 		this.dataSource.data = allWorkFlows;
 		this.adjustmentDatatypeData = allWorkFlows;
+		this.CompanyIdDataType = allWorkFlows[0].stocklineAdjustmentDataTypeId;
+		this.BusinessUnitIdDataType = allWorkFlows[1].stocklineAdjustmentDataTypeId;
+		this.DivisionIdDataType = allWorkFlows[2].stocklineAdjustmentDataTypeId;
+		this.DepartmentIdDataType = allWorkFlows[3].stocklineAdjustmentDataTypeId;
+		this.PartNumberDataType = allWorkFlows[4].stocklineAdjustmentDataTypeId;
+		this.QuantityonHandDataType = allWorkFlows[5].stocklineAdjustmentDataTypeId;
+		this.RevaluedStockCostDataType = allWorkFlows[6].stocklineAdjustmentDataTypeId;
+		this.SerialNumberDataType = allWorkFlows[7].stocklineAdjustmentDataTypeId;
+		this.ShelfDataType = allWorkFlows[8].stocklineAdjustmentDataTypeId;
+		this.SiteDataType = allWorkFlows[9].stocklineAdjustmentDataTypeId;
+		this.UnitCostDataType = allWorkFlows[10].stocklineAdjustmentDataTypeId;
+		this.UnitSalePriceDataType = allWorkFlows[11].stocklineAdjustmentDataTypeId;
+		this.WarehouseDataType = allWorkFlows[12].stocklineAdjustmentDataTypeId;
+		this.TimeLifeDataType = allWorkFlows[13].stocklineAdjustmentDataTypeId;
+		this.TimeLifeIdDataType = allWorkFlows[14].stocklineAdjustmentDataTypeId;
+		this.BinDataType = allWorkFlows[15].stocklineAdjustmentDataTypeId;
+		this.LocationDataType = allWorkFlows[16].stocklineAdjustmentDataTypeId;
+		this.CategoryDataType = allWorkFlows[17].stocklineAdjustmentDataTypeId;
+		this.DiscountSalePriceDataType = allWorkFlows[18].stocklineAdjustmentDataTypeId;
+		this.LotCostAdjustmentDataType = allWorkFlows[19].stocklineAdjustmentDataTypeId;
+		this.ManagementStructureIdDataType = allWorkFlows[20].stocklineAdjustmentDataTypeId;
 		console.log(allWorkFlows);
 	}
 
@@ -392,9 +434,6 @@ export class StockAdjustmentComponent implements OnInit {
 				k++;
 			}
 		}
-		console.log(out1);
-		console.log(out);
-		console.log(this.testManagementStructure);
 		return this.testManagementStructure;
 	}
 
@@ -1363,7 +1402,6 @@ export class StockAdjustmentComponent implements OnInit {
 				if (event == this.itemclaColl[i][0].partName) {
 					//this.sourceItemMaster.partId = this.itemclaColl[i][0].partId;
 					this.selectedPartId = this.itemclaColl[i][0].partId; //Storing PartId in Local
-
 					console.log(this.selectedPartId);
 					this.selectedActionName = event;
 				}
@@ -1372,9 +1410,7 @@ export class StockAdjustmentComponent implements OnInit {
 				if (data) {
 					this.descriptionbyPart = data[0]
 					//this.sourcePartAction = this.descriptionbyPart;
-
 					this.sourceStockLineSetup.partDescription = data[0][0].partDescription; //Passing Part Description based on Change Part
-
 					this.sourceStockLineSetup.isSerialized = data[0][0].isSerialized;
 					//this.serializedValue = this.sourceStockLineSetup.isSerialized;
 
@@ -1608,14 +1644,14 @@ export class StockAdjustmentComponent implements OnInit {
 			this.serialError = false;
 		}
 
-		//if ((this.quantityValueTryChange == true) && (this.sourceStockLineSetup.Afterquantity >= 0))
-		//{
-		//	this.quantityError = false;
-		//}
-		//else if (this.quantityValueTryChange == true)
-		//{
-		//	this.quantityError = true;
-		//}
+		if ((this.quantityValueTryChange == true) && (this.sourceStockLineSetup.Afterquantity >= 0))
+		{
+			this.quantityError = false;
+		}
+		else if (this.quantityValueTryChange == true)
+		{
+			this.quantityError = true;
+		}
 
 		if ((this.unitcostValueTryChange == true) && (!this.sourceStockLineSetup.AfterUnitCost)) {
 			
@@ -1766,28 +1802,7 @@ export class StockAdjustmentComponent implements OnInit {
 					this.sourceStockLine.updatedBy = this.userName;
 					this.sourceStockLine.masterCompanyId = 1;
 
-					//sitetryChange: this.siteValueTrytoChnage,
-					//	warehousetryChange: this.warehouseValueTrytoChange,
-					//		locationtryChange: this.locationValueTrytoChange,
-					//			shelftryChange: this.shelfValueTrytoChange,
-					//				bintryChnage: this.binValueTrytoChange,
-					//					StockLineId: this.sourceStockLineSetup.stockLineId,
-					//						SiteId: this.sourceStockLineSetup.AftersiteId,
-					//							WarehouseId: this.sourceStockLineSetup.AfterwarehouseId,
-					//								LocationId: this.sourceStockLineSetup.afterlocationId,
-					//									ShelfId: this.sourceStockLineSetup.aftershelfId,
-					//										BinId: this.sourceStockLineSetup.afterbinId,
-					//											SerialNumber: this.sourceStockLineSetup.AfterserialNumber,
-					//												partNumber: this.sourceStockLineSetup.AfterpartNumber,
-					//													Quantity: this.sourceStockLineSetup.Afterquantity,
-					//														CoreUnitCost: this.sourceStockLineSetup.AfterUnitCost,
-					//															UnitSalesPrice: this.sourceStockLineSetup.AfterunitSalesPrice,
-					//																DiscountSalesPrice: this.sourceStockLineSetup.AfterDiscountSalesPrice,
-					//																	LotCostAdjustment: this.sourceStockLineSetup.AfterLotCostAdjustment,
-					//																		RevalueStockCost: this.sourceStockLineSetup.AfterRevalueStockCost,
-					//																			UnitCostAdjustmentReasonTypeId: this.sourceStockLineSetup.unitCostAdjustmentReasonTypeId,
-					//																				UnitSalePriceAdjustmentReasonTypeId: this.sourceStockLineSetup.unitSalePriceAdjustmentReasonTypeId
-
+					
 					//for Stocklist Update Storing in Object
 					let Data = [{
 						sitetryChange: this.siteValueTrytoChnage,
@@ -1863,6 +1878,7 @@ export class StockAdjustmentComponent implements OnInit {
 
 			this.sourceItemMaster.itemMasterId = this.sourceStockAdjustment.im.itemMasterId;
 			this.sourceItemMaster.partId = this.selectedPartId;
+			this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list');
 		}
 
 		
@@ -1917,88 +1933,6 @@ export class StockAdjustmentComponent implements OnInit {
 
 		}
 
-	// debugger;
-
-
-
-	//	if (!this.sourceStockLine.stockLineId) {
-	//		this.sourceStockLine.createdBy = this.userName;
-	//		this.sourceStockLine.updatedBy = this.userName;
-	//		// this.sourceAction.defaultMessageCode = this.messageName;
-	//		this.sourceStockLine.masterCompanyId = 1;
-	//		//this.sourceStockLine.itemTypeId = 1;
-	//		this.stocklineser.newStockLineAdjustment(this.sourceStockLine).subscribe(data => {
-	//			this.collectionofstockLine = data;
-	//			this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-adjustment')
-	//			this.value = 1;
-
-	//		})
-
-
-	//	}
-	//	else {
-
-	//		this.sourceStockLine.updatedBy = this.userName;
-	//		//this.sourceItemMaster.defaultMessageCode = this.messageName;
-	//		this.sourceStockLine.masterCompanyId = 1;
-	//		this.stocklineser.updateStockLineAdjustment(this.sourceStockLine).subscribe(
-	//			response => this.saveCompleted(this.sourceStockLine),
-	//			error => this.saveFailedHelper(error));
-	//	}
-
-	//	// this.modal.close();
-	//}
-
-
-	//private saveSuccessHelper(role?: any) {
-	//	this.isSaving = false;
-	//	this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-
-	//	this.loadData();
-
-	//}
-	
-
-
-
-
-
-
-
-
-	// debugger;
-
-
-
-	//	if (!this.sourceStockLine.stockLineId) {
-	//		this.sourceStockLine.createdBy = this.userName;
-	//		this.sourceStockLine.updatedBy = this.userName;
-	//		// this.sourceAction.defaultMessageCode = this.messageName;
-	//		this.sourceStockLine.masterCompanyId = 1;
-	//		//this.sourceStockLine.itemTypeId = 1;
-	//		this.stocklineser.newStockLineAdjustment(this.sourceStockLine).subscribe(data => {
-	//			this.collectionofstockLine = data;
-	//			this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-adjustment')
-	//			this.value = 1;
-
-	//		})
-
-
-	//	}
-	//	else {
-
-	//		this.sourceStockLine.updatedBy = this.userName;
-	//		//this.sourceItemMaster.defaultMessageCode = this.messageName;
-	//		this.sourceStockLine.masterCompanyId = 1;
-	//		this.stocklineser.updateStockLineAdjustment(this.sourceStockLine).subscribe(
-	//			response => this.saveCompleted(this.sourceStockLine),
-	//			error => this.saveFailedHelper(error));
-	//	}
-
-	//	// this.modal.close();
-	//}
-
-
 	private saveSuccessHelper(role?: any) {
 		this.isSaving = false;
 		this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
@@ -2017,9 +1951,6 @@ export class StockAdjustmentComponent implements OnInit {
 	
 	savestocklineadsaveclose()
 	{
-
-		// debugger;
-
 		this.isSaving = true;
 
 		if (this.isEditMode == false)
@@ -2123,9 +2054,7 @@ export class StockAdjustmentComponent implements OnInit {
 				}
 
 			}
-
 			this.stockAdjustmentDataArray.push(data);
-
 		}
 
 

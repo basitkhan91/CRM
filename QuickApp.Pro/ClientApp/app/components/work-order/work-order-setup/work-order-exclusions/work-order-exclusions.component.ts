@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectorRef, OnInit } from '@angular/core';
 import * as $ from 'jquery'
 import { AlertService, MessageSeverity } from '../../../../services/alert.service';
 import { WorkOrderService } from '../../../../services/work-order/work-order.service';
@@ -11,19 +11,24 @@ import { AuthService } from '../../../../services/auth.service';
 
 })
 /** WorkOrderDocuments component*/
-export class WorkOrderExclusionsComponent {
+export class WorkOrderExclusionsComponent implements OnInit {
   @Input() workOrderExclusionsList;
   @Input() workFlowObject;
   @Input() isWorkOrder;
   @Output() saveExclusionsListForWO = new EventEmitter();
-  @Output() updateExclusionsListForWO = new EventEmitter()
+  @Output() updateExclusionsListForWO = new EventEmitter();
   @Output() refreshData = new EventEmitter();
+  @Input() isQuote = false;
   isEdit: boolean = false;
   editData: any;
   constructor(private workOrderService: WorkOrderService, private authService: AuthService,
     private alertService: AlertService, private cdRef: ChangeDetectorRef) {
 
 
+  }
+
+  ngOnInit(){
+    console.log(this.workOrderExclusionsList);
   }
 
 
@@ -62,8 +67,14 @@ export class WorkOrderExclusionsComponent {
   }
 
   saveExclusionsList(event) {
-    this.saveExclusionsListForWO.emit(event);
-    $('#addNewExclusions').modal('hide');
+    if(this.isQuote){
+      this.workOrderExclusionsList = [...this.workOrderExclusionsList, ...event['exclusions'].map(x=>{return {...x, epn: x.partNumber, epnDescription: x.partDescription}})];
+      $('#addNewExclusions').modal('hide');
+    }
+    else{
+      this.saveExclusionsListForWO.emit(event);
+      $('#addNewExclusions').modal('hide');
+    }
   }
 
 
@@ -72,6 +83,10 @@ export class WorkOrderExclusionsComponent {
     this.updateExclusionsListForWO.emit(event);
     $('#addNewExclusions').modal('hide');
     this.isEdit = false;
+  }
+
+  saveQuotation(){
+    this.saveExclusionsListForWO.emit(this.workOrderExclusionsList);
   }
 
 

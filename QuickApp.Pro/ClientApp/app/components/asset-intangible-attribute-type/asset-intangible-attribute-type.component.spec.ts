@@ -1,21 +1,21 @@
-﻿/// <reference path="../../../../../../node_modules/@types/jasmine/index.d.ts" />
+﻿/// <reference path="../../../../node_modules/@types/jasmine/index.d.ts" />
 import { TestBed, async, ComponentFixture, ComponentFixtureAutoDetect } from '@angular/core/testing';
 import { BrowserModule, By } from "@angular/platform-browser";
-import { WorkOrderMainComponentComponent } from './work-order-main-component.component';
+import { AssetIntangibleAttributeTypeComponent } from './asset-intangible-attribute-type.component';
 
-let component: WorkOrderMainComponentComponent;
-let fixture: ComponentFixture<WorkOrderMainComponentComponent>;
+let component: AssetIntangibleAttributeTypeComponent;
+let fixture: ComponentFixture<AssetIntangibleAttributeTypeComponent>;
 
-describe('WorkOrderMainComponent component', () => {
+describe('AssetIntangibleType component', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [ WorkOrderMainComponentComponent ],
+            declarations: [ AssetIntangibleAttributeTypeComponent ],
             imports: [ BrowserModule ],
             providers: [
                 { provide: ComponentFixtureAutoDetect, useValue: true }
             ]
         });
-        fixture = TestBed.createComponent(WorkOrderMainComponentComponent);
+        fixture = TestBed.createComponent(AssetIntangibleAttributeTypeComponent);
         component = fixture.componentInstance;
     }));
 

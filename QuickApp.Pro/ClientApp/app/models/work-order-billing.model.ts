@@ -11,7 +11,7 @@ export class Billing {
     shipDate: Date;
     noofPieces: number;
     employeeId: number;
-    employee: string;
+    employeeName: string;
     revType: number;
     gateStatus: string;
     soldToCustomerId: number;
@@ -40,8 +40,8 @@ export class Billing {
     currencyId: number;
     salesPerson: string;
     availableCredit: number;
-    creditTerms: string;
-    shipAccount: string;
+    creditTerm: string;
+    shipAccountInfo: string;
     constructor() {
         this.woOpenDate = null;
         this.customerRef = '';
@@ -49,13 +49,13 @@ export class Billing {
         this.invoiceTypeId = null;
         this.invoiceNo = '';
         this.customerId = null;
-        this.invoiceDate = null;
+        this.invoiceDate = new Date();
         this.invoiceTime = null;
-        this.printDate = null;
-        this.shipDate = null;
+        this.printDate = new Date();
+        this.shipDate = new Date();
         this.noofPieces = null;
         this.employeeId = null;
-        this.employee = '';
+        this.employeeName = '';
         this.revType = null;
         this.gateStatus = null;
         this.soldToCustomerId = null;
@@ -84,7 +84,7 @@ export class Billing {
         this.currencyId = null;
         this.salesPerson = '';
         this.availableCredit = null;
-        this.creditTerms = '';
-        this.shipAccount = '';
+        this.creditTerm = '';
+        this.shipAccountInfo = '';
     }
 }

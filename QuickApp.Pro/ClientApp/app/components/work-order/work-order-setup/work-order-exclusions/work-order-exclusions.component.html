@@ -71,6 +71,10 @@
                                                                         <th class="text-center">Unit Cost</th>
                                                                         <th class="text-center">Extended Cost</th>
                                                                         <th class="text-center">Memo</th>
+                                                                        <ng-container *ngIf="isQuote">
+                                                                            <th>Cost Plus Amount</th>
+                                                                            <th>Fixed Amount</th>
+                                                                        </ng-container>
                                                                         <th colspan="4" class="text-center"></th>
                                                                     </tr> 
                                                                 </thead>
@@ -83,6 +87,10 @@
                                                                         <td>{{w.unitCost}}</td>
                                                                         <td>{{w.extendedCost}}</td>
                                                                         <td>{{w.memo}}</td>
+                                                                        <ng-container *ngIf="isQuote">
+                                                                            <td>{{w.quantity * w.unitCost}}</td>
+                                                                            <td><input [(ngModel)]="w.FixedAmount" /></td>
+                                                                        </ng-container>
 
                                                                         <td>
                                                                           <button
@@ -118,4 +126,12 @@
                                                     <br />
                                                     <br />
                                                 </div>
+                                                <button
+                                                  class="btn btn-primary btn-primary-cstm"
+                                                  (click)="saveQuotation()"
+                                                  style="padding: 6px 12px !important;margin-top: 10px;"
+                                                  *ngIf = "isQuote"
+                                                >
+                                                  Save
+                                                </button>
 </div>

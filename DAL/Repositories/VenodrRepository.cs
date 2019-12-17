@@ -1,4 +1,5 @@
 ﻿
+using DAL.Common;
 using DAL.Models;
 using DAL.Repositories.Interfaces;
 using System;
@@ -72,7 +73,7 @@ namespace DAL.Repositories
                                 DiscountLevel = di == null ? 0 : di.DiscontValue,
                                 vc.ClassificationName,
                                 VendorCapabilityName = vca.capabilityDescription,
-                               VendorPhoneContact=t.VendorPhone+" - "+t.VendorPhoneExt
+                                VendorPhoneContact = t.VendorPhone + " - " + t.VendorPhoneExt
                             })/*.Where(t => t.IsActive == true)*/.OrderByDescending(c => c.CreatedDate).ToList();
                 return data;
 
@@ -532,13 +533,34 @@ namespace DAL.Repositories
 
                 _appContext.SaveChanges();
 
-
+               
                 billingAddress.AddressId = Convert.ToInt64(address.AddressId);
 
                 billingAddress.UpdatedDate = DateTime.Now;
                 billingAddress.IsActive = true;
                 billingAddress.IsDeleted = false;
-                billingAddress.IsPrimary = false;
+                //billingAddress.IsPrimary = false;
+                if (billingAddress.IsPrimary == null)
+                {
+                    billingAddress.IsPrimary = false;
+                }
+                else
+                {
+                    billingAddress.IsPrimary = billingAddress.IsPrimary;
+                }
+
+
+                if (billingAddress.IsPrimary == true)
+                {
+                    var vendorConcatData = _appContext.VendorBillingAddress.Where(p => p.VendorId == billingAddress.VendorId).ToList();
+
+                    foreach (var objContactdata in vendorConcatData)
+                    {
+                        objContactdata.IsPrimary = false;
+                        _appContext.VendorBillingAddress.Update(objContactdata);
+                    }
+                    _appContext.SaveChanges();
+                }
 
                 if (billingAddress.VendorBillingAddressId > 0)
                 {
@@ -908,21 +930,17 @@ namespace DAL.Repositories
         public IEnumerable<object> GetVendorProcessList(int companyId)
         {
             var list = (from m in _appContext.Master1099
-                        where m.IsActive == true && m.MasterCompanyId == companyId
-                        select new
-                        {
-                            m.Master1099Id,
-                            m.Description
-                        }).Distinct().ToList();
+                        where m.MasterCompanyId == companyId && m.IsDeleted !=true
+                        select m).Distinct().ToList();
             return list;
-          
+
         }
 
         public List<VendorDocumentDetailsAudit> GetVendorDocumentDetailsAudit(long id)
         {
             try
             {
-                return _appContext.VendorDocumentDetailsAudit.Where(p => p.IsActive == true && p.VendorDocumentDetailId == id).OrderByDescending(p=>p.UpdatedDate).ToList();
+                return _appContext.VendorDocumentDetailsAudit.Where(p => p.IsActive == true && p.VendorDocumentDetailId == id).OrderByDescending(p => p.UpdatedDate).ToList();
 
             }
             catch (Exception ex)
@@ -935,15 +953,18 @@ namespace DAL.Repositories
             try
             {
                 var list = (from vc in _appContext.VendorCapabiliy
-                          join vca in _appContext.VendorCapabiliyAudit on vc.VendorCapabilityId equals vca.AuditVendorCapabilityId 
+                            join vca in _appContext.VendorCapabiliyAudit on vc.VendorCapabilityId equals vca.AuditVendorCapabilityId
                             join v in _appContext.Vendor on vc.VendorId equals v.VendorId
-                            into vcc from v in vcc.DefaultIfEmpty()
+                            into vcc
+                            from v in vcc.DefaultIfEmpty()
                             join vct in _appContext.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId
-                            into vctt from vct in vctt.DefaultIfEmpty()
+                            into vctt
+                            from vct in vctt.DefaultIfEmpty()
 
                             join vcat in _appContext.capabilityType on vct.CapabilityTypeId equals vcat.CapabilityTypeId
-                            into vcatt from vcat in vcatt.DefaultIfEmpty()
-                            where vca.VendorCapabilityId==VendorCapabilityId && vca.VendorId==VendorId
+                            into vcatt
+                            from vcat in vcatt.DefaultIfEmpty()
+                            where vca.VendorCapabilityId == VendorCapabilityId && vca.VendorId == VendorId
                             select new
                             {
                                 v.VendorName,
@@ -966,7 +987,7 @@ namespace DAL.Repositories
                                 vca.capabilityDescription,
                                 vc.IsActive,
                                 CapabilityType = vcat.Description
-                               
+
                                 //vct.CapabilityTypeId,
 
                                 //vcat.AircraftTypeId,
@@ -1003,12 +1024,141 @@ namespace DAL.Repositories
                             v.CreatedDate,
                             v.UpdatedDate,
                             v.VendorId,
-                            v.IsActive
+                            v.IsActive,
+                            v.IsPrimary
 
                         }).ToList();
             return data;
         }
 
+        public void VendorProcess1099Save(Master1099 vendorProcess1099)
+        {
+            vendorProcess1099.CreatedDate = DateTime.Now;
+            vendorProcess1099.UpdatedDate = DateTime.Now;
+            vendorProcess1099.IsDeleted = false;
+            if (vendorProcess1099.Master1099Id > 0)
+            {
+                _appContext.Master1099.Attach(vendorProcess1099);
+                _appContext.Entry(vendorProcess1099).Property(x => x.Description).IsModified = true;
+                _appContext.Entry(vendorProcess1099).Property(x => x.Memo).IsModified = true;
+                _appContext.Entry(vendorProcess1099).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(vendorProcess1099).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.Entry(vendorProcess1099).Property(x => x.IsActive).IsModified = true;
 
+            }
+            else
+            {
+                _appContext.Master1099.Add(vendorProcess1099);
+            }
+            _appContext.SaveChanges();
+        }
+        public void VendorProcess1099StatusUpdate(long id, bool status, string updatedBy)
+        {
+            Master1099 vMaster1099 = new Master1099();
+            vMaster1099.Master1099Id = id;
+            vMaster1099.UpdatedDate = DateTime.Now;
+            vMaster1099.UpdatedBy = updatedBy;
+            vMaster1099.IsActive = status;
+
+            _appContext.Master1099.Attach(vMaster1099);
+            _appContext.Entry(vMaster1099).Property(x => x.IsActive).IsModified = true;
+            _appContext.Entry(vMaster1099).Property(x => x.UpdatedDate).IsModified = true;
+            _appContext.Entry(vMaster1099).Property(x => x.UpdatedBy).IsModified = true;
+            _appContext.SaveChanges();
+        }
+
+        public void VendorProcess1099Delete(long id, string updatedBy)
+        {
+            Master1099 vMaster1099 = new Master1099();
+            vMaster1099.Master1099Id = id;
+            vMaster1099.UpdatedDate = DateTime.Now;
+            vMaster1099.UpdatedBy = updatedBy;
+            vMaster1099.IsDeleted = true;
+
+            _appContext.Master1099.Attach(vMaster1099);
+            _appContext.Entry(vMaster1099).Property(x => x.IsDeleted).IsModified = true;
+            _appContext.Entry(vMaster1099).Property(x => x.UpdatedDate).IsModified = true;
+            _appContext.Entry(vMaster1099).Property(x => x.UpdatedBy).IsModified = true;
+            _appContext.SaveChanges();
+        }
+
+        public IEnumerable<object> GetVendorGeneralDocumentDetailById(long id, int moduleId)
+        {
+            var result = (from at in _appContext.Attachment
+                          join atd in _appContext.AttachmentDetails on at.AttachmentId equals atd.AttachmentId
+                          where at.ReferenceId == id && at.ModuleId == moduleId && atd.IsActive == true && atd.IsDeleted == false
+                          select atd).ToList();
+
+            return result;
+
+        }
+        public bool GetVendorGeneralDocumentDelete(long id, string updatedBy)
+        {
+            bool result = false;
+            try
+            {
+                AttachmentDetails attachmentDetails = new AttachmentDetails();
+                attachmentDetails.AttachmentDetailId = id;
+                attachmentDetails.UpdatedDate = DateTime.Now;
+                attachmentDetails.UpdatedBy = updatedBy;
+                attachmentDetails.IsDeleted = true;
+
+                _appContext.AttachmentDetails.Attach(attachmentDetails);
+                _appContext.Entry(attachmentDetails).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(attachmentDetails).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(attachmentDetails).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+                result = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
+
+        }
+
+
+        public List<Master1099Audit> GetVendorProcess1099Audit(long id)
+        {
+            try
+            {
+                return _appContext.Master1099Audit.Where(p => p.Master1099Id == id).OrderByDescending(p => p.UpdatedDate).ToList();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public IEnumerable<object> GetVendorProcessListForFinance(int companyId)
+        {
+            var list = (from m in _appContext.Master1099
+                        where m.MasterCompanyId == companyId && m.IsDeleted != true && m.IsActive == true
+                        select m).Distinct().ToList();
+            return list;
+
+        }
+        public IEnumerable<object> GetVendorProcessListFromTransaction(long vendorId)
+        {
+            var list = (from mst in _appContext.Master1099 
+                        join m in _appContext.VendorProcess1099 on mst.Master1099Id equals m.Master1099Id
+                          into master
+                        from m in master.DefaultIfEmpty()
+
+                        where m.VendorId == vendorId && m.IsDeleted != true && m.IsActive == true
+                        select new {
+                            m.VendorProcess1099Id, 
+                            m.Master1099Id,
+                            m.IsDefaultCheck,
+                            m.IsDefaultRadio,
+                            mst.Description 
+                        }).Distinct().ToList();
+
+       
+            return list;
+
+        }
     }
 }

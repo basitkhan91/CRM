@@ -105,13 +105,14 @@
                                                     <input class="form-control" type="text" name="doingBuinessAsName" [(ngModel)]="generalInformation.doingBuinessAsName">
                                                 </div>
                                                 <div class="form-group" style="margin-top: 15px;">
-                                                    <div class="label-cstm">Parent</div>
-                                                    <span class="checkbox-cstm">
-                                                        <label style="width: 20px;">
+                                                    <!-- <div class="label-cstm">Parent</div> -->
+                                                    <div class="checkbox-cstm" style="margin-left: 0;">
+                                                        <label>
                                                             <input type="checkbox" name="cparent" id="cparent" [(ngModel)]="generalInformation.parent">
                                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                            Parent
                                                         </label>
-                                                    </span>
+                                                    </div>
                                                     <p style="min-height: 10px;" *ngIf="!generalInformation.parent"></p>
                                                     <div class="cparent-input cust-name input-icon1" *ngIf="generalInformation.parent">
                                                         <div class="inner-addon right-addon inline-block">
@@ -138,12 +139,12 @@
                                                     <label>Phone <span class="clr-red">*</span></label>
                                                     <div class="col-md-12">
                                                         <div class="col-md-6">
-                                                                      <input type="text" id="phone" name="phone" pInputText pKeyFilter="num"  minlength=10 maxlength=13 class="form-control" [(ngModel)]="generalInformation.customerPhone" required>
+                                                                      <input type="text" id="phone" name="phone"   minlength=10 class="form-control" maxlength="20" (keypress)="patternMobilevalidationWithSpl($event)" [(ngModel)]="generalInformation.customerPhone" required>
                                                            
                                                         </div>
                                                         
                                                         <div class="col-md-6">
-                                                                <input type="text"  name="phoneExt" pInputText  maxlength="10" [(ngModel)]="generalInformation.customerPhoneExt">
+                                                                <input type="text"  name="phoneExt" pInputText  maxlength="15" [(ngModel)]="generalInformation.customerPhoneExt">
                                                         </div>
 
                                                     </div>
@@ -203,34 +204,35 @@
                                                     </div>
                                                     <!-- <div *ngIf="disablesave" style="color:red">Please Select From DropDown</div> -->
                                                 </div>
-                                                <div class="form-group" style="margin-top: 45px;">
-                                                    <div class="label-cstm" style="margin-left:15px;">Is this Address For Billing</div>
-                                                    <span class="checkbox-cstm">
-                                                        <label style="width: 20px;">
-
+                                                <div class="form-group" style="margin-top: 15px;">
+                                                    <!-- <div class="label-cstm" style="margin-left:15px;">Is this Address For Billing</div> -->
+                                                    <div class="checkbox-cstm" style="margin-left: 0;">
+                                                        <label>
                                                             <input type="checkbox" name="isAddressForBilling" [(ngModel)]="generalInformation.isAddressForBilling" >
                                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                            Is this Address For Billing
                                                         </label>
-                                                    </span>
+                                                    </div>
                                                 </div>
                                                 <div class="form-group" style="margin-top: 15px;">
-                                                    <div class="label-cstm">Is this Address For Shipping</div>
-                                                    <span class="checkbox-cstm">
-                                                        <label style="width: 20px;">
-
+                                                    <!-- <div class="label-cstm">Is this Address For Shipping</div> -->
+                                                    <div class="checkbox-cstm" style="margin-left: 0;">
+                                                        <label>
                                                             <input type="checkbox" name="isAddressForShipping" [(ngModel)]="generalInformation.isAddressForShipping">
                                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                            Is this Address For Shipping
                                                         </label>
-                                                    </span>
+                                                    </div>
                                                 </div>
                                                 <div class="form-group" style="margin-top: 15px;">
-                                                    <div class="label-cstm" style="margin-left:-13px;">Is this Customer also a Vendor</div>
-                                                    <span class="checkbox-cstm">
-                                                        <label style="width: 20px;">
+                                                    <!-- <div class="label-cstm" style="margin-left:-13px;">Is this Customer also a Vendor</div> -->
+                                                    <div class="checkbox-cstm" style="margin-left: 0;">
+                                                        <label>
                                                             <input type="checkbox" name="isCustomerAlsoVendor" [(ngModel)]="generalInformation.isCustomerAlsoVendor">
                                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                            Is this Customer also a Vendor
                                                         </label>
-                                                    </span>
+                                                    </div>
                                                 </div>
 
                                                 <!--<div class="form-group">
@@ -366,7 +368,7 @@
                                                             </div>
                                                         </div>
                                                         <div *ngIf="disableRestrictedPMA">
-                                                            <p-table class="table-responsive" [value]="generalInformation.restrictedPMAParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
+                                                            <p-table class="table-responsive ptable-cus-pma" [value]="generalInformation.restrictedPMAParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
                                                                 <ng-template pTemplate="header" let-columns>
                                                                     <tr>
                                                                         <th *ngFor="let col of columns">
@@ -437,7 +439,7 @@
                                                             </div>
                                                         </div>
                                                         <div *ngIf="disableRestrictedDER">
-                                                            <p-table class="table-responsive" [value]="generalInformation.restrictedDERParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
+                                                            <p-table class="table-responsive ptable-cus-pma" [value]="generalInformation.restrictedDERParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
                                                                 <ng-template pTemplate="header" let-columns>
                                                                     <tr>
                                                                         <th *ngFor="let col of columns">

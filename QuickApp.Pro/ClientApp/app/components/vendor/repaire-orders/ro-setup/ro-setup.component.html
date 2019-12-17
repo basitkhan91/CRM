@@ -74,7 +74,9 @@
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<label>Vendor Name <span class="clr-red">*</span></label>
+									<label>Vendor Name <span class="clr-red">*</span>
+										<span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Vendor" matTooltipPosition="above" target="_blank" [routerLink]="['/vendorsmodule/vendorpages/app-vendor-general-information']"></a></span>
+									</label>
 									<div class="inner-addon right-addon inline-block">
 										<p-autoComplete field="vendorName" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" (onKeyUp)=eventHandler($event) 
 										[(ngModel)]="sourceRoApproval.vendorId" name="vendorName" [suggestions]="vendorNames" 
@@ -121,7 +123,7 @@
 									<label>Credit Limit &amp; Terms</label>
 									<div class="form-row">
 										<div class="col-sm-5">
-											<input class="form-control" type="text" placeholder="limit" name="creditLimit" [(ngModel)]="sourceRoApproval.creditLimit" disabled>
+											<input class="form-control" type="text" name="creditLimit" [(ngModel)]="sourceRoApproval.creditLimit" disabled>
 										</div>
 										<div class="col-sm-7">
 												<input class="form-control" type="text" name="creditTerms" [(ngModel)]="sourceRoApproval.creditTerms" disabled>
@@ -163,6 +165,7 @@
 										<option value="2">Pending</option>
 										<option value="3">Fulfilling</option>
 										<option value="4">Closed</option>
+										<option value="5">Canceled</option>
 									</select>
 									<div *ngIf="statusId.invalid && (statusId.dirty || statusId.touched)" class="alert alert-danger alert-danger-cstm">
 											<div *ngIf="statusId.errors.required">
@@ -292,7 +295,7 @@
 							<ng-container *ngFor="let partList of partListData;let row_index=index;">
 								<!--createPOPartsList-->
 								<tr class="parent-data">
-									<td><i class="fa fa-trash" style="color: red;font-size: 15px;cursor: pointer;" (click)="onDelPNRow(row_index)"></i></td>
+									<td><i class="fa fa-trash" matTooltip="Delete Part Number" matTooltipPosition="above" style="color: red;font-size: 15px;cursor: pointer;" (click)="onDelPNRow(row_index)"></i></td>
 									<!-- <td>
 										<span class="checkbox-cstm">
 											<label style="width: 20px;">
@@ -438,7 +441,7 @@
 								<tr class="child-header splitship-head" *ngIf="partList.ifSplitShip">
 									<th></th>
 									<th></th>
-									<th><i class="fa fa-plus btn btn-success btn-cstm btn-xs" pTooltip="Split Shipment" style="padding: 4px 8px !important;" (click)="addRow(partList)"></i></th>
+									<th><i class="fa fa-plus btn btn-success btn-cstm btn-xs" matTooltip="Add Split Shipment" matTooltipPosition="above" style="padding: 4px 8px !important;" (click)="addRow(partList)"></i></th>
 									<th>PN</th>
 									<th>PN Description</th>
 									<th>User Type</th>
@@ -458,7 +461,7 @@
 									<!--enablePNChildRow-->
 									<td></td>
 									<td></td>
-									<td><i class="fa fa-trash" style="color: red;font-size: 15px;cursor: pointer;" (click)="deleteSplitShipment(partChildList,row_no,row_index)"></i></td>
+									<td><i class="fa fa-trash" matTooltip="Delete Split Shipment" matTooltipPosition="above" style="color: red;font-size: 15px;cursor: pointer;" (click)="deleteSplitShipment(partChildList,row_no,row_index)"></i></td>
 									<td>{{partList.partNumber}}</td>
 									<td>{{partList.partDescription}}</td>
 									<td>
@@ -484,8 +487,7 @@
 												</div>  -->
 											</div>
 											<div class="col-sm-1">
-												<div class="child-add-icon"><a target="_blank" 
-													[routerLink]="['/customersmodule/customerpages/app-customer-create']"><i class="fa fa-plus-circle fa-lg"></i></a></div>
+												<div class="child-add-icon"><a target="_blank" matTooltip="Add Customer" matTooltipPosition="above" [routerLink]="['/customersmodule/customerpages/app-customer-create']"><i class="fa fa-plus-circle fa-lg"></i></a></div>
 											</div>
 										</div>
 										<div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.partListUserTypeId==2">
@@ -500,8 +502,7 @@
 												</div>  -->
 											</div>
 											<div class="col-sm-1">
-												<div class="child-add-icon"><a target="_blank" 
-													[routerLink]="['/vendorsmodule/vendorpages/app-vendor-general-information']"><i class="fa fa-plus-circle fa-lg"></i></a></div>
+												<div class="child-add-icon"><a target="_blank" matTooltip="Add Vendor" matTooltipPosition="above" [routerLink]="['/vendorsmodule/vendorpages/app-vendor-general-information']"><i class="fa fa-plus-circle fa-lg"></i></a></div>
 											</div>
 										</div>
 										<div class="inner-addon right-addon autosuggesions-add inline-block w100" *ngIf="partChildList.partListUserTypeId==3">
@@ -530,14 +531,14 @@
 											<div class="col-sm-10">
 												<select class="inner-addon right-addon autosuggesions-add inline-block mw400 form-control" [(ngModel)]="partChildList.partListAddressId" name="partListAddressId{{row_index}}{{row_no}}" (change)="onGetSplitAddress(partChildList)">
 													<option>Select</option>
-													<option *ngFor="let object of getAddressDetails('splitAddressData', row_index, row_no)" value="{{object.addressId}}">{{object.address1}} {{object.city}} {{object.country}} {{object.postalCode}}</option>
+													<option *ngFor="let object of getAddressDetails('splitAddressData', row_index, row_no)" value="{{object.addressId}}">{{object.address1}} {{object.city}} {{object.countryName}} {{object.postalCode}}</option>
 												</select>
 											</div>
 											<div class="col-sm-1" style="margin: 2px -10px;" *ngIf="partChildList.partListUserTypeId">
-												<div style="cursor:pointer; font-size:14px;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#createPOAddress" (click)="onClickPartsListAddress('Add', partChildList, row_index, row_no)"></a></div>
+												<div style="cursor:pointer; font-size:14px;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Split Address" matTooltipPosition="above" data-toggle="modal" data-target="#createPOAddress" (click)="onClickPartsListAddress('Add', partChildList, row_index, row_no)"></a></div>
 											</div>
 											<div class="col-sm-1" style="margin: 5px 0;" *ngIf="partChildList.partListUserTypeId">
-												<div style="cursor:pointer; font-size:12px;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createPOAddress" (click)="onClickPartsListAddress('Edit', partChildList, row_index, row_no)"></a></div>
+												<div style="cursor:pointer; font-size:12px;"><a class="fa fa-edit fa-lg" matTooltip="Edit Split Address" matTooltipPosition="above" data-toggle="modal" data-target="#createPOAddress" (click)="onClickPartsListAddress('Edit', partChildList, row_index, row_no)"></a></div>
 											</div>
 										</div>
 									</td>
@@ -746,8 +747,7 @@
 									</div> 
 								</div>
 								<div class="col-sm-1">
-									<div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" target="_blank" 
-										[routerLink]="['/customersmodule/customerpages/app-customer-create']"></a></div>
+									<div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Customer" matTooltipPosition="above" [routerLink]="['/customersmodule/customerpages/app-customer-create']"></a></div>
 								</div>
 							</div>
 							<div class="form-row" *ngIf="sourceRoApproval.shipToUserTypeId==2">
@@ -761,8 +761,7 @@
 									</div> 
 								</div>
 								<div class="col-sm-1">
-									<div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" target="_blank" 
-										[routerLink]="['/vendorsmodule/vendorpages/app-vendor-general-information']"></a></div>
+									<div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Vendor" matTooltipPosition="above" [routerLink]="['/vendorsmodule/vendorpages/app-vendor-general-information']"></a></div>
 								</div>
 							</div>
 							<div class="form-row" *ngIf="sourceRoApproval.shipToUserTypeId==3">
@@ -791,8 +790,8 @@
 						<div class="form-group" *ngIf="sourceRoApproval.shipToUserTypeId==1">
 							<label>
 								Site Name <span class="clr-red">*</span>
-								<span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourceRoApproval.shipToUserId" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('AddCusSiteName')"></a></span>
-								<span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourceRoApproval.shipToUserId" class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('EditCusSiteName', sourceRoApproval)"></a></span>
+								<span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourceRoApproval.shipToUserId" class="fa fa-plus-circle fa-lg" matTooltip="Add Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('AddCusSiteName')"></a></span>
+								<span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourceRoApproval.shipToUserId" class="fa fa-edit fa-lg" matTooltip="Edit Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('EditCusSiteName', sourceRoApproval)"></a></span>
 							</label>
 							<select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" (change)="onShipToGetAddress(sourceRoApproval , sourceRoApproval.shipToAddressId)" name="shipCusSiteName" [(ngModel)]="sourceRoApproval.shipToAddressId" #shipCusSiteName="ngModel" required>
 								<option>-- Select --</option>
@@ -808,8 +807,8 @@
 						<div class="form-group" *ngIf="sourceRoApproval.shipToUserTypeId==2">
 							<label>
 								Site Name <span class="clr-red">*</span>
-								<span style="margin-left:3px;cursor:pointer;"><a  *ngIf="sourceRoApproval.shipToUserId" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('AddVenSiteName')"></a></span>
-								<span style="margin-left:5px;cursor:pointer;"><a  *ngIf="sourceRoApproval.shipToUserId" class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('EditVenSiteName', sourceRoApproval)"></a></span>
+								<span style="margin-left:3px;cursor:pointer;"><a  *ngIf="sourceRoApproval.shipToUserId" class="fa fa-plus-circle fa-lg" matTooltip="Add Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('AddVenSiteName')"></a></span>
+								<span style="margin-left:5px;cursor:pointer;"><a  *ngIf="sourceRoApproval.shipToUserId" class="fa fa-edit fa-lg" matTooltip="Edit Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('EditVenSiteName', sourceRoApproval)"></a></span>
 							</label>
 							<select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" (change)="onShipToGetAddress(sourceRoApproval ,sourceRoApproval.shipToAddressId)" name="shipVenSiteName" [(ngModel)]="sourceRoApproval.shipToAddressId" #shipVenSiteName="ngModel" required>
 								<option>-- Select --</option>
@@ -825,8 +824,8 @@
 						<div class="form-group" *ngIf="sourceRoApproval.shipToUserTypeId==3">
 							<label>
 								Site Name <span class="clr-red">*</span>
-								<span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourceRoApproval.shipToUserId" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('AddComSiteName')"></a></span>
-								<span style="margin-left:5px;cursor:pointer;"><a  *ngIf="sourceRoApproval.shipToUserId" class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('EditComSiteName', sourceRoApproval)"></a></span>
+								<span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourceRoApproval.shipToUserId" class="fa fa-plus-circle fa-lg" matTooltip="Add Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('AddComSiteName')"></a></span>
+								<span style="margin-left:5px;cursor:pointer;"><a  *ngIf="sourceRoApproval.shipToUserId" class="fa fa-edit fa-lg" matTooltip="Edit Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('EditComSiteName', sourceRoApproval)"></a></span>
 							</label>
 							<select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" (change)="onShipToGetCompanyAddress(sourceRoApproval.shipToAddressId)" name="shipCompSiteName" [(ngModel)]="sourceRoApproval.shipToAddressId" #shipCompSiteName="ngModel" required>
 								<option>-- Select --</option>
@@ -898,10 +897,10 @@
 							<div class="form-group">
 								<label>
 									Ship Via <span class="clr-red">*</span>
-									<span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourceRoApproval.shipToUserId" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#shipToShipVia" (click)="resetAddressShipViaForm();"></a></span>
-									<span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourceRoApproval.shipToUserId" class="fa fa-edit fa-lg" data-toggle="modal" data-target="#shipToShipVia" (click)="onEditShipVia(sourceRoApproval)"></a></span>
+									<span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourceRoApproval.shipToUserId" class="fa fa-plus-circle fa-lg" matTooltip="Add Ship Via" matTooltipPosition="above" data-toggle="modal" data-target="#shipToShipVia" (click)="resetAddressShipViaForm();"></a></span>
+									<span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourceRoApproval.shipToUserId" class="fa fa-edit fa-lg" matTooltip="Edit Ship Via" matTooltipPosition="above" data-toggle="modal" data-target="#shipToShipVia" (click)="onEditShipVia(sourceRoApproval)"></a></span>
 								</label>
-								<select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" name="cusShipViaId"  (ngModelChange)="getShipViaDetails($event)" [(ngModel)]="sourceRoApproval.shipViaId" #cusShipViaId="ngModel" required> <!--required-->
+								<select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" name="cusShipViaId"  (ngModelChange)="getShipViaDetails($event)" [(ngModel)]="sourceRoApproval.shipViaId" #cusShipViaId="ngModel" required>
 									<option>-- Select --</option>
 									<option *ngFor="let object of shipViaList" [ngValue]="object.shippingViaId">{{object.name}}</option>
 								</select>
@@ -958,8 +957,8 @@
 							<div class="form-group">
 								<label>
 									Ship Via <span class="clr-red">*</span>
-									<span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#shipToShipVia" (click)="resetAddressShipViaForm();"></a></span>
-									<span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" data-toggle="modal" data-target="#shipToShipVia" (click)="onEditShipVia(sourceRoApproval)"></a></span>
+									<span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Ship Via" matTooltipPosition="above" data-toggle="modal" data-target="#shipToShipVia" (click)="resetAddressShipViaForm();"></a></span>
+									<span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" matTooltip="Edit Ship Via" matTooltipPosition="above" data-toggle="modal" data-target="#shipToShipVia" (click)="onEditShipVia(sourceRoApproval)"></a></span>
 								</label>
 								<select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" name="cusShipViaId"    (ngModelChange)="getShipViaDetails($event)" [(ngModel)]="sourceRoApproval.shipViaId" #cusShipViaId="ngModel" required> <!--required-->
 									<option>-- Select --</option>
@@ -1020,8 +1019,8 @@
 							<div class="form-group">
 								<label>
 									Ship Via <span class="clr-red">*</span>
-									<span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourceRoApproval.shipToUserId" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#shipToShipVia" (click)="resetAddressShipViaForm();"></a></span>
-									<span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourceRoApproval.shipToUserId" class="fa fa-edit fa-lg" data-toggle="modal" data-target="#shipToShipVia" (click)="onEditShipVia(sourceRoApproval)"></a></span>
+									<span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourceRoApproval.shipToUserId" class="fa fa-plus-circle fa-lg" matTooltip="Add Ship Via" matTooltipPosition="above" data-toggle="modal" data-target="#shipToShipVia" (click)="resetAddressShipViaForm();"></a></span>
+									<span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourceRoApproval.shipToUserId" class="fa fa-edit fa-lg" matTooltip="Edit Ship Via" matTooltipPosition="above" data-toggle="modal" data-target="#shipToShipVia" (click)="onEditShipVia(sourceRoApproval)"></a></span>
 								</label>
 								<select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" name="cusShipViaId"  (ngModelChange)="getShipViaDetails($event)" [(ngModel)]="sourceRoApproval.shipViaId" #cusShipViaId="ngModel" required> <!--required-->
 									<option>-- Select --</option>
@@ -1109,8 +1108,7 @@
 									</div> 
 								</div>
 								<div class="col-sm-1">
-									<div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" target="_blank" 
-										[routerLink]="['/customersmodule/customerpages/app-customer-create']"></a></div>
+									<div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Customer" matTooltipPosition="above" [routerLink]="['/customersmodule/customerpages/app-customer-create']"></a></div>
 								</div>
 							</div>
 							<div class="form-row" *ngIf="sourceRoApproval.billToUserTypeId==2">
@@ -1124,8 +1122,7 @@
 									</div>                                
 								</div>
 								<div class="col-sm-1">
-									<div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" target="_blank" 
-										[routerLink]="['/vendorsmodule/vendorpages/app-vendor-general-information']"></a></div>
+									<div style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Vendor" matTooltipPosition="above" [routerLink]="['/vendorsmodule/vendorpages/app-vendor-general-information']"></a></div>
 								</div>
 							</div>
 							<div class="form-row" *ngIf="sourceRoApproval.billToUserTypeId==3">
@@ -1154,8 +1151,8 @@
 						<div class="form-group" *ngIf="sourceRoApproval.billToUserTypeId==1">
 							<label>
 								Site Name <span class="clr-red">*</span>
-								<span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourceRoApproval.billToUserId"  class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('AddCusSiteName')"></a></span>
-								<span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourceRoApproval.billToUserId" class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('EditCusSiteName', sourceRoApproval)"></a></span>
+								<span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourceRoApproval.billToUserId"  class="fa fa-plus-circle fa-lg" matTooltip="Add Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('AddCusSiteName')"></a></span>
+								<span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourceRoApproval.billToUserId" class="fa fa-edit fa-lg" matTooltip="Edit Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('EditCusSiteName', sourceRoApproval)"></a></span>
 							</label>
 							<select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" (change)="onBillToGetAddress(sourceRoApproval , sourceRoApproval.billToAddressId)" name="billCusSiteName" [(ngModel)]="sourceRoApproval.billToAddressId" #billCusSiteName="ngModel" required>
 								<option>-- Select --</option>
@@ -1170,8 +1167,8 @@
 						<div class="form-group" *ngIf="sourceRoApproval.billToUserTypeId==2">
 							<label>
 								Site Name <span class="clr-red">*</span>
-								<span style="margin-left:3px;cursor:pointer;"><a  *ngIf="sourceRoApproval.billToUserId" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('AddVenSiteName')"></a></span>
-								<span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourceRoApproval.billToUserId" class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('EditVenSiteName', sourceRoApproval)"></a></span>
+								<span style="margin-left:3px;cursor:pointer;"><a  *ngIf="sourceRoApproval.billToUserId" class="fa fa-plus-circle fa-lg" matTooltip="Add Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('AddVenSiteName')"></a></span>
+								<span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourceRoApproval.billToUserId" class="fa fa-edit fa-lg" matTooltip="Edit Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('EditVenSiteName', sourceRoApproval)"></a></span>
 							</label>
 							<select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" (change)="onBillToGetAddress(sourceRoApproval , sourceRoApproval.billToAddressId)" name="billVendorSiteName" [(ngModel)]="sourceRoApproval.billToAddressId" #billVendorSiteName="ngModel" required>
 								<option>-- Select --</option>
@@ -1186,8 +1183,8 @@
 						<div class="form-group" *ngIf="sourceRoApproval.billToUserTypeId==3">
 							<label>
 								Site Name <span class="clr-red">*</span>
-								<span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourceRoApproval.billToUserId" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('AddComSiteName')"></a></span>
-								<span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourceRoApproval.billToUserId" class="fa fa-edit fa-lg" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('EditComSiteName', sourceRoApproval)"></a></span>
+								<span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourceRoApproval.billToUserId" class="fa fa-plus-circle fa-lg" matTooltip="Add Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('AddComSiteName')"></a></span>
+								<span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourceRoApproval.billToUserId" class="fa fa-edit fa-lg" matTooltip="Edit Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('EditComSiteName', sourceRoApproval)"></a></span>
 							</label>
 							<select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" (change)="onBillToGetCompanyAddress(sourceRoApproval.billToAddressId)" name="billCompSiteName" [(ngModel)]="sourceRoApproval.billToAddressId" #billCompSiteName="ngModel" required> <!--selectedValue2-->
 								<option>-- Select --</option>
@@ -1266,7 +1263,7 @@
 		</div>
 	</form>
 		
-		<div class="modal fade" id="cpo-memo" role="dialog">
+		<div class="modal fade" id="cpo-memo" role="dialog" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-sm" style="max-width: 400px !important;">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -1287,7 +1284,7 @@
 			</div>
 		</div>
 		
-		<div class="modal fade" id="add-multiple-partnum" role="dialog">
+		<div class="modal fade" id="add-multiple-partnum" role="dialog" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -1374,7 +1371,7 @@
 			</div>
 		</div>
 		
-		<div class="modal fade" id="createPOAddress" role="dialog">
+		<div class="modal fade" id="createPOAddress" role="dialog" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-sm partsList-modal">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -1392,10 +1389,10 @@
 									<label class="col-md-6">Address 2:</label>
 									<input type="text" class="form-control col-md-6" name="address2" [(ngModel)]="addNewAddress.line2">
 								</div>
-								<div class="form-group col-md-12">
+								<!-- <div class="form-group col-md-12">
 									<label class="col-md-6">Address 3:</label>
 									<input type="text" class="form-control col-md-6" name="address3" [(ngModel)]="addNewAddress.line3">
-								</div>
+								</div> -->
 								<div class="form-group col-md-12">
 									<label class="col-md-6">City:</label>
 									<input type="text" class="form-control col-md-6" name="city" [(ngModel)]="addNewAddress.city">
@@ -1428,7 +1425,7 @@
 			</div>
 		</div>
 	
-		<div class="modal fade" id="createPOSiteName" role="dialog">
+		<div class="modal fade" id="createPOSiteName" role="dialog" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-sm partsList-modal">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -1456,10 +1453,10 @@
 									<label class="col-md-6">Address 2:</label>
 									<input type="text" class="form-control col-md-6" name="address2" [(ngModel)]="addressFormForShipping.address2">
 								</div>
-								<div class="form-group col-md-12">
+								<!-- <div class="form-group col-md-12">
 									<label class="col-md-6">Address 3:</label>
 									<input type="text" class="form-control col-md-6" name="address3" [(ngModel)]="addressFormForShipping.address3">
-								</div>
+								</div> -->
 								<div class="form-group col-md-12">
 									<label class="col-md-6">City:</label>
 									<input type="text" class="form-control col-md-6" name="city" [(ngModel)]="addressFormForShipping.city">
@@ -1492,7 +1489,7 @@
 			</div>
 		</div>
 	
-		<div class="modal fade" id="createBillingSiteName" role="dialog">
+		<div class="modal fade" id="createBillingSiteName" role="dialog" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-sm partsList-modal">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -1520,10 +1517,10 @@
 									<label class="col-md-6">Address 2:</label>
 									<input type="text" class="form-control col-md-6" name="address2" [(ngModel)]="addressFormForBilling.address2">
 								</div>
-								<div class="form-group col-md-12">
+								<!-- <div class="form-group col-md-12">
 									<label class="col-md-6">Address 3:</label>
 									<input type="text" class="form-control col-md-6" name="address3" [(ngModel)]="addressFormForBilling.address3">
-								</div>
+								</div> -->
 								<div class="form-group col-md-12">
 									<label class="col-md-6">City:</label>
 									<input type="text" class="form-control col-md-6" name="city" [(ngModel)]="addressFormForBilling.city">
@@ -1556,7 +1553,7 @@
 			</div>
 		</div>
 	
-		<div class="modal fade" id="shipToShipVia" role="dialog">
+		<div class="modal fade" id="shipToShipVia" role="dialog" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-sm partsList-modal">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -1612,7 +1609,7 @@
 			</div>
 		</div>
 	
-		<div class="modal fade" id="address-memo" role="dialog">
+		<div class="modal fade" id="address-memo" role="dialog" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-sm" style="max-width: 400px !important;">
 				<div class="modal-content">
 					<div class="modal-header">

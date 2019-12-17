@@ -56,7 +56,7 @@ export class StocklineService {
 	//For getting the stockline List
   
 	getStockLineList(data) {
-		return this.stocklineEndpoint.getStockLineEndpointList(data);
+		return this.stocklineEndpoint.getStockLineListEndpoint(data);
 	}
 
 	getGlobalSearch(value, pageIndex, pageSize) {
@@ -152,9 +152,9 @@ export class StocklineService {
 		return this.stocklineEndpoint.saveStocklineIntegrationPortalDataEndpoint<any>(sourceIntegrationPortalData);
 	}
 
-	updateItemMasterEndpoint(sourceStockLine: any) {
-		return this.stocklineEndpoint.updateItemMasterEndpoint<any>(sourceStockLine);
-	}
+	//updateItemMasterEndpoint(sourceStockLine: any) {
+	//	return this.stocklineEndpoint.getUpdateItemMasterDetEndpoint<any>(sourceStockLine);
+	//}
 	
 	//For updating the stocklineadjustment values of Part-C
 	updateStockLineTimeAdjustment(sourceStockLine: any) {

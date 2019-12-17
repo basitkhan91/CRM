@@ -14,7 +14,7 @@ import { validateRecordExistsOrNot, editValueAssignByCondition, getObjectById, s
 @Component({
     selector: 'app-asset-intangible-type',
     templateUrl: './asset-intangible-type.component.html',
-    styleUrls: [],
+    styleUrls: ['asset-intangible-type.component.scss'],
     animations: [fadeInOut]
 })
 export class AssetIntangibleTypeComponent implements OnInit {
@@ -170,8 +170,14 @@ export class AssetIntangibleTypeComponent implements OnInit {
         var itemExists = this.checkItemExists(item);
         if (itemExists) {
             this.currentModeOfOperation = ModeOfOperation.Update;
-            item.updatedBy = this.userName;
-            this.coreDataService.update(item).subscribe(response => {
+            console.log('item',item);
+            const data = {
+                ...item, updatedBy: this.userName, createdDate: item.createdDate, 
+                assetIntangibleName: editValueAssignByCondition('assetIntangibleName', item.assetIntangibleName),
+            };
+            console.log(data);
+            //item.updatedBy = this.userName;
+            this.coreDataService.update(data).subscribe(response => {
                 this.alertService.showMessage('Success', this.rowName + " updated successfully.", MessageSeverity.success);
                 this.getItemList();
             });

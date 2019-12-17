@@ -204,9 +204,8 @@ export class TaxTypeComponent implements OnInit {
 
     }
     sampleExcelDownload() {
-        // const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=CertificationType&fileName=certificationType.xlsx`;
-
-        // window.location.assign(url);
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=TaxType&fileName=taxType.xlsx`;
+        window.location.assign(url);
     }
 
     getList() {

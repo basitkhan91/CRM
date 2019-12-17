@@ -18,7 +18,7 @@ import { ConfigurationService } from '../../services/configuration.service';
 @Component({
     selector: 'asset-status',
     templateUrl: './asset-status.component.html',
-    styleUrls: [],
+    styleUrls: ['asset-status.component.scss'],
     animations: [fadeInOut]
 })
 export class AssetStatusComponent implements OnInit {

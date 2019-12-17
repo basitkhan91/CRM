@@ -51,8 +51,11 @@
 
   <ItemGroup>
     <!-- Files not to publish (note that the 'dist' subfolders are re-added below) -->
+    <Compile Remove="ClientApp\app\components\AdjustmentReason\**" />
     <Content Remove="ClientApp\**" />
     <Content Remove="wwwroot\dist\**" />
+    <EmbeddedResource Remove="ClientApp\app\components\AdjustmentReason\**" />
+    <None Remove="ClientApp\app\components\AdjustmentReason\**" />
   </ItemGroup>
 
   <Target Name="DevelopementRunWebpack" AfterTargets="Build" Condition="!Exists('wwwroot\dist\vendor.js')">
@@ -73,13 +76,13 @@
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
     <Exec Command="npm install" />
-    <Exec Command="node --max_old_space_size=4048  node_modules/webpack/bin/webpack.js --config webpack.config.vendor.js  --env.prod" />
-    <Exec Command="node --max_old_space_size=4048  node_modules/webpack/bin/webpack.js  --env.prod " />
+    <Exec Command="node --max_old_space_size=5120  node_modules/webpack/bin/webpack.js --config webpack.config.vendor.js  --env.prod" />
+    <Exec Command="node --max_old_space_size=5120  node_modules/webpack/bin/webpack.js  --env.prod " />
 
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
       <DistFiles Include="wwwroot\dist\**; ClientApp\dist\**" />
-      <ResolvedFileToPublish Include="@(DistFiles-&gt;'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
         <RelativePath>%(DistFiles.Identity)</RelativePath>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       </ResolvedFileToPublish>
@@ -94,6 +97,10 @@
 
   <ItemGroup>
     <None Remove="ClientApp\app\components\actions\actions-editor.component.ts" />
+    <None Remove="ClientApp\app\components\caps-report\caps-report.component.spec.ts" />
+    <None Remove="ClientApp\app\components\caps-report\caps-report.component.ts" />
+    <None Remove="ClientApp\app\components\vendor-process1099\vendor-process1099.component.spec.ts" />
+    <None Remove="ClientApp\app\components\vendor-process1099\vendor-process1099.component.ts" />
     <None Remove="ClientApp\app\customerpages\customerpages-routing.module.ts" />
     <None Remove="ClientApp\app\customerpages\customerpages.component.ts" />
     <None Remove="ClientApp\app\customerpages\customerpages.module.ts" />
@@ -114,6 +121,7 @@
     <None Remove="ClientApp\app\models\stockline.model.ts" />
     <None Remove="ClientApp\app\models\taxtype.model.ts" />
     <None Remove="ClientApp\app\models\vendorcapabilities.model.ts" />
+    <None Remove="ClientApp\app\models\vendorprocess1099.model.ts" />
     <None Remove="ClientApp\app\models\work-flow-action.model.ts" />
     <None Remove="ClientApp\app\rolespages\rolespages-routing.module.ts" />
     <None Remove="ClientApp\app\rolespages\rolespages.module.ts" />
@@ -138,6 +146,8 @@
     <None Remove="ClientApp\app\services\taxtype-endpoint.service.ts" />
     <None Remove="ClientApp\app\services\VendorCapabilities-endpoint.service.ts" />
     <None Remove="ClientApp\app\services\vendorcapabilities.service.ts" />
+    <None Remove="ClientApp\app\services\vendorprocess1099-endpoint.service.ts" />
+    <None Remove="ClientApp\app\services\vendorprocess1099.service.ts" />
     <None Remove="ClientApp\app\services\workflow-endpoint.service.ts" />
     <None Remove="ClientApp\app\services\workflow.service.ts" />
     <None Remove="ClientApp\app\singlepages\singlepages-routing.module.ts" />
@@ -374,6 +384,10 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\app\components\actions\actions-editor.component.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\caps-report\caps-report.component.spec.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\caps-report\caps-report.component.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\vendor-process1099\vendor-process1099.component.spec.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\vendor-process1099\vendor-process1099.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\customerpages\customerpages-routing.module.ts" />
     <TypeScriptCompile Include="ClientApp\app\customerpages\customerpages.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\customerpages\customerpages.module.ts" />
@@ -394,6 +408,7 @@
     <TypeScriptCompile Include="ClientApp\app\models\stockline.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\taxtype.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\vendorcapabilities.model.ts" />
+    <TypeScriptCompile Include="ClientApp\app\models\vendorprocess1099.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\work-flow-action.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\rolespages\rolespages-routing.module.ts" />
     <TypeScriptCompile Include="ClientApp\app\rolespages\rolespages.module.ts" />
@@ -418,6 +433,8 @@
     <TypeScriptCompile Include="ClientApp\app\services\taxtype-endpoint.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\VendorCapabilities-endpoint.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\vendorcapabilities.service.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\vendorprocess1099-endpoint.service.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\vendorprocess1099.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\workflow.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\workflow-endpoint.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\singlepages\singlepages-routing.module.ts" />

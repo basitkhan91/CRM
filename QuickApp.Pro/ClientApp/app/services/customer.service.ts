@@ -577,5 +577,14 @@ export class CustomerService {
     UpdateCustomerDocument(action: any) {
         return this.customerEndpoint.UpdateDocumentUpload<any>(action);
     }
-   
+    customerFinanceFileUpload(action: any) {
+
+        return this.customerEndpoint.customerFinanceFileUploadEndpoint<any>(action);
+    }
+    GetCustomerFinanceDocumentsList(customerId, moduleId) {
+        return this.customerEndpoint.GetCustomerFinanceDocumentsListEndpoint(customerId, moduleId);
+    }
+    GetCustomerAttachmentDelete(attachmentDetailId, updatedBy) {
+        return this.customerEndpoint.GetCustomerAttachmentDeleteEndpoint(attachmentDetailId, updatedBy);
+    }
 }

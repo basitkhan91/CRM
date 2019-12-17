@@ -71,6 +71,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     creditTermsId: any;
     disableSaveCurrency: boolean;
     SelectedCurrencyInfo: any;
+    vendorProcess1099Data: any;
     ngOnInit(): void {
         this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-financial-information';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
@@ -130,7 +131,12 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
             this.viewName = "Edit";
             this.local = this.workFlowtService.listCollection.t;
             this.sourceVendor = this.workFlowtService.listCollection.t;
-        }        
+            this.getVendorProcess1099FromTransaction(this.sourceVendor.vendorId);
+        }
+        else {
+            this.getVendorProcess1099();
+        }
+        
         //if(this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault)
         //{
         //    console.log(this.sourceVendor);
@@ -222,6 +228,41 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.sourceVendor = allWorkFlows;
     }
 
+    private getVendorProcess1099() {
+        let companyId = 1;
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.workFlowtService.getVendorProcess1099Data(companyId).subscribe(res => {
+            this.vendorProcess1099Data = res[0].map(x => {
+                return {
+                    ...x,
+                    isDefaultCheck: false,
+                    isDefaultRadio: false
+                }
+            });
+
+            console.log(this.vendorProcess1099Data);
+        })
+
+
+    }
+    private getVendorProcess1099FromTransaction(vendorId) {
+        
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.workFlowtService.getVendorProcess1099DataFromTransaction(vendorId).subscribe(res => {
+            this.vendorProcess1099Data = res[0].map(x => {
+                return {
+                    ...x
+                    
+                }
+            });
+
+            console.log(this.vendorProcess1099Data);
+        })
+
+
+    }
 
     handleChange(rowData, e) {
         if (e.checked == false) {
@@ -370,7 +411,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     }
 
     changevalue(value) {
-
+        debugger
         this.sourceVendor.v1099RentDefault = false;
         this.sourceVendor.v1099RoyaltiesDefault = false;
         this.sourceVendor.v1099OtherIncomeDefault = false;
@@ -471,7 +512,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
             if (this.sourceVendor.vendorId) {
                 this.sourceVendor.createdBy = this.userName;
                 this.sourceVendor.updatedBy = this.userName;
-               
+                this.sourceVendor.master1099s = this.vendorProcess1099Data;
                 this.workFlowtService.updatefinanceinfo(this.sourceVendor, this.sourceVendor.vendorId).subscribe(data => {
                     this.localCollection = data;
                     this.workFlowtService.financeCollection = this.local;
@@ -844,7 +885,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         }
         this.modal.close();
     }
-
+   
     discountvalueHandler(event) {
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();
