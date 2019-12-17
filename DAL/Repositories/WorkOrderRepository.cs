@@ -896,14 +896,14 @@ namespace DAL.Repositories
             try
             {
                 var list = (from w in _appContext.WorkOrderWorkFlow
-                            join wop in _appContext.WorkOrderPartNumber on w.WorkOrderId equals wop.WorkOrderId
+                           join wop in _appContext.WorkOrderPartNumber on w.WorkOrderPartNoId equals wop.ID
                             join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
                             join wf in _appContext.Workflow on w.WorkflowId equals wf.WorkflowId into wwf
                             from wf in wwf.DefaultIfEmpty()
                             join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                             join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
 
-                            where w.IsDeleted == false && w.IsActive == true && w.WorkOrderId == workOrderId
+                            where w.IsDeleted == false && w.IsActive == true && w.WorkOrderId == workOrderId && wop.WorkOrderId==workOrderId
                             select new
                             {
                                 value = w.WorkFlowWorkOrderId,
@@ -995,6 +995,35 @@ namespace DAL.Repositories
                                 wowf.ChargesCost,
                                 wowf.Total,
                                 wowf.PerOfBerThreshold,
+                            }).FirstOrDefault();
+                return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public object GetWorkOrderPartDetailsById(long workOrderPartNoId)
+        {
+            try
+            {
+                var data = (from wop in _appContext.WorkOrderPartNumber
+                            join sl in _appContext.StockLine on wop.StockLineId equals sl.StockLineId
+                            join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
+                            where wop.ID == workOrderPartNoId
+                            select new
+                            {
+                                workOrderPartNoId = wop.ID,
+                                MCPN = im.PartNumber,
+                                MCPNDESCRIPTION = im.PartDescription,
+                                MCSERIAL =  sl.SerialNumber,
+                                STOCKLINE = sl.StockLineNumber,
+                                QTYRESERVED = sl.QuantityReserved,
+                                CONTROLID = sl.IdNumber,
+                                CONTROL = sl.ControlNumber,
+                                QTYTOREPAIR = wop.Quantity
                             }).FirstOrDefault();
                 return data;
             }
@@ -4056,6 +4085,7 @@ namespace DAL.Repositories
                                     workOrderLaborHeader = BindWorkFlowWorkOrderLabor(workFlow.Expertise, workOrderId, createdBy, item.MasterCompanyId);
                                 }
 
+                                workFlowWorkOrder.WorkOrderPartNoId = item.ID;
                                 _appContext.WorkOrderWorkFlow.Add(workFlowWorkOrder);
                                 _appContext.SaveChanges();
 
@@ -4091,6 +4121,8 @@ namespace DAL.Repositories
                             workOrderWorkFlow.UpdatedDate = workOrderWorkFlow.CreatedDate = DateTime.Now;
                             workOrderWorkFlow.IsActive = true;
                             workOrderWorkFlow.IsDeleted = false;
+                            workOrderWorkFlow.WorkOrderPartNoId = item.ID;
+
                             _appContext.WorkOrderWorkFlow.Add(workOrderWorkFlow);
                             _appContext.SaveChanges();
                             workFlowWorkOrderId = workOrderWorkFlow.WorkFlowWorkOrderId;

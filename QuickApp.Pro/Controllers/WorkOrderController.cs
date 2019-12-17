@@ -261,6 +261,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("wopartdetailsbyid")]
+        public IActionResult GetWorkOrderPartDetailsById(long workOrderPartNoId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderPartDetailsById(workOrderPartNoId);
+            return Ok(result);
+        }
+
 
         #endregion
 
