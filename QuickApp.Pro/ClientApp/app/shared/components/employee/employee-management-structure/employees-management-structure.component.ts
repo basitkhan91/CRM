@@ -55,7 +55,7 @@ export class EmployeesManagementStructureComponent implements OnInit,AfterViewIn
     };
     gridData = [];
     
-    constructor(private router: Router, private route: ActivatedRoute, public employeeService: EmployeeService, private legalEntityService: LegalEntityService){
+    constructor(private router: Router, private route: ActivatedRoute, public employeeService: EmployeeService, private legalEntityService: LegalEntityService, private alertService: AlertService){
 
     }
 
@@ -188,7 +188,8 @@ export class EmployeesManagementStructureComponent implements OnInit,AfterViewIn
                 this.employeeService.storeEmployeeRoles(this.getEmployeeRolesList()).subscribe(
                     (result)=>{
                         this.employeeService.storeEmployeeManagementStructure(this.getLegalEntityList()).subscribe(
-                            (result)=>{
+                            (result) => {
+                                this.alertService.showMessage("Success", "Employee Updated Sucessfully", MessageSeverity.success);
                                 this.router.navigateByUrl('/employeesmodule/employeepages/app-employees-list');
                             },
                             (error)=>{
