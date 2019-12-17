@@ -14291,6 +14291,11 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     flex-wrap: wrap;
     padding: 10px 5px;
 }
+.sales-quote-shipping-label{
+    width: 100% !important;
+    text-align: left !important;
+    padding-left: 10px !important;
+}
 @media only screen and (max-width: 1024px) {
     .md-stepper-horizontal .md-step.active.done .md-step-title, .md-stepper-horizontal .md-step.active.editable .md-step-title {
         font-size: 10px !important;

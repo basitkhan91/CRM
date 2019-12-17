@@ -8,6 +8,7 @@ import { CustomerService } from "../../../../../../services/customer.service";
 import { SiteService } from '../../../../../../services/site.service';
 import { Site } from '../../../../../../models/site.model';
 
+
 @Component({
   selector: "app-sales-address",
   templateUrl: "./sales-address.component.html",
@@ -70,10 +71,10 @@ export class SalesAddressComponent {
 }
 
 getShipViaByDomesticShippingId(customerShippingAddressId) {
-  this.customerService.getShipViaByDomesticShippingId(customerShippingAddressId).subscribe(res => {
+  this.customerService.getShipViaByDomesticShippingId(customerShippingAddressId).subscribe((res:any) => {
     
 
-      this.demosticShippingViaData = res[0];
+      this.demosticShippingViaData = res;
   })
 }
   private onDataLoadFailed(error: any) {
