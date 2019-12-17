@@ -93,7 +93,36 @@
                                         </div>
                                         <div class="form-group tax-certificate" *ngIf="savedGeneralInformationData.isTaxExempt">
                                             <label>Attach Certificate</label>
-                                            <input type="file" id="file">
+                                            <p-fileUpload name="customerTaxExemptFile[]" multiple="multiple" [showCancelButton]="false" customUpload="true" (onSelect)="fileUpload($event,'customerTaxExemptFile')">
+                                            </p-fileUpload>
+                                            <div class="table-responsive table-overflow">
+                                                <h4 class="panel-title" style="padding-left: 10px;">Attachment Details:</h4>
+                                                <table class="table table-bordered ">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>File Name</th>
+                                                            <th>Download</th>
+                                                            <th>Delete</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody *ngFor="let f of allCustomerFinanceDocumentsList">
+                                                        <tr *ngIf="f.description == 'customerTaxExemptFile'">
+                                                            <td>{{f.fileName}}</td>
+                                                            <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a> </td>
+                                                            <td>
+                                                                <button  moduleName="app-customer-edit" requirePermission="canDelete"
+                                                                        class="btn-delete" mat-icon-button matTooltip="Delete"
+                                                                        (click)="CustomerAttachmentDelete(f)">
+                                                                    <mat-icon color="warn">delete</mat-icon>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+
+                                            <!--<input type="file" id="file">-->
                                         </div>
                                     </div>
 
@@ -198,7 +227,7 @@
                             </div>
 
                         </div>
-                        <button type="button" class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!financialInfoForm.valid" (click)="saveFinancialInformation();"> Next</button>
+                        <button type="button" class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!financialInfoForm.valid" (click)="saveFinancialInformation();">Save & Next</button>
                         <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
                     </div>
 

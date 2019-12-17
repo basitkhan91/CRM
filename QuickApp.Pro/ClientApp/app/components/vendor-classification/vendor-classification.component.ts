@@ -7,7 +7,7 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 import { validateRecordExistsOrNot, editValueAssignByCondition, getObjectById, selectedValueValidate, getObjectByValue } from '../../generic/autocomplete';
 import { Table } from 'primeng/table';
 import { ConfigurationService } from '../../services/configuration.service';
-
+import { CommonService } from '../../services/common.service';
 @Component({
     selector: 'app-vendor-classification',
     templateUrl: './vendor-classification.component.html',
@@ -50,7 +50,7 @@ export class VendorClassificationComponent implements OnInit {
     disableSaveForShortName: boolean = false;
     shortNameList: any;
 
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private configurations: ConfigurationService, private authService: AuthService, private alertService: AlertService, private vendorclassificationService: VendorClassificationService) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private configurations: ConfigurationService, private authService: AuthService, private alertService: AlertService, private vendorclassificationService: VendorClassificationService, private commonService: CommonService) {
 
     }
 
@@ -79,23 +79,21 @@ export class VendorClassificationComponent implements OnInit {
         console.log(file);
         if (file.length > 0) {
 
+            this.formData.append('ModuleName', 'VendorClassification')
             this.formData.append('file', file[0])
-            //this.vendorclassificationService.vendorClassificationFileUpload(this.formData).subscribe(res => {
-            //    event.target.value = '';
 
-            //    this.formData = new FormData();
-            //    this.existingRecordsResponse = res;
-            //    this.getvendorClassificationList();
-            //    this.alertService.showMessage(
-            //        'Success',
-            //        `Successfully Uploaded  `,
-            //        MessageSeverity.success
-            //    );
 
-            //    // $('#duplicateRecords').modal('show');
-            //    // document.getElementById('duplicateRecords').click();
+            this.commonService.smartExcelFileUpload(this.formData).subscribe(res => {
 
-            //})
+                this.formData = new FormData();
+                this.getVendorClassificationList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+
+            })
         }
 
     }

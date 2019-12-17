@@ -17,8 +17,8 @@ import { MenuItem } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
 import { selectedValueValidate, validateRecordExistsOrNot, editValueAssignByCondition } from '../../generic/autocomplete';
-
-
+import { CommonService } from '../../services/common.service';
+import { ConfigurationService } from '../../services/configuration.service';
 @Component({
     selector: 'app-customer-classification',
     templateUrl: './customer-classification.component.html',
@@ -72,8 +72,9 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
     pageSize: number = 20;
     totalPages: number;
     totalRecords: number;
+    formData = new FormData()
     /** Currency ctor */
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal, public CustomerClassificationService: CustomerClassificationService, private dialog: MatDialog) {
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal, public CustomerClassificationService: CustomerClassificationService, private dialog: MatDialog, private commonService: CommonService, private configurations: ConfigurationService ) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
 
@@ -291,6 +292,36 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
 
+    }
+
+    customExcelUpload(event) {
+        const file = event.target.files;
+
+        console.log(file);
+        if (file.length > 0) {
+
+            this.formData.append('ModuleName', 'CustomerClassification')
+            this.formData.append('file', file[0])
+
+
+            this.commonService.smartExcelFileUpload(this.formData).subscribe(res => {
+
+                this.formData = new FormData();
+                this.loadData();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+
+            })
+        }
+
+    }
+
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=CustomerClassification&fileName=CustomerClassification.xlsx`;
+        window.location.assign(url);
     }
     handleChange(rowData, e) {
         if (e.checked == false) {

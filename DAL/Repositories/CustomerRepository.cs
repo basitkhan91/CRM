@@ -1897,6 +1897,43 @@ namespace DAL.Repositories
                 throw ex;
             }
         }
+        public IEnumerable<object> GetCustomerFinanceDocumentDetailById(long id, int moduleId)
+        {
+            var result = (from at in _appContext.Attachment
+                          join atd in _appContext.AttachmentDetails on at.AttachmentId equals atd.AttachmentId
+                          where at.ReferenceId == id && at.ModuleId == moduleId && atd.IsActive == true && atd.IsDeleted == false
+                          select atd).ToList();
+
+            return result;
+
+        }
+
+        public bool GetCustomerFinanceDocumentDelete(long id, string updatedBy)
+        {
+            bool result = false;
+            try
+            {
+                AttachmentDetails attachmentDetails = new AttachmentDetails();
+                attachmentDetails.AttachmentDetailId = id;
+                attachmentDetails.UpdatedDate = DateTime.Now;
+                attachmentDetails.UpdatedBy = updatedBy;
+                attachmentDetails.IsDeleted = true;
+
+                _appContext.AttachmentDetails.Attach(attachmentDetails);
+                _appContext.Entry(attachmentDetails).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(attachmentDetails).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(attachmentDetails).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+                result = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
+
+        }
 
     }
 }
