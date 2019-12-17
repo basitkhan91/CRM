@@ -57,6 +57,7 @@ namespace DAL.Models
         public string Memo { get; set; }
         public long? ChangedPartNumberId { get; set; }
         public int MasterCompanyId { get; set; }
+        public long WorkOrderPartNoId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
