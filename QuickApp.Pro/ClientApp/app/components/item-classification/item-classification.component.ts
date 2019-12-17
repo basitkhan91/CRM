@@ -321,6 +321,7 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
 
     getAuditHistoryById(rowData) {
         this.itemClassificationService.historyAcion(rowData.itemClassificationId).subscribe(res => {
+
             console.log(res);
             this.auditHistory = res;
         })

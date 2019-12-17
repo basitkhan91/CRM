@@ -688,7 +688,7 @@ export class AssetAttributeTypeComponent implements OnInit {
 
         //Step x: Add the required details for dropdown options/column header
         this.columnHeaders = [
-            { field: 'assetTypeName', header: 'Asset Type', index: 1, showByDefault: true },
+            { field: 'assetTypeName', header: 'Asset Class', index: 1, showByDefault: true },
             { field: 'description', header: 'Description', index: 1, showByDefault: true },
             { field: 'assetAttributeTypeName', header: 'Name', index: 1, showByDefault: true },
             { field: 'conventionTypeName', header: 'Convention Type', index: 1, showByDefault: true },

@@ -43,8 +43,8 @@ export class AssetTypeComponent implements OnInit {
     ngOnInit(): void {
         //Get page-rendering payload
         this.getItemList();
-        this.rowName = "Asset Type";
-        this.header = "Asset Type";
+        this.rowName = "Asset Class";
+        this.header = "Asset Class";
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-asset-type';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         //Required details for dropdown options/column header
