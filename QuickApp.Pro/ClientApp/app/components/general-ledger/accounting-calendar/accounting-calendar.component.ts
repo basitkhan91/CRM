@@ -1,4 +1,5 @@
 ﻿import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { fadeInOut } from '../../../services/animations';
 import { AccountCalenderService } from '../../../services/account-calender/accountcalender.service';
 import { AuthService } from '../../../services/auth.service';
@@ -33,7 +34,14 @@ export class AccountingCalendarComponent implements OnInit {
     ledgerNameObject: any[];
     public minDate: any;
     companyList: any[] = [];
-    constructor(private legalEntityservice:LegalEntityService,
+    routeData: any;
+    editedData: any;
+    editedData1: any;
+    editCalendarPage: boolean = false;
+    displayShowButton: boolean = true;
+    pageTitle: String = "Create GL Calendar"
+
+    constructor(private legalEntityservice: LegalEntityService, private route: ActivatedRoute, 
             private accountListingService: AccountListingService, private calendarService: AccountCalenderService, private authService: AuthService, private alertService:AlertService) {
         //this.currentCalendarObj.fromDate = new Date('2019-01-01');
     }
@@ -42,22 +50,53 @@ export class AccountingCalendarComponent implements OnInit {
         let date = new Date();
         let year = date.getFullYear();
         this.minDate= new Date(year + '-' + '01-01');
-        this.loadCompleteCalendarData();
+        //this.loadCompleteCalendarData();
         this.loadCompaniesData();
         this.currentCalendarObj.fiscalYear = year;
         this.currentCalendarObj.fromDate = new Date('01-01' + '-' + year );
         this.currentCalendarObj.toDate= new Date('12-31' + '-' + year );
         this.getLedgerObject()
+                
+        this.editedData = this.calendarService.editedDetailsObject.subscribe(result => {
+            if (result && Object.keys(result).length) {
+                this.editCalendarPage = true;
+                this.loadEditCalendarData(result);
+            }
+        });
+      
     }
+
+    loadListingCalendarData() {
+        this.pageTitle = "Accounting Calendar List"
+        this.loadCompleteCalendarData()
+    }
+
+
     loadCompleteCalendarData() {
         this.calendarService.getAll().subscribe(data => {
             this.completeCalendarData = data[0];
 
         })
     }
+
+    loadEditCalendarData(value) {
+        const data = value;        
+        this.pageTitle = "Accounting Calendar Edit"
+        this.currentCalendarObj.ledgername = data.ledgerName;
+        this.currentCalendarObj.ledgerdescription = data.ledgerDescription;
+        this.currentCalendarObj.description = data.description;
+        let year = data.fiscalYear;
+        this.currentCalendarObj.fiscalYear = year;
+        this.currentCalendarObj.fromDate = new Date('01-01' + '-' + year);
+        this.currentCalendarObj.toDate = new Date('12-31' + '-' + year);
+        this.currentCalendarObj.periodType = data.periodType;
+        this.currentCalendarObj.noOfPeriods = data.noOfPeriod;       
+        this.addCalendar()
+    }
+
     setSelectedAttribute(value) {
         this.selectedPeriod = value;
-    }
+    }   
     private loadCompaniesData() {
         this.legalEntityservice.getEntityList().subscribe(entitydata => {
             this.companyList = entitydata[0];
@@ -410,11 +449,15 @@ export class AccountingCalendarComponent implements OnInit {
         this.isBoolean = false;
 
         if (!(this.currentCalendarObj.ledgername && this.currentCalendarObj.fiscalYear && this.currentCalendarObj.fromDate && this.currentCalendarObj.toDate && this.currentCalendarObj.periodType
-            && this.currentCalendarObj.noOfPeriods)) {
+            && this.currentCalendarObj.noOfPeriods)) {            
             this.display = true;
         }
 
         if (!this.display) {
+            if (this.editCalendarPage) {
+                this.selectedPeriod = this.currentCalendarObj.noOfPeriods
+            }
+
             this.calendarArray = [];
             var date2 = new Date(this.currentCalendarObj.fromDate);
             var date1 = new Date(this.currentCalendarObj.toDate);
@@ -486,7 +529,7 @@ export class AccountingCalendarComponent implements OnInit {
             }
         }
         else {
-
+           
         }
     }
     deleteRow(index) {
@@ -670,5 +713,10 @@ export class AccountingCalendarComponent implements OnInit {
     isEmptyOrSpaces(str) {
         return !str || str.trim() === '';
     }
-
+    
+    ngOnDestroy() {
+       // this.routeData.unsubscribe();
+        this.editedData.unsubscribe();
+        this.calendarService.emitCalendarDetails([]);
+    }
 }

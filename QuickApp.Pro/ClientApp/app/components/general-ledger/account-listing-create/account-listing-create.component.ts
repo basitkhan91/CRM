@@ -103,7 +103,8 @@ export class AccountListingCreateComponent implements OnInit {
     ngOnInit(): void {
         
         this.route.paramMap.subscribe(params => {
-
+            console.log('params :', params)
+            console.log('snapshot :', this.route.snapshot.paramMap)
              this.accountId = params.get("id")
              if(this.accountId){
                 this.editMode = true
@@ -111,7 +112,7 @@ export class AccountListingCreateComponent implements OnInit {
                 this.updateAccountData(this.accountId)
 
              }
-        })
+        })        
 
         if (this.glAccountService.glAccountEditCollection == null) {
             this.currentGLAccount = new GlAccount();
