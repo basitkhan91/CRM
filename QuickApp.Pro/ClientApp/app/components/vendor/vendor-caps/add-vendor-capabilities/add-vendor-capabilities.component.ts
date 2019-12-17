@@ -133,6 +133,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	newDashnumValue: any = [];
 	aircraftData: any;
 	viewTable: boolean = false;
+	enableAircraftInfo: boolean = false;
 
 	/** add-vendor-capabilities ctor */
     constructor(private _route: Router,private modalService: NgbModal,public ataSubChapter1Service: AtaSubChapter1Service,public ataservice: AtaMainService,public vendorService: VendorService, private alertService: AlertService, public itemser: ItemMasterService, public commonService: CommonService, private aircraftModelService: AircraftModelService, private dashNumService: DashNumberService, private authService: AuthService)
@@ -427,6 +428,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		this.vendorService.getPartDetailsWithidForSinglePart(this.itemMasterId).subscribe(
 			data => {
 				if (data[0]) {
+					this.sourceVendorCap.partNumber = data[0].partNumber;
 					this.sourceVendorCap.partDescription = data[0].partDescription;
 					this.sourceVendorCap.manufacturerId = data[0].manufacturerId;									
 					this.sourceVendorCap.manufacturerName = data[0].name;									
@@ -1088,7 +1090,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 
 	saveVendorCapsGeneralInfo() {
 		console.log(this.sourceVendorCap);
-		let {vendorCode, manufacturerName, ...res} = this.sourceVendorCap;		
+		let {vendorCode, partNumber, manufacturerName, ...res} = this.sourceVendorCap;		
 		res = {
 			...res,
 			vendorId: editValueAssignByCondition('vendorId', res.vendorId),
@@ -1370,7 +1372,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
                 DashNumberId: obj.DashNumber === 'Unknown' ? null : obj.DashNumberId,
                 AircraftModelId: obj.AircraftModel === 'Unknown' ? null : obj.AircraftModelId,
                 ItemMasterId: this.itemMasterId,
-                //PartNumber: this.pnvalue,
+                PartNumber: this.sourceVendorCap.partNumber,
                 MasterCompanyId: 1,
                 CreatedBy: this.userName,
                 UpdatedBy: this.userName,
