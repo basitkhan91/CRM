@@ -39,9 +39,9 @@ export class AccountingCalendarComponent implements OnInit {
     editedData1: any;
     editCalendarPage: boolean = false;
     displayShowButton: boolean = true;
-    pageTitle: String = "Create GL Calendar"
+    pageTitle: String = "Create Accounting Calendar"
 
-    constructor(private legalEntityservice: LegalEntityService, private route: ActivatedRoute, 
+    constructor(private legalEntityservice: LegalEntityService, private route: ActivatedRoute,
             private accountListingService: AccountListingService, private calendarService: AccountCalenderService, private authService: AuthService, private alertService:AlertService) {
         //this.currentCalendarObj.fromDate = new Date('2019-01-01');
     }
@@ -56,14 +56,14 @@ export class AccountingCalendarComponent implements OnInit {
         this.currentCalendarObj.fromDate = new Date('01-01' + '-' + year );
         this.currentCalendarObj.toDate= new Date('12-31' + '-' + year );
         this.getLedgerObject()
-                
+
         this.editedData = this.calendarService.editedDetailsObject.subscribe(result => {
             if (result && Object.keys(result).length) {
                 this.editCalendarPage = true;
                 this.loadEditCalendarData(result);
             }
         });
-      
+
     }
 
     loadListingCalendarData() {
@@ -80,7 +80,7 @@ export class AccountingCalendarComponent implements OnInit {
     }
 
     loadEditCalendarData(value) {
-        const data = value;        
+        const data = value;
         this.pageTitle = "Accounting Calendar Edit"
         this.currentCalendarObj.ledgername = data.ledgerName;
         this.currentCalendarObj.ledgerdescription = data.ledgerDescription;
@@ -90,13 +90,13 @@ export class AccountingCalendarComponent implements OnInit {
         this.currentCalendarObj.fromDate = new Date('01-01' + '-' + year);
         this.currentCalendarObj.toDate = new Date('12-31' + '-' + year);
         this.currentCalendarObj.periodType = data.periodType;
-        this.currentCalendarObj.noOfPeriods = data.noOfPeriod;       
+        this.currentCalendarObj.noOfPeriods = data.noOfPeriod;
         this.addCalendar()
     }
 
     setSelectedAttribute(value) {
         this.selectedPeriod = value;
-    }   
+    }
     private loadCompaniesData() {
         this.legalEntityservice.getEntityList().subscribe(entitydata => {
             this.companyList = entitydata[0];
@@ -449,7 +449,7 @@ export class AccountingCalendarComponent implements OnInit {
         this.isBoolean = false;
 
         if (!(this.currentCalendarObj.ledgername && this.currentCalendarObj.fiscalYear && this.currentCalendarObj.fromDate && this.currentCalendarObj.toDate && this.currentCalendarObj.periodType
-            && this.currentCalendarObj.noOfPeriods)) {            
+            && this.currentCalendarObj.noOfPeriods)) {
             this.display = true;
         }
 
@@ -529,7 +529,7 @@ export class AccountingCalendarComponent implements OnInit {
             }
         }
         else {
-           
+
         }
     }
     deleteRow(index) {
@@ -538,7 +538,7 @@ export class AccountingCalendarComponent implements OnInit {
     setMonthDate() {
 
         if (!isNaN(new Date('01-01' + '-' + this.currentCalendarObj.fiscalYear).getTime())
-            && !this.isEmptyOrSpaces(this.currentCalendarObj.fiscalYear)) {
+            && typeof (this.currentCalendarObj.fiscalYear) != 'undefined' && this.currentCalendarObj.fiscalYear) {
             this.currentCalendarObj.fromDate = new Date('01-01' + '-' + this.currentCalendarObj.fiscalYear);
         //this.currentCalendarObj.toDate = "";
         this.currentCalendarObj.toDate = new Date('12-31' + '-' + this.currentCalendarObj.fiscalYear);
@@ -713,7 +713,7 @@ export class AccountingCalendarComponent implements OnInit {
     isEmptyOrSpaces(str) {
         return !str || str.trim() === '';
     }
-    
+
     ngOnDestroy() {
        // this.routeData.unsubscribe();
         this.editedData.unsubscribe();

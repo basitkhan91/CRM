@@ -101,7 +101,7 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
     toggledbldisplay(content, row) {
         this.isEditMode = true;
         this.isSaving = true;
-        
+
         this.sourceAction = row;
         //this.itemName = this.sourceAction.itemClassificationCode;
         //this.loadMasterCompanies();
@@ -149,9 +149,9 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
         //debugger;
 
         this.cols = [
-            { field: 'categoryName', header: 'Name' },
-            { field: 'isPO', header: 'PO' },
-            { field: 'isRO', header: 'RO' }
+            { field: 'categoryName', header: 'Name' }
+            //,{ field: 'isPO', header: 'PO' },
+            //{ field: 'isRO', header: 'RO' }
             //{ field: 'createdBy', header: 'Created By' },
             //{ field: 'updatedBy', header: 'Updated By' },
             //{ field: 'updatedDate', header: 'Updated Date' },
