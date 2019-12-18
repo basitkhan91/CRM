@@ -17,6 +17,91 @@ namespace DAL.Repositories
 
         }
 
+        public IEnumerable<object> RepairOrderGlobalSearch(string filterText, int pageNumber, int pageSize)
+        {
+
+            var take = pageSize;
+            var skip = take * (pageNumber);
+
+            short statusId = 0;
+
+            var open = "open";
+            var pending = "pending";
+            var fulfilling = "fulfilling";
+            var closed = "closed";
+            if (!string.IsNullOrEmpty(filterText))
+            {
+                if (open.Contains(filterText.ToLower()))
+                {
+                    statusId = 1;
+                }
+                else if (pending.Contains(filterText.ToLower()))
+                {
+                    statusId = 2;
+                }
+                else if (fulfilling.Contains(filterText.ToLower()))
+                {
+                    statusId = 3;
+                }
+                else if (closed.Contains(filterText.ToLower()))
+                {
+                    statusId = 4;
+                }
+            }
+
+            var totalRecords = (from ro in _appContext.RepairOrder
+                                join emp in _appContext.Employee on ro.RequisitionerId equals emp.EmployeeId
+                                join v in _appContext.Vendor on ro.VendorId equals v.VendorId
+                                join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
+                                from appr in approver.DefaultIfEmpty()
+                                where ro.IsDeleted == false &&
+                                     (ro.RepairOrderNumber.Contains(filterText)
+                                     || v.VendorName.Contains(filterText)
+                                     || v.VendorCode.Contains(filterText)
+                                     || ro.StatusId == statusId
+                                     || emp.FirstName.Contains(filterText)
+                                     || appr.FirstName.Contains(filterText))
+                                select new
+                                {
+                                    ro.RepairOrderId
+
+                                }).Distinct()
+                .Count();
+
+            var repairOrderList = (from ro in _appContext.RepairOrder
+                                   join emp in _appContext.Employee on ro.RequisitionerId equals emp.EmployeeId
+                                   join v in _appContext.Vendor on ro.VendorId equals v.VendorId
+                                   join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
+                                   from appr in approver.DefaultIfEmpty()
+                                   where ro.IsDeleted == false &&
+                                     (ro.RepairOrderNumber.Contains(filterText)
+                                     || v.VendorName.Contains(filterText)
+                                     || v.VendorCode.Contains(filterText)
+                                     || ro.StatusId == statusId
+                                     || emp.FirstName.Contains(filterText)
+                                     || appr.FirstName.Contains(filterText))
+                                   select new
+                                   {
+                                       ro.RepairOrderId,
+                                       ro.RepairOrderNumber,
+                                       ro.OpenDate,
+                                       ro.ClosedDate,
+                                       v.VendorName,
+                                       v.VendorCode,
+                                       Status = ro.StatusId == 1 ? "Open" : (ro.StatusId == 2 ? "Pending" : (ro.StatusId == 3 ? "Fulfilling" : "Closed")),
+                                       RequestedBy = emp.FirstName,
+                                       ApprovedBy = appr == null ? "" : appr.FirstName,
+                                       ro.CreatedDate,
+                                       ro.IsActive,
+                                       TotalRecords = totalRecords
+                                   }).Distinct().OrderByDescending(p => p.CreatedDate)
+                                    .Skip(skip)
+                                   .Take(take)
+                                   .ToList();
+
+            return repairOrderList;
+        }
+
         public IEnumerable<object> RecevingRolist()
         {
             var roList = (from ro in _appContext.RepairOrder
