@@ -2378,32 +2378,32 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpGet("getMarkUpValues")]
-        public IActionResult getAll()
-        {
-            var markUpPercentages = _unitOfWork.Repository<MarkUpPercentage>().GetAll().OrderByDescending(x => x.MarkUpPercentageId);
-            return Ok(markUpPercentages);
-        }
+        //[HttpGet("getMarkUpValues")]
+        //public IActionResult getAll()
+        //{
+        //    var markUpPercentages = _unitOfWork.Repository<MarkUpPercentage>().GetAll().OrderByDescending(x => x.MarkUpPercentageId);
+        //    return Ok(markUpPercentages);
+        //}
 
-        [HttpPost("addMarkUp")]
-        public IActionResult addasset([FromBody] MarkUpPercentage markUpPercentage)
-        {
-            if (markUpPercentage != null)
-            {
-                markUpPercentage.MarkUpPercentageId = 0;
-                _context.MarkUpPercentage.Add(markUpPercentage);
-                _context.SaveChanges();
-            }
-            return Ok(markUpPercentage);
-        }
+        //[HttpPost("addMarkUp")]
+        //public IActionResult addasset([FromBody] MarkUpPercentage markUpPercentage)
+        //{
+        //    if (markUpPercentage != null)
+        //    {
+        //        markUpPercentage.MarkUpPercentageId = 0;
+        //        _context.MarkUpPercentage.Add(markUpPercentage);
+        //        _context.SaveChanges();
+        //    }
+        //    return Ok(markUpPercentage);
+        //}
 
-        [HttpPut("addMarkUp/{id}")]
-        public IActionResult updateAsset([FromBody] MarkUpPercentage markUpPercentage)
-        {
-            _unitOfWork.Repository<MarkUpPercentage>().Update(markUpPercentage);
-            _unitOfWork.SaveChanges();
-            return Ok(markUpPercentage);
-        }
+        //[HttpPut("addMarkUp/{id}")]
+        //public IActionResult updateAsset([FromBody] MarkUpPercentage markUpPercentage)
+        //{
+        //    _unitOfWork.Repository<MarkUpPercentage>().Update(markUpPercentage);
+        //    _unitOfWork.SaveChanges();
+        //    return Ok(markUpPercentage);
+        //}
 
         [HttpGet("getAllCustomers")]
         public IEnumerable<Customer> getAllCustomers()
@@ -3153,6 +3153,8 @@ namespace QuickApp.Pro.Controllers
             var deleteStatus = _unitOfWork.Customer.GetCustomerFinanceDocumentDelete(id, updatedBy);
             return Ok(deleteStatus);
         }
+
+        
     }
 
 }

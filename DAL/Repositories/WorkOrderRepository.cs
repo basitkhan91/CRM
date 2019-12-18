@@ -1597,7 +1597,7 @@ namespace DAL.Repositories
                                                from task in wetask.DefaultIfEmpty()
                                                join eo in _appContext.ExclusionEstimatedOccurances on we.EstimtPercentOccurranceId equals eo.Id into weeo
                                                from eo in weeo.DefaultIfEmpty()
-                                               join mp in _appContext.MarkUpPercentage on we.MarkUpPercentageId equals mp.MarkUpPercentageId into wemp
+                                               join mp in _appContext.Percent on we.MarkUpPercentageId equals mp.PercentId into wemp
                                                from mp in wemp.DefaultIfEmpty()
                                                where we.IsDeleted == false && we.WorkFlowWorkOrderId == wfwoId
                                                select new
@@ -1616,7 +1616,7 @@ namespace DAL.Repositories
                                                    we.IsFromWorkFlow,
                                                    we.ItemMasterId,
                                                    we.MarkUpPercentageId,
-                                                   MarkUpPercentage = mp.MarkUpValue == null ? "" : mp.MarkUpValue,
+                                                   MarkUpPercentage =  mp.PercentValue,
                                                    we.MasterCompanyId,
                                                    we.Memo,
                                                    we.Quantity,
@@ -2730,7 +2730,7 @@ namespace DAL.Repositories
                                                join im in _appContext.ItemMaster on we.ItemMasterId equals im.ItemMasterId
                                                join eo in _appContext.ExclusionEstimatedOccurances on we.ExstimtPercentOccuranceId equals eo.Id into weeo
                                                from eo in weeo.DefaultIfEmpty()
-                                               join mp in _appContext.MarkUpPercentage on we.MarkUpPercentageId equals mp.MarkUpPercentageId into wemp
+                                               join mp in _appContext.Percent on we.MarkUpPercentageId equals mp.PercentId into wemp
                                                from mp in wemp.DefaultIfEmpty()
                                                where we.IsDeleted == false && wq.WorkOrderQuoteId == WorkOrderQuoteId
                                                select new
@@ -2748,7 +2748,7 @@ namespace DAL.Repositories
                                                    we.IsDeleted,
                                                    we.ItemMasterId,
                                                    we.MarkUpPercentageId,
-                                                   MarkUpPercentage = mp.MarkUpValue == null ? "" : mp.MarkUpValue,
+                                                   MarkUpPercentage = mp.PercentValue,
                                                    we.MasterCompanyId,
                                                    we.Memo,
                                                    we.Quantity,
@@ -5405,7 +5405,7 @@ namespace DAL.Repositories
 
                     workFlowWorkOrder = BIndWorkFlowWorkOrderDetails(workFlowWorkOrder, workFlow);
                     workFlowWorkOrder.WorkFlowWorkOrderId = workFlow.workFlowWorkOrderId;
-
+                    workFlowWorkOrder.WorkOrderPartNoId = workFlow.workOrderPartNoId;
 
                     if (workFlow.Charges != null && workFlow.Charges.Count > 0)
                     {
@@ -5514,6 +5514,15 @@ namespace DAL.Repositories
                         _appContext.SaveChanges();
                     }
 
+
+                    //Updating existing workflow id
+                    WorkOrderPartNumber workOrderPartNumber = new WorkOrderPartNumber();
+                    workOrderPartNumber.ID = workFlowWorkOrder.WorkOrderPartNoId;
+                    workOrderPartNumber.WorkflowId = workFlowWorkOrder.WorkflowId;
+
+                    _appContext.WorkOrderPartNumber.Attach(workOrderPartNumber);
+                    _appContext.Entry(workOrderPartNumber).Property(p => p.WorkflowId).IsModified = true;
+                    _appContext.SaveChanges();
                 }
                 return workFlow.workFlowWorkOrderId;
             }

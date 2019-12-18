@@ -493,7 +493,10 @@ namespace DAL.Repositories
                             join creditTerms in _appContext.CreditTerms on t.CreditTermsId equals creditTerms.CreditTermsId into cre
                             from creditTerms in cre.DefaultIfEmpty()
                             join cc in _appContext.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
-                            join mup in _appContext.MarkUpPercentage on t.MarkUpPercentageId equals mup.MarkUpPercentageId into tmup
+                           
+                            join mup in _appContext.Percent on Convert.ToInt32(t.MarkUpPercentageId) equals Convert.ToInt32(mup.PercentId) 
+                            into tmup
+                            
                             from mup in tmup.DefaultIfEmpty()
 
                             join inte in _appContext.CustomerIntegrationPortal on t.CustomerId equals inte.CustomerId into integra
@@ -586,7 +589,7 @@ namespace DAL.Repositories
                                 IntegrationWith= intepo.Description,
 
                           CreditTermsName  =creditTerms.Name,
-                          MarkUpPercentage= mup.MarkUpValue,
+                          MarkUpPercentage= mup.PercentValue,
                           TaxTypeDescription=t.TaxTypeId,
                           CsrName= Employeecsr.FirstName,
                        
@@ -1934,6 +1937,6 @@ namespace DAL.Repositories
             return result;
 
         }
-
+       
     }
 }

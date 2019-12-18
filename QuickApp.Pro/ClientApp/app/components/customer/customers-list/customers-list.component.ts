@@ -332,13 +332,14 @@ export class CustomersListComponent implements OnInit {
 
     }
     loadData(event) {
+       
         this.lazyLoadEventData = event;
         const pageIndex = parseInt(event.first) / event.rows;;
         this.pageIndex = pageIndex;
         this.pageSize = event.rows;
         event.first = pageIndex;
-
-        this.getList(event)
+           this.getList(event)
+        
         console.log(event);
     }
 
