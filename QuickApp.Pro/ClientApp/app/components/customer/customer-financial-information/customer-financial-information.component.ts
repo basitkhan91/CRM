@@ -275,7 +275,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.generateValue();
         this.getAllcreditTermList();
         this.getAllDiscountList();
-        this.getAllMarkUp();
+       // this.getAllMarkUp();
         this.getAllTaxList();
         this.getAllCurrency();
         this.getAllPercentage();
@@ -326,7 +326,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     getAllPercentage() {
         this.commonservice.smartDropDownList('[Percent]', 'PercentId', 'PercentValue').subscribe(res => {
-
+    
         //this.percentService.getPercentages().subscribe(res => {
             this.percentageList = res;
         })
@@ -497,6 +497,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
         })]
     }
 
+   
+
     checkDiscountExists(field, value) {
         const exists = validateRecordExistsOrNot(field, value, this.creditTermList)
         console.log(exists);
@@ -524,11 +526,11 @@ export class CustomerFinancialInformationComponent implements OnInit {
     selectedDiscount() {
         this.isDiscountExists = true;
     }
-    getAllMarkUp() {
-        this.customerService.getMarkUpList().subscribe(res => {
-            this.markUpList = res[0];
-        })
-    }
+    //getAllMarkUp() {
+    //    this.customerService.getMarkUpList().subscribe(res => {
+    //        this.markUpList = res[0];
+    //    })
+    //}
 
 
     getAllTaxList() {
@@ -582,7 +584,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
     }
 
     saveFinancialInformation() {
-        
+       
+        alert(this.savedGeneralInformationData.markUpPercentageId)
         this.customerService.updatefinanceinfo({
             ...this.savedGeneralInformationData,
             CustomerTaxTypeRateMapping: this.taxTypeRateMapping,
@@ -645,7 +648,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
             updatedBy: this.userName,
         }
         this.customerService.newMarkUp(data).subscribe(data => {
-            this.getAllMarkUp();
+            //this.getAllMarkUp();
             this.alertService.showMessage(
                 'Success',
                 `Add MarkUp Sucessfully `,
