@@ -749,5 +749,21 @@ export class VendorShippingInformationComponent {
             }
         }
     }
+
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.shippingauditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+
+
+
 }
 
