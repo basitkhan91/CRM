@@ -63,10 +63,9 @@ export class StocklineService {
 		return this.stocklineEndpoint.getGlobalStockLineRecords<any>(value, pageIndex, pageSize);
   }
   
-	//getStockLineList() {
-	//	return Observable.forkJoin(
-	//		this.stocklineEndpoint.getStockLineEndpoint<any[]>());
-	//}
+	updateActionforActive(action, login) {
+		return this.stocklineEndpoint.getUpdatestockLineEndpointforActive(action, login);
+	}
 
 	getStockLineAdjustmentDatatypeList() {
 		return Observable.forkJoin(
