@@ -24,7 +24,7 @@ export class WorkOrderBillingComponent implements OnInit {
     @Input() savedWorkOrderData;
     @Input() currencyList;
     @Input() isEditBilling = false;
-    @Input() workOrderQuoteId;
+    @Input() workOrderQuoteId = 0;
     @Input() quoteExclusionList;
     @Input() quoteMaterialList;
     @Input() quoteFreightsList;
@@ -74,7 +74,7 @@ export class WorkOrderBillingComponent implements OnInit {
         this.getLegalEntity();
         this.generateNumbers();
         this.getInvoiceList();
-        console.log(this.isEditBilling)
+
         if (this.isEditBilling) {
             this.getSiteNamesBySoldCustomerId(data.soldToCustomerId);
             this.getSiteNamesByShipCustomerId(data.shipToCustomerId);
@@ -142,6 +142,8 @@ export class WorkOrderBillingComponent implements OnInit {
 
 
 
+
+
     getShipViaByCustomerId() {
         this.commonService.getShipViaDetailsByModule(getModuleIdByName('Customer'), this.customerId).subscribe(res => {
             this.shipViaData = res;
@@ -174,11 +176,8 @@ export class WorkOrderBillingComponent implements OnInit {
         })
     }
     async getSiteNamesBySoldCustomerId(object) {
-        console.log(object);
-
         const { customerId } = object;
         await this.customerService.getCustomerShipAddressGet(customerId).subscribe(res => {
-            console.log(res);
 
             this.soldCustomerShippingOriginalData = res[0];
             this.soldCustomerSiteList = res[0].map(x => {
@@ -289,6 +288,54 @@ export class WorkOrderBillingComponent implements OnInit {
             this.billingorInvoiceForm.managementStructureId = departmentId;
         }
     }
+
+    resetOtherOptions() {
+
+        // this.resetMisCharges();
+        // this.resetMaterial();
+
+    }
+    resetMisCharges() {
+        // this.billingorInvoiceForm.miscCharges = false;
+        if (this.billingorInvoiceForm.miscCharges === false) {
+            this.billingorInvoiceForm.miscChargesValue = null;
+            this.billingorInvoiceForm.miscChargesCost = 0;
+            this.billingorInvoiceForm.miscChargesCostPlus = 0;
+        } else {
+            this.sumofCharges();
+        }
+
+    }
+    resetMaterial() {
+        console.log(this.billingorInvoiceForm.material);
+        // this.billingorInvoiceForm.material = false;
+        if (this.billingorInvoiceForm.material === false) {
+            this.billingorInvoiceForm.materialValue = null;
+            this.billingorInvoiceForm.materialCost = 0;
+            this.billingorInvoiceForm.materialCostPlus = 0;
+        } else {
+            this.sumOfMaterialList();
+        }
+    }
+
+    calculateMaterialCostPlus(value) {
+        this.billingorInvoiceForm.materialCostPlus = this.billingorInvoiceForm.materialCost + ((this.billingorInvoiceForm.materialCost * value) / 100)
+    }
+
+    sumOfMaterialList() {
+        this.billingorInvoiceForm.materialCost = this.quoteMaterialList.reduce((acc, x) => acc + x.totalPartsCost, 0)
+    }
+
+
+    sumofCharges() {
+        this.billingorInvoiceForm.miscChargesCost = this.quoteChargesList.reduce((acc, x) => acc + x.extendedCost, 0)
+    }
+    calculateMiscChargesCostPlus(value) {
+        this.billingorInvoiceForm.miscChargesCostPlus = this.billingorInvoiceForm.miscChargesCost + ((this.billingorInvoiceForm.miscChargesCost * value) / 100)
+    }
+
+
+
     saveWorkOrderBilling() {
         this.saveWOBilling.emit(this.billingorInvoiceForm);
 
@@ -298,6 +345,7 @@ export class WorkOrderBillingComponent implements OnInit {
         this.updateWOBilling.emit(this.billingorInvoiceForm);
         // this.getQuoteCostingData();
     }
+
 
 
 

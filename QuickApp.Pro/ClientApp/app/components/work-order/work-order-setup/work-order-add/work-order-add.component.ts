@@ -176,11 +176,11 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     mainWorkOrderId: any = 0;
     quoteData: any;
     workOrderQuoteId: any;
-    quoteExclusionList: any;
-    quoteMaterialList: any;
-    quoteFreightsList: any;
-    quoteChargesList: any;
-    quoteLaborList: any;
+    quoteExclusionList: any = [];
+    quoteMaterialList: any = [];
+    quoteFreightsList: any = [];
+    quoteChargesList: any = [];
+    quoteLaborList: any = [];
     // workScope: any;
     workScope: any;
     subTabMainComponent: any = '';
@@ -286,7 +286,9 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                     this.workOrderPartNumberId = data.partNumbers[0].id;
                     this.showTabsGrid = true;
                     this.showGridMenu = true;
-
+                } else {
+                    this.showTabsGrid = true;
+                    this.showTabsMPNGrid = true;
                 }
 
                 this.workOrderId = data.workOrderId;
@@ -1285,7 +1287,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         if (this.isEditBilling) {
             this.workOrderService.updateBillingByWorkOrderId(data).subscribe(res => {
 
-                this.getQuoteIdByWfandWorkOrderId();
+                // this.getQuoteIdByWfandWorkOrderId();
                 this.alertService.showMessage(
                     this.moduleName,
                     'Updated Work Order Billing Succesfully',
@@ -1294,7 +1296,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             })
         } else {
             this.workOrderService.createBillingByWorkOrderId(data).subscribe(res => {
-                this.getQuoteIdByWfandWorkOrderId();
+                // this.getQuoteIdByWfandWorkOrderId();
                 this.alertService.showMessage(
                     this.moduleName,
                     'Saved Work Order Billing Succesfully',
@@ -1306,6 +1308,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
 
     billingCreateOrEdit() {
+        this.getQuoteIdByWfandWorkOrderId();
         this.workOrderService.getBillingEditData(this.workOrderId, this.workOrderPartNumberId).subscribe(res => {
             this.billing = {
                 ...res,
@@ -1366,7 +1369,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     getQuoteCostingData() {
         // if(this.workOrderQuoteId){
-        this.getQuoteExclusionListByWorkOrderQuoteId();
+        // this.getQuoteExclusionListByWorkOrderQuoteId();
         this.getQuoteMaterialListByWorkOrderQuoteId();
         this.getQuoteFreightsListByWorkOrderQuoteId();
         this.getQuoteChargesListByWorkOrderQuoteId();
@@ -1375,37 +1378,52 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     }
 
-    getQuoteExclusionListByWorkOrderQuoteId() {
+    // getQuoteExclusionListByWorkOrderQuoteId() {
 
-        this.quoteService.getQuoteExclusionList(this.workOrderQuoteId).subscribe(res => {
-            this.quoteExclusionList = res;
-        })
-    }
+    //     this.quoteService.getQuoteExclusionList(this.workOrderQuoteId).subscribe(res => {
+    //         this.quoteExclusionList = res;
+    //     })
+    // }
 
-    getQuoteMaterialListByWorkOrderQuoteId() {
-        this.quoteService.getQuoteMaterialList(this.workOrderQuoteId).subscribe(res => {
+    async getQuoteMaterialListByWorkOrderQuoteId() {
+        await this.quoteService.getQuoteMaterialList(this.workOrderQuoteId).subscribe(res => {
             this.quoteMaterialList = res;
+            this.sumOfMaterialList();
         })
     }
-    getQuoteFreightsListByWorkOrderQuoteId() {
-        this.quoteService.getQuoteFreightsList(this.workOrderQuoteId).subscribe(res => {
+    async getQuoteFreightsListByWorkOrderQuoteId() {
+        await this.quoteService.getQuoteFreightsList(this.workOrderQuoteId).subscribe(res => {
             this.quoteFreightsList = res;
         })
     }
-    getQuoteChargesListByWorkOrderQuoteId() {
-        this.quoteService.getQuoteChargesList(this.workOrderQuoteId).subscribe(res => {
+    async getQuoteChargesListByWorkOrderQuoteId() {
+        await this.quoteService.getQuoteChargesList(this.workOrderQuoteId).subscribe(res => {
             this.quoteChargesList = res;
+            this.sumofCharges();
         })
     }
-    getQuoteLaborListByWorkOrderQuoteId() {
-        this.quoteService.getQuoteLaborList(this.workOrderQuoteId).subscribe(res => {
-            if (res.length > 0) {
+    async getQuoteLaborListByWorkOrderQuoteId() {
+        await this.quoteService.getQuoteLaborList(this.workOrderQuoteId).subscribe(res => {
+            if (res) {
                 this.quoteLaborList = res.laborList;
             }
 
         })
     }
 
+    sumOfMaterialList() {
+        console.log(this.quoteMaterialList);
+        // this.billing = { ...this.billing, materialCost: 0 }
+        this.billing.materialCost = this.quoteMaterialList.reduce((acc, x) => acc + x.totalPartsCost, 0)
+        console.log(this.billing)
+    }
+    // sumofLaborOverHead(){
+    //     this.billing.laborOverHeadCost  = this.quoteMaterialList.reduce((acc, x) => acc + x.totalPartsCost, 0)
+    // }
+
+    sumofCharges(){
+        this.billing.miscChargesCost  = this.quoteChargesList.reduce((acc ,x) => acc +x.extendedCost , 0 )
+    }
 
 
 

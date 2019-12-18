@@ -12224,6 +12224,7 @@ table thead tr th:first-child input, table tr td:first-child input {
 
     .table-responsive {
         margin-bottom: 10px;
+        overflow-x : auto !important;
     }
 
     .modal-body .w70 {
