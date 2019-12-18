@@ -25,7 +25,7 @@ namespace DAL.Repositories
             return _appContext.Vendor.Where(v => v.IsActive == true && v.IsDelete == false).Select(v => new Vendor { VendorId = v.VendorId, VendorName = v.VendorName }).OrderBy(c => c.VendorName).ToList();
         }
 
-        public IEnumerable<object> GetVendorListDetails()
+        public IEnumerable<object> GetVendorListDetails(bool isActive)
         {
 
             {
@@ -44,6 +44,7 @@ namespace DAL.Repositories
                             join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                             from vca in vcad.DefaultIfEmpty()
                             where t.IsDelete != true
+                            && t.IsActive==(isActive==true?true:t.IsActive)
                             select new
                             {
                                 t.VendorId,

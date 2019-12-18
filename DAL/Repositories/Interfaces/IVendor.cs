@@ -11,7 +11,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<Vendor> GetVendorsLite();
 
 
-        IEnumerable<object> GetVendorListDetails();
+        IEnumerable<object> GetVendorListDetails(bool isActive);
         IEnumerable<object> GetvendorPurchaseOrderList(long id);
         IEnumerable<object> Getvendorrepairunit(long vendorId);
 

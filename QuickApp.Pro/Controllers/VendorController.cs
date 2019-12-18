@@ -204,17 +204,17 @@ namespace QuickApp.Pro.Controllers
         }
         [HttpGet("GetListDetails")]
         [Produces(typeof(List<VendorViewModel>))]
-        public IActionResult GetVendorListDetails(Object data)
+        public IActionResult GetVendorListDetails(bool isActive=false)
         {
-            var allVendorlistDetails = _unitOfWork.Vendor.GetVendorListDetails(); //.GetAllCustomersData();
+            var allVendorlistDetails = _unitOfWork.Vendor.GetVendorListDetails(isActive); //.GetAllCustomersData();
             return Ok(allVendorlistDetails);
 
         }
         [HttpGet("GetVendorDetailsWithData")]
         [Produces(typeof(List<VendorViewModel>))]
-        public IActionResult GetVendorDetailsWithData()
+        public IActionResult GetVendorDetailsWithData(bool isActive = false)
         {
-            var allVendorlistDetails = _unitOfWork.Vendor.GetVendorListDetails(); //.GetAllCustomersData();
+            var allVendorlistDetails = _unitOfWork.Vendor.GetVendorListDetails(isActive); //.GetAllCustomersData();
             return Ok(allVendorlistDetails);
 
         }
@@ -3659,6 +3659,14 @@ namespace QuickApp.Pro.Controllers
         {
             var result = _unitOfWork.Vendor.GetVendorProcessListFromTransaction(vendorId);
             return Ok(result);
+        }
+
+        [HttpGet("roglobalsearch")]
+        public IActionResult RepairOrderGlobalSearch(string filterText, int pageNumber = 0, int pageSize = 10)
+        {
+            var result = _unitOfWork.repairOrder.RepairOrderGlobalSearch(filterText, pageNumber, pageSize);
+            return Ok(result);
+
         }
 
         #region Capes
