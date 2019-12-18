@@ -145,6 +145,9 @@ namespace DAL.Models
         public long workFlowWorkOrderId { get; set; }
         [NotMapped]
         public bool IsSaveToWorkFlow { get; set; }
+        [NotMapped]
+        public long workOrderPartNoId { get; set; }
+        
 
     }
 }

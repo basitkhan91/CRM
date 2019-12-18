@@ -76,6 +76,7 @@ namespace DAL.Repositories.Interfaces
         void CustomerShippingDetailsViaStatus(long id, bool status, string updatedBy);
         IEnumerable<object> GetCustomerFinanceDocumentDetailById(long id, int moduleId);
         bool GetCustomerFinanceDocumentDelete(long id, string updatedBy);
+      
     }
 
 }

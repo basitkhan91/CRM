@@ -44,6 +44,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
+        this.loadAllVendors();
         if (this.isWorkOrder) {
             // this.row = this.workFlow.charges[0];
             // this.addRow();
@@ -89,7 +90,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
             error => this.errorMessage = <any>error
         );
 
-        this.loadAllVendors();
+
 
         if (this.UpdateMode) {
             this.reCalculate();
