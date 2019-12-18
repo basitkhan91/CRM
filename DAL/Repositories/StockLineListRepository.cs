@@ -413,6 +413,7 @@ namespace DAL.Repositories
                                 stl.UnitCostAdjustmentReasonTypeId,
                                 stl.UnitSalePriceAdjustmentReasonTypeId,
                                 stl.TimeLifeCyclesId,
+                                stl.isActive,
                                 ti.CyclesRemaining,
                                 ti.CyclesSinceNew,
                                 ti.CyclesSinceOVH,
@@ -658,6 +659,27 @@ namespace DAL.Repositories
             }
         }
 
+        public void StocklineStatus(long StocklineId, bool status, string updatedBy)
+        {
+            StockLine stockLine = new StockLine();
+            try
+            {
+                stockLine.StockLineId = StocklineId;
+                stockLine.UpdatedDate = DateTime.Now;
+                stockLine.UpdatedBy = updatedBy;
+                stockLine.isActive = !status;
+                _appContext.StockLine.Attach(stockLine);
+                _appContext.Entry(stockLine).Property(x => x.isActive).IsModified = true;
+                _appContext.Entry(stockLine).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(stockLine).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public IEnumerable<object> GetAllStockLinelistData(Filters<StockListFilters> stockListFilters)
         {
             try
@@ -847,6 +869,7 @@ namespace DAL.Repositories
                                                       stl.UnitCostAdjustmentReasonTypeId,
                                                       stl.UnitSalePriceAdjustmentReasonTypeId,
                                                       stl.TimeLifeCyclesId,
+                                                      stl.isActive,
                                                       ti.CyclesRemaining,
                                                       ti.CyclesSinceNew,
                                                       ti.CyclesSinceOVH,
@@ -1387,6 +1410,7 @@ namespace DAL.Repositories
                               stl.UnitCostAdjustmentReasonTypeId,
                               stl.UnitSalePriceAdjustmentReasonTypeId,
                               stl.TimeLifeCyclesId,
+                              stl.isActive,
                               ti.CyclesRemaining,
                               ti.CyclesSinceNew,
                               ti.CyclesSinceOVH,

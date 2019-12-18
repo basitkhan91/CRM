@@ -19,6 +19,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object>  GetAllStockLineIntegrationPortalData(long id);
         IEnumerable<object> getStocklineDataById(long id);
         IEnumerable<object>  GetAllTimeLifeData(long id);
+        void StocklineStatus(long StocklineId, bool status, string updatedBy);
         IEnumerable<StockLine> getStockLinesByIds(long[] ids);
         void CreateStockLine(StockLine model);
         IEnumerable<StockLineReport> GenerateStockLineReoprt();

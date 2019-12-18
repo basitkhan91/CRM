@@ -226,6 +226,14 @@ export class StockLineListComponent implements OnInit {
 
     }
 
+    changeStatus(rowData) {
+
+        this.workFlowtService.updateActionforActive(rowData, this.userName).subscribe(res => {
+            this.alertService.showMessage("Success", `Successfully Updated Status`, MessageSeverity.success);
+        })
+
+    }
+
     private onDataLoadFailed(error: any) {
         console.log(error);
     }
