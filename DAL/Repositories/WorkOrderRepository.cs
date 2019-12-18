@@ -902,8 +902,9 @@ namespace DAL.Repositories
                             from wf in wwf.DefaultIfEmpty()
                             join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                             join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
+							join pri in _appContext.Priority on wop.WorkOrderPriorityId equals pri.PriorityId 
 
-                            where w.IsDeleted == false && w.IsActive == true && w.WorkOrderId == workOrderId && wop.WorkOrderId==workOrderId
+							where w.IsDeleted == false && w.IsActive == true && w.WorkOrderId == workOrderId && wop.WorkOrderId==workOrderId
                             select new
                             {
                                 value = w.WorkFlowWorkOrderId,
@@ -916,6 +917,7 @@ namespace DAL.Repositories
                                 Workscope = ws.Description,
                                 NTE = (im.OverhaulHours == null ? 0 : im.OverhaulHours) + (im.RPHours == null ? 0 : im.RPHours) + (im.mfgHours == null ? 0 : im.mfgHours) + (im.TestHours == null ? 0 : im.TestHours),
                                 Qty = wop.Quantity,
+								priority = pri.Description,
                                 Stage = wop.Description,
                                 WorkOrderPartNumberId = wop.ID,
                                 wop.WorkOrderScopeId
