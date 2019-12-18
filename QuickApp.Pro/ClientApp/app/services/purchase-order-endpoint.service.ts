@@ -84,5 +84,9 @@ export class PurchaseOrderEndpoint extends EndpointFactory {
     getPOPartsViewById(purchaseOrderId) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/purchaseorder/popartsview?purchaseOrderId=${purchaseOrderId}`)
     }
+
+    purchaseOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId) {
+      return this.http.get<any>(`${this.configurations.baseUrl}/api/purchaseorder/poglobalsearch?filterText=${filterText}&pageNumber=${pageNumber}&pageSize=${pageSize}&vendorId=${vendorId}`)
+    }
     /* ./vendor PO*/
 }

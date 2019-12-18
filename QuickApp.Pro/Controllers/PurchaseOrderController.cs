@@ -39,9 +39,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("poglobalsearch")]
-        public IActionResult PurchaseOrderGlobalSearch(string filterText, int pageNumber=0, int pageSize=10)
+        public IActionResult PurchaseOrderGlobalSearch(string filterText, int pageNumber=0, int pageSize=10, long vendorId=0)
         {
-            var result = _unitOfWork.purchaseOrder.PurchaseOrderGlobalSearch(filterText, pageNumber, pageSize); 
+            var result = _unitOfWork.purchaseOrder.PurchaseOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId); 
             return Ok(result);
 
         }

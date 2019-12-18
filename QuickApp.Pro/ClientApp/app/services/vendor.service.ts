@@ -188,6 +188,10 @@ export class VendorService {
         return Observable.forkJoin(
             this.actionEndpoint.getvendorList<any[]>());
     }
+    getVendorListForVendor(isActive) {
+        return Observable.forkJoin(
+            this.actionEndpoint.getvendorListForVendor<any[]>(isActive));
+    }
     getVendors() {
         return Observable.forkJoin(
             this.actionEndpoint.getvendorList<Vendor[]>());
@@ -784,6 +788,10 @@ export class VendorService {
         return Observable.forkJoin(
             this.actionEndpoint.getVendorProcess1099idFromTransaction<any>(vendorId));
     }
+
+    repairOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId){
+        return this.actionEndpoint.repairOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId);
+      }
 }
 
 

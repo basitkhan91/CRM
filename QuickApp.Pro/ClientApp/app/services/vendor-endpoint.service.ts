@@ -494,6 +494,14 @@ export class VendorEndpointService extends EndpointFactory {
 			});
 	}
 
+	getvendorListForVendor<T>(isActive: any): Observable<T> {
+		let endpointurl = `${this.vendorlistsUrl}?isActive=${isActive}`;
+		return this.http.get<T>(endpointurl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getvendorListForVendor(isActive));
+			});
+	}
+
 	getVendorsDatawithid<T>(vendorId: any): Observable<T> {
 		let endpointurl = `${this.vendorListWithId}/${vendorId}`;
 		return this.http.get<T>(endpointurl, this.getRequestHeaders())
@@ -1647,4 +1655,8 @@ export class VendorEndpointService extends EndpointFactory {
 				return this.handleError(error, () => this.getVendorProcess1099idFromTransaction(vendorId));
 			});
 	}
+
+	repairOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId) {
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/roglobalsearch?filterText=${filterText}&pageNumber=${pageNumber}&pageSize=${pageSize}&vendorId=${vendorId}`)
+	  }
 }

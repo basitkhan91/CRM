@@ -160,6 +160,7 @@ export class VendorsListComponent implements OnInit {
     isEnablePOList: boolean = true;
     isEnableROList: boolean = true;
     vendorId: number;
+    isActive: boolean = true;
     // purchaseOrderData: any;
     // poPageSize: number = 10;
     // poPageIndex: number = 0;
@@ -205,7 +206,10 @@ export class VendorsListComponent implements OnInit {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getVendorList().subscribe(
+        if(!this.isCreatePO && !this.isCreateRO) {
+            this.isActive = false;
+        }        
+        this.workFlowtService.getVendorListForVendor(this.isActive).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
