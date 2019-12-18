@@ -382,6 +382,8 @@ export class WorkOrderCompleteMaterialListComponent {
         this.editData = rowData;
     }
     delete(rowData) {
+
+
         const { workOrderMaterialsId } = rowData;
 
         this.workOrderService.deleteWorkOrderMaterialList(workOrderMaterialsId, this.userName).subscribe(res => {

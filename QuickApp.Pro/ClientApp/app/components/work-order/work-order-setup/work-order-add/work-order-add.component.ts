@@ -70,6 +70,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     @Input() workOrderId;
     @Input() currencyList;
     @Input() workFlowWorkOrderId = 0;
+    @Input() showGridMenu = false;
 
     // @Output() viewWorkFlow = new EventEmitter();
 
@@ -149,7 +150,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     stockLineList: any;
     workOrderWorkFlowOriginalData: any;
     isDisabledSteps: boolean = false;
-    workFlowId: any;
+    workFlowId: any = 0;
     editWorkFlowData: any;
     modal: NgbModalRef;
 
@@ -183,6 +184,9 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     // workScope: any;
     workScope: any;
     subTabMainComponent: any = '';
+    mpnGridData: any;
+    showTabsMPNGrid: boolean = false;
+
 
 
 
@@ -275,12 +279,13 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                     })
                 }
 
-                this.showTabsGrid = true;
+
                 this.workFlowWorkOrderId = data.workFlowWorkOrderId;
                 if (data.isSinglePN) {
                     this.workFlowId = data.partNumbers[0].workflowId;
                     this.workOrderPartNumberId = data.partNumbers[0].id;
-
+                    this.showTabsGrid = true;
+                    this.showGridMenu = true;
 
                 }
 
@@ -302,9 +307,6 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 workFlowId: this.workFlowId,
                 workFlowWorkOrderId: this.workFlowWorkOrderId
             }
-            console.log(this.workFlowWorkOrderId);
-
-            console.log(this.savedWorkOrderData);
 
         }
 
@@ -489,10 +491,6 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             createdBy: this.userName,
             updatedBy: this.userName,
             partNumbers: generalInfo.partNumbers.map(x => {
-                // if (this.workOrderGeneralInformation.isSinglePN == false) {
-                //   this.mpnPartNumbersList.push({ label: x.masterPartId.partNumber, value: x.workflowId })
-                // }
-
 
                 return {
                     ...x,
@@ -554,22 +552,23 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         if (this.workFlowWorkOrderId !== 0) {
             this.isDisabledSteps = true;
         }
-
-
-        console.log(result);
         this.getWorkOrderWorkFlowNos();
+
         if (this.workOrderGeneralInformation.isSinglePN == true) {
             // get WorkFlow Equipment Details if WorFlow Exists
-
+            this.showTabsGrid = true;  // Show Grid Boolean
             this.workOrderPartNumberId = result.partNumbers[0].id;
             this.workFlowId = result.partNumbers[0].workflowId;
             this.workFlowWorkOrderId = result.workFlowWorkOrderId;
-            this.workScope = result.partNumbers[0].workscope;
+            this.workScope = result.partNumbers[0].workScope;
+            this.showGridMenu = true;
             this.getWorkFlowTabsData();
-
-
+        } else {
+            this.showTabsGrid = true;  // Show Grid Boolean
+            this.showTabsMPNGrid = true;
         }
-        this.showTabsGrid = true; // Show Grid Boolean
+
+
     }
 
 
@@ -753,6 +752,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     changeofMPN(data) {
         console.log(data)
+        this.mpnGridData = data.datas;
         // data.workOrderWorkFlowId
         // const data = object;
         // Used to Sub WorkOrder;
@@ -761,6 +761,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             this.workFlowWorkOrderId = data.workOrderWorkFlowId;
         this.workOrderPartNumberId = data.workOrderPartNumberId;
         this.workScope = data.workscope;
+        this.showGridMenu = true;
+
         // console.log(workFlowWorkOrderId);
 
         this.getWorkFlowTabsData();
@@ -824,6 +826,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                     return {
                         value:
                         {
+                            datas: x,
                             workOrderWorkFlowId: x.value,
                             workOrderNo: x.label,
                             masterPartId: x.masterPartId,
@@ -1027,7 +1030,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     formWorkerOrderLaborJson(data) {
 
         let result = {
-            "workFlowWorkOrderId":this.workFlowWorkOrderId,
+            "workFlowWorkOrderId": this.workFlowWorkOrderId,
             //"workFlowWorkOrderId": data['workFlowWorkOrderId'],
             "workOrderId": data['workOrderId'],
             "dataEnteredBy": data['dataEnteredBy'],
@@ -1310,7 +1313,6 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 printDate: new Date(res.printDate),
                 woOpenDate: new Date(res.openDate),
                 invoiceDate: new Date(res.invoiceDate),
-                workScope: this.workScope,
                 soldToCustomerId: { customerId: res.soldToCustomerId, customerName: res.soldToCustomer },
                 shipToCustomerId: { customerId: res.shipToCustomerId, customerName: res.shipToCustomer },
                 customerRef: res.customerReference,
@@ -1335,7 +1337,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 woOpenDate: new Date(data.openDate),
                 salesPerson: data.salesperson,
                 woType: data.workOrderType,
-                creditTerm: data.creditTerm
+                creditTerm: data.creditTerm,
+                workScope: this.workScope
 
             }
         })

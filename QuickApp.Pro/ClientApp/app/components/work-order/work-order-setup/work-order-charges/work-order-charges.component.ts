@@ -11,7 +11,7 @@ import { AuthService } from '../../../../services/auth.service';
 
 })
 /** WorkOrderDocuments component*/
-export class WorkOrderChargesComponent implements OnChanges{
+export class WorkOrderChargesComponent implements OnChanges {
   @Input() workOrderChargesList;
   @Input() workFlowObject;
   @Input() isWorkOrder;
@@ -20,7 +20,7 @@ export class WorkOrderChargesComponent implements OnChanges{
   @Output() saveChargesListForWO = new EventEmitter();
   @Output() updateChargesListForWO = new EventEmitter();
   @Output() refreshData = new EventEmitter();
-  @Output() createQuote = new EventEmitter(); 
+  @Output() createQuote = new EventEmitter();
 
 
   isEdit: boolean = false;
@@ -33,7 +33,7 @@ export class WorkOrderChargesComponent implements OnChanges{
 
   }
 
-  ngOnChanges(){
+  ngOnChanges() {
     console.log(this.markupList);
   }
 
@@ -53,12 +53,13 @@ export class WorkOrderChargesComponent implements OnChanges{
     this.editData = rowData;
   }
   delete(rowData, i) {
-    if(this.isQuote){
+    if (this.isQuote) {
       this.workOrderChargesList.splice(i, 1);
-    }
-    else{
-      const { workOrderChargeId } = rowData;
-      this.workOrderService.deleteWorkOrderChargesByChargesId(workOrderChargeId, this.userName).subscribe(res => {
+    } else {
+      console.log(rowData);
+
+      const { workOrderChargesId } = rowData;
+      this.workOrderService.deleteWorkOrderChargesByChargesId(workOrderChargesId, this.userName).subscribe(res => {
         this.refreshData.emit();
         this.alertService.showMessage(
           '',
@@ -75,31 +76,31 @@ export class WorkOrderChargesComponent implements OnChanges{
   }
 
   updateChargesList(event) {
-    if(this.isQuote && this.isEdit){
+    if (this.isQuote && this.isEdit) {
       this.workOrderChargesList[this.editingIndex] = event.charges[0];
       $('#addNewCharges').modal('hide');
       this.isEdit = false;
     }
-    else{
+    else {
       this.updateChargesListForWO.emit(event);
       $('#addNewCharges').modal('hide');
       this.isEdit = false;
     }
   }
 
-  createChargeQuote(){
+  createChargeQuote() {
     this.createQuote.emit(this.workOrderChargesList);
   }
 
-  markupChanged(matData){
-    try{
-      this.markupList.forEach((markup)=>{
-        if(markup.value == matData.markup){
-          matData.costPlusAmount = (matData.quantity * matData.unitCost) + ( ((matData.quantity * matData.unitCost)/100) *  Number(markup.label))
+  markupChanged(matData) {
+    try {
+      this.markupList.forEach((markup) => {
+        if (markup.value == matData.markup) {
+          matData.costPlusAmount = (matData.quantity * matData.unitCost) + (((matData.quantity * matData.unitCost) / 100) * Number(markup.label))
         }
       })
     }
-    catch(e){
+    catch (e) {
       console.log(e);
     }
   }

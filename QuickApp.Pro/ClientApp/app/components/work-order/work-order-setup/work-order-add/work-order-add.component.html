@@ -539,60 +539,60 @@
             </div>
 
  
-            <div class="card " *ngIf="showTabsGrid ">
-                <div class="card-header" *ngIf="!workOrderGeneralInformation.isSinglePN ">
-                  Multiple  MPN
-
-                </div>
-                <div class="card-body">
-                    <div class="col-md-12" [hidden]="workOrderGeneralInformation.isSinglePN">
-                        <div class="col-md-2">
-                            <label class="control-label col-sm-3">MPN </label>
-                             <div class="col-sm-7">
-
-                                <p-dropdown [options]="mpnPartNumbersList" placeholder="Select Part Number" class="p-dropdown-custom-md" 
-                                (onChange)="changeofMPN($event.value)"
-                                >
-                                  </p-dropdown> 
-                            </div> 
-
-                            <!-- <div class="col-sm-7">
-                              <select>
-                                <option *ngFor="let mpn of MPNList">{{mpn.partNumber}}</option>
-                              </select>
-                            </div> -->
-                        </div>
-                        <div class="col-md-10" style="background-color: white" [hidden]="workOrderGeneralInformation.isSinglePN">
+            <div class="card" *ngIf="showTabsGrid" >
+              <div *ngIf="showTabsMPNGrid">
+                  <div class="card-header" *ngIf="!workOrderGeneralInformation.isSinglePN">
+                      Multiple  MPN
+                    </div>
+                    <div class="card-body" >
+                        <div class="col-md-12" [hidden]="workOrderGeneralInformation.isSinglePN">
                             <div class="col-md-2">
-                                <label class="fs12">Description : </label>
-                                <span>Gyro</span>
+                                <label class="control-label col-sm-3">MPN </label>
+                                 <div class="col-sm-7">
+    
+                                    <p-dropdown [options]="mpnPartNumbersList" placeholder="Select Part Number" class="p-dropdown-custom-md" 
+                                    (onChange)="changeofMPN($event.value)"
+                                    >
+                                      </p-dropdown> 
+                                </div> 
                             </div>
-                            <div class="col-md-2">
-                                <label class="fs12">Workscope : </label>
-                                <span>REP</span>
-                            </div>
-                            <div class="col-md-2">
-                                <label class="fs12">NTE : </label>
-                                <span>5000</span>
-                            </div>
-
-                            <div class="col-md-2">
-                                <label class="fs12">Qty :</label>
-                                <span>10</span>
-                            </div>
-                            <div class="col-md-2">
-                                <label class="fs12" style="text-align: left;
-                                    width: 41px;">Stage : </label>
-                                <span>5_WO opened</span>
-
-                            </div>
-                            <div class="col-md-2">
-                                <label class="fs12">Priority :</label>
-                                <span>AOG</span>
+    
+                            <div  class="col-md-10" style="background-color: white" *ngIf="mpnGridData">
+                                <div class="col-md-2">
+                                    <label class="fs12">Description : </label>
+                                    <span>{{mpnGridData.description}}</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="fs12">Workscope : </label>
+                                    <span>{{mpnGridData.workscope}}</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="fs12">NTE : </label>
+                                    <span>{{mpnGridData.nte}}</span>
+                                </div>
+    
+                                <div class="col-md-2">
+                                    <label class="fs12">Qty :</label>
+                                    <span>{{mpnGridData.qty}}</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="fs12" style="text-align: left;
+                                        width: 41px;">Stage : </label>
+                                    <span>{{mpnGridData.stage}}</span>
+    
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="fs12">Priority :</label>
+                                    <span>{{mpnGridData.priority}}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;">
+              </div>
+                <div class="card-body" *ngIf="showGridMenu">
+
+
+                    <div  class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;">
                         <ul class="nav nav-pills nav-pills-cstm" id="pills-tab" role="tablist">
 
                             <li class="nav-item" *ngIf="isSubWorkOrder">
@@ -781,10 +781,10 @@
                         </div>
 
                     
-                      <div  *ngIf="workOrderId"  [ngClass]="{hidedataMain :  subTabMainComponent !== 'existingRO'} "  >
+                      <div  *ngIf="workOrderId && mpnId"  [ngClass]="{hidedataMain :  subTabMainComponent !== 'existingRO'} "  >
                         <app-workorder-ro-list  [mpnId]="workOrderPartNumberId" ></app-workorder-ro-list>
                       </div>
-                     <div *ngIf="workOrderId" [ngClass]="{hidedataMain :  subTabMainComponent !== 'createNewRO'} " >
+                     <div *ngIf="workOrderId && mpnId" [ngClass]="{hidedataMain :  subTabMainComponent !== 'createNewRO'} " >
                         <app-workorder-ro-create  [mpnId]="workOrderPartNumberId"> </app-workorder-ro-create>
                      </div>
 
