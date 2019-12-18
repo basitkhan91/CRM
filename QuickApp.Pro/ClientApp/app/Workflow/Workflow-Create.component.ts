@@ -48,6 +48,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
     @Input() workFlowId;
     @Input() workFlowWorkOrderId;
     @Input() isQuote = false;
+    @Input() isEdit = false;
     @Output() savedWorkFlowWorkOrderData = new EventEmitter();
     @Output() saveData = new EventEmitter();
     UpdateMode: boolean;

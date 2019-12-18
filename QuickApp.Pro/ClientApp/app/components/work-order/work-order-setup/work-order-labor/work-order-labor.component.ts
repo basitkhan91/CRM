@@ -383,6 +383,10 @@ console.log(this.workOrderLaborList);
     }
     
   }
+
+  deleteLabor(taskName, index){
+    this.laborForm.workOrderLaborList[0][taskName.toLowerCase()].splice(index, 1);
+  }
   // tasks : this.laborForm.tasks[0][keysArray[i]].map(x => {
   //   return {
   //     ...x,

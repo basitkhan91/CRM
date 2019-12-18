@@ -100,7 +100,7 @@
                   mat-icon-button
                   data-target="#addNewCharges"
                   data-toggle="modal"
-                  (click)="edit(w)"
+                  (click)="edit(w, i)"
                   matTooltip="Edit"
                 >
                   <mat-icon>edit</mat-icon>
@@ -111,7 +111,7 @@
                   class="btn-delete ptable-wo-btns"
                   mat-icon-button
                   matTooltip="Delete"
-                  (click)="delete(w)"
+                  (click)="delete(w, i)"
                 >
                   <mat-icon color="warn">delete</mat-icon>
                 </button>

@@ -88,6 +88,7 @@ export class WorkOrderQuoteComponent implements OnInit {
     exclusions: []
 }
 isQuote: boolean = true;
+editMatData: any[] = [];
 
 
 
@@ -108,6 +109,16 @@ isQuote: boolean = true;
       }
     });
   }
+
+  calculateExpiryDate() {
+    console.log(this.validFor);
+    console.log(this.quoteDueDate);
+    if(this.validFor && this.quoteDueDate){
+      this.expirationDate = new Date();
+      this.expirationDate.setDate(this.quoteDueDate.getDate() + this.validFor);
+    }
+  }
+
   saveQuoteDetails() {
     if(this.quotationHeader == undefined || this.quotationHeader.workOrderQuoteId == undefined){
       this.formQuoteInfo()
@@ -373,11 +384,11 @@ isQuote: boolean = true;
               epnDescription: exclusion.partDescription
             }
           });
-          this.labor.workOrderLaborList[0] = {};
+          // this.labor.workOrderLaborList[0] = {};
           this.taskList.forEach((tl)=>{
-            this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
             res['expertise'].forEach((rt)=>{
               if(rt['taskId'] == tl['taskId']){
+                this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
                 let labor = {}
                 labor = {...rt, expertiseId: rt.expertiseTypeId, hours: rt.estimatedHours}
                 this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(labor);
@@ -635,7 +646,12 @@ saveWorkOrderChargesList(data){
 }
 
 saveMaterialListForWO(data){
-  this.materialListQuotation = [...this.materialListQuotation, ...data['materialList']];
+  if(!this.editMatData || this.editMatData.length == 0){
+    this.materialListQuotation = [...this.materialListQuotation, ...data['materialList']];
+  }
+  else {
+    this.editMatData = [];
+  }
   $('#addNewMaterials').modal('hide');
 }
 
@@ -663,5 +679,25 @@ markupChanged(matData){
 
 saveBuildFromScratch(data){
   console.log(data);
+}
+
+editMaterialList(matData, index){
+  this.editMatData = [matData];
+}
+
+deleteMaterialList(index){
+  this.materialListQuotation.splice(index+1, index+1);
+}
+updateWorkOrderChargesList(data){
+  console.log(data);
+}
+checkValidQuote(){
+  if(this.quoteDueDate && this.validFor && this.currency && this.dso)
+  {
+    return false;
+  }
+  else{
+    return true;
+  }
 }
 }
