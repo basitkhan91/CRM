@@ -63,9 +63,10 @@ export class PolistComponent implements OnInit {
     approvedByInput: any;
     // isPOList: boolean;
     @Input() isEnablePOList: boolean;
-    @Input() vendorId: boolean;
+    @Input() vendorId: number;
     currentStatusPO: string = 'open';
     modal: NgbModalRef;
+    filterText: any = '';
 
     constructor(private _route: Router,
         private authService: AuthService,
@@ -214,13 +215,17 @@ export class PolistComponent implements OnInit {
         if(this.isEnablePOList) {
             this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, vendorId: this.vendorId }
         }
-        this.getList(this.lazyLoadEventDataInput);
+        console.log(this.filterText);        
+        if(this.filterText == '') {
+            this.getList(this.lazyLoadEventDataInput);
+        } else {
+            this.globalSearch(this.filterText);
+        }        
         console.log(event);
     }
 
     onChangeInputField(value, field) {
         console.log(value, field);
-                      
         // if(field == "purchaseOrderId") {
         //     this.purchaseOrderIdInput = value;
         // }
@@ -258,6 +263,7 @@ export class PolistComponent implements OnInit {
             status: this.statusIdInput,
             requestedBy: this.requestedByInput,
             approvedBy: this.approvedByInput,
+            vendorId: this.vendorId ? this.vendorId : null
         }
         console.log(this.lazyLoadEventDataInput);        
         //this.loadData(event);
@@ -359,6 +365,17 @@ export class PolistComponent implements OnInit {
     // }
     globalSearch(value) {
         this.pageIndex = 0;
+        this.filterText = value;
+        this.vendorId = this.vendorId ? this.vendorId : 0;
+        this.purchaseOrderService.purchaseOrderGlobalSearch(value, this.pageIndex, this.pageSize, this.vendorId).subscribe(res => {
+            this.pageIndex = 0;
+            this.data = res;
+            if (this.data.length > 0) {
+                this.totalRecords = res[0].totalRecords;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            }
+        })
+        //this.pageIndex = 0;
         // this.customerService.getGlobalSearch(value, this.pageIndex, this.pageSize).subscribe(res => {
         //     this.data = res;
         //     if (res.length > 0) {

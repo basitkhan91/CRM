@@ -75,7 +75,6 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Vendor Name <span class="clr-red">*</span>                                    
-                                    <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Vendor" matTooltipPosition="above" target="_blank" [routerLink]="['/vendorsmodule/vendorpages/app-vendor-general-information']"></a></span>
                                 </label>
                                 <div class="inner-addon right-addon inline-block">
                                     <p-autoComplete field="vendorName" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" (onKeyUp)=eventHandler($event) [(ngModel)]="sourcePoApproval.vendorId" name="vendorName" [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" #vendorName=ngModel (onSelect)="selectedVendorName($event)" required>
@@ -88,7 +87,8 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>Vendor Code <span class="clr-red">*</span></label>
+                                <label>Vendor Code <span class="clr-red">*</span>                                    
+                                </label>
                                 <div class="inner-addon right-addon inline-block">
                                     <p-autoComplete field="vendorCode" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" [(ngModel)]="sourcePoApproval.vendorCode" name="vendorCode" [suggestions]="vendorCodes" (completeMethod)="filterVendorCodes($event)"  [size]="30" [minLength]="1" [dropdown]="true" #vendorCode="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
                                     <div *ngIf="vendorCode.invalid && (vendorCode.dirty || vendorCode.touched)" class="alert alert-danger alert-danger-cstm">
@@ -99,7 +99,9 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>Vendor Contact <span class="clr-red">*</span></label>
+                                <label>Vendor Contact <span class="clr-red">*</span>
+                                    <span *ngIf="sourcePoApproval.vendorId" style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Vendor Contact" matTooltipPosition="above" data-target="#addContactInfo" data-toggle="modal" (click)="resetVenContactInfo()"></a></span>
+                                </label>
                                 <div class="inner-addon right-addon inline-block">
                                     <p-autoComplete field="csrName" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" [(ngModel)]="sourcePoApproval.vendorContactId" name="vendorContact" [suggestions]="vendorContactsHeader" (completeMethod)="filterVendorContacts($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" [disabled]="vendorName.invalid" #vendorContact="ngModel" required></p-autoComplete>
                                     <div *ngIf="vendorContact.invalid && (vendorContact.dirty || vendorContact.touched)" class="alert alert-danger alert-danger-cstm">
@@ -1608,6 +1610,130 @@
                     <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="onSaveAddressMemo()">Save</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addContactInfo" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"> Contact Details</h4>
+                </div>
+                <form #addContactForm="ngForm" class="form-horizontal">
+                    <div class="modal-body" *ngIf="sourcePoApproval.vendorId">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Prefix</label>
+                                    <select name="preifx" [(ngModel)]="vendorContactInfo.prefix">
+                                        <option value="Dr.">Dr.</option>
+                                        <option value="Mr.">Mr.</option>
+                                        <option value="Mrs.">Mrs.</option>
+                                        <option value="Ms.">Ms.</option>
+                                        <option value="None selected">None selected</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>First Name <span class="clr-red">*</span></label>
+                                    <div class="inner-addon right-addon inline-block" style="width: 100%">
+                                        <p-autoComplete field="firstName" class="pautocomp-cstm" [(ngModel)]="vendorContactInfo.firstName" name="venConFirstName" [suggestions]="venContactFirstNames" (completeMethod)="filterVenContactFirstNames($event)" [size]="30" [minLength]="1" [dropdown]="true" required></p-autoComplete>
+                                        <!-- <p-autoComplete class="pautocomp-cstm" [(ngModel)]="vendorContactInfo.firstName" (onSelect)="onFirstNameSelected($event)" (onKeyUp)=eventFirstNameHandler($event) name="firstName" [suggestions]="firstNames" (completeMethod)="filterFirstNames($event)" [size]="30" [minLength]="1" [dropdown]="true" required>
+                                            <ng-template let-firstName pTemplate="item">
+                                                <div class="ui-helper-clearfix">{{firstName}}</div>
+                                            </ng-template>
+                                        </p-autoComplete> -->
+                                    </div>
+                                    <!-- <div *ngIf="disablesaveForFirstname" class="clr-red">Entry Already Exists</div> -->
+                                </div>
+                                <div class="form-group">
+                                    <label>Middle Name</label>
+                                    <div class="inner-addon right-addon inline-block" style="width: 100%">
+                                        <p-autoComplete field="middleName" class="pautocomp-cstm" [(ngModel)]="vendorContactInfo.middleName" name="venConMiddleName" [suggestions]="venContactMiddleNames" (completeMethod)="filterVenContactMiddleNames($event)" [size]="30" [minLength]="1" [dropdown]="true"></p-autoComplete>
+                                        <!-- <p-autoComplete class="pautocomp-cstm" [(ngModel)]="vendorContactInfo.middleName" (onSelect)="onMiddleNameSelected($event)" (onKeyUp)=eventMiddleNameHandler($event) name="middleName" [suggestions]="middleNames" (completeMethod)="filterMiddleNames($event)" [size]="30" [minLength]="1" [dropdown]="true">
+                                            <ng-template let-middleName pTemplate="item">
+                                                <div class="ui-helper-clearfix">{{middleName}}</div>
+                                            </ng-template>
+                                        </p-autoComplete> -->
+                                    </div>
+                                    <!-- <div *ngIf="disablesaveForMiddlename" class="clr-red">Entry Already Exists</div> -->
+                                </div>
+                                <div class="form-group">
+                                    <label>Last Name <span class="clr-red">*</span></label>
+                                    <div class="inner-addon right-addon inline-block" style="width: 100%">
+                                        <p-autoComplete field="lastName" class="pautocomp-cstm" [(ngModel)]="vendorContactInfo.lastName" name="venConLastName" [suggestions]="venContactLastNames" (completeMethod)="filterVenContactLastNames($event)" [size]="30" [minLength]="1" [dropdown]="true" required></p-autoComplete>
+                                        <!-- <p-autoComplete class="pautocomp-cstm" [(ngModel)]="vendorContactInfo.lastName" (onSelect)="onLastNameSelected($event)" (onKeyUp)=eventlastNameHandler($event) name="lastName" [suggestions]="lastNames" (completeMethod)="filterLastNames($event)" [size]="30" [minLength]="1" [dropdown]="true" required>
+                                            <ng-template let-lastName pTemplate="item">
+                                                <div class="ui-helper-clearfix">{{lastName}}</div>
+                                            </ng-template>
+                                        </p-autoComplete> -->
+                                    </div>
+                                    <!-- <div *ngIf="disablesaveForlastname" class="clr-red">Entry Already Exists</div> -->
+                                </div>
+                                <div class="form-group">
+                                    <label>Suffix</label>
+                                    <select name="suffix" [(ngModel)]="vendorContactInfo.suffix">
+                                        <option value="II">II</option>
+                                        <option value="III">III</option>
+                                        <option value="Jr.">Jr.</option>
+                                        <option value="Sr.">Sr.</option>
+                                        <option value="None selected">None selected</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Title</label>
+                                    <input class="form-control" type="text" name="contactTitle" [(ngModel)]="vendorContactInfo.contactTitle">
+                                </div>
+                                <div class="form-group">
+                                    <label>Work Phone <span class="clr-red">*</span></label>
+                                    <div>
+                                        <input class="form-control" type="text" maxlength="20" (keypress)="patternMobilevalidationWithSpl($event)" name="workPhone" [(ngModel)]="vendorContactInfo.workPhone" style="width: calc(100% - 63px) !important;" required>
+                                        -
+                                        <input class="form-control w50" type="text" name="workPhoneExtn" [(ngModel)]="vendorContactInfo.workPhoneExtn" maxlength="15">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-group" style="margin-top: 15px; margin-bottom: 20px;">
+                                        <!--<div class="label-cstm" style="margin-right: 10px;">Primary Contact</div>-->
+                                        <span class="checkbox-cstm">
+                                            <label>
+                                                <input type="checkbox" name="isDefaultContact" [(ngModel)]="vendorContactInfo.isDefaultContact">
+                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span> Primary Contact
+                                            </label>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email <span class="clr-red">*</span></label>
+                                    <input class="form-control" email type="text" name="email" [(ngModel)]="vendorContactInfo.email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Mobile Phone</label>
+                                    <input class="form-control" type="text" maxlength="20" (keypress)="patternMobilevalidationWithSpl($event)" name="mobilePhone" [(ngModel)]="vendorContactInfo.mobilePhone">
+                                </div>
+                                <div class="form-group">
+                                    <label>Alternate Phone</label>
+                                    <input class="form-control" type="text" maxlength="20" (keypress)="patternMobilevalidationWithSpl($event)" name="alternatePhone" [(ngModel)]="vendorContactInfo.alternatePhone">
+                                </div>
+                                <div class="form-group">
+                                    <label>Fax</label>
+                                    <input class="form-control" type="text" maxlength="20" (keypress)="patternMobilevalidationWithSpl($event)" name="fax" [(ngModel)]="vendorContactInfo.fax">
+                                </div>
+                                <div class="form-group">
+                                    <label>Memo</label>
+                                    <textarea class="form-control" name="notes" [(ngModel)]="vendorContactInfo.notes"></textarea>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="addContactForVendor()" data-dismiss="modal" [disabled]="!addContactForm.valid">Save</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
