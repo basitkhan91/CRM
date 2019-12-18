@@ -133,7 +133,7 @@ namespace DAL.Repositories
             return purchaseOrderList;
         }
 
-        public IEnumerable<object> PurchaseOrderGlobalSearch(string filterText, int pageNumber, int pageSize)
+        public IEnumerable<object> PurchaseOrderGlobalSearch(string filterText, int pageNumber, int pageSize, long vendorId)
         {
 
             var take = pageSize;
@@ -169,9 +169,9 @@ namespace DAL.Repositories
                                 join v in _appContext.Vendor on po.VendorId equals v.VendorId
                                 join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
                                 from appr in approver.DefaultIfEmpty()
-                                where po.IsDeleted == false &&
+                                where po.IsDeleted == false && po.VendorId==(vendorId>0?vendorId:po.VendorId)
                                 
-                                (po.PurchaseOrderNumber.Contains(filterText)
+                                &&(po.PurchaseOrderNumber.Contains(filterText)
                                 || v.VendorName.Contains(filterText)
                                 || v.VendorCode.Contains(filterText)
                                 || po.StatusId == statusId
@@ -188,8 +188,8 @@ namespace DAL.Repositories
                                      join v in _appContext.Vendor on po.VendorId equals v.VendorId
                                      join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
                                      from appr in approver.DefaultIfEmpty()
-                                     where po.IsDeleted == false &&
-                                     ( po.PurchaseOrderNumber.Contains(filterText)
+                                     where po.IsDeleted == false && po.VendorId == (vendorId > 0 ? vendorId : po.VendorId)
+                                     && ( po.PurchaseOrderNumber.Contains(filterText)
                                      || v.VendorName.Contains(filterText)
                                      || v.VendorCode.Contains(filterText)
                                      || po.StatusId == statusId

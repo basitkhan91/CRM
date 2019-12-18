@@ -403,7 +403,7 @@ export class VendorBillingInformationComponent {
         this.sourceVendor = row;
         this.isSaving = true;
         this.workFlowtService.getVendorBillingAuditHistory(this.sourceVendor.vendorId,this.sourceVendor.vendorBillingAddressId).subscribe(
-            results => this.onAuditHistoryLoadSuccessful(results[0], content),
+            results => this.onAuditHistoryLoadSuccessful(results, content),
             error => this.saveFailedHelper(error));
     }
     private onAuditHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
@@ -718,5 +718,19 @@ export class VendorBillingInformationComponent {
             }
         }
     }
+
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.billingauditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+
 }
 

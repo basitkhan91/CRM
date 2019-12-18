@@ -200,6 +200,7 @@ export class SubWorkOrderComponent implements OnInit {
             this.workOrderService.createSubWorkOrderHeaderByWorkOrderId(data).subscribe(res => {
                 this.isEdit = true;
                 this.showTabsGrid = true;
+                this.showGridMenu = true;
                 this.subWorkOrderGeneralInformation = res;
                 this.subWorkOrderId = res.subWorkOrderId;
                 this.updateURLParams();
@@ -214,6 +215,7 @@ export class SubWorkOrderComponent implements OnInit {
             this.workOrderService.updateSubWorkOrderHeaderBySubWorkOrderId(data).subscribe(res => {
                 this.isEdit = true;
                 this.showTabsGrid = true;
+                this.showGridMenu = true;
                 this.subWorkOrderGeneralInformation = res;
                 this.subWorkOrderId = res.subWorkOrderId;
                 this.updateURLParams();

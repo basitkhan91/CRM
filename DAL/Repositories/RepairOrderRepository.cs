@@ -17,13 +17,15 @@ namespace DAL.Repositories
 
         }
 
-        public IEnumerable<object> RepairOrderGlobalSearch(string filterText, int pageNumber, int pageSize)
+        public IEnumerable<object> RepairOrderGlobalSearch(string filterText, int pageNumber, int pageSize, long vendorId)
         {
 
             var take = pageSize;
             var skip = take * (pageNumber);
 
             short statusId = 0;
+
+
 
             var open = "open";
             var pending = "pending";
@@ -54,8 +56,9 @@ namespace DAL.Repositories
                                 join v in _appContext.Vendor on ro.VendorId equals v.VendorId
                                 join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
                                 from appr in approver.DefaultIfEmpty()
-                                where ro.IsDeleted == false &&
-                                     (ro.RepairOrderNumber.Contains(filterText)
+                                where ro.IsDeleted == false
+                                     && ro.VendorId == (vendorId > 0 ? vendorId : ro.VendorId)
+                                     && (ro.RepairOrderNumber.Contains(filterText)
                                      || v.VendorName.Contains(filterText)
                                      || v.VendorCode.Contains(filterText)
                                      || ro.StatusId == statusId
@@ -73,8 +76,9 @@ namespace DAL.Repositories
                                    join v in _appContext.Vendor on ro.VendorId equals v.VendorId
                                    join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
                                    from appr in approver.DefaultIfEmpty()
-                                   where ro.IsDeleted == false &&
-                                     (ro.RepairOrderNumber.Contains(filterText)
+                                   where ro.IsDeleted == false
+                                     && ro.VendorId == (vendorId > 0 ? vendorId : ro.VendorId)
+                                     &&(ro.RepairOrderNumber.Contains(filterText)
                                      || v.VendorName.Contains(filterText)
                                      || v.VendorCode.Contains(filterText)
                                      || ro.StatusId == statusId
@@ -441,7 +445,7 @@ namespace DAL.Repositories
             return repairOrder;
         }
 
-        public object RepairOrderPartsById(long repairOrderId,long workOrderPartNoId)
+        public object RepairOrderPartsById(long repairOrderId, long workOrderPartNoId)
         {
             var roPartsList = _appContext.RepairOrder
                 .Include("RepairOrderPart")
@@ -541,10 +545,10 @@ namespace DAL.Repositories
                 repairOrderDtoList = null;
             }
             // Create RO From Work Order
-            if (workOrderPartNoId>0)
+            if (workOrderPartNoId > 0)
             {
                 var woPartNo = _appContext.WorkOrderPartNumber.Where(p => p.ID == workOrderPartNoId).FirstOrDefault();
-                if(woPartNo!=null)
+                if (woPartNo != null)
                 {
                     var itemMaster = ItemMasterDetails(woPartNo.MasterPartId);
                     repairOrderPartDto = new RepairOrderPartDto
@@ -561,11 +565,11 @@ namespace DAL.Repositories
                         ExtendedCost = 0,
                         ForeignExchangeRate = (repairOrderDtoList != null && repairOrderDtoList.Count > 0) ? repairOrderDtoList[0].ForeignExchangeRate : "",
                         FunctionalCurrencyId = (repairOrderDtoList != null && repairOrderDtoList.Count > 0) ? repairOrderDtoList[0].FunctionalCurrencyId : 0,
-                        GlAccountId =Convert.ToInt32(itemMaster.GLAccountId),
+                        GlAccountId = Convert.ToInt32(itemMaster.GLAccountId),
                         IsParent = true,
                         ItemMasterId = woPartNo.MasterPartId,
                         ItemTypeId = itemMaster.ItemTypeId,
-                        ManagementStructureId = (repairOrderDtoList!=null && repairOrderDtoList.Count>0)? repairOrderDtoList[0].ManagementStructureId:0,
+                        ManagementStructureId = (repairOrderDtoList != null && repairOrderDtoList.Count > 0) ? repairOrderDtoList[0].ManagementStructureId : 0,
                         ManufacturerId = Convert.ToInt32(itemMaster.ManufacturerId),
                         MasterCompanyId = woPartNo.MasterCompanyId,
                         Memo = "",
@@ -581,11 +585,11 @@ namespace DAL.Repositories
                         StockLineId = woPartNo.StockLineId,
                     };
 
-					if (repairOrderDtoList == null)
-						repairOrderDtoList = new List<RepairOrderPartDto>();
+                    if (repairOrderDtoList == null)
+                        repairOrderDtoList = new List<RepairOrderPartDto>();
 
 
-					repairOrderDtoList.Add(repairOrderPartDto);
+                    repairOrderDtoList.Add(repairOrderPartDto);
                 }
             }
 
@@ -594,7 +598,7 @@ namespace DAL.Repositories
 
         private ItemMaster ItemMasterDetails(long itemMasterId)
         {
-          var itemMaster=  _appContext.ItemMaster.Where(p => p.ItemMasterId == itemMasterId).FirstOrDefault();
+            var itemMaster = _appContext.ItemMaster.Where(p => p.ItemMasterId == itemMasterId).FirstOrDefault();
             if (itemMaster == null)
                 itemMaster = new ItemMaster();
             return itemMaster;

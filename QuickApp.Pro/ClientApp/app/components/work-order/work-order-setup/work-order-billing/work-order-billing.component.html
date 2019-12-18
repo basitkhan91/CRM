@@ -627,7 +627,7 @@
       </div>
 
       <div class="row" style="margin-top: 15px;">
-        <div class="col-md-5">
+        <div class="col-md-7">
             <div class="card">
                 <div class="card-body">
               <div>
@@ -653,7 +653,161 @@
                     </div>
               </div>
               <h5 class="po-head">{{billingorInvoiceForm.costPlusType}} Information </h5>
-              <div class="row">
+
+              <table class="table table-bordered ">
+                <thead>
+                  <tr>
+                  <th></th>
+                  <th>Total  Cost</th>
+                  <th>MarkUp</th>
+                  <th>Cost Plus Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td>
+                      <div class="form-group">
+                          <p-checkbox
+                            class="p-checkbox-label-2"
+                            name="totalworkOrder"
+                            binary="false"
+                            label="Total Work Order"
+                            (onChange)="resetOtherOptions()"
+                            [(ngModel)]="billingorInvoiceForm.totalWorkOrder"
+                          ></p-checkbox>
+                        </div>
+                    </td>
+                    <td>
+                     {{billingorInvoiceForm.totalWorkOrderCost}}
+                    </td>
+                    <td>
+                        <div class="form-group" *ngIf="billingorInvoiceForm.totalWorkOrder">
+                            <p-dropdown
+                              placeholder="Select "
+                           name="bu"
+                              #bu="ngModel"
+                              [options]="numberData"
+                              class="p-dropdown-custom-md"
+                              [(ngModel)]="billingorInvoiceForm.totalWorkOrderValue"
+                            >
+                            </p-dropdown>
+                            </div>
+                    </td>
+                    <td>
+                        {{billingorInvoiceForm.totalWorkOrderCostPlus }}
+                    </td>
+                </tr>
+
+                <tr>
+                  <td>
+                      <div class="form-group">
+                          <p-checkbox
+                          [disabled]="billingorInvoiceForm.totalWorkOrder"
+                          (onChange)="resetMaterial()"
+                            class="p-checkbox-label-2"
+                            name="material"
+                            binary="false"
+                            label="Material"
+                            [(ngModel)]="billingorInvoiceForm.material"
+                          ></p-checkbox>
+                        </div>
+                  </td>
+                  <td>
+                      {{billingorInvoiceForm.materialCost  }}
+                  </td>
+                  <td>
+                      <div class="form-group" *ngIf="billingorInvoiceForm.material">
+                          <p-dropdown
+                            placeholder="Select "
+                            name="materialValue"
+                            #materialValue="ngModel"
+                            [options]="numberData"
+                            class="p-dropdown-custom-md"
+                            (onChange)="calculateMaterialCostPlus($event.value)"
+                            [(ngModel)]="billingorInvoiceForm.materialValue"
+                          >
+                          </p-dropdown>
+                          </div>
+                  </td>
+                  <td>
+                      {{billingorInvoiceForm.materialCostPlus  }}
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                      <div class="form-group">
+                          <p-checkbox
+                          [disabled]="billingorInvoiceForm.totalWorkOrder"
+                            class="p-checkbox-label-2"
+                            name="laborOverHead"
+                            binary="false"
+                            label="Labor & Over Head"
+                            [(ngModel)]="billingorInvoiceForm.laborOverHead"
+                          ></p-checkbox>
+                        </div>
+                  </td>
+                  <td>
+                      {{billingorInvoiceForm.laborOverHeadCost   }}
+                  </td>
+                  <td>
+                      <div class="form-group" *ngIf="billingorInvoiceForm.laborOverHead">
+                          <p-dropdown
+                            placeholder="Select "
+                            name="head"
+                            #head="ngModel"
+                            [options]="numberData"
+                            class="p-dropdown-custom-md"
+                            [(ngModel)]="billingorInvoiceForm.laborOverHeadValue"
+                          >
+                          </p-dropdown>
+                          </div>
+                  </td>
+                  <td>
+                      {{billingorInvoiceForm.laborOverHeadCostPlus   }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                      <div class="form-group">
+                          <p-checkbox
+                          [disabled]="billingorInvoiceForm.totalWorkOrder"
+                            class="p-checkbox-label-2"
+                            (onChange)="resetMisCharges()"
+                            name="miscCharges"
+                            binary="false"
+                            label="Misc Chargers"
+                            [(ngModel)]="billingorInvoiceForm.miscCharges"
+                          ></p-checkbox>
+                        </div>
+                    </td>
+                    <td>
+                        {{billingorInvoiceForm.miscChargesCost    }}
+                    </td>
+                    <td>
+                        <div class="form-group" *ngIf="billingorInvoiceForm.miscCharges">
+                            <p-dropdown
+                              placeholder="Select "
+                              name="misc"
+                              #misc="ngModel"
+                              [options]="numberData"
+                              class="p-dropdown-custom-md"
+                              (onChange)="calculateMiscChargesCostPlus($event.value)"
+                              [(ngModel)]="billingorInvoiceForm.miscChargesValue"
+                            >
+                            </p-dropdown>
+                            </div>
+                    </td>
+                    <td>
+                        {{billingorInvoiceForm.miscChargesCostPlus    }}
+                    </td>
+
+                </tr>
+
+                </tbody>
+              </table>
+
+              <!-- <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
                         <p-checkbox
@@ -672,7 +826,7 @@
                        name="bu"
                           #bu="ngModel"
                           [options]="numberData"
-                          class="p-dropdown-custom-md-2"
+                          class="p-dropdown-custom-md"
                           [(ngModel)]="billingorInvoiceForm.totalWorkOrderValue"
                         >
                         </p-dropdown>
@@ -699,7 +853,7 @@
                             name="materialValue"
                             #materialValue="ngModel"
                             [options]="numberData"
-                            class="p-dropdown-custom-md-2"
+                            class="p-dropdown-custom-md"
                             [(ngModel)]="billingorInvoiceForm.materialValue"
                           >
                           </p-dropdown>
@@ -726,7 +880,7 @@
                               name="head"
                               #head="ngModel"
                               [options]="numberData"
-                              class="p-dropdown-custom-md-2"
+                              class="p-dropdown-custom-md"
                               [(ngModel)]="billingorInvoiceForm.laborOverHeadValue"
                             >
                             </p-dropdown>
@@ -760,12 +914,12 @@
                               </div>
             
                       </div>
-                    </div>
+                    </div> -->
             </div>
             </div>
         </div>
 
-        <div class="col-md-7">
+        <div class="col-md-5">
           <div class="card">
             <div class="card-body">
                 <div class="col-md-12">
@@ -797,7 +951,7 @@
                         ></p-checkbox>
                     </div>
                     <div class="row">
-                      <div class="col-md-4">
+                      <div class="col-md-5">
                           <div class="form-group">
                               <label for="credit" style="width: 100%;">Ship Via
                                    </label>
@@ -806,7 +960,7 @@
                           name="shipVia"
                           #shipVia="ngModel"
                           [options]="shipViaList"
-                          class="p-dropdown-custom-md-2"
+                          class="p-dropdown-custom-md"
                           [(ngModel)]="billingorInvoiceForm.shipViaId"
                            (onChange)="changeOfShipVia($event.value)"
                         >
@@ -824,7 +978,7 @@
                           />
                           </div>
                       </div>
-                      <div class="col-md-4 col-offset-1">
+                      <div class="col-md-5 col-offset-1">
                           <div class="form-group ">
                               <label>Way Bill REF</label>
                               <input
@@ -867,7 +1021,16 @@
   <div class="card-body" *ngIf="workOrderQuoteId">
 
                 <p-accordion>
-                    <p-accordionTab header="MaterialList">
+                    <p-accordionTab  header="Material List" >
+                        <!-- <p-header>
+                          <span>Material List</span>
+                          <span style="margin-left: 250px; color: #295d92 !important;"> : <span style="color: red;">{{1}}</span></span>
+                          <span style="margin-left: 250px; color: #295d92 !important;">MarkUp : <span style="color: red;">{{1}}</span></span>
+                          <span style="margin-left: 250px; color: #295d92 !important;">Total : <span style="color: red;">{{3000}}</span></span>                          
+                          
+
+                        </p-header> -->
+
                         <div class="equipment-tab-content"  >
                             <div class="x_panel" *ngIf="quoteMaterialList">
                                 <div class="tab-content">
@@ -967,7 +1130,7 @@
                             </div>
                         </div>
                     </p-accordionTab>
-                    <p-accordionTab header="Exclusions">
+                    <!-- <p-accordionTab header="Exclusions">
                         <div class="equipment-tab-content" >
                             <div class="x_panel" *ngIf="quoteExclusionList">
                                 <div class="tab-content">
@@ -1005,7 +1168,7 @@
                                 <br />
                             </div>
                         </div> 
-                    </p-accordionTab>
+                    </p-accordionTab> -->
                     <p-accordionTab header="Labor">
                         <p-accordion [multiple]="true">
  

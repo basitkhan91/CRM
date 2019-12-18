@@ -366,8 +366,14 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
-
-
+        [HttpGet("getVendorCapabilityByVendorId")]
+        [Produces(typeof(List<VendorCapabiliy>))]
+        public IActionResult GetvendorCapabilityListByVendorId(long vendorid)
+        {
+            var allCapabilities = _unitOfWork.VendorCapabilities.GetvendorCapabilityListByVendorId(vendorid);
+            return Ok(allCapabilities);                        
+        }
+                
 
         [HttpGet("GetpartdetailsWithidForSinglePart/{partid}")]
         public Object getPartwithid(long partid)
@@ -3662,9 +3668,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("roglobalsearch")]
-        public IActionResult RepairOrderGlobalSearch(string filterText, int pageNumber = 0, int pageSize = 10)
+        public IActionResult RepairOrderGlobalSearch(string filterText, int pageNumber = 0, int pageSize = 10,long vendorId=0)
         {
-            var result = _unitOfWork.repairOrder.RepairOrderGlobalSearch(filterText, pageNumber, pageSize);
+            var result = _unitOfWork.repairOrder.RepairOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId);
             return Ok(result);
 
         }

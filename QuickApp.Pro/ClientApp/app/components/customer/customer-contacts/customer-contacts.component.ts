@@ -191,6 +191,15 @@ export class CustomerContactsComponent implements OnInit {
         this.sourceViewforContact = rowData;
         
     }
+    viewSelectedRowdbl(content,rowData) {
+        this.sourceViewforContact = rowData;
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+
+    }
+    
     onAddContactInfo() {
         this.isEditButton = false;
         this.contactInformation = new CustomerContactModel()

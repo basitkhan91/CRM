@@ -24,6 +24,8 @@ export class StocklineEndpoint extends EndpointFactory {
 
 	private readonly _actionsUrl: string = "/api/StockLine/Get";//which will be specified in the Controller
 
+	private readonly _updateActionsUrl: string = "/api/StockLine/stockLineUpdateforActive";//which will be specified in the Controller
+
 	private readonly _stockLineListUrl: string = "/api/StockLine/Get";//which will be specified in the Controller
 
 	private readonly _actionsUrl1: string = "/api/StocklineAdjustment/Get";//which will be specified in the Controller
@@ -80,6 +82,8 @@ export class StocklineEndpoint extends EndpointFactory {
 
 	get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
 
+	get updateActiveInactive() { return this.configurations.baseUrl + this._updateActionsUrl; }
+
 	get stockListUrl() { return this.configurations.baseUrl + this._stockLineListUrl; }
 	//get adjustmentWarehouseUrl() { return this.configurations.baseUrl + this._stockLineAdjustmentWarehouseBeforeChange; }
 
@@ -116,6 +120,16 @@ export class StocklineEndpoint extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getStockLineEndpoint());
 			});
+	}
+
+	getUpdatestockLineEndpointforActive<T>(roleObject: any, login): Observable<T> {
+		let endpointUrl = `${this.updateActiveInactive}?StocklineId=${roleObject.stockLineId}&status=${roleObject.isActive}&updatedBy=${login}`;
+
+		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getUpdatestockLineEndpointforActive(roleObject, login));
+			});
+
 	}
 
 	getGlobalStockLineRecords<T>(value, pageIndex, pageSize): Observable<T> {
