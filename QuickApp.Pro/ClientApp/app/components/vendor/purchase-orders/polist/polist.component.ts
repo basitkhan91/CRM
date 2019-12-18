@@ -65,6 +65,7 @@ export class PolistComponent implements OnInit {
     @Input() isEnablePOList: boolean;
     @Input() vendorId: boolean;
     currentStatusPO: string = 'open';
+    modal: NgbModalRef;
 
     constructor(private _route: Router,
         private authService: AuthService,
@@ -293,6 +294,11 @@ export class PolistComponent implements OnInit {
         this.getPOViewById(rowData.purchaseOrderId);
         this.getPOPartsViewById(rowData.purchaseOrderId);
         this.getApproversListById(rowData.purchaseOrderId);
+    }
+
+    viewSelectedRowdbl(rowData) {
+        this.viewSelectedRow(rowData);
+        $('#poView').modal('show');
     }
 
     getPOViewById(poId) {

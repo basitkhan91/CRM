@@ -290,6 +290,11 @@ export class RoListComponent implements OnInit {
         this.getApproversListById(rowData.repairOrderId);
     }
 
+    viewSelectedRowdbl(rowData) {
+        this.viewSelectedRow(rowData);
+        $('#roView').modal('show');
+    }
+
     getROViewById(roId) {
         this.vendorService.getROViewById(roId).subscribe(res => {
             console.log(res);  
