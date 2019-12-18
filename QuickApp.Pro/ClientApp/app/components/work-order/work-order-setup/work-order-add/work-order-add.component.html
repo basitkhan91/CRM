@@ -542,7 +542,7 @@
             <div class="card" *ngIf="showTabsGrid" >
               <div *ngIf="showTabsMPNGrid">
                   <div class="card-header" *ngIf="!workOrderGeneralInformation.isSinglePN">
-                      Multiple  MPN
+                      Multiple  MPN  
                     </div>
                     <div class="card-body" >
                         <div class="col-md-12" [hidden]="workOrderGeneralInformation.isSinglePN">
@@ -590,7 +590,7 @@
                     </div>
               </div>
                 <div class="card-body" *ngIf="showGridMenu">
-
+                   
 
                     <div  class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;">
                         <ul class="nav nav-pills nav-pills-cstm" id="pills-tab" role="tablist">
@@ -780,11 +780,12 @@
                             <app-work-order-quote [quoteForm]="quote"></app-work-order-quote>
                         </div>
 
-                    
-                      <div  *ngIf="workOrderId && mpnId"  [ngClass]="{hidedataMain :  subTabMainComponent !== 'existingRO'} "  >
+                  
+                      
+                      <div  *ngIf="workOrderId && workOrderPartNumberId"  [ngClass]="{hidedataMain :  subTabMainComponent !== 'existingRO'} "  >
                         <app-workorder-ro-list  [mpnId]="workOrderPartNumberId" ></app-workorder-ro-list>
                       </div>
-                     <div *ngIf="workOrderId && mpnId" [ngClass]="{hidedataMain :  subTabMainComponent !== 'createNewRO'} " >
+                     <div *ngIf="workOrderId && workOrderPartNumberId" [ngClass]="{hidedataMain :  subTabMainComponent !== 'createNewRO'} " >
                         <app-workorder-ro-create  [mpnId]="workOrderPartNumberId"> </app-workorder-ro-create>
                      </div>
 
@@ -803,7 +804,7 @@
                     </div>
                       
 
-                    <div *ngIf="billing" [ngClass]="{hidedata : gridActiveTab !== 'billorInvoice'}">
+                    <div *ngIf="billing && quoteMaterialList " [ngClass]="{hidedata : gridActiveTab !== 'billorInvoice'}">
                         <app-work-order-billing   
                          [billingorInvoiceForm]="billing" 
                          [currencyList]="currencyList"
