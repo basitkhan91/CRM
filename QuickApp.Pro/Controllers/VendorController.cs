@@ -366,8 +366,14 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
-
-
+        [HttpGet("getVendorCapabilityByVendorId")]
+        [Produces(typeof(List<VendorCapabiliy>))]
+        public IActionResult GetvendorCapabilityListByVendorId(long vendorid)
+        {
+            var allCapabilities = _unitOfWork.VendorCapabilities.GetvendorCapabilityListByVendorId(vendorid);
+            return Ok(allCapabilities);                        
+        }
+                
 
         [HttpGet("GetpartdetailsWithidForSinglePart/{partid}")]
         public Object getPartwithid(long partid)
