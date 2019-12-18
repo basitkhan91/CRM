@@ -30,6 +30,7 @@ export class SubWorkOrderComponent implements OnInit {
     isEdit: boolean = false;
     showTabsGrid: boolean;
     workFlowWorkOrderId: any;
+    showGridMenu: boolean;
 
 
     constructor(private router: Router,
@@ -55,6 +56,7 @@ export class SubWorkOrderComponent implements OnInit {
         if (this.subWorkOrderId !== 0) {
             this.isEdit = true;
             this.showTabsGrid = true;
+            this.showGridMenu = true;
         }
 
 

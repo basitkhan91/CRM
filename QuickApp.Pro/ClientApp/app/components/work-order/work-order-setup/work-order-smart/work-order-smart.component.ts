@@ -23,6 +23,7 @@ export class WorkOrderSmartComponent implements OnInit {
     @Input() isSubWorkOrder = false;
     @Input() paramsData;
     @Input() showTabsGrid;
+    @Input() showGridMenu;
     @Input() subWorkOrderId;
     @Input() workFlowWorkOrderId;
 

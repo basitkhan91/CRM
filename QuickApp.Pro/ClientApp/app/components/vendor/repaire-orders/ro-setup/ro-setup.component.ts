@@ -91,7 +91,7 @@ export class RoSetupComponent implements OnInit {
 	vendorId: any;
 	loadingIndicator: boolean;
 	vendorCodes: any[];
-	isEditMode: boolean;
+	isEditMode: boolean = false;
 	allPartnumbersInfo: any = [];
 	showInput: boolean = false;
 	partNumbers: any;
@@ -281,12 +281,14 @@ export class RoSetupComponent implements OnInit {
 
 		this.roId = this._actRoute.snapshot.params['id'];
 		this.workOrderPartNumberId = this._actRoute.snapshot.params['mpnid'];
-		if (this.roId !== 0) {
+		console.log(this.roId);
+		if (this.roId !== 0 && this.roId !== undefined) {
 			this.isEditMode = true;
 			this.getVendorROById(this.roId);
 			this.getApproversListById(this.roId);
 			this.getRepairOrderPartsById(this.roId);
-		} else if (this.roId === 0) {
+		}
+		else if (this.roId === 0) {
 			this.getRepairOrderPartsById(this.roId);
 		}
 
