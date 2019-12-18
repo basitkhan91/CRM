@@ -173,7 +173,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     ataChapterName: string;
     localprovision: any[] = [];
     localgroup: any[] = [];
-    allProvisonInfo: Provision[];
+    //allProvisonInfo: Provision[];
+    allProvisonInfo: any=[];   
     activeTab: number = 0;
     itemQuantity = [];
     items1: MenuItem[];
@@ -1476,7 +1477,17 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     private onprodataSuccessful(getProvisionList: Provision[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.allProvisonInfo = getProvisionList;
+      //  this.allProvisonInfofilter = getProvisionList;
+
+       // alert(JSON.stringify(this.allProvisonInfo.));
+
+        if (getProvisionList != null) {
+            for (let i = 0; i < getProvisionList.length; i++) {
+                if (getProvisionList[i].isActive === true) {
+                    this.allProvisonInfo.push(getProvisionList[i]);
+                }
+            }
+        }
     }
 
 
@@ -1565,7 +1576,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     openModelPopups(capData) {
-        debugger;
+    
         if (this.itemser.isEditMode == false) {
 
             //Adding for Aircraft manafacturer List Has empty then List Should be null
@@ -2695,11 +2706,13 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 let provisionName = this.allProvisonInfo[i].description;
                 if (provisionName) {
                     if (provisionName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                        this.ProvisionNumber.push([{
-                            "provisionId": this.allProvisonInfo[i].provisionId,
-                            "provisionName": provisionName
-                        }]),
-                            this.localprovision.push(provisionName)
+                        if (this.allProvisonInfo[i].isActive === true) {
+                            this.ProvisionNumber.push([{
+                                "provisionId": this.allProvisonInfo[i].provisionId,
+                                "provisionName": provisionName
+                            }]),
+                                this.localprovision.push(provisionName)
+                        }
                     }
                 }
 
