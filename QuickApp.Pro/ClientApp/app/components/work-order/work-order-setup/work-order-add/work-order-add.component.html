@@ -745,7 +745,7 @@
                         <!-- <wf-create [isWorkOrder]="isWorkOrder" [savedWorkOrderData]="savedWorkOrderData" (savedWorkFlowWorkOrderData)="savedWorkFlowData($event)" > </wf-create> -->
                     </div>
                     <div *ngIf="workFlowId && subTabWorkFlow && editWorkFlowData" [ngClass]="{hidedata: subTabWorkFlow !== 'editworkFlow' }">
-                        <wf-create [isWorkOrder]="isWorkOrder" [workFlowWorkOrderId]="workFlowWorkOrderId" [savedWorkOrderData]="savedWorkOrderData" (savedWorkFlowWorkOrderData)="savedWorkFlowData($event)" > </wf-create>
+                        <wf-create [isWorkOrder]="isWorkOrder" [workOrderPartNumberId]="workOrderPartNumberId" [workFlowWorkOrderId]="workFlowWorkOrderId" [savedWorkOrderData]="savedWorkOrderData" (savedWorkFlowWorkOrderData)="savedWorkFlowData($event)" > </wf-create>
                         <!-- <app-workflow-list></app-workflow-list> -->
                     </div>
 
