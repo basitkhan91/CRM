@@ -449,6 +449,24 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut("updateCapes")]
+        public IActionResult updatecapes([FromBody] AssetCapes assetcapes)
+        {
+            if (assetcapes != null)
+            {
+                assetcapes.MasterCompanyId = 1;
+                assetcapes.UpdatedDate = DateTime.Now;
+                _unitOfWork.Repository<AssetCapes>().Update(assetcapes);
+                _unitOfWork.SaveChanges();
+                return Ok(assetcapes);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
     }
+
 }
 

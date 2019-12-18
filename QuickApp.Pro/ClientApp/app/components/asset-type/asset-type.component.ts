@@ -112,7 +112,7 @@ export class AssetTypeComponent implements OnInit {
     //Check if item exists before add/delete
     checkItemExists(rowData): boolean {
         this.getItemList();
-        const exists = this.itemList.some(item => item.assetTypeName == rowData.assetTypeName && item.assetTypeMemo == rowData.assetTypeMemo);
+        const exists = this.itemList.some(item => item.assetTypeName == rowData.assetTypeName);
         return exists;
     }
 
@@ -189,17 +189,20 @@ export class AssetTypeComponent implements OnInit {
     }
 
     saveExistingItem(rowData): void {
-        var itemExists = this.checkItemExists(rowData);
-        if (itemExists) {
+        //console.log('update',rowData);
+        //var itemExists = this.checkItemExists(rowData);
+        //if (itemExists) {
             this.currentModeOfOperation = ModeOfOperation.Update;
-            rowData.updatedBy = this.userName;
-            this.coreDataService.update(rowData).subscribe(response => {
+        rowData.updatedBy = this.userName;
+        const data = { ...rowData, assetTypeName: editValueAssignByCondition('assetTypeName', rowData.assetTypeName), };
+        //console.log(data);
+            this.coreDataService.update(data).subscribe(response => {
                 this.alertService.showMessage('Success', this.rowName + " updated successfully.", MessageSeverity.success);
                 this.getItemList();
             });
-        } else {
+        /*} else {
             this.saveNewItem();
-        }
+        }*/
         this.dismissModal();
     }
 

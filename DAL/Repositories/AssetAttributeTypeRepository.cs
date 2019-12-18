@@ -84,8 +84,8 @@ namespace DAL.Repositories
                 !string.IsNullOrWhiteSpace(item.Description) &&
                 (item?.ConventionType ?? 0) > 0 &&
                 (item?.DepreciationMethod ?? 0) > 0 &&
-                (item?.ResidualPercentage ?? 0) > 0 &&
-                (item?.ResidualValue ?? 0) > 0 &&
+                //(item?.ResidualPercentage ?? 0) > 0 && // Not required as per PAS-818 update
+                //(item?.ResidualValue ?? 0) > 0 && // should not be mandatory as per PAS-818 update
                 (item?.AssetLife ?? 0) > 0 &&
                 (item?.DepreciationFrequencyId ?? 0) > 0 &&
                 (item?.AcquiredGLAccountId ?? 0) > 0 &&
