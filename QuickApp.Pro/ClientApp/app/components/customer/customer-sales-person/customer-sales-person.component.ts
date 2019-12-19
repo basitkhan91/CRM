@@ -21,6 +21,7 @@ export class CustomerSalesPersonComponent implements OnInit {
     @Input() employeeListOriginal;
     @Output() tab = new EventEmitter();
     employeeList: any[];
+    employeeTypeList: any[];
     // employeeListOriginal: any[];
     id: number;
     customerName: any;
@@ -165,12 +166,25 @@ export class CustomerSalesPersonComponent implements OnInit {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
-    filteremployee(event) {
+    filteremployee(event, type) {
+
+
+
         this.employeeList = this.employeeListOriginal;
 
-        const employeeListData = [...this.employeeListOriginal.filter(x => {
+        const employeeTypeList = [...this.employeeListOriginal.filter(x => {
+            return x.jobTypeName.includes(type)
+        })]
+
+        this.employeeTypeList = employeeTypeList;
+        //const employeeListData = [...this.employeeListOriginal.filter(x => {
+        //    return x.firstName.toLowerCase().includes(event.query.toLowerCase())
+        //})]
+
+        const employeeListData = [...this.employeeTypeList.filter(x => {
             return x.firstName.toLowerCase().includes(event.query.toLowerCase())
         })]
+
         this.employeeList = employeeListData;
     }
     saveSalesInformation() {

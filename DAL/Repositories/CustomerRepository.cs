@@ -494,7 +494,7 @@ namespace DAL.Repositories
                             from creditTerms in cre.DefaultIfEmpty()
                             join cc in _appContext.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
                            
-                            join mup in _appContext.Percent on Convert.ToInt32(t.MarkUpPercentageId) equals Convert.ToInt32(mup.PercentId) 
+                            join mup in _appContext.Percent on Convert.ToInt32(t.MarkUpPercentageId) equals mup.PercentId 
                             into tmup
                             
                             from mup in tmup.DefaultIfEmpty()
@@ -589,7 +589,8 @@ namespace DAL.Repositories
                                 IntegrationWith= intepo.Description,
 
                           CreditTermsName  =creditTerms.Name,
-                          MarkUpPercentage= mup.PercentValue,
+                                MarkUpPercentage = mup == null ? 0 : mup.PercentValue,
+                                //MarkUpPercentage = mup.PercentValue,
                           TaxTypeDescription=t.TaxTypeId,
                           CsrName= Employeecsr.FirstName,
                        

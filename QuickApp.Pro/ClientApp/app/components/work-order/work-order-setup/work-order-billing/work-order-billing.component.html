@@ -632,24 +632,31 @@
                 <div class="card-body">
               <div>
                   <div class="form-row">
-                      <div class="form-group">
-                        <p-radioButton
-                          class="p-radiobutton-label-horizontal"
-                          name="HoursorClockorScan"
-                          label="Cost Plus"
-                          value="Cost Plus"
-                          [(ngModel)]="billingorInvoiceForm.costPlusType"
-                        ></p-radioButton>
-                        <p-radioButton
-                          class="p-radiobutton-label-horizontal col-width"
-                          name="HoursorClockorScan"
-                          value="Flat Rate"
-                          label="Flat Rate"
-                          [(ngModel)]="billingorInvoiceForm.costPlusType"
-                        ></p-radioButton>
-                
-                       
-                      </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <p-radioButton
+                              class="p-radiobutton-label-horizontal"
+                              name="HoursorClockorScan"
+                              label="Cost Plus"
+                              value="Cost Plus"
+                              [(ngModel)]="billingorInvoiceForm.costPlusType"
+                            ></p-radioButton>
+                            <p-radioButton
+                              class="p-radiobutton-label-horizontal col-width"
+                              name="HoursorClockorScan"
+                              value="Flat Rate"
+                              label="Flat Rate"
+                              [(ngModel)]="billingorInvoiceForm.costPlusType"
+                            ></p-radioButton>
+                    
+                           
+                          </div>
+                    </div>
+                    <div class="col-md-6" style="border-style: groove; border-radius: 10px; ">
+                     <h4 style=" color : #295d92"> Grand Total: </h4>
+                     <span style="color: red">{{billingorInvoiceForm.grandTotal}}</span>
+                    </div>
+
                     </div>
               </div>
               <h5 class="po-head">{{billingorInvoiceForm.costPlusType}} Information </h5>
@@ -672,7 +679,7 @@
                             name="totalworkOrder"
                             binary="false"
                             label="Total Work Order"
-                            (onChange)="resetOtherOptions()"
+                            (onChange)="resetOtherOptions(); calculateGrandTotal();"
                             [(ngModel)]="billingorInvoiceForm.totalWorkOrder"
                           ></p-checkbox>
                         </div>
@@ -686,8 +693,9 @@
                               placeholder="Select "
                            name="bu"
                               #bu="ngModel"
-                              [options]="numberData"
+                              [options]="markUpList"
                               class="p-dropdown-custom-md"
+                              (onChange)="calculateTotalWorkOrderCostPlus($event.value); calculateGrandTotal();"
                               [(ngModel)]="billingorInvoiceForm.totalWorkOrderValue"
                             >
                             </p-dropdown>
@@ -703,7 +711,7 @@
                       <div class="form-group">
                           <p-checkbox
                           [disabled]="billingorInvoiceForm.totalWorkOrder"
-                          (onChange)="resetMaterial()"
+                          (onChange)="resetMaterial(); calculateGrandTotal();"
                             class="p-checkbox-label-2"
                             name="material"
                             binary="false"
@@ -721,9 +729,9 @@
                             placeholder="Select "
                             name="materialValue"
                             #materialValue="ngModel"
-                            [options]="numberData"
+                            [options]="markUpList"
                             class="p-dropdown-custom-md"
-                            (onChange)="calculateMaterialCostPlus($event.value)"
+                            (onChange)="calculateMaterialCostPlus($event.value); calculateGrandTotal();"
                             [(ngModel)]="billingorInvoiceForm.materialValue"
                           >
                           </p-dropdown>
@@ -743,6 +751,7 @@
                             name="laborOverHead"
                             binary="false"
                             label="Labor & Over Head"
+                            (onChange)="resetLaborOverHead();  calculateGrandTotal();"
                             [(ngModel)]="billingorInvoiceForm.laborOverHead"
                           ></p-checkbox>
                         </div>
@@ -756,8 +765,9 @@
                             placeholder="Select "
                             name="head"
                             #head="ngModel"
-                            [options]="numberData"
+                            [options]="markUpList"
                             class="p-dropdown-custom-md"
+                            (onChange)="calculateLaborOverHeadCostPlus($event.value);  calculateGrandTotal();"
                             [(ngModel)]="billingorInvoiceForm.laborOverHeadValue"
                           >
                           </p-dropdown>
@@ -773,7 +783,7 @@
                           <p-checkbox
                           [disabled]="billingorInvoiceForm.totalWorkOrder"
                             class="p-checkbox-label-2"
-                            (onChange)="resetMisCharges()"
+                            (onChange)="resetMisCharges(); calculateGrandTotal();"
                             name="miscCharges"
                             binary="false"
                             label="Misc Chargers"
@@ -790,9 +800,9 @@
                               placeholder="Select "
                               name="misc"
                               #misc="ngModel"
-                              [options]="numberData"
+                              [options]="markUpList"
                               class="p-dropdown-custom-md"
-                              (onChange)="calculateMiscChargesCostPlus($event.value)"
+                              (onChange)="calculateMiscChargesCostPlus($event.value); calculateGrandTotal();"
                               [(ngModel)]="billingorInvoiceForm.miscChargesValue"
                             >
                             </p-dropdown>
@@ -825,7 +835,7 @@
                           placeholder="Select "
                        name="bu"
                           #bu="ngModel"
-                          [options]="numberData"
+                          [options]="markUpList"
                           class="p-dropdown-custom-md"
                           [(ngModel)]="billingorInvoiceForm.totalWorkOrderValue"
                         >
@@ -852,7 +862,7 @@
                             placeholder="Select "
                             name="materialValue"
                             #materialValue="ngModel"
-                            [options]="numberData"
+                            [options]="markUpList"
                             class="p-dropdown-custom-md"
                             [(ngModel)]="billingorInvoiceForm.materialValue"
                           >
@@ -879,7 +889,7 @@
                               placeholder="Select "
                               name="head"
                               #head="ngModel"
-                              [options]="numberData"
+                              [options]="markUpList"
                               class="p-dropdown-custom-md"
                               [(ngModel)]="billingorInvoiceForm.laborOverHeadValue"
                             >
@@ -906,7 +916,7 @@
                                 placeholder="Select "
                                 name="misc"
                                 #misc="ngModel"
-                                [options]="numberData"
+                                [options]="markUpList"
                                 class="p-dropdown-custom-md-2"
                                 [(ngModel)]="billingorInvoiceForm.miscChargesValue"
                               >

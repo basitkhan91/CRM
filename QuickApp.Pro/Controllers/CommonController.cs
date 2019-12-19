@@ -55,6 +55,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(restrictedParts);
 
         }
+        [HttpGet]
+        [Route("getrestrictedpartswithdesc")]
+        public IActionResult GetRestrictedPartsWithDescription(long moduleId, long? referenceId, string partType)
+        {
+            var restrictedParts = _unitOfWork.CommonRepository.GetRestrictedPartsWithDescription(moduleId, referenceId, partType);
+            return Ok(restrictedParts);
+
+        }
 
         [HttpGet]
         [Route("binddropdowns")]

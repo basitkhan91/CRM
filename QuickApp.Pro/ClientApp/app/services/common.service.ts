@@ -88,6 +88,8 @@ export class CommonService {
         return this.http.get<any>(`${this.baseUrl}/api/common/levelfourdata?parentId=${divisionId}`, this.authService.getRequestHeaders());
     }
 
-
+    getRestrictedPartsWithDesc(moduleId, referenceId, partType) {
+        return this.http.get<any>(`${this.baseUrl}/api/Common/getrestrictedpartswithdesc?moduleId=${moduleId}&referenceId=${referenceId}&partType=${partType}`)
+    }
 
 }

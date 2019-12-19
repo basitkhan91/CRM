@@ -284,6 +284,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 if (data.isSinglePN) {
                     this.workFlowId = data.partNumbers[0].workflowId;
                     this.workOrderPartNumberId = data.partNumbers[0].id;
+                    this.workScope = data.partNumbers[0].workScope;
                     this.showTabsGrid = true;
                     this.showGridMenu = true;
                 } else {
@@ -309,6 +310,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 workFlowId: this.workFlowId,
                 workFlowWorkOrderId: this.workFlowWorkOrderId
             }
+            this.getWorkOrderWorkFlowNos();
 
         }
 
@@ -318,6 +320,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
     }
+
+
 
 
 
@@ -710,6 +714,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     getSerialNoByStockLineId(workOrderPart) {
         const { stockLineId } = workOrderPart;
         const { conditionId } = workOrderPart;
+        workOrderPart.serialNumber = '';
+
         if ((stockLineId !== null && stockLineId !== 0) && (conditionId !== null && conditionId !== 0)) {
             this.workOrderService.getSerialNoByStockLineId(stockLineId, conditionId).subscribe(res => {
                 if (res) {
@@ -720,6 +726,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
 
     getWorkFlowByPNandScope(workOrderPart) {
+
+        workOrderPart.workflowId = 0;
         const itemMasterId = getValueFromObjectByKey('itemMasterId', workOrderPart.masterPartId)
         const { workOrderScopeId } = workOrderPart;
 
@@ -817,6 +825,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
 
     getWorkOrderWorkFlowNos() {
+        console.log(this.workOrderId);
         if (this.workOrderId) {
             this.workOrderService.getWorkOrderWorkFlowNumbers(this.workOrderId).subscribe(res => {
                 this.workOrderWorkFlowOriginalData = res;
@@ -1358,11 +1367,15 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     getQuoteIdByWfandWorkOrderId() {
         // this.workFlowWorkOrderId, this.workOrderId
         this.quoteService.getQuoteIdByWfandWorkOrderId(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
-            this.quoteData = res;
-            this.workOrderQuoteId = res.workOrderQuote.workOrderQuoteId;
-            console.log(this.workOrderQuoteId, res.workOrderQuoteId, res);
 
-            this.getQuoteCostingData();
+            if (res) {
+                this.quoteData = res;
+                this.workOrderQuoteId = res.workOrderQuote.workOrderQuoteId;
+                console.log(this.workOrderQuoteId, res.workOrderQuoteId, res);
+
+                this.getQuoteCostingData();
+            }
+
         })
     }
 
@@ -1374,6 +1387,9 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         this.getQuoteFreightsListByWorkOrderQuoteId();
         this.getQuoteChargesListByWorkOrderQuoteId();
         this.getQuoteLaborListByWorkOrderQuoteId();
+
+        // this.calculateTotalWorkOrderCost();
+
         // }
 
     }
@@ -1394,6 +1410,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     async getQuoteFreightsListByWorkOrderQuoteId() {
         await this.quoteService.getQuoteFreightsList(this.workOrderQuoteId).subscribe(res => {
             this.quoteFreightsList = res;
+
         })
     }
     async getQuoteChargesListByWorkOrderQuoteId() {
@@ -1406,23 +1423,36 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         await this.quoteService.getQuoteLaborList(this.workOrderQuoteId).subscribe(res => {
             if (res) {
                 this.quoteLaborList = res.laborList;
+                this.sumofLaborOverHead();
             }
 
         })
+
     }
 
-    sumOfMaterialList() {
-        console.log(this.quoteMaterialList);
-        // this.billing = { ...this.billing, materialCost: 0 }
-        this.billing.materialCost = this.quoteMaterialList.reduce((acc, x) => acc + x.totalPartsCost, 0)
-        console.log(this.billing)
-    }
-    // sumofLaborOverHead(){
-    //     this.billing.laborOverHeadCost  = this.quoteMaterialList.reduce((acc, x) => acc + x.totalPartsCost, 0)
+    // calculateTotalWorkOrderCost() {
+    //     this.sumOfMaterialList();
+    //     this.sumofCharges();
+    //     this.sumofLaborOverHead();
+    //     this.billing.totalWorkOrderCost = (this.billing.materialCost + this.billing.laborOverHeadCost + this.billing.miscChargesCost);
+
     // }
+    sumOfMaterialList() {
+        // this.billing = { ...this.billing, materialCost: 0 }
+        this.billing.materialCost = this.quoteMaterialList.reduce((acc, x) => acc + x.materialCostPlus, 0);
 
-    sumofCharges(){
-        this.billing.miscChargesCost  = this.quoteChargesList.reduce((acc ,x) => acc +x.extendedCost , 0 )
+    }
+    sumofLaborOverHead() {
+        this.billing.laborOverHeadCost = this.quoteLaborList.reduce((acc, x) => acc + x.labourCostPlus, 0);
+    }
+
+    sumofCharges() {
+        this.billing.miscChargesCost = this.quoteChargesList.reduce((acc, x) => acc + x.chargesCostPlus, 0);
+        this.calculateTotalWorkOrderCost();
+    }
+
+    calculateTotalWorkOrderCost() {
+        this.billing.totalWorkOrderCost = (this.billing.materialCost + this.billing.laborOverHeadCost + this.billing.miscChargesCost);
     }
 
 
