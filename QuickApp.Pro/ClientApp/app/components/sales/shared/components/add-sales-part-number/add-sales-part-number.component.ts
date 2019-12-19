@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
 import { ItemMasterService } from "../../../../../services/itemMaster.service";
 import { ItemSearchType } from "../../../quotes/models/item-search-type";
 import { PartDetail } from "../../models/part-detail";
+import { ISalesQuote } from "../../../../../models/sales/ISalesQuote.model";
 
 @Component({
   selector: "app-add-sales-part-number",
@@ -11,6 +12,7 @@ import { PartDetail } from "../../models/part-detail";
 export class AddSalesPartNumberComponent implements OnInit {
   @Input() display: boolean;
   @Input() customer: any;
+  @Input() salesQuote:ISalesQuote;
   @Output() close: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() select: EventEmitter<any> = new EventEmitter<any>();
   searchType: ItemSearchType;

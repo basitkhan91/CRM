@@ -10,7 +10,7 @@
             <h4 class="modal-title">Add PN to Quote</h4>
           </div>
           <div class="modal-body">
-            <app-customer-detail [customer]="customer"></app-customer-detail>
+            <app-customer-detail [salesQuote]="salesQuote"></app-customer-detail>
             <app-part-number-filter (onPartSearch)="onPartSearch($event)"
               (onSearchTypeChange)="onSearchTypeChange($event)">
             </app-part-number-filter>
