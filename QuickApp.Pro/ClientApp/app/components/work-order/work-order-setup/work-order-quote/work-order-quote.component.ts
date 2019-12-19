@@ -10,6 +10,7 @@ import { WorkOrderQuoteService } from '../../../../services/work-order/work-orde
 import { WorkOrderService } from '../../../../services/work-order/work-order.service';
 import { CommonService } from '../../../../services/common.service';
 import { WorkFlowtService } from '../../../../services/workflow.service';
+import { CurrencyService } from '../../../../services/currency.service';
 import * as $ from 'jquery'
 import {
   AlertService,
@@ -41,7 +42,7 @@ export class WorkOrderQuoteComponent implements OnInit {
   customerPhone: number;
   customerContact: string;
   customerRef: any;
-  quoteDueDate: Date;
+  quoteDueDate: Date = new Date();
   validFor: number;
   expirationDate: Date;
   quoteStatus: string;
@@ -50,7 +51,7 @@ export class WorkOrderQuoteComponent implements OnInit {
   salesPerson: string;
   csr: any;
   employeeName: any;
-  currency: any;
+  currency: number;
   workOrderNumber: string;
   mpnPartNumbersList: any[];
   selectedPartNumber: string = "";
@@ -66,10 +67,11 @@ export class WorkOrderQuoteComponent implements OnInit {
   chargesQuotation: any[];
   exclusionsQuotation: any[];
   laborQuotation: any[];
-  selectedHistoricalList: any;
+  selectedWorkFlowOrWorkOrder: any;
   workOrderLaborList: any;
   labor = new WorkOrderLabor();
   taskList: any;
+  currencyList: any[];
   savedWorkOrderData: any;
   laborPayload = new WorkOrderQuoteLabor();
   exclusionPayload = new ExclusionQuote();
@@ -80,6 +82,9 @@ export class WorkOrderQuoteComponent implements OnInit {
   workOrderExclusionsList: Object;
   workOrderMaterialList: any;
   workOrderChargesList: any;
+  accountsReceivableBalance: any;
+  warnings: any;
+  memo: any;
   markupList: any;
   workFlowObject = {
     materialList: [],
@@ -93,7 +98,7 @@ editMatData: any[] = [];
 
 
 
-  constructor(private router: ActivatedRoute,private workOrderService: WorkOrderQuoteService, private commonService: CommonService, private _workflowService: WorkFlowtService, private alertService:AlertService, private workorderMainService: WorkOrderService) {}
+  constructor(private router: ActivatedRoute,private workOrderService: WorkOrderQuoteService, private commonService: CommonService, private _workflowService: WorkFlowtService, private alertService:AlertService, private workorderMainService: WorkOrderService, private currencyService:CurrencyService) {}
   ngOnInit() {
     if(this.quoteForm == undefined){
       this.quoteForm = new WorkOrderQuote();
@@ -106,6 +111,7 @@ editMatData: any[] = [];
         this.getMPNDetails(params['workorderid']);
         this.getTaskList();
         this.getMarkup();
+        this.loadCurrency();
       }
     });
   }
@@ -152,7 +158,7 @@ editMatData: any[] = [];
         ExpirationDate: this.expirationDate,
         QuoteStatusId: this.quoteForm.expirationDateStatus,
       CustomerId:this.quoteForm.CustomerId,
-      CurrencyId:1,
+      CurrencyId: Number(this.currency),
       AccountsReceivableBalance:1000.012,
       SalesPersonId:this.quoteForm.SalesPersonId,
       EmployeeId:this.quoteForm.EmployeeId,
@@ -280,6 +286,7 @@ editMatData: any[] = [];
   buildMethodSelected(buildType: string){
     this.selectedBuildMethod = buildType;
     this.gridActiveTab = '';
+    this.selectedWorkFlowOrWorkOrder = undefined;
     var partId;
     var workScopeId;
     this.mpnPartNumbersList.forEach(element => {
@@ -310,10 +317,10 @@ editMatData: any[] = [];
   }
   gridTabChange(value) {
     this.gridActiveTab = value;
-    if(this.selectedBuildMethod == 'use historical wos' && this.selectedHistoricalList){
+    if(this.selectedBuildMethod == 'use historical wos' && this.selectedWorkFlowOrWorkOrder){
         this.clearQuoteData();
         if(value == 'materialList') {
-          this.workOrderService.getWorkOrderMaterialListForQuote(this.selectedHistoricalList.workFlowWorkOrderId)
+          this.workOrderService.getWorkOrderMaterialListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
           .subscribe(
             (res: any[]) =>{
               this.materialListQuotation = res;
@@ -322,7 +329,8 @@ editMatData: any[] = [];
           )
         }
         if(value ==  'labor') {
-          this.workOrderService.getWorkOrderLaborListForQuote(this.selectedHistoricalList.workFlowWorkOrderId)
+          this.savedWorkOrderData.workFlowWorkOrderId = 0;
+          this.workOrderService.getWorkOrderLaborListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
           .subscribe(
             (res: any) =>{
               this.labor = {...res, workOrderLaborList: [{}]};
@@ -341,7 +349,7 @@ editMatData: any[] = [];
           )
         }
         if(value == 'charges') {
-          this.workOrderService.getWorkOrderChargesListForQuote(this.selectedHistoricalList.workFlowWorkOrderId)
+          this.workOrderService.getWorkOrderChargesListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
           .subscribe(
             (res: any[]) =>{
               this.chargesQuotation = res;
@@ -350,7 +358,7 @@ editMatData: any[] = [];
           )
         }
         if(value == 'exclusions') {
-          this.workOrderService.getWorkOrderExclutionsListForQuote(this.selectedHistoricalList.workFlowWorkOrderId)
+          this.workOrderService.getWorkOrderExclutionsListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
           .subscribe(
             (res: any[]) =>{
               this.exclusionsQuotation = res;
@@ -361,6 +369,7 @@ editMatData: any[] = [];
     }
   }
   getQuoteInfo(data) {
+    this.selectedWorkFlowOrWorkOrder = data;
     this.gridActiveTab = '';
     if(this.selectedBuildMethod == 'use work flow'){
       this.workOrderService.getWorkFlowDetails(data.workFlowId)
@@ -395,11 +404,12 @@ editMatData: any[] = [];
               }
             })
           })
+          this.labor.workFloworSpecificTaskorWorkOrder = 'workFlow';
+          this.savedWorkOrderData.workFlowWorkOrderId = undefined;
         }
       )
     }
     else{
-      this.selectedHistoricalList = data;
       this.clearQuoteData();
     }
   }
@@ -662,6 +672,13 @@ getMarkup(){
       this.markupList = res;
     }
   )
+}
+
+loadCurrency(){
+  this.commonService.smartDropDownList('Currency', 'CurrencyId', 'symbol').subscribe(
+    results => this.currencyList = results,
+    error => {}
+);
 }
 
 markupChanged(matData){

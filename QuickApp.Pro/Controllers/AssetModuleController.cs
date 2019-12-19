@@ -187,6 +187,14 @@ namespace QuickApp.Pro.Controllers
                         _unitOfWork.SaveChanges();
                     }
                 }
+                else
+                {
+                        assetcapes.MasterCompanyId = 1;
+                        assetcapes.IsDelete = true;
+                        assetcapes.UpdatedDate = DateTime.Now;
+                        _unitOfWork.Repository<AssetCapes>().Update(assetcapes);
+                        _unitOfWork.SaveChanges();
+                }
                 return Ok(id);
             }
             else
@@ -197,7 +205,7 @@ namespace QuickApp.Pro.Controllers
 
         //capes Saving//
         [HttpPost("Mancapespost")]
-        public IActionResult addCapes([FromBody] List<AssetCapes> capabilities)
+        public IActionResult addCapes([FromBody] List<Capability> capabilities)
         {
             if (ModelState.IsValid)
             {
@@ -208,20 +216,28 @@ namespace QuickApp.Pro.Controllers
                     if (capabilities[i].ItemMasterId == null)
                     {
                         capabilities[i].ItemMasterId = null;
+                        assetcapes.ItemMasterId = null;
                     }
                     capabilities[i].MasterCompanyId = 1;
+                    assetcapes.MasterCompanyId = 1;
                     capabilities[i].CreatedDate = DateTime.Now;
+                    assetcapes.CreatedDate = DateTime.Now;
                     capabilities[i].UpdatedDate = DateTime.Now;
+                    assetcapes.UpdatedDate = DateTime.Now;
                     if (capabilities[i].CapabilityId > 0)
                     {
                         capabilities[i].UpdatedDate = DateTime.Now;
-                        _unitOfWork.Repository<AssetCapes>().Update(capabilities[i]);
+                         
+                        _unitOfWork.Repository<Capability>().Update(capabilities[i]);
+                        _unitOfWork.SaveChanges();
+
+                        _unitOfWork.Repository<AssetCapes>().Update(assetcapes);
                         _unitOfWork.SaveChanges();
                     }
                     else
                     {
-                        //_unitOfWork.Repository<Capability>().Add(capabilities[i]);
-                        //_unitOfWork.SaveChanges();
+                        _unitOfWork.Repository<Capability>().Add(capabilities[i]);
+                        _unitOfWork.SaveChanges();
 
                         assetcapes.AssetRecordId = capabilities[i].AssetRecordId;
                         assetcapes.CapabilityId = capabilities[i].CapabilityId;
@@ -449,6 +465,24 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut("updateCapes")]
+        public IActionResult updatecapes([FromBody] AssetCapes assetcapes)
+        {
+            if (assetcapes != null)
+            {
+                assetcapes.MasterCompanyId = 1;
+                assetcapes.UpdatedDate = DateTime.Now;
+                _unitOfWork.Repository<AssetCapes>().Update(assetcapes);
+                _unitOfWork.SaveChanges();
+                return Ok(assetcapes);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
     }
+
 }
 

@@ -126,7 +126,7 @@ namespace DAL.Repositories
                                t.CreatedBy,
                                t.UpdatedBy,
                                t.UpdatedDate,
-
+                               JobTypeName=jobtype.JobTypeName
                                //cc.Description
                            }).Distinct().OrderByDescending(p=>p.UpdatedDate).ToList();
 

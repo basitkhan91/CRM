@@ -625,22 +625,24 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'Asset Mgmt Maintenance', items: [
-                            { label: 'Depreciation Method', routerLink: '/singlepages/singlepages/app-depriciation-method' },
-                            { label: 'Asset Disposal Type', routerLink: '/singlepages/singlepages/app-disposal-type' },
-                            { label: 'Asset Status', routerLink: '/singlepages/singlepages/asset-status' },
                             { label: 'Asset Class', routerLink: '/singlepages/singlepages/app-asset-type' },
+                            {
+                                label: 'Asset Attributes', items: [
+                                    { label: 'Asset Attribute Type', routerLink: '/singlepages/singlepages/app-asset-attribute-type' },
+                                    { label: 'Depreciation - Book', routerLink: '/#' },
+                                    { label: 'Depreciaiton - Tax', routerLink: '/#' },
+                                    { label: 'Depreciaiton Date', routerLink: '/#' },
+
+                                ]
+                            },
+                            { label: 'Asset Status', routerLink: '/singlepages/singlepages/asset-status' },
+                            { label: 'Depreciation Method', routerLink: '/singlepages/singlepages/app-depriciation-method' },
+                            { label: 'Depreciaiton Convention', routerLink: '/singlepages/singlepages/app-asset-dep-convention-type' },
+                            { label: 'Depreciation Intervals', routerLink: '/singlepages/singlepages/app-depreciation-intervals' },
+                            { label: 'Asset Disposal Type', routerLink: '/singlepages/singlepages/app-disposal-type' },
                             { label: 'Asset Intangible Type', routerLink: '/singlepages/singlepages/app-asset-intangible-type' },
-                            { label: 'Depreciation Convension', routerLink: '/singlepages/singlepages/app-asset-dep-convention-type' },
-                            { label: 'Depreciation Intervals', routerLink: '/singlepages/singlepages/app-depreciation-intervals' },]
-                    },
-                    {
-                        label: 'Asset Attributes', items: [
-                            { label: 'Asset Attribute Type', routerLink: '/singlepages/singlepages/app-asset-attribute-type' },
                             { label: 'Intangible Attribute Type', routerLink: '/singlepages/singlepages/app-asset-intangible-attribute-type' },
-                            { label: 'Depreciation - Book', routerLink: '/#' },
-                            { label: 'Depreciaiton - Tax', routerLink: '/#' },
-                            { label: 'Depreciaiton Start Date', routerLink: '/#' },
-                        ]
+                            ]
                     },
 
                     {

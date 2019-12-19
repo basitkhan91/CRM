@@ -3560,9 +3560,6 @@ namespace DAL.Repositories
         {
             try
             {
-
-
-
                 var data = (from bi in _appContext.WorkOrderBillingInvoicing
                             join wo in _appContext.WorkOrder on bi.WorkOrderId equals wo.WorkOrderId
                             join wop in _appContext.WorkOrderPartNumber on bi.WorkOrderPartNoId equals wop.ID
@@ -3596,7 +3593,6 @@ namespace DAL.Repositories
                                 bi.WorkFlowWorkOrderId,
                                 bi.ItemMasterId,
                                 bi.InvoiceTypeId,
-
                                 InvoiceType = it.Description,
                                 bi.InvoiceNo,
                                 cust.ContractReference,
@@ -3673,13 +3669,18 @@ namespace DAL.Repositories
                                 wo.CustomerId,
                                 cust.Email,
                                 cust.CustomerPhone,
-                                bi.AvailableCredit
+                                bi.AvailableCredit,
+                                bi.TotalWorkOrderCost,
+                                bi.TotalWorkOrderCostPlus,
+                                bi.MaterialCost,
+                                bi.MaterialCostPlus,
+                                bi.LaborOverHeadCost,
+                                bi.LaborOverHeadCostPlus,
+                                bi.MiscChargesCost,
+                                bi.MiscChargesCostPlus,
+                                bi.GrandTotal,
                             }).FirstOrDefault();
-
-
-
                 return data;
-
             }
             catch (Exception)
             {
