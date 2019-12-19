@@ -516,6 +516,7 @@ namespace DAL.Repositories
                             from pub in woppub.DefaultIfEmpty()
                             join stage in _appContext.WorkOrderStage on swo.StageId equals stage.ID
                             join status in _appContext.WorkOrderStatus on swo.StatusId equals status.Id
+
                             where swo.SubWorkOrderId == subWorkOrderId
                             select new
                             {
@@ -543,7 +544,6 @@ namespace DAL.Repositories
                                 swo.IsDER,
                                 swo.IsPMA,
                                 wop.WorkOrderScopeId,
-                                swo.WorkFlowWorkOrderId,
                             }).FirstOrDefault();
                 return data;
             }
