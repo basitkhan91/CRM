@@ -290,48 +290,88 @@ export class WorkOrderBillingComponent implements OnInit {
     }
 
     resetOtherOptions() {
+        // this.billingorInvoiceForm.totalWorkOrderCost = 0;
+        this.billingorInvoiceForm.totalWorkOrderValue = null;
+        this.billingorInvoiceForm.totalWorkOrderCostPlus = 0;
 
-        // this.resetMisCharges();
-        // this.resetMaterial();
+        if (this.billingorInvoiceForm.totalWorkOrder === true) {
+            this.resetMisCharges();
+            this.resetMaterial();
+            this.calculateTotalWorkOrderCost();
 
-    }
-    resetMisCharges() {
-        // this.billingorInvoiceForm.miscCharges = false;
-        if (this.billingorInvoiceForm.miscCharges === false) {
-            this.billingorInvoiceForm.miscChargesValue = null;
-            this.billingorInvoiceForm.miscChargesCost = 0;
-            this.billingorInvoiceForm.miscChargesCostPlus = 0;
-        } else {
-            this.sumofCharges();
         }
-
     }
+
+    calculateTotalWorkOrderCost() {
+        this.sumOfMaterialList();
+        this.sumofCharges();
+        this.billingorInvoiceForm.totalWorkOrderCost = (this.billingorInvoiceForm.materialCost + this.billingorInvoiceForm.miscChargesCost);
+        this.calculateTotalWorkOrderCostPlus(0);
+    }
+
+    calculateTotalWorkOrderCostPlus(value) {
+        const materialCostPlus = this.billingorInvoiceForm.materialCost + ((this.billingorInvoiceForm.materialCost * value) / 100)
+        const misChargeCostPlus = this.billingorInvoiceForm.miscChargesCost + ((this.billingorInvoiceForm.miscChargesCost * value) / 100)
+        this.billingorInvoiceForm.totalWorkOrderCostPlus = Math.round(materialCostPlus + misChargeCostPlus)
+        // this.calculateGrandTotal();
+    }
+
     resetMaterial() {
         console.log(this.billingorInvoiceForm.material);
-        // this.billingorInvoiceForm.material = false;
-        if (this.billingorInvoiceForm.material === false) {
+        if (this.billingorInvoiceForm.material === false || this.billingorInvoiceForm.totalWorkOrder === true) {
+            this.billingorInvoiceForm.material = false
             this.billingorInvoiceForm.materialValue = null;
-            this.billingorInvoiceForm.materialCost = 0;
+            // this.billingorInvoiceForm.materialCost = 0;
             this.billingorInvoiceForm.materialCostPlus = 0;
         } else {
             this.sumOfMaterialList();
+            this.calculateMaterialCostPlus(0);
         }
     }
 
-    calculateMaterialCostPlus(value) {
-        this.billingorInvoiceForm.materialCostPlus = this.billingorInvoiceForm.materialCost + ((this.billingorInvoiceForm.materialCost * value) / 100)
+    resetMisCharges() {
+        if (this.billingorInvoiceForm.miscCharges === false || this.billingorInvoiceForm.totalWorkOrder === true) {
+            this.billingorInvoiceForm.miscCharges = false
+            this.billingorInvoiceForm.miscChargesValue = null;
+            // this.billingorInvoiceForm.miscChargesCost = 0;
+            this.billingorInvoiceForm.miscChargesCostPlus = 0;
+        } else {
+            this.sumofCharges();
+            this.calculateMiscChargesCostPlus(0);
+        }
+
     }
+
+
 
     sumOfMaterialList() {
         this.billingorInvoiceForm.materialCost = this.quoteMaterialList.reduce((acc, x) => acc + x.totalPartsCost, 0)
     }
-
-
+    calculateMaterialCostPlus(value) {
+        this.billingorInvoiceForm.materialCostPlus = this.billingorInvoiceForm.materialCost + ((this.billingorInvoiceForm.materialCost * value) / 100)
+        // this.calculateGrandTotal();
+    }
     sumofCharges() {
         this.billingorInvoiceForm.miscChargesCost = this.quoteChargesList.reduce((acc, x) => acc + x.extendedCost, 0)
     }
     calculateMiscChargesCostPlus(value) {
-        this.billingorInvoiceForm.miscChargesCostPlus = this.billingorInvoiceForm.miscChargesCost + ((this.billingorInvoiceForm.miscChargesCost * value) / 100)
+        this.billingorInvoiceForm.miscChargesCostPlus = this.billingorInvoiceForm.miscChargesCost + ((this.billingorInvoiceForm.miscChargesCost * value) / 100);
+        // this.calculateGrandTotal();
+    }
+
+    calculateGrandTotal() {
+
+        if (this.billingorInvoiceForm.totalWorkOrder === false) {
+            const materialAmount = this.billingorInvoiceForm.materialValue === null ? this.billingorInvoiceForm.materialCost : this.billingorInvoiceForm.materialCostPlus;
+            const misCharges = this.billingorInvoiceForm.miscChargesValue === null ? this.billingorInvoiceForm.miscChargesCost : this.billingorInvoiceForm.miscChargesCostPlus;
+            this.billingorInvoiceForm.grandTotal = (materialAmount + misCharges);
+
+        } else {
+            const totalWorkOrderCostPlus = this.billingorInvoiceForm.totalWorkOrder === null ? this.billingorInvoiceForm.totalWorkOrderCost : this.billingorInvoiceForm.totalWorkOrderCostPlus;
+            this.billingorInvoiceForm.grandTotal = (totalWorkOrderCostPlus);
+        }
+
+
     }
 
 

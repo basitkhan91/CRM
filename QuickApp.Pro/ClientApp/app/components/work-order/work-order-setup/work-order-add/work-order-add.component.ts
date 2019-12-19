@@ -1374,6 +1374,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         this.getQuoteFreightsListByWorkOrderQuoteId();
         this.getQuoteChargesListByWorkOrderQuoteId();
         this.getQuoteLaborListByWorkOrderQuoteId();
+        this.calculateTotalWorkOrderCost();
+
         // }
 
     }
@@ -1412,17 +1414,21 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
 
     sumOfMaterialList() {
-        console.log(this.quoteMaterialList);
         // this.billing = { ...this.billing, materialCost: 0 }
         this.billing.materialCost = this.quoteMaterialList.reduce((acc, x) => acc + x.totalPartsCost, 0)
-        console.log(this.billing)
+
     }
     // sumofLaborOverHead(){
     //     this.billing.laborOverHeadCost  = this.quoteMaterialList.reduce((acc, x) => acc + x.totalPartsCost, 0)
     // }
 
-    sumofCharges(){
-        this.billing.miscChargesCost  = this.quoteChargesList.reduce((acc ,x) => acc +x.extendedCost , 0 )
+    sumofCharges() {
+        this.billing.miscChargesCost = this.quoteChargesList.reduce((acc, x) => acc + x.extendedCost, 0)
+    }
+    calculateTotalWorkOrderCost() {
+        this.sumOfMaterialList();
+        this.sumofCharges();
+        this.billing.totalWorkOrderCost = (this.billing.materialCost + this.billing.miscChargesCost);
     }
 
 
