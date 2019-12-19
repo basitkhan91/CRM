@@ -956,11 +956,17 @@ export class AssetCapesComponent implements OnInit {
         let exchangeForm = capbilitiesForm.exchangeForm;
         mfgForm.forEach(element => {
            // element.capabilityTypeId = 1;
+            element.ataChapterId = 0;
+            element.managementStructureId = 0;
+            element.manufacturerId = 0;
             element.assetRecordId = this.currentAsset.assetRecordId;
             capabilityCollection.push(element);
         });
         overhaulForm.forEach(element => {
             element.capabilityTypeId = 2;
+            element.ataChapterId = 0;
+            element.managementStructureId = 0;
+            element.manufacturerId = 0;
             element.assetRecordId = this.currentAsset.assetRecordId;
             capabilityCollection.push(element);
         });
