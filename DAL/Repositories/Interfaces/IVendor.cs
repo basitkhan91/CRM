@@ -62,5 +62,10 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetVendorProcessListForFinance(int companyId);
         IEnumerable<object> GetVendorProcessListFromTransaction(long vendorId);
 
+        IEnumerable<VendorCapabilityAircraft> VendorAircraft(VendorCapabilityAircraft[] vendorAircraftMapping);
+        IEnumerable<object> VendorAircraftDataByCapsId(long vendorCapabilityId);
+        bool EditVendorAircraft(long id, string memo, string updatedBy);
+        bool DeleteVendorAircraft(long id, string updatedBy);
+
     }
 }

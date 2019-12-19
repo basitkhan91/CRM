@@ -338,7 +338,9 @@
                                             <div class="form-group">
                                                     <!-- <p-fileUpload name="fileupload[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event)">
                                                     </p-fileUpload> -->
-                                                <p-fileUpload name="isCertifiedFile[]" multiple="multiple" [showCancelButton]="false" customUpload="true" (onSelect)="fileUpload($event,'isCertifiedFile')">
+                                                <p-fileUpload name="isCertifiedFile[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event,'isCertifiedFile')">
+
+                                                   
                                                 </p-fileUpload>
                                             </div>
 
@@ -382,7 +384,7 @@
                                         <div *ngIf="sourceVendor.vendorAudit" style="width: 97%">
                                             <div class="form-group">
 
-                                                <p-fileUpload name="vendorAuditFile[]" multiple="multiple" [showCancelButton]="false" customUpload="true" (onSelect)="fileUpload($event,'vendorAuditFile')">
+                                                <p-fileUpload name="vendorAuditFile[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event,'vendorAuditFile')">
                                                 </p-fileUpload>
                                             </div>
 

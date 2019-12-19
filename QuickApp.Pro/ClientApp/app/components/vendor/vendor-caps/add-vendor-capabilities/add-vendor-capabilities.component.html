@@ -87,13 +87,26 @@
 								</div>
 								<div class="form-group">
 									<label>Capability Type <span class="clr-red">*</span></label>
+									<!-- <p-multiSelect [options]="capabilityTypeList" name="capabilityType" [(ngModel)]="sourceVendorCap.CapabilityId" [panelStyle]="{minWidth:'12em'}" #capabilityType="ngModel" required></p-multiSelect> -->
+									<select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendorCap.capabilityId" required>
+										<option *ngFor="let capabilty of capabilityTypeList" [ngValue]="capabilty.value" >  {{capabilty.label}}</option>
+									</select>
+									
+									<!-- <div *ngIf="capabilityType.invalid && (capabilityType.dirty || capabilityType.touched)" class="alert alert-danger alert-danger-cstm">
+											<div *ngIf="capabilityType.errors.required">
+												<small> Capability Type is required </small>
+											</div>
+									</div> -->
+								</div>
+								<!-- <div class="form-group">
+									<label>Capability Type <span class="clr-red">*</span></label>
 									<p-multiSelect [options]="capabilityTypeList" name="capabilityType" [(ngModel)]="sourceVendorCap.capabilityTypes" [panelStyle]="{minWidth:'12em'}" #capabilityType="ngModel" required></p-multiSelect>
 									<div *ngIf="capabilityType.invalid && (capabilityType.dirty || capabilityType.touched)" class="alert alert-danger alert-danger-cstm">
 											<div *ngIf="capabilityType.errors.required">
 												<small> Capability Type is required </small>
 											</div>
 									</div>
-								</div>
+								</div> -->
 								<div class="form-group">
 									<label>Vendor Ranking <span class="clr-red">*</span></label>
 									<input class="form-control" type="number" name="vendorRanking" pKeyFilter="pint" [(ngModel)]="sourceVendorCap.vendorRanking" #vendorRanking="ngModel" required>
@@ -135,8 +148,8 @@
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<label>TAT <span class="clr-red">*</span></label>
-									<input class="form-control" type="number" name="tat" pKeyFilter="pint" [(ngModel)]="sourceVendorCap.tat" #tat="ngModel" required>
+									<label>TAT (Days) <span class="clr-red">*</span></label>
+									<input class="form-control" type="number" name="tat" pKeyFilter="pint" maxlength="5" [(ngModel)]="sourceVendorCap.tat" #tat="ngModel" required>
 									<div *ngIf="tat.invalid && (tat.dirty || tat.touched)" class="alert alert-danger alert-danger-cstm">
 											<div *ngIf="tat.errors.required">
 												<small> TAT is required </small>
@@ -167,10 +180,14 @@
 									PN: <span style="color:red">{{sourceVendorCap.partNumber}}</span>
 								</div>
 								<div class="col-sm-3">
-									PN Description: <span style="color:red">{{sourceVendorCap.partDescription}}</span>
+									Vendor Name: <span style="color:red">{{sselectedVendorName}}</span>
 								</div>
 								<div class="col-sm-3">
-									Manufacturer: <span style="color:red">{{sourceVendorCap.manufacturerName}}</span>
+									Vendor Code: <span style="color:red">{{sselectedVendorCode}}</span>
+								</div>
+								<div class="col-sm-3">
+									Capability Name: <span style="color:red">{{ selectedCapabilityName }}</span>
+									
 								</div>
 							</div>
 							<div class="col-md-12">
