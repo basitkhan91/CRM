@@ -342,7 +342,7 @@ namespace DAL.Repositories
             {
                 var data = (from ro in _appContext.RepairOrder
                             join v in _appContext.Vendor on ro.VendorId equals v.VendorId
-                            join req in _appContext.Employee on ro.ApproverId equals req.EmployeeId
+                            join req in _appContext.Employee on ro.RequisitionerId equals req.EmployeeId
 
                             join app in _appContext.Employee on ro.ApproverId equals app.EmployeeId into approver
                             from app in approver.DefaultIfEmpty()

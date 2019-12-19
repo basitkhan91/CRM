@@ -543,6 +543,7 @@ namespace DAL.Repositories
                                 swo.IsDER,
                                 swo.IsPMA,
                                 wop.WorkOrderScopeId,
+                                swo.WorkFlowWorkOrderId,
                             }).FirstOrDefault();
                 return data;
             }
