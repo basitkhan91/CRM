@@ -6,6 +6,7 @@ import { AuthService } from '../../../services/auth.service';
 import { getValueFromObjectByKey, getObjectByValue, editValueAssignByCondition } from '../../../generic/autocomplete';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { NgbModal, NgbActiveModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { AuditHistory } from '../../../models/audithistory.model';
 @Component({
 	selector: 'app-customer-billing-information',
 	templateUrl: './customer-billing-information.component.html',
@@ -44,7 +45,8 @@ export class CustomerBillingInformationComponent {
     isDeleteMode: boolean = false;
     customerBillingAddressId: number;
     public sourceCustomer: any = {}
-
+    public auditHisory: AuditHistory[] = [];
+    billingauditHisory: any[];
 	// isViewModel : boolean = false
 
 
@@ -277,12 +279,47 @@ export class CustomerBillingInformationComponent {
         this.billingInfo = { ...rowData, country: getObjectByValue('countries_id', rowData.country, this.countryListOriginal) };
 	}
 
-	getCustomerBillingHistory(rowData){
-	  const {customerBillingAddressId} = rowData;
-		this.customerService.getCustomerBillingHistory(this.id, customerBillingAddressId).subscribe(res => {
-			this.billingHistoryData = res;
-		})
-	}
+  //  getCustomerBillingHistory(content,rowData){
+	 // const {customerBillingAddressId} = rowData;
+		//this.customerService.getCustomerBillingHistory(this.id, customerBillingAddressId).subscribe(res => {
+  //          this.billingHistoryData = res;
+  //          this.modal = this.modalService.open(content, { size: 'lg' });
+  //          this.modal.result.then(() => {
+  //              console.log('When user closes');
+  //          }, () => { console.log('Backdrop click') })
+		//})
+  //  }
+    getCustomerBillingHistory(content, row) {
+        const { customerBillingAddressId } = row;
+        this.alertService.startLoadingMessage();
+     
+        this.customerService.getCustomerBillingHistory(this.id, customerBillingAddressId).subscribe(
+            results => this.onAuditHistoryLoadSuccessful(results, content),
+            error => this.saveFailedHelper(error));
+    }
+    private onAuditHistoryLoadSuccessful(auditHistory, content) {
+        this.alertService.stopLoadingMessage();
+
+        
+        this.billingauditHisory = auditHistory;
+      
+        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.billingauditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
 
     //deleteBillingInfo(rowData) {
     //    const obj = {

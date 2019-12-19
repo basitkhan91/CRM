@@ -585,8 +585,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     saveFinancialInformation() {
        
-        alert(this.savedGeneralInformationData.markUpPercentageId)
-        this.customerService.updatefinanceinfo({
+         this.customerService.updatefinanceinfo({
             ...this.savedGeneralInformationData,
             CustomerTaxTypeRateMapping: this.taxTypeRateMapping,
             updatedBy: this.userName
