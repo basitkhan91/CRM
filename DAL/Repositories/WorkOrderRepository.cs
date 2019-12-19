@@ -2653,6 +2653,8 @@ namespace DAL.Repositories
             }
         }
 
+
+
         public WorkOrderQuoteDetails CreateWorkOrderQuoteDetails(WorkOrderQuoteDetails workOrderQuoteDetails)
         {
             try
@@ -2682,6 +2684,8 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
+
 
         public WorkOrderQuoteDetails CreateWorkOrderQuoteExclusions(WorkOrderQuoteDetails quoteExclusions)
         {
@@ -2794,6 +2798,8 @@ namespace DAL.Repositories
             }
         }
 
+
+
         public WorkOrderQuoteDetails CreateWorkOrderQuoteFreight(WorkOrderQuoteDetails quoteFreight)
         {
             try
@@ -2863,7 +2869,9 @@ namespace DAL.Repositories
                                                 wf.WorkOrderQuoteDetailsId,
                                                 wf.WorkOrderQuoteFreightId,
                                                 ShipViaName = sv.Name,
-                                                CarrierName = car.Name
+                                                CarrierName = car.Name,
+                                                wf.MarkupPercentageId,
+                                                wf.FreightCostPlus
                                             }).Distinct().ToList();
 
                 return workOrderFreightList;
@@ -2897,6 +2905,8 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
+
 
         public WorkOrderQuoteDetails CreateWorkOrderQuoteCharges(WorkOrderQuoteDetails quoteCharges)
         {
@@ -2972,7 +2982,8 @@ namespace DAL.Repositories
                                 woc.UpdatedDate,
                                 woc.WorkOrderQuoteDetailsId,
                                 woc.WorkOrderQuoteChargesId,
-                                WorkflowChargeTypeId = woc.ChargesTypeId
+                                WorkflowChargeTypeId = woc.ChargesTypeId,
+                                woc.ChargesCostPlus,
                             }
                           ).Distinct().ToList();
                 return list;
@@ -3005,6 +3016,7 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
 
 
         public WorkOrderQuoteDetails CreateWorkOrderQuoteMaterial(WorkOrderQuoteDetails quoteMaterials)
@@ -3071,10 +3083,10 @@ namespace DAL.Repositories
                                                   ConditionType = c.Description,
                                                   OemPmaDer = im.PMA == true && im.DER == true ? "PMA&DER" : (im.PMA == true && im.DER == false ? "PMA" : (im.PMA == false && im.DER == true ? "DER" : "")),
                                                   wom.UnitCost,
-                                                  wom.MatMarkup,
-                                                  wom.TotalPartsCost,
-                                                  wom.Markup,
-                                                  wom.CostPlusAmount,
+                                                  wom.MarkupPercentageId,
+                                                  wom.Price,
+                                                  wom.ExtendedPrice,
+                                                  wom.MaterialCostPlus,
                                                   wom.FixedAmount,
                                                   wom.WorkOrderQuoteDetailsId,
                                                   wom.WorkOrderQuoteMaterialId
@@ -3111,6 +3123,8 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
+
 
         public WorkOrderQuoteDetails CreateWorkOrderQuoteLabor(WorkOrderQuoteDetails quoteLabor)
         {
@@ -3215,7 +3229,10 @@ namespace DAL.Repositories
                                                       wol.UpdatedDate,
                                                       wol.WorkOrderQuoteLaborHeaderId,
                                                       wol.WorkOrderQuoteLaborId,
-                                                      EmployeeName = emp.FirstName
+                                                      EmployeeName = emp.FirstName,
+                                                      wol.DirectLaborOHCost,
+                                                      wol.MarkupPercentageId,
+                                                      wol.LabourCostPlus
                                                   }
                                                  ).Distinct().ToList()
                                  }

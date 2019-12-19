@@ -20,6 +20,9 @@ namespace DAL.Models
         public decimal? AdjustedHours { get; set; }
         public string Memo { get; set; }
         public int TaskId { get; set; }
+        public decimal? DirectLaborOHCost { get; set; }
+        public long? MarkupPercentageId { get; set; }
+        public decimal? LabourCostPlus { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
