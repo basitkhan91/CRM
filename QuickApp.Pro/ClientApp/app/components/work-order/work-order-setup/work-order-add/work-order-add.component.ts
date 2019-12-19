@@ -310,6 +310,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 workFlowId: this.workFlowId,
                 workFlowWorkOrderId: this.workFlowWorkOrderId
             }
+            this.getWorkOrderWorkFlowNos();
 
         }
 
@@ -319,6 +320,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
     }
+
+
 
 
 
@@ -711,6 +714,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     getSerialNoByStockLineId(workOrderPart) {
         const { stockLineId } = workOrderPart;
         const { conditionId } = workOrderPart;
+        workOrderPart.serialNumber = '';
+
         if ((stockLineId !== null && stockLineId !== 0) && (conditionId !== null && conditionId !== 0)) {
             this.workOrderService.getSerialNoByStockLineId(stockLineId, conditionId).subscribe(res => {
                 if (res) {
@@ -721,6 +726,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
 
     getWorkFlowByPNandScope(workOrderPart) {
+
+        workOrderPart.workflowId = 0;
         const itemMasterId = getValueFromObjectByKey('itemMasterId', workOrderPart.masterPartId)
         const { workOrderScopeId } = workOrderPart;
 
@@ -818,6 +825,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
 
     getWorkOrderWorkFlowNos() {
+        console.log(this.workOrderId);
         if (this.workOrderId) {
             this.workOrderService.getWorkOrderWorkFlowNumbers(this.workOrderId).subscribe(res => {
                 this.workOrderWorkFlowOriginalData = res;
