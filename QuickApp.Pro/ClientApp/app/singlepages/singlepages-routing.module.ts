@@ -368,12 +368,12 @@ const singlePagesRoutes: Routes = [
             {
                 path: "app-disposal-type",
                 component: DisposalTypeComponent,
-                data: { title: "Disposal Type" }
+                data: { title: "Asset Disposal Type" }
             },
             {
                 path: "app-asset-dep-convention-type",
                 component: AssetDepConventionTypeComponent,
-                data: { title: "Depreciation Convension" }
+                data: { title: "Depreciation Convention" }
             },
             {
                 path: "app-depreciation-intervals",

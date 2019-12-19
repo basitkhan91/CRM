@@ -201,7 +201,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     </div>
 </ng-template>
 
-<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentEdit let-c="close" class="editdisposaltype"  let-d="dismiss" style="width:auto">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Asset Disposal Type</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Asset Disposal Type</h4>
@@ -209,7 +209,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-body editdepriciation">
+    <div class="modal-body editdisposaltype">
         <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="SaveandEditDisposalType()">
             <div class="form-group">
                 <div class="col-sm-12">
