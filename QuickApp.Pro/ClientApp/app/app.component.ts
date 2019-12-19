@@ -439,9 +439,9 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'Organisation', items: [
-                            { label: 'Entity List', routerLink: '/#' },
+                            { label: 'Entity List', routerLink: '/generalledgermodule/generalledgerpage/app-entity-edit' },
                             { label: 'Entity Setup', routerLink: '/#' },
-                            { label: 'Legal Structure', routerLink: '/generalledgermodule/generalledgerpage/app-entity-edit' },
+                            { label: 'Legal Structure', routerLink: '/#' },
                             { label: 'Management Structure', routerLink: '/generalledgermodule/generalledgerpage/app-managemententity-structure' },
                         ]
                     }]
