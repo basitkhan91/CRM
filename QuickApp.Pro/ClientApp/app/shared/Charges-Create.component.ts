@@ -23,6 +23,8 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     @Input() UpdateMode: boolean;
     @Input() isWorkOrder: boolean;
     @Input() isEdit = false;
+    @Input() markupList;
+    @Input() isQuote = false;
     @Input() editData;
     @Output() saveChargesListForWO = new EventEmitter();
     @Output() updateChargesListForWO = new EventEmitter();
@@ -261,5 +263,18 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
 
     updateChargesWorkOrder() {
         this.updateChargesListForWO.emit(this.workFlow);
+    }
+
+    markupChanged(matData) {
+        try {
+            this.markupList.forEach((markup) => {
+            if (markup.value == matData.markup) {
+                matData.costPlusAmount = (matData.quantity * matData.unitCost) + (((matData.quantity * matData.unitCost) / 100) * Number(markup.label))
+            }
+            })
+        }
+        catch (e) {
+            console.log(e);
+        }
     }
 }
