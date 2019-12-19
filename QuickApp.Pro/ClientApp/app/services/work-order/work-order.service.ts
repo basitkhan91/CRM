@@ -226,7 +226,7 @@ export class WorkOrderService {
     }
 
     getSubWorkOrderView(subWorkOrderId) {
-        return this.workOrderEndpointService.getSubWorkOrderView(subWorkOrderId);
+        return this.workOrderEndpointService.getSubWorkOrderDataBySubWorkOrderId(subWorkOrderId);
     }
 
     // subWorkOrder 
