@@ -751,6 +751,7 @@
                             name="laborOverHead"
                             binary="false"
                             label="Labor & Over Head"
+                            (onChange)="resetLaborOverHead();  calculateGrandTotal();"
                             [(ngModel)]="billingorInvoiceForm.laborOverHead"
                           ></p-checkbox>
                         </div>
@@ -766,6 +767,7 @@
                             #head="ngModel"
                             [options]="numberData"
                             class="p-dropdown-custom-md"
+                            (onChange)="calculateLaborOverHeadCostPlus($event.value);  calculateGrandTotal();"
                             [(ngModel)]="billingorInvoiceForm.laborOverHeadValue"
                           >
                           </p-dropdown>

@@ -75,6 +75,7 @@ export class WorkOrderBillingComponent implements OnInit {
         this.generateNumbers();
         this.getInvoiceList();
 
+
         if (this.isEditBilling) {
             this.getSiteNamesBySoldCustomerId(data.soldToCustomerId);
             this.getSiteNamesByShipCustomerId(data.shipToCustomerId);
@@ -297,6 +298,7 @@ export class WorkOrderBillingComponent implements OnInit {
         if (this.billingorInvoiceForm.totalWorkOrder === true) {
             this.resetMisCharges();
             this.resetMaterial();
+            this.resetLaborOverHead();
             this.calculateTotalWorkOrderCost();
 
         }
@@ -305,14 +307,16 @@ export class WorkOrderBillingComponent implements OnInit {
     calculateTotalWorkOrderCost() {
         this.sumOfMaterialList();
         this.sumofCharges();
-        this.billingorInvoiceForm.totalWorkOrderCost = (this.billingorInvoiceForm.materialCost + this.billingorInvoiceForm.miscChargesCost);
+        this.sumofLaborOverHead();
+        this.billingorInvoiceForm.totalWorkOrderCost = (this.billingorInvoiceForm.materialCost + this.billingorInvoiceForm.miscChargesCost + this.billingorInvoiceForm.laborOverHeadCost);
         this.calculateTotalWorkOrderCostPlus(0);
     }
 
     calculateTotalWorkOrderCostPlus(value) {
         const materialCostPlus = this.billingorInvoiceForm.materialCost + ((this.billingorInvoiceForm.materialCost * value) / 100)
         const misChargeCostPlus = this.billingorInvoiceForm.miscChargesCost + ((this.billingorInvoiceForm.miscChargesCost * value) / 100)
-        this.billingorInvoiceForm.totalWorkOrderCostPlus = Math.round(materialCostPlus + misChargeCostPlus)
+        const laborOverHeadCostPlus = this.billingorInvoiceForm.laborOverHeadCost + ((this.billingorInvoiceForm.laborOverHeadCost * value) / 100);
+        this.billingorInvoiceForm.totalWorkOrderCostPlus = Math.round(materialCostPlus + misChargeCostPlus + laborOverHeadCostPlus)
         // this.calculateGrandTotal();
     }
 
@@ -327,6 +331,19 @@ export class WorkOrderBillingComponent implements OnInit {
             this.sumOfMaterialList();
             this.calculateMaterialCostPlus(0);
         }
+    }
+
+    resetLaborOverHead() {
+        if (this.billingorInvoiceForm.laborOverHead === false || this.billingorInvoiceForm.totalWorkOrder === true) {
+            this.billingorInvoiceForm.laborOverHead = false
+            this.billingorInvoiceForm.laborOverHeadValue = null;
+            // this.billingorInvoiceForm.miscChargesCost = 0;
+            this.billingorInvoiceForm.laborOverHeadCostPlus = 0;
+        } else {
+            this.sumofLaborOverHead();
+            this.calculateLaborOverHeadCostPlus(0);
+        }
+
     }
 
     resetMisCharges() {
@@ -345,14 +362,22 @@ export class WorkOrderBillingComponent implements OnInit {
 
 
     sumOfMaterialList() {
-        this.billingorInvoiceForm.materialCost = this.quoteMaterialList.reduce((acc, x) => acc + x.totalPartsCost, 0)
+        this.billingorInvoiceForm.materialCost = this.quoteMaterialList.reduce((acc, x) => acc + x.materialCostPlus, 0);
     }
     calculateMaterialCostPlus(value) {
-        this.billingorInvoiceForm.materialCostPlus = this.billingorInvoiceForm.materialCost + ((this.billingorInvoiceForm.materialCost * value) / 100)
+        this.billingorInvoiceForm.materialCostPlus = this.billingorInvoiceForm.materialCost + ((this.billingorInvoiceForm.materialCost * value) / 100);
         // this.calculateGrandTotal();
     }
+    sumofLaborOverHead() {
+        this.billingorInvoiceForm.laborOverHeadCost = this.quoteLaborList.reduce((acc, x) => acc + x.labourCostPlus, 0);
+    }
+    calculateLaborOverHeadCostPlus(value) {
+        this.billingorInvoiceForm.laborOverHeadCostPlus = this.billingorInvoiceForm.laborOverHeadCost + ((this.billingorInvoiceForm.laborOverHeadCost * value) / 100);
+    }
+
+
     sumofCharges() {
-        this.billingorInvoiceForm.miscChargesCost = this.quoteChargesList.reduce((acc, x) => acc + x.extendedCost, 0)
+        this.billingorInvoiceForm.miscChargesCost = this.quoteChargesList.reduce((acc, x) => acc + x.chargesCostPlus, 0);
     }
     calculateMiscChargesCostPlus(value) {
         this.billingorInvoiceForm.miscChargesCostPlus = this.billingorInvoiceForm.miscChargesCost + ((this.billingorInvoiceForm.miscChargesCost * value) / 100);
@@ -363,8 +388,14 @@ export class WorkOrderBillingComponent implements OnInit {
 
         if (this.billingorInvoiceForm.totalWorkOrder === false) {
             const materialAmount = this.billingorInvoiceForm.materialValue === null ? this.billingorInvoiceForm.materialCost : this.billingorInvoiceForm.materialCostPlus;
-            const misCharges = this.billingorInvoiceForm.miscChargesValue === null ? this.billingorInvoiceForm.miscChargesCost : this.billingorInvoiceForm.miscChargesCostPlus;
-            this.billingorInvoiceForm.grandTotal = (materialAmount + misCharges);
+            const misChargesAmount = this.billingorInvoiceForm.miscChargesValue === null ? this.billingorInvoiceForm.miscChargesCost : this.billingorInvoiceForm.miscChargesCostPlus;
+            const laborOverHeadAmount = this.billingorInvoiceForm.laborOverHeadValue === null ? this.billingorInvoiceForm.laborOverHeadCost : this.billingorInvoiceForm.laborOverHeadCostPlus;
+
+            // console.log(this.billingorInvoiceForm.miscChargesCost, this.billingorInvoiceForm.miscChargesCostPlus)
+            // console.log(this.billingorInvoiceForm.laborOverHeadCost, this.billingorInvoiceForm.laborOverHeadCostPlus)
+            // console.log(materialAmount, misChargesAmount, laborOverHeadAmount);
+
+            this.billingorInvoiceForm.grandTotal = (materialAmount + misChargesAmount + laborOverHeadAmount);
 
         } else {
             const totalWorkOrderCostPlus = this.billingorInvoiceForm.totalWorkOrder === null ? this.billingorInvoiceForm.totalWorkOrderCost : this.billingorInvoiceForm.totalWorkOrderCostPlus;

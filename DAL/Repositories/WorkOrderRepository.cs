@@ -614,6 +614,7 @@ namespace DAL.Repositories
                             join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
                             join status in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals status.Id
                             join wowf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wowf.WorkOrderId
+							
 
 
                             where wo.WorkOrderId == workOrderId && wop.ID == workOrderPartNumberId
