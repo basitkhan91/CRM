@@ -55,7 +55,8 @@ export class WorkOrderBillingComponent implements OnInit {
     businessUnitList: any;
     divisionList: any;
     departmentList: any;
-    numberData = [{ label: 1, value: 1 }];
+    markUpList: any;
+    // numberData = [{ label: 1, value: 1 }];
     invoiceTypeList: any;
     shipViaData: any;
 
@@ -72,7 +73,8 @@ export class WorkOrderBillingComponent implements OnInit {
         // this.getCustomerDetailsFromHeader();
         this.getShipViaByCustomerId();
         this.getLegalEntity();
-        this.generateNumbers();
+        // this.generateNumbers();
+        this.getPercentageList();
         this.getInvoiceList();
 
 
@@ -122,13 +124,19 @@ export class WorkOrderBillingComponent implements OnInit {
         }
     }
 
-    generateNumbers() {
-        for (var i = 1; i <= 10; i++) {
-            this.numberData.push({ label: i * 10, value: i * 10 });
-
-        }
-
+    getPercentageList(){
+        this.commonService.smartDropDownList('[Percent]', 'PercentId', 'PercentValue').subscribe(res => {
+            this.markUpList =  res;
+        })
     }
+
+    // generateNumbers() {
+    //     for (var i = 1; i <= 10; i++) {
+    //         this.numberData.push({ label: i * 10, value: i * 10 });
+
+    //     }
+
+    // }
     getInvoiceList() {
         this.commonService.smartDropDownList('InvoiceType', 'InvoiceTypeId', 'Description').subscribe(res => {
             this.invoiceTypeList = res;
