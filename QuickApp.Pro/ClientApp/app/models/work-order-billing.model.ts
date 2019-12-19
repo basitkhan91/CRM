@@ -41,7 +41,16 @@ export class Billing {
     salesPerson: string;
     availableCredit: number;
     creditTerm: string;
-    shipAccount: string;
+    shipAccountInfo: string;
+    totalWorkOrderCost : number;
+    totalWorkOrderCostPlus : number;
+    materialCost : number;
+    materialCostPlus : number;
+    laborOverHeadCost : number;
+    laborOverHeadCostPlus : number;
+    miscChargesCost : number;
+    miscChargesCostPlus : number;
+    grandtotal : number;
     constructor() {
         this.woOpenDate = null;
         this.customerRef = '';
@@ -49,10 +58,10 @@ export class Billing {
         this.invoiceTypeId = null;
         this.invoiceNo = '';
         this.customerId = null;
-        this.invoiceDate = null;
+        this.invoiceDate = new Date();
         this.invoiceTime = null;
-        this.printDate = null;
-        this.shipDate = null;
+        this.printDate = new Date();
+        this.shipDate = new Date();
         this.noofPieces = null;
         this.employeeId = null;
         this.employeeName = '';
@@ -85,6 +94,15 @@ export class Billing {
         this.salesPerson = '';
         this.availableCredit = null;
         this.creditTerm = '';
-        this.shipAccount = '';
+        this.shipAccountInfo = '';
+        this.totalWorkOrderCost = null;
+        this.totalWorkOrderCostPlus = null;
+        this.materialCost = null;
+        this.materialCostPlus = null;
+        this.laborOverHeadCost = null;
+        this.laborOverHeadCostPlus = null;
+        this.miscChargesCost = null;
+        this.miscChargesCostPlus = null;
+        this.grandtotal  = null;
     }
 }

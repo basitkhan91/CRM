@@ -204,9 +204,8 @@ export class TaxTypeComponent implements OnInit {
 
     }
     sampleExcelDownload() {
-        // const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=CertificationType&fileName=certificationType.xlsx`;
-
-        // window.location.assign(url);
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=TaxType&fileName=taxType.xlsx`;
+        window.location.assign(url);
     }
 
     getList() {
@@ -359,13 +358,17 @@ export class TaxTypeComponent implements OnInit {
 
     //Open the audit history modal.
     showHistory(rowData): void {
-        this.currentModeOfOperation = ModeOfOperation.Audit;
-        this.taxTypeService.getTaxTypeAudit(rowData.taxTypeId).subscribe(audits => {
-            if (audits[0].length > 0) {
-                this.auditHistory = audits[0];
-            }
-        });
-        console.log(this.auditHistory);
+        //this.currentModeOfOperation = ModeOfOperation.Audit;
+        //this.taxTypeService.getTaxTypeAudit(rowData.taxTypeId).subscribe(audits => {
+        //    if (audits[0].length > 0) {
+        //        this.auditHistory = audits[0];
+        //    }
+        //});
+        //console.log(this.auditHistory);
+
+        this.taxTypeService.getTaxTypeAudit(rowData.taxTypeId).subscribe(res => {
+            this.auditHistory = res;
+        })
     }
 
     onBlur(event) {
@@ -410,6 +413,7 @@ export class TaxTypeComponent implements OnInit {
             }
         }
     }
+
 
     // ngAfterViewInit() {
     //     this.dataSource.paginator = this.paginator;

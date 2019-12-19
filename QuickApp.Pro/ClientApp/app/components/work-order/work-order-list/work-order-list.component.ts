@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, ViewChild } from '@angular/core';
+﻿import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { fadeInOut } from '../../../services/animations';
 import { PageHeaderComponent } from '../../../shared/page-header.component';
 import * as $ from 'jquery';
@@ -7,6 +7,7 @@ import { Table } from 'primeng/table';
 import { AuthService } from '../../../services/auth.service';
 import { AlertService, MessageSeverity } from '../../../services/alert.service';
 import { Router } from '@angular/router';
+
 
 @Component({
     selector: 'app-work-order-list',
@@ -20,6 +21,11 @@ export class WorkOrderListComponent implements OnInit {
     workOrderData: any;
     isWorkOrder = true;
     pageSize: number = 10;
+    @Input() isSubWorkOrder = false;
+    @Input() isWorkOrderMainView = false;
+    @Input() workOrderId: any;
+    @Output() closeView = new EventEmitter();
+
     @ViewChild('dt')
     private table: Table;
     lazyLoadEventData: any;
@@ -46,7 +52,7 @@ export class WorkOrderListComponent implements OnInit {
     workOrderExclusionsList: Object;
     workOrderLaborList: Object;
     mpnPartNumbersList: any;
-    workOrderId: any;
+    // workOrderId: any;
     workFlowId: any;
     showTableGrid: boolean = false;
     showMPN: boolean = false;
@@ -72,6 +78,10 @@ export class WorkOrderListComponent implements OnInit {
     }
     ngOnInit() {
         // this.getAllWorkOrderList()
+        console.log('sample');
+        if (this.isWorkOrderMainView) {
+            this.view({ workOrderId: this.workOrderId })
+        }
     }
 
     get userName(): string {
@@ -145,9 +155,11 @@ export class WorkOrderListComponent implements OnInit {
 
         await this.workOrderService.viewWorkOrderHeader(this.workOrderId).subscribe(res => {
             this.viewWorkOrderHeader = res;
+
             if (res.singleMPN === "Single MPN") {
                 this.showMPN = false;
                 this.getAllTabsData(res.workFlowWorkOrderId, 0);
+
             } else {
                 this.showMPN = true;
             }
@@ -160,7 +172,7 @@ export class WorkOrderListComponent implements OnInit {
         })
 
         console.log(rowData);
-
+        // data-toggle="modal" data-target="#view"
 
 
         // this.workOrderId = 0;
@@ -179,11 +191,9 @@ export class WorkOrderListComponent implements OnInit {
             this.workOrderService.getWorkOrderWorkFlowNumbers(workOrderId).subscribe(res => {
 
                 this.mpnPartNumbersList = res.map(x => {
-
-
                     return {
                         value: { workflowId: x.workflowId, workFlowWorkOrderId: x.value },
-                        label: x.workflowNo
+                        label: x.partNumber
                     }
                 })
 
@@ -223,6 +233,10 @@ export class WorkOrderListComponent implements OnInit {
         this.getDirectionByWorkOrderId(workFlowWorkOrderId, workOrderId);
         this.showTableGrid = true;
         this.activeIndex = 0;
+        console.log('Testing');
+
+        // $('#viewWorkOrder').modal('show');
+
     }
 
 

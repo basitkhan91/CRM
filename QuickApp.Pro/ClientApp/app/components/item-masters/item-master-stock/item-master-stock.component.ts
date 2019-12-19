@@ -173,7 +173,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     ataChapterName: string;
     localprovision: any[] = [];
     localgroup: any[] = [];
-    allProvisonInfo: Provision[];
+    //allProvisonInfo: Provision[];
+    allProvisonInfo: any=[];   
     activeTab: number = 0;
     itemQuantity = [];
     items1: MenuItem[];
@@ -421,7 +422,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 this.isDisabledSteps = true;
                 this.sourceItemMaster = responseDataOfEdit[0];
                 this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
-                this.selectedIntegrationTypes = this.sourceItemMaster.integrationPortalIds;
+                this.Integration();
                 this.sourceItemMaster.oemPNId = this.sourceItemMaster.oemPNData[0]
                 this.ItemMasterId = this.itemMasterId;
                 // assign the header values
@@ -631,7 +632,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.getAircraftModelsData();
         this.getCpaesData();
         this.activeIndex = 0;
-        this.Integration();
         this.countrylist();
         this.sourceItemMaster.salesIsFixedPrice = true;
         this.capabilitiesForm = this.formBuilder.group({
@@ -1476,7 +1476,17 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     private onprodataSuccessful(getProvisionList: Provision[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.allProvisonInfo = getProvisionList;
+      //  this.allProvisonInfofilter = getProvisionList;
+
+       // alert(JSON.stringify(this.allProvisonInfo.));
+
+        if (getProvisionList != null) {
+            for (let i = 0; i < getProvisionList.length; i++) {
+                if (getProvisionList[i].isActive === true) {
+                    this.allProvisonInfo.push(getProvisionList[i]);
+                }
+            }
+        }
     }
 
 
@@ -1565,7 +1575,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     openModelPopups(capData) {
-        debugger;
+    
         if (this.itemser.isEditMode == false) {
 
             //Adding for Aircraft manafacturer List Has empty then List Should be null
@@ -2695,11 +2705,13 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 let provisionName = this.allProvisonInfo[i].description;
                 if (provisionName) {
                     if (provisionName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                        this.ProvisionNumber.push([{
-                            "provisionId": this.allProvisonInfo[i].provisionId,
-                            "provisionName": provisionName
-                        }]),
-                            this.localprovision.push(provisionName)
+                        if (this.allProvisonInfo[i].isActive === true) {
+                            this.ProvisionNumber.push([{
+                                "provisionId": this.allProvisonInfo[i].provisionId,
+                                "provisionName": provisionName
+                            }]),
+                                this.localprovision.push(provisionName)
+                        }
                     }
                 }
 
@@ -5139,10 +5151,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.dataSource.data = getEmployeeCerficationList;
         this.allintegrationdetails = getEmployeeCerficationList;
         if (this.allintegrationdetails.length > 0) {
-            for (let i = 0; i < this.allintegrationdetails.length; i++)
+            for (let i = 0; i < this.allintegrationdetails.length; i++) {
                 this.integrationvalues.push(
                     { value: this.allintegrationdetails[i].integrationPortalId, label: this.allintegrationdetails[i].description },
                 );
+            }
+            this.selectedIntegrationTypes = this.sourceItemMaster.integrationPortalIds;
         }
 
 

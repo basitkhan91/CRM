@@ -20,7 +20,7 @@
               <div class="form-group">
                 <label>Quote Type <span class="clr-red">*</span></label>
                 <select name="quoteType" [(ngModel)]="salesQuote.quoteTypeId" required>
-                  <option *ngFor="let type of salesQuote.salesQuoteTypes" [value]="type.id">{{ type.name }}</option>
+                  <option *ngFor="let type of salesQuote.salesQuoteTypes" [ngValue]="type.id">{{ type.name }}</option>
                 </select>
               </div>
               <div class="form-group">
@@ -54,15 +54,15 @@
               <div class="form-group">
                 <label>Priority<span class="clr-red">*</span></label>
                 <select name="priority" [(ngModel)]="salesQuote.priorityId" required>
-                  <option *ngFor="let p of salesQuote.priorities" [value]="p.priorityId">{{ p.description }}</option>
+                  <option *ngFor="let p of salesQuote.priorities" [ngValue]="p.priorityId">{{ p.description }}</option>
                 </select>
               </div>
             </div>
             <div class="col-md-2 column-seperator">
               <div class="form-group">
                 <label>Account Type <span class="clr-red">*</span></label>
-                <select name="quoteType" required>
-                  <option></option>
+                <select name="quoteType" required [(ngModel)]="salesQuote.accountTypeId">
+                    <option *ngFor="let accountType of accountTypes" [ngValue]="accountType.customerTypeId">{{ accountType.description }}</option>
                 </select>
               </div>
               <div class="form-group">
@@ -96,52 +96,115 @@
               </div>
               <div class="form-group">
                 <label>Customer Contact<span class="clr-red">*</span></label>
-                <input type="text" pInputText />
+                <select [(ngModel)]="salesQuote.customerContactId" [ngModelOptions]="{standalone: true}">
+                  <option>--Select</option>
+                  <option *ngFor="let contact of customerContactList" [ngValue]="contact.contactId">{{contact.contactTitle}} - {{ contact.workPhone }}</option>
+                </select>
               </div>
               <div class="form-group">
                 <label>Customer Ref<span class="clr-red">*</span></label>
-                <input type="text" pInputText />
+                <input type="text" pInputText name="customerReferenceName" [(ngModel)]="salesQuote.customerReferenceName" />
               </div>
               <div class="form-group">
                 <label>Contract Ref<span class="clr-red">*</span></label>
-                <input type="text" pInputText />
+                <input type="text" pInputText name="contractReferenceName" [(ngModel)]="salesQuote.contractReferenceName" />
               </div>
               <div class="form-group">
                 <label>Sales Person<span class="clr-red">*</span></label>
-                <input type="text" pInputText />
+              <p-autoComplete
+              class="autocomp-customer-cstm"
+              name="salesPersonName"
+              [(ngModel)]="salesQuote.salesPersonName"
+              [suggestions]="firstCollection"
+              [forceSelection]="true"
+              emptyMessage="No Match Found"
+              field="firstName"
+              (completeMethod)="filterfirstName($event)"
+              [size]="30"
+              [minLength]="1"
+              [dropdown]="true"
+              required
+            >
+            </p-autoComplete>
               </div>
               <div class="form-group">
                 <label>Agent<span class="clr-red">*</span></label>
-                <input type="text" pInputText />
+              <p-autoComplete
+              class="autocomp-customer-cstm"
+              name="agentName"
+              [(ngModel)]="salesQuote.agentName"
+              [suggestions]="firstCollection"
+              [forceSelection]="true"
+              emptyMessage="No Match Found"
+              field="firstName"
+              (completeMethod)="filterfirstName($event)"
+              [size]="30"
+              [minLength]="1"
+              [dropdown]="true"
+              required
+            >
+            </p-autoComplete>
               </div>
             </div>
             <div class="col-md-2 column column-seperator">
               <div class="form-group">
                 <label>Customer Service Rep <span class="clr-red">*</span></label>
-                <input type="text" pInputText />
+              <p-autoComplete
+              class="autocomp-customer-cstm"
+              name="customerServiceRepName"
+              [(ngModel)]="salesQuote.customerServiceRepName"
+              [suggestions]="firstCollection"
+              [forceSelection]="true"
+              emptyMessage="No Match Found"
+              field="firstName"
+              (completeMethod)="filterfirstName($event)"
+              [size]="30"
+              [minLength]="1"
+              [dropdown]="true"
+              required
+            >
+            </p-autoComplete>
               </div>
               <div class="form-group">
                 <label>Probibility <span class="clr-red">*</span></label>
                 <select name="probability" [(ngModel)]="salesQuote.probabilityId" required>
-                  <option *ngFor="let p of salesQuote.salesProbablity" [value]="p.id">{{ p.value }}</option>
+                  <option *ngFor="let p of salesQuote.salesProbablity" [ngValue]="p.id">{{ p.value }}</option> 
                 </select>
               </div>
               <div class="form-group">
                 <label>Lead Source <span class="clr-red">*</span></label>
                 <select name="leadSource" [(ngModel)]="salesQuote.leadSourceId" required>
-                  <option *ngFor="let ls of salesQuote.leadSources" [value]="ls.id">{{ ls.name }}</option>
+                    <option *ngFor="let ls of salesQuote.leadSources" [ngValue]="ls.id">{{ ls.name }}</option>
                 </select>
               </div>
               <div class="form-group">
                 <label>Credit Limit &amp; terms<span class="clr-red">*</span></label>
                 <div class="col-md-5">
-                  <input type="text" pInputText />
+                  <input type="text" pInputText name="creditLimit" [(ngModel)]="salesQuote.creditLimit" />
                 </div>
                 <div class="col-md-7">
                   <select name="quoteType" [(ngModel)]="salesQuote.creditLimitTermsId" required>
-                    <option *ngFor="let ct of salesQuote.creditTerms" [value]="ct.id">{{ ct.name }}</option>
+                    <option *ngFor="let ct of creditTerms" [ngValue]="ct.value">{{ ct.label }}</option>
                   </select>
                 </div>
+              </div>
+              <div class="form-group">
+                <label>Employee <span class="clr-red">*</span></label>
+              <p-autoComplete
+              class="autocomp-customer-cstm"
+              name="employeeName"
+              [(ngModel)]="salesQuote.employeeName"
+              [suggestions]="firstCollection"
+              [forceSelection]="true"
+              emptyMessage="No Match Found"
+              field="firstName"
+              (completeMethod)="filterfirstName($event)"
+              [size]="30"
+              [minLength]="1"
+              [dropdown]="true"
+              required
+            >
+            </p-autoComplete>
               </div>
               <div class="form-group" style="margin-top: 5px;">
                 <p-checkbox name="restrictPMA" [(ngModel)]="salesQuote.restrictPMA" binary="true" label="Restrit PMA">
@@ -154,7 +217,7 @@
             </div>
             <div class="col-md-2 column column-seperator">
               <div class="form-group">
-                <label>Quote Approved By <span class="clr-red">*</span></label>
+                <label>Quote Approved By</label>
                 <select name="quoteType" required>
                   <option></option>
                 </select>
@@ -165,16 +228,32 @@
               </div>
               <div class="form-group">
                 <label>Currency <span class="clr-red">*</span></label>
-                <select name="quoteType" required>
-                  <option></option>
+                <select name="quoteType" required [(ngModel)]="salesQuote.currencyId">
+                  <option>--Select</option>
+                  <option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">
+                    {{currencyName.symbol}}
+                    </option>
                 </select>
               </div>
               <div class="form-group">
                 <label>Warnings <span class="clr-red">*</span></label>
-                <select name="quoteType" required>
-                  <option></option>
+                <select name="quoteType" required [(ngModel)]="salesQuote.warningId" (change)="onWarningSelect(salesQuote.warningId)">
+                  <option>--Select</option>
+                  <option *ngFor="let customerWarning of customerWarningData" [ngValue]="customerWarning.customerWarningId">
+                    {{customerWarning.warningMessage}}
+                    </option>
                 </select>
               </div>
+              <div class="form-group">
+                  <label>Memo</label>
+                  <input type="text" pInputText [(ngModel)]="salesQuote.memo" name="memo"
+                     />
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <input type="text" pInputText [(ngModel)]="salesQuote.notes" name="notes"
+                      />
+                  </div>
             </div>
           </div>
           <ng-container>
@@ -186,7 +265,7 @@
                 <app-sales-approve></app-sales-approve>
               </p-tabPanel>
               <p-tabPanel header="Address">
-                <app-sales-address></app-sales-address>
+                <app-sales-address [customerId]="customerId"></app-sales-address>
               </p-tabPanel>
             </p-tabView>
           </ng-container>

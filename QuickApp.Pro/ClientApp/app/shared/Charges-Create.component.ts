@@ -44,6 +44,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
+        this.loadAllVendors();
         if (this.isWorkOrder) {
             // this.row = this.workFlow.charges[0];
             // this.addRow();
@@ -52,6 +53,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
             this.row = this.workFlow.charges[0];
             if (this.isEdit) {
                 this.workFlow.charges = [];
+
                 const data = { ...this.editData, vendor: this.editData.vendorName }
                 this.workFlow.charges.push(data);
                 this.reCalculate()
@@ -89,7 +91,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
             error => this.errorMessage = <any>error
         );
 
-        this.loadAllVendors();
+
 
         if (this.UpdateMode) {
             this.reCalculate();
@@ -130,10 +132,11 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         this.vendorservice.getVendorsForDropdown().subscribe(
             results => {
                 this.allVendors = results;
-                if (this.UpdateMode) {
+                if (this.UpdateMode || this.isEdit) {
                     for (var charge of this.workFlow.charges) {
                         var vendor = this.allVendors.filter(x => x.vendorId == charge.vendorId)[0];
                         if (vendor != undefined) {
+                            console.log('Test')
                             charge.vendor = {
                                 vendorId: vendor.vendorId,
                                 vendorName: vendor.vendorName

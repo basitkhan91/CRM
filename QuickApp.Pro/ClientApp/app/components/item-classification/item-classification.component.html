@@ -62,7 +62,12 @@
                                         {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
                                     </td>
                                     <td style="width:200px;position: sticky">
-                                        <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>
+                                        <!--<p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>-->
+                                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+
+
                                         <span> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" matTooltip="View" data-toggle="modal" data-target="#view"><i class="fa fa-eye"></i></a> </span>
 
                                         <button class="btn-edit" mat-icon-button (click)="editItemClassification(rowData)" data-toggle="modal" data-target="#contentEdit" matTooltip="edit">
@@ -276,15 +281,15 @@
                 <div class="col-sm-12">
                     <p>
                         <span class="label ">
-                            <b class="view-Header">ItemClassification Name: </b>
+                            <b class="view-Header">Item Classification ID: </b>
                         </span>
                         <span class="value">{{viewRowData.itemClassificationCode}}</span>
                     </p>
                     <p>
                         <span class="label ">
-                            <b class="view-Header">Description: </b>
+                            <b class="view-Header"> Item Classification Description: </b>
                         </span>
-                        <span class="value">{{viewRowData.itemClassificationCode}}</span>
+                        <span class="value">{{viewRowData.description}}</span>
                     </p>
                     <p>
                         <span class="label ">
@@ -324,7 +329,7 @@
                     </p>
                     <p>
                         <span class="label ">
-                            <b class="view-Header">IsActive: </b>
+                            <b class="view-Header">Is Active: </b>
                         </span>
                         <span class="value">{{viewRowData.isActive}}</span>
                     </p>
@@ -381,7 +386,7 @@
                                 <th>Item Classfication Description</th>
                                 <th>Item Type</th>
                                 <th>Memo</th>
-                                <th>IsActive</th>
+                                <th>Is Active</th>
                                 <th>Updated By</th>
                                 <th>Updated Time</th>
                             </tr>

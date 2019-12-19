@@ -349,20 +349,24 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/deleteworkorderasset?workOrderAssetId=${workOrderAssetId}&updatedBy=${updatedBy}`, this.getRequestHeaders())
     }
 
-    createQuotation(data) {
-        return this.http.post(`${this.configurations.baseUrl}/api/workOrder/createworkorderquote`, JSON.stringify(data), this.getRequestHeaders())
+    createOrUpdateQuotation(data) {
+        return this.http.post(`${this.configurations.baseUrl}/api/workOrder/${data.workOrderQuoteId == undefined ? 'createworkorderquote' : 'updateworkorderquote'}`, JSON.stringify(data), this.getRequestHeaders())
     }
 
     getSubWorkOrderListByWorkOrderId(workOrderId) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/WorkOrder/subworkorderlist?workOrderId=${workOrderId}`, this.getRequestHeaders())
     }
 
-    getSubWorkOrderView(subWorkOrderId) {
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/WorkOrder/subworkorderdetails?subWorkOrderId=${subWorkOrderId}`, this.getRequestHeaders())
-    }
+    // getSubWorkOrderView(subWorkOrderId) {
+    //     return this.http.get<any>(`${this.configurations.baseUrl}/api/WorkOrder/subworkorderdetails?subWorkOrderId=${subWorkOrderId}`, this.getRequestHeaders())
+    // }
 
     getSubWorkOrderHeaderByWorkOrderId(workOrderId, workOrderPartNumberId) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/subworkorderheaderdetails?workOrderId=${workOrderId}&workOrderPartNumberId=${workOrderPartNumberId}`)
+    }
+
+    getSubWorkOrderDataBySubWorkOrderId(subWorkOrderId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/subworkorderdetails?subWorkOrderId=${subWorkOrderId}`, this.getRequestHeaders())
     }
 
     createSubWorkOrderHeaderByWorkOrderId(data) {
@@ -375,6 +379,16 @@ export class WorkOrderEndpointService extends EndpointFactory {
 
     createBillingByWorkOrderId(data) {
         return this.http.post<any>(`${this.configurations.baseUrl}/api/workorder/createbillinginvoicing `, JSON.stringify(data), this.getRequestHeaders())
+    }
+
+    updateBillingByWorkOrderId(data) {
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/updatebillinginvoicing`, JSON.stringify(data), this.getRequestHeaders())
+    }
+    getExistingWOROList() {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderrolist`, this.getRequestHeaders())
+    }
+    createNewWORO(workOrderPartNoId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/wopartdetailsbyid?workOrderPartNoId=${workOrderPartNoId} `, this.getRequestHeaders())
     }
 
     getBillingEditData(workOrderId, workOrderPartNoId) {

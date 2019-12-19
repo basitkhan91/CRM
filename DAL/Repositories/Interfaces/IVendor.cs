@@ -11,7 +11,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<Vendor> GetVendorsLite();
 
 
-        IEnumerable<object> GetVendorListDetails();
+        IEnumerable<object> GetVendorListDetails(bool isActive);
         IEnumerable<object> GetvendorPurchaseOrderList(long id);
         IEnumerable<object> Getvendorrepairunit(long vendorId);
 
@@ -57,6 +57,15 @@ namespace DAL.Repositories.Interfaces
         void VendorProcess1099Delete(long id, string updatedBy);
         List<Master1099Audit> GetVendorProcess1099Audit(long id);
 
+        IEnumerable<object> GetVendorGeneralDocumentDetailById(long id, int moduleId);
+        bool GetVendorGeneralDocumentDelete(long id, string updatedBy);
+        IEnumerable<object> GetVendorProcessListForFinance(int companyId);
+        IEnumerable<object> GetVendorProcessListFromTransaction(long vendorId);
+
+        IEnumerable<VendorCapabilityAircraft> VendorAircraft(VendorCapabilityAircraft[] vendorAircraftMapping);
+        IEnumerable<object> VendorAircraftDataByCapsId(long vendorCapabilityId);
+        bool EditVendorAircraft(long id, string memo, string updatedBy);
+        bool DeleteVendorAircraft(long id, string updatedBy);
 
     }
 }

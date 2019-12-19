@@ -32,6 +32,7 @@ import { DialogModule } from 'primeng/dialog';//Error Validation Pop Up
 import { CustomerService } from '../../../services/customer.service';
 import { CommonService } from '../../../services/common.service';
 import { IntegrationService } from '../../../services/integration-service';
+import { ConfigurationService } from '../../../services/configuration.service';
 declare const google: any;
 @Component({
     selector: 'app-vendor-general-information',
@@ -135,22 +136,27 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
     //phoneNumberPattern = "[(][0-9]{3}[)] [0-9]{3}-[0-9]{4}";
     allvendorclassificationInfo;
     //@ViewChild('f') form: any;
+    formData = new FormData();
+    allVendorGeneralDocumentsList: any = [];
 
-    constructor(public vendorclassificationService: VendorClassificationService, private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public customerser: CustomerService, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, public commonService: CommonService,public integrationService: IntegrationService) {
+    constructor(public vendorclassificationService: VendorClassificationService, private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public customerser: CustomerService, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, public commonService: CommonService,public integrationService: IntegrationService,private configurations: ConfigurationService) {
         this.dataSource = new MatTableDataSource();
        
         if (this.local) {
             this.vendorService.contactCollection = this.local;
         }
         if (this.vendorService.generalCollection) {
-            this.local = this.vendorService.generalCollection;          
+            this.local = this.vendorService.generalCollection; 
+            this.toGetVendorGeneralDocumentsList(this.local.vendorId);       
         }        
 
         if (this.vendorService.listCollection != null && this.vendorService.isEditMode == true) {
+           
             this.showLable = true;
             this.viewName = "Edit";
             this.local = this.vendorService.listCollection.t;
             this.sourceVendor = this.vendorService.listCollection.t;
+            this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);  
             this.sourceVendor.address1 = this.vendorService.listCollection.address1;
             this.sourceVendor.address2 = this.vendorService.listCollection.address2;
             this.sourceVendor.address3 = this.vendorService.listCollection.address3;
@@ -195,7 +201,8 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         
-        this.sourceVendor.vendorTypeId=2;
+        this.sourceVendor.vendorTypeId = 2;
+      
         this.matSpinner = false;
         this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-general-information';
         this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
@@ -221,6 +228,9 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         if (this.vendorService.isEditMode == false) {
             this.sourceVendor.vendorTypeId = 2;
             this.viewName = "Create";
+            this.sourceVendor.isAddressForBilling = true;
+            this.sourceVendor.isAddressForShipping = true;
+           
         }
         if (this.vendorService.enableExternal == false) {
             this.sourceVendor.vendorTypeId = 2;
@@ -247,7 +257,9 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
             if(this.viewName !="Edit")
             {
                 this.sourceVendor = {};
-                this.sourceVendor.vendorTypeId=2;
+                this.sourceVendor.vendorTypeId = 2;
+                this.sourceVendor.isAddressForBilling = true;
+                this.sourceVendor.isAddressForShipping = true;
             }            
         }
     }
@@ -573,6 +585,7 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         this.isDeleteMode = false;
         this.isSaving = true;
         this.loadMasterCompanies();
+        this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
         this.actionName = "";
         this.modal = this.modalService.open(content, { size: 'sm' });
         //remove
@@ -592,10 +605,12 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
     }
 
     openEdit(content, row) {
+        debugger
+        this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
         this.isEditMode = true;
         this.isSaving = true;
         this.sourceVendor = row;
-        this.loadMasterCompanies();
+        this.loadMasterCompanies();      
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -610,6 +625,7 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         this.createddate = row.createdDate;
         this.updatedDate = row.updatedDate;
         this.loadMasterCompanies();
+        this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -651,6 +667,22 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
                 }
                 
                 this.vendorService.newAction(this.sourceVendor).subscribe(data => {
+                  
+                    const vdata = {                           
+                        vendorId:data.vendorId,
+                        masterCompanyId: 1,
+                        createdBy: this.userName,
+                        updatedBy: this.userName
+                    }
+            
+                    for (var key in vdata) {
+                        this.formData.append(key, vdata[key]);
+                    }
+                    //this.vendorService.vendorGeneralDocumentUploadEndpoint(this.formData, this.sourceVendor.vendorId,3,'Vendor',this.userName,1);
+                    this.vendorService.vendorGeneralFileUpload(this.formData).subscribe(res => {
+                        this.formData = new FormData();
+                        this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
+                    });
                     this.sourceVendor.updatedBy = this.userName;
                     this.localCollection = data;
                     this.sourceVendor = data;
@@ -684,7 +716,23 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
                     this.sourceVendor.vendorParentName = '';
                 }
                 this.vendorService.updateVendorDetails(this.sourceVendor).subscribe(
-                    data => {
+                    data => {                       
+                        const vdata = {                           
+                            vendorId: this.sourceVendor.vendorId,
+                            masterCompanyId: 1,
+                            createdBy: this.userName,
+                            updatedBy: this.userName
+                        }
+                
+                        for (var key in vdata) {
+                            this.formData.append(key, vdata[key]);
+                        }
+                        //this.vendorService.vendorGeneralDocumentUploadEndpoint(this.formData, this.sourceVendor.vendorId,3,'Vendor',this.userName,1);
+                        this.vendorService.vendorGeneralFileUpload(this.formData).subscribe(res => {
+                            this.formData = new FormData();
+                            this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
+                        });
+
                         this.sourceVendor.updatedBy = this.userName;
                         this.localCollection = data;
                         this.sourceVendor = data;
@@ -966,6 +1014,44 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         
       }
 
+      fileUpload(event,fileType) {               
+		if (event.files.length === 0)
+			return;
+
+        for (let file of event.files)
+        {        // console.log(fileType);   
+            this.formData.append(fileType, file);
+            console.log(this.formData);
+        }
+			
+    }
+
+    toGetVendorGeneralDocumentsList(vendorId)
+	{       
+        var moduleId=3;
+        this.vendorService.GetVendorGeneralDocumentsList(vendorId,moduleId).subscribe(res => {
+			this.allVendorGeneralDocumentsList = res;
+			console.log(this.allVendorGeneralDocumentsList);
+		})
+    }
+    downloadFileUpload(rowData) {	
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
+		window.location.assign(url);       
+    }
+
+    VendorAttachmentDelete(rowData)
+    {
+       let  attachmentDetailId=rowData.attachmentDetailId;
+       let updatedBy=this.userName;
+
+        this.vendorService.GetVendorAttachmentDelete(attachmentDetailId,updatedBy).subscribe(res => {
+			//this.allVendorGeneralDocumentsList = res;
+            //console.log(this.allVendorGeneralDocumentsList);
+            this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId)
+		})
+    }
+    
+   
     
 
 }

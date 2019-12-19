@@ -31,18 +31,18 @@ export class AddressModel {
     public addressId: number;
     public line1: string;
     public line2: string;
-    public line3: string;
+    public line3?: string;
     public country: string;
-    public recordModifiedDate: Date;
+    public recordModifiedDate?: Date;
     public stateOrProvince: string;
     public postalCode: string;
     public city: string;
-    public masterCompanyId: number;
-    public createdBy: string;
-    public updatedBy: string;
-    public createdDate: Date;
-    public updatedDate: Date;
+    public masterCompanyId?: number;
+    public createdBy?: string;
+    public updatedBy?: string;
+    public createdDate?: Date;
+    public updatedDate?: Date;
     public masterCompany?: MasterCompany;
-    public isActive: boolean;
-    public memo: string;
+    public isActive?: boolean;
+    public memo?: string;
 }

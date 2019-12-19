@@ -54,12 +54,12 @@
                 <tr>
 
                     <th *ngFor="let col of columns" pResizableColumn pReorderableColumn
-                        [pSortableColumn]="col.field">
+                        [pSortableColumn]="col.field" style="text-align:center;">
                         {{col.header}}
                         <p-sortIcon [field]="col.field"></p-sortIcon>
                     </th>
 
-                    <th style="width:200px"></th>
+                    <th style="width:200px; text-align: center;">Actions</th>
 
                 </tr>
 
@@ -84,23 +84,26 @@
                     </td>
 
                     <td style="width:200px">
-                        <p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
-                                       *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off"
-                                       (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']">
+                        <ng-container *ngIf="!isCreatePO && !isCreateRO">
+                                <p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
+                                *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off"
+                                (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']">
                         </p-inputSwitch>
                         <p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
-                                       *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on"
-                                       offLabel="off" (onChange)="handleChanges(rowData,$event)"
-                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on"
+                                        offLabel="off" (onChange)="handleChanges(rowData,$event)"
+                                        [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                         <p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
-                                       *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off"
-                                       (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']">
+                                        *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off"
+                                        (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']">
                         </p-inputSwitch>
+                        </ng-container>
+                        
                         <span data-toggle="modal" data-target="#view">
                             <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip"
                                (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a>
                         </span>
-                        <button [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
+                        <button *ngIf="!isCreatePO && !isCreateRO" [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
                                 class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="Edit">
                             <mat-icon>edit</mat-icon>
                         </button>
@@ -110,7 +113,7 @@
 
                         </i>
 
-                        <button [validate] moduleName="app-vendors-list" requirePermission="canDelete"
+                        <button *ngIf="!isCreatePO && !isCreateRO" [validate] moduleName="app-vendors-list" requirePermission="canDelete"
                                 class="btn-delete" mat-icon-button matTooltip="Delete"
                                 (click)=" openDelete(content1, rowData)">
                             <mat-icon color="warn">delete</mat-icon>
@@ -298,6 +301,69 @@
                                         <p>
                                             <span class="label"><b>URL to Vendor site: </b></span><span class="value">{{vendorURL}}</span>
                                         </p>
+                                    </div>
+                                   
+                                    <div class="col-sm-6">
+                                            
+                                            <p>
+                                                    <span class="label"><b>Certified: </b></span><span class="value">{{isCertified}}</span>
+                                                </p>
+                                            <div *ngIf="isCertified" class="table-responsive table-overflow">
+                                                    <h5 class="panel-title">Attachment Details:</h5>
+                                                    <table class="table table-bordered ">
+                                                        <thead>                                                          
+                                                                <tr>
+                                                                        <th>File Name</th>
+                                                                        <th>Download</th>                                                                        
+                                                                    </tr>
+                                                        </thead>                                                      
+                                                        <tbody *ngFor="let f of allVendorGeneralDocumentsList">
+                                                                <tr *ngIf="f.description == 'isCertifiedFile'">                                                                        
+                                                                    <td>{{f.fileName}}</td>
+                                                                    <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a> </td>
+                                                                    
+                                                                </tr>
+                                                        </tbody>                                                       
+                        
+                                                    </table>
+                                                </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                            <p>
+                                                    <span class="label"><b>Vendor Audit: </b></span><span class="value">{{isVendorAudit}}</span>
+                                                </p>
+                                            <div *ngIf="isVendorAudit" class="table-responsive table-overflow">
+                                                    <h5 class="panel-title" >Attachment Details:</h5>
+                                                    <table class="table table-bordered ">
+                                                            <thead>                                                          
+                                                                    <tr>
+                                                                            <th>File Name</th>
+                                                                            <th>Download</th>                                                                            
+                                                                    </tr>
+                                                            </thead>
+    
+                                                        <tbody *ngFor="let f of allVendorGeneralDocumentsList">
+                                                                <tr *ngIf="f.description == 'vendorAuditFile'">                                                             
+                                                                    <td>{{f.fileName}}</td>
+                                                                    <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a> </td>
+                                                                    
+                                                                </tr>
+                                                               
+                                                        </tbody>
+                        
+                                                    </table>
+                                                   
+                                                </div>
+                                                
+                                               
+                                               
+
+                                                
+                                    </div>
+                                    <div class="col-sm-6">
+                                            <p>
+                                                    <span class="label"><b>Is this Vendor also a Customer: </b></span><span class="value">{{isVendorCustomer}}</span>
+                                                </p>
                                     </div>
 
 

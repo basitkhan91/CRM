@@ -11,9 +11,11 @@ export class AccountCalenderEndpointService extends EndpointFactory {
     
     private readonly addURL: string = "/api/AccountingCalendar/addCalendarData";
     private readonly getAllURL: string = "/api/AccountingCalendar/getAllCalendarData";
+    private readonly getCalendarListURL: string = "/dist/assets/data/accountlisting.json";
     
     get add() { return this.configurations.baseUrl + this.addURL; }
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
+    get getCalendarList() { return this.configurations.baseUrl + this.getCalendarListURL; }
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
@@ -35,6 +37,15 @@ export class AccountCalenderEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getCalendarData());
+            });
+    }
+
+    getCalendarListData<T>(): Observable<T> {
+        let endpointUrl = this.getCalendarList;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getCalendarListData());
             });
     }
 

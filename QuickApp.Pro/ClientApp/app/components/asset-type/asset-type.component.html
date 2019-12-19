@@ -59,6 +59,8 @@
                                                 <i class="fa fa-upload"></i>
                                             </span>
                                         </label>
+                                        &nbsp; &nbsp;
+                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()">Sample File Download</button>
                                     </div>
                                 </div>
 
@@ -125,7 +127,7 @@
 
     <p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
               [width]="350" [minWidth]="200" [responsive]="true"
-              [minY]="1050" [baseZIndex]="1100000">
+              [minY]="1050" [baseZIndex]="1100000" *ngIf="(currentModeOfOperation === 9)">
         <h5 [ngStyle]="{'color':'red'}">
             Please Enter (*) Mandatory Fields
         </h5>
@@ -206,7 +208,7 @@
     </div>
 
     <!--Step x: Modal for Edit-->
-    <div #editItem id="editItem" class="modal fade" role="dialog" *ngIf="currentModeOfOperation === 2 || currentModeOfOperation === 3">
+    <div #editItem id="editItem" class="modal fade editModal" role="dialog" *ngIf="currentModeOfOperation === 2 || currentModeOfOperation === 3">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -218,10 +220,23 @@
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <label for="description" class="control-label">Name</label>
+                                    <label for="description" class="control-label">Asset Class <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="name" name="name" [(ngModel)]="selectedRowforEdit.assetTypeName" minlength="2" (onChange)="check"></textarea>
+                                    <!--<textarea class="text-item" #memo="ngModel" id="name" name="name" [(ngModel)]="selectedRowforEdit.assetTypeName" minlength="2" (onChange)="check"></textarea>
+        -->
+                                    <p-autoComplete field="assetTypeName"
+                                                    [(ngModel)]="selectedRowforEdit.assetTypeName"
+                                                    (onSelect)="selectedAssetType($event)"
+                                                    (onBlur)="onBlur($event)"
+                                                    (onKeyUp)="checkReasonCodeExists('assetTypeName', $event.target.value)"
+                                                    name="assetTypeName"
+                                                    [suggestions]="filteredItemList" (completeMethod)="filterAssetTypeName($event)"
+                                                    [size]="30" [minLength]="1"
+                                                    [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                    </p-autoComplete>
+                                    <div *ngIf="disableSave && selectedRowforEdit.assetTypeName" class="clr-red">Already Exists</div>
+                                    <div class="clear"></div>
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -229,7 +244,8 @@
                                     <label for="description" class="control-label">Memo</label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription" [(ngModel)]="selectedRowforEdit.assetTypeMemo" minlength="2"></textarea>
+                                    <textarea class="text-item" #memo="ngModel" id="memo" 
+                                              name="assetTypeMemo" [(ngModel)]="selectedRowforEdit.assetTypeMemo" minlength="2"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -302,12 +318,18 @@
                                     <th>Last Updated Time</th>
                                 </tr>
                             </thead>
-                            <tr *ngFor="let audit of auditHistory">
-                                <td>{{audit.assetTypeName}}</td>
-                                <td>{{audit.assetTypeMemo}}</td>
-                                <td>{{audit.isActive ? 'true' : 'false'}}</td>
+                            <tr *ngFor="let audit of auditHistory; let i = index;">
+                                <td [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].assetTypeName === audit.assetTypeName ? 'black' : 'red'  }">
+                                    {{audit.assetTypeName}}
+                                </td>
+                                <td [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].assetTypeMemo === audit.assetTypeMemo ? 'black' : 'red'  }">
+                                    {{audit.assetTypeMemo}}
+                                </td>
+                                <td [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].isActive === audit.isActive ? 'black' : 'red'  }">
+                                    {{audit.isActive}}
+                                </td>
                                 <td>{{audit.updatedBy}}</td>
-                                <td>{{audit.updatedDate| date: 'MM/dd/yyyy h:mm:ss a'}}</td>
+                                <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
                             </tr>
                         </table>
                     </div>

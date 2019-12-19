@@ -30,7 +30,7 @@
             {{
               col.field == 'openDate'
                 ? (rowData[col.field] | date: 'MM/dd/yyyy')
-                : rowData[col.field] && col.field == 'updatedDate'
+                : rowData[col.field] && col.field == 'needDate'
                 ? (rowData[col.field] | date: 'MM/dd/yyyy')
                 : rowData[col.field]
             }}
@@ -59,7 +59,7 @@
             >
               <mat-icon>edit</mat-icon>
             </button>
-
+<!-- 
             <button
               class="btn-delete ptable-wo-btns"
               mat-icon-button
@@ -69,7 +69,7 @@
               (click)="delete(rowData)"
             >
               <mat-icon color="warn">delete</mat-icon>
-            </button>
+            </button> -->
             <!-- <button
               class="btn-history ptable-wo-btns"
               mat-icon-button
@@ -135,7 +135,7 @@
                     }}</span>
                   </p>
                   <p>
-                    <span class="label"><b>Sub WO Need Data: </b></span
+                    <span class="label"><b>Sub WO Need Date: </b></span
                     ><span class="value">{{
                       subWorkOrderHeader.needDate
                     }}</span>

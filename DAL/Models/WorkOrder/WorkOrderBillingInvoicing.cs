@@ -34,13 +34,13 @@ namespace DAL.Models
         public string Notes { get; set; }
         public string CostPlusType { get; set; }
         public bool? TotalWorkOrder { get; set; }
-        public int? TotalWorkOrderValue { get; set; }
+        public long? TotalWorkOrderValue { get; set; }
         public bool? Material { get; set; }
-        public int? MaterialValue { get; set; }
+        public long? MaterialValue { get; set; }
         public bool? LaborOverHead { get; set; }
-        public int? LaborOverHeadValue { get; set; }
+        public long? LaborOverHeadValue { get; set; }
         public bool? MiscCharges { get; set; }
-        public int? MiscChargesValue { get; set; }
+        public long? MiscChargesValue { get; set; }
         public bool? ProForma { get; set; }
         public bool? PartialInvoice { get; set; }
         public bool? CostPlusRateCombo { get; set; }
@@ -48,6 +48,16 @@ namespace DAL.Models
         public string WayBillRef { get; set; }
         public string Tracking { get; set; }
         public int? CurrencyId { get; set; }
+        public decimal? AvailableCredit { get; set; }
+        public decimal? TotalWorkOrderCost { get; set; }
+        public decimal? TotalWorkOrderCostPlus { get; set; }
+        public decimal? MaterialCost { get; set; }
+        public decimal? MaterialCostPlus { get; set; }
+        public decimal? LaborOverHeadCost { get; set; }
+        public decimal? LaborOverHeadCostPlus { get; set; }
+        public decimal? MiscChargesCost { get; set; }
+        public decimal? MiscChargesCostPlus { get; set; }
+        public decimal? GrandTotal { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

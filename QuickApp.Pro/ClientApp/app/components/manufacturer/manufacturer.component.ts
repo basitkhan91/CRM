@@ -28,6 +28,8 @@ import { getObjectByValue, validateRecordExistsOrNot, selectedValueValidate, edi
 import { ConfigurationService } from '../../services/configuration.service';
 
 
+
+
 @Component({
     selector: 'app-manufacturer',
     templateUrl: './manufacturer.component.html',
@@ -545,6 +547,7 @@ export class ManufacturerComponent implements OnInit {
     formData = new FormData()
 
     @ViewChild('dt')
+   
     private table: Table;
     auditHistory: any[] = [];
     existingRecordsResponse: Object;
@@ -561,14 +564,13 @@ export class ManufacturerComponent implements OnInit {
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-manufacturer';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
 
+
     }
-
-
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
-    columnsChanges() {
+    columnsChanges() {       
         this.refreshList();
     }
     refreshList() {
@@ -628,8 +630,11 @@ export class ManufacturerComponent implements OnInit {
 
 
     checkManufacturerExists(field, value) {
+     
         const exists = validateRecordExistsOrNot(field, value, this.ManufactureData, this.selectedRecordForEdit);
+   
         if (exists.length > 0) {
+           
             this.disableSaveForUOM = true;
         }
         else {
@@ -646,13 +651,16 @@ export class ManufacturerComponent implements OnInit {
         this.ManufactList = ManufacturerVAlue;
     }
     selectedManufcaturer(object) {
+  
         const exists = selectedValueValidate('name', object, this.selectedRecordForEdit)
-
+      
+     
         this.disableSaveForUOM = !exists;
     }
 
     
     saveManufacturer() {
+       
         const data = {
             ...this.addnewManufacturer, createdBy: this.userName, updatedBy: this.userName,
             name: editValueAssignByCondition('name', this.addnewManufacturer.name),
@@ -690,9 +698,12 @@ export class ManufacturerComponent implements OnInit {
 
 
     editManufacturer(rowData) {
+     
         console.log(rowData);
+        
         this.isEdit = true;
-        this.disableSaveForUOM = false;
+   
+        this.disableSaveForUOM = true;
         this.disableSaveForShortName = false;
         // this.addNewUOM = rowData;
 

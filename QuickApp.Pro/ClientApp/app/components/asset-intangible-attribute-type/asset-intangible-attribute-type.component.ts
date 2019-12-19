@@ -20,11 +20,11 @@ import { LegalEntityService } from '../../services/legalentity.service';
 @Component({
     selector: 'app-asset-intangible-attribute-type',
     templateUrl: './asset-intangible-attribute-type.component.html',
-    styleUrls: [],
+    styleUrls: ['asset-intangible-attribute-type.component.scss'],
     animations: [fadeInOut]
 })
 export class AssetIntangibleAttributeTypeComponent implements OnInit {
-    itemList: AssetIntangibleAttributeType[];
+    itemList: any[] = [];
     filteredItemList: AssetIntangibleAttributeType[];
     allAssetIntangibleTypes: AssetIntangibleType[];
     filteredAssetIntangibleTypes: AssetIntangibleType[];
@@ -60,6 +60,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     loadingIndicator: boolean;
     closeResult: string;
     depreciationFreq: any[] = [];
+    depreciationMethod: any[] = [];
     percentageList: any[] = [];
     companyList: any[];
     buList: any[];
@@ -72,6 +73,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     allmgmtData: any[];
     mgmtStructureId: any;
     disableForMgmtStructure: boolean;
+    filteredDepriciationMethod: any[] = [];
 
     constructor(private breadCrumb: SingleScreenBreadcrumbService, private commonservice: CommonService, private glAccountService: GlAccountService, public legalEntityService: LegalEntityService, private configurations: ConfigurationService, private alertService: AlertService, private coreDataService: AssetIntangibleAttributeTypeService, private modalService: NgbModal, private authService: AuthService, private assetIntangibleTypeService: AssetIntangibleTypeService) {
     }
@@ -98,14 +100,17 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
         this.loadingIndicator = true;
         this.assetIntangibleTypeService.getAll().subscribe(
             results => this.onIntangibleTypeLoad(results[0]),
-            error => this.onDataLoadFailed(error)
+            error => this.onDataLoadFailed(error),
         );
+        
     }
 
     private onIntangibleTypeLoad(getAssetTypeList: AssetIntangibleType[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allAssetIntangibleTypes = getAssetTypeList;
+        this.allAssetIntangibleAttributeTypes = getAssetTypeList;
+        this.loadSelectedNames();
     }
 
     //loading GlAccount from generalLedger//
@@ -128,7 +133,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allGlInfo = getGlList;
-        //this.loadSelectedNames();
+        this.loadSelectedNames();
     }
 
     filterIntangibleType(event): void {
@@ -182,8 +187,68 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     getAllFrequency() {
         this.commonservice.smartDropDownList('[AssetDepreciationFrequency]', 'AssetDepreciationFrequencyId', 'Name').subscribe(res => {
             this.depreciationFreq = res;
-            //this.loadSelectedNames();
+            this.loadSelectedNames();
         })
+    }
+
+    getAllDepreMthod() {
+        this.commonservice.smartDropDownList('[AssetDepreciationMethod]', 'AssetDepreciationMethodId', 'AssetDepreciationMethodName').subscribe(res => {
+            this.depreciationMethod = res;
+            this.loadSelectedNames();
+        })
+    }
+    loadSelectedNames() {
+        //console.log('loadSelectedNames', this.itemList.length);
+        for (let i = 0; i < this.itemList.length; i++) {
+            this.itemList[i].depreciationMethodName = this.getDeprMethodNameById(this.itemList[i].assetDepreciationMethodId);
+            this.itemList[i].assetIntangibleName = this.itemId(this.itemList[i].assetIntangibleTypeId);
+            this.itemList[i].Name = this.getAmortFrequencyById(this.itemList[i].assetAmortizationIntervalId);
+            this.itemList[i].accAmortdeprGL = this.getAccNameById(this.itemList[i].accAmortDeprGLAccountId);
+            this.itemList[i].amortExpenseGL = this.getAccNameById(this.itemList[i].amortExpenseGLAccountId);
+            this.itemList[i].intangibleGL = this.getAccNameById(this.itemList[i].intangibleGLAccountId);
+            this.itemList[i].intangiblewritedoffGL = this.getAccCodeById(this.itemList[i].intangibleWriteOffGLAccountId);
+            this.itemList[i].intangiblewritedDownGL = this.getAccCodeById(this.itemList[i].intangibleWriteDownGLAccountId);
+        }
+    }
+
+    getAccNameById(value) {
+        for (let i = 0; i < this.allGlInfo.length; i++) {
+            let accId = this.allGlInfo[i].glAccountId;
+            if (accId == value) {
+                return this.allGlInfo[i].accountName;
+            }
+        }
+        return "";
+    }
+
+    getAccCodeById(value) {
+        for (let i = 0; i < this.allGlInfo.length; i++) {
+            let accId = this.allGlInfo[i].glAccountId;
+            if (accId == value) {
+                return this.allGlInfo[i].accountCode;
+            }
+        }
+        return "";
+    }
+
+    getDeprMethodNameById(value) {
+        for (let i = 0; i < this.depreciationMethod.length; i++) {
+            let accId = this.depreciationMethod[i].value;
+            if (accId == value) {
+                return this.depreciationMethod[i].label;
+            }
+        }
+        return "";
+    }
+
+    getAmortFrequencyById(value) {
+        for (let i = 0; i < this.depreciationFreq.length; i++) {
+            let accId = this.depreciationFreq[i].value;
+            if (accId == value) {
+                return this.depreciationFreq[i].label;
+            }
+        }
+        return "";
     }
 
     companySelected(): void {
@@ -333,15 +398,16 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
 
     //Check if asset type exists before add/delete
     checkItemExists(rowData): boolean {
-        this.getItemList();
-        let item = this.newItem(rowData);
-        const exists = this.itemList.some(existingItem => existingItem.assetintangibleAttributeTypeId === item.assetintangibleAttributeTypeId);
-        return exists;
+        //this.getItemList();
+        //let item = this.newItem(rowData);
+        //const exists = this.itemList.some(existingItem => existingItem.assetintangibleAttributeTypeId === item.assetintangibleAttributeTypeId);
+        //return exists;
+        return true;
     }
 
     //Open the confirmation to delete
     confirmItemDelete(rowData) {
-        this.currentRow = this.newItem(rowData);
+        this.currentRow = rowData as AssetIntangibleAttributeType;
         this.currentModeOfOperation = ModeOfOperation.Delete;
     }
 
@@ -355,7 +421,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
             this.currentModeOfOperation = ModeOfOperation.Update;
             item.updatedBy = this.userName;
             item.isDelete = true;
-            this.coreDataService.remove(item.assetintangibleAttributeTypeId).subscribe(response => {
+            this.coreDataService.remove(item.assetIntangibleAttributeTypeId).subscribe(response => {
                 this.alertService.showMessage('Success', this.rowName + " removed successfully.", MessageSeverity.success);
                 this.getItemList();
             });
@@ -377,6 +443,11 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
             this.itemList = responseData;
             this.totalRecords = responseData.length;
             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            this.glList();
+            this.getAllFrequency();
+            this.getAllDepreMthod();
+            this.loadManagementdata();
+            this.getIntangibleTypeList();
         })
     }
 
@@ -384,7 +455,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
         let item = new AssetIntangibleAttributeType();
         let defaultUserName = "admin";
         if (rowData) {
-            item.assetintangibleAttributeTypeId = rowData.assetintangibleAttributeTypeId || 0;
+            item.assetIntangibleAttributeTypeId = rowData.assetIntangibleAttributeTypeId || 0;
             item.updatedBy = this.userName || defaultUserName;
             item.createdBy = this.userName || defaultUserName;
             item.isActive = rowData.isActive || false;
@@ -401,11 +472,11 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     }
 
     openItemForEdit(rowData): void {
-        console.log(rowData.assetintangibleAttributeTypeId);
+        console.log(rowData.assetIntangibleAttributeTypeId);
         this.currentRow = this.newItem(rowData);
         this.currentRow = {
             ...rowData,
-            assetIntangibleAttributeName: getObjectById('assetintangibleAttributeTypeId', rowData.assetintangibleAttributeTypeId, this.itemList)
+            assetIntangibleAttributeName: getObjectById('assetIntangibleAttributeTypeId', rowData.assetIntangibleAttributeTypeId, this.itemList)
         };
         console.log(this.currentRow);
         this.currentModeOfOperation = ModeOfOperation.Update;
@@ -418,7 +489,20 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
 
     saveNewItem(): void {
         this.currentModeOfOperation = ModeOfOperation.Add;
-        this.coreDataService.add(this.currentRow).subscribe(response => {
+        const data = {
+            ...this.currentRow, createdBy: this.userName, updatedBy: this.userName, IsActive: this.currentRow.isActive, IsDeleted: this.currentRow.isDelete,
+            assetIntangibleTypeId: editValueAssignByCondition('assetIntangibleTypeId', this.currentRow.assetIntangibleTypeId),
+            assetDepreciationMethodId: editValueAssignByCondition('value', this.currentRow.depreciationMethod),
+            intangibleLifeYears: editValueAssignByCondition('IntangibleLifeYears', this.currentRow.intangibleLifeYears),
+            assetAmortizationIntervalId: editValueAssignByCondition('value', this.currentRow.amortizationFrequency),
+            intangibleGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.intangibleGLAccountId),
+            amortExpenseGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.amortExpenseGLAccountId),
+            accAmortDeprGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.accAmortDeprGLAccountId),
+            intangibleWriteDownGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.intangibleWriteDownGLAccountId),
+            intangibleWriteOffGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.intangibleWriteOffGLAccountId),
+            managementStructureId: editValueAssignByCondition('managementStructureId', this.mgmtStructureId),
+        };
+        this.coreDataService.add(data).subscribe(response => {
             this.alertService.showMessage('Success', this.rowName + " added successfully.", MessageSeverity.success);
             this.getItemList();
         });
@@ -445,7 +529,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     showHistory(rowData): void {
         this.currentModeOfOperation = ModeOfOperation.Audit;
         let item = this.newItem(rowData);
-        this.coreDataService.getItemAuditById(item.assetintangibleAttributeTypeId).subscribe(audits => {
+        this.coreDataService.getItemAuditById(item.assetIntangibleAttributeTypeId).subscribe(audits => {
             if (audits[0].length > 0) {
                 this.auditHistory = audits[0];
             }
@@ -453,13 +537,23 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     }
 
     showItemEdit(rowData): void {
-        console.log(rowData.assetintangibleAttributeTypeId);
+        console.log(rowData.assetIntangibleAttributeTypeId);
         this.currentRow = this.newItem(rowData);
         this.currentRow = {
             ...rowData,
-            assetIntangibleName: getObjectById('AssetIntangibleAttributeTypeId', rowData.AssetIntangibleAttributeTypeId, this.itemList)
+            assetIntangibleTypeId: getObjectById('assetIntangibleTypeId', rowData.assetIntangibleTypeId, this.allAssetIntangibleAttributeTypes),
+            assetDepreciationMethodId: getObjectById('value', rowData.assetDepreciationMethodId, this.depreciationMethod),
+            assetAmortizationIntervalId: getObjectById('depreciationFrequencyId', rowData.assetAmortizationIntervalId, this.depreciationFreq),
+            amortExpenseGLAccountId: getObjectById('glAccountId', rowData.amortExpenseGLAccountId, this.allGlInfo),
+            accAmortDeprGLAccountId: getObjectById('glAccountId', rowData.accAmortDeprGLAccountId, this.allGlInfo),
+            intangibleGLAccountId: getObjectById('glAccountId', rowData.intangibleGLAccountId, this.allGlInfo),
+            intangibleWriteDownGLAccountId: getObjectById('glAccountId', rowData.intangibleWriteDownGLAccountId, this.allGlInfo),
+            intangibleWriteOffGLAccountId: getObjectById('glAccountId', rowData.intangibleWriteOffGLAccountId, this.allGlInfo)
         };
         console.log(this.currentRow);
+        this.currentRow = { ...this.currentRow };
+        this.mgmtStructureId = this.currentRow.managementStructureId;
+        this.populateMgmtStructure(this.currentRow.managementStructureId);
         this.currentModeOfOperation = ModeOfOperation.Update;
     }
 
@@ -476,7 +570,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     viewItemDetails(rowData) {
         this.itemDetails = rowData;
     }
-
+AssetIntangibleAttributeTypeModel
     loadManagementdata() {
         this.legalEntityService.getManagemententity().subscribe(
             res => {
@@ -491,34 +585,34 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
 
     //Step x: load all the required data for the page to function
     private loadData() {
-        //this.getItemList();
-        this.glList();
-        this.getAllFrequency();
-        this.loadManagementdata();
-        this.getIntangibleTypeList();
+        this.getItemList();
+        console.log(this.itemList);
+        
         this.rowName = "Intangible Attribute Type";
         this.header = "Intangible Attribute  Type";
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-asset-intangible-attribute-type';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         //Step x: Add the required details for dropdown options/column header
         this.columnHeaders = [
-            { field: 'companyName', header: 'Company', index: 1, showByDefault: true },
-            { field: 'buName', header: 'BU', index: 2, showByDefault: true },
-            { field: 'divisionName', header: 'Division', index: 3, showByDefault: true },
-            { field: 'deptName', header: 'Dept', index: 4, showByDefault: true },
-            { field: 'intangibleTypeName', header: 'Intangible Type', index: 5, showByDefault: true },
-            { field: 'amortizationMethodName', header: 'Amortization Method', index: 6, showByDefault: true },
-            { field: 'intangibleLifeName', header: 'Intangible Life', index: 7, showByDefault: true },
-            { field: 'amortFrequency', header: 'Amort Frequency', index: 8, showByDefault: true },
-            { field: 'intangibleGL', header: 'Intangible GL', index: 8, showByDefault: true },
-            { field: 'amortExpenseGL', header: 'Amort Expense GL', index: 9, showByDefault: true },
-            { field: 'accAmortdeprGL', header: 'Acc Amort Depr GL', index: 10, showByDefault: true },
-            { field: 'intangiblewritedDownGL', header: 'Intangible Write Down GL', index: 11, showByDefault: true },
-            { field: 'intangiblewritedoffGL', header: 'Intangible Write Off GL', index: 12, showByDefault: true },
+            //{ field: 'companyName', header: 'Company', index: 1, showByDefault: true },
+            //{ field: 'buName', header: 'BU', index: 2, showByDefault: true },
+            //{ field: 'divisionName', header: 'Division', index: 3, showByDefault: true },
+            //{ field: 'deptName', header: 'Dept', index: 4, showByDefault: true },
+            { field: 'assetIntangibleName', header: 'Intangible Class', index: 1, showByDefault: true },
+            { field: 'depreciationMethodName', header: 'Amortization Method', index: 1, showByDefault: true },
+            { field: 'intangibleLifeYears', header: 'Intangible Life', index: 1, showByDefault: true },
+            { field: 'Name', header: 'Amort Frequency', index: 1, showByDefault: true },
+            { field: 'amortExpenseGL', header: 'Amort Expense GL', index: 1, showByDefault: true },
+            { field: 'accAmortdeprGL', header: 'Acc Amort Depr GL', index: 1, showByDefault: true },
+            { field: 'intangibleGL', header: 'Intangible GL', index: 1, showByDefault: true },
+            { field: 'intangiblewritedDownGL', header: 'Intangible Write Down GL', index: 1, showByDefault: true },
+            { field: 'intangiblewritedoffGL', header: 'Intangible Write Off GL', index: 1, showByDefault: true },
         ];
         this.currentModeOfOperation = ModeOfOperation.None;
         this.selectedColumns = this.columnHeaders;
-        this.currentRow = this.newItem(0);
+        this.currentRow = new AssetIntangibleAttributeType();
+        this.currentRow.isActive = true;
+        this.getItemList();
     }
 
     sampleExcelDownload() {
@@ -527,7 +621,8 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
         window.location.assign(url);
     }
 
-    customExcelUpload(event) {
+    customExcelUpload(
+        event) {
         const file = event.target.files;
 
         console.log(file);
@@ -568,12 +663,13 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
 
     itemId(event) {
         for (let i = 0; i < this.allAssetIntangibleAttributeTypes.length; i++) {
-            if (event == this.allAssetIntangibleAttributeTypes[i][0].assetIntangibleName) {
+            if (event == this.allAssetIntangibleAttributeTypes[i].assetIntangibleTypeId) {
                 this.disableSave = true;
                 this.selectedAssetIntangible = event;
+                return this.allAssetIntangibleAttributeTypes[i].assetIntangibleName;
             }
-
         }
+        return "";
     }
     selectedName(object) {
         const exists = selectedValueValidate('assetIntangibleName', object, this.currentRow);

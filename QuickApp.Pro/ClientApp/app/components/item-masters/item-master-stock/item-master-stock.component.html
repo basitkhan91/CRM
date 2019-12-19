@@ -217,7 +217,7 @@
                                             <label class="control-label control-alter1 col-sm-5">Rec'd date</label>
                                             <div class="col-sm-7">
                                                 <label class="wauto">
-                                                    <input type="checkbox" name="exp-date-radio" style="margin-left:11px !important"
+                                                    <input type="checkbox" name="exp-date-radio" style="margin-left:11px; margin-top: 10px !important"
                                                            id="exp-rec-date-radio" [ngModelOptions]="{standalone: true}"
                                                            [(ngModel)]="sourceItemMaster.isReceivedDateAvailable">
                                                 </label>
@@ -565,9 +565,12 @@
                                     </div>
                                     <div>
                                         <p-multiSelect [options]="integrationvalues"
-                                                       name="intergations" [maxSelectedLabels]="2" [(ngModel)]="selectedIntegrationTypes"
-                                                       [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
+                                                       name="intergations"
+                                                       defaultLabel="Choose Columns"
+                                                       [(ngModel)]="selectedIntegrationTypes">
+                                        </p-multiSelect>
                                     </div>
+                                </div>
                                     <label class="control-label">Memo</label>
                                     <div class="memo-popup-cstm">
                                         <span pTooltip="{{memoNotes}}" tooltipPosition="top">

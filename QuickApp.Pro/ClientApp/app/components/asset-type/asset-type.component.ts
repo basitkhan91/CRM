@@ -10,7 +10,8 @@ import { AssetTypeService } from "../../services/asset-type/asset-type.service";
 import { AssetType } from "../../models/asset-type.model";
 import { ModeOfOperation } from "../../models/ModeOfOperation.enum";
 import { UploadTag } from "../../models/UploadTag.enum";
-
+import { validateRecordExistsOrNot, editValueAssignByCondition, getObjectById, selectedValueValidate, getObjectByValue } from '../../generic/autocomplete';
+import { ConfigurationService } from '../../services/configuration.service';
 //
 @Component({
     selector: 'app-asset-type',
@@ -26,6 +27,7 @@ export class AssetTypeComponent implements OnInit {
     disableSave: boolean = false;
     header: string;
     itemList: AssetType[];
+    filteredItemList: AssetType[];
     itemDetails: any;
     modal: NgbModalRef;
     pageIndex: number = 0;
@@ -38,13 +40,26 @@ export class AssetTypeComponent implements OnInit {
     totalPages: number;
     formData: FormData;
     uploadedRecords: Object;
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private alertService: AlertService, private coreDataService: AssetTypeService, private modalService: NgbModal, private authService: AuthService) {
+    localCollection: any[] = [];
+    allAssetTypes: any[] = [];
+    isEdit: boolean = false;
+
+    new = {
+        assetTypeName: "",
+        assetTypeMemo: "",
+        masterCompanyId: 1,
+        isActive: true,
+        memo: "",
+    }
+    addNew = { ...this.new };
+
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private alertService: AlertService, private configurations: ConfigurationService, private coreDataService: AssetTypeService, private modalService: NgbModal, private authService: AuthService) {
     }
     ngOnInit(): void {
         //Get page-rendering payload
         this.getItemList();
-        this.rowName = "Asset Type";
-        this.header = "Asset Type";
+        this.rowName = "Asset Class";
+        this.header = "Asset Class";
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-asset-type';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         //Required details for dropdown options/column header
@@ -67,6 +82,7 @@ export class AssetTypeComponent implements OnInit {
     addNewItem(): void {
         this.selectedRowforEdit = new AssetType();
         this.selectedRowforEdit.createdBy = this.userName;
+        this.selectedRowforEdit.isActive = true;
         this.currentModeOfOperation = ModeOfOperation.Add;
     }
 
@@ -96,7 +112,7 @@ export class AssetTypeComponent implements OnInit {
     //Check if item exists before add/delete
     checkItemExists(rowData): boolean {
         this.getItemList();
-        const exists = this.itemList.some(item => item.assetTypeName == rowData.assetTypeName && item.assetTypeMemo == rowData.assetTypeMemo);
+        const exists = this.itemList.some(item => item.assetTypeName == rowData.assetTypeName);
         return exists;
     }
 
@@ -123,6 +139,7 @@ export class AssetTypeComponent implements OnInit {
     //Reset the modal
     dismissModal() {
         this.selectedRowforEdit = new AssetType();
+        this.selectedRowforEdit.isActive = true;
         this.selectedRowforDelete = new AssetType();
         this.auditHistory = [];
         this.currentModeOfOperation = ModeOfOperation.None;
@@ -147,7 +164,13 @@ export class AssetTypeComponent implements OnInit {
     }
 
     openItemForEdit(rowData): void {
-        this.selectedRowforEdit = rowData;
+        console.log(rowData);
+        this.addNew = {
+            ...rowData,
+            assetTypeName: getObjectById('assetTypeId', rowData.assetTypeId, this.itemList),
+        };
+        
+        this.selectedRowforEdit = { ...this.addNew }
         this.currentModeOfOperation = ModeOfOperation.Update;
     }
 
@@ -166,17 +189,20 @@ export class AssetTypeComponent implements OnInit {
     }
 
     saveExistingItem(rowData): void {
-        var itemExists = this.checkItemExists(rowData);
-        if (itemExists) {
+        //console.log('update',rowData);
+        //var itemExists = this.checkItemExists(rowData);
+        //if (itemExists) {
             this.currentModeOfOperation = ModeOfOperation.Update;
-            rowData.updatedBy = this.userName;
-            this.coreDataService.update(rowData).subscribe(response => {
+        rowData.updatedBy = this.userName;
+        const data = { ...rowData, assetTypeName: editValueAssignByCondition('assetTypeName', rowData.assetTypeName), };
+        //console.log(data);
+            this.coreDataService.update(data).subscribe(response => {
                 this.alertService.showMessage('Success', this.rowName + " updated successfully.", MessageSeverity.success);
                 this.getItemList();
             });
-        } else {
+        /*} else {
             this.saveNewItem();
-        }
+        }*/
         this.dismissModal();
     }
 
@@ -197,10 +223,18 @@ export class AssetTypeComponent implements OnInit {
                 this.auditHistory = audits[0];
             }
         });
+        console.log(this.auditHistory);
     }
 
     showItemEdit(rowData): void {
-        this.selectedRowforEdit = rowData;
+        this.isEdit = true;
+        console.log(rowData);
+        this.addNew = {
+            ...rowData,
+            assetTypeName: getObjectById('assetTypeId', rowData.assetTypeId, this.itemList),
+        };
+
+        this.selectedRowforEdit = { ...this.addNew }
         this.currentModeOfOperation = ModeOfOperation.Update;
     }
 
@@ -217,5 +251,66 @@ export class AssetTypeComponent implements OnInit {
         this.itemDetails = rowData;
     }
 
+    checkReasonCodeExists(field, value) {
+        const exists = validateRecordExistsOrNot(field, value, this.itemList, this.selectedRowforEdit);
+        if (exists.length > 0) {
+            this.disableSave = true;
+        }
+        else {
+            this.disableSave = false;
+        }
 
+    }
+
+    filterAssetTypeName(event) {
+        this.filteredItemList = this.itemList;
+
+        const ReasonCodeData = [...this.itemList.filter(x => {
+            return x.assetTypeName.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.filteredItemList = ReasonCodeData;
+    }
+
+    onBlur(event) {
+        //console.log(event.target.value);
+        //console.log(this.addNew);
+
+        const value = event.target.value;
+        this.disableSave = false;
+        for (let i = 0; i < this.itemList.length; i++) {
+            let assetTypeName = this.itemList[i].assetTypeName;
+            let assetTypeId = this.itemList[i].assetTypeId;
+            if (assetTypeName.toLowerCase() == value.toLowerCase()) {
+                if (!this.isEdit) {
+                    this.disableSave = true;
+                }
+                else if (assetTypeId != this.selectedRowforEdit.assetTypeId) {
+                    this.disableSave = true;
+                }
+                else {
+                    this.disableSave = false;
+                }
+                console.log('assetTypeName :', assetTypeName);
+                break;
+            }
+        }
+
+    }
+
+    sampleExcelDownload() {
+         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=AssetType&fileName=assetType.xlsx`;
+         window.location.assign(url);
+    }
+
+    selectedAssetType(object) {
+        console.log('selectedAssetType', object);
+        const exists = selectedValueValidate('AssetTypeName', object, this.selectedRowforEdit)
+        if (this.currentModeOfOperation == 2 || this.currentModeOfOperation == 3 && object.assetTypeId != this.selectedRowforEdit.assetTypeId) {
+            this.disableSave = !exists;
+        }
+        else {
+            this.disableSave = false;
+        }
+
+    }
 }

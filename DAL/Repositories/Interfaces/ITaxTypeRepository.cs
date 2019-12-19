@@ -12,5 +12,9 @@ namespace DAL.Repositories.Interfaces
         
             IEnumerable<DAL.Models.TaxType> GetAllTaxTypeData();
             new IQueryable<TaxType> GetPaginationData();
+
+        IEnumerable<DAL.Models.TaxTypeAudit> GetTaxTypeAuditDetails(long Id);
+
+
     }
 }

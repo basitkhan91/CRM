@@ -66,6 +66,7 @@ export class VendorShippingInformationComponent {
     selectedShipVia: any;
     shipviacollection: any[];
     shippingauditHisory: any[];
+    isPrimary: boolean = false;
     ngOnInit(): void {
         this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-shipping-information';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
@@ -371,6 +372,7 @@ export class VendorShippingInformationComponent {
     }
     openView(content, row) {
         this.sourceVendor = row;
+        this.isPrimary = row.isPrimary;
         this.siteName = row.siteName;
         this.address1 = row.address1;
         this.city = row.city;
@@ -747,5 +749,21 @@ export class VendorShippingInformationComponent {
             }
         }
     }
+
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.shippingauditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+
+
+
 }
 

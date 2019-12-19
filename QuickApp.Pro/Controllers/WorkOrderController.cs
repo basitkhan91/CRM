@@ -183,7 +183,14 @@ namespace QuickApp.Pro.Controllers
         public IActionResult SubWorkOrderDetails(long subWorkOrderId)
         {
             var result = unitOfWork.WorkOrderRepository.SubWorkOrderDetails(subWorkOrderId);
-            return Ok(result);
+			if(result != null)
+			{
+				return Ok(result);
+			}else
+			{
+				return NotFound();
+			}
+           
         }
 
         [HttpGet("subworkorderlist")]
@@ -197,7 +204,14 @@ namespace QuickApp.Pro.Controllers
         public IActionResult SubWorkOrderHeaderDetails(long workOrderId, long workOrderPartNumberId)
         {
             var result = unitOfWork.WorkOrderRepository.SubWorkOrderHeaderDetails(workOrderId, workOrderPartNumberId);
-            return Ok(result);
+			if(result != null)
+			{
+				return Ok(result);
+			}else
+			{
+				return NotFound();
+			}
+        
         }
 
         #endregion
@@ -244,6 +258,13 @@ namespace QuickApp.Pro.Controllers
         public IActionResult WorkOrderWorkFlowView(long workFlowWorkOrderId)
         {
             var result = unitOfWork.WorkOrderRepository.WorkOrderWorkFlowView(workFlowWorkOrderId);
+            return Ok(result);
+        }
+
+        [HttpGet("wopartdetailsbyid")]
+        public IActionResult GetWorkOrderPartDetailsById(long workOrderPartNoId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderPartDetailsById(workOrderPartNoId);
             return Ok(result);
         }
 
@@ -971,7 +992,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("deleteworkordermaterial")]
         public IActionResult DeleteWorkOrderMaterials(long workOrderMaterialsId, string updatedBy)
         {
-            unitOfWork.WorkOrderRepository.DeleteWorkOrderPublication(workOrderMaterialsId, updatedBy);
+            unitOfWork.WorkOrderRepository.DeleteWorkOrderMaterials(workOrderMaterialsId, updatedBy);
             return Ok();
         }
 

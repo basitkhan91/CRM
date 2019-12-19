@@ -1,4 +1,5 @@
 ﻿
+using DAL.Common;
 using DAL.Models;
 using DAL.Repositories.Interfaces;
 using System;
@@ -24,7 +25,7 @@ namespace DAL.Repositories
             return _appContext.Vendor.Where(v => v.IsActive == true && v.IsDelete == false).Select(v => new Vendor { VendorId = v.VendorId, VendorName = v.VendorName }).OrderBy(c => c.VendorName).ToList();
         }
 
-        public IEnumerable<object> GetVendorListDetails()
+        public IEnumerable<object> GetVendorListDetails(bool isActive)
         {
 
             {
@@ -43,6 +44,7 @@ namespace DAL.Repositories
                             join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                             from vca in vcad.DefaultIfEmpty()
                             where t.IsDelete != true
+                            && t.IsActive == (isActive == true ? true : t.IsActive)
                             select new
                             {
                                 t.VendorId,
@@ -548,6 +550,19 @@ namespace DAL.Repositories
                     billingAddress.IsPrimary = billingAddress.IsPrimary;
                 }
 
+
+                if (billingAddress.IsPrimary == true)
+                {
+                    var vendorConcatData = _appContext.VendorBillingAddress.Where(p => p.VendorId == billingAddress.VendorId).ToList();
+
+                    foreach (var objContactdata in vendorConcatData)
+                    {
+                        objContactdata.IsPrimary = false;
+                        _appContext.VendorBillingAddress.Update(objContactdata);
+                    }
+                    _appContext.SaveChanges();
+                }
+
                 if (billingAddress.VendorBillingAddressId > 0)
                 {
                     _appContext.VendorBillingAddress.Update(billingAddress);
@@ -916,7 +931,7 @@ namespace DAL.Repositories
         public IEnumerable<object> GetVendorProcessList(int companyId)
         {
             var list = (from m in _appContext.Master1099
-                        where m.MasterCompanyId == companyId && m.IsDeleted !=true
+                        where m.MasterCompanyId == companyId && m.IsDeleted != true
                         select m).Distinct().ToList();
             return list;
 
@@ -1068,6 +1083,44 @@ namespace DAL.Repositories
             _appContext.SaveChanges();
         }
 
+        public IEnumerable<object> GetVendorGeneralDocumentDetailById(long id, int moduleId)
+        {
+            var result = (from at in _appContext.Attachment
+                          join atd in _appContext.AttachmentDetails on at.AttachmentId equals atd.AttachmentId
+                          where at.ReferenceId == id && at.ModuleId == moduleId && atd.IsActive == true && atd.IsDeleted == false
+                          select atd).ToList();
+
+            return result;
+
+        }
+        public bool GetVendorGeneralDocumentDelete(long id, string updatedBy)
+        {
+            bool result = false;
+            try
+            {
+                AttachmentDetails attachmentDetails = new AttachmentDetails();
+                attachmentDetails.AttachmentDetailId = id;
+                attachmentDetails.UpdatedDate = DateTime.Now;
+                attachmentDetails.UpdatedBy = updatedBy;
+                attachmentDetails.IsDeleted = true;
+
+                _appContext.AttachmentDetails.Attach(attachmentDetails);
+                _appContext.Entry(attachmentDetails).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(attachmentDetails).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(attachmentDetails).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+                result = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
+
+        }
+
+
         public List<Master1099Audit> GetVendorProcess1099Audit(long id)
         {
             try
@@ -1079,6 +1132,133 @@ namespace DAL.Repositories
             {
                 throw ex;
             }
+        }
+        public IEnumerable<object> GetVendorProcessListForFinance(int companyId)
+        {
+            var list = (from m in _appContext.Master1099
+                        where m.MasterCompanyId == companyId && m.IsDeleted != true && m.IsActive == true
+                        select m).Distinct().ToList();
+            return list;
+
+        }
+        public IEnumerable<object> GetVendorProcessListFromTransaction(long vendorId)
+        {
+            var list = (from mst in _appContext.Master1099
+                        join m in _appContext.VendorProcess1099 on mst.Master1099Id equals m.Master1099Id
+                          into master
+                        from m in master.DefaultIfEmpty()
+
+                        where m.VendorId == vendorId && m.IsDeleted != true && m.IsActive == true
+                        select new
+                        {
+                            m.VendorProcess1099Id,
+                            m.Master1099Id,
+                            m.IsDefaultCheck,
+                            m.IsDefaultRadio,
+                            mst.Description
+                        }).Distinct().ToList();
+
+
+            return list;
+
+        }
+        public IEnumerable<VendorCapabilityAircraft> VendorAircraft(VendorCapabilityAircraft[] vendorAircraftMapping)
+        {
+
+            if(vendorAircraftMapping != null && vendorAircraftMapping.Length > 0)
+            {
+                foreach (var airData in vendorAircraftMapping)
+                {
+                    airData.CreatedDate = DateTime.Now;
+                    airData.UpdatedDate = DateTime.Now;
+                    airData.IsActive = true;
+                    airData.IsDeleted = false;
+                    _appContext.VendorCapabilityAircraft.Add(airData);
+                    _appContext.SaveChanges();
+                }
+            }           
+
+            return vendorAircraftMapping;
+        }
+
+        public IEnumerable<object> VendorAircraftDataByCapsId(long vendorCapabilityId)
+        {
+            var data = (from vc in _appContext.VendorCapabilityAircraft
+                        join art in _appContext.AircraftType on vc.AircraftTypeId equals art.AircraftTypeId into artt
+                        from art in artt.DefaultIfEmpty()
+                        join arm in _appContext.AircraftModel on vc.AircraftModelId equals arm.AircraftModelId into armd
+                        from arm in armd.DefaultIfEmpty()
+                        join ard in _appContext.AircraftDashNumber on vc.DashNumberId equals ard.DashNumberId into ardd
+                        from ard in ardd.DefaultIfEmpty() 
+                        where vc.VendorCapabilityId == vendorCapabilityId && vc.IsActive == true && vc.IsDeleted == false
+                        select new
+                        {
+                            vc.VendorCapabilityAirCraftId,
+                            vc.VendorCapabilityId,
+                            vc.AircraftTypeId,
+                            AircraftType= art.Description,
+                            vc.AircraftModelId,
+                            vc.DashNumberId,
+                            AircraftModel=arm.ModelName,
+                            ard.DashNumber,
+                            //vc.PartNumber,                           
+                            //vc.AircraftModel,
+                            vc.Memo                            
+                        }).ToList();
+            return data;
+        }
+
+        public bool EditVendorAircraft(long id,string memo, string updatedBy)
+        {
+            bool result = false;
+            try
+            {
+                VendorCapabilityAircraft airCraftDetails = new VendorCapabilityAircraft();
+                airCraftDetails.VendorCapabilityAirCraftId = id;
+                airCraftDetails.UpdatedDate = DateTime.Now;
+                airCraftDetails.UpdatedBy = updatedBy;
+                airCraftDetails.Memo = memo;
+
+                _appContext.VendorCapabilityAircraft.Attach(airCraftDetails);
+                _appContext.Entry(airCraftDetails).Property(x => x.Memo).IsModified = true;
+                _appContext.Entry(airCraftDetails).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(airCraftDetails).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+                result = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
+
+        }
+        public bool DeleteVendorAircraft(long id, string updatedBy)
+        {
+            bool result = false;
+            try
+            {
+                VendorCapabilityAircraft airCraftDetails = new VendorCapabilityAircraft();
+                airCraftDetails.VendorCapabilityAirCraftId = id;
+                airCraftDetails.UpdatedDate = DateTime.Now;
+                airCraftDetails.UpdatedBy = updatedBy;
+                airCraftDetails.IsDeleted = true;
+
+                _appContext.VendorCapabilityAircraft.Attach(airCraftDetails);
+                _appContext.Entry(airCraftDetails).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(airCraftDetails).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(airCraftDetails).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+                result = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
+
         }
     }
 }

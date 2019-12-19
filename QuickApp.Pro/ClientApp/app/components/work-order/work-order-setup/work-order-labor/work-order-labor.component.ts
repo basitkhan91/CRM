@@ -47,7 +47,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
 
     
     this.workOrderWorkFlowList = this.workOrderWorkFlowOriginalData;
-
+console.log(this.workOrderLaborList);
     if(this.workOrderLaborList){
       this.laborForm.workFlowWorkOrderId = this.workOrderLaborList['workFlowWorkOrderId'];
       this.laborForm.dataEnteredBy = this.workOrderLaborList['dataEnteredBy'];
@@ -382,6 +382,10 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
       return false;
     }
     
+  }
+
+  deleteLabor(taskName, index){
+    this.laborForm.workOrderLaborList[0][taskName.toLowerCase()].splice(index, 1);
   }
   // tasks : this.laborForm.tasks[0][keysArray[i]].map(x => {
   //   return {

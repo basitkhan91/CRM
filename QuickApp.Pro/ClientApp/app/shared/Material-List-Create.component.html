@@ -247,11 +247,21 @@
     </button>
   </div>
 
+  <div *ngIf="isQuote" style="float:right">
+    <button
+      class="btn btn-primary btn-primary-cstm"
+      (click)="saveMaterialsWorkOrder()"
+      style="padding: 6px 12px !important;margin-top: 10px;"
+    >
+      Save
+    </button>
+  </div>
+
   <div *ngIf="isWorkOrder && isEdit" style="float:right">
     <button
       *ngIf="isWorkOrder"
       class="btn btn-primary btn-primary-cstm"
-      (click)="updateMaterialsListForWO()"
+      (click)="updateMaterialsWorkOrder()"
       style="padding: 6px 12px !important;margin-top: 10px;"
     >
       Update

@@ -218,7 +218,7 @@ export class WorkOrderService {
     }
 
     createQuote(data) {
-        return this.workOrderEndpointService.createQuotation(data);
+        return this.workOrderEndpointService.createOrUpdateQuotation(data);
     }
 
     getSubWorkOrderListByWorkOrderId(workOrderId) {
@@ -226,12 +226,16 @@ export class WorkOrderService {
     }
 
     getSubWorkOrderView(subWorkOrderId) {
-        return this.workOrderEndpointService.getSubWorkOrderView(subWorkOrderId);
+        return this.workOrderEndpointService.getSubWorkOrderDataBySubWorkOrderId(subWorkOrderId);
     }
 
     // subWorkOrder 
     getSubWorkOrderHeaderByWorkOrderId(workOrderId, workOrderPartNumberId) {
         return this.workOrderEndpointService.getSubWorkOrderHeaderByWorkOrderId(workOrderId, workOrderPartNumberId);
+    }
+
+    getSubWorkOrderDataBySubWorkOrderId(subWorkOrderId) {
+        return this.workOrderEndpointService.getSubWorkOrderDataBySubWorkOrderId(subWorkOrderId);
     }
 
 
@@ -245,6 +249,17 @@ export class WorkOrderService {
 
     createBillingByWorkOrderId(data) {
         return this.workOrderEndpointService.createBillingByWorkOrderId(data);
+    }
+    updateBillingByWorkOrderId(data) {
+        return this.workOrderEndpointService.updateBillingByWorkOrderId(data);
+    }
+
+    getExistingWOROList() {
+        return this.workOrderEndpointService.getExistingWOROList();
+    }
+
+    createNewWORO(workOrderPartNoId) {
+        return this.workOrderEndpointService.createNewWORO(workOrderPartNoId);
     }
 
 

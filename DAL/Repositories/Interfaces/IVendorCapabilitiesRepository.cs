@@ -7,6 +7,7 @@ namespace DAL.Repositories.Interfaces
    public interface  IVendorCapabilitiesRepository : IRepository<DAL.Models.VendorCapabiliy>
     {
         IEnumerable<DAL.Models.VendorCapabiliy> GetVendorCapabilitiesData();
+        IEnumerable<object> GetvendorCapabilityListByVendorId(long vendorId);
 
     }
     

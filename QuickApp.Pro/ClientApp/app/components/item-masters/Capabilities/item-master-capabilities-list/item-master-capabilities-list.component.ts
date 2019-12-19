@@ -111,11 +111,11 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
     }
     
     capabilityForm: any ={
-        selectedCap:'',CapabilityTypeId: 0,companyId: 0,buId: 0,divisionId: 0,departmentId:0,manufacturerId:0,manufacturerLabel:'',ataChapterId:0,ataChapterLabel:'',atasubchapterId:0,ataSubchapterLabel:'',cmmId:0,cmmLabel:'',integrateWith:0,integrateWithLabel:'',description:'',entryDate:'',isVerified:false,managementStructureId:0,verifiedBy:'',dateVerified:'',nteHrs:0,tat:0, selectedPartId: [], selectedAircraftDataModels: [],
+        selectedCap: '', CapabilityTypeId: 0, companyId: 0, buId: 0, divisionId: 0, departmentId: 0, manufacturerId: 0, manufacturerLabel: '', ataChapterId: 0, ataChapterLabel: '', ataSubChapterId:0,ataSubchapterLabel:'',cmmId:0,cmmLabel:'',integrateWith:0,integrateWithLabel:'',description:'',entryDate:'',isVerified:false,managementStructureId:0,verifiedBy:'',dateVerified:'',nteHrs:0,tat:0, selectedPartId: [], selectedAircraftDataModels: [],
         selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: [], selectedDashNumbers2:[]
     };
     capabilityEditForm: any ={
-        itemMasterCapesId:0,selectedCap:'',CapabilityTypeId: 0,companyId: 0,buId: 0,divisionId: 0,departmentId:0,manufacturerId:0,manufacturerLabel:'',ataChapterId:0,ataChapterLabel:'',atasubchapterId:0,ataSubchapterLabel:'',cmmId:0,cmmLabel:'',integrateWith:0,integrateWithLabel:'',description:'',entryDate:'',isVerified:false,managementStructureId:0,verifiedBy:'',dateVerified:'',nteHrs:0,tat:0,memo:'', selectedPartId: 0, selectedAircraftDataModels: [],
+        itemMasterCapesId: 0, selectedCap: '', CapabilityTypeId: 0, companyId: 0, buId: 0, divisionId: 0, departmentId: 0, manufacturerId: 0, manufacturerLabel: '', ataChapterId: 0, ataChapterLabel: '', ataSubChapterId:0,ataSubchapterLabel:'',cmmId:0,cmmLabel:'',integrateWith:0,integrateWithLabel:'',description:'',entryDate:'',isVerified:false,managementStructureId:0,verifiedBy:'',dateVerified:'',nteHrs:0,tat:0,memo:'', selectedPartId: 0, selectedAircraftDataModels: [],
         selectedAircraftModelType: 0, selectedAircraftType: 0, selectedManufacturer: 0, selectedModel: 0, selectedDashNumber: 0
     };
 
@@ -197,11 +197,10 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
         // To display the values in header and column name values
         this.cols = [
             //{ field: 'actionId', header: 'Action Id' },
-
+            { field: 'capabilityId', header: 'Capability' },
             { field: 'partNumber', header: 'PN' },
             { field: 'partDescription', header: 'Description' },
             { field: 'manufacturerId', header: 'Manufacturer' },
-            { field: 'itemMasterId', header: 'Item Master Id' },
             { field: 'aircraftTypeId', header: 'aircraftType' },
             { field: 'aircraftModelId', header: 'aircraftModel' },
             { field: 'aircraftDashNumberId', header: 'aircraftDashNumber' },
@@ -816,7 +815,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
 	}
 
 	getBUList(companyId) {
-        if(this.isEditMode)
+        if(!this.isEditMode)
             this.capabilityForm.managementStructureId = companyId;
         else
             this.capabilityEditForm.managementStructureId = companyId;
@@ -1073,7 +1072,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
 
              capbilitiesObj.manufacturerId = capData.manufacturerId;
              capbilitiesObj.ataChapterId = capData.ataChapterId;
-            capbilitiesObj.atasubchapterId = capData.ataSubChapterId.ataSubChapterId;
+            capbilitiesObj.ataSubChapterId = capData.ataSubChapterId;
              capbilitiesObj.cmmId = capData.cmmId;
              capbilitiesObj.integrateWith = capData.integrateWith;
              capbilitiesObj.description = capData.description;
@@ -1201,7 +1200,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
         capbilitiesObj.itemMasterId = this.itemMasterId;
         capbilitiesObj.manufacturerId = this.capabilityEditForm.manufacturerId;
         capbilitiesObj.ataChapterId = this.capabilityEditForm.ataChapterId;
-        capbilitiesObj.atasubchapterId = this.capabilityEditForm.ataSubChapterId;
+        capbilitiesObj.ataSubChapterId = this.capabilityEditForm.ataSubChapterId;
         capbilitiesObj.cmmId = this.capabilityEditForm.cmmId;
         capbilitiesObj.integrateWith = this.capabilityEditForm.integrateWith;
         capbilitiesObj.description = this.capabilityEditForm.description;

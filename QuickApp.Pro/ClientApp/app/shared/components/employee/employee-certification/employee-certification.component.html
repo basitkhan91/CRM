@@ -70,7 +70,7 @@
                                 </div>
                                 <div class="form-group" *ngIf="sourceEmployee.isExpirationDate">
                                     <label>Certification Expiry Date</label>
-                                    <p-calendar [showIcon]="true" name="expirationDate" [(ngModel)]="sourceEmployee.expirationDate"></p-calendar>
+                                    <p-calendar [showIcon]="true" [minDate]="today" name="expirationDate" [(ngModel)]="sourceEmployee.expirationDate"></p-calendar>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -82,7 +82,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Certification Date</label>
-                                    <p-calendar [showIcon]="true" name="certificationDate" [(ngModel)]="sourceEmployee.certificationDate"></p-calendar>
+                                    <p-calendar [showIcon]="true" [maxDate]="today" name="certificationDate" [(ngModel)]="sourceEmployee.certificationDate"></p-calendar>
                                 </div>   
                             </div>
                         </div>

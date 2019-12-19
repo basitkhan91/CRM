@@ -208,7 +208,8 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
         this.itemClassificationDescList = this.allitemclassificationInfo;
 
         const itemCData = [...this.allitemclassificationInfo.filter(x => {
-            return x.itemClassificationCode.toLowerCase().includes(event.query.toLowerCase())
+            return x.itemClassificationCode.toLowerCase().includes(event.query.toLowerCase())   
+          
         })]
         this.itemClassificationDescList = itemCData;
     }
@@ -308,7 +309,7 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
                 this.getItemClassificationList();
                 this.alertService.showMessage(
                     'Success',
-                    `Deleted UOM Successfully  `,
+                    `Deleted New Item Classification Successfully  `,
                     MessageSeverity.success
                 );
             })
@@ -320,6 +321,7 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
 
     getAuditHistoryById(rowData) {
         this.itemClassificationService.historyAcion(rowData.itemClassificationId).subscribe(res => {
+
             console.log(res);
             this.auditHistory = res;
         })

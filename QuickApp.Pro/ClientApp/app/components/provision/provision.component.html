@@ -76,28 +76,32 @@
                                         (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                     </td>
                                     <td style="width:200px" *ngIf="selectedColumns.length> 0">
-                                        <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}"
-                                            (onChange)="changeStatus(rowData)" matTooltip="Update"></p-inputSwitch>
+                                        <!--<p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}"
+        (onChange)="changeStatus(rowData)" matTooltip="isActive"></p-inputSwitch>-->
+                                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+
 
                                         <span data-toggle="modal" data-target="#view">
                                             <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip"
-                                                (click)="viewSelectedRow(rowData)" matTooltip="View" data-target="#view"
-                                                data-toggle="modal">
+                                               (click)="viewSelectedRow(rowData)" matTooltip="View" data-target="#view"
+                                               data-toggle="modal">
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         </span>
                                         <button class="btn-edit" mat-icon-button (click)="editProvision(rowData)"
-                                            data-target="#addProvision" data-toggle="modal" matTooltip="Edit">
+                                                data-target="#addProvision" data-toggle="modal" matTooltip="Edit">
                                             <mat-icon>edit</mat-icon>
                                         </button>
 
                                         <button class="btn-delete" mat-icon-button matTooltip="Delete"
-                                            data-target="#delete" data-toggle="modal" (click)="delete(rowData)">
+                                                data-target="#delete" data-toggle="modal" (click)="delete(rowData)">
                                             <mat-icon color="warn">delete</mat-icon>
                                         </button>
                                         <button class="btn-history" mat-icon-button matTooltip="History"
-                                            data-target="#contentHist" data-toggle="modal"
-                                            (click)="getAuditHistoryById(rowData)">
+                                                data-target="#contentHist" data-toggle="modal"
+                                                (click)="getAuditHistoryById(rowData)">
                                             <mat-icon color="green">history</mat-icon>
                                         </button>
                                     </td>
@@ -284,7 +288,7 @@
                                 <!-- <th>UMID</th> -->
                                 <th>Provision Name</th>
                                 <th>Memo</th>
-                                <th>IsActive</th>
+                                <th>Is Active</th>
                                 <th>Updated By</th>
                                 <th>Updated Time</th>
                             </tr>
@@ -292,15 +296,9 @@
                         <tbody *ngIf="auditHistory.length> 0">
                             <tr *ngFor="let audit of auditHistory; let i = index;">
 
-                                <td
-                                    [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].description === audit.description ? 'black' : 'red'  }">
-                                    {{audit.description}}</td>
-                                <td
-                                    [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].memo === audit.memo ? 'black' : 'red'  }">
-                                    {{audit.memo}}</td>
-                                <td
-                                    [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].isActive === audit.isActive ? 'black' : 'red'  }">
-                                    {{audit.isActive}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
                                 <td>{{audit.updatedBy}}</td>
                                 <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
                             </tr>
@@ -352,7 +350,7 @@
                     </p>
                     <p>
                         <span class="label ">
-                            <b class="view-Header">IsActive</b>
+                            <b class="view-Header">Is Active</b>
                         </span>
                         <span class="value">{{viewRowData.isActive === true ? 'Yes' : 'No'}}</span>
                     </p>

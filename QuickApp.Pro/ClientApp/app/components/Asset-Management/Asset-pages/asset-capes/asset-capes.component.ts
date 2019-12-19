@@ -82,7 +82,8 @@ export class AssetCapesComponent implements OnInit {
     isSaving: boolean;
     currentCapes: any = {};
     search_AircraftDashNumberList: any;
-    capabilityTypeData:any[];
+    capabilityTypeData: any[];
+    currentRow: any;
 
     constructor(private modalService: NgbModal, private alertService: AlertService, public itemMasterService: ItemMasterService, private route: Router,
         private assetServices: AssetService, private dashnumberservices: DashNumberService, private formBuilder: FormBuilder,private commonservice: CommonService) {
@@ -956,11 +957,17 @@ export class AssetCapesComponent implements OnInit {
         let exchangeForm = capbilitiesForm.exchangeForm;
         mfgForm.forEach(element => {
            // element.capabilityTypeId = 1;
+            element.ataChapterId = 0;
+            element.managementStructureId = 0;
+            element.manufacturerId = 0;
             element.assetRecordId = this.currentAsset.assetRecordId;
             capabilityCollection.push(element);
         });
         overhaulForm.forEach(element => {
             element.capabilityTypeId = 2;
+            element.ataChapterId = 0;
+            element.managementStructureId = 0;
+            element.manufacturerId = 0;
             element.assetRecordId = this.currentAsset.assetRecordId;
             capabilityCollection.push(element);
         });
@@ -1033,6 +1040,7 @@ export class AssetCapesComponent implements OnInit {
     }
 
     private onCapesLoaded(allCapes: ItemMasterCapabilitiesModel[]) {
+        console.log('allCapes', allCapes);
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allCapesInfo = allCapes;
@@ -1102,5 +1110,30 @@ export class AssetCapesComponent implements OnInit {
         this.isSaving = true;
         const { assetId } = this.local;
         this.route.navigateByUrl(`/assetmodule/assetpages/app-edit-asset/${assetId}`);
+    }
+
+    //turn the item active/inActive
+    toggleActiveStatus(rowData) {
+        console.log(rowData);
+        console.log(rowData.isActive);
+
+        this.assetServices.updateCapes(rowData).subscribe(res => {
+            this.alertService.showMessage("Success", `Asset capes saved successfully.`, MessageSeverity.success);
+            this.loadCapesData();
+        });
+    }
+
+    onCapesDataSuccessful(capesData, isActive) {
+        console.log('1120', capesData);
+        const data = { ...capesData, isActive: isActive };
+        this.alertService.showMessage("Success", `Asset capes saved successfully.`, MessageSeverity.success);
+        /*this.assetServices.updateCapes(data).subscribe(res => {
+            this.alertService.showMessage("Success", `Asset capes saved successfully.`, MessageSeverity.success);
+            this.loadCapesData();
+        });*/
+    }
+
+    onCapesDataFail(error) {
+
     }
 }

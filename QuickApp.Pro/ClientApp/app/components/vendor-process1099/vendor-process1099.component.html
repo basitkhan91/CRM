@@ -5,20 +5,20 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="inline-block display-flex">
-                            <h3 class="po-head lead">Vendor Process1099</h3>
-                            <a class="plusicon-cstm new-margin" matTooltip="Add Vendor Process1099" matTooltipPosition="above" (click)="resetVendorProcess1099Form()" data-target="#addVendorProcess1099" data-toggle="modal">
+                            <h3 class="po-head lead">Vendor Process 1099</h3>
+                            <a style="margin-left:5px;" class="plusicon-cstm new-margin" matTooltip="Add Vendor Process 1099" matTooltipPosition="above" (click)="resetVendorProcess1099Form()" data-target="#addVendorProcess1099" data-toggle="modal">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
                         <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="vendorProcess1099Data" [first]="0" [rows]="pageSize" [paginator]="true" [pageLinks]="3"
                                  [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" (onPage)="changePage($event)"
-                                 [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" [totalRecords]="totalRecords" scrollHeight="450px">
+                                 [resizableColumns]="true" [reorderableColumns]="true"  [totalRecords]="totalRecords" >
                             <ng-template pTemplate="caption">
                                 <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect [maxSelectedLabels]="2" [options]="vendorProcess1099Headers" optionLabel="header" [(ngModel)]="selectedColumns"
                                                    [style]="{minWidth: '200px'}" style="float:left" (onChange)="columnsChanges()"></p-multiSelect>
                                     <button type="button" class="btn btn-primary-cstm " matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download"
-                                            iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                            iconPos="left" label="Export  Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm " matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download"
                                             iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
 
@@ -38,7 +38,7 @@
                                         </label>
                                         &nbsp; &nbsp;
 
-                                        <!-- <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()">Sample File Download</button> -->
+                                         <button class="btn btn-primary-cstm" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownload()">Sample File Download</button> 
                                     </div>
 
                                     <!-- <div class="inline-block display-flex">
@@ -149,7 +149,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">{{isEdit ? 'Edit' : 'Add' }} Vendor Process1099  </h4>
+                <h4 class="modal-title">{{isEdit ? 'Edit' : 'Add' }} Vendor Process 1099  </h4>
             </div>
             <div class="modal-body">
                 <form #VendorProcess1099="ngForm">
@@ -211,13 +211,13 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" id="" name="" (click)="resetViewData()">×</button>
-                <h4 class="modal-title">1099 Name</h4>
+                <h4 class="modal-title">Vendor Process 1099</h4>
             </div>
             <div class="modal-body viewform ">
                 <div class="col-sm-12">
                     <p>
                         <span class="label ">
-                            <b class="view-Header">Vendor Process1099: </b>
+                            <b class="view-Header">1099 Name: </b>
                         </span>
                         <span class="value">{{ viewRowData.description}}</span>
                     </p>
@@ -274,7 +274,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">History of Process1099</h4>
+                <h4 class="modal-title">History of Vendor Process 1099</h4>
                 <!--<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
                     <span aria-hidden="true">&times;</span>
                 </button>-->

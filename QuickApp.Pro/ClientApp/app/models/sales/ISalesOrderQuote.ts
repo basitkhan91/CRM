@@ -38,6 +38,7 @@ export interface ISalesOrderQuote {
     shipToPostalCode: string;
     shipToCountry: string;
     shipToContactId: number;
+    shipToContactName: string;
     shipViaName: string;
     shipViaShippingAccountInfo: string;
     shippingId: string;
@@ -53,10 +54,11 @@ export interface ISalesOrderQuote {
     billToPostalCode: string;
     billToCountry: string;
     billToContactId: number;
+    billToContactName: string;
     billToMemo: string;
     masterCompanyId: number;
     createdBy: string;
-    createdOn: number;
+    createdOn: string;
     updatedBy: string;
     updatedOn: string;
     isDeleted: boolean;

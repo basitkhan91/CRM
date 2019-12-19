@@ -63,7 +63,10 @@ export class PolistComponent implements OnInit {
     approvedByInput: any;
     // isPOList: boolean;
     @Input() isEnablePOList: boolean;
-    @Input() vendorId: boolean;
+    @Input() vendorId: number;
+    currentStatusPO: string = 'open';
+    modal: NgbModalRef;
+    filterText: any = '';
 
     constructor(private _route: Router,
         private authService: AuthService,
@@ -85,7 +88,7 @@ export class PolistComponent implements OnInit {
 
     }
     ngOnInit() {
-        // this.getList();
+        // this.getList();        
         this.vendorCapesCols = [
 			//{ field: 'vcId', header: 'VCID' },
 			{ field: 'ranking', header: 'Ranking' },
@@ -97,6 +100,29 @@ export class PolistComponent implements OnInit {
 			{ field: 'name', header: 'PN Mfg' },
         ];
 
+    }
+
+    getPOListByStatus(status) {
+        const pageIndex = parseInt(this.lazyLoadEventDataInput.first) / this.lazyLoadEventDataInput.rows;;
+        this.pageIndex = pageIndex;
+        this.pageSize = this.lazyLoadEventDataInput.rows;
+        this.lazyLoadEventDataInput.first = pageIndex;
+        if(status == 'open') {            
+            this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'open' };            
+        } 
+        else if(status == 'closed') {
+            this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'closed' };
+        }
+        else if(status == 'pending') {
+            this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'pending' };
+        }
+        else if(status == 'fulfilling') {
+            this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'fulfilling' };
+        }
+        else if(status == 'canceled') {
+            this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'canceled' };
+        }
+        this.getList(this.lazyLoadEventDataInput);
     }
 
     getList(data) {
@@ -178,22 +204,28 @@ export class PolistComponent implements OnInit {
 
     }
     loadData(event) {
+        //this.lazyLoadEventData = null;
         this.lazyLoadEventData = event;
         const pageIndex = parseInt(event.first) / event.rows;;
         this.pageIndex = pageIndex;
         this.pageSize = event.rows;
         event.first = pageIndex;
         this.lazyLoadEventDataInput = event;
+        this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'open' }
         if(this.isEnablePOList) {
             this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, vendorId: this.vendorId }
         }
-        this.getList(event);
+        console.log(this.filterText);        
+        if(this.filterText == '') {
+            this.getList(this.lazyLoadEventDataInput);
+        } else {
+            this.globalSearch(this.filterText);
+        }        
         console.log(event);
     }
 
     onChangeInputField(value, field) {
         console.log(value, field);
-                      
         // if(field == "purchaseOrderId") {
         //     this.purchaseOrderIdInput = value;
         // }
@@ -231,6 +263,7 @@ export class PolistComponent implements OnInit {
             status: this.statusIdInput,
             requestedBy: this.requestedByInput,
             approvedBy: this.approvedByInput,
+            vendorId: this.vendorId ? this.vendorId : null
         }
         console.log(this.lazyLoadEventDataInput);        
         //this.loadData(event);
@@ -267,6 +300,11 @@ export class PolistComponent implements OnInit {
         this.getPOViewById(rowData.purchaseOrderId);
         this.getPOPartsViewById(rowData.purchaseOrderId);
         this.getApproversListById(rowData.purchaseOrderId);
+    }
+
+    viewSelectedRowdbl(rowData) {
+        this.viewSelectedRow(rowData);
+        $('#poView').modal('show');
     }
 
     getPOViewById(poId) {
@@ -327,6 +365,17 @@ export class PolistComponent implements OnInit {
     // }
     globalSearch(value) {
         this.pageIndex = 0;
+        this.filterText = value;
+        this.vendorId = this.vendorId ? this.vendorId : 0;
+        this.purchaseOrderService.purchaseOrderGlobalSearch(value, this.pageIndex, this.pageSize, this.vendorId).subscribe(res => {
+            this.pageIndex = 0;
+            this.data = res;
+            if (this.data.length > 0) {
+                this.totalRecords = res[0].totalRecords;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            }
+        })
+        //this.pageIndex = 0;
         // this.customerService.getGlobalSearch(value, this.pageIndex, this.pageSize).subscribe(res => {
         //     this.data = res;
         //     if (res.length > 0) {
@@ -356,6 +405,14 @@ export class PolistComponent implements OnInit {
     closeViewModal() {
         $("#poView").modal("hide");
     }
+
+    closeHistoryModal() {
+        $("#poHistory").modal("hide");
+    }
+
+    closeDeleteModal() {
+        $("#poDelete").modal("hide");
+    }    
 
 }
 

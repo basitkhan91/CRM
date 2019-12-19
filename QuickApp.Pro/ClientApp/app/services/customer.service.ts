@@ -545,7 +545,7 @@ export class CustomerService {
     getCustomerBillingHistory(customerId, customerBillingAddressId) {
         return this.customerEndpoint.getCustomerBillingHistory(customerId , customerBillingAddressId)
     }
-
+    
     getCustomerClassificationMapping(customerId) {
         return this.customerEndpoint.getCustomerClassificationMapping(customerId);
     }
@@ -577,5 +577,14 @@ export class CustomerService {
     UpdateCustomerDocument(action: any) {
         return this.customerEndpoint.UpdateDocumentUpload<any>(action);
     }
-   
+    customerFinanceFileUpload(action: any) {
+
+        return this.customerEndpoint.customerFinanceFileUploadEndpoint<any>(action);
+    }
+    GetCustomerFinanceDocumentsList(customerId, moduleId) {
+        return this.customerEndpoint.GetCustomerFinanceDocumentsListEndpoint(customerId, moduleId);
+    }
+    GetCustomerAttachmentDelete(attachmentDetailId, updatedBy) {
+        return this.customerEndpoint.GetCustomerAttachmentDeleteEndpoint(attachmentDetailId, updatedBy);
+    }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-
+import { NgForm, FormBuilder, FormGroup, Validators, FormControl,FormArray } from '@angular/forms';
 import { CustomerSearchQuery } from "../models/customer-search-query";
 import { CustomerService } from "../../../../services/customer.service";
 import { Customer } from "../../../../models/customer.model";
@@ -9,7 +9,18 @@ import { map } from "rxjs/operators";
 import { SalesQuoteService } from "../../../../services/salesquote.service";
 import { ISalesQuote } from "../../../../models/sales/ISalesQuote.model";
 import { SalesQuote } from "../../../../models/sales/SalesQuote.model";
-import { NgForm } from "@angular/forms";
+import { ISalesOrderQuote } from "../../../../models/sales/ISalesOrderQuote";
+import { ISalesQuoteView } from "../../../../models/sales/ISalesQuoteView";
+import { SalesQuoteView } from "../../../../models/sales/SalesQuoteView";
+import { SalesOrderQuote } from "../../../../models/sales/SalesOrderQuote";
+import { CommonService } from '../../../../services/common.service';
+import { Currency } from '../../../../models/currency.model';
+import { CurrencyService } from '../../../../services/currency.service';
+import { EmployeeService } from '../../../../services/employee.service';
+import { AuthService } from '../../../../services/auth.service';
+import { Router } from "@angular/router";
+import { getValueFromObjectByKey, getObjectById, editValueAssignByCondition, getObjectByValue } from '../../../../generic/autocomplete';
+
 
 @Component({
   selector: "app-sales-quote-create",
@@ -19,23 +30,43 @@ import { NgForm } from "@angular/forms";
 export class SalesQuoteCreateComponent implements OnInit {
   query: CustomerSearchQuery;
   customers: Customer[];
+  customerDetails:any;
   totalRecords: number = 0;
   totalPages: number = 0;
   showPaginator: boolean = false;
   customerId: number;
   salesQuote: ISalesQuote;
+  salesOrderQuote: ISalesOrderQuote;
+  salesQuoteView: ISalesQuoteView;
+  creditTerms:any[];
+  allCurrencyInfo: any[];
+  firstCollection: any[];
+  allEmployeeinfo: any[] = [];
+  customerNames: any[];
+  allCustomer: any[];
+  customerContactList:any[];
+  customerWarningData: any = [];
+  approvers: any[];
+  accountTypes:any[];
   customer: any = {
     customerName: '',
     customerCode: '',
     promisedDate: ''
   };
+  salesQuoteForm: FormGroup;
 
   @ViewChild("newSalesQuoteForm") public newSalesQuoteForm: NgForm;
   constructor(
     private customerService: CustomerService,
     private alertService: AlertService,
     private route: ActivatedRoute,
-    private salesQuoteService: SalesQuoteService
+    private salesQuoteService: SalesQuoteService,
+    private formBuilder: FormBuilder,
+    private commonservice: CommonService,
+    public currencyService: CurrencyService,
+    public employeeService: EmployeeService,
+    private authService: AuthService,
+    private router: Router
   ) {
 
     this.salesQuote = new SalesQuote();
@@ -46,13 +77,212 @@ export class SalesQuoteCreateComponent implements OnInit {
     console.log(`customer id: ${this.customerId}`);
     this.getNewSalesQuoteInstance(this.customerId);
 
+    this.salesQuoteService
+    .getSalesOrderQuteInstance()
+    .subscribe(data => {
+      this.salesOrderQuote = data;
+    });
+    this.salesQuoteService
+    .getSalesOrderQuteApprovers()
+    .subscribe(data => {
+      this.approvers = data;
+    });
+    this.getCreditTerms();
+    this.getCurrencyData();
+    this.getCustomerDetails();
+    this.getEmployeedata();
+    this.getAllCustomerContact();
+    this.getCustomerWarningsData();
+    this.getAccountTypes();
+
   }
+  get userName(): string {
+    return this.authService.currentUser ? this.authService.currentUser.userName : "";
+}
+
+  getCreditTerms() {
+    this.commonservice.smartDropDownList('CreditTerms', 'CreditTermsId', 'Name').subscribe(res => {
+        this.creditTerms = res;
+        console.log(this.creditTerms);
+    })
+}
+
+getAccountTypes() {
+  this.customerService.getCustomerTypes().subscribe(res => {
+      const responseData = res[0];
+      this.accountTypes = responseData;
+  })
+}
+async getCustomerWarningsData() {
+  await this.customerService.getCustomerWarningsById(this.customerId).subscribe(res => {
+    this.customerWarningData = res;
+  })
+}
+private oncurrencySuccessful(getCreditTermsList: Currency[]) {
+  this.allCurrencyInfo = getCreditTermsList;
+}
+
+private getCurrencyData() {
+  this.currencyService.getCurrencyList().subscribe(
+      results => this.oncurrencySuccessful(results[0]),
+      error => this.onDataLoadFailed(error)
+  );
+}
+private getEmployeedata() {
+  this.employeeService.getEmployeeList().subscribe(
+    results => this.onempDataLoadSuccessful(results[0]),
+    error => this.onDataLoadFailed(error)
+  );
+
+
+}
+
+private onempDataLoadSuccessful(getEmployeeCerficationList: any[]) {
+  this.allEmployeeinfo = getEmployeeCerficationList;
+}
+
+
+filterfirstName(event) {
+  this.firstCollection = this.allEmployeeinfo;
+
+  const employeeListData = [...this.allEmployeeinfo.filter(x => {
+      return x.firstName.toLowerCase().includes(event.query.toLowerCase())
+  })]
+  this.firstCollection = employeeListData;
+}
+  private onCustomerDataLoadSuccessful(allCustomerFlows: any[]) {
+  this.allCustomer = allCustomerFlows;
+
+}
+private getCustomerList() {
+  this.customerService.getWorkFlows().subscribe(
+    results => this.onCustomerDataLoadSuccessful(results[0]),
+    error => this.onDataLoadFailed(error)
+  );
+}
+   filterNames(event) {
+
+      this.customerNames = [];
+      if (this.allCustomer) {
+          if (this.allCustomer.length > 0) {
+              for (let i = 0; i < this.allCustomer.length; i++) {
+                  let name = this.allCustomer[i].name;
+                  if (name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                      this.customerNames.push(name);
+                  }
+              }
+          }
+      }
+  }
+ /* this.salesInfo = {
+    ...this.editGeneralInformationData,
+    primarySalesPersonId: getObjectById('employeeId', this.editGeneralInformationData.primarySalesPersonId, this.employeeListOriginal),
+    secondarySalesPersonId: getObjectById('employeeId', this.editGeneralInformationData.secondarySalesPersonId, this.employeeListOriginal),
+    csrId: getObjectById('employeeId', this.editGeneralInformationData.csrId, this.employeeListOriginal),
+    saId: getObjectById('employeeId', this.editGeneralInformationData.saId, this.employeeListOriginal),
+};*/
+  getCustomerDetails() {
+    this.customerService.getCustomerdataById(this.customerId).subscribe(res => {
+      this.customerDetails = res[0];
+      console.log(this.customerDetails);
+    })
+    }
+    getDefaultContact() {
+      if (this.customerContactList) {
+          if (this.customerContactList.length > 0) {
+              for (let i = 0; i < this.customerContactList.length; i++) {
+                  let isDefaultContact = this.customerContactList[i].isDefaultContact;
+                  if (isDefaultContact) {
+                     this.salesQuote.customerContactId = this.customerContactList[i].contactId;
+                  }
+              }
+          }
+      }
+  }
+  getAllCustomerContact() {
+    // get Customer Contatcs 
+    
+this.customerService.getContacts(this.customerId).subscribe(res => {
+  this.customerContactList = res[0];
+  console.log(this.customerContactList);
+})
+}
+private onDataLoadFailed(error: any) {
+  // alert(error);
+}
+
+onSalesPersonSelect(event) {
+  console.log(event);
+  if (this.allEmployeeinfo) {
+      for (let i = 0; i < this.allEmployeeinfo.length; i++) {
+          if (event == this.allEmployeeinfo[i].firstName) {
+             this.salesQuote.salesPersonId = this.allEmployeeinfo[i].employeeId;  
+          }
+      }
+  }
+}
+onAgentSelect(event) {
+  console.log(event);
+  if (this.allEmployeeinfo) {
+      for (let i = 0; i < this.allEmployeeinfo.length; i++) {
+          if (event == this.allEmployeeinfo[i].firstName) {
+             this.salesQuote.agentId = this.allEmployeeinfo[i].employeeId;  
+          }
+      }
+  }
+}
+onCustomerServiceRepSelect(event) {
+  console.log(event);
+  if (this.allEmployeeinfo) {
+      for (let i = 0; i < this.allEmployeeinfo.length; i++) {
+          if (event == this.allEmployeeinfo[i].firstName) {
+             this.salesQuote.customerServiceRepId = this.allEmployeeinfo[i].employeeId;  
+          }
+      }
+  }
+}
+onEmployeeNameSelect(event) {
+  console.log(event);
+  if (this.allEmployeeinfo) {
+      for (let i = 0; i < this.allEmployeeinfo.length; i++) {
+          if (event == this.allEmployeeinfo[i].firstName) {
+             this.salesQuote.employeeId = this.allEmployeeinfo[i].employeeId;  
+          }
+      }
+  }
+}
+
+onWarningSelect(event) {
+  console.log(event);
+  if (this.customerWarningData) {
+      for (let i = 0; i < this.customerWarningData.length; i++) {
+          if (event == this.customerWarningData[i].customerWarningId) {
+             this.salesQuote.warningName = this.customerWarningData[i].warningMessage;  
+          }
+      }
+  }
+}
+
+
 
   getNewSalesQuoteInstance(customerId: number) {
     this.salesQuoteService
       .getNewSalesQuoteInstance(customerId)
       .subscribe(data => {
+        console.log(this.customerDetails);
         this.salesQuote = data && data.length ? data[0] : null;
+        this.salesQuote.creditLimit = this.customerDetails.creditLimit;
+        this.salesQuote.creditLimitTermsId = this.customerDetails.creditTermsId;
+        this.salesQuote.contractReferenceName = this.customerDetails.contractReference;
+        this.salesQuote.restrictPMA = this.customerDetails.restrictPMA;
+        this.salesQuote.restrictDER = this.customerDetails.restrictBER;
+        this.salesQuote.accountTypeId = this.customerDetails.customerTypeId;
+        this.salesQuote.salesPersonName =  getObjectById('employeeId', this.customerDetails.primarySalesPersonId, this.allEmployeeinfo),
+       // this.salesQuote.secondarySalesPersonId: getObjectById('employeeId', this.customerDetails.secondarySalesPersonId, this.employeeListOriginal),
+        this.salesQuote.customerServiceRepName = getObjectById('employeeId', this.customerDetails.csrId, this.allEmployeeinfo),
+        this.salesQuote.agentName = getObjectById('employeeId', this.customerDetails.saId, this.allEmployeeinfo),
+        this.getDefaultContact();
+       console.log(this.salesQuote);
         this.customer = {
           customerName: this.salesQuote.customerName,
           customerCode: this.salesQuote.customerCode,
@@ -75,13 +305,62 @@ export class SalesQuoteCreateComponent implements OnInit {
     this.salesQuote.customerId = customer.customerId;
     this.salesQuote.customerCode = customer.customerCode;
 
-    console.log(this.salesQuote);
+   
+ 
   }
 
   onSubmit() {
     //##TODO call below service to create sales quote 
     //this.salesQuoteService.create
     //input parameter: ISalesQuoteView
+
+    this.salesOrderQuote.quoteTypeId = this.salesQuote.quoteTypeId;
+    this.salesOrderQuote.openDate = this.salesQuote.openDate.toDateString();
+    this.salesOrderQuote.customerRequestDate = this.salesQuote.customerRequestDate.toDateString();
+    this.salesOrderQuote.promisedDate = this.salesQuote.customerPromisedDate.toDateString();
+    this.salesOrderQuote.estimatedShipDate = this.salesQuote.estimatedShipDate.toDateString();
+    this.salesOrderQuote.validForDays = this.salesQuote.validForDays;
+    this.salesOrderQuote.quoteExpireDate = this.salesQuote.quoteExpiryDate.toDateString();
+    this.salesOrderQuote.priorityId = this.salesQuote.priorityId;
+    this.salesOrderQuote.accountTypeId = this.salesQuote.accountTypeId;
+    this.salesOrderQuote.customerId = this.salesQuote.customerId;
+    this.salesOrderQuote.customerContactId = this.salesQuote.customerContactId;
+    this.salesOrderQuote.customerReference = this.salesQuote.customerReferenceName;
+    this.salesOrderQuote.contractReference = this.salesQuote.contractReferenceName;
+    this.salesOrderQuote.salesPersonId = editValueAssignByCondition('employeeId', this.salesQuote.salesPersonName);
+    this.salesOrderQuote.agentName = editValueAssignByCondition('firstName', this.salesQuote.agentName);
+     this.salesOrderQuote.customerSeviceRepId = editValueAssignByCondition('employeeId', this.salesQuote.customerServiceRepName);
+
+    this.salesOrderQuote.probabilityId = this.salesQuote.probabilityId;
+    this.salesOrderQuote.employeeId = editValueAssignByCondition('employeeId', this.salesQuote.employeeId);
+    this.salesOrderQuote.leadSourceId = this.salesQuote.leadSourceId;
+    this.salesOrderQuote.creditLimit = this.salesQuote.creditLimit;
+    this.salesOrderQuote.creditTermId = this.salesQuote.creditLimitTermsId;
+     this.salesOrderQuote.restrictPMA = this.salesQuote.restrictPMA;
+    this.salesOrderQuote.restrictDER = this.salesQuote.restrictDER;
+      this.salesOrderQuote.approvedDate = this.salesQuote.approvedDate.toDateString();
+    this.salesOrderQuote.currencyId = this.salesQuote.currencyId;
+    this.salesOrderQuote.customerWarningId = this.salesQuote.warningId;
+     this.salesOrderQuote.memo = this.salesQuote.memo;
+    this.salesOrderQuote.notes = this.salesQuote.notes;
+    this.salesOrderQuote.createdBy=this.userName;
+    this.salesOrderQuote.updatedBy=this.userName;
+    this.salesOrderQuote.createdOn = new Date().toDateString();
+    this.salesOrderQuote.updatedOn = new Date().toDateString();
+    this.salesQuoteView = new SalesQuoteView();
+    this.salesQuoteView.salesOrderQuote = this.salesOrderQuote;
+    this.salesQuoteView.approverList = this.approvers;
+    this.salesQuoteService
+    .create(this.salesQuoteView)
+    .subscribe(data => { 
+      console.log(data);
+      this.router.navigateByUrl(
+        `salesmodule/salespages/sales-quote-list`
+      );
+    });
+    console.log(this.salesQuote);
+    console.log(this.salesOrderQuote);
+    console.log(this.approvers);
   }
 
   quote: any = {

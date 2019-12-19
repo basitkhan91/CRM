@@ -9,6 +9,7 @@ namespace DAL.Repositories.Interfaces
     public interface IPurchaseOrder : IRepository<DAL.Models.PurchaseOrder>
     {
         IEnumerable<object> GetPurchaseOrderlist(Filters<PurchaseOrderFilters> poFilters);
+        IEnumerable<object> PurchaseOrderGlobalSearch(string filterText, int pageNumber, int pageSize, long vendorId);
         IEnumerable<PurchaseOrder> GetPurchaseOrderListLite();
         IEnumerable<PurchaseOrder> StockLinePOList();
 
