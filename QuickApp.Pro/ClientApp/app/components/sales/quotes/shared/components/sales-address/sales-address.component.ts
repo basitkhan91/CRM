@@ -7,6 +7,7 @@ import { SalesQuoteService } from "../../../../../../services/salesquote.service
 import { CustomerService } from "../../../../../../services/customer.service";
 import { SiteService } from '../../../../../../services/site.service';
 import { Site } from '../../../../../../models/site.model';
+import { getValueFromObjectByKey, getObjectById, editValueAssignByCondition, getObjectByValue } from '../../../../../../generic/autocomplete';
 
 
 @Component({
@@ -20,6 +21,7 @@ export class SalesAddressComponent {
   salesOrderQuote: ISalesOrderQuote;
   allSites: any[];
   siteList:any[]=[];
+  billingInfoList:any=[];
   allCustomer:any[];
   customerNames:any[];
   demosticShippingViaData:any[];
@@ -37,9 +39,10 @@ export class SalesAddressComponent {
    
    
     this.getDomesticShippingByCustomerId();
+    this.getBillingDataById();
     this.getCustomerList();
-      
 
+   
 	}
   private loadSiteData()  //retriving SIte Information
 	{
@@ -67,7 +70,49 @@ export class SalesAddressComponent {
       console.log(res);
       
       this.siteList = res[0];
+      this.getDefaultShipping();
+      
   })
+}
+getDefaultShipping() {
+  if (this.siteList) {
+      if (this.siteList.length > 0) {
+          for (let i = 0; i < this.siteList.length; i++) {
+              let isPrimary = this.siteList[i].isPrimary;
+              console.log(isPrimary);
+              if (isPrimary) {
+                 this.salesOrderQuote.shipToSiteName = this.siteList[i].siteName;
+                 this.onShipSiteSelect(this.salesOrderQuote.shipToSiteName);
+                 this.getShipViaByDomesticShippingId(this.siteList[i].customerShippingAddressId);
+                
+                 
+              }
+          }
+
+          console.log(this.salesOrderQuote);
+      }
+  }
+}
+getBillingDataById() {
+  this.customerService.getCustomerBillViaDetails(this.customerId).subscribe(res => {
+    this.billingInfoList = res[0]
+    this.getDefaultBilling();
+  })
+}
+getDefaultBilling() {
+  if (this.billingInfoList) {
+      if (this.billingInfoList.length > 0) {
+          for (let i = 0; i < this.billingInfoList.length; i++) {
+              let isPrimary = this.billingInfoList[i].isPrimary;
+              console.log(isPrimary);
+              if (isPrimary) {
+                 this.salesOrderQuote.billToSiteName = this.billingInfoList[i].siteName; 
+                 this.onBillSiteSelect(this.salesOrderQuote.billToSiteName);
+              }
+          }
+      }
+      console.log(this.salesOrderQuote);
+  }
 }
 
 getShipViaByDomesticShippingId(customerShippingAddressId) {
@@ -82,6 +127,8 @@ getShipViaByDomesticShippingId(customerShippingAddressId) {
   }
   private onCustomerDataLoadSuccessful(allCustomerFlows: any[]) {
     this.allCustomer = allCustomerFlows;
+    this.salesOrderQuote.shipToContactId =  getObjectById('customerId', this.customerId, this.allCustomer);
+    this.salesOrderQuote.billToContactId =  getObjectById('customerId', this.customerId, this.allCustomer);
   
   }
   private getCustomerList() {
@@ -90,19 +137,14 @@ getShipViaByDomesticShippingId(customerShippingAddressId) {
       error => this.onDataLoadFailed(error)
     );
   }
-  filterNames(event) {
 
-    this.customerNames = [];
-    if (this.allCustomer) {
-        if (this.allCustomer.length > 0) {
-            for (let i = 0; i < this.allCustomer.length; i++) {
-                let name = this.allCustomer[i].name;
-                if (name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                    this.customerNames.push(name);
-                }
-            }
-        }
-    }
+filterNames(event) {
+  this.customerNames = this.allCustomer;
+
+  const customerListData = [...this.allCustomer.filter(x => {
+      return x.name.toLowerCase().includes(event.query.toLowerCase())
+  })]
+  this.customerNames = customerListData;
 }
 
 
@@ -128,27 +170,27 @@ getShipViaByDomesticShippingId(customerShippingAddressId) {
     if (this.demosticShippingViaData) {
         for (let i = 0; i < this.demosticShippingViaData.length; i++) {
             if (event == this.demosticShippingViaData[i].shipVia) {
-               this.salesOrderQuote.shipViaShippingAccountInfo = this.demosticShippingViaData[i].address1;
-               this.salesOrderQuote.shippingId = this.demosticShippingViaData[i].address2;
-               this.salesOrderQuote.shippingURL = this.demosticShippingViaData[i].address3;
-               this.salesOrderQuote.shipViaMemo = this.demosticShippingViaData[i].city;
-               this.salesOrderQuote.shipViaShippingURL = this.demosticShippingViaData[i].stateOrProvince;
+               this.salesOrderQuote.shipViaShippingAccountInfo = this.demosticShippingViaData[i].shippingAccountInfo;
+               this.salesOrderQuote.shippingId = this.demosticShippingViaData[i].shippingId;
+               this.salesOrderQuote.shipViaMemo = this.demosticShippingViaData[i].memo;
+               this.salesOrderQuote.shippingURL = this.demosticShippingViaData[i].shippingURL;
+               this.salesOrderQuote.shipViaShippingURL = this.demosticShippingViaData[i].shippingURL;
               
             }
         }
     }
   }
   onBillSiteSelect(event) {
-    if (this.siteList) {
-        for (let i = 0; i < this.siteList.length; i++) {
-            if (event == this.siteList[i].siteName) {
-              this.salesOrderQuote.billToAddress1 = this.siteList[i].address1;
-              this.salesOrderQuote.billToAddress2 = this.siteList[i].address2;
-              this.salesOrderQuote.billToAddress3 = this.siteList[i].address3;
-              this.salesOrderQuote.billToCity = this.siteList[i].city;
-              this.salesOrderQuote.billToState = this.siteList[i].stateOrProvince;
-              this.salesOrderQuote.billToPostalCode = this.siteList[i].postalCode;
-              this.salesOrderQuote.billToCountry = this.siteList[i].country;
+    if (this.billingInfoList) {
+        for (let i = 0; i < this.billingInfoList.length; i++) {
+            if (event == this.billingInfoList[i].siteName) {
+              this.salesOrderQuote.billToAddress1 = this.billingInfoList[i].address1;
+              this.salesOrderQuote.billToAddress2 = this.billingInfoList[i].address2;
+              this.salesOrderQuote.billToAddress3 = this.billingInfoList[i].address3;
+              this.salesOrderQuote.billToCity = this.billingInfoList[i].city;
+              this.salesOrderQuote.billToState = this.billingInfoList[i].stateOrProvince;
+              this.salesOrderQuote.billToPostalCode = this.billingInfoList[i].postalCode;
+              this.salesOrderQuote.billToCountry = this.billingInfoList[i].country;
             }
         }
     }

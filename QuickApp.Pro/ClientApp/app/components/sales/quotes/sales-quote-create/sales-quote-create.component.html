@@ -65,10 +65,19 @@
                     <option *ngFor="let accountType of accountTypes" [ngValue]="accountType.customerTypeId">{{ accountType.description }}</option>
                 </select>
               </div>
-              <div class="form-group">
+              <div class="form-group sales-quote-customer-input">
                 <label>Customer Name<span class="clr-red">*</span></label>
                 <input type="text" pInputText [(ngModel)]="salesQuote.customerName" name="customerName"
                   [disabled]="true" />
+                  <span>
+                    <a class="btn btn-info boxed-float-btn nobg"
+                       data-toggle="tooltip"
+                       (click)="viewSelectedRow()"
+                       
+                       matTooltip="View">
+                        <i class="fa fa-eye"></i>
+                    </a>
+                </span>
                 <!-- <p-autoComplete
                   [(ngModel)]="salesQuote.customerName"
                   [suggestions]="customers"
@@ -168,7 +177,7 @@
               <div class="form-group">
                 <label>Probibility <span class="clr-red">*</span></label>
                 <select name="probability" [(ngModel)]="salesQuote.probabilityId" required>
-                  <option *ngFor="let p of salesQuote.salesProbablity" [ngValue]="p.id">{{ p.value }}</option> 
+                  <option *ngFor="let p of percents" [ngValue]="p.value">{{ p.label }}</option> 
                 </select>
               </div>
               <div class="form-group">
@@ -244,22 +253,24 @@
                     </option>
                 </select>
               </div>
-              <div class="form-group">
-                  <label>Memo</label>
-                  <input type="text" pInputText [(ngModel)]="salesQuote.memo" name="memo"
-                     />
+ 
+                <div class="form-group memo-popup-cstm" style="margin-top: 12px;">
+									<label>Memo</label>
+									<span pTooltip="{{salesQuote.memo}}" tooltipPosition="top"><input type="text" name="memo" pInputText class="form-control" value="{{salesQuote.memo}}" disabled /></span>
+									<i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#add-description" pTooltip="{{salesQuote.memo}}" tooltipPosition="top" (click)="onAddDescription('memo')"></i>
                 </div>
-                <div class="form-group">
-                    <label>Notes</label>
-                    <input type="text" pInputText [(ngModel)]="salesQuote.notes" name="notes"
-                      />
-                  </div>
+                <div class="form-group memo-popup-cstm" style="margin-top: 12px;">
+									<label>Notes</label>
+									<span pTooltip="{{salesQuote.notes}}" tooltipPosition="top"><input type="text" name="notes" pInputText class="form-control" value="{{salesQuote.notes}}" disabled /></span>
+									<i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#add-description" pTooltip="{{salesQuote.notes}}" tooltipPosition="top" (click)="onAddDescription('notes')"></i>
+                </div>
+             
             </div>
           </div>
           <ng-container>
             <p-tabView class="pas-tabview">
               <p-tabPanel header="PN" [selected]="true">
-                <app-sales-part-number [customer]="customer"></app-sales-part-number>
+                <app-sales-part-number [salesQuote]="salesQuote"></app-sales-part-number>
               </p-tabPanel>
               <p-tabPanel header="Approve">
                 <app-sales-approve></app-sales-approve>
@@ -278,6 +289,27 @@
             </div>
           </div>
         </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="add-description" role="dialog" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-sm" style="max-width: 400px !important;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Edit {{tempMemoLabel}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>{{tempMemoLabel}}</label>
+          <textarea class="form-control" name="tempMemo" [(ngModel)]="tempMemo" value={{tempMemo}}></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="onSaveDescription()">Save</button>
+        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
