@@ -667,7 +667,7 @@ namespace DAL.Repositories
                 stockLine.StockLineId = StocklineId;
                 stockLine.UpdatedDate = DateTime.Now;
                 stockLine.UpdatedBy = updatedBy;
-                stockLine.isActive = !status;
+                stockLine.isActive = status;
                 _appContext.StockLine.Attach(stockLine);
                 _appContext.Entry(stockLine).Property(x => x.isActive).IsModified = true;
                 _appContext.Entry(stockLine).Property(x => x.UpdatedDate).IsModified = true;
