@@ -323,7 +323,7 @@
                     </div>
                     <div class="clear"></div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="display:none">
                     <label for="description" class="control-label w100">Shipping Id</label>
                     <div class="control-data">
                         <input type="text" name="" id="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="shipViaObj.shippingId">
@@ -1076,13 +1076,13 @@
                                 <input class="form-control" type="text" name="shippingAccountinfo" [(ngModel)]="shipViaDomestic.shippingAccountInfo" required>
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
+                        <div class="col-md-2" style="display:none">
+                            <div class="form-group" >
                                 <label>Shipping Url <span class="clr-red"></span></label>
                                 <input class="form-control" type="text" name="shippingURL" [(ngModel)]="shipViaDomestic.shippingURL">
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2" style="display:none">
                             <div class="form-group">
                                 <label>Shipping ID <span class="clr-red">*</span></label>
                                 <input class="form-control" type="text" name="shippingId" [(ngModel)]="shipViaDomestic.shippingId" [disabled]="true">
@@ -1257,13 +1257,13 @@
                                 <input class="form-control" type="text" name="shippingAccountinfo" [(ngModel)]="shipViaInternational.shippingAccountInfo" required>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2" style="display:none">
                             <div class="form-group">
                                 <label>Shipping Url <span class="clr-red"></span></label>
                                 <input class="form-control" type="text" name="shippingURL" [(ngModel)]="shipViaInternational.shippingURL">
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2" style="display:none">
                             <div class="form-group">
                                 <label>Shipping ID <span class="clr-red">*</span></label>
                                 <input class="form-control" type="text" name="shippingId" [(ngModel)]="shipViaInternational.shippingId" required>
