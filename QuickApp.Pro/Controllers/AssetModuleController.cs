@@ -471,11 +471,14 @@ namespace QuickApp.Pro.Controllers
         {
             if (assetcapes != null)
             {
-                assetcapes.MasterCompanyId = 1;
-                assetcapes.UpdatedDate = DateTime.Now;
-                _unitOfWork.Repository<AssetCapes>().Update(assetcapes);
+                //var ac = _unitOfWork.AssetCapes.GetSingleOrDefault(c => c.IsActive == assetcapes.IsActive && c.UpdatedDate == DateTime.Now);
+                var ac = _unitOfWork.Repository<AssetCapes>().Find(x => x.AssetCapesId == assetcapes.AssetCapesId).FirstOrDefault();
+                ac.MasterCompanyId = 1;
+                ac.UpdatedDate = DateTime.Now;
+                ac.IsActive = assetcapes.IsActive;
+                _unitOfWork.Repository<AssetCapes>().Update(ac);
                 _unitOfWork.SaveChanges();
-                return Ok(assetcapes);
+                return Ok(ac);
             }
             else
             {
