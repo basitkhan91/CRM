@@ -123,8 +123,9 @@
                                                                             field="name" [suggestions]="customerNames"
                                                                             [forceSelection]="true" emptyMessage="No Match Found"
                                                                             (completeMethod)="filterCustomerParentNames($event)" [size]="30"
-                                                                            (onSelect)="checkWithName($event)"
-                                                                            (onKeyUp)="checkWithName($event)"
+                                                                            (onSelect)="selectedParentName($event)"
+                                                                            (onKeyUp)="checkWithName($event.target.value)"
+                                                                            (onChange)="checkWithName($event.target.value)"
                                                                             [minLength]="1" [dropdown]="true">
                                                                 <!-- <ng-template let-customerParentName pTemplate="item">
                             <div class="ui-helper-clearfix">{{customerParentName}}</div>

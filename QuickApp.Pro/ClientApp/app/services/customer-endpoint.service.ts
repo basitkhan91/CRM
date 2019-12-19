@@ -220,7 +220,7 @@ export class CustomerEndpoint extends EndpointFactory {
     }
 
     getCustomerBillingHistory(customerId, customerBillingAddressId) {
-        return this.http.get(`${this.configurations.baseUrl}/${this._customerBillingHistory}/${customerId}/${customerBillingAddressId}`)
+        return this.http.get(`${this.configurations.baseUrl}/${this._customerBillingHistory}?customerId=${customerId}&customerBillingaddressId=${customerBillingAddressId}`)
     }
 
     getShipViaByDomesticShippingId(customerShippingId) {
