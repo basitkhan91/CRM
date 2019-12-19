@@ -67,4 +67,15 @@ export class SalesQuoteEndpointService extends EndpointFactory {
       });
   }
 
+  delete(salesQuoteId: number): Observable<boolean> {
+    let endpointUrl = `${this.saleQuote}/${salesQuoteId}`;
+    return this.http
+      .delete<boolean>(endpointUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.delete(salesQuoteId)
+        );
+      });
+  }
 }
+
