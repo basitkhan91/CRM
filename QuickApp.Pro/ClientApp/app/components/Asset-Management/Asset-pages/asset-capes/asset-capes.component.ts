@@ -994,6 +994,11 @@ export class AssetCapesComponent implements OnInit {
 
         this.assetServices.saveManfacturerinforcapes(capabilityCollection).subscribe(data11 => {
             this.alertService.showMessage("Success", `Asset capes saved successfully.`, MessageSeverity.success);
+            let data: any ={
+                selectedCap:"",CapabilityTypeId: 0, selectedPartId: [], selectedAircraftDataModels: [],
+                selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: [],selectedDashNumbers2: []
+            };
+            this.capabilityForm = data;
             this.loadCapesData();
         })
         this.mfgFormArray.controls = [];
@@ -1029,7 +1034,6 @@ export class AssetCapesComponent implements OnInit {
 
 
     openCapes(content) {
-
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.mfgFormArray.controls = [];
@@ -1118,7 +1122,7 @@ export class AssetCapesComponent implements OnInit {
         console.log(rowData.isActive);
 
         this.assetServices.updateCapes(rowData).subscribe(res => {
-            this.alertService.showMessage("Success", `Asset capes saved successfully.`, MessageSeverity.success);
+            this.alertService.showMessage("Success", `Asset capes updated successfully.`, MessageSeverity.success);
             this.loadCapesData();
         });
     }

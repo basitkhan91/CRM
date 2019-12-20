@@ -59,7 +59,7 @@ namespace DAL.Repositories
                             select new
                             {
                                 ac.AssetCapesId,ac.ItemMasterId,im.PartNumber,im.PartDescription,captypedescription = captype.Description,
-                                manufacturer = act.Description,modelname = acm.ModelName,dashnumber= dn.DashNumber, cap.IsActive, cap.AircraftTypeId
+                                manufacturer = act.Description,modelname = acm.ModelName,dashnumber= dn.DashNumber, ac.IsActive, ac.AircraftTypeId
 
                             }).ToList();
                 return data;

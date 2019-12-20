@@ -3179,7 +3179,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("vendorAircrafDelete")]
+        [HttpPut("vendorAircrafDelete")]
         public IActionResult DeleteVendorAircraft(long id, string updatedBy)
         {
             var result = _unitOfWork.Vendor.DeleteVendorAircraft(id, updatedBy);

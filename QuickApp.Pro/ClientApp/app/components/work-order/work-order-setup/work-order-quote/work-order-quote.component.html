@@ -392,7 +392,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="mpn-row" *ngFor="let matQuotation of materialListQuotation">
+          <tr class="mpn-row" *ngFor="let matQuotation of materialListQuotation; let in=index;">
             <td>{{matQuotation.partNumber}}</td>
             <td>{{matQuotation.partDescription}}</td>
             <td>{{matQuotation.partDescription}}</td>
@@ -403,22 +403,16 @@
             <td>{{matQuotation.isDeferred}}</td>
             <td>{{matQuotation.unitCost}}</td>
             <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
-            <td>
-              <!-- <input [(ngModel)]="matQuotation.markup" /> -->
-              <select (change)="markupChanged(matQuotation)" [(ngModel)]="matQuotation.markup">
-                <option value="">Select</option>
-                <option *ngFor="let markUp of markupList; let index=index" [value]="markUp.value">{{markUp.label}}</option>
-              </select>
-            </td>
+            <td>{{matQuotation.markup}}</td>
             <td>{{matQuotation.costPlusAmount}}</td>
-            <td><input [(ngModel)]="matQuotation.fixedAmount" /></td>
+            <td>{{matQuotation.fixedAmount}}</td>
             <td>
                 <button
                   class="btn-edit ptable-wo-btns"
                   mat-icon-button
                   data-target="#addNewMaterials"
                   data-toggle="modal"
-                  (click)="editMaterialList(matQuotation, index)"
+                  (click)="editMaterialList(matQuotation)"
                   matTooltip="Edit"
                 >
                   <mat-icon>edit</mat-icon>
@@ -429,7 +423,7 @@
                   class="btn-delete ptable-wo-btns"
                   mat-icon-button
                   matTooltip="Delete"
-                  (click)="deleteMaterialList(index)"
+                  (click)="deleteMaterialList(in)"
                 >
                   <mat-icon color="warn">delete</mat-icon>
                 </button>
@@ -462,7 +456,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="mpn-row" *ngFor="let matQuotation of materialListQuotation; let index=index;">
+          <tr class="mpn-row" *ngFor="let matQuotation of materialListQuotation; let i=index;">
             <td>{{matQuotation.partNumber}}</td>
             <td>{{matQuotation.partDescription}}</td>
             <td>{{matQuotation.workOrderNumber}}</td>
@@ -473,15 +467,9 @@
             <td>{{matQuotation.oem}}</td>
             <td>{{matQuotation.unitCost}}</td>
             <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
-            <td>
-              <!-- <input [(ngModel)]="matQuotation.markup" /> -->
-              <select (change)="markupChanged(matQuotation, index)" [(ngModel)]="matQuotation.markup">
-                <option value="">Select</option>
-                <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
-              </select>
-            </td>
+            <td>{{matQuotation.markup}}</td>
             <td>{{matQuotation.costPlusAmount}}</td>
-            <td><input [(ngModel)]="matQuotation.fixedAmount" /></td>
+            <td>{{matQuotation.fixedAmount}}</td>
             <td>
                 <button
                   class="btn-edit ptable-wo-btns"
@@ -499,7 +487,7 @@
                   class="btn-delete ptable-wo-btns"
                   mat-icon-button
                   matTooltip="Delete"
-                  (click)="deleteMaterialList(index)"
+                  (click)="deleteMaterialList(i)"
                 >
                   <mat-icon color="warn">delete</mat-icon>
                 </button>
@@ -518,6 +506,7 @@
        [workOrderExclusionsList]="workOrderExclusionsList" 
       (saveExclusionsListForWO)="saveWorkOrderExclusionsList($event)"
       (updateExclusionsListForWO)="updateWorkOrderExclusionsList($event)"
+      [markupList]="markupList"
       (refreshData)="getExclusionListByWorkOrderId()"
       [isQuote]="isQuote"
     ></app-work-order-exclusions> 
@@ -525,7 +514,7 @@
   </div>
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'labor'">
-      <app-work-order-labor [taskList]="taskList" [laborForm]="labor" [workOrderLaborList]="workOrderLaborList" [workOrderWorkFlowOriginalData]="workOrderWorkFlowOriginalData" [savedWorkOrderData]="savedWorkOrderData"
+      <app-work-order-labor [taskList]="taskList" [laborForm]="labor" [workOrderLaborList]="workOrderLaborList" [workOrderWorkFlowOriginalData]="workOrderWorkFlowOriginalData" [savedWorkOrderData]="savedWorkOrderData" 
       (saveworkOrderLabor)="saveworkOrderLabor($event)"
       ></app-work-order-labor>
 
@@ -921,6 +910,7 @@
               [editData]="editMatData"
               [isWorkOrder]="isWorkOrder" 
               [workFlow]="workFlowObject" 
+              [markupList]="markupList"
               [isQuote]="isQuote"
               (saveMaterialListForWO)="saveMaterialListForWO($event)" ></grd-material>
           </div>
