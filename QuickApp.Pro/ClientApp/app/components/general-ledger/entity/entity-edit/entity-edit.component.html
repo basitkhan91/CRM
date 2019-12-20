@@ -82,7 +82,7 @@
 		
 			<ng-template pTemplate="header" let-columns>
 				<tr>
-					<th style="width:120px"
+					<th style="width:150px"
 						*ngFor="let col of columns" 
 						pResizableColumn 
 						pReorderableColumn 
@@ -97,7 +97,7 @@
                     </th>
 				</tr>
 				<tr>
-                    <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
+                    <th style="width:150px" *ngFor="let col of columns" [ngSwitch]="col.field">
                         <!-- <input type="text" style="width:100%;" pInputText   (keyup)="filterData($event)"> -->
                         <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
 
@@ -109,7 +109,7 @@
 
 			<ng-template pTemplate="body" let-rowData let-columns="columns">
 				<tr [pSelectableRow]="rowData" [pSelectableRow]="rowData" pReorderableRowHandle >
-					<td style="width:120px" 
+					<td style="width:150px" 
 						*ngFor="let col of columns" 
 						class="ui-resizable-column" 
 						pReorderableRowHandle>
