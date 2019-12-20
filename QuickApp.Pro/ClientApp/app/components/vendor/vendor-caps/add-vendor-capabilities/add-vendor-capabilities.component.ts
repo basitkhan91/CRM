@@ -118,6 +118,8 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	selectedCapabilityId: number;
 	sselectedVendorName: string = '';
 	sselectedVendorCode: number;
+	selectedVendorId: number;
+
 	colsaircraftLD: any[] = [
         { field: "aircraft", header: "Aircraft" },
         { field: "model", header: "Model" },
@@ -148,7 +150,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	ngOnInit(): void {
 		this.matSpinner = false;
 		//this.workFlowtService.MatSpinner = true;//App Mat Spinner Testing
-		// debugger;
+		
 		this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-add-vendor-capabilitiesn';
         this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
 
@@ -431,7 +433,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	}
 
 	getPNDetailsById(value) {
-		this.itemMasterId = editValueAssignByCondition('value', value);
+		this.itemMasterId = editValueAssignByCondition('value', value);		
 
 		this.vendorService.getPartDetailsWithidForSinglePart(this.itemMasterId).subscribe(
 			data => {
@@ -439,7 +441,8 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 					this.sourceVendorCap.partNumber = data[0].partNumber;
 					this.sourceVendorCap.partDescription = data[0].partDescription;
 					this.sourceVendorCap.manufacturerId = data[0].manufacturerId;									
-					this.sourceVendorCap.manufacturerName = data[0].name;									
+					this.sourceVendorCap.manufacturerName = data[0].name;
+					this.sourceVendorCap.itemMasterId =	this.itemMasterId;							
 				}
 			})
 	}
@@ -885,7 +888,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 
 	saveVendorCapsclose()//for Saving Vendor capability
 	{
-		debugger
+		
 		if (!this.sourceVendorCap.vendorCode)
 		{
 			this.vendorCodeError = true;
@@ -1102,6 +1105,8 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		console.log(this.sourceVendorCap);
 		this.sselectedVendorName=this.sourceVendorCap.vendorId.vendorName;
 		this.sselectedVendorCode=this.sourceVendorCap.vendorId.vendorCode;
+		this.sourceVendorCap.createdBy= this.userName,
+		this.sourceVendorCap.updatedBy= this.userName,
 	
 		this.selectedCapabilityName= getValueFromArrayOfObjectById('label' , 'value' , this.sourceVendorCap.capabilityId ,this.capabilityTypeList)
 	
@@ -1111,8 +1116,17 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 			vendorId: editValueAssignByCondition('vendorId', res.vendorId),
 			partNumberId: editValueAssignByCondition('value', res.partNumberId)
 		}
-		this.vendorService.newVendorCapability(res).subscribe(data => {
-			console.log(data);			
+		this.vendorService.newVendorCapability(res).subscribe(data => {		
+			debugger;
+			console.log(data);	
+			this.sourceVendorCap.vendorCapabilityId=data.vendorCapabilityId;
+			this.selectedVendorId=data.vendorId;
+
+			this.alertService.showMessage(
+                'Success',
+                'Saveed General Information Successfully',
+                MessageSeverity.success
+            );		
 		})
 	}
 
@@ -1218,7 +1232,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	
 	//  search aircraft information by all parameter
     async searchAircraftInformation() {
-
+     debugger;
         await this.searchByFieldUrlCreateforAircraftInformation();
         this.searchAircraftParams = '';
 
@@ -1256,7 +1270,8 @@ export class AddVendorCapabilitiesComponent implements OnInit{
                     aircraft: x.aircraftType,
                     model: x.aircraftModel,
                     dashNumber: x.dashNumber,
-                    memo: x.memo,
+					memo: x.memo,
+					
                 }
             })
         });
@@ -1286,10 +1301,14 @@ export class AddVendorCapabilitiesComponent implements OnInit{
     }
 
 	getAircraftMappedDataByItemMasterId() {
+		debugger
+		console.log(this.sourceVendorCap.vendorCapabilityId);
         // check whether edit or create and send and passes ItemMasterId
         // const id = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-        this.itemser.getMappedAirCraftDetails(this.itemMasterId).subscribe(data => {
-            const responseData = data;
+        //this.itemser.getMappedAirCraftDetails(this.itemMasterId).subscribe(data => {
+			this.itemser.getMappedAirCraftDetails(this.sourceVendorCap.vendorCapabilityId).subscribe(data => {
+			const responseData = data;
+			debugger;
             this.aircraftListDataValues = responseData.map(x => { //aircraftListData
                 return {
                     ...x,
@@ -1303,7 +1322,12 @@ export class AddVendorCapabilitiesComponent implements OnInit{
     }
 	
 	deleteAircraftMapped(data) {
-        this.itemser.deleteItemMasterAir(data.itemMasterAircraftMappingId).subscribe(res => {
+		debugger
+		console.log(data);
+		debugger
+
+        //this.itemser.deleteItemMasterAir(data.vendorCapabilityAirCraftId).subscribe(res => {
+			this.itemser.deleteAirCraft(data.vendorCapabilityAirCraftId,this.userName).subscribe(res => {
             this.getAircraftMappedDataByItemMasterId();
             this.alertService.showMessage(
                 'Success',
@@ -1393,7 +1417,10 @@ export class AddVendorCapabilitiesComponent implements OnInit{
                 UpdatedBy: this.userName,
                 CreatedDate: new Date(),
                 UpdatedDate: new Date(),
-                AircraftTypeId: this.selectedAircraftId,
+				AircraftTypeId: this.selectedAircraftId,
+				VendorCapabilityId:this.sourceVendorCap.vendorCapabilityId,
+				VendorId:this.selectedVendorId,
+				CapabilityId:this.sourceVendorCap.capabilityId,
                 IsActive: true,
                 IsDeleted: false
 
@@ -1401,7 +1428,10 @@ export class AddVendorCapabilitiesComponent implements OnInit{
         })
         // posting the DashNumber Mapped data from Popup
         // Used to get the Data Posted in the Popup
-        this.itemser.newItemMasterAircarftClass(data).subscribe(datas => {
+       // this.itemser.newItemMasterAircarftClass(data).subscribe(datas => {
+		this.itemser.newIVendorAircarftClass(data).subscribe(datas => {
+			debugger
+
             this.alertService.showMessage(
                 'Success',
                 'Mapped Aircraft Information Successfully',
