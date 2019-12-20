@@ -16,7 +16,7 @@ import { ATAMain } from '../../../../models/atamain.model';
 import { ATASubChapter } from '../../../../models/atasubchapter.model';
 import { AtaSubChapter1Service } from '../../../../services/atasubchapter1.service';
 import { ATAChapter } from '../../../../models/atachapter.model';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { getObjectById, editValueAssignByCondition, getValueFromObjectByKey, getValueFromArrayOfObjectById } from '../../../../generic/autocomplete';
 import { CommonService } from '../../../../services/common.service';
 import { AircraftModelService } from '../../../../services/aircraft-model/aircraft-model.service';
@@ -139,10 +139,13 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	newDashnumValue: any = [];
 	aircraftData: any;
 	viewTable: boolean = false;
-	enableAircraftInfo: boolean = false;
+	enableAircraftInfo: boolean = true;
+	selectedAircraftInfo: boolean = false;
+	selectedGeneralInfo: boolean = true;
+	vendorCapabilityId: number;
 
 	/** add-vendor-capabilities ctor */
-    constructor(private _route: Router,private modalService: NgbModal,public ataSubChapter1Service: AtaSubChapter1Service,public ataservice: AtaMainService,public vendorService: VendorService, private alertService: AlertService, public itemser: ItemMasterService, public commonService: CommonService, private aircraftModelService: AircraftModelService, private dashNumService: DashNumberService, private authService: AuthService)
+    constructor(private _route: Router,private modalService: NgbModal,public ataSubChapter1Service: AtaSubChapter1Service,public ataservice: AtaMainService,public vendorService: VendorService, private alertService: AlertService, public itemser: ItemMasterService, public commonService: CommonService, private aircraftModelService: AircraftModelService, private dashNumService: DashNumberService, private authService: AuthService, private _actRoute: ActivatedRoute)
 	{
         this.vendorService.isEditMode = false;
 	}
@@ -167,6 +170,16 @@ export class AddVendorCapabilitiesComponent implements OnInit{
         this.getAllDashNumbers();
 		
 		//this.loadATASubchapterData();
+		this.vendorCapabilityId = this._actRoute.snapshot.params['id'];
+		if(this.vendorCapabilityId) {
+			this.isEditMode = true;
+			this.enableAircraftInfo = false;
+			this.getVendorCapabilitiesEdit();
+		}
+	}
+
+	getVendorCapabilitiesEdit() {
+
 	}
 
 	get userName(): string {
@@ -1117,10 +1130,13 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 			partNumberId: editValueAssignByCondition('value', res.partNumberId)
 		}
 		this.vendorService.newVendorCapability(res).subscribe(data => {		
-			debugger;
+			//debugger;
 			console.log(data);	
 			this.sourceVendorCap.vendorCapabilityId=data.vendorCapabilityId;
 			this.selectedVendorId=data.vendorId;
+			this.enableAircraftInfo = false;
+			this.selectedGeneralInfo = false;
+			this.selectedAircraftInfo = true;
 
 			this.alertService.showMessage(
                 'Success',
@@ -1232,7 +1248,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	
 	//  search aircraft information by all parameter
     async searchAircraftInformation() {
-     debugger;
+     //debugger;
         await this.searchByFieldUrlCreateforAircraftInformation();
         this.searchAircraftParams = '';
 
@@ -1301,14 +1317,14 @@ export class AddVendorCapabilitiesComponent implements OnInit{
     }
 
 	getAircraftMappedDataByItemMasterId() {
-		debugger
+		//debugger
 		console.log(this.sourceVendorCap.vendorCapabilityId);
         // check whether edit or create and send and passes ItemMasterId
         // const id = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
         //this.itemser.getMappedAirCraftDetails(this.itemMasterId).subscribe(data => {
 			this.itemser.getMappedAirCraftDetails(this.sourceVendorCap.vendorCapabilityId).subscribe(data => {
 			const responseData = data;
-			debugger;
+			//debugger;
             this.aircraftListDataValues = responseData.map(x => { //aircraftListData
                 return {
                     ...x,
@@ -1322,9 +1338,9 @@ export class AddVendorCapabilitiesComponent implements OnInit{
     }
 	
 	deleteAircraftMapped(data) {
-		debugger
+		//debugger
 		console.log(data);
-		debugger
+		//debugger
 
         //this.itemser.deleteItemMasterAir(data.vendorCapabilityAirCraftId).subscribe(res => {
 			this.itemser.deleteAirCraft(data.vendorCapabilityAirCraftId,this.userName).subscribe(res => {
@@ -1430,7 +1446,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
         // Used to get the Data Posted in the Popup
        // this.itemser.newItemMasterAircarftClass(data).subscribe(datas => {
 		this.itemser.newIVendorAircarftClass(data).subscribe(datas => {
-			debugger
+			//debugger
 
             this.alertService.showMessage(
                 'Success',

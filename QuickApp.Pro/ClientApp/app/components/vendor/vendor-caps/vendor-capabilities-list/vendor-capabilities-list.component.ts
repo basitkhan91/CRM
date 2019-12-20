@@ -169,7 +169,8 @@ export class VendorCapabilitiesListComponent implements OnInit{
         this.vendorService.isEditMode = true;
         this.isSaving = true;
         this.vendorService.listCollection = row; //Storing Row Data  and saving Data in Service that will used in StockLine Setup
-        this._route.navigateByUrl('/vendorsmodule/vendorpages/app-edit-vendor-capabilities');
+        const {vendorCapabilityId} = row
+        this._route.navigateByUrl(`/vendorsmodule/vendorpages/app-add-vendor-capabilities/edit/${vendorCapabilityId}`);
     }
 
     private saveCompleted(user?: any)
