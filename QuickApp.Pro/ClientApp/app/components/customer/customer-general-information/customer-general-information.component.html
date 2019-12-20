@@ -140,13 +140,14 @@
                                                     <label>Phone <span class="clr-red">*</span></label>
                                                     <div class="col-md-12">
                                                         <div class="col-md-6">
-                                                            <input type="text" id="phone" name="phone" minlength=10 class="form-control" maxlength="20" (keypress)="patternMobilevalidationWithSpl($event)" [(ngModel)]="generalInformation.customerPhone" required>
+                                                            <input type="text" id="phone" name="phone" #customerPhone="ngModel" class="form-control" minlength=10 maxlength="20" (keypress)="patternMobilevalidationWithSpl($event)" [(ngModel)]="generalInformation.customerPhone" required>
 
                                                         </div>
 
                                                         <div class="col-md-6">
                                                             <input type="text" name="phoneExt" pInputText maxlength="15" [(ngModel)]="generalInformation.customerPhoneExt">
                                                         </div>
+                                                        <div *ngIf="customerPhone.errors" style="color:red">Please enter atleast 10 digits</div>
 
                                                     </div>
 

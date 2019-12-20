@@ -587,4 +587,10 @@ export class CustomerService {
     GetCustomerAttachmentDelete(attachmentDetailId, updatedBy) {
         return this.customerEndpoint.GetCustomerAttachmentDeleteEndpoint(attachmentDetailId, updatedBy);
     }
+    getContactsByCustomerId(customerId) {
+        return this.customerEndpoint.getContactsByCustomerId(customerId);
+    }
+    updatecustomeraircraft(customercntct: any, customerAircraftId: any) {
+        return this.customerEndpoint.getUpdateAircraft(customercntct, customerAircraftId);
+    }
 }

@@ -59,6 +59,8 @@ export class CustomerAircraftComponent implements OnInit {
     modelUnknown: boolean = false;
     airCraftMappingId: number;
     inventoryData: any = [];
+    editAirCraftData: any = [];
+    aircraftdata: any = [];
     colaircraft: any[] = [
         { field: "AircraftType", header: "Aircraft" },
         { field: "AircraftModel", header: "Model" },
@@ -159,7 +161,14 @@ export class CustomerAircraftComponent implements OnInit {
             this.add_AircraftDashNumberList = dashNumberList;
         });
     }
+    editAirCraft(rowData) {
+       
+        console.log('air');
+        console.log(rowData);
 
+        this.editAirCraftData = rowData;
+        this.aircraftdata = rowData;
+    }
 
     searchByFieldUrlCreateforAircraftInformation() {
      
@@ -330,7 +339,7 @@ export class CustomerAircraftComponent implements OnInit {
             this.aircraftManfacturerIdsUrl = '';
             this.aircraftModelsIdUrl = '';
             this.dashNumberIdUrl = '';
-              this.selectedmemo = [];
+            this.selectedmemo = [];
             this.selectAircraftManfacturer = '';
             this.selectedAircraftModel = [];
             this.selectedDashNumbers = [];
@@ -456,6 +465,39 @@ export class CustomerAircraftComponent implements OnInit {
         }
 
     }
+    updateCustomerAircraft() {
+        
+        const data = {
+            ...this.editAirCraftData,
+            customerAircraftMappingId: this.aircraftdata.customerAircraftMappingId,
+            dashNumberId: this.aircraftdata.dashNumberId,
+            aircraftModelId: this.aircraftdata.aircraftModelId,
+            customerId: this.id,
+            createdBy: this.userName,
+            updatedBy: this.userName,
+            aircraftType: this.aircraftdata.aircraftType,
+            aircraftTypeId: this.aircraftdata.aircraftTypeId,
+            dashNumber: this.aircraftdata.dashNumber,
+            masterCompanyId: 1,
+            isActive: true,
+            isDeleted: false,
+            aircraftModel: this.aircraftdata.aircraftModel
+
+        }
+        this.customerService.updatecustomeraircraft(data, this.aircraftdata.customerAircraftMappingId).subscribe(res => {
+
+            this.getAircraftMappedDataByCustomerId();
+            this.alertService.showMessage(
+                'Success',
+                `Updated Aircraft Sucessfully `,
+                MessageSeverity.success
+            );
+        })
+
+
+
+    }
+    
     async saveAircraft() {
         // const id = this.savedGeneralInformationData.customerId;
         const inventoryData = this.inventoryData.filter(x => {
@@ -479,7 +521,7 @@ export class CustomerAircraftComponent implements OnInit {
             }
         })
         await this.customerService.postCustomerAircrafts(data).subscribe(res => {
-            
+           
             this.alertService.showMessage(
                 'Success',
                 'Mapped Aircraft Inventory Successfully',
@@ -495,8 +537,8 @@ export class CustomerAircraftComponent implements OnInit {
             this.getAircraftMappedDataByCustomerId()
         }, error => {
                 this.alertService.showMessage(
-                    'failed',
-                   "Record already exist with these details",
+                    'Failed',
+                  error.error,
                     MessageSeverity.error
                 );
                 this.inventoryData = []
