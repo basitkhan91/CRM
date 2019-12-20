@@ -1,9 +1,9 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { fadeInOut } from '../../../services/animations';
 import { AccountCalenderService } from '../../../services/account-calender/accountcalender.service';
 import { AuthService } from '../../../services/auth.service';
-import { AlertService } from '../../../services/alert.service';
+import { AlertService, MessageSeverity } from '../../../services/alert.service';
 import { LegalEntityService } from '../../../services/legalentity.service';
 import { AccountListingService } from '../../../services/account-listing/account-listing.service'
 
@@ -33,15 +33,15 @@ export class AccountingCalendarComponent implements OnInit {
     ledgerNameObjectData: any[];
     ledgerNameObject: any[];
     public minDate: any;
-    companyList: any[] = [];
+    entitiesObj: any[] = [];
     routeData: any;
     editedData: any;
     editedData1: any;
     editCalendarPage: boolean = false;
     displayShowButton: boolean = true;
-    pageTitle: String = "Create Accounting Calendar"
+    pageTitle: String = "Create Accounting Calendar";
 
-    constructor(private legalEntityservice: LegalEntityService, private route: ActivatedRoute,
+    constructor(private legalEntityservice: LegalEntityService, private route: ActivatedRoute, private router: Router,
             private accountListingService: AccountListingService, private calendarService: AccountCalenderService, private authService: AuthService, private alertService:AlertService) {
         //this.currentCalendarObj.fromDate = new Date('2019-01-01');
     }
@@ -50,7 +50,7 @@ export class AccountingCalendarComponent implements OnInit {
         let date = new Date();
         let year = date.getFullYear();
         this.minDate= new Date(year + '-' + '01-01');
-        //this.loadCompleteCalendarData();
+       
         this.loadCompaniesData();
         this.currentCalendarObj.fiscalYear = year;
         this.currentCalendarObj.fromDate = new Date('01-01' + '-' + year );
@@ -58,6 +58,7 @@ export class AccountingCalendarComponent implements OnInit {
         this.getLedgerObject()
 
         this.editedData = this.calendarService.editedDetailsObject.subscribe(result => {
+            console.log('result :', result)
             if (result && Object.keys(result).length) {
                 this.editCalendarPage = true;
                 this.loadEditCalendarData(result);
@@ -65,27 +66,25 @@ export class AccountingCalendarComponent implements OnInit {
         });
 
     }
-
-    loadCompleteCalendarData() {
-        this.calendarService.getAll().subscribe(data => {
-            this.completeCalendarData = data[0];
-            console.log('completeCalendarData :', data)
-        })
-    }
-
+    
     loadEditCalendarData(value) {
         const data = value;
         this.pageTitle = "Accounting Calendar Edit"
-        this.currentCalendarObj.ledgername = data.ledgerName;
-        this.currentCalendarObj.ledgerdescription = data.ledgerDescription;
-        this.currentCalendarObj.description = data.description;
-        let year = data.fiscalYear;
+        this.currentCalendarObj.ledgername = {
+            id: value.name,
+            name: value.name
+        };            
+        this.currentCalendarObj.ledgerdescription = value.description;
+        this.currentCalendarObj.entityId = value.legalEntityId;
+        let year = value.fiscalYear;
         this.currentCalendarObj.fiscalYear = year;
         this.currentCalendarObj.fromDate = new Date('01-01' + '-' + year);
         this.currentCalendarObj.toDate = new Date('12-31' + '-' + year);
-        this.currentCalendarObj.periodType = data.periodType;
-        this.currentCalendarObj.noOfPeriods = data.noOfPeriod;
-        this.addCalendar()
+        this.currentCalendarObj.periodType = value.periodName;
+        this.currentCalendarObj.noOfPeriods = value.period;
+        //this.addCalendar()
+        this.showTable = true;
+        this.calendarArray = value['data']
     }
 
     setSelectedAttribute(value) {
@@ -93,7 +92,19 @@ export class AccountingCalendarComponent implements OnInit {
     }
     private loadCompaniesData() {
         this.legalEntityservice.getEntityList().subscribe(entitydata => {
-            this.companyList = entitydata[0];
+            this.entitiesObj = entitydata[0];
+            let entityObj = {}
+            let entityCollection = []
+            if (this.entitiesObj) {
+                const x = this.entitiesObj.filter((o, index) => {
+                    entityObj = {
+                        label: this.entitiesObj[index]['name'],
+                        value: this.entitiesObj[index]['legalEntityId']
+                    }
+                    entityCollection.push(entityObj)
+                })
+            }            
+            this.entitiesObj = entityCollection
         });
     }
 
@@ -172,7 +183,7 @@ export class AccountingCalendarComponent implements OnInit {
                     toDate: toDate,
                     periodName: months[selectedMonth] + ' ' + this.currentCalendarObj.fiscalYear,
                     name: this.currentCalendarObj.ledgername.name,
-                    description: this.currentCalendarObj.description,
+                    entityId: this.currentCalendarObj.entityId,
                     createdBy: this.userName,
                     updatedBy: this.userName,
                     isAdjustPeriod: false,
@@ -219,7 +230,7 @@ export class AccountingCalendarComponent implements OnInit {
                     toDate: this.calendarArray[11].toDate,
                     periodName: 'ADJ - PD -' + ' ' + this.currentCalendarObj.fiscalYear,
                     name: this.currentCalendarObj.ledgername.name,
-                    description: this.currentCalendarObj.description,
+                    entityId: this.currentCalendarObj.entityId,
                     createdBy: this.userName,
                     updatedBy: this.userName,
                     adjusting: 'yes',
@@ -296,7 +307,7 @@ export class AccountingCalendarComponent implements OnInit {
                     toDate: toDate,
                     periodName: fiscalName + ' - ' + this.currentCalendarObj.fiscalYear,
                     name: this.currentCalendarObj.ledgername.name,
-                    description: this.currentCalendarObj.description,
+                    entityId: this.currentCalendarObj.entityId,
                     createdBy: this.userName,
                     updatedBy: this.userName,
                     adjusting: 'yes',
@@ -319,7 +330,7 @@ export class AccountingCalendarComponent implements OnInit {
                     toDate: toDate,
                     periodName: fiscalName + ' - ' + this.currentCalendarObj.fiscalYear,
                     name: this.currentCalendarObj.ledgername.name,
-                    description: this.currentCalendarObj.description,
+                    entityId: this.currentCalendarObj.entityId,
                     createdBy: this.userName,
                     updatedBy: this.userName,
                     adjusting: 'yes',
@@ -364,7 +375,7 @@ export class AccountingCalendarComponent implements OnInit {
                     toDate: this.calendarArray[14].toDate,
                     periodName: fiscalName+ ' - ' + this.currentCalendarObj.fiscalYear,
                     name: this.currentCalendarObj.ledgername.name,
-                    description: this.currentCalendarObj.description,
+                    entityId: this.currentCalendarObj.entityId,
                     createdBy: this.userName,
                     updatedBy: this.userName,
                     adjusting: 'yes',
@@ -385,7 +396,7 @@ export class AccountingCalendarComponent implements OnInit {
                     toDate: toDate,
                     periodName: monthData[selectedMonth] + ' - ' + this.currentCalendarObj.fiscalYear,
                     name: this.currentCalendarObj.ledgername.name,
-                    description: this.currentCalendarObj.description,
+                    entityId: this.currentCalendarObj.entityId,
                     createdBy: this.userName,
                     updatedBy: this.userName,
                     isAdjustPeriod: false,
@@ -410,7 +421,7 @@ export class AccountingCalendarComponent implements OnInit {
                 toDate: toDate,
                 periodName: '',
                 name: this.currentCalendarObj.ledgername.name,
-                description: this.currentCalendarObj.description,
+                entityId: this.currentCalendarObj.entityId,
                 createdBy: this.userName,
                 updatedBy: this.userName,
                 isAdjustPeriod:false,
@@ -443,7 +454,7 @@ export class AccountingCalendarComponent implements OnInit {
         this.isBoolean = false;
 
         if (!(this.currentCalendarObj.ledgername && this.currentCalendarObj.fiscalYear && this.currentCalendarObj.fromDate && this.currentCalendarObj.toDate && this.currentCalendarObj.periodType
-            && this.currentCalendarObj.noOfPeriods)) {
+            && this.currentCalendarObj.entityId && this.currentCalendarObj.noOfPeriods)) {
             this.display = true;
         }
 
@@ -588,15 +599,16 @@ export class AccountingCalendarComponent implements OnInit {
                 }
                 if (!addDetails) {
                     this.calendarService.add(this.calendarArray).subscribe(data => {
-                        this.alertService.showMessage('Calendar data added successfully.');
-                        this.loadCompleteCalendarData();
+                        this.alertService.showMessage("Success", 'Calendar data added successfully.', MessageSeverity.success);                       
+                        this.router.navigateByUrl('/generalledgermodule/generalledgerpage/app-account-listing-calendar');
                     })
                 }
             }
             else {
+                
                 this.calendarService.add(this.calendarArray).subscribe(data => {
-                    this.alertService.showMessage('Calendar data added successfully.');
-                    this.loadCompleteCalendarData();
+                    this.alertService.showMessage("Success", 'Calendar data added successfully.', MessageSeverity.success);
+                    this.router.navigateByUrl('/generalledgermodule/generalledgerpage/app-account-listing-calendar');
                 })
             }
         }
