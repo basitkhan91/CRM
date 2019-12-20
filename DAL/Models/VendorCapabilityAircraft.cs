@@ -11,9 +11,10 @@ namespace DAL.Models
         public long VendorCapabilityId { get; set; }      
         public long VendorId { get; set; }
         public long CapabilityId { get; set; }
-        public long AircraftTypeId { get; set; }
-        public long AircraftModelId { get; set; }
+        public int AircraftTypeId { get; set; }
+        public int AircraftModelId { get; set; }
         public long DashNumberId { get; set; }
+        public long ItemMasterId { get; set; }
         public int MasterCompanyId { get; set; }
         public string Memo { get; set; }
         public string PartNumber { get; set; }
