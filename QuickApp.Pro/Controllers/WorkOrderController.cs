@@ -608,6 +608,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("workorderquoteexists")]
+        public IActionResult WorkOrderQuoteExists(long workOrderId)
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrderQuoteExists(workOrderId);
+            return Ok(result);
+        }
+
         [HttpPost("createwoquotedetails")]
         public IActionResult CreateWorkOrderQuoteDetails([FromBody]WorkOrderQuoteDetails workOrderQuoteDetails)
         {
