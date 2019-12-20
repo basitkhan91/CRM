@@ -15,12 +15,14 @@ export class WorkOrderExclusionsComponent implements OnInit {
   @Input() workOrderExclusionsList;
   @Input() workFlowObject;
   @Input() isWorkOrder;
+  @Input() markupList;
   @Output() saveExclusionsListForWO = new EventEmitter();
   @Output() updateExclusionsListForWO = new EventEmitter();
   @Output() refreshData = new EventEmitter();
   @Input() isQuote = false;
   isEdit: boolean = false;
   editData: any;
+  editingIndex: number;
   constructor(private workOrderService: WorkOrderService, private authService: AuthService,
     private alertService: AlertService, private cdRef: ChangeDetectorRef) {
 
@@ -45,7 +47,8 @@ export class WorkOrderExclusionsComponent implements OnInit {
     this.isEdit = false;
     this.editData = undefined;
   }
-  edit(rowData) {
+  edit(rowData, i) {
+    this.editingIndex = i;
     this.createNew();
     this.cdRef.detectChanges();
     this.isEdit = true;
@@ -53,17 +56,22 @@ export class WorkOrderExclusionsComponent implements OnInit {
 
 
   }
-  delete(rowData) {
-    const { workOrderExclusionsId } = rowData;
-    this.workOrderService.deleteWorkOrderExclusionByExclusionId(workOrderExclusionsId, this.userName).subscribe(res => {
-      this.refreshData.emit();
-      this.alertService.showMessage(
-        '',
-        'Deleted WorkOrder Exclusion Successfully',
-        MessageSeverity.success
-      );
-
-    })
+  delete(rowData, i) {
+    if(this.isQuote){
+      this.workOrderExclusionsList.splice(i, 1);
+    }
+    else{
+      const { workOrderExclusionsId } = rowData;
+      this.workOrderService.deleteWorkOrderExclusionByExclusionId(workOrderExclusionsId, this.userName).subscribe(res => {
+        this.refreshData.emit();
+        this.alertService.showMessage(
+          '',
+          'Deleted WorkOrder Exclusion Successfully',
+          MessageSeverity.success
+        );
+  
+      })
+    }
   }
 
   saveExclusionsList(event) {
@@ -80,9 +88,16 @@ export class WorkOrderExclusionsComponent implements OnInit {
 
 
   updateExclusionsList(event) {
-    this.updateExclusionsListForWO.emit(event);
-    $('#addNewExclusions').modal('hide');
-    this.isEdit = false;
+    if(this.isQuote && this.isEdit){
+      this.workOrderExclusionsList[this.editingIndex] = event.exclusions[0];
+      $('#addNewExclusions').modal('hide');
+      this.isEdit = false;
+    }
+    else{
+      this.updateExclusionsListForWO.emit(event);
+      $('#addNewExclusions').modal('hide');
+      this.isEdit = false;
+    }
   }
 
   saveQuotation(){

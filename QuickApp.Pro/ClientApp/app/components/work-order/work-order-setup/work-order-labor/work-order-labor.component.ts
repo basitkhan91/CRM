@@ -61,6 +61,7 @@ console.log(this.workOrderLaborList);
   }
 
   ngOnChanges(){
+    this.getAllEmployees();
     this.workOrderWorkFlowList = this.workOrderWorkFlowOriginalData;
     if(this.workOrderLaborList){
       this.laborForm.workFlowWorkOrderId = this.workOrderLaborList['workFlowWorkOrderId'];
@@ -68,11 +69,6 @@ console.log(this.workOrderLaborList);
       this.laborForm.employeeId = this.workOrderLaborList['employeeId'];
       this.laborForm.isTaskCompletedByOne = this.workOrderLaborList['isTaskCompletedByOne'];
         this.laborForm.expertiseId = this.workOrderLaborList['expertiseId'];
-        this.totalWorkHours = this.workOrderLaborList['expertiseId'];
-        if (this.workOrderLaborList !== undefined && this.workOrderLaborList !== null) {
-
-            this.totalWorkHours = this.workOrderLaborList.totalWorkHours;
-        }
     }
   }
 
@@ -235,14 +231,6 @@ console.log(this.workOrderLaborList);
       isActive: true,
       IsDeleted: false,
     }
-    let hoursorClockorScan;
-    if (this.laborForm.hoursorClockorScan === 'labourHours') {
-      hoursorClockorScan = 1;
-    } else if (this.laborForm.hoursorClockorScan === 'labourClock') {
-      hoursorClockorScan = 2;
-    } else if (this.laborForm.hoursorClockorScan === 'scan') {
-      hoursorClockorScan = 3;
-    }
 
         let tasksData = this.laborForm.workOrderLaborList[0];
         console.log(tasksData);
@@ -264,7 +252,7 @@ console.log(this.workOrderLaborList);
     }
     this.saveFormdata = {
       ...this.laborForm,
-      hoursorClockorScan: hoursorClockorScan,
+      hoursorClockorScan: this.laborForm.hoursorClockorScan,
       dataEnteredBy: getValueFromObjectByKey('value', this.laborForm.dataEnteredBy),
       employeeId: getValueFromObjectByKey('value', this.laborForm.employeeId),
       masterCompanyId: 1,
@@ -273,7 +261,7 @@ console.log(this.workOrderLaborList);
         workFlowWorkOrderId: getValueFromObjectByKey('value', this.laborForm.workFlowWorkOrderId),
         workOrderLaborHeaderId: wolHeaderId,
         workOrderLaborList: formedData,
-        totalWorkHours:this.totalWorkHours
+        totalWorkHours:this.laborForm.totalWorkHours
     }
 
 
@@ -382,6 +370,10 @@ console.log(this.workOrderLaborList);
       return false;
     }
     
+  }
+
+  deleteLabor(taskName, index){
+    this.laborForm.workOrderLaborList[0][taskName.toLowerCase()].splice(index, 1);
   }
   // tasks : this.laborForm.tasks[0][keysArray[i]].map(x => {
   //   return {

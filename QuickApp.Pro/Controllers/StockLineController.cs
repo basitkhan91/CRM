@@ -198,6 +198,14 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpGet("stockLineUpdateforActive")]
+        public IActionResult StockLineStatus(long StocklineId, bool status, string updatedBy)
+        {
+            _unitOfWork.stockLineList.StocklineStatus(StocklineId, status, updatedBy);
+            return Ok();
+
+        }
+
         [HttpPost("stockLineAdjustmentReasonpost")]
         public IActionResult stockLineAdjustmentReasonpost([FromBody] StocklineAdjustmnetReasonViewModel stocklineAdjustmnetReasonViewModel)
         {

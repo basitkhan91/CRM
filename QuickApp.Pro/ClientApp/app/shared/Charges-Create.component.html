@@ -2,7 +2,7 @@
   class="fixed-table-container-inner table-responsive cat4-table"
   style="height:380px;"
 >
-  <div style="width: 100%; z-index: 1;" *ngIf="!isEdit">
+  <div style="width: 1420px; z-index: 1;" *ngIf="!isEdit">
     <span class="cat-heading cat4"
       >Add New Charges<i (click)="addRow()" class="fa fa-plus"></i
     ></span>
@@ -18,6 +18,11 @@
       <th><label>Unit Price</label></th>
       <th><label>Extended Price</label></th>
       <th><label>Vendor Name</label></th>
+      <ng-container *ngIf="isQuote">
+        <th>MARKUP</th>
+        <th>Cost plus amount</th>
+        <th>Fixed Amount</th>
+      </ng-container>
       <th><label style="text-align: left;">Actions </label></th>
     </tr>
     <tr
@@ -126,6 +131,17 @@
         >
         </p-autoComplete>
       </td>
+      <ng-container *ngIf="isQuote">
+          <td>
+            <!-- <input [(ngModel)]="matQuotation.markup" /> -->
+            <select class="form-control custom-select wf-pub-id" (change)="markupChanged(charge)" [(ngModel)]="charge.markup">
+              <option value="">Select</option>
+              <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+            </select>
+          </td>
+          <td>{{charge.costPlusAmount}}</td>
+          <td><input [(ngModel)]="charge.fixedAmount" /></td>
+      </ng-container>
       <td>
         <button class="btn btn-danger nobg" (click)="deleteRow(i)">
           <i class="fa fa-trash"></i>
@@ -148,25 +164,25 @@
     </tr>
   </table>
 
-  <div *ngIf="isWorkOrder && !isEdit" style="float:right">
-    <button
-      *ngIf="isWorkOrder"
-      class="btn btn-primary btn-primary-cstm"
-      (click)="saveChargesWorkOrder()"
-      style="padding: 6px 12px !important;margin-top: 10px;"
-    >
-      Save
-    </button>
-  </div>
+</div>
+<div *ngIf="isWorkOrder && !isEdit" style="float:right">
+  <button
+    *ngIf="isWorkOrder"
+    class="btn btn-primary btn-primary-cstm"
+    (click)="saveChargesWorkOrder()"
+    style="padding: 6px 12px !important;margin-top: 10px;"
+  >
+    {{isQuote?'Add':'Save'}}
+  </button>
+</div>
 
-  <div *ngIf="isWorkOrder && isEdit" style="float:right">
-    <button
-      *ngIf="isWorkOrder"
-      class="btn btn-primary btn-primary-cstm"
-      (click)="updateChargesWorkOrder()"
-      style="padding: 6px 12px !important;margin-top: 10px;"
-    >
-      Update
-    </button>
-  </div>
+<div *ngIf="isWorkOrder && isEdit" style="float:right">
+  <button
+    *ngIf="isWorkOrder"
+    class="btn btn-primary btn-primary-cstm"
+    (click)="updateChargesWorkOrder()"
+    style="padding: 6px 12px !important;margin-top: 10px;"
+  >
+    Update
+  </button>
 </div>

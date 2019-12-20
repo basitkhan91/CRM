@@ -1,4 +1,4 @@
-﻿f﻿<div class="card">
+﻿﻿<div class="card">
     <div class="card-body">
         <div class="inline-block display-flex">
             <h3 class="po-head lead">Customer List</h3>
@@ -25,19 +25,21 @@
                  (onLazyLoad)="loadData($event)"
                  [resizableColumns]="true"
                  [reorderableColumns]="true"
-                 [totalRecords]="totalRecords">
+                 [totalRecords]="totalRecords"
+                 [scrollable]="true" scrollHeight="450px">
+
             <!-- <ng-template pTemplate="caption">
-                   (onPage)="changePage($event)"
-                <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
-                <input
-                  type="text"
-                  pInputText
-                  size="50"
-                  placeholder="Global Filter"
-                  (input)="globalSearch($event.target.value)"
-                  style="width:auto"
-                />
-              </ng-template> -->
+           (onPage)="changePage($event)"
+        <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+        <input
+          type="text"
+          pInputText
+          size="50"
+          placeholder="Global Filter"
+          (input)="globalSearch($event.target.value)"
+          style="width:auto"
+        />
+      </ng-template> -->
             <ng-template pTemplate="caption">
                 <div style="text-align: right;margin-left:-6px !important; min-height: 30px;">
                     <p-multiSelect [maxSelectedLabels]="2"
@@ -78,7 +80,7 @@
                             (click)="dt.exportCSV({ selectionOnly: true })"></button>
                     <button type="button"
                             class="btn btn-primary-cstm "
-                            matTooltip="Refsresh Data" matTooltipPosition="above"
+                            matTooltip="Refresh Data" matTooltipPosition="above"
                             pButton
                             icon="fa-refresh"
                             iconPos="left"
@@ -86,24 +88,30 @@
                             style="left:-10px;"
                             (click)="refreshList();"></button>
                     <!-- <div class="excel-upload  excel-upload-cstm">
-        <input type="file"
-               name="upload[]"
-               id="upload"
-               (change)="customExcelUpload($event)"
-               class="uploaddoc upload-file"
-               style="left:-10px;"
-               accept=".xlsx, .xls, .csv" />
-        <label for="upload">
-            <span matTooltip="Upload Data (Excel)">
-                <i class="fa fa-upload"></i>
-            </span>
-        </label>
-    </div> -->
+                <input type="file"
+                       name="upload[]"
+                       id="upload"
+                       (change)="customExcelUpload($event)"
+                       class="uploaddoc upload-file"
+                       style="left:-10px;"
+                       accept=".xlsx, .xls, .csv" />
+                <label for="upload">
+                    <span matTooltip="Upload Data (Excel)">
+                        <i class="fa fa-upload"></i>
+                    </span>
+                </label>
+            </div> -->
                 </div>
+            </ng-template>
+            <ng-template pTemplate="colgroup" let-columns>
+                <colgroup>
+                    <col *ngFor="let col of columns" style="width:130px">
+                </colgroup>
             </ng-template>
 
             <ng-template pTemplate="header" let-columns>
                 <tr>
+
                     <th style="width:120px"
                         *ngFor="let col of columns"
                         pResizableColumn
@@ -127,7 +135,7 @@
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowData let-columns="columns">
-                <tr [pSelectableRowDblClick]="rowData" pReorderableRowHandle (dblclick)="viewSelectedRowdbl(viewdbl,rowData)">
+                <tr [pSelectableRowDblClick]="rowData" [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="viewSelectedRowdbl(viewdbl,rowData)">
                     <td style="width:120px"
                         *ngFor="let col of columns"
                         class="ui-resizable-column"
@@ -142,8 +150,8 @@
                     </td>
                     <td style="width:200px" *ngIf="selectedColumns.length > 0">
                         <!--<p-inputSwitch [(ngModel)]="rowData['isActive']"
-                                       name="isActive{{ rowIndex }}"
-                                       (onChange)="changeStatus(rowData)"></p-inputSwitch>-->
+                               name="isActive{{ rowIndex }}"
+                               (onChange)="changeStatus(rowData)"></p-inputSwitch>-->
 
                         <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                         <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
@@ -152,8 +160,7 @@
                         <span>
                             <a class="btn btn-info boxed-float-btn nobg"
                                data-toggle="tooltip"
-                               (click)="viewSelectedRow(rowData)"
-                               
+                               (click)="viewSelectedRowdbl(viewdbl,rowData)"
                                matTooltip="View">
                                 <i class="fa fa-eye"></i>
                             </a>
@@ -185,10 +192,10 @@
                 </tr>
             </ng-template>
             <!-- <ng-template #auditContent let-c="close" let-d="dismiss">
-                        <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
-                            <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
-                        </div>
-                    </ng-template> -->
+                <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+                    <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+                </div>
+            </ng-template> -->
             <ng-template pTemplate="summary" id="footer">
                 <label id="footer" class="footer">No'of records:</label>
                 <input style="width: 5%;"
@@ -319,6 +326,13 @@
                           viewDataGeneralInformation.countryName
                                                         }}
                                                     </span>
+                                                </p>
+                                                <p>
+                                                    <span class="label"><b>Phone: </b></span><span class="value">
+    {{
+                          viewDataGeneralInformation.customerPhone
+    }}
+</span>
                                                 </p>
                                                 <p>
                                                     <span class="label"><b>Email: </b></span><span class="value">

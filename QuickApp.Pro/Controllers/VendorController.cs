@@ -204,17 +204,17 @@ namespace QuickApp.Pro.Controllers
         }
         [HttpGet("GetListDetails")]
         [Produces(typeof(List<VendorViewModel>))]
-        public IActionResult GetVendorListDetails(Object data)
+        public IActionResult GetVendorListDetails(bool isActive = false)
         {
-            var allVendorlistDetails = _unitOfWork.Vendor.GetVendorListDetails(); //.GetAllCustomersData();
+            var allVendorlistDetails = _unitOfWork.Vendor.GetVendorListDetails(isActive); //.GetAllCustomersData();
             return Ok(allVendorlistDetails);
 
         }
         [HttpGet("GetVendorDetailsWithData")]
         [Produces(typeof(List<VendorViewModel>))]
-        public IActionResult GetVendorDetailsWithData()
+        public IActionResult GetVendorDetailsWithData(bool isActive = false)
         {
-            var allVendorlistDetails = _unitOfWork.Vendor.GetVendorListDetails(); //.GetAllCustomersData();
+            var allVendorlistDetails = _unitOfWork.Vendor.GetVendorListDetails(isActive); //.GetAllCustomersData();
             return Ok(allVendorlistDetails);
 
         }
@@ -320,23 +320,23 @@ namespace QuickApp.Pro.Controllers
             {
                 var data = (from vc in _context.VendorCapabiliy
                             join v in _context.Vendor on vc.VendorId equals v.VendorId
-                            join im in _context.ItemMaster on vc.ItemMasterId equals im.ItemMasterId
-                            join vct in _context.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId
-                            join vcat in _context.capabilityType on vct.CapabilityTypeId equals vcat.CapabilityTypeId
-                            //join vct in _appContext.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId
-                            //join vcat in _appContext.vendorCapabilityAircraftType on vc.VendorCapabilityId equals vcat.VendorCapabilityId
-                            //join vcam in _appContext.vendorCapabiltiyAircraftModel on vc.VendorCapabilityId equals vcam.VendorCapabilityId
+                            join im in _context.ItemMaster on vc.ItemMasterId equals im.ItemMasterId into imm
+                            from im in imm.DefaultIfEmpty() 
+                            join vct in _context.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId into vctt
+                            from vct in vctt.DefaultIfEmpty()
+                            join vcat in _context.capabilityType on vct.CapabilityTypeId equals vcat.CapabilityTypeId into vcatt
+                            from vcat in vcatt.DefaultIfEmpty()
+                                //join vct in _appContext.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId
+                                //join vcat in _appContext.vendorCapabilityAircraftType on vc.VendorCapabilityId equals vcat.VendorCapabilityId
+                                //join vcam in _appContext.vendorCapabiltiyAircraftModel on vc.VendorCapabilityId equals vcam.VendorCapabilityId
                             select new
                             {
                                 v.VendorName,
                                 v.VendorCode,
-
                                 im.PartNumber,
                                 im.PartDescription,
-
                                 im.ManufacturerId,
                                 manufacturerName = im.Manufacturer.Name,
-
                                 vc.VendorCapabilityId,
                                 vc.VendorId,
                                 vc.VendorRanking,
@@ -360,13 +360,19 @@ namespace QuickApp.Pro.Controllers
                                 //vcam.AircraftModelId
 
 
-                            }).ToList();
+                            }).OrderByDescending(p => p.UpdatedDate).ToList();
                 // return data;
                 return Ok(data);
             }
         }
 
-
+        [HttpGet("getVendorCapabilityByVendorId")]
+        [Produces(typeof(List<VendorCapabiliy>))]
+        public IActionResult GetvendorCapabilityListByVendorId(long vendorid)
+        {
+            var allCapabilities = _unitOfWork.VendorCapabilities.GetvendorCapabilityListByVendorId(vendorid);
+            return Ok(allCapabilities);
+        }
 
 
         [HttpGet("GetpartdetailsWithidForSinglePart/{partid}")]
@@ -1541,7 +1547,7 @@ namespace QuickApp.Pro.Controllers
                 address.CreatedBy = vendorViewModel.CreatedBy ?? "Admin"; //Hotfix
                 address.UpdatedBy = vendorViewModel.UpdatedBy ?? "Admin";//Hotfix
                 address.CreatedDate = DateTime.Now;
-             
+
 
                 address.UpdatedDate = DateTime.Now;
                 _unitOfWork.Address.Update(address);
@@ -2048,12 +2054,12 @@ namespace QuickApp.Pro.Controllers
                         vendorprocess.UpdatedDate = DateTime.Now;
                         vendorprocess.IsDefaultRadio = item.IsDefaultRadio;
                         vendorprocess.IsDefaultCheck = item.IsDefaultCheck;
-                        if (vendorprocess.VendorProcess1099Id>0)
+                        if (vendorprocess.VendorProcess1099Id > 0)
                         {
                             _context.VendorProcess1099.Update(vendorprocess);
                         }
                         else
-                        _context.VendorProcess1099.Add(vendorprocess);
+                            _context.VendorProcess1099.Add(vendorprocess);
 
                     }
                 }
@@ -3143,6 +3149,45 @@ namespace QuickApp.Pro.Controllers
             return Ok(caps);
         }
 
+        [HttpPost("VendorAircraftPost")]
+        public IActionResult VendorAircraft([FromBody] VendorCapabilityAircraft[] vendorAircraftMapping)
+        {
+            if (ModelState.IsValid)
+            {
+                var aircraft = _unitOfWork.Vendor.VendorAircraft(vendorAircraftMapping);
+            }
+            else
+            {
+                return BadRequest($"{nameof(vendorAircraftMapping)} cannot be null");
+            }
+
+            return Ok(ModelState);
+        }
+
+        [HttpGet("VendorAircraftGetDataByCapsId/{vendorCapabilityId}")]
+        public IActionResult VendorAircraftDataByCapsId(long vendorCapabilityId)
+        {
+
+            var aircraftData = _unitOfWork.Vendor.VendorAircraftDataByCapsId(vendorCapabilityId);
+            return Ok(aircraftData);
+        }
+
+        [HttpPut("vendorAircraftupdateMemo")]
+        public IActionResult EditVendorAircraft(long id, string memo, string updatedBy)
+        {
+            var result = _unitOfWork.Vendor.EditVendorAircraft(id, memo, updatedBy);
+            return Ok(result);
+        }
+
+        [HttpDelete("vendorAircrafDelete")]
+        public IActionResult DeleteVendorAircraft(long id, string updatedBy)
+        {
+            var result = _unitOfWork.Vendor.DeleteVendorAircraft(id, updatedBy);
+            return Ok(result);
+        }
+
+
+
         [HttpGet("vendorCapabilityTypeGet/{id}")]
         [Produces(typeof(List<VendorCapabilityType>))]
         public IActionResult vendorCapabilityTypeGet(int id)
@@ -3436,7 +3481,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("roPartsById")]
-        public IActionResult RepairOrderPartsById(long repairOrderId,long workOrderPartNoId=0)
+        public IActionResult RepairOrderPartsById(long repairOrderId, long workOrderPartNoId = 0)
         {
             var result = _unitOfWork.repairOrder.RepairOrderPartsById(repairOrderId, workOrderPartNoId);
             return Ok(result);
@@ -3661,6 +3706,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("roglobalsearch")]
+        public IActionResult RepairOrderGlobalSearch(string filterText, int pageNumber = 0, int pageSize = 10, long vendorId = 0)
+        {
+            var result = _unitOfWork.repairOrder.RepairOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId);
+            return Ok(result);
+
+        }
+
         #region Capes
 
         [HttpGet("GetVendorCapesDatawithMasterId/{id}")]
@@ -3806,7 +3859,7 @@ namespace QuickApp.Pro.Controllers
                     address.CreatedDate = DateTime.Now;
                     _context.Address.Add(address);
                 }
-               
+
 
                 _context.SaveChanges();
                 _unitOfWork.Vendor.CreateVendorBillingAddress(billingAddress);
@@ -3896,7 +3949,7 @@ namespace QuickApp.Pro.Controllers
                 billingAddressData.UpdatedDate = billingAddress.UpdatedDate;
                 billingAddressData.IsActive = billingAddress.IsActive;
                 billingAddressData.IsDeleted = billingAddress.IsDeleted;
-                              
+
 
                 _unitOfWork.Vendor.UpdateVendorBillingAddress(billingAddressData);
                 _context.SaveChanges();

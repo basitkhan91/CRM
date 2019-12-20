@@ -25,6 +25,8 @@
           *ngIf="!isEdit"
           [workFlow]="workFlowObject"
           [isWorkOrder]="isWorkOrder"
+          [isQuote]="isQuote"
+          [markupList]="markupList"
           (saveChargesListForWO)="saveChargesList($event)"
         ></grd-charges>
 
@@ -34,6 +36,8 @@
           [editData]="editData"
           [workFlow]="workFlowObject"
           [isWorkOrder]="isWorkOrder"
+          [markupList]="markupList"
+          [isQuote]="isQuote"
           (updateChargesListForWO)="updateChargesList($event)"
         ></grd-charges>
       </div>
@@ -84,15 +88,9 @@
               <td>{{ w.extendedPrice }}</td>
               <td>{{ w.vendorName }}</td>
               <ng-container *ngIf="isQuote">
-                  <td>
-                    <!-- <input [(ngModel)]="matQuotation.markup" /> -->
-                    <select (change)="markupChanged(w)" [(ngModel)]="w.markup">
-                      <option value="">Select</option>
-                      <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
-                    </select>
-                  </td>
-                  <td>{{w.costPlusAmount}}</td>
-                  <td><input [(ngModel)]="w.fixedAmount" /></td>
+                  <td>{{ w.markup }}</td>
+                  <td>{{ w.costPlusAmount }}</td>
+                  <td>{{ w.fixedAmount }}</td>
               </ng-container>
               <td>
                 <button
@@ -100,7 +98,7 @@
                   mat-icon-button
                   data-target="#addNewCharges"
                   data-toggle="modal"
-                  (click)="edit(w)"
+                  (click)="edit(w, i)"
                   matTooltip="Edit"
                 >
                   <mat-icon>edit</mat-icon>
@@ -111,7 +109,7 @@
                   class="btn-delete ptable-wo-btns"
                   mat-icon-button
                   matTooltip="Delete"
-                  (click)="delete(w)"
+                  (click)="delete(w, i)"
                 >
                   <mat-icon color="warn">delete</mat-icon>
                 </button>

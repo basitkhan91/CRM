@@ -32,16 +32,20 @@
         </div>
         <div class="modal-body">
           <grd-exclusions  *ngIf="!isEdit"
+          [isQuote] = "isQuote"
            [workFlow]='workFlowObject' 
           [isWorkOrder]="isWorkOrder" 
+          [markupList]="markupList"
           (saveExclusionsListForWO)="saveExclusionsList($event)">
           </grd-exclusions>
 
         <grd-exclusions *ngIf="isEdit && editData"
+        [isQuote] = "isQuote"
         [isEdit]="isEdit"
         [editData]="editData"
         [workFlow]='workFlowObject' 
-        [isWorkOrder]="isWorkOrder" 
+        [isWorkOrder]="isWorkOrder"
+        [markupList]="markupList" 
         (updateExclusionsListForWO)="updateExclusionsList($event)">
       </grd-exclusions>
   
@@ -72,6 +76,7 @@
                                                                         <th class="text-center">Extended Cost</th>
                                                                         <th class="text-center">Memo</th>
                                                                         <ng-container *ngIf="isQuote">
+                                                                            <th>Mark up</th>
                                                                             <th>Cost Plus Amount</th>
                                                                             <th>Fixed Amount</th>
                                                                         </ng-container>
@@ -88,8 +93,9 @@
                                                                         <td>{{w.extendedCost}}</td>
                                                                         <td>{{w.memo}}</td>
                                                                         <ng-container *ngIf="isQuote">
-                                                                            <td>{{w.quantity * w.unitCost}}</td>
-                                                                            <td><input [(ngModel)]="w.FixedAmount" /></td>
+                                                                            <td>{{w.markup}}</td>
+                                                                            <td>{{w.costPlusAmount}}</td>
+                                                                            <td>{{w.fixedAmount}}</td>
                                                                         </ng-container>
 
                                                                         <td>
@@ -98,7 +104,7 @@
                                                                             mat-icon-button
                                                                             data-target="#addNewExclusions"
                                                                             data-toggle="modal"
-                                                                            (click)="edit(w)"
+                                                                            (click)="edit(w, i)"
                                                                             matTooltip="Edit"
                                                                           >
                                                                             <mat-icon>edit</mat-icon>
@@ -109,7 +115,7 @@
                                                                             class="btn-delete ptable-wo-btns"
                                                                             mat-icon-button
                                                                             matTooltip="Delete"
-                                                                            (click)="delete(w)"
+                                                                            (click)="delete(w, i)"
                                                                           >
                                                                             <mat-icon color="warn">delete</mat-icon>
                                                                           </button>
@@ -118,6 +124,13 @@
                                                                     </tr> 
                                                                 </tbody>
                                                             </table>
+                                                            <button
+                                                              class="btn btn-primary-cstm pull-right"
+                                                              (click)="saveQuotation()"
+                                                              *ngIf = "isQuote"
+                                                            >
+                                                              Save
+                                                            </button>
                                                         </div>
                                                     </div>
                                                     <div class="clear"></div>
@@ -126,12 +139,4 @@
                                                     <br />
                                                     <br />
                                                 </div>
-                                                <button
-                                                  class="btn btn-primary btn-primary-cstm"
-                                                  (click)="saveQuotation()"
-                                                  style="padding: 6px 12px !important;margin-top: 10px;"
-                                                  *ngIf = "isQuote"
-                                                >
-                                                  Save
-                                                </button>
 </div>

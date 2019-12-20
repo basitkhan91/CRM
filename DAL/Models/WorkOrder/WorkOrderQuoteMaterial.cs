@@ -22,13 +22,9 @@ namespace DAL.Models
         public decimal? ExtendedPrice { get; set; }
         public string Memo { get; set; }
         public bool? IsDefered { get; set; }
-
-        public decimal? MatMarkup { get; set; }
-        public decimal? TotalPartsCost { get; set; }
-        public decimal? Markup { get; set; }
-        public decimal? CostPlusAmount { get; set; }
+        public decimal? MaterialCostPlus { get; set; }
+        public long? MarkupPercentageId { get; set; }
         public decimal? FixedAmount { get; set; }
-
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

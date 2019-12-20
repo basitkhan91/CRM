@@ -188,6 +188,10 @@ export class VendorService {
         return Observable.forkJoin(
             this.actionEndpoint.getvendorList<any[]>());
     }
+    getVendorListForVendor(isActive) {
+        return Observable.forkJoin(
+            this.actionEndpoint.getvendorListForVendor<any[]>(isActive));
+    }
     getVendors() {
         return Observable.forkJoin(
             this.actionEndpoint.getvendorList<Vendor[]>());
@@ -614,20 +618,20 @@ export class VendorService {
     getVendorContactsListByID(vendorId: any) {
         return Observable.forkJoin(
             this.actionEndpoint.getVendorContactsByIDEndpoint<any[]>(vendorId));
-    }    
+    }
 
     getVendorsForDropdown() {
         return this.actionEndpoint.getVendorsForDropdownEndPoint<any[]>();
     }
 
-    getVendorSiteNames(vendorId){
+    getVendorSiteNames(vendorId) {
         return this.actionEndpoint.getVendorbillingsitenames(vendorId);
     }
-    getVendorAddressById(vendorId){
+    getVendorAddressById(vendorId) {
         return this.actionEndpoint.getVendorAddressById(vendorId)
     }
 
-    getReceivingPOListing(){
+    getReceivingPOListing() {
         return this.actionEndpoint.getReceivingPOListing();
     }
 
@@ -643,8 +647,8 @@ export class VendorService {
         return this.actionEndpoint.getVendorROById<any>(Id);
     }
 
-    getRepairOrderPartsById(Id: number) {
-        return Observable.forkJoin(this.actionEndpoint.getRepairOrderPartsById<any>(Id));
+    getRepairOrderPartsById(Id: number, workOrderPartNumberId) {
+        return Observable.forkJoin(this.actionEndpoint.getRepairOrderPartsById<any>(Id, workOrderPartNumberId));
     }
 
     getPurchaseOrderByItemId(Id: number) {
@@ -655,23 +659,23 @@ export class VendorService {
         return Observable.forkJoin(this.actionEndpoint.getRepiarOrderByItemId<any>(Id));
     }
 
-    getROStatus(repairOrderId, isActive, updatedBy){
+    getROStatus(repairOrderId, isActive, updatedBy) {
         return this.actionEndpoint.getROStatus(repairOrderId, isActive, updatedBy);
     }
 
-    deleteRO(repairOrderId, updatedBy){
+    deleteRO(repairOrderId, updatedBy) {
         return this.actionEndpoint.deleteRO(repairOrderId, updatedBy);
     }
 
-    getROHistory(repairOrderId){
+    getROHistory(repairOrderId) {
         return this.actionEndpoint.getROHistory(repairOrderId);
     }
 
-    getROViewById(purchaseOrderId){
-    return this.actionEndpoint.getROViewById(purchaseOrderId);
+    getROViewById(purchaseOrderId) {
+        return this.actionEndpoint.getROViewById(purchaseOrderId);
     }
 
-    getROPartsViewById(purchaseOrderId){
+    getROPartsViewById(purchaseOrderId) {
         return this.actionEndpoint.getROPartsViewById(purchaseOrderId);
     }
 
@@ -682,62 +686,58 @@ export class VendorService {
 
     saveCreateROApproval(action: any) {
         return this.actionEndpoint.saveCreateROApproval<any>(action);
-      }
+    }
 
-      updateROApproval(action: any) {
+    updateROApproval(action: any) {
         return this.actionEndpoint.updateROApproval<any>(action);
     }
 
-    getROApproverList(purchaseOrderId){
+    getROApproverList(purchaseOrderId) {
         return this.actionEndpoint.getROApproverList(purchaseOrderId);
-      }
-
-    getReceivingROList(){
-    return this.actionEndpoint.getReceivingROList();
     }
 
-    getVendorPOMemolist(vendorId)
-    {
+    getReceivingROList() {
+        return this.actionEndpoint.getReceivingROList();
+    }
+
+    getVendorPOMemolist(vendorId) {
         return this.actionEndpoint.getVendorPOMemolist<any>(vendorId);
     }
 
-    getVendorROMemolist(vendorId)
-    {
+    getVendorROMemolist(vendorId) {
         return this.actionEndpoint.getVendorROMemolist<any>(vendorId);
     }
 
-    updateVendorPOROmemolist(id, type, memoText,updatedBy)
-    {
-        return this.actionEndpoint.updateVendorPOROmemolist(id, type, memoText,updatedBy);
+    updateVendorPOROmemolist(id, type, memoText, updatedBy) {
+        return this.actionEndpoint.updateVendorPOROmemolist(id, type, memoText, updatedBy);
     }
-    
+
     getDocumentList(vendorId) {
         return this.actionEndpoint.getDocumentList(vendorId)
     }
-	
-	
-	 documentUploadAction(action: any) {
+
+
+    documentUploadAction(action: any) {
         return this.actionEndpoint.getDocumentUploadEndpoint<any>(action);
     }
 
     getDocumentListbyId(vendorDocumentId) {
         return this.actionEndpoint.getDocumentListbyId(vendorDocumentId)
     }
-	
-	
-	 documentUpdateUploadAction(action: any) {
+
+
+    documentUpdateUploadAction(action: any) {
         return this.actionEndpoint.getUpdateDocumentUploadEndpoint<any>(action);
     }
 
-    toGetUploadDocumentsList(attachmentId, vendorId,moduleId)
-    {
-        return this.actionEndpoint.GetUploadDocumentsList(attachmentId, vendorId,moduleId);
+    toGetUploadDocumentsList(attachmentId, vendorId, moduleId) {
+        return this.actionEndpoint.GetUploadDocumentsList(attachmentId, vendorId, moduleId);
     }
 
     getDeleteDocumentListbyId(vendorDocumentId) {
         return this.actionEndpoint.getdeleteDocumentListbyId(vendorDocumentId)
     }
-    
+
     getShipaddressHistory(vendorId, vendorShippingAddressId) {
         return this.actionEndpoint.getVendorShippingAuditHistory(vendorId, vendorShippingAddressId);
     }
@@ -761,27 +761,24 @@ export class VendorService {
 
     updateBillAddressdetails(action: any) {
 
-          return this.actionEndpoint.updateBillAddressDetails(action, action.vendorBillingAddressId);
+        return this.actionEndpoint.updateBillAddressDetails(action, action.vendorBillingAddressId);
     }
 
-    vendorGeneralDocumentUploadEndpoint(action: any,vendorId,moduleId,moduleName,uploadedBy,masterCompanyId)
-    {        
-        return this.actionEndpoint.vendorGeneralDocumentUploadEndpoint(action,vendorId,moduleId,moduleName,uploadedBy,masterCompanyId);
+    vendorGeneralDocumentUploadEndpoint(action: any, vendorId, moduleId, moduleName, uploadedBy, masterCompanyId) {
+        return this.actionEndpoint.vendorGeneralDocumentUploadEndpoint(action, vendorId, moduleId, moduleName, uploadedBy, masterCompanyId);
     }
 
     vendorGeneralFileUpload(action: any) {
-      
+
         return this.actionEndpoint.vendorGeneralFileUploadEndpoint<any>(action);
     }
 
-    GetVendorGeneralDocumentsList(vendorId,moduleId)
-    {
-        return this.actionEndpoint.GetVendorGeneralDocumentsListEndpoint(vendorId,moduleId);
+    GetVendorGeneralDocumentsList(vendorId, moduleId) {
+        return this.actionEndpoint.GetVendorGeneralDocumentsListEndpoint(vendorId, moduleId);
     }
 
-    GetVendorAttachmentDelete(attachmentDetailId,updatedBy)
-    {
-        return this.actionEndpoint.GetVendorAttachmentDeleteEndpoint(attachmentDetailId,updatedBy);
+    GetVendorAttachmentDelete(attachmentDetailId, updatedBy) {
+        return this.actionEndpoint.GetVendorAttachmentDeleteEndpoint(attachmentDetailId, updatedBy);
     }
     getVendorProcess1099Data(companyId: number) {
         return Observable.forkJoin(
@@ -791,6 +788,10 @@ export class VendorService {
         return Observable.forkJoin(
             this.actionEndpoint.getVendorProcess1099idFromTransaction<any>(vendorId));
     }
+
+    repairOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId){
+        return this.actionEndpoint.repairOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId);
+      }
 }
 
 

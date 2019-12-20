@@ -12227,6 +12227,7 @@ table thead tr th:first-child input, table tr td:first-child input {
 
     .table-responsive {
         margin-bottom: 10px;
+        overflow-x : auto !important;
     }
 
     .modal-body .w70 {
@@ -13876,6 +13877,9 @@ input[type=number]::-webkit-outer-spin-button {
     padding-left: 5px;
     text-align: center;
 }
+.prow-primary {
+    background-color: #79ffe3;
+}
 /*body .ui-panelmenu .ui-state-active, body .ui-panelmenu .ui-state-active:hover, body .ui-panelmenu .ui-panelmenu-header.ui-state-active a:hover {
     background-color: antiquewhite !important;
 }*/
@@ -13942,6 +13946,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 }
 .capes-view-btn .fa {
     color: blue !important;
+}
+.ptable-cus-pma .ui-table-wrapper {
+    padding: 0 !important;
 }
 .multi-general p-multiselect[_ngcontent-c234]{
     width: 207px !important;
@@ -14139,6 +14146,13 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .pub-multi4 {
     width: 130px !important;
 }
+.vcapes-multi .ui-multiselect-items-wrapper {
+    overflow-x: hidden !important;
+}
+input[type="date"]::-webkit-inner-spin-button {
+    display: none;
+    -webkit-appearance: none;
+}
 
 .pub-type-select .ui-dropdown-trigger .ui-dropdown-trigger-icon {
     left: 33% !important;
@@ -14298,6 +14312,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     width: 100% !important;
     text-align: left !important;
     padding-left: 10px !important;
+}
+.sales-quote-customer-input input{
+    width: 79%;
 }
 @media only screen and (max-width: 1024px) {
     .md-stepper-horizontal .md-step.active.done .md-step-title, .md-stepper-horizontal .md-step.active.editable .md-step-title {

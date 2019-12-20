@@ -14,7 +14,7 @@ import { AccountSetupComponent } from "../components/general-ledger/account-setu
 //import { GeneralLedgerCurrencyComponent } from "../components/general-ledger/general-ledger-currency/general-ledger-currency.component";
 //import { GlAccountCategoriesComponent } from "../components/gl-account-categories/gl-account-categories.component";
 import { ManagementStructureComponent } from '../components/general-ledger/entity/entity-setup/entity-setup.component';
-import { EntityEditComponent } from '../components/general-ledger/entity/entity-edit/entity-edit.component';
+import { EntityEditComponent } from '../components/general-ledger/entity/legal-entity-list/legal-entity-list.component';
 import { NodeSetupComponent } from "../components/accounting/general-ledger/node-setup/node-setup.component";
 import { GlaccountListComponent } from '../components/general-ledger/glaccount-list/glaccount-list.component';
 import { GlaccountCreateComponent } from '../components/general-ledger/glaccount-create/glaccount-create.component';
@@ -35,7 +35,7 @@ const generalledgerpageRoutes: Routes = [
         children: [
             { path: "app-legalentity-structure", component: LegalEntityStructureComponent, data: { title: "EntityListComponent" } },
             { path: "app-managemententity-structure", component: ManagementStructureComponent, data: { title: "EntitySetupComponent" } },
-            { path: "app-entity-edit", component: EntityEditComponent, data: { title: "EntityEditComponent" } },
+            { path: "app-legal-entity-list", component: EntityEditComponent, data: { title: "EntityListComponent" } },
 
             { path: "app-accounting-calendar", component: AccountingCalendarComponent, data: { title: "AccountingCalendarComponent" } },
             { path: "app-entity-edit-component", component: JournalsComponent, data: { title: "JournalsComponent" } },

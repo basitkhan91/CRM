@@ -1,8 +1,5 @@
 ﻿import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { fadeInOut } from '../../../../services/animations';
-import { PageHeaderComponent } from '../../../../shared/page-header.component';
-import * as $ from 'jquery';
-import { LegalEntityEndpontService } from '../../../../services/legalentity-endpoint.service';
 import { AuthService } from '../../../../services/auth.service';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
@@ -14,21 +11,13 @@ import { MasterComapnyService } from '../../../../services/mastercompany.service
 import { MasterCompany } from '../../../../models/mastercompany.model';
 import { CurrencyService } from '../../../../services/currency.service';
 import { Currency } from '../../../../models/currency.model';
-//import { TreeTableModule } from 'primeng/treetable';
 import { TreeNode } from 'primeng/api';
-import { CalendarModule } from 'primeng/calendar';
-import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { SelectButtonModule } from 'primeng/selectbutton';
-import { InputTextModule } from 'primeng/inputtext';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { AutoCompleteModule } from 'primeng/autocomplete';
 import { CustomerService } from '../../../../services/customer.service';
 
 @Component({
-	selector: 'app-entity-edit',
-	templateUrl: './entity-edit.component.html',
-	styleUrls: ['./entity-edit.component.scss'],
+	selector: 'app-legal-entity-list',
+	templateUrl: './legal-entity-list.component.html',
+	styleUrls: ['./legal-entity-list.component.scss'],
 	animations: [fadeInOut]
 })
 /** EntityEdit component*/
@@ -55,7 +44,6 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 	isSaving: boolean;
 	selectedColumns: any[];
 	selectedColumns1: any[];
-	//selectedColumn: any;
 	isEditMode: boolean = false;
 	isDeleteMode: boolean;
 	public sourceAction: any = [];
@@ -76,7 +64,6 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
     countrycollection: any[];
     disablesave: boolean;
     selectedCountries: any;
-	//selectedNode1: TreeNode
 
 	constructor(
         private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, public currency: CurrencyService, public workFlowtService: LegalEntityService,

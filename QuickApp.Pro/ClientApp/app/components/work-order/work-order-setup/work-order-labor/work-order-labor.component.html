@@ -108,13 +108,13 @@
           class="p-radiobutton-label-horizontal"
           name="HoursorClockorScan"
           label="Labour hours"
-          value="labourHours"
+          value=1
           [(ngModel)]="laborForm.hoursorClockorScan"
         ></p-radioButton>
         <p-radioButton
           class="p-radiobutton-label-horizontal col-width"
           name="HoursorClockorScan"
-          value="labourClock"
+          value=2
           label="Labour Clock In/Out"
           [(ngModel)]="laborForm.hoursorClockorScan"
         ></p-radioButton>
@@ -122,7 +122,7 @@
         <p-radioButton
           class="p-radiobutton-label-horizontal"
           name="HoursorClockorScan"
-          value="scan"
+          value=3
           label="Scan"
           [(ngModel)]="laborForm.hoursorClockorScan"
         ></p-radioButton>
@@ -144,20 +144,20 @@
           <th class="text-center">Billable /NonBillable</th>
           <th
             class="text-center"
-            *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'"
+            *ngIf="laborForm.hoursorClockorScan !== 1 && laborForm.hoursorClockorScan !== 3"
           >
             Start/Stop
           </th>
           <th
             class="text-center"
             style="width: 100px;"
-            *ngIf="laborForm.hoursorClockorScan !== 'labourHours'"
+            *ngIf="laborForm.hoursorClockorScan !== 1"
           >
             Start Date and Time
           </th>
           <th
             class="text-center"
-            *ngIf="laborForm.hoursorClockorScan !== 'labourHours'"
+            *ngIf="laborForm.hoursorClockorScan !== 1"
           >
             End Date and Time
           </th>
@@ -167,6 +167,7 @@
           <th class="text-center" style="padding: 7px 53px !important;">
             Memo
           </th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -242,7 +243,7 @@
                       [(ngModel)]="rec.billableId"
                     ></p-dropdown>
                 </td>
-                <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'">
+                <td *ngIf="laborForm.hoursorClockorScan !== 1 && laborForm.hoursorClockorScan !== 3">
                   <button
                     class="btn btn-primary-cstm start-btn"
                     (click)="startandStop(rec)"
@@ -251,7 +252,7 @@
                     Start/Stop
                   </button>
                 </td>
-                <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours'">
+                <td *ngIf="laborForm.hoursorClockorScan !== 1">
                   <p-calendar
                     [(ngModel)]="rec.startDate"
                     [disabled]="!rec.startDateandTimeIsEdit"
@@ -265,7 +266,7 @@
                   ></p-calendar>
                   <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(rec,'startDateandTimeIsEdit')"></i>
                 </td>
-                  <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
+                  <td *ngIf="laborForm.hoursorClockorScan !== 1 ">
                 
                   <p-calendar [(ngModel)]="rec.endDate" [disabled]="!rec.endDateandTimeIsEdit" [showIcon]="true" 
                   showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"  
@@ -274,10 +275,10 @@
                   ></p-calendar>
                 <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(rec,'endDateandTimeIsEdit')"></i>            
                 </td>
-                <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
+                <td *ngIf="laborForm.hoursorClockorScan !== 1 ">
                   {{ rec.hours }}
                 </td>
-                <td *ngIf="laborForm.hoursorClockorScan === 'labourHours'"> 
+                <td *ngIf="laborForm.hoursorClockorScan === 1"> 
                   <input type="number" (blur)="calculateHoursDifference(rec)" [(ngModel)]="rec.hours" name="hours" [disabled]="checkDisability(rec, task.taskId)"> 
                 </td>
                 <td>
@@ -288,6 +289,16 @@
                 </td>
                 <td>
                   <input type="text" [(ngModel)]="rec.memo" />
+                </td>
+                <td>
+                    <button
+                    class="btn-delete ptable-wo-btns"
+                    mat-icon-button
+                    matTooltip="Delete"
+                    (click)="deleteLabor(task.description, i)"
+                  >
+                    <mat-icon color="warn">delete</mat-icon>
+                  </button>
                 </td>
             </tr>
           <!-- </ng-container> -->
@@ -301,19 +312,19 @@
                 </td>
                 <td></td>
                 <td
-                  *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'"
+                  *ngIf="laborForm.hoursorClockorScan !== 1 && laborForm.hoursorClockorScan !== 3"
                 >
                 </td>
                 <td
-                  *ngIf="laborForm.hoursorClockorScan !== 'labourHours'"
+                  *ngIf="laborForm.hoursorClockorScan !== 1"
                 >
                 </td>
                 <td
-                  *ngIf="laborForm.hoursorClockorScan !== 'labourHours'"
+                  *ngIf="laborForm.hoursorClockorScan !== 1"
                 >
                 </td>
                 <td>
-                    <input type="text" [(ngModel)]="totalWorkHours" [disabled]="laborForm.workFloworSpecificTaskorWorkOrder == 'specificTasks'"/>
+                    <input type="text" [(ngModel)]="laborForm.totalWorkHours" [disabled]="laborForm.workFloworSpecificTaskorWorkOrder == 'specificTasks'"/>
                 </td>
                 <td></td>
                 <td></td>

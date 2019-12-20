@@ -17,7 +17,7 @@ import { ATASubChapter } from '../../../../models/atasubchapter.model';
 import { AtaSubChapter1Service } from '../../../../services/atasubchapter1.service';
 import { ATAChapter } from '../../../../models/atachapter.model';
 import { Router } from '@angular/router';
-import { getObjectById, editValueAssignByCondition } from '../../../../generic/autocomplete';
+import { getObjectById, editValueAssignByCondition, getValueFromObjectByKey, getValueFromArrayOfObjectById } from '../../../../generic/autocomplete';
 import { CommonService } from '../../../../services/common.service';
 import { AircraftModelService } from '../../../../services/aircraft-model/aircraft-model.service';
 import { DashNumberService } from '../../../../services/dash-number/dash-number.service';
@@ -114,6 +114,10 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	searchAircraftParams: string = '';
 	itemMasterId: number;
 	aircraftListDataValues: any;
+	selectedCapabilityName: string = '';
+	selectedCapabilityId: number;
+	sselectedVendorName: string = '';
+	sselectedVendorCode: number;
 	colsaircraftLD: any[] = [
         { field: "aircraft", header: "Aircraft" },
         { field: "model", header: "Model" },
@@ -133,6 +137,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	newDashnumValue: any = [];
 	aircraftData: any;
 	viewTable: boolean = false;
+	enableAircraftInfo: boolean = false;
 
 	/** add-vendor-capabilities ctor */
     constructor(private _route: Router,private modalService: NgbModal,public ataSubChapter1Service: AtaSubChapter1Service,public ataservice: AtaMainService,public vendorService: VendorService, private alertService: AlertService, public itemser: ItemMasterService, public commonService: CommonService, private aircraftModelService: AircraftModelService, private dashNumService: DashNumberService, private authService: AuthService)
@@ -314,6 +319,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	}
 
 	onDataLoadCapabilityTypeListDataSuccessful(capabilityTypeList: any[]) {
+		
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		//this.dataSource.data = getAtaMainList;
@@ -395,11 +401,14 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 
 	onVendorselected(event)
 	{
+		
 		for (let i = 0; i < this.VendorNamecoll.length; i++) {
 			if (event == this.VendorNamecoll[i][0].vendorName)
-            {
+			{
+				
+				this.sourceVendorCap.vendorName=this.VendorNamecoll[i][0].vendorName;
                 this.sourceVendorCap.vendorId = this.VendorNamecoll[i][0].vendorId;
-				this.sourceVendorCap.vendorCode = this.VendorNamecoll[i][0].vendorCode
+				this.sourceVendorCap.vendorCode = this.VendorNamecoll[i][0].vendorCode;
 				//alert("Action Name already Exists");
 				this.disableSaveVenName = true;
 				this.disableSave = true;
@@ -427,6 +436,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		this.vendorService.getPartDetailsWithidForSinglePart(this.itemMasterId).subscribe(
 			data => {
 				if (data[0]) {
+					this.sourceVendorCap.partNumber = data[0].partNumber;
 					this.sourceVendorCap.partDescription = data[0].partDescription;
 					this.sourceVendorCap.manufacturerId = data[0].manufacturerId;									
 					this.sourceVendorCap.manufacturerName = data[0].name;									
@@ -875,6 +885,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 
 	saveVendorCapsclose()//for Saving Vendor capability
 	{
+		debugger
 		if (!this.sourceVendorCap.vendorCode)
 		{
 			this.vendorCodeError = true;
@@ -1087,8 +1098,14 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	}
 
 	saveVendorCapsGeneralInfo() {
+	
 		console.log(this.sourceVendorCap);
-		let {vendorCode, manufacturerName, ...res} = this.sourceVendorCap;		
+		this.sselectedVendorName=this.sourceVendorCap.vendorId.vendorName;
+		this.sselectedVendorCode=this.sourceVendorCap.vendorId.vendorCode;
+	
+		this.selectedCapabilityName= getValueFromArrayOfObjectById('label' , 'value' , this.sourceVendorCap.capabilityId ,this.capabilityTypeList)
+	
+		let {vendorCode, partNumber, manufacturerName, ...res} = this.sourceVendorCap;		
 		res = {
 			...res,
 			vendorId: editValueAssignByCondition('vendorId', res.vendorId),
@@ -1370,7 +1387,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
                 DashNumberId: obj.DashNumber === 'Unknown' ? null : obj.DashNumberId,
                 AircraftModelId: obj.AircraftModel === 'Unknown' ? null : obj.AircraftModelId,
                 ItemMasterId: this.itemMasterId,
-                //PartNumber: this.pnvalue,
+                PartNumber: this.sourceVendorCap.partNumber,
                 MasterCompanyId: 1,
                 CreatedBy: this.userName,
                 UpdatedBy: this.userName,

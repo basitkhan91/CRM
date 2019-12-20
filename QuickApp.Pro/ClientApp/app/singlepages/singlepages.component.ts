@@ -96,7 +96,7 @@ export class SingleComponent {
             else if (this.currentUrl == '/singlepages/singlepages/app-disposal-type') {
                 this.items = [
                     { label: 'Single Screens' },
-                    { label: 'Disposal Type' }
+                    { label: 'Asset Disposal Type' }
                 ];
             }
 
@@ -799,7 +799,7 @@ export class SingleComponent {
             else if (this.currentUrl == '/singlepages/singlepages/app-disposal-type') {
                 this.items = [
                     { label: 'Single Screens' },
-                    { label: 'Disposal Type' }
+                    { label: ' Asset Disposal Type' }
                 ];
             }
 

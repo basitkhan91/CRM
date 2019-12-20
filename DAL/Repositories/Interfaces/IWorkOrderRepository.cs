@@ -146,5 +146,7 @@ namespace DAL.Repositories.Interfaces
         object GetBillingInvoicingDetails(long WorkOrderId, long workOrderPartNoId);
 
         IEnumerable<object> WorkOrderROlist();
+
+        object GetWorkOrderPartDetailsById(long workOrderPartNoId);
     }
 }

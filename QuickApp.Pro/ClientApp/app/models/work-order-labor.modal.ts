@@ -8,6 +8,7 @@ export class WorkOrderLabor {
   workFloworSpecificTaskorWorkOrder: string;
   hoursorClockorScan: 'labourHours';
   workOrderLaborList: any;
+  totalWorkHours: any;
 
     constructor() {
         this.workOrderLaborHeaderId = null;

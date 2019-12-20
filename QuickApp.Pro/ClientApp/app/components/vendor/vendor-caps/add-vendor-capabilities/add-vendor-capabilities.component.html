@@ -87,13 +87,26 @@
 								</div>
 								<div class="form-group">
 									<label>Capability Type <span class="clr-red">*</span></label>
+									<!-- <p-multiSelect [options]="capabilityTypeList" name="capabilityType" [(ngModel)]="sourceVendorCap.CapabilityId" [panelStyle]="{minWidth:'12em'}" #capabilityType="ngModel" required></p-multiSelect> -->
+									<select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendorCap.capabilityId" required>
+										<option *ngFor="let capabilty of capabilityTypeList" [ngValue]="capabilty.value" >  {{capabilty.label}}</option>
+									</select>
+									
+									<!-- <div *ngIf="capabilityType.invalid && (capabilityType.dirty || capabilityType.touched)" class="alert alert-danger alert-danger-cstm">
+											<div *ngIf="capabilityType.errors.required">
+												<small> Capability Type is required </small>
+											</div>
+									</div> -->
+								</div>
+								<!-- <div class="form-group">
+									<label>Capability Type <span class="clr-red">*</span></label>
 									<p-multiSelect [options]="capabilityTypeList" name="capabilityType" [(ngModel)]="sourceVendorCap.capabilityTypes" [panelStyle]="{minWidth:'12em'}" #capabilityType="ngModel" required></p-multiSelect>
 									<div *ngIf="capabilityType.invalid && (capabilityType.dirty || capabilityType.touched)" class="alert alert-danger alert-danger-cstm">
 											<div *ngIf="capabilityType.errors.required">
 												<small> Capability Type is required </small>
 											</div>
 									</div>
-								</div>
+								</div> -->
 								<div class="form-group">
 									<label>Vendor Ranking <span class="clr-red">*</span></label>
 									<input class="form-control" type="number" name="vendorRanking" pKeyFilter="pint" [(ngModel)]="sourceVendorCap.vendorRanking" #vendorRanking="ngModel" required>
@@ -135,8 +148,8 @@
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<label>TAT <span class="clr-red">*</span></label>
-									<input class="form-control" type="number" name="tat" pKeyFilter="pint" [(ngModel)]="sourceVendorCap.tat" #tat="ngModel" required>
+									<label>TAT (Days) <span class="clr-red">*</span></label>
+									<input class="form-control" type="number" name="tat" pKeyFilter="pint" maxlength="5" [(ngModel)]="sourceVendorCap.tat" #tat="ngModel" required>
 									<div *ngIf="tat.invalid && (tat.dirty || tat.touched)" class="alert alert-danger alert-danger-cstm">
 											<div *ngIf="tat.errors.required">
 												<small> TAT is required </small>
@@ -160,72 +173,76 @@
 						</div>
 						</form>
 					</p-tabPanel>
-					<p-tabPanel header="Aircraft Info">
-						<div class="card">
-								<div class="col-sm-12 font-padding">
-									<div class="col-sm-2">
-										PN: <span style="color:red">{{'pnvalue'}}</span>
-									</div>
-									<div class="col-sm-3">
-										PN Description: <span style="color:red">{{'pnDescription'}}</span>
-									</div>
-									<div class="col-sm-3">
-										Manufacturer: <span style="color:red">{{'ManufacturerValue'}}</span>
-									</div>
+					<p-tabPanel header="Aircraft Info" [disabled]="enableAircraftInfo">
+						<div class="card" style="padding: 8px 4px 4px;">
+							<div class="col-sm-12 font-padding" *ngIf="sourceVendorCap">
+								<div class="col-sm-2">
+									PN: <span style="color:red">{{sourceVendorCap.partNumber}}</span>
 								</div>
-								<div class="col-md-12">
-									<div class="col-md-12 ">
-										<div class="shadow-Box">
-											<div class="col-sm-12">
-												<h4 class="float-left">Search Aircraft Information</h4>
-												<h4 class="float-right">
-													Add Aircraft Information
-													<a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ModalDashNumber"><i class="fa fa-plus-circle fa-lg"></i></a>
-												</h4>
-											</div>
-											<div class="col-md-3">
-												<div class="form-group ">
-													<label class="fs12">Aircraft </label>
-													<p-multiSelect [options]="manufacturerData" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectAircraftManfacturer" (onChange)="getAircraftModelByManfacturerType()" class="pub-multi"></p-multiSelect>
-												</div>
-											</div>
-											<div class="col-md-3">
-												<div class="form-group">
-													<label class="fs12">
-														Aircraft Model
-													</label>
-													<p-multiSelect [maxSelectedLabels]="2" [options]="aircraftModelList" [(ngModel)]="selectedAircraftModel" [ngModelOptions]="{standalone: true}"
-																	class="pub-multi" (onChange)="getDashNumberByManfacturerandModel()" [selectionLimit]="30"></p-multiSelect>
-												</div>
-											</div>
-											<div class="col-md-3">
-												<div class="form-group">
-													<label class="fs12">DashNumber </label>
-													<p-multiSelect [maxSelectedLabels]="2" [options]="dashNumberList" [(ngModel)]="selectedDashNumbers" [ngModelOptions]="{standalone: true}"
-																	class="pub-multi" [selectionLimit]="30"></p-multiSelect>
-												</div>
-											</div>
-											<div class="col-md-2">
-												<div class="form-group">
-													<label class="fs12">Memo </label>
-													<input type="text" style="height: 27px !important" pInputText />
-												</div>
-											</div>
-											<div class="col-md-1 add-new-align">
-												<div class="form-group">
-													<button class="btn btn-primary mtop20" (click)="searchAircraftInformation()">
-														<i class="pi pi-search pi-search"></i>
-													</button>
-												</div>
-											</div>
-											<div class="clear"></div>
+								<div class="col-sm-3">
+									Vendor Name: <span style="color:red">{{sselectedVendorName}}</span>
+								</div>
+								<div class="col-sm-3">
+									Vendor Code: <span style="color:red">{{sselectedVendorCode}}</span>
+								</div>
+								<div class="col-sm-3">
+									Capability Name: <span style="color:red">{{ selectedCapabilityName }}</span>
+									
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="col-md-12 ">
+									<div class="shadow-Box">
+										<div class="col-sm-12">
+											<h4 class="float-left">Search Aircraft Information</h4>
+											<h4 class="float-right">
+												Add Aircraft Information
+												<a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ModalDashNumber"><i class="fa fa-plus-circle fa-lg"></i></a>
+											</h4>
 										</div>
+										<div class="col-md-3">
+											<div class="form-group ">
+												<label class="fs12">Aircraft </label>
+												<p-multiSelect [options]="manufacturerData" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectAircraftManfacturer" (onChange)="getAircraftModelByManfacturerType()" class="vcapes-multi"></p-multiSelect>
+											</div>
+										</div>
+										<div class="col-md-3">
+											<div class="form-group">
+												<label class="fs12">
+													Aircraft Model
+												</label>
+												<p-multiSelect [maxSelectedLabels]="2" [options]="aircraftModelList" [(ngModel)]="selectedAircraftModel" [ngModelOptions]="{standalone: true}"
+																class="vcapes-multi" (onChange)="getDashNumberByManfacturerandModel()" [selectionLimit]="30"></p-multiSelect>
+											</div>
+										</div>
+										<div class="col-md-3">
+											<div class="form-group">
+												<label class="fs12">DashNumber </label>
+												<p-multiSelect [maxSelectedLabels]="2" [options]="dashNumberList" [(ngModel)]="selectedDashNumbers" [ngModelOptions]="{standalone: true}"
+																class="vcapes-multi" [selectionLimit]="30"></p-multiSelect>
+											</div>
+										</div>
+										<div class="col-md-2">
+											<div class="form-group">
+												<label class="fs12">Memo </label>
+												<input type="text" style="height: 27px !important" pInputText />
+											</div>
+										</div>
+										<div class="col-md-1 add-new-align">
+											<div class="form-group">
+												<button class="btn btn-primary-cstm mtop20" (click)="searchAircraftInformation()" style="padding: 4px 8px !important;">
+													<i class="pi pi-search pi-search"></i>
+												</button>
+											</div>
+										</div>
+										<div class="clear"></div>
 									</div>
 								</div>
+							</div>
 						</div>
 						<br />
 						<div class="card">
-							<p-table [value]="aircraftListDataValues" [rows]="6" [columns]="colsaircraftLD" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+							<p-table class="ptable-custom" [value]="aircraftListDataValues" [rows]="6" [columns]="colsaircraftLD" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
 								<ng-template pTemplate="header" let-columns>
 									<tr>
 										<th>Id</th>
@@ -255,6 +272,7 @@
 			</p-tabView>
 		</div>
 	</div>
+</div>
 
 	<div class="modal fade" id="add-description" role="dialog" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-sm" style="max-width: 400px !important;">
@@ -279,7 +297,7 @@
 
 		<div id="ModalDashNumber"
          class="modal fade custom-popup"
-         role="dialog">
+         role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-full">
             <div class="modal-content">
                 <div class="modal-header">
@@ -289,9 +307,9 @@
                 <div class="modal-body">
                     <div class="form-row">
                         <div class="col-md-3">
-                            <div class="form-group">
+                            <div class="form-group" *ngIf="manufacturerData">
                                 <label class="popup-plusicon-cstm">Aircraft Type <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
-                                <!-- <p-dropdown class="imstock-pddowm" [options]="manufacturerData" filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftId" (onChange)="getAircraftModelByManfacturer($event)" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>  -->
+                                <p-dropdown class="imstock-pddowm" [options]="manufacturerData" filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAircraftId" (onChange)="getAircraftModelByManfacturer($event)" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>
                             </div>
                         </div>
 
@@ -303,10 +321,10 @@
                                  margin-left: 7px; " (change)="resetAircraftModelsorDashNumbers()"> Unknown
                                 </label>
 
-                                <p-multiSelect *ngIf="!modelUnknown" [maxSelectedLabels]="2" [disabled]="!selectedAircraftId" class="imstock-pmselect" [options]="LoadValues" [(ngModel)]="selectedModelId" [ngModelOptions]="{standalone: true}" (onChange)="getDashNumberByTypeandModel($event)"></p-multiSelect>
+                                <p-multiSelect *ngIf="!modelUnknown" [maxSelectedLabels]="2" [disabled]="!selectedAircraftId" class="imstock-pmselect" [options]="loadValues" [(ngModel)]="selectedModelId" [ngModelOptions]="{standalone: true}" (onChange)="getDashNumberByTypeandModel($event)"></p-multiSelect>
                             </div>
                         </div>
-                        <div class="col-md-3" *ngIf="!modelUnknown">
+                        <div class="col-md-4" *ngIf="!modelUnknown">
                             <div class="form-group">
                                 <label class="popup-plusicon-cstm" style="width: 190px !important">
                                     DashNumber
@@ -318,7 +336,7 @@
                                 <p-multiSelect *ngIf=" !modelUnknown && !dashNumberUnknown" [maxSelectedLabels]="2" [disabled]="!selectedAircraftId" class="imstock-pmselect" [options]="loadDashnumber" [(ngModel)]="selectedDashnumber" [ngModelOptions]="{standalone: true}" (onChange)="selectedDashnumbervalue($event)"></p-multiSelect>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                             <button style="margin-top: 20px;" type="button" class="btn btn-primary-cstm" (click)="mapAircraftInformation()">Add</button>
                         </div>
                     </div>
@@ -469,7 +487,7 @@
 				<label class="control-label col-sm-4">TAT  (Days)<strong class="clr-red">*</strong></label>
                 <div class="col-sm-7">
                     <input class="form-control" type="text" pKeyFilter="num" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendorCap.tat" maxlength="5">
-                    <!--<label style="margin-right: -75px;margin-left: -44px;">Days</label>-->
+                    <label style="margin-right: -75px;margin-left: -44px;">Days</label>
                 </div>
 			</div>
 

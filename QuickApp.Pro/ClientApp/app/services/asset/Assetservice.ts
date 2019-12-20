@@ -112,9 +112,13 @@ export class AssetService {
     getAssetsById(assetsRecordsId){
         return this.assetEndpoint.getAssetsById(assetsRecordsId);
     }
-  //  Audit method in services
+    //Audit method in services
     //getAudit(assetRecordId: number) {
     //    return this.assetEndpoint.getAudit<any[]>(assetRecordId);
     //}
+
+    updateCapes(assetcapes: any) {
+        return this.assetEndpoint.updateCapes(assetcapes, assetcapes.AssetCapesId);
+    }
 
 }

@@ -18,8 +18,8 @@
                                 <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect  [maxSelectedLabels]="2" [options]="headers"  optionLabel="header" [(ngModel)]="selectedColumns"  
                                         [style]="{minWidth: '200px'}"  style="float:left" (onChange)="columnsChanges()"  ></p-multiSelect>
-                                     <button type="button" class="btn btn-primary-cstm " matTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
-                                        iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                     <button type="button" class="btn btn-primary-cstm " matTooltip="Download Data" tooltipPosition="top" pButton icon="fa-download"
+                                        iconPos="left" label="Export Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm " matTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
                                         iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button> 
                                     <div class="excel-upload  excel-upload-cstm">
@@ -32,7 +32,7 @@
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()" >Sample File Download</button>
+                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()" matTooltip="Download Sample File" tooltipPosition="top" >Sample File Download</button>
                                     </div>
                                     
                                 </div>
@@ -259,7 +259,7 @@
                                                     <!-- <th>UMID</th> -->
                                                     <th>Tax Type</th>
                                                     <th>Memo</th>
-                                                    <th>IsActive</th>
+                                                    <th>Is Active</th>
                                                     <th>Updated By</th>
                                                     <th>Updated Time</th>
                                                 </tr>
@@ -267,7 +267,7 @@
                                             <tbody *ngIf="auditHistory.length> 0" >
                                                     <tr *ngFor="let audit of auditHistory; let i = index;">
                                                         <!-- auditHistory[i>0 ? i-1 : i] -->          
-                                                            <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'TaxTypeId', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
+                                                            <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
                                                              <td [ngStyle]="{'color': getColorCodeForHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>                                                        
                                                              <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
                                                             <td >{{audit.updatedBy}}</td>
@@ -319,7 +319,7 @@
                 </p>
                 <p>
                     <span class="label ">
-                        <b class="view-Header">IsActive</b>
+                        <b class="view-Header">Is Active</b>
                     </span>
                     <span class="value">{{viewRowData.isActive === true ? 'Yes' : 'No'}}</span>
                 </p>

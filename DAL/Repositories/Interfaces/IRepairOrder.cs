@@ -6,6 +6,7 @@ namespace DAL.Repositories.Interfaces
 {
     public interface IRepairOrder : IRepository<RepairOrder>
     {
+        IEnumerable<object> RepairOrderGlobalSearch(string filterText, int pageNumber, int pageSize, long vendorId);
         IEnumerable<object> RecevingRolist();
         IEnumerable<object> RoHistoryList(int repairOrderId);
         IEnumerable<object> GetRepairOrderlist(Filters<RepairOrderFilters> roFilters);

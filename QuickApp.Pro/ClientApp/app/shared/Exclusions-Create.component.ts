@@ -16,6 +16,8 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     @Input() workFlow: IWorkFlow;
     @Input() UpdateMode: boolean;
     @Input() isEdit = false;
+    @Input() isQuote = false;
+    @Input() markupList;
     @Input() editData;
     @Output() saveExclusionsListForWO = new EventEmitter();
     @Output() updateExclusionsListForWO = new EventEmitter();
@@ -41,25 +43,24 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
 
+        if (this.isEdit) {
+            this.workFlow.exclusions = [];
+            const data = {
+                ...this.editData,
+                partDescription: this.editData.epnDescription,
+                partNumber: this.editData.epn
 
+            }
+            this.workFlow.exclusions.push(data);
+            this.reCalculate();
+        } else {
+            this.workFlow.exclusions = [];
+            this.row = this.workFlow.exclusions[0];
+            this.addRow();
+        }
         if (this.isWorkOrder) {
             this.row = this.workFlow.exclusions[0];
-            if (this.isEdit) {
-                this.workFlow.exclusions = [];
-                const data = {
-                    ...this.editData,
-                    partDescription: this.editData.epnDescription,
-                    partNumber: this.editData.epn,
-                    estimtPercentOccurrance: this.editData.estimtPercentOccurranceId
-
-                }
-                this.workFlow.exclusions.push(data);
-                this.reCalculate();
-            } else {
-                this.workFlow.exclusions = [];
-                this.row = this.workFlow.exclusions[0];
-                this.addRow();
-            }
+            
             // this.row = this.workFlow.exclusions[0];
             // this.addRow();
         } else {
@@ -78,6 +79,8 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
 
 
     ngOnChanges(): void {
+        console.log(this.isEdit);
+        console.log(this.isQuote);
     }
     reCalculate() {
         this.calculateQtySummation();
@@ -212,6 +215,19 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
 
     updateExclusionsWorkOrder() {
         this.updateExclusionsListForWO.emit(this.workFlow);
+    }
+
+    markupChanged(matData) {
+        try {
+            this.markupList.forEach((markup) => {
+            if (markup.value == matData.markup) {
+                matData.costPlusAmount = (matData.quantity * matData.unitCost) + (((matData.quantity * matData.unitCost) / 100) * Number(markup.label))
+            }
+            })
+        }
+        catch (e) {
+            console.log(e);
+        }
     }
 
 }

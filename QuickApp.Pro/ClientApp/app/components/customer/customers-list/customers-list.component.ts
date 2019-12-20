@@ -150,12 +150,12 @@ export class CustomersListComponent implements OnInit {
         { field: 'accountType', header: 'Account Type' },
         { field: 'customerType', header: 'Customer Type' },
 
-        { field: 'customerClassification', header: 'Classification' },
+        { field: 'customerClassification', header: 'Customer Classification' },
         { field: 'email', header: 'Customer Email' },
-        { field: 'city', header: 'City' },
-        { field: 'stateOrProvince', header: 'State or Province' },
-        { field: 'contact', header: 'Contact' },
-        { field: 'salesPersonPrimary', header: 'Primary Sales Person' }
+        { field: 'city', header: 'Customer City' },
+        { field: 'stateOrProvince', header: 'Customer State' },
+        { field: 'contact', header: 'Customer Contact' },
+        { field: 'salesPersonPrimary', header: 'Sales Person' }
 
 
     ]
@@ -332,13 +332,14 @@ export class CustomersListComponent implements OnInit {
 
     }
     loadData(event) {
+       
         this.lazyLoadEventData = event;
         const pageIndex = parseInt(event.first) / event.rows;;
         this.pageIndex = pageIndex;
         this.pageSize = event.rows;
         event.first = pageIndex;
-
-        this.getList(event)
+           this.getList(event)
+        
         console.log(event);
     }
 
@@ -408,6 +409,7 @@ export class CustomersListComponent implements OnInit {
         const { customerId } = rowData;
         this.modal = this.modalService.open(CustomerViewComponent, { size: 'lg' });
         this.modal.componentInstance.customerId = customerId;
+       
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })

@@ -76,6 +76,7 @@ import { AircraftModelService } from "../services/aircraft-model/aircraft-model.
 import { DashNumberService } from "../services/dash-number/dash-number.service";
 import { AircraftModelEndpointService } from "../services/aircraft-model/aircraft-model-endpoint.service";
 import { DashNumberEndpointService } from "../services/dash-number/dash-number-endpoint.service";
+import { DropdownModule } from "primeng/dropdown";
 
 
 @NgModule({
@@ -105,7 +106,8 @@ import { DashNumberEndpointService } from "../services/dash-number/dash-number-e
         TreeTableModule,
         ValidateAccessModule,
         TabViewModule,
-        TooltipModule
+		TooltipModule,
+		DropdownModule
 
 	],
 	declarations: [

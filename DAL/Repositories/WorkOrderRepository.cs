@@ -50,6 +50,13 @@ namespace DAL.Repositories
                 _appContext.WorkOrder.Update(workOrder);
                 _appContext.SaveChanges();
 
+                foreach (var item in workOrder.PartNumbers)
+                {
+                    var workScope = _appContext.WorkScope.Where(p => p.WorkScopeId == item.WorkOrderScopeId).FirstOrDefault();
+                    if (workScope != null)
+                        item.WorkScope = workScope.Description;
+                }
+
                 // Creating WorkflowWorkOrder From Work Flow
                 workOrder.WorkFlowWorkOrderId = CreateWorkFlowWorkOrderFromWorkFlow(workOrder.PartNumbers, workOrder.WorkOrderId, workOrder.CreatedBy);
 
@@ -509,6 +516,7 @@ namespace DAL.Repositories
                             from pub in woppub.DefaultIfEmpty()
                             join stage in _appContext.WorkOrderStage on swo.StageId equals stage.ID
                             join status in _appContext.WorkOrderStatus on swo.StatusId equals status.Id
+
                             where swo.SubWorkOrderId == subWorkOrderId
                             select new
                             {
@@ -523,9 +531,9 @@ namespace DAL.Repositories
                                 CustName = cust.Name,
                                 WorkScope = wos.Description,
                                 Stockline = sl.StockLineNumber,
-                                WorkFlowId = wf == null ? 0 : wop.WorkflowId,
+                                WorkFlowId = swo.WorkFlowId,
                                 WorkFlowNo = wf == null ? "" : wf.WorkOrderNumber,
-                                wo.OpenDate,
+                                swo.OpenDate,
                                 swo.EstCompDate,
                                 swo.StageId,
                                 WorkOrderStage = stage.Description,
@@ -607,6 +615,7 @@ namespace DAL.Repositories
                             join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
                             join status in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals status.Id
                             join wowf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wowf.WorkOrderId
+							
 
 
                             where wo.WorkOrderId == workOrderId && wop.ID == workOrderPartNumberId
@@ -889,14 +898,15 @@ namespace DAL.Repositories
             try
             {
                 var list = (from w in _appContext.WorkOrderWorkFlow
-                            join wop in _appContext.WorkOrderPartNumber on w.WorkOrderId equals wop.WorkOrderId
+                           join wop in _appContext.WorkOrderPartNumber on w.WorkOrderPartNoId equals wop.ID
                             join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
                             join wf in _appContext.Workflow on w.WorkflowId equals wf.WorkflowId into wwf
                             from wf in wwf.DefaultIfEmpty()
                             join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                             join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
+							join pri in _appContext.Priority on wop.WorkOrderPriorityId equals pri.PriorityId 
 
-                            where w.IsDeleted == false && w.IsActive == true && w.WorkOrderId == workOrderId
+							where w.IsDeleted == false && w.IsActive == true && w.WorkOrderId == workOrderId && wop.WorkOrderId==workOrderId
                             select new
                             {
                                 value = w.WorkFlowWorkOrderId,
@@ -909,6 +919,7 @@ namespace DAL.Repositories
                                 Workscope = ws.Description,
                                 NTE = (im.OverhaulHours == null ? 0 : im.OverhaulHours) + (im.RPHours == null ? 0 : im.RPHours) + (im.mfgHours == null ? 0 : im.mfgHours) + (im.TestHours == null ? 0 : im.TestHours),
                                 Qty = wop.Quantity,
+								priority = pri.Description,
                                 Stage = wop.Description,
                                 WorkOrderPartNumberId = wop.ID,
                                 wop.WorkOrderScopeId
@@ -988,6 +999,35 @@ namespace DAL.Repositories
                                 wowf.ChargesCost,
                                 wowf.Total,
                                 wowf.PerOfBerThreshold,
+                            }).FirstOrDefault();
+                return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public object GetWorkOrderPartDetailsById(long workOrderPartNoId)
+        {
+            try
+            {
+                var data = (from wop in _appContext.WorkOrderPartNumber
+                            join sl in _appContext.StockLine on wop.StockLineId equals sl.StockLineId
+                            join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
+                            where wop.ID == workOrderPartNoId
+                            select new
+                            {
+                                workOrderPartNoId = wop.ID,
+                                MCPN = im.PartNumber,
+                                MCPNDESCRIPTION = im.PartDescription,
+                                MCSERIAL =  sl.SerialNumber,
+                                STOCKLINE = sl.StockLineNumber,
+                                QTYRESERVED = sl.QuantityReserved,
+                                CONTROLID = sl.IdNumber,
+                                CONTROL = sl.ControlNumber,
+                                QTYTOREPAIR = wop.Quantity
                             }).FirstOrDefault();
                 return data;
             }
@@ -1311,10 +1351,10 @@ namespace DAL.Repositories
                 {
                     foreach (var asset in workOrderAssets)
                     {
-                        workOrderAssets.ForEach(p =>
-                        {
-                            p.AssetRecordId = Convert.ToInt64(p.AssetId);
-                        });
+                        //workOrderAssets.ForEach(p =>
+                        //{
+                        //    p.AssetRecordId = Convert.ToInt64(p.AssetId);
+                        //});
 
                         if (asset.WorkOrderAssetId > 0)
                         {
@@ -1557,9 +1597,9 @@ namespace DAL.Repositories
                                                join im in _appContext.ItemMaster on we.ItemMasterId equals im.ItemMasterId
                                                join task in _appContext.Task on we.TaskId equals task.TaskId into wetask
                                                from task in wetask.DefaultIfEmpty()
-                                               join eo in _appContext.ExclusionEstimatedOccurances on we.ExstimtPercentOccuranceId equals eo.Id into weeo
+                                               join eo in _appContext.ExclusionEstimatedOccurances on we.EstimtPercentOccurranceId equals eo.Id into weeo
                                                from eo in weeo.DefaultIfEmpty()
-                                               join mp in _appContext.MarkUpPercentage on we.MarkUpPercentageId equals mp.MarkUpPercentageId into wemp
+                                               join mp in _appContext.Percent on we.MarkUpPercentageId equals mp.PercentId into wemp
                                                from mp in wemp.DefaultIfEmpty()
                                                where we.IsDeleted == false && we.WorkFlowWorkOrderId == wfwoId
                                                select new
@@ -1569,7 +1609,7 @@ namespace DAL.Repositories
                                                    we.CreatedDate,
                                                    Epn = im.PartNumber,
                                                    EpnDescription = im.PartDescription,
-                                                   we.ExstimtPercentOccuranceId,
+                                                   we.EstimtPercentOccurranceId,
                                                    ExstimtPercentOccurance = eo.Name == null ? "" : eo.Name,
                                                    we.ExtendedCost,
                                                    we.FixedAmount,
@@ -1578,7 +1618,7 @@ namespace DAL.Repositories
                                                    we.IsFromWorkFlow,
                                                    we.ItemMasterId,
                                                    we.MarkUpPercentageId,
-                                                   MarkUpPercentage = mp.MarkUpValue == null ? "" : mp.MarkUpValue,
+                                                   MarkUpPercentage =  mp.PercentValue,
                                                    we.MasterCompanyId,
                                                    we.Memo,
                                                    we.Quantity,
@@ -2615,6 +2655,8 @@ namespace DAL.Repositories
             }
         }
 
+
+
         public WorkOrderQuoteDetails CreateWorkOrderQuoteDetails(WorkOrderQuoteDetails workOrderQuoteDetails)
         {
             try
@@ -2644,6 +2686,8 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
+
 
         public WorkOrderQuoteDetails CreateWorkOrderQuoteExclusions(WorkOrderQuoteDetails quoteExclusions)
         {
@@ -2692,7 +2736,7 @@ namespace DAL.Repositories
                                                join im in _appContext.ItemMaster on we.ItemMasterId equals im.ItemMasterId
                                                join eo in _appContext.ExclusionEstimatedOccurances on we.ExstimtPercentOccuranceId equals eo.Id into weeo
                                                from eo in weeo.DefaultIfEmpty()
-                                               join mp in _appContext.MarkUpPercentage on we.MarkUpPercentageId equals mp.MarkUpPercentageId into wemp
+                                               join mp in _appContext.Percent on we.MarkUpPercentageId equals mp.PercentId into wemp
                                                from mp in wemp.DefaultIfEmpty()
                                                where we.IsDeleted == false && wq.WorkOrderQuoteId == WorkOrderQuoteId
                                                select new
@@ -2710,7 +2754,7 @@ namespace DAL.Repositories
                                                    we.IsDeleted,
                                                    we.ItemMasterId,
                                                    we.MarkUpPercentageId,
-                                                   MarkUpPercentage = mp.MarkUpValue == null ? "" : mp.MarkUpValue,
+                                                   MarkUpPercentage = mp.PercentValue,
                                                    we.MasterCompanyId,
                                                    we.Memo,
                                                    we.Quantity,
@@ -2755,6 +2799,8 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
+
 
         public WorkOrderQuoteDetails CreateWorkOrderQuoteFreight(WorkOrderQuoteDetails quoteFreight)
         {
@@ -2825,7 +2871,9 @@ namespace DAL.Repositories
                                                 wf.WorkOrderQuoteDetailsId,
                                                 wf.WorkOrderQuoteFreightId,
                                                 ShipViaName = sv.Name,
-                                                CarrierName = car.Name
+                                                CarrierName = car.Name,
+                                                wf.MarkupPercentageId,
+                                                wf.FreightCostPlus
                                             }).Distinct().ToList();
 
                 return workOrderFreightList;
@@ -2859,6 +2907,8 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
+
 
         public WorkOrderQuoteDetails CreateWorkOrderQuoteCharges(WorkOrderQuoteDetails quoteCharges)
         {
@@ -2934,7 +2984,8 @@ namespace DAL.Repositories
                                 woc.UpdatedDate,
                                 woc.WorkOrderQuoteDetailsId,
                                 woc.WorkOrderQuoteChargesId,
-                                WorkflowChargeTypeId = woc.ChargesTypeId
+                                WorkflowChargeTypeId = woc.ChargesTypeId,
+                                woc.ChargesCostPlus,
                             }
                           ).Distinct().ToList();
                 return list;
@@ -2967,6 +3018,7 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
 
 
         public WorkOrderQuoteDetails CreateWorkOrderQuoteMaterial(WorkOrderQuoteDetails quoteMaterials)
@@ -3033,10 +3085,10 @@ namespace DAL.Repositories
                                                   ConditionType = c.Description,
                                                   OemPmaDer = im.PMA == true && im.DER == true ? "PMA&DER" : (im.PMA == true && im.DER == false ? "PMA" : (im.PMA == false && im.DER == true ? "DER" : "")),
                                                   wom.UnitCost,
-                                                  wom.MatMarkup,
-                                                  wom.TotalPartsCost,
-                                                  wom.Markup,
-                                                  wom.CostPlusAmount,
+                                                  wom.MarkupPercentageId,
+                                                  wom.Price,
+                                                  wom.ExtendedPrice,
+                                                  wom.MaterialCostPlus,
                                                   wom.FixedAmount,
                                                   wom.WorkOrderQuoteDetailsId,
                                                   wom.WorkOrderQuoteMaterialId
@@ -3073,6 +3125,8 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
+
 
         public WorkOrderQuoteDetails CreateWorkOrderQuoteLabor(WorkOrderQuoteDetails quoteLabor)
         {
@@ -3177,7 +3231,10 @@ namespace DAL.Repositories
                                                       wol.UpdatedDate,
                                                       wol.WorkOrderQuoteLaborHeaderId,
                                                       wol.WorkOrderQuoteLaborId,
-                                                      EmployeeName = emp.FirstName
+                                                      EmployeeName = emp.FirstName,
+                                                      wol.DirectLaborOHCost,
+                                                      wol.MarkupPercentageId,
+                                                      wol.LabourCostPlus
                                                   }
                                                  ).Distinct().ToList()
                                  }
@@ -3522,9 +3579,6 @@ namespace DAL.Repositories
         {
             try
             {
-
-
-
                 var data = (from bi in _appContext.WorkOrderBillingInvoicing
                             join wo in _appContext.WorkOrder on bi.WorkOrderId equals wo.WorkOrderId
                             join wop in _appContext.WorkOrderPartNumber on bi.WorkOrderPartNoId equals wop.ID
@@ -3558,7 +3612,6 @@ namespace DAL.Repositories
                                 bi.WorkFlowWorkOrderId,
                                 bi.ItemMasterId,
                                 bi.InvoiceTypeId,
-
                                 InvoiceType = it.Description,
                                 bi.InvoiceNo,
                                 cust.ContractReference,
@@ -3635,13 +3688,18 @@ namespace DAL.Repositories
                                 wo.CustomerId,
                                 cust.Email,
                                 cust.CustomerPhone,
-                                bi.AvailableCredit
+                                bi.AvailableCredit,
+                                bi.TotalWorkOrderCost,
+                                bi.TotalWorkOrderCostPlus,
+                                bi.MaterialCost,
+                                bi.MaterialCostPlus,
+                                bi.LaborOverHeadCost,
+                                bi.LaborOverHeadCostPlus,
+                                bi.MiscChargesCost,
+                                bi.MiscChargesCostPlus,
+                                bi.GrandTotal,
                             }).FirstOrDefault();
-
-                 
-
                 return data;
-
             }
             catch (Exception)
             {
@@ -4049,6 +4107,7 @@ namespace DAL.Repositories
                                     workOrderLaborHeader = BindWorkFlowWorkOrderLabor(workFlow.Expertise, workOrderId, createdBy, item.MasterCompanyId);
                                 }
 
+                                workFlowWorkOrder.WorkOrderPartNoId = item.ID;
                                 _appContext.WorkOrderWorkFlow.Add(workFlowWorkOrder);
                                 _appContext.SaveChanges();
 
@@ -4084,6 +4143,8 @@ namespace DAL.Repositories
                             workOrderWorkFlow.UpdatedDate = workOrderWorkFlow.CreatedDate = DateTime.Now;
                             workOrderWorkFlow.IsActive = true;
                             workOrderWorkFlow.IsDeleted = false;
+                            workOrderWorkFlow.WorkOrderPartNoId = item.ID;
+
                             _appContext.WorkOrderWorkFlow.Add(workOrderWorkFlow);
                             _appContext.SaveChanges();
                             workFlowWorkOrderId = workOrderWorkFlow.WorkFlowWorkOrderId;
@@ -5364,7 +5425,7 @@ namespace DAL.Repositories
 
                     workFlowWorkOrder = BIndWorkFlowWorkOrderDetails(workFlowWorkOrder, workFlow);
                     workFlowWorkOrder.WorkFlowWorkOrderId = workFlow.workFlowWorkOrderId;
-
+                    workFlowWorkOrder.WorkOrderPartNoId = workFlow.workOrderPartNoId;
 
                     if (workFlow.Charges != null && workFlow.Charges.Count > 0)
                     {
@@ -5473,6 +5534,15 @@ namespace DAL.Repositories
                         _appContext.SaveChanges();
                     }
 
+
+                    //Updating existing workflow id
+                    WorkOrderPartNumber workOrderPartNumber = new WorkOrderPartNumber();
+                    workOrderPartNumber.ID = workFlowWorkOrder.WorkOrderPartNoId;
+                    workOrderPartNumber.WorkflowId = workFlowWorkOrder.WorkflowId;
+
+                    _appContext.WorkOrderPartNumber.Attach(workOrderPartNumber);
+                    _appContext.Entry(workOrderPartNumber).Property(p => p.WorkflowId).IsModified = true;
+                    _appContext.SaveChanges();
                 }
                 return workFlow.workFlowWorkOrderId;
             }

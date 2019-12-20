@@ -52,27 +52,6 @@
                             iconPos="left"
                             label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above"
                             (click)="dt.exportCSV({ selectionOnly: true })"></button>
-                    <!-- <div class="excel-upload  excel-upload-cstm">
-                        <input type="file"
-                               name="upload[]"
-                               id="upload"
-                               (change)="customExcelUpload($event)"
-                               class="uploaddoc upload-file"
-                               accept=".xlsx, .xls, .csv" />
-                        <label for="upload">
-                            <span matTooltip="Upload Data (Excel)">
-                                <i class="fa fa-upload"></i>
-                            </span>
-                        </label>
-                        &nbsp; &nbsp;
-                        <a matTooltip="Create Stockline"
-                           class="btn btn-success nobg btn-cstm"
-                           [routerLink]="[
-                '/stocklinemodule/stocklinepages/app-stock-line-setup'
-              ]">
-                            <span><i class="fa fa-plus"></i></span>
-                        </a>
-                    </div> -->
                 </div>
             </ng-template>
 
@@ -209,6 +188,7 @@
                      <p><span class="label"><b>Shelf: </b></span><span class="value">{{shelf}}</span></p>
                      <p><span class="label"><b>Bin: </b></span><span class="value">{{bin}}</span></p>
                  </div>
+
                  <div class="col-sm-4">
                      <p><span class="label"><b>Obtain From: </b></span><span class="value">{{obtainFrom}}</span></p>
                      <p><span class="label"><b>Owner: </b></span><span class="value">{{owner}}</span></p>
@@ -230,6 +210,7 @@
                      <p><span class="label"><b>RO Num: </b></span><span class="value">{{repairOrderNumber}}</span></p>
                      <p><span class="label"><b>RO Unit Cost: </b></span><span class="value">{{repairOrderUnitCost}}</span></p>
                  </div>
+
                  <div class="col-sm-4">
                      <p><span class="label"><b>Received Date: </b></span><span class="value">{{receivedDate}}</span></p>
                      <p><span class="label"><b>Receiver Num: </b></span><span class="value">{{receiverNumber}}</span></p>
@@ -242,12 +223,36 @@
                      <p><span class="label"><b>Memo: </b></span><span class="value">{{memo}}</span></p>
 
                  </div>
+                 <div class="col-sm-4">
+                     <h5>Cycles</h5>
+                     <p><span class="label"><b>Remaining: </b></span><span class="value">{{cyclesRemaining}}</span></p>
+                     <p><span class="label"><b>Since New: </b></span><span class="value">{{cyclesSinceNew}}</span></p>
+                     <p><span class="label"><b>Since Ovh: </b></span><span class="value">{{cyclesSinceOVH}}</span></p>
+                     <p><span class="label"><b>Since Insp: </b></span><span class="value">{{cyclesSinceInspection}}</span></p>
+                     <p><span class="label"><b>Since Repair: </b></span><span class="value">{{cyclesSinceRepair}}</span></p>
+                 </div>
+
+                 <div class="col-sm-4">
+                     <h5>Time</h5>
+                     <p><span class="label"><b>Remaining: </b></span><span class="value">{{timeRemaining}}</span></p>
+                     <p><span class="label"><b>Since New: </b></span><span class="value">{{timeSinceNew}}</span></p>
+                     <p><span class="label"><b>Since Ovh: </b></span><span class="value">{{timeSinceOVH}}</span></p>
+                     <p><span class="label"><b>Since Insp: </b></span><span class="value">{{timeSinceInspection}}</span></p>
+                     <p><span class="label"><b>Since Repair: </b></span><span class="value">{{timeSinceRepair}}</span></p>
+                 </div>
+
+                 <div class="col-sm-4">
+                     <h5>Last</h5>
+                     <p><span class="label"><b>Since New: </b></span><span class="value">{{lastSinceNew}}</span></p>
+                     <p><span class="label"><b>Since Ovh: </b></span><span class="value">{{lastSinceOVH}}</span></p>
+                     <p><span class="label"><b>Since Insp: </b></span><span class="value">{{lastSinceInspection}}</span></p>
+                 </div>
              </div>
              <div class="clear"></div>
          </div>
-         <div class="modal-footer">
-             <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+             <div class="modal-footer">
+                 <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+             </div>
          </div>
-     </div>
 
  </ng-template>

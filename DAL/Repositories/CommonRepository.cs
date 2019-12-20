@@ -338,6 +338,44 @@ namespace DAL.Repositories
                 throw ex;
             }
         }
+        public IEnumerable<object> GetRestrictedPartsWithDescription(long moduleId, long? referenceId, string partType)
+        {
+            try
+            {
+
+
+                var data = (from t in _appContext.ItemMaster
+                            join rp in _appContext.RestrictedParts on t.ItemMasterId equals rp.MasterPartId
+
+                            where rp.IsDeleted == false && rp.ModuleId == moduleId && rp.ReferenceId == referenceId && rp.PartType == partType && rp.PartNumber != null
+                            // select new { t, ad, vt }).ToList();
+                            select new
+                            {
+                                rp.RestrictedPartId,
+                                rp.ModuleId,
+                                rp.ReferenceId,
+                                rp.MasterPartId,
+                                rp.Memo,
+                                rp.PartNumber,
+                                rp.PartType,
+                                rp.CreatedDate,
+                                rp.CreatedBy,
+                                rp.UpdatedDate,
+                                rp.UpdatedBy,
+                                rp.IsActive,
+                                rp.IsDeleted,
+                                t.PartDescription
+                            }).ToList();
+                
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
 
 
         #region RestrictsPMAList

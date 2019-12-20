@@ -60,6 +60,10 @@ export class PurchaseOrderService {
   getPOPartsViewById(purchaseOrderId){
     return this.purchaseOrderEndpoint.getPOPartsViewById(purchaseOrderId);
   }
+
+  purchaseOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId){
+    return this.purchaseOrderEndpoint.purchaseOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId);
+  }
   /*./vendor PO*/
 
 }

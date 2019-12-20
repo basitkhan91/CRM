@@ -18,9 +18,6 @@ import { WorkOrderEquipmentListComponent } from '../components/work-order/work-o
 import { WorkOrderEquipmentCheckInOutComponent } from '../components/work-order/work-order-setup/work-order-equipment/work-order-equipment-check-in-out/work-order-equipment-check-in-out.component';
 import { WorkOrderCompleteMaterialListComponent } from '../components/work-order/work-order-setup/work-order-complete-material-list/work-order-complete-material-list.component';
 import { WorkOrderReserveIssueComponent } from '../components/work-order/work-order-setup/work-order-reserve-issue/work-order-reserve-issue.component';
-import { WorkOrderMainComponentComponent } from '../components/work-order/work-order-setup/work-order-main-component/work-order-main-component.component';
-
-
 import { WorkOrderMemoComponent } from '../components/work-order/work-order-setup/work-order-memo/work-order-memo.component';
 import { WorkOrderDocumentsComponent } from '../components/work-order/work-order-setup/work-order-documents/work-order-documents.component';
 import { WorkOrderAnalysisComponent } from '../components/work-order/work-order-setup/work-order-analysis/work-order-analysis.component';
@@ -65,6 +62,9 @@ import { SubWorkOrderComponent } from '../components/work-order/work-order-setup
 import { MatTooltipModule } from '@angular/material';
 import { WorkOrderQuoteService } from '../services/work-order/work-order-quote.service';
 import { QuoteEndpointService } from '../services/work-order/work-order-quote.endpoint.service';
+import { WorkOrderROListComponent } from '../components/work-order/work-order-setup/work-order-ro-list/work-order-ro-list.component';
+import { WorkOrderROCreateComponent } from '../components/work-order/work-order-setup/work-order-ro-create/work-order-ro-create.component';
+
 
 // import { MaterialListCreateComponent } from '../shared/Material-List-Create.component';
 // import { SharedModule } from '../shared/shared.module';
@@ -108,9 +108,6 @@ import { QuoteEndpointService } from '../services/work-order/work-order-quote.en
     WorkOrderEquipmentCheckInOutComponent,
     WorkOrderCompleteMaterialListComponent,
     WorkOrderReserveIssueComponent,
-    WorkOrderMainComponentComponent,
-
-
     WorkOrderMemoComponent,
     WorkOrderDocumentsComponent,
     WorkOrderAnalysisComponent,
@@ -124,7 +121,9 @@ import { QuoteEndpointService } from '../services/work-order/work-order-quote.en
     WorkOrderAddressesComponent,
     WorkOrderSmartComponent,
     SubWorkOrderListComponent,
-    SubWorkOrderComponent
+    SubWorkOrderComponent,
+    WorkOrderROListComponent,
+    WorkOrderROCreateComponent
 
 
 

@@ -447,7 +447,7 @@
                                     <span class="inline-block">
                                         <p-dropdown [options]="workFlowList" 
                                         name="workFlow{{i}}"  #workFlow="ngModel" 
-                                        placeholder="Select WorkFlow" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.workflowId">
+                                        placeholder="None" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.workflowId">
                                         </p-dropdown>
                                     </span>
                                 </td>
@@ -539,60 +539,60 @@
             </div>
 
  
-            <div class="card " *ngIf="showTabsGrid ">
-                <div class="card-header" *ngIf="!workOrderGeneralInformation.isSinglePN ">
-                  Multiple  MPN
-
-                </div>
-                <div class="card-body">
-                    <div class="col-md-12" [hidden]="workOrderGeneralInformation.isSinglePN">
-                        <div class="col-md-2">
-                            <label class="control-label col-sm-3">MPN </label>
-                             <div class="col-sm-7">
-
-                                <p-dropdown [options]="mpnPartNumbersList" placeholder="Select Part Number" class="p-dropdown-custom-md" 
-                                (onChange)="changeofMPN($event.value)"
-                                >
-                                  </p-dropdown> 
-                            </div> 
-
-                            <!-- <div class="col-sm-7">
-                              <select>
-                                <option *ngFor="let mpn of MPNList">{{mpn.partNumber}}</option>
-                              </select>
-                            </div> -->
-                        </div>
-                        <div class="col-md-10" style="background-color: white" [hidden]="workOrderGeneralInformation.isSinglePN">
+            <div class="card" *ngIf="showTabsGrid" >
+              <div *ngIf="showTabsMPNGrid">
+                  <div class="card-header" *ngIf="!workOrderGeneralInformation.isSinglePN">
+                      Multiple  MPN  
+                    </div>
+                    <div class="card-body" >
+                        <div class="col-md-12" [hidden]="workOrderGeneralInformation.isSinglePN">
                             <div class="col-md-2">
-                                <label class="fs12">Description : </label>
-                                <span>Gyro</span>
+                                <label class="control-label col-sm-3">MPN </label>
+                                 <div class="col-sm-7">
+    
+                                    <p-dropdown [options]="mpnPartNumbersList" placeholder="Select Part Number" class="p-dropdown-custom-md" 
+                                    (onChange)="changeofMPN($event.value)"
+                                    >
+                                      </p-dropdown> 
+                                </div> 
                             </div>
-                            <div class="col-md-2">
-                                <label class="fs12">Workscope : </label>
-                                <span>REP</span>
-                            </div>
-                            <div class="col-md-2">
-                                <label class="fs12">NTE : </label>
-                                <span>5000</span>
-                            </div>
-
-                            <div class="col-md-2">
-                                <label class="fs12">Qty :</label>
-                                <span>10</span>
-                            </div>
-                            <div class="col-md-2">
-                                <label class="fs12" style="text-align: left;
-                                    width: 41px;">Stage : </label>
-                                <span>5_WO opened</span>
-
-                            </div>
-                            <div class="col-md-2">
-                                <label class="fs12">Priority :</label>
-                                <span>AOG</span>
+    
+                            <div  class="col-md-10" style="background-color: white" *ngIf="mpnGridData">
+                                <div class="col-md-2">
+                                    <label class="fs12">Description : </label>
+                                    <span>{{mpnGridData.description}}</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="fs12">Workscope : </label>
+                                    <span>{{mpnGridData.workscope}}</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="fs12">NTE : </label>
+                                    <span>{{mpnGridData.nte}}</span>
+                                </div>
+    
+                                <div class="col-md-2">
+                                    <label class="fs12">Qty :</label>
+                                    <span>{{mpnGridData.qty}}</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="fs12" style="text-align: left;
+                                        width: 41px;">Stage : </label>
+                                    <span>{{mpnGridData.stage}}</span>
+    
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="fs12">Priority :</label>
+                                    <span>{{mpnGridData.priority}}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;">
+              </div>
+                <div class="card-body" *ngIf="showGridMenu">
+                   
+
+                    <div  class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;">
                         <ul class="nav nav-pills nav-pills-cstm" id="pills-tab" role="tablist">
 
                             <li class="nav-item" *ngIf="isSubWorkOrder">
@@ -644,10 +644,10 @@
                                   (click)="gridTabChange('main')">Main
                                   Component </a>
                               <div class="dropdown-menu">
-                                  <a class="dropdown-item">Add to an Existing RO</a>
-                                  <a class="dropdown-item">Create New RO</a>
-                                  <a class="dropdown-item">Convert Internal to External </a>
-                                  <a class="dropdown-item">Return MC to Customer </a>
+                                  <a class="dropdown-item" (click)="mainComponentTabSelected('existingRO')">Add to an Existing RO</a>
+                                  <a class="dropdown-item" (click)="mainComponentTabSelected('createNewRO')" >Create New RO</a>
+                                  <a class="dropdown-item" (click)="mainComponentTabSelected('interOrexternal')" >Convert Internal to External </a>
+                                  <a class="dropdown-item" (click)="mainComponentTabSelected('returnmc')" >Return MC to Customer </a>
                               </div>
                           </li>
                           <li class="nav-item">
@@ -728,11 +728,11 @@
                             (click)="gridTabChange('otherOptions')">Other Options</a>
                         <div class="dropdown-menu">
               
-                            <a class="dropdown-item" (click)="otherOptionSelected('freight')" >Freight</a>
-                            <a class="dropdown-item" (click)="otherOptionSelected('contactGrid')">Contact Grid</a>
-                            <a class="dropdown-item" (click)="otherOptionSelected('accounting')" >Accounting</a>
-                            <a class="dropdown-item" (click)="otherOptionSelected('charges')">Charges</a>
-                            <a class="dropdown-item" (click)="otherOptionSelected('exclusions')" >Exclusion </a>
+                            <a class="dropdown-item" (click)="otherOptionTabSelected('freight')" >Freight</a>
+                            <a class="dropdown-item" (click)="otherOptionTabSelected('contactGrid')">Contact Grid</a>
+                            <a class="dropdown-item" (click)="otherOptionTabSelected('accounting')" >Accounting</a>
+                            <a class="dropdown-item" (click)="otherOptionTabSelected('charges')">Charges</a>
+                            <a class="dropdown-item" (click)="otherOptionTabSelected('exclusions')" >Exclusion </a>
                         </div>
                     </li>
                     </ul>
@@ -745,7 +745,7 @@
                         <!-- <wf-create [isWorkOrder]="isWorkOrder" [savedWorkOrderData]="savedWorkOrderData" (savedWorkFlowWorkOrderData)="savedWorkFlowData($event)" > </wf-create> -->
                     </div>
                     <div *ngIf="workFlowId && subTabWorkFlow && editWorkFlowData" [ngClass]="{hidedata: subTabWorkFlow !== 'editworkFlow' }">
-                        <wf-create [isWorkOrder]="isWorkOrder" [workFlowWorkOrderId]="workFlowWorkOrderId" [savedWorkOrderData]="savedWorkOrderData" (savedWorkFlowWorkOrderData)="savedWorkFlowData($event)" > </wf-create>
+                        <wf-create [isWorkOrder]="isWorkOrder" [workOrderPartNumberId]="workOrderPartNumberId" [workFlowWorkOrderId]="workFlowWorkOrderId" [savedWorkOrderData]="savedWorkOrderData" (savedWorkFlowWorkOrderData)="savedWorkFlowData($event)" > </wf-create>
                         <!-- <app-workflow-list></app-workflow-list> -->
                     </div>
 
@@ -779,6 +779,17 @@
                     <div  *ngIf="quote" [ngClass]="{hidedata : gridActiveTab !== 'quote' }" >
                             <app-work-order-quote [quoteForm]="quote"></app-work-order-quote>
                         </div>
+
+                  
+                      
+                      <div  *ngIf="workOrderId && workOrderPartNumberId"  [ngClass]="{hidedataMain :  subTabMainComponent !== 'existingRO'} "  >
+                        <app-workorder-ro-list  [mpnId]="workOrderPartNumberId" ></app-workorder-ro-list>
+                      </div>
+                     <div *ngIf="workOrderId && workOrderPartNumberId" [ngClass]="{hidedataMain :  subTabMainComponent !== 'createNewRO'} " >
+                        <app-workorder-ro-create  [mpnId]="workOrderPartNumberId"> </app-workorder-ro-create>
+                     </div>
+
+
                     <div *ngIf="workOrderId" [ngClass]="{hidedata : gridActiveTab !== 'materialList' }" >  
                       <app-work-order-complete-material-list [materialStatus]="materialStatus"
                        [isWorkOrder]="isWorkOrder" 
@@ -793,7 +804,7 @@
                     </div>
                       
 
-                    <div *ngIf="billing" [ngClass]="{hidedata : gridActiveTab !== 'billorInvoice'}">
+                    <div *ngIf="billing && quoteMaterialList " [ngClass]="{hidedata : gridActiveTab !== 'billorInvoice'}">
                         <app-work-order-billing   
                          [billingorInvoiceForm]="billing" 
                          [currencyList]="currencyList"

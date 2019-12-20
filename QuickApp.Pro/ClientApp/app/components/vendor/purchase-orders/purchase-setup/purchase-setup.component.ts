@@ -196,6 +196,11 @@ export class PurchaseSetupComponent implements OnInit {
 	allCountriesList: any = [];
 	countriesList: any = [];
 	inputValidCheck: any;
+	vendorContactInfo: any = {}
+	venContactList: any = [];
+	venContactFirstNames: any = [];
+	venContactLastNames: any = [];
+	venContactMiddleNames: any = [];
 
 	constructor(private route: Router,
 		public legalEntityService: LegalEntityService,
@@ -240,6 +245,7 @@ export class PurchaseSetupComponent implements OnInit {
 		this.getLegalEntity();
 		this.getCountriesList();
 		this.loadPercentData();
+		this.loadVendorContactInfo();
 		this.sourcePoApproval.companyId = 0;
 		this.sourcePoApproval.buId = 0;
 		this.sourcePoApproval.divisionId = 0;
@@ -732,6 +738,14 @@ export class PurchaseSetupComponent implements OnInit {
 
 		this.legalEntityList_ForBilling = legalFilter;
 	}
+
+	private loadVendorContactInfo() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.vendorService.getContactsFirstName().subscribe(results => {
+			this.venContactList = results[0];
+		});
+    }
 
 	private priorityData() {
 		this.commonService.smartDropDownList('Priority', 'PriorityId', 'Description').subscribe(res => {
@@ -3497,6 +3511,105 @@ export class PurchaseSetupComponent implements OnInit {
 			}
 		})
 	}
+
+	filterVenContactFirstNames(event) {
+		this.venContactFirstNames = this.venContactList;
+		if (event.query !== undefined && event.query !== null) {
+			const firstNames = [...this.venContactList.filter(x => {
+				return x.firstName.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.venContactFirstNames = firstNames;
+		}
+	}
+	filterVenContactLastNames(event) {
+		this.venContactLastNames = this.venContactList;
+		if (event.query !== undefined && event.query !== null) {
+			const lastNames = [...this.venContactList.filter(x => {
+				return x.lastName.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.venContactLastNames = lastNames;
+		}
+	}
+	filterVenContactMiddleNames(event) {
+		this.venContactMiddleNames = this.venContactList;
+		if (event.query !== undefined && event.query !== null) {
+			const middleNames = [...this.venContactList.filter(x => {
+				return x.middleName;
+				//.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.venContactLastNames = middleNames;
+		}
+	}
+	
+	resetVenContactInfo() {
+		this.vendorContactInfo = new Object();
+	}
+
+	addContactForVendor() {
+		console.log(this.sourcePoApproval.vendorId);
+		let vendorContactInfo = {
+			...this.vendorContactInfo,
+			firstName: editValueAssignByCondition('firstName', this.vendorContactInfo.firstName),
+			middleName: editValueAssignByCondition('middleName', this.vendorContactInfo.middleName),
+			lastName: editValueAssignByCondition('lastName', this.vendorContactInfo.lastName),
+			vendorId: editValueAssignByCondition('vendorId', this.sourcePoApproval.vendorId)
+		}
+		this.vendorService.newAddContactInfo(vendorContactInfo).subscribe(res => {
+			console.log(res);
+			this.getVendorContactsListByID(vendorContactInfo.vendorId);
+		})	
+
+        // if (!(this.sourceVendor.firstName && this.sourceVendor.lastName && this.sourceVendor.workPhone &&
+        //     this.sourceVendor.email
+        // )) {
+        //     //this.display = true;
+        //     this.modelValue = true;
+        // }
+        // if (this.sourceVendor.firstName && this.sourceVendor.lastName && this.sourceVendor.workPhone &&
+        //     this.sourceVendor.email) {
+        //     if (!this.sourceVendor.vendorId) {
+        //         this.sourceVendor.createdBy = this.userName;
+        //         this.sourceVendor.updatedBy = this.userName;
+        //         this.sourceVendor.masterCompanyId = 1;
+        //         this.isDefault = this.sourceVendor.isDefaultContact;
+        //         if(!this.sourceVendor.isDefaultContact){
+        //             this.sourceVendor.isDefaultContact = false;
+        //         }
+        //         // before you commit make sure u don't have conlog, debug, commented code...
+        //         this.workFlowtService.newAddContactInfo(this.sourceVendor).subscribe(data => {
+        //             console.log(data)
+        //             this.localCollection = data;
+        //             this.sourceVendor = new Object();
+        //             this.localCollection.VendorId = this.local.vendorId;
+        //             this.localCollection.ContactId = this.local.contactId;
+        //             this.loadData();
+        //             if (data) {
+        //                 this.updateVendorContact(this.localCollection);
+        //                 this.localCollection.isDefaultContact = this.isDefault;
+        //                 this.loadData(); // use proper naming conventions
+        //             }
+
+        //             this.workFlowtService.contactCollection = this.local;
+        //             this.saveCompleted(this.sourceVendor);
+        //             this.sourceVendor = {};
+        //         })
+        //     }
+        //     else {
+        //         this.sourceVendor.updatedBy = this.userName;
+        //         this.sourceVendor.masterCompanyId = 1;
+        //         this.workFlowtService.updateContactinfo(this.sourceVendor).subscribe(data => {
+        //             this.loadData();
+        //             if (data) { this.sourceVendor = new Object(); }
+        //             this.savesuccessCompleted(this.sourceVendor);
+        //             this.sourceVendor = {};
+        //         })
+        //     }
+        // }
+
+        // else {
+        // }       
+        // this.workFlowtService.contactCollection = this.local;        
+    }
 
 	// getShipToSiteName(data, id) {
 	// 	this.shipToAddress = {};

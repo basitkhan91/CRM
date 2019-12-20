@@ -311,7 +311,7 @@ namespace DAL
 
         public DbSet<GLAccountClassAudit> GLAccountClassAudit { get; set; }
 
-        public DbSet<MarkUpPercentage> MarkUpPercentage { get; set; }
+       
         public DbSet<POROCategory> POROCategory { get; set; }
         public DbSet<POROCategoryAudit> POROCategoryAudit { get; set; }
 
@@ -339,7 +339,7 @@ namespace DAL
         public DbSet<ConditionAudit> ConditionAudit { get; set; }
         public DbSet<CreditTermsAudit> CreditTermsAudit { get; set; }
         public DbSet<CurrencyAudit> CurrencyAudit { get; set; }
-        public DbSet<ItemClassficationAudit> ItemClassficationAudit { get; set; }
+        public DbSet<ItemClassficationAudit> ItemClassificationAudit { get; set; }
         public DbSet<ItemgroupAudit> ItemGroupAudit { get; set; }
         public DbSet<JobTitleAudit> JobTitleAudit { get; set; }
         public DbSet<JobTypeAudit> JobTypeAudit { get; set; }
@@ -456,6 +456,8 @@ namespace DAL
 
         public DbSet<Master1099> Master1099 { get; set; }
         public DbSet<VendorProcess1099> VendorProcess1099 { get; set; }
+        public DbSet<VendorCapabilityAircraft> VendorCapabilityAircraft { get; set; }
+        
 
 
         public DbSet<WorkOrderQuoteExclusions> WorkOrderQuoteExclusions { get; set; }
