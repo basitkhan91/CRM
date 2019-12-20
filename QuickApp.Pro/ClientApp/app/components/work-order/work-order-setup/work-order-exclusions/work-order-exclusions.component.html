@@ -35,6 +35,7 @@
           [isQuote] = "isQuote"
            [workFlow]='workFlowObject' 
           [isWorkOrder]="isWorkOrder" 
+          [markupList]="markupList"
           (saveExclusionsListForWO)="saveExclusionsList($event)">
           </grd-exclusions>
 
@@ -43,7 +44,8 @@
         [isEdit]="isEdit"
         [editData]="editData"
         [workFlow]='workFlowObject' 
-        [isWorkOrder]="isWorkOrder" 
+        [isWorkOrder]="isWorkOrder"
+        [markupList]="markupList" 
         (updateExclusionsListForWO)="updateExclusionsList($event)">
       </grd-exclusions>
   
@@ -74,6 +76,7 @@
                                                                         <th class="text-center">Extended Cost</th>
                                                                         <th class="text-center">Memo</th>
                                                                         <ng-container *ngIf="isQuote">
+                                                                            <th>Mark up</th>
                                                                             <th>Cost Plus Amount</th>
                                                                             <th>Fixed Amount</th>
                                                                         </ng-container>
@@ -90,8 +93,9 @@
                                                                         <td>{{w.extendedCost}}</td>
                                                                         <td>{{w.memo}}</td>
                                                                         <ng-container *ngIf="isQuote">
-                                                                            <td>{{w.quantity * w.unitCost}}</td>
-                                                                            <td><input [(ngModel)]="w.FixedAmount" /></td>
+                                                                            <td>{{w.markup}}</td>
+                                                                            <td>{{w.costPlusAmount}}</td>
+                                                                            <td>{{w.fixedAmount}}</td>
                                                                         </ng-container>
 
                                                                         <td>

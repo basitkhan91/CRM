@@ -243,7 +243,7 @@
                                                         {{x.quantityAlreadyReserved}}
                                                     </td>
                                                     <td>
-                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityReserved" (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 2 ||  statusId === 3 ">
+                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityReserved" (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 2 ||  statusId === 3 ||  statusId === 4">
                                                     </td>
                                                     <td>
                                                         <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityTurnIn">
@@ -253,7 +253,7 @@
                                                         {{x.quantityAlreadyIssued}}
                                                     </td>
                                                     <td>
-                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityIssued"  (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 1 || statusId === 3 ">
+                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityIssued"  (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 1 || statusId ===5">
                                                     </td>
 
                                                     <td></td>
@@ -325,7 +325,7 @@
                                                     </td>
                                                     <td>{{x.quantityAlreadyReserved}}</td>
                                                     <td>
-                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityIssued" (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 1 || statusId === 3 ">
+                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityIssued" (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 1 || statusId ===5">
 
                                                     </td>
 
