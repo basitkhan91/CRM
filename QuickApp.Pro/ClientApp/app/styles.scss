@@ -2873,15 +2873,18 @@ input[type="text"] {
     
 }
 
+.acc-calendar.add-glaccount.form-horizontal label {
+    width: inherit;
+}
 
-    .form-horizontal .control-label {
-        font-weight: 500;
-        color: #222;
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        text-align: right;
-        margin: 0;
-        font-weight: bold !important;
-    }
+.form-horizontal .control-label {
+    font-weight: 500;
+    color: #222;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-align: right;
+    margin: 0;
+    font-weight: bold !important;
+}
 
     .form-control:focus {
         border-color: #CCD0D7;
@@ -14371,4 +14374,21 @@ margin-left: -6px;
 .accountCalendarTable .table.table-bordered thead tr th{
     padding: 5px;
 }
+
+.add-glaccount .form-group input,
+.add-glaccount .form-group select,
+.add-glaccount .ui-autocomplete .ui-autocomplete-dropdown,
+.add-glaccount .ui-calendar .ui-calendar-button {
+    height: 29px !important;
+}
+
+.add-glaccount .form-group input[type=checkbox],
+.add-glaccount .form-group input[type=radio]{
+    height: auto !important;
+}
+
+.add-glaccount .form-group{
+    margin-bottom: 10px !important
+}
+
 

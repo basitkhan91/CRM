@@ -10,8 +10,9 @@ export class AccountCalenderEndpointService extends EndpointFactory {
 
     
     private readonly addURL: string = "/api/AccountingCalendar/addCalendarData";
-    private readonly getAllURL: string = "/api/AccountingCalendar/getAllCalendarData";
-    private readonly getCalendarListURL: string = "/dist/assets/data/accountlisting.json";
+    private readonly getAllURL: string = "/api/AccountingCalendar/getAllCalendarListData";
+    //private readonly getCalendarListURL: string = "/dist/assets/data/accountlisting.json";
+    private readonly getCalendarListURL: string = "/api/AccountingCalendar/getAllCalendarListData";
     
     get add() { return this.configurations.baseUrl + this.addURL; }
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }

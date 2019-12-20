@@ -66,16 +66,10 @@ export class AccountingCalendarComponent implements OnInit {
 
     }
 
-    loadListingCalendarData() {
-        this.pageTitle = "Accounting Calendar List"
-        this.loadCompleteCalendarData()
-    }
-
-
     loadCompleteCalendarData() {
         this.calendarService.getAll().subscribe(data => {
             this.completeCalendarData = data[0];
-
+            console.log('completeCalendarData :', data)
         })
     }
 

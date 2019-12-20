@@ -57,6 +57,7 @@ export class AccountingListingCalendarComponent implements OnInit {
         
         this.calendarService.getCalendarListData().subscribe(
             datalist => {
+                console.log('datalist :', datalist)
                 var calendarData = datalist[0]['accountList'];   
                 if (data && data.sortField) {
                     if (data.sortOrder == -1)
