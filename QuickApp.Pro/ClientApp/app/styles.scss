@@ -14310,6 +14310,9 @@ input[type="date"]::-webkit-inner-spin-button {
     text-align: left !important;
     padding-left: 10px !important;
 }
+.sales-quote-customer-input input{
+    width: 79%;
+}
 @media only screen and (max-width: 1024px) {
     .md-stepper-horizontal .md-step.active.done .md-step-title, .md-stepper-horizontal .md-step.active.editable .md-step-title {
         font-size: 10px !important;

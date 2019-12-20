@@ -15,6 +15,7 @@ export class WorkOrderExclusionsComponent implements OnInit {
   @Input() workOrderExclusionsList;
   @Input() workFlowObject;
   @Input() isWorkOrder;
+  @Input() markupList;
   @Output() saveExclusionsListForWO = new EventEmitter();
   @Output() updateExclusionsListForWO = new EventEmitter();
   @Output() refreshData = new EventEmitter();

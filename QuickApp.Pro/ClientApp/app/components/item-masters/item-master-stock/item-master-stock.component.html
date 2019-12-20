@@ -565,8 +565,10 @@
                                     </div>
                                     <div>
                                         <p-multiSelect [options]="integrationvalues"
-                                                       name="intergations" [maxSelectedLabels]="2" [(ngModel)]="selectedIntegrationTypes"
-                                                       [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
+                                                       name="intergations"
+                                                       defaultLabel="Choose Columns"
+                                                       [(ngModel)]="selectedIntegrationTypes">
+                                        </p-multiSelect>
                                     </div>
                                     <label class="control-label">Memo</label>
                                     <div class="memo-popup-cstm">

@@ -31,6 +31,7 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
     @Input() editData;
     @Input() isQuote = false;
     @Input() workFlow: IWorkFlow;
+    @Input() markupList;
     @Input() UpdateMode: boolean;
     @Output() workFlowChange = new EventEmitter();
     @Output() saveMaterialListForWO = new EventEmitter();
@@ -386,6 +387,19 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
 
     updateMaterialsWorkOrder() {
         this.updateMaterialListForWO.emit(this.workFlow);
+    }
+
+    markupChanged(matData){
+    try{
+        this.markupList.forEach((markup)=>{
+        if(markup.value == matData.markup){
+            matData.costPlusAmount = (matData.quantity * matData.unitCost) + ( ((matData.quantity * matData.unitCost)/100) *  Number(markup.label))
+        }
+        })
+    }
+    catch(e){
+        console.log(e);
+    }
     }
 
 

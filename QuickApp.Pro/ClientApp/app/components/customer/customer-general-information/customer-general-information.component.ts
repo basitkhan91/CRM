@@ -35,6 +35,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     @Input() customerListOriginal;
     @Output() tab = new EventEmitter<any>();
     @Output() saveGeneralInformationData = new EventEmitter<any>();
+
     @Output() editGeneralInformation = new EventEmitter<any>();
 
     generalInformation = new CustomerGeneralInformation();
@@ -97,12 +98,13 @@ export class CustomerGeneralInformationComponent implements OnInit {
     restrictedPMAParts: any = [];
     restrictHeaders = [
         { field: 'partNumber', header: 'PN' },
-        { field: 'memo', header: 'Description' },
+        { field: 'partDescription', header: 'Description' },
 
     ];
     selectedClassificationRecordForEdit: any;
     tempClassifciatonIds: any = [];
     tempIntegrationIds: any = [];
+    changeName: boolean = false;
     ataListDataValues: any;
     // editData: any;
 
@@ -424,7 +426,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 };
                 this.generalInformation1 = {
                     ...this.editData,
-                    name: getObjectByValue('name', res.name, this.customerListOriginal),
+                  
                     country: getObjectById('countries_id', res.country, this.countryListOriginal),
                     customerParentName: getObjectByValue('name', res.customerParentName, this.customerListOriginal),
                     customerCode: getObjectByValue('customerCode', res.customerCode, this.customerListOriginal),
@@ -529,7 +531,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     async    getCustomerRestrictedPMAByCustomerId() {
        
-     await    this.commonService.getRestrictedParts(1, this.id, 'PMA').subscribe(res => {
+     //await    this.commonService.getRestrictedParts(1, this.id, 'PMA').subscribe(res => {
+        await this.commonService.getRestrictedPartsWithDesc(1, this.id, 'PMA').subscribe(res => {
+        
            this.generalInformation.restrictedPMAParts = res;
             if (this.generalInformation.restrictedPMAParts.length > 0) {
                 this.disableRestrictedPMA = true;
@@ -552,7 +556,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
     }
 
     async getCustomerRestrictedDERByCustomerId() {
-        await this.commonService.getRestrictedParts(1, this.id, 'DER').subscribe(res => {
+        //await this.commonService.getRestrictedParts(1, this.id, 'DER').subscribe(res => {
+        await this.commonService.getRestrictedPartsWithDesc(1, this.id, 'DER').subscribe(res => {
 
             this.generalInformation.restrictedDERParts = res;
             if (this.generalInformation.restrictedDERParts.length > 0) {
@@ -591,7 +596,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
             this.partListOriginal = data.map(x => {
                 return {
-                    label: x.partNumber, value: { masterPartId: x.itemMasterId, partNumber: x.partNumber, memo: x.memo, createdBy: this.userName, updatedBy: this.userName }
+                    label: x.partNumber, value: { masterPartId: x.itemMasterId, partNumber: x.partNumber, memo: x.memo, createdBy: this.userName, updatedBy: this.userName, partDescription: x.partDescription }
                 }
             })
             this.partListForPMA = [...this.partListOriginal];
@@ -834,7 +839,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     }
 
     checkCustomerNameExist(value) {
-     
+        this.changeName = true;
         this.isCustomerNameAlreadyExists = false;
         this.disableSaveCustomerName = false;
         for (let i = 0; i < this.customerListOriginal.length; i++) {
@@ -850,13 +855,43 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
 
     }
-    checkWithName(event) {
-    
-        if (event == this.generalInformation.name) {
-            this.disableSaveParentName = true;
+    selectedParentName(event) {
+       
+        if (this.changeName == false) {
+            if (event.name === this.generalInformation1.name) {
+                this.disableSaveParentName = true;
+            }
+            else {
+                this.disableSaveParentName = false;
+            }
         }
         else {
-            this.disableSaveParentName = false;
+            if (event.name === this.generalInformation.name) {
+                this.disableSaveParentName = true;
+            }
+            else {
+                this.disableSaveParentName = false;
+            }
+        }
+        
+    }
+    checkWithName(event) {
+      
+        if (this.changeName == false) {
+            if (event === this.generalInformation1.name) {
+                this.disableSaveParentName = true;
+            }
+            else {
+                this.disableSaveParentName = false;
+            }
+        }
+        else {
+            if (event === this.generalInformation.name) {
+                this.disableSaveParentName = true;
+            }
+            else {
+                this.disableSaveParentName = false;
+            }
         }
     }
     checkCustomerCodeExist(value) {
@@ -970,7 +1005,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 //this.generalInformation = new CustomerGeneralInformation();
                 //this.isEdit = true;
                 this.tab.emit('Contacts');
-                this.saveGeneralInformationData.emit(res);
+               
+                //this.saveGeneralInformationData.emit(res);
+                this.editGeneralInformation.emit(res);
                 this.id = res.customerId;
                 this.editData = res;
 

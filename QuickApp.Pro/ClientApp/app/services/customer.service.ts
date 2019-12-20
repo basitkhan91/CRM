@@ -545,7 +545,7 @@ export class CustomerService {
     getCustomerBillingHistory(customerId, customerBillingAddressId) {
         return this.customerEndpoint.getCustomerBillingHistory(customerId , customerBillingAddressId)
     }
-
+    
     getCustomerClassificationMapping(customerId) {
         return this.customerEndpoint.getCustomerClassificationMapping(customerId);
     }

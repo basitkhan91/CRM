@@ -191,11 +191,9 @@ export class WorkOrderListComponent implements OnInit {
             this.workOrderService.getWorkOrderWorkFlowNumbers(workOrderId).subscribe(res => {
 
                 this.mpnPartNumbersList = res.map(x => {
-
-
                     return {
                         value: { workflowId: x.workflowId, workFlowWorkOrderId: x.value },
-                        label: x.workflowNo
+                        label: x.partNumber
                     }
                 })
 

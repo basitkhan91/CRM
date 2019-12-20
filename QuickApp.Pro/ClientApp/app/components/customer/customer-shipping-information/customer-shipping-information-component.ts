@@ -78,8 +78,8 @@ export class CustomerShippingInformationComponent implements OnInit {
     selectedColumnsForInternationShipViaTable = [
         { field: 'shipVia', header: 'Ship Via' },
         { field: 'shippingAccountInfo', header: 'Shipping AccountInfo' },
-        { field: 'shippingURL', header: 'Shipping URL' },
-        { field: 'shippingId', header: 'shipping Id' },
+        //{ field: 'shippingURL', header: 'Shipping URL' },
+        //{ field: 'shippingId', header: 'shipping Id' },
         { field: 'memo', header: 'Memo' }
 
     ];

@@ -52,6 +52,7 @@ namespace QuickApp.Pro.Controllers
             list = from q in this.Context.SalesOrderQuote
                    join c in this.Context.Customer
                    on q.CustomerId equals c.CustomerId
+                   where q.IsDeleted == false
                    select new SalesQuoteListView
                    {
                        SalesQuoteId = q.SalesOrderQuoteId,
@@ -61,6 +62,7 @@ namespace QuickApp.Pro.Controllers
                        CustomerCode = c.CustomerCode,
                        Status = "Open",  // Hardcoded for time being, will be removed in next version  
                    };
+                   
             return Ok(list);
         }
 

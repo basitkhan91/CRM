@@ -516,6 +516,7 @@ namespace DAL.Repositories
                             from pub in woppub.DefaultIfEmpty()
                             join stage in _appContext.WorkOrderStage on swo.StageId equals stage.ID
                             join status in _appContext.WorkOrderStatus on swo.StatusId equals status.Id
+
                             where swo.SubWorkOrderId == subWorkOrderId
                             select new
                             {
@@ -614,6 +615,7 @@ namespace DAL.Repositories
                             join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
                             join status in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals status.Id
                             join wowf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wowf.WorkOrderId
+							
 
 
                             where wo.WorkOrderId == workOrderId && wop.ID == workOrderPartNumberId
@@ -2653,6 +2655,8 @@ namespace DAL.Repositories
             }
         }
 
+
+
         public WorkOrderQuoteDetails CreateWorkOrderQuoteDetails(WorkOrderQuoteDetails workOrderQuoteDetails)
         {
             try
@@ -2682,6 +2686,8 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
+
 
         public WorkOrderQuoteDetails CreateWorkOrderQuoteExclusions(WorkOrderQuoteDetails quoteExclusions)
         {
@@ -2794,6 +2800,8 @@ namespace DAL.Repositories
             }
         }
 
+
+
         public WorkOrderQuoteDetails CreateWorkOrderQuoteFreight(WorkOrderQuoteDetails quoteFreight)
         {
             try
@@ -2863,7 +2871,9 @@ namespace DAL.Repositories
                                                 wf.WorkOrderQuoteDetailsId,
                                                 wf.WorkOrderQuoteFreightId,
                                                 ShipViaName = sv.Name,
-                                                CarrierName = car.Name
+                                                CarrierName = car.Name,
+                                                wf.MarkupPercentageId,
+                                                wf.FreightCostPlus
                                             }).Distinct().ToList();
 
                 return workOrderFreightList;
@@ -2897,6 +2907,8 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
+
 
         public WorkOrderQuoteDetails CreateWorkOrderQuoteCharges(WorkOrderQuoteDetails quoteCharges)
         {
@@ -2972,7 +2984,8 @@ namespace DAL.Repositories
                                 woc.UpdatedDate,
                                 woc.WorkOrderQuoteDetailsId,
                                 woc.WorkOrderQuoteChargesId,
-                                WorkflowChargeTypeId = woc.ChargesTypeId
+                                WorkflowChargeTypeId = woc.ChargesTypeId,
+                                woc.ChargesCostPlus,
                             }
                           ).Distinct().ToList();
                 return list;
@@ -3005,6 +3018,7 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
 
 
         public WorkOrderQuoteDetails CreateWorkOrderQuoteMaterial(WorkOrderQuoteDetails quoteMaterials)
@@ -3071,10 +3085,10 @@ namespace DAL.Repositories
                                                   ConditionType = c.Description,
                                                   OemPmaDer = im.PMA == true && im.DER == true ? "PMA&DER" : (im.PMA == true && im.DER == false ? "PMA" : (im.PMA == false && im.DER == true ? "DER" : "")),
                                                   wom.UnitCost,
-                                                  wom.MatMarkup,
-                                                  wom.TotalPartsCost,
-                                                  wom.Markup,
-                                                  wom.CostPlusAmount,
+                                                  wom.MarkupPercentageId,
+                                                  wom.Price,
+                                                  wom.ExtendedPrice,
+                                                  wom.MaterialCostPlus,
                                                   wom.FixedAmount,
                                                   wom.WorkOrderQuoteDetailsId,
                                                   wom.WorkOrderQuoteMaterialId
@@ -3111,6 +3125,8 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
+
 
         public WorkOrderQuoteDetails CreateWorkOrderQuoteLabor(WorkOrderQuoteDetails quoteLabor)
         {
@@ -3215,7 +3231,10 @@ namespace DAL.Repositories
                                                       wol.UpdatedDate,
                                                       wol.WorkOrderQuoteLaborHeaderId,
                                                       wol.WorkOrderQuoteLaborId,
-                                                      EmployeeName = emp.FirstName
+                                                      EmployeeName = emp.FirstName,
+                                                      wol.DirectLaborOHCost,
+                                                      wol.MarkupPercentageId,
+                                                      wol.LabourCostPlus
                                                   }
                                                  ).Distinct().ToList()
                                  }
@@ -3560,9 +3579,6 @@ namespace DAL.Repositories
         {
             try
             {
-
-
-
                 var data = (from bi in _appContext.WorkOrderBillingInvoicing
                             join wo in _appContext.WorkOrder on bi.WorkOrderId equals wo.WorkOrderId
                             join wop in _appContext.WorkOrderPartNumber on bi.WorkOrderPartNoId equals wop.ID
@@ -3596,7 +3612,6 @@ namespace DAL.Repositories
                                 bi.WorkFlowWorkOrderId,
                                 bi.ItemMasterId,
                                 bi.InvoiceTypeId,
-
                                 InvoiceType = it.Description,
                                 bi.InvoiceNo,
                                 cust.ContractReference,
@@ -3673,13 +3688,18 @@ namespace DAL.Repositories
                                 wo.CustomerId,
                                 cust.Email,
                                 cust.CustomerPhone,
-                                bi.AvailableCredit
+                                bi.AvailableCredit,
+                                bi.TotalWorkOrderCost,
+                                bi.TotalWorkOrderCostPlus,
+                                bi.MaterialCost,
+                                bi.MaterialCostPlus,
+                                bi.LaborOverHeadCost,
+                                bi.LaborOverHeadCostPlus,
+                                bi.MiscChargesCost,
+                                bi.MiscChargesCostPlus,
+                                bi.GrandTotal,
                             }).FirstOrDefault();
-
-
-
                 return data;
-
             }
             catch (Exception)
             {

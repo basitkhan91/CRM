@@ -19,6 +19,7 @@ export class AssetEndpoint extends EndpointFactory {
     private readonly getAuditById: string = "/api/AssetModule/audits";
     private readonly capesPost: string = "/api/AssetModule/Mancapespost";
     private readonly addassetcapes: string = "/api/AssetModule/addAssetCapes";
+    private readonly _updatecapesUrl: string = "/api/AssetModule/updatecapes";
 
     get allAssetListURL() { return this.configurations.baseUrl + this._allAssetlistUrl; }
     get assetListurl() { return this.configurations.baseUrl + this._assetlistUrl; }
@@ -119,6 +120,13 @@ export class AssetEndpoint extends EndpointFactory {
 
     getAssetsById(assetRecordId) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderassetview?assetRecordId=${assetRecordId}`, this.getRequestHeaders());
+    }
+
+    updateCapes<T>(roleObject: any, assetCapesId: number): Observable<T> {
+        return this.http.put<T>(this._updatecapesUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.updateCapes(roleObject, assetCapesId));
+            });
     }
 
     //Audit method in end pont services

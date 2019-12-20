@@ -371,6 +371,7 @@ export class AssetAttributeTypeComponent implements OnInit {
         this.currentRow = new AssetAttributeType();
         this.currentRow.isDelete = false;
         this.currentRow.residualValue = 1;
+        this.currentRow.residualPercentage = 0;
         this.currentRow.isActive = true;
         //this.currentRow.managementStructureId= 1;
         this.selectedCompanyID = 0;
@@ -469,6 +470,7 @@ export class AssetAttributeTypeComponent implements OnInit {
         rowData.updatedBy = rowData.updatedBy || userName;
         rowData.isActive = rowData.isActive || false;
         rowData.isDelete = rowData.isDelete || false;
+        rowData.residualPercentage = rowData.residualPercentage || 0;
         let item = new AssetAttributeType(rowData.assetAttributeTypeId, rowData.assetTypeId, rowData.description,
             rowData.assetAttributeTypeName, rowData.conventionType, rowData.depreciationMethod, rowData.residualPercentage,
             rowData.residualValue, rowData.assetLife, rowData.depreciationFrequencyId, rowData.acquiredGLAccountId,
@@ -695,7 +697,7 @@ export class AssetAttributeTypeComponent implements OnInit {
             { field: 'conventionTypeName', header: 'Convention Type', index: 1, showByDefault: true },
             { field: 'depreciationMethodName', header: 'Depreciation Method', index: 1, showByDefault: true },
             { field: 'residualPercentage', header: 'Residual Percentage', index: 1, showByDefault: true },
-            { field: 'residualValue', header: 'Residual Value', index: 1, showByDefault: true },
+            //{ field: 'residualValue', header: 'Residual Value', index: 1, showByDefault: true },
             { field: 'assetLife', header: 'Asset Life', index: 1, showByDefault: true },
             { field: 'depreciationFrequencyName', header: 'Depreciation Frequency', index: 1, showByDefault: true },
             { field: 'acquiredGLAccountName', header: 'Acquired GL Account', index: 1, showByDefault: true },

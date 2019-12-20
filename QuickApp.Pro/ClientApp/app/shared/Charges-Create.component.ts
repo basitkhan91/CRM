@@ -23,6 +23,8 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     @Input() UpdateMode: boolean;
     @Input() isWorkOrder: boolean;
     @Input() isEdit = false;
+    @Input() markupList;
+    @Input() isQuote = false;
     @Input() editData;
     @Output() saveChargesListForWO = new EventEmitter();
     @Output() updateChargesListForWO = new EventEmitter();
@@ -53,6 +55,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
             this.row = this.workFlow.charges[0];
             if (this.isEdit) {
                 this.workFlow.charges = [];
+
                 const data = { ...this.editData, vendor: this.editData.vendorName }
                 this.workFlow.charges.push(data);
                 this.reCalculate()
@@ -131,10 +134,11 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         this.vendorservice.getVendorsForDropdown().subscribe(
             results => {
                 this.allVendors = results;
-                if (this.UpdateMode) {
+                if (this.UpdateMode || this.isEdit) {
                     for (var charge of this.workFlow.charges) {
                         var vendor = this.allVendors.filter(x => x.vendorId == charge.vendorId)[0];
                         if (vendor != undefined) {
+                            console.log('Test')
                             charge.vendor = {
                                 vendorId: vendor.vendorId,
                                 vendorName: vendor.vendorName
@@ -259,5 +263,18 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
 
     updateChargesWorkOrder() {
         this.updateChargesListForWO.emit(this.workFlow);
+    }
+
+    markupChanged(matData) {
+        try {
+            this.markupList.forEach((markup) => {
+            if (markup.value == matData.markup) {
+                matData.costPlusAmount = (matData.quantity * matData.unitCost) + (((matData.quantity * matData.unitCost) / 100) * Number(markup.label))
+            }
+            })
+        }
+        catch (e) {
+            console.log(e);
+        }
     }
 }

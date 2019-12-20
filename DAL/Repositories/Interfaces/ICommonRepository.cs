@@ -59,6 +59,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> ManagementStructureLevelTwoData(long parentId);
         IEnumerable<object> ManagementStructureLevelThreeData(long parentId);
         IEnumerable<object> ManagementStructureLevelFourData(long parentId);
+        IEnumerable<object> GetRestrictedPartsWithDescription(long moduleId, long? referenceId, string partType);
 
     }
 }
