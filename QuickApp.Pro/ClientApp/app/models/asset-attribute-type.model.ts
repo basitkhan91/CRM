@@ -3,7 +3,7 @@
 export class AssetAttributeType {
 
     constructor(assetAttributeTypeId?: number, assetTypeId?: number, description?: string, assetAttributeTypeName?: string,
-        conventionType?: number, depreciationMethod?: number, residualPercentage?: number, residualValue?: number, assetLife?: number, depreciationFrequencyId?: number, acquiredGLAccountId?: number, deprExpenseGLAccountId?: number, adDepsGLAccountId?: number, assetSale?: number, assetWriteOff?: number, assetWriteDown?: number, managementStructureId?: number,
+        conventionType?: number, depreciationMethod?: number, residualPercentage?: number, residualValue?: number, assetLife?: number, depreciationFrequencyId?: number, acquiredGLAccountId?: number, deprExpenseGLAccountId?: number, adDepsGLAccountId?: number, assetSale?: number, assetWriteOff?: number, assetWriteDown?: number, managementStructureId?: number, selectedCompanyIds?: string,
         createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, isActive?: boolean, isDelete?: boolean) {
 
         this.assetAttributeTypeId = assetAttributeTypeId;
@@ -23,6 +23,7 @@ export class AssetAttributeType {
         this.assetWriteOff = assetWriteOff || 0;
         this.assetWriteDown = assetWriteDown || 0;
         this.managementStructureId = managementStructureId || 0;
+        this.selectedCompanyIds = selectedCompanyIds || "";
         this.createdBy = createdBy || "admin";
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
@@ -48,6 +49,7 @@ export class AssetAttributeType {
     assetWriteOff: number;
     assetWriteDown: number;
     managementStructureId: number;
+    selectedCompanyIds: string;
     createdBy: string;
     updatedBy: string;
     createdDate: Date;
