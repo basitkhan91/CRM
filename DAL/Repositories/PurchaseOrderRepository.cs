@@ -146,6 +146,7 @@ namespace DAL.Repositories
             var fulfilling = "fulfilling";
             var closed = "closed";
             if (!string.IsNullOrEmpty(filterText))
+
             {
                 if (open.Contains(filterText.ToLower()))
                 {
@@ -163,57 +164,99 @@ namespace DAL.Repositories
                 {
                     statusId = 4;
                 }
-            }
-            var totalRecords = (from po in _appContext.PurchaseOrder
-                                join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId
-                                join v in _appContext.Vendor on po.VendorId equals v.VendorId
-                                join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
-                                from appr in approver.DefaultIfEmpty()
-                                where po.IsDeleted == false && po.VendorId==(vendorId>0?vendorId:po.VendorId)
-                                
-                                &&(po.PurchaseOrderNumber.Contains(filterText)
-                                || v.VendorName.Contains(filterText)
-                                || v.VendorCode.Contains(filterText)
-                                || po.StatusId == statusId
-                                || emp.FirstName.Contains(filterText)
-                                || appr.FirstName.Contains(filterText))
-                                select new
-                                {
-                                    po.PurchaseOrderId
-                                }).Distinct()
-                                .Count();
 
-            var purchaseOrderList = (from po in _appContext.PurchaseOrder
-                                     join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId
-                                     join v in _appContext.Vendor on po.VendorId equals v.VendorId
-                                     join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
-                                     from appr in approver.DefaultIfEmpty()
-                                     where po.IsDeleted == false && po.VendorId == (vendorId > 0 ? vendorId : po.VendorId)
-                                     && ( po.PurchaseOrderNumber.Contains(filterText)
-                                     || v.VendorName.Contains(filterText)
-                                     || v.VendorCode.Contains(filterText)
-                                     || po.StatusId == statusId
-                                     || emp.FirstName.Contains(filterText)
-                                     || appr.FirstName.Contains(filterText))
-                                     select new
-                                     {
-                                         po.PurchaseOrderId,
-                                         po.PurchaseOrderNumber,
-                                         OpenDate = po.OpenDate,
-                                         ClosedDate = po.ClosedDate,
-                                         v.VendorName,
-                                         v.VendorCode,
-                                         Status = po.StatusId == 1 ? "Open" : (po.StatusId == 2 ? "Pending" : (po.StatusId == 3 ? "Fulfilling" : "Closed")),
-                                         RequestedBy = emp.FirstName,
-                                         ApprovedBy = appr == null ? "" : appr.FirstName,
-                                         po.CreatedDate,
-                                         po.IsActive,
-                                         TotalRecords = totalRecords
-                                     }).Distinct().OrderByDescending(p => p.CreatedDate)
-                                     .Skip(skip)
-                                    .Take(take)
-                                    .ToList();
-            return purchaseOrderList;
+                var totalRecords = (from po in _appContext.PurchaseOrder
+                                    join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId
+                                    join v in _appContext.Vendor on po.VendorId equals v.VendorId
+                                    join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
+                                    from appr in approver.DefaultIfEmpty()
+                                    where po.IsDeleted == false && po.VendorId == (vendorId > 0 ? vendorId : po.VendorId)
+
+                                    && (po.PurchaseOrderNumber.Contains(filterText)
+                                    || v.VendorName.Contains(filterText)
+                                    || v.VendorCode.Contains(filterText)
+                                    || po.StatusId == statusId
+                                    || emp.FirstName.Contains(filterText)
+                                    || appr.FirstName.Contains(filterText))
+                                    select new
+                                    {
+                                        po.PurchaseOrderId
+                                    }).Distinct()
+                               .Count();
+
+                var purchaseOrderList = (from po in _appContext.PurchaseOrder
+                                         join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId
+                                         join v in _appContext.Vendor on po.VendorId equals v.VendorId
+                                         join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
+                                         from appr in approver.DefaultIfEmpty()
+                                         where po.IsDeleted == false && po.VendorId == (vendorId > 0 ? vendorId : po.VendorId)
+                                         && (po.PurchaseOrderNumber.Contains(filterText)
+                                         || v.VendorName.Contains(filterText)
+                                         || v.VendorCode.Contains(filterText)
+                                         || po.StatusId == statusId
+                                         || emp.FirstName.Contains(filterText)
+                                         || appr.FirstName.Contains(filterText))
+                                         select new
+                                         {
+                                             po.PurchaseOrderId,
+                                             po.PurchaseOrderNumber,
+                                             OpenDate = po.OpenDate,
+                                             ClosedDate = po.ClosedDate,
+                                             v.VendorName,
+                                             v.VendorCode,
+                                             Status = po.StatusId == 1 ? "Open" : (po.StatusId == 2 ? "Pending" : (po.StatusId == 3 ? "Fulfilling" : "Closed")),
+                                             RequestedBy = emp.FirstName,
+                                             ApprovedBy = appr == null ? "" : appr.FirstName,
+                                             po.CreatedDate,
+                                             po.IsActive,
+                                             TotalRecords = totalRecords
+                                         }).Distinct().OrderByDescending(p => p.CreatedDate)
+                                         .Skip(skip)
+                                        .Take(take)
+                                        .ToList();
+                return purchaseOrderList;
+            }
+            else
+            {
+                var totalRecords = (from po in _appContext.PurchaseOrder
+                                    join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId
+                                    join v in _appContext.Vendor on po.VendorId equals v.VendorId
+                                    join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
+                                    from appr in approver.DefaultIfEmpty()
+                                    where po.IsDeleted == false && po.VendorId == (vendorId > 0 ? vendorId : po.VendorId)
+                                    select new
+                                    {
+                                        po.PurchaseOrderId
+                                    }).Distinct()
+                               .Count();
+
+                var purchaseOrderList = (from po in _appContext.PurchaseOrder
+                                         join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId
+                                         join v in _appContext.Vendor on po.VendorId equals v.VendorId
+                                         join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
+                                         from appr in approver.DefaultIfEmpty()
+                                         where po.IsDeleted == false && po.VendorId == (vendorId > 0 ? vendorId : po.VendorId)
+                                         select new
+                                         {
+                                             po.PurchaseOrderId,
+                                             po.PurchaseOrderNumber,
+                                             OpenDate = po.OpenDate,
+                                             ClosedDate = po.ClosedDate,
+                                             v.VendorName,
+                                             v.VendorCode,
+                                             Status = po.StatusId == 1 ? "Open" : (po.StatusId == 2 ? "Pending" : (po.StatusId == 3 ? "Fulfilling" : "Closed")),
+                                             RequestedBy = emp.FirstName,
+                                             ApprovedBy = appr == null ? "" : appr.FirstName,
+                                             po.CreatedDate,
+                                             po.IsActive,
+                                             TotalRecords = totalRecords
+                                         }).Distinct().OrderByDescending(p => p.CreatedDate)
+                                         .Skip(skip)
+                                        .Take(take)
+                                        .ToList();
+                return purchaseOrderList;
+            }
+           
         }
 
         public IEnumerable<object> RecevingPolist()
