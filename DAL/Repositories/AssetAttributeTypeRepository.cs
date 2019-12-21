@@ -65,7 +65,7 @@ namespace DAL.Repositories
                                             existingItem.ConventionType == item.ConventionType &&
                                             existingItem.DepreciationMethod == item.DepreciationMethod &&
                                             existingItem.ResidualPercentage == item.ResidualPercentage &&
-                                            existingItem.ResidualValue == item.ResidualValue &&
+                                            //existingItem.ResidualValue == item.ResidualValue &&
                                             existingItem.AssetLife == item.AssetLife &&
                                             existingItem.DepreciationFrequencyId == item.DepreciationFrequencyId &&
                                             existingItem.AcquiredGLAccountId == item.AcquiredGLAccountId &&
@@ -105,6 +105,7 @@ namespace DAL.Repositories
 
             foreach (var item in items)
             {
+                /* // Not need, everything covered in line # 120
                 isItemValid = IsValid(item);
                 if (IsValid(item))
                 {
@@ -115,6 +116,7 @@ namespace DAL.Repositories
                 {
                     item.UploadTag = UploadTag.Invalid;
                 }
+                */
                 item.UploadTag = IsValid(item) ? (IsDuplicate(item, existingItems) ? UploadTag.Duplicate : UploadTag.Unique) : UploadTag.Invalid;
             }
             return items;
