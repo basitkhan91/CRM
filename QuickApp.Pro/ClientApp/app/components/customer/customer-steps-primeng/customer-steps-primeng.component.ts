@@ -24,7 +24,8 @@ export class CustomerStepsPrimengComponent {
 	isDisabledSteps: boolean = false;
 	search_ataChapterList: any;
 	add_ataChapterList: any;
-	ataListDataValues: any;
+    ataListDataValues: any;
+    contactList: any;
 	// ifvalue: boolean;
 	// generalcollection: any;
 	// collection: any;
@@ -42,7 +43,8 @@ export class CustomerStepsPrimengComponent {
 		private acRouter: ActivatedRoute,
 		public employeeService: EmployeeService,
 		private atamain: AtaMainService,
-		private alertService: AlertService,
+        private alertService: AlertService,
+        private route: Router
 	) {
 		// let currentUrl = this.route.url;
 		// this.customerService.alertChangeObject$.subscribe(value => {
@@ -66,7 +68,7 @@ export class CustomerStepsPrimengComponent {
 		this.getAllCustomers();
 		this.getAllEmployees();
 		this.getAllATAChapter();
-
+        
 		// 	this.showComponentPTab = this.customerService.ShowPtab;
 		// 	this.currentUrl = this.route.url;
 		// 	//debugger
@@ -205,17 +207,22 @@ export class CustomerStepsPrimengComponent {
 	changeOfTab(value) {
 		if (value === 'General') {
 			this.currentTab = 'General';
-			this.activeMenuItem = 1;
+            this.activeMenuItem = 1;
+            
 		} else if (value === 'Contacts') {
 			this.currentTab = 'Contacts';
-			this.activeMenuItem = 2;
-
+            this.activeMenuItem = 2;
+            
 		} else if (value === 'AircraftInfo') {
 			this.currentTab = 'AircraftInfo';
 			this.activeMenuItem = 3;
 		} else if (value === 'Atachapter') {
 			this.currentTab = 'Atachapter';
-			this.activeMenuItem = 4;
+            this.activeMenuItem = 4;
+            this.getMappedContactByCustomerId(this.customerId);
+           
+            
+
 		} else if (value === 'Financial') {
 			this.currentTab = 'Financial';
 			this.activeMenuItem = 5;
@@ -265,6 +272,7 @@ export class CustomerStepsPrimengComponent {
 
 
 
+
 	getAllATAChapter() {
 		this.atamain.getAtaMainList().subscribe(res => {
 			const responseData = res[0];
@@ -290,13 +298,21 @@ export class CustomerStepsPrimengComponent {
 		const data = ATAMappingData;
 		this.customerService.postCustomerATAs(data).subscribe(res => {
 
+            this.getMappedContactByCustomerId(data[0].CustomerId) 
 			this.getMappedATAByCustomerId(data[0].CustomerId)
 			this.alertService.showMessage(
 				'Success',
 				'Saved ATA Mapped Data Successfully ',
 				MessageSeverity.success
 			);
-		})
+        }, error => {
+                this.alertService.showMessage(
+                    'Failed',
+                    error.error,
+                    MessageSeverity.error
+            );
+        })
+        
 	}
 
 
@@ -309,6 +325,15 @@ export class CustomerStepsPrimengComponent {
 
 		})
 	}
+    getMappedContactByCustomerId(customerId) {
+    
+        // const id = this.savedGeneralInformationData.customerId;
+        this.customerService.getContactsByCustomerId(customerId).subscribe(res => {
+            this.contactList = res;
+            console.log(res);
+
+        })
+    }
 
 
 

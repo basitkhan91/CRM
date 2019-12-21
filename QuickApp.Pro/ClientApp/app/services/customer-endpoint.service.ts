@@ -97,6 +97,9 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _CustomerATAPostUrl: string = "/api/Customer/CustomerContactATAPost";
     private readonly _getATAMappedByContactId: string = "/api/Customer/getCustomerContactATAMapped";
     private readonly _getATAMappedByCustomerId: string = "/api/Customer/getCustomerATAMapped";
+    private readonly _getContactsByCustomerId: string = "/api/Customer/GetCustomerContacts";
+
+    
     private readonly _deleteATAMappedByContactId: string = "/api/Customer/DeleteCustomerContactATAMapping"
     private readonly _CustomerAtaSearchUrl: string = '/api/Customer/searchGetCustomerATAMappedByMultiATAIDATASubID';
 
@@ -141,7 +144,7 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _addCustomerFinanceFileDetails: string = "/api/Customer/getCustmerFinanceDocumentDetail";
 
     private readonly _customerDeleteAttachment: string = "/api/Customer/customerAttachmentDelete";
-
+    private readonly _customerAircraftUpdate: string = "/api/Customer/CustomerAircraftUpdate";
 
     get globalSearch() { return this.configurations.baseUrl + this.getGlobalCustomer; }
     get paginate() { return this.configurations.baseUrl + this.getCustomer; }
@@ -1319,6 +1322,22 @@ export class CustomerEndpoint extends EndpointFactory {
 
     GetCustomerAttachmentDeleteEndpoint(attachmentDetailId, updatedBy) {
         return this.http.delete(`${this._customerDeleteAttachment}/${attachmentDetailId}?updatedBy=${updatedBy}`, this.getRequestHeaders())
+    }
+    getContactsByCustomerId<T>(customerId: number): Observable<T> {
+        let endpointUrl = `${this._getContactsByCustomerId}?id=${customerId}`;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getATAMappingByCustomerId(customerId));
+            });
+    }
+
+    getUpdateAircraft<T>(roleObject: any, customerAircraftId: number): Observable<T> {
+        let endpointUrl = `${this._customerAircraftUpdate}/${customerAircraftId}`;
+        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getUpdateAircraft(roleObject, customerAircraftId));
+            });
     }
 }
 
