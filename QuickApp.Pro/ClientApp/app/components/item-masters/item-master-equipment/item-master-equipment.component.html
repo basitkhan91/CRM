@@ -287,16 +287,6 @@
 							<div class="col-sm-7" *ngIf="selectedAircraftTypes || enablePlus">
 								<i class="fa fa-plus clr-blue cpointer" data-toggle="modal" data-target="#platform-block" (click)="openModelPopups(contentModel)"></i>
 
-								<!--<div *ngIf="showInput">
-				<div *ngFor="let word of selectedModels; let in=index">
-					<div class="col-sm-7">
-						<p>
-							<textarea [(ngModel)]="selectedModels[in].modelName" [ngModelOptions]="{standalone: true}" class="form-control" value="selectedModels[in].modelName" required></textarea>
-						</p>
-
-					</div>
-				</div>
-			</div>-->
 								<table *ngIf="showInput" [style.border]="showInput ? '1px solid gray' : 'none'">
 									<tr *ngFor="let word of selectedModels; let in=index">
 										<td>
@@ -988,19 +978,6 @@
 								</td>
 								<td>
 									<input class="form-control w100" [(ngModel)]="col.priority" [ngModelOptions]="{standalone: true}" (change)="getSelectedItem(col,$event)">
-									<!--<select class="form-control w100" [(ngModel)]="col.priority" [ngModelOptions]="{standalone: true}" (change)="getSelectedItem(col,$event)">
-		<option>Select</option>
-		<option value="10">10</option>
-		<option value="20">20</option>
-		<option value="30">30</option>
-		<option>40</option>
-		<option>50</option>
-		<option>60</option>
-		<option>70</option>
-		<option>80</option>
-		<option>90</option>
-		<option>100</option>
-	</select>-->
 								</td>
 							</tr>
 						</tbody>

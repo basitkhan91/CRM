@@ -118,20 +118,6 @@
                                     </span>
                                     <i class="fa fa-info-circle fa-lg" tooltipPosition="top" pTooltip="{{repairOrderHeaderData.memo}}"></i>
                                 </div>
-                                <!-- <div class="form-group">
-                                    <label>Status <span class="clr-red">*</span></label>
-                                    <select class="form-control" name="status" [(ngModel)]="sourceRoApproval.statusId" #statusId="ngModel" required>
-                                        <option value="1">Open</option>
-                                        <option value="2">Pending</option>
-                                        <option value="3">Fulfilling</option>
-                                        <option value="4">Closed</option>
-                                    </select>
-                                    <div *ngIf="statusId.invalid && (statusId.dirty || statusId.touched)" class="alert alert-danger alert-danger-cstm">
-                                            <div *ngIf="statusId.errors.required">
-                                                <small> Status is required </small>
-                                            </div>
-                                    </div>
-                                </div> -->
                                 <div class="form-group">
                                     <div class="checkbox-cstm" style="margin-top: 15px;">
                                         <label>
@@ -398,12 +384,6 @@
                                 <th>Location</th>
                                 <th>Shelf</th>
                                 <th>Bin</th>
-                                <!-- <th>Owner</th>
-                                <th>Name</th>
-                                <th>Obtain From</th>
-                                <th>Name</th>
-                                <th>Traceable to</th>
-                                <th>Name</th> -->
                                 <th>Trace</th>
                                 <th>Mfg</th>
                                 <th>Mfg Lot Num</th>
@@ -419,8 +399,6 @@
                                 <th>Ship Via</th>
                                 <th>Shipping Account</th>
                                 <th>ESN</th>
-                                <!-- <th class="date">Core Due Date</th>
-                                <th class="date"> Core Returned Date</th> -->
                                 <th>GL Account</th>
                                 <th>Time Life</th>
                                 <ng-container *ngIf="part.timeLife != null && part.timeLife.length > 0 ">
@@ -457,7 +435,7 @@
                                            [(ngModel)]="SL.repairOrderUnitCost" />
                                 </td>
                                 <td>
-                                    <input class="form-control" type="text" disabled pInputText pKeyFilter="pnum"
+                                    <input class="form-control" type="text" pInputText pKeyFilter="pnum"
                                            [(ngModel)]="SL.repairOrderExtendedCost"
                                            disabled="disabled" />
                                 </td>
@@ -719,19 +697,6 @@
                                         <option *ngFor="let bin of SL.BinList" [value]="bin.Key">{{bin.Value}}</option>
                                     </select>
                                 </td>
-                                <!-- <td>
-                                    <select name="ownerType{{stockline_row_index}}" [(ngModel)]="SL.ownerType">
-                                        <option value="1">Customer</option>
-                                        <option value="2">Vendor</option>
-                                        <option value="3">Company</option>
-                                    </select>
-                                </td> -->
-                                <!--<td>{{SL.ownerType}}</td>
-                                <td>{{SL.owner}}</td>
-                                <td>{{SL.obtainFromType}}</td>
-                                <td>{{SL.obtainFrom}}</td>
-                                <td>{{SL.traceableToType}}</td>
-                                <td>{{SL.traceableTo}}</td>-->
                                 <td>
                                     <input class="form-control" type="text"
                                            [disabled]="!SL.isEnabled"
@@ -829,12 +794,6 @@
                                 <td>
                                     <input class="form-control" type="text" [disabled]="!SL.isEnabled" [(ngModel)]="SL.engineSerialNumber" pInputText [maxLength]="200">
                                 </td>
-                                <!-- <td>
-                                    <input type="text" class="form-control" disabled value="unknown field" />
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" disabled value="unknown field" />
-                                </td> -->
                                 <td>{{SL.glAccountText}}</td>
                                 <td>
                                     <input type="checkbox" disabled [checked]="part.itemMaster.isTimeLife == true" />

@@ -449,7 +449,6 @@
                                 <th colspan="10"></th>
                             </tr>
                             <tr class="child-data splitship-child" *ngFor="let partChildList of partList.childList; let row_no = index"  >
-                                <!--enablePNChildRow-->
                                 <td></td>
                                 <td></td>
                                 <td><i class="fa fa-trash" matTooltip="Delete Split Shipment" matTooltipPosition="above" style="color: red;font-size: 15px;cursor: pointer;" (click)="deleteSplitShipment(partChildList,row_no,row_index)"></i></td>
@@ -471,11 +470,6 @@
                                     <div class="inner-addon right-addon autosuggesions-add inline-block w175" *ngIf="partChildList.partListUserTypeId==1">
                                         <div class="col-sm-11">
                                             <p-autoComplete field="label" class="pautocomp-cstm pautocomp-po-cstm" [(ngModel)]="partChildList.partListUserId" name="cCustomerName{{row_index}}{{row_no}}" [suggestions]="splitcustomersList" (completeMethod)="filterCustomersSplit($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onCustomerNameChange($event.value, partChildList, row_index, row_no)" #cCustomerName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
-                                            <!-- <div *ngIf="cCustomerName.invalid && (cCustomerName.dirty || cCustomerName.touched)" class="alert alert-danger alert-danger-cstm">
-                                                    <div *ngIf="cCustomerName.errors.required">
-                                                        <small> Customer Name is required </small>
-                                                    </div>
-                                            </div>  -->
                                         </div>
                                         <div class="col-sm-1">
                                             <div class="child-add-icon"><a target="_blank" matTooltip="Add Customer" matTooltipPosition="above" [routerLink]="['/customersmodule/customerpages/app-customer-create']"><i class="fa fa-plus-circle fa-lg"></i></a></div>
@@ -485,12 +479,7 @@
                                         <div class="col-sm-11">
                                                 <p-autoComplete field="vendorName" class="pautocomp-cstm pautocomp-po-cstm" 
                                                 [(ngModel)]="partChildList.partListUserId" name="splitVendorNames{{row_index}}{{row_no}}" [suggestions]="splitVendorNames" (completeMethod)="filterSplitVendorNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onVendorNameChange($event.vendorId, partChildList, row_index, row_no)" > <!--required #cVendorName="ngModel"-->
-                                            </p-autoComplete>                                            
-                                            <!-- <div *ngIf="cVendorName.invalid && (cVendorName.dirty || cVendorName.touched)" class="alert alert-danger alert-danger-cstm">
-                                                    <div *ngIf="cVendorName.errors.required">
-                                                        <small> Vendor Name is required </small>
-                                                    </div>
-                                            </div>  -->
+                                            </p-autoComplete>
                                         </div>
                                         <div class="col-sm-1">
                                             <div class="child-add-icon"><a target="_blank" matTooltip="Add Vendor" matTooltipPosition="above" [routerLink]="['/vendorsmodule/vendorpages/app-vendor-general-information']"><i class="fa fa-plus-circle fa-lg"></i></a></div>
@@ -509,11 +498,6 @@
                                          [forceSelection]="true" 
                                          #shipCompanyName="ngModel" required>
                                         </p-autoComplete>
-                                        <!-- <div *ngIf="cCompanyName.invalid && (cCompanyName.dirty || cCompanyName.touched)" class="alert alert-danger alert-danger-cstm">
-                                                <div *ngIf="cCompanyName.errors.required">
-                                                    <small> Company Name is required </small>
-                                                </div>
-                                        </div>  -->
                                     </div>
                                 </td>                            
 
@@ -1325,10 +1309,8 @@
                                     <td>{{obj.nsn === null ? '-':obj.nsn}}</td>
                                     <td>{{obj.priority === null ? '-':obj.priority}}</td>
                                     <td></td>
-                                    <!-- <td><a href="#" class="clr-red" target="_blank" *ngIf="multiplePNDetails" (click)="onAddPartNum()">Add Part Number</a></td> -->
                                 </tr>
                                 <tr *ngFor="let obj of newPNList">
-                                    <!--<th>{{obj.enterdPart}}</th>-->
                                     <td></td>
                                     <td style="padding: 6px;">{{obj.partNumber}}</td>
                                     <td></td>
@@ -1435,10 +1417,6 @@
                                 <label class="col-md-6">Address 2:</label>
                                 <input type="text" class="form-control col-md-6" name="address2" [(ngModel)]="addressFormForShipping.address2">
                             </div>
-                            <!-- <div class="form-group col-md-12">
-                                <label class="col-md-6">Address 3:</label>
-                                <input type="text" class="form-control col-md-6" name="address3" [(ngModel)]="addressFormForShipping.address3">
-                            </div> -->
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">City:</label>
                                 <input type="text" class="form-control col-md-6" name="city" [(ngModel)]="addressFormForShipping.city">
@@ -1454,7 +1432,6 @@
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Country:</label>
                                 <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="addressFormForShipping.country" name="country" [suggestions]="countriesList" (completeMethod)="filterCountries($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
-                                <!-- <input type="text" class="form-control col-md-6" name="country" [(ngModel)]="addressFormForShipping.country"> -->
                             </div>
                             <div class="form-group col-md-12" style="margin-top: 8px;">
                                 <button type="button" class="btn btn-primary-cstm" [disabled]="!addSiteNameForm.valid" (click)="saveShippingAddress(); " data-dismiss="modal">Save</button> <!--resetAddressShippingForm();-->
@@ -1485,12 +1462,6 @@
                                         <label class="col-md-6">Site Name:</label>
                                         <input type="text" class="form-control col-md-6" name="siteName" [(ngModel)]="addressFormForBilling.siteName">
                                     </div>
-                            <!-- <div class="form-group col-md-12">
-                                <label class="col-md-6">Site Name:</label>
-                                <select class="form-control col-md-6" name="siteName" [(ngModel)]="addressFormForBilling.siteName">
-                                    <option value="0">Select</option>
-                                </select>
-                            </div> -->
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Address 1:</label>
                                 <input type="text" class="form-control col-md-6" name="address1" [(ngModel)]="addressFormForBilling.address1">
@@ -1499,10 +1470,6 @@
                                 <label class="col-md-6">Address 2:</label>
                                 <input type="text" class="form-control col-md-6" name="address2" [(ngModel)]="addressFormForBilling.address2">
                             </div>
-                            <!-- <div class="form-group col-md-12">
-                                <label class="col-md-6">Address 3:</label>
-                                <input type="text" class="form-control col-md-6" name="address3" [(ngModel)]="addressFormForBilling.address3">
-                            </div> -->
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">City:</label>
                                 <input type="text" class="form-control col-md-6" name="city" [(ngModel)]="addressFormForBilling.city">
@@ -1518,7 +1485,6 @@
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Country:</label>
                                 <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="addressFormForBilling.country" name="country" [suggestions]="countriesList" (completeMethod)="filterCountries($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
-                                <!-- <input type="text" class="form-control col-md-6" name="country" [(ngModel)]="addressFormForBilling.country"> -->
                             </div>
                             <div class="form-group col-md-12" style="margin-top: 8px;">
                                 <button type="button" class="btn btn-primary-cstm" [disabled]="!addSiteNameForm.valid" (click)="saveBillingAddress();"  data-dismiss="modal">Save</button>
@@ -1548,18 +1514,7 @@
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Ship Via:</label>
                                 <input type="text" class="form-control col-md-6" name="shipVia" [(ngModel)]="addShipViaFormForShipping.shipVia">
-                                <!-- <select class="form-control col-md-6" name="shipviaId" [(ngModel)]="shipToShipViaDetails.shipviaId">
-                                    <option value="0">Select</option>
-                                </select> -->
                             </div>
-                            <!-- <div class="form-group col-md-12">
-                                <label class="col-md-6">Shipping Cost:</label>
-                                <input type="text" class="form-control col-md-6" name="shippingCost" [(ngModel)]="shipToShipViaDetails.shippingCost">
-                            </div>
-                            <div class="form-group col-md-12">
-                                <label class="col-md-6">Handling Cost:</label>
-                                <input type="text" class="form-control col-md-6" name="handlingCost" [(ngModel)]="shipToShipViaDetails.handlingCost">
-                            </div> -->
                             <div class="form-group col-md-12">
                                 <label class="col-md-6">Shipping Acct Info:</label>
                                 <input type="text" class="form-control col-md-6" name="shippingAcctInfo" [(ngModel)]="addShipViaFormForShipping.shippingAccountInfo">
@@ -1639,37 +1594,19 @@
                                     <label>First Name <span class="clr-red">*</span></label>
                                     <div class="inner-addon right-addon inline-block" style="width: 100%">
                                         <p-autoComplete field="firstName" class="pautocomp-cstm" [(ngModel)]="vendorContactInfo.firstName" name="venConFirstName" [suggestions]="venContactFirstNames" (completeMethod)="filterVenContactFirstNames($event)" [size]="30" [minLength]="1" [dropdown]="true" required></p-autoComplete>
-                                        <!-- <p-autoComplete class="pautocomp-cstm" [(ngModel)]="vendorContactInfo.firstName" (onSelect)="onFirstNameSelected($event)" (onKeyUp)=eventFirstNameHandler($event) name="firstName" [suggestions]="firstNames" (completeMethod)="filterFirstNames($event)" [size]="30" [minLength]="1" [dropdown]="true" required>
-                                            <ng-template let-firstName pTemplate="item">
-                                                <div class="ui-helper-clearfix">{{firstName}}</div>
-                                            </ng-template>
-                                        </p-autoComplete> -->
                                     </div>
-                                    <!-- <div *ngIf="disablesaveForFirstname" class="clr-red">Entry Already Exists</div> -->
                                 </div>
                                 <div class="form-group">
                                     <label>Middle Name</label>
                                     <div class="inner-addon right-addon inline-block" style="width: 100%">
                                         <p-autoComplete field="middleName" class="pautocomp-cstm" [(ngModel)]="vendorContactInfo.middleName" name="venConMiddleName" [suggestions]="venContactMiddleNames" (completeMethod)="filterVenContactMiddleNames($event)" [size]="30" [minLength]="1" [dropdown]="true"></p-autoComplete>
-                                        <!-- <p-autoComplete class="pautocomp-cstm" [(ngModel)]="vendorContactInfo.middleName" (onSelect)="onMiddleNameSelected($event)" (onKeyUp)=eventMiddleNameHandler($event) name="middleName" [suggestions]="middleNames" (completeMethod)="filterMiddleNames($event)" [size]="30" [minLength]="1" [dropdown]="true">
-                                            <ng-template let-middleName pTemplate="item">
-                                                <div class="ui-helper-clearfix">{{middleName}}</div>
-                                            </ng-template>
-                                        </p-autoComplete> -->
                                     </div>
-                                    <!-- <div *ngIf="disablesaveForMiddlename" class="clr-red">Entry Already Exists</div> -->
                                 </div>
                                 <div class="form-group">
                                     <label>Last Name <span class="clr-red">*</span></label>
                                     <div class="inner-addon right-addon inline-block" style="width: 100%">
                                         <p-autoComplete field="lastName" class="pautocomp-cstm" [(ngModel)]="vendorContactInfo.lastName" name="venConLastName" [suggestions]="venContactLastNames" (completeMethod)="filterVenContactLastNames($event)" [size]="30" [minLength]="1" [dropdown]="true" required></p-autoComplete>
-                                        <!-- <p-autoComplete class="pautocomp-cstm" [(ngModel)]="vendorContactInfo.lastName" (onSelect)="onLastNameSelected($event)" (onKeyUp)=eventlastNameHandler($event) name="lastName" [suggestions]="lastNames" (completeMethod)="filterLastNames($event)" [size]="30" [minLength]="1" [dropdown]="true" required>
-                                            <ng-template let-lastName pTemplate="item">
-                                                <div class="ui-helper-clearfix">{{lastName}}</div>
-                                            </ng-template>
-                                        </p-autoComplete> -->
                                     </div>
-                                    <!-- <div *ngIf="disablesaveForlastname" class="clr-red">Entry Already Exists</div> -->
                                 </div>
                                 <div class="form-group">
                                     <label>Suffix</label>
@@ -1697,7 +1634,6 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <div class="form-group" style="margin-top: 15px; margin-bottom: 20px;">
-                                        <!--<div class="label-cstm" style="margin-right: 10px;">Primary Contact</div>-->
                                         <span class="checkbox-cstm">
                                             <label>
                                                 <input type="checkbox" name="isDefaultContact" [(ngModel)]="vendorContactInfo.isDefaultContact">

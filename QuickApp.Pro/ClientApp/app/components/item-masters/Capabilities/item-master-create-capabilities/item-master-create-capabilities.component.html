@@ -158,8 +158,6 @@
 													<option *ngFor="let name of allManufacturerInfo"
 														[ngValue]="name.manufacturerId">{{name.name}}</option>
 												</select>
-												<!-- <a href="manufacturer.html" target="_blank" class="add-icon"><i
-												class="fa fa-plus"></i></a> -->
 											</div>
 										</td>
 										<td><input type="text" formControlName="aircraftTypeName" disabled="true" />
@@ -175,8 +173,6 @@
 														[ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}
 													</option>
 												</select>
-												<!-- <a href="add-ata.html" target="_blank" class="add-icon"><i
-												class="fa fa-plus"></i></a> -->
 											</div>
 										</td>
 										<td><input type="date" class="form-control datepicker w70 hasDatepicker"
@@ -263,8 +259,6 @@
 												<option *ngFor="let name of allManufacturerInfo"
 													[ngValue]="name.manufacturerId">{{name.name}}</option>
 											</select>
-											<!-- <a href="manufacturer.html" target="_blank" class="add-icon"><i
-													class="fa fa-plus"></i></a> -->
 										</div>
 									</td>
 									<td><input type="text" formControlName="aircraftTypeName" disabled="true" /></td>
@@ -276,8 +270,6 @@
 												<option *ngFor="let ataName of allATAMaininfo1"
 													[ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
 											</select>
-											<!-- <a href="add-ata.html" target="_blank" class="add-icon"><i
-													class="fa fa-plus"></i></a> -->
 										</div>
 									</td>
 									<td><input type="date" class="form-control datepicker w70 hasDatepicker"
@@ -363,8 +355,6 @@
 												<option *ngFor="let name of allManufacturerInfo"
 													[ngValue]="name.manufacturerId">{{name.name}}</option>
 											</select>
-											<!-- <a href="manufacturer.html" target="_blank" class="add-icon"><i
-													class="fa fa-plus"></i></a> -->
 										</div>
 									</td>
 									<td><input type="text" formControlName="aircraftTypeName" disabled="true" /></td>
@@ -376,8 +366,6 @@
 												<option *ngFor="let ataName of allATAMaininfo1"
 													[ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
 											</select>
-											<!-- <a href="add-ata.html" target="_blank" class="add-icon"><i
-													class="fa fa-plus"></i></a> -->
 										</div>
 									</td>
 									<td><input type="date" class="form-control datepicker w70 hasDatepicker"
@@ -462,8 +450,6 @@
 												<option *ngFor="let name of allManufacturerInfo"
 													[ngValue]="name.manufacturerId">{{name.name}}</option>
 											</select>
-											<!-- <a href="manufacturer.html" target="_blanl" class="add-icon"><i
-														class="fa fa-plus"></i></a> -->
 										</div>
 									</td>
 									<td><input type="text" formControlName="aircraftTypeName" disabled="true" /></td>
@@ -475,8 +461,6 @@
 												<option *ngFor="let ataName of allATAMaininfo1"
 													[ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
 											</select>
-											<!-- <a href="add-ata.html" target="_blank" class="add-icon"><i
-														class="fa fa-plus"></i></a> -->
 										</div>
 									</td>
 									<td><input type="date" class="form-control datepicker w70 hasDatepicker"
@@ -656,8 +640,6 @@
 												<option *ngFor="let name of allManufacturerInfo"
 													[ngValue]="name.manufacturerId">{{name.name}}</option>
 											</select>
-											<!-- <a href="manufacturer.html" target="_blank" class="add-icon"><i
-														class="fa fa-plus"></i></a> -->
 										</div>
 									</td>
 									<td><input type="text" formControlName="aircraftTypeName" disabled="true" /></td>
@@ -669,8 +651,6 @@
 												<option *ngFor="let ataName of allATAMaininfo1"
 													[ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
 											</select>
-											<!-- <a href="add-ata.html" target="_blank" class="add-icon"><i
-														class="fa fa-plus"></i></a> -->
 										</div>
 									</td>
 									<td><input type="date" class="form-control datepicker w70 hasDatepicker"
@@ -707,409 +687,7 @@
 							</ng-container>
 							</ng-container>
 							<!-- distributionForm End -->
-							<!-- </tbody> -->
 						</tbody>
-						<!-- <tr style="background: #a5a5a5;">
-								<td style="color: #fff; font-weight: bold;">Overhaul</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td>
-									<div class="input-group">
-										<select class="multiselect" multiple="" style="display: none;">
-											<option value="AirBus">AirBus</option>
-											<option value="Boeing">Boeing</option>
-										</select>
-										<div class="btn-group"><button type="button"
-												class="multiselect dropdown-toggle btn btn-default"
-												data-toggle="dropdown" title="None selected"><span
-													class="multiselect-selected-text">None
-													selected</span> <b class="caret"></b></button>
-											<ul class="multiselect-container dropdown-menu">
-												<li class="multiselect-item multiselect-all"><a tabindex="0"
-														class="multiselect-all"><label class="checkbox"><input
-																type="checkbox" value="multiselect-all"> Select
-															all</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="AirBus">
-															AirBus</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Boeing">
-															Boeing</label></a></li>
-											</ul>
-										</div>
-										<a href="aircraft-manufacturer.html" target="_blank" class="add-icon"><i
-												class="fa fa-plus"></i></a>
-									</div>
-								</td>
-								<td>
-									<div class="input-group">
-										<select class="multiselect" id="" name="catadd" multiple=""
-											style="display: none;">
-											<option value="Airbus-B767">AirBus - B767</option>
-											<option value="Airbus-A320">AirBus - A320</option>
-											<option value="Boeing-B767">Boeing - B767</option>
-											<option value="Boeing-A320">Boeing - A320</option>
-										</select>
-										<div class="btn-group"><button type="button"
-												class="multiselect dropdown-toggle btn btn-default"
-												data-toggle="dropdown" title="None selected"><span
-													class="multiselect-selected-text">None
-													selected</span> <b class="caret"></b></button>
-											<ul class="multiselect-container dropdown-menu">
-												<li class="multiselect-item multiselect-all"><a tabindex="0"
-														class="multiselect-all"><label class="checkbox"><input
-																type="checkbox" value="multiselect-all"> Select
-															all</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Airbus-B767"> AirBus - B767</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Airbus-A320"> AirBus - A320</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Boeing-B767"> Boeing - B767</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Boeing-A320"> Boeing - A320</label></a></li>
-											</ul>
-										</div>
-										<a href="aircraft-models.html" target="_blank" class="add-icon"><i
-												class="fa fa-plus"></i></a>
-									</div>
-								</td>
-								<td><a href="#" class="btn btn-warning" data-toggle="tooltip" title=""
-										data-original-title="Add Models"><i class="fa fa-plus clr-white"></i></a></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr> -->
-
-						<!-- <tr style="background: #a5a5a5;">
-								<td style="color: #fff; font-weight: bold;">Distribution</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td>
-									<div class="input-group">
-										<select class="multiselect" multiple="" style="display: none;">
-											<option value="AirBus">AirBus</option>
-											<option value="Boeing">Boeing</option>
-										</select>
-										<div class="btn-group"><button type="button"
-												class="multiselect dropdown-toggle btn btn-default"
-												data-toggle="dropdown" title="None selected"><span
-													class="multiselect-selected-text">None
-													selected</span> <b class="caret"></b></button>
-											<ul class="multiselect-container dropdown-menu">
-												<li class="multiselect-item multiselect-all"><a tabindex="0"
-														class="multiselect-all"><label class="checkbox"><input
-																type="checkbox" value="multiselect-all"> Select
-															all</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="AirBus">
-															AirBus</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Boeing">
-															Boeing</label></a></li>
-											</ul>
-										</div>
-										<a href="aircraft-manufacturer.html" target="_blank" class="add-icon"><i
-												class="fa fa-plus"></i></a>
-									</div>
-								</td>
-								<td>
-									<div class="input-group">
-										<select class="multiselect" id="" name="catadd" multiple=""
-											style="display: none;">
-											<option value="Airbus-B767">AirBus - B767</option>
-											<option value="Airbus-A320">AirBus - A320</option>
-											<option value="Boeing-B767">Boeing - B767</option>
-											<option value="Boeing-A320">Boeing - A320</option>
-										</select>
-										<div class="btn-group"><button type="button"
-												class="multiselect dropdown-toggle btn btn-default"
-												data-toggle="dropdown" title="None selected"><span
-													class="multiselect-selected-text">None
-													selected</span> <b class="caret"></b></button>
-											<ul class="multiselect-container dropdown-menu">
-												<li class="multiselect-item multiselect-all"><a tabindex="0"
-														class="multiselect-all"><label class="checkbox"><input
-																type="checkbox" value="multiselect-all"> Select
-															all</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Airbus-B767"> AirBus - B767</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Airbus-A320"> AirBus - A320</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Boeing-B767"> Boeing - B767</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Boeing-A320"> Boeing - A320</label></a></li>
-											</ul>
-										</div>
-										<a href="aircraft-models.html" target="_blank" class="add-icon"><i
-												class="fa fa-plus"></i></a>
-									</div>
-								</td>
-								<td><a href="#" class="btn btn-warning" data-toggle="tooltip" title=""
-										data-original-title="Add Models"><i class="fa fa-plus clr-white"></i></a></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr> -->
-
-						<!-- <tr style="background: #a5a5a5;">
-								<td style="color: #fff; font-weight: bold;">Certification</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td>
-									<div class="input-group">
-										<select class="multiselect" multiple="" style="display: none;">
-											<option value="AirBus">AirBus</option>
-											<option value="Boeing">Boeing</option>
-										</select>
-										<div class="btn-group"><button type="button"
-												class="multiselect dropdown-toggle btn btn-default"
-												data-toggle="dropdown" title="None selected"><span
-													class="multiselect-selected-text">None
-													selected</span> <b class="caret"></b></button>
-											<ul class="multiselect-container dropdown-menu">
-												<li class="multiselect-item multiselect-all"><a tabindex="0"
-														class="multiselect-all"><label class="checkbox"><input
-																type="checkbox" value="multiselect-all"> Select
-															all</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="AirBus">
-															AirBus</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Boeing">
-															Boeing</label></a></li>
-											</ul>
-										</div>
-										<a href="aircraft-manufacturer.html" target="_blank" class="add-icon"><i
-												class="fa fa-plus"></i></a>
-									</div>
-								</td>
-								<td>
-									<div class="input-group">
-										<select class="multiselect" id="" name="catadd" multiple=""
-											style="display: none;">
-											<option value="Airbus-B767">AirBus - B767</option>
-											<option value="Airbus-A320">AirBus - A320</option>
-											<option value="Boeing-B767">Boeing - B767</option>
-											<option value="Boeing-A320">Boeing - A320</option>
-										</select>
-										<div class="btn-group"><button type="button"
-												class="multiselect dropdown-toggle btn btn-default"
-												data-toggle="dropdown" title="None selected"><span
-													class="multiselect-selected-text">None
-													selected</span> <b class="caret"></b></button>
-											<ul class="multiselect-container dropdown-menu">
-												<li class="multiselect-item multiselect-all"><a tabindex="0"
-														class="multiselect-all"><label class="checkbox"><input
-																type="checkbox" value="multiselect-all"> Select
-															all</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Airbus-B767"> AirBus - B767</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Airbus-A320"> AirBus - A320</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Boeing-B767"> Boeing - B767</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Boeing-A320"> Boeing - A320</label></a></li>
-											</ul>
-										</div>
-										<a href="aircraft-models.html" target="_blank" class="add-icon"><i
-												class="fa fa-plus"></i></a>
-									</div>
-								</td>
-								<td><a href="#" class="btn btn-warning" data-toggle="tooltip" title=""
-										data-original-title="Add Models"><i class="fa fa-plus clr-white"></i></a></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr> -->
-
-						<!-- <tr style="background: #a5a5a5;">
-								<td style="color: #fff; font-weight: bold;">Repair</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td>
-									<div class="input-group">
-										<select class="multiselect" multiple="" style="display: none;">
-											<option value="AirBus">AirBus</option>
-											<option value="Boeing">Boeing</option>
-										</select>
-										<div class="btn-group"><button type="button"
-												class="multiselect dropdown-toggle btn btn-default"
-												data-toggle="dropdown" title="None selected"><span
-													class="multiselect-selected-text">None
-													selected</span> <b class="caret"></b></button>
-											<ul class="multiselect-container dropdown-menu">
-												<li class="multiselect-item multiselect-all"><a tabindex="0"
-														class="multiselect-all"><label class="checkbox"><input
-																type="checkbox" value="multiselect-all"> Select
-															all</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="AirBus">
-															AirBus</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Boeing">
-															Boeing</label></a></li>
-											</ul>
-										</div>
-										<a href="aircraft-manufacturer.html" target="_blank" class="add-icon"><i
-												class="fa fa-plus"></i></a>
-									</div>
-								</td>
-								<td>
-									<div class="input-group">
-										<select class="multiselect" id="" name="catadd" multiple=""
-											style="display: none;">
-											<option value="Airbus-B767">AirBus - B767</option>
-											<option value="Airbus-A320">AirBus - A320</option>
-											<option value="Boeing-B767">Boeing - B767</option>
-											<option value="Boeing-A320">Boeing - A320</option>
-										</select>
-										<div class="btn-group"><button type="button"
-												class="multiselect dropdown-toggle btn btn-default"
-												data-toggle="dropdown" title="None selected"><span
-													class="multiselect-selected-text">None
-													selected</span> <b class="caret"></b></button>
-											<ul class="multiselect-container dropdown-menu">
-												<li class="multiselect-item multiselect-all"><a tabindex="0"
-														class="multiselect-all"><label class="checkbox"><input
-																type="checkbox" value="multiselect-all"> Select
-															all</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Airbus-B767"> AirBus - B767</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Airbus-A320"> AirBus - A320</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Boeing-B767"> Boeing - B767</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Boeing-A320"> Boeing - A320</label></a></li>
-											</ul>
-										</div>
-										<a href="aircraft-models.html" target="_blank" class="add-icon"><i
-												class="fa fa-plus"></i></a>
-									</div>
-								</td>
-								<td><a href="#" class="btn btn-warning" data-toggle="tooltip" title=""
-										data-original-title="Add Models"><i class="fa fa-plus clr-white"></i></a></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr> -->
-
-						<!-- <tr style="background: #a5a5a5;">
-								<td style="color: #fff; font-weight: bold;">Exchange</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td>
-									<div class="input-group">
-										<select class="multiselect" multiple="" style="display: none;">
-											<option value="AirBus">AirBus</option>
-											<option value="Boeing">Boeing</option>
-										</select>
-										<div class="btn-group"><button type="button"
-												class="multiselect dropdown-toggle btn btn-default"
-												data-toggle="dropdown" title="None selected"><span
-													class="multiselect-selected-text">None
-													selected</span> <b class="caret"></b></button>
-											<ul class="multiselect-container dropdown-menu">
-												<li class="multiselect-item multiselect-all"><a tabindex="0"
-														class="multiselect-all"><label class="checkbox"><input
-																type="checkbox" value="multiselect-all"> Select
-															all</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="AirBus">
-															AirBus</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Boeing">
-															Boeing</label></a></li>
-											</ul>
-										</div>
-										<a href="aircraft-manufacturer.html" target="_blank" class="add-icon"><i
-												class="fa fa-plus"></i></a>
-									</div>
-								</td>
-								<td>
-									<div class="input-group">
-										<select class="multiselect" id="" name="catadd" multiple=""
-											style="display: none;">
-											<option value="Airbus-B767">AirBus - B767</option>
-											<option value="Airbus-A320">AirBus - A320</option>
-											<option value="Boeing-B767">Boeing - B767</option>
-											<option value="Boeing-A320">Boeing - A320</option>
-										</select>
-										<div class="btn-group"><button type="button"
-												class="multiselect dropdown-toggle btn btn-default"
-												data-toggle="dropdown" title="None selected"><span
-													class="multiselect-selected-text">None
-													selected</span> <b class="caret"></b></button>
-											<ul class="multiselect-container dropdown-menu">
-												<li class="multiselect-item multiselect-all"><a tabindex="0"
-														class="multiselect-all"><label class="checkbox"><input
-																type="checkbox" value="multiselect-all"> Select
-															all</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Airbus-B767"> AirBus - B767</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Airbus-A320"> AirBus - A320</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Boeing-B767"> Boeing - B767</label></a></li>
-												<li><a tabindex="0"><label class="checkbox"><input type="checkbox"
-																value="Boeing-A320"> Boeing - A320</label></a></li>
-											</ul>
-										</div>
-										<a href="aircraft-models.html" target="_blank" class="add-icon"><i
-												class="fa fa-plus"></i></a>
-									</div>
-								</td>
-								<td><a href="#" class="btn btn-warning" data-toggle="tooltip" title=""
-										data-original-title="Add Models"><i class="fa fa-plus clr-white"></i></a></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr> -->
-
-						<!-- </tbody> -->
 					</table>
 				</form>
 				<div class="clear"></div>
