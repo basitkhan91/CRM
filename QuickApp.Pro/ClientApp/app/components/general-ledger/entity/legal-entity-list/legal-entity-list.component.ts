@@ -119,14 +119,12 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 
 		this.cols = [
 			//{ field: 'ataMainId', header: 'ATAMain Id' },
-			{ field: 'name', header: 'Name' },
-			{ field: 'description', header: 'Description' },
+			{ field: 'name', header: 'Company Code' },
+			{ field: 'description', header: 'Company Name' },
+			{ field: 'description', header: 'Ledger Name' },
+			{ field: 'currencyCode', header: 'Functional Currency' },
 			{ field: 'cageCode', header: 'Cage Code' },
-			{ field: 'doingLegalAs', header: 'Doing Business As' },
 			{ field: 'createdBy', header: 'Created By' },
-			{ field: 'updatedBy', header: 'Updated By' },
-			{ field: 'updatedDate', header: 'Updated Date' },
-			{ field: 'createdDate', header: 'Created Date' }
 		];
 
 		this.selectedColumns = this.cols;
