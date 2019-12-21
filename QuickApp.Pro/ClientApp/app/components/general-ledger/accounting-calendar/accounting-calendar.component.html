@@ -1,4 +1,4 @@
-﻿<div class="card general1 form-horizontal add-glaccount">
+﻿<div class="card general1 form-horizontal add-glaccount acc-calendar">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item" aria-current="page">General Ledger</li>
@@ -7,13 +7,13 @@
     </nav>
     <div class="col-xs-12 x_content">
         <h4 class="page-heading">{{pageTitle}}</h4>
-        <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="col-md-12 col-sm-12 col-xs-12 mt8">
             <div class="tab-content">
                 <div class="tab-pane active" id="home">
-                    <div class="col-sm-4" style="margin-left: 15px">
+                    <div class="col-sm-6" style="margin-left: 30px">
                         <div class="form-group col-sm-12">
-                            <label class="">Ledger Name<strong class="clr-red">*</strong></label>
-                            <div class="inner-addon right-addon inline-block">
+                            <label class="col-sm-3">Ledger Name<strong class="clr-red">*</strong></label>
+                            <div class="col-sm-5 inner-addon right-addon inline-block">
                                 <p-autoComplete class="autocomp-customer-cstm"
                                                 name="name"
                                                 [(ngModel)]="currentCalendarObj.ledgername" [suggestions]="ledgerNameObject"
@@ -24,40 +24,41 @@
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
-                            <label class="">Ledger Description</label>
-                            <div class="">
+                            <label class="col-sm-3">Ledger Description</label>
+                            <div class="col-sm-5">
                                 <input [(ngModel)]="currentCalendarObj.ledgerdescription" class="form-control" type="text">
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
-                            <label class="">Description</label>
-                            <div class="">
-                                <input [(ngModel)]="currentCalendarObj.description" class="form-control" type="text">
+                            <label class="col-sm-3">Entity<strong class="clr-red">*</strong></label>
+                            <div class="col-sm-5">                                
+                                <p-multiSelect [options]="entitiesObj" [(ngModel)]="currentCalendarObj.entityId" name="entities" required>
+                                </p-multiSelect>
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
-                            <label class="">Fiscal Year<strong class="clr-red">*</strong></label>
-                            <div class="">
+                            <label class="col-sm-3">Fiscal Year<strong class="clr-red">*</strong></label>
+                            <div class="col-sm-5">
                                 <input class="form-control" type="number" [(ngModel)]="currentCalendarObj.fiscalYear" (change)="setMonthDate()" required>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-5" style="margin-left: 15px">
-                        <div class="">
-                            <label class="">Start Date<strong class="clr-red">*</strong></label>
-                            <div class="">
+                    <div class="col-sm-5">
+                        <div class="form-group col-sm-12">
+                            <label class="col-sm-3">Start Date<strong class="clr-red">*</strong></label>
+                            <div class="col-sm-5">
                                 <p-calendar [(ngModel)]="currentCalendarObj.fromDate" [showIcon]="true" [minDate]="minDate"></p-calendar>
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
-                            <label class="">End Date<strong class="clr-red">*</strong></label>
-                            <div class="">
+                            <label class="col-sm-3">End Date<strong class="clr-red">*</strong></label>
+                            <div class="col-sm-5">
                                 <p-calendar [(ngModel)]="currentCalendarObj.toDate" [showIcon]="true"></p-calendar>
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
-                            <label class="">Num of periods<strong class="clr-red">*</strong></label>
-                            <div class="">
+                            <label class="col-sm-3">Num of periods<strong class="clr-red">*</strong></label>
+                            <div class="col-sm-5">
                                 <select name="noperiods" id="noperiods" [(ngModel)]="currentCalendarObj.noOfPeriods" (change)="setSelectedAttribute($event.target.value)" required>
                                     <option value="">Select</option>
                                     <option value="12">12</option>
@@ -68,8 +69,8 @@
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
-                            <label class="">Period Type<strong class="clr-red">*</strong></label>
-                            <div class="">
+                            <label class="col-sm-3">Period Type<strong class="clr-red">*</strong></label>
+                            <div class="col-sm-5">
                                 <select [(ngModel)]="currentCalendarObj.periodType">
                                     <option value="">Select</option>
                                     <option value="Calendar Months">Calendar Months</option>
