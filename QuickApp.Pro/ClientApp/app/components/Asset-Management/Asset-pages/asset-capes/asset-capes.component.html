@@ -190,7 +190,7 @@
 
             <ng-template pTemplate="body" let-rowData let-assetCapes let-rowIndex="rowIndex">
                 <tr [pSelectableRow]="rowData" pReorderableRowHandle>
-                    <td style="width:120px"  *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                    <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                         {{rowData[col.field]}}
                     </td>
                     <td>{{assetCapes.partNumber}}</td>
@@ -201,10 +201,18 @@
                     <td>{{assetCapes.dashnumber}}</td>
                     <td>
                         <!--
-                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch> -->
-                        <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="toggleActiveStatus(rowData)" matTooltip="Toggle Status"></p-inputSwitch>
+    <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+    <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+    <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch> -->
+                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on"
+                                       offLabel="off" (onChange)="toggleActiveStatus(rowData)"
+                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on"
+                                       offLabel="off" (onChange)="toggleActiveStatus(rowData)"
+                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on"
+                                       offLabel="off" (onChange)="toggleActiveStatus(rowData)"
+                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                         <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>-->
                         <button class="btn-edit" mat-icon-button (click)="opencapesToEdit(content,rowData)" matTooltip="Edit">
                             <mat-icon>edit</mat-icon>

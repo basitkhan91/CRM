@@ -34,7 +34,7 @@ export class SalesQuoteService {
   constructor(private salesQuoteEndPointSevice: SalesQuoteEndpointService) {
     this.salesOrderQuote = new SalesOrderQuote();
     this.approvers = [];
-   }
+  }
 
   getNewSalesQuoteInstance(customerId: number) {
     return Observable.forkJoin(
@@ -43,27 +43,31 @@ export class SalesQuoteService {
       )
     );
   }
-  getNewSalesOrderQuteInstance() { 
+
+  getNewSalesOrderQuteInstance() {
     return Observable.create(observer => {
       observer.next(this.salesOrderQuote);
       observer.complete();
-      
+
     });
   }
-  getSalesOrderQuteInstance() { 
+
+  getSalesOrderQuteInstance() {
     return Observable.create(observer => {
       observer.next(this.salesOrderQuote);
       observer.complete();
-      
+
     });
   }
-  getSalesOrderQuteApprovers() { 
+
+  getSalesOrderQuteApprovers() {
     return Observable.create(observer => {
       observer.next(this.approvers);
       observer.complete();
-      
+
     });
   }
+
 
   create(salesquote: ISalesQuoteView): Observable<ISalesOrderQuote[]> {
     return Observable.forkJoin(
@@ -87,5 +91,13 @@ export class SalesQuoteService {
         salesQuoteSearchParameters
       )
     );
+  }
+
+  delete(salesQuoteId: number): Observable<boolean[]> {
+    return Observable.forkJoin(
+      this.salesQuoteEndPointSevice.delete(
+        salesQuoteId
+      )
+    )
   }
 }

@@ -22,6 +22,7 @@ export class CustomerATAInformationComponent implements OnInit {
     @Input() editMode;
     @Input() search_ataChapterList;
     @Input() ataListDataValues;
+    @Input() contactList;
     @Output() tab = new EventEmitter();
     @Output() refreshCustomerATAMapped = new EventEmitter();
     // LoadAtachapter: any = [];
@@ -34,13 +35,17 @@ export class CustomerATAInformationComponent implements OnInit {
     // add_SelectedModels: any;
     // add_SelectedId: any;
     search_SelectedATA = []
+    search_SelectedContact = []
     search_SelectedATASubChapter = []
     ataHeaders = [
+        { field: 'firstName', header: 'Contact' },
         { field: 'ataChapterName', header: 'ATA Chapter' },
         { field: 'ataSubChapterDescription', header: 'ATA Sub-Chapter' }
+        
     ]
     // ataListDataValues: any;
     ataChapterIdUrl: string;
+    contactIdUrl: string;
     ataSubchapterIdUrl: any;
     search_ataSubChapterList: any;
     // search_ataChapterList: { value: number; label: string; }[];
@@ -53,6 +58,7 @@ export class CustomerATAInformationComponent implements OnInit {
     isDeleteMode: boolean = false;
     public sourceCustomer: any = {}
     customerContactATAMappingId: number;
+    //contactList: any;
     constructor(
         private atasubchapter1service: AtaSubChapter1Service,
         private atamain: AtaMainService,
@@ -79,7 +85,7 @@ export class CustomerATAInformationComponent implements OnInit {
 
         // this.getAllATAChapter();
         this.getAllATASubChapter();
-
+        this.getContactsByCustomerId();
         // this.ataChapter = this.LoadAtachapter;
 
     }
@@ -183,7 +189,14 @@ export class CustomerATAInformationComponent implements OnInit {
 
     // search URL generation 
     searchByFieldUrlCreateforATA() {
-
+        if (this.search_SelectedContact.length > 0) {
+            const contactIds = this.search_SelectedContact.reduce((acc, value) => {
+                return `${acc},${value}`;
+            }, '');
+            this.contactIdUrl = contactIds.substr(1);
+        } else {
+            this.contactIdUrl = '';
+        }
         if (this.search_SelectedATA.length > 0) {
             const ataIds = this.search_SelectedATA.reduce((acc, value) => {
                 return `${acc},${value}`;
@@ -228,23 +241,52 @@ export class CustomerATAInformationComponent implements OnInit {
         }
     }
 
+    getContactsByCustomerId() {
+        this.customerService.getContactsByCustomerId(this.id).subscribe(res => {
+            const responseData: any = res;
+                this.contactList = responseData.map(x => {
+                    return {
+                        label: x.firstName, value: x.contactId
+                    }
+                })
+
+                
+            
+            })
+        
+    }
 
     async searchATA() {
         await this.searchByFieldUrlCreateforATA();
         this.searchATAParams = '';
         // checks where multi select is empty or not and calls the service
-        if (this.ataChapterIdUrl !== '' && this.ataSubchapterIdUrl !== '') {
+        if (this.ataChapterIdUrl !== '' && this.ataSubchapterIdUrl !== '' && this.contactIdUrl!=='') {
           
-            this.searchATAParams = `ataChapterId=${
+            this.searchATAParams = `contactId=${this.contactIdUrl}&ataChapterId=${
                 this.ataChapterIdUrl
                 }&ataSubChapterId=${this.ataSubchapterIdUrl}`;
         }
+        else if (this.ataChapterIdUrl !== '' && this.contactIdUrl !== '') {
+
+            this.searchATAParams = `contactId=${this.contactIdUrl}&ataChapterId=${this.ataChapterIdUrl}`;
+        }
+        else if (this.ataSubchapterIdUrl !== ''  && this.contactIdUrl !== '') {
+            this.searchATAParams = `contactId=${this.contactIdUrl}&ataSubChapterId=${this.ataSubchapterIdUrl}`;
+        }
+        else if (this.ataSubchapterIdUrl !== '' && this.ataChapterIdUrl !== '') {
+            this.searchATAParams = `ataChapterId=${this.ataChapterIdUrl}&ataSubChapterId=${this.ataSubchapterIdUrl}`;
+        }
+
         else if (this.ataChapterIdUrl !== '') {
 
             this.searchATAParams = `ataChapterId=${this.ataChapterIdUrl}`;
         }
         else if (this.ataSubchapterIdUrl !== '') {
             this.searchATAParams = `ataSubChapterId=${this.ataSubchapterIdUrl}`;
+        }
+
+        else if (this.contactIdUrl !== '') {
+            this.searchATAParams = `contactId=${this.contactIdUrl}`;
         }
 
         console.log(this.searchATAParams);
@@ -256,6 +298,13 @@ export class CustomerATAInformationComponent implements OnInit {
             )
             .subscribe(res => {
                 this.ataListDataValues = res;
+
+                this.contactIdUrl = '';
+                this.ataSubchapterIdUrl = '';
+                this.ataChapterIdUrl = '';
+                this.search_SelectedContact = [];
+                this.search_SelectedATASubChapter = [];
+                this.search_SelectedATA = [];
                 // .map(x => {
                 //     return {
                 //         ataChapterName: x.ataChapterName,

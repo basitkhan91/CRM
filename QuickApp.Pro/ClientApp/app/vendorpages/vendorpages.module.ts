@@ -10,11 +10,9 @@ import { VendorPagesRoutingModule } from "./vendorpages-routing.module";
 import { VendorpagesComponent } from "./vendorpages.component";
 
 import { VendorContactsComponent } from "../components/vendor/vendor-contacts/vendor-contacts.component";
-import { VendorEditComponent } from "../components/vendor/vendor-edit/vendor-edit.component";
 import { VendorFinancialInformationComponent } from "../components/vendor/vendor-financial-information/vendor-financial-information.component";
 import { VendorGeneralInformationComponent } from "../components/vendor/vendor-general-information/vendor-general-information.component";
 import { VendorPaymentInformationComponent } from "../components/vendor/vendor-payment-information/vendor-payment-information.component";
-import { VendorSetupComponent } from "../components/vendor/vendor-setup/vendor-setup.component";
 import { VendorBillingInformationComponent } from "../components/vendor/vendor-billing-information/vendor-billing-information.component";
 import { VendorShippingInformationComponent } from "../components/vendor/vendor-shipping-information/vendor-shipping-information.component";
 import { VendorWarningsComponent } from "../components/vendor/vendor-warnings/vendor-warnings.component";
@@ -113,11 +111,9 @@ import { DropdownModule } from "primeng/dropdown";
 	declarations: [
 		VendorpagesComponent,
 		VendorContactsComponent,
-		VendorEditComponent,
 		VendorFinancialInformationComponent,
 		VendorGeneralInformationComponent,
 		VendorPaymentInformationComponent,
-        VendorSetupComponent,
         VendorBillingInformationComponent,
 		VendorShippingInformationComponent,
 		VendorWarningsComponent,

@@ -132,17 +132,6 @@
                       <div class="form-group col-sm-12">
                         <label class="">1099 Category</label>
                         <div class="">
-                         <!--  <select formControlName="category" [(ngModel)]="glAccountObj.categoryId">
-                            <option>--Select--</option>
-                            <option value="1">Rent</option>
-                            <option value="2">Royalties</option>
-                            <option value="3">Other Income</option>
-                            <option value="4">Medical &amp; Healthcare Payments</option>
-                            <option value="5">Non Employee Comp</option>
-                            <option value="6">Golden Parachute</option>
-                            <option value="7">Gross Proceeds paid to an attorneey</option>
-                          </select> -->
-
                           <select formControlName="category" [(ngModel)]="glAccountObj.categoryId">
                                   <option *ngFor="let miscCategory of miscData" [ngValue]="miscCategory.glClassFlowClassificationId">  {{miscCategory.glClassFlowClassificationName}}</option>
                               </select>

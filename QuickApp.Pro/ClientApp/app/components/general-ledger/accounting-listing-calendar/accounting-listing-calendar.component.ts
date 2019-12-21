@@ -20,13 +20,13 @@ export class AccountingListingCalendarComponent implements OnInit {
     totalRecords: number = 0;
     totalPages: number = 0;
     headers = [
-        { field: 'ledgerName', header: 'Ledger Name' },
-        { field: 'ledgerDescription', header: 'Ledger Description' },
+        { field: 'name', header: 'Ledger Name' },
+        { field: 'description', header: 'Ledger Description' },
         { field: 'fiscalYear', header: 'Fiscal Year' },
         { field: 'startDate', header: 'Start Date' },       
         { field: 'endDate', header: 'End Date' },
-        { field: 'noOfPeriod', header: 'Period' },
-        { field: 'periodType', header: 'Period Type' }
+        { field: 'period', header: 'Period' },
+        { field: 'periodName', header: 'Period Type' }
     ]
     selectedColumns = this.headers;
     data: any;
@@ -56,8 +56,63 @@ export class AccountingListingCalendarComponent implements OnInit {
     getCalendarData(data: any) {
         
         this.calendarService.getCalendarListData().subscribe(
-            datalist => {
-                var calendarData = datalist[0]['accountList'];   
+            datalist => {               
+                var calendarResponseData = datalist[0]; 
+                var resultArr = []
+                for (var i = 0; i < calendarResponseData.length; i++) {
+                    var calendarArr = calendarResponseData[i]['calendarListData'] 
+                    let startDate = calendarArr[0].fromDate;
+                    let endDate = calendarArr[calendarArr.length - 1].toDate;
+                    var arraylist = []                   
+                    var results = calendarArr.reduce((p, e) => {
+                        let data = {}
+                        data = {
+                            fiscalName: e.fiscalName,
+                            fiscalYear: e.fiscalYear,
+                            period: e.period,
+                            quater: e.quater,
+                            fromDate: new Date(e.fromDate),
+                            toDate: new Date(e.toDate),
+                            periodName: e.periodName,
+                            name: e.name,
+                            entityId: e.entityId,
+                            createdBy: e.createdBy,
+                            updatedBy: e.updatedBy,
+                            isAdjustPeriod: e.isAdjustPeriod,
+                            accountingCalendarId: e.accountingCalendarId
+                        }
+                        let calendarList = {}
+                        calendarList = {
+                            "name": e.name,
+                            "description": e.description,
+                            "legalEntityId": e.legalEntityId,
+                            "fiscalYear": e.fiscalYear,
+                            "startDate": startDate,
+                            "endDate": endDate,
+                            "period": e.period,
+                            "periodName": e.periodName,
+                            "createdBy": e.createdBy,
+                            "updatedBy": e.updatedBy,
+                            "updatedDate": e.updatedDate,
+                            "createdDate": e.createdDate
+                        }
+                        p[e.fiscalName] = e
+                        p[e.fiscalName]['data'] = data
+                        p[e.fiscalName]['calendarList'] = calendarList
+                        return p;
+                    }, {});
+                    var dataList = []
+                    Object.keys(results).map(function (key, index) {
+                        arraylist.push(results[key]['data']);
+                        dataList['calendarList'] = results[key]['calendarList'];
+                    });
+                    dataList['calendarList']['data'] = arraylist
+                    resultArr[i] = dataList	
+                }
+               
+                var calendarData = resultArr.map((item) => {
+                    return item['calendarList']
+                })
                 if (data && data.sortField) {
                     if (data.sortOrder == -1)
                         calendarData = this.sortCalendarData(calendarData, data.sortField, false);
@@ -74,8 +129,8 @@ export class AccountingListingCalendarComponent implements OnInit {
         );
     }
 
-    sortCalendarData(array, key, descendingOrder = true) {
-        if (key == 'glAccountId' || key == 'fiscalYear' || key == 'noOfPeriod') {
+    sortCalendarData(array, key, descendingOrder = true) {        
+        if (key == 'fiscalYear' || key == 'period') {
             return this.calendarService.sortBy(array, {
                 prop: key,
                 desc: descendingOrder
@@ -109,8 +164,9 @@ export class AccountingListingCalendarComponent implements OnInit {
         console.log(event);
     }
 
-    editCalendarData(data) {
-        this.calendarService.emitCalendarDetails(data);        
+    editCalendarData(rowData) {
+        //var selectedRow = rowData['data']
+        this.calendarService.emitCalendarDetails(rowData);        
         this.router.navigate(['/generalledgermodule/generalledgerpage/app-accounting-calendar']);
         //const params = JSON.stringify(data)
         //this.router.navigate(['/generalledgermodule/generalledgerpage/app-accounting-calendar'], { queryParams: { calendarSelectedData: params}, skipLocationChange: true, replaceUrl: false });        

@@ -333,13 +333,16 @@ editMatData: any[] = [];
           this.workOrderService.getWorkOrderLaborListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
           .subscribe(
             (res: any) =>{
-              this.labor = {...res, workOrderLaborList: [{}]};
+              let laborList = this.labor.workOrderLaborList;
+              this.labor = {...res, workOrderLaborList: laborList};
               this.taskList.forEach((tl)=>{
-                this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
                 res.laborList.forEach((rt)=>{
                   if(rt['taskId'] == tl['taskId']){
+                    if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
+                      this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
+                    }
                     let labor = {}
-                    labor = {...rt, expertiseId: rt.expertiseTypeId, hours: rt.estimatedHours}
+                    labor = {...rt}
                     this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(labor);
                   }
                 })
@@ -397,7 +400,9 @@ editMatData: any[] = [];
           this.taskList.forEach((tl)=>{
             res['expertise'].forEach((rt)=>{
               if(rt['taskId'] == tl['taskId']){
-                this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
+                if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
+                  this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
+                }
                 let labor = {}
                 labor = {...rt, expertiseId: rt.expertiseTypeId, hours: rt.estimatedHours}
                 this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(labor);
@@ -703,7 +708,7 @@ editMaterialList(matData, index){
 }
 
 deleteMaterialList(index){
-  this.materialListQuotation.splice(index+1, index+1);
+  this.materialListQuotation.splice(index, 1);
 }
 updateWorkOrderChargesList(data){
   console.log(data);

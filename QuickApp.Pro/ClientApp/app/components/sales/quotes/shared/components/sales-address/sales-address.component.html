@@ -79,12 +79,19 @@
                     </div>
                     <div class="col-md-8">
                         
-                        <p-autoComplete sstyle="font-size: 1px" [(ngModel)]="salesOrderQuote.shipToContactName" (onSelect)="OnShipToContact($event)" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30"
-                        [minLength]="1" [dropdown]="true">
-                          <ng-template let-name pTemplate="item">
-                              <div class="ui-helper-clearfix">{{name}}</div>
-                          </ng-template>
-                      </p-autoComplete>
+                      <p-autoComplete
+                      class="autocomp-customer-cstm"
+                      [(ngModel)]="salesOrderQuote.shipToContactId"
+                      [suggestions]="customerNames"
+                      [forceSelection]="true"
+                      emptyMessage="No Match Found"
+                      field="name"
+                      (completeMethod)="filterNames($event)"
+                      [size]="30"
+                      [minLength]="1"
+                      [dropdown]="true"
+                    >
+                    </p-autoComplete>
                     </div>
                    
                   </div>
@@ -160,7 +167,7 @@
                     <div class="col-md-8">
                         <select [(ngModel)]="salesOrderQuote.billToSiteName" name="billToSiteName" (change)="onBillSiteSelect(salesOrderQuote.billToSiteName)" required>
                             <option>--Select</option>
-                            <option *ngFor="let site of siteList" [ngValue]="site.siteName">
+                            <option *ngFor="let site of billingInfoList" [ngValue]="site.siteName">
                                 {{site.siteName}}
                                 </option>
                           </select>
@@ -223,12 +230,19 @@
                       <label class="sales-quote-shipping-label">CONTACT NAME</label>
                     </div>
                     <div class="col-md-8">
-                        <p-autoComplete sstyle="font-size: 1px" [(ngModel)]="salesOrderQuote.billToContactName" (onSelect)="OnBillToContact($event)" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30"
-                        [minLength]="1" [dropdown]="true">
-                          <ng-template let-name pTemplate="item">
-                              <div class="ui-helper-clearfix">{{name}}</div>
-                          </ng-template>
-                      </p-autoComplete>
+                      <p-autoComplete
+                      class="autocomp-customer-cstm"
+                      [(ngModel)]="salesOrderQuote.billToContactId"
+                      [suggestions]="customerNames"
+                      [forceSelection]="true"
+                      emptyMessage="No Match Found"
+                      field="name"
+                      (completeMethod)="filterNames($event)"
+                      [size]="30"
+                      [minLength]="1"
+                      [dropdown]="true"
+                    >
+                    </p-autoComplete>
                     </div>
                    
                   </div>

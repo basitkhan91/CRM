@@ -43,7 +43,7 @@ import { User } from '../../../../models/user.model';
 
 import { CompanyService } from '../../../../services/company.service';
 import { CurrencyService } from '../../../../services/currency.service';
-import { getObjectById } from '../../../../generic/autocomplete';
+import { getObjectById, editValueAssignByCondition } from '../../../../generic/autocomplete';
 
 
 
@@ -522,9 +522,9 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         // this.sourceEmployee.firstName = this.empCreationForm.get('firstName').value;
         // this.sourceEmployee.lastName = this.empCreationForm.get('lastName').value;
         // this.sourceEmployee.middleName = this.empCreationForm.get('middleName').value;
-        this.sourceEmployee.firstName = this.sourceEmployee.firstName.firstName ? this.sourceEmployee.firstName.firstName : this.sourceEmployee.firstName;
-        this.sourceEmployee.lastName = this.sourceEmployee.lastName.lastName ? this.sourceEmployee.lastName.lastName : this.sourceEmployee.lastName;
-        this.sourceEmployee.middleName = this.sourceEmployee.middleName.middleName ? this.sourceEmployee.middleName.middleName : this.sourceEmployee.middleName;
+        this.sourceEmployee.firstName = editValueAssignByCondition('firstName', this.sourceEmployee.firstName);
+        this.sourceEmployee.lastName = editValueAssignByCondition('lastName', this.sourceEmployee.lastName);
+        this.sourceEmployee.middleName = editValueAssignByCondition('middleName', this.sourceEmployee.middleName);
         this.sourceEmployee.currencyId = this.sourceEmployee.currencyId ? this.sourceEmployee.currencyId.currencyId : null;
         this.sourceEmployee.jobTitleId = this.empCreationForm.get('jobTitleId').value;
         this.sourceEmployee.employeeExpertiseId = this.empCreationForm.get('employeeExpertiseId').value;

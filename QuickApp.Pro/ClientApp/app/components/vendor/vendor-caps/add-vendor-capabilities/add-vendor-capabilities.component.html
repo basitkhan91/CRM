@@ -10,7 +10,7 @@
 		</div>
 		<div class="card-body">
 			<p-tabView class="pas-tabview">
-					<p-tabPanel header="General Info">
+					<p-tabPanel header="General Info" [selected]="selectedGeneralInfo">
 						<h4 class="po-head">Create General Information</h4>
 						<form #addVendorCapForm="ngForm" class="form-horizontal ro-grid-form mtop10">
 						<div class="form-row">
@@ -173,22 +173,22 @@
 						</div>
 						</form>
 					</p-tabPanel>
-					<p-tabPanel header="Aircraft Info" [disabled]="enableAircraftInfo">
+					<p-tabPanel header="Aircraft Info" [disabled]="enableAircraftInfo" [selected]="selectedAircraftInfo">
 						<div class="card" style="padding: 8px 4px 4px;">
 							<div class="col-sm-12 font-padding" *ngIf="sourceVendorCap">
-								<div class="col-sm-2">
+								<div class="col-sm-4">
 									PN: <span style="color:red">{{sourceVendorCap.partNumber}}</span>
 								</div>
-								<div class="col-sm-3">
+								<div class="col-sm-4">
 									Vendor Name: <span style="color:red">{{sselectedVendorName}}</span>
 								</div>
-								<div class="col-sm-3">
+								<div class="col-sm-4">
 									Vendor Code: <span style="color:red">{{sselectedVendorCode}}</span>
 								</div>
-								<div class="col-sm-3">
+								<!-- <div class="col-sm-3">
 									Capability Name: <span style="color:red">{{ selectedCapabilityName }}</span>
 									
-								</div>
+								</div> -->
 							</div>
 							<div class="col-md-12">
 								<div class="col-md-12 ">

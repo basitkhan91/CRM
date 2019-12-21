@@ -192,8 +192,13 @@ namespace QuickApp.Pro.Controllers
                 {
                     employeeobject.LegalEntityId = entityobject.LegalEntityId;
                 }
-               
-               
+                else
+                {
+                    var legalEntityobject = _context.LegalEntity.OrderByDescending(p => p.LegalEntityId).FirstOrDefault();
+                    employeeobject.LegalEntityId = legalEntityobject.LegalEntityId;
+                }
+
+
                 employeeobject.SSN = employeeViewModel.SSN;
                 employeeobject.Email = employeeViewModel.Email;
                 employeeobject.AllowDoubleTime = employeeViewModel.AllowDoubleTime;
