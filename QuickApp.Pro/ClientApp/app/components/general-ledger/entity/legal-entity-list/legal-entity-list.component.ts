@@ -83,7 +83,8 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
         this.sourceLegalEntity.isBalancingEntity = true;
 		this.CurrencyData();
         this.loadData();
-        this.countrylist();
+		this.countrylist();
+		this.loadMasterCompanies();
 	}
 
 	modal: NgbModalRef;
@@ -285,7 +286,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 		this.isDeleteMode = false;
 
 		this.isSaving = true;
-		this.loadMasterCompanies();
+		
 		this.sourceAction = new Currency();
 		this.sourceAction.isActive = true;
 		this.currencyName = "";
@@ -306,7 +307,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 			this.sourceLegalEntity.createdBy = this.userName;
 			this.sourceLegalEntity.updatedBy = this.userName;
 
-			this.sourceLegalEntity.masterCompanyId = 1;
+			//this.sourceLegalEntity.masterCompanyId = 1;
             this.workFlowtService.newAddEntity(this.sourceLegalEntity).subscribe(data =>
             {
                 this.alertService.showMessage('Legal Entity added successfully.');

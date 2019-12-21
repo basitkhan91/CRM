@@ -91,7 +91,7 @@ namespace QuickApp.Pro.Controllers
                 DomesticWirePayment domesticWirePaymentObj = new DomesticWirePayment();
                 InternationalwirePayment internationalWirePaymentObj = new InternationalwirePayment();
                 ACH ach = new ACH();
-                entityobject.MasterCompanyId = 1;
+                entityobject.MasterCompanyId = legalEntityViewModel.MasterCompanyId;
                 entityobject.Name = legalEntityViewModel.Name;
                 entityobject.Description = legalEntityViewModel.Description;
                 entityobject.DoingLegalAs = legalEntityViewModel.DoingLegalAs;
