@@ -31,6 +31,7 @@ export class AssetAttributeTypeComponent implements OnInit {
     columnHeaders: any[];
     itemDetails: any;
     currentRow: AssetAttributeType;
+    currentRowData: AssetAttributeType;
     currentModeOfOperation: ModeOfOperation;
     rowName: string;
     header: string;
@@ -53,10 +54,11 @@ export class AssetAttributeTypeComponent implements OnInit {
     filteredPercentageList: any[] = [];
 
     companyList: any[];
+    companyListData: any[] = [];
     buList: any[];
     divisionList: any[];
     departmentList: any[];
-    selectedCompanyID: number = 0;
+    selectedCompanyID: any = [];
     selectedBUId: number = 0;
     selectedDivisionID: number = 0;
     selectedDeptID: number = 0;
@@ -172,14 +174,33 @@ export class AssetAttributeTypeComponent implements OnInit {
 
     loadManagementdata() {
         this.legalEntityService.getManagemententity().subscribe(
-            res => {
-                this.loadHierarchy(res[0])
-            });
+            results => this.loadHierarchy(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
     }
 
     loadHierarchy(mgmtStructureData) {
         this.allmgmtData = mgmtStructureData;
         this.companyList = this.allmgmtData.filter(c => c.parentId == null);
+        if (this.companyList.length > 0) {
+            for (let i = 0; i < this.companyList.length; i++ ) {
+                this.companyListData.push(
+                    { value: this.companyList[i].managementStructureId, label: this.companyList[i].code },
+                );
+            }
+        }
+        //console.log('companyListData', this.companyListData);
+    }
+
+    getCompanyName(managementStructureId) {
+        let label = "";
+        for (let i = 0; i < this.companyListData.length; i++) {
+            if (this.companyListData[i].value == managementStructureId) {
+                label = this.companyListData[i].label
+                break;
+            }
+        }
+        return label;
     }
 
     loadDepricationMethod() {
@@ -191,7 +212,7 @@ export class AssetAttributeTypeComponent implements OnInit {
     }
 
     companySelected(): void {
-        ////console.log(`Company Id :${this.selectedCompanyID}`);
+        console.log(`Company Id :${this.selectedCompanyID}`);
 
         if (this.selectedCompanyID != undefined && this.selectedCompanyID.toString() !== "0") {
             this.mgmtStructureId = this.selectedCompanyID;
@@ -374,7 +395,8 @@ export class AssetAttributeTypeComponent implements OnInit {
         this.currentRow.residualPercentage = 0;
         this.currentRow.isActive = true;
         //this.currentRow.managementStructureId= 1;
-        this.selectedCompanyID = 0;
+        let selectedCompanyIDs: any[] = [115, 118];
+        this.selectedCompanyID = [];
         this.selectedBUId = 0;
         this.selectedDivisionID = 0;
         this.selectedDeptID = 0;
@@ -507,7 +529,9 @@ export class AssetAttributeTypeComponent implements OnInit {
             assetSale: editValueAssignByCondition('glAccountId', this.currentRow.assetSale),
             assetWriteOff: editValueAssignByCondition('glAccountId', this.currentRow.assetWriteOff),
             assetWriteDown: editValueAssignByCondition('glAccountId', this.currentRow.assetWriteDown),
-            managementStructureId: editValueAssignByCondition('managementStructureId', this.mgmtStructureId),
+            //managementStructureId: editValueAssignByCondition('managementStructureId', this.mgmtStructureId),
+            managementStructureId: 115,
+            selectedCompanyIds: this.selectedCompanyID ,
         };
         this.coreDataService.add(data).subscribe(response => {
             this.alertService.showMessage('Success', this.rowName + " added successfully.", MessageSeverity.success);
@@ -536,6 +560,8 @@ export class AssetAttributeTypeComponent implements OnInit {
                 assetWriteOff: editValueAssignByCondition('glAccountId', this.currentRow.assetWriteOff),
                 assetWriteDown: editValueAssignByCondition('glAccountId', this.currentRow.assetWriteDown),
                 //managementStructureId: editValueAssignByCondition('managementStructureId', this.mgmtStructureId),
+                managementStructureId: 115,
+                selectedCompanyIds: this.selectedCompanyID,
             };
             //console.log('saveExistingItem:', data);
             this.coreDataService.update(data).subscribe(response => {
@@ -568,7 +594,9 @@ export class AssetAttributeTypeComponent implements OnInit {
 
     showItemEdit(rowData): void {
         this.currentModeOfOperation = ModeOfOperation.Update;
+        this.disableSave = true;
         //console.log('currentModeOfOperation', this.currentModeOfOperation);
+        this.currentRowData = rowData;
         this.currentRow = {
             ...rowData,
             assetTypeId: getObjectById('assetTypeId', rowData.assetTypeId, this.allAssetTypes),
@@ -581,7 +609,7 @@ export class AssetAttributeTypeComponent implements OnInit {
             residualPercentage: getObjectById('value', rowData.residualPercentage, this.percentageList),
             assetSale: getObjectById('glAccountId', rowData.assetSale, this.allGlInfo),
             assetWriteOff: getObjectById('glAccountId', rowData.assetWriteOff, this.allGlInfo),
-            assetWriteDown: getObjectById('glAccountId', rowData.assetWriteDown, this.allGlInfo)
+            assetWriteDown: getObjectById('glAccountId', rowData.assetWriteDown, this.allGlInfo),
         };
         this.currentRow = { ...this.currentRow };
         this.mgmtStructureId = this.currentRow.managementStructureId;
@@ -720,5 +748,14 @@ export class AssetAttributeTypeComponent implements OnInit {
         this.selectedDivisionID = 0;
         this.selectedDeptID = 0;
         this.currentRow = new AssetAttributeType();
+    }
+
+    onChangeSelectField(object, field) {
+        if (this.currentRowData[field] == object[field]) {
+            this.disableSave = true;
+        }
+        else {
+            this.disableSave = false;
+        }
     }
 }

@@ -380,7 +380,8 @@
                                 <div class="col-sm-5">
                                     <p-autoComplete field="accountName" [(ngModel)]="currentRow.acquiredGLAccountId" name="acquiredGLAccountId"
                                                     [suggestions]="filteredGLAccountList" (completeMethod)="filterGLAccount($event)"
-                                                    [forceSelection]="true" [size]="30" [minLength]="1"
+                                                    [forceSelection]="true" [size]="30" [minLength]="1" 
+                                                    (ngModelChange)="onChangeSelectField($event, 'acquiredGLAccountId')"
                                                     [dropdown]="true" class="p-autoComplete-ctsm" required>
                                     </p-autoComplete>
                                 </div>
@@ -454,12 +455,13 @@
                             </div>
                             <div class="col-sm-5">
                                 <div style="margin: 2px 0">
-                                    <select name="primaryCompany"
-                                            (change)="companySelected()" [(ngModel)]="selectedCompanyID" required>
-                                        <option value="0">Select Company</option>
-                                        <option *ngFor="let name of companyList" [ngValue]="name.managementStructureId">{{name.code}}</option>
-                                    </select>
+                                    <p-multiSelect [options]="companyListData"
+                                                   [ngModelOptions]="{standalone: true}"
+                                                   [(ngModel)]="selectedCompanyID" [panelStyle]="{minWidth:'12em'}"
+                                                   (onChange)="companySelected()">
+                                    </p-multiSelect>
                                 </div>
+                                <!--
                                 <div style="margin: 2px 0">
                                     <select name="primaryBU" [(ngModel)]="selectedBUId" (change)="buSelected()" [disabled]="selectedCompanyID == 0">
                                         <option value="0">Select BU</option>
@@ -477,7 +479,7 @@
                                         <option value="0">Select Dept</option>
                                         <option *ngFor="let name of departmentList" [ngValue]="name.managementStructureId">{{name.code}}</option>
                                     </select>
-                                </div>
+                                </div> -->
                             </div>
                         </div> 
                         <div class="form-group">
@@ -496,7 +498,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="AssetType.invalid" (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();"> {{currentModeOfOperation == 3 ? 'Update' : 'Save' }}</button>
+                    <button class="btn btn-primary-cstm" data-dismiss="modal" 
+                            [disabled]="AssetType.invalid || disableSave" (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();"> {{currentModeOfOperation == 3 ? 'Update' : 'Save' }}</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetFromData()">Close</button>
 
                 </div>
