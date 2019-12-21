@@ -84,7 +84,7 @@ namespace DAL.Repositories
                         item.WorkScope = workScope.Description;
                 }
 
-                //workOrder.WorkFlowWorkOrderId = CreateWorkFlowWorkOrderFromWorkFlow(workOrder.PartNumbers, workOrder.WorkOrderId, workOrder.CreatedBy);
+                workOrder.WorkFlowWorkOrderId = CreateWorkFlowWorkOrderFromWorkFlow(workOrder.PartNumbers, workOrder.WorkOrderId, workOrder.CreatedBy);
 
                 return workOrder;
             }
@@ -2674,6 +2674,18 @@ namespace DAL.Repositories
             }
         }
 
+        public object WorkOrderQuoteExists(long workOrderId)
+        {
+            try
+            {
+                return _appContext.WorkOrderQuote.Where(p => p.WorkOrderId == workOrderId).FirstOrDefault();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
 
 
         public WorkOrderQuoteDetails CreateWorkOrderQuoteDetails(WorkOrderQuoteDetails workOrderQuoteDetails)
@@ -4128,15 +4140,19 @@ namespace DAL.Repositories
 
                                 workFlowWorkOrder.WorkOrderPartNoId = item.ID;
 
-                                //if (_appContext.WorkOrderWorkFlow.Any(p => p.WorkOrderPartNoId == item.ID))
-                                //{
-                                //    _appContext.WorkOrderWorkFlow.Update(workFlowWorkOrder);
-                                //}
-                                //else
-                                //{
-                                //    _appContext.WorkOrderWorkFlow.Add(workFlowWorkOrder);
-                                //}
-                                _appContext.WorkOrderWorkFlow.Add(workFlowWorkOrder);
+                                var existWorkFlow = _appContext.WorkOrderWorkFlow.Where(p => p.WorkOrderPartNoId == item.ID).AsNoTracking().FirstOrDefault();
+                                if (existWorkFlow != null)
+                                {
+                                    workFlowWorkOrder.WorkFlowWorkOrderId = existWorkFlow.WorkFlowWorkOrderId;
+                                    _appContext.WorkOrderWorkFlow.Update(workFlowWorkOrder);
+                                }
+
+                                else
+                                {
+                                    _appContext.WorkOrderWorkFlow.Add(workFlowWorkOrder);
+                                }
+
+                                //_appContext.WorkOrderWorkFlow.Add(workFlowWorkOrder);
                                 _appContext.SaveChanges();
 
                                 workFlowWorkOrder.WorkFlowWorkOrderNo = "WOWF" + workFlowWorkOrder.WorkFlowWorkOrderId;
@@ -4173,16 +4189,22 @@ namespace DAL.Repositories
                             workOrderWorkFlow.IsDeleted = false;
                             workOrderWorkFlow.WorkOrderPartNoId = item.ID;
 
-                            //if(_appContext.WorkOrderWorkFlow.Any(p=>p.WorkOrderPartNoId==item.ID))
-                            //{
-                            //    workOrderWorkFlow.WorkFlowWorkOrderId= _appContext.WorkOrderWorkFlow.Where(p => p.WorkOrderPartNoId == item.ID).FirstOrDefault().WorkFlowWorkOrderId;
-                            //    _appContext.WorkOrderWorkFlow.Update(workOrderWorkFlow);
-                            //}
-                            //else
-                            //{
-                            //    _appContext.WorkOrderWorkFlow.Add(workOrderWorkFlow);
-                            //}
-                            _appContext.WorkOrderWorkFlow.Add(workOrderWorkFlow);
+
+                            var existWorkFlow = _appContext.WorkOrderWorkFlow.Where(p => p.WorkOrderPartNoId == item.ID).AsNoTracking().FirstOrDefault();
+                            if(existWorkFlow!=null)
+                            {
+                                workOrderWorkFlow.WorkFlowWorkOrderId = existWorkFlow.WorkFlowWorkOrderId;
+                                
+
+                                _appContext.WorkOrderWorkFlow.Update(workOrderWorkFlow);
+                            }
+
+                            else
+                            {
+                                _appContext.WorkOrderWorkFlow.Add(workOrderWorkFlow);
+                            }
+
+                            //_appContext.WorkOrderWorkFlow.Add(workOrderWorkFlow);
                             _appContext.SaveChanges();
                             workFlowWorkOrderId = workOrderWorkFlow.WorkFlowWorkOrderId;
 

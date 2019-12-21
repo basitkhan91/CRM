@@ -49,61 +49,107 @@ namespace DAL.Repositories
                 {
                     statusId = 4;
                 }
-            }
 
-            var totalRecords = (from ro in _appContext.RepairOrder
-                                join emp in _appContext.Employee on ro.RequisitionerId equals emp.EmployeeId
-                                join v in _appContext.Vendor on ro.VendorId equals v.VendorId
-                                join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
-                                from appr in approver.DefaultIfEmpty()
-                                where ro.IsDeleted == false
-                                     && ro.VendorId == (vendorId > 0 ? vendorId : ro.VendorId)
-                                     && (ro.RepairOrderNumber.Contains(filterText)
-                                     || v.VendorName.Contains(filterText)
-                                     || v.VendorCode.Contains(filterText)
-                                     || ro.StatusId == statusId
-                                     || emp.FirstName.Contains(filterText)
-                                     || appr.FirstName.Contains(filterText))
-                                select new
-                                {
-                                    ro.RepairOrderId
+                var totalRecords = (from ro in _appContext.RepairOrder
+                                    join emp in _appContext.Employee on ro.RequisitionerId equals emp.EmployeeId
+                                    join v in _appContext.Vendor on ro.VendorId equals v.VendorId
+                                    join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
+                                    from appr in approver.DefaultIfEmpty()
+                                    where ro.IsDeleted == false
+                                         && ro.VendorId == (vendorId > 0 ? vendorId : ro.VendorId)
+                                         && (ro.RepairOrderNumber.Contains(filterText)
+                                         || v.VendorName.Contains(filterText)
+                                         || v.VendorCode.Contains(filterText)
+                                         || ro.StatusId == statusId
+                                         || emp.FirstName.Contains(filterText)
+                                         || appr.FirstName.Contains(filterText))
+                                    select new
+                                    {
+                                        ro.RepairOrderId
 
-                                }).Distinct()
+                                    }).Distinct()
                 .Count();
 
-            var repairOrderList = (from ro in _appContext.RepairOrder
-                                   join emp in _appContext.Employee on ro.RequisitionerId equals emp.EmployeeId
-                                   join v in _appContext.Vendor on ro.VendorId equals v.VendorId
-                                   join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
-                                   from appr in approver.DefaultIfEmpty()
-                                   where ro.IsDeleted == false
-                                     && ro.VendorId == (vendorId > 0 ? vendorId : ro.VendorId)
-                                     &&(ro.RepairOrderNumber.Contains(filterText)
-                                     || v.VendorName.Contains(filterText)
-                                     || v.VendorCode.Contains(filterText)
-                                     || ro.StatusId == statusId
-                                     || emp.FirstName.Contains(filterText)
-                                     || appr.FirstName.Contains(filterText))
-                                   select new
-                                   {
-                                       ro.RepairOrderId,
-                                       ro.RepairOrderNumber,
-                                       ro.OpenDate,
-                                       ro.ClosedDate,
-                                       v.VendorName,
-                                       v.VendorCode,
-                                       Status = ro.StatusId == 1 ? "Open" : (ro.StatusId == 2 ? "Pending" : (ro.StatusId == 3 ? "Fulfilling" : "Closed")),
-                                       RequestedBy = emp.FirstName,
-                                       ApprovedBy = appr == null ? "" : appr.FirstName,
-                                       ro.CreatedDate,
-                                       ro.IsActive,
-                                       TotalRecords = totalRecords
-                                   }).Distinct().OrderByDescending(p => p.CreatedDate)
-                                    .Skip(skip)
-                                   .Take(take)
-                                   .ToList();
+                var repairOrderList = (from ro in _appContext.RepairOrder
+                                       join emp in _appContext.Employee on ro.RequisitionerId equals emp.EmployeeId
+                                       join v in _appContext.Vendor on ro.VendorId equals v.VendorId
+                                       join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
+                                       from appr in approver.DefaultIfEmpty()
+                                       where ro.IsDeleted == false
+                                         && ro.VendorId == (vendorId > 0 ? vendorId : ro.VendorId)
+                                         && (ro.RepairOrderNumber.Contains(filterText)
+                                         || v.VendorName.Contains(filterText)
+                                         || v.VendorCode.Contains(filterText)
+                                         || ro.StatusId == statusId
+                                         || emp.FirstName.Contains(filterText)
+                                         || appr.FirstName.Contains(filterText))
+                                       select new
+                                       {
+                                           ro.RepairOrderId,
+                                           ro.RepairOrderNumber,
+                                           ro.OpenDate,
+                                           ro.ClosedDate,
+                                           v.VendorName,
+                                           v.VendorCode,
+                                           Status = ro.StatusId == 1 ? "Open" : (ro.StatusId == 2 ? "Pending" : (ro.StatusId == 3 ? "Fulfilling" : "Closed")),
+                                           RequestedBy = emp.FirstName,
+                                           ApprovedBy = appr == null ? "" : appr.FirstName,
+                                           ro.CreatedDate,
+                                           ro.IsActive,
+                                           TotalRecords = totalRecords
+                                       }).Distinct().OrderByDescending(p => p.CreatedDate)
+                                        .Skip(skip)
+                                       .Take(take)
+                                       .ToList();
 
-            return repairOrderList;
+                return repairOrderList;
+            }
+            else
+            {
+                var totalRecords = (from ro in _appContext.RepairOrder
+                                    join emp in _appContext.Employee on ro.RequisitionerId equals emp.EmployeeId
+                                    join v in _appContext.Vendor on ro.VendorId equals v.VendorId
+                                    join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
+                                    from appr in approver.DefaultIfEmpty()
+                                    where ro.IsDeleted == false
+                                         && ro.VendorId == (vendorId > 0 ? vendorId : ro.VendorId)
+                                    select new
+                                    {
+                                        ro.RepairOrderId
+
+                                    }).Distinct()
+                .Count();
+
+                var repairOrderList = (from ro in _appContext.RepairOrder
+                                       join emp in _appContext.Employee on ro.RequisitionerId equals emp.EmployeeId
+                                       join v in _appContext.Vendor on ro.VendorId equals v.VendorId
+                                       join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
+                                       from appr in approver.DefaultIfEmpty()
+                                       where ro.IsDeleted == false
+                                         && ro.VendorId == (vendorId > 0 ? vendorId : ro.VendorId)
+                                       select new
+                                       {
+                                           ro.RepairOrderId,
+                                           ro.RepairOrderNumber,
+                                           ro.OpenDate,
+                                           ro.ClosedDate,
+                                           v.VendorName,
+                                           v.VendorCode,
+                                           Status = ro.StatusId == 1 ? "Open" : (ro.StatusId == 2 ? "Pending" : (ro.StatusId == 3 ? "Fulfilling" : "Closed")),
+                                           RequestedBy = emp.FirstName,
+                                           ApprovedBy = appr == null ? "" : appr.FirstName,
+                                           ro.CreatedDate,
+                                           ro.IsActive,
+                                           TotalRecords = totalRecords
+                                       }).Distinct().OrderByDescending(p => p.CreatedDate)
+                                        .Skip(skip)
+                                       .Take(take)
+                                       .ToList();
+
+                return repairOrderList;
+            }
+
+            
         }
 
         public IEnumerable<object> RecevingRolist()
