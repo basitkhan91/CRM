@@ -4944,10 +4944,16 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.isSaving = true;
         if (this.isEditMode == false) {
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.integrationName;
+            this.sourceAction.Name = this.sourcemanufacturer.name;
+            this.sourceAction.createdBy = this.userName;
             this.sourceAction.masterCompanyId = 1;
-            this.itemser.savemanufacutrer(this.sourcemanufacturer).subscribe(
+            this.itemser.savemanufacutrer(this.sourceAction).subscribe(
                 data => {
+                    this.alertService.showMessage(
+                        'Success',
+                        `Saved Manufacturer Successfully `,
+                        MessageSeverity.success
+                    );
                     this.sourceItemMaster.manufacturerId = data.manufacturerId;
                     this.manufacturerdata()
                 })
