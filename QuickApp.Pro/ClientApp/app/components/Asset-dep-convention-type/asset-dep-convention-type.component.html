@@ -2,19 +2,19 @@
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_content">
-                <nav aria-label="breadcrumb">
+                <!-- <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item" aria-current="page">Asset Management</li>
                         <li class="breadcrumb-item" aria-current="page">Asset Management Maintanance</li>
                         <li class="breadcrumb-item active" aria-current="page">Depreciation Convension</li>
                     </ol>
-                </nav>
+                </nav> -->
                 <div class="card">
                     <div class="card-body">
                         <div class="inline-block display-flex">
                             <h3 class="po-head lead"> Depreciation Convension</h3>
                             &nbsp;&nbsp;
-                            <a class="plusicon-cstm new-margin" pTooltip="Add  Depreciation Convention" tooltipPosition="right" (click)="open(contentEdit)">
+                            <a class="plusicon-cstm new-margin" pTooltip="Add Depreciation Convention" tooltipPosition="right" (click)="open(contentEdit)">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
@@ -35,9 +35,9 @@
                                 <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect [maxSelectedLabels]="2" [options]="selectedData" optionLabel="header" [(ngModel)]="selectedColumns"
                                                    [style]="{minWidth: '200px'}" style="float:left"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download All" tooltipPosition="top" pButton icon="fa-download"
                                             iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected Data" tooltipPosition="top" pButton icon="fa-download"
                                             iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
                                         <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
