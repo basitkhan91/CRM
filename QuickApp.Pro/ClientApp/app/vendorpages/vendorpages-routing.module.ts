@@ -68,8 +68,9 @@ const vendorPagesRoutes: Routes = [
 			{ path: "workorder-ro-create/:id/:mpnid", component: RoSetupComponent, data: { title: "RO Setup" } },
 			{ path: "app-ro-setup/vendor/:vendorId", component: RoSetupComponent, data: { title: "RO Setup" } },
 			{ path: "app-vendor-capabilities-list", component: VendorCapabilitiesListComponent, data: { title: "capabilities-list" } },
-			{ path: "app-add-vendor-capabilities", component: AddVendorCapabilitiesComponent, data: { title: "capabilities-add" } },
-			{ path: "app-edit-vendor-capabilities", component: EditVendorCapabilitiesComponent, data: { title: "capabilities-edit" } },
+			{ path: "app-add-vendor-capabilities", component: AddVendorCapabilitiesComponent, data: { title: "Add Capabilities" } },
+			{ path: "app-add-vendor-capabilities/edit/:id", component: AddVendorCapabilitiesComponent, data: { title: "Edit Capabilities" } },
+			// { path: "app-edit-vendor-capabilities", component: EditVendorCapabilitiesComponent, data: { title: "capabilities-edit" } },
 
 		]
 	}
