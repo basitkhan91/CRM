@@ -120,6 +120,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(audits);
         }
 
+        [HttpPost("bulkUpload")]
+        public IActionResult BulkUpload()
+        {
+            var result = _unitOfWork.AssetTypeRepository.BulkUpload(Request.Form.Files[0]);
+
+            return Ok(result);
+        }
+
         #endregion Public Methods
 
         #region Private Methods
