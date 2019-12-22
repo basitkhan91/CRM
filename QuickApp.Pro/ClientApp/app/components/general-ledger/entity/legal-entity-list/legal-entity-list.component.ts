@@ -121,7 +121,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 			//{ field: 'ataMainId', header: 'ATAMain Id' },
 			{ field: 'name', header: 'Company Code' },
 			{ field: 'description', header: 'Company Name' },
-			{ field: 'description', header: 'Ledger Name' },
+			{ field: 'ledgerName', header: 'Ledger Name' },
 			{ field: 'currencyCode', header: 'Functional Currency' },
 			{ field: 'cageCode', header: 'Cage Code' },
 			{ field: 'createdBy', header: 'Created By' },

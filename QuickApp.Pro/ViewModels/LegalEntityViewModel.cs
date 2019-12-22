@@ -12,7 +12,7 @@ namespace QuickApp.Pro.ViewModels
 
         public long ACHId { get; set; }
         public  string Name { get; set; }
-
+        public string LedgerName { get; set; }
         public string Description { get; set; }
 
         public string LegalEntityType { get; set; }

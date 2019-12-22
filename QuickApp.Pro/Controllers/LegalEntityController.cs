@@ -93,6 +93,7 @@ namespace QuickApp.Pro.Controllers
                 ACH ach = new ACH();
                 entityobject.MasterCompanyId = legalEntityViewModel.MasterCompanyId;
                 entityobject.Name = legalEntityViewModel.Name;
+                entityobject.LedgerName = legalEntityViewModel.LedgerName;
                 entityobject.Description = legalEntityViewModel.Description;
                 entityobject.DoingLegalAs = legalEntityViewModel.DoingLegalAs;
                 entityobject.CageCode = legalEntityViewModel.CageCode;
