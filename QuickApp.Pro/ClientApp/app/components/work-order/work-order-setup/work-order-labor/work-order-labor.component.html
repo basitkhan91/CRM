@@ -108,13 +108,13 @@
           class="p-radiobutton-label-horizontal"
           name="HoursorClockorScan"
           label="Labour hours"
-          value=1
+          [value]=1
           [(ngModel)]="laborForm.hoursorClockorScan"
         ></p-radioButton>
         <p-radioButton
           class="p-radiobutton-label-horizontal col-width"
           name="HoursorClockorScan"
-          value=2
+          [value]=2
           label="Labour Clock In/Out"
           [(ngModel)]="laborForm.hoursorClockorScan"
         ></p-radioButton>
@@ -122,7 +122,7 @@
         <p-radioButton
           class="p-radiobutton-label-horizontal"
           name="HoursorClockorScan"
-          value=3
+          [value]=3
           label="Scan"
           [(ngModel)]="laborForm.hoursorClockorScan"
         ></p-radioButton>
@@ -164,6 +164,14 @@
           <th class="text-center">Hours/Mins</th>
           <th class="text-center">Adjustments</th>
           <th class="text-center">Adjusted Hours</th>
+          <ng-container *ngIf="isQuote">
+            <th>
+              Direct Labor OH Cost
+            </th>
+            <th>MARKUP</th>
+            <th>Cost plus amount</th>
+            <th>Fixed Amount</th>
+          </ng-container>
           <th class="text-center" style="padding: 7px 53px !important;">
             Memo
           </th>
@@ -287,6 +295,20 @@
                 <td>
                   {{ rec.adjustedHours }}
                 </td>
+                <ng-container *ngIf="isQuote">
+                  <td>
+                    <input type="number" [(ngModel)]="rec.laborOverheadCost" />
+                  </td>
+                  <td>
+                      <!-- <input [(ngModel)]="matQuotation.markup" /> -->
+                    <select class="form-control custom-select wf-pub-id" (change)="markupChanged(rec)" [(ngModel)]="rec.markupPercentageId">
+                      <option value="">Select</option>
+                      <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+                    </select>
+                  </td>
+                  <td>{{rec.costPlusAmount}}</td>
+                  <td><input [(ngModel)]="rec.fixedAmount" /></td>
+                </ng-container>
                 <td>
                   <input type="text" [(ngModel)]="rec.memo" />
                 </td>

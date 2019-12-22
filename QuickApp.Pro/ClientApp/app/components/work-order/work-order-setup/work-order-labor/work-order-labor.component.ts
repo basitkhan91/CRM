@@ -21,6 +21,8 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   @Output() saveworkOrderLabor = new EventEmitter();
   @Input() workOrderLaborList: any;
   @Input() taskList: any;
+  @Input() isQuote = false;
+  @Input() markupList;
 
     totalHours: number;
   workOrderWorkFlowList: any;
@@ -35,7 +37,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   billableList = [
     { label: 'Billable', value: 1 },
     { label: 'Non-Billable', value: 2 }
-    ]
+    ];
 
 
   constructor(private workOrderService: WorkOrderService,
@@ -140,6 +142,16 @@ console.log(this.workOrderLaborList);
     this.commonService.smartDropDownList('Employee', 'EmployeeId', 'FirstName').subscribe(res => {
       this.employeesOriginalData = res;
       this.employeeList = res;
+      if(this.laborForm.dataEnteredBy != null){
+        this.employeeList.forEach(emp=>{
+          if(this.laborForm.dataEnteredBy == emp.value){
+            this.laborForm.dataEnteredBy = emp;
+          }
+          if(this.laborForm.employeeId == emp.value){
+            this.laborForm.employeeId = emp;
+          }
+        })
+      }
     })
   }
 
@@ -374,6 +386,19 @@ console.log(this.workOrderLaborList);
 
   deleteLabor(taskName, index){
     this.laborForm.workOrderLaborList[0][taskName.toLowerCase()].splice(index, 1);
+  }
+
+  markupChanged(matData) {
+      try {
+          this.markupList.forEach((markup) => {
+          if (markup.value == matData.markupPercentageId) {
+              matData.costPlusAmount = (matData.laborOverheadCost) + (((matData.laborOverheadCost) / 100) * Number(markup.label))
+          }
+          })
+      }
+      catch (e) {
+          console.log(e);
+      }
   }
   // tasks : this.laborForm.tasks[0][keysArray[i]].map(x => {
   //   return {

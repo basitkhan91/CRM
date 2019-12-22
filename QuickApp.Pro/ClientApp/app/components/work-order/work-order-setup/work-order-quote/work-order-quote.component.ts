@@ -342,7 +342,7 @@ editMatData: any[] = [];
                       this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
                     }
                     let labor = {}
-                    labor = {...rt}
+                    labor = {...rt, employeeId: {'label':rt.employeeName, 'value': rt.employeeId}}
                     this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(labor);
                   }
                 })
@@ -374,6 +374,7 @@ editMatData: any[] = [];
   getQuoteInfo(data) {
     this.selectedWorkFlowOrWorkOrder = data;
     this.gridActiveTab = '';
+    this.formTaskList();
     if(this.selectedBuildMethod == 'use work flow'){
       this.workOrderService.getWorkFlowDetails(data.workFlowId)
       .subscribe(
@@ -404,7 +405,7 @@ editMatData: any[] = [];
                   this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
                 }
                 let labor = {}
-                labor = {...rt, expertiseId: rt.expertiseTypeId, hours: rt.estimatedHours}
+                labor = {...rt, expertiseId: rt.expertiseTypeId, hours: rt.estimatedHours, employeeId: {'label':rt.employeeName, 'value': rt.employeeId}}
                 this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(labor);
               }
             })
@@ -427,6 +428,7 @@ editMatData: any[] = [];
   }
 
   createMaterialQuote(){
+    this.materialListPayload.BuildMethodId = this.getBuildMethodId();
     this.materialListPayload.WorkOrderQuoteMaterial = this.materialListQuotation.map(mList=>{
       return {
                   "WorkOrderQuoteMaterialId":0,
@@ -443,10 +445,10 @@ editMatData: any[] = [];
                   "ExtendedPrice":mList.extendedPrice,
                   "Memo":mList.memo,
                   "IsDefered":mList.isDeferred,
-                  "MatMarkup":1,
+                  "markupPercentageId":mList.markupPercentageId,
                   "TotalPartsCost":155,
                   "Markup":mList.markup,
-                  "CostPlusAmount":mList.quantity * mList.unitCost,
+                  "CostPlusAmount":mList.costPlusAmount,
                   "FixedAmount":mList.masterCompanyId,
                   "masterCompanyId":mList.masterCompanyId,
               "CreatedBy":"admin",
@@ -481,6 +483,7 @@ editMatData: any[] = [];
   }
 
   createChargeQuote(data){
+    this.chargesPayload.BuildMethodId = this.getBuildMethodId();
     this.chargesPayload.WorkOrderQuoteCharges = data.map(charge=>{
       return {
         "WorkOrderQuoteChargesId":0,
@@ -491,8 +494,8 @@ editMatData: any[] = [];
         "RoNumberId":1,
         "InvoiceNo":"InvoiceNo 123456",
         "Amount":100,
-        "MarkupPercentageId":1,
-        "CostPlusAmount":charge.quantity*charge.unitPrice,
+        "MarkupPercentageId":charge.markupPercentageId,
+        "CostPlusAmount":charge.CostPlusAmount,
         "FixedAmount":charge.fixedAmount,
         "Description":charge.description,
         "UnitCost":charge.unitCost,
@@ -537,9 +540,7 @@ editMatData: any[] = [];
             (taskList) => {
                 this.labor.workOrderLaborList[0] = {}
                 this.taskList = taskList;
-                this.taskList.forEach(task => {
-                    this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [new AllTasks()];
-                });
+                this.formTaskList();
             },
             (error) => {
                 console.log(error);
@@ -547,8 +548,15 @@ editMatData: any[] = [];
         )
 }
 
+formTaskList(){
+  this.taskList.forEach(task => {
+      this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [new AllTasks()];
+  });
+}
+
 saveworkOrderLabor(data) {
   console.log(data);
+  this.laborPayload.BuildMethodId = this.getBuildMethodId();
   this.laborPayload.WorkOrderQuoteLaborHeader.WorkOrderQuoteLaborHeaderId = data.workOrderLaborHeaderId;
   this.laborPayload.WorkOrderQuoteLaborHeader.WorkOrderQuoteDetailsId = 0;
   this.laborPayload.WorkOrderQuoteLaborHeader.DataEnteredBy = data.dataEnteredBy;
@@ -579,7 +587,10 @@ saveworkOrderLabor(data) {
 		 		"Adjustments":labor.adjustments,
 		 		"AdjustedHours":labor.adjustedHours,
 		 		"Memo":labor.memo,
-		 		"TaskId":labor.taskId,
+        "TaskId":labor.taskId,
+        "CostPlusAmount": labor.costPlusAmount,
+        "laborOverheadCost": labor.laborOverheadCost,
+        "markupPercentageId": labor.markupPercentageId,
 		 		"CreatedBy":"admin",
         "UpdatedBy":"admin",
         "IsActive":true,
@@ -589,7 +600,15 @@ saveworkOrderLabor(data) {
   this.createLaborQuote();
 }
 
+getBuildMethodId(){
+  if(this.selectedBuildMethod === 'use work flow') return 1;
+  else if(this.selectedBuildMethod === 'use historical wos') return 2;
+  else if(this.selectedBuildMethod === 'build from scratch') return 3;
+  else if(this.selectedBuildMethod === 'display 3rd party') return 4;
+}
+
 saveWorkOrderExclusionsList(data) {
+  this.exclusionPayload.BuildMethodId = this.getBuildMethodId();
   this.exclusionPayload.WorkOrderQuoteExclusions = data.map(ex=>{
     return {
       "WorkOrderQuoteExclusionsId":0,
@@ -602,8 +621,8 @@ saveWorkOrderExclusionsList(data) {
       "Quantity":ex.quantity,
       "UnitCost":ex.unitCost,
       "ExtendedCost":ex.extendedCost,
-      "MarkUpPercentageId":1,
-      "CostPlusAmount":20,
+      "MarkUpPercentageId":ex.markupPercentageId,
+      "CostPlusAmount":ex.CostPlusAmount,
       "FixedAmount":25,
       "masterCompanyId":ex.masterCompanyId,
       "CreatedBy":"admin",
@@ -671,7 +690,7 @@ saveMaterialListForWO(data){
 }
 
 getMarkup(){
-  this.commonService.smartDropDownList('MarkUpPercentage', 'MarkUpPercentageId', 'MarkupValue')
+  this.commonService.smartDropDownList('[Percent]', 'PercentId', 'PercentValue')
   .subscribe(
     res=>{
       this.markupList = res;
