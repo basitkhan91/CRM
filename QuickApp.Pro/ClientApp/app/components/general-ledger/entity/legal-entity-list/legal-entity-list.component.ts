@@ -33,11 +33,13 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 	selectedNode1: TreeNode;
 	dataSource: MatTableDataSource<{}>;
 	displayedColumns: any;
+	display: boolean = false;
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	selectedColumn: any;
 	@ViewChild(MatSort) sort: MatSort;
 	loadingIndicator: boolean;
 	currencyName: any;
+	modelValue: boolean = false;
 	cols: any[];
 	allComapnies: MasterCompany[] = [];
 	allATAMaininfo: any[] = [];
@@ -119,14 +121,12 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 
 		this.cols = [
 			//{ field: 'ataMainId', header: 'ATAMain Id' },
-			{ field: 'name', header: 'Name' },
-			{ field: 'description', header: 'Description' },
+			{ field: 'name', header: 'Company Code' },
+			{ field: 'description', header: 'Company Name' },
+			{ field: 'ledgerName', header: 'Ledger Name' },
+			{ field: 'currencyCode', header: 'Functional Currency' },
 			{ field: 'cageCode', header: 'Cage Code' },
-			{ field: 'doingLegalAs', header: 'Doing Business As' },
 			{ field: 'createdBy', header: 'Created By' },
-			{ field: 'updatedBy', header: 'Updated By' },
-			{ field: 'updatedDate', header: 'Updated Date' },
-			{ field: 'createdDate', header: 'Created Date' }
 		];
 
 		this.selectedColumns = this.cols;
@@ -300,35 +300,41 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 	}
 	editItemAndCloseModel() {
 
-		this.isSaving = true;
+		//this.isSaving = true;
 
-        if (!this.sourceLegalEntity.legalEntityId)
-        {
-			this.sourceLegalEntity.createdBy = this.userName;
-			this.sourceLegalEntity.updatedBy = this.userName;
-
-			//this.sourceLegalEntity.masterCompanyId = 1;
-            this.workFlowtService.newAddEntity(this.sourceLegalEntity).subscribe(data =>
-            {
-                this.alertService.showMessage('Legal Entity added successfully.');
-                this.loadData();
-
-            });
+		if (!(this.sourceLegalEntity.name && this.sourceLegalEntity.description && this.sourceLegalEntity.reportingCurrencyId && this.sourceLegalEntity.reportingCurrencyId && this.sourceLegalEntity.ledgerName)) {
+			this.display = true;
+			this.modelValue = true;
 		}
-		else {
+		if (this.sourceLegalEntity.name && this.sourceLegalEntity.description && this.sourceLegalEntity.reportingCurrencyId && this.sourceLegalEntity.reportingCurrencyId && this.sourceLegalEntity.ledgerName) {
+			if (!this.sourceLegalEntity.legalEntityId) {
+				this.sourceLegalEntity.createdBy = this.userName;
+				this.sourceLegalEntity.updatedBy = this.userName;
 
-			this.sourceLegalEntity.createdBy = this.userName;
-			this.sourceLegalEntity.updatedBy = this.userName;
-            this.sourceLegalEntity.masterCompanyId = 1;
-            this.workFlowtService.updateEntity(this.sourceLegalEntity).subscribe(data =>
-            {
-                this.alertService.showMessage('Legal Entity updated successfully.');
-                this.loadData();
-            }); 
+				//this.sourceLegalEntity.masterCompanyId = 1;
+				this.workFlowtService.newAddEntity(this.sourceLegalEntity).subscribe(data => {
+					this.alertService.showMessage('Legal Entity added successfully.');
+					this.loadData();
+
+				});
+			}
+			else {
+
+				this.sourceLegalEntity.createdBy = this.userName;
+				this.sourceLegalEntity.updatedBy = this.userName;
+				//this.sourceLegalEntity.masterCompanyId = 1;
+				this.workFlowtService.updateEntity(this.sourceLegalEntity).subscribe(data => {
+					this.alertService.showMessage('Legal Entity updated successfully.');
+					this.loadData();
+				});
+			}
+			if (this.modal) { this.modal.close(); }
+			if (this.modal1) { this.modal1.close(); }
 		}
-		if (this.modal) { this.modal.close();}
-		if (this.modal1) { this.modal1.close();}		
-		
+
+		if (this.display == false) {
+			this.dismissModel();
+		}
 	}
 
 
@@ -352,8 +358,6 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 			this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
 
 		}
-
-		//this.loadData();
 	}
 
 	private saveFailedHelper(error: any) {
@@ -371,6 +375,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 		
 	}
 	openContentEdit(content, row) {
+		this.isEditMode = true;
 		this.GeneralInformation();
 		this.sourceLegalEntity.isBankingInfo = false;
 		this.sourceLegalEntity = row;

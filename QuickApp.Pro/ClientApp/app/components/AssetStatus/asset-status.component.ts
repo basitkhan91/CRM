@@ -363,6 +363,7 @@ export class AssetStatusComponent implements OnInit {
     }
 
     openView(content, row) {
+        console.log(content);
         this.sourceAction = row;
         this.code = row.code;
         this.name = row.name;

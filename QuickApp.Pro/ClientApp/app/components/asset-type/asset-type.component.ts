@@ -44,6 +44,7 @@ export class AssetTypeComponent implements OnInit {
     allAssetTypes: any[] = [];
     isEdit: boolean = false;
 
+
     new = {
         assetTypeName: "",
         assetTypeMemo: "",
@@ -89,12 +90,21 @@ export class AssetTypeComponent implements OnInit {
     bulkUpload(event) {
         this.formData = new FormData();
         const file = event.target.files;
+        //console.log(file[0]);
         if (file.length > 0) {
             this.formData.append('file', file[0]);
+            //console.log(this.formData);
             this.coreDataService.bulkUpload(this.formData).subscribe(response => {
                 //event.target.value = '';
-                let bulkUploadResult = response[0];
-                this.showBulkUploadResult(bulkUploadResult);
+                //console.log(response);
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+                this.formData = new FormData();
+                //let bulkUploadResult = response;
+                this.showBulkUploadResult(response);
                 this.getItemList();
             })
         }
@@ -207,12 +217,23 @@ export class AssetTypeComponent implements OnInit {
     }
 
     showBulkUploadResult(items: any) {
-        let successCount = items.filter(item => item.UploadTag == UploadTag.Success);
-        let failedCount = items.filter(item => item.UploadTag == UploadTag.Failed);
-        let duplicateCount = items.filter(item => item.UploadTag == UploadTag.Duplicate);
-        this.alertService.showMessage('Success', `${successCount} ${this.rowName}${successCount > 1 ? 's' : ''} uploaded successfully.`, MessageSeverity.success);
-        this.alertService.showMessage('Error', `${failedCount} ${this.rowName}${failedCount > 1 ? 's' : ''} failed to upload.`, MessageSeverity.error);
-        this.alertService.showMessage('Info', `${duplicateCount} ${duplicateCount > 1 ? 'duplicates' : 'duplicate'} ignored.`, MessageSeverity.info);
+        if (items) {
+            let successCount = items.filter(item => item.UploadTag == UploadTag.Success);
+            let failedCount = items.filter(item => item.UploadTag == UploadTag.Failed);
+            let duplicateCount = items.filter(item => item.UploadTag == UploadTag.Duplicate);
+
+            if (successCount)
+                this.alertService.showMessage('Success', `${successCount} ${this.rowName}${successCount > 1 ? 's' : ''} uploaded successfully.`,
+                    MessageSeverity.success);
+
+            if (failedCount)
+            this.alertService.showMessage('Error', `${failedCount} ${this.rowName}${
+                failedCount > 1 ? 's' : ''} failed to upload.`, MessageSeverity.error);
+
+            if (duplicateCount)
+                this.alertService.showMessage('Info', `${duplicateCount} ${duplicateCount > 1 ? 'duplicates' : 'duplicate'} ignored.`,
+                    MessageSeverity.info);
+        }
     }
 
     showHistory(rowData): void {
@@ -298,7 +319,7 @@ export class AssetTypeComponent implements OnInit {
     }
 
     sampleExcelDownload() {
-         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=AssetType&fileName=assetType.xlsx`;
+         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=AssetType&fileName=AssetClass.xlsx`;
          window.location.assign(url);
     }
 
@@ -312,5 +333,20 @@ export class AssetTypeComponent implements OnInit {
             this.disableSave = false;
         }
 
+    }
+
+    viewItemDetailsClick(content, row) {
+        //console.log(content);
+        this.itemDetails = row;
+        //this.loadMasterCompanies();
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    dismissModel() {
+        this.isEdit = false;
+        this.modal.close();
     }
 }

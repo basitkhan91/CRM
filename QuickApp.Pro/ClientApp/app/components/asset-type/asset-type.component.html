@@ -50,10 +50,23 @@
                                             pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm" pTooltip="Download All Data" tooltipPosition="top"
                                             pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    <!--
                                     <div class="excel-upload  excel-upload-cstm">
                                         <input type="file" id="file" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
                                                accept=".xlsx, .xls, .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                                                (change)="bulkUpload($event)">
+                                        <label for="upload">
+                                            <span matTooltip="Upload Data (Excel)">
+                                                <i class="fa fa-upload"></i>
+                                            </span>
+                                        </label>
+                                        &nbsp; &nbsp;
+                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()">Sample File Download</button>
+                                    </div>
+                                    -->
+                                    <div class="excel-upload  excel-upload-cstm">
+                                        <input type="file" name="upload[]" id="upload" (change)="bulkUpload($event)" class="uploaddoc upload-file"
+                                               accept=".xlsx, .xls, .csv">
                                         <label for="upload">
                                             <span matTooltip="Upload Data (Excel)">
                                                 <i class="fa fa-upload"></i>
@@ -86,7 +99,7 @@
 
                             <!--body-->
                             <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                                <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="viewItemDetails(rowData)">
+                                <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="viewItemDetailsClick(viewClick, rowData)">
                                     <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                         {{rowData[col.field]}}
                                     </td>
@@ -207,6 +220,73 @@
 
     </div>
 
+    <ng-template #viewClick class="modal fade " id="view" role="dialog">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+                <h4 class="modal-title"> Asset Class Details</h4>
+            </div>
+            <div class="modal-body viewform">
+                <div class="col-sm-12">
+                    <p>
+                        <span class="label">
+                            <b>Id: </b>
+                        </span>
+                        <span class="value">{{itemDetails.assetTypeId}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Name: </b>
+                        </span>
+                        <span class="value">{{itemDetails.assetTypeName}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Memo: </b>
+                        </span>
+                        <span class="value">{{itemDetails.assetTypeMemo}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Active: </b>
+                        </span>
+                        <span class="value">{{itemDetails.isActive ? 'True' : 'False'}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Created By: </b>
+                        </span>
+                        <span class="value">{{itemDetails.createdBy}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Created Date: </b>
+                        </span>
+                        <span class="value">{{itemDetails.createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Last Updated By: </b>
+                        </span>
+                        <span class="value">{{itemDetails.updatedBy}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Last Updated Date: </b>
+                        </span>
+                        <span class="value">{{itemDetails.updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
+                    </p>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+            </div>
+        </div>
+
+    </ng-template>
+
     <!--Step x: Modal for Edit-->
     <div #editItem id="editItem" class="modal fade editModal" role="dialog" *ngIf="currentModeOfOperation === 2 || currentModeOfOperation === 3">
         <div class="modal-dialog">
@@ -224,7 +304,7 @@
                                 </div>
                                 <div class="col-sm-5">
                                     <!--<textarea class="text-item" #memo="ngModel" id="name" name="name" [(ngModel)]="selectedRowforEdit.assetTypeName" minlength="2" (onChange)="check"></textarea>
-        -->
+                                    -->
                                     <p-autoComplete field="assetTypeName"
                                                     [(ngModel)]="selectedRowforEdit.assetTypeName"
                                                     (onSelect)="selectedAssetType($event)"
@@ -244,7 +324,7 @@
                                     <label for="description" class="control-label">Memo</label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="memo" 
+                                    <textarea class="text-item" #memo="ngModel" id="memo"
                                               name="assetTypeMemo" [(ngModel)]="selectedRowforEdit.assetTypeMemo" minlength="2"></textarea>
                                 </div>
                             </div>

@@ -185,15 +185,13 @@
 <p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
 		  [width]="350" [minWidth]="200" [responsive]="true"
 		  [minY]="1050" [baseZIndex]="1100000">
-
-
-	<h5 [ngStyle]="{'color':'red'}">
+	
+    <h5 [ngStyle]="{'color':'red'}">
 		There is No data
 	</h5>
 	<p-footer>
 		<button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
 	</p-footer>
-
 </p-dialog>
 
 <ng-template #contentView let-c="close" let-d="dismiss">
