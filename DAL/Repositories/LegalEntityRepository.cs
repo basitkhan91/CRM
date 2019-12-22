@@ -56,6 +56,7 @@ namespace DAL.Repositories
                             legal.FunctionalCurrencyId,
                             legal.ReportingCurrencyId,
                             legal.IsBankingInfo,
+                            legal.LedgerName,
 
                             CurrencyCode = curr.DisplayName,
 
