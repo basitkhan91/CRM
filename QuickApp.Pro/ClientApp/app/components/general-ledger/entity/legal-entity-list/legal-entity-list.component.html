@@ -161,7 +161,7 @@
 						<div class="margin0">
 							<div class="tab-content mar-0 padd-0">
 								<ul class="nav nav-pills">
-									<li><button class="btn my-btn" (click)="GeneralInformation()" [class.extraclass]="GeneralInformationStyle">General Info</button></li>
+									<li><button class="btn my-btn" (click)="GeneralInformation()" [class.extraclass]="GeneralInformationStyle">General Information</button></li>
 									<li><button class="btn my-btn" (click)="Lockbox()" [class.extraclass]="LockboxStyle" *ngIf="sourceLegalEntity.isBankingInfo">Lockbox</button></li>
 									<li><button class="btn my-btn" (click)="DomesticWire()" [class.extraclass]="domesticWireStyle" *ngIf="sourceLegalEntity.isBankingInfo">Domestic Wire</button></li>
 									<li><button class="btn my-btn" (click)="InternationalWire()" [class.extraclass]="internationalStyle" *ngIf="sourceLegalEntity.isBankingInfo">International Wire</button></li>
@@ -185,11 +185,11 @@
 											</div>
 										</div>
 										<div class="form-group col-sm-12">
-											<label class="control-label col-sm-4">COMPANY CODE</label>
+											<label class="control-label col-sm-4">COMPANY CODE <strong class="clr-red">*</strong></label>
 											<div class="col-sm-7"> <input type="text" class="form-control" id="ccode" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.name"> </div>
 										</div>
 										<div class="form-group col-sm-12">
-											<label class="control-label col-sm-4">COMPANY</label>
+											<label class="control-label col-sm-4">COMPANY NAME <strong class="clr-red">*</strong></label>
 											<div class="col-sm-7"> <input type="text" class="form-control" id="cname" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.description"> </div>
 										</div>
 										<div class="form-group col-sm-12">
@@ -254,7 +254,7 @@
 										</div>-->
 
 										<div class="form-group col-sm-12">
-											<label class="control-label col-sm-4">FUNCTIONAL CURRENCY </label>
+											<label class="control-label col-sm-4">FUNCTIONAL CURRENCY<strong class="clr-red">*</strong> </label>
 											<div class="col-sm-7">
 												<select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.functionalCurrencyId">
 													<option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">{{currencyName.symbol}}</option>
@@ -263,7 +263,7 @@
 										</div>
 
 										<div class="form-group col-sm-12">
-											<label class="control-label col-sm-4">REPORTING CURRENCY </label>
+											<label class="control-label col-sm-4">REPORTING CURRENCY <strong class="clr-red">*</strong></label>
 											<div class="col-sm-7">
 												<select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.reportingCurrencyId">
 													<option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">{{currencyName.symbol}}</option>
@@ -274,7 +274,7 @@
 										<div class="form-group col-sm-12">
 											<label class="control-label col-sm-4">BALANCING ENTITY</label>
 											<div class="col-sm-7">
-												<input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.isBalancingEntity">
+												<input class="form-control" [disabled]="true" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.isBalancingEntity">
 											</div>
 										</div>
 										<div class="form-group col-sm-12">
@@ -290,7 +290,7 @@
 											<div class="col-sm-7"> <input type="text" class="form-control" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.taxId"> </div>
 										</div>
 										<div class="form-group col-sm-12">
-											<label class="control-label col-sm-4">LEDGER NAME</label>
+											<label class="control-label col-sm-4">LEDGER NAME <strong class="clr-red">*</strong></label>
 											<div class="col-sm-7"> <input type="text" class="form-control" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.ledgerName"> </div>
 										</div>
 									</div>
@@ -313,6 +313,7 @@
 								<div class="clear"></div>
 								<hr class="hr-light-grey">
 								<div class="form-group col-sm-12"><button type="submit" class="btn btn-success pull-right submit-btn" [disabled]="sourceLegalEntity.isBankingInfo" (click)="editItemAndCloseModel()">Save</button> </div>
+
 							</div>
 
 							<div *ngIf="LockboxValue" class="tab-pane active">
@@ -457,6 +458,16 @@
 		</form>
 	</div>
 </ng-template>
+
+<p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
+		  [width]="350" [minWidth]="200" [responsive]="true"
+		  [minY]="1050" [baseZIndex]="1100000">
+
+	<h5 [ngStyle]="{'color':'red'}">
+		Mandatory fields are not filled.
+	</h5>
+		<button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
+</p-dialog>
 
 <ng-template #content let-c="close" let-d="dismiss">
 	<div class="modal-header">

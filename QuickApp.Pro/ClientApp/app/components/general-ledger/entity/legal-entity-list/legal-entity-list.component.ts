@@ -33,11 +33,13 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 	selectedNode1: TreeNode;
 	dataSource: MatTableDataSource<{}>;
 	displayedColumns: any;
+	display: boolean = false;
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	selectedColumn: any;
 	@ViewChild(MatSort) sort: MatSort;
 	loadingIndicator: boolean;
 	currencyName: any;
+	modelValue: boolean = false;
 	cols: any[];
 	allComapnies: MasterCompany[] = [];
 	allATAMaininfo: any[] = [];
@@ -298,35 +300,41 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 	}
 	editItemAndCloseModel() {
 
-		this.isSaving = true;
+		//this.isSaving = true;
 
-        if (!this.sourceLegalEntity.legalEntityId)
-        {
-			this.sourceLegalEntity.createdBy = this.userName;
-			this.sourceLegalEntity.updatedBy = this.userName;
-
-			//this.sourceLegalEntity.masterCompanyId = 1;
-            this.workFlowtService.newAddEntity(this.sourceLegalEntity).subscribe(data =>
-            {
-                this.alertService.showMessage('Legal Entity added successfully.');
-                this.loadData();
-
-            });
+		if (!(this.sourceLegalEntity.name && this.sourceLegalEntity.description && this.sourceLegalEntity.reportingCurrencyId && this.sourceLegalEntity.reportingCurrencyId && this.sourceLegalEntity.ledgerName)) {
+			this.display = true;
+			this.modelValue = true;
 		}
-		else {
+		if (this.sourceLegalEntity.name && this.sourceLegalEntity.description && this.sourceLegalEntity.reportingCurrencyId && this.sourceLegalEntity.reportingCurrencyId && this.sourceLegalEntity.ledgerName) {
+			if (!this.sourceLegalEntity.legalEntityId) {
+				this.sourceLegalEntity.createdBy = this.userName;
+				this.sourceLegalEntity.updatedBy = this.userName;
 
-			this.sourceLegalEntity.createdBy = this.userName;
-			this.sourceLegalEntity.updatedBy = this.userName;
-            //this.sourceLegalEntity.masterCompanyId = 1;
-            this.workFlowtService.updateEntity(this.sourceLegalEntity).subscribe(data =>
-            {
-                this.alertService.showMessage('Legal Entity updated successfully.');
-                this.loadData();
-            }); 
+				//this.sourceLegalEntity.masterCompanyId = 1;
+				this.workFlowtService.newAddEntity(this.sourceLegalEntity).subscribe(data => {
+					this.alertService.showMessage('Legal Entity added successfully.');
+					this.loadData();
+
+				});
+			}
+			else {
+
+				this.sourceLegalEntity.createdBy = this.userName;
+				this.sourceLegalEntity.updatedBy = this.userName;
+				//this.sourceLegalEntity.masterCompanyId = 1;
+				this.workFlowtService.updateEntity(this.sourceLegalEntity).subscribe(data => {
+					this.alertService.showMessage('Legal Entity updated successfully.');
+					this.loadData();
+				});
+			}
+			if (this.modal) { this.modal.close(); }
+			if (this.modal1) { this.modal1.close(); }
 		}
-		if (this.modal) { this.modal.close();}
-		if (this.modal1) { this.modal1.close();}		
-		
+
+		if (this.display == false) {
+			this.dismissModel();
+		}
 	}
 
 
