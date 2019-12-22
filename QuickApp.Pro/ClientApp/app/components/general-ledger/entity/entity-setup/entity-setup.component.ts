@@ -432,6 +432,7 @@ export class ManagementStructureComponent implements OnInit, AfterViewInit {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
 	}
+
 	editItemAndCloseModel() {
 		
 			if (!(this.sourceLegalEntity.code && this.sourceLegalEntity.name && this.sourceLegalEntity.legalEntityId)) {
