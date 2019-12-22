@@ -211,11 +211,11 @@ namespace QuickApp.Pro.Controllers
         public IActionResult AddAddress(LegalEntityViewModel legalEntityViewModel)
         {
             Address address = new Address();
-            address.Line1 = legalEntityViewModel.BankStreetaddress1;
-            address.Line2 = legalEntityViewModel.BankStreetaddress2;
+            address.Line1 = legalEntityViewModel.Address1;
+            address.Line2 = legalEntityViewModel.Address2;
             address.PostalCode = legalEntityViewModel.PostalCode;
-            address.StateOrProvince = legalEntityViewModel.BankProvince;
-            //address.City = legalEntityViewModel.BankCity;
+            address.StateOrProvince = legalEntityViewModel.StateOrProvince;
+            address.City = legalEntityViewModel.City;
             address.Country = legalEntityViewModel.Country;
             address.MasterCompanyId = 1;
             address.IsActive = true;
@@ -276,7 +276,9 @@ namespace QuickApp.Pro.Controllers
                         address.Line1 = legalEntityViewModel.Address1;
                         address.Line2 = legalEntityViewModel.Address2;
                         address.PostalCode = legalEntityViewModel.PostalCode;
-                        address.StateOrProvince = legalEntityViewModel.BankProvince;
+                        address.City = legalEntityViewModel.City;
+                        address.StateOrProvince = legalEntityViewModel.StateOrProvince;
+                        //address.StateOrProvince = legalEntityViewModel.BankProvince;
                         address.Country = legalEntityViewModel.Country;
                         address.MasterCompanyId = 1;
                         address.CreatedBy = legalEntityViewModel.CreatedBy;

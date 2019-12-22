@@ -317,7 +317,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 
 			this.sourceLegalEntity.createdBy = this.userName;
 			this.sourceLegalEntity.updatedBy = this.userName;
-            this.sourceLegalEntity.masterCompanyId = 1;
+            //this.sourceLegalEntity.masterCompanyId = 1;
             this.workFlowtService.updateEntity(this.sourceLegalEntity).subscribe(data =>
             {
                 this.alertService.showMessage('Legal Entity updated successfully.');
@@ -350,8 +350,6 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 			this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
 
 		}
-
-		//this.loadData();
 	}
 
 	private saveFailedHelper(error: any) {
@@ -369,6 +367,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 		
 	}
 	openContentEdit(content, row) {
+		this.isEditMode = true;
 		this.GeneralInformation();
 		this.sourceLegalEntity.isBankingInfo = false;
 		this.sourceLegalEntity = row;
