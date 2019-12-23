@@ -104,6 +104,7 @@ namespace DAL
         public DbSet<CustomerType> CustomerType { get; set; }
         public DbSet<Charge> Charge { get; set; }
         public DbSet<Vendor> Vendor { get; set; }
+        public DbSet<VendorAudit> VendorAudit { get; set; }
         public DbSet<CustomerContact> CustomerContact { get; set; }
         public DbSet<CustomerShipping> CustomerShipping { get; set; }
         public DbSet<CustomerShippingAddress> CustomerShippingAddress { get; set; }
