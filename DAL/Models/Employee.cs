@@ -51,6 +51,8 @@ namespace DAL.Models
 
         public string Memo { get; set; }
 
+        public int? CurrencyId { get; set; }
+        public Nullable<bool> IsHeWorksInShop { get; set; }
         public virtual MasterCompany MasterCompany { get; set; }
         public ICollection<EmployeeLeaveTypeMapping> EmployeeLeaveTypeMapping { get; set; }
         public ICollection<EmployeeShiftMapping> EmployeeShiftMapping { get; set; }

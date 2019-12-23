@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter, ViewChild, OnChanges, SimpleChanges } from "@angular/core";
 import { ISalesQuote } from "../../../../../../models/sales/ISalesQuote.model";
 import { DataTable } from "primeng/datatable";
+import { SalesQuoteService } from "../../../../../../services/salesquote.service";
+import { IPartJson } from "../../../models/ipart-json";
 
 @Component({
   selector: "app-stockline-part-details",
@@ -9,18 +11,27 @@ import { DataTable } from "primeng/datatable";
 })
 export class StocklinePartDetailsComponent implements OnChanges {
   @Input() customer: any;
-  @Input() parts: any[];
+  @Input() parts: IPartJson[];
+  @Output() select: EventEmitter<any> = new EventEmitter<any>();
   selectedColumns: any[];
   showPaginator: boolean;
   totalRecords: number;
   pageLinks: any;
 
   columns: any[];
-  constructor() {
+  constructor(private salesQuoteService: SalesQuoteService) {
     this.parts = [];
     this.columns = [];
     this.initColumns();
   }
+  ngOnInit() {
+    this.salesQuoteService.getSearchPartResult()
+    .subscribe(data => {
+      this.parts = data;
+    
+    });
+       
+      }
 
 
   ngOnChanges(changes: SimpleChanges) {
@@ -50,5 +61,9 @@ export class StocklinePartDetailsComponent implements OnChanges {
 
   onPaging(event) {
 
+  }
+  onChange(event, part,salesMargin) {
+    let checked: boolean = event.srcElement.checked;
+    this.select.emit({ checked: checked, part: part,salesMargin:salesMargin });
   }
 }

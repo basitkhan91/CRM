@@ -188,7 +188,7 @@ namespace DAL.Repositories
                                 im.PartNumber,
                                 im.PartDescription,
                                 RevisedPartNo = im1.PartNumber,
-                                WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Shop(Internal)" : (wo.WorkOrderTypeId == 3 ? "Liquidation" : "Services")),
+                                WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Internal" : (wo.WorkOrderTypeId == 3 ? "Tear Down" : "Shop Services")),
                                 wop.CustomerRequestDate,
                                 wop.PromisedDate,
                                 wop.EstimatedShipDate,
@@ -227,9 +227,9 @@ namespace DAL.Repositories
             var closed = "closed";
 
             var customer = "customer";
-            var shopinternal = "shop(internal)";
-            var liquidation = "liquidation";
-            var services = "services";
+            var shopinternal = "internal";
+            var liquidation = "tear down";
+            var services = "shop services";
 
             if (!string.IsNullOrEmpty(woFilters.filters.WorkOrderStatus))
             {
@@ -304,9 +304,9 @@ namespace DAL.Repositories
                                 wo.WorkOrderId,
                                 wo.WorkOrderNum,
                                 wo.OpenDate,
-                                cust.Name,
+								CustomerName  = cust.Name,
                                 cust.CustomerCode,
-                                WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Shop(Internal)" : (wo.WorkOrderTypeId == 3 ? "Liquidation" : "Services")),
+                                WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Internal" : (wo.WorkOrderTypeId == 3 ? "Tear Down" : "Shop Services")),
                                 wo.IsActive,
                                 wo.CreatedDate,
                                 WorkOrderStatus = wost.Description,
@@ -351,9 +351,9 @@ namespace DAL.Repositories
             var closed = "closed";
 
             var customer = "customer";
-            var shopinternal = "shop(internal)";
-            var liquidation = "liquidation";
-            var services = "services";
+            var shopinternal = "internal";
+            var liquidation = "tear down";
+            var services = "shop services";
 
             if (!string.IsNullOrEmpty(filterText))
             {
@@ -424,9 +424,9 @@ namespace DAL.Repositories
                                     wo.WorkOrderId,
                                     wo.WorkOrderNum,
                                     wo.OpenDate,
-                                    cust.Name,
+									CustomerName = cust.Name,
                                     cust.CustomerCode,
-                                    WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Shop(Internal)" : (wo.WorkOrderTypeId == 3 ? "Liquidation" : "Services")),
+                                    WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Internal" : (wo.WorkOrderTypeId == 3 ? "Tear Down" : "Shop Services")),
                                     wo.IsActive,
                                     wo.CreatedDate,
                                     WorkOrderStatus = wost.Description,
@@ -472,7 +472,7 @@ namespace DAL.Repositories
                                     wo.OpenDate,
                                     cust.Name,
                                     cust.CustomerCode,
-                                    WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Shop(Internal)" : (wo.WorkOrderTypeId == 3 ? "Liquidation" : "Services")),
+                                    WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Internal" : (wo.WorkOrderTypeId == 3 ? "Tear Down" : "Shop Services")),
                                     wo.IsActive,
                                     wo.CreatedDate,
                                     WorkOrderStatus = wost.Description,
@@ -584,7 +584,7 @@ namespace DAL.Repositories
                                        select new
                                        {
                                            SingleMPN = wo.IsSinglePN == true ? "Single MPN" : "Multiple MPN",
-                                           WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Shop(Internal)" : (wo.WorkOrderTypeId == 2 ? "Liquidation" : "Services")),
+                                           WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Internal" : (wo.WorkOrderTypeId == 2 ? "Tear Down" : "Shop Services")),
                                            WorkOrderNumber = wo.WorkOrderNum,
                                            CustomerName = c.Name,
                                            wo.IsContractAvl,
@@ -3891,7 +3891,7 @@ namespace DAL.Repositories
                                 EmployeeName = emp.FirstName,
                                 bi.RevType,
                                 wo.WorkOrderTypeId,
-                                WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Shop(Internal)" : (wo.WorkOrderTypeId == 3 ? "Liquidation" : "Services")),
+                                WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Internal" : (wo.WorkOrderTypeId == 3 ? "Tear Down" : "Shop Services")),
                                 WorkScope = wos.Description,
                                 wop.WorkOrderScopeId,
                                 wop.Quantity,

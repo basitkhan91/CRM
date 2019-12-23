@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, AfterViewInit, ViewChild,Input } from '@angular/core';
+﻿import { Component, OnInit, AfterViewInit, ViewChild, Input } from '@angular/core';
 import { fadeInOut } from '../../../../services/animations';
 import { CustomerService } from '../../../../services/customer.service';
 import { CommonService } from '../../../../services/common.service';
@@ -15,8 +15,8 @@ import * as $ from 'jquery';
 })
 
 export class CustomerViewComponent implements OnInit {
-  
-    @Input() public customerId;
+
+    @Input() customerId;
     viewDataGeneralInformation: any[];
     viewDataclassification: any[];
     customerContacts: any;
@@ -26,7 +26,7 @@ export class CustomerViewComponent implements OnInit {
         { field: 'lastName', header: 'Last Name' },
         { field: 'contactTitle', header: 'Contact Title' },
         { field: 'email', header: 'Email' },
-       
+
         { field: 'workPhone', header: 'Work Phone' },
         { field: 'mobilePhone', header: 'Mobile Phone' },
         { field: 'fax', header: 'Fax' },
@@ -109,8 +109,8 @@ export class CustomerViewComponent implements OnInit {
     restrictedDERParts: any;
     disableRestrictedPMA: boolean = false;
     classificationIds: any[];
-    constructor(public customerService: CustomerService,private commonService: CommonService,private activeModal: NgbActiveModal,) {
-      
+    constructor(public customerService: CustomerService, private commonService: CommonService, private activeModal: NgbActiveModal, ) {
+
 
     }
     ngOnInit(): void {
@@ -129,8 +129,8 @@ export class CustomerViewComponent implements OnInit {
         this.getMappedTaxTypeRateDetails(customerId);
         this.getCustomerRestrictedPMAByCustomerId(customerId);
         this.getCustomerRestrictedDERByCustomerId(customerId);
-        this.getCustomerClassificationByCustomerId(customerId) 
-       
+        this.getCustomerClassificationByCustomerId(customerId)
+
     }
 
     getAllCustomerContact(customerId) {
@@ -214,20 +214,20 @@ export class CustomerViewComponent implements OnInit {
         })
     }
 
-        getCustomerRestrictedPMAByCustomerId(customerId) {
+    getCustomerRestrictedPMAByCustomerId(customerId) {
 
-            this.commonService.getRestrictedParts(1, customerId, 'PMA').subscribe(res => {
-             
+        this.commonService.getRestrictedParts(1, customerId, 'PMA').subscribe(res => {
+
             this.restrictedPMAParts = res;
-            
-           
-    })
+
+
+        })
     }
 
 
     getCustomerRestrictedDERByCustomerId(customerId) {
-     
-            this.commonService.getRestrictedParts(1, customerId, 'DER').subscribe(res => {
+
+        this.commonService.getRestrictedParts(1, customerId, 'DER').subscribe(res => {
 
             this.restrictedDERParts = res;
 
@@ -235,17 +235,17 @@ export class CustomerViewComponent implements OnInit {
         })
     }
 
-      getCustomerClassificationByCustomerId(customerId) {
+    getCustomerClassificationByCustomerId(customerId) {
 
-         this.customerService.getCustomerClassificationMapping(customerId).subscribe(res => {
-             this.viewDataclassification = res.map(x => x.description);
-            
+        this.customerService.getCustomerClassificationMapping(customerId).subscribe(res => {
+            this.viewDataclassification = res.map(x => x.description);
+
             // console.log(this.generalInformation.customerClassificationIds);
         });
     }
     dismissModel() {
         //this.isDeleteMode = false;
-      
+
         this.activeModal.close();
     }
 
@@ -276,6 +276,6 @@ export class CustomerViewComponent implements OnInit {
     }
 
 
-   
+
 
 }
