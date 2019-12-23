@@ -1,9 +1,122 @@
 <div class="form-group">
   <div class="row">
-    <button type="button" class="btn btn-primary" (click)="addPartNumber($event)" data-target="#addPartNumber"
-      data-toggle="modal">
+    <button type="button" class="btn btn-primary" (click)="addPartNumber()">
       Add PN
     </button>
   </div>
+  <div class="row">
+      <p-table [value]="selectedParts" [scrollable]="true">
+          <ng-template pTemplate="header">
+            <tr>
+
+              <th>PartNumber</th>
+              <th>Description</th>
+              <th>Stock Line Number</th>
+              <th>Method</th>
+              <th>Serial Number</th>
+              <th>STOCK LINE NUM</th>
+              <th>ID NUM</th>             
+              <th>OEM/PMA/DE</th>
+              <th>COND TYPE</th>
+              <th>Currency</th>
+              <th>fx Rate</th>             
+              <th>QTY QUOTED</th>
+              <th>UNIT SALE PRICE</th>
+              <th>MARK UP %</th>
+              <th>MARK UP AMOUNT</th>
+              <th>SALES BEFORE DISCOUNT</th>             
+              <th>DISCOUNT %</th>
+              <th>DISC AMOUNT</th>
+              <th>NET SALES</th>
+              <th>UNIT COST</th>
+              <th>EXTENDED COST</th>
+              <th>MARGIN ($)</th>
+              <th>MARGIN (%)</th>
+             
+              
+              <th>
+                &nbsp;
+              </th>
+            </tr>
+          </ng-template>
+        
+       
+        
+          <ng-template pTemplate="body" let-part>
+            <tr>
+              <td>
+                  {{ part.partNumber }}
+              </td>
+              <td>
+                  {{ part.description }}
+              </td>
+              <td>
+                  {{ part.stockLineNumber }}
+              </td>
+              <td>
+                  {{ part.serialNumber }}
+              </td>
+              <td>
+                  {{ part.stockLineId }}
+              </td>
+              <td>
+                  {{ part.itemMasterId }}
+              </td>
+              <td>
+                  {{ part.pmaStatus }}
+              </td>
+
+              <td>
+                  {{ part.conditionType }}
+              </td>
+              <td>
+                  {{ part.currency }}
+              </td>
+              <td>
+                  {{ part.fixRate }}
+              </td>
+              <td>
+                  {{ part.quantityFromThis }}
+              </td>
+             
+              <td>
+                  {{ part.salesPricePerUnit }}
+              </td>
+              <td>
+                  {{ part.markUpPercentage }}
+              </td>
+              <td>
+                  {{ part.salesDiscount }}
+              </td>
+              <td>
+                  {{ part.salesDiscountPerUnit }}
+              </td>
+              <td>
+                  {{ part.netSalesPriceExtended }}
+              </td>
+              <td>
+                  {{ part.unitCostPerUnit }}
+              </td>
+              <td>
+                  {{ part.unitCostExtended }}
+              </td>
+              <td>
+                  {{ part.marginAmountExtended }}
+              </td>
+              <td>
+                  {{ part.marginPercentageExtended }}
+              </td>
+            </tr>
+          </ng-template>
+         
+        </p-table>
+  </div>
 </div>
-<app-add-sales-part-number [display]="show" [salesQuote]="salesQuote" (close)="onClose($event)"></app-add-sales-part-number>
+
+<ng-template #addPart let-c="close" let-d="dismiss">
+<app-add-sales-part-number [display]="show" [salesQuote]="salesQuote" (select)="openSalesMargin($event)" (close)="onClose($event)"></app-add-sales-part-number>
+</ng-template>
+
+<ng-template #salesMargin let-c="close" let-d="dismiss" tabindex="-1">
+    <app-sales-margin tabindex="-1" [part]="part" (save)="openSalesMarginSave($event)" (close)="onCloseMargin($event)"></app-sales-margin>
+</ng-template>
