@@ -159,7 +159,7 @@ editMatData: any[] = [];
         QuoteStatusId: this.quoteForm.expirationDateStatus,
       CustomerId:this.quoteForm.CustomerId,
       CurrencyId: Number(this.currency),
-      AccountsReceivableBalance:1000.012,
+      AccountsReceivableBalance:this.accountsReceivableBalance,
       SalesPersonId:this.quoteForm.SalesPersonId,
       EmployeeId:this.quoteForm.EmployeeId,
       masterCompanyId:this.quoteForm.masterCompanyId,
@@ -167,7 +167,9 @@ editMatData: any[] = [];
       updatedBy:"admin",
       IsActive:true,
       IsDeleted:false,
-      DSO: this.dso
+      DSO: this.dso,
+      Warnings: this.warnings,
+      Memo: this.memo
     }
     return this.quotationHeader;
   }
@@ -449,7 +451,7 @@ editMatData: any[] = [];
                   "TotalPartsCost":155,
                   "Markup":mList.markup,
                   "CostPlusAmount":mList.costPlusAmount,
-                  "FixedAmount":mList.masterCompanyId,
+                  "FixedAmount":mList.fixedAmount,
                   "masterCompanyId":mList.masterCompanyId,
               "CreatedBy":"admin",
               "UpdatedBy":"admin",
@@ -460,6 +462,7 @@ editMatData: any[] = [];
     this.workOrderService.saveMaterialListQuote(this.materialListPayload)
     .subscribe(
       res => {
+        this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId);
         this.alertService.showMessage(
             this.moduleName,
             'Quotation for material list created successfully',
@@ -473,6 +476,7 @@ editMatData: any[] = [];
     this.workOrderService.saveLaborListQuote(this.laborPayload)
     .subscribe(
       res => {
+        this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId);
         this.alertService.showMessage(
           this.moduleName,
           'Quotation created  Succesfully',
@@ -512,6 +516,7 @@ editMatData: any[] = [];
     this.workOrderService.saveChargesQuote(this.chargesPayload)
     .subscribe(
       res => {
+        this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId);
         this.alertService.showMessage(
           this.moduleName,
           'Quotation created  Succesfully',
@@ -524,6 +529,7 @@ editMatData: any[] = [];
     this.workOrderService.saveExclusionsQuote(this.exclusionsQuotation)
     .subscribe(
       res => {
+        this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId);
         console.log(res);
       }
     )
@@ -589,6 +595,7 @@ saveworkOrderLabor(data) {
 		 		"Memo":labor.memo,
         "TaskId":labor.taskId,
         "CostPlusAmount": labor.costPlusAmount,
+        "FixedAmount": labor.fixedAmount,
         "laborOverheadCost": labor.laborOverheadCost,
         "markupPercentageId": labor.markupPercentageId,
 		 		"CreatedBy":"admin",
@@ -623,7 +630,7 @@ saveWorkOrderExclusionsList(data) {
       "ExtendedCost":ex.extendedCost,
       "MarkUpPercentageId":ex.markupPercentageId,
       "CostPlusAmount":ex.CostPlusAmount,
-      "FixedAmount":25,
+      "FixedAmount":ex.fixedAmount,
       "masterCompanyId":ex.masterCompanyId,
       "CreatedBy":"admin",
       "UpdatedBy":"admin",
@@ -740,5 +747,12 @@ checkValidQuote(){
   else{
     return true;
   }
+}
+
+updateWorkOrderQuoteDetailsId(id){
+  this.laborPayload.WorkOrderQuoteDetailsId = id;
+  this.chargesPayload.WorkOrderQuoteDetailsId = id;
+  this.exclusionPayload.WorkOrderQuoteDetailsId = id;
+  this.materialListPayload.WorkOrderQuoteDetailsId = id; 
 }
 }
