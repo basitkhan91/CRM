@@ -285,7 +285,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                 items: [
                     {
                         label: 'Customer Work', items: [
-                            { label: 'Customer Work', routerLink: '/receivingmodule/receivingpages/app-customer-works-list' },
+                            { label: 'Customer Work List', routerLink: '/receivingmodule/receivingpages/app-customer-works-list' },
                             { label: 'Create Customer', routerLink: '/receivingmodule/receivingpages/app-customer-work-edit' }
                         ]
                     },
