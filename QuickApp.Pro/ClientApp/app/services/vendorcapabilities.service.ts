@@ -69,5 +69,13 @@ export class VendorCapabilitiesService {
     getVendorCapesById(vendorId){
         return this.vendorCapabilitiesEndpoint.getVendorCapesById(vendorId);
     }
+
+    getVendorCapabilitybyId(vendorCapesId){
+        return this.vendorCapabilitiesEndpoint.getVendorCapabilitybyId(vendorCapesId);
+    }
+
+    getVendorAircraftGetDataByCapsId(vendorCapesId){
+        return this.vendorCapabilitiesEndpoint.getVendorAircraftGetDataByCapsId(vendorCapesId);
+    }
     
 }

@@ -198,9 +198,9 @@
 					data-target="#view"
 					(dblclick)="viewSelectedRow(rowData)"-->
 				  {{
-					col.field == 'createdDate'
+					col.field == 'openDate'
 					  ? (rowData[col.field] | date: 'MM/dd/yyyy')
-					  : rowData[col.field] && col.field == 'updatedDate'
+					  : rowData[col.field] && col.field == 'closedDate'
 					  ? (rowData[col.field] | date: 'MM/dd/yyyy')
 					  : rowData[col.field]
 				  }}
