@@ -170,7 +170,7 @@
 					<input type="text" *ngIf="col.field !== 'openDate' && col.field !== 'closedDate'" style="width:100%;" pInputText (keyup)="onChangeInputField($event.target.value, col.field)">
 					<input type="date" *ngIf="col.field == 'openDate'" name="openDate" style="width:100%;" (change)="onChangeInputField($event.target.value, col.field)">
 					<input type="date" *ngIf="col.field == 'closedDate'" name="closedDate" style="width:100%;" (change)="onChangeInputField($event.target.value, col.field)">
-				</th>
+				</th>				
 				<!-- <th
 				  style="width:120px"
 				  *ngFor="let col of columns"
@@ -197,9 +197,9 @@
 					data-target="#view"
 					(dblclick)="viewSelectedRow(rowData)"-->
 				  {{
-					col.field == 'createdDate'
+					col.field == 'openDate'
 					  ? (rowData[col.field] | date: 'MM/dd/yyyy')
-					  : rowData[col.field] && col.field == 'updatedDate'
+					  : rowData[col.field] && col.field == 'closedDate'
 					  ? (rowData[col.field] | date: 'MM/dd/yyyy')
 					  : rowData[col.field]
 				  }}

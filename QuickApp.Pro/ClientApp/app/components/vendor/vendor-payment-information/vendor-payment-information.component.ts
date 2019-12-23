@@ -998,5 +998,9 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
             }
 
         }
+	}
+	
+	onAddPaymentInfo() {
+        //this.sourceVendor = {};
     }
 }
