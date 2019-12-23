@@ -6,5 +6,5 @@ import { ISalesOrderQuotePart } from './ISalesOrderQuotePart';
 export interface ISalesQuoteView {
     salesOrderQuote: ISalesOrderQuote;
     approverList: ISalesOrderQuoteApproverList[];
-    parts: ISalesOrderQuotePart
+    parts: ISalesOrderQuotePart[];
 }

@@ -106,7 +106,7 @@
               <div class="form-group">
                 <label>Customer Contact<span class="clr-red">*</span></label>
                 <select [(ngModel)]="salesQuote.customerContactId" [ngModelOptions]="{standalone: true}">
-                  <option>--Select</option>
+                  <option value='0'>--Select</option>
                   <option *ngFor="let contact of customerContactList" [ngValue]="contact.contactId">{{contact.contactTitle}} - {{ contact.workPhone }}</option>
                 </select>
               </div>
@@ -115,11 +115,11 @@
                 <input type="text" pInputText name="customerReferenceName" [(ngModel)]="salesQuote.customerReferenceName" />
               </div>
               <div class="form-group">
-                <label>Contract Ref<span class="clr-red">*</span></label>
+                <label>Contract Ref</label>
                 <input type="text" pInputText name="contractReferenceName" [(ngModel)]="salesQuote.contractReferenceName" />
               </div>
               <div class="form-group">
-                <label>Sales Person<span class="clr-red">*</span></label>
+                <label>Sales Person</label>
               <p-autoComplete
               class="autocomp-customer-cstm"
               name="salesPersonName"
@@ -132,12 +132,11 @@
               [size]="30"
               [minLength]="1"
               [dropdown]="true"
-              required
             >
             </p-autoComplete>
               </div>
               <div class="form-group">
-                <label>Agent<span class="clr-red">*</span></label>
+                <label>Agent</label>
               <p-autoComplete
               class="autocomp-customer-cstm"
               name="agentName"
@@ -150,14 +149,13 @@
               [size]="30"
               [minLength]="1"
               [dropdown]="true"
-              required
             >
             </p-autoComplete>
               </div>
             </div>
             <div class="col-md-2 column column-seperator">
               <div class="form-group">
-                <label>Customer Service Rep <span class="clr-red">*</span></label>
+                <label>Customer Service Rep</label>
               <p-autoComplete
               class="autocomp-customer-cstm"
               name="customerServiceRepName"
@@ -170,29 +168,31 @@
               [size]="30"
               [minLength]="1"
               [dropdown]="true"
-              required
             >
             </p-autoComplete>
               </div>
               <div class="form-group">
-                <label>Probibility <span class="clr-red">*</span></label>
-                <select name="probability" [(ngModel)]="salesQuote.probabilityId" required>
+                <label>Probibility</label>
+                <select name="probability" [(ngModel)]="salesQuote.probabilityId">
+                  <option value='0'>--Select</option>
                   <option *ngFor="let p of percents" [ngValue]="p.value">{{ p.label }}</option> 
                 </select>
               </div>
               <div class="form-group">
-                <label>Lead Source <span class="clr-red">*</span></label>
-                <select name="leadSource" [(ngModel)]="salesQuote.leadSourceId" required>
+                <label>Lead Source</label>
+                <select name="leadSource" [(ngModel)]="salesQuote.leadSourceId">
+                    <option value='0'>--Select</option>
                     <option *ngFor="let ls of salesQuote.leadSources" [ngValue]="ls.id">{{ ls.name }}</option>
                 </select>
               </div>
               <div class="form-group">
-                <label>Credit Limit &amp; terms<span class="clr-red">*</span></label>
+                <label>Credit Limit &amp; terms</label>
                 <div class="col-md-5">
                   <input type="text" pInputText name="creditLimit" [(ngModel)]="salesQuote.creditLimit" />
                 </div>
                 <div class="col-md-7">
-                  <select name="quoteType" [(ngModel)]="salesQuote.creditLimitTermsId" required>
+                  <select name="quoteType" [(ngModel)]="salesQuote.creditLimitTermsId">
+                      <option value='0'>--Select</option>
                     <option *ngFor="let ct of creditTerms" [ngValue]="ct.value">{{ ct.label }}</option>
                   </select>
                 </div>
@@ -232,22 +232,22 @@
                 </select>
               </div>
               <div class="form-group">
-                <label>Approved Date<span class="clr-red">*</span></label>
+                <label>Approved Date</label>
                 <p-calendar name="approvedDate" [(ngModel)]="salesQuote.approvedDate" [showIcon]="true"></p-calendar>
               </div>
               <div class="form-group">
                 <label>Currency <span class="clr-red">*</span></label>
                 <select name="quoteType" required [(ngModel)]="salesQuote.currencyId">
-                  <option>--Select</option>
+                  <option value='0'>--Select</option>
                   <option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">
                     {{currencyName.symbol}}
                     </option>
                 </select>
               </div>
               <div class="form-group">
-                <label>Warnings <span class="clr-red">*</span></label>
+                <label>Warnings </label>
                 <select name="quoteType" required [(ngModel)]="salesQuote.warningId" (change)="onWarningSelect(salesQuote.warningId)">
-                  <option>--Select</option>
+                  <option value='0'>--Select</option>
                   <option *ngFor="let customerWarning of customerWarningData" [ngValue]="customerWarning.customerWarningId">
                     {{customerWarning.warningMessage}}
                     </option>
@@ -314,3 +314,14 @@
     </div>
   </div>
 </div>
+<p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
+          [width]="350" [minWidth]="200" [responsive]="true"
+          [minY]="1050" [baseZIndex]="1100000">
+    <h5 [ngStyle]="{'color':'red'}">
+        Please Enter (*) Mandatory Fields
+    </h5>
+    <p-footer>
+        <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
+    </p-footer>
+
+</p-dialog>

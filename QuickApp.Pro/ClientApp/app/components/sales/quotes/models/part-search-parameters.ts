@@ -13,7 +13,11 @@ export class PartSearchParamters {
 
     public quantityRequired: number;
 
+    public quantityRequested: number;
+
     public quantityToQuote: number;
+
+    public quantityAlreadyQuoted: number;
 
     public itemSearchType: ItemSearchType;
 

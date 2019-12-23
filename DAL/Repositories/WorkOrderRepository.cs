@@ -2895,7 +2895,10 @@ namespace DAL.Repositories
                                           CreditTermId = ct == null ? 0 : ct.CreditTermsId,
                                           CreditTerm = ct == null ? "" : ct.Name,
                                           SalesPersonName = sp.FirstName + ' ' + sp.LastName,
-                                          EmployeeName = emp.FirstName + ' ' + emp.LastName
+                                          EmployeeName = emp.FirstName + ' ' + emp.LastName,
+                                          wq.Warnings,
+                                          wq.Memo,
+                                          wq.AccountsReceivableBalance
 
                                       }).FirstOrDefault();
                 return workOrderQuote;

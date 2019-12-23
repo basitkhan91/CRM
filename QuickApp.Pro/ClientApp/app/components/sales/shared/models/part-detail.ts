@@ -1,5 +1,6 @@
 export class PartDetail {
     partNumber: string;
+    stockLineNumber:string;
     description: string;
     conditionType: string;
     classification: string;
@@ -7,12 +8,20 @@ export class PartDetail {
     quantityRequested: number;
     quantityAlreadyQuoted: number;
     quantityToBeQuoted: number;
+    quantityFromThis:number;
     uom: string;
     currency: any;
     fixRate: number;
     partType: string;
     markUpPercentage: number;
     salesDiscount: number;
+
+    itemMasterId: number;
+    stockLineId: number;
+    masterCompanyId: number;
+    method:string;
+    serialNumber: string;
+    pmaStatus:string;
 
     salesPricePerUnit: number;
     markupPerUnit: number;
