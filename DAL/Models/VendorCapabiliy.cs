@@ -1,13 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace DAL.Models
 {
-   public class VendorCapabiliy
+    public class VendorCapabiliy
     {
        // public EntityState State { get; set; }
 
@@ -56,5 +53,8 @@ namespace DAL.Models
         public bool? IsDeleted { get; set; }
 
         public virtual MasterCompany MasterCompany { get; set; }
+
+        public bool? IsPMA { get; set; }
+        public bool? IsDER { get; set; }
     }
 }

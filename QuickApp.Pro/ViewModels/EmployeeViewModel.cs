@@ -61,6 +61,9 @@ namespace QuickApp.Pro.ViewModels
         public string[] EmployeeShiftId { get; set; }
         public string[] ShiftId { get; set; }
         public string Memo { get; set; }
+
+        public int? CurrencyId { get; set; }
+        public Nullable<bool> IsHeWorksInShop { get; set; }
         public class EmployeeViewModelValidator : AbstractValidator<EmployeeViewModel>
         {
             public EmployeeViewModelValidator()
