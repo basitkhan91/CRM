@@ -65,6 +65,7 @@ console.log(this.workOrderLaborList);
   ngOnChanges(){
     this.getAllEmployees();
     this.workOrderWorkFlowList = this.workOrderWorkFlowOriginalData;
+    this.calculateTotalWorkHours();
     if(this.workOrderLaborList){
       this.laborForm.workFlowWorkOrderId = this.workOrderLaborList['workFlowWorkOrderId'];
       this.laborForm.dataEnteredBy = this.workOrderLaborList['dataEnteredBy'];
@@ -107,23 +108,13 @@ console.log(this.workOrderLaborList);
       // obj['adjustedHours'] = `${(h.length ==1)?'0'+h:h}.${(m.length ==1)?'0'+m:m}`;
       obj['adjustedHours'] = Number(obj.hours) + Number(obj.adjustments)
       var totalHours = 0;
-      for(let task in this.laborForm.workOrderLaborList[0]){
-        if(this.laborForm.workOrderLaborList[0][task][0]['hours'] != null){
-          for (let taskList of this.laborForm.workOrderLaborList[0][task] ){
-            // hoursArr = taskList['hours'].split(":");
-            // if(hoursArr.length == 1){ hoursArr.push(0)}
-            // hoursInSeconds = (+hoursArr[0]) * 60 * 60 + (+hoursArr[1]) * 60;
-              this.totalWorkHours += taskList['hours'];
-              
-          }
-        }
-      }
       // h = Math.floor(totalSec / 3600).toString();
       // m = Math.floor(totalSec % 3600 / 60).toString();
       // s = Math.floor(totalSec % 3600 % 60).toString();
       // this.totalWorkHours = `${(h.length ==1)?'0'+h:h}:${(m.length ==1)?'0'+m:m}:${(s.length ==1)?'0'+s:s}`;
       // this.totalWorkHours = totalHours;
     }
+    this.calculateTotalWorkHours();
     }
 
   filterWorkFlowNumbers(event): void {
@@ -385,7 +376,7 @@ console.log(this.workOrderLaborList);
   }
 
   deleteLabor(taskName, index){
-    this.laborForm.workOrderLaborList[0][taskName.toLowerCase()].splice(index, 1);
+    this.laborForm.workOrderLaborList[0][taskName.toLowerCase()][index].isDeleted = true;
   }
 
   markupChanged(matData) {
@@ -399,6 +390,21 @@ console.log(this.workOrderLaborList);
       catch (e) {
           console.log(e);
       }
+  }
+
+  calculateTotalWorkHours(){
+    this.laborForm.totalWorkHours = 0;
+    for(let task in this.laborForm.workOrderLaborList[0]){
+      if(this.laborForm.workOrderLaborList[0][task][0]['hours'] != null){
+        for (let taskList of this.laborForm.workOrderLaborList[0][task] ){
+          // hoursArr = taskList['hours'].split(":");
+          // if(hoursArr.length == 1){ hoursArr.push(0)}
+          // hoursInSeconds = (+hoursArr[0]) * 60 * 60 + (+hoursArr[1]) * 60;
+            this.laborForm.totalWorkHours += taskList['hours'];
+            
+        }
+      }
+    }
   }
   // tasks : this.laborForm.tasks[0][keysArray[i]].map(x => {
   //   return {

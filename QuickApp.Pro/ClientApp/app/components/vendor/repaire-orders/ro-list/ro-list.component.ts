@@ -217,8 +217,11 @@ export class RoListComponent implements OnInit {
         console.log(event);
     }
 
-    onChangeInputField(value, field) {
+    onChangeInputField(value, field, el) {
         console.log(value, field);
+        if (value === '') { el.classList.add("hidePlaceHolder"); }
+        else el.classList.remove("hidePlaceHolder");
+
                       
         // if(field == "repairOrderId") {
         //     this.repairOrderIdInput = value;

@@ -215,6 +215,18 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.UpdatedBy = employeeViewModel.UpdatedBy;
                 employeeobject.Memo = employeeViewModel.Memo;
 
+                employeeobject.CurrencyId = employeeViewModel.CurrencyId;
+
+                if(employeeViewModel.IsHeWorksInShop == null)
+                {
+                    employeeobject.IsHeWorksInShop = false;
+                }
+                else
+                {
+                    employeeobject.IsHeWorksInShop = employeeViewModel.IsHeWorksInShop;
+                }
+               
+
                 _unitOfWork.employee.Add(employeeobject);
                 _unitOfWork.SaveChanges();
 
@@ -374,7 +386,17 @@ namespace QuickApp.Pro.Controllers
                 existingResult.EmployeeCertifyingStaff = employeeViewModel.EmployeeCertifyingStaff;
                 existingResult.MasterCompanyId = 1;
                 existingResult.Memo = employeeViewModel.Memo;
-                
+                existingResult.CurrencyId = employeeViewModel.CurrencyId;
+
+                if (employeeViewModel.IsHeWorksInShop == null)
+                {
+                    existingResult.IsHeWorksInShop = false;
+                }
+                else
+                {
+                    existingResult.IsHeWorksInShop = employeeViewModel.IsHeWorksInShop;
+                }
+
                 if (employeeViewModel.EmployeeLeaveTypeId != null)
                 {
                     var integrationList = _unitOfWork.EmployeeLeaveTypeMappingRepository.GetAllData().ToList();

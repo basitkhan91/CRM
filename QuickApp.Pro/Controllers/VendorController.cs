@@ -50,6 +50,15 @@ namespace QuickApp.Pro.Controllers
             return Ok(allActions);
 
         }
+
+        [HttpGet("GetVendorAuditHistory/{vendorId}")]
+        public IActionResult GetVendorAuditListDetails(long vendorId)
+        {
+            var allVendorlistDetails = _unitOfWork.Vendor.GetVendorsAuditHistory(vendorId);
+            return Ok(allVendorlistDetails);
+
+        }
+
         /// <summary>
         /// Method that gets basic info namely id and name only
         /// </summary>
@@ -321,7 +330,7 @@ namespace QuickApp.Pro.Controllers
                 var data = (from vc in _context.VendorCapabiliy
                             join v in _context.Vendor on vc.VendorId equals v.VendorId
                             join im in _context.ItemMaster on vc.ItemMasterId equals im.ItemMasterId into imm
-                            from im in imm.DefaultIfEmpty() 
+                            from im in imm.DefaultIfEmpty()
                             join vct in _context.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId into vctt
                             from vct in vctt.DefaultIfEmpty()
                             join vcat in _context.capabilityType on vct.CapabilityTypeId equals vcat.CapabilityTypeId into vcatt
@@ -361,6 +370,53 @@ namespace QuickApp.Pro.Controllers
 
 
                             }).OrderByDescending(p => p.UpdatedDate).ToList();
+                // return data;
+                return Ok(data);
+            }
+        }
+
+        [HttpGet("getVendorCapabilitybyId/{id}")]
+        public IActionResult GetvendorCapabilityById(long id)
+        {
+            {
+                var data = (from vc in _context.VendorCapabiliy
+                            join v in _context.Vendor on vc.VendorId equals v.VendorId
+                            join im in _context.ItemMaster on vc.ItemMasterId equals im.ItemMasterId into imm
+                            from im in imm.DefaultIfEmpty()
+                            join vct in _context.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId into vctt
+                            from vct in vctt.DefaultIfEmpty()
+                            join vcat in _context.capabilityType on vct.CapabilityTypeId equals vcat.CapabilityTypeId into vcatt
+                            from vcat in vcatt.DefaultIfEmpty()
+                            where vc.VendorCapabilityId == id
+                            select new
+                            {
+                                v.VendorName,
+                                v.VendorCode,
+                                im.PartNumber,
+                                im.PartDescription,
+                                im.ManufacturerId,
+                                manufacturerName = im.Manufacturer.Name,
+                                vc.VendorCapabilityId,
+                                vc.VendorId,
+                                vc.VendorRanking,
+                                vc.PMA_DER,
+                                vc.ItemMasterId,
+                                vc.TAT,
+                                vc.Cost,
+                                vc.AlternatePartId,
+                                vc.ATAChapterId,
+                                vc.ATASubchapterId,
+                                vc.Memo,
+                                vc.CreatedDate,
+                                vc.UpdatedDate,
+                                vc.capabilityDescription,
+                                vc.IsActive,
+                                vc.CapabilityId,
+                                vc.IsPMA,
+                                vc.IsDER,
+                                CapabilityType = vcat.Description
+
+                            }).OrderByDescending(p => p.UpdatedDate).FirstOrDefault();
                 // return data;
                 return Ok(data);
             }
@@ -1310,6 +1366,14 @@ namespace QuickApp.Pro.Controllers
                 actionobject.UpdatedBy = vendorViewModel.UpdatedBy;
                 actionobject.IsAddressForBilling = vendorViewModel.IsAddressForBilling;
                 actionobject.IsAddressForShipping = vendorViewModel.IsAddressForShipping;
+                if (vendorViewModel.IsAllowNettingAPAR == null)
+                {
+                    actionobject.IsAllowNettingAPAR = false;
+                }
+                else
+                {
+                    actionobject.IsAllowNettingAPAR = vendorViewModel.IsAllowNettingAPAR;
+                }
 
                 //actionobject.vendorc
                 AddAddress(vendorViewModel);
@@ -1535,6 +1599,16 @@ namespace QuickApp.Pro.Controllers
                 actionobject.UpdatedBy = vendorViewModel.UpdatedBy;
                 actionobject.IsAddressForBilling = vendorViewModel.IsAddressForBilling;
                 actionobject.IsAddressForShipping = vendorViewModel.IsAddressForShipping;
+
+                if (vendorViewModel.IsAllowNettingAPAR == null)
+                {
+                    actionobject.IsAllowNettingAPAR = false;
+                }
+                else
+                {
+                    actionobject.IsAllowNettingAPAR = vendorViewModel.IsAllowNettingAPAR;
+                }
+
                 address.Line1 = vendorViewModel.Address1;
                 address.Line2 = vendorViewModel.Address2;
                 address.Line3 = vendorViewModel.Address3;
@@ -3248,6 +3322,8 @@ namespace QuickApp.Pro.Controllers
             disc.ATASubchapterId = vendorCapability.ATASubchapterId;
             disc.Memo = vendorCapability.Memo;
             disc.IsActive = vendorCapability.IsActive;
+            disc.IsPMA = vendorCapability.IsPMA;
+            disc.IsDER = vendorCapability.IsDER;
 
             _unitOfWork.Repository<VendorCapabiliy>().Update(disc);
 

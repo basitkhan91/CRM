@@ -50,7 +50,10 @@ namespace DAL.Repositories
                             vc.UpdatedDate,
                             vc.capabilityDescription,
                             vc.IsActive,
-                            CapabilityType = vcat.Description
+                            CapabilityType = vcat.Description,
+                            vc.IsPMA,
+                            vc.IsDER,
+                            vc.CapabilityId
                         }).OrderByDescending(p=>p.UpdatedDate).ToList();
             return data;
 
