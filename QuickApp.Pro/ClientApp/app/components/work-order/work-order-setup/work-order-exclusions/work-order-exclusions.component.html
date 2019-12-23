@@ -85,43 +85,45 @@
                                                                 </thead>
                                                             
                                                                 <tbody>
-                                                                  <tr *ngFor="let w  of workOrderExclusionsList; let i=index;">
-                                                                        <td>{{w.epn}}</td>
-                                                                        <td>{{w.epnDescription}}</td>
-                                                                        <td>{{w.quantity}}</td>
-                                                                        <td>{{w.unitCost}}</td>
-                                                                        <td>{{w.extendedCost}}</td>
-                                                                        <td>{{w.memo}}</td>
-                                                                        <ng-container *ngIf="isQuote">
-                                                                            <td>{{w.markup}}</td>
-                                                                            <td>{{w.costPlusAmount}}</td>
-                                                                            <td>{{w.fixedAmount}}</td>
-                                                                        </ng-container>
+                                                                  <ng-container *ngFor="let w  of workOrderExclusionsList; let i=index;">
+                                                                    <tr *ngIf="!w['isDeleted']">
+                                                                      <td>{{w.epn}}</td>
+                                                                      <td>{{w.epnDescription}}</td>
+                                                                      <td>{{w.quantity}}</td>
+                                                                      <td>{{w.unitCost}}</td>
+                                                                      <td>{{w.extendedCost}}</td>
+                                                                      <td>{{w.memo}}</td>
+                                                                      <ng-container *ngIf="isQuote">
+                                                                          <td>{{w.markup}}</td>
+                                                                          <td>{{w.costPlusAmount}}</td>
+                                                                          <td>{{w.fixedAmount}}</td>
+                                                                      </ng-container>
 
-                                                                        <td>
-                                                                          <button
-                                                                            class="btn-edit ptable-wo-btns"
-                                                                            mat-icon-button
-                                                                            data-target="#addNewExclusions"
-                                                                            data-toggle="modal"
-                                                                            (click)="edit(w, i)"
-                                                                            matTooltip="Edit"
-                                                                          >
-                                                                            <mat-icon>edit</mat-icon>
-                                                                          </button>
-                                                                        </td>
-                                                                        <td>
-                                                                          <button
-                                                                            class="btn-delete ptable-wo-btns"
-                                                                            mat-icon-button
-                                                                            matTooltip="Delete"
-                                                                            (click)="delete(w, i)"
-                                                                          >
-                                                                            <mat-icon color="warn">delete</mat-icon>
-                                                                          </button>
-                                                                        </td>
-                               
+                                                                      <td>
+                                                                        <button
+                                                                          class="btn-edit ptable-wo-btns"
+                                                                          mat-icon-button
+                                                                          data-target="#addNewExclusions"
+                                                                          data-toggle="modal"
+                                                                          (click)="edit(w, i)"
+                                                                          matTooltip="Edit"
+                                                                        >
+                                                                          <mat-icon>edit</mat-icon>
+                                                                        </button>
+                                                                      </td>
+                                                                      <td>
+                                                                        <button
+                                                                          class="btn-delete ptable-wo-btns"
+                                                                          mat-icon-button
+                                                                          matTooltip="Delete"
+                                                                          (click)="delete(w, i)"
+                                                                        >
+                                                                          <mat-icon color="warn">delete</mat-icon>
+                                                                        </button>
+                                                                      </td>
+
                                                                     </tr> 
+                                                                  </ng-container>
                                                                 </tbody>
                                                             </table>
                                                             <button
