@@ -108,7 +108,7 @@ namespace DAL.Repositories
                             t.CreatedDate,
                             t.IsActive,
                             t.IsDeleted,
-                         AccountType=   AccountTyp.description,
+                            AccountType = AccountTyp.description,
                             TotalRecords = totalRecords
                         }).Distinct().OrderByDescending(p => p.CreatedDate)
                              .Skip(skip)
@@ -318,14 +318,14 @@ namespace DAL.Repositories
                             t.CreatedBy,
                             t.UpdatedBy,
                             t.UpdatedDate,
-                     
+
                             ad.AddressId,
                             ad.Country,
                             ad.PostalCode,
                             vt.CustomerAffiliationId,
                             cc.CustomerClassificationId,
                             //cc.Description
-                        }).Where(t=>t.IsActive==true).OrderByDescending(a => a.UpdatedDate).ToList();
+                        }).Where(t => t.IsActive == true).OrderByDescending(a => a.UpdatedDate).ToList();
             return data;
         }
         public IEnumerable<object> GetCustomerBynameList(string name)
@@ -470,8 +470,8 @@ namespace DAL.Repositories
                             join ad in _appContext.Address on t.AddressId equals ad.AddressId into add
                             from ad in add.DefaultIfEmpty()
 
-                           
-                            join Emp in _appContext.Employee on Convert.ToInt32( t.PrimarySalesPersonId) equals Emp.EmployeeId into Emplyee
+
+                            join Emp in _appContext.Employee on Convert.ToInt32(t.PrimarySalesPersonId) equals Emp.EmployeeId into Emplyee
                             from Emp in Emplyee.DefaultIfEmpty()
 
                             join Empe in _appContext.Employee on Convert.ToInt32(t.SecondarySalesPersonId) equals Empe.EmployeeId into Empl
@@ -493,10 +493,10 @@ namespace DAL.Repositories
                             join creditTerms in _appContext.CreditTerms on t.CreditTermsId equals creditTerms.CreditTermsId into cre
                             from creditTerms in cre.DefaultIfEmpty()
                             join cc in _appContext.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
-                           
-                            join mup in _appContext.Percent on Convert.ToInt32(t.MarkUpPercentageId) equals mup.PercentId 
+
+                            join mup in _appContext.Percent on Convert.ToInt32(t.MarkUpPercentageId) equals mup.PercentId
                             into tmup
-                            
+
                             from mup in tmup.DefaultIfEmpty()
 
                             join inte in _appContext.CustomerIntegrationPortal on t.CustomerId equals inte.CustomerId into integra
@@ -528,15 +528,15 @@ namespace DAL.Repositories
                                 stateOrProvince = ad.StateOrProvince,
                                 postalCode = ad.PostalCode,
                                 country = ad.Country,
-                                CountryName= cont.countries_name,
-                                currency= currency.DisplayName,
+                                CountryName = cont.countries_name,
+                                currency = currency.DisplayName,
 
 
                                 customerCode = t.CustomerCode,
                                 doingBuinessAsName = t.DoingBuinessAsName,
                                 parent = t.Parent,
 
-                               
+
                                 customerParentName = t.CustomerParentName,
                                 customerURL = t.CustomerURL,
                                 generalCurrencyId = t.CurrencyId,
@@ -575,7 +575,7 @@ namespace DAL.Repositories
                                 primarySalesPersonId = t.PrimarySalesPersonId,
                                 primarySalesPersonFirstName = Emp.FirstName,
 
-                               
+
                                 csrId = t.CsrId,
                                 saId = t.SaId,
                                 secondarySalesPersonId = t.SecondarySalesPersonId,
@@ -584,19 +584,19 @@ namespace DAL.Repositories
                                 annualQuota = t.AnnualQuota,
                                 annualRevenuePotential = t.AnnualRevenuePotential,
                                 AgentName = Employeesald.FirstName,
-								t.CustomerPhoneExt,
-                                ClassificationName=cc.Description,
-                                IntegrationWith= intepo.Description,
+                                t.CustomerPhoneExt,
+                                ClassificationName = cc.Description,
+                                IntegrationWith = intepo.Description,
 
-                          CreditTermsName  =creditTerms.Name,
+                                CreditTermsName = creditTerms.Name,
                                 MarkUpPercentage = mup == null ? 0 : mup.PercentValue,
                                 //MarkUpPercentage = mup.PercentValue,
-                          TaxTypeDescription=t.TaxTypeId,
-                          CsrName= Employeecsr.FirstName,
-                       
-                         AccountType= v.description,
-                        TaxTypeName= taxTyp.TaxType,
-                             TaxRateName=   taxTyp.TaxRate
+                                TaxTypeDescription = t.TaxTypeId,
+                                CsrName = Employeecsr.FirstName,
+
+                                AccountType = v.description,
+                                TaxTypeName = taxTyp.TaxType,
+                                TaxRateName = taxTyp.TaxRate
 
 
                                 //t.CreditTermsId,
@@ -685,7 +685,7 @@ namespace DAL.Repositories
             {
 
                 var data = (from ca in _appContext.CustomerContactATAMapping
-                          join cont in _appContext.CustomerContact  on ca.CustomerContactId equals cont.ContactId
+                            join cont in _appContext.CustomerContact on ca.CustomerContactId equals cont.ContactId
                             join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
                             from contt in conttt.DefaultIfEmpty()
 
@@ -1318,7 +1318,7 @@ namespace DAL.Repositories
         }
 
 
-        public IEnumerable<object> searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(long CustomerId, string AircraftTypeId, string AircraftModelId, string DashNumberId,string memo)
+        public IEnumerable<object> searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(long CustomerId, string AircraftTypeId, string AircraftModelId, string DashNumberId, string memo)
         {
             long[] myAircraftTypeId = null;
             long?[] myAircraftModelId = null;
@@ -1333,15 +1333,15 @@ namespace DAL.Repositories
                 myDashNumberId = DashNumberId.Split(',').Select(x => (long?)Convert.ToInt64(x)).ToArray();
 
 
-            if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId != null && memo!=null)
+            if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId != null && memo != null)
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
-                            where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && myAircraftModelId.Contains(cam.AircraftModelId) && myDashNumberId.Contains(cam.DashNumberId)&& memo.Contains(cam.Memo) && cam.IsDeleted != true
+                            where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && myAircraftModelId.Contains(cam.AircraftModelId) && myDashNumberId.Contains(cam.DashNumberId) && memo.Contains(cam.Memo) && cam.IsDeleted != true
                             select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
             }
-          else  if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId != null)
+            else if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId != null)
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
                             where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && myAircraftModelId.Contains(cam.AircraftModelId) && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
@@ -1397,7 +1397,7 @@ namespace DAL.Repositories
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
             }
-            else if (AircraftTypeId == null && myAircraftModelId == null && myDashNumberId == null && memo !=null)
+            else if (AircraftTypeId == null && myAircraftModelId == null && myDashNumberId == null && memo != null)
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
                             where cam.CustomerId == CustomerId && memo.Contains(cam.Memo) && cam.IsDeleted != true
@@ -1405,7 +1405,7 @@ namespace DAL.Repositories
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
             }
-            else if ( myAircraftModelId != null && myDashNumberId != null && memo != null)
+            else if (myAircraftModelId != null && myDashNumberId != null && memo != null)
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
                             where cam.CustomerId == CustomerId && memo.Contains(cam.Memo) && myAircraftModelId.Contains(cam.AircraftModelId) && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
@@ -1413,10 +1413,10 @@ namespace DAL.Repositories
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
             }
-            else if (myAircraftModelId != null  && memo != null)
+            else if (myAircraftModelId != null && memo != null)
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
-                            where cam.CustomerId == CustomerId && memo.Contains(cam.Memo) && myAircraftModelId.Contains(cam.AircraftModelId)  && cam.IsDeleted != true
+                            where cam.CustomerId == CustomerId && memo.Contains(cam.Memo) && myAircraftModelId.Contains(cam.AircraftModelId) && cam.IsDeleted != true
                             select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1425,7 +1425,7 @@ namespace DAL.Repositories
             else if (myDashNumberId != null && memo != null)
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
-                            where cam.CustomerId == CustomerId && memo.Contains(cam.Memo)  && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
+                            where cam.CustomerId == CustomerId && memo.Contains(cam.Memo) && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
                             select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1439,7 +1439,7 @@ namespace DAL.Repositories
                 return uniquedata;
             }
         }
-        public IEnumerable<object> searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(long customerId,string contactId, string ATAChapterId, string ATASubChapterID)
+        public IEnumerable<object> searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(long customerId, string contactId, string ATAChapterId, string ATASubChapterID)
         {
             long[] myATAChapterId = null;
             long[] myATASubChapterID = null;
@@ -1451,7 +1451,7 @@ namespace DAL.Repositories
             if (contactId != null && contactId != "")
                 mycontactID = contactId.Split(',').Select(y => Convert.ToInt64(y)).ToArray();
 
-            if (ATAChapterId != null && ATASubChapterID != null && contactId !=null)
+            if (ATAChapterId != null && ATASubChapterID != null && contactId != null)
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
                             where cATA.CustomerId == customerId && myATAChapterId.Contains(cATA.ATAChapterId) && myATASubChapterID.Contains(cATA.ATASubChapterId) && mycontactID.Contains(cATA.CustomerContactId) && cATA.IsDeleted != true
@@ -1550,8 +1550,43 @@ namespace DAL.Repositories
                                 CustomerName = cust.Name + " - " + cust.CustomerCode,
                                 cust.CreditLimit,
                                 cust.CreditTermsId,
-                                CustomerContact= con==null?" ":con.FirstName,
-                                CustomerRef=cust.ContractReference==null?"": cust.ContractReference,
+                                CustomerContact = con == null ? " " : con.FirstName,
+                                CustomerRef = cust.ContractReference == null ? "" : cust.ContractReference,
+                                CSRName = emp.FirstName,
+                                CustomerEmail = cust.Email,
+                                CustomerPhoneNo = con == null ? "" : con.WorkPhone
+                            }
+                            ).Distinct().ToList();
+                return list;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public IEnumerable<object> GetCustomerNameAndCodesByCustomerId(long customerId)
+        {
+            try
+            {
+                var list = (from cust in _appContext.Customer
+
+                            join cc in _appContext.CustomerContact on cust.CustomerId equals cc.CustomerId into custcc
+                            from cc in custcc.DefaultIfEmpty()
+                            join con in _appContext.Contact on cc.ContactId equals con.ContactId into custcon
+                            from con in custcon.DefaultIfEmpty()
+                            join emp in _appContext.Employee on cust.CsrId equals emp.EmployeeId into custemp
+                            from emp in custemp.DefaultIfEmpty()
+                            where cust.CustomerId == customerId && cust.IsActive == true && cust.IsDeleted == false
+                            select new
+                            {
+                                CustomerId = cust.CustomerId,
+                                CustomerName = cust.Name + " - " + cust.CustomerCode,
+                                cust.CreditLimit,
+                                cust.CreditTermsId,
+                                CustomerContact = con == null ? " " : con.FirstName,
+                                CustomerRef = cust.ContractReference == null ? "" : cust.ContractReference,
                                 CSRName = emp.FirstName
                             }
                             ).Distinct().ToList();
@@ -1564,40 +1599,7 @@ namespace DAL.Repositories
             }
         }
 
-		public IEnumerable<object> GetCustomerNameAndCodesByCustomerId(long customerId)
-		{
-			try
-			{
-				var list = (from cust in _appContext.Customer
-
-							join cc in _appContext.CustomerContact on cust.CustomerId equals cc.CustomerId into custcc
-							from cc in custcc.DefaultIfEmpty()
-							join con in _appContext.Contact on cc.ContactId equals con.ContactId into custcon
-							from con in custcon.DefaultIfEmpty()
-							join emp in _appContext.Employee on cust.CsrId equals emp.EmployeeId into custemp
-							from emp in custemp.DefaultIfEmpty()
-							where cust.CustomerId == customerId && cust.IsActive == true && cust.IsDeleted == false							  
-							select new
-							{
-								CustomerId = cust.CustomerId,
-								CustomerName = cust.Name + " - " + cust.CustomerCode,
-								cust.CreditLimit,
-								cust.CreditTermsId,
-								CustomerContact = con == null ? " " : con.FirstName,
-								CustomerRef = cust.ContractReference == null ? "" : cust.ContractReference,
-								CSRName = emp.FirstName
-							}
-							).Distinct().ToList();
-				return list;
-
-			}
-			catch (Exception ex)
-            {
-                throw ex;
-            }
-		}
-
-		private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
+        private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
         #region Customer ShippingAddress 
 
@@ -1608,21 +1610,21 @@ namespace DAL.Repositories
         /// <param name="objCustomer"></param>
         public void AddCustomerShippingAddress(Customer objCustomer)
         {
-           // CustomerShippingAddress objCustomerShippingAddress = new CustomerShippingAddress();
+            // CustomerShippingAddress objCustomerShippingAddress = new CustomerShippingAddress();
             // var shippingaddress = _appContext.CustomerShippingAddress.GetSingleOrDefault(a => a.AddressId == objCustomer.AddressId && a.CustomerId == objCustomer.CustomerId);
             //var shipping = _appContext.CustomerShippingAddress
             //         .Where(p => p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
 
-        
-          
-          
+
+
+
 
             //if (objCustomerShippingAddress.CustomerShippingAddressId > 0)
             //{
-                //_appContext.CustomerShippingAddress.detch
-                CustomerShippingAddress data = _appContext.CustomerShippingAddress.AsNoTracking().Where(p=>p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
-                //_appContext.CustomerShippingAddress.detach(objCustomerShippingAddress);
-               if(data!=null)
+            //_appContext.CustomerShippingAddress.detch
+            CustomerShippingAddress data = _appContext.CustomerShippingAddress.AsNoTracking().Where(p => p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
+            //_appContext.CustomerShippingAddress.detach(objCustomerShippingAddress);
+            if (data != null)
             {
                 if (data.CustomerShippingAddressId > 0)
                 {
@@ -1655,13 +1657,13 @@ namespace DAL.Repositories
                 objCustomerShippingAddress.IsActive = objCustomer.IsActive;
                 objCustomerShippingAddress.IsPrimary = true;
                 objCustomerShippingAddress.IsDelete = false;
-              
+
                 _appContext.CustomerShippingAddress.Add(objCustomerShippingAddress);
             }
 
             _appContext.SaveChanges();
 
-           // return objCustomerShippingAddress;
+            // return objCustomerShippingAddress;
         }
 
 
@@ -1833,7 +1835,7 @@ namespace DAL.Repositories
 
             return data.ToList(); ;
         }
-        
+
         public void CustomerShippingDetailsStatus(long id, bool status, string updatedBy)
         {
             try
@@ -1944,7 +1946,7 @@ namespace DAL.Repositories
             {
                 var result = (from c in _appContext.Contact
                               join cc in _appContext.CustomerContact on c.ContactId equals cc.ContactId
-                              where cc.CustomerId == id 
+                              where cc.CustomerId == id
                               select new
                               {
                                   c.ContactId,
@@ -1987,6 +1989,6 @@ namespace DAL.Repositories
             return result;
 
         }
-       
+
     }
 }
