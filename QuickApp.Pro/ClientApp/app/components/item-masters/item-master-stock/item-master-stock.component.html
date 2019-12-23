@@ -837,7 +837,7 @@
                                         <h4 class="float-left">Search ATA chapters</h4>
                                         <h4 class="float-right">
                                             Add ATA Information
-                                            <a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ATAADD"><i class="fa fa-plus-circle fa-lg"></i></a>
+                                            <a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ATAADD" (click)="addNewATA()"><i class="fa fa-plus-circle fa-lg"></i></a>
                                         </h4>
                                     </div>
                                     <div class="col-md-3">
@@ -1446,6 +1446,8 @@
 
 
     <div id="ATAADD"
+            data-backdrop="static" 
+            data-keyboard="false"
          class="modal fade custom-popup"
          role="dialog">
         <div class="modal-dialog modal-full">
@@ -1465,7 +1467,7 @@
                                     <select class="select-option dropdown-custm" formControlName="atanumber" (change)="getATASubChapterByATAChapter()" style="width: 160px !important;">
 
                                         <option value=''> Select Chapter</option>
-                                        <option *ngFor="let chaptername of ataMainchapter" [ngValue]="chaptername.ataChapterId">{{chaptername.ataChapterName}}</option>
+                                        <option *ngFor="let chaptername of ataMainchapter" [ngValue]="chaptername.ataChapterId"> {{chaptername.ataChapterCode}}-{{chaptername.ataChapterName}}</option>
                                     </select>
                                 </div>
                             </div>
