@@ -95,8 +95,8 @@ export class WorkOrderService {
     getConditionByItemMasterId(itemMasterId) {
         return this.workOrderEndpointService.getConditionByItemMasterId(itemMasterId);
     }
-    getWorkOrderList(pageIndex, pageSize) {
-        return this.workOrderEndpointService.getWorkOrderList(pageIndex, pageSize);
+    getWorkOrderList(paginationData) {
+        return this.workOrderEndpointService.getWorkOrderList(paginationData);
     }
 
     updateActionforWorkOrder(action, login) {

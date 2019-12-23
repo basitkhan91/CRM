@@ -7,6 +7,7 @@ import { Table } from 'primeng/table';
 import { AuthService } from '../../../services/auth.service';
 import { AlertService, MessageSeverity } from '../../../services/alert.service';
 import { Router } from '@angular/router';
+import { listSearchFilterObjectCreation } from '../../../generic/autocomplete';
 
 
 @Component({
@@ -115,8 +116,13 @@ export class WorkOrderListComponent implements OnInit {
         this.getAllWorkOrderList(event)
     }
 
+
+
+
+
     getAllWorkOrderList(data) {
-        this.workOrderService.getWorkOrderList(this.pageIndex, this.pageSize).subscribe(res => {
+        const PagingData = { ...data, filters: listSearchFilterObjectCreation(data.filters) }
+        this.workOrderService.getWorkOrderList(PagingData).subscribe(res => {
             this.workOrderData = res;
             if (res.length > 0) {
                 this.totalRecords = res[0].totalRecords;

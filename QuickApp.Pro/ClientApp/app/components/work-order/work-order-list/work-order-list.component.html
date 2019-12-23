@@ -4,6 +4,18 @@
 
 
 <div *ngIf="!isSubWorkOrder">
+
+    <div class="inline-block display-flex">
+        <h3 class="po-head lead">WorkOrder List</h3>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a matTooltip="Create Customer"
+           class="plusicon-cstm new-margin"
+           [routerLink]="[
+            '/workordersmodule/workorderspages/app-work-order-add'
+          ]">
+            <i class="fa fa-plus-circle fa-lg"></i>
+        </a>
+    </div>
 <p-table
   #dt
   class="rpo-table-cstm rro-table-cstm"
@@ -103,6 +115,14 @@
       <th style="position:sticky" *ngIf="selectedColumns.length > 0">
         Actions
       </th>
+    </tr>
+    <tr>
+        <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
+            <!-- <input type="text" style="width:100%;" pInputText   (keyup)="filterData($event)"> -->
+            <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+
+        </th>
+        <th style="width:200px;position:sticky"></th>
     </tr>
   </ng-template>
   <ng-template

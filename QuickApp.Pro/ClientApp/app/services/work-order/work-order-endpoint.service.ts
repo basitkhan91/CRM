@@ -159,8 +159,8 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/conditiondetailsbypartno?itemMasterId=${itemMasterId}`, this.getRequestHeaders())
     }
 
-    getWorkOrderList(pageIndex, pageSize) {
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderlist?pageNo=${pageIndex}&pageSize=${pageSize}`, this.getRequestHeaders())
+    getWorkOrderList(data) {
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/workorderlist`, JSON.stringify(data), this.getRequestHeaders())
     }
 
     updateWorkOrderStatus(data, login) {
