@@ -13,7 +13,8 @@ namespace DAL.Repositories.Interfaces
         WorkOrder UpdateWorkOrder(WorkOrder workOrder);
         void DeleteWorkOrder(long workOrderId);
         void WorkOrderStatus(long workOrderId, bool status, string updatedBy);
-        IEnumerable<object> GetWorkOrdersList(int pageNo, int pageSize);
+        IEnumerable<object> GetWorkOrdersList(Filters<WorkOrderFilters> woFilters);
+        IEnumerable<object> WorkOrdersGlobalSearch(string filterText, int pageNumber, int pageSize);
         IEnumerable<object> GetWorkOrderPartList(long workOrderId);
         WorkOrder WorkOrderById(long workOrderId);
         object WorkOrderHeaderView(long workOrderId);
