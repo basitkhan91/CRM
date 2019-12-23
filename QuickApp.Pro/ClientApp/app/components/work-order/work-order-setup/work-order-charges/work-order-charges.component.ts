@@ -54,7 +54,7 @@ export class WorkOrderChargesComponent implements OnChanges {
   }
   delete(rowData, i) {
     if (this.isQuote) {
-      this.workOrderChargesList.splice(i, 1);
+      this.workOrderChargesList[i].isDeleted = true;
     } else {
       console.log(rowData);
 

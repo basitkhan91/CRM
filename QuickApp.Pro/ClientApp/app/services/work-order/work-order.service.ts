@@ -95,8 +95,11 @@ export class WorkOrderService {
     getConditionByItemMasterId(itemMasterId) {
         return this.workOrderEndpointService.getConditionByItemMasterId(itemMasterId);
     }
-    getWorkOrderList(pageIndex, pageSize) {
-        return this.workOrderEndpointService.getWorkOrderList(pageIndex, pageSize);
+    getWorkOrderList(paginationData) {
+        return this.workOrderEndpointService.getWorkOrderList(paginationData);
+    }
+    getWorkOrderGlobalSearch(value, pageIndex, pageSize) {
+        return this.workOrderEndpointService.getWorkOrderGlobalSearch(value, pageIndex, pageSize);
     }
 
     updateActionforWorkOrder(action, login) {

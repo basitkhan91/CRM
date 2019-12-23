@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, AfterViewInit, ViewChild,Input } from '@angular/core';
+﻿import { Component, OnInit, AfterViewInit, ViewChild, Input } from '@angular/core';
 import { fadeInOut } from '../../../../services/animations';
 import { CustomerService } from '../../../../services/customer.service';
 import { CommonService } from '../../../../services/common.service';
@@ -15,8 +15,8 @@ import * as $ from 'jquery';
 })
 
 export class CustomerViewComponent implements OnInit {
-  
-    @Input() public customerId;
+
+    @Input() customerId;
     viewDataGeneralInformation: any[];
     viewDataclassification: any[];
     customerContacts: any;
@@ -26,7 +26,7 @@ export class CustomerViewComponent implements OnInit {
         { field: 'lastName', header: 'Last Name' },
         { field: 'contactTitle', header: 'Contact Title' },
         { field: 'email', header: 'Email' },
-       
+
         { field: 'workPhone', header: 'Work Phone' },
         { field: 'mobilePhone', header: 'Mobile Phone' },
         { field: 'fax', header: 'Fax' },
@@ -105,76 +105,78 @@ export class CustomerViewComponent implements OnInit {
 
     filterKeysByValue: object = {};
     taxTypeRateMapping: any;
-    restrictedPMAParts: any;
+    restrictedPMAParts: any ;
     restrictedDERParts: any;
     disableRestrictedPMA: boolean = false;
     classificationIds: any[];
-    constructor(public customerService: CustomerService,private commonService: CommonService,private activeModal: NgbActiveModal,) {
-      
+    constructor(public customerService: CustomerService, private commonService: CommonService, private activeModal: NgbActiveModal, ) {
+
 
     }
     ngOnInit(): void {
         let customerId = this.customerId;
         this.customerService.getCustomerdataById(customerId).subscribe(res => {
+
+            this.getAllCustomerContact(customerId);
+            this.getAircraftMappedDataByCustomerId(customerId);
+            this.getMappedATAByCustomerId(customerId);
+            this.getBillingDataById(customerId);
+            this.getDomesticShippingByCustomerId(customerId);
+            this.getInternationalShippingByCustomerId(customerId);
+            this.getCustomerWaringByCustomerId(customerId);
+            this.getCustomerDocumentsByCustomerId(customerId);
+            this.getMappedTaxTypeRateDetails(customerId);
+            this.getCustomerRestrictedPMAByCustomerId(customerId);
+            this.getCustomerRestrictedDERByCustomerId(customerId);
+            this.getCustomerClassificationByCustomerId(customerId);
             this.viewDataGeneralInformation = res[0];
         })
-        this.getAllCustomerContact(customerId);
-        this.getAircraftMappedDataByCustomerId(customerId);
-        this.getMappedATAByCustomerId(customerId);
-        this.getBillingDataById(customerId);
-        this.getDomesticShippingByCustomerId(customerId);
-        this.getInternationalShippingByCustomerId(customerId);
-        this.getCustomerWaringByCustomerId(customerId);
-        this.getCustomerDocumentsByCustomerId(customerId);
-        this.getMappedTaxTypeRateDetails(customerId);
-        this.getCustomerRestrictedPMAByCustomerId(customerId);
-        this.getCustomerRestrictedDERByCustomerId(customerId);
-        this.getCustomerClassificationByCustomerId(customerId) 
-       
+
+
     }
 
-    getAllCustomerContact(customerId) {
+    async   getAllCustomerContact(customerId) {
         // get Customer Contatcs 
-        this.customerService.getContacts(customerId).subscribe(res => {
+        await this.customerService.getContacts(customerId).subscribe(res => {
             this.customerContacts = res[0]
         })
     }
 
-    getAircraftMappedDataByCustomerId(customerId) {
+    async getAircraftMappedDataByCustomerId(customerId) {
         // const id = this.savedGeneralInformationData.customerId;
-        this.customerService.getMappedAirCraftDetails(customerId).subscribe(res => {
+        await this.customerService.getMappedAirCraftDetails(customerId).subscribe(res => {
             this.aircraftListDataValues = res;
         })
     }
-    getMappedATAByCustomerId(customerId) {
+    async getMappedATAByCustomerId(customerId) {
         // const id = this.savedGeneralInformationData.customerId;
-        this.customerService.getATAMappedByCustomerId(customerId).subscribe(res => {
+        await this.customerService.getATAMappedByCustomerId(customerId).subscribe(res => {
             this.ataListDataValues = res;
             console.log(res);
 
         })
     }
-    getBillingDataById(customerId) {
-        this.customerService.getCustomerBillViaDetails(customerId).subscribe(res => {
+    async getBillingDataById(customerId) {
+        await this.customerService.getCustomerBillViaDetails(customerId).subscribe(res => {
             this.billingInfoList = res[0]
         })
     }
 
 
     // get domestic shipping by customer Id 
-    getDomesticShippingByCustomerId(customerId) {
+    async getDomesticShippingByCustomerId(customerId) {
         // const id = this.savedGeneralInformationData.customerId;
-        this.customerService.getCustomerShipAddressGet(customerId).subscribe(res => {
+        await this.customerService.getCustomerShipAddressGet(customerId).subscribe(res => {
             console.log(res);
             this.domesticShippingData = res[0];
         })
     }
 
-    getInternationalShippingByCustomerId(customerId) {
+    async getInternationalShippingByCustomerId(customerId) {
 
         // const id = this.savedGeneralInformationData.customerId;
 
-        this.customerService.getInternationalShippingByCustomerId(customerId, 0, 20).subscribe(res => {
+        await this.customerService.getInternationalShippingByCustomerId(customerId, 0, 20).subscribe(res => {
             console.log(res);
             this.internationalShippingData = res.paginationList;
             // this.totalRecordsForInternationalShipping = res.totalRecordsCount;
@@ -184,8 +186,8 @@ export class CustomerViewComponent implements OnInit {
 
     }
 
-    getCustomerWaringByCustomerId(customerId) {
-        this.customerService.getCustomerWarnings(customerId).subscribe(res => {
+    async getCustomerWaringByCustomerId(customerId) {
+        await this.customerService.getCustomerWarnings(customerId).subscribe(res => {
             this.waringInfoList = res[0].map(x => {
                 return {
                     ...x,
@@ -199,35 +201,35 @@ export class CustomerViewComponent implements OnInit {
         })
     }
 
-    getCustomerDocumentsByCustomerId(customerId) {
+    async getCustomerDocumentsByCustomerId(customerId) {
 
-        this.customerService.getDocumentList(customerId).subscribe(res => {
+        await this.customerService.getDocumentList(customerId).subscribe(res => {
             this.DocumentsList = res;
         })
     }
 
-    getMappedTaxTypeRateDetails(customerId) {
+    async getMappedTaxTypeRateDetails(customerId) {
 
-        this.customerService.getMappedTaxTypeRateDetails(customerId).subscribe(res => {
+        await this.customerService.getMappedTaxTypeRateDetails(customerId).subscribe(res => {
             this.taxTypeRateMapping = res;
 
         })
     }
 
-        getCustomerRestrictedPMAByCustomerId(customerId) {
+    async getCustomerRestrictedPMAByCustomerId(customerId) {
 
-            this.commonService.getRestrictedParts(1, customerId, 'PMA').subscribe(res => {
-             
+        await this.commonService.getRestrictedParts(1, customerId, 'PMA').subscribe(res => {
+
             this.restrictedPMAParts = res;
-            
-           
-    })
+
+
+        })
     }
 
 
-    getCustomerRestrictedDERByCustomerId(customerId) {
-     
-            this.commonService.getRestrictedParts(1, customerId, 'DER').subscribe(res => {
+    async getCustomerRestrictedDERByCustomerId(customerId) {
+
+        await this.commonService.getRestrictedParts(1, customerId, 'DER').subscribe(res => {
 
             this.restrictedDERParts = res;
 
@@ -235,17 +237,17 @@ export class CustomerViewComponent implements OnInit {
         })
     }
 
-      getCustomerClassificationByCustomerId(customerId) {
+    async getCustomerClassificationByCustomerId(customerId) {
 
-         this.customerService.getCustomerClassificationMapping(customerId).subscribe(res => {
-             this.viewDataclassification = res.map(x => x.description);
-            
+        await this.customerService.getCustomerClassificationMapping(customerId).subscribe(res => {
+            this.viewDataclassification = res.map(x => x.description);
+
             // console.log(this.generalInformation.customerClassificationIds);
         });
     }
     dismissModel() {
         //this.isDeleteMode = false;
-      
+
         this.activeModal.close();
     }
 
@@ -276,6 +278,6 @@ export class CustomerViewComponent implements OnInit {
     }
 
 
-   
+
 
 }

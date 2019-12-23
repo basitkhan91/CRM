@@ -129,7 +129,7 @@ export function listSearchFilterObjectCreation(filterData) {
     if (data !== undefined) {
         const keys = Object.keys(data);
         for (var i = 0; i < keys.length; i++) {
-            result[keys[i]] = data[keys[i]]['value']
+            result[keys[i]] = data[keys[i]]['value'] === undefined ? data[keys[i]] : data[keys[i]]['value']
         }
         // const a = keys.map(x => {
         //     return {
