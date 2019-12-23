@@ -182,7 +182,8 @@
         <!-- Receive -->
         <ng-container *ngFor="let task of taskList; let taskIndex = index">
           <!-- <ng-container *ngIf="isAllowedTask(task.taskId)"> -->
-            <tr *ngFor="let rec of laborForm.workOrderLaborList[0][task.description | lowercase]; let i = index">
+          <ng-container *ngFor="let rec of laborForm.workOrderLaborList[0][task.description | lowercase]; let i = index">
+            <tr *ngIf="!rec['isDeleted']">
                 <td *ngIf="i < 1">
                   {{task.description}}
                   <i
@@ -323,6 +324,7 @@
                   </button>
                 </td>
             </tr>
+          </ng-container>
           <!-- </ng-container> -->
           </ng-container>
               <tr>
