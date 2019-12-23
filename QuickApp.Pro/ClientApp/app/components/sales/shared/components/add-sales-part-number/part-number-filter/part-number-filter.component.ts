@@ -3,8 +3,9 @@ import { ItemMasterSearchQuery } from "../../../../quotes/models/item-master-sea
 import { ItemSearchType } from "../../../../quotes/models/item-search-type";
 
 import { ItemMasterService } from "../../../../../../services/itemMaster.service";
-import { ISalesQuote } from "../../../../../../models/sales/ISalesQuote.model";
 import { StocklineService } from "../../../../../../services/stockline.service";
+import { SalesQuoteService } from "../../../../../../services/salesquote.service";
+import { ConditionService } from '../../../../../../services/condition.service';
 
 @Component({
   selector: "app-part-number-filter",
@@ -20,9 +21,13 @@ export class PartNumberFilterComponent {
   partDetail: any;
   searchDisabled: boolean;
   historicalDisabled: boolean;
+  allConditionInfo: any[] = [];
 
-  constructor(private itemMasterService: ItemMasterService,
-    private stockLineService: StocklineService) {
+  constructor(
+    private itemMasterService: ItemMasterService,
+    private stockLineService: StocklineService,
+    private salesQuoteService: SalesQuoteService,
+    public conditionService: ConditionService) {
     this.partDetails = [];
     this.query = new ItemMasterSearchQuery();
     this.partDetail = {
@@ -32,6 +37,27 @@ export class PartNumberFilterComponent {
     };
 
     this.resetActionButtons();
+  }
+  ngOnInit() {
+//this.ptnumberlistdata();
+this.loadData();
+this.salesQuoteService.getSearchPartObject()
+.subscribe(data => {
+  this.query = data;
+  this.calculate();
+
+});
+   
+  }
+
+  private loadData()
+	{
+
+
+		this.conditionService.getConditionList().subscribe(
+      results =>{
+        this.allConditionInfo = results[0];
+      });
   }
 
 
@@ -43,10 +69,12 @@ export class PartNumberFilterComponent {
   search($event) {
     $event.preventDefault();
 
+    console.log(this.query);
     switch (this.query.partSearchParamters.itemSearchType) {
       case ItemSearchType.StockLine:
         this.stockLineService.search(this.query)
           .subscribe(result => {
+            console.log(result);
             this.onPartSearch.emit(result);
           });
         break;
@@ -61,6 +89,23 @@ export class PartNumberFilterComponent {
     }
 
   }
+  calculate() {
+    this.query.partSearchParamters.quantityToQuote = this.query.partSearchParamters.quantityRequested - this.query.partSearchParamters.quantityAlreadyQuoted;
+    this.salesQuoteService.updateSearchPartObject(this.query);
+  }
+  private ptnumberlistdata() {
+
+    this.itemMasterService.getPrtnumberslistList().subscribe(
+        results => this.onptnmbersSuccessful(results[0]),
+        //error => this.onDataLoadFailed(error)
+    );
+}
+
+private onptnmbersSuccessful(allWorkFlows: any[]) {
+    //this.dataSource.data = allWorkFlows;
+    console.log(this.partDetails);
+    this.partDetails = allWorkFlows;
+}
 
   onPartNumberSelect(part: any) {
     this.resetActionButtons();
@@ -69,6 +114,18 @@ export class PartNumberFilterComponent {
     this.query.partSearchParamters.partDescription = part.partDescription;
     this.searchDisabled = false;
   }
+  
+ /* onPartNumberSelect(event) {
+    console.log(event);
+    if (this.partDetails) {
+        for (let i = 0; i < this.partDetails.length; i++) {
+            if (event == this.partDetails[i].itemMasterId) {
+              this.query.partSearchParamters.partNumber = this.partDetails[i].partNumber; 
+              this.query.partSearchParamters.partDescription = this.partDetails[i].partDescription;  
+            }
+        }
+    }
+  }*/
 
   searchPartByPartNumber(event) {
     this.searchDisabled = true;
