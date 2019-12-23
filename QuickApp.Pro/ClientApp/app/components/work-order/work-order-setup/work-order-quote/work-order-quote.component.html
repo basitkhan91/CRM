@@ -255,6 +255,7 @@
         <td>
           <input [value]="workOrderPart['workScope']" readonly/>
         </td>
+      </tr>
   </tbody>
   </table>
 </div>
@@ -392,43 +393,46 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="mpn-row" *ngFor="let matQuotation of materialListQuotation; let in=index;">
-            <td>{{matQuotation.partNumber}}</td>
-            <td>{{matQuotation.partDescription}}</td>
-            <td>{{matQuotation.partDescription}}</td>
-            <td>{{matQuotation.partDescription}}</td>
-            <td>{{matQuotation.quantity}}</td>
-            <td>{{matQuotation.unitOfMeasureId}}</td>
-            <td>{{matQuotation.conditionCodeId}}</td>
-            <td>{{matQuotation.isDeferred}}</td>
-            <td>{{matQuotation.unitCost}}</td>
-            <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
-            <td>{{matQuotation.markup}}</td>
-            <td>{{matQuotation.costPlusAmount}}</td>
-            <td>{{matQuotation.fixedAmount}}</td>
-            <td>
-                <button
-                  class="btn-edit ptable-wo-btns"
-                  mat-icon-button
-                  data-target="#addNewMaterials"
-                  data-toggle="modal"
-                  (click)="editMaterialList(matQuotation)"
-                  matTooltip="Edit"
-                >
-                  <mat-icon>edit</mat-icon>
-                </button>
-            </td>
-            <td>
-                <button
-                  class="btn-delete ptable-wo-btns"
-                  mat-icon-button
-                  matTooltip="Delete"
-                  (click)="deleteMaterialList(in)"
-                >
-                  <mat-icon color="warn">delete</mat-icon>
-                </button>
-            </td>
-          </tr>
+          <ng-container *ngFor="let matQuotation of materialListQuotation; let in=index;">
+
+          </ng-container>
+            <tr class="mpn-row" *ngIf="!matQuotation['isDeleted']">
+              <td>{{matQuotation.partNumber}}</td>
+              <td>{{matQuotation.partDescription}}</td>
+              <td>{{matQuotation.partDescription}}</td>
+              <td>{{matQuotation.partDescription}}</td>
+              <td>{{matQuotation.quantity}}</td>
+              <td>{{matQuotation.unitOfMeasureId}}</td>
+              <td>{{matQuotation.conditionCodeId}}</td>
+              <td>{{matQuotation.isDeferred}}</td>
+              <td>{{matQuotation.unitCost}}</td>
+              <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
+              <td>{{matQuotation.markup}}</td>
+              <td>{{matQuotation.costPlusAmount}}</td>
+              <td>{{matQuotation.fixedAmount}}</td>
+              <td>
+                  <button
+                    class="btn-edit ptable-wo-btns"
+                    mat-icon-button
+                    data-target="#addNewMaterials"
+                    data-toggle="modal"
+                    (click)="editMaterialList(matQuotation)"
+                    matTooltip="Edit"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+              </td>
+              <td>
+                  <button
+                    class="btn-delete ptable-wo-btns"
+                    mat-icon-button
+                    matTooltip="Delete"
+                    (click)="deleteMaterialList(in)"
+                  >
+                    <mat-icon color="warn">delete</mat-icon>
+                  </button>
+              </td>
+            </tr>
         </tbody>
       </table>
       <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save</button>

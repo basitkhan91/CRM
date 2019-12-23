@@ -450,13 +450,13 @@ editMatData: any[] = [];
                   "markupPercentageId":mList.markupPercentageId,
                   "TotalPartsCost":155,
                   "Markup":mList.markup,
-                  "CostPlusAmount":mList.costPlusAmount,
+                  "MaterialCostPlus":mList.costPlusAmount,
                   "FixedAmount":mList.fixedAmount,
                   "masterCompanyId":mList.masterCompanyId,
               "CreatedBy":"admin",
               "UpdatedBy":"admin",
               "IsActive":true,
-              "IsDeleted":false
+              "IsDeleted":mList.isDeleted
                 }
     })
     this.workOrderService.saveMaterialListQuote(this.materialListPayload)
@@ -499,7 +499,7 @@ editMatData: any[] = [];
         "InvoiceNo":"InvoiceNo 123456",
         "Amount":100,
         "MarkupPercentageId":charge.markupPercentageId,
-        "CostPlusAmount":charge.CostPlusAmount,
+        "ChargesCostPlus":charge.costPlusAmount,
         "FixedAmount":charge.fixedAmount,
         "Description":charge.description,
         "UnitCost":charge.unitCost,
@@ -510,7 +510,7 @@ editMatData: any[] = [];
         "CreatedBy":"admin",
         "UpdatedBy":"admin",
         "IsActive":true,
-        "IsDeleted":false
+        "IsDeleted":charge.isDeleted
       }
     })
     this.workOrderService.saveChargesQuote(this.chargesPayload)
@@ -582,28 +582,54 @@ saveworkOrderLabor(data) {
   for (let labor in data.workOrderLaborList){
     laborList = [...laborList, ...data.workOrderLaborList[labor]];
   }
-  this.laborPayload.WorkOrderQuoteLaborHeader.WorkOrderQuoteLabor = laborList.map((labor)=>{
-    return {
+  this.laborPayload.WorkOrderQuoteLaborHeader.WorkOrderQuoteLabor = []
+  laborList.forEach((labor)=>{
+    if(labor.expertiseId){
+      this.laborPayload.WorkOrderQuoteLaborHeader.WorkOrderQuoteLabor.push({
         "WorkOrderQuoteLaborId":0,
-		 		"WorkOrderQuoteLaborHeaderId":0,
-		 		"ExpertiseId":labor.expertiseId,
-		 		"EmployeeId":labor.employeeId,
-		 		"BillableId":labor.billableId,
-		 		"Hours":labor.hours,
-		 		"Adjustments":labor.adjustments,
-		 		"AdjustedHours":labor.adjustedHours,
-		 		"Memo":labor.memo,
+        "WorkOrderQuoteLaborHeaderId":0,
+        "ExpertiseId":labor.expertiseId,
+        "EmployeeId":labor.employeeId,
+        "BillableId":labor.billableId,
+        "Hours":labor.hours,
+        "Adjustments":labor.adjustments,
+        "AdjustedHours":labor.adjustedHours,
+        "Memo":labor.memo,
         "TaskId":labor.taskId,
-        "CostPlusAmount": labor.costPlusAmount,
+        "LabourCostPlus": labor.costPlusAmount,
         "FixedAmount": labor.fixedAmount,
         "laborOverheadCost": labor.laborOverheadCost,
         "markupPercentageId": labor.markupPercentageId,
-		 		"CreatedBy":"admin",
+        "CreatedBy":"admin",
         "UpdatedBy":"admin",
         "IsActive":true,
-        "IsDeleted":false
+        "IsDeleted":labor.isDeleted
+    })
     }
-  }) 
+  })
+  // this.laborPayload.WorkOrderQuoteLaborHeader.WorkOrderQuoteLabor = laborList.map((labor)=>{
+  //     return {
+  //         "WorkOrderQuoteLaborId":0,
+  //         "WorkOrderQuoteLaborHeaderId":0,
+  //         "ExpertiseId":labor.expertiseId,
+  //         "EmployeeId":labor.employeeId,
+  //         "BillableId":labor.billableId,
+  //         "Hours":labor.hours,
+  //         "Adjustments":labor.adjustments,
+  //         "AdjustedHours":labor.adjustedHours,
+  //         "Memo":labor.memo,
+  //         "TaskId":labor.taskId,
+  //         "LabourCostPlus": labor.costPlusAmount,
+  //         "FixedAmount": labor.fixedAmount,
+  //         "laborOverheadCost": labor.laborOverheadCost,
+  //         "markupPercentageId": labor.markupPercentageId,
+  //         "CreatedBy":"admin",
+  //         "UpdatedBy":"admin",
+  //         "IsActive":true,
+  //         "IsDeleted":labor.isDeleted
+  //     }
+  // }) 
+
   this.createLaborQuote();
 }
 
@@ -635,7 +661,7 @@ saveWorkOrderExclusionsList(data) {
       "CreatedBy":"admin",
       "UpdatedBy":"admin",
       "IsActive":true,
-      "IsDeleted":false
+      "IsDeleted":ex.isDeleted
     }
   })
   this.workOrderService.saveExclusionsQuote(this.exclusionPayload)
@@ -734,7 +760,7 @@ editMaterialList(matData, index){
 }
 
 deleteMaterialList(index){
-  this.materialListQuotation.splice(index, 1);
+  this.materialListQuotation[index].isDeleted = true;
 }
 updateWorkOrderChargesList(data){
   console.log(data);
