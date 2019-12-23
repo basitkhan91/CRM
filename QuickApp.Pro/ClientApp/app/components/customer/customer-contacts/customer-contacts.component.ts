@@ -154,7 +154,15 @@ export class CustomerContactsComponent implements OnInit {
 			return x.lastName.toLowerCase().includes(event.query.toLowerCase())
 		})]
 	}
+    patternMobilevalidationWithSpl(event: any) {
+        const pattern = /[0-9\+\-()\ ]/;
 
+        let inputChar = String.fromCharCode(event.charCode);
+        if (event.keyCode != 8 && !pattern.test(inputChar)) {
+            event.preventDefault();
+        }
+
+    }
 	async saveContactInformation() {
 
 		// create a new contact in the contact table

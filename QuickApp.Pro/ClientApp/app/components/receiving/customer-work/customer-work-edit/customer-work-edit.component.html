@@ -4,7 +4,7 @@
             <div class="x_content add-customer-work">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item active" aria-current="page">Edit Customer Work</li>
+                        <li class="breadcrumb-item active" aria-current="page">Create Customer Work</li>
                     </ol>
                 </nav>
                 <div class="pheading">
@@ -20,7 +20,7 @@
                                 <div class="col-sm-4 blocks3">
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Employee Name</label>
-                                        <p-autoComplete [(ngModel)]="sourcereceving.firstName" [ngModelOptions]="{standalone: true}"  (onSelect)="empnameId($event)" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
+                                        <p-autoComplete sstyle="font-size: 1px" [(ngModel)]="sourcereceving.firstName" [ngModelOptions]="{standalone: true}"  (onSelect)="empnameId($event)" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
                                                         [minLength]="1" [dropdown]="true">
                                             <ng-template let-firstName pTemplate="item">
                                                 <div class="ui-helper-clearfix">{{firstName}}</div>
@@ -53,13 +53,13 @@
                                     <div class="form-group col-sm-12">
                                             <label class="control-label col-sm-4">Customer Code</label>
                                             <div class="col-sm-7">
-                                                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.customerCode" readonly>
+                                                <input sstyle="font-size: 1px" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.customerCode" readonly>
                                             </div>
                                         </div>
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">RECEIVING NUM</label>
                                         <div class="col-sm-7">
-                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.receivingCustomerNumber" readonly>
+                                            <input sstyle="font-size: 1px" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.receivingCustomerNumber" readonly>
                                         </div>
                                     </div>
 
@@ -68,7 +68,7 @@
                                         <div class="col-sm-7">
                                             <div class="inner-addon right-addon inline-block">
                                                 <i class="fa fa-search"></i>
-                                                <input type="text" class="form-control numberids ui-autocomplete-input" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.customerReference">
+                                                <input sstyle="font-size: 1px" type="text" class="form-control numberids ui-autocomplete-input" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.customerReference">
                                             </div>
                                         </div>
                                     </div>
@@ -76,7 +76,7 @@
                                         <label class="control-label col-sm-4">Contact</label>
                                         <div class="col-sm-7">
                                            
-                                            <select [(ngModel)]="sourcereceving.customerContactId" [ngModelOptions]="{standalone: true}" (change)="customerContactChange(sourcereceving.customerContactId)">
+                                            <select style="border-radius:5px;" sstyle="font-size: 1px" [(ngModel)]="sourcereceving.customerContactId" [ngModelOptions]="{standalone: true}" (change)="customerContactChange(sourcereceving.customerContactId)">
                                                     <option>--Select</option>
                                                     <option *ngFor="let contact of customerContactList" [ngValue]="contact.contactId">{{contact.contactTitle}}</option>
                                             </select>
@@ -85,12 +85,12 @@
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Contact Phone</label>
                                         <div class="col-sm-7">
-                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.workPhone">
+                                            <input sstyle="font-size: 1px" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.workPhone">
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-12 input-icon1">
                                         <label class="control-label col-sm-4">PN </label>
-                                        <p-autoComplete [(ngModel)]="sourcereceving.partNumber" (onSelect)="partnmId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
+                                        <p-autoComplete sstyle="font-size: 1px" [(ngModel)]="sourcereceving.partNumber" (onSelect)="partnmId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
                                                         [minLength]="1" [dropdown]="true">
                                             <ng-template let-partName pTemplate="part">
                                                 <div class="ui-helper-clearfix">{{partName}}</div>
@@ -110,8 +110,8 @@
                                             </div>
                                         </div>
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Change PN </label>
-                                        <p-autoComplete [(ngModel)]="sourcereceving.changePartNumber" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
+                                        <label class="control-label col-sm-4">Revised PN </label>
+                                        <p-autoComplete sstyle="font-size: 1px" [(ngModel)]="sourcereceving.changePartNumber" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
                                                         [minLength]="1" [dropdown]="true">
                                             <ng-template let-partName1 pTemplate="part">
                                                 <div class="ui-helper-clearfix">{{partName1}}</div>
@@ -178,7 +178,7 @@
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Condtion</label>
                                         <div class="col-sm-7">
-                                            <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.conditionCodeId">
+                                            <select style="border-radius:5px;" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.conditionCodeId">
                                                 <option *ngFor="let condition of allConditionInfo" [ngValue]="condition.conditionCodeId">{{condition.description}}</option>
                                             </select>
                                         </div>
@@ -187,7 +187,7 @@
                                         <label class="control-label col-sm-4">Site <strong class="clr-red">*</strong></label>
                                         <div class="col-sm-7">
 
-                                            <select [(ngModel)]="sourcereceving.siteId" [ngModelOptions]="{standalone: true}" (change)="siteValueChange($event.target.value)">
+                                            <select style="border-radius:5px;" [(ngModel)]="sourcereceving.siteId" [ngModelOptions]="{standalone: true}" (change)="siteValueChange($event.target.value)">
                                                 <option>--Select</option>
                                                 <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                                             </select>
@@ -198,7 +198,7 @@
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Warehouse</label>
                                         <div class="col-sm-7">
-                                            <select [(ngModel)]="sourcereceving.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(sourcereceving.warehouseId)">
+                                            <select style="border-radius:5px;" [(ngModel)]="sourcereceving.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(sourcereceving.warehouseId)">
                                                 <option>--Select</option>
                                                 <option *ngFor="let site of allWareHouses" [ngValue]="site.warehouseId">{{site.warehouseName}}</option>
                                             </select>
@@ -207,7 +207,7 @@
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Location</label>
                                         <div class="col-sm-7">
-                                            <select [(ngModel)]="sourcereceving.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(sourcereceving.locationId)">
+                                            <select style="border-radius:5px;" [(ngModel)]="sourcereceving.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(sourcereceving.locationId)">
                                                 <option>--Select</option>
                                                 <option *ngFor="let site of allLocations" [ngValue]="site.locationId">{{site.name}}</option>
                                             </select>
@@ -216,7 +216,7 @@
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Shelf</label>
                                         <div class="col-sm-7">
-                                            <select [(ngModel)]="sourcereceving.shelfId" [ngModelOptions]="{standalone: true}" (change)="shelfValueChange(sourcereceving.shelfId)">
+                                            <select style="border-radius:5px;" [(ngModel)]="sourcereceving.shelfId" [ngModelOptions]="{standalone: true}" (change)="shelfValueChange(sourcereceving.shelfId)">
                                                 <option>--Select</option>
                                                 <option *ngFor="let site of allShelfs" [ngValue]="site.shelfId">{{site.name}}</option>
                                             </select>
@@ -225,7 +225,7 @@
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Bin</label>
                                         <div class="col-sm-7">
-                                            <select [(ngModel)]="sourcereceving.binId" [ngModelOptions]="{standalone: true}" (change)="binValueSelect(sourcereceving.binId)">
+                                            <select style="border-radius:5px;" [(ngModel)]="sourcereceving.binId" [ngModelOptions]="{standalone: true}" (change)="binValueSelect(sourcereceving.binId)">
                                                 <option>--Select</option>
                                                 <option *ngFor="let site of allBins" [ngValue]="site.binId">{{site.name}}</option>
                                             </select>
@@ -249,7 +249,7 @@
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4" for="obtainFrom">Tracable to</label>
                                         <div class="col-sm-7">
-                                            <select id="obtainFrom" [(ngModel)]="sourcereceving.traceableToType" [ngModelOptions]="{standalone: true}" class="form-control">
+                                            <select style="border-radius:5px;" id="obtainFrom" [(ngModel)]="sourcereceving.traceableToType" [ngModelOptions]="{standalone: true}" class="form-control">
 
                                                 <option [value]="1">Customer</option>
                                                 <option [value]="2">Other </option>
@@ -511,8 +511,7 @@
                 </form>
             </div>
             </div>
-                <div class="pull-right"> © 2018 <a routerLink="/">PAS</a> </div>
-            </div>
+              </div>
 
 
         </div>
