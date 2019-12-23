@@ -1,0 +1,35 @@
+export interface IPartJson {
+    selected:boolean;
+    method:string;
+    itemId:number;
+    partNumber: string;
+    alternatePartId:number;
+    description: string;
+    conditionType: string;
+    stockLineNumber:string;
+    uomDescription:string;
+    qtyAvailable:number;
+    qtyOnHand:number;
+    qtyToOrder:number;
+    qtyOnOrder:number;
+    itemClassification:any;
+    itemGroup: string;
+    controlNumber: string;
+    idNumber: string;
+    serialNumber: string;
+    alternateFor: string;
+    unitCost: string;
+    unitListPrice: string;
+    pma: string;
+    der: string;
+    manufacturer: any;
+    customerRef: string;
+    currency: string;
+    coreUnitPrice: string;
+    glAccount: any;
+    itar: string;
+    eccn: string;
+    memo: string;
+    currencyId: string;
+    currencyDescription: string;
+}

@@ -216,6 +216,7 @@ import { DashNumberEndpointService } from './services/dash-number/dash-number-en
 import { AccountListingService } from './services/account-listing/account-listing.service'
 import { CustomerViewComponent } from './shared/components/customer/customer-view/customer-view.component';
 import { CommonService } from "./services/common.service";
+import { CommonModule } from '@angular/common';
 
 @NgModule({
     imports: [
@@ -228,6 +229,7 @@ import { CommonService } from "./services/common.service";
         AdminModule,
         SettingsModule,
         AppRoutingModule,
+        CommonModule,
 
         TranslateModule.forRoot({
             loader: {
@@ -438,8 +440,9 @@ import { CommonService } from "./services/common.service";
         AccountListingService,
         CommonService
     ],
-    entryComponents: [LoginDialogComponent, AddTaskDialogComponent,CustomerViewComponent],
+    entryComponents: [LoginDialogComponent, AddTaskDialogComponent, CustomerViewComponent],
     bootstrap: [AppComponent],
+    exports: [CommonModule],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }
