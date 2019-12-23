@@ -96,7 +96,7 @@ export class WorkOrderChargesComponent implements OnChanges {
     try {
       this.markupList.forEach((markup) => {
         if (markup.value == matData.markup) {
-          matData.costPlusAmount = (matData.quantity * matData.unitCost) + (((matData.quantity * matData.unitCost) / 100) * Number(markup.label))
+          matData.costPlusAmount = (matData.quantity * matData.extendedCost) + (((matData.quantity * matData.extendedCost) / 100) * Number(markup.label))
         }
       })
     }

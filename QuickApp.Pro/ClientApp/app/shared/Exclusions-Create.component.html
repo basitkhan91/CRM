@@ -122,7 +122,7 @@
       <ng-container *ngIf="isQuote">
           <td>
             <!-- <input [(ngModel)]="matQuotation.markup" /> -->
-            <select class="form-control custom-select wf-pub-id" (change)="markupChanged(charge)" [(ngModel)]="exclusion.markup">
+            <select class="form-control custom-select wf-pub-id" (change)="markupChanged(charge)" [(ngModel)]="exclusion.markupPercentageId">
               <option value="">Select</option>
               <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
             </select>
