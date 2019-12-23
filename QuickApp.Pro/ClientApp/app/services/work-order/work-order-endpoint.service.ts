@@ -162,6 +162,10 @@ export class WorkOrderEndpointService extends EndpointFactory {
     getWorkOrderList(data) {
         return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/workorderlist`, JSON.stringify(data), this.getRequestHeaders())
     }
+    getWorkOrderGlobalSearch(value, pageIndex, pageSize) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/woglobalsearch?filterText=${value}&pageNumber=${pageIndex}&pageSize=${pageSize}`)
+    }
+
 
     updateWorkOrderStatus(data, login) {
         return this.http.get(`${this.configurations.baseUrl}/api/workOrder/updateworkorderstatus?workOrderId=${data.workOrderId}&status=${data.isActive}&updatedBy=${login}`, this.getRequestHeaders())

@@ -8,7 +8,7 @@
     <div class="inline-block display-flex">
         <h3 class="po-head lead">WorkOrder List</h3>
         &nbsp;&nbsp;&nbsp;&nbsp;
-        <a matTooltip="Create Customer"
+        <a matTooltip="Create WorkOrder"
            class="plusicon-cstm new-margin"
            [routerLink]="[
             '/workordersmodule/workorderspages/app-work-order-add'
@@ -16,6 +16,30 @@
             <i class="fa fa-plus-circle fa-lg"></i>
         </a>
     </div>
+
+    <div class="form-row status-radio">
+				<div class="col-md-8">
+					<div class="form-group">
+						<label style="float:left; width:auto; margin-right:20px; padding-top:3px;">Status:</label>
+						<div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
+							<label class="radio-cstm wauto">
+								<input type="radio" name="woStatus" class="form-control" value="open"  [(ngModel)]="currentStatus" (click)="changeOfStatus('open')">
+								<span class="checkmark"></span>Open</label>
+            </div>
+            <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
+                <label class="radio-cstm wauto">
+                  <input type="radio" name="woStatus" class="form-control" value="pending" [(ngModel)]="currentStatus"   (click)="changeOfStatus('pending')">
+                  <span class="checkmark"></span>Pending</label>
+              </div>
+						<div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
+							<label class="radio-cstm wauto">
+								<input type="radio" name="woStatus" class="form-control" value="closed" [(ngModel)]="currentStatus"  (click)="changeOfStatus('closed')" >
+								<span class="checkmark"></span>Closed</label>
+						</div>
+
+					</div>
+				</div>
+			</div>
 <p-table
   #dt
   class="rpo-table-cstm rro-table-cstm"
@@ -108,7 +132,7 @@
   </ng-template>
   <ng-template pTemplate="header" let-columns>
     <tr>
-      <th>WorkOrder Number</th>
+
       <th *ngFor="let col of columns">
         {{ col.header }}
       </th>
@@ -119,7 +143,8 @@
     <tr>
         <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
             <!-- <input type="text" style="width:100%;" pInputText   (keyup)="filterData($event)"> -->
-            <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+            <input   *ngIf="col.field !== 'openDate'"  style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains'); fieldSearch($event.target.value, col.field , 'contains' )">
+            <input type="date" class="hidePlaceHolder" *ngIf="col.field == 'openDate'" name="openDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
 
         </th>
         <th style="width:200px;position:sticky"></th>
@@ -133,8 +158,8 @@
     let-columns="columns"
   >
     <tr class="ui-widget-header">
-      <td>
-        <!-- <a [pRowToggler]="rowData">
+     <!--  <td>
+        <a [pRowToggler]="rowData">
           <i
             (click)="getWorkOrderPartListByWorkOrderId(rowData)"
             [ngClass]="
@@ -144,9 +169,9 @@
             "
           ></i>
           <span> {{ rowData.workOrderNum }}</span>
-        </a> -->
-        {{ rowData.workOrderNum }}
-      </td>
+        </a> 
+      
+      </td> -->
       <td *ngFor="let col of columns">
         {{
           col.field == 'openDate'
@@ -205,11 +230,11 @@
       </td>
     </tr>
   </ng-template>
-  <ng-template pTemplate="rowexpansion" let-rowData let-rowIndex="rowIndex">
+  <!-- <ng-template pTemplate="rowexpansion" let-rowData let-rowIndex="rowIndex">
     <tr>
-      <!-- <td>{{ partList.openDate }}</td> -->
+
     </tr>
-  </ng-template>
+  </ng-template> -->
 </p-table>
 </div>
 <!-- Modal -->

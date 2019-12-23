@@ -98,6 +98,9 @@ export class WorkOrderService {
     getWorkOrderList(paginationData) {
         return this.workOrderEndpointService.getWorkOrderList(paginationData);
     }
+    getWorkOrderGlobalSearch(value, pageIndex, pageSize) {
+        return this.workOrderEndpointService.getWorkOrderGlobalSearch(value, pageIndex, pageSize);
+    }
 
     updateActionforWorkOrder(action, login) {
         return this.workOrderEndpointService.updateWorkOrderStatus(action, login);
