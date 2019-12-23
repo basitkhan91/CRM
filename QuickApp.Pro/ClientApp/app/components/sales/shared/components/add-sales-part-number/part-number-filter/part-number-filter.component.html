@@ -1,10 +1,10 @@
 <div class="row">
-  <div class="col-md-12 col-sm-12 col-12">
     <div class="col-2 column">
       <div class="form-group">
         <label>PN<span class="clr-red">*</span></label>
-        <p-autoComplete [suggestions]="this.partDetails" (completeMethod)="searchPartByPartNumber($event)"
-          name="partNumber" field="partNumber" [(ngModel)]="partDetail" (onSelect)="onPartNumberSelect($event)">
+  
+        <p-autoComplete class="autocomp-customer-cstm" [suggestions]="this.partDetails" (completeMethod)="searchPartByPartNumber($event)"
+          name="partNumber" [(ngModel)]="query.partSearchParamters.partNumber" (onSelect)="onPartNumberSelect($event)">
           <ng-template let-value pTemplate="selectedItem">
             <span>{{ value.partNumber }}</span>
           </ng-template>
@@ -14,6 +14,18 @@
             </div>
           </ng-template>
         </p-autoComplete>
+     
+       
+        
+       <!--
+         <select  name="partNumber" [(ngModel)]="query.partSearchParamters.partId" (onSelect)="onPartNumberSelect(query.partSearchParamters.partId)">
+          <option>--select--</option>
+          <option *ngFor="let pt of partDetails" [ngValue]="pt.itemMasterId">{{ pt.partNumber }}</option>
+        </select>
+          <input type="text" pInputText name="partNumber" [(ngModel)]="query.partSearchParamters.partNumber"
+        [disabled]="true" />
+       -->
+
       </div>
     </div>
     <div class="col-2 column">
@@ -23,26 +35,33 @@
           [disabled]="true" />
       </div>
     </div>
-    <div class="col-2 column">
+    <div class="col-1 column">
       <div class="form-group">
         <label>Cond Type<span class="clr-red">*</span></label>
-        <select [disabled]="true">
+        <select>
           <option>--select--</option>
+          <option *ngFor="let condition of allConditionInfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
         </select>
       </div>
     </div>
-    <div class="col-1 column">
+    <div class="col-2 column">
       <div class="form-group">
-        <label>Qty Required</label>
-        <input type="text" pInputText name="qtyRequired" [(ngModel)]="query.partSearchParamters.quantityRequired" />
+        <label>Qty Requested</label>
+        <input type="number" pInputText name="qtyRequested" [(ngModel)]="query.partSearchParamters.quantityRequested" (change)="calculate()" />
       </div>
     </div>
     <div class="col-1 column">
       <div class="form-group">
         <label>Qty to Quote</label>
-        <input type="text" pInputText name="qtyToQuote" [(ngModel)]="query.partSearchParamters.quantityToQuote" />
+        <input type="number" pInputText name="qtyToQuote" [(ngModel)]="query.partSearchParamters.quantityToQuote" />
       </div>
     </div>
+    <div class="col-2 column">
+        <div class="form-group">
+          <label>Qty AlreadyQuoted</label>
+          <input type="number" pInputText name="qtyAlreadyQuoted" [(ngModel)]="query.partSearchParamters.quantityAlreadyQuoted" disabled="true" />
+        </div>
+      </div>
     <div class="col-1 column">
       <div class="form-group">
         <label>Qty On Hand</label>
@@ -55,7 +74,22 @@
         <input type="text" pInputText name="qtyAvailable" disabled="true" />
       </div>
     </div>
-  </div>
+</div>
+<div class="row justify-content-end">
+    <div class="col-1 column" style="margin-right: 8px;">
+        <div class="form-group">
+          <label>&nbsp;</label>
+          <button class="btn btn-primary" (click)="search($event)" [disabled]="searchDisabled">
+            Search PN
+          </button>
+        </div>
+      </div>
+      <div class="col-1 column" style="margin-right: 8px;">
+        <div class="form-group">
+          <label>&nbsp;</label>
+          <button class="btn btn-primary" [disabled]="historicalDisabled">Historical</button>
+        </div>
+      </div>
 </div>
 <div class="row filter-method">
   <div>
@@ -76,23 +110,5 @@
   <div>
     <label><input type="checkbox" name="method" name="includeMultiplePN"
         [(ngModel)]="query.partSearchParamters.includeAlternatePartNumber" />&nbsp;Multiple PN's</label>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-12 col-sm-12 col-12">
-    <div class="col-1 column" style="margin-right: 8px;">
-      <div class="form-group">
-        <label>&nbsp;</label>
-        <button class="btn btn-primary" (click)="search($event)" [disabled]="searchDisabled">
-          Search PN
-        </button>
-      </div>
-    </div>
-    <div class="col-1 column" style="margin-right: 8px;">
-      <div class="form-group">
-        <label>&nbsp;</label>
-        <button class="btn btn-primary" [disabled]="historicalDisabled">Historical</button>
-      </div>
-    </div>
   </div>
 </div>

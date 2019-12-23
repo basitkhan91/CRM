@@ -224,8 +224,10 @@ export class PolistComponent implements OnInit {
         console.log(event);
     }
 
-    onChangeInputField(value, field) {
+    onChangeInputField(value, field, el) {
         console.log(value, field);
+        if (value === '') { el.classList.add("hidePlaceHolder"); }
+        else el.classList.remove("hidePlaceHolder");
         // if(field == "purchaseOrderId") {
         //     this.purchaseOrderIdInput = value;
         // }

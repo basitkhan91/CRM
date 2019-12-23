@@ -366,6 +366,51 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
+        [HttpGet("getVendorCapabilitybyId/{id}")]        
+        public IActionResult GetvendorCapabilityById(long id)
+        {
+            {
+                var data = (from vc in _context.VendorCapabiliy
+                            join v in _context.Vendor on vc.VendorId equals v.VendorId
+                            join im in _context.ItemMaster on vc.ItemMasterId equals im.ItemMasterId into imm
+                            from im in imm.DefaultIfEmpty()
+                            join vct in _context.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId into vctt
+                            from vct in vctt.DefaultIfEmpty()
+                            join vcat in _context.capabilityType on vct.CapabilityTypeId equals vcat.CapabilityTypeId into vcatt
+                            from vcat in vcatt.DefaultIfEmpty()
+                             
+                            select new
+                            {
+                                v.VendorName,
+                                v.VendorCode,
+                                im.PartNumber,
+                                im.PartDescription,
+                                im.ManufacturerId,
+                                manufacturerName = im.Manufacturer.Name,
+                                vc.VendorCapabilityId,
+                                vc.VendorId,
+                                vc.VendorRanking,
+                                vc.PMA_DER,
+                                vc.ItemMasterId,
+                                vc.TAT,
+                                vc.Cost,
+                                vc.AlternatePartId,
+                                vc.ATAChapterId,
+                                vc.ATASubchapterId,
+                                vc.Memo,
+                                vc.CreatedDate,
+                                vc.UpdatedDate,
+                                vc.capabilityDescription,
+                                vc.IsActive,
+                                vc.CapabilityId,
+                                CapabilityType = vcat.Description                               
+
+                            }).OrderByDescending(p => p.UpdatedDate).FirstOrDefault();
+                // return data;
+                return Ok(data);
+            }
+        }
+
         [HttpGet("getVendorCapabilityByVendorId")]
         [Produces(typeof(List<VendorCapabiliy>))]
         public IActionResult GetvendorCapabilityListByVendorId(long vendorid)
