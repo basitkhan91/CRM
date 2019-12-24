@@ -388,7 +388,7 @@ namespace QuickApp.Pro.Controllers
                             from im in imm.DefaultIfEmpty()
                             join vct in _context.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId into vctt
                             from vct in vctt.DefaultIfEmpty()
-                            join vcat in _context.capabilityType on vct.CapabilityTypeId equals vcat.CapabilityTypeId into vcatt
+                            join vcat in _context.capabilityType on vc.CapabilityId equals Convert.ToInt64(vcat.CapabilityTypeId) into vcatt
                             from vcat in vcatt.DefaultIfEmpty()
                             where vc.VendorCapabilityId == id
                             select new
@@ -3889,6 +3889,22 @@ namespace QuickApp.Pro.Controllers
             }
             return Ok(vendorAircraftModel);
             // return Ok(ModelState);
+        }
+
+        [HttpGet("searchForGetAirCraftByVendorCapsId/{vendorCapabilityId}")]
+      
+        public IActionResult orAirMappedMultiDashId(long vendorCapabilityId, string aircraftTypeID, string aircraftModelID, string dashNumberId)
+        {
+            var result = _unitOfWork.Vendor.searchItemAircraftMappingDataByMultiTypeIdModelIDDashID(vendorCapabilityId, aircraftTypeID, aircraftModelID, dashNumberId);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
         }
 
         [HttpGet("GetListforCapes")]
