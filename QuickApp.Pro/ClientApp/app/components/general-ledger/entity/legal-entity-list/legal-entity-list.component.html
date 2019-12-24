@@ -147,7 +147,7 @@
 	<div class="modal-header">
 		<h4 class="modal-title" *ngIf="isEditMode">Edit Entity</h4>
 		<h4 class="modal-title" *ngIf="!isEditMode">Add Entity</h4>
-		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+		<button type="button" class="close" aria-label="Close" (click)="dismissModelWarning()">
 			<span aria-hidden="true">&times;</span>
 		</button>
 	</div>
@@ -459,6 +459,18 @@
 		Mandatory fields are not filled.
 	</h5>
 		<button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
+</p-dialog>
+
+<p-dialog header="Alert" [(visible)]="displayWarningModal" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
+		  [width]="350" [minWidth]="200" [responsive]="true"
+		  [minY]="1050" [baseZIndex]="1100000">
+
+	<h5 [ngStyle]="{'color':'red'}">
+		Are you sure, You want to close?.
+	</h5>
+		<button type="button" pButton icon="pi pi-check" (click)="displayWarningModal=false;dismissModel()" label="Yes"></button>
+		&nbsp;&nbsp;
+		<button type="button" pButton icon="pi pi-times" (click)="displayWarningModal=false" label="No"></button>
 </p-dialog>
 
 <ng-template #content let-c="close" let-d="dismiss">

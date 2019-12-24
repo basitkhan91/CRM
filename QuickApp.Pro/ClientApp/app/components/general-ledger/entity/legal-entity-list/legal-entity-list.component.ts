@@ -65,7 +65,8 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
     allCountryinfo: any[];
     countrycollection: any[];
     disablesave: boolean;
-    selectedCountries: any;
+	selectedCountries: any;
+	displayWarningModal: boolean = false;
 
 	constructor(
         private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, public currency: CurrencyService, public workFlowtService: LegalEntityService,
@@ -337,7 +338,9 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-
+	dismissModelWarning() {
+		this.displayWarningModal = true;
+	}
 	private saveSuccessHelper(role?: any) {
 		this.isSaving = false;
 		this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
