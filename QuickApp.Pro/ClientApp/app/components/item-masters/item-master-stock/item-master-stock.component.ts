@@ -1,5 +1,6 @@
 ﻿import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog, SELECT_MULTIPLE_PANEL_PADDING_X } from '@angular/material';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { DOCUMENT } from '@angular/common';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { MasterCompany } from '../../../models/mastercompany.model';
@@ -13,7 +14,7 @@ import { Integration } from '../../../models/integration.model';
 import { IntegrationService } from '../../../services/integration-service';
 import { ItemClassificationService } from '../../../services/item-classfication.service';
 import { ItemClassificationModel } from '../../../models/item-classification.model';
-import { OnInit, AfterViewInit, Component, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { OnInit, AfterViewInit, Component, ViewChild, ChangeDetectorRef, Inject } from '@angular/core';
 import { Itemgroup } from '../../../models/item-group.model';
 import { ItemGroupService } from '../../../services/item-group.service';
 import { Provision } from '../../../models/provision.model';
@@ -304,7 +305,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     modelUnknown = false;
     dashNumberUnknown = false;
     newFields = {
-        Condition: "NEW",
+        Condition: null ,
         PP_UOMId: null,
         PP_CurrencyId: null,
         PP_FXRatePerc: null,
@@ -391,6 +392,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     selectedCapabilityTypes: any = [];
     capeBldList: any = [];
     distinctAtaList: any[] = [];
+    listOfErrors: any = [];
+    conditionList: any;
 
     // errorLogForPS: string = '';
 
@@ -401,7 +404,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         public priority: PriorityService, public inteService: IntegrationService,
         public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService,
         public proService: ProvisionService, private dialog: MatDialog,
-        private masterComapnyService: MasterComapnyService, public commonService: CommonService) {
+        private masterComapnyService: MasterComapnyService, public commonService: CommonService, @Inject(DOCUMENT) document) {
         this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-stock';
         this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
         this.displayedColumns.push('action');
@@ -649,6 +652,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         // this.getAllATASubChapter();
         this.getAllSubChapters();
         this.getCapabilityType();
+        this.getConditionsList();
 
 
 
@@ -4596,6 +4600,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     }
+
+    getConditionsList(){
+        this.commonService.smartDropDownList('Condition', 'ConditionId' , 'Description'  ).subscribe(res => {
+            this.conditionList = res;
+        })
+    }
     moveExportInformation1() {
         this.showpurchaseData = true;
         this.showGeneralData = false;
@@ -4666,12 +4676,32 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.tempOEMpartNumberId = value.itemMasterId;
     }
 
-    saveItemMasterGeneralInformation() {
-        if (!(this.sourceItemMaster.partNumber && this.sourceItemMaster.partDescription && this.sourceItemMaster.purchaseUnitOfMeasureId && this.sourceItemMaster.glAccountId && this.sourceItemMaster.manufacturerId && this.sourceItemMaster.itemClassificationId)) {
-            console.log("this.sourceItemMaster.itemClassificationId before form save:::", this.sourceItemMaster.itemClassificationId);
+    saveItemMasterGeneralInformation(addCustomerWorkForm) {
+        let errors;
+        this.listOfErrors = [];
+        if(addCustomerWorkForm.status === "INVALID"){
+            Object.keys(addCustomerWorkForm.controls).map(key => {
+                errors = addCustomerWorkForm.controls[key].errors;
+               if (errors === null) { return null; }            
+               if (errors['required']) {  
+                 let titlevalue = key;
+                 if(document.getElementById(key)){
+                     titlevalue = document.getElementById(key).getAttribute('title');
+                 }
+                   this.listOfErrors.push(`${titlevalue} is required`); //test
+                 // return 
+               } else {
+               this.listOfErrors.push(`${key} has an unknown error`);
+                 // return `${key} has an unknown error`;
+               }
+             });
             this.display = true;
             this.modelValue = true;
+             return false
+
         } else {
+           
+
 
             this.isSaving = true;
             if (!this.isItemMasterCreated) //for create ItemMaster

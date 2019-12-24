@@ -213,9 +213,10 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("UploadataChapterCustomData")]
         public IActionResult UploadataChapterCustomData()
         {
+            
 
-            _unitOfWork.FileUploadRepository.UploadCustomFile(Convert.ToString("ATAChapter"), Request.Form.Files[0]);
-            return Ok();
+          var result  =  _unitOfWork.ATAChapter.UploadCustomData(Request.Form.Files[0]);
+            return Ok(result);
         }
     }
 

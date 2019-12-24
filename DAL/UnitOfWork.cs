@@ -718,7 +718,7 @@ namespace DAL
             get
             {
                 if (_employeeExpertiseRepository == null)
-                    _employeeExpertiseRepository = new EmployeeExpertiseRepository(_context);
+                    _employeeExpertiseRepository = new EmployeeExpertiseRepository(_context, _appSettings);
                 return _employeeExpertiseRepository;
             }
         }
@@ -1097,7 +1097,7 @@ namespace DAL
             get
             {
                 if (_aTAChapter == null)
-                    _aTAChapter = new ATAChapterRepository(_context);
+                    _aTAChapter = new ATAChapterRepository(_context, _appSettings);
                 return _aTAChapter;
             }
         }

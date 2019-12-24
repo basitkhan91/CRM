@@ -479,7 +479,7 @@ export class RoSetupComponent implements OnInit {
 			return partList.roPartSplits.map((y, cindex) => {
 				const splitpart = {
 					...y,
-					needByDate: new Date(y.needByDate),
+					needByDate: y.needByDate ? new Date(y.needByDate) : '',
 					partListUserTypeId: y.roPartSplitUserTypeId,
 					partListUserId: this.getPartSplitUserIdEdit(y, pindex, cindex),
 					partListAddressId: y.roPartSplitAddressId ? y.roPartSplitAddressId : 0,

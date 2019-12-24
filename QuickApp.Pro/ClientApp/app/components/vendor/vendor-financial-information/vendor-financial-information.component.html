@@ -281,7 +281,8 @@
                                         <input class="" type="checkbox" id="finc-info-check" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.is1099Required">
                                     </div>
                                 </div>
-                                <div class="finc-info form-group col-sm-12" *ngIf="sourceVendor.is1099Required">
+                                <!-- <div class="finc-info form-group col-sm-12" *ngIf="sourceVendor.is1099Required"> -->
+                                        <div class="finc-info form-group col-sm-12" >
                                     <div class="col-sm-12 table-responsive">
                                         <table class="table table-striped">
                                             <thead>
@@ -293,11 +294,11 @@
                                             </thead>
                                             <tbody>
                                                 <tr *ngFor="let proces of vendorProcess1099Data; let i = index;">
-                                                    <td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="proces.isDefaultCheck"></td>
+                                                    <td><input type="checkbox" class="form-control" [value]="proces.description"  [ngModelOptions]="{standalone: true}" [(ngModel)]="proces.isDefaultCheck"  (change)="changeCheck1099Required($event, i)"></td>
 
                                                     <!--<td>{{i+1}}</td>-->
                                                     <td>{{proces.description}} </td>
-                                                    <td><input type="radio" name="isDefaultRadio" [(ngModel)]="proces.isDefaultRadio" class="radio-inline" (change)="changevalue($event)"></td>
+                                                    <td><input type="radio" name="isDefaultRadio"  [attr.disabled]="proces.isRadioDisabled === true ||  null" [value]="proces.description"   [(ngModel)]="proces.isDefaultRadio"   class="radio-inline" (change)="changevalue($event, i)"></td>
 
 
                                                 </tr>

@@ -68,5 +68,7 @@ namespace DAL.Repositories.Interfaces
         bool EditVendorAircraft(long id, string memo, string updatedBy);
         bool DeleteVendorAircraft(long id, string updatedBy);
 
+        IEnumerable<object> searchItemAircraftMappingDataByMultiTypeIdModelIDDashID(long VendorCapabilityId, string AircraftTypeId, string AircraftModelId, string DashNumberId);
+
     }
 }
