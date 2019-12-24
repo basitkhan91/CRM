@@ -23,6 +23,10 @@ export class PartSearchParamters {
 
     public includeAlternatePartNumber: boolean;
 
+    public qtyAvailable:number;
+    
+    public qtyOnHand:number;
+
     constructor() {
         this.itemSearchType = ItemSearchType.ItemMaster;
     }

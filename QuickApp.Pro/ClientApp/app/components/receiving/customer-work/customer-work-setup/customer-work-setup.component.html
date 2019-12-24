@@ -6,7 +6,7 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item" aria-current="page">Receiving</li>
                         <li class="breadcrumb-item" aria-current="page">Customer Work</li>
-                        <li class="breadcrumb-item active" aria-current="page">Create Customer Work</li>
+                        <li class="breadcrumb-item active" aria-current="page">Edit Customer Work</li>
                     </ol>
                 </nav>
                 <h4 class="page-heading">Receiving</h4>
@@ -16,59 +16,66 @@
                         <div class="tab-content form-bg">
                             <div class="tab-pane active" id="home">
                                 <div class="col-sm-4 blocks3">
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Employee Name</label>
-                                        <p-autoComplete [(ngModel)]="sourcereceving.firstName" (onSelect)="empnameId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
+                                    <div class="form-group col-sm-12 add-icon-inline-right">
+                                        <label class="control-label col-sm-4">Employee Name<strong class="clr-red">*</strong></label>
+                                        <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcereceving.firstName" (onSelect)="empnameId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
                                                         [minLength]="1" [dropdown]="true">
                                             <ng-template let-firstName pTemplate="item">
                                                 <div class="ui-helper-clearfix">{{firstName}}</div>
                                             </ng-template>
                                         </p-autoComplete>
+                                        <a matTooltip="Create Employee" style="position: absolute;right: -20px;top: 0;"
+                                           class=""
+                                           [routerLink]="[
+      '/employeesmodule/employeepages/app-employee-general-information'
+    ]">
+                                            <i class="fa fa-plus-circle fa-lg"></i>
+                                        </a>
                                     </div>
                                 </div>
                                 <div class="clear"></div>
                                 <hr class="hr-dark">
                                 <div class="col-sm-4 blocks3">
-                                    <div class="form-group col-sm-13">
+                                    <div class="form-group col-sm-13 add-icon-inline-right">
                                         <label class="control-label col-sm-4">Customer Name<strong class="clr-red">*</strong></label>
-                                        <p-autoComplete sstyle="font-size: 1px" [(ngModel)]="sourcereceving.name" (onSelect)="customerNameId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30"
+                                        <p-autoComplete class="pautocomp-cstm" sstyle="font-size: 1px" [(ngModel)]="sourcereceving.name" (onSelect)="customerNameId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30"
                                                         [minLength]="1" [dropdown]="true">
                                             <ng-template let-name pTemplate="item">
                                                 <div class="ui-helper-clearfix">{{name}}</div>
 
                                             </ng-template>
                                         </p-autoComplete>
-                                       
-                                            <!--<a matTooltip="Create Customer"
-                                               class="plusicon-cstm new-margin"
-                                               [routerLink]="[
-                '/customersmodule/customerpages/app-customer-create'
-              ]">
-                                                <i class="fa fa-plus-circle fa-lg"></i>
-                                            </a>-->
-                                      
+
+                                        <a  matTooltip="Create Customer" style="position: absolute;right: -20px;top: 0;z-index:1;"
+                                           class=""
+                                           [routerLink]="[
+      '/customersmodule/customerpages/app-customer-create'
+    ]">
+                                            <i class="fa fa-plus-circle fa-lg"></i>
+                                        </a>
+
 
                                     </div>
                                     <div class="form-group col-sm-13">
-                                        <div class="form-group">
+                                        <div class="form-group add-icon-inline-right">
                                             <label class="control-label col-sm-4">Customer Code<strong class="clr-red">*</strong></label>
 
 
-                                            <p-autoComplete sstyle="font-size: 1px"
+                                            <p-autoComplete class="pautocomp-cstm" sstyle="font-size: 1px"
                                                             name="customerCode"
                                                             [(ngModel)]="sourcereceving.customerCode" [suggestions]="custcodes"
                                                             field="customerCode"
                                                             (completeMethod)="filterCodes($event)" [size]="30" #customerCode="ngModel"
                                                             [minLength]="1" [dropdown]="true" required>
-                                              
+
                                             </p-autoComplete>
-                                            <!--<a matTooltip="Create Customer"
+                                            <a matTooltip="Create Customer" style="position: absolute;right: -20px;top: 0;z-index:1"
                                                class=""
                                                [routerLink]="[
-                '/customersmodule/customerpages/app-customer-create'
-              ]">
+      '/customersmodule/customerpages/app-customer-create'
+    ]">
                                                 <i class="fa fa-plus-circle fa-lg"></i>
-                                            </a>-->
+                                            </a>
                                         </div>
 
                                         <!--<label class="control-label col-sm-4">Customer Code<strong class="clr-red">*</strong></label>
@@ -87,7 +94,7 @@
                                     </div>
 
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Ref</label>
+                                        <label class="control-label col-sm-4">Ref<strong class="clr-red">*</strong></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control numberids ui-autocomplete-input" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.customerReference">
                                         </div>
@@ -95,7 +102,7 @@
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Contact Phone</label>
 
-                                        <p-autoComplete [(ngModel)]="sourcereceving.workPhone" [ngModelOptions]="{standalone: true}" [suggestions]="workPhone" (completeMethod)="filterContacts($event)" [size]="30"
+                                        <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcereceving.workPhone" [ngModelOptions]="{standalone: true}" [suggestions]="workPhone" (completeMethod)="filterContacts($event)" [size]="30"
                                                         [minLength]="1" [dropdown]="true">
                                             <ng-template let-workPhone pTemplate="item">
                                                 <div class="ui-helper-clearfix">{{workPhone}}</div>
@@ -106,7 +113,7 @@
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Contact</label>
 
-                                        <p-autoComplete [(ngModel)]="sourcereceving.customerContactName" [ngModelOptions]="{standalone: true}" (onSelect)="customerContactId($event)" [suggestions]="firstNames" (completeMethod)="filterFirstNames($event)" [size]="30"
+                                        <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcereceving.customerContactName" [ngModelOptions]="{standalone: true}" (onSelect)="customerContactId($event)" [suggestions]="firstNames" (completeMethod)="filterFirstNames($event)" [size]="30"
                                                         [minLength]="1" [dropdown]="true">
                                             <ng-template let-firstNames pTemplate="item">
                                                 <div class="ui-helper-clearfix">{{firstNames}}</div>
@@ -115,12 +122,19 @@
                                     </div>
                                     <div class="form-group col-sm-12 input-icon1">
                                         <label class="control-label col-sm-4"> PN<strong class="clr-red">*</strong> </label>
-                                        <p-autoComplete [(ngModel)]="sourcereceving.partNumber" (onSelect)="partnmId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
+                                        <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcereceving.partNumber" (onSelect)="partnmId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
                                                         [minLength]="1" [dropdown]="true">
                                             <ng-template let-partName pTemplate="part">
                                                 <div class="ui-helper-clearfix">{{partName}}</div>
                                             </ng-template>
                                         </p-autoComplete>
+                                        <a matTooltip="Create Item master" style="position: absolute;right: -20px;top: 0;z-index:1;"
+                                           class=""
+                                           [routerLink]="[
+      '/itemmastersmodule/itemmasterpages/app-item-master-stock'
+    ]">
+                                            <i class="fa fa-plus-circle fa-lg"></i>
+                                        </a>
                                     </div>
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">PN Description<strong class="clr-red">*</strong></label>
@@ -136,12 +150,19 @@
                                     </div>
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Revised PN </label>
-                                        <p-autoComplete [(ngModel)]="sourcereceving.changePartNumber" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
+                                        <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcereceving.changePartNumber" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
                                                         [minLength]="1" [dropdown]="true">
                                             <ng-template let-partName1 pTemplate="part">
                                                 <div class="ui-helper-clearfix">{{partName1}}</div>
                                             </ng-template>
                                         </p-autoComplete>
+                                        <a matTooltip="Create Item master" style="position: absolute;right: -20px;top: 0;z-index:1;"
+                                           class=""
+                                           [routerLink]="[
+      '/itemmastersmodule/itemmasterpages/app-item-master-stock'
+    ]">
+                                            <i class="fa fa-plus-circle fa-lg"></i>
+                                        </a>
                                     </div>
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Serialized</label>
@@ -150,7 +171,7 @@
                                         </div>
 
                                         <div *ngIf="sourcereceving.isSerialized" class="serialized-block">
-                                            <hr>
+                                      
                                             <div class="form-group col-sm-12">
                                                 <label class="control-label col-sm-4">Serial Number </label>
                                                 <div class="col-sm-8">
@@ -193,7 +214,7 @@
 
 
                                     <div class="clear"></div>
-                                    <div class="form-group col-sm-12">
+                                    <div class="form-group col-sm-10">
                                         <label class="control-label col-sm-4">QTY</label>
                                         <div class="col-sm-8">
                                             <input class="form-control qty-input" *ngIf="showNormalQuantity" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.quantity">
@@ -223,7 +244,7 @@
 
 
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Warehouse</label>
+                                        <label class="control-label col-sm-4">Warehouse<strong class="clr-red">*</strong></label>
                                         <div class="col-sm-8">
                                             <select style="border-radius:5px;" [(ngModel)]="sourcereceving.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(sourcereceving.warehouseId)">
                                                 <option>--Select</option>
@@ -232,7 +253,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Location</label>
+                                        <label class="control-label col-sm-4">Location<strong class="clr-red">*</strong></label>
                                         <div class="col-sm-8">
                                             <select style="border-radius:5px;" [(ngModel)]="sourcereceving.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(sourcereceving.locationId)">
                                                 <option>--Select</option>
@@ -260,7 +281,7 @@
                                     </div>
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Owner</label>
-                                        <div class="col-sm-8">
+                                        <div class="col-sm-8 add-icon-inline-right">
                                             <select style="border-radius:5px;" id="obtainFrom" [(ngModel)]="sourcereceving.ownerType" [ngModelOptions]="{standalone: true}" class="form-control" (change)="getOwnerType(sourcereceving.ownerType)">
                                                 <option>--Select--</option>
                                                 <option value="1">Customer</option>
@@ -268,6 +289,13 @@
                                                 <option value="3">Vendor</option>
                                                 <option value="4">Company</option>
                                             </select>
+                                            <a matTooltip="Create Customer" style="position: absolute;right: -20px;top: 0;z-index:1;"
+                                               class=""
+                                               [routerLink]="[
+      '/customersmodule/customerpages/app-customer-create'
+    ]">
+                                                <i class="fa fa-plus-circle fa-lg"></i>
+                                            </a>
                                         </div>
                                         <div class="form-group col-sm-12" *ngIf="showCustomer2">
                                             <label class="control-label col-sm-4"></label>
@@ -320,7 +348,7 @@
                                         <div class="form-group col-sm-12" *ngIf="showCustomer">
                                             <label class="control-label col-sm-4"></label>
                                             <div class="inner-addon inline-block display-flex" *ngIf="sourcereceving.traceableToType == 1">
-                                                <select [(ngModel)]="sourcereceving.traceableTo" [ngModelOptions]="{standalone: true}">
+                                                <select style="border-radius:5px;" [(ngModel)]="sourcereceving.traceableTo" [ngModelOptions]="{standalone: true}">
                                                     <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
                                                 </select>
                                             </div>
@@ -334,7 +362,7 @@
                                         <div class="form-group col-sm-12" *ngIf="showVendor">
                                             <label class="control-label col-sm-4"></label>
                                             <div class="inner-addon inline-block display-flex" *ngIf="sourcereceving.traceableToType == 3">
-                                                <select [(ngModel)]="sourcereceving.traceableTo" [ngModelOptions]="{standalone: true}">
+                                                <select style="border-radius:5px;" [(ngModel)]="sourcereceving.traceableTo" [ngModelOptions]="{standalone: true}">
                                                     <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                                                 </select>
                                             </div>
@@ -342,7 +370,7 @@
                                         <div class="form-group col-sm-12" *ngIf="showCompany">
                                             <label class="control-label col-sm-4"></label>
                                             <div class="col-sm-8" *ngIf="sourcereceving.traceableToType == 4">
-                                                <select [(ngModel)]="sourcereceving.traceableTo" [ngModelOptions]="{standalone: true}">
+                                                <select style="border-radius:5px;" [(ngModel)]="sourcereceving.traceableTo" [ngModelOptions]="{standalone: true}">
                                                     <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.code">{{ataName.code}}</option>
                                                 </select>
                                             </div>
@@ -367,7 +395,7 @@
                                         <div class="form-group col-sm-12" *ngIf="showCustomer1">
                                             <label class="control-label col-sm-4"></label>
                                             <div class="inner-addon inline-block display-flex" *ngIf="sourcereceving.obtainFromType == 1">
-                                                <select [(ngModel)]="sourcereceving.obtainFrom" [ngModelOptions]="{standalone: true}">
+                                                <select style="border-radius:5px;" [(ngModel)]="sourcereceving.obtainFrom" [ngModelOptions]="{standalone: true}">
                                                     <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
                                                 </select>
                                             </div>
@@ -436,7 +464,7 @@
                                         </div>
                                     </div>
                                     <div *ngIf="this.sourcereceving.isTimeLife" class="timelife-block">
-                                        <hr>
+                                     
                                         <div class="form-group col-sm-12">
                                             <label class="control-label col-sm-4">Date</label>
                                             <div class="col-sm-8">
@@ -552,7 +580,7 @@
                                     </div>
                                 </div>
                                 <div class="clear"></div>
-                                <hr>
+                            
                                 <!--<a class="btn btn-success pull-right" (click)="saveCustomerwork()">Submit</a>-->
                             </div>
 

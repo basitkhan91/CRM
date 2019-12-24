@@ -586,8 +586,8 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                workOrderQuote.WorkOrderQuoteId = unitOfWork.WorkOrderRepository.CreateWorkOrderQuote(workOrderQuote);
-                return Ok(workOrderQuote);
+                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderQuote(workOrderQuote);
+                return Ok(result);
             }
             else
             {
@@ -601,8 +601,8 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                unitOfWork.WorkOrderRepository.UpdateWorkOrderQuote(workOrderQuote);
-                return Ok(workOrderQuote);
+               var result= unitOfWork.WorkOrderRepository.UpdateWorkOrderQuote(workOrderQuote);
+                return Ok(result);
             }
             else
             {

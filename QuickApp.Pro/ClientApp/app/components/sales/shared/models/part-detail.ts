@@ -22,6 +22,7 @@ export class PartDetail {
     method:string;
     serialNumber: string;
     pmaStatus:string;
+    idNumber:string;
 
     salesPricePerUnit: number;
     markupPerUnit: number;

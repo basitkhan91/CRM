@@ -81,18 +81,35 @@ export class AddSalesPartNumberComponent implements OnInit {
     //this.parts[0].isSelected = true;
     this.salesQuoteService.updateSearchPartResult(this.parts);
   }
+  updateQuantiy(){
+    let qtyOnHand = 0;
+    let qtyAvailable = 0;
+    for (let i = 0; i < this.parts.length; i++) {
+      qtyAvailable = qtyAvailable + this.parts[i].qtyAvailable;
+      qtyOnHand = qtyOnHand + this.parts[i].qtyOnHand;
+    }
+    this.query.partSearchParamters.qtyAvailable = qtyAvailable;
+    this.query.partSearchParamters.qtyOnHand = qtyOnHand;
+    this.salesQuoteService.updateSearchPartObject(this.query);
+    console.log(this.parts);
+  }
 
   onSearchTypeChange(type: ItemSearchType) {
     this.searchType = type;
   }
 
-  onShowModalMargin(event: any) {
+  /*onShowModalMargin(event: any) {
     this.showModalMargin = event.checked;
     if (this.showMarginDetails) {
       this.part = event.part;
      
       setTimeout(this.showMarginDetails, 100);
     }
+  }*/
+
+  onShowModalMargin(part: any) {
+    console.log(part);
+    this.select.emit(part);
   }
 
   onSelect(part: any) {

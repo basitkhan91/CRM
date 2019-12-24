@@ -89,6 +89,7 @@ export class SalesQuoteCreateComponent implements OnInit {
     console.log(`customer id: ${this.customerId}`);
   
 
+    this.salesQuoteService.resetSalesOrderQuote();
     this.salesQuoteService
     .getSalesOrderQuteInstance()
     .subscribe(data => {
@@ -372,10 +373,11 @@ onSaveDescription() {
     //this.salesQuoteService.create
     //input parameter: ISalesQuoteView
     console.log(this.salesQuote);
-    if (!(this.salesQuote.quoteTypeId!=0 && this.salesQuote.openDate && this.salesQuote.customerRequestDate
-      && this.salesQuote.customerPromisedDate && this.salesQuote.estimatedShipDate && this.salesQuote.validForDays!=0
-      && this.salesQuote.quoteExpiryDate && this.salesQuote.priorityId!=0 && this.salesQuote.accountTypeId!=0 && this.salesQuote.customerContactId!=0
-      && this.salesQuote.customerReferenceName  && this.salesQuote.employeeId!=0  && this.salesQuote.currencyId!=0)) {
+    console.log(this.salesQuote.quoteTypeId);
+    if (!(this.salesQuote.openDate && this.salesQuote.customerRequestDate
+      && this.salesQuote.customerPromisedDate && this.salesQuote.estimatedShipDate
+      && this.salesQuote.quoteExpiryDate
+      && this.salesQuote.customerReferenceName)) {
       this.display = true;
   }else{
     this.display = false;

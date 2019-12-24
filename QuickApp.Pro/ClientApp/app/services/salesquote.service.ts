@@ -69,6 +69,11 @@ export class SalesQuoteService {
 
     });
   }
+  resetSalesOrderQuote(){
+    this.approvers = [];
+    this.selectedParts = [];
+    this.salesOrderQuote = new SalesOrderQuote();
+  }
 
   getSelectedParts() {
     return Observable.create(observer => {
