@@ -398,7 +398,12 @@ export class TaxRateComponent implements OnInit {
     }
     viewSelectedRow(rowData) {
         //console.log(rowData);
-        this.viewRowData = rowData;
+        let data = 
+            {
+                ...rowData,
+            taxTypeName: editValueAssignByCondition('description', rowData.taxTypeId),
+            };
+        this.viewRowData = data;
     }
     resetViewData() {
         this.viewRowData = undefined;
