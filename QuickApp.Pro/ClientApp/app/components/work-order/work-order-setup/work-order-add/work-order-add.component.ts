@@ -70,8 +70,10 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     @Input() showTabsGrid = false;
     @Input() workOrderId;
     @Input() currencyList;
+    @Input() legalEntityList;
     @Input() workFlowWorkOrderId = 0;
     @Input() showGridMenu = false;
+
 
     // @Output() viewWorkFlow = new EventEmitter();
 
@@ -169,7 +171,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     workOrderExclusionsList: Object;
     isEditLabor: boolean = false;
     // mpnId: any;
-    billing: Billing;
+    billing: Billing = new Billing();
     loginDetailsForCreate: any;
     workOrderPartNumberId: any;
     isEditBilling: boolean = false;
@@ -187,7 +189,15 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     subTabMainComponent: any = '';
     mpnGridData: any;
     showTabsMPNGrid: boolean = false;
-
+    businessUnitList: any;
+    divisionList: any;
+    departmentList: any;
+    managementStructure = {
+        companyId: null,
+        buId: null,
+        divisionId: null,
+        departmentId: null,
+    }
 
 
 
@@ -253,6 +263,19 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 console.log(this.workOrderGeneralInformation);
                 this.getWorkOrderQuoteDetail(this.workOrderGeneralInformation.workOrderId, this.workOrderGeneralInformation.workFlowWorkOrderId);
                 const data = this.workOrderGeneralInformation;
+                this.commonService.getManagementStructureDetails(data.managementStructureId).subscribe(res => {
+                    this.selectedLegalEntity(res.Level1);
+                    this.selectedBusinessUnit(res.Level2);
+                    this.selectedDivision(res.Level3);
+                    this.selectedDepartment(res.Level4);
+                    this.managementStructure = {
+                        companyId: res.Level1 !== undefined ? res.Level1 : null,
+                        buId: res.Level2 !== undefined ? res.Level2 : null,
+                        divisionId: res.Level3 !== undefined ? res.Level3 : null,
+                        departmentId: res.Level4 !== undefined ? res.Level4 : null,
+                    }
+
+                })
                 this.workOrderGeneralInformation = {
                     ...data,
                     workOrderTypeId: String(data.workOrderTypeId),
@@ -261,6 +284,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                     customerId: data.customerDetails,
                     employeeId: getObjectById('value', data.employeeId, this.employeesOriginalData),
                     salesPersonId: getObjectById('value', data.employeeId, this.employeesOriginalData),
+
                     partNumbers: data.partNumbers.map((x, index) => {
 
                         this.getRevisedpartNumberByItemMasterId(x.masterPartId, index);
@@ -366,19 +390,19 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     selectCustomer(object, currentRecord) {
         currentRecord.customerReference = object.customerRef,
-        currentRecord.csr = object.csrName;
+            currentRecord.csr = object.csrName;
         currentRecord.creditLimit = object.creditLimit;
         currentRecord.creditTermsId = object.creditTermsId;
 
     }
-    viewCustomerDetails(customerId){
-           
-    console.log();
-    this.modal = this.modalService.open(CustomerViewComponent, { size: 'lg' });
-    this.modal.componentInstance.customerId = customerId;
-    this.modal.result.then(() => {
-        console.log('When user closes');
-    }, () => { console.log('Backdrop click') })
+    viewCustomerDetails(customerId) {
+
+        console.log();
+        this.modal = this.modalService.open(CustomerViewComponent, { size: 'lg' });
+        this.modal.componentInstance.customerId = customerId;
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
     }
 
     clearautoCompleteInput(currentRecord, field) {
@@ -445,6 +469,39 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     }
 
+    selectedLegalEntity(legalEntityId) {
+        if (legalEntityId) {
+            this.workOrderGeneralInformation.managementStructureId = legalEntityId;
+            this.commonService.getBusinessUnitListByLegalEntityId(legalEntityId).subscribe(res => {
+                this.businessUnitList = res;
+            })
+        }
+
+    }
+    selectedBusinessUnit(businessUnitId) {
+        if (businessUnitId) {
+            this.workOrderGeneralInformation.managementStructureId = businessUnitId;
+            this.commonService.getDivisionListByBU(businessUnitId).subscribe(res => {
+                this.divisionList = res;
+            })
+        }
+
+    }
+    selectedDivision(divisionUnitId) {
+        if (divisionUnitId) {
+            this.workOrderGeneralInformation.managementStructureId = divisionUnitId;
+            this.commonService.getDepartmentListByDivisionId(divisionUnitId).subscribe(res => {
+                this.departmentList = res;
+            })
+        }
+
+    }
+    selectedDepartment(departmentId) {
+        if (departmentId) {
+            this.workOrderGeneralInformation.managementStructureId = departmentId;
+        }
+    }
+
     toggleDisplayMode(): void {
         this.isDetailedView = !this.isDetailedView;
     }
@@ -484,6 +541,10 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         }
 
         this.gridActiveTab = '';
+        this.subTabOtherOptions = '';
+        this.subTabMainComponent = '';
+
+
     }
 
     deleteMPN(index) {
@@ -1190,6 +1251,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
     otherOptionTabSelected(value) {
+        this.subTabWorkFlow = '';
+        this.subTabMainComponent = '';
         this.subTabOtherOptions = value;
         if (value === 'charges') {
             this.getChargesListByWorkOrderId();
@@ -1341,8 +1404,6 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 shipAccountInfo: res.shippingAccountinfo
             }
             this.isEditBilling = true;
-            console.log(this.billing);
-
         }, error => {
             this.getCustomerDetailsFromHeader();
         })
@@ -1464,15 +1525,15 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         this.billing.totalWorkOrderCost = (this.billing.materialCost + this.billing.laborOverHeadCost + this.billing.miscChargesCost);
     }
 
-    getWorkOrderQuoteDetail(workOrderId, workFlowWorkOrderId){
+    getWorkOrderQuoteDetail(workOrderId, workFlowWorkOrderId) {
         this.quoteService.getWorkOrderQuoteDetail(workOrderId, workFlowWorkOrderId)
-        .subscribe(
-            (res:any) => {
-                if(res){
-                    this.workOrderQuoteId = res.workOrderQuote.workOrderQuoteId;
+            .subscribe(
+                (res: any) => {
+                    if (res) {
+                        this.workOrderQuoteId = res.workOrderQuote.workOrderQuoteId;
+                    }
                 }
-            }
-        )
+            )
     }
 
 

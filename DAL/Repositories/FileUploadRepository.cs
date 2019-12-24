@@ -791,7 +791,7 @@ namespace DAL.Repositories
             foreach (var item in ConditionList)
             {
 
-                var flag = _appContext.Condition.Any(p => p.IsDelete == false && !string.IsNullOrEmpty(p.Description)
+                var flag = _appContext.Condition.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.Description)
                 && !string.IsNullOrEmpty(p.Description) &&
                 p.Description.ToLower() == item.Description.Trim().ToLower());
                 if (!flag)

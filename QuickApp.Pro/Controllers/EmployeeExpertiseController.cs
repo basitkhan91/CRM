@@ -131,5 +131,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(auditResult);
         }
 
+
+        [HttpPost("uploaduomcustomdata")]
+        public IActionResult EmployeeExpertiseCustomData()
+        {
+            var result = _unitOfWork.EmployeeExpertise.UploadEmployeeExpertiseCustomData(Request.Form.Files[0]);
+            return Ok(result);
+        }
+
     }
 }
