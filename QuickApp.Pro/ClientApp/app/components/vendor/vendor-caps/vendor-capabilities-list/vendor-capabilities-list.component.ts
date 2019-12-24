@@ -46,6 +46,13 @@ export class VendorCapabilitiesListComponent implements OnInit{
     selectedColumn: any;
     capabilityauditHisory: any[];
     vendorCapesGeneralInfo: any = {};
+    aircraftListDataValues: any;
+    colsaircraftLD: any[] = [
+        { field: "aircraft", header: "Aircraft" },
+        { field: "model", header: "Model" },
+        { field: "dashNumber", header: "Dash Numbers" },
+        { field: "memo", header: "Memo" }
+	];
 
     constructor(private vendorService: VendorService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService, private vendorCapesService: VendorCapabilitiesService)
     {
@@ -293,7 +300,16 @@ export class VendorCapabilitiesListComponent implements OnInit{
 
 	getVendorCapesAircraftView(vendorCapesId) {
 		this.vendorCapesService.getVendorAircraftGetDataByCapsId(vendorCapesId).subscribe(res => {
-			console.log(res);
+            console.log(res);
+            this.aircraftListDataValues = res.map(x => {
+                return {
+                    ...x,
+                    aircraft: x.aircraftType,
+                    model: x.aircraftModel,
+                    dashNumber: x.dashNumber,
+                    memo: x.memo,
+                }
+            })
 		})
 	}
 
