@@ -1,5 +1,6 @@
 ﻿import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog, SELECT_MULTIPLE_PANEL_PADDING_X } from '@angular/material';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { DOCUMENT } from '@angular/common';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { MasterCompany } from '../../../models/mastercompany.model';
@@ -13,7 +14,7 @@ import { Integration } from '../../../models/integration.model';
 import { IntegrationService } from '../../../services/integration-service';
 import { ItemClassificationService } from '../../../services/item-classfication.service';
 import { ItemClassificationModel } from '../../../models/item-classification.model';
-import { OnInit, AfterViewInit, Component, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { OnInit, AfterViewInit, Component, ViewChild, ChangeDetectorRef, Inject } from '@angular/core';
 import { Itemgroup } from '../../../models/item-group.model';
 import { ItemGroupService } from '../../../services/item-group.service';
 import { Provision } from '../../../models/provision.model';
@@ -390,6 +391,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     selectedCapabilityTypes: any = [];
     capeBldList: any = [];
     distinctAtaList: any[] = [];
+    listOfErrors: any = [];
 
     // errorLogForPS: string = '';
 
@@ -400,7 +402,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         public priority: PriorityService, public inteService: IntegrationService,
         public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService,
         public proService: ProvisionService, private dialog: MatDialog,
-        private masterComapnyService: MasterComapnyService, public commonService: CommonService) {
+        private masterComapnyService: MasterComapnyService, public commonService: CommonService, @Inject(DOCUMENT) document) {
         this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-stock';
         this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
         this.displayedColumns.push('action');
@@ -559,6 +561,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     capesListDataValues: any;
 
     ngOnInit(): void {
+        alert(1);
         this.ataform = this.fb.group({
             atanumber: new FormControl('', Validators.required),
             atasubchaptername: new FormControl('', Validators.required)
@@ -4650,152 +4653,186 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.tempOEMpartNumberId = value.itemMasterId;
     }
 
-    saveItemMasterGeneralInformation() {
-        if (!(this.sourceItemMaster.partNumber && this.sourceItemMaster.partDescription && this.sourceItemMaster.purchaseUnitOfMeasureId && this.sourceItemMaster.glAccountId && this.sourceItemMaster.manufacturerId && this.sourceItemMaster.itemClassificationId)) {
-            console.log("this.sourceItemMaster.itemClassificationId before form save:::", this.sourceItemMaster.itemClassificationId);
-            this.display = true;
+    saveItemMasterGeneralInformation(addCustomerWorkForm) {
+        var testvar;
+        let errors;
+        console.log(addCustomerWorkForm, "addCustomerWorkForm+++")
+        this.listOfErrors = [];
+        if(addCustomerWorkForm.status === "INVALID"){
+
+            Object.keys(addCustomerWorkForm.controls).map(key => {
+
+                errors = addCustomerWorkForm.controls[key].errors;
+               if (errors === null) { return null; }
+            console.log(errors, "errors+++")
+            console.log(key, "key+++")
+               if (errors['required']) {   
+                 console.log(key, "key+++++")
+                 let titlevalue = key;
+                 if(document.getElementById(key)){
+                     titlevalue = document.getElementById(key).getAttribute('title');
+                 }
+                 
+                   this.listOfErrors.push(`${titlevalue} is required`); //test
+                 // return 
+               } else {
+               this.listOfErrors.push(`${key} has an unknown error`);
+                 // return `${key} has an unknown error`;
+               }
+             });
+             console.log(this.listOfErrors);
+             this.display = true;
             this.modelValue = true;
+             return false
+
+        // console.log(addCustomerWorkForm, "addCustomerWorkForm++++++++++");
+        // if (!(this.sourceItemMaster.partNumber && this.sourceItemMaster.partDescription && this.sourceItemMaster.purchaseUnitOfMeasureId && this.sourceItemMaster.glAccountId && this.sourceItemMaster.manufacturerId && this.sourceItemMaster.itemClassificationId)) {
+        //     console.log("this.sourceItemMaster.itemClassificationId before form save:::", this.sourceItemMaster.itemClassificationId);
+        //     this.display = true;
+        //     this.modelValue = true;
         } else {
-
-            this.isSaving = true;
-            if (!this.isItemMasterCreated) //for create ItemMaster
-
-            {
-                this.oemPnData = this.sourceItemMaster.oemPNId;
-                this.sourceItemMaster.createdBy = this.userName;
-                this.sourceItemMaster.updatedBy = this.userName;
-                this.sourceItemMaster.masterCompanyId = 1;
-                this.sourceItemMaster.itemTypeId = 1;
+            alert(789)
 
 
-                if (this.selectedIntegrationTypes != null) {
+        //     this.isSaving = true;
+        //     if (!this.isItemMasterCreated) //for create ItemMaster
 
-                    this.sourceItemMaster.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
-                }
-
-                if (this.sourceItemMaster.isPma) {
-                    this.sourceItemMaster.oemPNId = this.tempOEMpartNumberId;
-                }
-                this.itemser.newItemMaster(this.sourceItemMaster).subscribe(data => {
-
-                    this.sourceItemMaster.oemPNId = this.oemPnData;
-
-                    this.tempOEMpartNumberId = null;
-
-                    this.ManufacturerValue = data.manufacturer.name;
-                    // check whether response it there or not 
-                    if (data != null) {
-                        this.ItemMasterId = data.itemMasterId;
-                        if (this.isSaveCapes == true) {
-                            this.saveCapabilities();
-                        }
-                    }
-
-                    // // get aircraft Mapped Information by ItemMasterId
-                    // this.itemser.getMappedAirCraftDetails(this.ItemMasterId).subscribe(data => {
-                    //     this.aircraftListDataValues = data.map(x => {
-                    //         return {
-                    //             aircraft: x.aircraftType,
-                    //             model: x.aircraftModel,
-                    //             dashNumber: x.dashNumber,
-                    //             memo: x.memo,
-                    //         }
-                    //     })
-                    // })
-
-                    this.isItemMasterCreated = true;
-                    // go to next tab
-                    this.changeOfTab('AircraftInfo');
-                    // response Data after save 
-                    this.collectionofItemMaster = data;
-
-                    this.savesuccessCompleted(this.sourceItemMaster);
-
-                    this.alertService.startLoadingMessage();
-                    this.AddCustomerAircraftdata(this.collectionofItemMaster); //passing ItemMaster Saved Collection for Stote Aircraft Data                                    
-                    // this.value = 1;
-                    // this.activeTab = 2;
-                    this.moveAircraftInformation();
-
-                })
+        //     {
+        //         this.oemPnData = this.sourceItemMaster.oemPNId;
+        //         this.sourceItemMaster.createdBy = this.userName;
+        //         this.sourceItemMaster.updatedBy = this.userName;
+        //         this.sourceItemMaster.masterCompanyId = 1;
+        //         this.sourceItemMaster.itemTypeId = 1;
 
 
+        //         if (this.selectedIntegrationTypes != null) {
 
-                // if (this.selectedAircraftTypes != null) //separting Array whic is having ","
-                // {
-                // this.sourceItemMaster.AircraftTypeId = this.selectedAircraftTypes.toString().split(",");
-                // }
+        //             this.sourceItemMaster.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
+        //         }
 
-                // if (this.selectedIntegrationTypes != null) //separting Array which is having ","
-                // {
-                //     this.sourceItemMaster.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
-                // }
+        //         if (this.sourceItemMaster.isPma) {
+        //             this.sourceItemMaster.oemPNId = this.tempOEMpartNumberId;
+        //         }
+        //         this.itemser.newItemMaster(this.sourceItemMaster).subscribe(data => {
+
+        //             this.sourceItemMaster.oemPNId = this.oemPnData;
+
+        //             this.tempOEMpartNumberId = null;
+
+        //             this.ManufacturerValue = data.manufacturer.name;
+        //             // check whether response it there or not 
+        //             if (data != null) {
+        //                 this.ItemMasterId = data.itemMasterId;
+        //                 if (this.isSaveCapes == true) {
+        //                     this.saveCapabilities();
+        //                 }
+        //             }
+
+        //             // // get aircraft Mapped Information by ItemMasterId
+        //             // this.itemser.getMappedAirCraftDetails(this.ItemMasterId).subscribe(data => {
+        //             //     this.aircraftListDataValues = data.map(x => {
+        //             //         return {
+        //             //             aircraft: x.aircraftType,
+        //             //             model: x.aircraftModel,
+        //             //             dashNumber: x.dashNumber,
+        //             //             memo: x.memo,
+        //             //         }
+        //             //     })
+        //             // })
+
+        //             this.isItemMasterCreated = true;
+        //             // go to next tab
+        //             this.changeOfTab('AircraftInfo');
+        //             // response Data after save 
+        //             this.collectionofItemMaster = data;
+
+        //             this.savesuccessCompleted(this.sourceItemMaster);
+
+        //             this.alertService.startLoadingMessage();
+        //             this.AddCustomerAircraftdata(this.collectionofItemMaster); //passing ItemMaster Saved Collection for Stote Aircraft Data                                    
+        //             // this.value = 1;
+        //             // this.activeTab = 2;
+        //             this.moveAircraftInformation();
+
+        //         })
 
 
-            }
-            else if (this.isItemMasterCreated || this.itemMasterId) //for Edit Screen
 
-            {
+        //         // if (this.selectedAircraftTypes != null) //separting Array whic is having ","
+        //         // {
+        //         // this.sourceItemMaster.AircraftTypeId = this.selectedAircraftTypes.toString().split(",");
+        //         // }
 
-                const itemMasterId = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-                // takes copy of current object to reassign to UI after submit data only on create edit Method
+        //         // if (this.selectedIntegrationTypes != null) //separting Array which is having ","
+        //         // {
+        //         //     this.sourceItemMaster.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
+        //         // }
 
 
-                this.oemPnData = this.sourceItemMaster.oemPNId;
+        //     }
+        //     else if (this.isItemMasterCreated || this.itemMasterId) //for Edit Screen
+
+        //     {
+
+        //         const itemMasterId = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
+        //         // takes copy of current object to reassign to UI after submit data only on create edit Method
 
 
-                if (this.selectedIntegrationTypes != null) //separting Array whic is having ","
-                {
-                    this.sourceItemMaster.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
-                }
-                this.sourceItemMaster.updatedBy = this.userName;
-                this.sourceItemMaster.masterCompanyId = 1;
-                this.sourceItemMaster.itemTypeId = 1;
+        //         this.oemPnData = this.sourceItemMaster.oemPNId;
 
-                if (this.sourceItemMaster.isPma) {
-                    // checks whether the Change of Data is Happened or not if not and its is in edit mode binds the old data id if not edit and no change it will get the old create oemPnID
-                    this.sourceItemMaster.oemPNId = this.tempOEMpartNumberId === null ? this.isEdit === true ? this.sourceItemMaster.oemPNId.itemMasterId : this.oemPnData.itemMasterId : this.tempOEMpartNumberId;
-                }
 
-                this.sourceItemMaster.itemMasterId = itemMasterId;
-                // Destructing the Object in Services Place Apply Changes there also 
-                this.itemser.updateItemMaster(this.sourceItemMaster).subscribe(data => {
+        //         if (this.selectedIntegrationTypes != null) //separting Array whic is having ","
+        //         {
+        //             this.sourceItemMaster.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
+        //         }
+        //         this.sourceItemMaster.updatedBy = this.userName;
+        //         this.sourceItemMaster.masterCompanyId = 1;
+        //         this.sourceItemMaster.itemTypeId = 1;
 
-                    this.sourceItemMaster.oemPNId = this.oemPnData;
-                    this.tempOEMpartNumberId = null;
-                    this.changeOfTab('AircraftInfo');
-                    this.collectionofItemMaster = data;
-                    this.saveCompleted(this.sourceItemMaster);
-                    if (data != null) {
-                        if (data.partId && data.itemMasterId) {
-                            if (this.manfacturerAircraftmodelsarray.length >= 0) {
-                                this.savemfginfo(data.partId, data.itemMasterId, this.manfacturerAircraftmodelsarray);
-                            }
-                            if (this.distributionAircraftmodelsarray.length >= 0) {
-                                this.saveDistrbution(data.partId, data.itemMasterId, this.distributionAircraftmodelsarray);
-                            }
+        //         if (this.sourceItemMaster.isPma) {
+        //             // checks whether the Change of Data is Happened or not if not and its is in edit mode binds the old data id if not edit and no change it will get the old create oemPnID
+        //             this.sourceItemMaster.oemPNId = this.tempOEMpartNumberId === null ? this.isEdit === true ? this.sourceItemMaster.oemPNId.itemMasterId : this.oemPnData.itemMasterId : this.tempOEMpartNumberId;
+        //         }
 
-                            if (this.overhaulAircraftmodelsarray.length >= 0) {
-                                this.saveovhinfo(data.partId, data.itemMasterId, this.overhaulAircraftmodelsarray);
-                            }
-                            if (this.repairAircraftmodelsarray.length >= 0) {
-                                this.saverepairinfo(data.partId, data.itemMasterId, this.repairAircraftmodelsarray);
-                            }
-                            if (this.certificationarrayAircraftmodelsarray.length >= 0) {
-                                this.savecertification(data.partId, data.itemMasterId, this.certificationarrayAircraftmodelsarray);
-                            }
-                            if (this.exchangeAircraftmodelsarray.length >= 0) {
-                                this.saveexcahneginfo(data.partId, data.itemMasterId, this.exchangeAircraftmodelsarray);
-                            }
-                            if (this.selectedModels.length > 0) {
-                                this.saveAircraftmodelinfo(data.partId, data.itemMasterId, this.selectedModels);
-                            }
-                        }
-                    }
-                    this.alertService.startLoadingMessage();
-                    this.moveAircraftInformation();
-                })
-            }
+        //         this.sourceItemMaster.itemMasterId = itemMasterId;
+        //         // Destructing the Object in Services Place Apply Changes there also 
+        //         this.itemser.updateItemMaster(this.sourceItemMaster).subscribe(data => {
+
+        //             this.sourceItemMaster.oemPNId = this.oemPnData;
+        //             this.tempOEMpartNumberId = null;
+        //             this.changeOfTab('AircraftInfo');
+        //             this.collectionofItemMaster = data;
+        //             this.saveCompleted(this.sourceItemMaster);
+        //             if (data != null) {
+        //                 if (data.partId && data.itemMasterId) {
+        //                     if (this.manfacturerAircraftmodelsarray.length >= 0) {
+        //                         this.savemfginfo(data.partId, data.itemMasterId, this.manfacturerAircraftmodelsarray);
+        //                     }
+        //                     if (this.distributionAircraftmodelsarray.length >= 0) {
+        //                         this.saveDistrbution(data.partId, data.itemMasterId, this.distributionAircraftmodelsarray);
+        //                     }
+
+        //                     if (this.overhaulAircraftmodelsarray.length >= 0) {
+        //                         this.saveovhinfo(data.partId, data.itemMasterId, this.overhaulAircraftmodelsarray);
+        //                     }
+        //                     if (this.repairAircraftmodelsarray.length >= 0) {
+        //                         this.saverepairinfo(data.partId, data.itemMasterId, this.repairAircraftmodelsarray);
+        //                     }
+        //                     if (this.certificationarrayAircraftmodelsarray.length >= 0) {
+        //                         this.savecertification(data.partId, data.itemMasterId, this.certificationarrayAircraftmodelsarray);
+        //                     }
+        //                     if (this.exchangeAircraftmodelsarray.length >= 0) {
+        //                         this.saveexcahneginfo(data.partId, data.itemMasterId, this.exchangeAircraftmodelsarray);
+        //                     }
+        //                     if (this.selectedModels.length > 0) {
+        //                         this.saveAircraftmodelinfo(data.partId, data.itemMasterId, this.selectedModels);
+        //                     }
+        //                 }
+        //             }
+        //             this.alertService.startLoadingMessage();
+        //             this.moveAircraftInformation();
+        //         })
+        //     }
 
 
         }

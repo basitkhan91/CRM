@@ -20,7 +20,7 @@
 
     <div class="clear"></div>
     <br>
-    <form action="#" method="post" id="add-customerwork" name="" class="form-horizontal add-custustomer">
+    <form #addCustomerWorkForm="ngForm"  (submit)="saveItemMasterGeneralInformation(addCustomerWorkForm)"  id="add-customerwork" name="" class="form-horizontal add-custustomer">
         <div class="tab-content form-bg margin0 padding0 ">
             <div class="" id="menu3">
                 <div class="clear"></div>
@@ -99,9 +99,9 @@
                                         </label>
                                     </div>
                                     <div>
-                                        <p-autoComplete [(ngModel)]="sourceItemMaster.partNumber"
-                                                        (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event)"
-                                                        [ngModelOptions]="{standalone: true}" [suggestions]="partCollection"
+                                        <p-autoComplete id="partNumber" title="Part Number" [(ngModel)]="sourceItemMaster.partNumber"
+                                                        (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event)" [name]="partNumber"
+                                                        [required]="true" [suggestions]="partCollection" [ngModelOptions]="{standalone: true}"
                                                         (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
                                                         [dropdown]="true" class="autocomplete-customer">
                                             <ng-template let-partName pTemplate="part">
@@ -155,7 +155,7 @@
 
                                     </div>
                                     <div>                             
-                                        <select name="itemclassification" class="select-drop"
+                                        <select name="itemClassificationId" id="itemClassificationId" title="Item Classification" required class="select-drop"
                                                 [(ngModel)]="sourceItemMaster.itemClassificationId">
                                             <ng-container *ngFor="let itemName of allitemclassificationInfo">
                                                 <option 
@@ -164,7 +164,7 @@
                                                 </option>
                                             </ng-container>
                                         </select>
-                                    </div>
+                                    </div> 
                                     <div class="inline-block display-flex spacing-label">
                                         <label class="control-label">
                                             Item Group
@@ -378,8 +378,8 @@
                                         </label>
                                     </div>
                                     <div>
-                                        <select [ngModelOptions]="{standalone: true}"
-                                                [(ngModel)]="sourceItemMaster.manufacturerId" (change)="getManufacturer(manufacturer)">
+                                        <select  required name="manufacturerId"
+                                                [(ngModel)]="sourceItemMaster.manufacturerId" id="manufacturerId" title="Manufacturer Id" (change)="getManufacturer(manufacturer)">
                                             <ng-container *ngFor="let manufacturer of allManufacturerInfo">
                                                 <option [ngValue]="manufacturer.manufacturerId" *ngIf="manufacturer.isActive">
                                                     {{manufacturer.name}}
@@ -690,7 +690,8 @@
                         <div class="col-sm-6">
                         </div>
                         <div class="col-sm-6">
-                            <button class="btn btn-primary-cstm float-right" pButton type="button" (click)="saveItemMasterGeneralInformation()" icon="pi pi-angle-right" iconPos="right" label="Save & Next" style="padding: 0 !important;"></button>
+                            <button class="btn btn-primary-cstm float-right" pButton type="submit"  icon="pi pi-angle-right" iconPos="right" label="Save & Next" style="padding: 0 !important;"></button>
+                            <!-- <button class="btn btn-primary-cstm float-right" pButton type="button" (click)="saveItemMasterGeneralInformation()" icon="pi pi-angle-right" iconPos="right" label="Save & Next" style="padding: 0 !important;"></button> -->
                         </div>
                     </div>
                 </div>
@@ -2256,7 +2257,12 @@
 
     <h5 [ngStyle]="{'color':'red'}">
         Please Enter (*) Mandatory Fields
+        <!-- <pre>{{listOfErrors | json}}</pre> -->
+        
     </h5>
+    <ul  [ngStyle]="{'color':'red'}">
+        <li *ngFor="let error of listOfErrors">{{error}}</li>
+    </ul>
     <p-footer>
         <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
     </p-footer>
