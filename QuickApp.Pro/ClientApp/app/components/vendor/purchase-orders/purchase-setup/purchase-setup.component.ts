@@ -3609,7 +3609,18 @@ export class PurchaseSetupComponent implements OnInit {
         // else {
         // }       
         // this.workFlowtService.contactCollection = this.local;        
-    }
+	}
+	
+	getFXRate(partList) {
+		console.log(partList);
+		if((partList.reportCurrencyId != null || partList.reportCurrencyId != undefined) && (partList.functionalCurrencyId != null || partList.functionalCurrencyId != undefined)) {
+			const funcCurrency = editValueAssignByCondition('currencyId', partList.functionalCurrencyId);
+			const reportCurrency = editValueAssignByCondition('currencyId', partList.reportCurrencyId);
+			if(funcCurrency == reportCurrency) {
+				partList.foreignExchangeRate = 1;
+			}
+		}
+	}
 
 	// getShipToSiteName(data, id) {
 	// 	this.shipToAddress = {};
