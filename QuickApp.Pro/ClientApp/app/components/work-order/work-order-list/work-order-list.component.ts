@@ -33,7 +33,7 @@ export class WorkOrderListComponent implements OnInit {
     headers = [
         { field: 'workOrderNum', header: 'WorkOrder Number' },
         { field: 'customerName', header: 'Customer Name' },
-        { field: 'customerCode', header: 'customerCode' },
+        { field: 'customerCode', header: 'Customer Code' },
         { field: 'workOrderType', header: 'WorkOrder Type' },
         { field: 'openDate', header: 'Open Date' },
         { field: 'workOrderStatus', header: 'WorkOrder Status' },
