@@ -65,7 +65,7 @@ namespace DAL.Repositories
                                             existingItem.ConventionType == item.ConventionType &&
                                             existingItem.DepreciationMethod == item.DepreciationMethod &&
                                             existingItem.ResidualPercentage == item.ResidualPercentage &&
-                                            existingItem.ResidualValue == item.ResidualValue &&
+                                            //existingItem.ResidualValue == item.ResidualValue &&
                                             existingItem.AssetLife == item.AssetLife &&
                                             existingItem.DepreciationFrequencyId == item.DepreciationFrequencyId &&
                                             existingItem.AcquiredGLAccountId == item.AcquiredGLAccountId &&
@@ -84,8 +84,9 @@ namespace DAL.Repositories
                 !string.IsNullOrWhiteSpace(item.Description) &&
                 (item?.ConventionType ?? 0) > 0 &&
                 (item?.DepreciationMethod ?? 0) > 0 &&
-                (item?.ResidualPercentage ?? 0) > 0 &&
-                (item?.ResidualValue ?? 0) > 0 &&
+                //(item?.ResidualPercentage ?? 0) > 0 && // Not required as per PAS-818 update
+                //(item?.ResidualValue ?? 0) > 0 && // should not be mandatory as per PAS-818 update
+                //!string.IsNullOrWhiteSpace(item.selectedCompanyIds) &&
                 (item?.AssetLife ?? 0) > 0 &&
                 (item?.DepreciationFrequencyId ?? 0) > 0 &&
                 (item?.AcquiredGLAccountId ?? 0) > 0 &&
@@ -104,6 +105,7 @@ namespace DAL.Repositories
 
             foreach (var item in items)
             {
+                /* // Not need, everything covered in line # 120
                 isItemValid = IsValid(item);
                 if (IsValid(item))
                 {
@@ -114,6 +116,7 @@ namespace DAL.Repositories
                 {
                     item.UploadTag = UploadTag.Invalid;
                 }
+                */
                 item.UploadTag = IsValid(item) ? (IsDuplicate(item, existingItems) ? UploadTag.Duplicate : UploadTag.Unique) : UploadTag.Invalid;
             }
             return items;

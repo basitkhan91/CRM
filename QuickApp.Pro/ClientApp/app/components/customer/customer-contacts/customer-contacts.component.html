@@ -62,21 +62,24 @@
                                     {{col.header}}
                                     <p-sortIcon [field]="col.field"></p-sortIcon>
                                 </th>
-
-                                <th style="width: 130px;"></th>
+                                <th style="width:200px;position:sticky" *ngIf="selectedColumns.length > 0">
+                                   
+                                    Actions
+                                </th>
+                              
 
                             </tr>
                         </ng-template>
 
                         <ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">
-                            <tr [pSelectableRow]="rowData"  data-toggle="modal" data-target="#view" (dblclick)="viewSelectedRow(rowData)"  [ngStyle]="{'background-color' : rowData.isDefaultContact === true ? '#79ffe3'  : 'white'  }" >
+                            <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="viewSelectedRowdbl(viewdbl,rowData)"  [ngStyle]="{'background-color' : rowData.isDefaultContact === true ? '#79ffe3'  : 'white'  }" >
 
 
-                                <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                                <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle style="width:110px">
                                     {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                 </td>
 
-                                <td>
+                                <td style="width:200px" *ngIf="selectedColumns.length > 0">
                                     <p-inputSwitch  name="isActive{{i}}" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                     <!-- <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                     <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch> -->
@@ -212,14 +215,14 @@
       </div>
 
 
-<div #addContactDetails class="modal fade" id="addContactDetails" role="dialog">
-    <div class="modal-dialog">
-        <form #ccForm="ngForm" #addContactForm="ngForm" class="form-horizontal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Add Contact Details</h4>
-                </div>
+<div class="modal fade" id="addContactDetails" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add Contact Details</h4>
+            </div>
+            <form #ccForm="ngForm" #addContactForm="ngForm" class="form-horizontal">
                 <div class="modal-body">
                     <div class="form-row">
                         <div class="col-md-6">
@@ -243,28 +246,28 @@
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
                                     <input type="text" class="form-control" [(ngModel)]="contactInformation.firstName" name="firstName" required>
                                     <!-- <p-autoComplete class="autocomp-customer-cstm"
-                                                [(ngModel)]="contactInformation.firstName"  name="firstName" field="firstName" [suggestions]="firstNamesList" (completeMethod)="filterFirstNames($event)" [size]="30"
-                                                [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required>
+                                        [(ngModel)]="contactInformation.firstName"  name="firstName" field="firstName" [suggestions]="firstNamesList" (completeMethod)="filterFirstNames($event)" [size]="30"
+                                        [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required>
 
 
-                                </p-autoComplete> -->
+                        </p-autoComplete> -->
                                 </div>
                                 <!-- <div *ngIf="disableSaveFirstName" class="clr-red">Entry Already Exists</div> -->
                                 <!-- <div class="form-group col-sm-12 Customer-details-heading" *ngIf="showFirstName">
-                                <p class="fs10">
-                                    Please Enter Required fields
-                                </p>
-                            </div> -->
+                        <p class="fs10">
+                            Please Enter Required fields
+                        </p>
+                    </div> -->
                             </div>
                             <div class="form-group">
                                 <label>Middle Name</label>
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
                                     <input type="text" class="form-control" [(ngModel)]="contactInformation.middleName" name="middleName">
                                     <!-- <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="contactInformation.middleName"
-                                                name="middleName"  [suggestions]="middleNamesList" field="middleName" (completeMethod)="filterMiddleNames($event)" [size]="30"
-                                                [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}">
+                                        name="middleName"  [suggestions]="middleNamesList" field="middleName" (completeMethod)="filterMiddleNames($event)" [size]="30"
+                                        [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}">
 
-                                </p-autoComplete> -->
+                        </p-autoComplete> -->
                                 </div>
 
                                 <!-- <div *ngIf="disableSaveMiddleName" class="clr-red">Entry Already Exists</div> -->
@@ -274,18 +277,18 @@
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
                                     <input type="text" class="form-control" [(ngModel)]="contactInformation.lastName" name="lastName" required>
                                     <!-- <p-autoComplete class="autocomp-customer-cstm"  [(ngModel)]="contactInformation.lastName"
-                                 name="lastName" [suggestions]="lastNamesList" field="lastName" (completeMethod)="filterLastNames($event)"
+                         name="lastName" [suggestions]="lastNamesList" field="lastName" (completeMethod)="filterLastNames($event)"
 
-                                                [size]="30" [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required>
+                                        [size]="30" [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required>
 
-                                </p-autoComplete> -->
+                        </p-autoComplete> -->
                                     <!-- <div *ngIf="disableSaveLastName" class="clr-red">Entry Already Exists</div> -->
                                 </div>
                                 <!-- <div class="form-group col-sm-12 Customer-details-heading" *ngIf="showLastName">
-                                <p class="fs10">
-                                    Please Enter Required fields
-                                </p>
-                            </div> -->
+                        <p class="fs10">
+                            Please Enter Required fields
+                        </p>
+                    </div> -->
                             </div>
                             <div class="form-group">
                                 <label>Suffix</label>
@@ -298,16 +301,16 @@
 
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" >
                                 <label>Title</label>
                                 <input class="form-control" type="text" name="contactTitle" [(ngModel)]="contactInformation.contactTitle">
                             </div>
-                            <div class="form-group">
-                                <label>Work Phone <span class="clr-red">*</span></label>
-                                <div>
-                                    <input class="form-control" type="number" pattern="[0-9]+([-\,][0-9]+)?" name="workPhone" [(ngModel)]="contactInformation.workPhone" style="width: calc(100% - 63px) !important;">
+                            <div class="form-group" style="width:300px;margin-top:20px;">
+                                <label>Work Phone <span class="clr-red" style="margin-right:110px;">*</span></label>
+                                <div class="col-md-12">
+                                    <input class="form-control" type="text"  name="workPhone" [(ngModel)]="contactInformation.workPhone" style="width: calc(62% - 63px) !important;" (keypress)="patternMobilevalidationWithSpl($event)">
                                     -
-                                    <input class="form-control w50" type="text" name="workPhoneExtn" [(ngModel)]="contactInformation.workPhoneExtn">
+                                    <input class="form-control" type="text" name="workPhoneExtn" [(ngModel)]="contactInformation.workPhoneExtn" style="width: calc(62% - 63px) !important;">
                                 </div>
                             </div>
                         </div>
@@ -370,8 +373,9 @@
                     <button type="button" *ngIf="isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" (click)="updateCustomerContact()" [disabled]="!addContactForm.valid ||contactEmail.errors" data-dismiss="modal">Update</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
+        
     </div>
 </div>
 
@@ -416,181 +420,205 @@
       
         </div>
 </div>
-
-
-
-<div id="ATAADD" class="modal fade custom-popup" role="dialog" #ATAADD>
-    <div class="modal-dialog modal-full">
-    
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">×</button>
-          <h4 class="modal-title">Add ATA Information</h4>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="form-row">
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label class="popup-plusicon-cstm"
-                    >ATA Chapter
-                    <a
-                      data-dismiss="modal"
-                      [routerLink]="['/singlepages/singlepages/app-ata-main']"
-                      ><i class="fa fa-plus-circle fa-lg"></i
-                    ></a>
-                  </label>
-                  <p-dropdown
-                    name="ataPopUp"
-                    placeholder="Select ATA Chapter"
-                    class="p-dropdown-custom-md"
-                    [(ngModel)]="add_SelectedId"
-                    (onChange)="getATASubChapterByATAChapter()"
-                    [options]="add_ataChapterList"
-                  ></p-dropdown>
-                </div>
-              </div>
+<ng-template #viewdbl class="modal fade " id="viewdbl" role="dialog">
   
-              <div class="col-md-4">
-                <div class="form-group">
-                  <label
-                    class="popup-plusicon-cstm"
-                    style="width: 170px !important;"
-                    >ATA SubChapters
-                    <a
-                      data-dismiss="modal"
-                      [routerLink]="[
+
+        <div role="dialog">
+         
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" (click)="dismissModel()">&times;</button>
+                        <h4 class="modal-title">Details of Customer Contact</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-sm-12">
+                            <p><span class="label"><b>Tag: </b></span><span class="value">{{sourceViewforContact.tag}}</span></p>
+                            <p><span class="label"><b>Prefix: </b></span><span class="value">{{sourceViewforContact.prefix}}</span></p>
+                            <p><span class="label"><b>First Name: </b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
+                            <p><span class="label"><b>Middle Name: </b></span><span class="value">{{sourceViewforContact.middleName}}</span></p>
+                            <p><span class="label"><b>Last Name: </b></span><span class="value">{{sourceViewforContact.lastName}}</span></p>
+                            <p><span class="label"><b>Suffix: </b></span><span class="value">{{sourceViewforContact.suffix}}</span></p>
+                            <p><span class="label"><b>Title: </b></span><span class="value">{{sourceViewforContact.contactTitle}}</span></p>
+                            <p><span class="label"><b>Work Phone: </b></span><span class="value">{{sourceViewforContact.workPhone}}</span></p>
+                            <p><span class="label"><b>Primary Contact </b></span><span class="value">{{sourceViewforContact.isDefaultContact}}</span></p>
+
+                            <p><span class="label"><b>Email: </b></span><span class="value">{{sourceViewforContact.email}}</span></p>
+                            <p><span class="label"><b>WebSite: </b></span><span class="value">{{sourceViewforContact.websiteURL}}</span></p>
+                            <p><span class="label"><b>Mobile Phone: </b></span><span class="value">{{sourceViewforContact.mobilePhone}}</span></p>
+                            <p><span class="label"><b>Alternate Phone:</b></span><span class="value">{{sourceViewforContact.alternatePhone}}</span></p>
+
+                            <p><span class="label"><b>Fax: </b></span><span class="value">{{sourceViewforContact.fax}}</span></p>
+                            <p><span class="label"><b>Memo: </b></span><span class="value">{{sourceViewforContact.notes}}</span></p>
+                            <p><span class="label"><b>Active: </b></span><span class="value">{{sourceViewforContact.isActive}}</span></p>
+
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+                    </div>
+                </div>
+
+            </div>
+</ng-template>
+
+    <div id="ATAADD" class="modal fade custom-popup" role="dialog" #ATAADD>
+        <div class="modal-dialog modal-full">
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title">Add ATA Information</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="popup-plusicon-cstm">
+                                        ATA Chapter
+                                        <a data-dismiss="modal"
+                                           [routerLink]="['/singlepages/singlepages/app-ata-main']">
+                                            <i class="fa fa-plus-circle fa-lg"></i>
+                                        </a>
+                                    </label>
+                                    <p-dropdown name="ataPopUp"
+                                                placeholder="Select ATA Chapter"
+                                                class="p-dropdown-custom-md"
+                                                [(ngModel)]="add_SelectedId"
+                                                (onChange)="getATASubChapterByATAChapter()"
+                                                [options]="add_ataChapterList"></p-dropdown>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="popup-plusicon-cstm"
+                                           style="width: 170px !important;">
+                                        ATA SubChapters
+                                        <a data-dismiss="modal"
+                                           [routerLink]="[
                         '/singlepages/singlepages/app-ata-sub-chapter1'
-                      ]"
-                      ><i class="fa fa-plus-circle fa-lg"></i></a
-                  ></label>
-                  <p-multiSelect
-                    class="imstock-pmselect"
-                    [options]="add_ataSubChapterList"
-                    [(ngModel)]="add_SelectedModels"
-                    name="popUpATASubchapter"
-                    [panelStyle]="{ minWidth: '12em' }"
-                  ></p-multiSelect>
-                </div>
-              </div>
-  
-              <div class="col-md-2">
-                <button
-                  style="margin-top: 20px;"
-                  type="button"
-                  class="btn btn-primary-cstm"
-                  (click)="addATAMapping()"
-                >
-                  Save
-                </button>
-              </div>
-            </div>
-          </form>
-          <p-table
-          [rows]="6"
-          [value]="ataListDataValues"
-          [scrollable]="true"
-          [style]="{ width: '100%' }"
-          [paginator]="true"
-        >
-          <ng-template pTemplate="header" let-columns>
-            <tr>
-              <!-- <th>Id</th> -->
-              <th *ngFor="let col of ataHeaders">
-                {{ col.header }}
-              </th>
-              <th>Action</th>
-            </tr>
-          </ng-template>
-          <ng-template
-            pTemplate="body"
-            let-i="rowIndex"
-            let-rowData
-            let-columns="columns"
-          >
-            <tr>
-              <!-- <td>{{ i + 1 }}</td> -->
-              <td *ngFor="let col of ataHeaders">
-                {{ rowData[col.field] }}
-              </td>
-              <td>
-                <button
-                  class="btn btn-danger nobg"
-                  (click)="deleteATAMapped(deleteContent1,rowData)"
-                >
-                  <i class="fa fa-trash"></i>
-                </button>
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
+                      ]"><i class="fa fa-plus-circle fa-lg"></i></a>
+                                    </label>
+                                    <p-multiSelect class="imstock-pmselect"
+                                                   [options]="add_ataSubChapterList"
+                                                   [(ngModel)]="add_SelectedModels"
+                                                   name="popUpATASubchapter"
+                                                   [panelStyle]="{ minWidth: '12em' }"></p-multiSelect>
+                                </div>
+                            </div>
 
+                            <div class="col-md-2">
+                                <button style="margin-top: 20px;"
+                                        type="button"
+                                        class="btn btn-primary-cstm"
+                                        (click)="addATAMapping()">
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <p-table [rows]="6"
+                             [value]="ataListDataValues"
+                             [scrollable]="true"
+                             [style]="{ width: '100%' }"
+                             [paginator]="true">
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
+                                <!-- <th>Id</th> -->
+                                <th *ngFor="let col of ataHeaders">
+                                    {{ col.header }}
+                                </th>
+                                <th>Action</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body"
+                                     let-i="rowIndex"
+                                     let-rowData
+                                     let-columns="columns">
+                            <tr>
+                                <!-- <td>{{ i + 1 }}</td> -->
+                                <td *ngFor="let col of ataHeaders">
+                                    {{ rowData[col.field] }}
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger nobg"
+                                            (click)="deleteATAMapped(deleteContent1,rowData)">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
         </div>
+    </div>
+    <ng-template #deleteContent let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+            <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">
-            Close
-          </button>
+            <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
+            <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
         </div>
-      </div>
-    </div>
-  </div>
-<ng-template #deleteContent let-c="close" let-d="dismiss">
-    <div class="modal-header">
-        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
+    </ng-template>
+    <ng-template #deleteContent1 let-c="close" let-d="dismiss">
+        <div class="modal-header">
+            <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+            <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
 
-    <div class="modal-footer">
-        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
-    </div>
-</ng-template>
-<ng-template #deleteContent1 let-c="close" let-d="dismiss">
-    <div class="modal-header">
-        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel1()">Yes</button>
+            <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+        </div>
+    </ng-template>
+    <!-- <ng-template #view class="modal fade" role="dialog">
 
-    <div class="modal-footer">
-        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel1()">Yes</button>
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
-    </div>
-</ng-template>
-<!-- <ng-template #view class="modal fade" role="dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body viewform viewform-cstm">
 
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-                <h4 class="modal-title"></h4>
-            </div>
-            <div class="modal-body viewform viewform-cstm">
+                    <div class="col-sm-12">
+                        <p><span class="label"><b>Prefix: </b></span><span class="value">{{sourceViewforContact.prefix}}</span></p>
+                        <p><span class="label"><b>First Name: </b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
+                        <p><span class="label"><b>Middle Name: </b></span><span class="value">{{sourceViewforContact.middleName}}</span></p>
+                        <p><span class="label"><b>Last Name: </b></span><span class="value">{{sourceViewforContact.lastName}}</span></p>
+                        <p><span class="label"><b>Suffix: </b></span><span class="value">{{sourceViewforContact.suffix}}</span></p>
+                        <p><span class="label"><b>Title: </b></span><span class="value">{{sourceViewforContact.contactTitle}}</span></p>
+                        <p><span class="label"><b>Work Phone: </b></span><span class="value">{{sourceViewforContact.workPhone}}</span></p>
 
-                <div class="col-sm-12">
-                    <p><span class="label"><b>Prefix: </b></span><span class="value">{{sourceViewforContact.prefix}}</span></p>
-                    <p><span class="label"><b>First Name: </b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
-                    <p><span class="label"><b>Middle Name: </b></span><span class="value">{{sourceViewforContact.middleName}}</span></p>
-                    <p><span class="label"><b>Last Name: </b></span><span class="value">{{sourceViewforContact.lastName}}</span></p>
-                    <p><span class="label"><b>Suffix: </b></span><span class="value">{{sourceViewforContact.suffix}}</span></p>
-                    <p><span class="label"><b>Title: </b></span><span class="value">{{sourceViewforContact.contactTitle}}</span></p>
-                    <p><span class="label"><b>Work Phone: </b></span><span class="value">{{sourceViewforContact.workPhone}}</span></p>
+                        <p><span class="label"><b>Email: </b></span><span class="value">{{sourceViewforContact.email}}</span></p>
+                        <p><span class="label"><b>WebSite: </b></span><span class="value">{{sourceViewforContact.websiteURL}}</span></p>
+                        <p><span class="label"><b>Mobile Phone: </b></span><span class="value">{{sourceViewforContact.mobilePhone}}</span></p>
+                        <p><span class="label"><b>Alternate Phone:</b></span><span class="value">{{sourceViewforContact.alternatePhone}}</span></p>
 
-                    <p><span class="label"><b>Email: </b></span><span class="value">{{sourceViewforContact.email}}</span></p>
-                    <p><span class="label"><b>WebSite: </b></span><span class="value">{{sourceViewforContact.websiteURL}}</span></p>
-                    <p><span class="label"><b>Mobile Phone: </b></span><span class="value">{{sourceViewforContact.mobilePhone}}</span></p>
-                    <p><span class="label"><b>Alternate Phone:</b></span><span class="value">{{sourceViewforContact.alternatePhone}}</span></p>
-
-                    <p><span class="label"><b>Fax: </b></span><span class="value">{{sourceViewforContact.fax}}</span></p>
-                    <p><span class="label"><b>Memo: </b></span><span class="value">{{sourceViewforContact.notes}}</span></p>
-                    <div class="clear"></div>
+                        <p><span class="label"><b>Fax: </b></span><span class="value">{{sourceViewforContact.fax}}</span></p>
+                        <p><span class="label"><b>Memo: </b></span><span class="value">{{sourceViewforContact.notes}}</span></p>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
-            </div>
-        </div>
 
-    </ng-template> -->
+        </ng-template> -->

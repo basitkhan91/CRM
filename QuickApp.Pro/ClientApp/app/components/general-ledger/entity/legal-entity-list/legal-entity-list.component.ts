@@ -1,8 +1,5 @@
 ﻿import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { fadeInOut } from '../../../../services/animations';
-import { PageHeaderComponent } from '../../../../shared/page-header.component';
-import * as $ from 'jquery';
-import { LegalEntityEndpontService } from '../../../../services/legalentity-endpoint.service';
 import { AuthService } from '../../../../services/auth.service';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
@@ -14,21 +11,13 @@ import { MasterComapnyService } from '../../../../services/mastercompany.service
 import { MasterCompany } from '../../../../models/mastercompany.model';
 import { CurrencyService } from '../../../../services/currency.service';
 import { Currency } from '../../../../models/currency.model';
-//import { TreeTableModule } from 'primeng/treetable';
 import { TreeNode } from 'primeng/api';
-import { CalendarModule } from 'primeng/calendar';
-import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { SelectButtonModule } from 'primeng/selectbutton';
-import { InputTextModule } from 'primeng/inputtext';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { AutoCompleteModule } from 'primeng/autocomplete';
 import { CustomerService } from '../../../../services/customer.service';
 
 @Component({
-	selector: 'app-entity-edit',
-	templateUrl: './entity-edit.component.html',
-	styleUrls: ['./entity-edit.component.scss'],
+	selector: 'app-legal-entity-list',
+	templateUrl: './legal-entity-list.component.html',
+	styleUrls: ['./legal-entity-list.component.scss'],
 	animations: [fadeInOut]
 })
 /** EntityEdit component*/
@@ -44,18 +33,19 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 	selectedNode1: TreeNode;
 	dataSource: MatTableDataSource<{}>;
 	displayedColumns: any;
+	display: boolean = false;
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	selectedColumn: any;
 	@ViewChild(MatSort) sort: MatSort;
 	loadingIndicator: boolean;
 	currencyName: any;
+	modelValue: boolean = false;
 	cols: any[];
 	allComapnies: MasterCompany[] = [];
 	allATAMaininfo: any[] = [];
 	isSaving: boolean;
 	selectedColumns: any[];
 	selectedColumns1: any[];
-	//selectedColumn: any;
 	isEditMode: boolean = false;
 	isDeleteMode: boolean;
 	public sourceAction: any = [];
@@ -76,7 +66,6 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
     countrycollection: any[];
     disablesave: boolean;
     selectedCountries: any;
-	//selectedNode1: TreeNode
 
 	constructor(
         private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, public currency: CurrencyService, public workFlowtService: LegalEntityService,
@@ -96,7 +85,8 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
         this.sourceLegalEntity.isBalancingEntity = true;
 		this.CurrencyData();
         this.loadData();
-        this.countrylist();
+		this.countrylist();
+		this.loadMasterCompanies();
 	}
 
 	modal: NgbModalRef;
@@ -131,14 +121,12 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 
 		this.cols = [
 			//{ field: 'ataMainId', header: 'ATAMain Id' },
-			{ field: 'name', header: 'Name' },
-			{ field: 'description', header: 'Description' },
+			{ field: 'name', header: 'Company Code' },
+			{ field: 'description', header: 'Company Name' },
+			{ field: 'ledgerName', header: 'Ledger Name' },
+			{ field: 'currencyCode', header: 'Functional Currency' },
 			{ field: 'cageCode', header: 'Cage Code' },
-			{ field: 'doingLegalAs', header: 'Doing Business As' },
 			{ field: 'createdBy', header: 'Created By' },
-			{ field: 'updatedBy', header: 'Updated By' },
-			{ field: 'updatedDate', header: 'Updated Date' },
-			{ field: 'createdDate', header: 'Created Date' }
 		];
 
 		this.selectedColumns = this.cols;
@@ -298,7 +286,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 		this.isDeleteMode = false;
 
 		this.isSaving = true;
-		this.loadMasterCompanies();
+		
 		this.sourceAction = new Currency();
 		this.sourceAction.isActive = true;
 		this.currencyName = "";
@@ -312,35 +300,41 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 	}
 	editItemAndCloseModel() {
 
-		this.isSaving = true;
+		//this.isSaving = true;
 
-        if (!this.sourceLegalEntity.legalEntityId)
-        {
-			this.sourceLegalEntity.createdBy = this.userName;
-			this.sourceLegalEntity.updatedBy = this.userName;
-
-			this.sourceLegalEntity.masterCompanyId = 1;
-            this.workFlowtService.newAddEntity(this.sourceLegalEntity).subscribe(data =>
-            {
-                this.alertService.showMessage('Legal Entity added successfully.');
-                this.loadData();
-
-            });
+		if (!(this.sourceLegalEntity.name && this.sourceLegalEntity.description && this.sourceLegalEntity.reportingCurrencyId && this.sourceLegalEntity.reportingCurrencyId && this.sourceLegalEntity.ledgerName)) {
+			this.display = true;
+			this.modelValue = true;
 		}
-		else {
+		if (this.sourceLegalEntity.name && this.sourceLegalEntity.description && this.sourceLegalEntity.reportingCurrencyId && this.sourceLegalEntity.reportingCurrencyId && this.sourceLegalEntity.ledgerName) {
+			if (!this.sourceLegalEntity.legalEntityId) {
+				this.sourceLegalEntity.createdBy = this.userName;
+				this.sourceLegalEntity.updatedBy = this.userName;
 
-			this.sourceLegalEntity.createdBy = this.userName;
-			this.sourceLegalEntity.updatedBy = this.userName;
-            this.sourceLegalEntity.masterCompanyId = 1;
-            this.workFlowtService.updateEntity(this.sourceLegalEntity).subscribe(data =>
-            {
-                this.alertService.showMessage('Legal Entity updated successfully.');
-                this.loadData();
-            }); 
+				//this.sourceLegalEntity.masterCompanyId = 1;
+				this.workFlowtService.newAddEntity(this.sourceLegalEntity).subscribe(data => {
+					this.alertService.showMessage('Legal Entity added successfully.');
+					this.loadData();
+
+				});
+			}
+			else {
+
+				this.sourceLegalEntity.createdBy = this.userName;
+				this.sourceLegalEntity.updatedBy = this.userName;
+				//this.sourceLegalEntity.masterCompanyId = 1;
+				this.workFlowtService.updateEntity(this.sourceLegalEntity).subscribe(data => {
+					this.alertService.showMessage('Legal Entity updated successfully.');
+					this.loadData();
+				});
+			}
+			if (this.modal) { this.modal.close(); }
+			if (this.modal1) { this.modal1.close(); }
 		}
-		if (this.modal) { this.modal.close();}
-		if (this.modal1) { this.modal1.close();}		
-		
+
+		if (this.display == false) {
+			this.dismissModel();
+		}
 	}
 
 
@@ -364,8 +358,6 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 			this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
 
 		}
-
-		//this.loadData();
 	}
 
 	private saveFailedHelper(error: any) {
@@ -383,6 +375,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 		
 	}
 	openContentEdit(content, row) {
+		this.isEditMode = true;
 		this.GeneralInformation();
 		this.sourceLegalEntity.isBankingInfo = false;
 		this.sourceLegalEntity = row;

@@ -8,6 +8,7 @@ import { CustomerService } from '../../../../services/customer.service';
 import { getObjectById, editValueAssignByCondition } from '../../../../generic/autocomplete';
 import { Billing } from '../../../../models/work-order-billing.model';
 import { getModuleIdByName } from '../../../../generic/enums';
+import { WorkOrderQuoteService } from '../../../../services/work-order/work-order-quote.service';
 
 @Component({
     selector: 'app-work-order-billing',
@@ -16,12 +17,20 @@ import { getModuleIdByName } from '../../../../generic/enums';
     animations: [fadeInOut]
 })
 /** WorkOrderBilling component*/
+
 export class WorkOrderBillingComponent implements OnInit {
     @Input() employeesOriginalData;
-    @Input() billingorInvoiceForm  ;
+    @Input() billingorInvoiceForm;
     @Input() savedWorkOrderData;
     @Input() currencyList;
     @Input() isEditBilling = false;
+    @Input() workOrderQuoteId = 0;
+    @Input() quoteExclusionList;
+    @Input() quoteMaterialList;
+    @Input() quoteFreightsList;
+    @Input() quoteChargesList;
+    @Input() quoteLaborList;
+
     @Output() saveWOBilling = new EventEmitter();
     @Output() updateWOBilling = new EventEmitter();
     employeeList: any;
@@ -46,12 +55,13 @@ export class WorkOrderBillingComponent implements OnInit {
     businessUnitList: any;
     divisionList: any;
     departmentList: any;
-    numberData = [{ label: 1, value: 1 }];
+    markUpList: any;
+    // numberData = [{ label: 1, value: 1 }];
     invoiceTypeList: any;
     shipViaData: any;
 
     constructor(private commonService: CommonService, private workOrderService: WorkOrderService,
-        private customerService: CustomerService
+        private customerService: CustomerService, private quoteService: WorkOrderQuoteService
 
     ) {
 
@@ -63,9 +73,11 @@ export class WorkOrderBillingComponent implements OnInit {
         // this.getCustomerDetailsFromHeader();
         this.getShipViaByCustomerId();
         this.getLegalEntity();
-        this.generateNumbers();
+        // this.generateNumbers();
+        this.getPercentageList();
         this.getInvoiceList();
-        console.log(this.isEditBilling)
+
+
         if (this.isEditBilling) {
             this.getSiteNamesBySoldCustomerId(data.soldToCustomerId);
             this.getSiteNamesByShipCustomerId(data.shipToCustomerId);
@@ -112,13 +124,19 @@ export class WorkOrderBillingComponent implements OnInit {
         }
     }
 
-    generateNumbers() {
-        for (var i = 1; i <= 10; i++) {
-            this.numberData.push({ label: i * 10, value: i * 10 });
-
-        }
-
+    getPercentageList(){
+        this.commonService.smartDropDownList('[Percent]', 'PercentId', 'PercentValue').subscribe(res => {
+            this.markUpList =  res;
+        })
     }
+
+    // generateNumbers() {
+    //     for (var i = 1; i <= 10; i++) {
+    //         this.numberData.push({ label: i * 10, value: i * 10 });
+
+    //     }
+
+    // }
     getInvoiceList() {
         this.commonService.smartDropDownList('InvoiceType', 'InvoiceTypeId', 'Description').subscribe(res => {
             this.invoiceTypeList = res;
@@ -130,6 +148,8 @@ export class WorkOrderBillingComponent implements OnInit {
             this.legalEntityList = res;
         })
     }
+
+
 
 
 
@@ -165,11 +185,8 @@ export class WorkOrderBillingComponent implements OnInit {
         })
     }
     async getSiteNamesBySoldCustomerId(object) {
-        console.log(object);
-
         const { customerId } = object;
         await this.customerService.getCustomerShipAddressGet(customerId).subscribe(res => {
-            console.log(res);
 
             this.soldCustomerShippingOriginalData = res[0];
             this.soldCustomerSiteList = res[0].map(x => {
@@ -205,8 +222,8 @@ export class WorkOrderBillingComponent implements OnInit {
         const data = getObjectById('shippingViaId', value, this.shipViaData);
 
         if (data) {
-            this.billingorInvoiceForm.shipAccountInfo = data.ShippingAccountInfo;
-        }  
+            this.billingorInvoiceForm.shipAccountInfo = data.shippingAccountInfo;
+        }
     }
 
     async  getSiteNamesByShipCustomerId(object) {
@@ -280,12 +297,138 @@ export class WorkOrderBillingComponent implements OnInit {
             this.billingorInvoiceForm.managementStructureId = departmentId;
         }
     }
+
+    resetOtherOptions() {
+        // this.billingorInvoiceForm.totalWorkOrderCost = 0;
+        this.billingorInvoiceForm.totalWorkOrderValue = null;
+        this.billingorInvoiceForm.totalWorkOrderCostPlus = 0;
+
+        if (this.billingorInvoiceForm.totalWorkOrder === true) {
+            this.resetMisCharges();
+            this.resetMaterial();
+            this.resetLaborOverHead();
+            this.calculateTotalWorkOrderCost();
+
+        }
+    }
+
+    calculateTotalWorkOrderCost() {
+        this.sumOfMaterialList();
+        this.sumofCharges();
+        this.sumofLaborOverHead();
+        this.billingorInvoiceForm.totalWorkOrderCost = (this.billingorInvoiceForm.materialCost + this.billingorInvoiceForm.miscChargesCost + this.billingorInvoiceForm.laborOverHeadCost);
+        this.calculateTotalWorkOrderCostPlus(0);
+    }
+
+    calculateTotalWorkOrderCostPlus(value) {
+        const materialCostPlus = this.billingorInvoiceForm.materialCost + ((this.billingorInvoiceForm.materialCost * value) / 100)
+        const misChargeCostPlus = this.billingorInvoiceForm.miscChargesCost + ((this.billingorInvoiceForm.miscChargesCost * value) / 100)
+        const laborOverHeadCostPlus = this.billingorInvoiceForm.laborOverHeadCost + ((this.billingorInvoiceForm.laborOverHeadCost * value) / 100);
+        this.billingorInvoiceForm.totalWorkOrderCostPlus = Math.round(materialCostPlus + misChargeCostPlus + laborOverHeadCostPlus)
+        // this.calculateGrandTotal();
+    }
+
+    resetMaterial() {
+        console.log(this.billingorInvoiceForm.material);
+        if (this.billingorInvoiceForm.material === false || this.billingorInvoiceForm.totalWorkOrder === true) {
+            this.billingorInvoiceForm.material = false
+            this.billingorInvoiceForm.materialValue = null;
+            // this.billingorInvoiceForm.materialCost = 0;
+            this.billingorInvoiceForm.materialCostPlus = 0;
+        } else {
+            this.sumOfMaterialList();
+            this.calculateMaterialCostPlus(0);
+        }
+    }
+
+    resetLaborOverHead() {
+        if (this.billingorInvoiceForm.laborOverHead === false || this.billingorInvoiceForm.totalWorkOrder === true) {
+            this.billingorInvoiceForm.laborOverHead = false
+            this.billingorInvoiceForm.laborOverHeadValue = null;
+            // this.billingorInvoiceForm.miscChargesCost = 0;
+            this.billingorInvoiceForm.laborOverHeadCostPlus = 0;
+        } else {
+            this.sumofLaborOverHead();
+            this.calculateLaborOverHeadCostPlus(0);
+        }
+
+    }
+
+    resetMisCharges() {
+        if (this.billingorInvoiceForm.miscCharges === false || this.billingorInvoiceForm.totalWorkOrder === true) {
+            this.billingorInvoiceForm.miscCharges = false
+            this.billingorInvoiceForm.miscChargesValue = null;
+            // this.billingorInvoiceForm.miscChargesCost = 0;
+            this.billingorInvoiceForm.miscChargesCostPlus = 0;
+        } else {
+            this.sumofCharges();
+            this.calculateMiscChargesCostPlus(0);
+        }
+
+    }
+
+
+
+    sumOfMaterialList() {
+        this.billingorInvoiceForm.materialCost = this.quoteMaterialList.reduce((acc, x) => acc + x.materialCostPlus, 0);
+    }
+    calculateMaterialCostPlus(value) {
+        this.billingorInvoiceForm.materialCostPlus = this.billingorInvoiceForm.materialCost + ((this.billingorInvoiceForm.materialCost * value) / 100);
+        // this.calculateGrandTotal();
+    }
+    sumofLaborOverHead() {
+        this.billingorInvoiceForm.laborOverHeadCost = this.quoteLaborList.reduce((acc, x) => acc + x.labourCostPlus, 0);
+    }
+    calculateLaborOverHeadCostPlus(value) {
+        this.billingorInvoiceForm.laborOverHeadCostPlus = this.billingorInvoiceForm.laborOverHeadCost + ((this.billingorInvoiceForm.laborOverHeadCost * value) / 100);
+    }
+
+
+    sumofCharges() {
+        this.billingorInvoiceForm.miscChargesCost = this.quoteChargesList.reduce((acc, x) => acc + x.chargesCostPlus, 0);
+    }
+    calculateMiscChargesCostPlus(value) {
+        this.billingorInvoiceForm.miscChargesCostPlus = this.billingorInvoiceForm.miscChargesCost + ((this.billingorInvoiceForm.miscChargesCost * value) / 100);
+        // this.calculateGrandTotal();
+    }
+
+    calculateGrandTotal() {
+
+        if (this.billingorInvoiceForm.totalWorkOrder === false) {
+            const materialAmount = this.billingorInvoiceForm.materialValue === null ? this.billingorInvoiceForm.materialCost : this.billingorInvoiceForm.materialCostPlus;
+            const misChargesAmount = this.billingorInvoiceForm.miscChargesValue === null ? this.billingorInvoiceForm.miscChargesCost : this.billingorInvoiceForm.miscChargesCostPlus;
+            const laborOverHeadAmount = this.billingorInvoiceForm.laborOverHeadValue === null ? this.billingorInvoiceForm.laborOverHeadCost : this.billingorInvoiceForm.laborOverHeadCostPlus;
+
+            // console.log(this.billingorInvoiceForm.miscChargesCost, this.billingorInvoiceForm.miscChargesCostPlus)
+            // console.log(this.billingorInvoiceForm.laborOverHeadCost, this.billingorInvoiceForm.laborOverHeadCostPlus)
+            // console.log(materialAmount, misChargesAmount, laborOverHeadAmount);
+
+            this.billingorInvoiceForm.grandTotal = (materialAmount + misChargesAmount + laborOverHeadAmount);
+
+        } else {
+            const totalWorkOrderCostPlus = this.billingorInvoiceForm.totalWorkOrder === null ? this.billingorInvoiceForm.totalWorkOrderCost : this.billingorInvoiceForm.totalWorkOrderCostPlus;
+            this.billingorInvoiceForm.grandTotal = (totalWorkOrderCostPlus);
+        }
+
+
+    }
+
+
+
     saveWorkOrderBilling() {
         this.saveWOBilling.emit(this.billingorInvoiceForm);
+
+        // this.getQuoteCostingData();
     }
-    updateWorkOrderBilling(){
+    updateWorkOrderBilling() {
         this.updateWOBilling.emit(this.billingorInvoiceForm);
+        // this.getQuoteCostingData();
     }
+
+
+
+
+
 
 
 

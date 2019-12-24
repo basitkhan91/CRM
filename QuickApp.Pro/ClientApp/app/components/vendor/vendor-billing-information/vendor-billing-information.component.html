@@ -467,15 +467,22 @@
 
                     </tr>
                 </thead>
-                <tr *ngFor="let audit of billingauditHisory">
+                <!-- <tr *ngFor="let audit of billingauditHisory">
                     <td>{{audit.siteName}}</td>
                     <td>{{audit.updatedBy}}</td>
                     <td>{{audit.updatedDate}}</td>
-                    <!--<td>{{audit.field == 'createdDate'?  (rowData[audit.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[audit.field] && audit.field == 'updatedDate'?  (rowData[audit.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[audit.field]}}</td>-->
                     <td>{{audit.createdBy}}</td>
                     <td>{{audit.createdDate}}</td>
 
-                </tr>
+                </tr> -->
+
+                <tr *ngFor="let audit of billingauditHisory; let i = index;">                                       
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'siteName', audit.siteName)  ? 'black' : 'red'  }">{{audit.siteName}}</td>
+                    <td>{{audit.updatedBy}}</td>
+                    <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                    <td>{{audit.createdBy}}</td>
+                    <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+            </tr>   
             </table>
         </div>
     </div>

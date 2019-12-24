@@ -150,12 +150,12 @@ export class CustomersListComponent implements OnInit {
         { field: 'accountType', header: 'Account Type' },
         { field: 'customerType', header: 'Customer Type' },
 
-        { field: 'customerClassification', header: 'Classification' },
+        { field: 'customerClassification', header: 'Customer Classification' },
         { field: 'email', header: 'Customer Email' },
-        { field: 'city', header: 'City' },
-        { field: 'stateOrProvince', header: 'State or Province' },
-        { field: 'contact', header: 'Contact' },
-        { field: 'salesPersonPrimary', header: 'Primary Sales Person' }
+        { field: 'city', header: 'Customer City' },
+        { field: 'stateOrProvince', header: 'Customer State' },
+        { field: 'contact', header: 'Customer Contact' },
+        { field: 'salesPersonPrimary', header: 'Sales Person' }
 
 
     ]
@@ -172,13 +172,17 @@ export class CustomersListComponent implements OnInit {
     viewDataGeneralInformation: any[];
     viewDataclassification: any[];
     customerContacts: any;
+    selectedRow: any;
+    contactcols: any[];
+    selectedContactColumns: any[];
+    allContacts: any[] = [];
     customerContactsColumns = [
         { field: 'tag', header: 'Tag' },
         { field: 'firstName', header: 'First Name' },
         { field: 'lastName', header: 'Last Name' },
         { field: 'contactTitle', header: 'Contact Title' },
         { field: 'email', header: 'Email' },
-       
+
         { field: 'workPhone', header: 'Work Phone' },
         { field: 'mobilePhone', header: 'Mobile Phone' },
         { field: 'fax', header: 'Fax' },
@@ -261,6 +265,8 @@ export class CustomersListComponent implements OnInit {
     restrictedDERParts: any;
     disableRestrictedPMA: boolean = false;
     classificationIds: any[];
+    filteredText: string;
+    dataSource: MatTableDataSource<any>;
     //     NameInput:any;
     //     customerCodeInput:any;
     //     customerClassificationInput:any;
@@ -285,6 +291,7 @@ export class CustomersListComponent implements OnInit {
         // this.activeIndex = 0;
         // this.workFlowtService.listCollection = null;
         //this.sourceCustomer = new Customer();
+        this.dataSource = new MatTableDataSource();
 
     }
     ngOnInit() {
@@ -318,7 +325,12 @@ export class CustomersListComponent implements OnInit {
         this.refreshList();
     }
     refreshList() {
-        this.table.reset();
+        if (this.filteredText != "" && this.filteredText != null && this.filteredText != undefined) {
+            this.globalSearch(this.filteredText);
+        }
+        else {
+            this.table.reset();
+        }
         // this.getList();
         // this.table.sortOrder = 0;
         // this.table.sortField = '';
@@ -326,13 +338,14 @@ export class CustomersListComponent implements OnInit {
 
     }
     loadData(event) {
+       
         this.lazyLoadEventData = event;
         const pageIndex = parseInt(event.first) / event.rows;;
         this.pageIndex = pageIndex;
         this.pageSize = event.rows;
         event.first = pageIndex;
-
-        this.getList(event)
+           this.getList(event)
+        
         console.log(event);
     }
 
@@ -402,12 +415,13 @@ export class CustomersListComponent implements OnInit {
         const { customerId } = rowData;
         this.modal = this.modalService.open(CustomerViewComponent, { size: 'lg' });
         this.modal.componentInstance.customerId = customerId;
+       
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
 
     }
-    
+
     viewSelectedRowdbl(content, rowData) {
 
 
@@ -426,7 +440,7 @@ export class CustomersListComponent implements OnInit {
         this.getMappedTaxTypeRateDetails(customerId);
         this.getCustomerRestrictedPMAByCustomerId(customerId);
         this.getCustomerRestrictedDERByCustomerId(customerId);
-        this.getCustomerClassificationByCustomerId(customerId) 
+        this.getCustomerClassificationByCustomerId(customerId)
         this.modal = this.modalService.open(content, { size: 'lg' });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -515,20 +529,20 @@ export class CustomersListComponent implements OnInit {
         })
     }
 
-        getCustomerRestrictedPMAByCustomerId(customerId) {
+    getCustomerRestrictedPMAByCustomerId(customerId) {
 
-            this.commonService.getRestrictedParts(1, customerId, 'PMA').subscribe(res => {
-             
+        this.commonService.getRestrictedParts(1, customerId, 'PMA').subscribe(res => {
+
             this.restrictedPMAParts = res;
-            
-           
-    })
+
+
+        })
     }
 
 
     getCustomerRestrictedDERByCustomerId(customerId) {
-     
-            this.commonService.getRestrictedParts(1, customerId, 'DER').subscribe(res => {
+
+        this.commonService.getRestrictedParts(1, customerId, 'DER').subscribe(res => {
 
             this.restrictedDERParts = res;
 
@@ -536,11 +550,11 @@ export class CustomersListComponent implements OnInit {
         })
     }
 
-      getCustomerClassificationByCustomerId(customerId) {
+    getCustomerClassificationByCustomerId(customerId) {
 
-         this.customerService.getCustomerClassificationMapping(customerId).subscribe(res => {
-             this.viewDataclassification = res.map(x => x.description);
-            
+        this.customerService.getCustomerClassificationMapping(customerId).subscribe(res => {
+            this.viewDataclassification = res.map(x => x.description);
+
             // console.log(this.generalInformation.customerClassificationIds);
         });
     }
@@ -553,6 +567,7 @@ export class CustomersListComponent implements OnInit {
     // }
     globalSearch(value) {
         this.pageIndex = 0;
+        this.filteredText = value;
         this.customerService.getGlobalSearch(value, this.pageIndex, this.pageSize).subscribe(res => {
             this.data = res;
             if (res.length > 0) {
@@ -562,6 +577,7 @@ export class CustomersListComponent implements OnInit {
         })
     }
     getAuditHistoryById(rowData) {
+        //alert('This functionality is not implemented');
     }
     ExpandAllCustomerDetailsModel() {
         $('#step1').collapse('show');
@@ -627,11 +643,11 @@ export class CustomersListComponent implements OnInit {
     //}
     dismissModel() {
         this.isDeleteMode = false;
-      
+
         this.modal.close();
     }
     delete(content, rowData) {
-       
+
         this.isDeleteMode = true;
 
 
@@ -670,6 +686,49 @@ export class CustomersListComponent implements OnInit {
         this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
+
+    openContactList(content, row) {
+        this.selectedRow = row;
+        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+        this.loadContactDataData(row.customerId);
+    }
+    private loadContactDataData(customerId) {
+        this.alertService.startLoadingMessage();
+       
+        this.customerService.getContacts(customerId).subscribe(
+            results => this.onContactDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+
+        this.contactcols = [
+            { field: 'tag', header: 'Tag' },
+            { field: 'firstName', header: 'First Name' },
+            { field: 'lastName', header: 'Last  Name' },
+            { field: 'contactTitle', header: 'Contact Title' },
+            { field: 'email', header: 'Email' },
+            { field: 'mobilePhone', header: 'Mobile Phone' },
+            { field: 'fax', header: 'Fax' }
+            //{ field: 'createdBy', header: 'Created By' },
+            //{ field: 'updatedBy', header: 'Updated By' },
+            //{ field: 'updatedDate', header: 'Updated Date' },
+            //{ field: 'createdDate', header: 'Created Date' }
+        ];
+        this.selectedContactColumns = this.contactcols;
+    }
+    private onContactDataLoadSuccessful(allWorkFlows: any[]) {
+        this.alertService.stopLoadingMessage();
+   
+        this.dataSource.data = allWorkFlows;
+        this.allContacts = allWorkFlows;
+    }
+    private onDataLoadFailed(error: any) {
+        this.alertService.stopLoadingMessage();
+        
+    }
+
     // ngAfterViewInit() {
     //     this.dataSource.paginator = this.paginator;
     //     this.dataSource.sort = this.sort;

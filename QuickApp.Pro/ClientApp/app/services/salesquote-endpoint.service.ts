@@ -17,6 +17,8 @@ export class SalesQuoteEndpointService extends EndpointFactory {
   private readonly getNewSalesQuoteInstanceUrl: string = "/api/salesquote/new";
   private readonly saleQuote: string = "/api/salesquote";
   private readonly searchSalesQuote: string = "/api/salesquote/search";
+  private readonly getSalesQuoteDetails: string = "/api/salesquote/get";
+
 
 
   constructor(
@@ -67,4 +69,28 @@ export class SalesQuoteEndpointService extends EndpointFactory {
       });
   }
 
+  delete(salesQuoteId: number): Observable<boolean> {
+    let endpointUrl = `${this.saleQuote}/${salesQuoteId}`;
+    return this.http
+      .delete<boolean>(endpointUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.delete(salesQuoteId)
+        );
+      });
+  }
+
+  getSalesQuote(
+    salesQuoteId: number
+  ): Observable<ISalesQuoteView> {
+    const URL = `${this.getSalesQuoteDetails}/${salesQuoteId}`;
+    return this.http
+      .get<ISalesQuote>(URL, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () =>
+          this.getSalesQuote(salesQuoteId)
+        );
+      });
+  }
 }
+

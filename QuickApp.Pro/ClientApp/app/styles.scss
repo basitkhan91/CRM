@@ -2873,15 +2873,18 @@ input[type="text"] {
     
 }
 
+.acc-calendar.add-glaccount.form-horizontal label {
+    width: inherit;
+}
 
-    .form-horizontal .control-label {
-        font-weight: 500;
-        color: #222;
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        text-align: right;
-        margin: 0;
-        font-weight: bold !important;
-    }
+.form-horizontal .control-label {
+    font-weight: 500;
+    color: #222;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-align: right;
+    margin: 0;
+    font-weight: bold !important;
+}
 
     .form-control:focus {
         border-color: #CCD0D7;
@@ -12224,6 +12227,7 @@ table thead tr th:first-child input, table tr td:first-child input {
 
     .table-responsive {
         margin-bottom: 10px;
+        overflow-x : auto !important;
     }
 
     .modal-body .w70 {
@@ -12482,7 +12486,7 @@ table thead tr th:first-child input, table tr td:first-child input {
 
     body .ui-table .ui-table-thead > tr > th {
         font-weight: 600 !important;
-        font-size: 10px !important;
+        font-size: 12px !important;
         color: #fff !important;
     }
 
@@ -13873,6 +13877,13 @@ input[type=number]::-webkit-outer-spin-button {
     padding-left: 5px;
     text-align: center;
 }
+.prow-primary {
+    background-color: #79ffe3;
+}
+.span-header-red {
+    color: red;
+    font-weight: bold;
+  }
 /*body .ui-panelmenu .ui-state-active, body .ui-panelmenu .ui-state-active:hover, body .ui-panelmenu .ui-panelmenu-header.ui-state-active a:hover {
     background-color: antiquewhite !important;
 }*/
@@ -13939,6 +13950,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 }
 .capes-view-btn .fa {
     color: blue !important;
+}
+.ptable-cus-pma .ui-table-wrapper {
+    padding: 0 !important;
 }
 .multi-general p-multiselect[_ngcontent-c234]{
     width: 207px !important;
@@ -14136,6 +14150,13 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .pub-multi4 {
     width: 130px !important;
 }
+.vcapes-multi .ui-multiselect-items-wrapper {
+    overflow-x: hidden !important;
+}
+input[type="date"]::-webkit-inner-spin-button {
+    display: none;
+    -webkit-appearance: none;
+}
 
 .pub-type-select .ui-dropdown-trigger .ui-dropdown-trigger-icon {
     left: 33% !important;
@@ -14291,6 +14312,14 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     flex-wrap: wrap;
     padding: 10px 5px;
 }
+.sales-quote-shipping-label{
+    width: 100% !important;
+    text-align: left !important;
+    padding-left: 10px !important;
+}
+.sales-quote-customer-input input{
+    width: 79%;
+}
 @media only screen and (max-width: 1024px) {
     .md-stepper-horizontal .md-step.active.done .md-step-title, .md-stepper-horizontal .md-step.active.editable .md-step-title {
         font-size: 10px !important;
@@ -14365,5 +14394,25 @@ margin-left: -6px;
 
 .accountCalendarTable .table.table-bordered thead tr th{
     padding: 5px;
+}
+
+.add-glaccount .form-group input,
+.add-glaccount .form-group select,
+.add-glaccount .ui-autocomplete .ui-autocomplete-dropdown,
+.add-glaccount .ui-calendar .ui-calendar-button {
+    height: 29px !important;
+}
+
+.add-glaccount .form-group input[type=checkbox],
+.add-glaccount .form-group input[type=radio]{
+    height: auto !important;
+}
+
+.add-glaccount .form-group{
+    margin-bottom: 10px !important
+}
+
+.ui-panelmenu .ui-submenu-list .ui-submenu-list{
+    margin-left: 10px;
 }
 

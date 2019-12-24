@@ -187,10 +187,14 @@
       
           <!-- Modal content-->
           <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title">Reserved Parts</h4>
-            </div>
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title" *ngIf="statusId ===1">Reserved Parts</h4>
+                  <h4 class="modal-title" *ngIf="statusId ===2">Issued Parts</h4>
+                  <h4 class="modal-title" *ngIf="statusId ===3">Reserve & Issue Parts</h4>
+                  <h4 class="modal-title" *ngIf="statusId ===4">UnIssue Parts</h4>
+                  <h4 class="modal-title" *ngIf="statusId ===5">UnReserve Parts</h4>
+              </div>
             <div class="modal-body" *ngIf="reservedList">
         
                                     <div class="table-responsive" id="workflow-attributes-block">
@@ -213,10 +217,12 @@
 
                                                     <th class="text-center">Qty Requried</th>
                                                     <th class="text-center">Qty Already Reserved</th>
-                                                    <th class="text-center">Qty Reserved</th>
+                                                    <th class="text-center" *ngIf="statusId ===1 || statusId ===2 || statusId ===3 || statusId ===4">Qty to Reserve</th>
+                                                    <th class="text-center" *ngIf="statusId ===5">Qty to UnReserve</th>
                                                     <th class="text-center">Qty Turn IN </th>
                                                     <th class="text-center">Qty Already Issued</th>
-                                                    <th class="text-center">Qty Issued</th>
+                                                    <th class="text-center" *ngIf="statusId ===2 || statusId ===3 || statusId ===1 || statusId ===5">Qty to Issue</th>
+                                                    <th class="text-center" *ngIf="statusId ===4">Qty to UnIssue</th>
                                                     <th class="text-center"> Qty ON Hand </th>
                                                     <th class="text-center"> Qty ON Available </th>
                                                     <th class="text-center"> Qty ON  ORDER  </th>
@@ -243,7 +249,7 @@
                                                         {{x.quantityAlreadyReserved}}
                                                     </td>
                                                     <td>
-                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityReserved" (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 2 ||  statusId === 3 ">
+                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityReserved" (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 2 ||  statusId === 3 ||  statusId === 4">
                                                     </td>
                                                     <td>
                                                         <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityTurnIn">
@@ -253,7 +259,7 @@
                                                         {{x.quantityAlreadyIssued}}
                                                     </td>
                                                     <td>
-                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityIssued"  (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 1 || statusId === 3 ">
+                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityIssued"  (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 1 || statusId ===5">
                                                     </td>
 
                                                     <td></td>
@@ -325,7 +331,7 @@
                                                     </td>
                                                     <td>{{x.quantityAlreadyReserved}}</td>
                                                     <td>
-                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityIssued" (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 1 || statusId === 3 ">
+                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityIssued" (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 1 || statusId ===5">
 
                                                     </td>
 

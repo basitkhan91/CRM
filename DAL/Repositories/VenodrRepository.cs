@@ -20,12 +20,66 @@ namespace DAL.Repositories
             return _appContext.Vendor.OrderByDescending(c => c.VendorId).ToList();
         }
 
+        public IEnumerable<object> GetVendorsAuditHistory(long vendorId)
+        {
+            var retData = (from t in _appContext.VendorAudit
+                           join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                           join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
+                           from vt in vtt.DefaultIfEmpty()
+                           join ct in _appContext.CreditTerms on t.CreditTermsId equals ct.CreditTermsId into crd
+                           from ct in crd.DefaultIfEmpty()
+                           join cu in _appContext.Currency on t.CurrencyId equals cu.CurrencyId into curr
+                           from cu in curr.DefaultIfEmpty()
+                           join di in _appContext.Discount on t.DiscountId equals di.DiscountId into dis
+                           from di in dis.DefaultIfEmpty()
+                           join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
+                           from vc in vcd.DefaultIfEmpty()
+                           join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
+                           from vca in vcad.DefaultIfEmpty()
+                           where t.VendorId == vendorId
+                           select new
+                           {
+                               t.AuditVendorId,
+                               t.VendorId,
+                               t,
+                               t.VendorEmail,
+                               t.IsActive,
+                               Address1 = ad.Line1,
+                               Address2 = ad.Line2,
+                               Address3 = ad.Line3,
+                               t.VendorCode,
+                               t.VendorName,
+                               ad.City,
+                               ad.StateOrProvince,
+                               vt.Description,
+                               t.CreatedDate,
+                               t.CreatedBy,
+                               t.UpdatedBy,
+                               t.UpdatedDate,
+                               ad.AddressId,
+                               ad.Country,
+                               ad.PostalCode,
+                               t.EDI,
+                               t.EDIDescription,
+                               t.CreditLimit,
+                               CurrencyId = cu.Code,
+                               CreditTermsId = ct.Name,
+                               DiscountLevel = di == null ? 0 : di.DiscontValue,
+                               vc.ClassificationName,
+                               VendorCapabilityName = vca.capabilityDescription,
+                               VendorPhoneContact = t.VendorPhone + " - " + t.VendorPhoneExt
+                           }).OrderByDescending(c => c.AuditVendorId).ToList();
+
+            return retData;
+
+
+        }
         public IEnumerable<Vendor> GetVendorsLite()
         {
             return _appContext.Vendor.Where(v => v.IsActive == true && v.IsDelete == false).Select(v => new Vendor { VendorId = v.VendorId, VendorName = v.VendorName }).OrderBy(c => c.VendorName).ToList();
         }
 
-        public IEnumerable<object> GetVendorListDetails()
+        public IEnumerable<object> GetVendorListDetails(bool isActive)
         {
 
             {
@@ -44,6 +98,7 @@ namespace DAL.Repositories
                             join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                             from vca in vcad.DefaultIfEmpty()
                             where t.IsDelete != true
+                            && t.IsActive == (isActive == true ? true : t.IsActive)
                             select new
                             {
                                 t.VendorId,
@@ -533,7 +588,7 @@ namespace DAL.Repositories
 
                 _appContext.SaveChanges();
 
-               
+
                 billingAddress.AddressId = Convert.ToInt64(address.AddressId);
 
                 billingAddress.UpdatedDate = DateTime.Now;
@@ -930,7 +985,7 @@ namespace DAL.Repositories
         public IEnumerable<object> GetVendorProcessList(int companyId)
         {
             var list = (from m in _appContext.Master1099
-                        where m.MasterCompanyId == companyId && m.IsDeleted !=true
+                        where m.MasterCompanyId == companyId && m.IsDeleted != true
                         select m).Distinct().ToList();
             return list;
 
@@ -1131,6 +1186,133 @@ namespace DAL.Repositories
             {
                 throw ex;
             }
+        }
+        public IEnumerable<object> GetVendorProcessListForFinance(int companyId)
+        {
+            var list = (from m in _appContext.Master1099
+                        where m.MasterCompanyId == companyId && m.IsDeleted != true && m.IsActive == true
+                        select m).Distinct().ToList();
+            return list;
+
+        }
+        public IEnumerable<object> GetVendorProcessListFromTransaction(long vendorId)
+        {
+            var list = (from mst in _appContext.Master1099
+                        join m in _appContext.VendorProcess1099 on mst.Master1099Id equals m.Master1099Id
+                          into master
+                        from m in master.DefaultIfEmpty()
+
+                        where m.VendorId == vendorId && m.IsDeleted != true && m.IsActive == true
+                        select new
+                        {
+                            m.VendorProcess1099Id,
+                            m.Master1099Id,
+                            m.IsDefaultCheck,
+                            m.IsDefaultRadio,
+                            mst.Description
+                        }).Distinct().ToList();
+
+
+            return list;
+
+        }
+        public IEnumerable<VendorCapabilityAircraft> VendorAircraft(VendorCapabilityAircraft[] vendorAircraftMapping)
+        {
+
+            if (vendorAircraftMapping != null && vendorAircraftMapping.Length > 0)
+            {
+                foreach (var airData in vendorAircraftMapping)
+                {
+                    airData.CreatedDate = DateTime.Now;
+                    airData.UpdatedDate = DateTime.Now;
+                    airData.IsActive = true;
+                    airData.IsDeleted = false;
+                    _appContext.VendorCapabilityAircraft.Add(airData);
+                    _appContext.SaveChanges();
+                }
+            }
+
+            return vendorAircraftMapping;
+        }
+
+        public IEnumerable<object> VendorAircraftDataByCapsId(long vendorCapabilityId)
+        {
+            var data = (from vc in _appContext.VendorCapabilityAircraft
+                        join art in _appContext.AircraftType on vc.AircraftTypeId equals art.AircraftTypeId into artt
+                        from art in artt.DefaultIfEmpty()
+                        join arm in _appContext.AircraftModel on vc.AircraftModelId equals arm.AircraftModelId into armd
+                        from arm in armd.DefaultIfEmpty()
+                        join ard in _appContext.AircraftDashNumber on vc.DashNumberId equals ard.DashNumberId into ardd
+                        from ard in ardd.DefaultIfEmpty()
+                        where vc.VendorCapabilityId == vendorCapabilityId && vc.IsActive == true && vc.IsDeleted == false
+                        select new
+                        {
+                            vc.VendorCapabilityAirCraftId,
+                            vc.VendorCapabilityId,
+                            vc.AircraftTypeId,
+                            AircraftType = art.Description,
+                            vc.AircraftModelId,
+                            vc.DashNumberId,
+                            AircraftModel = arm.ModelName,
+                            ard.DashNumber,
+                            //vc.PartNumber,                           
+                            //vc.AircraftModel,
+                            vc.Memo
+                        }).ToList();
+            return data;
+        }
+
+        public bool EditVendorAircraft(long id, string memo, string updatedBy)
+        {
+            bool result = false;
+            try
+            {
+                VendorCapabilityAircraft airCraftDetails = new VendorCapabilityAircraft();
+                airCraftDetails.VendorCapabilityAirCraftId = id;
+                airCraftDetails.UpdatedDate = DateTime.Now;
+                airCraftDetails.UpdatedBy = updatedBy;
+                airCraftDetails.Memo = memo;
+
+                _appContext.VendorCapabilityAircraft.Attach(airCraftDetails);
+                _appContext.Entry(airCraftDetails).Property(x => x.Memo).IsModified = true;
+                _appContext.Entry(airCraftDetails).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(airCraftDetails).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+                result = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
+
+        }
+        public bool DeleteVendorAircraft(long id, string updatedBy)
+        {
+            bool result = false;
+            try
+            {
+                VendorCapabilityAircraft airCraftDetails = new VendorCapabilityAircraft();
+                airCraftDetails.VendorCapabilityAirCraftId = id;
+                airCraftDetails.UpdatedDate = DateTime.Now;
+                airCraftDetails.UpdatedBy = updatedBy;
+                airCraftDetails.IsDeleted = true;
+
+                _appContext.VendorCapabilityAircraft.Attach(airCraftDetails);
+                _appContext.Entry(airCraftDetails).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(airCraftDetails).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(airCraftDetails).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+                result = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
+
         }
     }
 }

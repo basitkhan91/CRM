@@ -20,6 +20,8 @@ import { ActivatedRoute,Router } from '@angular/router';
 import { AssetIntangibleType } from '../../../../models/asset-intangible-type.model';
 import { AssetIntangibleAttributeType } from '../../../../models/asset-intangible-attribute-type.model';
 import { CommonService } from '../../../../services/common.service';
+import { forEach } from '@angular/router/src/utils/collection';
+import { validateRecordExistsOrNot, getObjectById, selectedValueValidate, editValueAssignByCondition } from '../../../../generic/autocomplete';
 
 @Component({
     selector: 'app-create-asset',
@@ -67,7 +69,7 @@ export class CreateAssetComponent implements OnInit {
     currentSelectedIntangibleAssetType: any = {};
     currentSelectedAssetType: any = {};
     currentSelectedAssetAttributeType: any = {};
-    depriciationMethodList: DepriciationMethod[];
+    depriciationMethodList: DepriciationMethod[] = [];
     allAssets: any[] = [];
     auditHistory: any[];
     amortizationFrequencyList:any[];
@@ -78,6 +80,9 @@ export class CreateAssetComponent implements OnInit {
         public unitService: UnitOfMeasureService, public currencyService: CurrencyService, public assetTypeService: AssetTypeService, private depriciationMethodService: DepriciationMethodService, private authService: AuthService, public assetattrService1: AssetAttributeTypeService, public assetIntangibleService: AssetIntangibleAttributeTypeService,private commonservice: CommonService,) {
 
         this.AssetId = this.router.snapshot.params['id'];
+
+        this.loadDepricationMethod();
+
             if (this.AssetId) {
                 this.assetService.isEditMode = true;
                 this.assetService.currentUrl = '/assetmodule/assetpages/app-edit-asset';
@@ -85,7 +90,8 @@ export class CreateAssetComponent implements OnInit {
                 this.assetService.isEditMode = false;
                 this.assetService.listCollection = null;
                 this.assetService.currentUrl = '/assetmodule/assetpages/app-create-asset';
-            }
+        }
+        this.GetAssetData(this.AssetId);
         if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
             this.showLable = true;
             this.currentAsset = this.assetService.listCollection;
@@ -126,6 +132,7 @@ export class CreateAssetComponent implements OnInit {
     ngOnInit() {
 
         this.AssetId = this.router.snapshot.params['id'];
+        this.GetAssetData(this.AssetId);
 		if (this.AssetId) {
             this.assetService.isEditMode = true;
             this.assetService.currentUrl = '/assetmodule/assetpages/app-edit-asset';
@@ -152,10 +159,25 @@ export class CreateAssetComponent implements OnInit {
         this.assetTypeData();
         this.intangibleData();
         this.glList();
-        this.loadDepricationMethod();
+        //this.loadDepricationMethod();
         this.getAmortizationFrequencyList();
         this.getDepreciationFrequencyList();
         this.getAssetAcquisitionTypeList();
+    }
+
+    private GetAssetData(assetid) {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.assetService.getByAssetId(assetid).subscribe(
+            results => this.onassetdataSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private onassetdataSuccessful(getAssetData: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.assetService.listCollection = getAssetData;
     }
 
     private AssetAttData() {
@@ -208,8 +230,16 @@ export class CreateAssetComponent implements OnInit {
             }
         }
     }
+
+    getDeprMethodName(id) {
+        for (let i = 0; i < this.depriciationMethodList.length; i++) {
+            if (id == this.depriciationMethodList[i].assetDepreciationMethodId)
+                return this.depriciationMethodList[i].depreciationMethod; 
+        }
+    }
     showItemEdit(rowData): void {
         if (this.currentAsset.isDepreciable == true) {
+            this.loadDepricationMethod();
             this.currentRow = rowData as AssetAttributeType;
             this.assetattrService1.getByAssetTypeId(rowData).subscribe(audits => {
                 this.currentSelectedAssetAttributeType.assetAttributeTypeId = audits[0].assetAttributeTypeId;
@@ -217,6 +247,10 @@ export class CreateAssetComponent implements OnInit {
                 this.currentSelectedAssetAttributeType.description = audits[0].description;
                 this.currentSelectedAssetAttributeType.conventionType = audits[0].conventionType;
                 this.currentSelectedAssetAttributeType.depreciationMethod = audits[0].depreciationMethod;
+                console.log(this.getDeprMethodName(audits[0].depreciationMethod));
+                //if(this.depriciationMethodList)
+                //    console.log(getObjectById('assetDepreciationMethodId', audits[0].depreciationMethod, this.depriciationMethodList));
+                this.currentSelectedAssetAttributeType.depreciationMethodObj = this.getDeprMethodName(audits[0].depreciationMethod);
                 this.currentSelectedAssetAttributeType.residualPercentage = audits[0].residualPercentage;
                 this.currentSelectedAssetAttributeType.residualValue = audits[0].residualValue;
                 this.currentSelectedAssetAttributeType.assetLife = audits[0].assetLife;
@@ -501,7 +535,17 @@ export class CreateAssetComponent implements OnInit {
     private onAssetTypeLoad(getAssetTypeList: any[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.allAssetTypeInfo = getAssetTypeList;
+        let assetTypeList: any[] = [];
+        //console.log('getAssetTypeList',getAssetTypeList);
+        if (getAssetTypeList) {
+            for (let i = 0; i < getAssetTypeList.length; i++) {
+                //console.log(getAssetTypeList[i].isActive);
+                if (getAssetTypeList[i].isActive == true)
+                    assetTypeList.push(getAssetTypeList[i]);
+            }
+        }
+        //console.log('assetTypeList',assetTypeList);
+        this.allAssetTypeInfo = assetTypeList;
         if (this.assetService.isEditMode == true && this.currentAsset.assetTypeId) {
             this.getSelectedAssetType(this.currentAsset.assetTypeId);
         }
@@ -510,7 +554,18 @@ export class CreateAssetComponent implements OnInit {
     private onIntangibletypeLoad(getAssetTypeList: any[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.allIntangibleInfo = getAssetTypeList;
+        let assetTypeList: any[] = [];
+        //console.log('getAssetTypeList',getAssetTypeList);
+        if (getAssetTypeList) {
+            for (let i = 0; i < getAssetTypeList.length; i++) {
+                //console.log(getAssetTypeList[i].isActive);
+                if (getAssetTypeList[i].isActive == true)
+                    assetTypeList.push(getAssetTypeList[i]);
+            }
+        }
+        //console.log('assetTypeList',assetTypeList);
+        this.allIntangibleInfo = assetTypeList;
+        //this.allIntangibleInfo = getAssetTypeList;
         if (this.assetService.isEditMode == true && this.currentAsset.assetIntangibleTypeId) {
             this.getSelectedIntangible(this.currentAsset.assetIntangibleTypeId);
         }

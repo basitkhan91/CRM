@@ -52,15 +52,15 @@ export class ConditionsComponent implements OnInit {
     viewRowData: any;
     auditHistory: any;
     selectedRowforDelete: any;
-    
+
     conditionData: any;
     conditionList: any;
     conditionHeaders = [
-        
-            { field: 'description', header: 'Condition Name' },
-            { field: 'memo', header: 'Memo' },
 
-        ];
+        { field: 'description', header: 'Condition Name' },
+        { field: 'memo', header: 'Memo' },
+
+    ];
     totalRecords: any;
     pageIndex: number = 0;
     pageSize: number = 10;
@@ -76,11 +76,11 @@ export class ConditionsComponent implements OnInit {
             isDelete: false,
             memo: ""
         };
-    addNewCondition= {...this.newCondition};
+    addNewCondition = { ...this.newCondition };
     disableSaveForCondition: boolean;
     /** Currency ctor */
     constructor(public router: Router, private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal, public conditionService: ConditionService, private dialog: MatDialog) {
-         
+
 
     }
     ngOnInit(): void {
@@ -90,7 +90,7 @@ export class ConditionsComponent implements OnInit {
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
     }
 
-       
+
     columnsChanges() {
         this.refreshList();
     }
@@ -106,7 +106,7 @@ export class ConditionsComponent implements OnInit {
     resetConditionForm() {
         this.isEditMode = false;
         this.disableSaveForCondition = false;
-     
+
         this.selectedRecordForEdit = undefined;
         this.addNewCondition = { ...this.newCondition };
     }
@@ -142,7 +142,7 @@ export class ConditionsComponent implements OnInit {
         }
 
     }*/
-   
+
     filterConditions(event) {
         this.conditionList = this.conditionData;
 
@@ -160,7 +160,7 @@ export class ConditionsComponent implements OnInit {
                 this.disableSaveForCondition = false;
             }
         }
-        
+
         /*console.log("field:", field);
         console.log("value::", value);
         const exists = validateRecordExistsOrNot(field, value, this.conditionData, this.selectedRecordForEdit);
@@ -183,12 +183,12 @@ export class ConditionsComponent implements OnInit {
         this.disableSaveForCondition = !exists;
     }
 
-   
+
     refreshList() {
         this.table.reset();
         this.getConditionList();
     }
-   
+
     delete(rowData) {
         this.selectedRowforDelete = rowData;
 
@@ -207,7 +207,7 @@ export class ConditionsComponent implements OnInit {
             this.selectedRowforDelete = undefined;
         }
     }
-      
+
     viewSelectedRow(rowData) {
         console.log(rowData);
         this.viewRowData = rowData;
@@ -226,7 +226,11 @@ export class ConditionsComponent implements OnInit {
     }
 
     saveCondition() {
-         const data = {
+        if (this.conditionData.findIndex(x => x.description == this.addNewCondition.description) > -1) {
+            this.alertService.showMessage("Failed", "Condition " + this.addNewCondition.description + " already exists.", MessageSeverity.error);
+            return;
+        }
+        const data = {
             ...this.addNewCondition, createdBy: this.userName, updatedBy: this.userName,
             description: editValueAssignByCondition('description', this.addNewCondition.description)
         };
@@ -254,7 +258,7 @@ export class ConditionsComponent implements OnInit {
             })
         }
     }
-          
+
 
     openHelpText(content) {
         this.modal = this.modalService.open(content, { size: 'sm' });
@@ -262,9 +266,9 @@ export class ConditionsComponent implements OnInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-   
 
-    
+
+
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";

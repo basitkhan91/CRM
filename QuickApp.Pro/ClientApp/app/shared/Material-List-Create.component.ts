@@ -17,7 +17,7 @@ import { AlertService, MessageSeverity } from "../services/alert.service";
     templateUrl: './Material-List-Create.component.html',
     styleUrls: ['./Material-List-Create.component.css']
 })
-export class MaterialListCreateComponent implements OnInit {
+export class MaterialListCreateComponent implements OnInit, OnChanges {
     @Input() workFlowObject;
     partCollection: any[] = [];
     itemclaColl: any[] = [];
@@ -31,10 +31,12 @@ export class MaterialListCreateComponent implements OnInit {
     @Input() editData;
     @Input() isQuote = false;
     @Input() workFlow: IWorkFlow;
+    @Input() markupList;
     @Input() UpdateMode: boolean;
     @Output() workFlowChange = new EventEmitter();
     @Output() saveMaterialListForWO = new EventEmitter();
     @Output() updateMaterialListForWO = new EventEmitter();
+
 
     @Output() notify: EventEmitter<IWorkFlow> =
         new EventEmitter<IWorkFlow>();
@@ -122,6 +124,16 @@ export class MaterialListCreateComponent implements OnInit {
         if (this.UpdateMode) {
             this.reCalculate();
 
+        }
+    }
+
+    ngOnChanges(){
+        if(this.isQuote && this.editData.length > 0){
+            this.workFlow.materialList = this.editData;
+        }
+        else if(this.isQuote){
+            this.workFlow.materialList = [];
+            this.addRow();
         }
     }
 
@@ -253,7 +265,7 @@ export class MaterialListCreateComponent implements OnInit {
         newRow.itemMasterId = "";
         newRow.mandatoryOrSupplemental = 'Mandatory';
         newRow.partDescription = "";
-        newRow.partNumber = " ";
+        newRow.partNumber = "";
         newRow.isDeferred = this.isDeferredBoolean;
         newRow.memo = "";
         newRow.price = "";
@@ -375,6 +387,19 @@ export class MaterialListCreateComponent implements OnInit {
 
     updateMaterialsWorkOrder() {
         this.updateMaterialListForWO.emit(this.workFlow);
+    }
+
+    markupChanged(matData){
+    try{
+        this.markupList.forEach((markup)=>{
+        if(markup.value == matData.markupPercentageId){
+            matData.costPlusAmount = (matData.extendedPrice) + ( ((matData.extendedPrice)/100) *  Number(markup.label))
+        }
+        })
+    }
+    catch(e){
+        console.log(e);
+    }
     }
 
 

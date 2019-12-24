@@ -170,7 +170,10 @@
             <hr />
         </div>
 
-        <p-table #dt [value]="allCapesInfo" [metaKeySelection]="true" [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
+        <p-table #dt [value]="allCapesInfo" [metaKeySelection]="true" [rows]="20" 
+                 [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" 
+                 [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" 
+                 [resizableColumns]="true" [reorderableColumns]="true">
 
             <ng-template pTemplate="header" let-columns>
                 <tr>
@@ -185,11 +188,10 @@
             </ng-template>
 
 
-            <ng-template pTemplate="body" let-rowData let-assetCapes>
+            <ng-template pTemplate="body" let-rowData let-assetCapes let-rowIndex="rowIndex">
                 <tr [pSelectableRow]="rowData" pReorderableRowHandle>
-                    <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                    <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                         {{rowData[col.field]}}
-
                     </td>
                     <td>{{assetCapes.partNumber}}</td>
                     <td>{{assetCapes.partDescription}}</td>
@@ -198,10 +200,19 @@
                     <td>{{assetCapes.modelname}}</td>
                     <td>{{assetCapes.dashnumber}}</td>
                     <td>
-                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-
+                        <!--
+    <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+    <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+    <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch> -->
+                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on"
+                                       offLabel="off" (onChange)="toggleActiveStatus(rowData)"
+                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on"
+                                       offLabel="off" (onChange)="toggleActiveStatus(rowData)"
+                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on"
+                                       offLabel="off" (onChange)="toggleActiveStatus(rowData)"
+                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                         <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>-->
                         <button class="btn-edit" mat-icon-button (click)="opencapesToEdit(content,rowData)" matTooltip="Edit">
                             <mat-icon>edit</mat-icon>
@@ -214,8 +225,8 @@
 
 
                         <!--<button class="btn-history" mat-icon-button matTooltip="History">
-            <mat-icon color="green">history</mat-icon>
-        </button>-->
+        <mat-icon color="green">history</mat-icon>
+    </button>-->
                     </td>
                 </tr>
             </ng-template>

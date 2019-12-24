@@ -5,8 +5,8 @@ export class Vendor {
     // Note: Using only optional constructor properties without backing store disables typescript's type checking for the type
     constructor(masterCompany?: MasterCompany, isActive?: boolean, vendorId?: number, vendorName?: string, vendorCode?: string, vendorTypeId?: number, doingBusinessAsName?: string, vendorClassificationId?: number, parent?: number, vendorContractReference?: string, addressId?: number, isVendorAlsoCustomer?: boolean, relatedCustomerId?: number, vendorEmail?: string, isPreferredVendor?: boolean, licenseNumber?: string, vendorURL?: string, isCertified?: boolean, certificationFile?: string, vendorAudit?: boolean, vendorAuditFile?: string, eDI?: boolean, eDIDescription?: string, aeroExchange?: boolean, eeroExchangeDescription?: string, creditLimit?: number, currencyId?: number, discountLevel?: number, is1099Required?: boolean, creditTermsId?: number,
        
-		masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string
-		, memo?: string, vendorPhone?: string) {
+        masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string
+        , memo?: string, vendorPhone?: string, isAddressForBilling?: boolean, isAddressForShipping?: boolean) {
 
         this.vendorId = vendorId;
         this.vendorName = vendorName;
@@ -44,6 +44,8 @@ export class Vendor {
         this.updatedBy = updatedBy;
         this.masterCompany = masterCompany;
         this.memo = memo;
+        this.isAddressForBilling = isAddressForBilling;
+        this.isAddressForShipping = isAddressForShipping;
 
     }
 
@@ -84,8 +86,10 @@ export class Vendor {
     public updatedDate: Date;
     public masterCompany?: MasterCompany;
 	public memo: string;
-	public vendorPhone: string;
+    public vendorPhone: string;
 
+    public isAddressForBilling :boolean;
+    public isAddressForShipping : boolean;
 
 
 }

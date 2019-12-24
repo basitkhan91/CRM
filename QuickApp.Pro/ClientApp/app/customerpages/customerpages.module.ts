@@ -16,8 +16,6 @@ import { CustomerPagesComponent } from "./customerpages.component";
 
 
 import { CustomersListComponent } from "../components/customer/customers-list/customers-list.component";
-import { CustomerEditComponent } from "../components/customer/customer-edit/customer-edit.component";
-import { CustomerSetupComponent } from "../components/customer/customer-setup/customer-setup.component";
 import { CustomerGeneralInformationComponent } from "../components/customer/customer-general-information/customer-general-information.component";
 import { CustomerContactsComponent } from "../components/customer/customer-contacts/customer-contacts.component";
 import { CustomerFinancialInformationComponent } from "../components/customer/customer-financial-information/customer-financial-information.component";
@@ -87,8 +85,6 @@ import { CommonService } from "../services/common.service";
     declarations: [
         CustomerPagesComponent,
         CustomersListComponent,
-        CustomerEditComponent,
-        CustomerSetupComponent,
         CustomerGeneralInformationComponent,
         CustomerAircraftComponent,
         CustomerDocumentsComponent,

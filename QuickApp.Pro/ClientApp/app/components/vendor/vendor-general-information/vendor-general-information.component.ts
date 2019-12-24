@@ -138,6 +138,7 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
     //@ViewChild('f') form: any;
     formData = new FormData();
     allVendorGeneralDocumentsList: any = [];
+ 
 
     constructor(public vendorclassificationService: VendorClassificationService, private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public customerser: CustomerService, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, public commonService: CommonService,public integrationService: IntegrationService,private configurations: ConfigurationService) {
         this.dataSource = new MatTableDataSource();
@@ -201,7 +202,8 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         
-        this.sourceVendor.vendorTypeId=2;
+        this.sourceVendor.vendorTypeId = 2;
+      
         this.matSpinner = false;
         this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-general-information';
         this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
@@ -227,6 +229,9 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         if (this.vendorService.isEditMode == false) {
             this.sourceVendor.vendorTypeId = 2;
             this.viewName = "Create";
+            this.sourceVendor.isAddressForBilling = true;
+            this.sourceVendor.isAddressForShipping = true;
+           
         }
         if (this.vendorService.enableExternal == false) {
             this.sourceVendor.vendorTypeId = 2;
@@ -253,7 +258,9 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
             if(this.viewName !="Edit")
             {
                 this.sourceVendor = {};
-                this.sourceVendor.vendorTypeId=2;
+                this.sourceVendor.vendorTypeId = 2;
+                this.sourceVendor.isAddressForBilling = true;
+                this.sourceVendor.isAddressForShipping = true;
             }            
         }
     }

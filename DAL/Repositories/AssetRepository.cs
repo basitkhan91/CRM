@@ -42,6 +42,109 @@ namespace DAL.Repositories
                 return data;
             }
         }
+
+        public IEnumerable<object> GetAsset(string id)
+        {
+            {
+                var data = (from asset in _appContext.Asset
+                            where asset.AssetId == id
+
+                            select new
+                            {
+                                asset.AssetId,
+                                asset.AssetRecordId,
+                                asset.AlternateAssetId,
+                                asset.AssetAcquisitionTypeId,
+                                asset.AssetCalibrationExpected,
+                                asset.AssetCalibrationExpectedTolerance,
+                                asset.AssetCalibrationMaxTolerance,
+                                asset.AssetCalibrationMemo,
+                                asset.AssetCalibrationMin,
+                                asset.AssetCalibratonMax,
+                                asset.AssetIntangibleTypeId,
+                                asset.AssetIsMaintenanceReqd,
+                                asset.AssetMaintenanceContractFile,
+                                asset.AssetMaintenanceContractFileExt,
+                                asset.AssetMaintenanceIsContract,
+                                asset.AssetParentId,
+                                asset.AssetType,
+                                asset.AssetTypeId,
+                                asset.Asset_Location,
+                                asset.CalibrationCurrencyId,
+                                asset.CalibrationDefaultCost,
+                                asset.CalibrationDefaultVendorId,
+                                asset.CalibrationFrequencyDays,
+                                asset.CalibrationFrequencyMonths,
+                                asset.CalibrationGlAccountId,
+                                asset.CalibrationMemo,
+                                asset.CalibrationRequired,
+                                asset.CertificationCurrencyId,
+                                asset.CertificationFrequencyDays,
+                                asset.CertificationDefaultVendorId,
+                                asset.CertificationGlAccountId,
+                                asset.CertificationMemo,
+                                asset.CertificationRequired,
+                                asset.CreatedBy,
+                                asset.CreatedDate,
+                                asset.Currency,
+                                asset.CurrencyId,
+                                asset.DefaultVendorId,
+                                asset.Description,
+                                asset.EntryDate,
+                                asset.ExpirationDate,
+                                asset.GLAccount,
+                                asset.GLAccountId,
+                                asset.InspectionCurrencyId,
+                                asset.InspectionDefaultCost,
+                                asset.InspectionDefaultVendorId,
+                                asset.InspectionFrequencyDays,
+                                asset.InspectionFrequencyMonths,
+                                asset.InspectionGlaAccountId,
+                                asset.InspectionMemo,
+                                asset.InspectionRequired,
+                                asset.IsActive,
+                                asset.IsDelete,
+                                asset.IsDepreciable,
+                                asset.IsIntangible,
+                                asset.IsSerialized,
+                                asset.IsWarrantyRequired,
+                                asset.MaintenanceFrequencyDays,
+                                asset.MaintenanceFrequencyMonths,
+                                asset.MaintenanceMemo,
+                                asset.ManagementStructureId,
+                                asset.ManufacturedDate,
+                                asset.ManufacturerId,
+                                asset.Manufacturer,
+                                asset.MasterCompanyId,
+                                asset.MasterPartId,
+                                asset.Memo,
+                                asset.Model,
+                                asset.Name,
+                                asset.UnexpiredTime,
+                                asset.UnitCost,
+                                asset.UnitOfMeasureId,
+                                asset.UpdatedBy,
+                                asset.UpdatedDate,
+                                asset.VerificationCurrencyId,
+                                asset.VerificationDefaultCost,
+                                asset.VerificationDefaultVendorId,
+                                asset.VerificationFrequencyDays,
+                                asset.VerificationFrequencyMonths,
+                                asset.VerificationGlAccountId,
+                                asset.VerificationMemo,
+                                asset.VerificationRequired,
+                                asset.Warranty,
+                                asset.WarrantyCompany,
+                                asset.WarrantyEndDate,
+                                asset.WarrantyFile,
+                                asset.WarrantyFileExt,
+                                asset.WarrantyStartDate,
+                                asset.WarrantyStatus
+
+                            }).ToList();
+                return data;
+            }
+        }
         public IEnumerable<object> getCapesList(long id)
         {
             {
@@ -59,7 +162,7 @@ namespace DAL.Repositories
                             select new
                             {
                                 ac.AssetCapesId,ac.ItemMasterId,im.PartNumber,im.PartDescription,captypedescription = captype.Description,
-                                manufacturer = act.Description,modelname = acm.ModelName,dashnumber= dn.DashNumber
+                                manufacturer = act.Description,modelname = acm.ModelName,dashnumber= dn.DashNumber, ac.IsActive, ac.AircraftTypeId
 
                             }).ToList();
                 return data;

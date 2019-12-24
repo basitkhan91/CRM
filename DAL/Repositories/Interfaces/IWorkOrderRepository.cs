@@ -13,7 +13,8 @@ namespace DAL.Repositories.Interfaces
         WorkOrder UpdateWorkOrder(WorkOrder workOrder);
         void DeleteWorkOrder(long workOrderId);
         void WorkOrderStatus(long workOrderId, bool status, string updatedBy);
-        IEnumerable<object> GetWorkOrdersList(int pageNo, int pageSize);
+        IEnumerable<object> GetWorkOrdersList(Filters<WorkOrderFilters> woFilters);
+        IEnumerable<object> WorkOrdersGlobalSearch(string filterText, int pageNumber, int pageSize);
         IEnumerable<object> GetWorkOrderPartList(long workOrderId);
         WorkOrder WorkOrderById(long workOrderId);
         object WorkOrderHeaderView(long workOrderId);
@@ -61,9 +62,10 @@ namespace DAL.Repositories.Interfaces
         void UpdateWorkOrderAddress(WorkOrderAddress workOrderAddress);
         IEnumerable<WorkOrderAddress> GetWorkFlowWorkOrderAddressList(long wfwoId = 0, long workOrderId = 0);
 
-        long CreateWorkOrderQuote(WorkOrderQuote workOrderQuote);
-        void UpdateWorkOrderQuote(WorkOrderQuote workOrderQuote);
+        WorkOrderQuote CreateWorkOrderQuote(WorkOrderQuote workOrderQuote);
+        WorkOrderQuote UpdateWorkOrderQuote(WorkOrderQuote workOrderQuote);
         object GetWorkFlowWorkOrderQuote(long wfwoId = 0, long workOrderId = 0);
+        object WorkOrderQuoteExists(long workOrderId);
         WorkOrderQuoteDetails CreateWorkOrderQuoteDetails(WorkOrderQuoteDetails workOrderQuoteDetails);
         WorkOrderQuoteDetails UpdateWorkOrderQuoteDetails(WorkOrderQuoteDetails workOrderQuoteDetails);
 
@@ -146,5 +148,7 @@ namespace DAL.Repositories.Interfaces
         object GetBillingInvoicingDetails(long WorkOrderId, long workOrderPartNoId);
 
         IEnumerable<object> WorkOrderROlist();
+
+        object GetWorkOrderPartDetailsById(long workOrderPartNoId);
     }
 }

@@ -137,7 +137,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Date Of Birth</label>
-                                            <p-calendar [showIcon]="true" name="dateOfBirth" [(ngModel)]="sourceEmployee.dateOfBirth"  (onSelect)="onSelectMethod($event)"></p-calendar>
+                                            <p-calendar [showIcon]="true" name="dateOfBirth" [maxDate]="sourceEmployee.startDate" [(ngModel)]="sourceEmployee.dateOfBirth" ></p-calendar>
                                         </div> 
                                         <div class="form-group">
                                             <label>Country of Origin</label>
@@ -147,7 +147,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Start Date <span class="clr-red">*</span></label>
-                                            <p-calendar name="startDate" [formControl]="empCreationForm.controls['startDate']"  [showIcon]="true" [(ngModel)]="sourceEmployee.startDate"></p-calendar>
+                                            <p-calendar name="startDate" [minDate]="sourceEmployee.dateOfBirth" [formControl]="empCreationForm.controls['startDate']"  [showIcon]="true" [(ngModel)]="sourceEmployee.startDate"></p-calendar>
                                         </div>
                                         <div class="form-group">
                                             <label>Cell</label>
@@ -237,18 +237,25 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Pay Type</label>
+                                            <!--<div>
+        <label class="radio-cstm wauto pull-left" style="margin-right: 10px;">
+            <input type="radio" name="paytype" id="hourpay" class="form-control" value="Hourly" [checked]="sourceEmployee.isHourly"  (change)="handlePayType('hourly')" [(ngModel)]="sourceEmployee.hourlypayType">
+            <span class="checkmark"></span>
+            Hourly
+        </label>
+        <label class="radio-cstm wauto pull-left" style="margin-right: 10px;">
+            <input type="radio" name="paytype" id="salarypay" class="form-control" value="Monthly"  (change)="handlePayType('monthly')" [(ngModel)]="sourceEmployee.yearlypayType">
+            <span class="checkmark"></span>
+            Monthly
+        </label>
+    </div> -->
+
                                             <div>
-                                                <label class="radio-cstm wauto pull-left" style="margin-right: 10px;">
-                                                    <input type="radio" name="paytype" id="hourpay" class="form-control" value="Hourly" (change)="handlePayType('hourly')" [(ngModel)]="sourceEmployee.hourlypayType">
-                                                    <span class="checkmark"></span>
-                                                    Hourly
+                                                <label *ngFor="let radiobutton of radioItems">
+                                                    <input type="radio" name="options" (click)="model.option = radiobutton" (change)="handlePayType(model.option)"
+                                                           [checked]="radiobutton === model.option">{{radiobutton}}
                                                 </label>
-                                                <label class="radio-cstm wauto pull-left" style="margin-right: 10px;">
-                                                    <input type="radio" name="paytype" id="salarypay" class="form-control" value="Monthly" (change)="handlePayType('monthly')" [(ngModel)]="sourceEmployee.yearlypayType">
-                                                    <span class="checkmark"></span>
-                                                    Monthly
-                                                </label>
-                                            </div>                                           
+                                            </div>
                                         </div>
                                         <div class="form-group col-sm-12 hourpay-block" *ngIf="hourly"> <!--hourly-->
                                             <label>Hourly Pay</label>
@@ -297,7 +304,7 @@
                                                 <label>
                                                     <input type="checkbox" name="worksInShop-radio" [(ngModel)]="sourceEmployee.isHeWorksInShop">
                                                     <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                    Is He Works In Shop?
+                                                    Shop Employee
                                                 </label>
                                             </div>
                                         </div>

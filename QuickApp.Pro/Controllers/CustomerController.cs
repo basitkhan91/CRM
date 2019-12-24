@@ -2057,11 +2057,47 @@ namespace QuickApp.Pro.Controllers
                     }
                     else
                     {
-                        return Ok("Record already exist with these details");
+                        return BadRequest("Record already exist with these details");
                     }
                   
                 }
             }
+            else
+            {
+                return BadRequest($"{nameof(customerAircraftMappingVM)} cannot be null");
+            }
+            return Ok(ModelState);
+        }
+
+        [HttpPut("CustomerAircraftUpdate/{id}")]
+        [Produces(typeof(CustomerAircraftMapping[]))]
+        public IActionResult UpdateCustomerAircraftInfo(long id,[FromBody] CustomerAircraftMappingViewModel customerAircraftMappingVM)
+        {
+            if (ModelState.IsValid)
+            {
+                var aircraft = _unitOfWork.Repository<CustomerAircraftMapping>().GetSingleOrDefault(c=>c.CustomerAircraftMappingId==id);// && c.AircraftModelId == customerAircraftMappingVM[i].AircraftModelId && c.MasterCompanyId == customerAircraftMappingVM[i].MasterCompanyId && c.CustomerId = customerAircraftMappingVM[i].CustomerId);
+                aircraft.AircraftType = customerAircraftMappingVM.AircraftType;
+                aircraft.AircraftModel = customerAircraftMappingVM.AircraftModel;
+                aircraft.DashNumber = customerAircraftMappingVM.DashNumber;
+                //ModelNumber = customerAircraftMappingVM[i].ModelNumber,
+                aircraft.AircraftModelId = customerAircraftMappingVM.AircraftModelId;
+                aircraft.DashNumberId = customerAircraftMappingVM.DashNumberId;
+                aircraft.Memo = customerAircraftMappingVM.Memo;
+                aircraft.MasterCompanyId = customerAircraftMappingVM.MasterCompanyId;
+                aircraft.CreatedBy = customerAircraftMappingVM.CreatedBy;
+                aircraft.UpdatedBy = customerAircraftMappingVM.UpdatedBy;
+                aircraft.CustomerId = customerAircraftMappingVM.CustomerId;
+                aircraft.CreatedDate = System.DateTime.Now;
+                aircraft.UpdatedDate = System.DateTime.Now;
+                aircraft.IsDeleted = customerAircraftMappingVM.IsDeleted;
+                aircraft.Inventory = customerAircraftMappingVM.Inventory;
+                aircraft.AircraftTypeId = customerAircraftMappingVM.AircraftTypeId;
+                        
+                        _unitOfWork.Repository<CustomerAircraftMapping>().Update(aircraft);
+                        _unitOfWork.SaveChanges();
+                    }
+                    
+
             else
             {
                 return BadRequest($"{nameof(customerAircraftMappingVM)} cannot be null");
@@ -2152,10 +2188,26 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                foreach (var customerContactAtaMapping in customerContactATAMapping)
+                for (int i = 0; i < customerContactATAMapping.Length; i++)
                 {
-                    _unitOfWork.Repository<CustomerContactATAMapping>().Add(customerContactAtaMapping);
-                    _unitOfWork.SaveChanges();
+
+                    var atachapter = _unitOfWork.Repository<CustomerContactATAMapping>().GetSingleOrDefault(c => c.CustomerContactId == customerContactATAMapping[i].CustomerContactId && (c.ATAChapterId == customerContactATAMapping[i].ATAChapterId) && (c.ATASubChapterId == customerContactATAMapping[i].ATASubChapterId) && (c.MasterCompanyId == customerContactATAMapping[i].MasterCompanyId) );// && c.AircraftModelId == customerAircraftMappingVM[i].AircraftModelId && c.MasterCompanyId == customerAircraftMappingVM[i].MasterCompanyId && c.CustomerId = customerAircraftMappingVM[i].CustomerId);
+                    if (atachapter == null)
+                    {
+
+                        foreach (var customerContactAtaMapping in customerContactATAMapping)
+                        {
+
+
+                            _unitOfWork.Repository<CustomerContactATAMapping>().Add(customerContactAtaMapping);
+                            _unitOfWork.SaveChanges();
+                        }
+                    }
+                    else
+                    {
+
+                        return BadRequest("Record already exist with these details");
+                    }
                 }
             }
             else
@@ -2378,32 +2430,32 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpGet("getMarkUpValues")]
-        public IActionResult getAll()
-        {
-            var markUpPercentages = _unitOfWork.Repository<MarkUpPercentage>().GetAll().OrderByDescending(x => x.MarkUpPercentageId);
-            return Ok(markUpPercentages);
-        }
+        //[HttpGet("getMarkUpValues")]
+        //public IActionResult getAll()
+        //{
+        //    var markUpPercentages = _unitOfWork.Repository<MarkUpPercentage>().GetAll().OrderByDescending(x => x.MarkUpPercentageId);
+        //    return Ok(markUpPercentages);
+        //}
 
-        [HttpPost("addMarkUp")]
-        public IActionResult addasset([FromBody] MarkUpPercentage markUpPercentage)
-        {
-            if (markUpPercentage != null)
-            {
-                markUpPercentage.MarkUpPercentageId = 0;
-                _context.MarkUpPercentage.Add(markUpPercentage);
-                _context.SaveChanges();
-            }
-            return Ok(markUpPercentage);
-        }
+        //[HttpPost("addMarkUp")]
+        //public IActionResult addasset([FromBody] MarkUpPercentage markUpPercentage)
+        //{
+        //    if (markUpPercentage != null)
+        //    {
+        //        markUpPercentage.MarkUpPercentageId = 0;
+        //        _context.MarkUpPercentage.Add(markUpPercentage);
+        //        _context.SaveChanges();
+        //    }
+        //    return Ok(markUpPercentage);
+        //}
 
-        [HttpPut("addMarkUp/{id}")]
-        public IActionResult updateAsset([FromBody] MarkUpPercentage markUpPercentage)
-        {
-            _unitOfWork.Repository<MarkUpPercentage>().Update(markUpPercentage);
-            _unitOfWork.SaveChanges();
-            return Ok(markUpPercentage);
-        }
+        //[HttpPut("addMarkUp/{id}")]
+        //public IActionResult updateAsset([FromBody] MarkUpPercentage markUpPercentage)
+        //{
+        //    _unitOfWork.Repository<MarkUpPercentage>().Update(markUpPercentage);
+        //    _unitOfWork.SaveChanges();
+        //    return Ok(markUpPercentage);
+        //}
 
         [HttpGet("getAllCustomers")]
         public IEnumerable<Customer> getAllCustomers()
@@ -2795,9 +2847,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("searchGetCustomerATAMappedByMultiATAIDATASubID")]
-        public IActionResult CustomerATAMappedList(long customerId, string ATAChapterId, string ATASubChapterID)
+        public IActionResult CustomerATAMappedList(long customerId,string contactId, string ATAChapterId, string ATASubChapterID)
         {
-            var result = _unitOfWork.Customer.searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(customerId, ATAChapterId, ATASubChapterID);
+            var result = _unitOfWork.Customer.searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(customerId,contactId, ATAChapterId, ATASubChapterID);
 
             if (result == null)
             {
@@ -2863,7 +2915,7 @@ namespace QuickApp.Pro.Controllers
                         objCustomerDocumentDetail.IsActive = true;
                         objCustomerDocumentDetail.IsDeleted = false;
                         objCustomerDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objCustomerDocumentDetail.CustomerId,
-                                                                                Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), objCustomerDocumentDetail.UpdatedBy, objCustomerDocumentDetail.MasterCompanyId);
+                                                                                Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), objCustomerDocumentDetail.UpdatedBy, objCustomerDocumentDetail.MasterCompanyId);
                         _unitOfWork.CreateDocumentDetails.Add(objCustomerDocumentDetail);
                         _unitOfWork.SaveChanges();
                     }
@@ -3095,6 +3147,73 @@ namespace QuickApp.Pro.Controllers
             _unitOfWork.SaveChanges();
             return Ok(id);
         }
+
+        [HttpPost("customerFinanceDocumentUpload")]
+        [Produces("application/json")]
+        public IActionResult CustomerDocumentUploadAction()
+        {
+
+            try
+            {
+                CustomerDocumentDetail objCustomerDocumentDetail = new CustomerDocumentDetail();
+                if (ModelState.IsValid)
+                {
+                    if (Request.Form == null)
+                        return BadRequest($"{nameof(objCustomerDocumentDetail)} cannot be null");
+                    objCustomerDocumentDetail.MasterCompanyId = 1;
+                    objCustomerDocumentDetail.UpdatedBy = Request.Form["UpdatedBy"];
+                    objCustomerDocumentDetail.CustomerId = Convert.ToInt64(Request.Form["CustomerId"]);
+
+                    if (objCustomerDocumentDetail.CustomerId > 0)
+                    {
+                        var attachmentData = _context.Attachment.Where(p => p.ReferenceId == objCustomerDocumentDetail.CustomerId && p.ModuleId == Convert.ToInt32(ModuleEnum.Customer)).FirstOrDefault();
+
+                        if (attachmentData != null)
+                        {
+                            objCustomerDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objCustomerDocumentDetail.CustomerId,
+                                                         Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), objCustomerDocumentDetail.UpdatedBy, objCustomerDocumentDetail.MasterCompanyId, attachmentData.AttachmentId);
+
+
+                        }
+                        else
+                        {
+                            objCustomerDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objCustomerDocumentDetail.CustomerId,
+                                                                       Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), objCustomerDocumentDetail.UpdatedBy, objCustomerDocumentDetail.MasterCompanyId);
+
+                        }
+
+                    }
+
+                    return Ok(objCustomerDocumentDetail);
+                }
+                return Ok(ModelState);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("getCustmerFinanceDocumentDetail/{id}")]
+        public IActionResult GetCustomerFinanceDocumentDetail(long id, int moduleId)
+        {
+            var allcustomerFinanceDocs = _unitOfWork.Customer.GetCustomerFinanceDocumentDetailById(id, moduleId);
+            return Ok(allcustomerFinanceDocs);
+        }
+        [HttpDelete("customerAttachmentDelete/{id}")]
+        public IActionResult GetCustomerFinanceDocumentDelete(long id, string updatedBy)
+        {
+            var deleteStatus = _unitOfWork.Customer.GetCustomerFinanceDocumentDelete(id, updatedBy);
+            return Ok(deleteStatus);
+        }
+        [HttpGet("GetCustomerContacts")]
+        // [Produces(typeof(List<ATAChapterViewModel>))]
+        public IActionResult GetCustomerContacts(long id)
+        {
+            var allATAMaininfo = _unitOfWork.Customer.GetCustomerContacts(id);
+            return Ok(allATAMaininfo);
+
+        }
+
     }
 
 }

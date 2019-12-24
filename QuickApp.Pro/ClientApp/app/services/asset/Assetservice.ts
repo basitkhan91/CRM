@@ -80,6 +80,10 @@ export class AssetService {
         return Observable.forkJoin(this.assetEndpoint.getAllAssetList<any[]>());
     }
 
+    getByAssetId(assetId?: string) {
+        return this.assetEndpoint.getByAssetIdDataEndpoint<any>(assetId);
+    }
+
     updateAsset(asset: any) {
         return this.assetEndpoint.updateAsset(asset, asset.assetRecordId);
     }
@@ -112,9 +116,13 @@ export class AssetService {
     getAssetsById(assetsRecordsId){
         return this.assetEndpoint.getAssetsById(assetsRecordsId);
     }
-  //  Audit method in services
+    //Audit method in services
     //getAudit(assetRecordId: number) {
     //    return this.assetEndpoint.getAudit<any[]>(assetRecordId);
     //}
+
+    updateCapes(assetcapes: any) {
+        return this.assetEndpoint.updateCapes(assetcapes, assetcapes.AssetCapesId);
+    }
 
 }

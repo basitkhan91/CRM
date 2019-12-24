@@ -108,13 +108,13 @@
           class="p-radiobutton-label-horizontal"
           name="HoursorClockorScan"
           label="Labour hours"
-          value="labourHours"
+          [value]=1
           [(ngModel)]="laborForm.hoursorClockorScan"
         ></p-radioButton>
         <p-radioButton
           class="p-radiobutton-label-horizontal col-width"
           name="HoursorClockorScan"
-          value="labourClock"
+          [value]=2
           label="Labour Clock In/Out"
           [(ngModel)]="laborForm.hoursorClockorScan"
         ></p-radioButton>
@@ -122,7 +122,7 @@
         <p-radioButton
           class="p-radiobutton-label-horizontal"
           name="HoursorClockorScan"
-          value="scan"
+          [value]=3
           label="Scan"
           [(ngModel)]="laborForm.hoursorClockorScan"
         ></p-radioButton>
@@ -144,36 +144,46 @@
           <th class="text-center">Billable /NonBillable</th>
           <th
             class="text-center"
-            *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'"
+            *ngIf="laborForm.hoursorClockorScan !== 1 && laborForm.hoursorClockorScan !== 3"
           >
             Start/Stop
           </th>
           <th
             class="text-center"
             style="width: 100px;"
-            *ngIf="laborForm.hoursorClockorScan !== 'labourHours'"
+            *ngIf="laborForm.hoursorClockorScan !== 1"
           >
             Start Date and Time
           </th>
           <th
             class="text-center"
-            *ngIf="laborForm.hoursorClockorScan !== 'labourHours'"
+            *ngIf="laborForm.hoursorClockorScan !== 1"
           >
             End Date and Time
           </th>
           <th class="text-center">Hours/Mins</th>
           <th class="text-center">Adjustments</th>
           <th class="text-center">Adjusted Hours</th>
+          <ng-container *ngIf="isQuote">
+            <th>
+              Direct Labor OH Cost
+            </th>
+            <th>MARKUP</th>
+            <th>Cost plus amount</th>
+            <th>Fixed Amount</th>
+          </ng-container>
           <th class="text-center" style="padding: 7px 53px !important;">
             Memo
           </th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
         <!-- Receive -->
         <ng-container *ngFor="let task of taskList; let taskIndex = index">
           <!-- <ng-container *ngIf="isAllowedTask(task.taskId)"> -->
-            <tr *ngFor="let rec of laborForm.workOrderLaborList[0][task.description | lowercase]; let i = index">
+          <ng-container *ngFor="let rec of laborForm.workOrderLaborList[0][task.description | lowercase]; let i = index">
+            <tr *ngIf="!rec['isDeleted']">
                 <td *ngIf="i < 1">
                   {{task.description}}
                   <i
@@ -242,7 +252,7 @@
                       [(ngModel)]="rec.billableId"
                     ></p-dropdown>
                 </td>
-                <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'">
+                <td *ngIf="laborForm.hoursorClockorScan !== 1 && laborForm.hoursorClockorScan !== 3">
                   <button
                     class="btn btn-primary-cstm start-btn"
                     (click)="startandStop(rec)"
@@ -251,7 +261,7 @@
                     Start/Stop
                   </button>
                 </td>
-                <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours'">
+                <td *ngIf="laborForm.hoursorClockorScan !== 1">
                   <p-calendar
                     [(ngModel)]="rec.startDate"
                     [disabled]="!rec.startDateandTimeIsEdit"
@@ -265,7 +275,7 @@
                   ></p-calendar>
                   <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(rec,'startDateandTimeIsEdit')"></i>
                 </td>
-                  <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
+                  <td *ngIf="laborForm.hoursorClockorScan !== 1 ">
                 
                   <p-calendar [(ngModel)]="rec.endDate" [disabled]="!rec.endDateandTimeIsEdit" [showIcon]="true" 
                   showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"  
@@ -274,10 +284,10 @@
                   ></p-calendar>
                 <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(rec,'endDateandTimeIsEdit')"></i>            
                 </td>
-                <td *ngIf="laborForm.hoursorClockorScan !== 'labourHours' ">
+                <td *ngIf="laborForm.hoursorClockorScan !== 1 ">
                   {{ rec.hours }}
                 </td>
-                <td *ngIf="laborForm.hoursorClockorScan === 'labourHours'"> 
+                <td *ngIf="laborForm.hoursorClockorScan === 1"> 
                   <input type="number" (blur)="calculateHoursDifference(rec)" [(ngModel)]="rec.hours" name="hours" [disabled]="checkDisability(rec, task.taskId)"> 
                 </td>
                 <td>
@@ -286,10 +296,35 @@
                 <td>
                   {{ rec.adjustedHours }}
                 </td>
+                <ng-container *ngIf="isQuote">
+                  <td>
+                    <input type="number" [(ngModel)]="rec.laborOverheadCost" />
+                  </td>
+                  <td>
+                      <!-- <input [(ngModel)]="matQuotation.markup" /> -->
+                    <select class="form-control custom-select wf-pub-id" (change)="markupChanged(rec)" [(ngModel)]="rec.markupPercentageId">
+                      <option value="">Select</option>
+                      <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+                    </select>
+                  </td>
+                  <td>{{rec.costPlusAmount}}</td>
+                  <td><input [(ngModel)]="rec.fixedAmount" /></td>
+                </ng-container>
                 <td>
                   <input type="text" [(ngModel)]="rec.memo" />
                 </td>
+                <td>
+                    <button
+                    class="btn-delete ptable-wo-btns"
+                    mat-icon-button
+                    matTooltip="Delete"
+                    (click)="deleteLabor(task.description, i)"
+                  >
+                    <mat-icon color="warn">delete</mat-icon>
+                  </button>
+                </td>
             </tr>
+          </ng-container>
           <!-- </ng-container> -->
           </ng-container>
               <tr>
@@ -301,19 +336,19 @@
                 </td>
                 <td></td>
                 <td
-                  *ngIf="laborForm.hoursorClockorScan !== 'labourHours' && laborForm.hoursorClockorScan !== 'scan'"
+                  *ngIf="laborForm.hoursorClockorScan !== 1 && laborForm.hoursorClockorScan !== 3"
                 >
                 </td>
                 <td
-                  *ngIf="laborForm.hoursorClockorScan !== 'labourHours'"
+                  *ngIf="laborForm.hoursorClockorScan !== 1"
                 >
                 </td>
                 <td
-                  *ngIf="laborForm.hoursorClockorScan !== 'labourHours'"
+                  *ngIf="laborForm.hoursorClockorScan !== 1"
                 >
                 </td>
                 <td>
-                    <input type="text" [(ngModel)]="totalWorkHours" [disabled]="laborForm.workFloworSpecificTaskorWorkOrder == 'specificTasks'"/>
+                    <input type="text" [(ngModel)]="laborForm.totalWorkHours" [disabled]="laborForm.workFloworSpecificTaskorWorkOrder == 'specificTasks'"/>
                 </td>
                 <td></td>
                 <td></td>

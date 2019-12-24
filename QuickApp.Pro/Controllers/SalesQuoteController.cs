@@ -52,6 +52,7 @@ namespace QuickApp.Pro.Controllers
             list = from q in this.Context.SalesOrderQuote
                    join c in this.Context.Customer
                    on q.CustomerId equals c.CustomerId
+                   where q.IsDeleted == false
                    select new SalesQuoteListView
                    {
                        SalesQuoteId = q.SalesOrderQuoteId,
@@ -61,6 +62,7 @@ namespace QuickApp.Pro.Controllers
                        CustomerCode = c.CustomerCode,
                        Status = "Open",  // Hardcoded for time being, will be removed in next version  
                    };
+                   
             return Ok(list);
         }
 
@@ -77,6 +79,35 @@ namespace QuickApp.Pro.Controllers
 
 
             return Ok(model);
+        }
+
+        // POST: api/SalesQuote/get/{id}
+        [HttpGet("get/{id}")]
+        public IActionResult Get(long id)
+        {
+
+            SalesOrderQuote quote = this.UnitOfWork.SalesOrderQuote.Get(id);
+
+            if (quote == null) return NotFound($"{id} doesnot exist.");
+
+            IEnumerable<SalesOrderQuoteApproverList> approverList =  this.UnitOfWork.SalesOrderQuoteApproverList.GetApproverList(id);
+
+            IEnumerable<SalesOrderQuotePart> parts = this.UnitOfWork.SalesOrderQuotePart.GetPartsBySalesQuoteId(id);
+
+            var quoteView = Mapper.Map<SalesOrderQuote, SalesOrderQuoteView>(quote);
+
+            var approverListView = Mapper.Map<IEnumerable<SalesOrderQuoteApproverList>, IEnumerable<SalesOrderQuoteApproverListView>>(approverList);
+
+            var partsView = Mapper.Map<IEnumerable<SalesOrderQuotePart>, IEnumerable<SalesOrderQuotePartView>>(parts);
+
+            var response = new SalesQuoteView
+            {
+                SalesOrderQuote = quoteView,
+                ApproverList = approverListView.ToList(),  
+                Parts = partsView.ToList()
+            };
+
+            return Ok(response);
         }
 
         // POST: api/SalesQuote

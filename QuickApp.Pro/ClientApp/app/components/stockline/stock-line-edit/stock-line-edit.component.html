@@ -343,42 +343,42 @@
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">ESN</label>
+                    <label class="control-label col-sm-4" matTooltip="Engine Serial Number" matTooltipPosition="above">ESN</label>
                     <div class="col-sm-7">
                         <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.engineSerialNumber">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">ECCN</label>
+                    <label class="control-label col-sm-4" matTooltip="Export Control Classification Number" matTooltipPosition="above">ECCN</label>
                     <div class="col-sm-7">
                         <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.ExportECCN">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">ITAR NUM</label>
+                    <label class="control-label col-sm-4" matTooltip="International Traffic in Arms Regulations Number" matTooltipPosition="above">ITAR NUM</label>
                     <div class="col-sm-7">
                         <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.ITARNumber">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">NHA</label>
+                    <label class="control-label col-sm-4" matTooltip="Next Higher Assembly" matTooltipPosition="above">NHA</label>
                     <div class="col-sm-7">
                         <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.NHA">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">TLA</label>
+                    <label class="control-label col-sm-4" matTooltip="Top Level Assembly" matTooltipPosition="above">TLA</label>
                     <div class="col-sm-7">
                         <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.tla">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">NSN</label>
+                    <label class="control-label col-sm-4" matTooltip="National Stock Number" matTooltipPosition="above">NSN</label>
                     <div class="col-sm-7">
                         <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.nationalStockNumber">
                     </div>
@@ -655,27 +655,12 @@
                                         </td>
                                         <td>
                                             <input type="checkbox" class=" wauto" [(ngModel)]="col.integratedCheckbox" [ngModelOptions]="{standalone: true}" (change)="saveSelectedModel(col,$event)">
-
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
-
                         </div>
-
                     </div>
-                    <!--<label class="control-label col-sm-4">Integration</label>
-        <div class="col-sm-7">
-            <div class="input-group">
-                <select id="cexpertise" name="catadd" multiple="" style="display: none;">
-                    <option value="ILS" class="">ILS</option>
-                    <option value="Parts base" class="">Parts base</option>
-                    <option value="Aeroxchange" class="">Aeroxchange</option>
-                    <option value="145.com" class="">145.com</option>
-                </select><div class="btn-group"><button type="button" class="multiselect dropdown-toggle btn btn-default" data-toggle="dropdown" title="None selected"><span class="multiselect-selected-text">None selected</span> <b class="caret"></b></button><ul class="multiselect-container dropdown-menu"><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="ILS"> ILS</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Parts base"> Parts base</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="Aeroxchange"> Aeroxchange</label></a></li><li><a tabindex="0"><label class="checkbox"><input type="checkbox" value="145.com"> 145.com</label></a></li></ul></div>
-                <a href="add-integration.html" target="_blank" class="add-icon"><i class="fa fa-plus"></i></a>
-            </div>
-        </div>-->
                 </div>
 
                 <div class="form-group col-sm-12">

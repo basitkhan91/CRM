@@ -114,6 +114,7 @@ export class VendorShippingInformationComponent {
     selectedCountries: any;
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
+    auditHistory: any = [];
 
     constructor(private http: HttpClient, private router: Router,
         private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
@@ -212,7 +213,7 @@ export class VendorShippingInformationComponent {
             { field: 'siteName', header: 'Ship To' },
             { field: 'address1', header: 'Address1' },
             { field: 'address2', header: 'Address2' },
-            { field: 'address3', header: 'Address3' },
+            // { field: 'address3', header: 'Address3' },
             { field: 'city', header: 'City' },
             { field: 'stateOrProvince', header: 'State/Prov' },
             { field: 'postalCode', header: 'Postal Code' },
@@ -315,7 +316,7 @@ export class VendorShippingInformationComponent {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.auditHisory = auditHistory;
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -326,7 +327,7 @@ export class VendorShippingInformationComponent {
        
         this.shippingauditHisory = auditHistory;
        
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -348,7 +349,7 @@ export class VendorShippingInformationComponent {
         this.isSaving = true;
         this.loadMasterCompanies();
         this.actionName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -358,7 +359,7 @@ export class VendorShippingInformationComponent {
         this.isDeleteMode = true;
         //this.sourceVendor = row;
         this.localCollection = row;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -386,13 +387,13 @@ export class VendorShippingInformationComponent {
         this.createddate = row.createdDate;
         this.updatedDate = row.updatedDate;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
     openHelpText(content) {
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -422,12 +423,12 @@ export class VendorShippingInformationComponent {
 
     editItemAndCloseModel() {
         this.isSaving = true;
-        if (!(this.sourceVendor.siteName && this.sourceVendor.address1 && this.sourceVendor.city &&
-            this.sourceVendor.stateOrProvince && this.sourceVendor.postalCode && this.sourceVendor.country
-        )) {
-            this.display = true;
-            this.modelValue = true;
-        }
+        // if (!(this.sourceVendor.siteName && this.sourceVendor.address1 && this.sourceVendor.city &&
+        //     this.sourceVendor.stateOrProvince && this.sourceVendor.postalCode && this.sourceVendor.country
+        // )) {
+        //     this.display = true;
+        //     this.modelValue = true;
+        // }
         if (this.sourceVendor.siteName && this.sourceVendor.address1 && this.sourceVendor.city &&
             this.sourceVendor.stateOrProvince && this.sourceVendor.postalCode && this.sourceVendor.country) {
             if (!this.sourceVendor.vendorId) {
@@ -525,7 +526,7 @@ export class VendorShippingInformationComponent {
         this.loadShipViaCollection(rowData);
         this.loadMasterCompanies();
         this.sourceAction.isActive = true;
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -749,5 +750,32 @@ export class VendorShippingInformationComponent {
             }
         }
     }
+
+    getAuditHistoryById(rowData) {
+        // this.publicationService.getPublicationAuditDetails(rowData.publicationRecordId).subscribe(res => {
+        //     console.log(res);            
+        //     this.auditHistory = res;
+        // })
+    }
+
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.shippingauditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+
+    onAddShippingInfo() {
+        this.sourceVendor = {};
+    }
+
+
+
 }
 

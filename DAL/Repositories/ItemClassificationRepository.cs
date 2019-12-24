@@ -140,7 +140,7 @@ namespace DAL.Repositories
 
         public IEnumerable<ItemClassficationAudit> GetItemClassficationAuditDetails(long itemClassificationId)
         {
-            return _appContext.ItemClassficationAudit.Where(c => c.ItemClassificationId == itemClassificationId).OrderByDescending(p => p.UpdatedDate).ToList();
+            return _appContext.ItemClassificationAudit.Where(c => c.ItemClassificationId == itemClassificationId).OrderByDescending(p => p.UpdatedDate).ToList();
 
         }
 

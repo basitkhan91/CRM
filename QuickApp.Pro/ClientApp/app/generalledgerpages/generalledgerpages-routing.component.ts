@@ -14,7 +14,7 @@ import { AccountSetupComponent } from "../components/general-ledger/account-setu
 //import { GeneralLedgerCurrencyComponent } from "../components/general-ledger/general-ledger-currency/general-ledger-currency.component";
 //import { GlAccountCategoriesComponent } from "../components/gl-account-categories/gl-account-categories.component";
 import { ManagementStructureComponent } from '../components/general-ledger/entity/entity-setup/entity-setup.component';
-import { EntityEditComponent } from '../components/general-ledger/entity/entity-edit/entity-edit.component';
+import { EntityEditComponent } from '../components/general-ledger/entity/legal-entity-list/legal-entity-list.component';
 import { NodeSetupComponent } from "../components/accounting/general-ledger/node-setup/node-setup.component";
 import { GlaccountListComponent } from '../components/general-ledger/glaccount-list/glaccount-list.component';
 import { GlaccountCreateComponent } from '../components/general-ledger/glaccount-create/glaccount-create.component';
@@ -23,6 +23,7 @@ import { InterCompanySetupComponent } from '../components/general-ledger/interco
 //import { GLAccountCategoryComponent } from '../components/gl-account-categories/gl-account-categories.component';
 import { AccountListingComponent } from '../components/general-ledger/account-listing/account-listing.component';
 import { AccountListingCreateComponent } from '../components/general-ledger/account-listing-create/account-listing-create.component';
+import { AccountingListingCalendarComponent } from '../components/general-ledger/accounting-listing-calendar/accounting-listing-calendar.component';
 
 
 const generalledgerpageRoutes: Routes = [
@@ -34,7 +35,7 @@ const generalledgerpageRoutes: Routes = [
         children: [
             { path: "app-legalentity-structure", component: LegalEntityStructureComponent, data: { title: "EntityListComponent" } },
             { path: "app-managemententity-structure", component: ManagementStructureComponent, data: { title: "EntitySetupComponent" } },
-            { path: "app-entity-edit", component: EntityEditComponent, data: { title: "EntityEditComponent" } },
+            { path: "app-legal-entity-list", component: EntityEditComponent, data: { title: "EntityListComponent" } },
 
             { path: "app-accounting-calendar", component: AccountingCalendarComponent, data: { title: "AccountingCalendarComponent" } },
             { path: "app-entity-edit-component", component: JournalsComponent, data: { title: "JournalsComponent" } },
@@ -49,7 +50,8 @@ const generalledgerpageRoutes: Routes = [
             { path: "app-intercompany-setup", component: InterCompanySetupComponent, data: { title: "InterCompanySetup" } },
             { path: "app-account-listing", component: AccountListingComponent, data: { title: "AccountListing" } },
             { path: "app-account-listing-create", component: AccountListingCreateComponent, data: { title: "AccountListingCreate" } },
-            { path: "app-account-listing-create/:id", component: AccountListingCreateComponent, data: { title: "AccountListingEdit" } }
+            { path: "app-account-listing-create/:id", component: AccountListingCreateComponent, data: { title: "AccountListingEdit" } },
+            { path: "app-accounting-listing-calendar", component: AccountingListingCalendarComponent, data: { title: "AccountingCalendarList", mode: "listing" } }
         ]
     }
 ];

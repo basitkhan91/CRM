@@ -19,6 +19,8 @@ export class AssetEndpoint extends EndpointFactory {
     private readonly getAuditById: string = "/api/AssetModule/audits";
     private readonly capesPost: string = "/api/AssetModule/Mancapespost";
     private readonly addassetcapes: string = "/api/AssetModule/addAssetCapes";
+    private readonly _updatecapesUrl: string = "/api/AssetModule/updatecapes";
+    private readonly _getAssetUrl: string = "/api/AssetModule/GetAsset";
 
     get allAssetListURL() { return this.configurations.baseUrl + this._allAssetlistUrl; }
     get assetListurl() { return this.configurations.baseUrl + this._assetlistUrl; }
@@ -26,6 +28,7 @@ export class AssetEndpoint extends EndpointFactory {
     get removeCapesById() { return this.configurations.baseUrl + this.removeCapByIdURL; }
     get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
     get getCapabilityUrl() { return this.configurations.baseUrl + this._getCapabilityUrl; }
+    get getAssetUrl() { return this.configurations.baseUrl + this._getAssetUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
         super(http, configurations, injector);
@@ -45,6 +48,14 @@ export class AssetEndpoint extends EndpointFactory {
         return this.http.post<T>(this._addAssetUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getNewAsset(userObject));
+            });
+    }
+
+    getByAssetIdDataEndpoint<T>(assetId: any): Observable<T> {
+        let url = `${this.getAssetUrl}/${assetId}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getByAssetIdDataEndpoint(assetId));
             });
     }
     getAssetList<T>(): Observable<T> {
@@ -119,6 +130,13 @@ export class AssetEndpoint extends EndpointFactory {
 
     getAssetsById(assetRecordId) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderassetview?assetRecordId=${assetRecordId}`, this.getRequestHeaders());
+    }
+
+    updateCapes<T>(roleObject: any, assetCapesId: number): Observable<T> {
+        return this.http.put<T>(this._updatecapesUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.updateCapes(roleObject, assetCapesId));
+            });
     }
 
     //Audit method in end pont services

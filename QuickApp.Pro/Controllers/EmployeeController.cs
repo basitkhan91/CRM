@@ -192,8 +192,13 @@ namespace QuickApp.Pro.Controllers
                 {
                     employeeobject.LegalEntityId = entityobject.LegalEntityId;
                 }
-               
-               
+                else
+                {
+                    var legalEntityobject = _context.LegalEntity.OrderByDescending(p => p.LegalEntityId).FirstOrDefault();
+                    employeeobject.LegalEntityId = legalEntityobject.LegalEntityId;
+                }
+
+
                 employeeobject.SSN = employeeViewModel.SSN;
                 employeeobject.Email = employeeViewModel.Email;
                 employeeobject.AllowDoubleTime = employeeViewModel.AllowDoubleTime;
@@ -209,6 +214,18 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.CreatedBy = employeeViewModel.CreatedBy;
                 employeeobject.UpdatedBy = employeeViewModel.UpdatedBy;
                 employeeobject.Memo = employeeViewModel.Memo;
+
+                employeeobject.CurrencyId = employeeViewModel.CurrencyId;
+
+                if(employeeViewModel.IsHeWorksInShop == null)
+                {
+                    employeeobject.IsHeWorksInShop = false;
+                }
+                else
+                {
+                    employeeobject.IsHeWorksInShop = employeeViewModel.IsHeWorksInShop;
+                }
+               
 
                 _unitOfWork.employee.Add(employeeobject);
                 _unitOfWork.SaveChanges();
@@ -369,7 +386,17 @@ namespace QuickApp.Pro.Controllers
                 existingResult.EmployeeCertifyingStaff = employeeViewModel.EmployeeCertifyingStaff;
                 existingResult.MasterCompanyId = 1;
                 existingResult.Memo = employeeViewModel.Memo;
-                
+                existingResult.CurrencyId = employeeViewModel.CurrencyId;
+
+                if (employeeViewModel.IsHeWorksInShop == null)
+                {
+                    existingResult.IsHeWorksInShop = false;
+                }
+                else
+                {
+                    existingResult.IsHeWorksInShop = employeeViewModel.IsHeWorksInShop;
+                }
+
                 if (employeeViewModel.EmployeeLeaveTypeId != null)
                 {
                     var integrationList = _unitOfWork.EmployeeLeaveTypeMappingRepository.GetAllData().ToList();
@@ -1039,6 +1066,13 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetEmpoyeeManagementStructure(long employeeId)
         {
             var result = _unitOfWork.employee.GetEmpoyeeManagementStructure(employeeId);
+            return Ok(result);
+        }
+
+        [HttpGet("GetEmployeeAuditHistory/{employeeId}")]        
+        public IActionResult GetEmployeeAuditHistoryByEmployeeId(long employeeId)
+        {
+            var result = _unitOfWork.employee.GetEmployeeAuditHistoryData(employeeId);
             return Ok(result);
         }
 

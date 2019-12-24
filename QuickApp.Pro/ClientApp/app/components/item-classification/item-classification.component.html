@@ -14,18 +14,8 @@
                                 <div style="text-align: right">
                                     <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
                                                    selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-                                    <!-- <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
-                                        <i class="fa fa-search"></i>
-                                        <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value,'contains')" placeholder="Global Filter">
-                                    </div> -->
                                     <button type="button" class="btn btn-primary-cstm " pButton icon="fa-download" iconPos="left" label="Export All Data" style="padding: 5px 12px !important" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm " pButton icon="fa-download" iconPos="left" label="Export Selection Only" style="padding: 5px 12px !important" (click)="dt.exportCSV({selectionOnly:true})"></button>
-                                    <!-- <div class="excel-upload  excel-upload-cstm">
-                                        <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                        <label for="upload">
-                                            <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-                                        </label>
-                                    </div> -->
                                     <div class="excel-upload  excel-upload-cstm">
 
                                         <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)"
@@ -103,25 +93,6 @@
     </div>
 </div>
 
-
-<!-- <ng-template #content let-c="close" let-d="dismiss">
-    <div class="modal-header">
-        <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
-
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-       <strong>Item Classification Name: <span class="new-label">"{{ item_Name}}"</span></strong>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-primary-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
-    </div>
-
-</ng-template> -->
-
 <div class="modal fade" id="contentEdit" role="dialog">
     <form #userForm="ngForm" class="form-horizontal">
         <div class="modal-dialog">
@@ -140,9 +111,6 @@
                             </div>
                             <div class="col-sm-5">
                                 <p-autoComplete field="itemClassificationCode" name="code" (onSelect)="selectedItemCode($event)" (onKeyUp)="checkItemCodeExists('itemClassificationCode', $event.target.value)" [(ngModel)]="addNewItemClassification.itemClassificationCode" [suggestions]="itemClassificationList" (completeMethod)="filterItemCode($event)" [size]="30" [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
-                                    <!-- <ng-template let-itemName pTemplate="item">
-                                        <div class="ui-helper-clearfix">{{itemName}}</div>
-                                    </ng-template> -->
                                 </p-autoComplete>
                                 <div *ngIf="disableSaveForItemCode" class="clr-red">Already Exists</div>
                             </div>
@@ -157,9 +125,6 @@
                                 <p-autoComplete field="description" (onSelect)="selectedItemDesc($event)" name="classficationDesc" (onKeyUp)="checkItemDescExists('description', $event.target.value)"
                                                 [(ngModel)]="addNewItemClassification.description"
                                                 [suggestions]="itemClassificationDescList" (completeMethod)="filterItemDesc($event)" [size]="30" class="p-autoComplete-ctsm p-autocomp-ctsm" [minLength]="1" [dropdown]="true" required>
-                                    <!-- <ng-template let-className pTemplate="description">
-                                        <div class="ui-helper-clearfix">{{className}}</div>
-                                    </ng-template> -->
                                 </p-autoComplete>
                                 <div *ngIf="disableSaveForItemDesc" class="clr-red">Already Exists</div>
                             </div>
@@ -173,17 +138,6 @@
                                     <option value="Stock">Stock</option>
                                     <option value="Non Stock">Non Stock</option>
                                 </select>
-                                <!-- <p-autoComplete (onSelect)="classificationtypeId($event)" name="type" class="p-autoComplete-ctsm" (onKeyUp)=classeventtypeHandler($event)
-                                                [(ngModel)]="itemTypeName"
-                                                [suggestions]="localtypeCollection" (completeMethod)="filterItemtypes($event)" [size]="30"
-                                                [minLength]="1" [dropdown]="true" required>
-                                    <ng-template let-itemTypeName pTemplate="ItemType">
-                                        <div class="ui-helper-clearfix">{{itemTypeName}}</div>
-                                    </ng-template>
-
-                                </p-autoComplete>
-                                <div *ngIf="disabletypeSave" style="color:Red">Already Exist</div> -->
-
                             </div>
                         </div>
                         <div class="col-sm-12">
@@ -219,57 +173,6 @@
     </form>
 </div>
 
-
-<!-- <ng-template #view class="modal fade " id="view" role="dialog">
-
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-            <h4 class="modal-title">ItemClassification Details</h4>
-        </div>
-        <div class="modal-body viewform">
-            <div class="col-sm-12">
-                <p><span class="label col-sm-6"><b>ItemClassification Name: </b></span><span class="value col-sm-6">{{ item_Name}}</span></p>
-                <p><span class="label col-sm-6"><b>Description: </b></span><span class="value col-sm-6">{{ description}}</span></p>
-                <p><span class="label col-sm-6"><b>ItemType: </b></span><span class="value col-sm-6">{{ itemType}}</span></p>
-                <p><span class="label col-sm-6"><b>Memo: </b></span><span class="value col-sm-6">{{memo}}</span></p>
-                <p><span class="label col-sm-6"><b>Created By: </b></span><span class="value col-sm-6">{{createdBy}}</span></p>
-                <p><span class="label col-sm-6"><b>Created Date: </b></span><span class="value col-sm-6">{{createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span></p>
-                <p><span class="label col-sm-6"><b>Updated By: </b></span><span class="value col-sm-6">{{updatedBy}}</span></p>
-                <p><span class="label col-sm-6"><b>Updated Date: </b></span><span class="value col-sm-6">{{updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span></p>
-            </div>
-
-            <div class="clear"></div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
-        </div>
-    </div>
-
-</ng-template> -->
-<!-- <ng-template #helpText class="modal fade" id="help-popup" role="dialog">
-
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-            <h4 class="modal-title">Help text about the page</h4>
-        </div>
-        <div class="modal-body">
-            <p>Sample Point 1 about Page Description</p>
-            <p>Sample Point 2 about Page Description</p>
-            <p>Sample Point 3 about Page Description</p>
-            <p>Sample Point 4 about Page Description</p>
-            <p>Sample Point 5 about Page Description</p>
-            <hr />
-            <p><b>Excell format to upload the Data - <a href="documents/action-table-format.xlsx" class="clr-red">Download</a></b></p>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
-        </div>
-    </div>
-
-</ng-template> -->
-
 <div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -281,13 +184,13 @@
                 <div class="col-sm-12">
                     <p>
                         <span class="label ">
-                            <b class="view-Header">ItemClassification Name: </b>
+                            <b class="view-Header">Item Classification ID: </b>
                         </span>
                         <span class="value">{{viewRowData.itemClassificationCode}}</span>
                     </p>
                     <p>
                         <span class="label ">
-                            <b class="view-Header">Description: </b>
+                            <b class="view-Header"> Item Classification Description: </b>
                         </span>
                         <span class="value">{{viewRowData.description}}</span>
                     </p>
@@ -329,7 +232,7 @@
                     </p>
                     <p>
                         <span class="label ">
-                            <b class="view-Header">IsActive: </b>
+                            <b class="view-Header">Is Active: </b>
                         </span>
                         <span class="value">{{viewRowData.isActive}}</span>
                     </p>
@@ -386,14 +289,13 @@
                                 <th>Item Classfication Description</th>
                                 <th>Item Type</th>
                                 <th>Memo</th>
-                                <th>IsActive</th>
+                                <th>Is Active</th>
                                 <th>Updated By</th>
                                 <th>Updated Time</th>
                             </tr>
                         </thead>
                         <tbody *ngIf="auditHistory.length> 0">
                             <tr *ngFor="let audit of auditHistory; let i = index;">
-                                <!-- auditHistory[i>0 ? i-1 : i] -->
                                 <td [ngStyle]="{'color': getColorCodeForHistory(i, 'itemClassificationCode', audit.itemClassificationCode)  ? 'black' : 'red'  }">{{audit.itemClassificationCode}}</td>
                                 <td [ngStyle]="{'color': getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
                                 <td [ngStyle]="{'color': getColorCodeForHistory(i, 'itemType', audit.itemType)  ? 'black' : 'red'  }">{{audit.itemType}}</td>

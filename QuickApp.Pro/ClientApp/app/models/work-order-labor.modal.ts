@@ -6,8 +6,9 @@ export class WorkOrderLabor {
   employeeId: null;
   isTaskCompletedByOne: false;
   workFloworSpecificTaskorWorkOrder: string;
-  hoursorClockorScan: 'labourHours';
+    hoursorClockorScan: number;
   workOrderLaborList: any;
+  totalWorkHours: any;
 
     constructor() {
         this.workOrderLaborHeaderId = null;
@@ -17,7 +18,7 @@ export class WorkOrderLabor {
     this.employeeId = null;
     this.isTaskCompletedByOne = false;
     this.workFloworSpecificTaskorWorkOrder = 'specificTasks';
-    this.hoursorClockorScan = 'labourHours';
+    this.hoursorClockorScan = 1;
   }
 }
 

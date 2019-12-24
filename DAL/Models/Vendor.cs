@@ -118,7 +118,10 @@ namespace DAL.Models
 
         public string VendorPhoneExt { get; set; }
 
+        public Nullable<bool> IsAddressForBilling { get; set; }
+        public Nullable<bool> IsAddressForShipping { get; set; }
 
+        public Nullable<bool> IsAllowNettingAPAR { get; set; }
 
     }
 }

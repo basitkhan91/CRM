@@ -413,6 +413,7 @@ namespace DAL.Repositories
                                 stl.UnitCostAdjustmentReasonTypeId,
                                 stl.UnitSalePriceAdjustmentReasonTypeId,
                                 stl.TimeLifeCyclesId,
+                                stl.isActive,
                                 ti.CyclesRemaining,
                                 ti.CyclesSinceNew,
                                 ti.CyclesSinceOVH,
@@ -658,6 +659,27 @@ namespace DAL.Repositories
             }
         }
 
+        public void StocklineStatus(long StocklineId, bool status, string updatedBy)
+        {
+            StockLine stockLine = new StockLine();
+            try
+            {
+                stockLine.StockLineId = StocklineId;
+                stockLine.UpdatedDate = DateTime.Now;
+                stockLine.UpdatedBy = updatedBy;
+                stockLine.isActive = status;
+                _appContext.StockLine.Attach(stockLine);
+                _appContext.Entry(stockLine).Property(x => x.isActive).IsModified = true;
+                _appContext.Entry(stockLine).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(stockLine).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public IEnumerable<object> GetAllStockLinelistData(Filters<StockListFilters> stockListFilters)
         {
             try
@@ -701,11 +723,11 @@ namespace DAL.Repositories
                                                from ti in time.DefaultIfEmpty()
                                                join man in _appContext.Manufacturer on stl.ManufacturerId equals man.ManufacturerId into manufa
                                                from man in manufa.DefaultIfEmpty()
-                                              // where (stl.PartNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartNumber) ? stockListFilters.filters.PartNumber : stl.PartNumber)
-                                                //&& stl.StockLineNumber.Contains(!String.IsNullOrEmpty(stockListFilters.filters.StocklineNumber) ? stockListFilters.filters.StocklineNumber : stl.StockLineNumber)
-                                                //&& stl.SerialNumber.Contains(!String.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber))
-                                               // && co.ConditionId == (stockListFilters.filters.ConditionId == 0 ? stockListFilters.filters.ConditionId : co.ConditionId))
-                                                select new
+                                    where (stl.PartNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartNumber) ? stockListFilters.filters.PartNumber : stl.PartNumber)
+                                     && stl.StockLineNumber.Contains(!String.IsNullOrEmpty(stockListFilters.filters.StocklineNumber) ? stockListFilters.filters.StocklineNumber : stl.StockLineNumber)
+                                     && stl.SerialNumber.Contains(!String.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber))
+                                    // && co.ConditionId == (stockListFilters.filters.ConditionId == 0 ? stockListFilters.filters.ConditionId : co.ConditionId))
+                                    select new
                                                            {
                                                                stl.StockLineNumber,
                                                            }).Count();
@@ -760,10 +782,10 @@ namespace DAL.Repositories
 
                                                   join man in _appContext.Manufacturer on stl.ManufacturerId equals man.ManufacturerId into manufa
                                                   from man in manufa.DefaultIfEmpty()
-                                                  //where (stl.PartNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartNumber) ? stockListFilters.filters.PartNumber : stl.PartNumber)
-                                                 //&& stl.StockLineNumber.Contains(!String.IsNullOrEmpty(stockListFilters.filters.StocklineNumber) ? stockListFilters.filters.StocklineNumber : stl.StockLineNumber)
-                                                 //&& stl.SerialNumber.Contains(!String.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber))
-                                                 // && co.ConditionId == (stockListFilters.filters.ConditionId == 0 ? stockListFilters.filters.ConditionId : co.ConditionId))
+                                                  where (stl.PartNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartNumber) ? stockListFilters.filters.PartNumber : stl.PartNumber)
+                                                 && stl.StockLineNumber.Contains(!String.IsNullOrEmpty(stockListFilters.filters.StocklineNumber) ? stockListFilters.filters.StocklineNumber : stl.StockLineNumber)
+                                                 && stl.SerialNumber.Contains(!String.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber))
+                                                  // && co.ConditionId == (stockListFilters.filters.ConditionId == 0 ? stockListFilters.filters.ConditionId : co.ConditionId))
                                                   select new
                                                   {
                                                       stl,
@@ -847,6 +869,7 @@ namespace DAL.Repositories
                                                       stl.UnitCostAdjustmentReasonTypeId,
                                                       stl.UnitSalePriceAdjustmentReasonTypeId,
                                                       stl.TimeLifeCyclesId,
+                                                      stl.isActive,
                                                       ti.CyclesRemaining,
                                                       ti.CyclesSinceNew,
                                                       ti.CyclesSinceOVH,
@@ -1387,6 +1410,7 @@ namespace DAL.Repositories
                               stl.UnitCostAdjustmentReasonTypeId,
                               stl.UnitSalePriceAdjustmentReasonTypeId,
                               stl.TimeLifeCyclesId,
+                              stl.isActive,
                               ti.CyclesRemaining,
                               ti.CyclesSinceNew,
                               ti.CyclesSinceOVH,

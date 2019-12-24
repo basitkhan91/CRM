@@ -34,7 +34,7 @@ export class ItemMasterCapabilitiesModel {
     clcfNumber: any;
     assetRecordId: number;
     AssetCapesId: number;
-    atasubchapterId:any;
+    ataSubChapterId:any;
     cmmId:any;
     integrateWith:any;
     nteHrs:number;

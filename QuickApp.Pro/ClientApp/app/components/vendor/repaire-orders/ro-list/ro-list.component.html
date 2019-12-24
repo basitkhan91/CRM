@@ -17,27 +17,27 @@
 						<label style="float:left; width:auto; margin-right:20px; padding-top:3px;">Status:</label>
 						<div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
 							<label class="radio-cstm wauto">
-								<input type="radio" name="postatus" class="form-control" value="open" (click)="getROListByStatus('open')" [(ngModel)]="currentStatus">
+								<input type="radio" name="rostatus" class="form-control" value="open" (click)="getROListByStatus('open')" [(ngModel)]="currentStatus">
 								<span class="checkmark"></span>Open</label>
 						</div>
 						<div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
 							<label class="radio-cstm wauto">
-								<input type="radio" name="postatus" class="form-control" value="closed" (click)="getROListByStatus('closed')">
+								<input type="radio" name="rostatus" class="form-control" value="closed" (click)="getROListByStatus('closed')">
 								<span class="checkmark"></span>Closed</label>
 						</div>
 						<div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
 							<label class="radio-cstm wauto">
-								<input type="radio" name="postatus" class="form-control" value="pending" (click)="getROListByStatus('pending')">
+								<input type="radio" name="rostatus" class="form-control" value="pending" (click)="getROListByStatus('pending')">
 								<span class="checkmark"></span>Pending</label>
 						</div>
 						<div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
 							<label class="radio-cstm wauto">
-								<input type="radio" name="postatus" class="form-control" value="fulfilling" (click)="getROListByStatus('fulfilling')">
+								<input type="radio" name="rostatus" class="form-control" value="fulfilling" (click)="getROListByStatus('fulfilling')">
 								<span class="checkmark"></span>Fulfilling</label>
 						</div>
 						<div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
 							<label class="radio-cstm wauto">
-								<input type="radio" name="postatus" class="form-control" value="canceled" (click)="getROListByStatus('canceled')">
+								<input type="radio" name="rostatus" class="form-control" value="canceled" (click)="getROListByStatus('canceled')">
 								<span class="checkmark"></span>Canceled</label>
 						</div>
 					</div>
@@ -167,9 +167,9 @@
 			  </tr>
 			  <tr>
 				<th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
-					<input type="text" *ngIf="col.field !== 'openDate' && col.field !== 'closedDate'" style="width:100%;" pInputText (keyup)="onChangeInputField($event.target.value, col.field)">
-					<input type="date" *ngIf="col.field == 'openDate'" name="openDate" style="width:100%;" (change)="onChangeInputField($event.target.value, col.field)">
-					<input type="date" *ngIf="col.field == 'closedDate'" name="closedDate" style="width:100%;" (change)="onChangeInputField($event.target.value, col.field)">
+					<input type="text" class="hidePlaceHolder" *ngIf="col.field !== 'openDate' && col.field !== 'closedDate'" style="width:100%;" pInputText (keyup)="onChangeInputField($event.target.value, col.field ,$event.target)">
+					<input type="date" class="hidePlaceHolder" *ngIf="col.field == 'openDate'" name="openDate" style="width:100%;" (change)="onChangeInputField($event.target.value, col.field ,$event.target)">
+					<input type="date" class="hidePlaceHolder" *ngIf="col.field == 'closedDate'" name="closedDate" style="width:100%;" (change)="onChangeInputField($event.target.value, col.field ,$event.target)">
 					<!-- <p-calendar [showIcon]="true" *ngIf="col.field == 'closedDate'"></p-calendar> -->
 				</th>
 				<!-- <th
@@ -188,7 +188,7 @@
 			  </tr>
 			</ng-template>
 			<ng-template pTemplate="body" let-rowData let-columns="columns">
-			  <tr [pSelectableRow]="rowData" pReorderableRowHandle>
+			  <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" pReorderableRowHandle (dblclick)="viewSelectedRowdbl(rowData)">
 				<td
 				  style="width:150px"
 				  *ngFor="let col of columns"
@@ -198,9 +198,9 @@
 					data-target="#view"
 					(dblclick)="viewSelectedRow(rowData)"-->
 				  {{
-					col.field == 'createdDate'
+					col.field == 'openDate'
 					  ? (rowData[col.field] | date: 'MM/dd/yyyy')
-					  : rowData[col.field] && col.field == 'updatedDate'
+					  : rowData[col.field] && col.field == 'closedDate'
 					  ? (rowData[col.field] | date: 'MM/dd/yyyy')
 					  : rowData[col.field]
 				  }}

@@ -84,23 +84,26 @@
                     </td>
 
                     <td style="width:200px">
-                        <p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
-                                       *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off"
-                                       (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']">
+                        <ng-container *ngIf="!isCreatePO && !isCreateRO">
+                                <p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
+                                *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off"
+                                (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']">
                         </p-inputSwitch>
                         <p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
-                                       *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on"
-                                       offLabel="off" (onChange)="handleChanges(rowData,$event)"
-                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on"
+                                        offLabel="off" (onChange)="handleChanges(rowData,$event)"
+                                        [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                         <p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
-                                       *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off"
-                                       (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']">
+                                        *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off"
+                                        (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']">
                         </p-inputSwitch>
+                        </ng-container>
+                        
                         <span data-toggle="modal" data-target="#view">
                             <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip"
                                (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a>
                         </span>
-                        <button [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
+                        <button *ngIf="!isCreatePO && !isCreateRO" [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
                                 class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="Edit">
                             <mat-icon>edit</mat-icon>
                         </button>
@@ -110,7 +113,7 @@
 
                         </i>
 
-                        <button [validate] moduleName="app-vendors-list" requirePermission="canDelete"
+                        <button *ngIf="!isCreatePO && !isCreateRO" [validate] moduleName="app-vendors-list" requirePermission="canDelete"
                                 class="btn-delete" mat-icon-button matTooltip="Delete"
                                 (click)=" openDelete(content1, rowData)">
                             <mat-icon color="warn">delete</mat-icon>
@@ -202,7 +205,7 @@
         </ng-template>
     </div>
 </div>
-<ng-template #view class="modal fade " id="view" role="dialog">
+<ng-template #view class="modal fade " id="view"  >
 
     <div class="modal-body viewform">
         <div id="adminsearchlocationajax" class="table-responsive default-bg clear">
@@ -361,6 +364,11 @@
                                             <p>
                                                     <span class="label"><b>Is this Vendor also a Customer: </b></span><span class="value">{{isVendorCustomer}}</span>
                                                 </p>
+
+                                                <p>
+                                                    <span class="label"><b>Allow Netting of AP/AR: </b></span><span class="value">{{isAllowNettingAPAR}}</span>
+                                                </p>
+                                                
                                     </div>
 
 

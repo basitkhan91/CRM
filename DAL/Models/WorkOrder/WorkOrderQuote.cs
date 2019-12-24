@@ -28,6 +28,8 @@ namespace DAL.Models
         public decimal AccountsReceivableBalance { get; set; }
         public long SalesPersonId { get; set; }
         public long EmployeeId { get; set; }
+        public string Memo { get; set; }
+        public string Warnings { get; set; }
         public int? MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

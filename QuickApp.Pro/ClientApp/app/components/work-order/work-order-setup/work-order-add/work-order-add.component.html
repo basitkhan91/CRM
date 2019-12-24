@@ -91,20 +91,20 @@
                                         <label style="width: auto;">
                                             <input type="radio" value="2" name="dealer"  #dealer="ngModel" [(ngModel)]="workOrderGeneralInformation.workOrderTypeId"
                                                 (click)="woDealerChange($event.target.value)">
-                                            Shop(Internal)
+                                                Internal
                                         </label>
 
                                         <label style="width: auto;">
                                             <input type="radio" value="3" name="dealer"  #dealer="ngModel"
                                                 [(ngModel)]="workOrderGeneralInformation.workOrderTypeId"
                                                 (click)="woDealerChange($event.target.value)">
-                                            Liquidation
+                                           Tear Down
                                         </label>
                                         <label style="width: auto;">
                                             <input type="radio" value="4" name="dealer"  #dealer="ngModel"
                                                 [(ngModel)]="workOrderGeneralInformation.workOrderTypeId"
                                                 (click)="woDealerChange($event.target.value)">
-                                            Services
+                                           Shop  Services
                                         </label>
                                     </div>
                                 </div>
@@ -155,7 +155,7 @@
                                             <label for="customername">Customer Name
                                                 <span class="clr-red">*</span>
                                                 <span *ngIf="workOrderGeneralInformation.customerId !== null ">
-                                                        <a data-toggle="tooltip" pTooltip="Customer Email: 'Indigo@gmail.com' , Customer Phone: 0423588779" tooltipPosition="bottom" title=""  data-original-title="View" data-toggle="modal" data-target="#viewcustomerDetails"  >
+                                                        <a data-toggle="tooltip" pTooltip="Customer Email: {{workOrderGeneralInformation.customerId.customerEmail}}, Customer Phone: {{workOrderGeneralInformation.customerId.customerPhoneNo}}" tooltipPosition="bottom" title=""  (click)="viewCustomerDetails(workOrderGeneralInformation.customerId.customerId)"  >
                                                             <i class="fa fa-eye"></i>
                                                         </a>
                                                     </span>
@@ -447,7 +447,7 @@
                                     <span class="inline-block">
                                         <p-dropdown [options]="workFlowList" 
                                         name="workFlow{{i}}"  #workFlow="ngModel" 
-                                        placeholder="Select WorkFlow" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.workflowId">
+                                        placeholder="None" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.workflowId">
                                         </p-dropdown>
                                     </span>
                                 </td>
@@ -533,66 +533,66 @@
                 <div>
                   <button class="btn btn-primary-cstm pull-right" *ngIf="!showTabsGrid && !isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Save</button>
                   <button class="btn btn-primary-cstm pull-right" *ngIf="isEdit" type="button"  [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Update</button>
-                  <button  *ngIf="showTabsGrid && workOrderGeneralInformation.isSinglePN " class="btn btn-success pull-right" [routerLink]="['/workordersmodule/workorderspages/app-work-order-quote']"[queryParams]="{workOrderId: savedWorkOrderData['workOrderId']}"  >Create Quote</button>
+                  <button  *ngIf="showTabsGrid && workOrderGeneralInformation.isSinglePN " class="btn btn-primary-cstm pull-right" (click)="createQuote()"  >{{(workOrderQuoteId)?'Update Quote':'Create Quote'}}</button>
                 </div>
             </form>
             </div>
 
  
-            <div class="card " *ngIf="showTabsGrid ">
-                <div class="card-header" *ngIf="!workOrderGeneralInformation.isSinglePN ">
-                  Multiple  MPN
-
-                </div>
-                <div class="card-body">
-                    <div class="col-md-12" [hidden]="workOrderGeneralInformation.isSinglePN">
-                        <div class="col-md-2">
-                            <label class="control-label col-sm-3">MPN </label>
-                             <div class="col-sm-7">
-
-                                <p-dropdown [options]="mpnPartNumbersList" placeholder="Select Part Number" class="p-dropdown-custom-md" 
-                                (onChange)="changeofMPN($event.value)"
-                                >
-                                  </p-dropdown> 
-                            </div> 
-
-                            <!-- <div class="col-sm-7">
-                              <select>
-                                <option *ngFor="let mpn of MPNList">{{mpn.partNumber}}</option>
-                              </select>
-                            </div> -->
-                        </div>
-                        <div class="col-md-10" style="background-color: white" [hidden]="workOrderGeneralInformation.isSinglePN">
+            <div class="card" *ngIf="showTabsGrid" >
+              <div *ngIf="showTabsMPNGrid">
+                  <div class="card-header" *ngIf="!workOrderGeneralInformation.isSinglePN">
+                      Multiple  MPN  
+                    </div>
+                    <div class="card-body" >
+                        <div class="col-md-12" [hidden]="workOrderGeneralInformation.isSinglePN">
                             <div class="col-md-2">
-                                <label class="fs12">Description : </label>
-                                <span>Gyro</span>
+                                <label class="control-label col-sm-3">MPN </label>
+                                 <div class="col-sm-7">
+    
+                                    <p-dropdown [options]="mpnPartNumbersList" placeholder="Select Part Number" class="p-dropdown-custom-md" 
+                                    (onChange)="changeofMPN($event.value)"
+                                    >
+                                      </p-dropdown> 
+                                </div> 
                             </div>
-                            <div class="col-md-2">
-                                <label class="fs12">Workscope : </label>
-                                <span>REP</span>
-                            </div>
-                            <div class="col-md-2">
-                                <label class="fs12">NTE : </label>
-                                <span>5000</span>
-                            </div>
-
-                            <div class="col-md-2">
-                                <label class="fs12">Qty :</label>
-                                <span>10</span>
-                            </div>
-                            <div class="col-md-2">
-                                <label class="fs12" style="text-align: left;
-                                    width: 41px;">Stage : </label>
-                                <span>5_WO opened</span>
-
-                            </div>
-                            <div class="col-md-2">
-                                <label class="fs12">Priority :</label>
-                                <span>AOG</span>
+    
+                            <div  class="col-md-10" style="background-color: white" *ngIf="mpnGridData">
+                                <div class="col-md-2">
+                                    <label class="fs12">Description : </label>
+                                    <span>{{mpnGridData.description}}</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="fs12">Workscope : </label>
+                                    <span>{{mpnGridData.workscope}}</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="fs12">NTE : </label>
+                                    <span>{{mpnGridData.nte}}</span>
+                                </div>
+    
+                                <div class="col-md-2">
+                                    <label class="fs12">Qty :</label>
+                                    <span>{{mpnGridData.qty}}</span>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="fs12" style="text-align: left;
+                                        width: 41px;">Stage : </label>
+                                    <span>{{mpnGridData.stage}}</span>
+    
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="fs12">Priority :</label>
+                                    <span>{{mpnGridData.priority}}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;">
+              </div>
+                <div class="card-body" *ngIf="showGridMenu">
+                   
+
+                    <div  class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;">
                         <ul class="nav nav-pills nav-pills-cstm" id="pills-tab" role="tablist">
 
                             <li class="nav-item" *ngIf="isSubWorkOrder">
@@ -644,10 +644,10 @@
                                   (click)="gridTabChange('main')">Main
                                   Component </a>
                               <div class="dropdown-menu">
-                                  <a class="dropdown-item">Add to an Existing RO</a>
-                                  <a class="dropdown-item">Create New RO</a>
-                                  <a class="dropdown-item">Convert Internal to External </a>
-                                  <a class="dropdown-item">Return MC to Customer </a>
+                                  <a class="dropdown-item" (click)="mainComponentTabSelected('existingRO')">Add to an Existing RO</a>
+                                  <a class="dropdown-item" (click)="mainComponentTabSelected('createNewRO')" >Create New RO</a>
+                                  <a class="dropdown-item" (click)="mainComponentTabSelected('interOrexternal')" >Convert Internal to External </a>
+                                  <a class="dropdown-item" (click)="mainComponentTabSelected('returnmc')" >Return MC to Customer </a>
                               </div>
                           </li>
                           <li class="nav-item">
@@ -728,11 +728,11 @@
                             (click)="gridTabChange('otherOptions')">Other Options</a>
                         <div class="dropdown-menu">
               
-                            <a class="dropdown-item" (click)="otherOptionSelected('freight')" >Freight</a>
-                            <a class="dropdown-item" (click)="otherOptionSelected('contactGrid')">Contact Grid</a>
-                            <a class="dropdown-item" (click)="otherOptionSelected('accounting')" >Accounting</a>
-                            <a class="dropdown-item" (click)="otherOptionSelected('charges')">Charges</a>
-                            <a class="dropdown-item" (click)="otherOptionSelected('exclusions')" >Exclusion </a>
+                            <a class="dropdown-item" (click)="otherOptionTabSelected('freight')" >Freight</a>
+                            <a class="dropdown-item" (click)="otherOptionTabSelected('contactGrid')">Contact Grid</a>
+                            <a class="dropdown-item" (click)="otherOptionTabSelected('accounting')" >Accounting</a>
+                            <a class="dropdown-item" (click)="otherOptionTabSelected('charges')">Charges</a>
+                            <a class="dropdown-item" (click)="otherOptionTabSelected('exclusions')" >Exclusion </a>
                         </div>
                     </li>
                     </ul>
@@ -745,7 +745,7 @@
                         <!-- <wf-create [isWorkOrder]="isWorkOrder" [savedWorkOrderData]="savedWorkOrderData" (savedWorkFlowWorkOrderData)="savedWorkFlowData($event)" > </wf-create> -->
                     </div>
                     <div *ngIf="workFlowId && subTabWorkFlow && editWorkFlowData" [ngClass]="{hidedata: subTabWorkFlow !== 'editworkFlow' }">
-                        <wf-create [isWorkOrder]="isWorkOrder" [workFlowWorkOrderId]="workFlowWorkOrderId" [savedWorkOrderData]="savedWorkOrderData" (savedWorkFlowWorkOrderData)="savedWorkFlowData($event)" > </wf-create>
+                        <wf-create [isWorkOrder]="isWorkOrder" [workOrderPartNumberId]="workOrderPartNumberId" [workFlowWorkOrderId]="workFlowWorkOrderId" [savedWorkOrderData]="savedWorkOrderData" (savedWorkFlowWorkOrderData)="savedWorkFlowData($event)" > </wf-create>
                         <!-- <app-workflow-list></app-workflow-list> -->
                     </div>
 
@@ -779,6 +779,17 @@
                     <div  *ngIf="quote" [ngClass]="{hidedata : gridActiveTab !== 'quote' }" >
                             <app-work-order-quote [quoteForm]="quote"></app-work-order-quote>
                         </div>
+
+                  
+                      
+                      <div  *ngIf="workOrderId && workOrderPartNumberId"  [ngClass]="{hidedataMain :  subTabMainComponent !== 'existingRO'} "  >
+                        <app-workorder-ro-list  [mpnId]="workOrderPartNumberId" ></app-workorder-ro-list>
+                      </div>
+                     <div *ngIf="workOrderId && workOrderPartNumberId" [ngClass]="{hidedataMain :  subTabMainComponent !== 'createNewRO'} " >
+                        <app-workorder-ro-create  [mpnId]="workOrderPartNumberId"> </app-workorder-ro-create>
+                     </div>
+
+
                     <div *ngIf="workOrderId" [ngClass]="{hidedata : gridActiveTab !== 'materialList' }" >  
                       <app-work-order-complete-material-list [materialStatus]="materialStatus"
                        [isWorkOrder]="isWorkOrder" 
@@ -793,7 +804,7 @@
                     </div>
                       
 
-                    <div *ngIf="billing" [ngClass]="{hidedata : gridActiveTab !== 'billorInvoice'}">
+                    <div *ngIf="billing && quoteMaterialList " [ngClass]="{hidedata : gridActiveTab !== 'billorInvoice'}">
                         <app-work-order-billing   
                          [billingorInvoiceForm]="billing" 
                          [currencyList]="currencyList"
@@ -802,6 +813,12 @@
                          [isEditBilling]="isEditBilling"
                          (saveWOBilling)="saveWorkOrderBilling($event)"
                          (updateWOBilling)="saveWorkOrderBilling($event)"
+                        [workOrderQuoteId]="workOrderQuoteId"
+                         [quoteExclusionList]="quoteExclusionList"
+                          [quoteMaterialList]="quoteMaterialList"
+                          [quoteFreightsList]="quoteFreightsList"
+                          [quoteChargesList]="quoteChargesList"
+                          [quoteLaborList]="quoteLaborList"
                          ></app-work-order-billing>
                     </div>
                     <div *ngIf="addresses" [ngClass]="{hidedata : gridActiveTab !== 'address'}">
@@ -852,378 +869,7 @@
 
 
 
-<div class="modal fade " id="viewcustomerDetails" role="dialog" >
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" id="" name="">×</button>
-          <h4 class="modal-title">Details of Customer "Shabbir Ahmad"</h4>
-        </div>
-        <div class="modal-body viewform">
-          <div id="adminsearchlocationajax" class="table-responsive default-bg clear"> <a href="#" class="btn btn-primary openall">open all</a> <a href="#" class="btn btn-warning closeall">close all</a>
-            <hr>
-            <div class="panel-group" id="accordion">
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h4 class="panel-title"> <a data-toggle="collapse" href="#step1" aria-expanded="true" aria-controls="receive">General Info</a> </h4>
-                </div>
-                <div id="step1" class="panel-collapse collapse in">
-                  <div class="panel-body">
-                    <div class="col-sm-6">
-                      <p><span class="label"><b>User Name: </b></span><span class="value">sha123</span></p>
-                      <p><span class="label"><b>Customer Name: </b></span><span class="value">Shabbir Ahmad</span></p>
-                      <p><span class="label"><b>Customer Code: </b></span><span class="value">Cust546</span></p>
-                      <p><span class="label"><b>Internal/External: </b></span><span class="value">Internal</span></p>
-                      <p><span class="label"><b>d/b/a: </b></span><span class="value">d/b/a</span></p>
-                      <p><span class="label"><b>Parent: </b></span><span class="value">Silverxis</span></p>
-                      <p><span class="label"><b>Address 1: </b></span><span class="value">10656 S De Anza Blvd, Suite 859</span></p>
-                      <p><span class="label"><b>Address 2: </b></span><span class="value">23658 Paseo Padre Pkwy, Suite 528</span></p>
-                      <p><span class="label"><b>Address 3: </b></span><span class="value">85698 Decoto Road, Suite 459</span></p>
-                      <p><span class="label"><b>City: </b></span><span class="value">Cupertino</span></p>
-                      <p><span class="label"><b>State/Province: </b></span><span class="value">CA</span></p>
-                      <p><span class="label"><b>Postal: </b></span><span class="value">95014</span></p>
-                      <p><span class="label"><b>Country: </b></span><span class="value">USA</span></p>
-                      <p><span class="label"><b>Email: </b></span><span class="value">mshabbir5007@gmail.com</span></p>
-                    </div>
-                    <div class="col-sm-6">
-                      <p><span class="label"><b>Core Due In: </b></span><span class="value">52 Days</span></p>
-                      <p><span class="label"><b>Classification: </b></span><span class="value">Commercial</span></p>
-                      <p><span class="label"><b>Contract Ref: </b></span><span class="value">Shabbir</span></p>
-                      <p><span class="label"><b>PBH Customer: </b></span><span class="value">PBH Customer Memo (If not checked this field is hidden)</span></p>
-                      <p><span class="label"><b>Restrict PMA: </b></span><span class="value">Restrict PMA Memo (If not checked this field is hidden)</span></p>
-                      <p><span class="label"><b>Integration: </b></span><span class="value">ILS</span></p>
-                      <p><span class="label"><b>URL to Customer site: </b></span><span class="value">https://www.google.co.in/</span></p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step2">Contact</a> </h4>
-                </div>
-                <div id="step2" class="panel-collapse collapse">
-                  <div class="panel-body">
-                    <div class="table-responsive">
-                      <table class="table table-bordered">
-                        <thead>
-                          <tr>
-                            <th>UID</th>
-                            <th>Name</th>
-                            <th>Title</th>
-                            <th>Work Phone</th>
-                            <th>Email</th>
-                            <th>Mobile Phone</th>
-                            <th>Alt. Mobile Phone</th>
-                            <th>Website</th>
-                            <th>Fax</th>
-                            <th>Memo</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>1</td>
-                            <td>Donald Budhu </td>
-                            <td>Aerospace Vendor</td>
-                            <td>653-258-8960</td>
-                            <td>donaldbudhu@gmail.com</td>
-                            <td>589-678-5412</td>
-                            <td>985-687-4523</td>
-                            <td>pas.com</td>
-                            <td>589-678</td>
-                            <td>This Testing UI</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
-                <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step3">Aircraft Info</a> </h4>
-                </div>
-                <div id="step3" class="panel-collapse collapse">
-                  <div class="panel-body">
-                    <div class="table-responsive">
-                        <h6>Dash Numbers</h6>
-                      <table class="table table-bordered">
-                              <thead>
-                                <tr>
-                                  <th>ID</th>
-                                  <th>Aircraft</th>
-                                  <th>Model</th>
-                                  <th>Dash Numbers</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <td>1</td>
-                                  <td>Airbus</td>
-                                  <td>A767</td>
-                                  <td>333</td>
-                                </tr>
-                                <tr>
-                                  <td>2</td>
-                                  <td>Airbus</td>
-                                  <td>A767</td>
-                                  <td>444</td>
-                                </tr>
-                                <tr>
-                                  <td>3</td>
-                                  <td>Airbus</td>
-                                  <td>A767</td>
-                                  <td>555</td>
-                                </tr>
-                                <tr>
-                                  <td>4</td>
-                                  <td>Airbus</td>
-                                  <td>A767</td>
-                                  <td>666</td>
-                                </tr>
-                                <tr>
-                                  <td>5</td>
-                                  <td>Airbus</td>
-                                  <td>A768</td>
-                                  <td>333</td>
-                                </tr>
-                                <tr>
-                                  <td>6</td>
-                                  <td>Airbus</td>
-                                  <td>A768</td>
-                                  <td>777</td>
-                                </tr>
-                                
-                              </tbody>
-                            </table>                          
-                    </div>
-                      <div class="table-responsive">
-                        <h6>ATA Chapters</h6>
-                      <table class="table table-bordered">
-                              <thead>
-                                <tr>
-                                  <th>ID</th>
-                                  <th>ATA Chapter</th>
-                                  <th>ATA Sub-Chapter</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <td>1</td>
-                                  <td>MAINTENANCE POLICY</td>
-                                  <td>Sub SUPPORT</td>
-                                </tr>
-                                <tr>
-                                  <td>2</td>
-                                  <td>SUPPORT</td>
-                                  <td>Sub SUPPORT</td>
-                                </tr>
-                              </tbody>
-                            </table>                        
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step4">Financial Info</a> </h4>
-                </div>
-                <div id="step4" class="panel-collapse collapse">
-                  <div class="panel-body">
-                    <div class="col-sm-6">
-                      <p><span class="label"><b>MarkUp %: </b></span><span class="value">10 %</span></p>
-                      <p><span class="label"><b>Credit Limit:: </b></span><span class="value">10</span></p>
-                      <p><span class="label"><b>Credit Terms: </b></span><span class="value">Net 30</span></p>
-                      <p><span class="label"><b>Allow Netting of AP/AR: </b></span><span class="value">Yes</span></p>
-                      <p><span class="label"><b>Taxable Exempt: </b></span><span class="value">Yes</span></p>
-                      <p><span class="label"><b>Tax Rate - State/Prov: </b></span><span class="value">8%</span></p>
-                      <p><span class="label"><b>Tax Rate - Other: </b></span><span class="value">25</span></p>
-                    </div>
-                    <div class="col-sm-6">
-                      <p><span class="label"><b>EDI: </b></span><span class="value">EDI</span></p>
-                      <p><span class="label"><b>Deferred PO: </b></span><span class="value">Yes</span></p>
-                      <p><span class="label"><b>Deferred RO: </b></span><span class="value">No</span></p>
-                      <p><span class="label"><b>Currency: </b></span><span class="value">US Dollar</span></p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step5">Billing Info</a> </h4>
-                </div>
-                <div id="step5" class="panel-collapse collapse">
-                  <div class="panel-body">
-                    <div class="table-responsive">
-                      <table class="table table-bordered">
-                        <thead>
-                          <tr>
-                            <th>UID</th>
-                            <th>Address 1</th>
-                            <th>Address 2</th>
-                            <th>Address 3</th>
-                            <th>City</th>
-                            <th>State/Prov</th>
-                            <th>Postal Code</th>
-                            <th>Country</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>1</td>
-                            <td>10656 S De Anza Blvd, Suite 859 </td>
-                            <td>23658 Paseo Padre Pkwy, Suite 528 </td>
-                            <td>85698 Decoto Road, Suite 459</td>
-                            <td>Cupertino</td>
-                            <td>CA</td>
-                            <td>95014</td>
-                            <td>USA</td>
-                          </tr>
-                          <tr>
-                            <td>2</td>
-                            <td>438 Cherry Hill Road </td>
-                            <td>8996 X Eisenhower PkwyAnn Arbor</td>
-                            <td>4692 Woodward Ave. Ste 680</td>
-                            <td>Bloomfield Hills</td>
-                            <td>MI</td>
-                            <td>48302</td>
-                            <td>Canada</td>
-                          </tr>
-                          <tr>
-                            <td>3</td>
-                            <td>852 Research Blvd Suite C#105</td>
-                            <td>12678 W Hebron Pkwy Suite C#1089</td>
-                            <td>8596 Fry Rd Suite C5-300</td>
-                            <td>Austin</td>
-                            <td>TX</td>
-                            <td>78759</td>
-                            <td>UK</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step6">Shipping Info</a> </h4>
-                </div>
-                <div id="step6" class="panel-collapse collapse">
-                  <div class="panel-body">
-                    <div class="table-responsive">
-                      <table class="table table-bordered">
-                        <thead>
-                          <tr>
-                            <th>UID</th>
-                            <th>Site Name</th>
-                            <th>Address 1</th>
-                            <th>Address 2</th>
-                            <th>Address 3</th>
-                            <th>City</th>
-                            <th>State/Prov</th>
-                            <th>PostalCode</th>
-                            <th>Country</th>
-                            <th>Ship Via</th>
-                            <th>Shipping ID</th>
-                            <th>Shipping URL</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>1</td>
-                            <td>AOX</td>
-                            <td>10656 S De Anza Blvd, Suite 859 </td>
-                            <td>23658 Paseo Padre Pkwy, Suite 528 </td>
-                            <td>85698 Decoto Road, Suite 459</td>
-                            <td>Cupertino</td>
-                            <td>CA</td>
-                            <td>95014</td>
-                            <td>USA</td>
-                            <td>Fed Ex</td>
-                            <td>UHJ9990</td>
-                            <td>www.fedex.com/ship</td>
-                          </tr>
-                          <tr>
-                            <td>2</td>
-                            <td>AOX</td>
-                            <td>438 Cherry Hill Road </td>
-                            <td>8996 X Eisenhower PkwyAnn Arbor</td>
-                            <td>4692 Woodward Ave. Ste 680</td>
-                            <td>Bloomfield Hills</td>
-                            <td>MI</td>
-                            <td>48302</td>
-                            <td>Canada</td>
-                            <td>Fed Ex</td>
-                            <td>UHJ478001</td>
-                            <td>www.fedex.com/ship</td>
-                          </tr>
-                          <tr>
-                            <td>3</td>
-                            <td>AOX</td>
-                            <td>852 Research Blvd Suite C#105</td>
-                            <td>12678 W Hebron Pkwy Suite C#1089</td>
-                            <td>8596 Fry Rd Suite C5-300</td>
-                            <td>Austin</td>
-                            <td>TX</td>
-                            <td>78759</td>
-                            <td>UK</td>
-                            <td>Fed Ex</td>
-                            <td>UHJ58756</td>
-                            <td>www.fedex.com/ship</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step7">Sales Person/Agent Info</a> </h4>
-                </div>
-                <div id="step7" class="panel-collapse collapse">
-                  <div class="panel-body">
-                    <div class="col-sm-10">
-                      <p><span class="label"><b>Primary Sales Person Name: </b></span><span class="value">Shabbir Ahmad</span></p>
-                      <p><span class="label"><b>Secondary Sales Person Name: </b></span><span class="value">Donald</span></p>
-                      <p><span class="label"><b>CSR Name: </b></span><span class="value">Roger</span></p>
-                      <p><span class="label"><b>Agent Name: </b></span><span class="value">Prasad</span></p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step8">International Shipping Info</a> </h4>
-                </div>
-                <div id="step8" class="panel-collapse collapse">
-                  <div class="panel-body">
-                    <div class="col-sm-10">
-                      <p><span class="label"><b>Export License Required: </b></span><span class="value">125468254</span></p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="">Close</button>
-        </div>
-      </div>
-    </div>
-  </div> 
-  <div class="modal fade" id="quote-details" role="dialog">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <!-- <app-work-order-quote></app-work-order-quote> -->
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-</div>
+
 
 
 

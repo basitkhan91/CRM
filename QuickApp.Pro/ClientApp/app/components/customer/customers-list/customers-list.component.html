@@ -25,19 +25,21 @@
                  (onLazyLoad)="loadData($event)"
                  [resizableColumns]="true"
                  [reorderableColumns]="true"
-                 [totalRecords]="totalRecords">
+                 [totalRecords]="totalRecords"
+                 [scrollable]="true" scrollHeight="450px">
+
             <!-- <ng-template pTemplate="caption">
-                   (onPage)="changePage($event)"
-                <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
-                <input
-                  type="text"
-                  pInputText
-                  size="50"
-                  placeholder="Global Filter"
-                  (input)="globalSearch($event.target.value)"
-                  style="width:auto"
-                />
-              </ng-template> -->
+           (onPage)="changePage($event)"
+        <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+        <input
+          type="text"
+          pInputText
+          size="50"
+          placeholder="Global Filter"
+          (input)="globalSearch($event.target.value)"
+          style="width:auto"
+        />
+      </ng-template> -->
             <ng-template pTemplate="caption">
                 <div style="text-align: right;margin-left:-6px !important; min-height: 30px;">
                     <p-multiSelect [maxSelectedLabels]="2"
@@ -76,25 +78,40 @@
                             label="Export Selected Data"
                             style="left:-10px;"
                             (click)="dt.exportCSV({ selectionOnly: true })"></button>
+                    <button type="button"
+                            class="btn btn-primary-cstm "
+                            matTooltip="Refresh Data" matTooltipPosition="above"
+                            pButton
+                            icon="fa-refresh"
+                            iconPos="left"
+                            label="Refresh"
+                            style="left:-10px;"
+                            (click)="refreshList();"></button>
                     <!-- <div class="excel-upload  excel-upload-cstm">
-                        <input type="file"
-                               name="upload[]"
-                               id="upload"
-                               (change)="customExcelUpload($event)"
-                               class="uploaddoc upload-file"
-                               style="left:-10px;"
-                               accept=".xlsx, .xls, .csv" />
-                        <label for="upload">
-                            <span matTooltip="Upload Data (Excel)">
-                                <i class="fa fa-upload"></i>
-                            </span>
-                        </label>
-                    </div> -->
+                <input type="file"
+                       name="upload[]"
+                       id="upload"
+                       (change)="customExcelUpload($event)"
+                       class="uploaddoc upload-file"
+                       style="left:-10px;"
+                       accept=".xlsx, .xls, .csv" />
+                <label for="upload">
+                    <span matTooltip="Upload Data (Excel)">
+                        <i class="fa fa-upload"></i>
+                    </span>
+                </label>
+            </div> -->
                 </div>
+            </ng-template>
+            <ng-template pTemplate="colgroup" let-columns>
+                <colgroup>
+                    <col *ngFor="let col of columns" style="width:130px">
+                </colgroup>
             </ng-template>
 
             <ng-template pTemplate="header" let-columns>
                 <tr>
+
                     <th style="width:120px"
                         *ngFor="let col of columns"
                         pResizableColumn
@@ -118,7 +135,7 @@
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowData let-columns="columns">
-                <tr [pSelectableRowDblClick]="rowData" pReorderableRowHandle (dblclick)="viewSelectedRowdbl(viewdbl,rowData)">
+                <tr [pSelectableRowDblClick]="rowData" [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="viewSelectedRowdbl(viewdbl,rowData)">
                     <td style="width:120px"
                         *ngFor="let col of columns"
                         class="ui-resizable-column"
@@ -133,8 +150,8 @@
                     </td>
                     <td style="width:200px" *ngIf="selectedColumns.length > 0">
                         <!--<p-inputSwitch [(ngModel)]="rowData['isActive']"
-                                       name="isActive{{ rowIndex }}"
-                                       (onChange)="changeStatus(rowData)"></p-inputSwitch>-->
+           name="isActive{{ rowIndex }}"
+           (onChange)="changeStatus(rowData)"></p-inputSwitch>-->
 
                         <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                         <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
@@ -143,8 +160,7 @@
                         <span>
                             <a class="btn btn-info boxed-float-btn nobg"
                                data-toggle="tooltip"
-                               (click)="viewSelectedRow(rowData)"
-                               
+                               (click)="viewSelectedRowdbl(viewdbl,rowData)"
                                matTooltip="View">
                                 <i class="fa fa-eye"></i>
                             </a>
@@ -155,7 +171,10 @@
                                 matTooltip="Edit">
                             <mat-icon>edit</mat-icon>
                         </button>
+                        <i class="fa fa-users" mat-icon-button matTooltip="Contacts"
+                           (click)="openContactList(contentcontact,rowData)">
 
+                        </i>
                         <button class="btn-delete"
                                 mat-icon-button
                                 matTooltip="Delete"
@@ -176,10 +195,10 @@
                 </tr>
             </ng-template>
             <!-- <ng-template #auditContent let-c="close" let-d="dismiss">
-                        <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
-                            <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
-                        </div>
-                    </ng-template> -->
+                <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
+                    <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
+                </div>
+            </ng-template> -->
             <ng-template pTemplate="summary" id="footer">
                 <label id="footer" class="footer">No'of records:</label>
                 <input style="width: 5%;"
@@ -310,6 +329,13 @@
                           viewDataGeneralInformation.countryName
                                                         }}
                                                     </span>
+                                                </p>
+                                                <p>
+                                                    <span class="label"><b>Phone: </b></span><span class="value">
+    {{
+                          viewDataGeneralInformation.customerPhone
+    }}
+</span>
                                                 </p>
                                                 <p>
                                                     <span class="label"><b>Email: </b></span><span class="value">
@@ -860,6 +886,55 @@
         </div>
     </div>
     </ng-template>
+<ng-template #contentcontact let-c="close" let-d="dismiss" class="modal fade" role="dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+
+            <h4 class="modal-title"> Contacts of {{this.selectedRow['name']}}</h4>
+        </div>
+
+
+        <div class="modal-body viewform">
+
+            <p-table class="table-responsive" #dt *ngIf="allContacts.length > 0" [value]="allContacts" [metaKeySelection]="true" [rows]="10" [paginator]="true"
+                     [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedContactColumns"
+                     [resizableColumns]="true" [reorderableColumns]="true">
+
+
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th *ngFor="let col of columns" pResizableColumn pReorderableColumn
+                            [pSortableColumn]="col.field">
+                            {{col.header}}
+                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                        </th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                    <tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)">
+
+                        <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                            {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <div class="contact-no-record" *ngIf="allContacts.length == 0">
+                No Records found
+            </div>
+
+
+        </div>
+        <div class="modal-footer">
+
+            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
+        </div>
+    </div>
+
+
+</ng-template>
     <ng-template #content1 let-c="close" let-d="dismiss">
         <div class="modal-header">
             <h4 class="modal-title">Are You Sure Want to Delete?</h4>

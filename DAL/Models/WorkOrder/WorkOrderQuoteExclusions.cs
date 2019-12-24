@@ -18,7 +18,7 @@ namespace DAL.Models
         public int? Quantity { get; set; }
         public decimal? UnitCost { get; set; }
         public decimal? ExtendedCost { get; set; }
-        public int? MarkUpPercentageId { get; set; }
+        public long? MarkUpPercentageId { get; set; }
         public decimal? CostPlusAmount { get; set; }
         public decimal? FixedAmount { get; set; }
         public int MasterCompanyId { get; set; }

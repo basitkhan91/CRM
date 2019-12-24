@@ -29,6 +29,11 @@
         <th>Extended Price</th>
         <th>Memo</th>
         <th>Deferred</th>
+        <ng-container *ngIf="isQuote">
+          <th>MARKUP</th>
+          <th>COST PLUS AMOUNT</th>
+          <th>FIXED AMOUNT</th>
+        </ng-container>
         <th>Action</th>
       </tr>
     </thead>
@@ -205,6 +210,17 @@
             />
           </div>
         </td>
+        <ng-container *ngIf="isQuote">
+            <td>
+              <!-- <input [(ngModel)]="matQuotation.markup" /> -->
+              <select class="form-control custom-select wf-pub-id" (change)="markupChanged(material, index)" [(ngModel)]="material.markupPercentageId">
+                <option value="">Select</option>
+                <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+              </select>
+            </td>
+            <td>{{material.costPlusAmount}}</td>
+            <td><input [(ngModel)]="material.fixedAmount" /></td>
+        </ng-container>
         <td>
           <button class="btn btn-danger nobg" (click)="deleteRow(i)">
             <i class="fa fa-trash"></i>
@@ -253,7 +269,7 @@
       (click)="saveMaterialsWorkOrder()"
       style="padding: 6px 12px !important;margin-top: 10px;"
     >
-      Save
+      Add
     </button>
   </div>
 
@@ -261,7 +277,7 @@
     <button
       *ngIf="isWorkOrder"
       class="btn btn-primary btn-primary-cstm"
-      (click)="updateMaterialsListForWO()"
+      (click)="updateMaterialsWorkOrder()"
       style="padding: 6px 12px !important;margin-top: 10px;"
     >
       Update

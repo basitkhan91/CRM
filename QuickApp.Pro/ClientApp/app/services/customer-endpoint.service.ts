@@ -97,6 +97,9 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _CustomerATAPostUrl: string = "/api/Customer/CustomerContactATAPost";
     private readonly _getATAMappedByContactId: string = "/api/Customer/getCustomerContactATAMapped";
     private readonly _getATAMappedByCustomerId: string = "/api/Customer/getCustomerATAMapped";
+    private readonly _getContactsByCustomerId: string = "/api/Customer/GetCustomerContacts";
+
+    
     private readonly _deleteATAMappedByContactId: string = "/api/Customer/DeleteCustomerContactATAMapping"
     private readonly _CustomerAtaSearchUrl: string = '/api/Customer/searchGetCustomerATAMappedByMultiATAIDATASubID';
 
@@ -136,9 +139,12 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _customersBillingUpdateforActive: string = '/api/Customer/customersBillingUpdateStatus'
     private readonly _getCustomerDocumentAttachmentslist: string = "/api/FileUpload/getattachmentdetails";
     private readonly _updateCustomerDocument: string = '/api/Customer/customerDocumentUpdate';
+    private readonly _addCustomerFileUpload: string = "/api/Customer/customerFinanceDocumentUpload";
 
+    private readonly _addCustomerFinanceFileDetails: string = "/api/Customer/getCustmerFinanceDocumentDetail";
 
-
+    private readonly _customerDeleteAttachment: string = "/api/Customer/customerAttachmentDelete";
+    private readonly _customerAircraftUpdate: string = "/api/Customer/CustomerAircraftUpdate";
 
     get globalSearch() { return this.configurations.baseUrl + this.getGlobalCustomer; }
     get paginate() { return this.configurations.baseUrl + this.getCustomer; }
@@ -217,7 +223,7 @@ export class CustomerEndpoint extends EndpointFactory {
     }
 
     getCustomerBillingHistory(customerId, customerBillingAddressId) {
-        return this.http.get(`${this.configurations.baseUrl}/${this._customerBillingHistory}/${customerId}/${customerBillingAddressId}`)
+        return this.http.get(`${this.configurations.baseUrl}/${this._customerBillingHistory}?customerId=${customerId}&customerBillingaddressId=${customerBillingAddressId}`)
     }
 
     getShipViaByDomesticShippingId(customerShippingId) {
@@ -1306,8 +1312,33 @@ export class CustomerEndpoint extends EndpointFactory {
         return this.http.put<T>(`${this._updateCustomerDocument}`, file);
     }
 
+    customerFinanceFileUploadEndpoint<T>(file: any): Observable<T> {
+        const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
+        return this.http.post<T>(`${this._addCustomerFileUpload}`, file);
+    }
+    GetCustomerFinanceDocumentsListEndpoint(customerId, moduleId) {
+        return this.http.get<any>(`${this._addCustomerFinanceFileDetails}/${customerId}?moduleId=${moduleId}`, this.getRequestHeaders())
+    }
 
+    GetCustomerAttachmentDeleteEndpoint(attachmentDetailId, updatedBy) {
+        return this.http.delete(`${this._customerDeleteAttachment}/${attachmentDetailId}?updatedBy=${updatedBy}`, this.getRequestHeaders())
+    }
+    getContactsByCustomerId<T>(customerId: number): Observable<T> {
+        let endpointUrl = `${this._getContactsByCustomerId}?id=${customerId}`;
 
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getATAMappingByCustomerId(customerId));
+            });
+    }
+
+    getUpdateAircraft<T>(roleObject: any, customerAircraftId: number): Observable<T> {
+        let endpointUrl = `${this._customerAircraftUpdate}/${customerAircraftId}`;
+        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getUpdateAircraft(roleObject, customerAircraftId));
+            });
+    }
 }
 
 

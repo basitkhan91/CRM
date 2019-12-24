@@ -258,17 +258,17 @@ export class AppComponent implements OnInit, AfterViewInit {
                         { label: 'Add Vendor Caps', routerLink: '/vendorsmodule/vendorpages/app-add-vendor-capabilities' },
                             { label: 'Reports and Forms', items: [{ label: 'Caps Report', routerLink: '/singlepages/singlepages/app-caps-report' }] }],
                     },
-                    {
-                        label: 'Purchase Order', items: [{ label: 'PO List', routerLink: '/vendorsmodule/vendorpages/app-polist' },
-                        { label: 'Create PO', routerLink: '/vendorsmodule/vendorpages/app-create-po' },
-                        { label: 'PO Approval', routerLink: '/#' },
-                        { label: 'Create Vendor RMA', routerLink: '/#' }]
-                    },
-                    {
-                        label: 'Repair Order', items: [{ label: 'RO List', routerLink: '/vendorsmodule/vendorpages/app-ro-list' },
-                        { label: 'Create RO', routerLink: '/vendorsmodule/vendorpages/app-create-ro' },
-                        { label: 'RO Approval', routerLink: '/#' }]
-                    },
+                    // {
+                    //     label: 'Purchase Order', items: [{ label: 'PO List', routerLink: '/vendorsmodule/vendorpages/app-polist' },
+                    //     { label: 'Create PO', routerLink: '/vendorsmodule/vendorpages/app-create-po' },
+                    //     { label: 'PO Approval', routerLink: '/#' },
+                    //     { label: 'Create Vendor RMA', routerLink: '/#' }]
+                    // },
+                    // {
+                    //     label: 'Repair Order', items: [{ label: 'RO List', routerLink: '/vendorsmodule/vendorpages/app-ro-list' },
+                    //     { label: 'Create RO', routerLink: '/vendorsmodule/vendorpages/app-create-ro' },
+                    //     { label: 'RO Approval', routerLink: '/#' }]
+                    // },
                     {
                         label: 'Reports and Forms', items: [{ label: 'Open Ro Report', routerLink: '/#' },
                         { label: 'RO by WO', routerLink: '/#' },
@@ -280,12 +280,31 @@ export class AppComponent implements OnInit, AfterViewInit {
                 ]
             },
             {
+                label: 'Purchase Order',
+                icon: 'fa fa-fw fa-shopping-cart',
+                items: [     
+                    { label: 'PO List', routerLink: '/vendorsmodule/vendorpages/app-polist' },
+                    { label: 'Create PO', routerLink: '/vendorsmodule/vendorpages/app-create-po' },
+                    { label: 'PO Approval', routerLink: '/#' },
+                    { label: 'Create Vendor RMA', routerLink: '/#' }
+                ]
+            },
+            {
+                label: 'Repair Order',
+                icon: 'fa fa-fw fa-cog',
+                items: [ 
+                    { label: 'RO List', routerLink: '/vendorsmodule/vendorpages/app-ro-list' },
+                    { label: 'Create RO', routerLink: '/vendorsmodule/vendorpages/app-create-ro' },
+                    { label: 'RO Approval', routerLink: '/#' }
+                ]
+            },
+            {
                 label: 'Receiving',
                 icon: 'fa fa-fw fa-download',
                 items: [
                     {
                         label: 'Customer Work', items: [
-                            { label: 'Customer Work', routerLink: '/receivingmodule/receivingpages/app-customer-works-list' },
+                            { label: 'Customer Work List', routerLink: '/receivingmodule/receivingpages/app-customer-works-list' },
                             { label: 'Create Customer', routerLink: '/receivingmodule/receivingpages/app-customer-work-edit' }
                         ]
                     },
@@ -397,6 +416,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'GL Account List', routerLink: '/generalledgermodule/generalledgerpage/app-account-listing' },
                             { label: 'Create GL Account', routerLink: '/generalledgermodule/generalledgerpage/app-account-listing-create' },
                             { label: 'Create Accounting Calendar', routerLink: '/generalledgermodule/generalledgerpage/app-accounting-calendar' },
+                            { label: 'Accounting Calendar List', routerLink: '/generalledgermodule/generalledgerpage/app-accounting-listing-calendar' },
                             { label: 'Open/Close Ledger', routerLink: '/#' },
                             { label: 'Intercompany', routerLink: '/#' },
                             {
@@ -438,9 +458,8 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'Organisation', items: [
-                            { label: 'Entity List', routerLink: '/#' },
-                            { label: 'Entity Setup', routerLink: '/#' },
-                            { label: 'Legal Structure', routerLink: '/generalledgermodule/generalledgerpage/app-entity-edit' },
+                            { label: 'Legal Entity List', routerLink: '/generalledgermodule/generalledgerpage/app-legal-entity-list' },
+                            { label: 'Legal Structure', routerLink: '/#' },
                             { label: 'Management Structure', routerLink: '/generalledgermodule/generalledgerpage/app-managemententity-structure' },
                         ]
                     }]
@@ -624,23 +643,24 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'Asset Mgmt Maintenance', items: [
-                            { label: 'Depreciation Method', routerLink: '/singlepages/singlepages/app-depriciation-method' },
-                            { label: 'Asset Disposal Type', routerLink: '/singlepages/singlepages/app-disposal-type' },
-                            { label: 'Asset Status', routerLink: '/singlepages/singlepages/asset-status' },
                             { label: 'Asset Class', routerLink: '/singlepages/singlepages/app-asset-type' },
-                            { label: 'Asset Intangible Type', routerLink: '/singlepages/singlepages/app-asset-intangible-type' },
-                            { label: 'Depreciation Convension', routerLink: '/singlepages/singlepages/app-asset-dep-convention-type' },
-                            { label: 'Depreciation Intervals', routerLink: '/singlepages/singlepages/app-depreciation-intervals' },]
-                    },
-                    {
-                        label: 'Asset Attributes', items: [
-                            { label: 'Asset Attribute Type', routerLink: '/singlepages/singlepages/app-asset-attribute-type' },
-                            { label: 'Intangible Attribute Type', routerLink: '/singlepages/singlepages/app-asset-intangible-attribute-type' },
-                            { label: 'Depreciation - Book', routerLink: '/#' },
-                            { label: 'Depreciaiton - Tax', routerLink: '/#' },
-                            { label: 'Depreciaiton Start Date', routerLink: '/#' },
+                            {
+                                label: 'Asset Attributes', items: [
+                                    { label: 'Asset Attribute Type', routerLink: '/singlepages/singlepages/app-asset-attribute-type' },
+                                    { label: 'Depreciation - Book', routerLink: '/#' },
+                                    { label: 'Depreciaiton - Tax', routerLink: '/#' },
+                                    { label: 'Depreciaiton Date', routerLink: '/#' },
 
-                        ]
+                                ]
+                            },
+                            { label: 'Asset Status', routerLink: '/singlepages/singlepages/asset-status' },
+                            { label: 'Depreciation Method', routerLink: '/singlepages/singlepages/app-depriciation-method' },
+                            { label: 'Depreciation Convention', routerLink: '/singlepages/singlepages/app-asset-dep-convention-type' },
+                            { label: 'Depreciation Intervals', routerLink: '/singlepages/singlepages/app-depreciation-intervals' },
+                            { label: 'Asset Disposal Type', routerLink: '/singlepages/singlepages/app-disposal-type' },
+                            { label: 'Asset Intangible Type', routerLink: '/singlepages/singlepages/app-asset-intangible-type' },
+                            { label: 'Intangible Attribute Type', routerLink: '/singlepages/singlepages/app-asset-intangible-attribute-type' },
+                            ]
                     },
 
                     {

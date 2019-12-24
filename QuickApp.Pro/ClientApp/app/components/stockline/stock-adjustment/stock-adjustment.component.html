@@ -289,9 +289,9 @@
 														</ng-template>
 													</p-autoComplete>
 													<div *ngIf="disableSavepartNumber" style="color:red">Please select From DropDown</div>
+													<a routerLink="/itemmastersmodule/itemmasterpages/app-item-master-stock" class="add-icon"><i class="fa fa-plus"></i></a>
 												</div>
 											</div>
-											<a routerLink="/itemmastersmodule/itemmasterpages/app-item-master-stock" class="add-icon"><i class="fa fa-plus"></i></a>
 										</div>
                                     </td>
 									<td>
@@ -343,10 +343,12 @@
 									<td *ngIf="hideUnit"><input type="text" class="w100 form-control editable-field" style="display: none;"></td>
 									<td *ngIf="hideUnit"><textarea style="height: 80px; display: none;" class="editable-field"></textarea></td>
 									<td *ngIf="showUnit">
-										<select [(ngModel)]="sourceStockLineSetup.unitCostAdjustmentReasonTypeId" [ngModelOptions]="{standalone: true}" (change)="unitCostAdjustmentType(sourceStockLineSetup.unitCostAdjustmentReasonTypeId)" [value]='select'>
-											<option *ngFor="let adjustmentReason of allAdjustmentReasons" [ngValue]="adjustmentReason.adjustmentReasonId">{{adjustmentReason.description}}</option>
-										</select>
-										<a routerLink="/singlepages/singlepages/app-adjustment-reason" class="add-icon"><i class="fa fa-plus"></i></a>
+										<div class="inner-addon right-addon autosuggesions-add " style="display: inline-block">
+											<select [(ngModel)]="sourceStockLineSetup.unitCostAdjustmentReasonTypeId" [ngModelOptions]="{standalone: true}" (change)="unitCostAdjustmentType(sourceStockLineSetup.unitCostAdjustmentReasonTypeId)" [value]='select'>
+												<option *ngFor="let adjustmentReason of allAdjustmentReasons" [ngValue]="adjustmentReason.adjustmentReasonId">{{adjustmentReason.description}}</option>
+											</select>
+											<a routerLink="/singlepages/singlepages/app-adjustment-reason" class="add-icon"><i class="fa fa-plus"></i></a>
+										</div>
 										<input type="number" [(ngModel)]="sourceStockLineSetup.AfterUnitCost" (keyup)="UnitCostNumberValuechange(UnitCostDataType,sourceStockLineSetup.BeforecoreUnitCost,sourceStockLineSetup.AfterUnitCost,sourceStockLineSetup.UnitCostAdjustmentReason)" [ngModelOptions]="{standalone: true}" class="w100 form-control editable-field" style="display: inline-block;">
 									</td>
 									<td *ngIf="showUnit">
@@ -364,11 +366,13 @@
 									<td *ngIf="hideUnitSale"><input type="text" class="w100 form-control editable-field" style="display: none;"></td>
 									<td *ngIf="hideUnitSale"><textarea style="height: 80px; display: none;" class="editable-field"></textarea></td>
 									<td *ngIf="showUnitSale">
-										<select [(ngModel)]="sourceStockLineSetup.unitSalePriceAdjustmentReasonTypeId" [ngModelOptions]="{standalone: true}" (change)="unitSalesAdjustmentType(sourceStockLineSetup.unitSalePriceAdjustmentReasonTypeId)">
-											<option *ngFor="let adjustmentReason of allAdjustmentReasons" [ngValue]="adjustmentReason.adjustmentReasonId">{{adjustmentReason.description}}</option>
-										</select>
-										<a routerLink="/singlepages/singlepages/app-adjustment-reason" class="add-icon"><i class="fa fa-plus"></i></a>
-										<input [(ngModel)]="sourceStockLineSetup.AfterunitSalesPrice" (keyup)="UnitSalePriceNumberValuechange(UnitSalePriceDataType,sourceStockLineSetup.BeforeunitSalesPrice,sourceStockLineSetup.AfterunitSalesPrice,sourceStockLineSetup.unitSalesPriceAdjustmentReason)" [ngModelOptions]="{standalone: true}" type="number" class="w100 form-control editable-field" style="display: inline-block;">
+										<div class="inner-addon right-addon autosuggesions-add " style="display: inline-block">
+											<select [(ngModel)]="sourceStockLineSetup.unitSalePriceAdjustmentReasonTypeId" [ngModelOptions]="{standalone: true}" (change)="unitSalesAdjustmentType(sourceStockLineSetup.unitSalePriceAdjustmentReasonTypeId)">
+												<option *ngFor="let adjustmentReason of allAdjustmentReasons" [ngValue]="adjustmentReason.adjustmentReasonId">{{adjustmentReason.description}}</option>
+											</select>
+											<a routerLink="/singlepages/singlepages/app-adjustment-reason" class="add-icon"><i class="fa fa-plus"></i></a>
+											</div>
+											<input [(ngModel)]="sourceStockLineSetup.AfterunitSalesPrice" (keyup)="UnitSalePriceNumberValuechange(UnitSalePriceDataType,sourceStockLineSetup.BeforeunitSalesPrice,sourceStockLineSetup.AfterunitSalesPrice,sourceStockLineSetup.unitSalesPriceAdjustmentReason)" [ngModelOptions]="{standalone: true}" type="number" class="w100 form-control editable-field" style="display: inline-block;">
 									</td>
 									<td *ngIf="showUnitSale">
 										<textarea *ngIf="showSalesDiscountSalePrice" placeholder="Discount Saleprice *" [(ngModel)]="sourceStockLineSetup.unitSalesPriceAdjustmentReason" (change)="UnitSalePriceNumberValuechange1(UnitSalePriceDataType,sourceStockLineSetup.BeforeunitSalesPrice,sourceStockLineSetup.AfterunitSalesPrice,sourceStockLineSetup.unitSalesPriceAdjustmentReason)" [ngModelOptions]="{standalone: true}" style="height: 80px; display: inline-block;" class="editable-field"></textarea>

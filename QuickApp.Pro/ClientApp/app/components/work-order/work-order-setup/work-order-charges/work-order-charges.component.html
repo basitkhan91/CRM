@@ -25,6 +25,8 @@
           *ngIf="!isEdit"
           [workFlow]="workFlowObject"
           [isWorkOrder]="isWorkOrder"
+          [isQuote]="isQuote"
+          [markupList]="markupList"
           (saveChargesListForWO)="saveChargesList($event)"
         ></grd-charges>
 
@@ -34,6 +36,8 @@
           [editData]="editData"
           [workFlow]="workFlowObject"
           [isWorkOrder]="isWorkOrder"
+          [markupList]="markupList"
+          [isQuote]="isQuote"
           (updateChargesListForWO)="updateChargesList($event)"
         ></grd-charges>
       </div>
@@ -74,49 +78,45 @@
           </thead>
 
           <tbody>
-            <tr *ngFor="let w of workOrderChargesList; let i = index">
-              <td>{{ w.chargeType }}</td>
-              <td>{{ w.description }}</td>
-              <td>{{ w.quantity }}</td>
-              <td>{{ w.unitCost }}</td>
-              <td>{{ w.extendedCost }}</td>
-              <td>{{ w.unitPrice }}</td>
-              <td>{{ w.extendedPrice }}</td>
-              <td>{{ w.vendorName }}</td>
-              <ng-container *ngIf="isQuote">
-                  <td>
-                    <!-- <input [(ngModel)]="matQuotation.markup" /> -->
-                    <select (change)="markupChanged(w)" [(ngModel)]="w.markup">
-                      <option value="">Select</option>
-                      <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
-                    </select>
-                  </td>
-                  <td>{{w.costPlusAmount}}</td>
-                  <td><input [(ngModel)]="w.fixedAmount" /></td>
-              </ng-container>
-              <td>
-                <button
-                  class="btn-edit ptable-wo-btns"
-                  mat-icon-button
-                  data-target="#addNewCharges"
-                  data-toggle="modal"
-                  (click)="edit(w)"
-                  matTooltip="Edit"
-                >
-                  <mat-icon>edit</mat-icon>
-                </button>
-              </td>
-              <td>
-                <button
-                  class="btn-delete ptable-wo-btns"
-                  mat-icon-button
-                  matTooltip="Delete"
-                  (click)="delete(w)"
-                >
-                  <mat-icon color="warn">delete</mat-icon>
-                </button>
-              </td>
-            </tr>
+            <ng-container *ngFor="let w of workOrderChargesList; let i = index">
+              <tr *ngIf="!w['isDeleted']">
+                <td>{{ w.chargeType }}</td>
+                <td>{{ w.description }}</td>
+                <td>{{ w.quantity }}</td>
+                <td>{{ w.unitCost }}</td>
+                <td>{{ w.extendedCost }}</td>
+                <td>{{ w.unitPrice }}</td>
+                <td>{{ w.extendedPrice }}</td>
+                <td>{{ w.vendorName }}</td>
+                <ng-container *ngIf="isQuote">
+                    <td>{{ w.markup }}</td>
+                    <td>{{ w.costPlusAmount }}</td>
+                    <td>{{ w.fixedAmount }}</td>
+                </ng-container>
+                <td>
+                  <button
+                    class="btn-edit ptable-wo-btns"
+                    mat-icon-button
+                    data-target="#addNewCharges"
+                    data-toggle="modal"
+                    (click)="edit(w, i)"
+                    matTooltip="Edit"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                </td>
+                <td>
+                  <button
+                    class="btn-delete ptable-wo-btns"
+                    mat-icon-button
+                    matTooltip="Delete"
+                    (click)="delete(w, i)"
+                  >
+                    <mat-icon color="warn">delete</mat-icon>
+                  </button>
+                </td>
+              </tr>
+            </ng-container>
           </tbody>
         </table>
         <button class="btn btn-primary-cstm pull-right" (click)="createChargeQuote()">Save</button>

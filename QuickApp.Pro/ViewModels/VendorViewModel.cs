@@ -9,7 +9,7 @@
 using DAL.Models;
 using Microsoft.AspNetCore.Http;
 using System;
-
+using System.Collections.Generic;
 
 namespace QuickApp.Pro.ViewModels
 {
@@ -113,5 +113,11 @@ namespace QuickApp.Pro.ViewModels
         public IFormFile VendorFileCertified { get; set; }
         public IFormFile VendorFileAudit { get; set; }
         public string VendorPhoneExt { get; set; }
+        public bool IsAddressForBilling { get; set; }
+        public bool IsAddressForShipping { get; set; }
+        public Nullable<bool> IsAllowNettingAPAR { get; set; }
+
+
+        public virtual List<VendorProcess1099> Master1099s { get; set; }
     }
 }

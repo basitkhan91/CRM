@@ -8,6 +8,7 @@ using DAL;
 using DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -47,7 +48,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     for (var i = 0; i < calendarObj.Count; i++)
                     {
-                        
+
                         if (calendarObj[i].AccountingCalendarId > 0)
                         {
                             calendarObj[i].UpdatedDate = DateTime.Now.Date;
@@ -60,14 +61,14 @@ namespace QuickApp.Pro.Controllers
                             calendarObj[i].MasterCompanyId = 1;
                             calendarObj[i].IsActive = true;
                             calendarObj[i].IsDeleted = false;
-                            calendarObj[i].isUpdate = false;                         
+                            calendarObj[i].isUpdate = false;
                             calendarObj[i].CreatedDate = DateTime.Now;
                             calendarObj[i].UpdatedDate = DateTime.Now;
                             unitOfWork.Repository<AccountingCalendar>().Add(calendarObj[i]);
                         }
-                        
+
                         unitOfWork.SaveChanges();
-                        
+
                     }
                 }
                 else
@@ -83,7 +84,19 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-        
+        [HttpGet("getAllCalendarListData")]
+        public IActionResult getListAll()
+        {
+            var calendarData = unitOfWork.Repository<AccountingCalendar>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.AccountingCalendarId);
+            var calendarListData = calendarData.GroupBy(item => new { item.Name, item.FiscalYear })
+                .OrderBy(group => group.Key.FiscalYear).Select(group => new
+                {
+                    calendarListData = group.OrderBy(x => x.AccountingCalendarId),
+                    periodYear = group.Key.FiscalYear,
+                    periodCount = group.Count()
+                }).ToList();
+            return Ok(calendarListData);
+        }
 
         #endregion Public Methods
 

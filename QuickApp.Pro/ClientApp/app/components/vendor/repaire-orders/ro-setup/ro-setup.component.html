@@ -386,12 +386,12 @@
 									<td><input type="number" class="form-control" [(ngModel)]="partList.discountAmount" name="discountAmount{{row_index}}" pKeyFilter="pint" disabled></td>
 									<td><input type="number" [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" [(ngModel)]="partList.extendedCost" name="extendedCost{{row_index}}" pKeyFilter="pint" disabled required></td>
 									<td>
-										<p-autoComplete field="symbol" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" [(ngModel)]="partList.functionalCurrencyId" name="functionalCurrencyId{{row_index}}" [suggestions]="functionalCurrList" (completeMethod)="filterFunctionalCurrency($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" required>
+										<p-autoComplete field="symbol" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" [(ngModel)]="partList.functionalCurrencyId" name="functionalCurrencyId{{row_index}}" [suggestions]="functionalCurrList" (completeMethod)="filterFunctionalCurrency($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="getFXRate(partList)" (onBlur)="getFXRate(partList)" required>
 										</p-autoComplete>
 									</td>
-									<td><input type="number" [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" [(ngModel)]="partList.foreignExchangeRate" name="foreignExchangeRate{{row_index}}" pKeyFilter="num" required></td>
+									<td><input type="number" [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" [(ngModel)]="partList.foreignExchangeRate" name="foreignExchangeRate{{row_index}}" pKeyFilter="num" (keyup)="getFXRate(partList)" required></td>
 									<td>
-										<p-autoComplete field="symbol" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" [(ngModel)]="partList.reportCurrencyId" name="reportCurrencyId{{row_index}}" [suggestions]="functionalTransList" (completeMethod)="filterTransCurrency($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" required
+										<p-autoComplete field="symbol" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" [(ngModel)]="partList.reportCurrencyId" name="reportCurrencyId{{row_index}}" [suggestions]="functionalTransList" (completeMethod)="filterTransCurrency($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="getFXRate(partList)" (onBlur)="getFXRate(partList)" required
 										> <!--[disabled]=true-->          
 										</p-autoComplete>
 									</td>
@@ -911,22 +911,22 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label>Shipping Cost <span class="clr-red">*</span></label>
-								<input [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" type="number" name="cusShippingCost" [(ngModel)]="sourceRoApproval.shippingCost" #cusShippingCost="ngModel" required><!--required-->
-								<div *ngIf="cusShippingCost.invalid && (cusShippingCost.dirty || cusShippingCost.touched)" class="alert alert-danger alert-danger-cstm">
+								<label>Shipping Cost</label>
+								<input class="form-control" type="number" name="cusShippingCost" [(ngModel)]="sourceRoApproval.shippingCost" ><!--#cusShippingCost="ngModel" required-->
+								<!-- <div *ngIf="cusShippingCost.invalid && (cusShippingCost.dirty || cusShippingCost.touched)" class="alert alert-danger alert-danger-cstm">
 									<div *ngIf="cusShippingCost.errors.required">
 										<small> Shipping Cost is required </small>
 									</div>
-							</div>
+								</div> -->
 							</div>
 							<div class="form-group">
-								<label>Handling Cost <span class="clr-red">*</span></label>
-								<input [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" type="number" name="cusHandlingCost" [(ngModel)]="sourceRoApproval.handlingCost" #cusHandlingCost="ngModel" required><!--required-->
-								<div *ngIf="cusHandlingCost.invalid && (cusHandlingCost.dirty || cusHandlingCost.touched)" class="alert alert-danger alert-danger-cstm">
+								<label>Handling Cost</label>
+								<input class="form-control" type="number" name="cusHandlingCost" [(ngModel)]="sourceRoApproval.handlingCost"><!--#cusHandlingCost="ngModel" required-->
+								<!-- <div *ngIf="cusHandlingCost.invalid && (cusHandlingCost.dirty || cusHandlingCost.touched)" class="alert alert-danger alert-danger-cstm">
 									<div *ngIf="cusHandlingCost.errors.required">
 										<small> Handling Cost is required </small>
 									</div>
-							</div>
+							</div> -->
 							</div>
 							<div class="form-group">
 								<label>Shipping Acct Num <span class="clr-red">*</span></label>
@@ -1257,13 +1257,13 @@
 				</div>
 			</p-tabPanel>
 		</p-tabView>
-		
+	
 		<div>
 			<button class="btn btn-primary-cstm pull-right" (click)="saveRepairOrder()" style="margin-top: 10px;margin-bottom: 20px;">{{isEditMode ? 'Update' : 'Save'}}</button> <!--[disabled]="!createPOForm.valid"-->
 		</div>
 	</form>
 		
-		<div class="modal fade" id="cpo-memo" role="dialog">
+		<div class="modal fade" id="cpo-memo" role="dialog" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-sm" style="max-width: 400px !important;">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -1284,7 +1284,7 @@
 			</div>
 		</div>
 		
-		<div class="modal fade" id="add-multiple-partnum" role="dialog">
+		<div class="modal fade" id="add-multiple-partnum" role="dialog" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -1371,7 +1371,7 @@
 			</div>
 		</div>
 		
-		<div class="modal fade" id="createPOAddress" role="dialog">
+		<div class="modal fade" id="createPOAddress" role="dialog" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-sm partsList-modal">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -1425,7 +1425,7 @@
 			</div>
 		</div>
 	
-		<div class="modal fade" id="createPOSiteName" role="dialog">
+		<div class="modal fade" id="createPOSiteName" role="dialog" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-sm partsList-modal">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -1435,12 +1435,6 @@
 					<div class="modal-body">
 						<div class="form-row">
 							<form #addSiteNameForm="ngForm" class="form-horizontal">
-								<!-- <div class="form-group col-md-12">
-									<label class="col-md-6">Site Name:</label>
-									<select class="form-control col-md-6" name="siteName" [(ngModel)]="addressFormForShipping.siteName">
-										<option value="0">Select</option>
-									</select>
-								</div> -->
 								<div class="form-group col-md-12">
 									<label class="col-md-6">Site Name:</label>
 									<input type="text" class="form-control col-md-6" name="siteName" [(ngModel)]="addressFormForShipping.siteName">
@@ -1489,7 +1483,7 @@
 			</div>
 		</div>
 	
-		<div class="modal fade" id="createBillingSiteName" role="dialog">
+		<div class="modal fade" id="createBillingSiteName" role="dialog" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-sm partsList-modal">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -1553,7 +1547,7 @@
 			</div>
 		</div>
 	
-		<div class="modal fade" id="shipToShipVia" role="dialog">
+		<div class="modal fade" id="shipToShipVia" role="dialog" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-sm partsList-modal">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -1609,7 +1603,7 @@
 			</div>
 		</div>
 	
-		<div class="modal fade" id="address-memo" role="dialog">
+		<div class="modal fade" id="address-memo" role="dialog" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-sm" style="max-width: 400px !important;">
 				<div class="modal-content">
 					<div class="modal-header">

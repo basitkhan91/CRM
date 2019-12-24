@@ -16,14 +16,6 @@ namespace DAL.Repositories
 
         public IEnumerable<object> GetPurchaseOrderlist(Filters<PurchaseOrderFilters> poFilters)
         {
-            //var purchaseOrderList = _appContext.PurchaseOrder.Include("PurchaseOderPart").Include("Vendor").OrderByDescending(c => c.PurchaseOrderId).ToList();
-            //purchaseOrderList.ForEach(x =>
-            //{
-            //    if (x.Vendor != null)
-            //    {
-            //        x.Vendor.VendorContact = _appContext.VendorContact.Include("Contact").Where(vendorContact => vendorContact.VendorId == x.VendorId).ToList();
-            //    }
-            //});
 
             if (poFilters.filters == null)
                 poFilters.filters = new PurchaseOrderFilters();
@@ -57,7 +49,7 @@ namespace DAL.Repositories
                     statusId = 4;
                 }
 
-                
+
 
             }
 
@@ -72,7 +64,7 @@ namespace DAL.Repositories
                                 join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
                                 from appr in approver.DefaultIfEmpty()
                                 where po.IsDeleted == false
-                                && po.VendorId==(vendorId>0?vendorId:po.VendorId)
+                                && po.VendorId == (vendorId > 0 ? vendorId : po.VendorId)
                                 && po.PurchaseOrderNumber.Contains(!String.IsNullOrEmpty(poFilters.filters.PurchaseOrderNo) ? poFilters.filters.PurchaseOrderNo : po.PurchaseOrderNumber)
                                 //&& Convert.ToString(po.OpenDate) == (Convert.ToString(poFilters.filters.OpenDate) == "1/1/0001 12:00:00 AM" ? Convert.ToString(po.OpenDate) : Convert.ToString(poFilters.filters.OpenDate))
                                 //&& Convert.ToString(po.ClosedDate) == (Convert.ToString(poFilters.filters.ClosedDate) == "1/1/0001 12:00:00 AM" ? Convert.ToString(po.ClosedDate) : Convert.ToString(poFilters.filters.ClosedDate))
@@ -139,6 +131,132 @@ namespace DAL.Repositories
             }
 
             return purchaseOrderList;
+        }
+
+        public IEnumerable<object> PurchaseOrderGlobalSearch(string filterText, int pageNumber, int pageSize, long vendorId)
+        {
+
+            var take = pageSize;
+            var skip = take * (pageNumber);
+
+            short statusId = 0;
+
+            var open = "open";
+            var pending = "pending";
+            var fulfilling = "fulfilling";
+            var closed = "closed";
+            if (!string.IsNullOrEmpty(filterText))
+
+            {
+                if (open.Contains(filterText.ToLower()))
+                {
+                    statusId = 1;
+                }
+                else if (pending.Contains(filterText.ToLower()))
+                {
+                    statusId = 2;
+                }
+                else if (fulfilling.Contains(filterText.ToLower()))
+                {
+                    statusId = 3;
+                }
+                else if (closed.Contains(filterText.ToLower()))
+                {
+                    statusId = 4;
+                }
+
+                var totalRecords = (from po in _appContext.PurchaseOrder
+                                    join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId
+                                    join v in _appContext.Vendor on po.VendorId equals v.VendorId
+                                    join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
+                                    from appr in approver.DefaultIfEmpty()
+                                    where po.IsDeleted == false && po.VendorId == (vendorId > 0 ? vendorId : po.VendorId)
+
+                                    && (po.PurchaseOrderNumber.Contains(filterText)
+                                    || v.VendorName.Contains(filterText)
+                                    || v.VendorCode.Contains(filterText)
+                                    || po.StatusId == statusId
+                                    || emp.FirstName.Contains(filterText)
+                                    || appr.FirstName.Contains(filterText))
+                                    select new
+                                    {
+                                        po.PurchaseOrderId
+                                    }).Distinct()
+                               .Count();
+
+                var purchaseOrderList = (from po in _appContext.PurchaseOrder
+                                         join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId
+                                         join v in _appContext.Vendor on po.VendorId equals v.VendorId
+                                         join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
+                                         from appr in approver.DefaultIfEmpty()
+                                         where po.IsDeleted == false && po.VendorId == (vendorId > 0 ? vendorId : po.VendorId)
+                                         && (po.PurchaseOrderNumber.Contains(filterText)
+                                         || v.VendorName.Contains(filterText)
+                                         || v.VendorCode.Contains(filterText)
+                                         || po.StatusId == statusId
+                                         || emp.FirstName.Contains(filterText)
+                                         || appr.FirstName.Contains(filterText))
+                                         select new
+                                         {
+                                             po.PurchaseOrderId,
+                                             po.PurchaseOrderNumber,
+                                             OpenDate = po.OpenDate,
+                                             ClosedDate = po.ClosedDate,
+                                             v.VendorName,
+                                             v.VendorCode,
+                                             Status = po.StatusId == 1 ? "Open" : (po.StatusId == 2 ? "Pending" : (po.StatusId == 3 ? "Fulfilling" : "Closed")),
+                                             RequestedBy = emp.FirstName,
+                                             ApprovedBy = appr == null ? "" : appr.FirstName,
+                                             po.CreatedDate,
+                                             po.IsActive,
+                                             TotalRecords = totalRecords
+                                         }).Distinct().OrderByDescending(p => p.CreatedDate)
+                                         .Skip(skip)
+                                        .Take(take)
+                                        .ToList();
+                return purchaseOrderList;
+            }
+            else
+            {
+                var totalRecords = (from po in _appContext.PurchaseOrder
+                                    join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId
+                                    join v in _appContext.Vendor on po.VendorId equals v.VendorId
+                                    join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
+                                    from appr in approver.DefaultIfEmpty()
+                                    where po.IsDeleted == false && po.VendorId == (vendorId > 0 ? vendorId : po.VendorId)
+                                    select new
+                                    {
+                                        po.PurchaseOrderId
+                                    }).Distinct()
+                               .Count();
+
+                var purchaseOrderList = (from po in _appContext.PurchaseOrder
+                                         join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId
+                                         join v in _appContext.Vendor on po.VendorId equals v.VendorId
+                                         join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
+                                         from appr in approver.DefaultIfEmpty()
+                                         where po.IsDeleted == false && po.VendorId == (vendorId > 0 ? vendorId : po.VendorId)
+                                         select new
+                                         {
+                                             po.PurchaseOrderId,
+                                             po.PurchaseOrderNumber,
+                                             OpenDate = po.OpenDate,
+                                             ClosedDate = po.ClosedDate,
+                                             v.VendorName,
+                                             v.VendorCode,
+                                             Status = po.StatusId == 1 ? "Open" : (po.StatusId == 2 ? "Pending" : (po.StatusId == 3 ? "Fulfilling" : "Closed")),
+                                             RequestedBy = emp.FirstName,
+                                             ApprovedBy = appr == null ? "" : appr.FirstName,
+                                             po.CreatedDate,
+                                             po.IsActive,
+                                             TotalRecords = totalRecords
+                                         }).Distinct().OrderByDescending(p => p.CreatedDate)
+                                         .Skip(skip)
+                                        .Take(take)
+                                        .ToList();
+                return purchaseOrderList;
+            }
+           
         }
 
         public IEnumerable<object> RecevingPolist()
@@ -969,8 +1087,8 @@ namespace DAL.Repositories
                                 GLAccount = gla.AccountName,
                                 UnitOfMeasure = uom.Description,
                                 Condition = cond.Description,
-                                FunctionalCurrency = fcurr.DisplayName,
-                                ReportCurrency = rcurr.DisplayName,
+                                FunctionalCurrency = fcurr.Symbol,
+                                ReportCurrency = rcurr.Symbol,
                                 WorkOrderNo = pop.WorkOrderId,
                                 SalesOrderNo = pop.WorkOrderId,
                                 ReapairOrderNo = pop.RepairOrderId,

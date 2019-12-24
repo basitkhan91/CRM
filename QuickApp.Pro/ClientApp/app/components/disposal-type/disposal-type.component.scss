@@ -34,6 +34,15 @@
     margin-top: 10px;
 }
 
+.modal.editdisposaltype {
+    .modal-body div.form-group label, label {
+        font-weight: normal;
+        width: 100%;
+        text-align: left;
+        
+    }
+}
+
 .modal {
     .modal-body.editdisposaltype label {
         font-weight: normal !important;
@@ -44,14 +53,6 @@
 
     .modal-body.editdisposaltype .form-group {
         margin-bottom: 10px;
-    }
-}
-
-.modal.editdisposaltype {
-    .modal-body div.form-group label, label {
-        font-weight: normal;
-        width: 100%;
-        text-align: left;
     }
 }
 

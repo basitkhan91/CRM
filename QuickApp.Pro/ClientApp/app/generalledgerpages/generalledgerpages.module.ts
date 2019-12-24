@@ -23,7 +23,7 @@ import { GeneralLedgerCurrencyComponent } from "../components/general-ledger/gen
 import { LegalEntityStructureComponent } from "../components/general-ledger/entity/entity-list/entity-list.component";
 import { ManagementStructureComponent } from "../components/general-ledger/entity/entity-setup/entity-setup.component";
 import { TreeTableModule } from 'primeng/treetable';
-import { EntityEditComponent } from "../components/general-ledger/entity/entity-edit/entity-edit.component";
+import { EntityEditComponent } from "../components/general-ledger/entity/legal-entity-list/legal-entity-list.component";
 //import { TreeNode } from 'primeng/api';
 import { TreeModule } from 'primeng/tree';
 import { DialogModule } from 'primeng/dialog';
@@ -49,6 +49,7 @@ import { AccountListingCreateComponent } from "../components/general-ledger/acco
 import {DropdownModule} from 'primeng/dropdown';
 
 import { CommonService } from "../services/common.service";
+import { AccountingListingCalendarComponent } from '../components/general-ledger/accounting-listing-calendar/accounting-listing-calendar.component';
 
 
 @NgModule({
@@ -89,8 +90,8 @@ import { CommonService } from "../services/common.service";
         PoRoCategoryComponent,
         InterCompanySetupComponent,
         AccountListingComponent,
-        AccountListingCreateComponent
-
+        AccountListingCreateComponent,
+        AccountingListingCalendarComponent
     ],
     providers: [
         NodeSetupService,

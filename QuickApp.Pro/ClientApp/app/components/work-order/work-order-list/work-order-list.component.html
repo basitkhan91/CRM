@@ -4,6 +4,42 @@
 
 
 <div *ngIf="!isSubWorkOrder">
+
+    <div class="inline-block display-flex">
+        <h3 class="po-head lead">WorkOrder List</h3>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a matTooltip="Create WorkOrder"
+           class="plusicon-cstm new-margin"
+           [routerLink]="[
+            '/workordersmodule/workorderspages/app-work-order-add'
+          ]">
+            <i class="fa fa-plus-circle fa-lg"></i>
+        </a>
+    </div>
+
+    <div class="form-row status-radio">
+				<div class="col-md-8">
+					<div class="form-group">
+						<label style="float:left; width:auto; margin-right:20px; padding-top:3px;">Status:</label>
+						<div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
+							<label class="radio-cstm wauto">
+								<input type="radio" name="woStatus" class="form-control" value="open"  [(ngModel)]="currentStatus" (click)="changeOfStatus('open')">
+								<span class="checkmark"></span>Open</label>
+            </div>
+            <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
+                <label class="radio-cstm wauto">
+                  <input type="radio" name="woStatus" class="form-control" value="pending" [(ngModel)]="currentStatus"   (click)="changeOfStatus('pending')">
+                  <span class="checkmark"></span>Pending</label>
+              </div>
+						<div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
+							<label class="radio-cstm wauto">
+								<input type="radio" name="woStatus" class="form-control" value="closed" [(ngModel)]="currentStatus"  (click)="changeOfStatus('closed')" >
+								<span class="checkmark"></span>Closed</label>
+						</div>
+
+					</div>
+				</div>
+			</div>
 <p-table
   #dt
   class="rpo-table-cstm rro-table-cstm"
@@ -96,13 +132,22 @@
   </ng-template>
   <ng-template pTemplate="header" let-columns>
     <tr>
-      <th>WorkOrder Number</th>
+
       <th *ngFor="let col of columns">
         {{ col.header }}
       </th>
       <th style="position:sticky" *ngIf="selectedColumns.length > 0">
         Actions
       </th>
+    </tr>
+    <tr>
+        <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
+            <!-- <input type="text" style="width:100%;" pInputText   (keyup)="filterData($event)"> -->
+            <input   *ngIf="col.field !== 'openDate'"  style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains'); fieldSearch($event.target.value, col.field , 'contains' )">
+            <input type="date" class="hidePlaceHolder" *ngIf="col.field == 'openDate'" name="openDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
+
+        </th>
+        <th style="width:200px;position:sticky"></th>
     </tr>
   </ng-template>
   <ng-template
@@ -113,7 +158,7 @@
     let-columns="columns"
   >
     <tr class="ui-widget-header">
-      <td>
+     <!--  <td>
         <a [pRowToggler]="rowData">
           <i
             (click)="getWorkOrderPartListByWorkOrderId(rowData)"
@@ -124,8 +169,9 @@
             "
           ></i>
           <span> {{ rowData.workOrderNum }}</span>
-        </a>
-      </td>
+        </a> 
+      
+      </td> -->
       <td *ngFor="let col of columns">
         {{
           col.field == 'openDate'
@@ -184,11 +230,11 @@
       </td>
     </tr>
   </ng-template>
-  <ng-template pTemplate="rowexpansion" let-rowData let-rowIndex="rowIndex">
+  <!-- <ng-template pTemplate="rowexpansion" let-rowData let-rowIndex="rowIndex">
     <tr>
-      <!-- <td>{{ partList.openDate }}</td> -->
+
     </tr>
-  </ng-template>
+  </ng-template> -->
 </p-table>
 </div>
 <!-- Modal -->
@@ -259,11 +305,11 @@
                       </p>
                       <p>
                         <span class="label"><b>Customer Code: </b></span
-                        ><span class="value"></span>
+                        ><span class="value">{{viewWorkOrderHeader.customerCode}}</span>
                       </p>
                       <p>
                         <span class="label"><b>Customer Ref: </b></span
-                        ><span class="value"></span>
+                        ><span class="value">{{viewWorkOrderHeader.contractReference}}</span>
                       </p>
                     </div>
       
@@ -943,238 +989,6 @@
     </div>
   </div>
 </div>
-
-<!-- *ngFor="let partList of workOrderPartListData; let i = index"
-[hidden]="rowIndex === i" -->
-
-<!-- <div [@fadeInOut] class="page-content">
-    <div class="right_col" role="main">
-        <div class="col-md-12">
-            <div class="x_panel" style="">
-                <div class="x_content">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Work Order List</li>
-                        </ol>
-                    </nav>
-                    <div class="pheading">
-                        <h4 class="page-heading">List of Work Order's</h4>
-						<form id="" class="lgrey-bg div8 filters" name="" action="#" method="post" onsubmit="return false;">
-							<div class="col-sm-2">
-								<label>WO Num</label>
-								<br />
-								<div class="inner-addon right-addon inline-block">
-									<i class="fa fa-search"></i>
-									<input type="text" class="form-control numberids" id="" name="" placeholder="WO Number" />
-								</div>
-							</div>
-							<div class="col-sm-2">
-								<label>Cust Name</label>
-								<br />
-								<div class="inner-addon right-addon inline-block">
-									<i class="fa fa-search"></i>
-									<input type="text" class="form-control names" id="" name="" placeholder="Cust Name" />
-								</div>
-							</div>
-							<div class="col-sm-2">
-								<label>Cust Code</label>
-								<br />
-								<div class="inner-addon right-addon inline-block">
-									<i class="fa fa-search"></i>
-									<input type="text" class="form-control numberids" id="" name="" placeholder="Cust Code" />
-								</div>
-							</div>
-							<div class="col-sm-2">
-								<label>Int./Ext.</label>
-								<br />
-								<select>
-									<option value="">Select</option>
-									<option value="External">External</option>
-									<option value="Internal">Internal</option>
-								</select>
-							</div>
-							<div class="col-sm-2">
-								<label>Open Date</label>
-								<br />
-								<input type="text" class="form-control datepicker" id="" name="" placeholder="Open Date" />
-							</div>
-							<div class="col-sm-2">
-								<label>Promise Date</label>
-								<br />
-								<input type="text" class="form-control datepicker" id="" name="" placeholder="Promise Date" />
-							</div>
-							<div class="col-sm-2">
-								<label>Workflow ID</label>
-								<br />
-								<div class="inner-addon right-addon inline-block">
-									<i class="fa fa-search"></i>
-									<input type="text" class="form-control numberids" id="" name="" placeholder="W123" />
-								</div>
-							</div>
-							<div class="col-sm-2">
-								<label>PN</label>
-								<br />
-								<div class="inner-addon right-addon inline-block">
-									<i class="fa fa-search"></i>
-									<input type="text" class="form-control numberids" id="" name="" placeholder="PN123" />
-								</div>
-							</div>
-							<div class="col-sm-2">
-								<label>Revised PN</label>
-								<br />
-								<div class="inner-addon right-addon inline-block">
-									<i class="fa fa-search"></i>
-									<input type="text" class="form-control numberids" id="" name="" placeholder="PN456" />
-								</div>
-							</div>
-							<div class="col-sm-2">
-								<label>Status</label>
-								<br />
-								<select>
-									<option value="">Select Status</option>
-									<option value="Active">Active</option>
-									<option value="Inactive">Inactive</option>
-								</select>
-							</div>
-							<button type="button" class="btn btn-default height40 black-search-button btmargin"><i class="fa fa-search"></i></button>
-							<div class="excel-upload">
-								<input type="file" name="upload[]" multiple="" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-								<label for="upload">
-									<span data-toggle="tooltip" title="Excel Upload (table rows)"><i class="fa fa-file-excel-o"></i></span>
-								</label>
-							</div>
-						</form>
-                    </div>
-                    <div class="cdetails-top">
-                        <div class="col-sm-12">
-                            <label>Company</label>
-                            <span>Silverxis</span>
-                        </div>
-                        <div class="col-sm-12">
-                            <label>BU</label>
-                            <span>Adso</span>
-                        </div>
-                        <div class="col-sm-12">
-                            <label>Division</label>
-                            <span>Development</span>
-                        </div>
-                        <div class="col-sm-12">
-                            <label>Dept</label>
-                            <span>Java</span>
-                        </div>
-
-                    </div>
-                    <div class="clear"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-12 col-sm-12 col-12">
-            <div class="x_panel">
-                <div id="adminsearchlocationajax" class="table-responsive default-bg clear">
-                    <div class="col-12">
-                        <table class="table table-bordered table-striped table-sorting">
-                            <thead>
-                                <tr>
-                                    <th>WO Num</th>
-                                    <th>Cust Name</th>
-                                    <th>Cust Code</th>
-                                    <th>Int./Ext.</th>
-                                    <th>WO Qty</th>
-                                    <th>Open Date</th>
-                                    <th>Promise Date</th>
-                                    <th>Workflow ID</th>
-                                    <th>PN</th>
-                                    <th>PN Des.</th>
-                                    <th>Revised PN</th>
-                                    <th class="events5"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>WO123</td>
-                                    <td>Shabbir</td>
-                                    <td>C123</td>
-                                    <td>Internal</td>
-                                    <td>2</td>
-                                    <td>03/13/2018</td>
-                                    <td>04/13/2018</td>
-                                    <td>W123</td>
-                                    <td>PN123</td>
-                                    <td>single drum towing winch</td>
-                                    <td>PN456</td>
-                                    <td>
-                                        <span data-toggle="tooltip" class="status" title="Active" data-placement="right"><input type="checkbox" checked data-toggle="toggle" data-width="30" id="toggle-one" data-on="<i class='fa fa-check'></i>" data-off="<i class='fa fa-times'></i>" data-onstyle="success" data-offstyle="danger"></span>
-                                        <span data-toggle="modal" data-target="#viewcustomer"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="View"><i class="fa fa-eye"></i></a> </span>
-                                        <span data-toggle="modal" data-target="#history"><a class="btn btn-success nobg" data-toggle="tooltip" title="History"><i class="fa fa-history"></i></a></span>
-                                        <span data-toggle="modal" data-target="#delete"> <a class="btn btn-danger boxed-float-btn nobg" data-toggle="tooltip" title="Delete"><i class="fa fa-trash"></i></a> </span>
-                                    </td>
-                                </tr>                                
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="clear"></div>
-                    <div class="padding5">
-                        <ul class="pagination">
-                            <li class="arrows disabled"><a> <i class="fa fa-angle-left"></i> </a></li>
-                            <li class="active"><a>1</a></li>
-                            <li><a>2</a></li>
-                            <li><a>3</a></li>
-                            <li class="arrows"><a> <i class="fa fa-angle-right"></i> </a></li>
-                        </ul>
-                        <div class="pull-right"> &copy; 2018 <a routerLink="/">PAS</a> </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="active" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" id="" name="">&times;</button>
-                <h4 class="modal-title">Are You Sure Want to Active the current selection ?</h4>
-            </div>
-            <div class="modal-body">
-                <button type="button" class="btn btn-success" data-dismiss="modal">Yes</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="inactive" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" id="" name="">&times;</button>
-                <h4 class="modal-title">Are You Sure Want to InActive the current selection ?</h4>
-            </div>
-            <div class="modal-body">
-                <button type="button" class="btn btn-success" data-dismiss="modal">Yes</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="delete" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" id="" name="">&times;</button>
-                <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
-            </div>
-            <div class="modal-body">
-                <button type="button" class="btn btn-success" data-dismiss="modal">Yes</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
-            </div>
-        </div>
-    </div>
-</div>
- -->
-
-
-
       <div *ngIf="isSubWorkOrder">
         <h4 class="modal-title">WorkOrder View</h4>
         <div class="card-body" *ngIf="viewWorkOrderHeader">

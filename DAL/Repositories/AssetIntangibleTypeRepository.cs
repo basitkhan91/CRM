@@ -72,7 +72,7 @@ namespace DAL.Repositories
         private IEnumerable<AssetIntangibleType> TagItems(IEnumerable<AssetIntangibleType> items)
         {
             IEnumerable<AssetIntangibleType> existingItems = GetAllItems();
-            bool isItemUnique = false;
+            bool isDuplicate = false;
             bool isItemValid = false;
 
             foreach (var item in items)
@@ -80,11 +80,11 @@ namespace DAL.Repositories
                 isItemValid = IsValid(item);
                 if (isItemValid)
                 {
-                    isItemUnique = existingItems.Any(existingItem =>
-                                                                    existingItem.AssetIntangibleName == item.AssetIntangibleName ||
-                                                                    existingItem.AssetIntangibleMemo == item.AssetIntangibleMemo
+                    isDuplicate = existingItems.Any(existingItem =>
+                                                                    existingItem.AssetIntangibleName == item.AssetIntangibleName 
+                                                                    //&& existingItem.AssetIntangibleMemo == item.AssetIntangibleMemo
                                                                     );
-                    item.UploadTag = isItemUnique ? UploadTag.Unique : UploadTag.Duplicate;
+                    item.UploadTag = isDuplicate ? UploadTag.Duplicate: UploadTag.Unique;
                 }
                 else
                 {

@@ -58,8 +58,9 @@ export class RoListComponent implements OnInit {
     requestedByInput: any;
     approvedByInput: any;
     @Input() isEnableROList: boolean;
-    @Input() vendorId: boolean;
+    @Input() vendorId: number;
     currentStatus: string = 'open';
+    filterText: any = '';
 
     constructor(private _route: Router,
         private authService: AuthService,
@@ -208,12 +209,19 @@ export class RoListComponent implements OnInit {
         if(this.isEnableROList) {
             this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, vendorId: this.vendorId }
         }
-        this.getList(this.lazyLoadEventDataInput);
+        if(this.filterText == '') {
+            this.getList(this.lazyLoadEventDataInput);
+        } else {
+            this.globalSearch(this.filterText);
+        }
         console.log(event);
     }
 
-    onChangeInputField(value, field) {
+    onChangeInputField(value, field, el) {
         console.log(value, field);
+        if (value === '') { el.classList.add("hidePlaceHolder"); }
+        else el.classList.remove("hidePlaceHolder");
+
                       
         // if(field == "repairOrderId") {
         //     this.repairOrderIdInput = value;
@@ -252,6 +260,7 @@ export class RoListComponent implements OnInit {
             status: this.statusIdInput,
             requestedBy: this.requestedByInput,
             approvedBy: this.approvedByInput,
+            vendorId: this.vendorId ? this.vendorId : null
         }
         console.log(this.lazyLoadEventDataInput);        
         //this.loadData(event);
@@ -288,6 +297,11 @@ export class RoListComponent implements OnInit {
         this.getROViewById(rowData.repairOrderId);
         this.getROPartsViewById(rowData.repairOrderId);
         this.getApproversListById(rowData.repairOrderId);
+    }
+
+    viewSelectedRowdbl(rowData) {
+        this.viewSelectedRow(rowData);
+        $('#roView').modal('show');
     }
 
     getROViewById(roId) {
@@ -348,6 +362,18 @@ export class RoListComponent implements OnInit {
     // }
     globalSearch(value) {
         this.pageIndex = 0;
+        this.filterText = value;
+        this.vendorId = this.vendorId ? this.vendorId : 0;
+        this.vendorService.repairOrderGlobalSearch(value, this.pageIndex, this.pageSize, this.vendorId).subscribe(res => {
+            this.pageIndex = 0;
+            this.data = res;
+            if (this.data.length > 0) {
+                this.totalRecords = res[0].totalRecords;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            }
+        })
+
+        //this.pageIndex = 0;
         // this.customerService.getGlobalSearch(value, this.pageIndex, this.pageSize).subscribe(res => {
         //     this.data = res;
         //     if (res.length > 0) {

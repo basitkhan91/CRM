@@ -174,7 +174,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     ataChapterName: string;
     localprovision: any[] = [];
     localgroup: any[] = [];
-    allProvisonInfo: Provision[];
+    //allProvisonInfo: Provision[];
+    allProvisonInfo: any = [];
     activeTab: number = 0;
     itemQuantity = [];
     items1: MenuItem[];
@@ -423,7 +424,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 this.isDisabledSteps = true;
                 this.sourceItemMaster = responseDataOfEdit[0];
                 this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
-                this.selectedIntegrationTypes = this.sourceItemMaster.integrationPortalIds;
+                this.Integration();
                 this.sourceItemMaster.oemPNId = this.sourceItemMaster.oemPNData[0]
                 this.ItemMasterId = this.itemMasterId;
                 // assign the header values
@@ -492,6 +493,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             })
 
         }
+        this.Integration();
 
 
 
@@ -634,7 +636,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.getAircraftModelsData();
         this.getCpaesData();
         this.activeIndex = 0;
-        this.Integration();
         this.countrylist();
         this.sourceItemMaster.salesIsFixedPrice = true;
         this.capabilitiesForm = this.formBuilder.group({
@@ -648,7 +649,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.getAllAircraftModels();
         this.getAllDashNumbers();
         this.getAllATAChapter();
-        this.getAllATASubChapter();
+        // this.getAllATASubChapter();
         this.getAllSubChapters();
         this.getCapabilityType();
 
@@ -1479,7 +1480,17 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     private onprodataSuccessful(getProvisionList: Provision[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.allProvisonInfo = getProvisionList;
+        //  this.allProvisonInfofilter = getProvisionList;
+
+        // alert(JSON.stringify(this.allProvisonInfo.));
+
+        if (getProvisionList != null) {
+            for (let i = 0; i < getProvisionList.length; i++) {
+                if (getProvisionList[i].isActive === true) {
+                    this.allProvisonInfo.push(getProvisionList[i]);
+                }
+            }
+        }
     }
 
 
@@ -1568,7 +1579,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     openModelPopups(capData) {
-        debugger;
+
         if (this.itemser.isEditMode == false) {
 
             //Adding for Aircraft manafacturer List Has empty then List Should be null
@@ -2698,11 +2709,13 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 let provisionName = this.allProvisonInfo[i].description;
                 if (provisionName) {
                     if (provisionName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                        this.ProvisionNumber.push([{
-                            "provisionId": this.allProvisonInfo[i].provisionId,
-                            "provisionName": provisionName
-                        }]),
-                            this.localprovision.push(provisionName)
+                        if (this.allProvisonInfo[i].isActive === true) {
+                            this.ProvisionNumber.push([{
+                                "provisionId": this.allProvisonInfo[i].provisionId,
+                                "provisionName": provisionName
+                            }]),
+                                this.localprovision.push(provisionName)
+                        }
                     }
                 }
 
@@ -4260,7 +4273,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.ataMainchapter = Atachapter[0];
             for (let i = 0; i < this.ataMainchapter.length; i++) {
                 this.LoadAtachapter.push(
-                    { value: this.ataMainchapter[i].ataChapterId, label: this.ataMainchapter[i].ataChapterName },
+                    { value: this.ataMainchapter[i].ataChapterId, label: `${this.ataMainchapter[i].ataChapterCode}-${this.ataMainchapter[i].ataChapterName}` },
                 );
             }
         });
@@ -4276,7 +4289,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             })
         })
     }
-
+    addNewATA() {
+        this.atasubchapter = [];
+        this.ataform.reset();
+    }
     addATAMapping() {
         const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
         const PartNumber = this.isEdit === true ? this.pnvalue : this.collectionofItemMaster.partNumber
@@ -4969,10 +4985,16 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.isSaving = true;
         if (this.isEditMode == false) {
             this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.integrationName;
+            this.sourceAction.Name = this.sourcemanufacturer.name;
+            this.sourceAction.createdBy = this.userName;
             this.sourceAction.masterCompanyId = 1;
-            this.itemser.savemanufacutrer(this.sourcemanufacturer).subscribe(
+            this.itemser.savemanufacutrer(this.sourceAction).subscribe(
                 data => {
+                    this.alertService.showMessage(
+                        'Success',
+                        `Saved Manufacturer Successfully `,
+                        MessageSeverity.success
+                    );
                     this.sourceItemMaster.manufacturerId = data.manufacturerId;
                     this.manufacturerdata()
                 })
@@ -5006,7 +5028,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     exportUOmOpen(content) {
         console.log("In exportUOmOpen function!!");
-       // this.sourceUOM.isActive = true;
+        // this.sourceUOM.isActive = true;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
         }, () => { console.log('Backdrop click') })
@@ -5176,10 +5198,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.dataSource.data = getEmployeeCerficationList;
         this.allintegrationdetails = getEmployeeCerficationList;
         if (this.allintegrationdetails.length > 0) {
-            for (let i = 0; i < this.allintegrationdetails.length; i++)
+            for (let i = 0; i < this.allintegrationdetails.length; i++) {
                 this.integrationvalues.push(
                     { value: this.allintegrationdetails[i].integrationPortalId, label: this.allintegrationdetails[i].description },
                 );
+            }
+            this.selectedIntegrationTypes = this.sourceItemMaster.integrationPortalIds;
         }
 
 
@@ -5447,7 +5471,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     // New code for loading dropdown
 
-    getATASubChapterByATAChapter(atachapterId?) {
+    getATASubChapterByATAChapter() {
         const selectedATAChapterId = this.ataform.value.atanumber;
         this.ataChaptherSelected = this.ataMainchapter.filter(x => {
             if (x.ataChapterId === selectedATAChapterId) {

@@ -16,7 +16,13 @@ import { ATAMain } from '../../../../models/atamain.model';
 import { ATASubChapter } from '../../../../models/atasubchapter.model';
 import { AtaSubChapter1Service } from '../../../../services/atasubchapter1.service';
 import { ATAChapter } from '../../../../models/atachapter.model';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { getObjectById, editValueAssignByCondition, getValueFromObjectByKey, getValueFromArrayOfObjectById } from '../../../../generic/autocomplete';
+import { CommonService } from '../../../../services/common.service';
+import { AircraftModelService } from '../../../../services/aircraft-model/aircraft-model.service';
+import { DashNumberService } from '../../../../services/dash-number/dash-number.service';
+import { AuthService } from '../../../../services/auth.service';
+import { VendorCapabilitiesService } from '../../../../services/vendorcapabilities.service';
 @Component({
     selector: 'app-add-vendor-capabilities',
     templateUrl: './add-vendor-capabilities.component.html',
@@ -84,12 +90,63 @@ export class AddVendorCapabilitiesComponent implements OnInit{
     modelValue: boolean;
     collectionofVendorCapability: any;
     collectionofItemMaster: any;
-    selectedCapabulityTypesListData: any;
+	selectedCapabulityTypesListData: any;
     collectionofVendorCapabilityTypeList: any;
     collectionofVendorCapabulityAircraftTypeList: any;
-    enablePlus: boolean = false;
+	enablePlus: boolean = false;
+	tempMemo: any;
+	tempMemoLabel: any;
+	isEditMode: boolean = false;
+	manufacturerData: any[] = [];
+	selectedAircraftId: any;
+	newValue: any;
+	loadValues: any[] = [];
+	selectedModelId: any;
+	selectedDashnumber: any;
+	selectAircraftManfacturer: any = [];
+	aircraftModelList: { label: string; value: number; }[] = [];
+	aircraftManfacturerIdsUrl: any = '';
+    aircraftModelsIdUrl: any = '';
+	dashNumberIdUrl: any = '';
+	selectedAircraftModel: any = [];
+    selectedDashNumbers: any = [];
+	selectedATAchapter: any = [];
+	dashNumberList: any = [];
+	searchAircraftParams: string = '';
+	itemMasterId: number;
+	aircraftListDataValues: any;
+	selectedCapabilityName: string = '';
+	selectedCapabilityId: number;
+	sselectedVendorName: string = '';
+	sselectedVendorCode: number;
+	selectedVendorId: number;
+
+	colsaircraftLD: any[] = [
+        { field: "aircraft", header: "Aircraft" },
+        { field: "model", header: "Model" },
+        { field: "dashNumber", header: "Dash Numbers" },
+        { field: "memo", header: "Memo" }
+	];
+	colaircraft: any[] = [
+        { field: "AircraftType", header: "Aircraft" },
+        { field: "AircraftModel", header: "Model" },
+        { field: "DashNumber", header: "Dash Numbers" },
+    ];
+	modelUnknown = false;
+	dashNumberUnknown = false;
+	dashNumberUrl: any;
+	loadDashnumber = [];
+	newModelValue: any = [];
+	newDashnumValue: any = [];
+	aircraftData: any;
+	viewTable: boolean = false;
+	enableAircraftInfo: boolean = true;
+	selectedAircraftInfo: boolean = false;
+	selectedGeneralInfo: boolean = true;
+	vendorCapabilityId: number;
+
 	/** add-vendor-capabilities ctor */
-    constructor(private _route: Router,private modalService: NgbModal,public ataSubChapter1Service: AtaSubChapter1Service,public ataservice: AtaMainService,public vendorService: VendorService, private alertService: AlertService, public itemser: ItemMasterService,)
+    constructor(private _route: Router,private modalService: NgbModal,public ataSubChapter1Service: AtaSubChapter1Service,public ataservice: AtaMainService,public vendorService: VendorService, private alertService: AlertService, public itemser: ItemMasterService, public commonService: CommonService, private aircraftModelService: AircraftModelService, private dashNumService: DashNumberService, private authService: AuthService, private _actRoute: ActivatedRoute, private vendorCapesService: VendorCapabilitiesService)
 	{
         this.vendorService.isEditMode = false;
 	}
@@ -97,7 +154,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	ngOnInit(): void {
 		this.matSpinner = false;
 		//this.workFlowtService.MatSpinner = true;//App Mat Spinner Testing
-		// debugger;
+		
 		this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-add-vendor-capabilitiesn';
         this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
 
@@ -110,8 +167,85 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		this.aircraftManfacturerData();
 		this.capabilityTypeListData();
 		this.manufacturerdata();
+		this.getAllAircraftModels();
+        this.getAllDashNumbers();
 		
 		//this.loadATASubchapterData();
+		this.vendorCapabilityId = this._actRoute.snapshot.params['id'];
+		if(this.vendorCapabilityId) {
+			this.isEditMode = true;
+			this.enableAircraftInfo = false;
+			this.getVendorCapabilitiesEdit(this.vendorCapabilityId);
+			this.getVendorCapesAircraftEdit(this.vendorCapabilityId);
+		}
+	}
+
+	getVendorCapabilitiesEdit(vendorCapesId) {
+		this.vendorCapesService.getVendorCapabilitybyId(vendorCapesId).subscribe(res => {
+			console.log(res);
+			this.sselectedVendorName = res.vendorName;
+			this.sselectedVendorCode = res.vendorCode;
+			this.sourceVendorCap = {
+				...res,
+				vendorId: getObjectById('vendorId', res.vendorId, this.allVendors),
+				vendorCode: getObjectById('vendorId', res.vendorId, this.allVendors),
+				partNumberId: getObjectById('value', res.itemMasterId, this.allPartnumbersInfo),
+			}
+
+		})
+	}
+
+	getVendorCapesAircraftEdit(vendorCapesId) {
+		this.vendorCapesService.getVendorAircraftGetDataByCapsId(vendorCapesId).subscribe(res => {
+			console.log(res);			
+		})
+	}
+
+	get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+	}
+	
+	// get all Aircraft Models
+    getAllAircraftModels() {
+
+        this.aircraftModelService.getAll().subscribe(models => {
+            const responseValue = models[0];
+            this.aircraftModelList = responseValue.map(models => {
+                return {
+                    label: models.modelName,
+                    value: models.aircraftModelId
+                };
+            });
+        });
+    }
+
+
+    // get all dashnumber
+    getAllDashNumbers() {
+        this.dashNumService.getAll().subscribe(dashnumbers => {
+            const responseData = dashnumbers[0];
+            this.dashNumberList = responseData.map(dashnumbers => {
+                return {
+                    label: dashnumbers.dashNumber,
+                    value: dashnumbers.dashNumberId
+                };
+            });
+        });
+    }
+
+	filterVendorNames(event) {
+		this.vendorNames = this.allVendors;
+
+		if (event.query !== undefined && event.query !== null) {
+			const vendorFilter = [...this.allVendors.filter(x => {
+				return x.vendorName.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.vendorNames = vendorFilter;
+		}
+	}
+
+	selectedVendorName(value) {
+		this.sourceVendorCap.vendorCode = getObjectById('vendorId', value.vendorId, this.allVendors);				
 	}
 
 	private manufacturerdata() {
@@ -164,10 +298,13 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		if (this.allaircraftInfo) {
 			if (this.allaircraftInfo.length > 0) {
 				for (let i = 0; i < this.allaircraftInfo.length; i++)
-					this.shiftValues.push(
-						{ value: this.allaircraftInfo[i].aircraftTypeId, label: this.allaircraftInfo[i].description },
+					// this.shiftValues.push(
+					// 	{ value: this.allaircraftInfo[i].aircraftTypeId, label: this.allaircraftInfo[i].description },
 
-					);
+					// );
+					this.manufacturerData.push(
+                        { value: this.allaircraftInfo[i].aircraftTypeId, label: this.allaircraftInfo[i].description },
+                    );
 			}
 
 			//Adding
@@ -191,6 +328,15 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 			
 
 		}
+
+		if (this.allaircraftInfo) {
+            if (this.allaircraftInfo.length > 0) {
+                for (let i = 0; i < this.allaircraftInfo.length; i++)
+                    this.manufacturerData.push(
+                        { value: this.allaircraftInfo[i].aircraftTypeId, label: this.allaircraftInfo[i].description },
+                    );
+            }
+        }
 	}
 
 
@@ -207,6 +353,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	}
 
 	onDataLoadCapabilityTypeListDataSuccessful(capabilityTypeList: any[]) {
+		
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		//this.dataSource.data = getAtaMainList;
@@ -221,6 +368,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 					);
 			}
 		}
+		console.log(this.capabilityTypeList);		
 	}
 
 		private atamaindata()
@@ -283,15 +431,18 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		this.allVendors = allWorkFlows;
 		//this.vendorId = this.allVendors[0].vendorId;
 		//console.log(this.allActions);
-	}
+	}	
 
 	onVendorselected(event)
 	{
+		
 		for (let i = 0; i < this.VendorNamecoll.length; i++) {
 			if (event == this.VendorNamecoll[i][0].vendorName)
-            {
+			{
+				
+				this.sourceVendorCap.vendorName=this.VendorNamecoll[i][0].vendorName;
                 this.sourceVendorCap.vendorId = this.VendorNamecoll[i][0].vendorId;
-				this.sourceVendorCap.vendorCode = this.VendorNamecoll[i][0].vendorCode
+				this.sourceVendorCap.vendorCode = this.VendorNamecoll[i][0].vendorCode;
 				//alert("Action Name already Exists");
 				this.disableSaveVenName = true;
 				this.disableSave = true;
@@ -302,45 +453,71 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		}
 	}
 
-	eventHandler(event)
-	{
-		if (event.target.value != "")
-		{
-			let value = event.target.value.toLowerCase();
-			if (this.selectedVendorActionName) {
-				if (value == this.selectedVendorActionName.toLowerCase()) {
-					//alert("Action Name already Exists");
-					this.disableSaveVenderName = true;
-					this.disableSaveVenName = true;
-				}
-				else {
-					this.disableSaveVenderName = false;
-					this.disableSaveVenName = false;
-				}
-			}
+	filterpartItems(event) {
+		this.partCollection = this.allPartnumbersInfo;
 
+		if (event.query !== undefined && event.query !== null) {
+			const partNumberFilter = [...this.allPartnumbersInfo.filter(x => {
+				return x.label.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.partCollection = partNumberFilter;
 		}
 	}
 
-	filterVendorNames(event)
-	{
-		this.vendorNames = [];
-		for (let i = 0; i < this.allVendors.length; i++)
-		{
-			let vendorName = this.allVendors[i].vendorName;
-			if (vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-				//this.vendorNames.push(vendorName);
-              //  this.sourceVendorCap.vendorId= this.allVendors[i].vendorId;
-				this.VendorNamecoll.push([{
-                    "vendorId": this.allVendors[i].vendorId,
-					"vendorName": vendorName,
-                    "vendorCode": this.allVendors[i].vendorCode,
+	getPNDetailsById(value) {
+		this.itemMasterId = editValueAssignByCondition('value', value);		
+
+		this.vendorService.getPartDetailsWithidForSinglePart(this.itemMasterId).subscribe(
+			data => {
+				if (data[0]) {
+					this.sourceVendorCap.partNumber = data[0].partNumber;
+					this.sourceVendorCap.partDescription = data[0].partDescription;
+					this.sourceVendorCap.manufacturerId = data[0].manufacturerId;									
+					this.sourceVendorCap.manufacturerName = data[0].name;
+					this.sourceVendorCap.itemMasterId =	this.itemMasterId;							
+				}
+			})
+	}
+
+	// eventHandler(event)
+	// {
+	// 	if (event.target.value != "")
+	// 	{
+	// 		let value = event.target.value.toLowerCase();
+	// 		if (this.selectedVendorActionName) {
+	// 			if (value == this.selectedVendorActionName.toLowerCase()) {
+	// 				//alert("Action Name already Exists");
+	// 				this.disableSaveVenderName = true;
+	// 				this.disableSaveVenName = true;
+	// 			}
+	// 			else {
+	// 				this.disableSaveVenderName = false;
+	// 				this.disableSaveVenName = false;
+	// 			}
+	// 		}
+
+	// 	}
+	// }
+
+	// filterVendorNames(event)
+	// {
+	// 	this.vendorNames = [];
+	// 	for (let i = 0; i < this.allVendors.length; i++)
+	// 	{
+	// 		let vendorName = this.allVendors[i].vendorName;
+	// 		if (vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+	// 			//this.vendorNames.push(vendorName);
+    //           //  this.sourceVendorCap.vendorId= this.allVendors[i].vendorId;
+	// 			this.VendorNamecoll.push([{
+    //                 "vendorId": this.allVendors[i].vendorId,
+	// 				"vendorName": vendorName,
+    //                 "vendorCode": this.allVendors[i].vendorCode,
                    
-				}]),
-					this.vendorNames.push(vendorName);
-			}
-		}
-	}
+	// 			}]),
+	// 				this.vendorNames.push(vendorName);
+	// 		}
+	// 	}
+	// }
 
 	onVendorCodeselected(event)
 	{
@@ -379,52 +556,66 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		}
 	}
 
-	filterVendorCodes(event)
-	{
+	filterVendorCodes(event) {
+		this.vendorCodes = this.allVendors;
 
-		this.vendorCodes = [];
-		for (let i = 0; i < this.allVendors.length; i++)
-		{
-			let vendorCode = this.allVendors[i].vendorCode;
-
-            if (vendorCode.toLowerCase().indexOf(event.query.toLowerCase()) == 0)
-            {
-               // this.sourceVendorCap.vendorId = this.allVendors[i].vendorId;
-				//this.vendorCodes.push(vendorCode);
-				this.VendorCodesColl.push([{
-                    "vendorId": this.allVendors[i].vendorId,
-					"vendorName":this.allVendors[i].vendorName,
-					"vendorCode": vendorCode
-				}]),
-					this.vendorCodes.push(vendorCode);
-
-			}
+		if (event.query !== undefined && event.query !== null) {
+			const vendorCodesTemp = [...this.allVendors.filter(x => {
+				return x.vendorCode.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.vendorCodes = vendorCodesTemp;
 		}
 	}
+
+	// filterVendorCodes(event)
+	// {
+
+	// 	this.vendorCodes = [];
+	// 	for (let i = 0; i < this.allVendors.length; i++)
+	// 	{
+	// 		let vendorCode = this.allVendors[i].vendorCode;
+
+    //         if (vendorCode.toLowerCase().indexOf(event.query.toLowerCase()) == 0)
+    //         {
+    //            // this.sourceVendorCap.vendorId = this.allVendors[i].vendorId;
+	// 			//this.vendorCodes.push(vendorCode);
+	// 			this.VendorCodesColl.push([{
+    //                 "vendorId": this.allVendors[i].vendorId,
+	// 				"vendorName":this.allVendors[i].vendorName,
+	// 				"vendorCode": vendorCode
+	// 			}]),
+	// 				this.vendorCodes.push(vendorCode);
+
+	// 		}
+	// 	}
+	// }
 
 
 	private ptnumberlistdata() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
+		this.commonService.smartDropDownList('ItemMaster', 'ItemMasterId', 'partnumber').subscribe(response => {
+			this.allPartnumbersInfo = response;
+		});
 
-		this.itemser.getPrtnumberslistList().subscribe(
-			results => this.onptnmbersSuccessful(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
+		// this.itemser.getPrtnumberslistList().subscribe(
+		// 	results => this.onptnmbersSuccessful(results[0]),
+		// 	error => this.onDataLoadFailed(error)
+		// );
 	}
 
-	private onptnmbersSuccessful(allWorkFlows: any[]) {
+	// private onptnmbersSuccessful(allWorkFlows: any[]) {
 
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		//this.dataSource.data = allWorkFlows;
-		this.allPartnumbersInfo = allWorkFlows;
-
-
-		//console.log(this.allActions);
+	// 	this.alertService.stopLoadingMessage();
+	// 	this.loadingIndicator = false;
+	// 	//this.dataSource.data = allWorkFlows;
+	// 	this.allPartnumbersInfo = allWorkFlows;
 
 
-	}
+	// 	//console.log(this.allActions);
+
+
+	// }
 
 	partEventHandler(event)
 	{
@@ -446,62 +637,62 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		}
 	}
 
-	partnmId(event)
-	{
-		//
-		if (this.itemclaColl) {
-			for (let i = 0; i < this.itemclaColl.length; i++) {
-                if (event == this.itemclaColl[i][0].partName)
-                {
-                    this.sourceVendorCap.partName = this.itemclaColl[i][0].partName;
-					this.sourceVendorCap.partId = this.itemclaColl[i][0].partId;
-					this.disableSavepartNumber = true;
-					this.selectedActionName = event;
-				}
-			}
-			this.itemser.getDescriptionbypart(event).subscribe(
-				results => this.onpartnumberloadsuccessfull(results[0]),
-				error => this.onDataLoadFailed(error)
-			);
-			this.disableSavepartDescription = true;
-		}
-	}
+	// partnmId(event)
+	// {
+	// 	//
+	// 	if (this.itemclaColl) {
+	// 		for (let i = 0; i < this.itemclaColl.length; i++) {
+    //             if (event == this.itemclaColl[i][0].partName)
+    //             {
+    //                 this.sourceVendorCap.partName = this.itemclaColl[i][0].partName;
+	// 				this.sourceVendorCap.partId = this.itemclaColl[i][0].partId;
+	// 				this.disableSavepartNumber = true;
+	// 				this.selectedActionName = event;
+	// 			}
+	// 		}
+	// 		this.itemser.getDescriptionbypart(event).subscribe(
+	// 			results => this.onpartnumberloadsuccessfull(results[0]),
+	// 			error => this.onDataLoadFailed(error)
+	// 		);
+	// 		this.disableSavepartDescription = true;
+	// 	}
+	// }
 
-	private onpartnumberloadsuccessfull(allWorkFlows: any[]) //getting Part Description
-	{
+	// private onpartnumberloadsuccessfull(allWorkFlows: any[]) //getting Part Description
+	// {
 
 
-        this.sourceVendorCap.itemMasterId = allWorkFlows[0].itemMasterId;
-		//this.sourceAction = this.descriptionbyPart;
-		this.sourceVendorCap.partDescription = allWorkFlows[0].partDescription;
-		this.sourceVendorCap.manufacturerId= allWorkFlows[0].manufacturerId;
+    //     this.sourceVendorCap.itemMasterId = allWorkFlows[0].itemMasterId;
+	// 	//this.sourceAction = this.descriptionbyPart;
+	// 	this.sourceVendorCap.partDescription = allWorkFlows[0].partDescription;
+	// 	this.sourceVendorCap.manufacturerId= allWorkFlows[0].manufacturerId;
 
-	}
+	// }
 
-	filterpartItems(event)
-	{
+	// filterpartItems(event)
+	// {
 
-		this.partCollection = [];
-		this.itemclaColl = [];
-		if (this.allPartnumbersInfo) {
-			if (this.allPartnumbersInfo.length > 0) {
+	// 	this.partCollection = [];
+	// 	this.itemclaColl = [];
+	// 	if (this.allPartnumbersInfo) {
+	// 		if (this.allPartnumbersInfo.length > 0) {
 
-				for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
-					let partName = this.allPartnumbersInfo[i].partNumber;
-					if (partName) {
-						if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-							this.itemclaColl.push([{
-								"partId": this.allPartnumbersInfo[i].itemMasterId,
-								"partName": partName
-							}]),
+	// 			for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
+	// 				let partName = this.allPartnumbersInfo[i].partNumber;
+	// 				if (partName) {
+	// 					if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+	// 						this.itemclaColl.push([{
+	// 							"partId": this.allPartnumbersInfo[i].itemMasterId,
+	// 							"partName": partName
+	// 						}]),
 
-								this.partCollection.push(partName);
-						}
-					}
-				}
-			}
-		}
-	}
+	// 							this.partCollection.push(partName);
+	// 					}
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// }
 
 	//get ATA Chapter Alias ATA Subchapter1 Data
 	getATASubChapterData(ataMainId)
@@ -729,6 +920,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 
 	saveVendorCapsclose()//for Saving Vendor capability
 	{
+		
 		if (!this.sourceVendorCap.vendorCode)
 		{
 			this.vendorCodeError = true;
@@ -917,5 +1109,398 @@ export class AddVendorCapabilitiesComponent implements OnInit{
         if (value == 'der') {
             this.sourceVendorCap.isPMADER = 'DER';
         }
+	}
+	
+	onAddDescription(value) {
+		this.tempMemo = '';
+		if (value == 'capDesc') {
+			this.tempMemoLabel = 'Cap Description';
+			this.tempMemo = this.sourceVendorCap.capabilityDescription;
+		}
+		if (value == 'memo') {
+			this.tempMemoLabel = 'Memo';
+			this.tempMemo = this.sourceVendorCap.memo;
+		}		
+	}
+
+	onSaveDescription() {
+		if (this.tempMemoLabel == 'Cap Description') {
+			this.sourceVendorCap.capabilityDescription = this.tempMemo;
+		}
+		if (this.tempMemoLabel == 'Memo') {
+			this.sourceVendorCap.memo = this.tempMemo;
+		}		
+	}
+
+	saveVendorCapsGeneralInfo() {
+	
+		console.log(this.sourceVendorCap);
+		this.sselectedVendorName=this.sourceVendorCap.vendorId.vendorName;
+		this.sselectedVendorCode=this.sourceVendorCap.vendorId.vendorCode;
+		this.sourceVendorCap.createdBy= this.userName,
+		this.sourceVendorCap.updatedBy= this.userName,
+	
+		this.selectedCapabilityName= getValueFromArrayOfObjectById('label' , 'value' , this.sourceVendorCap.capabilityId ,this.capabilityTypeList)
+	
+		let {vendorCode, partNumber, manufacturerName, ...res} = this.sourceVendorCap;		
+		res = {
+			...res,
+			vendorId: editValueAssignByCondition('vendorId', res.vendorId),
+			partNumberId: editValueAssignByCondition('value', res.partNumberId)
+		}
+		this.vendorService.newVendorCapability(res).subscribe(data => {		
+			//debugger;
+			console.log(data);	
+			this.sourceVendorCap.vendorCapabilityId=data.vendorCapabilityId;
+			this.selectedVendorId=data.vendorId;
+			this.enableAircraftInfo = false;
+			this.selectedGeneralInfo = false;
+			this.selectedAircraftInfo = true;
+
+			this.alertService.showMessage(
+                'Success',
+                'Saveed General Information Successfully',
+                MessageSeverity.success
+            );		
+		})
+	}
+
+	// get aircraft model by type 
+    getAircraftModelByManfacturer(value) {
+        this.newValue = value.originalEvent.target.textContent;
+        if (this.newValue) {
+            this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftId).subscribe(models => {
+                const responseValue = models[0];
+                this.loadValues = responseValue.map(models => {
+                    return {
+                        label: models.modelName,
+                        value: models
+                    }
+                });
+            });
+            this.selectedModelId = undefined;
+            this.selectedDashnumber = undefined;
+        }
+	}
+
+	searchByFieldUrlCreateforAircraftInformation() {
+        if (this.selectAircraftManfacturer.length > 0) {
+            const aircraftTypeIds = this.selectAircraftManfacturer.reduce(
+                (acc, value) => {
+                    return `${acc},${value}`;
+                },
+                ''
+            );
+            this.aircraftManfacturerIdsUrl = aircraftTypeIds.substr(1);
+        } else {
+            this.aircraftManfacturerIdsUrl = '';
+        }
+
+        if (this.selectedAircraftModel.length > 0) {
+            const aircraftModelIds = this.selectedAircraftModel.reduce((acc, id) => {
+                return `${acc},${id}`;
+            }, '');
+            this.aircraftModelsIdUrl = aircraftModelIds.substr(1);
+        } else {
+            this.aircraftModelsIdUrl = '';
+        }
+        if (this.selectedDashNumbers.length > 0) {
+            const dashNumberIds = this.selectedDashNumbers.reduce((acc, id) => {
+                return `${acc},${id}`;
+            }, '');
+            this.dashNumberIdUrl = dashNumberIds.substr(1);
+        } else {
+            this.dashNumberIdUrl = '';
+        }
+
+	}
+	
+	// get AircraftModels By manufacturer Type
+    async getAircraftModelByManfacturerType() {
+        // construct url from array
+        await this.searchByFieldUrlCreateforAircraftInformation();
+        // reset the dropdowns
+        this.selectedAircraftModel = [];
+        this.selectedDashNumbers = []
+        // checks where multi select is empty or not and calls the service
+        if (this.aircraftManfacturerIdsUrl !== '') {
+            this.aircraftModelService
+                .getAircraftModelListByManufactureId(this.aircraftManfacturerIdsUrl)
+                .subscribe(models => {
+                    const responseValue = models[0];
+                    this.aircraftModelList = responseValue.map(models => {
+                        return {
+                            label: models.modelName,
+                            value: models.aircraftModelId
+                        };
+                    });
+                });
+        } else {
+            this.getAllAircraftModels();
+            this.getAllDashNumbers();
+        }
+    }
+	
+	async getDashNumberByManfacturerandModel() {
+        // construct url from array
+        await this.searchByFieldUrlCreateforAircraftInformation();
+        // reset dropdown
+        this.selectedDashNumbers = []
+        // checks where multi select is empty or not and calls the service
+
+        if (this.aircraftManfacturerIdsUrl !== '' && this.aircraftModelsIdUrl !== '') {
+            this.dashNumService.getDashNumberByModelTypeId(
+                this.aircraftModelsIdUrl,
+                this.aircraftManfacturerIdsUrl
+            ).subscribe(dashnumbers => {
+                const responseData = dashnumbers;
+                this.dashNumberList = responseData.map(dashnumbers => {
+
+                    return {
+                        label: dashnumbers.dashNumber,
+                        value: dashnumbers.dashNumberId
+                    };
+                });
+            });
+        }
+	}
+	
+	//  search aircraft information by all parameter
+    async searchAircraftInformation() {
+     //debugger;
+        await this.searchByFieldUrlCreateforAircraftInformation();
+        this.searchAircraftParams = '';
+
+        // checks where multi select is empty or not and calls the service
+        if (
+            this.aircraftManfacturerIdsUrl !== '' &&
+            this.aircraftModelsIdUrl !== '' &&
+            this.dashNumberIdUrl !== ''
+        ) {
+            this.searchAircraftParams = `aircraftTypeID=${this.aircraftManfacturerIdsUrl}&aircraftModelID=${this.aircraftModelsIdUrl}&dashNumberId=${this.dashNumberIdUrl}`;
+        }
+        // search only by manfacturer and Model and  publicationId
+        else if (
+            this.aircraftManfacturerIdsUrl !== '' &&
+            this.aircraftModelsIdUrl !== ''
+        ) {
+            this.searchAircraftParams = `aircraftTypeID=${this.aircraftManfacturerIdsUrl}&aircraftModelID=${this.aircraftModelsIdUrl}`;
+        } else if (this.aircraftManfacturerIdsUrl !== '') {
+            this.searchAircraftParams = `aircraftTypeID=${this.aircraftManfacturerIdsUrl}`;
+        }
+        // search only by model and publicationId
+        else if (this.aircraftModelsIdUrl !== '') {
+            this.searchAircraftParams = `aircraftModelID=${this.aircraftModelsIdUrl}`;
+        }
+        // search only by dashNumber and publicationId
+        else if (this.dashNumberIdUrl !== '') {
+            this.searchAircraftParams = `dashNumberId=${this.dashNumberIdUrl}`;
+        }
+
+        // const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
+
+        this.itemser.searchAirMappedByMultiTypeIdModelIDDashID(this.itemMasterId, this.searchAircraftParams).subscribe(res => {
+            this.aircraftListDataValues = res.map(x => {
+                return {
+                    aircraft: x.aircraftType,
+                    model: x.aircraftModel,
+                    dashNumber: x.dashNumber,
+					memo: x.memo,
+					
+                }
+            })
+        });
+	}
+
+	selectedDashnumbervalue(value) {
+        this.newDashnumValue = value.originalEvent.target.textContent;
+    }
+
+	// get dashNumbers by Type and Model 
+    getDashNumberByTypeandModel(value) {
+        this.newModelValue = value.originalEvent.target.textContent;
+        this.dashNumberUrl = this.selectedModelId.reduce((acc, obj) => {
+
+            return `${acc},${obj.aircraftModelId}`
+        }, '')
+        this.dashNumberUrl = this.dashNumberUrl.substr(1);
+        this.dashNumService.getDashNumberByModelTypeId(this.dashNumberUrl, this.selectedAircraftId).subscribe(dashnumbers => {
+            const responseData = dashnumbers;
+            this.loadDashnumber = responseData.map(dashnumbers => {
+                return {
+                    label: dashnumbers.dashNumber,
+                    value: dashnumbers.dashNumberId
+                }
+            });
+        });
+    }
+
+	getAircraftMappedDataByItemMasterId() {
+		//debugger
+		console.log(this.sourceVendorCap.vendorCapabilityId);
+        // check whether edit or create and send and passes ItemMasterId
+        // const id = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
+        //this.itemser.getMappedAirCraftDetails(this.itemMasterId).subscribe(data => {
+			this.itemser.getMappedAirCraftDetails(this.sourceVendorCap.vendorCapabilityId).subscribe(data => {
+			const responseData = data;
+			//debugger;
+            this.aircraftListDataValues = responseData.map(x => { //aircraftListData
+                return {
+                    ...x,
+                    aircraft: x.aircraftType,
+                    model: x.aircraftModel,
+                    dashNumber: x.dashNumber,
+                    memo: x.memo,
+                }
+            })
+        })
+    }
+	
+	deleteAircraftMapped(data) {
+		//debugger
+		console.log(data);
+		//debugger
+
+        //this.itemser.deleteItemMasterAir(data.vendorCapabilityAirCraftId).subscribe(res => {
+			this.itemser.deleteAirCraft(data.vendorCapabilityAirCraftId,this.userName).subscribe(res => {
+            this.getAircraftMappedDataByItemMasterId();
+            this.alertService.showMessage(
+                'Success',
+                `Deleted Successfully`,
+                MessageSeverity.success
+            );
+        })
+	}
+	
+	resetAircraftModelsorDashNumbers() {
+        if (this.modelUnknown) {
+            this.selectedModelId = undefined;
+            this.selectedDashnumber = undefined;
+        }
+        if (this.dashNumberUnknown) {
+            this.selectedDashnumber = undefined;
+        }
+	}
+	
+	mapAircraftInformation() {
+        console.log(this.selectedDashnumber)
+        this.viewTable = true;
+        // Selected All 
+        if (this.selectedAircraftId !== undefined && this.selectedModelId !== undefined && this.selectedDashnumber !== undefined) {
+            this.dashNumService.getAllDashModels(this.dashNumberUrl, this.selectedAircraftId, this.selectedDashnumber).subscribe(aircraftdata => {
+                const responseValue = aircraftdata;
+                this.aircraftData = responseValue.map(x => {
+                    return {
+                        AircraftType: x.aircraft,
+                        AircraftModel: x.model,
+                        DashNumber: x.dashNumber,
+                        AircraftModelId: x.modelid,
+                        DashNumberId: x.dashNumberId,
+                        Memo: '',
+                        IsChecked: false
+                    }
+                })
+            })
+        }
+
+        if (this.selectedAircraftId !== undefined && this.modelUnknown) {
+            this.aircraftData = [{
+                AircraftType: this.newValue,
+                AircraftModel: 'Unknown',
+                DashNumber: 'Unknown',
+                AircraftModelId: '',
+                DashNumberId: '',
+                Memo: '',
+                IsChecked: false
+            }]
+        }
+
+        if (this.selectedAircraftId !== undefined && this.selectedModelId !== undefined && this.dashNumberUnknown) {
+            this.aircraftData = this.selectedModelId.map(x => {
+                return {
+                    AircraftType: this.newValue,
+                    AircraftModel: x.modelName,
+                    DashNumber: 'Unknown',
+                    AircraftModelId: x.aircraftModelId,
+                    DashNumberId: '',
+                    Memo: '',
+                    IsChecked: false
+                }
+            })
+        }
+	}
+	
+	saveAircraft() {
+
+        // const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
+        const aircraftData = this.aircraftData.filter(x => {
+            if (x.IsChecked) {
+                return x;
+            }
+        })
+        const data = aircraftData.map(obj => {
+            console.log(obj);
+
+            return {
+                ...obj,
+                DashNumberId: obj.DashNumber === 'Unknown' ? null : obj.DashNumberId,
+                AircraftModelId: obj.AircraftModel === 'Unknown' ? null : obj.AircraftModelId,
+                ItemMasterId: this.itemMasterId,
+                PartNumber: this.sourceVendorCap.partNumber,
+                MasterCompanyId: 1,
+                CreatedBy: this.userName,
+                UpdatedBy: this.userName,
+                CreatedDate: new Date(),
+                UpdatedDate: new Date(),
+				AircraftTypeId: this.selectedAircraftId,
+				VendorCapabilityId:this.sourceVendorCap.vendorCapabilityId,
+				VendorId:this.selectedVendorId,
+				CapabilityId:this.sourceVendorCap.capabilityId,
+                IsActive: true,
+                IsDeleted: false
+
+            }
+        })
+        // posting the DashNumber Mapped data from Popup
+        // Used to get the Data Posted in the Popup
+       // this.itemser.newItemMasterAircarftClass(data).subscribe(datas => {
+		this.itemser.newIVendorAircarftClass(data).subscribe(datas => {
+			//debugger
+
+            this.alertService.showMessage(
+                'Success',
+                'Mapped Aircraft Information Successfully',
+                MessageSeverity.success
+            );
+            // reset poupup aircraft information
+            this.aircraftData = undefined;
+            this.selectedAircraftId = undefined;
+            this.selectedModelId = undefined;
+            this.selectedDashnumber = undefined;
+            this.dashNumberUnknown = false;
+            this.modelUnknown = false;
+
+            // get aircraft Mapped Data 
+            this.getAircraftMappedDataByItemMasterId();
+
+        }, err => {
+            const errorLog = err;
+            this.errorMessageHandler(errorLog);
+            // reset poupup aircraft information
+            this.aircraftData = undefined;
+            this.selectedAircraftId = undefined;
+            this.selectedModelId = undefined;
+            this.selectedDashnumber = undefined;
+            this.dashNumberUnknown = false;
+            this.modelUnknown = false;
+        })
+	}
+	
+	errorMessageHandler(log) {
+        this.alertService.showMessage(
+            'Error',
+            log.error.error,
+            MessageSeverity.error
+        );
     }
 }
