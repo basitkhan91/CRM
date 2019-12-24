@@ -188,7 +188,7 @@
 			</p-table>
 
 		</div>
-		<ng-template #view1 class="modal fade " id="view" role="dialog">
+		<ng-template #view1 class="modal fade " id="view" role="dialog" data-backdrop="static">
 
 			<div class="modal-content">
 				<div class="modal-header">
@@ -344,7 +344,7 @@
 	</div>
 </div>
 
-<ng-template #content let-c="close" let-d="dismiss">
+<ng-template #content let-c="close" let-d="dismiss" data-backdrop="static">
 	<div class="modal-header">
 		<h4 class="modal-title">Are You Sure Want to Delete ?</h4>
 		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
@@ -360,7 +360,7 @@
 
 
 
-    <ng-template #view class="modal fade " id="view" role="dialog">
+    <ng-template #view class="modal fade " id="view" role="dialog" data-backdrop="static">
         <div class="modal-body viewform">
             <div id="adminsearchlocationajax" class="table-responsive default-bg clear">
                 <div class="modal-header">

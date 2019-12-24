@@ -1352,9 +1352,7 @@
 
 
     <!--New code for dialogue-->
-    <div id="ModalDashNumber"
-         class="modal fade custom-popup"
-         role="dialog">
+    <div id="ModalDashNumber" class="modal fade custom-popup" role="dialog" data-backdrop="static">
         <div class="modal-dialog modal-full">
             <!-- Modal content-->
             <div class="modal-content">
@@ -1502,7 +1500,7 @@
     </div>
     <div id="ModalViewCapes"
          class="modal fade custom-popup"
-          role="dialog">
+          role="dialog" data-backdrop="static">
         <div class="modal-dialog modal-full">
             <!-- Modal content-->
             <form #capeForm="ngForm" >
@@ -1609,7 +1607,7 @@
             </form>
         </div>
     </div>    
-    <ng-template #ModalUnit let-c="close" let-d="dismiss" style="width:auto">
+    <ng-template #ModalUnit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
         <div class="modal-header">
             <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
                 <span aria-hidden="true">&times;</span>
@@ -1690,7 +1688,7 @@
     </ng-template>
     <div class="pull-right"> © 2018 <a href="#">PAS</a> </div>
 </div>
-<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Item Classification</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Item Classification</h4>
@@ -1787,7 +1785,7 @@
 </ng-template>
 
 
-<ng-template #contentEdits let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentEdits let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Item Group</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Item Group</h4>
@@ -1861,7 +1859,7 @@
 
 
 
-<ng-template #contents let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contents let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Provision</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Provision</h4>
@@ -1927,7 +1925,7 @@
     </div>
 </ng-template>
 
-<ng-template #conEdit let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #conEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Purchase Unit Of Measure</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Purchase Unit Of Measure</h4>
@@ -2008,7 +2006,7 @@
     </div>
 </ng-template>
 
-<ng-template #conmodel let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #conmodel let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Stock Unit Of Measure</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Stock Unit Of Measure</h4>
@@ -2090,7 +2088,7 @@
 </ng-template>
 
 
-<ng-template #conEdited let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #conEdited let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Consume Unit Of Measure</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Consume Unit Of Measure</h4>
@@ -2171,7 +2169,7 @@
     </div>
 </ng-template>
 
-<ng-template #contextEdited let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contextEdited let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Sold Unit Of Mearsure</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Sold Unit Of Mearsure</h4>
@@ -2277,7 +2275,7 @@
     </p-footer>
 
 </p-dialog>
-<ng-template #contentModel let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentModel let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
 
     <div class="modal-content">
         <div class="modal-header">
@@ -2328,7 +2326,7 @@
     </div>
 </ng-template>
 
-<ng-template #contentEditforAtaMain1 let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentEditforAtaMain1 let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit ATA MAin</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add ATA MAin</h4>
@@ -2396,7 +2394,7 @@
         </form>
     </div>
 </ng-template>
-<ng-template #contentEditforAtaMain2 let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentEditforAtaMain2 let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit ATA MAin</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add ATA MAin</h4>
@@ -2466,7 +2464,7 @@
 
 
 
-<ng-template #models let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #models let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Waring</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Waning</h4>
@@ -2522,7 +2520,7 @@
 
 </ng-template>
 
-<ng-template #modeledt let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #modeledt let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Manufacturer</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Manufacturer</h4>
@@ -2573,7 +2571,7 @@
     </div>
 </ng-template>
 
-<ng-template #integrationcontentEdit let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #integrationcontentEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Integration</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Integration</h4>
@@ -2641,7 +2639,7 @@
 
 </ng-template>
 
-<div class="modal fade" id="rro-memo" role="dialog">
+<div class="modal fade" id="rro-memo" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-sm" style="max-width: 400px !important;">
         <div class="modal-content">
             <div class="modal-header">
@@ -2662,7 +2660,7 @@
     </div>
 </div>
 
-<ng-template #prioritycontentEdit let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #prioritycontentEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Priority</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Priority</h4>
@@ -2725,9 +2723,7 @@
 
 </ng-template>
 
-<div id="EditMemo"
-     class="modal fade custom-popup"
-     role="dialog">
+<div id="EditMemo" class="modal fade custom-popup" role="dialog" data-backdrop="static">
     <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">

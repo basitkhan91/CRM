@@ -126,13 +126,13 @@
 </div>
 
 
-<ng-template #auditContent let-c="close" let-d="dismiss">
+<ng-template #auditContent let-c="close" let-d="dismiss" data-backdrop="static">
     <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
         <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
     </div>
 </ng-template>
 
-<div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog">
+<div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -155,8 +155,7 @@
     </div>
 </div>
 
-
-<div #addPriority id="addPriority" class="modal fade" role="dialog">
+<div #addPriority id="addPriority" class="modal fade" role="dialog" data-backdrop="static">
     <div class="modal-dialog">
 
         <!-- Modal content-->
@@ -225,9 +224,7 @@
     </div>
 </div>
 
-
-
-<div *ngIf="existingRecordsResponse" id="duplicateRecords" #duplicateRecords class="modal fade" role="dialog">
+<div *ngIf="existingRecordsResponse" id="duplicateRecords" #duplicateRecords class="modal fade" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->
@@ -267,7 +264,7 @@
     </div>
 </div>
 
-<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog">
+<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->
@@ -323,9 +320,7 @@
     </div>
 </div>
 
-
-
-<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog">
+<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -391,7 +386,7 @@
 
 </div>
 
-<ng-template #helpText class="modal fade" id="help-popup" role="dialog">
+<ng-template #helpText class="modal fade" id="help-popup" role="dialog" data-backdrop="static">
     <div class="modal-content">
         <div class="modal-header">
 
@@ -417,6 +412,3 @@
         </div>
     </div>
 </ng-template>
-
-
-

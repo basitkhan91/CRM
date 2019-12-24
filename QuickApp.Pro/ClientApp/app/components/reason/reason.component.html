@@ -137,7 +137,7 @@
 
 <!-- Delete Contact Modal -->
 
-<ng-template #content let-c="close" let-d="dismiss">
+<ng-template #content let-c="close" let-d="dismiss" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
 
@@ -152,8 +152,7 @@
     </div>
 </ng-template>
 
-
-<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Reason</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Reason</h4>
@@ -166,10 +165,6 @@
             <div class="form-group">
                 <label for="reasonCode" class="control-label">Reason Code<span class="clr-red">*</span></label>
                 <div class="inner-addon right-addon inline-block">
-                    <!--<div class="control-data">
-                        <input type="text" name="reasonCode" class="form-control" #reasonCode="ngModel" [(ngModel)]="sourceAction.reasonCode">
-
-                    </div>-->
                     <p-autoComplete [(ngModel)]="reasonName" (onSelect)="itemId($event)" (onKeyUp)="eventHandler($event)" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterReasons($event)" [size]="30"
                                     [minLength]="1" [dropdown]="true">
                         <ng-template let-reasonName pTemplate="item">
@@ -185,13 +180,6 @@
                 <label for="reasonForRemoval" class="control-label">Reason For Removal<span class="clr-red">*</span></label>
                 <div class="control-data">
                     <input type="text" name="reasonForRemoval" class="form-control" #reasonForRemoval="ngModel" [(ngModel)]="sourceAction.reasonForRemoval">
-                    <!--<div *ngIf="reasonForRemoval.dirty && reasonForRemoval.errors?.required && reasonForRemoval.errors" class="invalid-form-error-message">
-                        Reason For Removal required.
-                    </div>
-                    <div *ngIf="reasonForRemoval.dirty && reasonForRemoval.errors?.minlength && reasonForRemoval.errors" class="invalid-form-error-message">
-                        Reason For Removal must be at least 2 characters long.
-                    </div>-->
-
                 </div>
                 <div class="clear"></div>
             </div>
@@ -199,27 +187,9 @@
                 <label for="description" class="control-label">Memo</label>
                 <div class="control-data">
                     <input #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
-                    <!--<div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
-                        Memo required.
-                    </div>
-                    <div *ngIf="memo.dirty && memo.errors?.minlength && memo.errors" class="invalid-form-error-message">
-                        Memo must be at least 2 characters long.
-                    </div>-->
                 </div>
                 <div class="clear"></div>
             </div>
-            <!--<div class="form-group">
-                <label for="masterCompanyId" class="control-label">Company</label>
-                <div class="">
-                    <select name="masterCompanyId" class="form-control form-control-lg w150" required #masterCompanyId="ngModel" id="masterCompanyId" [(ngModel)]="sourceAction.masterCompanyId">
-                        <option *ngFor="let pow of allComapnies" [value]="pow.masterCompanyId">{{pow.companyName}}</option>
-                    </select>
-                </div>
-                <div *ngIf="masterCompanyId.dirty && masterCompanyId.errors?.required && masterCompanyId.errors" class="invalid-form-error-message">
-                    Master company required.
-                </div>
-                <div class="clear"></div>
-            </div>-->
             <div class="form-group">
                 <div class="col-sm-6">
                     <label class="form-check-label" for="isActive">
@@ -241,8 +211,7 @@
 
 </ng-template>
 
-
-<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog">
+<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->
@@ -304,7 +273,7 @@
     </div>
 </div>
 
-<ng-template #view class="modal fade " id="view" role="dialog">
+<ng-template #view class="modal fade " id="view" role="dialog" data-backdrop="static">
 
     <div class="modal-content">
         <div class="modal-header">
@@ -327,7 +296,7 @@
 
 </ng-template>
 
-<div #addReason id="addReason" class="modal fade" role="dialog">
+<div #addReason id="addReason" class="modal fade" role="dialog" data-backdrop="static">
     <div class="modal-dialog">
 
         <!-- Modal content-->

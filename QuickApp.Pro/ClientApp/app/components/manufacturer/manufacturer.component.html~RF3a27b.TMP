@@ -5,45 +5,46 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="inline-block display-flex">
-                            <h3 class="po-head lead">Job Titles</h3>
+                            <h3 class="po-head lead">Manufacturer</h3>
                             &nbsp;&nbsp;
-                            <a class="plusicon-cstm new-margin" pTooltip="Add Job Titles" tooltipPosition="right"
-                                data-target="#addJobtitles" data-toggle="modal" (click)="resetJobTitleForm()">
+                            <a class="plusicon-cstm new-margin" pTooltip="Add Manufacturer" tooltipPosition="right" (click)="resetManufacuterForm()"
+                                data-target="#addManufacturer" data-toggle="modal">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
-                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="jobTitleData" [first]="0"
+                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="ManufactureData" [first]="0"
                             [rows]="pageSize" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
                             [columns]="selectedColumns" selectionMode="multiple" (onPage)="changePage($event)"
                             [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true"
                             [totalRecords]="totalRecords" scrollHeight="450px">
                             <ng-template pTemplate="caption">
                                 <div style="text-align: right;margin-left:-6px !important;">
-                                    <p-multiSelect [maxSelectedLabels]="2" [options]="jobtitleHeader"
-                                        optionLabel="header" [(ngModel)]="selectedColumns" [style]="{minWidth: '200px'}"
-                                        style="float:left" (onChange)="columnsChanges()"></p-multiSelect>
+                                    <p-multiSelect [maxSelectedLabels]="2" [options]="manufacturerHeader"
+                                                   optionLabel="header" [(ngModel)]="selectedColumns" [style]="{minWidth: '200px'}"
+                                                    [resetFilterOnHide]="true" style="float:left" (onChange)="columnsChanges()"></p-multiSelect>                                   
 
-                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download All Data"
-                                        tooltipPosition="top" pButton icon="fa-download" iconPos="left"
-                                        label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download Selected"
-                                        tooltipPosition="top" pButton icon="fa-download" iconPos="left"
-                                        label="Export Selection Only"
-                                        (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download All Data" matTooltipPosition="above"
+                                            tooltipPosition="top" pButton icon="fa-download" iconPos="left"
+                                            label="Export All Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download Selected" matTooltipPosition="above"
+                                            tooltipPosition="top" pButton icon="fa-download" iconPos="left"
+                                            label="Export Selection Only"
+                                            (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
 
                                         <input type="file" name="upload[]" id="upload"
-                                            (change)="customExcelUpload($event)" class="uploaddoc upload-file"
-                                            accept=".xlsx, .xls, .csv">
+                                               (change)="customExcelUpload($event)" class="uploaddoc upload-file"
+                                               accept=".xlsx, .xls, .csv">
                                         <label for="upload">
-                                            <span matTooltip="Upload Data (Excel)">
+                                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
                                                 <i class="fa fa-upload"></i>
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" matTooltip="Download Sample file"
-                                            (click)="sampleExcelDownload()">Sample File
-                                            Download</button>
+                                        <button class="btn btn-primary-cstm" matTooltip="Download Sample file" matTooltipPosition="above" (click)="sampleExcelDownload()">
+                                            Sample File
+                                            Download
+                                        </button>
                                     </div>
 
                                 </div>
@@ -76,28 +77,32 @@
                                         (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                     </td>
                                     <td style="width:200px" *ngIf="selectedColumns.length> 0">
-                                        <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}"
-                                            (onChange)="changeStatus(rowData)" matTooltip="Update"></p-inputSwitch>
+                                        <!--<p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}"
+        (onChange)="changeStatus(rowData)"  matTooltip="isActive"></p-inputSwitch>-->
+                                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+
 
                                         <span data-toggle="modal" data-target="#view">
                                             <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip"
-                                                (click)="viewSelectedRow(rowData)" matTooltip="View" data-target="#view"
-                                                data-toggle="modal">
+                                               (click)="viewSelectedRow(rowData)" matTooltip="View" data-target="#view"
+                                               data-toggle="modal">
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         </span>
-                                        <button class="btn-edit" mat-icon-button (click)="editJobTitle(rowData)"
-                                            data-target="#addJobtitles" data-toggle="modal" matTooltip="Edit">
+                                        <button class="btn-edit" mat-icon-button (click)="editManufacturer(rowData)"
+                                                data-target="#addManufacturer" data-toggle="modal" matTooltip="Edit">
                                             <mat-icon>edit</mat-icon>
                                         </button>
 
                                         <button class="btn-delete" mat-icon-button matTooltip="Delete"
-                                            data-target="#delete" data-toggle="modal" (click)="delete(rowData)">
+                                                data-target="#delete" data-toggle="modal" (click)="delete(rowData)">
                                             <mat-icon color="warn">delete</mat-icon>
                                         </button>
                                         <button class="btn-history" mat-icon-button matTooltip="History"
-                                            data-target="#contentHist" data-toggle="modal"
-                                            (click)="getAuditHistoryById(rowData)">
+                                                data-target="#contentHist" data-toggle="modal"
+                                                (click)="getAuditHistoryById(rowData)">
                                             <mat-icon color="green">history</mat-icon>
                                         </button>
                                     </td>
@@ -126,13 +131,13 @@
 </div>
 
 
-<ng-template #auditContent let-c="close" let-d="dismiss" data-backdrop="static">
+<ng-template #auditContent let-c="close" let-d="dismiss">
     <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
         <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
     </div>
 </ng-template>
 
-<div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog" data-backdrop="static">
+<div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -140,8 +145,8 @@
                 <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
             </div>
             <div class="modal-body">
-                <strong>Job Title
-                    <span class="new-label">{{selectedRowforDelete.description}}</span>
+                <strong>Manufacture Name:
+                    <span class="new-label">{{selectedRowforDelete.name}}</span>
                 </strong>
             </div>
             <div class="modal-footer">
@@ -156,42 +161,43 @@
 </div>
 
 
-<div #addJobtitles id="addJobtitles" class="modal fade" role="dialog" data-backdrop="static">
+<div #addManufacturer id="addManufacturer" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" (click)="resetJobTitleForm()" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">{{isEdit ? 'Edit' : 'Add' }} Job Titles </h4>
+                <button type="button" class="close" (click)="resetManufacuterForm()" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{isEdit ? 'Edit' : 'Add' }} Manufacturer </h4>
             </div>
             <div class="modal-body">
-                <form #jobtitle="ngForm">
+                <form #Manufacturer="ngForm">
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="col-sm-4">
-                                <label for="description" class="control-label">Job Titles <span class="clr-red">*</span>
+                                <label for="description" class="control-label">Manufacturer
+                                    <span class="clr-red">*</span>
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <p-autoComplete field="description" [(ngModel)]="addNewJobTitle.description"
-                                    (onSelect)="selectedJobTitle($event)" name="description"
-                                    (onKeyUp)="checkJobTitleExists('description', $event.target.value)"
-                                    [suggestions]="jobTitleList" (completeMethod)="filterJobTitles($event)"
+                                <p-autoComplete field="name" [(ngModel)]="addnewManufacturer.name"
+                                    (onSelect)="selectedManufcaturer($event)"
+                                    (onKeyUp)="checkManufacturerExists('name', $event.target.value)" name="uom"
+                                    [suggestions]="ManufactList" (completeMethod)="filterDescription($event)"
                                     [size]="30" [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
 
                                 </p-autoComplete>
-                                <div *ngIf="disableSaveForJobTitle" class="clr-red">Already Exists</div>
+                                <div *ngIf="disableSaveForUOM" class="clr-red">Already Exists</div>
                                 <div class="clear"></div>
                             </div>
                         </div>
                         <div class="col-sm-12">
                             <div class="col-sm-4">
-                                <label for="memo" class="control-label">Memo</label>
+                                <label for="description" class="control-label">Memo</label>
                             </div>
                             <div class="col-sm-5">
-                                <textarea class="text-item" #memo="ngModel" id="memo" name="memo"
-                                    [(ngModel)]="addNewJobTitle.memo" minlength="2"></textarea>
+                                <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription"
+                                    [(ngModel)]="addnewManufacturer.comments" minlength="2"></textarea>
                             </div>
                         </div>
                     </div>
@@ -199,7 +205,7 @@
                         <div class="col-sm-6">
                             <div class="checkbox-cstm">
                                 <label>
-                                    <input type="checkbox" name="isActive" [(ngModel)]="addNewJobTitle.isActive">
+                                    <input type="checkbox" name="isActive" [(ngModel)]="addnewManufacturer.isActive">
                                     <span class="cr">
                                         <i class="cr-icon pi pi-check"></i>
                                     </span>
@@ -213,10 +219,11 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary-cstm" data-dismiss="modal"
-                    [disabled]="jobtitle.invalid || disableSaveForJobTitle " (click)="saveJobTitle();">
+                    [disabled]="Manufacturer.invalid || disableSaveForUOM" (click)="saveManufacturer();">
                     {{isEdit ? 'Update' : 'Save' }}</button>
                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal"
-                    (click)="resetJobTitleForm()">Close</button>
+                    (click)="resetManufacuterForm()">Close</button>
+
             </div>
         </div>
 
@@ -225,7 +232,7 @@
 
 
 
-<div *ngIf="existingRecordsResponse" id="duplicateRecords" #duplicateRecords class="modal fade" role="dialog" data-backdrop="static">
+<div *ngIf="existingRecordsResponse" id="duplicateRecords" #duplicateRecords class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->
@@ -240,14 +247,16 @@
                         <thead>
                             <tr>
                                 <!-- <th>UMID</th> -->
-                                <th>Jobtitles Name</th> >
+                                <th>Manufacturer Name</th> >
                                 <th>Memo</th>
                             </tr>
                         </thead>
                         <tbody *ngIf="existingRecordsResponse.length> 0">
                             <tr *ngFor="let ext of existingRecordsResponse; let i = index;">
-                                <td>{{ext.description}}</td>
-                                <td>{{ext.memo}}</td>
+
+                                <!-- <td >{{audit.unitOfMeasureAuditId}}</td> -->
+                                <td>{{ext.name}}</td>
+                                <td>{{ext.comments}}</td>
                             </tr>
                         </tbody>
 
@@ -263,14 +272,14 @@
     </div>
 </div>
 
-<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static">
+<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">History of Jobtitles</h4>
+                <h4 class="modal-title">History of Manufacturer</h4>
             </div>
             <div class="modal-body">
                 <div class="table-responsive rro-table-cstm">
@@ -278,23 +287,25 @@
                         <thead>
                             <tr>
                                 <!-- <th>UMID</th> -->
-                                <th>Jobtitles Name</th>
+                                <th>Manufacturer</th>
                                 <th>Memo</th>
-                                <th>IsActive</th>
+                                <th>Is Active</th>
                                 <th>Updated By</th>
                                 <th>Updated Time</th>
                             </tr>
                         </thead>
                         <tbody *ngIf="auditHistory.length> 0">
-
-
-
                             <tr *ngFor="let audit of auditHistory; let i = index;">
-                                <!-- auditHistory[i>0 ? i-1 : i] -->
-                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
-                          
-                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>
-                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+                               
+                                <td
+                                    [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].name === audit.name ? 'black' : 'red'  }">
+                                    {{audit.name}}</td>
+                                <td
+                                    [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].memo === audit.comments ? 'black' : 'red'  }">
+                                    {{audit.comments}}</td>
+                                <td
+                                    [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].isActive === audit.isActive ? 'black' : 'red'  }">
+                                    {{audit.isActive}}</td>
                                 <td>{{audit.updatedBy}}</td>
                                 <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
                             </tr>
@@ -321,32 +332,32 @@
 
 
 
-<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static">
+<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" id="" name=""
                     (click)="resetViewData()">×</button>
-                <h4 class="modal-title">Job Title Details</h4>
+                <h4 class="modal-title">Manufacture Details</h4>
             </div>
             <div class="modal-body viewform ">
                 <div class="col-sm-12">
                     <p>
                         <span class="label ">
-                            <b class="view-Header">Job Title: </b>
+                            <b class="view-Header">Manufacturer: </b>
                         </span>
-                        <span class="value">{{ viewRowData.description}}</span>
+                        <span class="value">{{ viewRowData.name}}</span>
                     </p>
 
                     <p>
                         <span class="label ">
                             <b class="view-Header">Memo: </b>
                         </span>
-                        <span class="value">{{viewRowData.memo}}</span>
+                        <span class="value">{{viewRowData.comments}}</span>
                     </p>
                     <p>
                         <span class="label ">
-                            <b class="view-Header">IsActive</b>
+                            <b class="view-Header">Is Active</b>
                         </span>
                         <span class="value">{{viewRowData.isActive === true ? 'Yes' : 'No'}}</span>
                     </p>
@@ -387,7 +398,7 @@
 
 </div>
 
-<ng-template #helpText class="modal fade" id="help-popup" role="dialog" data-backdrop="static">
+<ng-template #helpText class="modal fade" id="help-popup" role="dialog">
     <div class="modal-content">
         <div class="modal-header">
 
