@@ -144,7 +144,7 @@
 
                                     <label class="control-label">NSN</label>
                                     <div>
-                                        <input class="form-control text-field" maxlength="10" type="text" [ngModelOptions]="{standalone: true}"
+                                        <input class="form-control text-field" maxlength="25" type="text" [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.nationalStockNumber">
                                     </div>
                                     <div class="inline-block display-flex spacing-label">
@@ -1212,12 +1212,11 @@
                                         <label for="eccn" class="control-label">
                                             ECCN
                                         </label>
-                                        <input type="text" class="input-field-value" maxlength="5"
-           [pattern]="'^[a-zA-Z0-9 \'\-]+$'"  [(ngModel)]="exportInfo.ExportECCN" name="ExportECCN" />
+                                        <input type="text" class="input-field-value" pInputText [(ngModel)]="exportInfo.ExportECCN" name="ExportECCN" /> <!--maxlength="5" [pattern]="'^[a-zA-Z0-9 \'\-]+$'"-->
                                         <label class="control-label">
                                             ITAR Num <strong class="clr-red">*</strong>
                                         </label>
-                                        <input type="text" class="input-field-value" required pInputText pKeyFilter="alphanum" [(ngModel)]="exportInfo.ITARNumber" name="itarNumber" />
+                                        <input type="text" class="input-field-value" required pInputText [(ngModel)]="exportInfo.ITARNumber" name="itarNumber" />
                                         <label class="control-label">Country <span style="color: red">*</span></label>
 
 

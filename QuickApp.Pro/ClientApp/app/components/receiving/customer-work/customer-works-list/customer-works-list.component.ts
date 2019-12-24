@@ -67,7 +67,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     public navigateTogeneralInfo() {
         this.receivingCustomerWorkService.isEditMode = false;
         this.receivingCustomerWorkService.enableExternal = false;
-        this._route.navigateByUrl('receivingmodule/receivingpages/app-customer-work-setup');
+        this._route.navigateByUrl('receivingmodule/receivingpages/app-customer-work-edit');
 
     }
     private onDataLoadFailed(error: any) {

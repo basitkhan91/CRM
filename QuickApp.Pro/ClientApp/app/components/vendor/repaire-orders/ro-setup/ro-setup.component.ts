@@ -3562,4 +3562,15 @@ export class RoSetupComponent implements OnInit {
 			partList.controlNumber = res.controlNumber;
 		});
 	}
+
+	getFXRate(partList) {
+		console.log(partList);
+		if((partList.reportCurrencyId != null || partList.reportCurrencyId != undefined) && (partList.functionalCurrencyId != null || partList.functionalCurrencyId != undefined)) {
+			const funcCurrency = editValueAssignByCondition('currencyId', partList.functionalCurrencyId);
+			const reportCurrency = editValueAssignByCondition('currencyId', partList.reportCurrencyId);
+			if(funcCurrency == reportCurrency) {
+				partList.foreignExchangeRate = 1;
+			}
+		}
+	}
 }

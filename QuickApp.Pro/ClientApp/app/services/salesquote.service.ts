@@ -69,6 +69,11 @@ export class SalesQuoteService {
 
     });
   }
+  resetSalesOrderQuote(){
+    this.approvers = [];
+    this.selectedParts = [];
+    this.salesOrderQuote = new SalesOrderQuote();
+  }
 
   getSelectedParts() {
     return Observable.create(observer => {
@@ -84,29 +89,29 @@ export class SalesQuoteService {
 
     });
   }
-  getSearchPartResult(){
+  getSearchPartResult() {
     return Observable.create(observer => {
       observer.next(this.parts);
       observer.complete();
 
     });
   }
-  getSearchPartObject(){
+  getSearchPartObject() {
     return Observable.create(observer => {
       observer.next(this.query);
       observer.complete();
 
     });
   }
-  resetSearchPart(){
+  resetSearchPart() {
     this.parts = [];
     this.query = new ItemMasterSearchQuery();
     this.query.partSearchParamters.quantityAlreadyQuoted = 0;
   }
-  updateSearchPartResult(parts){
+  updateSearchPartResult(parts) {
     this.parts = parts;
   }
-  updateSearchPartObject(query){
+  updateSearchPartObject(query) {
     this.query = query;
   }
 
@@ -141,5 +146,13 @@ export class SalesQuoteService {
         salesQuoteId
       )
     )
+  }
+
+  getSalesQuote(salesQuoteId: number): Observable<ISalesQuoteView[]> {
+    return Observable.forkJoin(
+      this.salesQuoteEndPointSevice.getSalesQuote(
+        salesQuoteId
+      )
+    );
   }
 }

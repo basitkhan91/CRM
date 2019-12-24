@@ -17,7 +17,7 @@
     <div class="col-2 column">
       <div class="form-group">
         <label>Promised Date</label>
-        <input type="text" pInputText name="promisedDate" [ngModel]="salesQuote.customerPromisedDate" disabled="true" />
+        <input type="text" pInputText name="promisedDate" [ngModel]="salesQuote.customerPromisedDate| date:'M/d/y'" disabled="true" />
       </div>
     </div>
     <div class="col-2 column">

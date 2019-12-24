@@ -239,13 +239,14 @@ namespace DAL.Repositories
                 }
                 else if (pending.Contains(woFilters.filters.WorkOrderStatus.ToLower()))
                 {
+                    statusId = 3;
+                }
+                
+                else if (closed.Contains(woFilters.filters.WorkOrderStatus.ToLower()))
+                {
                     statusId = 2;
                 }
                 else if (fulfilling.Contains(woFilters.filters.WorkOrderStatus.ToLower()))
-                {
-                    statusId = 3;
-                }
-                else if (closed.Contains(woFilters.filters.WorkOrderStatus.ToLower()))
                 {
                     statusId = 4;
                 }
@@ -1849,8 +1850,8 @@ namespace DAL.Repositories
                                                    we.CostPlusAmount,
                                                    we.CreatedBy,
                                                    we.CreatedDate,
-                                                   Epn = im.PartNumber,
-                                                   EpnDescription = im.PartDescription,
+                                                   Epn = im == null ? "" : im.PartNumber,
+                                                   EpnDescription = im==null?"": im.PartDescription,
                                                    we.EstimtPercentOccurranceId,
                                                    ExstimtPercentOccurance = eo.Name == null ? "" : eo.Name,
                                                    we.ExtendedCost,
@@ -1860,7 +1861,7 @@ namespace DAL.Repositories
                                                    we.IsFromWorkFlow,
                                                    we.ItemMasterId,
                                                    we.MarkUpPercentageId,
-                                                   MarkUpPercentage = mp.PercentValue,
+                                                   MarkUpPercentage = mp==null?0: mp.PercentValue,
                                                    we.MasterCompanyId,
                                                    we.Memo,
                                                    we.Quantity,
@@ -2819,7 +2820,7 @@ namespace DAL.Repositories
 
         #region Work Order Quote
 
-        public long CreateWorkOrderQuote(WorkOrderQuote workOrderQuote)
+        public WorkOrderQuote CreateWorkOrderQuote(WorkOrderQuote workOrderQuote)
         {
             try
             {
@@ -2835,7 +2836,7 @@ namespace DAL.Repositories
                 _appContext.WorkOrderQuote.Update(workOrderQuote);
                 _appContext.SaveChanges();
 
-                return workOrderQuote.WorkOrderQuoteId;
+                return workOrderQuote;
             }
             catch (Exception)
             {
@@ -2844,7 +2845,7 @@ namespace DAL.Repositories
             }
         }
 
-        public void UpdateWorkOrderQuote(WorkOrderQuote workOrderQuote)
+        public WorkOrderQuote UpdateWorkOrderQuote(WorkOrderQuote workOrderQuote)
         {
             try
             {
@@ -2854,6 +2855,7 @@ namespace DAL.Repositories
 
                 _appContext.WorkOrderQuote.Update(workOrderQuote);
                 _appContext.SaveChanges();
+                return workOrderQuote;
             }
             catch (Exception)
             {
