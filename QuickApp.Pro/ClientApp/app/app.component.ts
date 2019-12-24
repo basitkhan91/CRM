@@ -258,17 +258,17 @@ export class AppComponent implements OnInit, AfterViewInit {
                         { label: 'Add Vendor Caps', routerLink: '/vendorsmodule/vendorpages/app-add-vendor-capabilities' },
                             { label: 'Reports and Forms', items: [{ label: 'Caps Report', routerLink: '/singlepages/singlepages/app-caps-report' }] }],
                     },
-                    {
-                        label: 'Purchase Order', items: [{ label: 'PO List', routerLink: '/vendorsmodule/vendorpages/app-polist' },
-                        { label: 'Create PO', routerLink: '/vendorsmodule/vendorpages/app-create-po' },
-                        { label: 'PO Approval', routerLink: '/#' },
-                        { label: 'Create Vendor RMA', routerLink: '/#' }]
-                    },
-                    {
-                        label: 'Repair Order', items: [{ label: 'RO List', routerLink: '/vendorsmodule/vendorpages/app-ro-list' },
-                        { label: 'Create RO', routerLink: '/vendorsmodule/vendorpages/app-create-ro' },
-                        { label: 'RO Approval', routerLink: '/#' }]
-                    },
+                    // {
+                    //     label: 'Purchase Order', items: [{ label: 'PO List', routerLink: '/vendorsmodule/vendorpages/app-polist' },
+                    //     { label: 'Create PO', routerLink: '/vendorsmodule/vendorpages/app-create-po' },
+                    //     { label: 'PO Approval', routerLink: '/#' },
+                    //     { label: 'Create Vendor RMA', routerLink: '/#' }]
+                    // },
+                    // {
+                    //     label: 'Repair Order', items: [{ label: 'RO List', routerLink: '/vendorsmodule/vendorpages/app-ro-list' },
+                    //     { label: 'Create RO', routerLink: '/vendorsmodule/vendorpages/app-create-ro' },
+                    //     { label: 'RO Approval', routerLink: '/#' }]
+                    // },
                     {
                         label: 'Reports and Forms', items: [{ label: 'Open Ro Report', routerLink: '/#' },
                         { label: 'RO by WO', routerLink: '/#' },
@@ -277,6 +277,25 @@ export class AppComponent implements OnInit, AfterViewInit {
                         ]
                     }
 
+                ]
+            },
+            {
+                label: 'Purchase Order',
+                icon: 'fa fa-fw fa-shopping-cart',
+                items: [     
+                    { label: 'PO List', routerLink: '/vendorsmodule/vendorpages/app-polist' },
+                    { label: 'Create PO', routerLink: '/vendorsmodule/vendorpages/app-create-po' },
+                    { label: 'PO Approval', routerLink: '/#' },
+                    { label: 'Create Vendor RMA', routerLink: '/#' }
+                ]
+            },
+            {
+                label: 'Repair Order',
+                icon: 'fa fa-fw fa-cog',
+                items: [ 
+                    { label: 'RO List', routerLink: '/vendorsmodule/vendorpages/app-ro-list' },
+                    { label: 'Create RO', routerLink: '/vendorsmodule/vendorpages/app-create-ro' },
+                    { label: 'RO Approval', routerLink: '/#' }
                 ]
             },
             {
