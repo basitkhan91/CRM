@@ -312,13 +312,13 @@
                                     <div class="col-md-3">
                                             <div class="card">
                                                     <div class="card-body">
-                                                        <h5 class="po-head">Management Structure </h5>
+                                                        <h5 class="po-head">Management Structure <span class="clr-red">*</span>  </h5>
                                                         <div class="col-md-12">
                                                             <div class="form-group">
                                                           <p-dropdown
                                                             placeholder="Select Legal Entity"
                                                             name="company"
-                                                            #companyId="ngModel"
+                                                            #wocompanyId="ngModel"
                                                             required
                                                             [options]="legalEntityList"
                                                             class="p-dropdown-custom-md-2"
@@ -331,7 +331,7 @@
                                                               <p-dropdown
                                                                 placeholder="Select "
                                                                 name="bu"
-                                                                #bu="ngModel"
+                                                                #wobu="ngModel"
                                                                 [options]="businessUnitList"
                                                                 class="p-dropdown-custom-md-2"
                                                                 (onChange)="selectedBusinessUnit($event.value)"
@@ -343,7 +343,7 @@
                                                                   <p-dropdown
                                                                     placeholder="Select "
                                                                     name="division"
-                                                                    #division="ngModel"
+                                                                    #wodivision="ngModel"
                                                                     [options]="divisionList"
                                                                     class="p-dropdown-custom-md-2"
                                                                     (onChange)="selectedDivision($event.value)"
@@ -355,7 +355,7 @@
                                                                       <p-dropdown
                                                                         placeholder="Select "
                                                                         name="department"
-                                                                        #department="ngModel"
+                                                                        #wodepartment="ngModel"
                                                                         [options]="departmentList"
                                                                         class="p-dropdown-custom-md-2"
                                                                         (onChange)="selectedDepartment($event.value)"

@@ -263,6 +263,19 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 console.log(this.workOrderGeneralInformation);
                 this.getWorkOrderQuoteDetail(this.workOrderGeneralInformation.workOrderId, this.workOrderGeneralInformation.workFlowWorkOrderId);
                 const data = this.workOrderGeneralInformation;
+                this.commonService.getManagementStructureDetails(data.managementStructureId).subscribe(res => {
+                    this.selectedLegalEntity(res.Level1);
+                    this.selectedBusinessUnit(res.Level2);
+                    this.selectedDivision(res.Level3);
+                    this.selectedDepartment(res.Level4);
+                    this.managementStructure = {
+                        companyId: res.Level1 !== undefined ? res.Level1 : null,
+                        buId: res.Level2 !== undefined ? res.Level2 : null,
+                        divisionId: res.Level3 !== undefined ? res.Level3 : null,
+                        departmentId: res.Level4 !== undefined ? res.Level4 : null,
+                    }
+
+                })
                 this.workOrderGeneralInformation = {
                     ...data,
                     workOrderTypeId: String(data.workOrderTypeId),
@@ -271,6 +284,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                     customerId: data.customerDetails,
                     employeeId: getObjectById('value', data.employeeId, this.employeesOriginalData),
                     salesPersonId: getObjectById('value', data.employeeId, this.employeesOriginalData),
+
                     partNumbers: data.partNumbers.map((x, index) => {
 
                         this.getRevisedpartNumberByItemMasterId(x.masterPartId, index);
