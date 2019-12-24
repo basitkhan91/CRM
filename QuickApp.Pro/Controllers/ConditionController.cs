@@ -88,7 +88,7 @@ namespace QuickApp.Pro.Controllers
                 conditionObj.Description = conditionViewModel.Description;
                 conditionObj.MasterCompanyId = conditionViewModel.MasterCompanyId;
                 conditionObj.IsActive = conditionViewModel.IsActive;
-                conditionObj.IsDelete = conditionViewModel.IsDelete;
+                conditionObj.IsDelete = conditionViewModel.IsDeleted;
                 conditionObj.Memo = conditionViewModel.Memo;
                 conditionObj.CreatedDate = DateTime.Now;
                 conditionObj.UpdatedDate = DateTime.Now;
@@ -113,7 +113,7 @@ namespace QuickApp.Pro.Controllers
                 var existingResult = _unitOfWork.Conditions.GetSingleOrDefault(c => c.ConditionId == id);
                 // DAL.Models.Action updateObject = new DAL.Models.Action();
 
-                existingResult.IsDelete = conditionViewModel.IsDelete;
+                existingResult.IsDelete = conditionViewModel.IsDeleted;
                 existingResult.UpdatedDate = DateTime.Now;
                 existingResult.UpdatedBy = conditionViewModel.UpdatedBy;
                 existingResult.Description = conditionViewModel.Description;

@@ -169,7 +169,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     workOrderExclusionsList: Object;
     isEditLabor: boolean = false;
     // mpnId: any;
-    billing: Billing;
+    billing: Billing = new Billing();
     loginDetailsForCreate: any;
     workOrderPartNumberId: any;
     isEditBilling: boolean = false;
@@ -366,19 +366,19 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     selectCustomer(object, currentRecord) {
         currentRecord.customerReference = object.customerRef,
-        currentRecord.csr = object.csrName;
+            currentRecord.csr = object.csrName;
         currentRecord.creditLimit = object.creditLimit;
         currentRecord.creditTermsId = object.creditTermsId;
 
     }
-    viewCustomerDetails(customerId){
-           
-    console.log();
-    this.modal = this.modalService.open(CustomerViewComponent, { size: 'lg' });
-    this.modal.componentInstance.customerId = customerId;
-    this.modal.result.then(() => {
-        console.log('When user closes');
-    }, () => { console.log('Backdrop click') })
+    viewCustomerDetails(customerId) {
+
+        console.log();
+        this.modal = this.modalService.open(CustomerViewComponent, { size: 'lg' });
+        this.modal.componentInstance.customerId = customerId;
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
     }
 
     clearautoCompleteInput(currentRecord, field) {
@@ -484,6 +484,10 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         }
 
         this.gridActiveTab = '';
+        this.subTabOtherOptions = '';
+        this.subTabMainComponent = '';
+
+
     }
 
     deleteMPN(index) {
@@ -1190,6 +1194,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
     otherOptionTabSelected(value) {
+        this.subTabWorkFlow = '';
+        this.subTabMainComponent = '';
         this.subTabOtherOptions = value;
         if (value === 'charges') {
             this.getChargesListByWorkOrderId();
@@ -1341,8 +1347,6 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 shipAccountInfo: res.shippingAccountinfo
             }
             this.isEditBilling = true;
-            console.log(this.billing);
-
         }, error => {
             this.getCustomerDetailsFromHeader();
         })
@@ -1464,15 +1468,15 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         this.billing.totalWorkOrderCost = (this.billing.materialCost + this.billing.laborOverHeadCost + this.billing.miscChargesCost);
     }
 
-    getWorkOrderQuoteDetail(workOrderId, workFlowWorkOrderId){
+    getWorkOrderQuoteDetail(workOrderId, workFlowWorkOrderId) {
         this.quoteService.getWorkOrderQuoteDetail(workOrderId, workFlowWorkOrderId)
-        .subscribe(
-            (res:any) => {
-                if(res){
-                    this.workOrderQuoteId = res.workOrderQuote.workOrderQuoteId;
+            .subscribe(
+                (res: any) => {
+                    if (res) {
+                        this.workOrderQuoteId = res.workOrderQuote.workOrderQuoteId;
+                    }
                 }
-            }
-        )
+            )
     }
 
 

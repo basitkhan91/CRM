@@ -304,7 +304,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     modelUnknown = false;
     dashNumberUnknown = false;
     newFields = {
-        Condition: "NEW",
+        Condition: null ,
         PP_UOMId: null,
         PP_CurrencyId: null,
         PP_FXRatePerc: null,
@@ -391,6 +391,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     selectedCapabilityTypes: any = [];
     capeBldList: any = [];
     distinctAtaList: any[] = [];
+    conditionList: any;
 
     // errorLogForPS: string = '';
 
@@ -649,6 +650,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         // this.getAllATASubChapter();
         this.getAllSubChapters();
         this.getCapabilityType();
+        this.getConditionsList();
 
 
 
@@ -4595,6 +4597,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
 
+    }
+
+    getConditionsList(){
+        this.commonService.smartDropDownList('Condition', 'ConditionId' , 'Description'  ).subscribe(res => {
+            this.conditionList = res;
+        })
     }
     moveExportInformation1() {
         this.showpurchaseData = true;
