@@ -62,7 +62,7 @@ export class WorkOrderQuoteComponent implements OnInit {
   buildWorkOrderList: any[];
   buildHistoricalList: any[];
   gridActiveTab: string;
-  quotationHeader: any;
+  quotationHeader = {};
   materialListQuotation: any[];
   chargesQuotation: any[];
   exclusionsQuotation: any[];
@@ -126,9 +126,8 @@ editMatData: any[] = [];
   }
 
   saveQuoteDetails() {
-    if(this.quotationHeader == undefined || this.quotationHeader.workOrderQuoteId == undefined){
-      this.formQuoteInfo()
-    }
+    
+    this.formQuoteInfo(this.quoteForm);
     this.workOrderService.createOrUpdateQuotation(this.quotationHeader)
     .subscribe(
       res=>{
@@ -148,29 +147,44 @@ editMatData: any[] = [];
   //   this.quoteForm.partsDetails.push(new multiParts());
   // }
 
-  formQuoteInfo(){
-    this.quotationHeader = {
-      WorkOrderId: this.quoteForm.WorkOrderId,
-      WorkFlowWorkOrderId: this.quoteForm.WorkFlowWorkOrderId,
-      openDate:this.quoteForm.openDate,
+  formQuoteInfo(quoteHeader){
+    
+    let quotationHeader = {
+      WorkOrderId: (quoteHeader.workOrderId)?quoteHeader.workOrderId:quoteHeader.WorkOrderId,
+      WorkFlowWorkOrderId: (quoteHeader.workFlowWorkOrderId)?quoteHeader.workFlowWorkOrderId:quoteHeader.WorkFlowWorkOrderId,
+      openDate:quoteHeader.openDate,
       QuoteDueDate:this.quoteDueDate,
       ValidForDays:this.validFor,
-        ExpirationDate: this.expirationDate,
-        QuoteStatusId: this.quoteForm.expirationDateStatus,
-      CustomerId:this.quoteForm.CustomerId,
+      ExpirationDate: this.expirationDate,
+      QuoteStatusId: quoteHeader.expirationDateStatus,
+      CustomerId:quoteHeader.CustomerId,
       CurrencyId: Number(this.currency),
       AccountsReceivableBalance:this.accountsReceivableBalance,
-      SalesPersonId:this.quoteForm.SalesPersonId,
-      EmployeeId:this.quoteForm.EmployeeId,
-      masterCompanyId:this.quoteForm.masterCompanyId,
+      SalesPersonId:quoteHeader.SalesPersonId,
+      EmployeeId:quoteHeader.EmployeeId,
+      masterCompanyId:quoteHeader.masterCompanyId,
       createdBy:"admin",
       updatedBy:"admin",
       IsActive:true,
       IsDeleted:false,
       DSO: this.dso,
       Warnings: this.warnings,
-      Memo: this.memo
+      Memo: this.memo,
+      creditLimit: this.creditLimit,
+      creditTerm: this.creditTerm,
+      customerContact: this.customerContact,
+      customerEmail: this.customerEmail,
+      customerName: this.customerName,
+      customerPhone: this.customerPhone,
+      customerReference: this.customerRef,
+      employeeName: this.employeeName,
+      salesPersonName: this.salesPerson,
+      workOrderNumber: this.workOrderNumber
     }
+    if(this.quotationHeader !== undefined && this.quotationHeader['workOrderQuoteId'] !== undefined){
+      quotationHeader['workOrderQuoteId'] = this.quotationHeader['workOrderQuoteId'];
+    }
+    this.quotationHeader = quotationHeader;
     return this.quotationHeader;
   }
 
@@ -196,6 +210,27 @@ editMatData: any[] = [];
       this.quoteForm.EmployeeId = res['employeeId'];
       this.quoteForm.masterCompanyId = res['masterCompanyId'];
       this.quoteForm.creditTermsandLimit = res.customerDetails.creditLimit;
+      this.workOrderService.getWorkOrderQuoteDetail(res.workOrderId, res["workFlowWorkOrderId"])
+      .subscribe(
+        (res : any)=>{
+          if(res){
+            this.quotationHeader = this.formQuoteInfo(res.workOrderQuote);
+            this.quotationHeader['workOrderQuoteId'] = res.workOrderQuote.workOrderQuoteId;
+            this.dso = res.workOrderQuote.dso;
+            this.validFor = res.workOrderQuote.validForDays;
+            this.quoteForm = {...res.workOrderQuote, WorkOrderId: res.workOrderId,
+              WorkFlowWorkOrderId: res["workFlowWorkOrderId"], quoteNumber: res.workOrderQuote.quoteNumber, expirationDateStatus: res.workOrderQuote.quoteStatusId};
+            this.quoteDueDate = new Date(res.workOrderQuote.quoteDueDate);
+            this.expirationDate = new Date(res.workOrderQuote.expirationDate);
+            this.currency = res.workOrderQuote.currencyId;
+            this.accountsReceivableBalance = res.workOrderQuote.accountsReceivableBalance;
+            this.warnings = res.warnings;
+            this.memo = res.memo;
+            this.getQuoteTabData();
+
+          }
+        }
+      )
 
       this.getCreditTerms(res.creditTermsId);
       this.getEmployeeList(res.employeeId,res.salesPersonId);
@@ -780,5 +815,38 @@ updateWorkOrderQuoteDetailsId(id){
   this.chargesPayload.WorkOrderQuoteDetailsId = id;
   this.exclusionPayload.WorkOrderQuoteDetailsId = id;
   this.materialListPayload.WorkOrderQuoteDetailsId = id; 
+}
+
+getQuoteTabData() {
+  // if(this.workOrderQuoteId){
+  // this.getQuoteExclusionListByWorkOrderQuoteId();
+  this.getQuoteMaterialListByWorkOrderQuoteId();
+  this.getQuoteChargesListByWorkOrderQuoteId();
+  this.getQuoteLaborListByWorkOrderQuoteId();
+
+  // this.calculateTotalWorkOrderCost();
+
+  // }
+
+}
+
+getQuoteMaterialListByWorkOrderQuoteId() {
+  this.workOrderService.getQuoteMaterialList(this.quotationHeader['workOrderQuoteId']).subscribe(res => {
+      this.materialListPayload = res;
+  })
+}
+ getQuoteChargesListByWorkOrderQuoteId() {
+  this.workOrderService.getQuoteChargesList(this.quotationHeader['workOrderQuoteId']).subscribe(res => {
+      this.chargesPayload = res;
+  })
+}
+ getQuoteLaborListByWorkOrderQuoteId() {
+  this.workOrderService.getQuoteLaborList(this.quotationHeader['workOrderQuoteId']).subscribe(res => {
+      if (res) {
+          this.laborPayload = res.laborList;
+      }
+
+  })
+
 }
 }
