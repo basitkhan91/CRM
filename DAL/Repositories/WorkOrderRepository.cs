@@ -2880,6 +2880,8 @@ namespace DAL.Repositories
                                       from con in cccon.DefaultIfEmpty()
                                       join ct in _appContext.CreditTerms on cust.CreditTermsId equals ct.CreditTermsId into custct
                                       from ct in custct.DefaultIfEmpty()
+                                      join qd in _appContext.WorkOrderQuoteDetails on wq.WorkOrderQuoteId equals qd.WorkOrderQuoteId into wqqd
+                                      from qd in wqqd.DefaultIfEmpty()
                                       where wq.WorkOrderId == workOrderId && wq.IsDeleted == false
                                       select new
                                       {
@@ -2900,7 +2902,10 @@ namespace DAL.Repositories
                                           EmployeeName = emp.FirstName + ' ' + emp.LastName,
                                           wq.Warnings,
                                           wq.Memo,
-                                          wq.AccountsReceivableBalance
+                                          wq.AccountsReceivableBalance,
+                                          BuildMethodId= qd== null?0:qd.BuildMethodId,
+                                          SelectedId=qd == null ? 0 : qd.SelectedId,
+                                          ReferenceNo=qd == null ? "" : qd.ReferenceNo,
 
                                       }).FirstOrDefault();
                 return workOrderQuote;
@@ -5839,6 +5844,10 @@ namespace DAL.Repositories
                     if (workFlow.Expertise != null && workFlow.Expertise.Count > 0)
                     {
                         workOrderLaborHeader = BindWorkFlowWorkOrderLabor(workFlow.Expertise, workFlow.workOrderId, workFlow.CreatedBy, workFlow.MasterCompanyId);
+                    }
+                    else
+                    {
+                        workOrderLaborHeader = null;
                     }
 
 
