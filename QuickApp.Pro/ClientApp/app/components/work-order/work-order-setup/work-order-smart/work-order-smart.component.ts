@@ -40,6 +40,7 @@ export class WorkOrderSmartComponent implements OnInit {
     workOrderGeneralInformation: workOrderGeneralInfo = new workOrderGeneralInfo();
     isEdit: boolean = false;
     currencyList: any;
+    legalEntityList: any;
     /** WorkOrderShipping ctor */
     constructor(private alertService: AlertService,
         private workOrderService: WorkOrderService,
@@ -67,6 +68,7 @@ export class WorkOrderSmartComponent implements OnInit {
         this.getMultiplePartsNumbers();
         this.getAllPriority();
         this.getCurrency();
+        this.getLegalEntity();
 
         if (this.isSubWorkOrder) {
             this.subWorkOrderId = this.subWorkOrderId;
@@ -183,6 +185,12 @@ export class WorkOrderSmartComponent implements OnInit {
     getCurrency() {
         this.commonService.smartDropDownList('Currency', 'CurrencyId', 'symbol').subscribe(res => {
             this.currencyList = res;
+        })
+    }
+
+    getLegalEntity() {
+        this.commonService.getLegalEntityList().subscribe(res => {
+            this.legalEntityList = res;
         })
     }
 

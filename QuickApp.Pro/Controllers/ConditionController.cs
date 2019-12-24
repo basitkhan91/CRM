@@ -88,7 +88,7 @@ namespace QuickApp.Pro.Controllers
                 conditionObj.Description = conditionViewModel.Description;
                 conditionObj.MasterCompanyId = conditionViewModel.MasterCompanyId;
                 conditionObj.IsActive = conditionViewModel.IsActive;
-                conditionObj.IsDelete = conditionViewModel.IsDeleted;
+                conditionObj.IsDeleted = conditionViewModel.IsDeleted;
                 conditionObj.Memo = conditionViewModel.Memo;
                 conditionObj.CreatedDate = DateTime.Now;
                 conditionObj.UpdatedDate = DateTime.Now;
@@ -113,7 +113,7 @@ namespace QuickApp.Pro.Controllers
                 var existingResult = _unitOfWork.Conditions.GetSingleOrDefault(c => c.ConditionId == id);
                 // DAL.Models.Action updateObject = new DAL.Models.Action();
 
-                existingResult.IsDelete = conditionViewModel.IsDeleted;
+                existingResult.IsDeleted = conditionViewModel.IsDeleted;
                 existingResult.UpdatedDate = DateTime.Now;
                 existingResult.UpdatedBy = conditionViewModel.UpdatedBy;
                 existingResult.Description = conditionViewModel.Description;
@@ -135,7 +135,7 @@ namespace QuickApp.Pro.Controllers
         {
             var existingResult = _unitOfWork.Conditions.GetSingleOrDefault(c => c.ConditionId == id);
 
-             existingResult.IsDelete = true;
+             existingResult.IsDeleted = true;
             _unitOfWork.Conditions.Update(existingResult);
 
             //_unitOfWork.Conditions.Remove(existingResult);
@@ -167,7 +167,7 @@ namespace QuickApp.Pro.Controllers
                 columHeaders.Add(columnHeader);
             }
             dynamicGridData.columHeaders = columHeaders;
-            dynamicGridData.ColumnData = _unitOfWork.Conditions.GetAll().Where(u => u.IsDelete == false);
+            dynamicGridData.ColumnData = _unitOfWork.Conditions.GetAll().Where(u => u.IsDeleted == false);
             dynamicGridData.TotalRecords = dynamicGridData.ColumnData.Count();
 
 

@@ -70,8 +70,10 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     @Input() showTabsGrid = false;
     @Input() workOrderId;
     @Input() currencyList;
+    @Input() legalEntityList;
     @Input() workFlowWorkOrderId = 0;
     @Input() showGridMenu = false;
+
 
     // @Output() viewWorkFlow = new EventEmitter();
 
@@ -187,7 +189,15 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     subTabMainComponent: any = '';
     mpnGridData: any;
     showTabsMPNGrid: boolean = false;
-
+    businessUnitList: any;
+    divisionList: any;
+    departmentList: any;
+    managementStructure = {
+        companyId: null,
+        buId: null,
+        divisionId: null,
+        departmentId: null,
+    }
 
 
 
@@ -443,6 +453,39 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             this.isWorkOrderMainView = true;
         }
 
+    }
+
+    selectedLegalEntity(legalEntityId) {
+        if (legalEntityId) {
+            this.workOrderGeneralInformation.managementStructureId = legalEntityId;
+            this.commonService.getBusinessUnitListByLegalEntityId(legalEntityId).subscribe(res => {
+                this.businessUnitList = res;
+            })
+        }
+
+    }
+    selectedBusinessUnit(businessUnitId) {
+        if (businessUnitId) {
+            this.workOrderGeneralInformation.managementStructureId = businessUnitId;
+            this.commonService.getDivisionListByBU(businessUnitId).subscribe(res => {
+                this.divisionList = res;
+            })
+        }
+
+    }
+    selectedDivision(divisionUnitId) {
+        if (divisionUnitId) {
+            this.workOrderGeneralInformation.managementStructureId = divisionUnitId;
+            this.commonService.getDepartmentListByDivisionId(divisionUnitId).subscribe(res => {
+                this.departmentList = res;
+            })
+        }
+
+    }
+    selectedDepartment(departmentId) {
+        if (departmentId) {
+            this.workOrderGeneralInformation.managementStructureId = departmentId;
+        }
     }
 
     toggleDisplayMode(): void {

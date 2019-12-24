@@ -127,7 +127,7 @@
                                 <div class="clear"></div>
                                 <hr>
                                 <div class="form-row">
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <div class="form-group ">
                                             <label for="workflownum">WO Num
                                             </label>
@@ -150,7 +150,7 @@
 
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="customername">Customer Name
                                                 <span class="clr-red">*</span>
@@ -203,7 +203,7 @@
                                         </div>
                                         
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                             <div class="form-group">
                                                     <div class="checkbox-cstm">
                                                         <label>
@@ -308,6 +308,65 @@
                                               </div>
                                           </div>
                                         </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                            <div class="card">
+                                                    <div class="card-body">
+                                                        <h5 class="po-head">Management Structure </h5>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                          <p-dropdown
+                                                            placeholder="Select Legal Entity"
+                                                            name="company"
+                                                            #companyId="ngModel"
+                                                            required
+                                                            [options]="legalEntityList"
+                                                            class="p-dropdown-custom-md-2"
+                                                            (onChange)="selectedLegalEntity($event.value)"
+                                                            [(ngModel)]="managementStructure.companyId"
+                                                          >
+                                                          </p-dropdown>
+                                                          </div>
+                                                           <div class="form-group">
+                                                              <p-dropdown
+                                                                placeholder="Select "
+                                                                name="bu"
+                                                                #bu="ngModel"
+                                                                [options]="businessUnitList"
+                                                                class="p-dropdown-custom-md-2"
+                                                                (onChange)="selectedBusinessUnit($event.value)"
+                                                                [(ngModel)]="managementStructure.buId"
+                                                              >
+                                                              </p-dropdown>
+                                                              </div>
+                                                              <div class="form-group">
+                                                                  <p-dropdown
+                                                                    placeholder="Select "
+                                                                    name="division"
+                                                                    #division="ngModel"
+                                                                    [options]="divisionList"
+                                                                    class="p-dropdown-custom-md-2"
+                                                                    (onChange)="selectedDivision($event.value)"
+                                                                    [(ngModel)]="managementStructure.divisionId"
+                                                                  >
+                                                                  </p-dropdown>
+                                                                  </div>
+                                                                  <div class="form-group">
+                                                                      <p-dropdown
+                                                                        placeholder="Select "
+                                                                        name="department"
+                                                                        #department="ngModel"
+                                                                        [options]="departmentList"
+                                                                        class="p-dropdown-custom-md-2"
+                                                                        (onChange)="selectedDepartment($event.value)"
+                                                                        [(ngModel)]="managementStructure.departmentId"
+                                                                      >
+                                                                      </p-dropdown>
+                                                                      </div> 
+                                                        </div>
+                                                    </div>
+                                                  </div>
+
                                     </div>
                                     <div class="clear"></div>
                                     <hr>
@@ -807,6 +866,7 @@
                     <div *ngIf="billing && quoteMaterialList " [ngClass]="{hidedata : gridActiveTab !== 'billorInvoice'}">
                         <app-work-order-billing   
                          [billingorInvoiceForm]="billing" 
+                         [legalEntityList]="legalEntityList"
                          [currencyList]="currencyList"
                          [savedWorkOrderData]="savedWorkOrderData"    
                          [employeesOriginalData]="employeesOriginalData"
