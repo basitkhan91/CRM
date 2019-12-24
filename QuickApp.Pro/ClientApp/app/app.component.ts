@@ -411,7 +411,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'Financial Statement', items: [
-                            { label: 'Node Setup', routerLink: '/generalledgermodule/generalledgerpage/app-node-setup' },
+                            { label: 'Node List', routerLink: '/generalledgermodule/generalledgerpage/app-node-setup' },
                             { label: 'Income Statement', routerLink: '/#' },
                             { label: 'Balance Sheet', routerLink: '/#' },
                             { label: 'Statement of CashFlows', routerLink: '/#' },
