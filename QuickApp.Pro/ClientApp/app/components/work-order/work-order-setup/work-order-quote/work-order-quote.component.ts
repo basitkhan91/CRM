@@ -62,7 +62,7 @@ export class WorkOrderQuoteComponent implements OnInit {
   buildWorkOrderList: any[];
   buildHistoricalList: any[];
   gridActiveTab: string;
-  quotationHeader = {};
+    quotationHeader: any;
   materialListQuotation: any[];
   chargesQuotation: any[];
   exclusionsQuotation: any[];
@@ -179,10 +179,11 @@ editMatData: any[] = [];
       customerReference: this.customerRef,
       employeeName: this.employeeName,
       salesPersonName: this.salesPerson,
-      workOrderNumber: this.workOrderNumber
+        workOrderNumber: this.workOrderNumber,
+        workOrderQuoteId:0
     }
     if(this.quotationHeader !== undefined && this.quotationHeader['workOrderQuoteId'] !== undefined){
-      quotationHeader['workOrderQuoteId'] = this.quotationHeader['workOrderQuoteId'];
+        quotationHeader['workOrderQuoteId'] = this.quotationHeader['workOrderQuoteId'];
     }
     this.quotationHeader = quotationHeader;
     return this.quotationHeader;
