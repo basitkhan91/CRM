@@ -27,9 +27,9 @@ namespace DAL.Repositories
         {
         }
 
-        public IEnumerable<SalesOrderQuotePart> GetAllPartsBySalesQuoteId(long salesQuoteId, long masterCompanyId)
+        public IEnumerable<SalesOrderQuotePart> GetPartsBySalesQuoteId(long salesQuoteId)
         {
-            throw new NotImplementedException();
+            return this.Context.SalesOrderQuotePart.Where(part => part.SalesOrderQuoteId == salesQuoteId).ToList();
         }
 
         public IEnumerable<SalesOrderQuotePart> BulkCreate(IEnumerable<SalesOrderQuotePart> parts)

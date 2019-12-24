@@ -35,7 +35,6 @@ export class NodeSetupComponent implements OnInit {
     totalPages: number;
     headers = [
         { field: 'ledgerName', header: 'Ledger Name' },
-        { field: 'companyCodes', header: 'Share with the Other Entities' },
         { field: 'nodeCode', header: 'Node Code' },
         { field: 'nodeName', header: 'Node Name' },
         { field: 'description', header: 'Description' },
@@ -119,6 +118,7 @@ export class NodeSetupComponent implements OnInit {
         this.currentNodeSetup = new GLAccountNodeSetup();
         this.loadGlAccountClassData();
         this.getList();
+        this.loadLegalEntitydata();
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-node-setup';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
     }
@@ -134,7 +134,7 @@ export class NodeSetupComponent implements OnInit {
         const { selectedCompanysData, ...rest }: any = data;
         console.log(rest);
         if (!this.isEdit) {
-            this.nodeSetupService.add(rest).subscribe(() => {
+            this.nodeSetupService.add(data).subscribe(() => {
                 this.resetForm();
                 this.addGLAccountEntitymapping();
                 this.nodeSetupService.getAll().subscribe(nodes => {
@@ -474,6 +474,22 @@ export class NodeSetupComponent implements OnInit {
             results => this.onManagemtntdataLoadDataList(results[0]),
             error => this.onDataLoadFailed(error)
         );
+    }
+
+    private loadLegalEntitydata() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+
+        this.legalEntityService.getLedgerNamesData().subscribe(
+            results => this.onloadLegalEntitydata(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private onloadLegalEntitydata(getAtaMainList: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.ledgerList = getAtaMainList;
     }
 
     private onManagemtntdataLoadDataList(getAtaMainList: any[]) {

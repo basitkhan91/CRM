@@ -21,6 +21,8 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   @Output() saveworkOrderLabor = new EventEmitter();
   @Input() workOrderLaborList: any;
   @Input() taskList: any;
+  @Input() isQuote = false;
+  @Input() markupList;
 
     totalHours: number;
   workOrderWorkFlowList: any;
@@ -35,7 +37,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   billableList = [
     { label: 'Billable', value: 1 },
     { label: 'Non-Billable', value: 2 }
-    ]
+    ];
 
 
   constructor(private workOrderService: WorkOrderService,
@@ -63,6 +65,7 @@ console.log(this.workOrderLaborList);
   ngOnChanges(){
     this.getAllEmployees();
     this.workOrderWorkFlowList = this.workOrderWorkFlowOriginalData;
+    this.calculateTotalWorkHours();
     if(this.workOrderLaborList){
       this.laborForm.workFlowWorkOrderId = this.workOrderLaborList['workFlowWorkOrderId'];
       this.laborForm.dataEnteredBy = this.workOrderLaborList['dataEnteredBy'];
@@ -105,23 +108,13 @@ console.log(this.workOrderLaborList);
       // obj['adjustedHours'] = `${(h.length ==1)?'0'+h:h}.${(m.length ==1)?'0'+m:m}`;
       obj['adjustedHours'] = Number(obj.hours) + Number(obj.adjustments)
       var totalHours = 0;
-      for(let task in this.laborForm.workOrderLaborList[0]){
-        if(this.laborForm.workOrderLaborList[0][task][0]['hours'] != null){
-          for (let taskList of this.laborForm.workOrderLaborList[0][task] ){
-            // hoursArr = taskList['hours'].split(":");
-            // if(hoursArr.length == 1){ hoursArr.push(0)}
-            // hoursInSeconds = (+hoursArr[0]) * 60 * 60 + (+hoursArr[1]) * 60;
-              this.totalWorkHours += taskList['hours'];
-              
-          }
-        }
-      }
       // h = Math.floor(totalSec / 3600).toString();
       // m = Math.floor(totalSec % 3600 / 60).toString();
       // s = Math.floor(totalSec % 3600 % 60).toString();
       // this.totalWorkHours = `${(h.length ==1)?'0'+h:h}:${(m.length ==1)?'0'+m:m}:${(s.length ==1)?'0'+s:s}`;
       // this.totalWorkHours = totalHours;
     }
+    this.calculateTotalWorkHours();
     }
 
   filterWorkFlowNumbers(event): void {
@@ -140,6 +133,16 @@ console.log(this.workOrderLaborList);
     this.commonService.smartDropDownList('Employee', 'EmployeeId', 'FirstName').subscribe(res => {
       this.employeesOriginalData = res;
       this.employeeList = res;
+      if(this.laborForm.dataEnteredBy != null){
+        this.employeeList.forEach(emp=>{
+          if(this.laborForm.dataEnteredBy == emp.value){
+            this.laborForm.dataEnteredBy = emp;
+          }
+          if(this.laborForm.employeeId == emp.value){
+            this.laborForm.employeeId = emp;
+          }
+        })
+      }
     })
   }
 
@@ -373,7 +376,37 @@ console.log(this.workOrderLaborList);
   }
 
   deleteLabor(taskName, index){
-    this.laborForm.workOrderLaborList[0][taskName.toLowerCase()].splice(index, 1);
+    this.laborForm.workOrderLaborList[0][taskName.toLowerCase()][index].isDeleted = true;
+  }
+
+  markupChanged(matData) {
+      try {
+          this.markupList.forEach((markup) => {
+          if (markup.value == matData.markupPercentageId) {
+              matData.costPlusAmount = (matData.laborOverheadCost) + (((matData.laborOverheadCost) / 100) * Number(markup.label))
+          }
+          })
+      }
+      catch (e) {
+          console.log(e);
+      }
+  }
+
+  calculateTotalWorkHours(){
+    this.laborForm.totalWorkHours = 0;
+    if(this.laborForm.workOrderLaborList){
+      for(let task in this.laborForm.workOrderLaborList[0]){
+        if(this.laborForm.workOrderLaborList[0][task][0]['hours'] != null){
+          for (let taskList of this.laborForm.workOrderLaborList[0][task] ){
+            // hoursArr = taskList['hours'].split(":");
+            // if(hoursArr.length == 1){ hoursArr.push(0)}
+            // hoursInSeconds = (+hoursArr[0]) * 60 * 60 + (+hoursArr[1]) * 60;
+              this.laborForm.totalWorkHours += taskList['hours'];
+              
+          }
+        }
+      }
+    }
   }
   // tasks : this.laborForm.tasks[0][keysArray[i]].map(x => {
   //   return {

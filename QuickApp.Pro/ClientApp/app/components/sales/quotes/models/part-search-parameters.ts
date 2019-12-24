@@ -13,11 +13,19 @@ export class PartSearchParamters {
 
     public quantityRequired: number;
 
+    public quantityRequested: number;
+
     public quantityToQuote: number;
+
+    public quantityAlreadyQuoted: number;
 
     public itemSearchType: ItemSearchType;
 
     public includeAlternatePartNumber: boolean;
+
+    public qtyAvailable:number;
+    
+    public qtyOnHand:number;
 
     constructor() {
         this.itemSearchType = ItemSearchType.ItemMaster;

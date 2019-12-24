@@ -13,6 +13,20 @@
     }
 }
 
+.modal {
+    .modal-body.assetattributetype label {
+        font-weight: normal !important;
+        width: 100% !important;
+        text-align: left;
+        margin-top: 0;
+    }
+
+    .modal-body.editdisposaltype .form-group {
+        margin-bottom: 10px;
+    }
+}
+
+
 .ui-button.ui-button-text-icon-left.btn-primary-cstm.ui-button-text {
     font-family: 'Open Sans', sans-serif !important;
 }

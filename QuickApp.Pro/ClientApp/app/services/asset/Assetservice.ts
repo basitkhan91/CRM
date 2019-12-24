@@ -80,6 +80,10 @@ export class AssetService {
         return Observable.forkJoin(this.assetEndpoint.getAllAssetList<any[]>());
     }
 
+    getByAssetId(assetId?: string) {
+        return this.assetEndpoint.getByAssetIdDataEndpoint<any>(assetId);
+    }
+
     updateAsset(asset: any) {
         return this.assetEndpoint.updateAsset(asset, asset.assetRecordId);
     }

@@ -29,7 +29,7 @@ namespace QuickApp.Pro.ViewModels
 
         public bool? IsActive { get; set; }
 
-        public bool? IsDelete { get; set; }
+        public bool? IsDeleted { get; set; }
 
     }
 

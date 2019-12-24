@@ -174,7 +174,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     localprovision: any[] = [];
     localgroup: any[] = [];
     //allProvisonInfo: Provision[];
-    allProvisonInfo: any=[];   
+    allProvisonInfo: any = [];
     activeTab: number = 0;
     itemQuantity = [];
     items1: MenuItem[];
@@ -304,7 +304,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     modelUnknown = false;
     dashNumberUnknown = false;
     newFields = {
-        Condition: "NEW",
+        Condition: null ,
         PP_UOMId: null,
         PP_CurrencyId: null,
         PP_FXRatePerc: null,
@@ -391,6 +391,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     selectedCapabilityTypes: any = [];
     capeBldList: any = [];
     distinctAtaList: any[] = [];
+    conditionList: any;
 
     // errorLogForPS: string = '';
 
@@ -491,6 +492,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             })
 
         }
+        this.Integration();
 
 
 
@@ -645,9 +647,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.getAllAircraftModels();
         this.getAllDashNumbers();
         this.getAllATAChapter();
-        this.getAllATASubChapter();
+        // this.getAllATASubChapter();
         this.getAllSubChapters();
         this.getCapabilityType();
+        this.getConditionsList();
 
 
 
@@ -1476,9 +1479,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     private onprodataSuccessful(getProvisionList: Provision[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-      //  this.allProvisonInfofilter = getProvisionList;
+        //  this.allProvisonInfofilter = getProvisionList;
 
-       // alert(JSON.stringify(this.allProvisonInfo.));
+        // alert(JSON.stringify(this.allProvisonInfo.));
 
         if (getProvisionList != null) {
             for (let i = 0; i < getProvisionList.length; i++) {
@@ -1575,7 +1578,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     openModelPopups(capData) {
-    
+
         if (this.itemser.isEditMode == false) {
 
             //Adding for Aircraft manafacturer List Has empty then List Should be null
@@ -4269,7 +4272,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.ataMainchapter = Atachapter[0];
             for (let i = 0; i < this.ataMainchapter.length; i++) {
                 this.LoadAtachapter.push(
-                    { value: this.ataMainchapter[i].ataChapterId, label: this.ataMainchapter[i].ataChapterName },
+                    { value: this.ataMainchapter[i].ataChapterId, label: `${this.ataMainchapter[i].ataChapterCode}-${this.ataMainchapter[i].ataChapterName}` },
                 );
             }
         });
@@ -4285,7 +4288,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             })
         })
     }
-
+    addNewATA() {
+        this.atasubchapter = [];
+        this.ataform.reset();
+    }
     addATAMapping() {
         const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
         const PartNumber = this.isEdit === true ? this.pnvalue : this.collectionofItemMaster.partNumber
@@ -4591,6 +4597,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
 
+    }
+
+    getConditionsList(){
+        this.commonService.smartDropDownList('Condition', 'ConditionId' , 'Description'  ).subscribe(res => {
+            this.conditionList = res;
+        })
     }
     moveExportInformation1() {
         this.showpurchaseData = true;
@@ -4987,7 +4999,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     exportUOmOpen(content) {
         console.log("In exportUOmOpen function!!");
-       // this.sourceUOM.isActive = true;
+        // this.sourceUOM.isActive = true;
         this.modal = this.modalService.open(content, { size: 'sm' });
         this.modal.result.then(() => {
         }, () => { console.log('Backdrop click') })
@@ -5430,7 +5442,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     // New code for loading dropdown
 
-    getATASubChapterByATAChapter(atachapterId?) {
+    getATASubChapterByATAChapter() {
         const selectedATAChapterId = this.ataform.value.atanumber;
         this.ataChaptherSelected = this.ataMainchapter.filter(x => {
             if (x.ataChapterId === selectedATAChapterId) {

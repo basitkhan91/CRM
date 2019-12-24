@@ -16,7 +16,6 @@
                         </p>
                     </div>
                     <div class="table-responsive">
-
                         <div>
                             <div class="col-md-12" style="margin-bottom: -10px;">
                                 <h4 class="float-right">
@@ -40,7 +39,7 @@
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
                                     </div>
                                     <button type="button" class="btn btn-primary-cstm" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding:5px 10px !important;"></button>
-                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>
+                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selected Data" (click)="dt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>
                                     
                                     <!-- <div class="excel-upload excel-upload-cstm">
                                         <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">

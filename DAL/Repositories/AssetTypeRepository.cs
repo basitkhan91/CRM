@@ -55,7 +55,7 @@ namespace DAL.Repositories
         private IEnumerable<AssetType> TagItems(IEnumerable<AssetType> items)
         {
             IEnumerable<AssetType> existingItems = GetAllItems();
-            bool isItemUnique = false;
+            bool isDuplicate = false;
             bool isItemValid = false;
 
             foreach (var item in items)
@@ -63,11 +63,11 @@ namespace DAL.Repositories
                 isItemValid = IsValid(item);
                 if (isItemValid)
                 {
-                    isItemUnique = existingItems.Any(existingItem =>
-                                                                    existingItem.AssetTypeName == item.AssetTypeName ||
-                                                                    existingItem.AssetTypeMemo == item.AssetTypeMemo
+                    isDuplicate = existingItems.Any(existingItem =>
+                                                                    existingItem.AssetTypeName == item.AssetTypeName 
+                                                                    // || existingItem.AssetTypeMemo == item.AssetTypeMemo
                                                                     );
-                    item.UploadTag = isItemUnique ? UploadTag.Unique : UploadTag.Duplicate;
+                    item.UploadTag = isDuplicate ? UploadTag.Duplicate : UploadTag.Unique;
                 }
                 else
                 {

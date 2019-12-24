@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DAL;
+using DAL.Common;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -91,12 +92,21 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-        [HttpGet("workorderlist")]
-        public IActionResult GetWorkOrdersList(int pageNo = 0, int pageSize = 10)
+        [HttpPost("workorderlist")]
+        public IActionResult GetWorkOrdersList([FromBody]Filters<WorkOrderFilters> woFilters)
         {
-            var result = unitOfWork.WorkOrderRepository.GetWorkOrdersList(pageNo, pageSize);
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrdersList(woFilters);
             return Ok(result);
         }
+
+
+        [HttpGet("woglobalsearch")]
+        public IActionResult WorkOrdersGlobalSearch(string filterText, int pageNumber=0, int pageSize=10)
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrdersGlobalSearch(filterText, pageNumber, pageSize);
+            return Ok(result);
+        }
+
 
         [HttpGet("workorderpartlist")]
         public IActionResult GetWorkOrderPartList(long workOrderId)
@@ -576,8 +586,8 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                workOrderQuote.WorkOrderQuoteId = unitOfWork.WorkOrderRepository.CreateWorkOrderQuote(workOrderQuote);
-                return Ok(workOrderQuote);
+                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderQuote(workOrderQuote);
+                return Ok(result);
             }
             else
             {
@@ -591,8 +601,8 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                unitOfWork.WorkOrderRepository.UpdateWorkOrderQuote(workOrderQuote);
-                return Ok(workOrderQuote);
+               var result= unitOfWork.WorkOrderRepository.UpdateWorkOrderQuote(workOrderQuote);
+                return Ok(result);
             }
             else
             {

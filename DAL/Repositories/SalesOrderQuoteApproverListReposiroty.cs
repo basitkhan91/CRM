@@ -28,9 +28,9 @@ namespace DAL.Repositories
         {
         }
 
-        public IEnumerable<SalesOrderQuoteApproverList> GetApproverList()
+        public IEnumerable<SalesOrderQuoteApproverList> GetApproverList(long salesQuoteId)
         {
-            throw new NotImplementedException();
+            return Context.SalesOrderQuoteApproverList.Where(list => list.SalesOrderQuoteId == salesQuoteId).ToList();
         }
 
         public SalesOrderQuoteApproverList Create(SalesOrderQuoteApproverList quote)

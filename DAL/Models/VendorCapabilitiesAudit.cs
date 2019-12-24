@@ -23,7 +23,30 @@ namespace DAL.Models
         public bool? IsDelete { get; set; }
         public string Memo { get; set; }
         public string capabilityDescription { get; set; }
-         public long VendorId { get; set; }
+         public long VendorId { get; set; }        
+
+        public string VendorRanking { get; set; }
+
+        public string PMA_DER { get; set; }
+
+        public long ItemMasterId { get; set; }
+
+        public Int32? TAT { get; set; }
+
+        public Decimal Cost { get; set; }
+
+        public long AlternatePartId { get; set; }
+
+        public long ATAChapterId { get; set; }
+
+        public long ATASubchapterId { get; set; }     
+        
+
+        public bool? IsDeleted { get; set; }
+        
+
+        public bool? IsPMA { get; set; }
+        public bool? IsDER { get; set; }
 
 
 
