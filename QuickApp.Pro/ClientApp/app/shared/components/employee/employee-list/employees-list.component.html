@@ -636,12 +636,12 @@
                                 <tr>
                                     <th>First Name</th>
                                     <th>Last Name</th>
-                                    <th>Emp Id</th>
+                                    <th>EmpID</th>
                                     <th>Job Title</th>
                                     <th>Emp Expertise</th>
                                     <th>Job Type</th>
                                     <th>Start Date</th>
-                                    <th>Company</th>
+                                    <!-- <th>Company</th> -->
                                     <th>Pay Type</th>
                                     <th>IsActive</th>
                                     <th>Updated By</th>
@@ -651,14 +651,14 @@
                             <tbody class="audithistory-cstm"> <!--*ngIf="auditHistory.length> 0"-->
                                 <tr *ngFor="let audit of auditHistory; let i = index;">
                                     <!-- auditHistory[i>0 ? i-1 : i] -->          
-                                        <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'firstName', audit.firstName)  ? 'black' : 'red'  }">{{audit.firstName}}</td>
+                                        <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'firstName', audit.firstName)  ? 'black' : 'red'  }">{{ audit.firstName}}</td>
                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'lastName', audit.lastName)  ? 'black' : 'red'  }">{{audit.lastName}}</td>
                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'employeeId', audit.employeeId)  ? 'black' : 'red'  }">{{audit.employeeId}}</td>
                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'jobtitle', audit.jobtitle)  ? 'black' : 'red'  }">{{audit.jobtitle}}</td>
                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'employeeExpertise', audit.employeeExpertise)  ? 'black' : 'red'  }">{{audit.employeeExpertise}}</td>
                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'jobType', audit.jobType)  ? 'black' : 'red'  }">{{audit.jobType}}</td>
                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'startDate', audit.startDate)  ? 'black' : 'red'  }">{{audit.startDate}}</td>
-                                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'company', audit.company)  ? 'black' : 'red'  }">{{audit.company}}</td>
+                                            <!-- <td [ngStyle]="{'color': getColorCodeForHistory(i, 'company', audit.company)  ? 'black' : 'red'  }">{{audit.company}}</td> -->
                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'payType', audit.payType)  ? 'black' : 'red'  }">{{audit.payType}}</td>
                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
                                         <td >{{audit.updatedBy}}</td>
