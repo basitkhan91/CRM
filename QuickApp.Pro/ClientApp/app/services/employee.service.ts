@@ -216,4 +216,7 @@ export class EmployeeService {
         return this.employeeEndpoint.getStoredEmployeeManagementStructure(employeeId);
     }
 
+    getEmployeeAuditDetails(employeeId: any){
+        return this.employeeEndpoint.getEmployeeAuditDetailsEndPoint(employeeId);
+    }
 }
