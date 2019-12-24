@@ -239,13 +239,14 @@ namespace DAL.Repositories
                 }
                 else if (pending.Contains(woFilters.filters.WorkOrderStatus.ToLower()))
                 {
+                    statusId = 3;
+                }
+                
+                else if (closed.Contains(woFilters.filters.WorkOrderStatus.ToLower()))
+                {
                     statusId = 2;
                 }
                 else if (fulfilling.Contains(woFilters.filters.WorkOrderStatus.ToLower()))
-                {
-                    statusId = 3;
-                }
-                else if (closed.Contains(woFilters.filters.WorkOrderStatus.ToLower()))
                 {
                     statusId = 4;
                 }
@@ -278,7 +279,7 @@ namespace DAL.Repositories
                                     join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
                                     join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
                                     where wo.IsDeleted == false
-                                    && wo.WorkOrderNum.Contains(!String.IsNullOrEmpty(woFilters.filters.WorkOrderNo) ? woFilters.filters.WorkOrderNo : wo.WorkOrderNum)
+                                    && wo.WorkOrderNum.Contains(!String.IsNullOrEmpty(woFilters.filters.workOrderNum) ? woFilters.filters.workOrderNum : wo.WorkOrderNum)
                                     && cust.Name.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerName) ? woFilters.filters.CustomerName : cust.Name)
                                     && cust.CustomerCode.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerCode) ? woFilters.filters.CustomerCode : cust.CustomerCode)
                                     && wo.WorkOrderStatusId == (statusId > 0 ? statusId : wo.WorkOrderStatusId)
@@ -294,7 +295,7 @@ namespace DAL.Repositories
                             join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
                             join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
                             where wo.IsDeleted == false
-                             && wo.WorkOrderNum.Contains(!String.IsNullOrEmpty(woFilters.filters.WorkOrderNo) ? woFilters.filters.WorkOrderNo : wo.WorkOrderNum)
+                             && wo.WorkOrderNum.Contains(!String.IsNullOrEmpty(woFilters.filters.workOrderNum) ? woFilters.filters.workOrderNum : wo.WorkOrderNum)
                                     && cust.Name.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerName) ? woFilters.filters.CustomerName : cust.Name)
                                     && cust.CustomerCode.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerCode) ? woFilters.filters.CustomerCode : cust.CustomerCode)
                                     && wo.WorkOrderStatusId == (statusId > 0 ? statusId : wo.WorkOrderStatusId)
@@ -602,6 +603,7 @@ namespace DAL.Repositories
                                            wo.CustomerReference,
                                            workFlowWorkOrderId = wo.IsSinglePN == true ? wf.WorkFlowWorkOrderId : 0,
                                            workFlowId = wo.IsSinglePN == true ? wf.WorkflowId : 0,
+                                           wo.ManagementStructureId
                                        }).FirstOrDefault();
                 return workOrderHeader;
             }
@@ -1849,8 +1851,8 @@ namespace DAL.Repositories
                                                    we.CostPlusAmount,
                                                    we.CreatedBy,
                                                    we.CreatedDate,
-                                                   Epn = im.PartNumber,
-                                                   EpnDescription = im.PartDescription,
+                                                   Epn = im == null ? "" : im.PartNumber,
+                                                   EpnDescription = im==null?"": im.PartDescription,
                                                    we.EstimtPercentOccurranceId,
                                                    ExstimtPercentOccurance = eo.Name == null ? "" : eo.Name,
                                                    we.ExtendedCost,
@@ -1860,7 +1862,7 @@ namespace DAL.Repositories
                                                    we.IsFromWorkFlow,
                                                    we.ItemMasterId,
                                                    we.MarkUpPercentageId,
-                                                   MarkUpPercentage = mp.PercentValue,
+                                                   MarkUpPercentage = mp==null?0: mp.PercentValue,
                                                    we.MasterCompanyId,
                                                    we.Memo,
                                                    we.Quantity,
@@ -2819,7 +2821,7 @@ namespace DAL.Repositories
 
         #region Work Order Quote
 
-        public long CreateWorkOrderQuote(WorkOrderQuote workOrderQuote)
+        public WorkOrderQuote CreateWorkOrderQuote(WorkOrderQuote workOrderQuote)
         {
             try
             {
@@ -2835,7 +2837,7 @@ namespace DAL.Repositories
                 _appContext.WorkOrderQuote.Update(workOrderQuote);
                 _appContext.SaveChanges();
 
-                return workOrderQuote.WorkOrderQuoteId;
+                return workOrderQuote;
             }
             catch (Exception)
             {
@@ -2844,7 +2846,7 @@ namespace DAL.Repositories
             }
         }
 
-        public void UpdateWorkOrderQuote(WorkOrderQuote workOrderQuote)
+        public WorkOrderQuote UpdateWorkOrderQuote(WorkOrderQuote workOrderQuote)
         {
             try
             {
@@ -2854,6 +2856,7 @@ namespace DAL.Repositories
 
                 _appContext.WorkOrderQuote.Update(workOrderQuote);
                 _appContext.SaveChanges();
+                return workOrderQuote;
             }
             catch (Exception)
             {
@@ -2878,6 +2881,8 @@ namespace DAL.Repositories
                                       from con in cccon.DefaultIfEmpty()
                                       join ct in _appContext.CreditTerms on cust.CreditTermsId equals ct.CreditTermsId into custct
                                       from ct in custct.DefaultIfEmpty()
+                                      join qd in _appContext.WorkOrderQuoteDetails on wq.WorkOrderQuoteId equals qd.WorkOrderQuoteId into wqqd
+                                      from qd in wqqd.DefaultIfEmpty()
                                       where wq.WorkOrderId == workOrderId && wq.IsDeleted == false
                                       select new
                                       {
@@ -2898,7 +2903,10 @@ namespace DAL.Repositories
                                           EmployeeName = emp.FirstName + ' ' + emp.LastName,
                                           wq.Warnings,
                                           wq.Memo,
-                                          wq.AccountsReceivableBalance
+                                          wq.AccountsReceivableBalance,
+                                          BuildMethodId= qd== null?0:qd.BuildMethodId,
+                                          SelectedId=qd == null ? 0 : qd.SelectedId,
+                                          ReferenceNo=qd == null ? "" : qd.ReferenceNo,
 
                                       }).FirstOrDefault();
                 return workOrderQuote;
@@ -3868,7 +3876,6 @@ namespace DAL.Repositories
                             join ct in _appContext.CreditTerms on wo.CreditTermsId equals ct.CreditTermsId
                             join sv in _appContext.ShippingVia on bi.ShipViaId equals sv.ShippingViaId into bisv
                             from sv in bisv.DefaultIfEmpty()
-
                             where bi.WorkOrderId == WorkOrderId && bi.WorkOrderPartNoId == workOrderPartNoId
                             select new
                             {
@@ -5837,6 +5844,10 @@ namespace DAL.Repositories
                     if (workFlow.Expertise != null && workFlow.Expertise.Count > 0)
                     {
                         workOrderLaborHeader = BindWorkFlowWorkOrderLabor(workFlow.Expertise, workFlow.workOrderId, workFlow.CreatedBy, workFlow.MasterCompanyId);
+                    }
+                    else
+                    {
+                        workOrderLaborHeader = null;
                     }
 
 

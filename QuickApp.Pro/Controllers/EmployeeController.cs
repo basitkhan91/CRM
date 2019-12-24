@@ -1069,6 +1069,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("GetEmployeeAuditHistory/{employeeId}")]        
+        public IActionResult GetEmployeeAuditHistoryByEmployeeId(long employeeId)
+        {
+            var result = _unitOfWork.employee.GetEmployeeAuditHistoryData(employeeId);
+            return Ok(result);
+        }
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
 }

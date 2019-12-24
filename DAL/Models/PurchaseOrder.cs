@@ -53,8 +53,8 @@ namespace DAL.Models
         public Nullable<bool> IsActive { get; set; }
         public string ShipToSiteName { get; set; }
         public string BillToSiteName { get; set; }
-        public decimal ShippingCost { get; set; }
-        public decimal HandlingCost { get; set; }
+        public decimal? ShippingCost { get; set; }
+        public decimal? HandlingCost { get; set; }
         public long BillToContactId { get; set; }
         public long ShipViaId { get; set; }
         public long? ShipToSiteId { get; set; }

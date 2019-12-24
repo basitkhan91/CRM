@@ -68,7 +68,8 @@ export class EmployeesListComponent implements OnInit {
     public empTrainningInfo: any;
     public leaveMapArray: any;
     public shiftMapArray: any;
-    auditHistory: AuditHistory[] = [];
+    //public auditHistory: AuditHistory[] = [];
+    auditHistory: any=[];
 
     ngOnInit(): void {
 
@@ -212,8 +213,8 @@ export class EmployeesListComponent implements OnInit {
     }
 
     getData(rowData, field) {
-        if (field === 'jobtitle') return rowData['jobtitle'] ? rowData['jobtitle']['description'] : 'NA';
-        else if (field === 'jobtype') return rowData['jobtype'] ? rowData['jobtype']['jobTypeName'] : 'NA';
+         if (field === 'jobtitle') return rowData['jobtitle'] ? rowData['jobtitle']['description'] : 'NA';
+        if (field === 'jobtype') return rowData['jobtype'] ? rowData['jobtype']['jobTypeName'] : 'NA';
         else if (field === 'company') {
            // return rowData['masterCompany'] ? rowData['masterCompany']['companyName'] : 'NA';
 
@@ -448,11 +449,10 @@ export class EmployeesListComponent implements OnInit {
       
     }
 
-    getAuditHistoryById(rowData) {
-        // this.empService.getPublicationAuditDetails(rowData.publicationRecordId).subscribe(res => {
-        //     console.log(res);            
-        //     this.auditHistory = res;
-        // })
+    getAuditHistoryById(rowData) {       
+        this.empService.getEmployeeAuditDetails(rowData.employeeId).subscribe(res => {           
+            this.auditHistory = res;
+        })
     }
     getColorCodeForHistory(i, field, value) {
         const data = this.auditHistory;

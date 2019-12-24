@@ -13,4 +13,9 @@ input.hidePlaceHolder:hover,
 input.hidePlaceHolder:active {
     color: #000 !important;
 }
-
+#roView .modal-body p .label {
+    width: 40% !important;
+}
+#roView .modal-body p .value {
+    width: 60% !important;
+}
