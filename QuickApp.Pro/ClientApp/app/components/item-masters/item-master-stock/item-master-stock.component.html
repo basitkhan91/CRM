@@ -426,7 +426,7 @@
                                         </label>
                                     </div>
                                     <div>
-                                        <select [ngModelOptions]="{standalone: true}"
+                                        <select  id="glAccountId" name="glAccountId" title="GL Acct" required
                                                 [(ngModel)]="sourceItemMaster.glAccountId">
                                             <option *ngFor="let glAccounts of allGlInfo"
                                                     [ngValue]="glAccounts.glAccountId" title="{{glAccounts.accountDescription}}">
@@ -447,7 +447,7 @@
 
                                     </div>
                                     <div>
-                                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.purchaseUnitOfMeasureId">
+                                        <select  id="unitOfMeasureId" name="unitOfMeasureId" title="Purchase UOM" required [(ngModel)]="sourceItemMaster.purchaseUnitOfMeasureId">
                                             <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo" [ngValue]="unitName.unitOfMeasureId">
                                                 {{unitName.shortName}}
                                             </option>
