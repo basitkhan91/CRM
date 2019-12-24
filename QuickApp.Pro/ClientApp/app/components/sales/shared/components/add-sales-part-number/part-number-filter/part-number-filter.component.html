@@ -65,13 +65,13 @@
     <div class="col-1 column">
       <div class="form-group">
         <label>Qty On Hand</label>
-        <input type="text" pInputText name="qtyOnHand" disabled="true" />
+        <input type="text" pInputText name="qtyOnHand" [(ngModel)]="query.partSearchParamters.qtyOnHand" disabled="true" />
       </div>
     </div>
     <div class="col-1 column">
       <div class="form-group">
         <label>Qty Available</label>
-        <input type="text" pInputText name="qtyAvailable" disabled="true" />
+        <input type="text" pInputText name="qtyAvailable" [(ngModel)]="query.partSearchParamters.qtyAvailable" disabled="true" />
       </div>
     </div>
 </div>

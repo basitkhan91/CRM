@@ -32,28 +32,28 @@
         </div>
         <div class="row margin-row">
           <div class="col-md-12 col-sm-12 col-12">
-            <div class="col-2 column">
+            <div class="col-3 column">
               <div class="form-group">
                 <label>Quantity requested</label>
                 <input type="number" pInputText name="quantityRequest" disabled="true"
                   [(ngModel)]="part.quantityRequested" />
               </div>
             </div>
-            <div class="col-2 column">
+            <div class="col-3 column">
               <div class="form-group">
                 <label>Quantity already quoted</label>
                 <input type="number" pInputText name="quantityAlreadyQuoted" disabled="true"
                   [(ngModel)]="part.quantityAlreadyQuoted" />
               </div>
             </div>
-            <div class="col-2 column">
+            <div class="col-3 column">
                 <div class="form-group">
                   <label>Quantity from this</label>
                   <input type="number" pInputText name="quantityFromThis" (change)="calculate()"
                     [(ngModel)]="part.quantityFromThis" />
                 </div>
               </div>
-            <div class="col-2 column">
+            <div class="col-3 column">
               <div class="form-group">
                 <label>Quantity to be quoted</label>
                 <input type="number" pInputText name="quantityToBeQuoted" disabled="true"
@@ -68,10 +68,10 @@
           <table>
             <thead>
               <tr>
-                <th style="width:10%"></th>
-                <th style="width:15%"></th>
-                <th style="width:15%"><span>Per Unit</span></th>
-                <th><span>Extended</span></th>
+                <th style="width:25%"></th>
+                <th style="width:25%"></th>
+                <th style="width:25%"><span>Per Unit</span></th>
+                <th style="width:25%"><span>Extended</span></th>
               </tr>
             </thead>
             <tbody>
