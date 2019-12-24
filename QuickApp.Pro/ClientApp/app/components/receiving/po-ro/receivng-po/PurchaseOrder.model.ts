@@ -73,7 +73,7 @@ export class PurchaseOrderPart {
     trace: string;
     conditionCode: string;
     quantityActuallyReceived: number;
-    quantityRejected: string;
+    quantityRejected: number;
     uomId: number;
 
     quantityOrdered: number;
@@ -323,6 +323,7 @@ export class ReceiveParts {
     purchaseOrderPartRecordId: number;
     stockLines: StockLine[];
     timeLife: TimeLife[];
+    quantityRejected: number;
 }
 
 export class DropDownData {

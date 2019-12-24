@@ -81,9 +81,9 @@ namespace QuickApp.Pro.Controllers
             return Ok(model);
         }
 
-        // POST: api/SalesQuote/{id}
-        [HttpGet("edit/{id}")]
-        public IActionResult Edit(long id)
+        // POST: api/SalesQuote/get/{id}
+        [HttpGet("get/{id}")]
+        public IActionResult Get(long id)
         {
 
             SalesOrderQuote quote = this.UnitOfWork.SalesOrderQuote.Get(id);
