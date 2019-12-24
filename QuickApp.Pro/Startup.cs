@@ -180,6 +180,8 @@ namespace QuickApp.Pro
                         { IdentityServerConfig.ApiName, IdentityServerConfig.ApiFriendlyName }
                     }
                 });
+
+                c.CustomSchemaIds(x => x.FullName);
             });
 
 
