@@ -5,8 +5,13 @@
     </button>
   </div>
   <div class="row">
-      <p-table [value]="selectedParts" [scrollable]="true">
-          <ng-template pTemplate="header">
+      <p-table [value]="selectedParts" class="rpo-table-cstm rro-table-cstm" [columns]="columns" [scrollable]="true" [style]="{ width: '100%' }">
+        <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col *ngFor="let col of columns" style="width:200px" />
+            </colgroup>
+          </ng-template>  
+        <ng-template pTemplate="header">
             <tr>
 
               <th>PartNumber</th>
@@ -23,8 +28,7 @@
               <th>QTY QUOTED</th>
               <th>UNIT SALE PRICE</th>
               <th>MARK UP %</th>
-              <th>MARK UP AMOUNT</th>
-              <th>SALES BEFORE DISCOUNT</th>             
+              <th>MARK UP AMOUNT</th>           
               <th>DISCOUNT %</th>
               <th>DISC AMOUNT</th>
               <th>NET SALES</th>
@@ -32,11 +36,6 @@
               <th>EXTENDED COST</th>
               <th>MARGIN ($)</th>
               <th>MARGIN (%)</th>
-             
-              
-              <th>
-                &nbsp;
-              </th>
             </tr>
           </ng-template>
         
@@ -51,8 +50,12 @@
                   {{ part.description }}
               </td>
               <td>
-                  {{ part.stockLineNumber }}
+                {{ part.stockLineNumber }}
               </td>
+              <td>
+                {{ part.method }}
+                </td>
+             
               <td>
                   {{ part.serialNumber }}
               </td>
@@ -60,7 +63,7 @@
                   {{ part.stockLineId }}
               </td>
               <td>
-                  {{ part.itemMasterId }}
+                  {{ part.idNumber }}
               </td>
               <td>
                   {{ part.pmaStatus }}
@@ -85,6 +88,9 @@
               <td>
                   {{ part.markUpPercentage }}
               </td>
+              <td>
+                {{ part.markupExtended }}
+            </td>
               <td>
                   {{ part.salesDiscount }}
               </td>
