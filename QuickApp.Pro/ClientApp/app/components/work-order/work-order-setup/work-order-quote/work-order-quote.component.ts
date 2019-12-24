@@ -182,6 +182,9 @@ editMatData: any[] = [];
         workOrderNumber: this.workOrderNumber,
         workOrderQuoteId:0
     }
+    if(quoteHeader.quoteNumber){
+      quotationHeader['quoteNumber'] = quoteHeader.quoteNumber;
+    }
     if(this.quotationHeader !== undefined && this.quotationHeader['workOrderQuoteId'] !== undefined){
         quotationHeader['workOrderQuoteId'] = this.quotationHeader['workOrderQuoteId'];
     }
@@ -373,18 +376,20 @@ editMatData: any[] = [];
             (res: any) =>{
               let laborList = this.labor.workOrderLaborList;
               this.labor = {...res, workOrderLaborList: laborList};
-              this.taskList.forEach((tl)=>{
-                res.laborList.forEach((rt)=>{
-                  if(rt['taskId'] == tl['taskId']){
-                    if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
-                      this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
+              if(res.laborList){
+                this.taskList.forEach((tl)=>{
+                  res.laborList.forEach((rt)=>{
+                    if(rt['taskId'] == tl['taskId']){
+                      if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
+                        this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
+                      }
+                      let labor = {}
+                      labor = {...rt, employeeId: {'label':rt.employeeName, 'value': rt.employeeId}}
+                      this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(labor);
                     }
-                    let labor = {}
-                    labor = {...rt, employeeId: {'label':rt.employeeName, 'value': rt.employeeId}}
-                    this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(labor);
-                  }
+                  })
                 })
-              })
+              }
               this.laborQuotation = res;
             }
           )

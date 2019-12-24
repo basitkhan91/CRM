@@ -354,7 +354,7 @@ export class WorkOrderEndpointService extends EndpointFactory {
     }
 
     createOrUpdateQuotation(data) {
-        return this.http.post(`${this.configurations.baseUrl}/api/workOrder/${data.workOrderQuoteId == undefined ? 'createworkorderquote' : 'updateworkorderquote'}`, JSON.stringify(data), this.getRequestHeaders())
+        return this.http.post(`${this.configurations.baseUrl}/api/workOrder/${(data.workOrderQuoteId == undefined || data.workOrderQuoteId == 0) ? 'createworkorderquote' : 'updateworkorderquote'}`, JSON.stringify(data), this.getRequestHeaders())
     }
 
     getSubWorkOrderListByWorkOrderId(workOrderId) {
