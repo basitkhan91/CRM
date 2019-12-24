@@ -7,7 +7,7 @@ namespace DAL.Models
     public class WorkOrderFilters
     {
         public long WorkOrderId { get; set; }
-        public string WorkOrderNo { get; set; }
+        public string workOrderNum { get; set; }
         public string CustomerName { get; set; }
         public string CustomerCode { get; set; }
         public string WorkOrderType { get; set; }

@@ -279,7 +279,7 @@ namespace DAL.Repositories
                                     join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
                                     join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
                                     where wo.IsDeleted == false
-                                    && wo.WorkOrderNum.Contains(!String.IsNullOrEmpty(woFilters.filters.WorkOrderNo) ? woFilters.filters.WorkOrderNo : wo.WorkOrderNum)
+                                    && wo.WorkOrderNum.Contains(!String.IsNullOrEmpty(woFilters.filters.workOrderNum) ? woFilters.filters.workOrderNum : wo.WorkOrderNum)
                                     && cust.Name.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerName) ? woFilters.filters.CustomerName : cust.Name)
                                     && cust.CustomerCode.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerCode) ? woFilters.filters.CustomerCode : cust.CustomerCode)
                                     && wo.WorkOrderStatusId == (statusId > 0 ? statusId : wo.WorkOrderStatusId)
@@ -295,7 +295,7 @@ namespace DAL.Repositories
                             join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
                             join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
                             where wo.IsDeleted == false
-                             && wo.WorkOrderNum.Contains(!String.IsNullOrEmpty(woFilters.filters.WorkOrderNo) ? woFilters.filters.WorkOrderNo : wo.WorkOrderNum)
+                             && wo.WorkOrderNum.Contains(!String.IsNullOrEmpty(woFilters.filters.workOrderNum) ? woFilters.filters.workOrderNum : wo.WorkOrderNum)
                                     && cust.Name.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerName) ? woFilters.filters.CustomerName : cust.Name)
                                     && cust.CustomerCode.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerCode) ? woFilters.filters.CustomerCode : cust.CustomerCode)
                                     && wo.WorkOrderStatusId == (statusId > 0 ? statusId : wo.WorkOrderStatusId)
@@ -603,6 +603,7 @@ namespace DAL.Repositories
                                            wo.CustomerReference,
                                            workFlowWorkOrderId = wo.IsSinglePN == true ? wf.WorkFlowWorkOrderId : 0,
                                            workFlowId = wo.IsSinglePN == true ? wf.WorkflowId : 0,
+                                           wo.ManagementStructureId
                                        }).FirstOrDefault();
                 return workOrderHeader;
             }
@@ -3875,7 +3876,6 @@ namespace DAL.Repositories
                             join ct in _appContext.CreditTerms on wo.CreditTermsId equals ct.CreditTermsId
                             join sv in _appContext.ShippingVia on bi.ShipViaId equals sv.ShippingViaId into bisv
                             from sv in bisv.DefaultIfEmpty()
-
                             where bi.WorkOrderId == WorkOrderId && bi.WorkOrderPartNoId == workOrderPartNoId
                             select new
                             {
