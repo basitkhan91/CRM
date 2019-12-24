@@ -14,6 +14,7 @@
         Site, 
         WareHouse,
         Location,
+        ATAMainChapter,
         Shelf,
         AssetType,
         AssetIntangibleType,

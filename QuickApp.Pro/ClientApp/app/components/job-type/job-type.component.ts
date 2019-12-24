@@ -23,7 +23,7 @@ export class JobTypeComponent implements OnInit {
     newJobType =
         {
             jobTypeName: "",
-            jobTypeDescription: "",
+            jobTypeMemo: "",
             masterCompanyId: 1,
             isActive: true,
             isDeleted: false
@@ -38,7 +38,7 @@ export class JobTypeComponent implements OnInit {
     totalPages: number;
     jobTypeHeaders = [
         { field: 'jobTypeName', header: 'Job Type' },
-        { field: 'jobTypeDescription', header: 'Description' },
+        { field: 'jobTypeMemo', header: 'memo' },
     ]
     selectedColumns = this.jobTypeHeaders;
     formData = new FormData()
@@ -108,7 +108,7 @@ export class JobTypeComponent implements OnInit {
 
     getJobTypeList() {
         this.jobTypeService.getAllJobTypeList().subscribe(res => {
-            const responseData = res[0];
+            const responseData = res[0];           
             this.jobTypeData = responseData;
             this.totalRecords = responseData.length;
             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
@@ -142,7 +142,7 @@ export class JobTypeComponent implements OnInit {
     }
 
     selectedJobType(object) {
-        const exists = selectedValueValidate('description', object, this.selectedRecordForEdit)
+        const exists = selectedValueValidate('jobTypeMemo', object, this.selectedRecordForEdit)
         this.disableSaveForJobType = !exists;
     }
 
@@ -150,7 +150,7 @@ export class JobTypeComponent implements OnInit {
         const data = {
             ...this.addNewJobType, createdBy: this.userName, updatedBy: this.userName,
             jobTypeName: editValueAssignByCondition('jobTypeName', this.addNewJobType.jobTypeName),
-            jobTypeDescription: editValueAssignByCondition('jobTypeDescription', this.addNewJobType.jobTypeDescription)
+            jobTypeMemo: editValueAssignByCondition('jobTypeMemo', this.addNewJobType.jobTypeMemo)
         };
         if (!this.isEdit) {
             this.jobTypeService.newJobType(data).subscribe(() => {
@@ -188,7 +188,7 @@ export class JobTypeComponent implements OnInit {
     editJobType(rowData) {
         console.log(rowData);
         this.isEdit = true;
-        this.disableSaveForJobType = false;
+        this.disableSaveForJobType = true;
 
         this.addNewJobType = {
             ...rowData, jobTypeName: getObjectById('jobTypeId', rowData.jobTypeId, this.jobTypeData)

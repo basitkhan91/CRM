@@ -38,7 +38,7 @@ export class AtaMainComponent implements OnInit {
     originalData: any;
     isEdit: boolean = false;
     totalRecords: any;
-    existingRecordsResponse: Object;
+    existingRecordsResponse: any;
     pageIndex: number = 0;
     pageSize: number = 10;
     totalPages: number;
@@ -115,16 +115,33 @@ export class AtaMainComponent implements OnInit {
              this.formData.append('file', file[0])
              this.atamainService.ataChapterCustomUpload(this.formData).subscribe(res => {
                  event.target.value = '';
-
                  this.formData = new FormData();
                  this.existingRecordsResponse = res;
-                 this.getList();
-                 this.alertService.showMessage(
-                     'Success',
-                     `Successfully Uploaded  `,
-                     MessageSeverity.success
-                 );
+                 var result = this.existingRecordsResponse[0].uploadStatus;
+                 if (result == "Duplicate") {
+                    
+                     this.alertService.showMessage(
+                         'Success',
+                         `Duplicaate Records found `,
+                         MessageSeverity.success
+                     );
+                 }
+                 if (result === "Success") {
+                     this.alertService.showMessage(
+                         'Success',
+                         `Successfully imported `,
+                         MessageSeverity.success
+                     );
+                 }   
 
+                 if (result === "Failed") {
+                     this.alertService.showMessage(
+                         'Failed',
+                         `Failed `,
+                         MessageSeverity.success
+                     );
+                 }   
+                 this.getList();  
              })
          }
 

@@ -70,4 +70,8 @@ export class EmployeeExpertiseService {
         return this.employeeexpertiseEndpoint.getAuditById<any[]>(employeeExpertiseId);
     }
 
+    EmployeeExpertiseFileUpload(file) {
+        return this.employeeexpertiseEndpoint.EmployeeExpertiseFileUploadCustomUpload(file);
+    }
+
 }

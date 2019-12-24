@@ -18,26 +18,28 @@
                                 <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect [maxSelectedLabels]="2" [options]="uomHeaders" optionLabel="header" [(ngModel)]="selectedColumns"
                                                    [style]="{minWidth: '200px'}" style="float:left" (onChange)="columnsChanges()"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
-                                            iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
+                                            iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
                                             iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
 
-                                        <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
+                                        <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file"
                                                accept=".xlsx, .xls, .csv">
-                                        <label for="upload">
-                                            <span matTooltip="Upload Data (Excel)">
-                                                <i class="fa fa-upload"></i>
-                                            </span>
+                                        <label>
+                                           
+                                            <!--<span matTooltip="Upload Data (Excel)">
+                        <i class="fa fa-upload"></i>
+                    </span>-->
                                         </label>
                                         &nbsp; &nbsp;
                                         <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()">Sample File Download</button>
                                     </div>
 
                                 </div>
+                                <br />
                             </ng-template>
-
+                            
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
                                     <th style="width:120px" *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
@@ -132,7 +134,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
 </div>
 
 
-<div #addJobType id="addJobType" class="modal fade" role="dialog">
+<div #addJobType id="addJobType" class="modal fade" role="dialog"  data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
 
         <!-- Modal content-->
@@ -165,12 +167,12 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                         
                         <div class="col-sm-12">
                             <div class="col-sm-4">
-                                <label for="jobTypeDescription" class="control-label">
-                                    Description
+                                <label for="jobTypeMemo" class="control-label">
+                                    Memo
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <input type="text" name="jobTypeDescription" class="form-control" #jobTypeDescription="ngModel" [(ngModel)]="addNewJobType.jobTypeDescription" >
+                                <input type="text" name="jobTypeMemo" class="form-control" #jobTypeMemo="ngModel" [(ngModel)]="addNewJobType.jobTypeMemo" >
                             </div>
                         </div>
                     </div>
@@ -216,14 +218,14 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                         <thead>
                             <tr>
                                 <th>Job Type</th>
-                                <th>Description</th>
+                                <th>Memo</th>
                             </tr>
                         </thead>
                         <tbody *ngIf="existingRecordsResponse.length> 0">
                             <tr *ngFor="let ext of existingRecordsResponse; let i = index;">
 
                                 <td>{{ext.jobTypeName}}</td>
-                                <td>{{ext.jobTypeDescription}}</td>
+                                <td>{{ext.jobTypeMemo}}</td>
                             </tr>
                         </tbody>
 
@@ -254,7 +256,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                         <thead>
                             <tr>
                                 <th>JobType</th>
-                                <th>Description</th>
+                                <th>Memo</th>
                                 <th>IsActive</th>
                                 <th>Updated By</th>
                                 <th>Updated Time</th>
@@ -264,7 +266,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                             <tr *ngFor="let audit of auditHistory; let i = index;">
                                 <!-- auditHistory[i>0 ? i-1 : i] -->
                                 <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'jobTypeName', audit.jobTypeName)  ? 'black' : 'red'  }">{{audit.jobTypeName}}</td>
-                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'jobTypeDescription', audit.jobTypeDescription)  ? 'black' : 'red'  }">{{audit.jobTypeDescription}}</td>
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'jobTypeMemo', audit.jobTypeMemo)  ? 'black' : 'red'  }">{{audit.jobTypeMemo}}</td>
                                 <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
                                 <td>{{audit.updatedBy}}</td>
                                 <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
@@ -311,7 +313,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                         <span class="label ">
                             <b class="view-Header">ShortName: </b>
                         </span>
-                        <span class="value">{{ viewRowData.jobTypeDescription}}</span>
+                        <span class="value">{{ viewRowData.jobTypeMemo}}</span>
                     </p>
                     <p>
                         <span class="label ">
