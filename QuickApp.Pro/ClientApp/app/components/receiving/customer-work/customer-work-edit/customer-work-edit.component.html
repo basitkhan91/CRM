@@ -17,7 +17,7 @@
                 <div class="clear"></div>
                 <div class="tab-content form-bg">
                     <div class="tab-pane active" id="home">
-                <form action="#" method="post" id="add-customerwork" name="" class="form-horizontal add-custustomer">
+                <form action="#" #addcustomerwork="ngForm" method="post" id="addcustomerwork" name="" class="form-horizontal add-custustomer">
 
                     <div class="card">
                         <div class="form-row col-row col-row1">
@@ -28,8 +28,8 @@
                                         <div class="col-sm-7 add-icon-inline-right">
                                             <!--<div class="inner-addon right-addon inline-block">-->
 
-                                                <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcereceving.firstName" [ngModelOptions]="{standalone: true}" (onSelect)="empnameId($event)" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
-                                                                [minLength]="1" [dropdown]="true">
+                                                <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcereceving.firstName" [ngModelOptions]="{standalone: true}" (onSelect)="empnameId($event)" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30" required
+                                                                [minLength]="1" [dropdown]="true" >
                                                     <ng-template let-firstName pTemplate="item">
                                                         <div class="ui-helper-clearfix">{{firstName}}</div>
                                                     </ng-template>
@@ -57,7 +57,7 @@
                                         <label class="control-label col-sm-4">Customer Name<strong class="clr-red">*</strong></label>
                                         <div class="col-sm-7 add-icon-inline-right">
 
-                                            <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcereceving.name" (onSelect)="customerNameId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30"
+                                            <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcereceving.name" (onSelect)="customerNameId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30" required
                                                             [minLength]="1" [dropdown]="true">
                                                 <ng-template let-name pTemplate="item">
                                                     <div class="ui-helper-clearfix">{{name}}</div>
@@ -107,7 +107,13 @@
                                         <div class="col-sm-7">
                                             <div class="inner-addon right-addon inline-block">
                                                 <!--<i class="fa fa-search"></i>-->
-                                                <input sstyle="font-size: 1px" type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.customerReference">
+                                                <!--<input sstyle="font-size: 1px" type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.customerReference">-->
+                                                <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcereceving.customerReference"  [ngModelOptions]="{standalone: true}" [suggestions]="customerReferenceNames" (completeMethod)="filterReferenceNames($event)" [size]="30"
+                                                                [minLength]="1" [dropdown]="true" required>
+                                                    <ng-template let-name pTemplate="item">
+                                                        <div class="ui-helper-clearfix">{{name}}</div>
+                                                    </ng-template>
+                                                </p-autoComplete>
                                             </div>
                                         </div>
                                     </div>
@@ -133,7 +139,7 @@
                                             <!--<div class="inner-addon right-addon inline-block">-->
 
                                                 <p-autoComplete class="pautocomp-cstm" sstyle="font-size: 1px" [(ngModel)]="sourcereceving.partNumber" (onSelect)="partnmId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
-                                                                [minLength]="1" [dropdown]="true">
+                                                                [minLength]="1" [dropdown]="true" required>
                                                     <ng-template let-partName pTemplate="part">
                                                         <div class="ui-helper-clearfix">{{partName}}</div>
                                                     </ng-template>
@@ -229,7 +235,7 @@
 
                                                     <div class="clear"></div>
                                                     <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">QTY</label>
+                                                        <label class="control-label col-sm-4" *ngIf="showNormalQuantity||showRestrictQuantity||showFreeQuantity">QTY</label>
                                                         <div class="col-sm-7">
                                                             <input class="form-control qty-input" *ngIf="showNormalQuantity" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.quantity">
                                                             <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.quantity">
@@ -250,10 +256,18 @@
                                                         <label class="control-label col-sm-4">Site <strong class="clr-red">*</strong></label>
                                                         <div class="col-sm-7">
 
-                                                            <select style="border-radius:5px;" [(ngModel)]="sourcereceving.siteId" [ngModelOptions]="{standalone: true}" (change)="siteValueChange($event.target.value)">
+                                                            <select required style="border-radius:5px;" [(ngModel)]="sourcereceving.siteId" [ngModelOptions]="{standalone: true}" (change)="siteValueChange($event.target.value)">
                                                                 <option>--Select</option>
                                                                 <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                                                             </select>
+                                                            <a matTooltip="Create Site" style="position: absolute;right: -20px;top: 0;"
+                                                               class=""
+                                                               [routerLink]="[
+                                                 '/singlepages/singlepages/app-site'
+                                                         ]">
+                                                                <i class="fa fa-plus-circle fa-lg"></i>
+                                                            </a>
+
                                                         </div>
                                                     </div>
 
@@ -261,7 +275,7 @@
                                                     <div class="form-group col-sm-12">
                                                         <label class="control-label col-sm-4">Warehouse <strong class="clr-red">*</strong></label>
                                                         <div class="col-sm-7">
-                                                            <select style="border-radius:5px;" [(ngModel)]="sourcereceving.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(sourcereceving.warehouseId)">
+                                                            <select required style="border-radius:5px;" [(ngModel)]="sourcereceving.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(sourcereceving.warehouseId)">
                                                                 <option>--Select</option>
                                                                 <option *ngFor="let site of allWareHouses" [ngValue]="site.warehouseId">{{site.warehouseName}}</option>
                                                             </select>
@@ -270,7 +284,7 @@
                                                     <div class="form-group col-sm-12">
                                                         <label class="control-label col-sm-4">Location<strong class="clr-red">*</strong></label>
                                                         <div class="col-sm-7">
-                                                            <select style="border-radius:5px;" [(ngModel)]="sourcereceving.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(sourcereceving.locationId)">
+                                                            <select required style="border-radius:5px;" [(ngModel)]="sourcereceving.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(sourcereceving.locationId)">
                                                                 <option>--Select</option>
                                                                 <option *ngFor="let site of allLocations" [ngValue]="site.locationId">{{site.name}}</option>
                                                             </select>
@@ -402,7 +416,7 @@
                                                             </div>
                                                             <div class="form-group col-sm-12">
                                                                 <label class="control-label col-sm-4">MFG Date</label>
-                                                                <div class="col-sm-1">
+                                                                <div class="col-sm-7">
                                                                     <input [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.isMFGDate" type="checkbox">
                                                                     <div *ngIf="sourcereceving.isMFGDate">
                                                                         <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.manufacturingDate"></p-calendar>
@@ -423,11 +437,12 @@
                                                             </div>
                                                             <div class="form-group col-sm-12">
                                                                 <label class="control-label col-sm-4">Exp Date</label>
-                                                                <div class="col-sm-1">
+                                                                <div class="col-sm-7">
                                                                     <input class="" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.isExpirationDate" id="expdate-input">
-                                                                </div>
-                                                                <div *ngIf="sourcereceving.isExpirationDate">
-                                                                    <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.expirationDate "></p-calendar>
+
+                                                                    <div *ngIf="sourcereceving.isExpirationDate">
+                                                                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.expirationDate "></p-calendar>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group col-sm-12">
@@ -454,9 +469,9 @@
                                                             </div>
 
                                                             <div class="form-group col-sm-12">
-                                                                <div class="col-sm-4">
+                                                                <div class="col-sm-3">
                                                                 </div>
-                                                                <div class="col-sm-7">
+                                                                <div class="col-sm-8">
                                                                     <div class="card" style="margin-top: 20px;">
                                                                         <div class="card-header" style="padding: 10px 12px;">
                                                                             <h5 style="margin-bottom: 0; font-size: 12px;">Management Structure <span class="clr-red">*</span></h5>
@@ -576,7 +591,7 @@
                                         <div class="col-sm-6">
                                         </div>
                                         <div class="col-sm-6">
-                                            <button class="btn btn-primary-cstm float-right" pButton type="button" (click)="editItemAndCloseModel()" icon="pi pi-angle-right" iconPos="right"   label="Save" style="padding: 0 !important;"></button>
+                                            <button class="btn btn-primary-cstm float-right" pButton type="button" (click)="editItemAndCloseModel()"   [disabled]="!addcustomerwork.valid"  label="Save" style="padding: 0 !important;"></button>
                                         </div>
                                     </div>
 
