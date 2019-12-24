@@ -374,9 +374,9 @@ editMatData: any[] = [];
           this.workOrderService.getWorkOrderLaborListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
           .subscribe(
             (res: any) =>{
-              let laborList = this.labor.workOrderLaborList;
-              this.labor = {...res, workOrderLaborList: laborList};
-              if(res.laborList){
+              if(res){
+                let laborList = this.labor.workOrderLaborList;
+                this.labor = {...res, workOrderLaborList: laborList};
                 this.taskList.forEach((tl)=>{
                   res.laborList.forEach((rt)=>{
                     if(rt['taskId'] == tl['taskId']){
