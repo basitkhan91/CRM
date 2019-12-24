@@ -30,13 +30,13 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<ReceivingCustomerWorkViewModel>))]
         public IActionResult Get()
         {
-            //var result = _unitOfWork.receivingCustomerWork.GetAllreceivingCustomerWork(); //GetAllSite Information
-            //return Ok(result);
+            var result = _unitOfWork.receivingCustomerWork.GetAllreceivingCustomerWork(); //GetAllSite Information
+            return Ok(result);
 
-            var customerworkList = _context.ReceivingCustomerWork
-                .Where(rcw => rcw.IsDeleted == false)
-                .ToList();
-            return Ok(customerworkList);
+            //var customerworkList = _context.ReceivingCustomerWork
+            //    .Where(rcw => rcw.IsDeleted == false)
+            //    .ToList();
+            //return Ok(customerworkList);
 
         }
 

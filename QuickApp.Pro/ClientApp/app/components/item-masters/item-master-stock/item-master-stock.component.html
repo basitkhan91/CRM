@@ -1053,12 +1053,14 @@
                                         <td>
 
                                             <select class="form-control w80 select-value-drop1" id="condition" name="condition" [(ngModel)]="field.Condition" [ngModelOptions]="{standalone: true}" required>
-                                                <option value="NEW" selected="1">NEW</option>
+                                                <option value="null">Select Condition </option>
+                                                <option *ngFor="let x of conditionList" [ngValue]="x.value">{{x.label}} </option>
+                                                <!-- <option value="NEW" selected="1">NEW</option>
                                                 <option value="AS-IS">AS-IS </option>
                                                 <option value="REPAIR">REPAIR</option>
                                                 <option value="SRV">SRV</option>
                                                 <option value="OVERHAUL">OVERHAUL</option>
-                                                <option value="AR">AR</option>
+                                                <option value="AR">AR</option> -->
                                             </select>
                                         </td>
                                         <td>
@@ -1211,7 +1213,10 @@
                                         <label for="eccn" class="control-label">
                                             ECCN
                                         </label>
-                                        <input type="text" class="input-field-value" pInputText [(ngModel)]="exportInfo.ExportECCN" name="ExportECCN" /> <!--maxlength="5" [pattern]="'^[a-zA-Z0-9 \'\-]+$'"-->
+
+                                        <input type="text" class="input-field-value" maxlength="10" 
+           [pattern]="'^[a-zA-Z0-9 \'\-]+$'"  [(ngModel)]="exportInfo.ExportECCN" name="ExportECCN" />
+
                                         <label class="control-label">
                                             ITAR Num <strong class="clr-red">*</strong>
                                         </label>

@@ -1989,6 +1989,85 @@ namespace DAL.Repositories
             return result;
 
         }
+        public IEnumerable<object> GetCustomerAuditHistoryByid(long customerId)
+        {
+
+            {
+                var data = (from t in _appContext.CustomerAudit
+                            join ad in _appContext.Address on t.AddressId equals ad.AddressId into add
+                            from ad in add.DefaultIfEmpty()
+                            join cont in _appContext.Countries on Convert.ToInt32(ad.Country) equals cont.countries_id into country
+                            from cont in country.DefaultIfEmpty()
+
+                            join vt in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals vt.CustomerAffiliationId into vtt
+                            from vt in vtt.DefaultIfEmpty()
+
+                              join cc in _appContext.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
+
+                            join mup in _appContext.Percent on Convert.ToInt32(t.MarkUpPercentageId) equals mup.PercentId
+                            into tmup
+
+                            from mup in tmup.DefaultIfEmpty()
+
+                            join inte in _appContext.CustomerIntegrationPortal on t.CustomerId equals inte.CustomerId into integra
+                            from inte in integra.DefaultIfEmpty()
+                            join intepo in _appContext.IntegrationPortal on inte.IntegrationPortalId equals intepo.IntegrationPortalId into integrapo
+                            from intepo in integrapo.DefaultIfEmpty()
+                            join v in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals v.CustomerAffiliationId
+
+                            where t.CustomerId == customerId //&&  (t.IsDelete == true || t.IsDelete == null)
+                                                             // select new { t, ad, vt }).ToList();
+                            select new
+                            {
+
+                                addressId = t.AddressId,
+                                isAddressForBilling = t.IsAddressForBilling,
+                                isAddressForShipping = t.IsAddressForShipping,
+                                customerAffiliationId = vt.CustomerAffiliationId,
+                                customerTypeId = t.CustomerTypeId,
+                                name = t.Name,
+                                customerPhone = t.CustomerPhone,
+                                email = t.Email,
+                                address1 = ad.Line1,
+                                address2 = ad.Line2,
+                                address3 = ad.Line3,
+                                city = ad.City,
+                                stateOrProvince = ad.StateOrProvince,
+                                postalCode = ad.PostalCode,
+                                country = ad.Country,
+                                CountryName = cont.countries_name,
+                                customerCode = t.CustomerCode,
+                                doingBuinessAsName = t.DoingBuinessAsName,
+                                parent = t.Parent,
+                                customerParentName = t.CustomerParentName,
+                                customerURL = t.CustomerURL,
+                                generalCurrencyId = t.CurrencyId,
+                                customerClassificationId = t.CustomerClassificationId,
+                                contractReference = t.ContractReference,
+                                isPBHCustomer = t.IsPBHCustomer,
+                                pbhCustomerMemo = t.PBHCustomerMemo,
+                                restrictPMA = t.RestrictPMA,
+                                restrictPMAMemo = t.RestrictPMAMemo,
+                                restrictBER = t.RestrictBER,
+                                restrictBERMemo = t.RestrictBERMemo,
+                                 isCustomerAlsoVendor = t.IsCustomerAlsoVendor,
+                                ediDescription = t.EDIDescription,
+                                createdBy = t.CreatedBy,
+                                updatedBy = t.UpdatedBy,
+                                UpdatedDate = t.UpdatedDate,
+                                CreatedDate = t.CreatedDate,
+                                masterCompanyId = t.MasterCompanyId,
+                                isActive = t.IsActive,
+                               customerId = t.CustomerId,
+                               ClassificationName = cc.Description,
+                                IntegrationWith = intepo.Description,
+                                AccountType = v.description,
+                            }).OrderByDescending(a => a.UpdatedDate).ToList();
+                return data;
+
+            }
+
+        }
 
     }
 }

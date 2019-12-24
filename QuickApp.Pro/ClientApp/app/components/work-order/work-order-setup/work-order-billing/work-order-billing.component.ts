@@ -30,6 +30,7 @@ export class WorkOrderBillingComponent implements OnInit {
     @Input() quoteFreightsList;
     @Input() quoteChargesList;
     @Input() quoteLaborList;
+    @Input() legalEntityList;
 
     @Output() saveWOBilling = new EventEmitter();
     @Output() updateWOBilling = new EventEmitter();
@@ -51,7 +52,7 @@ export class WorkOrderBillingComponent implements OnInit {
     workOrderId: any;
     shipViaList: Object;
     customerId: any;
-    legalEntityList: any;
+    // legalEntityList: any;
     businessUnitList: any;
     divisionList: any;
     departmentList: any;
@@ -72,7 +73,7 @@ export class WorkOrderBillingComponent implements OnInit {
         this.customerId = editValueAssignByCondition('customerId', this.savedWorkOrderData.customerId);
         // this.getCustomerDetailsFromHeader();
         this.getShipViaByCustomerId();
-        this.getLegalEntity();
+        // this.getLegalEntity();
         // this.generateNumbers();
         this.getPercentageList();
         this.getInvoiceList();
@@ -143,11 +144,11 @@ export class WorkOrderBillingComponent implements OnInit {
         })
     }
 
-    getLegalEntity() {
-        this.commonService.getLegalEntityList().subscribe(res => {
-            this.legalEntityList = res;
-        })
-    }
+    // getLegalEntity() {
+    //     this.commonService.getLegalEntityList().subscribe(res => {
+    //         this.legalEntityList = res;
+    //     })
+    // }
 
 
 

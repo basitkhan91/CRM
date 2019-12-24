@@ -19,6 +19,7 @@ export class workOrderGeneralInfo {
   customerReference: string;
   csr: string;
   workOrderType: string;
+  managementStructureId : number;
   partNumbers: WorkOrderPartNumber[]
 
   // workOrderType: string;
@@ -56,6 +57,7 @@ export class workOrderGeneralInfo {
     this.customerReference = '';
     this.csr = '';
     this.workOrderType = '';
+    this.managementStructureId = null;
     this.partNumbers = []
 
     // this.workOrderType = 'single';

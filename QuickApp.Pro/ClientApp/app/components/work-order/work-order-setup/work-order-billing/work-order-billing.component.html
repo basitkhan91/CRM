@@ -629,6 +629,7 @@
       <div class="row" style="margin-top: 15px;">
         <div class="col-md-7">
             <div class="card">
+            
                 <div class="card-body">
               <div>
                   <div class="form-row">
@@ -666,8 +667,8 @@
                   <tr>
                   <th></th>
                   <th>Total  Cost</th>
-                  <th>MarkUp</th>
-                  <th>Cost Plus Amount</th>
+                  <th *ngIf="billingorInvoiceForm.costPlusType === 'Cost Plus'">MarkUp</th>
+                  <th >Cost Plus Amount</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -687,7 +688,7 @@
                     <td>
                      {{billingorInvoiceForm.totalWorkOrderCost}}
                     </td>
-                    <td>
+                    <td *ngIf="billingorInvoiceForm.costPlusType === 'Cost Plus'">
                         <div class="form-group" *ngIf="billingorInvoiceForm.totalWorkOrder">
                             <p-dropdown
                               placeholder="Select "
@@ -701,8 +702,12 @@
                             </p-dropdown>
                             </div>
                     </td>
-                    <td>
+                    
+                    <td *ngIf="billingorInvoiceForm.costPlusType === 'Cost Plus'" >
                         {{billingorInvoiceForm.totalWorkOrderCostPlus }}
+                    </td>
+                    <td  *ngIf="billingorInvoiceForm.costPlusType !== 'Cost Plus'" >
+                      <input type="number" name="totalWorkOrderCostPlus" class="form-control wo-input" [(ngModel)]="billingorInvoiceForm.totalWorkOrderCostPlus "  />
                     </td>
                 </tr>
 
@@ -723,7 +728,7 @@
                   <td>
                       {{billingorInvoiceForm.materialCost  }}
                   </td>
-                  <td>
+                  <td *ngIf="billingorInvoiceForm.costPlusType === 'Cost Plus'"  >
                       <div class="form-group" *ngIf="billingorInvoiceForm.material">
                           <p-dropdown
                             placeholder="Select "
@@ -737,9 +742,12 @@
                           </p-dropdown>
                           </div>
                   </td>
-                  <td>
+                  <td *ngIf="billingorInvoiceForm.costPlusType === 'Cost Plus'" >
                       {{billingorInvoiceForm.materialCostPlus  }}
                   </td>
+                  <td  *ngIf="billingorInvoiceForm.costPlusType !== 'Cost Plus'" >
+                      <input type="number" name="materialCostPlus" class="form-control wo-input" [(ngModel)]="billingorInvoiceForm.materialCostPlus"  />
+                    </td>
                 </tr>
 
                 <tr>
@@ -756,10 +764,12 @@
                           ></p-checkbox>
                         </div>
                   </td>
-                  <td>
+                  <td  >
                       {{billingorInvoiceForm.laborOverHeadCost   }}
                   </td>
-                  <td>
+   
+
+                  <td *ngIf="billingorInvoiceForm.costPlusType === 'Cost Plus'">
                       <div class="form-group" *ngIf="billingorInvoiceForm.laborOverHead">
                           <p-dropdown
                             placeholder="Select "
@@ -773,9 +783,12 @@
                           </p-dropdown>
                           </div>
                   </td>
-                  <td>
+                  <td *ngIf="billingorInvoiceForm.costPlusType === 'Cost Plus'">
                       {{billingorInvoiceForm.laborOverHeadCostPlus   }}
                   </td>
+                  <td  *ngIf="billingorInvoiceForm.costPlusType !== 'Cost Plus'" >
+                      <input type="number" name="laborOverHeadCostPlus" class="form-control wo-input" [(ngModel)]="billingorInvoiceForm.laborOverHeadCostPlus"  />
+                    </td>
                 </tr>
                 <tr>
                   <td>
@@ -791,10 +804,10 @@
                           ></p-checkbox>
                         </div>
                     </td>
-                    <td>
+                    <td >
                         {{billingorInvoiceForm.miscChargesCost    }}
                     </td>
-                    <td>
+                    <td *ngIf="billingorInvoiceForm.costPlusType === 'Cost Plus'">
                         <div class="form-group" *ngIf="billingorInvoiceForm.miscCharges">
                             <p-dropdown
                               placeholder="Select "
@@ -808,9 +821,12 @@
                             </p-dropdown>
                             </div>
                     </td>
-                    <td>
-                        {{billingorInvoiceForm.miscChargesCostPlus    }}
+                    <td *ngIf="billingorInvoiceForm.costPlusType === 'Cost Plus'">
+                        {{billingorInvoiceForm.miscChargesCostPlus}}
                     </td>
+                    <td  *ngIf="billingorInvoiceForm.costPlusType !== 'Cost Plus'" >
+                        <input type="number" name="miscChargesCostPlus" class="form-control wo-input" [(ngModel)]="billingorInvoiceForm.miscChargesCostPlus"  />
+                      </td>
 
                 </tr>
 

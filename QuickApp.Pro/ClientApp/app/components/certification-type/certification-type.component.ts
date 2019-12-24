@@ -309,7 +309,7 @@ export class CertificationTypeComponent implements OnInit {
 	edit(rowData) {
 		console.log(rowData);
 		this.isEdit = true;
-		this.disableSaveCertification = false;
+		this.disableSaveCertification = true;
 
 
 

@@ -14,7 +14,8 @@ export class LegalEntityEndpontService extends EndpointFactory {
 	private readonly _entityurl: string = "/api/legalEntity/Get";
 
     private readonly _managementUrl: string = "/api/ManagementStrcture/ManagementGet";
-    private readonly _managementLegalUrl: string = "/api/ManagementStrcture/ManagementGetView";
+	private readonly _managementLegalUrl: string = "/api/ManagementStrcture/ManagementGetView"; 
+	private readonly _ledgerUrl: string = "/api/ManagementStrcture/LedgerNames";
 	private readonly _entityediturl: string = "/api/legalEntity/GetforEdigt";
 	private readonly _entityUrlNew: string = "/api/legalEntity/legalEntitypost";
 	private readonly _managementposturl: string = "/api/ManagementStrcture/managementEntitypost";
@@ -28,7 +29,8 @@ export class LegalEntityEndpontService extends EndpointFactory {
 
 	get entityurl() { return this.configurations.baseUrl + this._entityurl; }
     get managemententityurl() { return this.configurations.baseUrl + this._managementUrl; }
-    get managementlengalentityurl() { return this.configurations.baseUrl + this._managementLegalUrl; }
+	get managementlengalentityurl() { return this.configurations.baseUrl + this._managementLegalUrl; } 
+	get ledgerNamesurl() { return this.configurations.baseUrl + this._ledgerUrl; }
 	get entityediturl() { return this.configurations.baseUrl + this._entityediturl; }
 
 	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -59,7 +61,14 @@ export class LegalEntityEndpontService extends EndpointFactory {
             });
     }
 
-    
+	getLedgerNamesData<T>(): Observable<T> {
+
+		return this.http.get<T>(this.ledgerNamesurl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getLegalEntityEndpontService());
+			});
+	}
+	
 
 	getEntityforEdit<T>(): Observable<T> {
 
@@ -135,6 +144,7 @@ export class LegalEntityEndpontService extends EndpointFactory {
 			'cageCode': roleObject.cageCode,
 			'faaLicense': roleObject.faaLicense,
 			'taxId': roleObject.taxId,
+			'ledgerName': roleObject.ledgerName,
 			'isBankingInfo': roleObject.isBankingInfo,
 			'isLastLevel': roleObject.isLastLevel,
 			'poBox': roleObject.poBox,
