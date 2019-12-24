@@ -75,7 +75,8 @@ export class CreateAssetComponent implements OnInit {
     amortizationFrequencyList:any[];
     depreciationFrequencyList:any[];
     assetAcquisitionTypeList:any[];
-    AssetId:any;
+    AssetId: any;
+    static assetService;
     constructor(private router: ActivatedRoute,private glAccountService: GlAccountService, private intangibleTypeService: AssetIntangibleTypeService, private route: Router, private assetService: AssetService, private legalEntityServices: LegalEntityService, private alertService: AlertService, public itemMasterservice: ItemMasterService,
         public unitService: UnitOfMeasureService, public currencyService: CurrencyService, public assetTypeService: AssetTypeService, private depriciationMethodService: DepriciationMethodService, private authService: AuthService, public assetattrService1: AssetAttributeTypeService, public assetIntangibleService: AssetIntangibleAttributeTypeService,private commonservice: CommonService,) {
 
@@ -91,7 +92,9 @@ export class CreateAssetComponent implements OnInit {
                 this.assetService.listCollection = null;
                 this.assetService.currentUrl = '/assetmodule/assetpages/app-create-asset';
         }
-        this.GetAssetData(this.AssetId);
+        if (this.assetService.listCollection == undefined) {
+            this.GetAssetData(this.AssetId);
+        }
         if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
             this.showLable = true;
             this.currentAsset = this.assetService.listCollection;
@@ -132,7 +135,9 @@ export class CreateAssetComponent implements OnInit {
     ngOnInit() {
 
         this.AssetId = this.router.snapshot.params['id'];
-        this.GetAssetData(this.AssetId);
+        if (this.assetService.listCollection == undefined) {
+            this.GetAssetData(this.AssetId);
+        }
 		if (this.AssetId) {
             this.assetService.isEditMode = true;
             this.assetService.currentUrl = '/assetmodule/assetpages/app-edit-asset';
@@ -178,6 +183,57 @@ export class CreateAssetComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.assetService.listCollection = getAssetData;
+        if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
+            this.showLable = true;
+            this.currentAsset = this.assetService.listCollection;
+            this.updateMode = true;
+            if (this.currentAsset.isIntangible == true) {
+                this.currentAsset.isDepreciable = false;
+                this.currentAsset.isIntangible = true;
+                this.showItemEdit(this.currentAsset.assetIntangibleTypeId);
+            }
+            else {
+                this.currentAsset.isDepreciable = true;
+                this.currentAsset.isIntangible = false;
+                this.showItemEdit(this.currentAsset.assetTypeId);
+            }
+
+        }
+        if (this.currentAsset.expirationDate) {
+            this.currentAsset.expirationDate = new Date(this.currentAsset.expirationDate);
+        }
+        if (this.currentAsset.manufacturedDate) {
+            this.currentAsset.manufacturedDate = new Date(this.currentAsset.manufacturedDate);
+        }
+        if (this.currentAsset.entryDate) {
+            this.currentAsset.entryDate = new Date(this.currentAsset.entryDate);
+        }
+        else {
+            this.currentAsset.entryDate = new Date();
+        }
+
+        this.currentAsset.isDepreciable = true;
+
+        this.assetService.bredcrumbObj.next(this.assetService.currentUrl);
+        //steps Code  Start
+        this.assetService.ShowPtab = true;
+        this.AssetAttData();
+
+        this.getAssetsList();
+        this.assetService.alertObj.next(this.assetService.ShowPtab); //steps
+        this.activeIndex = 0;
+        this.loadManagementdata();
+        this.manufacturerdata();
+        this.unitOfMeasureList();
+        this.CurrencyData();
+        this.assetTypeData();
+        this.intangibleData();
+        this.glList();
+        //this.loadDepricationMethod();
+        this.getAmortizationFrequencyList();
+        this.getDepreciationFrequencyList();
+        this.getAssetAcquisitionTypeList();
+
     }
 
     private AssetAttData() {
