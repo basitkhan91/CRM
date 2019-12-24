@@ -254,7 +254,7 @@
                                                 <div class="form-group">
                                                     <label>
                                                         <span class="pull-left">Customer Classification</span> <span class="clr-red">*</span>
-                                                        <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClassification" (click)="addclassification()"></a></span>
+                                                        <span style="margin-left:3px;cursor:pointer;"><a  class="fa fa-plus-circle fa-lg" data-toggle="modal" data-backdrop="static" data-target="#addCustomerClassification" (click)="addclassification()" ></a></span>
                                                     </label>
 
                                                     <p-multiSelect [options]="allcustomerclassificationInfo" [(ngModel)]="generalInformation.customerClassificationIds" name="customerClassificationId" required>

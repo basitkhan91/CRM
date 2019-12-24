@@ -72,6 +72,8 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     disableSaveCurrency: boolean;
     SelectedCurrencyInfo: any;
     vendorProcess1099Data: any;
+    checkedCheckboxesList : any = [];
+
     ngOnInit(): void {
         this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-financial-information';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
@@ -233,11 +235,13 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.workFlowtService.getVendorProcess1099Data(companyId).subscribe(res => {
+            console.log(res[0], "res[0]")
             this.vendorProcess1099Data = res[0].map(x => {
                 return {
                     ...x,
                     isDefaultCheck: false,
-                    isDefaultRadio: false
+                    isDefaultRadio: false,
+                    isRadioDisabled: true
                 }
             });
 
@@ -288,7 +292,8 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     private onVendorsLoadSuccssfull(allVendors: any) {        
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.dataSource.data = allVendors;       
+        this.dataSource.data = allVendors;    
+        console.log(allVendors, "allVendors++++")   
        // debugger
         if(allVendors[0].t != null)
         {
@@ -410,41 +415,65 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         }
     }
 
-    changevalue(value) {
-        debugger
-        this.sourceVendor.v1099RentDefault = false;
-        this.sourceVendor.v1099RoyaltiesDefault = false;
-        this.sourceVendor.v1099OtherIncomeDefault = false;
-        this.sourceVendor.v1099MedicalHealthPaymentsDefault = false;
-        this.sourceVendor.v1099NonEmployeeCompDefault = false;
-        this.sourceVendor.v1099GoldenParachuteDefault = false;
-        this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = false;
+    // changevalue(value) {
+    //     debugger
+    //     this.sourceVendor.v1099RentDefault = false;
+    //     this.sourceVendor.v1099RoyaltiesDefault = false;
+    //     this.sourceVendor.v1099OtherIncomeDefault = false;
+    //     this.sourceVendor.v1099MedicalHealthPaymentsDefault = false;
+    //     this.sourceVendor.v1099NonEmployeeCompDefault = false;
+    //     this.sourceVendor.v1099GoldenParachuteDefault = false;
+    //     this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = false;
 
-        if (value == "sourceVendor.v1099RentDefault") {
-            this.sourceVendor.v1099RentDefault = true;            
+    //     if (value == "sourceVendor.v1099RentDefault") {
+    //         this.sourceVendor.v1099RentDefault = true;            
+    //     }
+    //     else if (value == "sourceVendor.v1099RoyaltiesDefault") {
+    //         this.sourceVendor.v1099RoyaltiesDefault = true;          
+    //     }
+    //     else if (value == "sourceVendor.v1099OtherIncomeDefault") {
+    //         this.sourceVendor.v1099OtherIncomeDefault = true;            
+    //     }
+    //     else if (value == "sourceVendor.v1099MedicalHealthPaymentsDefault") {
+    //         this.sourceVendor.v1099MedicalHealthPaymentsDefault = true;            
+    //     }
+    //     else if (value == "sourceVendor.v1099NonEmployeeCompDefault") {
+    //         this.sourceVendor.v1099NonEmployeeCompDefault = true;            
+    //     }
+    //     else if (value == "sourceVendor.v1099GoldenParachuteDefault") {
+    //         this.sourceVendor.v1099GoldenParachuteDefault = true;          
+    //     }
+    //     else if (value == "sourceVendor.v1099GrossProceedsPaidToAttorneyDefault") {
+    //         this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = true;         
+    //     }
+    //     else{
+    //         this.sourceVendor.v1099RentDefault = true;   
+    //     }
+    // }
+
+    changeCheck1099Required (event, index) {
+        if(event.target.checked){
+          this.checkedCheckboxesList.push(index);
+          this.vendorProcess1099Data[index].isRadioDisabled = false;
+          if(this.checkedCheckboxesList.length == 1){
+            this.vendorProcess1099Data[index].isDefaultRadio = event.target.value;            
+          }         
+        } else {  
+          let checkedArrayIndex;    
+          this.vendorProcess1099Data[index].isDefaultRadio = false;
+           checkedArrayIndex = this.checkedCheckboxesList.indexOf(index);
+          this.checkedCheckboxesList.splice(checkedArrayIndex, 1);
+          this.vendorProcess1099Data[index].isRadioDisabled = true;
+          if(this.checkedCheckboxesList.length >= 1){
+            this.vendorProcess1099Data[this.checkedCheckboxesList[0]].isRadioDisabled = false;
+            this.vendorProcess1099Data[this.checkedCheckboxesList[0]].isDefaultRadio = this.vendorProcess1099Data[this.checkedCheckboxesList[0]].description;
+          }
         }
-        else if (value == "sourceVendor.v1099RoyaltiesDefault") {
-            this.sourceVendor.v1099RoyaltiesDefault = true;          
+      }
+  
+      changevalue(event, index) {
+          this.vendorProcess1099Data[index].isDefaultCheck = true;
         }
-        else if (value == "sourceVendor.v1099OtherIncomeDefault") {
-            this.sourceVendor.v1099OtherIncomeDefault = true;            
-        }
-        else if (value == "sourceVendor.v1099MedicalHealthPaymentsDefault") {
-            this.sourceVendor.v1099MedicalHealthPaymentsDefault = true;            
-        }
-        else if (value == "sourceVendor.v1099NonEmployeeCompDefault") {
-            this.sourceVendor.v1099NonEmployeeCompDefault = true;            
-        }
-        else if (value == "sourceVendor.v1099GoldenParachuteDefault") {
-            this.sourceVendor.v1099GoldenParachuteDefault = true;          
-        }
-        else if (value == "sourceVendor.v1099GrossProceedsPaidToAttorneyDefault") {
-            this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = true;         
-        }
-        else{
-            this.sourceVendor.v1099RentDefault = true;   
-        }
-    }
 
     editItemAndCloseModel(isGoNxt?: boolean) {
         this.isSaving = true;
