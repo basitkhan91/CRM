@@ -19,19 +19,8 @@ export class CustomerViewComponent implements OnInit {
     @Input() customerId;
     viewDataGeneralInformation: any[];
     viewDataclassification: any[];
-    customerContacts: any;
-    customerContactsColumns = [
-        { field: 'tag', header: 'Tag' },
-        { field: 'firstName', header: 'First Name' },
-        { field: 'lastName', header: 'Last Name' },
-        { field: 'contactTitle', header: 'Contact Title' },
-        { field: 'email', header: 'Email' },
-
-        { field: 'workPhone', header: 'Work Phone' },
-        { field: 'mobilePhone', header: 'Mobile Phone' },
-        { field: 'fax', header: 'Fax' },
-
-    ];
+    customerContacts: any[];
+    customerContactsColumns: any[];
     colsaircraftLD: any = [
         { field: "aircraftType", header: "Aircraft" },
         { field: "aircraftModel", header: "Model" },
@@ -95,7 +84,7 @@ export class CustomerViewComponent implements OnInit {
         { field: 'partNumber', header: 'Part Number' },
         { field: 'memo', header: 'Memo' },
     ];
-    aircraftListDataValues: any;
+    aircraftListDataValues: any[];
     ataListDataValues: any;
     billingInfoList: any;
     waringInfoList: any;
@@ -114,6 +103,18 @@ export class CustomerViewComponent implements OnInit {
 
     }
     ngOnInit(): void {
+
+        this.customerContactsColumns = [
+            { field: 'tag', header: 'Tag' },
+            { field: 'firstName', header: 'First Name' },
+            { field: 'lastName', header: 'Last Name' },
+            { field: 'contactTitle', header: 'Contact Title' },
+            { field: 'email', header: 'Email' },
+            { field: 'workPhone', header: 'Work Phone' },
+            { field: 'mobilePhone', header: 'Mobile Phone' },
+            { field: 'fax', header: 'Fax' },
+
+        ];
         let customerId = this.customerId;
         this.customerService.getCustomerdataById(customerId).subscribe(res => {
 
@@ -135,25 +136,28 @@ export class CustomerViewComponent implements OnInit {
 
     }
 
-    async   getAllCustomerContact(customerId) {
+      getAllCustomerContact(customerId) {
         // get Customer Contatcs 
-        await this.customerService.getContacts(customerId).subscribe(res => {
-            this.customerContacts = res[0]
+         this.customerService.getContacts(customerId).subscribe(res => {
+            this.customerContacts = res[0];
+            console.log("resresresres:", res)
+            console.log("this.customerContacts:", this.customerContacts);
         })
     }
 
-    async getAircraftMappedDataByCustomerId(customerId) {
+    getAircraftMappedDataByCustomerId(customerId) {
         // const id = this.savedGeneralInformationData.customerId;
-        await this.customerService.getMappedAirCraftDetails(customerId).subscribe(res => {
-            this.aircraftListDataValues = res;
+         this.customerService.getMappedAirCraftDetails(customerId).subscribe(res => {
+             this.aircraftListDataValues = res;;
+             console.log("this.aircraftListDataValues:", res)
         })
     }
     async getMappedATAByCustomerId(customerId) {
         // const id = this.savedGeneralInformationData.customerId;
         await this.customerService.getATAMappedByCustomerId(customerId).subscribe(res => {
             this.ataListDataValues = res;
-            console.log(res);
-
+            console.log(res);;
+            console.log("this.ataListDataValues:", res)
         })
     }
     async getBillingDataById(customerId) {
