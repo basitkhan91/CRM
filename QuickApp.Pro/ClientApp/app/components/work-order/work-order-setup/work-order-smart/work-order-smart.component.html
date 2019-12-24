@@ -10,7 +10,7 @@
     workScopesList &&
     workOrderStagesList &&
     priorityList &&
-    partNumberOriginalData
+    partNumberOriginalData && legalEntityList
   "
 >
   <app-work-order-add
@@ -26,7 +26,9 @@
     [priorityList]="priorityList"
     [currencyList]="currencyList"
     [partNumberOriginalData]="partNumberOriginalData"
+    [legalEntityList] = "legalEntityList"
     [workOrderGeneralInformation]="editWorkOrderGeneralInformation"
+
   ></app-work-order-add>
 </div>
 <div
@@ -40,7 +42,7 @@
       workScopesList &&
       workOrderStagesList &&
       priorityList &&
-      partNumberOriginalData
+      partNumberOriginalData && legalEntityList
     )
   "
 >
@@ -61,6 +63,7 @@
     [workOrderStagesList]="workOrderStagesList"
     [priorityList]="priorityList"
     [partNumberOriginalData]="partNumberOriginalData"
+    [legalEntityList] = "legalEntityList"
     [workOrderGeneralInformation]="workOrderGeneralInformation"
   ></app-work-order-add>
 </div>
