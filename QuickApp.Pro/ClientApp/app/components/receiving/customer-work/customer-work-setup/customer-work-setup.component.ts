@@ -380,6 +380,9 @@ export class CustomerWorkSetupComponent
                                 this.sourcereceving.timeLifeDate = '';
                                 this.sourcereceving.timeLifeOrigin = '';
                             }
+                          
+
+                            console.log(this.sourcereceving)
                             this.receivingCustomerWorkService.newReason(this.sourcereceving).subscribe(
                                 role => this.saveSuccessHelper(role),
                                 error => this.saveFailedHelper(error));
