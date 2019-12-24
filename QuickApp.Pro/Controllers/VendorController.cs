@@ -361,7 +361,10 @@ namespace QuickApp.Pro.Controllers
                                 vc.UpdatedDate,
                                 vc.capabilityDescription,
                                 vc.IsActive,
-                                CapabilityType = vcat.Description
+                                CapabilityType = vcat.Description,
+                                vc.CapabilityId,
+                                vc.IsPMA,
+                                vc.IsDER,
                                 //vct.CapabilityTypeId,
 
                                 //vcat.AircraftTypeId,
