@@ -947,7 +947,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     }
 
     deleteAirCraftEndpoint<T>(id: any,updatedBy:any): Observable<T> {      
-        return this.http.put<T>(`${this._vendorItemMasterAircraftMappedDelete}/${id}?updatedBy=${updatedBy}`, JSON.stringify({}), this.getRequestHeaders())
+        return this.http.put<T>(`${this._vendorItemMasterAircraftMappedDelete}/?id=${id}&updatedBy=${updatedBy}`, JSON.stringify({}), this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.deleteAirCraftEndpoint(id,updatedBy));
             });

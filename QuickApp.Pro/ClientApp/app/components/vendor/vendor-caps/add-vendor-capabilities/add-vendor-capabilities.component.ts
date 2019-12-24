@@ -144,6 +144,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	selectedAircraftInfo: boolean = false;
 	selectedGeneralInfo: boolean = true;
 	vendorCapabilityId: number;
+	rowDataToDelete: any = {};
 
 	/** add-vendor-capabilities ctor */
     constructor(private _route: Router,private modalService: NgbModal,public ataSubChapter1Service: AtaSubChapter1Service,public ataservice: AtaMainService,public vendorService: VendorService, private alertService: AlertService, public itemser: ItemMasterService, public commonService: CommonService, private aircraftModelService: AircraftModelService, private dashNumService: DashNumberService, private authService: AuthService, private _actRoute: ActivatedRoute, private vendorCapesService: VendorCapabilitiesService)
@@ -183,6 +184,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	getVendorCapabilitiesEdit(vendorCapesId) {
 		this.vendorCapesService.getVendorCapabilitybyId(vendorCapesId).subscribe(res => {
 			console.log(res);
+			this.itemMasterId = res.itemMasterId;
 			this.sselectedVendorName = res.vendorName;
 			this.sselectedVendorCode = res.vendorCode;
 			this.sourceVendorCap = {
@@ -197,7 +199,16 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 
 	getVendorCapesAircraftEdit(vendorCapesId) {
 		this.vendorCapesService.getVendorAircraftGetDataByCapsId(vendorCapesId).subscribe(res => {
-			console.log(res);			
+			console.log(res);
+			this.aircraftListDataValues = res.map(x => {
+                return {
+                    ...x,
+                    aircraft: x.aircraftType,
+                    model: x.aircraftModel,
+                    dashNumber: x.dashNumber,
+                    memo: x.memo,
+                }
+            })
 		})
 	}
 
@@ -295,39 +306,39 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 
 		this.completeAircraftManfacturerData = allWorkFlows;
 
-		if (this.allaircraftInfo) {
-			if (this.allaircraftInfo.length > 0) {
-				for (let i = 0; i < this.allaircraftInfo.length; i++)
-					// this.shiftValues.push(
-					// 	{ value: this.allaircraftInfo[i].aircraftTypeId, label: this.allaircraftInfo[i].description },
+		// if (this.allaircraftInfo) {
+		// 	if (this.allaircraftInfo.length > 0) {
+		// 		for (let i = 0; i < this.allaircraftInfo.length; i++)
+		// 			// this.shiftValues.push(
+		// 			// 	{ value: this.allaircraftInfo[i].aircraftTypeId, label: this.allaircraftInfo[i].description },
 
-					// );
-					this.manufacturerData.push(
-                        { value: this.allaircraftInfo[i].aircraftTypeId, label: this.allaircraftInfo[i].description },
-                    );
-			}
+		// 			// );
+		// 			this.manufacturerData.push(
+        //                 { value: this.allaircraftInfo[i].aircraftTypeId, label: this.allaircraftInfo[i].description },
+        //             );
+		// 	}
 
-			//Adding
+		// 	//Adding
 
-			//	let valAirCraft = [];
-			//	//we are Passing Customer Id for getting Edit Data and make it check 
-			//	this.itemser.getAircaftManafacturerList(this.sourceItemMaster.itemMasterId)
-			//		.subscribe(results => {
-			//			this.allAircraftManufacturer = results[0];
-			//			if (results != null) {
-			//				for (let i = 0; i < this.allAircraftManufacturer.length; i++) {
-			//					valAirCraft.push(this.allAircraftManufacturer[i].aircraftTypeId);
-			//				}
-			//				this.selectedAircraftTypes = valAirCraft; //if there is Aircraft Data with ItemMasterId that will be Checked 
-			//				console.log(this.selectedAircraftTypes);
-			//			}
+		// 	//	let valAirCraft = [];
+		// 	//	//we are Passing Customer Id for getting Edit Data and make it check 
+		// 	//	this.itemser.getAircaftManafacturerList(this.sourceItemMaster.itemMasterId)
+		// 	//		.subscribe(results => {
+		// 	//			this.allAircraftManufacturer = results[0];
+		// 	//			if (results != null) {
+		// 	//				for (let i = 0; i < this.allAircraftManufacturer.length; i++) {
+		// 	//					valAirCraft.push(this.allAircraftManufacturer[i].aircraftTypeId);
+		// 	//				}
+		// 	//				this.selectedAircraftTypes = valAirCraft; //if there is Aircraft Data with ItemMasterId that will be Checked 
+		// 	//				console.log(this.selectedAircraftTypes);
+		// 	//			}
 
-			//		},
-			//			error => this.onDataLoadFailed(error)
-			//		);
+		// 	//		},
+		// 	//			error => this.onDataLoadFailed(error)
+		// 	//		);
 			
 
-		}
+		// }
 
 		if (this.allaircraftInfo) {
             if (this.allaircraftInfo.length > 0) {
@@ -1297,11 +1308,13 @@ export class AddVendorCapabilitiesComponent implements OnInit{
             this.searchAircraftParams = `dashNumberId=${this.dashNumberIdUrl}`;
         }
 
-        // const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
+		// const ItemMasterID = this.isEditMode === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
+		 console.log(this.itemMasterId);		 
 
         this.itemser.searchAirMappedByMultiTypeIdModelIDDashID(this.itemMasterId, this.searchAircraftParams).subscribe(res => {
             this.aircraftListDataValues = res.map(x => {
                 return {
+					...x,
                     aircraft: x.aircraftType,
                     model: x.aircraftModel,
                     dashNumber: x.dashNumber,
@@ -1354,15 +1367,16 @@ export class AddVendorCapabilitiesComponent implements OnInit{
                 }
             })
         })
-    }
+	}
 	
-	deleteAircraftMapped(data) {
-		//debugger
-		console.log(data);
-		//debugger
-
+	deleteAircraft(rowData) {
+		this.rowDataToDelete = rowData;
+	}
+	
+	deleteAircraftMapped() {
+		const { vendorCapabilityAirCraftId } = this.rowDataToDelete;
         //this.itemser.deleteItemMasterAir(data.vendorCapabilityAirCraftId).subscribe(res => {
-			this.itemser.deleteAirCraft(data.vendorCapabilityAirCraftId,this.userName).subscribe(res => {
+			this.itemser.deleteAirCraft(vendorCapabilityAirCraftId,this.userName).subscribe(res => {
             this.getAircraftMappedDataByItemMasterId();
             this.alertService.showMessage(
                 'Success',
