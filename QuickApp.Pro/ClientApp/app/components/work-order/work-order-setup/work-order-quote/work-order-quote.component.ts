@@ -62,7 +62,7 @@ export class WorkOrderQuoteComponent implements OnInit {
   buildWorkOrderList: any[];
   buildHistoricalList: any[];
   gridActiveTab: string;
-  quotationHeader = {};
+  quotationHeader : any;
   materialListQuotation: any[];
   chargesQuotation: any[];
   exclusionsQuotation: any[];
