@@ -80,7 +80,9 @@ export class CreateAssetComponent implements OnInit {
         public unitService: UnitOfMeasureService, public currencyService: CurrencyService, public assetTypeService: AssetTypeService, private depriciationMethodService: DepriciationMethodService, private authService: AuthService, public assetattrService1: AssetAttributeTypeService, public assetIntangibleService: AssetIntangibleAttributeTypeService,private commonservice: CommonService,) {
 
         this.AssetId = this.router.snapshot.params['id'];
+
         this.loadDepricationMethod();
+
             if (this.AssetId) {
                 this.assetService.isEditMode = true;
                 this.assetService.currentUrl = '/assetmodule/assetpages/app-edit-asset';
@@ -88,7 +90,8 @@ export class CreateAssetComponent implements OnInit {
                 this.assetService.isEditMode = false;
                 this.assetService.listCollection = null;
                 this.assetService.currentUrl = '/assetmodule/assetpages/app-create-asset';
-            }
+        }
+        this.GetAssetData(this.AssetId);
         if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
             this.showLable = true;
             this.currentAsset = this.assetService.listCollection;
@@ -129,6 +132,7 @@ export class CreateAssetComponent implements OnInit {
     ngOnInit() {
 
         this.AssetId = this.router.snapshot.params['id'];
+        this.GetAssetData(this.AssetId);
 		if (this.AssetId) {
             this.assetService.isEditMode = true;
             this.assetService.currentUrl = '/assetmodule/assetpages/app-edit-asset';
@@ -159,6 +163,21 @@ export class CreateAssetComponent implements OnInit {
         this.getAmortizationFrequencyList();
         this.getDepreciationFrequencyList();
         this.getAssetAcquisitionTypeList();
+    }
+
+    private GetAssetData(assetid) {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.assetService.getByAssetId(assetid).subscribe(
+            results => this.onassetdataSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private onassetdataSuccessful(getAssetData: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.assetService.listCollection = getAssetData;
     }
 
     private AssetAttData() {

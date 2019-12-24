@@ -10,6 +10,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> getCapabilityData(long id);
         IEnumerable<object> getCapesList(long id);
         IEnumerable<Asset> getAllAsset();
+        IEnumerable<object> GetAsset(string id);
     }
     
 }
