@@ -14,7 +14,7 @@ namespace QuickApp.Pro.ViewModels
 
         public string JobTypeName{ get; set; }
 
-        public string jobTypeDescription { get; set; }
+        public string JobTypeMemo { get; set; }
 
         public Int32 MasterCompanyId { get; set; }
 

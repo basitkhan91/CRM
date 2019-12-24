@@ -12,6 +12,8 @@ import { getObjectByValue, validateRecordExistsOrNot, selectedValueValidate, edi
 import { Table } from 'primeng/table';
 import { ConfigurationService } from '../../services/configuration.service';
 
+
+
 @Component({
     selector: 'app-employee-expertise',
     templateUrl: './employee-expertise.component.html',
@@ -51,7 +53,7 @@ export class EmployeeExpertiseComponent implements OnInit {
     viewRowData: any;
     selectedRowforDelete: any;
     // originalData: any;
-    existingRecordsResponse = []
+    existingRecordsResponse: any;
     constructor(private breadCrumb: SingleScreenBreadcrumbService,
         private authService: AuthService,
         private alertService: AlertService,
@@ -94,27 +96,46 @@ export class EmployeeExpertiseComponent implements OnInit {
         this.getList();
     }
 
-    customExcelUpload() {
-        // const file = event.target.files;
+    customExcelUpload(event) {
+         const file = event.target.files;
 
-        // console.log(file);
-        // if (file.length > 0) {
+         console.log(file);
+         if (file.length > 0) {
 
-        //     this.formData.append('file', file[0])
-        //     this.unitofmeasureService.UOMFileUpload(this.formData).subscribe(res => {
-        //         event.target.value = '';
+             this.formData.append('file', file[0])
+             this.employeeService.EmployeeExpertiseFileUpload(this.formData).subscribe(res => {
+                 event.target.value = '';
 
-        //         this.formData = new FormData();
-        //         this.existingRecordsResponse = res;
-        //         this.getList();
-        //         this.alertService.showMessage(
-        //             'Success',
-        //             `Successfully Uploaded  `,
-        //             MessageSeverity.success
-        //         );
+                 this.formData = new FormData();
+                 this.existingRecordsResponse = res;
 
-        //     })
-        // }
+                 var result = this.existingRecordsResponse[0].uploadStatus;
+                 if (result == "Duplicate") {
+
+                     this.alertService.showMessage(
+                         'Duplicate',
+                         `Duplicate Records found `,
+                         MessageSeverity.success
+                     );
+                 }
+                 if (result === "Success") {
+                     this.alertService.showMessage(
+                         'Success',
+                         `Success Records found `,
+                         MessageSeverity.success
+                     );
+                 }
+
+                 if (result === "Failed") {
+                     this.alertService.showMessage(
+                         'Failed',
+                         `Failed `,
+                         MessageSeverity.success
+                     );
+                 }   
+                 this.getList();
+             })
+         }
 
     }
     sampleExcelDownload() {
@@ -210,7 +231,7 @@ export class EmployeeExpertiseComponent implements OnInit {
     edit(rowData) {
         console.log(rowData);
         this.isEdit = true;
-        this.disableSaveEmpExpertise = false;
+        this.disableSaveEmpExpertise = true;
 
 
 

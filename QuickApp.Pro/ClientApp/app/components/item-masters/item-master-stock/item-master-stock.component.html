@@ -1212,7 +1212,10 @@
                                         <label for="eccn" class="control-label">
                                             ECCN
                                         </label>
-                                        <input type="text" class="input-field-value" pInputText [(ngModel)]="exportInfo.ExportECCN" name="ExportECCN" /> <!--maxlength="5" [pattern]="'^[a-zA-Z0-9 \'\-]+$'"-->
+
+                                        <input type="text" class="input-field-value" maxlength="10" 
+           [pattern]="'^[a-zA-Z0-9 \'\-]+$'"  [(ngModel)]="exportInfo.ExportECCN" name="ExportECCN" />
+
                                         <label class="control-label">
                                             ITAR Num <strong class="clr-red">*</strong>
                                         </label>
