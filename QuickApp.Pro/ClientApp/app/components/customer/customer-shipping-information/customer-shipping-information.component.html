@@ -27,8 +27,6 @@
                             <i class="fa fa-plus-circle fa-lg"></i>
                         </a>
                     </h4>
-
-                    <!-- <button type="button" class="btn btn-primary-cstm float-right" data-toggle="modal" data-target="#addShippingInfo" (click)="onAddShippingInfo()">Add Shipping Information</button> -->
                 </div>
                 <div class="clear"></div>
                 <hr />
@@ -66,13 +64,10 @@
                                 </label>
                             </div>
                         </div>
-
-
                     </ng-template>
 
                     <ng-template pTemplate="header" let-columns>
                         <tr>
-
                             <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                 {{col.header}}
                                 <p-sortIcon [field]="col.field"></p-sortIcon>
@@ -85,13 +80,9 @@
 
                     <ng-template pTemplate="body" let-rowData let-columns="columns">
                         <tr [pSelectableRow]="rowData">
-
-
-
                             <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                 {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                             </td>
-
                             <td>
                                 <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForShipping(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                 <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForShipping(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
@@ -109,7 +100,6 @@
                                     <i class="fa fa-truck" data-target="#addDomesticShipVia" data-toggle="modal" (click)="selectedDomesticForShipVia(rowData)"></i>
                                 </button>
 
-                                <!--<button (click)="openShipVia(contentShipVia,rowData)" data-target="#VShipVia" class="btn btn-danger nobg" data-toggle="tooltip" matTooltip="Add Ship Via " data-original-title="View Shipping Via Information"><i class="fa fa-truck"></i></button>-->
                                 <button class="btn-history" mat-icon-button matTooltip="history" (click)="openShipaddressHistory(contentHist,rowData)">
                                     <mat-icon color="green">history</mat-icon>
                                 </button>
@@ -118,19 +108,8 @@
 
                         </tr>
                     </ng-template>
-
-
                 </p-table>
-
-
-
-                <!-- <div *ngIf="allActions.length<=0" style="text-align:center;border:1px solid">
-                    No Records
-                </div> -->
             </div>
-
-
-
             <div class="clear"></div>
 
             <form class="form-horizontal" style="margin-top: 30px;">
@@ -144,19 +123,12 @@
                             <i class="fa fa-plus-circle fa-lg"></i>
                         </a>
                     </h4>
-
-
-                    <!-- <button type="button" class="btn btn-primary-cstm float-right" data-toggle="modal" data-target="#addInternationalShippingInfo">Add International Shipping Details</button> -->
                 </div>
                 <div class="clear"></div>
                 <hr />
                 <div class="clear"></div>
 
                 <div class="table-responsive">
-
-
-                    <!--<p class="lead"></p>-->
-
                     <p-table #dt class="rpo-table-cstm rro-table-cstm"
                              name="internationalTable"
                              [metaKeySelection]="true"
@@ -193,39 +165,26 @@
                                     </label>
                                 </div>
                             </div>
-
-
                         </ng-template>
 
                         <ng-template pTemplate="header" let-columns>
                             <tr>
-
                                 <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                     {{col.header}}
                                     <p-sortIcon [field]="col.field"></p-sortIcon>
                                 </th>
                                 <th style="width: 140px;" *ngIf="selectedColumnsForInternationTable.length > 0"> Actions</th>
-
-
-                            </tr>
+                           </tr>
                         </ng-template>
 
                         <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
                             <tr [pSelectableRow]="rowData">
-
-
                                 <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                     {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                 </td>
-
                                 <td>
-
                                     <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActiveIS{{rowIndex}}" (onChange)="updateActiveorInActiveForIS(rowData)"></p-inputSwitch>
-                                    <!-- <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" name="isActiveIS" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                    <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                    <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch> -->
                                     <span data-toggle="modal" data-target="#viewInter"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openInterShippingView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-
                                     <button class="btn-edit" mat-icon-button data-toggle="modal"
                                             data-target="#addInternationalShippingInfo" (click)="getInternationalShippingById(rowData)" matTooltip="edit">
                                         <mat-icon>edit</mat-icon>
@@ -247,12 +206,7 @@
 
                             </tr>
                         </ng-template>
-
-
                     </p-table>
-                    <!-- <div *ngIf="allActions.length<=0" style="text-align:center;border:1px solid">
-                        No Records
-                    </div> -->
                 </div>
             </form>
             <div class="clear"></div>
@@ -260,10 +214,9 @@
             <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
         </div>
     </div>
-
 </div>
 
-<div class="modal fade success-msg" id="success-popup" role="dialog">
+<div class="modal fade success-msg" id="success-popup" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-sm popup-timeout">
         <div class="modal-content">
             <div class="modal-header">
@@ -274,13 +227,10 @@
     </div>
 </div>
 
-
-<ng-template #contentShipVia let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentShipVia let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Ship Via Info</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Ship Via Info</h4>
-        <!--<label>Customer Name{{local?.CustomerName}}</label>
-        <h4 class="modal-title">{{shipViaObj?.siteName}}</h4>-->
         <button type="button" class="close" aria-label="Close" (click)="dismissShipViaModelModel()">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -293,7 +243,6 @@
                 <div class="form-group">
                     <label for="classificationName" class="control-label w100">Ship Via<strong class="clr-red">*</strong></label>
                     <div class="control-data">
-                        <!--<input type="text" name="" id="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="shipViaObj.shipVia">-->
                         <p-autoComplete (onSelect)="onShipVia($event)" (onKeyUp)=eventShipviaHandler($event) [(ngModel)]="shipViaObj.shipVia" [ngModelOptions]="{standalone: true}" [suggestions]="shipviacollection" (completeMethod)="filterShipVia($event)" [size]="30"
                                         [minLength]="1" [dropdown]="true">
                             <ng-template let-siteName pTemplate="item">
@@ -301,8 +250,6 @@
                             </ng-template>
                         </p-autoComplete>
                     </div>
-
-
                     <div class="clear"></div>
                 </div>
                 <div class="form-group">
@@ -349,32 +296,13 @@
                     </div>
                     <div class="clear"></div>
                 </div>
-
                 <div class="clear"></div>
             </div>
 
             <div class="clear"></div>
-
-
-
-            <!--<div class="form-group">
-                <label for="masterCompanyId" class="control-label">Company</label>
-                <div class="">
-                    <select name="masterCompanyId" class="form-control form-control-lg w150" required #masterCompanyId="ngModel" id="masterCompanyId" [(ngModel)]="sourceAction.masterCompanyId">
-                        <option *ngFor="let pow of allComapnies" [value]="pow.masterCompanyId">{{pow.companyName}}</option>
-                    </select>
-                </div>
-                <div *ngIf="masterCompanyId.dirty && masterCompanyId.errors?.required && masterCompanyId.errors" class="invalid-form-error-message">
-                    Master company required.
-                </div>
-                <div class="clear"></div>
-            </div>-->
-
-
             <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="allShipViaDetails" [metaKeySelection]="true" [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" [columns]="selectedShipViaColumn" selectionMode="multiple" [(selection)]="selectedShipViaColumns" [resizableColumns]="true" [reorderableColumns]="true">
 
                 <ng-template pTemplate="caption">
-
                     <div style="text-align: right">
                         <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header"
                                        selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
@@ -392,47 +320,34 @@
                             </label>
                         </div>
                     </div>
-
-
                 </ng-template>
 
                 <ng-template pTemplate="header" let-columns>
                     <tr>
-
                         <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                             {{col.header}}
                             <p-sortIcon [field]="col.field"></p-sortIcon>
                         </th>
-
                         <th></th>
-
                     </tr>
                 </ng-template>
 
                 <ng-template pTemplate="body" let-rowData let-columns="columns">
                     <tr [pSelectableRow]="rowData">
-
-
                         <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                             {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
                         </td>
-
                         <td>
-
                             <button class="btn-edit" mat-icon-button (click)="openShipViaEdit(rowData)" matTooltip="edit">
                                 <mat-icon>edit</mat-icon>
                             </button>
-
                             <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteItemShippingCloseModel(rowData.CustomerShippingId)">
                                 <mat-icon color="warn">delete</mat-icon>
                             </button>
-
                             <button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
                                 <mat-icon color="green">history</mat-icon>
                             </button>
-
                         </td>
-
                     </tr>
                 </ng-template>
             </p-table>
@@ -444,20 +359,14 @@
             </div>
         </form>
     </div>
-
-
 </ng-template>
 
-
-<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
-
         <h4 class="modal-title">History of Shipping</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
             <span aria-hidden="true">&times;</span>
         </button>
-
-
     </div>
     <div class="modal-body">
 
@@ -488,18 +397,8 @@
         <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>
-<!--
-<p-dialog [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
-          [width]="350" [minWidth]="200" [responsive]="true"
-          [minY]="1050" [baseZIndex]="1100000">
-    <h5 [ngStyle]="{'color':'red'}">
-        Please Enter (*) Mandatory Fields
-    </h5>
-    <p-footer>
-        <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
-    </p-footer>
-</p-dialog> -->
-<ng-template #modelEdit let-c="close" let-d="dismiss" style="width:auto">
+
+<ng-template #modelEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Country</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Country</h4>
@@ -535,8 +434,6 @@
                 </div>
                 <div class="clear"></div>
             </div>
-
-
             <div class="modal-footer">
 
                 <button class="btn btn-success">Submit</button>
@@ -547,11 +444,8 @@
 
 </ng-template>
 
-
-
-
 <!-- The Modal -->
-<div *ngIf="sourceViewforShipping" class="modal" id="view" #view>
+<div *ngIf="sourceViewforShipping" class="modal" id="view" #view data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -587,41 +481,7 @@
     </div>
 </div>
 
-<!-- <div *ngIf="sourceViewforShipping" #view class="modal fade " id="view" role="dialog" >
-
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close"  data-dismiss="modal" id="" name="">×</button>
-            <h4 class="modal-title"></h4>
-        </div>
-
-        <div class="modal-body viewform viewform-cstm">
-
-
-            <div class="col-sm-12">
-                <p><span class="label"><b>Site Name: </b></span><span class="value">{{sourceViewforShipping.siteName}}</span></p>
-                <p><span class="label"><b>Ship To Address 1: </b></span><span class="value">{{sourceViewforShipping.address1}}</span></p>
-                <p><span class="label"><b>Ship To Address 2: </b></span><span class="value">{{sourceViewforShipping.address2}}</span></p>
-                <p><span class="label"><b>ship To Address 3: </b></span><span class="value">{{sourceViewforShipping.address3}}</span></p>
-                <p><span class="label"><b>Ship To City: </b></span><span class="value">{{sourceViewforShipping.city}}</span></p>
-                <p><span class="label"><b>Ship To State/Prov: </b></span><span class="value">{{sourceViewforShipping.stateOrProvince}}</span></p>
-                <p><span class="label"><b>Ship To Postal Code :</b></span><span class="value">{{sourceViewforShipping.postalCode}}</span></p>
-                <p><span class="label"><b>Ship To Country: </b></span><span class="value">{{sourceViewforShipping.country}}</span></p>
-
-
-                <div class="clear"></div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
-        </div>
-    </div>
-
-</div>       -->
-
-
-
-<div class="modal fade" id="addShippingInfo" role="dialog">
+<div class="modal fade" id="addShippingInfo" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -650,10 +510,6 @@
                                 <label>Ship To City <span class="clr-red">*</span></label>
                                 <input class="form-control" id="cscity" type="text" name="city" [(ngModel)]="domesticShippingInfo.city" required>
                             </div>
-                            <!--<div class="form-group" style="display:none">
-        <label>Ship To Address 3</label>
-        <input class="form-control" id="csaddress3" type="text" name="address3" [(ngModel)]="domesticShippingInfo.address3">
-    </div>-->
                         </div>
                         <div class="col-md-3">
 
@@ -674,140 +530,11 @@
                                 <div class="inner-addon right-addon inline-block">
                                     <p-autoComplete class="autocomp-customer-cstm" field="nice_name" [(ngModel)]="domesticShippingInfo.country" name="country" [suggestions]="countrycollection" (completeMethod)="filterCountries($event)" [size]="30"
                                                     [forceSelection]="true" [minLength]="1" [dropdown]="true" required>
-                                        <!-- <ng-template let-countryName pTemplate="item">
-                                            <div class="ui-helper-clearfix">{{countryName}}</div>
-                                        </ng-template> -->
                                     </p-autoComplete>
                                 </div>
-                                <!-- <div *ngIf="disablesave" class="clr-red">Please Select From List</div> -->
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="form-row">
-                        <div class="form-group" style="margin-top: 15px;">
-                            <div class="label-cstm">Add Shipping Via Details </div>
-                            <span class="checkbox-cstm">
-                                <label style="width: 20px;margin-left: 8px;">
-                                    <input type="checkbox" name="addShippingviDetails" ngModel #addShippingviaDetails>
-                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                </label>
-                            </span>
-                        </div>
-                    </div> -->
-                    <!-- <div *ngIf="addShippingviaDetails.checked">
-                        <div class="form-row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Ship Via <span class="clr-red">*</span></label>
-                                    <p-autoComplete class="autocomp-customer-cstm autocomp-customership-cstm" (onSelect)="onShipVia($event)" (onKeyUp)=eventShipviaHandler($event) [(ngModel)]="shipViaObj.shipVia" name="shipVia" [suggestions]="shipviacollection" (completeMethod)="filterShipVia($event)" [size]="30"
-                                                    [minLength]="1" [dropdown]="true">
-                                        <ng-template let-siteName pTemplate="item">
-                                            <div class="ui-helper-clearfix">{{siteName}}</div>
-                                        </ng-template>
-                                    </p-autoComplete>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Shipping Account Info <span class="clr-red">*</span></label>
-                                    <input class="form-control" type="text" name="shippingAccountinfo" [(ngModel)]="shipViaObj.shippingAccountinfo" required>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Shipping Url <span class="clr-red">*</span></label>
-                                    <input class="form-control" type="text" name="shippingURL" [(ngModel)]="shipViaObj.shippingURL" required>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Shipping ID <span class="clr-red">*</span></label>
-                                    <input class="form-control" type="text" name="shippingId" [(ngModel)]="shipViaObj.shippingId" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Memo</label>
-                                    <textarea class="form-control" name="memo" [(ngModel)]="shipViaObj.memo"></textarea>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div>
-                            <div class="form-group">
-                                <button type="button" class="btn btn-primary-cstm">Add Details</button>
-                            </div>
-                        </div>
-
-                            <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="allShipViaDetails" [metaKeySelection]="true" [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" [columns]="selectedShipViaColumn" selectionMode="multiple" [(selection)]="selectedShipViaColumns" [resizableColumns]="true" [reorderableColumns]="true">
-
-                                <ng-template pTemplate="caption">
-
-                                    <div style="text-align: right">
-                                        <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header"
-                                                       selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-                                        <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
-                                            <i class="fa fa-search"></i>
-                                            <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter" style="height: 28px !important;">
-                                        </div>
-                                        <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-                                        <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedShipViaColumn" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
-
-                                        <div class="excel-upload excel-upload-cstm">
-                                            <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                            <label for="upload">
-                                                <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-
-                                </ng-template>
-
-                                <ng-template pTemplate="header" let-columns>
-                                    <tr>
-
-                                        <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
-                                            {{col.header}}
-                                            <p-sortIcon [field]="col.field"></p-sortIcon>
-                                        </th>
-
-                                        <th></th>
-
-                                    </tr>
-                                </ng-template>
-
-                                <ng-template pTemplate="body" let-rowData let-columns="columns">
-                                    <tr [pSelectableRow]="rowData">
-
-
-                                        <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                            {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
-                                        </td>
-
-                                        <td>
-
-                                            <button class="btn-edit" mat-icon-button (click)="openShipViaEdit(rowData)" matTooltip="edit">
-                                                <mat-icon>edit</mat-icon>
-                                            </button>
-
-                                            <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteItemShippingCloseModel(rowData.CustomerShippingId)">
-                                                <mat-icon color="warn">delete</mat-icon>
-                                            </button>
-
-                                            <button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
-                                                <mat-icon color="green">history</mat-icon>
-                                            </button>
-
-                                        </td>
-
-                                    </tr>
-                                </ng-template>
-                            </p-table>
-
-                    </div> -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary-cstm pull-right" data-dismiss="modal" [disabled]="!addShippingForm.valid" (click)="saveDomesticShipping()">{{isEditDomestic ? 'Update' : 'Save'}}</button>
@@ -818,7 +545,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="addInternationalShippingInfo" role="dialog">
+<div class="modal fade" id="addInternationalShippingInfo" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -859,12 +586,8 @@
                                     <p-autoComplete class="autocomp-customer-cstm" field="nice_name" [(ngModel)]="internationalShippingInfo.shipToCountryId" name="country" [suggestions]="countrycollection"
                                                     (completeMethod)="filterCountries($event)" [size]="30" [forceSelection]="true"
                                                     [minLength]="1" [dropdown]="true" required>
-                                        <!-- <ng-template let-countryName pTemplate="item">
-                                            <div class="ui-helper-clearfix">{{countryName}}</div>
-                                        </ng-template> -->
                                     </p-autoComplete>
                                 </div>
-                                <!-- <div *ngIf="disablesave" class="clr-red">Please Select From List</div> -->
                             </div>
                         </div>
 
@@ -880,131 +603,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="form-row">
-                        <div class="form-group" style="margin-top: 15px;">
-                            <div class="label-cstm">Add Shipping Via Details </div>
-                            <span class="checkbox-cstm">
-                                <label style="width: 20px;margin-left: 8px;">
-                                    <input type="checkbox" name="addShippingviDetails" ngModel #addIShippingviaDetails>
-                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                </label>
-                            </span>
-                        </div>
-                    </div>
-
-                    <div *ngIf="addIShippingviaDetails.checked">
-                        <div class="form-row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Ship Via <span class="clr-red">*</span></label>
-                                    <p-autoComplete class="autocomp-customer-cstm autocomp-customership-cstm" (onSelect)="onShipVia($event)" (onKeyUp)=eventShipviaHandler($event) [(ngModel)]="shipViaObj.shipVia" name="shipVia" [suggestions]="shipviacollection" (completeMethod)="filterShipVia($event)" [size]="30"
-                                                    [minLength]="1" [dropdown]="true">
-                                        <ng-template let-siteName pTemplate="item">
-                                            <div class="ui-helper-clearfix">{{siteName}}</div>
-                                        </ng-template>
-                                    </p-autoComplete>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Shipping Account Info <span class="clr-red">*</span></label>
-                                    <input class="form-control" type="text" name="shippingAccountinfo" [(ngModel)]="shipViaObj.shippingAccountinfo" required>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Shipping Url <span class="clr-red">*</span></label>
-                                    <input class="form-control" type="text" name="shippingURL" [(ngModel)]="shipViaObj.shippingURL" required>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Shipping ID <span class="clr-red">*</span></label>
-                                    <input class="form-control" type="text" name="shippingId" [(ngModel)]="shipViaObj.shippingId" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Memo</label>
-                                    <textarea class="form-control" name="memo" [(ngModel)]="shipViaObj.memo"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="form-group">
-                                <button type="button" class="btn btn-primary-cstm">Add Details</button>
-                            </div>
-                        </div>
-
-                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="allShipViaDetails" [metaKeySelection]="true" [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" [columns]="selectedShipViaColumn" selectionMode="multiple" [(selection)]="selectedShipViaColumns" [resizableColumns]="true" [reorderableColumns]="true">
-
-                            <ng-template pTemplate="caption">
-
-                                <div style="text-align: right">
-                                    <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header"
-                                                   selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-                                    <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
-                                        <i class="fa fa-search"></i>
-                                        <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter" style="height: 28px !important;">
-                                    </div>
-                                    <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-                                    <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedShipViaColumn" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
-
-                                    <div class="excel-upload excel-upload-cstm">
-                                        <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                        <label for="upload">
-                                            <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-                                        </label>
-                                    </div>
-                                </div>
-
-
-                            </ng-template>
-
-                            <ng-template pTemplate="header" let-columns>
-                                <tr>
-
-                                    <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
-                                        {{col.header}}
-                                        <p-sortIcon [field]="col.field"></p-sortIcon>
-                                    </th>
-
-                                    <th></th>
-
-                                </tr>
-                            </ng-template>
-
-                            <ng-template pTemplate="body" let-rowData let-columns="columns">
-                                <tr [pSelectableRow]="rowData">
-
-
-                                    <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                        {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
-                                    </td>
-
-                                    <td>
-
-                                        <button class="btn-edit" mat-icon-button (click)="openShipViaEdit(rowData)" matTooltip="edit">
-                                            <mat-icon>edit</mat-icon>
-                                        </button>
-
-                                        <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteItemShippingCloseModel(rowData.CustomerShippingId)">
-                                            <mat-icon color="warn">delete</mat-icon>
-                                        </button>
-
-                                        <button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
-                                            <mat-icon color="green">history</mat-icon>
-                                        </button>
-
-                                    </td>
-
-                                </tr>
-                            </ng-template>
-                        </p-table>
-
-                    </div> -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary-cstm pull-right" data-dismiss="modal" [disabled]=" !addIShippingForm.valid" (click)="saveInternationalShipping()">{{isEditInternational ? 'Update' : 'Save'}}</button>
@@ -1015,9 +613,7 @@
     </div>
 </div>
 
-
-
-<div *ngIf="sourceViewforInterShipping" class="modal" id="viewInter">
+<div *ngIf="sourceViewforInterShipping" class="modal" id="viewInter" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -1051,8 +647,7 @@
     </div>
 </div>
 
-
-<div class="modal fade" id="addDomesticShipVia">
+<div class="modal fade" id="addDomesticShipVia" data-backdrop="static">
     <form #addShippingVia="ngForm">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -1101,29 +696,9 @@
                                 <br>
                                 <button type="button" class="btn btn-primary-cstm" [disabled]="!addShippingVia.valid" (click)="saveshipViaDomestic()">{{isEditDomesticShipVia ? 'Update Ship Via' : 'Save Ship Via'}}</button>
                             </div>
-
                         </div>
                     </div>
-
                 </div>
-
-                <!-- <p-table #dt class="rpo-table-cstm rro-table-cstm"
-                  name="domesticShipViaTable"
-                    [first]="pageIndexForInternationalShipVia"
-                    [rows]="pageSizeForInternationalShipVia"
-                    [metaKeySelection]="true"
-                    [lazy]="true"
-                    [value]="internationalShippingViaData"
-                    [paginator]="true"
-                    [pageLinks]="3"
-                    [rowsPerPageOptions]="[10,20,50,100]"
-                    [columns]="selectedColumnsForInternationShipViaTable"
-                    selectionMode="multiple"
-                    [resizableColumns]="true"
-                    [reorderableColumns]="true"
-                    [totalRecords]="totalRecordsForInternationalShipVia"
-                    (onPage)="internationalShippingViaPagination($event)"> -->
-
                 <p-table #dt class="rpo-table-cstm rro-table-cstm"
                          name="domesticShipViaTable"
                          [metaKeySelection]="true"
@@ -1144,24 +719,16 @@
                                 {{col.header}}
                                 <p-sortIcon [field]="col.field"></p-sortIcon>
                             </th>
-                            <th style="width: 140px;"> Actions</th> <!--*ngIf="selectedColumnsForInternationTable.length > 0"-->
-
-
+                            <th style="width: 140px;"> Actions</th>
                         </tr>
                     </ng-template>
 
                     <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
                         <tr [pSelectableRow]="rowData">
-
-
                             <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                 {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                             </td>
-
                             <td>
-                               
-
-
                                 <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActiveIS{{rowIndex}}" (onChange)="updateActiveorInActiveForS(rowData)"></p-inputSwitch>
                                 <span data-toggle="modal" data-target="#viewDomesticVia"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" matTooltip="View" (click)="openDomesticShippingViewVia(rowData)"><i class="fa fa-eye"></i></a> </span> <!-- (click)="openInterShippingView(rowData)" -->
 
@@ -1170,22 +737,16 @@
                                 </button>
 
                                 <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteShipVia(rowData)">
-                                    <!--(click)="deleteInternationalShipping(rowData)"-->
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
-
-
 
                                 <button class="btn-history" mat-icon-button matTooltip="history">
                                     <mat-icon color="green">history</mat-icon>
                                 </button>
 
                             </td>
-
                         </tr>
                     </ng-template>
-
-
                 </p-table>
 
                 <div class="modal-footer">
@@ -1198,7 +759,7 @@
     </form>
 </div>
 
-<div class="modal fade" id="addInternationShipVia">
+<div class="modal fade" id="addInternationShipVia" data-backdrop="static">
     <div *ngIf="sourceViewforInterShipping" class="modal" id="viewInter">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -1235,7 +796,6 @@
     <form #addInterShipVia="ngForm">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-
 
                 <div class="modal-header">
                     <h4 class="modal-title">{{isEditInternationalShipVia ? 'Edit' : 'Add'}} International Ship Via  </h4>
@@ -1282,14 +842,9 @@
                                 <br>
                                 <button type="button" class="btn btn-primary-cstm" [disabled]="!addInterShipVia.valid" (click)="saveshipViaInternational()">{{isEditInternationalShipVia ? 'Update Ship Via' : 'Save Ship Via'}}</button>
                             </div>
-
                         </div>
                     </div>
-
-
-
                 </div>
-
 
                 <p-table #dt class="rpo-table-cstm rro-table-cstm"
                          name="internationalshipViaTable"
@@ -1308,51 +863,26 @@
                          [totalRecords]="totalRecordsForInternationalShipVia"
                          (onPage)="internationalShippingViaPagination($event)">
                     <ng-template pTemplate="caption">
-
                         <div style="text-align: right">
-                            <!-- <p-multiSelect [options]="internationalShippingHeaders" [(ngModel)]="selectedColumnsForInternationTable" [ngModelOptions]="{standalone: true}" optionLabel="header"
-                                       selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect> -->
-                            <!-- <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
-                                <i class="fa fa-search"></i>
-                                <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter" style="height: 28px !important;">
-                            </div>
-                            <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-                            <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedrowsFromInternational" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
-
-                            <div class="excel-upload excel-upload-cstm">
-                                <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                <label for="upload">
-                                    <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-                                </label>
-                            </div> -->
                         </div>
-
-
                     </ng-template>
 
                     <ng-template pTemplate="header" let-columns>
                         <tr>
-
                             <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                 {{col.header}}
                                 <p-sortIcon [field]="col.field"></p-sortIcon>
                             </th>
                             <th style="width: 140px;" *ngIf="selectedColumnsForInternationTable.length > 0"> Actions</th>
-
-
                         </tr>
                     </ng-template>
 
                     <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
                         <tr [pSelectableRow]="rowData">
-
-
                             <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                 {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                             </td>
-
                             <td>
-
                                 <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActiveIS{{rowIndex}}" (onChange)="updateActiveorInActiveForIS(rowData)"></p-inputSwitch>
                                 <span data-toggle="modal" data-target="#viewInterVia"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openInterShippingViewVia(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
 
@@ -1365,89 +895,13 @@
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
 
-
-
                                 <button class="btn-history" mat-icon-button matTooltip="history">
                                     <mat-icon color="green">history</mat-icon>
                                 </button>
-
                             </td>
-
                         </tr>
                     </ng-template>
-
-
                 </p-table>
-
-                <!-- <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="allShipViaDetails" [metaKeySelection]="true" [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" [columns]="selectedShipViaColumn" selectionMode="multiple" [(selection)]="selectedShipViaColumns" [resizableColumns]="true" [reorderableColumns]="true">
-
-                    <ng-template pTemplate="caption">
-
-                        <div style="text-align: right">
-                            <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header"
-                                           selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-                            <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
-                                <i class="fa fa-search"></i>
-                                <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter" style="height: 28px !important;">
-                            </div>
-                            <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-                            <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedShipViaColumn" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
-
-                            <div class="excel-upload excel-upload-cstm">
-                                <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                <label for="upload">
-                                    <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-                                </label>
-                            </div>
-                        </div>
-
-
-                    </ng-template>
-
-                    <ng-template pTemplate="header" let-columns>
-                        <tr>
-
-                            <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
-                                {{col.header}}
-                                <p-sortIcon [field]="col.field"></p-sortIcon>
-                            </th>
-
-                            <th></th>
-
-                        </tr>
-                    </ng-template>
-
-                    <ng-template pTemplate="body" let-rowData let-columns="columns">
-                        <tr [pSelectableRow]="rowData">
-
-
-                            <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
-                            </td>
-
-                            <td>
-
-                                <button class="btn-edit" mat-icon-button (click)="openShipViaEdit(rowData)" matTooltip="edit">
-                                    <mat-icon>edit</mat-icon>
-                                </button>
-
-                                <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteItemShippingCloseModel(rowData.CustomerShippingId)">
-                                    <mat-icon color="warn">delete</mat-icon>
-                                </button>
-
-                                <button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
-                                    <mat-icon color="green">history</mat-icon>
-                                </button>
-
-                            </td>
-
-                        </tr>
-                    </ng-template>
-                </p-table> -->
-
-
-
-
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="resetShipViaInternational()">Close</button>
@@ -1457,7 +911,8 @@
         </div>
     </form>
 </div>
-<div *ngIf="sourceViewforInterShipping" class="modal" id="viewInterSipVia">
+
+<div *ngIf="sourceViewforInterShipping" class="modal" id="viewInterSipVia" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -1490,7 +945,8 @@
         </div>
     </div>
 </div>
-<div *ngIf="sourceViewforInterShippingVia" class="modal" id="viewInterVia">
+
+<div *ngIf="sourceViewforInterShippingVia" class="modal" id="viewInterVia" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -1526,7 +982,7 @@
     </div>
 </div>
 
-<div *ngIf="sourceViewforDomesticShippingVia" class="modal" id="viewDomesticVia">
+<div *ngIf="sourceViewforDomesticShippingVia" class="modal" id="viewDomesticVia" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -1561,4 +1017,3 @@
         </div>
     </div>
 </div>
-

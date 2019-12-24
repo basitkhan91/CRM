@@ -30,13 +30,6 @@
               (onChange)="getAircraftModelByManfacturerType($event.value)"
                       
             ></p-dropdown>
-            <!-- <p-multiSelect
-              [options]="manufacturerData"
-              name="searchAircraft"
-              [(ngModel)]="selectAircraftManfacturer"
-              (onChange)="getAircraftModelByManfacturerType()"
-              class="pub-multi"
-            ></p-multiSelect> -->
           </div>
         </div>
         <div class="col-md-3">
@@ -137,29 +130,6 @@
     </ng-template>
   </p-table>
   <br />
-  <!-- <div class="col-sm-12">
-    <div class="col-sm-3 font">
-      Schematic:
-      <input type="checkbox" data-md-icheck (change)="onSchematic($event)" />
-    </div>
-    <div class="col-sm-6 font inline-block display-flex" *ngIf="schematic">
-      Attach Drawing..
-      <div class="upload">
-        <input
-          type="file"
-          name="upload[]"
-          id="upload"
-          class="inputfile upload-file"
-          data-multiple-caption="{count} files selected"
-          multiple=""
-        />
-        <label>
-          <figure><i class="fa fa-upload"></i></figure>
-        </label>
-      </div>
-    </div>
-  </div> -->
-
   <div>
     <button
       type="button"
@@ -178,12 +148,7 @@
   </div>
 </div>
 
-<!-- <div class="col-sm-12 mt8">
-        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveGeneralInfromation(); changeOfTab('General')" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
-        <button class="btn btn-primary-cstm float-right" pButton (click)="moveAtachapter()" type="button" icon="pi pi-angle-right" iconPos="right" label="Go to Next Step" style="padding: 0 !important;"></button>
-    </div> -->
-
-<div id="addInventory" class="modal fade custom-popup" role="dialog">
+<div id="addInventory" class="modal fade custom-popup" role="dialog" data-backdrop="static">
   <div class="modal-dialog modal-full">
     <!-- Modal content-->
     <div class="modal-content">
@@ -379,7 +344,7 @@
     </div>
   </div>
 </div>
-<div class="modal fade" id="editAirCraftDetails" role="dialog">
+<div class="modal fade" id="editAirCraftDetails" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -420,7 +385,7 @@
 
     </div>
 </div>
-<ng-template #deleteContent let-c="close" let-d="dismiss">
+<ng-template #deleteContent let-c="close" let-d="dismiss" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title">Are You Sure Want to Delete?</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">

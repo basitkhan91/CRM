@@ -14,8 +14,6 @@
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
-                        <!--Step x: Add/update table taking grid data (itemList) and selected columns -->
-                        <!--(onLazyLoad)="changePage($event)"-->
                         <p-table #dt
                                  class="rpo-table-cstm rro-table-cstm"
                                  [value]="itemList"
@@ -34,10 +32,6 @@
                             <!--caption-->
                             <ng-template pTemplate="caption">
                                 <div style="text-align: right; margin-left: -6px !important;">
-                                    <!--column names dropdown taking selectedColumns-->
-                                    <!--Step x: Update the dropdown with options-->
-                                    <!--(onChange)="reorderValues($event)"-->
-                                    <!--to-do:add (change)=>-->
                                     <p-multiSelect [maxSelectedLabels]="2"
                                                    [options]="columnHeaders"
                                                    optionLabel="header"
@@ -123,7 +117,7 @@
     <!--to-do:use same modal to view, add, update, and delete-->
     <!--Modal for view only-->
 
-    <div #view *ngIf="itemDetails" class="modal fade" id="view" role="dialog">
+    <div #view *ngIf="itemDetails" class="modal fade" id="view" role="dialog" data-backdrop="static">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -181,7 +175,7 @@
     </div>
 
     <!--Step x: Modal for Edit-->
-    <div #editItem id="editItem" class="modal fade" role="dialog" *ngIf="currentModeOfOperation === 2 || currentModeOfOperation === 3">
+    <div #editItem id="editItem" class="modal fade" role="dialog" *ngIf="currentModeOfOperation === 2 || currentModeOfOperation === 3" data-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -234,7 +228,7 @@
     </div>
 
     <!--Modal for delete only-->
-    <div #delete *ngIf="currentModeOfOperation === 4" id="delete" class="modal fade" role="dialog">
+    <div #delete *ngIf="currentModeOfOperation === 4" id="delete" class="modal fade" role="dialog" data-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -258,7 +252,7 @@
 
 
     <!--Step x: Audit modal-->
-    <div #itemHistory *ngIf="currentModeOfOperation === 5" class="modal fade" id="itemHistory" role="dialog">
+    <div #itemHistory *ngIf="currentModeOfOperation === 5" class="modal fade" id="itemHistory" role="dialog" data-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

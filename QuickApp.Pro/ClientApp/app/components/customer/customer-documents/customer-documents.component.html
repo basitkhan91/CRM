@@ -97,30 +97,6 @@
                             </tr>
                         </ng-template>
 
-                        <!-- <ng-template #view class="modal fade" id="view" role="dialog" *ngIf="sourceViewforDocument">
-
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-                                    <h4 class="modal-title">Details of Customer Contact</h4>
-                                </div>
-                                <div class="modal-body viewform viewform-cstm">
-
-                                    <div class="col-sm-12">
-                                        <p><span class="label"><b>Name: </b></span><span class="value">{{sourceViewforDocument.name}}</span></p>
-                                        <p><span class="label"><b>Description: </b></span><span class="value">{{sourceViewforDocument.description}}</span></p>
-                                        <p><span class="label"><b>Memo: </b></span><span class="value">{{sourceViewforDocument.memo}}</span></p>
-                                        <p><span class="label"><b>Attachments: </b></span><span class="value"></span></p>
-                                        <div class="clear"></div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
-                                </div>
-                            </div>
-
-                        </ng-template> -->
-
                     </p-table>
                 </div>
 
@@ -129,7 +105,7 @@
         </div>
 
     </div>
-<ng-template #deleteContent let-c="close" let-d="dismiss">
+<ng-template #deleteContent let-c="close" let-d="dismiss" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title">Are You Sure Want to Delete?</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
@@ -143,7 +119,7 @@
     </div>
 </ng-template>
 
-    <div id="view"  #view class="modal fade" role="dialog" >
+    <div id="view"  #view class="modal fade" role="dialog"  data-backdrop="static">
             <div class="modal-dialog">
           
               <!-- Modal content-->
@@ -188,47 +164,7 @@
           </div>
 
 
-<!-- <ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
-	<div class="modal-header">
-
-		<h4 class="modal-title">History of Action</h4>
-		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-			<span aria-hidden="true">&times;</span>
-		</button>
-
-
-	</div>
-	<div class="modal-body">
-
-		<div class="table-responsive">
-			<table class="table table-bordered cus-contact-table">
-				<thead>
-					<tr>
-						<th>AID</th>
-						<th>Colum Name</th>
-						<th>Previous Value</th>
-						<th>New Value</th>
-						<th>Last Updated By</th>
-						<th>Last Updated Time</th>
-					</tr>
-				</thead>
-				<tr *ngFor="let audit of auditHisory">
-					<td>{{audit.auditHistoryId}}</td>
-					<td>{{audit.columnName}}</td>
-					<td>{{audit.previousValue}}</td>
-					<td>{{audit.newValue}}</td>
-					<td>{{audit.updatedBy}}</td>
-					<td>{{audit.updatedDate | date: 'MM/dd/yyyy'}}</td>
-				</tr>
-			</table>
-		</div>
-	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
-	</div>
-</ng-template> -->
-
-<div class="modal fade" id="addDocumentDetails" role="dialog">
+<div class="modal fade" id="addDocumentDetails" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">

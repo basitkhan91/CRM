@@ -2,13 +2,6 @@
 	<div class="right_col" role="main">
 		<div class="x_panel">
 			<div class="x_content">
-				<!--<nav aria-label="breadcrumb">
-					<ol class="breadcrumb">
-						<li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
-						<li class="breadcrumb-item active" aria-current="page">ATA</li>
-					</ol>
-				</nav>-->
-
 				<h4 class="page-heading clr-green">ATA Sub Chapter 2</h4>
 
 				<span class="help-icon" (click)="openHelpText(helpText)" data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span>
@@ -91,7 +84,7 @@
 </div>
 
 <!-- Delete Contact Modal -->
-<ng-template #content let-c="close" let-d="dismiss">
+<ng-template #content let-c="close" let-d="dismiss" data-backdrop="static">
 	<div class="modal-header">
 		<h4 class="modal-title">Are You Sure Want to Delete ?</h4>
 		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
@@ -106,7 +99,7 @@
 </ng-template>
 
 
-<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
 	<div class="modal-header">
 		<h4 class="modal-title" *ngIf="isEditMode">Edit ATA Sub Chapter2</h4>
 		<h4 class="modal-title" *ngIf="!isEditMode">Add ATA Sub Chapter2</h4>
@@ -116,23 +109,6 @@
 	</div>
 	<div class="modal-body">
 		<form #userForm="ngForm" class="form-horizontal" (ngSubmit)="editItemAndCloseModel()">
-			<!--<div class="form-group">
-		<label for="ataChapterName" class="control-label">ATA Name <span class="clr-red">*</span></label>
-		<div class="control-data">
-			<input type="text" name="ataChapterName" class="form-control" placeholder="" required minlength="5" #ataChapterName="ngModel" [(ngModel)]="sourceAction.ataChapterName">
-		</div>
-		<div class="clear"></div>
-	</div>-->
-			<!--<div class="form-group">
-		<label for="ataChapterName" class="control-label">ATA Name <span class="clr-red">*</span></label>
-		<p-autoComplete (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="ataChapterName" [ngModelOptions]="{standalone: true}" [suggestions]="localCollection" (completeMethod)="filterAtamains($event)" [size]="30"
-						[minLength]="2" [dropdown]="true">
-			<ng-template let-ataChapterName pTemplate="item">
-				<div class="ui-helper-clearfix">{{ataChapterName}}</div>
-			</ng-template>
-		</p-autoComplete>
-	</div>-->
-
 
 			<div class="form-group">
 
@@ -143,7 +119,6 @@
 					</select>
 
 				</div>
-				<!--<a href="#" data-toggle="modal" data-target="#addCustomerClass" class="add-icon" (click)="openatachapter(modelEdits)"></a>-->
 			</div>
 			<div class="form-group">
 				<label for="ataChapterCategory" class="control-label">ATA SubChapter2<span class="clr-red">*</span></label>
@@ -167,19 +142,6 @@
 				<div class="clear"></div>
 			</div>
 
-			<!--<div class="form-group">
-		<label for="masterCompanyId" class="control-label">Company</label>
-		<div class="">
-			<select name="masterCompanyId" class="form-control form-control-lg w150" required #masterCompanyId="ngModel" id="masterCompanyId" [(ngModel)]="sourceAction.masterCompanyId">
-				<option *ngFor="let pow of allComapnies" [value]="pow.masterCompanyId">{{pow.companyName}}</option>
-			</select>
-		</div>
-		<div *ngIf="masterCompanyId.dirty && masterCompanyId.errors?.required && masterCompanyId.errors" class="invalid-form-error-message">
-			Master company required.
-		</div>
-		<div class="clear"></div>
-	</div>-->
-
 			<div class="form-group">
 				<div class="col-sm-6">
 					<label class="form-check-label" for="isActive">
@@ -202,7 +164,7 @@
 </ng-template>
 
 
-<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
 	<div class="modal-header">
 
 		<h4 class="modal-title">History of ATASubChapter2</h4>
@@ -242,7 +204,7 @@
 	</div>
 </ng-template>
 
-<ng-template #view class="modal fade " id="view" role="dialog">
+<ng-template #view class="modal fade " id="view" role="dialog" data-backdrop="static">
 
 	<div class="modal-content">
 		<div class="modal-header">
@@ -269,7 +231,7 @@
 
 </ng-template>
 
-<ng-template #helpText class="modal fade" id="help-popup" role="dialog">
+<ng-template #helpText class="modal fade" id="help-popup" role="dialog" data-backdrop="static">
 
 	<div class="modal-content">
 		<div class="modal-header">

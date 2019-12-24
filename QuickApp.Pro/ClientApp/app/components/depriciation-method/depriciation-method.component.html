@@ -2,13 +2,6 @@
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_content">
-                <!--<nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item" aria-current="page">Asset Management</li>
-                        <li class="breadcrumb-item" aria-current="page">Asset Management Maintanance</li>
-                        <li class="breadcrumb-item active" aria-current="page">Depreciation Method</li>
-                    </ol>
-                </nav>-->
                 <div class="card">
                     <div class="card-body">
                         <div class="inline-block display-flex">
@@ -101,12 +94,6 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                     </td>
                                 </tr>
                             </ng-template>
-                            <!--<ng-template #auditContent let-c="close" let-d="dismiss">
-                    <div class="audit-template-launcher">
-                        <bin-audit [Data]="AuditDetails" [Modal]="modal" *ngIf="HasAuditDetails"></bin-audit>
-                        <audit-no-history [Modal]="modal" [Title]="AuditHistoryTitle" *ngIf="!HasAuditDetails"></audit-no-history>
-                    </div>
-                </ng-template>-->
 
                             <ng-template #auditContent let-c="close" let-d="dismiss">
                                 <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
@@ -127,7 +114,8 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
         </div>
     </div>
 </div>
-<ng-template #view class="modal fade " id="view" role="dialog">
+
+<ng-template #view class="modal fade " id="view" role="dialog" data-backdrop="static">
 
     <div class="modal-content">
         <div class="modal-header">
@@ -194,7 +182,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
 
 </ng-template>
 
-<ng-template #content let-c="close" let-d="dismiss">
+<ng-template #content let-c="close" let-d="dismiss" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
@@ -213,7 +201,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     </div>
 </ng-template>
 
-<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Depreciation Method</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Depreciation Method</h4>
@@ -232,9 +220,6 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                         </label>
                     </div>
                     <div class="col-sm-5">
-                        <!--<p-autoComplete field="code" [(ngModel)]="codeName" (onSelect)="partnmId($event)" (onKeyUp)="eventHandler('code', $event.target.value)" name="code"
-                                        [suggestions]="localCollection" (completeMethod)="filterDepreciationMethod($event)" [size]="30" [minLength]="1"
-                                        [dropdown]="true" class="p-autoComplete-ctsm" required>-->
                         <p-autoComplete [(ngModel)]="codeName" name="code" (onSelect)="partnmId($event)" (onKeyUp)="eventHandler($event)" [suggestions]="localCollection" (completeMethod)="filterDepreciationMethod($event)" [size]="30"
                                         [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
                             <ng-template let-codeName pTemplate="item">
@@ -308,14 +293,13 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     </div>
 </ng-template>
 
-<ng-template #auditContent let-c="close" let-d="dismiss">
+<ng-template #auditContent let-c="close" let-d="dismiss" data-backdrop="static">
     <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
         <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
     </div>
 </ng-template>
 
-
-<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog">
+<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->
