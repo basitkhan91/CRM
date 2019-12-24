@@ -1,8 +1,6 @@
-<div #salesMargin id="salesMargin" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
+
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">
+        <button type="button" class="close" (click)="onClose($event)">
           &times;
         </button>
         <h4 class="modal-title">Edit Margin Details</h4>
@@ -34,60 +32,46 @@
         </div>
         <div class="row margin-row">
           <div class="col-md-12 col-sm-12 col-12">
-            <div class="col-2 column">
+            <div class="col-3 column">
               <div class="form-group">
                 <label>Quantity requested</label>
-                <input type="text" pInputText name="quantityRequest" (change)="calculate()"
+                <input type="number" pInputText name="quantityRequest" disabled="true"
                   [(ngModel)]="part.quantityRequested" />
               </div>
             </div>
-            <div class="col-2 column">
+            <div class="col-3 column">
               <div class="form-group">
                 <label>Quantity already quoted</label>
-                <input type="text" pInputText name="quantityAlreadyQuoted" disabled="true" (change)="calculate()"
+                <input type="number" pInputText name="quantityAlreadyQuoted" disabled="true"
                   [(ngModel)]="part.quantityAlreadyQuoted" />
               </div>
             </div>
-            <div class="col-2 column">
+            <div class="col-3 column">
+                <div class="form-group">
+                  <label>Quantity from this</label>
+                  <input type="number" pInputText name="quantityFromThis" (change)="calculate()"
+                    [(ngModel)]="part.quantityFromThis" />
+                </div>
+              </div>
+            <div class="col-3 column">
               <div class="form-group">
                 <label>Quantity to be quoted</label>
-                <input type="text" pInputText name="quantityToBeQuoted" (change)="calculate()"
+                <input type="number" pInputText name="quantityToBeQuoted" disabled="true"
                   [(ngModel)]="part.quantityToBeQuoted" />
               </div>
             </div>
-            <div class="col-2 column">
-              <div class="form-group">
-                <label>UOM</label>
-                <input type="text" pInputText name="uom" disabled="true" (change)="calculate()"
-                  [(ngModel)]="part.uom" />
-              </div>
-            </div>
+           
           </div>
         </div>
-        <div class="row margin-row">
-          <div class="col-md-12 col-sm-12 col-12">
-            <div class="col-2 column">
-              <div class="form-group">
-                <label>Currency</label>
-                <input type="text" pInputText name="currency" />
-              </div>
-            </div>
-            <div class="col-2 column">
-              <div class="form-group">
-                <label>FX Rate</label>
-                <input type="text" pInputText name="fxRate" />
-              </div>
-            </div>
-          </div>
-        </div>
+        
         <div class="row margin-row row-table">
           <table>
             <thead>
               <tr>
-                <th style="width:10%"></th>
-                <th style="width:15%"></th>
-                <th style="width:15%"><span>Per Unit</span></th>
-                <th><span>Extended</span></th>
+                <th style="width:25%"></th>
+                <th style="width:25%"></th>
+                <th style="width:25%"><span>Per Unit</span></th>
+                <th style="width:25%"><span>Extended</span></th>
               </tr>
             </thead>
             <tbody>
@@ -96,9 +80,9 @@
                   <span>Sales Price</span></td>
                 <td>
                 </td>
-                <td><span><input type="text" pInputText [(ngModel)]="part.SalesPricePerUnit"
+                <td><span><input type="number" pInputText [(ngModel)]="part.salesPricePerUnit"
                       (change)="calculate()" /></span></td>
-                <td><span>{{part.SalesPriceExtended}}</span></td>
+                <td><span>{{part.salesPriceExtended}}</span></td>
               </tr>
               <tr>
                 <td>
@@ -106,13 +90,13 @@
                 </td>
                 <td>
                   <select [(ngModel)]="part.markUpPercentage" (change)="calculate()">
-                    <option *ngFor="let p of percentage" value={{p.value}}>{{p.text}}</option>
+                      <option *ngFor="let p of percentage" [ngValue]="p.value">{{ p.label }}</option> 
                   </select>
                   &nbsp; <span>%</span>
                 </td>
-                <td><span><input type="text" pInputText [(ngModel)]="part.markupPerUnit"
+                <td><span><input type="number" pInputText [(ngModel)]="part.markupPerUnit"
                       (change)="calculate()" /></span></td>
-                <td><span>{{part.MarkupExtended}}</span></td>
+                <td><span>{{part.markupExtended}}</span></td>
               </tr>
               <tr>
                 <td>
@@ -120,15 +104,15 @@
                 </td>
                 <td>
                   <select [(ngModel)]="part.salesDiscount" (change)="calculate()">
-                    <option *ngFor="let p of percentage" value={{p.value}}>{{p.text}}</option>
+                      <option *ngFor="let p of percentage" [ngValue]="p.value">{{ p.label }}</option> 
                   </select>
                   &nbsp; <span>%</span>
 
                 </td>
                 <td>
-                  <input type="text" pInputText [(ngModel)]="part.salesDiscountPerUnit" (change)="calculate()" />
+                  <input type="number" pInputText [(ngModel)]="part.salesDiscountPerUnit" (change)="calculate()" />
                 </td>
-                <td><span>{{part.SalesDiscountExtended}}</span></td>
+                <td><span>{{part.salesDiscountExtended}}</span></td>
               </tr>
               <tr>
                 <td>
@@ -137,9 +121,9 @@
                 <td>
                 </td>
                 <td>
-                  <span>{{part.NetSalesPricePerUnit}}</span>
+                  <span>{{part.netSalesPricePerUnit}}</span>
                 </td>
-                <td><span>{{part.NetSalesPriceExtended}}</span></td>
+                <td><span>{{part.netSalesPriceExtended}}</span></td>
               </tr>
               <tr>
                 <td colspan="4">&nbsp;</td>
@@ -149,11 +133,12 @@
                   <span>Unit Cost</span>
                 </td>
                 <td>
+                    
                 </td>
                 <td>
-                  <span></span>
+                  <span><input type="number" pInputText [(ngModel)]="part.unitCostPerUnit" (change)="calculate()" /></span>
                 </td>
-                <td><span></span></td>
+                <td><span>{{ part.unitCostExtended }}</span></td>
               </tr>
               <tr>
                 <td>
@@ -162,9 +147,9 @@
                 <td>
                 </td>
                 <td>
-                  <input type="text" pInputText />
+                    <input type="number" pInputText [(ngModel)]="part.marginAmountPerUnit" (change)="calculate()" />
                 </td>
-                <td><span></span></td>
+                <td><span>{{ part.marginAmountExtended }}</span></td>
               </tr>
               <tr>
                 <td>
@@ -173,25 +158,21 @@
                 <td>
                 </td>
                 <td>
-                  <select>
-                    <option *ngFor="let p of percentage" value={{p.value}}>{{p.text}}</option>
+                  <select [(ngModel)]="part.marginPercentagePerUnit" (change)="calculate()">
+                      <option *ngFor="let p of percentage" [ngValue]="p.value">{{ p.label }}</option> 
                   </select>
                 </td>
-                <td><span></span></td>
+                <td><span>{{ part.marginPercentageExtended }}</span></td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-success" data-toggle="modal" data-target="#addPartNumber">
+        <button type="submit" class="btn btn-success" (click)="onSave($event)">
           Save
         </button>
-        <button type="button" (click)="onClose($event)" class="btn btn-danger" data-dismiss="modal" data-toggle="modal"
-          data-target="#salesMargin">
+        <button type="button" (click)="onClose($event)" class="btn btn-danger">
           Close
         </button>
       </div>
-    </div>
-  </div>
-</div>

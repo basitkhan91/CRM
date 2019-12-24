@@ -104,6 +104,7 @@ namespace DAL
         public DbSet<CustomerType> CustomerType { get; set; }
         public DbSet<Charge> Charge { get; set; }
         public DbSet<Vendor> Vendor { get; set; }
+        public DbSet<VendorAudit> VendorAudit { get; set; }
         public DbSet<CustomerContact> CustomerContact { get; set; }
         public DbSet<CustomerShipping> CustomerShipping { get; set; }
         public DbSet<CustomerShippingAddress> CustomerShippingAddress { get; set; }
@@ -135,6 +136,7 @@ namespace DAL
         public DbSet<VendorWarnings> VendorWarning { get; set; }
         public DbSet<CustomerWarning> CustomerWarning { get; set; }
         public DbSet<Employee> Employee { get; set; }
+        public DbSet<EmployeeAudit> EmployeeAudit { get; set; }
         public DbSet<shift> Shift { get; set; }
         public DbSet<Countries> Countries { get; set; }
         public DbSet<EmployeeLeaveType> EmployeeLeaveType { get; set; }

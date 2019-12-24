@@ -159,9 +159,13 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/conditiondetailsbypartno?itemMasterId=${itemMasterId}`, this.getRequestHeaders())
     }
 
-    getWorkOrderList(pageIndex, pageSize) {
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderlist?pageNo=${pageIndex}&pageSize=${pageSize}`, this.getRequestHeaders())
+    getWorkOrderList(data) {
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/workorderlist`, JSON.stringify(data), this.getRequestHeaders())
     }
+    getWorkOrderGlobalSearch(value, pageIndex, pageSize) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/woglobalsearch?filterText=${value}&pageNumber=${pageIndex}&pageSize=${pageSize}`)
+    }
+
 
     updateWorkOrderStatus(data, login) {
         return this.http.get(`${this.configurations.baseUrl}/api/workOrder/updateworkorderstatus?workOrderId=${data.workOrderId}&status=${data.isActive}&updatedBy=${login}`, this.getRequestHeaders())
@@ -350,7 +354,7 @@ export class WorkOrderEndpointService extends EndpointFactory {
     }
 
     createOrUpdateQuotation(data) {
-        return this.http.post(`${this.configurations.baseUrl}/api/workOrder/${data.workOrderQuoteId == undefined ? 'createworkorderquote' : 'updateworkorderquote'}`, JSON.stringify(data), this.getRequestHeaders())
+        return this.http.post(`${this.configurations.baseUrl}/api/workOrder/${(data.workOrderQuoteId == undefined || data.workOrderQuoteId == 0) ? 'createworkorderquote' : 'updateworkorderquote'}`, JSON.stringify(data), this.getRequestHeaders())
     }
 
     getSubWorkOrderListByWorkOrderId(workOrderId) {

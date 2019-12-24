@@ -2,7 +2,10 @@ import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
 import { ItemMasterService } from "../../../../../services/itemMaster.service";
 import { ItemSearchType } from "../../../quotes/models/item-search-type";
 import { PartDetail } from "../../models/part-detail";
+import { IPartJson } from "../../models/ipart-json";
 import { ISalesQuote } from "../../../../../models/sales/ISalesQuote.model";
+import { SalesQuoteService } from "../../../../../services/salesquote.service";
+import { ItemMasterSearchQuery } from "../../../quotes/models/item-master-search-query";
 
 @Component({
   selector: "app-add-sales-part-number",
@@ -16,18 +19,48 @@ export class AddSalesPartNumberComponent implements OnInit {
   @Output() close: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() select: EventEmitter<any> = new EventEmitter<any>();
   searchType: ItemSearchType;
-  parts: any[];
+  parts: IPartJson[];
   showModalMargin: boolean;
   part: PartDetail;
+  query: ItemMasterSearchQuery;
 
-  constructor(private itemMasterService: ItemMasterService) {
+  constructor(private itemMasterService: ItemMasterService,private salesQuoteService: SalesQuoteService) {
     console.log("add...");
     this.searchType = ItemSearchType.ItemMaster;
     this.showModalMargin = false;
   }
 
   ngOnInit() {
-    this.parts = [];
+   // this.parts = [];
+    this.salesQuoteService
+    .getSearchPartResult()
+    .subscribe(data => {
+      this.parts = data;
+      console.log(this.parts);
+    });
+    this.salesQuoteService.getSearchPartObject()
+    .subscribe(data => {
+  this.query = data;
+  this.searchType = this.getSearchType(this.query.partSearchParamters.itemSearchType);
+  console.log(this.query);
+  console.log(this.searchType);
+
+});
+  }
+  getSearchType(event) {
+    let searchType: ItemSearchType = ItemSearchType.None;
+    switch (event) {
+      case "1":
+        searchType = ItemSearchType.ItemMaster;
+        break;
+
+      case "2":
+        searchType = ItemSearchType.StockLine;
+        break;
+
+    }
+    return searchType;
+    
   }
 
   show(value: boolean): void {
@@ -45,21 +78,42 @@ export class AddSalesPartNumberComponent implements OnInit {
   onPartSearch(parts) {
     console.log(parts);
     this.parts = parts.data;
+    //this.parts[0].isSelected = true;
+    this.salesQuoteService.updateSearchPartResult(this.parts);
+  }
+  updateQuantiy(){
+    let qtyOnHand = 0;
+    let qtyAvailable = 0;
+    for (let i = 0; i < this.parts.length; i++) {
+      qtyAvailable = qtyAvailable + this.parts[i].qtyAvailable;
+      qtyOnHand = qtyOnHand + this.parts[i].qtyOnHand;
+    }
+    this.query.partSearchParamters.qtyAvailable = qtyAvailable;
+    this.query.partSearchParamters.qtyOnHand = qtyOnHand;
+    this.salesQuoteService.updateSearchPartObject(this.query);
+    console.log(this.parts);
   }
 
   onSearchTypeChange(type: ItemSearchType) {
     this.searchType = type;
   }
 
-  onShowModalMargin(event: any) {
+  /*onShowModalMargin(event: any) {
     this.showModalMargin = event.checked;
     if (this.showMarginDetails) {
       this.part = event.part;
+     
       setTimeout(this.showMarginDetails, 100);
     }
+  }*/
+
+  onShowModalMargin(part: any) {
+    console.log(part);
+    this.select.emit(part);
   }
 
   onSelect(part: any) {
+    console.log(part);
     this.select.emit(part);
   }
 

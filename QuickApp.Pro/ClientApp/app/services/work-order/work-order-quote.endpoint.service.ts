@@ -30,6 +30,9 @@ export class QuoteEndpointService extends EndpointFactory {
     getQuoteLaborList(workOrderQuoteId) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/quotelabor?workOrderQuoteId=${workOrderQuoteId}`, this.getRequestHeaders())
     }
+    getWorkOrderQuoteDetail(workOrderId, workFlowWorkOrderId) {
+        return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkorderquote?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`);
+    }
 
 
 

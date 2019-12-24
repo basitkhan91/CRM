@@ -17,6 +17,8 @@ import { MasterComapnyService } from '../../../../services/mastercompany.service
 import { AuditHistory } from '../../../../models/audithistory.model';
 import { MasterCompany } from '../../../../models/mastercompany.model';
 import { VendorService } from '../../../../services/vendor.service';
+import * as $ from 'jquery';
+import { VendorCapabilitiesService } from '../../../../services/vendorcapabilities.service';
 
 @Component({
     selector: 'app-vendor-capabilities-list',
@@ -43,7 +45,9 @@ export class VendorCapabilitiesListComponent implements OnInit{
     Active: string = "Active";
     selectedColumn: any;
     capabilityauditHisory: any[];
-    constructor(private vendorService: VendorService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService,)
+    vendorCapesGeneralInfo: any = {};
+
+    constructor(private vendorService: VendorService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService, private vendorCapesService: VendorCapabilitiesService)
     {
         this.dataSource = new MatTableDataSource();
     }
@@ -78,32 +82,14 @@ export class VendorCapabilitiesListComponent implements OnInit{
 
         // To display the values in header and column name values
         this.cols = [
-            //{ field: 'actionId', header: 'Action Id' },
-
-            //{ field: 'vendorCapabilityId', header: 'VCID' },
             { field: 'vendorCode', header: 'Vendor Code' },
             { field: 'vendorName', header: 'Vendor Name' },
-            { field: 'capabilityType', header: 'Cap Type' },
             { field: 'capabilityDescription', header: 'Vendor Caps' },
-
-            
-            //{ field: 'id', header: 'ID' },
-            //{field: 'materialType', header: 'Material Type' },
             { field: 'partNumber', header: 'PN' },
             { field: 'partDescription', header: 'PN Description' },
+            { field: 'capabilityType', header: 'Caps Type' },            
             { field: 'vendorRanking', header: ' Vendor Ranking' },
-
-            //{ field: 'cost', header: 'Cost' },
             { field: 'tat', header: 'TAT' },
-           
-            //{ field: 'manufacturerName', header: 'PN Mfg' },
-            //{ field: 'updatedDate', header: 'Updated Date' },
-            //{ field: 'partCertificationNumber', header: 'Part Certification Num' }
-            //{ field: 'createdBy', header: 'Created By' },
-            //{ field: 'updatedBy', header: 'Updated By' },
-            //{ field: 'updatedDate', header: 'Updated Date' },
-            //{ field: 'createdDate', header: 'Created Date' }
-
         ];
 
         this.selectedColumns = this.cols;
@@ -116,7 +102,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allvendorCapsList = allWorkFlows;
-        console.log(allWorkFlows);
+        console.log(this.allvendorCapsList);
     }
 
     ngAfterViewInit()
@@ -289,5 +275,30 @@ export class VendorCapabilitiesListComponent implements OnInit{
         console.log(rowData);
         const { vendorId } = rowData;
         this._route.navigateByUrl(`vendorsmodule/vendorpages/app-ro-setup/vendor/${vendorId}`);
+    }
+
+    viewSelectedRow(rowData) { 
+        console.log(rowData);
+        const {vendorCapabilityId} = rowData;
+        this.getVendorCapabilitiesView(vendorCapabilityId);     
+        this.getVendorCapesAircraftView(vendorCapabilityId);     
+    }
+
+    getVendorCapabilitiesView(vendorCapesId) {
+		this.vendorCapesService.getVendorCapabilitybyId(vendorCapesId).subscribe(res => {
+			console.log(res);
+			this.vendorCapesGeneralInfo = res;
+		})
+	}
+
+	getVendorCapesAircraftView(vendorCapesId) {
+		this.vendorCapesService.getVendorAircraftGetDataByCapsId(vendorCapesId).subscribe(res => {
+			console.log(res);
+		})
+	}
+
+    viewSelectedRowdbl(rowData) {
+        this.viewSelectedRow(rowData);
+        $('#vendorCapesView').modal('show');
     }
 }

@@ -144,7 +144,7 @@
 
                                     <label class="control-label">NSN</label>
                                     <div>
-                                        <input class="form-control text-field" maxlength="10" type="text" [ngModelOptions]="{standalone: true}"
+                                        <input class="form-control text-field" maxlength="25" type="text" [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.nationalStockNumber">
                                     </div>
                                     <div class="inline-block display-flex spacing-label">
@@ -837,7 +837,7 @@
                                         <h4 class="float-left">Search ATA chapters</h4>
                                         <h4 class="float-right">
                                             Add ATA Information
-                                            <a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ATAADD"><i class="fa fa-plus-circle fa-lg"></i></a>
+                                            <a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ATAADD" (click)="addNewATA()"><i class="fa fa-plus-circle fa-lg"></i></a>
                                         </h4>
                                     </div>
                                     <div class="col-md-3">
@@ -1210,11 +1210,11 @@
                                         <label for="eccn" class="control-label">
                                             ECCN
                                         </label>
-                                        <input type="text" class="input-field-value" pInputText pKeyFilter="alphanum" [(ngModel)]="exportInfo.ExportECCN" name="ExportECCN" />
+                                        <input type="text" class="input-field-value" pInputText [(ngModel)]="exportInfo.ExportECCN" name="ExportECCN" /> <!--maxlength="5" [pattern]="'^[a-zA-Z0-9 \'\-]+$'"-->
                                         <label class="control-label">
                                             ITAR Num <strong class="clr-red">*</strong>
                                         </label>
-                                        <input type="text" class="input-field-value" required pInputText pKeyFilter="alphanum" [(ngModel)]="exportInfo.ITARNumber" name="itarNumber" />
+                                        <input type="text" class="input-field-value" required pInputText [(ngModel)]="exportInfo.ITARNumber" name="itarNumber" />
                                         <label class="control-label">Country <span style="color: red">*</span></label>
 
 
@@ -1445,6 +1445,8 @@
 
 
     <div id="ATAADD"
+            data-backdrop="static" 
+            data-keyboard="false"
          class="modal fade custom-popup"
          role="dialog">
         <div class="modal-dialog modal-full">
@@ -1464,7 +1466,7 @@
                                     <select class="select-option dropdown-custm" formControlName="atanumber" (change)="getATASubChapterByATAChapter()" style="width: 160px !important;">
 
                                         <option value=''> Select Chapter</option>
-                                        <option *ngFor="let chaptername of ataMainchapter" [ngValue]="chaptername.ataChapterId">{{chaptername.ataChapterName}}</option>
+                                        <option *ngFor="let chaptername of ataMainchapter" [ngValue]="chaptername.ataChapterId"> {{chaptername.ataChapterCode}}-{{chaptername.ataChapterName}}</option>
                                     </select>
                                 </div>
                             </div>

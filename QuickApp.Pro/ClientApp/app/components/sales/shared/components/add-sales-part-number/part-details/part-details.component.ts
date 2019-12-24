@@ -2,6 +2,8 @@ import { Component, Input, Output, EventEmitter, ViewChild, OnChanges, SimpleCha
 import { ISalesQuote } from "../../../../../../models/sales/ISalesQuote.model";
 import { DataTable } from "primeng/datatable";
 import { PartDetail } from "../../../models/part-detail";
+import { IPartJson } from "../../../models/ipart-json";
+import { SalesQuoteService } from "../../../../../../services/salesquote.service";
 
 @Component({
   selector: "app-part-details",
@@ -10,7 +12,7 @@ import { PartDetail } from "../../../models/part-detail";
 })
 export class PartDetailsComponent implements OnChanges {
   @Input() customer: any;
-  @Input() parts: any[];
+  @Input() parts: IPartJson[];
   @Output() onPartSelect: EventEmitter<any> = new EventEmitter<any>();
   selectedColumns: any[];
   showPaginator: boolean;
@@ -19,12 +21,20 @@ export class PartDetailsComponent implements OnChanges {
   part: PartDetail;
   show: boolean;
   columns: any[];
-  constructor() {
+  constructor(private salesQuoteService: SalesQuoteService) {
     this.parts = [];
     this.columns = [];
     this.initColumns();
     this.part = null;
   }
+  ngOnInit() {
+    this.salesQuoteService.getSearchPartResult()
+    .subscribe(data => {
+      this.parts = data;
+      console.log(this.parts);
+    });
+       
+      }
 
 
   ngOnChanges(changes: SimpleChanges) {

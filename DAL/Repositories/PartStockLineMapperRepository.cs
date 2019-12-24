@@ -247,6 +247,7 @@ namespace DAL.Repositories
                         DiscountPerUnit = x.DiscountPerUnit,
                         ExtendedCost = x.ExtendedCost,
                         UnitCost = x.UnitCost,
+                        QuantityRejected = x.QuantityRejected,
                         StockLine = x.StockLine == null ? null : x.StockLine.Select(SL => new
                         {
                             StockLineId = SL.StockLineId,
@@ -394,6 +395,7 @@ namespace DAL.Repositories
                              DiscountPerUnit = part.DiscountPerUnit,
                              ExtendedCost = part.ExtendedCost,
                              UnitCost = part.UnitCost,
+                             QuantityRejected = part.QuantityRejected,
                              StockLine = _appContext.StockLine.Where(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId).Select(SL => new
                              {
                                  StockLineId = SL.StockLineId,

@@ -188,7 +188,7 @@ namespace DAL.Repositories
                                 im.PartNumber,
                                 im.PartDescription,
                                 RevisedPartNo = im1.PartNumber,
-                                WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Shop(Internal)" : (wo.WorkOrderTypeId == 3 ? "Liquidation" : "Services")),
+                                WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Internal" : (wo.WorkOrderTypeId == 3 ? "Tear Down" : "Shop Services")),
                                 wop.CustomerRequestDate,
                                 wop.PromisedDate,
                                 wop.EstimatedShipDate,
@@ -210,11 +210,67 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrdersList(int pageNo, int pageSize)
+        public IEnumerable<object> GetWorkOrdersList(Filters<WorkOrderFilters> woFilters)
         {
-            var pageNumber = pageNo + 1;
-            var take = pageSize;
+            if (woFilters.filters == null)
+                woFilters.filters = new WorkOrderFilters();
+            var pageNumber = woFilters.first + 1;
+            var take = woFilters.rows;
             var skip = take * (pageNumber - 1);
+
+            short statusId = 0;
+            short workOrderTypeId = 0;
+
+            var open = "open";
+            var pending = "pending";
+            var fulfilling = "fulfilling";
+            var closed = "closed";
+
+            var customer = "customer";
+            var shopinternal = "internal";
+            var liquidation = "tear down";
+            var services = "shop services";
+
+            if (!string.IsNullOrEmpty(woFilters.filters.WorkOrderStatus))
+            {
+                if (open.Contains(woFilters.filters.WorkOrderStatus.ToLower()))
+                {
+                    statusId = 1;
+                }
+                else if (pending.Contains(woFilters.filters.WorkOrderStatus.ToLower()))
+                {
+                    statusId = 3;
+                }
+                
+                else if (closed.Contains(woFilters.filters.WorkOrderStatus.ToLower()))
+                {
+                    statusId = 2;
+                }
+                else if (fulfilling.Contains(woFilters.filters.WorkOrderStatus.ToLower()))
+                {
+                    statusId = 4;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(woFilters.filters.WorkOrderType))
+            {
+                if (customer.Contains(woFilters.filters.WorkOrderType.ToLower()))
+                {
+                    workOrderTypeId = 1;
+                }
+                else if (shopinternal.Contains(woFilters.filters.WorkOrderType.ToLower()))
+                {
+                    workOrderTypeId = 2;
+                }
+                else if (liquidation.Contains(woFilters.filters.WorkOrderType.ToLower()))
+                {
+                    workOrderTypeId = 3;
+                }
+                else if (services.Contains(woFilters.filters.WorkOrderType.ToLower()))
+                {
+                    workOrderTypeId = 4;
+                }
+            }
 
             try
             {
@@ -223,6 +279,11 @@ namespace DAL.Repositories
                                     join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
                                     join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
                                     where wo.IsDeleted == false
+                                    && wo.WorkOrderNum.Contains(!String.IsNullOrEmpty(woFilters.filters.workOrderNum) ? woFilters.filters.workOrderNum : wo.WorkOrderNum)
+                                    && cust.Name.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerName) ? woFilters.filters.CustomerName : cust.Name)
+                                    && cust.CustomerCode.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerCode) ? woFilters.filters.CustomerCode : cust.CustomerCode)
+                                    && wo.WorkOrderStatusId == (statusId > 0 ? statusId : wo.WorkOrderStatusId)
+                                    && wo.WorkOrderTypeId == (workOrderTypeId > 0 ? workOrderTypeId : wo.WorkOrderTypeId)
                                     select new
                                     {
                                         wo.WorkOrderId,
@@ -234,14 +295,19 @@ namespace DAL.Repositories
                             join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
                             join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
                             where wo.IsDeleted == false
+                             && wo.WorkOrderNum.Contains(!String.IsNullOrEmpty(woFilters.filters.workOrderNum) ? woFilters.filters.workOrderNum : wo.WorkOrderNum)
+                                    && cust.Name.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerName) ? woFilters.filters.CustomerName : cust.Name)
+                                    && cust.CustomerCode.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerCode) ? woFilters.filters.CustomerCode : cust.CustomerCode)
+                                    && wo.WorkOrderStatusId == (statusId > 0 ? statusId : wo.WorkOrderStatusId)
+                                    && wo.WorkOrderTypeId == (workOrderTypeId > 0 ? workOrderTypeId : wo.WorkOrderTypeId)
                             select new
                             {
                                 wo.WorkOrderId,
                                 wo.WorkOrderNum,
                                 wo.OpenDate,
-                                cust.Name,
+								CustomerName  = cust.Name,
                                 cust.CustomerCode,
-                                WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Shop(Internal)" : (wo.WorkOrderTypeId == 3 ? "Liquidation" : "Services")),
+                                WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Internal" : (wo.WorkOrderTypeId == 3 ? "Tear Down" : "Shop Services")),
                                 wo.IsActive,
                                 wo.CreatedDate,
                                 WorkOrderStatus = wost.Description,
@@ -252,12 +318,179 @@ namespace DAL.Repositories
                           .Skip(skip)
                           .Take(take)
                           .ToList();
+
+                if (woFilters.filters.OpenDate != null)
+                {
+                    if (list != null && list.Any())
+                    {
+                        list = list
+                            .Where(x => x.OpenDate == woFilters.filters.OpenDate)
+                            .ToList();
+                    }
+                }
+
                 return list;
             }
             catch (Exception)
             {
 
                 throw;
+            }
+        }
+
+        public IEnumerable<object> WorkOrdersGlobalSearch(string filterText, int pageNumber, int pageSize)
+        {
+            var take = pageSize;
+            var skip = take * (pageNumber);
+
+            short statusId = 0;
+            short workOrderTypeId = 0;
+
+            var open = "open";
+            var pending = "pending";
+            var fulfilling = "fulfilling";
+            var closed = "closed";
+
+            var customer = "customer";
+            var shopinternal = "internal";
+            var liquidation = "tear down";
+            var services = "shop services";
+
+            if (!string.IsNullOrEmpty(filterText))
+            {
+                if (open.Contains(filterText.ToLower()))
+                {
+                    statusId = 1;
+                }
+                else if (pending.Contains(filterText.ToLower()))
+                {
+                    statusId = 2;
+                }
+                else if (fulfilling.Contains(filterText.ToLower()))
+                {
+                    statusId = 3;
+                }
+                else if (closed.Contains(filterText.ToLower()))
+                {
+                    statusId = 4;
+                }
+
+                if (customer.Contains(filterText.ToLower()))
+                {
+                    workOrderTypeId = 1;
+                }
+                else if (shopinternal.Contains(filterText.ToLower()))
+                {
+                    workOrderTypeId = 2;
+                }
+                else if (liquidation.Contains(filterText.ToLower()))
+                {
+                    workOrderTypeId = 3;
+                }
+                else if (services.Contains(filterText.ToLower()))
+                {
+                    workOrderTypeId = 4;
+                }
+
+                try
+                {
+                    var totalRecords = (from wo in _appContext.WorkOrder
+                                        join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
+                                        join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
+                                        join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
+                                        where wo.IsDeleted == false
+                                        && (wo.WorkOrderNum.Contains(filterText)
+                                        || cust.Name.Contains(filterText)
+                                        || cust.CustomerCode.Contains(filterText)
+                                        || wo.WorkOrderStatusId == statusId
+                                        || wo.WorkOrderTypeId == workOrderTypeId)
+                                        select new
+                                        {
+                                            wo.WorkOrderId,
+                                        }
+                              ).Distinct().Count();
+
+                    var list = (from wo in _appContext.WorkOrder
+                                join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
+                                join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
+                                join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
+                                where wo.IsDeleted == false
+                                 && (wo.WorkOrderNum.Contains(filterText)
+                                        || cust.Name.Contains(filterText)
+                                        || cust.CustomerCode.Contains(filterText)
+                                        || wo.WorkOrderStatusId == statusId
+                                        || wo.WorkOrderTypeId == workOrderTypeId)
+                                select new
+                                {
+                                    wo.WorkOrderId,
+                                    wo.WorkOrderNum,
+                                    wo.OpenDate,
+									CustomerName = cust.Name,
+                                    cust.CustomerCode,
+                                    WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Internal" : (wo.WorkOrderTypeId == 3 ? "Tear Down" : "Shop Services")),
+                                    wo.IsActive,
+                                    wo.CreatedDate,
+                                    WorkOrderStatus = wost.Description,
+                                    TotalRecords = totalRecords
+                                }
+                              ).Distinct()
+                              .OrderByDescending(p => p.CreatedDate)
+                              .Skip(skip)
+                              .Take(take)
+                              .ToList();
+                    return list;
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+            else
+            {
+                try
+                {
+                    var totalRecords = (from wo in _appContext.WorkOrder
+                                        join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
+                                        join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
+                                        join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
+                                        where wo.IsDeleted == false
+                                        select new
+                                        {
+                                            wo.WorkOrderId,
+                                        }
+                              ).Distinct().Count();
+
+                    var list = (from wo in _appContext.WorkOrder
+                                join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
+                                join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
+                                join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
+                                where wo.IsDeleted == false
+                                select new
+                                {
+                                    wo.WorkOrderId,
+                                    wo.WorkOrderNum,
+                                    wo.OpenDate,
+                                    cust.Name,
+                                    cust.CustomerCode,
+                                    WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Internal" : (wo.WorkOrderTypeId == 3 ? "Tear Down" : "Shop Services")),
+                                    wo.IsActive,
+                                    wo.CreatedDate,
+                                    WorkOrderStatus = wost.Description,
+                                    TotalRecords = totalRecords
+                                }
+                              ).Distinct()
+                              .OrderByDescending(p => p.CreatedDate)
+                              .Skip(skip)
+                              .Take(take)
+                              .ToList();
+                    return list;
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
             }
         }
 
@@ -352,7 +585,7 @@ namespace DAL.Repositories
                                        select new
                                        {
                                            SingleMPN = wo.IsSinglePN == true ? "Single MPN" : "Multiple MPN",
-                                           WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Shop(Internal)" : (wo.WorkOrderTypeId == 2 ? "Liquidation" : "Services")),
+                                           WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Internal" : (wo.WorkOrderTypeId == 2 ? "Tear Down" : "Shop Services")),
                                            WorkOrderNumber = wo.WorkOrderNum,
                                            CustomerName = c.Name,
                                            wo.IsContractAvl,
@@ -370,6 +603,7 @@ namespace DAL.Repositories
                                            wo.CustomerReference,
                                            workFlowWorkOrderId = wo.IsSinglePN == true ? wf.WorkFlowWorkOrderId : 0,
                                            workFlowId = wo.IsSinglePN == true ? wf.WorkflowId : 0,
+                                           wo.ManagementStructureId
                                        }).FirstOrDefault();
                 return workOrderHeader;
             }
@@ -1617,8 +1851,8 @@ namespace DAL.Repositories
                                                    we.CostPlusAmount,
                                                    we.CreatedBy,
                                                    we.CreatedDate,
-                                                   Epn = im.PartNumber,
-                                                   EpnDescription = im.PartDescription,
+                                                   Epn = im == null ? "" : im.PartNumber,
+                                                   EpnDescription = im==null?"": im.PartDescription,
                                                    we.EstimtPercentOccurranceId,
                                                    ExstimtPercentOccurance = eo.Name == null ? "" : eo.Name,
                                                    we.ExtendedCost,
@@ -1628,7 +1862,7 @@ namespace DAL.Repositories
                                                    we.IsFromWorkFlow,
                                                    we.ItemMasterId,
                                                    we.MarkUpPercentageId,
-                                                   MarkUpPercentage = mp.PercentValue,
+                                                   MarkUpPercentage = mp==null?0: mp.PercentValue,
                                                    we.MasterCompanyId,
                                                    we.Memo,
                                                    we.Quantity,
@@ -2587,7 +2821,7 @@ namespace DAL.Repositories
 
         #region Work Order Quote
 
-        public long CreateWorkOrderQuote(WorkOrderQuote workOrderQuote)
+        public WorkOrderQuote CreateWorkOrderQuote(WorkOrderQuote workOrderQuote)
         {
             try
             {
@@ -2603,7 +2837,7 @@ namespace DAL.Repositories
                 _appContext.WorkOrderQuote.Update(workOrderQuote);
                 _appContext.SaveChanges();
 
-                return workOrderQuote.WorkOrderQuoteId;
+                return workOrderQuote;
             }
             catch (Exception)
             {
@@ -2612,7 +2846,7 @@ namespace DAL.Repositories
             }
         }
 
-        public void UpdateWorkOrderQuote(WorkOrderQuote workOrderQuote)
+        public WorkOrderQuote UpdateWorkOrderQuote(WorkOrderQuote workOrderQuote)
         {
             try
             {
@@ -2622,6 +2856,7 @@ namespace DAL.Repositories
 
                 _appContext.WorkOrderQuote.Update(workOrderQuote);
                 _appContext.SaveChanges();
+                return workOrderQuote;
             }
             catch (Exception)
             {
@@ -2646,7 +2881,9 @@ namespace DAL.Repositories
                                       from con in cccon.DefaultIfEmpty()
                                       join ct in _appContext.CreditTerms on cust.CreditTermsId equals ct.CreditTermsId into custct
                                       from ct in custct.DefaultIfEmpty()
-                                      where wq.WorkFlowWorkOrderId == wfwoId && wq.IsDeleted == false
+                                      join qd in _appContext.WorkOrderQuoteDetails on wq.WorkOrderQuoteId equals qd.WorkOrderQuoteId into wqqd
+                                      from qd in wqqd.DefaultIfEmpty()
+                                      where wq.WorkOrderId == workOrderId && wq.IsDeleted == false
                                       select new
                                       {
                                           WorkOrderQuote = wq,
@@ -2663,7 +2900,13 @@ namespace DAL.Repositories
                                           CreditTermId = ct == null ? 0 : ct.CreditTermsId,
                                           CreditTerm = ct == null ? "" : ct.Name,
                                           SalesPersonName = sp.FirstName + ' ' + sp.LastName,
-                                          EmployeeName = emp.FirstName + ' ' + emp.LastName
+                                          EmployeeName = emp.FirstName + ' ' + emp.LastName,
+                                          wq.Warnings,
+                                          wq.Memo,
+                                          wq.AccountsReceivableBalance,
+                                          BuildMethodId= qd== null?0:qd.BuildMethodId,
+                                          SelectedId=qd == null ? 0 : qd.SelectedId,
+                                          ReferenceNo=qd == null ? "" : qd.ReferenceNo,
 
                                       }).FirstOrDefault();
                 return workOrderQuote;
@@ -3633,7 +3876,6 @@ namespace DAL.Repositories
                             join ct in _appContext.CreditTerms on wo.CreditTermsId equals ct.CreditTermsId
                             join sv in _appContext.ShippingVia on bi.ShipViaId equals sv.ShippingViaId into bisv
                             from sv in bisv.DefaultIfEmpty()
-
                             where bi.WorkOrderId == WorkOrderId && bi.WorkOrderPartNoId == workOrderPartNoId
                             select new
                             {
@@ -3656,7 +3898,7 @@ namespace DAL.Repositories
                                 EmployeeName = emp.FirstName,
                                 bi.RevType,
                                 wo.WorkOrderTypeId,
-                                WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Shop(Internal)" : (wo.WorkOrderTypeId == 3 ? "Liquidation" : "Services")),
+                                WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Internal" : (wo.WorkOrderTypeId == 3 ? "Tear Down" : "Shop Services")),
                                 WorkScope = wos.Description,
                                 wop.WorkOrderScopeId,
                                 wop.Quantity,
@@ -4191,10 +4433,10 @@ namespace DAL.Repositories
 
 
                             var existWorkFlow = _appContext.WorkOrderWorkFlow.Where(p => p.WorkOrderPartNoId == item.ID).AsNoTracking().FirstOrDefault();
-                            if(existWorkFlow!=null)
+                            if (existWorkFlow != null)
                             {
                                 workOrderWorkFlow.WorkFlowWorkOrderId = existWorkFlow.WorkFlowWorkOrderId;
-                                
+
 
                                 _appContext.WorkOrderWorkFlow.Update(workOrderWorkFlow);
                             }
@@ -5602,6 +5844,10 @@ namespace DAL.Repositories
                     if (workFlow.Expertise != null && workFlow.Expertise.Count > 0)
                     {
                         workOrderLaborHeader = BindWorkFlowWorkOrderLabor(workFlow.Expertise, workFlow.workOrderId, workFlow.CreatedBy, workFlow.MasterCompanyId);
+                    }
+                    else
+                    {
+                        workOrderLaborHeader = null;
                     }
 
 

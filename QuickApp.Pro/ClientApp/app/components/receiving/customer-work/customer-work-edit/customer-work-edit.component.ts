@@ -22,6 +22,7 @@ import { ItemMasterService } from '../../../../services/itemMaster.service';
 import { NgbActiveModal, NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
+import { getObjectById } from '../../../../generic/autocomplete';
 
 @Component({
     selector: 'app-customer-work-edit',
@@ -89,7 +90,7 @@ export class CustomerWorkEditComponent {
     divisionlist: any[] = [];
     departmentList: any[] = [];
     partListData: any[] = [];
-
+    custcodes: { customerId: any; name: any; }[];
     constructor(private router: Router,private conditionService: ConditionService, public workFlowtService1: LegalEntityService, private siteService: SiteService, private binService: BinService, private vendorservice: VendorService, public employeeService: EmployeeService, private alertService: AlertService, public itemser: ItemMasterService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public receivingCustomerWorkService: ReceivingCustomerWorkService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerservices: CustomerService) {
         this.dataSource = new MatTableDataSource();
 
@@ -347,14 +348,22 @@ export class CustomerWorkEditComponent {
         }, () => { console.log('Backdrop click') })
     }
 
+    filterCodes(event) {
+        this.custcodes = this.allCustomer;
+        this.custcodes = [...this.allCustomer.filter(x => {
+            return x.customerCode.toLowerCase().includes(event.query.toLowerCase())
+        })]
 
+    }
     editItemAndCloseModel() {
         this.isSaving = true;
 
         if (!this.sourcereceving.receivingCustomerWorkId) {
+            debugger
             this.sourcereceving.createdBy = this.userName;
             this.sourcereceving.updatedBy = this.userName;
             this.sourcereceving.masterCompanyId = 1;
+            this.sourcereceving.isActive = true;
             console.log(this.sourcereceving);
             if ((this.sourceTimeLife != null) || (this.sourceTimeLife != "null")) {
                 if (this.sourceTimeLife.timeLife) {
@@ -369,7 +378,7 @@ export class CustomerWorkEditComponent {
                             this.sourcereceving.tagType = '';
                             this.sourcereceving.partCertificationNumber = '';
                         }
-                        switch(this.sourcereceving.traceableToType){
+                        switch (this.sourcereceving.traceableToType) {
                             case '1':
                                 this.sourcereceving.traceableTo = this.sourcereceving.traceableToCustomerId;
                                 break;
@@ -383,7 +392,7 @@ export class CustomerWorkEditComponent {
                                 this.sourcereceving.traceableTo = this.sourcereceving.traceableToCompanyId;
                                 break;
                         }
-                        switch(this.sourcereceving.obtainFromType){
+                        switch (this.sourcereceving.obtainFromType) {
                             case '1':
                                 this.sourcereceving.obtainFrom = this.sourcereceving.obtainFromCustomerId;
                                 break;
@@ -406,6 +415,12 @@ export class CustomerWorkEditComponent {
 
                     )
                 }
+                else {
+                    this.receivingCustomerWorkService.newReason(this.sourcereceving).subscribe(
+                        role => this.saveSuccessHelper(role),
+                        error => this.saveFailedHelper(error));
+                    this.sourcereceving = {};
+                }
             }
         }
 
@@ -426,6 +441,8 @@ export class CustomerWorkEditComponent {
 
             }
             else {
+             
+
                 this.receivingCustomerWorkService.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
                     this.collectionofstockLine = data;
 
@@ -636,11 +653,15 @@ export class CustomerWorkEditComponent {
 
     customerNameId(event) {
         //
+        debugger
         if (this.allCustomer) {
             for (let i = 0; i < this.allCustomer.length; i++) {
                 if (event == this.allCustomer[i].name) {
                     this.sourcereceving.customerId = this.allCustomer[i].customerId;
-                    this.sourcereceving.customerCode = this.allCustomer[i].customerCode;
+
+                    //this.sourcereceving.customerCode = this.allCustomer[i].customerCode;
+                    this.sourcereceving.customerCode = getObjectById('customerId', this.allCustomer[i].customerId, this.allCustomer);
+                   console.log(this.sourcereceving.customerCode)
                     this.selectedActionName = event;
                     this.getAllCustomerContact(this.allCustomer[i].customerId);
                 }

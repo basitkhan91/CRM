@@ -73,7 +73,7 @@
                             </ng-template>
         
                             <ng-template pTemplate="body" let-rowData let-columns="columns">
-                                <tr [pSelectableRow]="rowData" pReorderableRowHandle>
+                                <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" pReorderableRowHandle (dblclick)="viewSelectedRowdbl(rowData)">
         
                                     <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                         {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
@@ -86,6 +86,18 @@
                                         <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                         <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
         
+                                        <span>
+                                        <a
+                                            class="btn btn-info boxed-float-btn nobg"
+                                            data-toggle="tooltip"
+                                            (click)="viewSelectedRow(rowData)"
+                                            data-target="#vendorCapesView"
+                                            data-toggle="modal"
+                                            matTooltip="View"
+                                        >
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                        </span>
                                         <button class="btn-edit" mat-icon-button (click)="openEdits(rowData)" matTooltip="edit">
                                             <mat-icon>edit</mat-icon>
                                         </button>
@@ -229,3 +241,48 @@
         <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>
+
+<div class="modal fade" id="vendorCapesView" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button> <!--data-dismiss="modal"-->
+              <h4 class="modal-title">Capability Details</h4>
+            </div>
+            <div class="modal-body">
+              <div>
+                <div class="card">
+                    <div class="card-body" *ngIf="vendorCapesGeneralInfo">
+                        <div class="table-responsive default-bg clear">
+                            <div class="col-sm-3">
+                                <p><span class="label"><b>Vendor Name: </b></span><span class="value">{{vendorCapesGeneralInfo.vendorName ? vendorCapesGeneralInfo.vendorName : '-'}}</span></p>
+                                <p><span class="label"><b>Vendor Code: </b></span><span class="value">{{vendorCapesGeneralInfo.vendorCode ? vendorCapesGeneralInfo.vendorCode : '-'}}</span></p>
+                                <p><span class="label"><b>PN: </b></span><span class="value">{{vendorCapesGeneralInfo.partNumber ? vendorCapesGeneralInfo.partNumber : '-'}}</span></p>
+                                <p><span class="label"><b>PN Description: </b></span><span class="value">{{vendorCapesGeneralInfo.partDescription ? vendorCapesGeneralInfo.partDescription : '-'}}</span></p>
+                            </div>
+                            <div class="col-sm-3">
+                                <p><span class="label"><b>PN Mfg: </b></span><span class="value">{{vendorCapesGeneralInfo.manufacturerName ? vendorCapesGeneralInfo.manufacturerName : '-'}}</span></p>
+                                <p><span class="label"><b>Capability Type: </b></span><span class="value">{{vendorCapesGeneralInfo.capabilityType ? vendorCapesGeneralInfo.capabilityType : '-'}}</span></p>
+                                <p><span class="label"><b>Vendor Ranking: </b></span><span class="value">{{vendorCapesGeneralInfo.vendorRanking ? vendorCapesGeneralInfo.vendorRanking : '-'}}</span></p>
+                            </div>
+                            <div class="col-sm-3">
+                                <p><span class="label"><b>PMA: </b></span><span class="value">{{vendorCapesGeneralInfo.isPMA ? vendorCapesGeneralInfo.isPMA : '-'}}</span></p>
+                                <p><span class="label"><b>DER: </b></span><span class="value">{{vendorCapesGeneralInfo.isDER ? vendorCapesGeneralInfo.isDER : '-'}}</span></p>
+                                <p><span class="label"><b>Cost: </b></span><span class="value">{{vendorCapesGeneralInfo.cost ? vendorCapesGeneralInfo.cost : '-'}}</span></p>
+                            </div>
+                            <div class="col-sm-3">
+                                <p><span class="label"><b>TAT (Days): </b></span><span class="value">{{vendorCapesGeneralInfo.tat ? vendorCapesGeneralInfo.tat : '-'}}</span></p>
+                                <p><span class="label"><b>Cap Description: </b></span><span class="value">{{vendorCapesGeneralInfo.capabilityDescription ? vendorCapesGeneralInfo.capabilityDescription : '-'}}</span></p>
+                                <p><span class="label"><b>Memo: </b></span><span class="value">{{vendorCapesGeneralInfo.memo ? vendorCapesGeneralInfo.memo : '-'}}</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>

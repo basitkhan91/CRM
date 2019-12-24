@@ -301,16 +301,16 @@
 
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" >
                                 <label>Title</label>
                                 <input class="form-control" type="text" name="contactTitle" [(ngModel)]="contactInformation.contactTitle">
                             </div>
-                            <div class="form-group">
-                                <label>Work Phone <span class="clr-red">*</span></label>
-                                <div>
-                                    <input class="form-control" type="number" pattern="[0-9]+([-\,][0-9]+)?" name="workPhone" [(ngModel)]="contactInformation.workPhone" style="width: calc(100% - 63px) !important;">
+                            <div class="form-group" style="width:300px;margin-top:20px;">
+                                <label>Work Phone <span class="clr-red" style="margin-right:110px;">*</span></label>
+                                <div class="col-md-12">
+                                    <input class="form-control" type="text"  name="workPhone" [(ngModel)]="contactInformation.workPhone" style="width: calc(62% - 63px) !important;" (keypress)="patternMobilevalidationWithSpl($event)">
                                     -
-                                    <input class="form-control w50" type="text" name="workPhoneExtn" [(ngModel)]="contactInformation.workPhoneExtn">
+                                    <input class="form-control" type="text" name="workPhoneExtn" [(ngModel)]="contactInformation.workPhoneExtn" style="width: calc(62% - 63px) !important;">
                                 </div>
                             </div>
                         </div>

@@ -93,7 +93,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="contentEdit" role="dialog">
+<div class="modal fade" id="contentEdit" role="dialog" data-backdrop="static">
     <form #userForm="ngForm" class="form-horizontal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -270,7 +270,7 @@
     </div>
 </div>
 
-<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog">
+<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static" >
     <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->

@@ -4,7 +4,7 @@ namespace DAL.Repositories.Interfaces
 {
     public interface ISalesOrderQuoteApproverList
     {
-        IEnumerable<SalesOrderQuoteApproverList> GetApproverList();
+        IEnumerable<SalesOrderQuoteApproverList> GetApproverList(long salesQuoteId);
         SalesOrderQuoteApproverList Create(SalesOrderQuoteApproverList quote);
 
         IEnumerable<SalesOrderQuoteApproverList> BulkCreate(IEnumerable<SalesOrderQuoteApproverList> approverLists);

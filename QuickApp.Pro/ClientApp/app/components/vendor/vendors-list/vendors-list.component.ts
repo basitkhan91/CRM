@@ -113,6 +113,7 @@ export class VendorsListComponent implements OnInit {
     poCols: any = [];
     selectedPOColumns: any[];
     selectedPOColumn: any[];
+    isAllowNettingAPAR: boolean = false;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -404,7 +405,9 @@ export class VendorsListComponent implements OnInit {
             { field: 'lastName', header: 'Last  Name' },
             { field: 'contactTitle', header: 'Contact Title' },
             { field: 'email', header: 'Email' },
+            //{ field: 'mobilePhone', header: 'Mobile Phone' },
             { field: 'mobilePhone', header: 'Mobile Phone' },
+            { field: 'fullContactNo', header: 'Work Phone' },
             { field: 'fax', header: 'Fax' },
             { field: 'createdBy', header: 'Created By' },
             { field: 'updatedBy', header: 'Updated By' },
@@ -616,6 +619,7 @@ export class VendorsListComponent implements OnInit {
         this.isCertified= row.t.isCertified;
         this.isVendorAudit= row.t.vendorAudit;
         this.isVendorCustomer= row.t.isVendorAlsoCustomer;
+        this.isAllowNettingAPAR= row.t.isAllowNettingAPAR;
 
         this.loadContactDataData(row.vendorId);
         this.loadPayamentData(row.vendorId);

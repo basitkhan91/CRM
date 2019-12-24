@@ -62,6 +62,7 @@ export class EmployeeEndpoint extends EndpointFactory {
 	private readonly _getEmployeeRolesUrl: string = "/api/Employee/getEmployeeRoles";
 	private readonly _getStoreEmployeeManagementStructure: string = "/api/Employee/employeeManagementStructure";
 	private readonly _getEmployeeManagementStructure: string = "/api/Employee/getemployeeManagementStructure";
+	private readonly _getEmployeeAuditHistoryByEmpId: string = "/api/Employee/GetEmployeeAuditHistory";
  
     
 
@@ -455,6 +456,13 @@ export class EmployeeEndpoint extends EndpointFactory {
 		return this.http.get<T>(`${this._getEmployeeManagementStructure}?employeeId=${employeeId}`, this.getRequestHeaders())
 		.catch(error => {
 			return this.handleError(error, () => this.getEmployeeEndpoint());
+		});
+	}
+
+	getEmployeeAuditDetailsEndPoint<T>(employeeId): Observable<T> {
+		return this.http.get<T>(`${this._getEmployeeAuditHistoryByEmpId}/${employeeId}`, this.getRequestHeaders())
+		.catch(error => {
+			return this.handleError(error, () => this.getEmployeeAuditDetailsEndPoint(employeeId));
 		});
 	}
 }

@@ -118,13 +118,15 @@ export class AssetListingComponent implements OnInit {
     private onGlAccountLoad(getGl: GlAccount) {
         //console.log(getGl);
         //console.log(getGl[0]);
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.assetViewList.inspectionGlaAccountName = getGl[0].accountName;
+        if (getGl) {
+            this.alertService.stopLoadingMessage();
+            this.loadingIndicator = false;
+            this.assetViewList.inspectionGlaAccountName = getGl[0].accountName;
+        }
     }
 
-    private getInsecVendorName() {
-        //console.log('107', this.assetViewList.inspectionDefaultVendorId);
+    private getInspecVendorName() {
+        console.log('129', this.assetViewList.inspectionDefaultVendorId);
         this.vendorEndpointService.getVendorsDatawithid(this.assetViewList.inspectionDefaultVendorId).subscribe(
             results => this.onVendorLoad(results[0]),
             error => this.onDataLoadFailed(error)
@@ -243,7 +245,7 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.inspectionDefaultCost = row.inspectionDefaultCost;
         this.assetViewList.inspectionGlaAccountId = row.inspectionGlaAccountId;
         this.getInsecGLAccName();
-        this.getInsecVendorName();
+        this.getInspecVendorName();
         this.assetViewList.inspectionMemo = row.inspectionMemo;
         this.assetViewList.manufacturedDate = row.manufacturedDate;
         this.assetViewList.isSerialized = row.isSerialized;

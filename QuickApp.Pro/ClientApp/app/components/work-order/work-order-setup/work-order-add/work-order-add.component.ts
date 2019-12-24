@@ -41,6 +41,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { Billing } from '../../../../models/work-order-billing.model';
 import * as moment from 'moment';
 import { WorkOrderQuoteService } from '../../../../services/work-order/work-order-quote.service';
+import { CustomerViewComponent } from '../../../../shared/components/customer/customer-view/customer-view.component';
 
 
 @Component({
@@ -239,7 +240,6 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         // this.getStockLines();
 
 
-
         if (!this.isSubWorkOrder) { // subWorkOrder false
             if (!this.isEdit) { // create new WorkOrder
 
@@ -251,7 +251,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
             } else { // edit WorkOrder
                 console.log(this.workOrderGeneralInformation);
-
+                this.getWorkOrderQuoteDetail(this.workOrderGeneralInformation.workOrderId, this.workOrderGeneralInformation.workFlowWorkOrderId);
                 const data = this.workOrderGeneralInformation;
                 this.workOrderGeneralInformation = {
                     ...data,
@@ -366,10 +366,19 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     selectCustomer(object, currentRecord) {
         currentRecord.customerReference = object.customerRef,
-            currentRecord.csr = object.csrName;
+        currentRecord.csr = object.csrName;
         currentRecord.creditLimit = object.creditLimit;
         currentRecord.creditTermsId = object.creditTermsId;
 
+    }
+    viewCustomerDetails(customerId){
+           
+    console.log();
+    this.modal = this.modalService.open(CustomerViewComponent, { size: 'lg' });
+    this.modal.componentInstance.customerId = customerId;
+    this.modal.result.then(() => {
+        console.log('When user closes');
+    }, () => { console.log('Backdrop click') })
     }
 
     clearautoCompleteInput(currentRecord, field) {
@@ -1455,7 +1464,16 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         this.billing.totalWorkOrderCost = (this.billing.materialCost + this.billing.laborOverHeadCost + this.billing.miscChargesCost);
     }
 
-
+    getWorkOrderQuoteDetail(workOrderId, workFlowWorkOrderId){
+        this.quoteService.getWorkOrderQuoteDetail(workOrderId, workFlowWorkOrderId)
+        .subscribe(
+            (res:any) => {
+                if(res){
+                    this.workOrderQuoteId = res.workOrderQuote.workOrderQuoteId;
+                }
+            }
+        )
+    }
 
 
 
