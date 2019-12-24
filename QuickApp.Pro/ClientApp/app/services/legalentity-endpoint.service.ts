@@ -144,6 +144,7 @@ export class LegalEntityEndpontService extends EndpointFactory {
 			'cageCode': roleObject.cageCode,
 			'faaLicense': roleObject.faaLicense,
 			'taxId': roleObject.taxId,
+			'ledgerName': roleObject.ledgerName,
 			'isBankingInfo': roleObject.isBankingInfo,
 			'isLastLevel': roleObject.isLastLevel,
 			'poBox': roleObject.poBox,
