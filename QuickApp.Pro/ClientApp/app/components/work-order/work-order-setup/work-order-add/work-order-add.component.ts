@@ -240,7 +240,6 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         // this.getStockLines();
 
 
-
         if (!this.isSubWorkOrder) { // subWorkOrder false
             if (!this.isEdit) { // create new WorkOrder
 
@@ -252,7 +251,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
             } else { // edit WorkOrder
                 console.log(this.workOrderGeneralInformation);
-
+                this.getWorkOrderQuoteDetail(this.workOrderGeneralInformation.workOrderId, this.workOrderGeneralInformation.workFlowWorkOrderId);
                 const data = this.workOrderGeneralInformation;
                 this.workOrderGeneralInformation = {
                     ...data,
@@ -1465,7 +1464,16 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         this.billing.totalWorkOrderCost = (this.billing.materialCost + this.billing.laborOverHeadCost + this.billing.miscChargesCost);
     }
 
-
+    getWorkOrderQuoteDetail(workOrderId, workFlowWorkOrderId){
+        this.quoteService.getWorkOrderQuoteDetail(workOrderId, workFlowWorkOrderId)
+        .subscribe(
+            (res:any) => {
+                if(res){
+                    this.workOrderQuoteId = res.workOrderQuote.workOrderQuoteId;
+                }
+            }
+        )
+    }
 
 
 

@@ -394,14 +394,16 @@ console.log(this.workOrderLaborList);
 
   calculateTotalWorkHours(){
     this.laborForm.totalWorkHours = 0;
-    for(let task in this.laborForm.workOrderLaborList[0]){
-      if(this.laborForm.workOrderLaborList[0][task][0]['hours'] != null){
-        for (let taskList of this.laborForm.workOrderLaborList[0][task] ){
-          // hoursArr = taskList['hours'].split(":");
-          // if(hoursArr.length == 1){ hoursArr.push(0)}
-          // hoursInSeconds = (+hoursArr[0]) * 60 * 60 + (+hoursArr[1]) * 60;
-            this.laborForm.totalWorkHours += taskList['hours'];
-            
+    if(this.laborForm.workOrderLaborList){
+      for(let task in this.laborForm.workOrderLaborList[0]){
+        if(this.laborForm.workOrderLaborList[0][task][0]['hours'] != null){
+          for (let taskList of this.laborForm.workOrderLaborList[0][task] ){
+            // hoursArr = taskList['hours'].split(":");
+            // if(hoursArr.length == 1){ hoursArr.push(0)}
+            // hoursInSeconds = (+hoursArr[0]) * 60 * 60 + (+hoursArr[1]) * 60;
+              this.laborForm.totalWorkHours += taskList['hours'];
+              
+          }
         }
       }
     }
