@@ -22,6 +22,7 @@ import { CommonService } from '../../../../services/common.service';
 import { AircraftModelService } from '../../../../services/aircraft-model/aircraft-model.service';
 import { DashNumberService } from '../../../../services/dash-number/dash-number.service';
 import { AuthService } from '../../../../services/auth.service';
+import { VendorCapabilitiesService } from '../../../../services/vendorcapabilities.service';
 @Component({
     selector: 'app-add-vendor-capabilities',
     templateUrl: './add-vendor-capabilities.component.html',
@@ -145,7 +146,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	vendorCapabilityId: number;
 
 	/** add-vendor-capabilities ctor */
-    constructor(private _route: Router,private modalService: NgbModal,public ataSubChapter1Service: AtaSubChapter1Service,public ataservice: AtaMainService,public vendorService: VendorService, private alertService: AlertService, public itemser: ItemMasterService, public commonService: CommonService, private aircraftModelService: AircraftModelService, private dashNumService: DashNumberService, private authService: AuthService, private _actRoute: ActivatedRoute)
+    constructor(private _route: Router,private modalService: NgbModal,public ataSubChapter1Service: AtaSubChapter1Service,public ataservice: AtaMainService,public vendorService: VendorService, private alertService: AlertService, public itemser: ItemMasterService, public commonService: CommonService, private aircraftModelService: AircraftModelService, private dashNumService: DashNumberService, private authService: AuthService, private _actRoute: ActivatedRoute, private vendorCapesService: VendorCapabilitiesService)
 	{
         this.vendorService.isEditMode = false;
 	}
@@ -174,12 +175,30 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		if(this.vendorCapabilityId) {
 			this.isEditMode = true;
 			this.enableAircraftInfo = false;
-			this.getVendorCapabilitiesEdit();
+			this.getVendorCapabilitiesEdit(this.vendorCapabilityId);
+			this.getVendorCapesAircraftEdit(this.vendorCapabilityId);
 		}
 	}
 
-	getVendorCapabilitiesEdit() {
+	getVendorCapabilitiesEdit(vendorCapesId) {
+		this.vendorCapesService.getVendorCapabilitybyId(vendorCapesId).subscribe(res => {
+			console.log(res);
+			this.sselectedVendorName = res.vendorName;
+			this.sselectedVendorCode = res.vendorCode;
+			this.sourceVendorCap = {
+				...res,
+				vendorId: getObjectById('vendorId', res.vendorId, this.allVendors),
+				vendorCode: getObjectById('vendorId', res.vendorId, this.allVendors),
+				partNumberId: getObjectById('value', res.itemMasterId, this.allPartnumbersInfo),
+			}
 
+		})
+	}
+
+	getVendorCapesAircraftEdit(vendorCapesId) {
+		this.vendorCapesService.getVendorAircraftGetDataByCapsId(vendorCapesId).subscribe(res => {
+			console.log(res);			
+		})
 	}
 
 	get userName(): string {
