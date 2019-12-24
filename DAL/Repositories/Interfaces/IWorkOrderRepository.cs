@@ -62,8 +62,8 @@ namespace DAL.Repositories.Interfaces
         void UpdateWorkOrderAddress(WorkOrderAddress workOrderAddress);
         IEnumerable<WorkOrderAddress> GetWorkFlowWorkOrderAddressList(long wfwoId = 0, long workOrderId = 0);
 
-        long CreateWorkOrderQuote(WorkOrderQuote workOrderQuote);
-        void UpdateWorkOrderQuote(WorkOrderQuote workOrderQuote);
+        WorkOrderQuote CreateWorkOrderQuote(WorkOrderQuote workOrderQuote);
+        WorkOrderQuote UpdateWorkOrderQuote(WorkOrderQuote workOrderQuote);
         object GetWorkFlowWorkOrderQuote(long wfwoId = 0, long workOrderId = 0);
         object WorkOrderQuoteExists(long workOrderId);
         WorkOrderQuoteDetails CreateWorkOrderQuoteDetails(WorkOrderQuoteDetails workOrderQuoteDetails);
