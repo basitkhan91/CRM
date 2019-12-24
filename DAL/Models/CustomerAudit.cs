@@ -131,6 +131,10 @@ namespace DAL.Models
         public int? Currency { get; set; }
 
         public bool? IsAddressForBillingAndShipping { get; set; }
+        public bool? IsAddressForBilling { get; set; }
+
+        public bool? IsAddressForShipping { get; set; }
+
 
         //public virtual MasterCompany MasterCompany { get; set; }
 

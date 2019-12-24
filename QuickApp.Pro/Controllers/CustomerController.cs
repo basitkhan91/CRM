@@ -3213,7 +3213,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(allATAMaininfo);
 
         }
+        [HttpGet("GetCustomerAuditHistoryByid/{customerId}")]
+        [Produces(typeof(List<CustomerViewModel>))]
+        public IActionResult GetCustomerAuditHistoryByid(long customerId)
+        {
+            var customerDtails = _unitOfWork.Customer.GetCustomerAuditHistoryByid(customerId); //.GetAllCustomersData();
+            return Ok(customerDtails);
 
+        }
     }
 
 }
