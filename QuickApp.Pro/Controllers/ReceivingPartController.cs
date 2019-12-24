@@ -254,7 +254,7 @@ namespace QuickApp.Pro.Controllers
                         {
                             purchaseOrderPart.QuantityBackOrdered = (short?)(purchaseOrderPart.QuantityOrdered - quantity);
                         }
-
+                        purchaseOrderPart.QuantityRejected = receivePart.QuantityRejected;
                         unitOfWork.Repository<PurchaseOrderPart>().Update(purchaseOrderPart);
 
                         unitOfWork.Repository<StockLine>().AddRange(receivePart.StockLines);
@@ -425,7 +425,8 @@ namespace QuickApp.Pro.Controllers
                     if (!filteredParts.Any(x => x.ItemMasterId == part.ItemMasterId))
                         filteredParts.AddRange(splitParts);
                 }
-                else {
+                else
+                {
                     filteredParts.Add(part);
                 }
             }
