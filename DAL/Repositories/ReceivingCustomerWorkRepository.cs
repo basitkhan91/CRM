@@ -21,8 +21,8 @@ namespace DAL.Repositories
                               join im in _appContext.ItemMaster on stl.PartNumber equals im.PartNumber
 
 
-                              join co in _appContext.Condition on stl.ConditionId equals co.ConditionId
-
+                              join co in _appContext.Condition on stl.ConditionId equals co.ConditionId into conn
+                              from co in conn.DefaultIfEmpty()
 
                               join si in _appContext.Site on stl.SiteId equals si.SiteId into sit
                               from si in sit.DefaultIfEmpty()
@@ -64,6 +64,7 @@ namespace DAL.Repositories
                                   customer,
                                   employee.FirstName,
                                   customer.Name,
+                                  customer.CustomerCode,
                                   contact.WorkPhone,
                                   contact.ContactId,
                                   partNumber = stl.PartNumber,
@@ -79,7 +80,8 @@ namespace DAL.Repositories
                                   warehouse = w.Name,
                                   im.ExpirationDate,
                                   stl.SerialNumber,
-                                  conditionId = co.ConditionId,
+                                  conditionId = co == null ? 0 : co.ConditionId,
+                                  //conditionId = co.ConditionId,
                                   stl.ChangePartNumber,
                                   partDescription = im.PartDescription,
                                   stl.Quantity,
@@ -117,7 +119,6 @@ namespace DAL.Repositories
                                   w,
                                   l,
                                   ti,
-                                 
                                   conditionType = co.Description,
                                   im.ItemTypeId,
 

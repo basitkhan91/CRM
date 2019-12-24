@@ -15,6 +15,7 @@ export class EmployeeExpertiseEndpointService extends EndpointFactory {
     private readonly _employeeExpertiseUrlNew: string = "/api/EmployeeExpertise/EmployeeExpertiseepost";
     private readonly _actionsUrlAuditHistory: string = "/api/EmployeeExpertise/auditHistoryById";
     private readonly _getAuditById: string = "/api/EmployeeExpertise/audits";
+    private readonly excelUpload: string = "/api/EmployeeExpertise/uploaduomcustomdata";
     get employeeExpertiseUrl() { return this.configurations.baseUrl + this._employeeExpertiseGetUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -79,5 +80,12 @@ export class EmployeeExpertiseEndpointService extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getAuditById(employeeExpertiseId));
             });
+    }
+
+
+    EmployeeExpertiseFileUploadCustomUpload(file) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}`, file)
+
+
     }
 }

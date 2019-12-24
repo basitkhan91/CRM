@@ -54,7 +54,11 @@ export class LegalEntityService {
     getManagemtentLengalEntityData() {
         return Observable.forkJoin(
             this.legalEntityEndpont.getManagemtentLengalEntityData<any[]>());
-    }
+	}
+	getLedgerNamesData() {
+		return Observable.forkJoin(
+			this.legalEntityEndpont.getLedgerNamesData<any[]>());
+	}
 	getEntityforEdit() {
 		return Observable.forkJoin(
 			this.legalEntityEndpont.getEntityforEdit<any[]>());

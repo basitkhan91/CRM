@@ -370,7 +370,7 @@
 	
 	</div>
 	
-	<ng-template #helpText class="modal fade" id="help-popup" role="dialog" data-backdrop="static">
+	<ng-template #helpText class="modal fade" id="help-popup" role="dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 	

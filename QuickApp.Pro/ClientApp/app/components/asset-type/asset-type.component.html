@@ -151,7 +151,7 @@
 
     <!--to-do:use same modal to view, add, update, and delete-->
     <!--Step x: Modal for view only-->
-    <div #view *ngIf="itemDetails" class="modal fade" id="view" role="dialog">
+    <div #view *ngIf="itemDetails" class="modal fade" id="view" role="dialog" data-backdrop="static">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -220,7 +220,7 @@
 
     </div>
 
-    <ng-template #viewClick class="modal fade " id="view" role="dialog">
+    <ng-template #viewClick class="modal fade " id="view" role="dialog" data-backdrop="static">
 
         <div class="modal-content">
             <div class="modal-header">
@@ -288,7 +288,7 @@
     </ng-template>
 
     <!--Step x: Modal for Edit-->
-    <div #editItem id="editItem" class="modal fade editModal" role="dialog" *ngIf="currentModeOfOperation === 2 || currentModeOfOperation === 3">
+    <div #editItem id="editItem" class="modal fade editModal" role="dialog" *ngIf="currentModeOfOperation === 2 || currentModeOfOperation === 3" data-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -355,7 +355,7 @@
     </div>
 
     <!--Modal for delete only-->
-    <div #delete *ngIf="currentModeOfOperation === 4" id="delete" class="modal fade" role="dialog">
+    <div #delete *ngIf="currentModeOfOperation === 4" id="delete" class="modal fade" role="dialog" data-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -379,7 +379,7 @@
 
 
     <!--Step x: Audit modal-->
-    <div #itemHistory *ngIf="currentModeOfOperation === 5" class="modal fade" id="itemHistory" role="dialog">
+    <div #itemHistory *ngIf="currentModeOfOperation === 5" class="modal fade" id="itemHistory" role="dialog" data-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

@@ -52,6 +52,7 @@ export class CustomerWorkEditComponent {
     allActions: any[] = [];
     customerId: any;
     customerNames: any[];
+    customerReferenceNames: any[];
     customerNamecoll: any;
     selectedColumns: any;
     cols: any;
@@ -221,7 +222,7 @@ export class CustomerWorkEditComponent {
 
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
 
-        debugger;
+       
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
 
@@ -359,7 +360,7 @@ export class CustomerWorkEditComponent {
         this.isSaving = true;
 
         if (!this.sourcereceving.receivingCustomerWorkId) {
-            debugger
+          
             this.sourcereceving.createdBy = this.userName;
             this.sourcereceving.updatedBy = this.userName;
             this.sourcereceving.masterCompanyId = 1;
@@ -411,6 +412,8 @@ export class CustomerWorkEditComponent {
                             role => this.saveSuccessHelper(role),
                             error => this.saveFailedHelper(error));
                         this.sourcereceving = {};
+                        this.router.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
+
                     }
 
                     )
@@ -420,6 +423,8 @@ export class CustomerWorkEditComponent {
                         role => this.saveSuccessHelper(role),
                         error => this.saveFailedHelper(error));
                     this.sourcereceving = {};
+                    this.router.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
+
                 }
             }
         }
@@ -451,6 +456,8 @@ export class CustomerWorkEditComponent {
                 })
             }
             this.sourcereceving = {};
+            this.router.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
+
         }
     }
 
@@ -596,6 +603,21 @@ export class CustomerWorkEditComponent {
             }
         }
     }
+    filterReferenceNames(event) {
+
+        this.customerReferenceNames = [];
+        if (this.allCustomer) {
+            if (this.allCustomer.length > 0) {
+                for (let i = 0; i < this.allCustomer.length; i++) {
+                    let name = this.allCustomer[i].name;
+                    if (name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                        this.customerReferenceNames.push(name);
+                    }
+                }
+            }
+        }
+    }
+
     filterpartItems(event) {
 
         this.partCollection = [];
@@ -652,8 +674,7 @@ export class CustomerWorkEditComponent {
     }
 
     customerNameId(event) {
-        //
-        debugger
+       
         if (this.allCustomer) {
             for (let i = 0; i < this.allCustomer.length; i++) {
                 if (event == this.allCustomer[i].name) {
@@ -672,6 +693,21 @@ export class CustomerWorkEditComponent {
             );
         }
     }
+
+    customerReferenceNameId(event) {
+       
+        if (this.allCustomer) {
+            for (let i = 0; i < this.allCustomer.length; i++) {
+                if (event == this.allCustomer[i].name) {
+                    this.sourcereceving.customerReference = this.allCustomer[i].customerId;
+
+                    
+                }
+            }
+           
+        }
+    }
+
     getAllCustomerContact(id) {
         // get Customer Contatcs 
         

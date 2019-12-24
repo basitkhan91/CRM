@@ -121,6 +121,7 @@ export class CustomerWorkSetupComponent
     managementStructureData: any[];
     parentManagementInfo: any[] = [];
     childManagementInfo: any[] = [];
+    customerReferenceNames: any[];
 	ngOnInit(): void {
 		this.sourcereceving.isCustomerStock = true;
 
@@ -152,11 +153,13 @@ export class CustomerWorkSetupComponent
 
             this.showLable = true;
             this.sourcereceving = this.receivingCustomerWorkService.listCollection;
+          
             this.sourcereceving.serialNumber = this.receivingCustomerWorkService.listCollection.serialNumber;
             if (this.receivingCustomerWorkService.listCollection.customer) {
                 this.sourcereceving.customerId = this.receivingCustomerWorkService.listCollection.customer.customerId;
                 this.sourcereceving.name = this.receivingCustomerWorkService.listCollection.customer.name;
-                this.sourcereceving.customerCode = this.receivingCustomerWorkService.listCollection.customer.customerCode;
+                 this.sourcereceving.customerCode = this.receivingCustomerWorkService.listCollection.customer.customerCode;
+                //this.sourcereceving.customerCode = getObjectById('customerCode', this.sourcereceving.customerId, this.allCustomer);
 
             }
             if (this.receivingCustomerWorkService.listCollection.employee) {
@@ -571,23 +574,23 @@ export class CustomerWorkSetupComponent
         })]
 
     }
-    //filterCodes(event) {
-    //    debugger
-    //    this.custcodes = [];
-    //    if (this.allCustomer) {
-    //        if (this.allCustomer.length > 0) {
-    //            for (let i = 0; i < this.allCustomer.length; i++) {
-    //                let customerCode = this.allCustomer[i].customerCode;
-                 
-    //                if (customerCode.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+    filterReferenceNames(event) {
 
-    //                    this.custcodes.push(customerCode);
+        this.customerReferenceNames = [];
+        if (this.allCustomer) {
+            if (this.allCustomer.length > 0) {
+                for (let i = 0; i < this.allCustomer.length; i++) {
+                    let name = this.allCustomer[i].name;
+                    if (name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                        this.customerReferenceNames.push(name);
+                    }
+                }
+            }
+        }
+    }
 
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
+   
+   
 
 
 	filterpartItems(event) {

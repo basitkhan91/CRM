@@ -20,7 +20,7 @@
 
     <div class="clear"></div>
     <br>
-    <form action="#" method="post" id="add-customerwork" name="" class="form-horizontal add-custustomer">
+    <form #addCustomerWorkForm="ngForm"  (submit)="saveItemMasterGeneralInformation(addCustomerWorkForm)"  id="add-customerwork" name="" class="form-horizontal add-custustomer">
         <div class="tab-content form-bg margin0 padding0 ">
             <div class="" id="menu3">
                 <div class="clear"></div>
@@ -99,9 +99,9 @@
                                         </label>
                                     </div>
                                     <div>
-                                        <p-autoComplete [(ngModel)]="sourceItemMaster.partNumber"
-                                                        (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event)"
-                                                        [ngModelOptions]="{standalone: true}" [suggestions]="partCollection"
+                                        <p-autoComplete id="partNumber" title="Part Number" [(ngModel)]="sourceItemMaster.partNumber"
+                                                        (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event)" [name]="partNumber"
+                                                        [required]="true" [suggestions]="partCollection" [ngModelOptions]="{standalone: true}"
                                                         (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
                                                         [dropdown]="true" class="autocomplete-customer">
                                             <ng-template let-partName pTemplate="part">
@@ -155,7 +155,7 @@
 
                                     </div>
                                     <div>                             
-                                        <select name="itemclassification" class="select-drop"
+                                        <select name="itemClassificationId" id="itemClassificationId" title="Item Classification" required class="select-drop"
                                                 [(ngModel)]="sourceItemMaster.itemClassificationId">
                                             <ng-container *ngFor="let itemName of allitemclassificationInfo">
                                                 <option 
@@ -164,7 +164,7 @@
                                                 </option>
                                             </ng-container>
                                         </select>
-                                    </div>
+                                    </div> 
                                     <div class="inline-block display-flex spacing-label">
                                         <label class="control-label">
                                             Item Group
@@ -378,8 +378,8 @@
                                         </label>
                                     </div>
                                     <div>
-                                        <select [ngModelOptions]="{standalone: true}"
-                                                [(ngModel)]="sourceItemMaster.manufacturerId" (change)="getManufacturer(manufacturer)">
+                                        <select  required name="manufacturerId"
+                                                [(ngModel)]="sourceItemMaster.manufacturerId" id="manufacturerId" title="Manufacturer Id" (change)="getManufacturer(manufacturer)">
                                             <ng-container *ngFor="let manufacturer of allManufacturerInfo">
                                                 <option [ngValue]="manufacturer.manufacturerId" *ngIf="manufacturer.isActive">
                                                     {{manufacturer.name}}
@@ -426,7 +426,7 @@
                                         </label>
                                     </div>
                                     <div>
-                                        <select [ngModelOptions]="{standalone: true}"
+                                        <select  id="glAccountId" name="glAccountId" title="GL Acct" required
                                                 [(ngModel)]="sourceItemMaster.glAccountId">
                                             <option *ngFor="let glAccounts of allGlInfo"
                                                     [ngValue]="glAccounts.glAccountId" title="{{glAccounts.accountDescription}}">
@@ -447,7 +447,7 @@
 
                                     </div>
                                     <div>
-                                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.purchaseUnitOfMeasureId">
+                                        <select  id="unitOfMeasureId" name="unitOfMeasureId" title="Purchase UOM" required [(ngModel)]="sourceItemMaster.purchaseUnitOfMeasureId">
                                             <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo" [ngValue]="unitName.unitOfMeasureId">
                                                 {{unitName.shortName}}
                                             </option>
@@ -692,7 +692,8 @@
                         <div class="col-sm-6">
                         </div>
                         <div class="col-sm-6">
-                            <button class="btn btn-primary-cstm float-right" pButton type="button" (click)="saveItemMasterGeneralInformation()" icon="pi pi-angle-right" iconPos="right" label="Save & Next" style="padding: 0 !important;"></button>
+                            <button class="btn btn-primary-cstm float-right" pButton type="submit"  icon="pi pi-angle-right" iconPos="right" label="Save & Next" style="padding: 0 !important;"></button>
+                            <!-- <button class="btn btn-primary-cstm float-right" pButton type="button" (click)="saveItemMasterGeneralInformation()" icon="pi pi-angle-right" iconPos="right" label="Save & Next" style="padding: 0 !important;"></button> -->
                         </div>
                     </div>
                 </div>
@@ -1052,12 +1053,14 @@
                                         <td>
 
                                             <select class="form-control w80 select-value-drop1" id="condition" name="condition" [(ngModel)]="field.Condition" [ngModelOptions]="{standalone: true}" required>
-                                                <option value="NEW" selected="1">NEW</option>
+                                                <option value="null">Select Condition </option>
+                                                <option *ngFor="let x of conditionList" [ngValue]="x.value">{{x.label}} </option>
+                                                <!-- <option value="NEW" selected="1">NEW</option>
                                                 <option value="AS-IS">AS-IS </option>
                                                 <option value="REPAIR">REPAIR</option>
                                                 <option value="SRV">SRV</option>
                                                 <option value="OVERHAUL">OVERHAUL</option>
-                                                <option value="AR">AR</option>
+                                                <option value="AR">AR</option> -->
                                             </select>
                                         </td>
                                         <td>
@@ -1210,7 +1213,10 @@
                                         <label for="eccn" class="control-label">
                                             ECCN
                                         </label>
-                                        <input type="text" class="input-field-value" pInputText [(ngModel)]="exportInfo.ExportECCN" name="ExportECCN" /> <!--maxlength="5" [pattern]="'^[a-zA-Z0-9 \'\-]+$'"-->
+
+                                        <input type="text" class="input-field-value" maxlength="10" 
+           [pattern]="'^[a-zA-Z0-9 \'\-]+$'"  [(ngModel)]="exportInfo.ExportECCN" name="ExportECCN" />
+
                                         <label class="control-label">
                                             ITAR Num <strong class="clr-red">*</strong>
                                         </label>
@@ -1346,9 +1352,7 @@
 
 
     <!--New code for dialogue-->
-    <div id="ModalDashNumber"
-         class="modal fade custom-popup"
-         role="dialog">
+    <div id="ModalDashNumber" class="modal fade custom-popup" role="dialog" data-backdrop="static">
         <div class="modal-dialog modal-full">
             <!-- Modal content-->
             <div class="modal-content">
@@ -1496,7 +1500,7 @@
     </div>
     <div id="ModalViewCapes"
          class="modal fade custom-popup"
-          role="dialog">
+          role="dialog" data-backdrop="static">
         <div class="modal-dialog modal-full">
             <!-- Modal content-->
             <form #capeForm="ngForm" >
@@ -1603,7 +1607,7 @@
             </form>
         </div>
     </div>    
-    <ng-template #ModalUnit let-c="close" let-d="dismiss" style="width:auto">
+    <ng-template #ModalUnit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
         <div class="modal-header">
             <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
                 <span aria-hidden="true">&times;</span>
@@ -1684,7 +1688,7 @@
     </ng-template>
     <div class="pull-right"> © 2018 <a href="#">PAS</a> </div>
 </div>
-<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Item Classification</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Item Classification</h4>
@@ -1781,7 +1785,7 @@
 </ng-template>
 
 
-<ng-template #contentEdits let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentEdits let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Item Group</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Item Group</h4>
@@ -1855,7 +1859,7 @@
 
 
 
-<ng-template #contents let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contents let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Provision</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Provision</h4>
@@ -1921,7 +1925,7 @@
     </div>
 </ng-template>
 
-<ng-template #conEdit let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #conEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Purchase Unit Of Measure</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Purchase Unit Of Measure</h4>
@@ -2002,7 +2006,7 @@
     </div>
 </ng-template>
 
-<ng-template #conmodel let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #conmodel let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Stock Unit Of Measure</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Stock Unit Of Measure</h4>
@@ -2084,7 +2088,7 @@
 </ng-template>
 
 
-<ng-template #conEdited let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #conEdited let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Consume Unit Of Measure</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Consume Unit Of Measure</h4>
@@ -2165,7 +2169,7 @@
     </div>
 </ng-template>
 
-<ng-template #contextEdited let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contextEdited let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Sold Unit Of Mearsure</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Sold Unit Of Mearsure</h4>
@@ -2260,13 +2264,18 @@
 
     <h5 [ngStyle]="{'color':'red'}">
         Please Enter (*) Mandatory Fields
+        <!-- <pre>{{listOfErrors | json}}</pre> -->
+        
     </h5>
+    <ul  [ngStyle]="{'color':'red'}">
+        <li *ngFor="let error of listOfErrors">{{error}}</li>
+    </ul>
     <p-footer>
         <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
     </p-footer>
 
 </p-dialog>
-<ng-template #contentModel let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentModel let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
 
     <div class="modal-content">
         <div class="modal-header">
@@ -2317,7 +2326,7 @@
     </div>
 </ng-template>
 
-<ng-template #contentEditforAtaMain1 let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentEditforAtaMain1 let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit ATA MAin</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add ATA MAin</h4>
@@ -2385,7 +2394,7 @@
         </form>
     </div>
 </ng-template>
-<ng-template #contentEditforAtaMain2 let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentEditforAtaMain2 let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit ATA MAin</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add ATA MAin</h4>
@@ -2455,7 +2464,7 @@
 
 
 
-<ng-template #models let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #models let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Waring</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Waning</h4>
@@ -2511,7 +2520,7 @@
 
 </ng-template>
 
-<ng-template #modeledt let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #modeledt let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Manufacturer</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Manufacturer</h4>
@@ -2562,7 +2571,7 @@
     </div>
 </ng-template>
 
-<ng-template #integrationcontentEdit let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #integrationcontentEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Integration</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Integration</h4>
@@ -2630,7 +2639,7 @@
 
 </ng-template>
 
-<div class="modal fade" id="rro-memo" role="dialog">
+<div class="modal fade" id="rro-memo" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-sm" style="max-width: 400px !important;">
         <div class="modal-content">
             <div class="modal-header">
@@ -2651,7 +2660,7 @@
     </div>
 </div>
 
-<ng-template #prioritycontentEdit let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #prioritycontentEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Priority</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Priority</h4>
@@ -2714,9 +2723,7 @@
 
 </ng-template>
 
-<div id="EditMemo"
-     class="modal fade custom-popup"
-     role="dialog">
+<div id="EditMemo" class="modal fade custom-popup" role="dialog" data-backdrop="static">
     <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">

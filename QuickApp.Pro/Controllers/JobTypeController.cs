@@ -51,7 +51,7 @@ namespace QuickApp.Pro.Controllers
                     return BadRequest($"{nameof(jobTypeViewModel)} cannot be null");
 
                 DAL.Models.JobType jobTypeObj = new DAL.Models.JobType();
-                jobTypeObj.jobTypeDescription = jobTypeViewModel.jobTypeDescription;
+                jobTypeObj.JobTypeMemo = jobTypeViewModel.JobTypeMemo;
                 jobTypeObj.JobTypeName = jobTypeViewModel.JobTypeName;
                 jobTypeObj.MasterCompanyId = jobTypeViewModel.MasterCompanyId;
                
@@ -82,7 +82,7 @@ namespace QuickApp.Pro.Controllers
                 var existingResult = _unitOfWork.JobType.GetSingleOrDefault(c => c.JobTypeId == id);
                 // DAL.Models.Action updateObject = new DAL.Models.Action();
 
-                existingResult.jobTypeDescription = jobTypeViewModel.jobTypeDescription;
+                existingResult.JobTypeMemo = jobTypeViewModel.JobTypeMemo;
                 existingResult.JobTypeName = jobTypeViewModel.JobTypeName;
                 existingResult.MasterCompanyId = jobTypeViewModel.MasterCompanyId;
                 existingResult.IsActive = jobTypeViewModel.IsActive;

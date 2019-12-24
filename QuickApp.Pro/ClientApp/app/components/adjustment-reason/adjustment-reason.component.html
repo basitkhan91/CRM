@@ -114,7 +114,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     </div>
 </div>
 
-<ng-template #view class="modal fade " id="view" role="dialog">
+<ng-template #view class="modal fade " id="view" role="dialog" data-backdrop="static">
 
     <div class="modal-content">
         <div class="modal-header">
@@ -176,7 +176,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
 
 </ng-template>
 
-<ng-template #content let-c="close" let-d="dismiss">
+<ng-template #content let-c="close" let-d="dismiss" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
@@ -197,7 +197,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
 </ng-template>
 
 
-<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Stock Adjustment Reason</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Stock Adjustment Reason</h4>
@@ -259,7 +259,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
 
 
 
-<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog">
+<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->

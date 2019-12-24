@@ -12,7 +12,7 @@ namespace DAL.Models
         public Int16 JobTypeId { get; set; }
 
         public string JobTypeName { get; set; }
-        public string jobTypeDescription { get; set; }
+        public string JobTypeMemo { get; set; }
 
         [ForeignKey("MasterCompanyId")]
         public Int32 MasterCompanyId { get; set; }

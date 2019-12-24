@@ -18,9 +18,9 @@
                                 <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect  [maxSelectedLabels]="2" [options]="headers"  optionLabel="header" [(ngModel)]="selectedColumns"  
                                         [style]="{minWidth: '200px'}"  style="float:left" (onChange)="columnsChanges()"  ></p-multiSelect>
-                                     <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
+                                     <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
                                         iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
                                         iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button> 
                                     <div class="excel-upload  excel-upload-cstm">
                                         
@@ -60,7 +60,12 @@
                                         (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                     </td>
                                     <td style="width:200px" *ngIf="selectedColumns.length> 0">
-                                        <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>
+                                        <!--<p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>-->
+                                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+
+
 
                                         <span data-toggle="modal" data-target="#view">
                                             <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" data-target="#view" data-toggle="modal">
@@ -71,10 +76,10 @@
                                             <mat-icon>edit</mat-icon>
                                         </button>
 
-                                        <button class="btn-delete" mat-icon-button matTooltip="Delete"  data-target="#delete" data-toggle="modal"  (click)="delete(rowData)">
+                                        <button class="btn-delete" mat-icon-button matTooltip="Delete" data-target="#delete" data-toggle="modal" (click)="delete(rowData)">
                                             <mat-icon color="warn">delete</mat-icon>
                                         </button>
-                                        <button class="btn-history" mat-icon-button matTooltip="History" data-target="#contentHist" data-toggle="modal" (click)="getAuditHistoryById(rowData)" >
+                                        <button class="btn-history" mat-icon-button matTooltip="History" data-target="#contentHist" data-toggle="modal" (click)="getAuditHistoryById(rowData)">
                                             <mat-icon color="green">history</mat-icon>
                                         </button>
                                     </td>
@@ -100,14 +105,14 @@
 </div>
 
 
-<ng-template #auditContent let-c="close" let-d="dismiss">
+<ng-template #auditContent let-c="close" let-d="dismiss" data-backdrop="static">
     <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
         <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
     </div>
 </ng-template>
 
 
-<div  *ngIf="selectedRowforDelete" #delete id="delete"  class="modal fade" role="dialog">
+<div  *ngIf="selectedRowforDelete" #delete id="delete"  class="modal fade" role="dialog" data-backdrop="static">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -129,7 +134,7 @@
   </div>
 
 
-  <div #add  id="add"class="modal fade" role="dialog">
+  <div #add  id="add"class="modal fade" role="dialog"  data-backdrop="static" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
   
       <!-- Modal content-->
@@ -196,7 +201,7 @@
   </div>
 
 
-<div *ngIf="existingRecordsResponse" id="duplicateRecords" #duplicateRecords class="modal fade" role="dialog" >
+<div *ngIf="existingRecordsResponse" id="duplicateRecords" #duplicateRecords class="modal fade" role="dialog"  data-backdrop="static">
                             <div class="modal-dialog modal-lg">
                           
                              
@@ -240,7 +245,7 @@
                             </div>
 </div>
 
-                          <div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" >
+                          <div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog"  data-backdrop="static">
                             <div class="modal-dialog modal-lg">
                           
                               <!-- Modal content-->
@@ -298,7 +303,7 @@
 
 
 
-<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog">
+<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static">
 <div class="modal-dialog modal-sm">
     <div class="modal-content">
         <div class="modal-header">
@@ -361,7 +366,7 @@
 
 </div>
 
-<ng-template #helpText class="modal fade" id="help-popup" role="dialog">
+<ng-template #helpText class="modal fade" id="help-popup" role="dialog" data-backdrop="static">
     <div class="modal-content">
         <div class="modal-header">
             

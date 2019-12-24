@@ -20,5 +20,8 @@ namespace DAL.Models
 
         public virtual MasterCompany MasterCompany { get; set; }
         public bool? IsDelete { get; set; }
+
+        [NotMapped]
+        public string UploadStatus { get; set; }
     }
 }
