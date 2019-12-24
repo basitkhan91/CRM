@@ -383,7 +383,7 @@ console.log(this.workOrderLaborList);
       try {
           this.markupList.forEach((markup) => {
           if (markup.value == matData.markupPercentageId) {
-              matData.costPlusAmount = (matData.laborOverheadCost) + (((matData.laborOverheadCost) / 100) * Number(markup.label))
+              matData.labourCostPlus = (matData.directLaborOHCost) + (((matData.directLaborOHCost) / 100) * Number(markup.label))
           }
           })
       }

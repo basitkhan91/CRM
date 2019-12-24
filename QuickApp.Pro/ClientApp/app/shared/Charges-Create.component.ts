@@ -269,7 +269,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         try {
             this.markupList.forEach((markup) => {
             if (markup.value == matData.markupPercentageId) {
-                matData.costPlusAmount = (matData.extendedPrice) + (((matData.extendedPrice) / 100) * Number(markup.label))
+                matData.chargesCostPlus = (matData.extendedPrice) + (((matData.extendedPrice) / 100) * Number(markup.label))
             }
             })
         }

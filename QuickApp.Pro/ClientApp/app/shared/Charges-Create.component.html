@@ -139,7 +139,7 @@
               <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
             </select>
           </td>
-          <td>{{charge.costPlusAmount}}</td>
+          <td>{{charge.chargesCostPlus}}</td>
           <td><input [(ngModel)]="charge.fixedAmount" /></td>
       </ng-container>
       <td>
