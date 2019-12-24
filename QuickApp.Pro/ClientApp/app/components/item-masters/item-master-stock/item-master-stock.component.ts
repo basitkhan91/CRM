@@ -5434,7 +5434,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     // New code for loading dropdown
 
-    getATASubChapterByATAChapter(atachapterId) {
+    getATASubChapterByATAChapter() {
         const selectedATAChapterId = this.ataform.value.atanumber;
         this.ataChaptherSelected = this.ataMainchapter.filter(x => {
             if (x.ataChapterId === selectedATAChapterId) {
