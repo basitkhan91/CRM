@@ -205,7 +205,7 @@
         </ng-template>
     </div>
 </div>
-<ng-template #view class="modal fade " id="view"  >
+<ng-template #view class="modal fade " id="view"   data-backdrop="static">
 
     <div class="modal-body viewform">
         <div id="adminsearchlocationajax" class="table-responsive default-bg clear">
@@ -721,7 +721,7 @@
     </div>
 </ng-template>
 
-<ng-template #content1 let-c="close" let-d="dismiss">
+<ng-template #content1 let-c="close" let-d="dismiss" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title">Are You Sure Want to Delete?</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
@@ -735,7 +735,7 @@
     </div>
 </ng-template>
 
-<ng-template #contentcontact let-c="close" let-d="dismiss" class="modal fade" role="dialog">
+<ng-template #contentcontact let-c="close" let-d="dismiss" class="modal fade" role="dialog" data-backdrop="static">
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>

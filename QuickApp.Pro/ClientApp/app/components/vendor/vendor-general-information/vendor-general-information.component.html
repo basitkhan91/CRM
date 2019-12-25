@@ -186,7 +186,6 @@
                                     </label>
                                     <input class="form-control" type="text" id="vmpostal" name="vmpostal"
                                            [(ngModel)]="sourceVendor.PostalCode" required>
-
                                 </div>
 
                                 <div class="form-group">
@@ -205,9 +204,7 @@
                                     <div *ngIf="disablesave" class="clr-red">Please Select From List</div>
                                 </div>
 
-                                <!--<button type="button" class="btn btn-primary-cstm map-check" style="margin-bottom: 10px" (click)="getlatlng(sourceVendor.address1+sourceVendor.address2)">Check Address</button>-->
                                 <div class="form-group" style="margin-top: 15px;">
-                                    <!-- <div class="label-cstm" style="margin-left:15px;">Is this Address For Billing</div> -->
                                     <div class="checkbox-cstm" style="margin-left: 0;">
                                         <label>
                                             <input type="checkbox" name="isAddressForBilling" [(ngModel)]="sourceVendor.isAddressForBilling">
@@ -217,7 +214,6 @@
                                     </div>
                                 </div>
                                 <div class="form-group" style="margin-top: 15px;">
-                                    <!-- <div class="label-cstm">Is this Address For Shipping</div> -->
                                     <div class="checkbox-cstm" style="margin-left: 0;">
                                         <label>
                                             <input type="checkbox" name="isAddressForShipping" [(ngModel)]="sourceVendor.isAddressForShipping">
@@ -240,16 +236,7 @@
 
                                             </label>
                                             <p-multiSelect [options]="allvendorclassificationInfo" [(ngModel)]="sourceVendor.vendorClassificationIds"  name="vendorClassificationIds" required>
-
                                             </p-multiSelect>
-                                            <!-- <select [(ngModel)]="sourceVendor.vendorClassificationId" name="vendorClassificationId" required>
-                                                <option *ngFor="let venclassName of allVendorClassInfo"
-                                                        [ngValue]="venclassName.vendorClassificationId">
-                                                    {{venclassName.classificationName}}
-                                                </option>
-                                            </select> -->
-
-                                            
                                         </div>
 
                                         <div class="form-group">
@@ -275,10 +262,6 @@
                                                 <span class="pull-left">Integration With</span>
                                                 <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" (click)="onAddIntegrationWith()"></a></span>
                                             </label>
-                                            <!-- <p-multiSelect [options]="integrationCols" [(ngModel)]="intSelectedColumns" optionLabel="header"
-                                                           selectedItemsLabel="{0} columns selected" name="integrationCols"
-                                                           [style]="{minWidth: '200px'}" defaultLabel="Choose Columns">
-                                            </p-multiSelect> -->
                                            
                                             <p-multiSelect [options]="integrationOriginalList" [(ngModel)]="sourceVendor.integrationPortalIds"  name="integrationPortalIds" defaultLabel="Choose Columns">
                                             </p-multiSelect>
@@ -301,14 +284,6 @@
                                             <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.capabilityId">
                                                 <option *ngFor="let capabilty of dropDownVendorCapabilitiesList" [ngValue]="capabilty.value">  {{capabilty.label}}</option>
                                             </select>
-                                           
-                                            <!--<select class="form-control">
-                                                <option>Select</option>
-                                                <option>Capabilities 1</option>
-                                                <option>Capabilities 2</option>
-                                                <option>Capabilities 3</option>
-
-                                            </select>-->
                                         </div>
                                         <div class="form-group">
                                             <label for="vendorname">
@@ -336,8 +311,6 @@
 
                                         <div *ngIf="sourceVendor.isCertified" style="width: 97%">
                                             <div class="form-group">
-                                                    <!-- <p-fileUpload name="fileupload[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event)">
-                                                    </p-fileUpload> -->
                                                 <p-fileUpload name="isCertifiedFile[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event,'isCertifiedFile')">
 
                                                    
@@ -473,66 +446,7 @@
 
 </form>
 
-<!--<div *ngIf="checkAddress">
-        <p-gmap [options]="options" [overlays]="overlays" [style]="{'width':'100%','height':'320px'}" ></p-gmap>
-</div>-->
-<!--<div id="addIntergation" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" (click)="resetIntegrationPopUp()">&times;</button>
-                <h4 class="modal-title">Add Intergation</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>WebSite url  <span class="clr-red">*</span></label>
-                    <div class="inner-addon right-addon inline-block">
-
-                        <p-autoComplete class="p-dropdown-custom-2" name="url"
-                                        [(ngModel)]="addNewIntergation.portalURL"
-                                        (onKeyUp)="checkIntergationExists('description',$event.target.value)"
-                                        [suggestions]="integrationList" field="description" (completeMethod)="filterIntegrations($event)"
-                                        [size]="30" [minLength]="1" [dropdown]="true" required>
-                        </p-autoComplete>
-                        <div *ngIf="isIntegrationAlreadyExists" class="clr-red">Entry Already Exists</div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Intergation</label>
-                    <input class="form-control" [(ngModel)]="addNewIntergation.description" name="description">
-                </div>
-
-                <div class="form-group">
-                    <label>Memo</label>
-                    <input class="form-control" [(ngModel)]="addNewIntergation.memo" name="memo">
-                </div>
-
-                <div class="form-group">
-                    <div class="col-sm-6">
-                        <span class="checkbox-cstm">
-                            <label style="margin-top: 12px;" class="form-check-label" for="isActive">
-                                <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="addNewIntergation.isActive">
-                                <span class="cr"><i class="cr-icon pi pi-check"></i></span> Active
-                            </label>
-                        </span>
-                    </div>
-                    <div class="clear"></div>
-                </div>
-
-            </div>
-
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="newIntegrationAdd()" [disabled]="isClassificationAlreadyExists">Save</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetIntegrationPopUp()">Close</button>
-            </div>
-        </div>
-
-    </div>
-</div>-->
-
-<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto" >
+<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto"  data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Vendor Classification</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Vendor Classification</h4>

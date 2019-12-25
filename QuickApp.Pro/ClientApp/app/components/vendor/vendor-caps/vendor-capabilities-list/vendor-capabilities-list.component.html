@@ -4,15 +4,6 @@
     <div class="right_col" role="main">
 
         <div class="x_content">
-            <!--<nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a routerLink="/">Dashboard</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Reason</li>
-                </ol>
-            </nav>-->
-            <!--<h4 class="page-heading clr-green">Stockline List</h4>
-            <span class="help-icon" (click)="openHelpText(helpText)" data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span>-->
-
             <div class="card">
                 <div class="card-body">
                     <div class="inline-block display-flex">
@@ -34,13 +25,6 @@
                                     </div>
                                     <button type="button" class="btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export  Data" (click)="dt.exportCSV()" matTooltip="Download Data" matTooltipPosition="above" style="padding: 5px 12px !important;"></button>
                                     <button type="button" class="btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 12px !important;"></button>
-                                    <!-- <a matTooltip="Add Vendor Capabilities" class="btn btn-success nobg" (click)="navigateTogeneralInfo()"><span><i class="fa fa-plus"></i></span></a> -->
-                                    <!-- <div class="excel-upload">
-                                        <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                        <label for="upload">
-                                            <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-                                        </label>
-                                    </div> -->
                                 </div>
         
                                 <div class="clear"></div>
@@ -80,21 +64,12 @@
                                     </td>
         
                                     <td style="width:200px">
-        
-                                        <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>-->
                                         <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                         <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                         <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
         
                                         <span>
-                                        <a
-                                            class="btn btn-info boxed-float-btn nobg"
-                                            data-toggle="tooltip"
-                                            (click)="viewSelectedRow(rowData)"
-                                            data-target="#vendorCapesView"
-                                            data-toggle="modal"
-                                            matTooltip="View"
-                                        >
+                                        <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" data-target="#vendorCapesView" data-toggle="modal" matTooltip="View" >
                                             <i class="fa fa-eye"></i>
                                         </a>
                                         </span>
@@ -107,17 +82,8 @@
                                         <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
                                             <mat-icon color="warn">delete</mat-icon>
                                         </button>
-        
-                                        <!--<button class="btn-exposure" mat-icon-button matTooltip="stock Adjustment" (click)="openAdjustment(rowData)">
-                <mat-icon>exposure</mat-icon>
-            </button>-->
                                         <span data-toggle="modal" data-target="#contacts"> <a class="btn btn-primary boxed-float-btn nobg" data-toggle="tooltip" (click)="gotoCreatePO(rowData)" matTooltip="Create PO"><i class="fa fa-plus"></i></a> </span>
-        
                                         <span data-toggle="modal" data-target="#contacts"> <a class="btn btn-primary boxed-float-btn nobg"  data-toggle="tooltip" (click)="gotoCreateRO(rowData)" matTooltip="Create RO"><i class="fa fa-plus" style="color:forestgreen"></i></a></span>
-        
-                                        <!--<button class="btn-add_circle" style="color:forestgreen" mat-icon-button matTooltip="Create RO" (click)="gotoCreateRO(rowData)">
-                                            <i class="fa fa-plus"></i>
-                                        </button>-->
                                     </td>
         
                                 </tr>
@@ -134,7 +100,7 @@
 </div>
 
 <!-- Delete Contact Modal -->
-<ng-template #content let-c="close" let-d="dismiss">
+<ng-template #content let-c="close" let-d="dismiss" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
@@ -148,48 +114,7 @@
     </div>
 </ng-template>
 
-
-<!-- <ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
-    <div class="modal-header">
-
-        <h4 class="modal-title">History of S</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-
-
-    </div>
-    <div class="modal-body">
-
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>RID</th>
-                        <th>Description</th>
-                        <th>previousValue</th>
-                        <th>newValue</th>
-                        <th>Last Updated By</th>
-                        <th>Last Updated Time</th>
-                    </tr>
-                </thead>
-                <tr *ngFor="let audit of auditHisory">
-                    <td>{{audit.auditHistoryId}}</td>
-                    <td>{{audit.columnName}}</td>
-                    <td>{{audit.previousValue}}</td>
-                    <td>{{audit.newValue}}</td>
-                    <td>{{audit.updatedBy}}</td>
-                    <td>{{audit.updatedDate}}</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-    </div>
-</ng-template> -->
-<ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto">
-    <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
+<ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
 
         <h4 class="modal-title">History of Vendor Capability</h4>

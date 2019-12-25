@@ -351,7 +351,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade hide-model" id="addJobTitle" role="dialog" data-backdrop="static">
+    <div class="modal fade hide-model" id="addJobTitle" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -378,7 +378,7 @@
     </div>
     <!--Add Job Title Modal End-->
     <!-- Add Employee Expertise Modal -->
-    <div class="modal fade hide-model" id="addEmpExprt" role="dialog" data-backdrop="static">
+    <div class="modal fade hide-model" id="addEmpExprt" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -405,7 +405,7 @@
     </div>
     <!--Add Employee Expertise Modal End-->
     <!---Successs Message Modal -->
-    <div class="modal fade success-msg" id="success-popup" role="dialog" data-backdrop="static">
+    <div class="modal fade success-msg" id="success-popup" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">

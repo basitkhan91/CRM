@@ -111,7 +111,7 @@
     </div>
 </div>
 
-<ng-template #deleteContent let-c="close" let-d="dismiss">
+<ng-template #deleteContent let-c="close" let-d="dismiss" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title">Are You Sure Want to Delete?</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
@@ -125,48 +125,7 @@
     </div>
 </ng-template>
 
-
-<!--<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
-    <div class="modal-header">
-
-        <h4 class="modal-title">History of Action</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-
-    </div>
-    <div class="modal-body">
-
-        <div class="table-responsive">
-            <table class="table table-bordered cus-contact-table">
-                <thead>
-                    <tr>
-                        <th>AID</th>
-                        <th>Colum Name</th>
-                        <th>Previous Value</th>
-                        <th>New Value</th>
-                        <th>Last Updated By</th>
-                        <th>Last Updated Time</th>
-                    </tr>
-                </thead>
-                <tr *ngFor="let audit of auditHisory" (dblclick)="openEdit(contentEdit,rowData)">
-                    <td>{{audit.auditHistoryId}}</td>
-                    <td>{{audit.columnName}}</td>
-                    <td>{{audit.previousValue}}</td>
-                    <td>{{audit.newValue}}</td>
-                    <td>{{audit.updatedBy}}</td>
-                    <td>{{audit.updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
-    </div>
-</ng-template>-->
-
-<ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto">
-    <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
+<ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
 
         <h4 class="modal-title">History of Contact Information</h4>
@@ -214,7 +173,7 @@
     </div>
 </ng-template>
 
-<ng-template #view class="modal fade " id="view" role="dialog">
+<ng-template #view class="modal fade " id="view" role="dialog" data-backdrop="static">
 
     <div class="modal-content">
         <div class="modal-header">
@@ -383,4 +342,3 @@
         </div>
     </div>
 </div>
-
