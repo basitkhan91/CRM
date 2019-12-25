@@ -358,7 +358,7 @@
 
     </div>
   </div>
-  <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;" *ngIf="selectedBuildMethod != 'build from scratch' && selectedBuildMethod != '' && selectedWorkFlowOrWorkOrder">
+  <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;" *ngIf="(selectedBuildMethod != 'build from scratch' && selectedBuildMethod != '' && selectedWorkFlowOrWorkOrder) || isEdit">
       <div class="form-group ">
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'materialList'?'btn-primary-cstm':'btn-light-cstm'" (click)="gridTabChange('materialList');">Material List</button>
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'labor'?'btn-primary-cstm':'btn-light-cstm'" (click)="gridTabChange('labor');">Labor</button>
@@ -394,8 +394,6 @@
         </thead>
         <tbody>
           <ng-container *ngFor="let matQuotation of materialListQuotation; let in=index;">
-
-          </ng-container>
             <tr class="mpn-row" *ngIf="!matQuotation['isDeleted']">
               <td>{{matQuotation.partNumber}}</td>
               <td>{{matQuotation.partDescription}}</td>
@@ -407,8 +405,8 @@
               <td>{{matQuotation.isDeferred}}</td>
               <td>{{matQuotation.unitCost}}</td>
               <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
-              <td>{{matQuotation.markup}}</td>
-              <td>{{matQuotation.costPlusAmount}}</td>
+              <td>{{matQuotation.markupPercentageId}}</td>
+              <td>{{matQuotation.materialCostPlus}}</td>
               <td>{{matQuotation.fixedAmount}}</td>
               <td>
                   <button
@@ -433,12 +431,13 @@
                   </button>
               </td>
             </tr>
+          </ng-container>
         </tbody>
       </table>
       <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save</button>
     </div>
 
-    <div *ngIf="selectedBuildMethod == 'use historical wos'">
+    <div *ngIf="selectedBuildMethod == 'use historical wos' || isEdit">
       <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" >
         <thead>
           <tr>
@@ -471,8 +470,8 @@
             <td>{{matQuotation.oem}}</td>
             <td>{{matQuotation.unitCost}}</td>
             <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
-            <td>{{matQuotation.markup}}</td>
-            <td>{{matQuotation.costPlusAmount}}</td>
+            <td>{{matQuotation.markupPercentageId}}</td>
+            <td>{{matQuotation.materialCostPlus}}</td>
             <td>{{matQuotation.fixedAmount}}</td>
             <td>
                 <button

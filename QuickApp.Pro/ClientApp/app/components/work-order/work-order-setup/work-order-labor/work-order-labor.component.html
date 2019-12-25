@@ -170,7 +170,6 @@
             </th>
             <th>MARKUP</th>
             <th>Cost plus amount</th>
-            <th>Fixed Amount</th>
           </ng-container>
           <th class="text-center" style="padding: 7px 53px !important;">
             Memo
@@ -298,7 +297,7 @@
                 </td>
                 <ng-container *ngIf="isQuote">
                   <td>
-                    <input type="number" [(ngModel)]="rec.laborOverheadCost" />
+                    <input type="number" [(ngModel)]="rec.directLaborOHCost" />
                   </td>
                   <td>
                       <!-- <input [(ngModel)]="matQuotation.markup" /> -->
@@ -307,8 +306,7 @@
                       <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                     </select>
                   </td>
-                  <td>{{rec.costPlusAmount}}</td>
-                  <td><input [(ngModel)]="rec.fixedAmount" /></td>
+                  <td>{{rec.labourCostPlus}}</td>
                 </ng-container>
                 <td>
                   <input type="text" [(ngModel)]="rec.memo" />

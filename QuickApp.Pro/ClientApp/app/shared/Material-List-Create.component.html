@@ -218,7 +218,7 @@
                 <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
               </select>
             </td>
-            <td>{{material.costPlusAmount}}</td>
+            <td>{{material.materialCostPlus}}</td>
             <td><input [(ngModel)]="material.fixedAmount" /></td>
         </ng-container>
         <td>
