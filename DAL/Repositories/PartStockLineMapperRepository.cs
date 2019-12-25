@@ -72,7 +72,9 @@ namespace DAL.Repositories
                     DeferredReceiver = purchaseOrder.DeferredReceiver,
                     Resale = purchaseOrder.Resale,
                     Notes = purchaseOrder.Notes,
-                    PurchaseOderPart = purchaseOrder.PurchaseOderPart
+                    PurchaseOderPart = purchaseOrder.PurchaseOderPart,
+                    BillToUserType = purchaseOrder.BillToUserType,
+                    BillToUserId = purchaseOrder.BillToUserId
                 };
 
                 //return purchaseOrder;

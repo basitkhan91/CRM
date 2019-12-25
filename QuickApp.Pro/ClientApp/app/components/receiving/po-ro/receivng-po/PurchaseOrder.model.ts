@@ -34,7 +34,9 @@ export class PurchaseOrder {
     billToContactName: string;
     billToMemo: string;
     masterCompanyId: number;
+
     shipToUserType: number;
+    billToUserId: number;
     billToUserType: number;
     shipToUserName: string;
     billToUserName: string;

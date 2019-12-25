@@ -770,6 +770,16 @@ export class ReceivngPoComponent implements OnInit {
                 stockLine.purchaseOrderUnitCost = 0;
                 stockLine.purchaseOrderExtendedCost = part.unitCost;
                 stockLine.currentDate = new Date();
+                stockLine.obtainFromType = 3;
+                stockLine.obtainFrom = this.purchaseOrderData.vendor.vendorId.toString();
+                stockLine.obtainFromObject = this.VendorList.find(x => x.Key == this.purchaseOrderData.vendor.vendorId.toString());
+
+                if (this.purchaseOrderData.billToUserType == 1 || this.purchaseOrderData.billToUserType == 2) {
+                    stockLine.ownerType = this.purchaseOrderData.billToUserType == 2 ? 3 : this.purchaseOrderData.billToUserType;
+                    stockLine.owner = this.purchaseOrderData.billToUserId.toString();
+                        stockLine.ownerObject = stockLine.ownerType == 1 ? this.CustomerList.find(x => x.Key == this.purchaseOrderData.billToUserId.toString())
+                            : this.VendorList.find(x => x.Key == this.purchaseOrderData.billToUserId.toString());
+                }
 
                 if (part.itemMaster != undefined) {
                     stockLine.purchaseOrderUnitCost = part.unitCost;
@@ -808,6 +818,9 @@ export class ReceivngPoComponent implements OnInit {
             stockLine.purchaseOrderUnitCost = 0;
             stockLine.purchaseOrderExtendedCost = part.unitCost;
             stockLine.currentDate = new Date();
+            stockLine.obtainFromType = 3;
+            stockLine.obtainFrom = this.purchaseOrderData.vendor.vendorId.toString();
+            stockLine.obtainFromObject = this.VendorList.find(x => x.Key == this.purchaseOrderData.vendor.vendorId.toString());
 
             if (part.itemMaster != undefined) {
                 stockLine.purchaseOrderUnitCost = part.unitCost;
@@ -1215,9 +1228,10 @@ export class ReceivngPoComponent implements OnInit {
                         item.stocklineListObj[i].purchaseOrderExtendedCost.toString() == '' ? 0 :
                         item.stocklineListObj[i].purchaseOrderExtendedCost;
 
-                    item.stocklineListObj[i].purchaseOrderUnitCost = item.stocklineListObj[i].purchaseOrderUnitCost == undefined ||
-                        item.stocklineListObj[i].purchaseOrderUnitCost.toString() == '' ? 0 :
-                        item.stocklineListObj[i].purchaseOrderUnitCost;
+                    if (item.stocklineListObj[i].purchaseOrderUnitCost == undefined || (item.stocklineListObj[i].purchaseOrderUnitCost != undefined && item.stocklineListObj[i].purchaseOrderUnitCost.toString() == '')) {
+                        errorMessages.push("Please enter Unit Cost in Receiving Qty - " + (i + 1).toString() + ofPartMsg);
+                    }
+                    
                     //item.stocklineListObj[i].oEM = item.itemMaster.oemPNId;
 
                     if (item.stocklineListObj[i].companyId == undefined || item.stocklineListObj[i].companyId == 0) {
@@ -1227,6 +1241,7 @@ export class ReceivngPoComponent implements OnInit {
                     if (item.stocklineListObj[i].siteId == undefined || item.stocklineListObj[i].siteId == 0) {
                         errorMessages.push("Please select Site in Receiving Qty - " + (i + 1).toString() + ofPartMsg);
                     }
+
 
                     if (item.itemMaster.isSerialized == true) {
                         item.stocklineListObj[i].serialNumber = item.stocklineListObj[i].serialNumber != undefined ? item.stocklineListObj[i].serialNumber.trim() : '';
