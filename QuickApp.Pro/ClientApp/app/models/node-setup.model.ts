@@ -5,7 +5,7 @@
     nodeName: string;
     parentNodeId: number;
     leafNodeCheck: boolean;
-    glAccountTypeId: number;
+    GLAccountNodeType: string;
     fsType: boolean;
     description: string;
     createdBy: string;
@@ -15,7 +15,6 @@
     isActive: boolean;
     isDelete: boolean;
     ledgerNameMgmStructureId: number;
-
     comapnycodes: string;
     selectedCompanysData: any[] = [];
 

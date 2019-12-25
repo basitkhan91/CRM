@@ -5,20 +5,13 @@ import { GLAccountNodeSetup } from "../../../../models/node-setup.model";
 import { NodeSetupService } from "../../../../services/node-setup/node-setup.service";
 import { LegalEntityService } from "../../../../services/legalentity.service";
 import { GLAccountClassService } from "../../../../services/glaccountclass.service";
-import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { TableModule, Table } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { SelectButtonModule } from 'primeng/selectbutton';
-import { InputTextModule } from 'primeng/inputtext';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { AutoCompleteModule } from 'primeng/autocomplete';
-import { MenuItem } from 'primeng/api';//bread crumb
-import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Table } from 'primeng/table';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { AuthService } from "../../../../services/auth.service";
 import { SingleScreenBreadcrumbService } from "../../../../services/single-screens-breadcrumb.service";
 import { ConfigurationService } from "../../../../services/configuration.service";
-import { editValueAssignByCondition, getObjectById, validateRecordExistsOrNot, selectedValueValidate } from "../../../../generic/autocomplete";
+import { getObjectById, validateRecordExistsOrNot, selectedValueValidate } from "../../../../generic/autocomplete";
 @Component({
     selector: 'app-node-setup',
     templateUrl: './node-setup.component.html',
@@ -28,6 +21,7 @@ import { editValueAssignByCondition, getObjectById, validateRecordExistsOrNot, s
 /** node-setup component*/
 export class NodeSetupComponent implements OnInit {
     originalData: any;
+    ledgerNameMgmStructureId: any;
     isEdit: boolean = false;
     totalRecords: any;
     pageIndex: number = 0;
@@ -42,7 +36,6 @@ export class NodeSetupComponent implements OnInit {
         { field: 'leafNodeCheck', header: 'Leaf Node' },
         { field: 'glAccountNodeType', header: 'Node Type' },
         { field: 'fsType', header: 'F/S Type' },
-
     ]
     selectedColumns = this.headers;
     formData = new FormData()
@@ -130,9 +123,7 @@ export class NodeSetupComponent implements OnInit {
             ...this.addNew, createdBy: this.userName, updatedBy: this.userName, 
         };
         //const data = this.addNew 
-        console.log(data);
         const { selectedCompanysData, ...rest }: any = data;
-        console.log(rest);
         if (!this.isEdit) {
             this.nodeSetupService.add(data).subscribe(() => {
                 this.resetForm();
@@ -274,11 +265,13 @@ export class NodeSetupComponent implements OnInit {
 
     edit(rowData) {
         this.isEdit = true;
+        this.parentNode = rowData.parentNodeName;
         this.disableSaveGroupId = false;
         this.disableSaveForDescription = false;
         this.addNew = {
             ...rowData,
-            parentNodeId: getObjectById('parenNodeId', rowData.parenNodeId, this.originalData.parentNode)
+            parentNodeId: getObjectById('parenNodeId', rowData.parenNodeId, this.originalData.parentNode),
+
         };
         this.selectedRecordForEdit = { ...this.addNew }
 
