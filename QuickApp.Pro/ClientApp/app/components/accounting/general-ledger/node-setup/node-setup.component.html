@@ -238,14 +238,13 @@
                             <div class="col-sm-5">
                                 <select name="aircraftType" [(ngModel)]="addNew.ledgerName" #ledgerNameMgmStructureId="ngModel" required>
                                     <option>-- Select --</option>
-                                    <option *ngFor="let object of ledgerList" [ngValue]="object.ledgerName">{{object.ledgerName}}</option>
+                                    <option *ngFor="let object of ledgerList" [ngValue]="addNew.LegalEntityId">{{object.ledgerName}}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-sm-12">
                             <div class="col-sm-5">
                                 <label for="description" class="control-label">Share with the Other Entities
-                                  
                                 </label>
                             </div>
                             <div class="col-sm-5">
@@ -285,9 +284,10 @@
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <p-autoComplete (onSelect)="parentCodeNodeSelect($event)" class="p-autoComplete-ctsm" (onKeyUp)=parentCodeNodeHandler($event) [(ngModel)]="addNew.parentNodeId"
-                                    name="parentNode" [suggestions]="parentCodeCollection" (completeMethod)="filterParentNodeCodes($event)"
-                                    [size]="30" [minLength]="1" [dropdown]="true">
+                                <p-autoComplete (onSelect)="parentCodeNodeSelect($event)" class="p-autoComplete-ctsm" (onKeyUp)=parentCodeNodeHandler($event) [(ngModel)]="addNew.parentNode"
+                                                name="parentNode" [suggestions]="parentCodeCollection" (completeMethod)="filterParentNodeCodes($event)"
+                                                [size]="30" [minLength]="1" [dropdown]="true">
+                                    {{parentNode}}
                                 </p-autoComplete>
                             </div>
                         </div>
@@ -383,107 +383,6 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
         <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
-    </div>
-</ng-template>
-
-<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
-    <div class="modal-header">
-        <h4 class="modal-title" *ngIf="isEditMode">Edit Nodes</h4>
-        <h4 class="modal-title" *ngIf="!isEditMode">Add Nodes</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <form #userForm="ngForm" class="form-horizontal">
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Ledger Name
-                    <span class="clr-red">*</span>
-                </label>
-                <div class="col-sm-7">
-                    <select [(ngModel)]="currentNodeSetup.ledgerName" [ngModelOptions]="{standalone: true}">
-                        <option *ngFor="let ledger of ledgerList" [ngValue]="ledger.ledgerName">{{ledger.ledgerName}}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Share with the Other Entities</label>
-                <div class="col-sm-7">
-                    <p-multiSelect [options]="mainCompanylistMultiSelectData" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentNodeSetup.selectedCompanysData"
-                        [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Node Code
-                    <span class="clr-red">*</span>
-                </label>
-                <div class="col-sm-7">
-                    <p-autoComplete (onSelect)="codeSelect($event)" (onKeyUp)=codeHandler($event) [(ngModel)]="currentNodeSetup.nodeCode" [ngModelOptions]="{standalone: true}"
-                        [suggestions]="localCollection" (completeMethod)="filterCodes($event)" [size]="30" [minLength]="1" [dropdown]="true">
-                        <ng-template let-nodeCode pTemplate="item">
-                            <div class="ui-helper-clearfix">{{nodeCode}}</div>
-                        </ng-template>
-                    </p-autoComplete>
-                    <div *ngIf="disablesave" class="clr-red">Already Exists</div>
-
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Node Name
-                    <span class="clr-red">*</span>
-                </label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" [(ngModel)]="currentNodeSetup.nodeName" [ngModelOptions]="{standalone: true}">
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Parent Node</label>
-                <div class="col-sm-7">
-                    <p-autoComplete (onSelect)="parentCodeNodeSelect($event)" (onKeyUp)=parentCodeNodeHandler($event) [(ngModel)]="parentNode"
-                        [ngModelOptions]="{standalone: true}" [suggestions]="parentCodeCollection" (completeMethod)="filterParentNodeCodes($event)"
-                        [size]="30" [minLength]="1" [dropdown]="true">
-                    </p-autoComplete>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Leaf Node</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="checkbox" [(ngModel)]="currentNodeSetup.leafNodeCheck" [ngModelOptions]="{standalone: true}">
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Node Type
-                    <span class="clr-red">*</span>
-                </label>
-                <div class="col-sm-7">
-                    <select [(ngModel)]="currentNodeSetup.glAccountNodeType" [ngModelOptions]="{standalone: true}">
-                        <option *ngFor="let glAccountClass of allGLAccountClassData" [ngValue]="glAccountClass.glAccountClassName">{{glAccountClass.glAccountClassName}}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">F/S Type
-                    <span class="clr-red">*</span>
-                </label>
-                <div class="col-sm-7">
-                    <select [(ngModel)]="currentNodeSetup.fsType" [ngModelOptions]="{standalone: true}">
-                        <option value="incomeStatement">Income Statement</option>
-                        <option value="balanceSheet">Balance Sheet</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-sm-4" for="description">Node Description</label>
-                <div class="control-data">
-                    <textarea style="width: 300px;height: 100px;" [(ngModel)]="currentNodeSetup.description" [ngModelOptions]="{standalone: true}"></textarea>
-                </div>
-            </div>
-            <div class="clear"></div>
-            <div class="modal-footer">
-                <button class="btn btn-success pull-right submit-btn" [disabled]="disablesave" *ngIf="!this.updateMode" (click)="addNodeSetup()">Save</button>
-                <button class="btn btn-success pull-right submit-btn" [disabled]="disablesave" *ngIf="this.updateMode" (click)="updateNodeSetup()">Save</button>
-            </div>
-        </form>
     </div>
 </ng-template>
 
