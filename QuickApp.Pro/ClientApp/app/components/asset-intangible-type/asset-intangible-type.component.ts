@@ -340,4 +340,18 @@ export class AssetIntangibleTypeComponent implements OnInit {
 
     }
 
+    viewItemDetailsClick(content, row) {
+        //console.log(content);
+        this.itemDetails = row;
+        //this.loadMasterCompanies();
+        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    dismissModel() {
+        this.currentModeOfOperation = ModeOfOperation.None;
+        this.modal.close();
+    }
 }
