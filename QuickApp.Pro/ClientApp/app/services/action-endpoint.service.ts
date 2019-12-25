@@ -78,7 +78,6 @@ export class ActionEndpoint extends EndpointFactory {
     }
 
     getTaskAuditDetails<T>(Id: number): Observable<T> {
-        debugger;
         let endPointUrl = `${this._auditUrl}/${Id}`;
 
         return this.http.get<T>(endPointUrl, this.getRequestHeaders())
