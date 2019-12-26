@@ -176,6 +176,7 @@ export class CustomersListComponent implements OnInit {
     contactcols: any[];
     selectedContactColumns: any[];
     allContacts: any[] = [];
+    customerauditHisory: any[];
     customerContactsColumns = [
         { field: 'tag', header: 'Tag' },
         { field: 'firstName', header: 'First Name' },
@@ -576,9 +577,9 @@ export class CustomersListComponent implements OnInit {
             }
         })
     }
-    getAuditHistoryById(rowData) {
-        //alert('This functionality is not implemented');
-    }
+    //getAuditHistoryById(rowData) {
+    //    //alert('This functionality is not implemented');
+    //}
     ExpandAllCustomerDetailsModel() {
         $('#step1').collapse('show');
         $('#step2').collapse('show');
@@ -727,6 +728,37 @@ export class CustomersListComponent implements OnInit {
     private onDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();
         
+    }
+    getAuditHistoryById(content, row) {
+        
+        this.alertService.startLoadingMessage();
+
+        this.customerService.getCustomerHistory(row.customerId).subscribe(
+            results => this.onAuditHistoryLoadSuccessful(results, content),
+            error => this.saveFailedHelper(error));
+    }
+    private onAuditHistoryLoadSuccessful(auditHistory, content) {
+        this.alertService.stopLoadingMessage();
+
+
+        this.customerauditHisory = auditHistory;
+
+        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.customerauditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
     }
 
     // ngAfterViewInit() {

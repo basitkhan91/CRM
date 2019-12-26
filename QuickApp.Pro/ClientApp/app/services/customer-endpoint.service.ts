@@ -145,7 +145,7 @@ export class CustomerEndpoint extends EndpointFactory {
 
     private readonly _customerDeleteAttachment: string = "/api/Customer/customerAttachmentDelete";
     private readonly _customerAircraftUpdate: string = "/api/Customer/CustomerAircraftUpdate";
-
+    private readonly _customerHistory: string = "/api/Customer/GetCustomerAuditHistoryByid"
     get globalSearch() { return this.configurations.baseUrl + this.getGlobalCustomer; }
     get paginate() { return this.configurations.baseUrl + this.getCustomer; }
     get customerBillAddressUrl() { return this.configurations.baseUrl + this._customerBillAddressUrl; }
@@ -1338,6 +1338,9 @@ export class CustomerEndpoint extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getUpdateAircraft(roleObject, customerAircraftId));
             });
+    }
+    getCustomerHistory(customerId) {
+        return this.http.get(`${this.configurations.baseUrl}/${this._customerHistory}?customerId=${customerId}`)
     }
 }
 
