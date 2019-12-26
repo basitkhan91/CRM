@@ -28,6 +28,7 @@ export class WorkOrderCompleteMaterialListComponent {
     @Input() workFlowObject;
     @Input() savedWorkOrderData;
     @Input() materialStatus;
+    @Input() mpnId;
     @Output() saveMaterialListForWO = new EventEmitter();
     @Output() updateMaterialListForWO = new EventEmitter();
     @Output() saveRIParts = new EventEmitter();
@@ -499,6 +500,9 @@ export class WorkOrderCompleteMaterialListComponent {
 
 
 
+    }
+    createNewPoWorkOrder(){
+        window.open(`/vendorsmodule/vendorpages/workorder-po-create/${0}/${this.mpnId}`)
     }
 
 

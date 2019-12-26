@@ -70,6 +70,9 @@ const vendorPagesRoutes: Routes = [
 			{ path: "app-vendor-capabilities-list", component: VendorCapabilitiesListComponent, data: { title: "capabilities-list" } },
 			{ path: "app-add-vendor-capabilities", component: AddVendorCapabilitiesComponent, data: { title: "Add Capabilities" } },
 			{ path: "app-add-vendor-capabilities/edit/:id", component: AddVendorCapabilitiesComponent, data: { title: "Edit Capabilities" } },
+			{ path: "workorder-po-create/:id/:mpnid", component: PurchaseSetupComponent, data: { title: "Create PO" } },
+
+
 			// { path: "app-edit-vendor-capabilities", component: EditVendorCapabilitiesComponent, data: { title: "capabilities-edit" } },
 
 		]

@@ -153,6 +153,15 @@
                                     </button>
                                   </td>
                                   <td>
+                                        <a
+                                        (click)="createNewPoWorkOrder(rowData)"
+                                        matTooltip="Create PO"
+                                        class="btn btn-success nobg btn-cstm"
+                                      >
+                                        <span><i class="fa fa-plus"></i></span
+                                      ></a>
+                                  </td>
+                                  <td>
                                     <button
                                       class="btn-delete ptable-wo-btns"
                                       mat-icon-button
