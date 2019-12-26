@@ -677,19 +677,27 @@ namespace DAL.Repositories
         public object PurchaseOrderById(long purchaseOrderId)
         {
             var data = (from po in _appContext.PurchaseOrder
-                        join v in _appContext.Vendor on po.VendorId equals v.VendorId
-                        join vc in _appContext.VendorContact on v.VendorId equals vc.VendorId
-                        join con in _appContext.Contact on vc.ContactId equals con.ContactId
+                        //join v in _appContext.Vendor on po.VendorId equals v.VendorId
+                        //join vc in _appContext.VendorContact on v.VendorId equals vc.VendorId
+                        //join con in _appContext.Contact on vc.ContactId equals con.ContactId
                         where po.PurchaseOrderId == purchaseOrderId
                         select new
                         {
                             po
                         }).FirstOrDefault();
-
+            
             return data;
         }
 
-        public List<PurchaseOrderPart> GetPurchaseOrderParts(long purchaseOrderId)
+        private ItemMaster ItemMasterDetails(long itemMasterId)
+        {
+            var itemMaster = _appContext.ItemMaster.Where(p => p.ItemMasterId == itemMasterId).FirstOrDefault();
+            if (itemMaster == null)
+                itemMaster = new ItemMaster();
+            return itemMaster;
+        }
+
+        public List<PurchaseOrderPart> GetPurchaseOrderParts(long purchaseOrderId, long workOrderPartNoId)
         {
             List<PurchaseOrderPart> purchaseOrderParts = new List<PurchaseOrderPart>();
             List<PurchaseOrderSplitParts> purchaseOrderSplitParts = new List<PurchaseOrderSplitParts>();
@@ -798,6 +806,51 @@ namespace DAL.Repositories
 
 
 
+                    }
+                }
+
+                if (workOrderPartNoId > 0)
+                {
+                    var woPartNo = _appContext.WorkOrderPartNumber.Where(p => p.ID == workOrderPartNoId).FirstOrDefault();
+                    if (woPartNo != null)
+                    {
+                        var itemMaster = ItemMasterDetails(woPartNo.MasterPartId);
+                        purchaseOrderPart = new PurchaseOrderPart();
+                        purchaseOrderPart.PurchaseOrderSplitParts = new List<PurchaseOrderSplitParts>();
+
+
+                        purchaseOrderPart.PurchaseOrderPartRecordId = 0;
+                        purchaseOrderPart.PurchaseOrderId = 0;
+                        purchaseOrderPart.isParent = true;
+                        purchaseOrderPart.SerialNumber = woPartNo.SerialNumber;
+                        purchaseOrderPart.ItemMasterId = woPartNo.MasterPartId;
+                        purchaseOrderPart.ManufacturerId =Convert.ToInt64(itemMaster.ManufacturerId);
+                        purchaseOrderPart.GeneralLedgerAccounId = Convert.ToInt64(itemMaster.GLAccountId);
+                        purchaseOrderPart.UOMId = itemMaster.PurchaseUnitOfMeasureId;
+                        purchaseOrderPart.NeedByDate = DateTime.Now;
+                        purchaseOrderPart.ConditionId = woPartNo.ConditionId;
+                        purchaseOrderPart.QuantityOrdered = Convert.ToInt16(woPartNo.Quantity);
+                        purchaseOrderPart.UnitCost =0;
+                        purchaseOrderPart.DiscountAmount =0;
+                        purchaseOrderPart.DiscountPercent =0;
+                        purchaseOrderPart.ExtendedCost = 0;
+                        purchaseOrderPart.FunctionalCurrencyId = 0;
+                        purchaseOrderPart.ReportCurrencyId = 0;
+                        purchaseOrderPart.ForeignExchangeRate = 0;
+                        purchaseOrderPart.WorkOrderId = woPartNo.WorkOrderId;
+                        purchaseOrderPart.RepairOrderId = 0;
+                        purchaseOrderPart.SalesOrderId = 0;
+                        purchaseOrderPart.ManagementStructureId = 0;
+                        purchaseOrderPart.Memo = string.Empty;
+                        purchaseOrderPart.MasterCompanyId = woPartNo.MasterCompanyId;
+                        purchaseOrderPart.CreatedBy = woPartNo.CreatedBy;
+                        purchaseOrderPart.CreatedDate = DateTime.Now;
+                        purchaseOrderPart.UpdatedBy = woPartNo.UpdatedBy;
+                        purchaseOrderPart.UpdatedDate = DateTime.Now;
+                        purchaseOrderPart.IsActive = true;
+                        purchaseOrderPart.DiscountPerUnit = 0;
+
+                        purchaseOrderParts.Add(purchaseOrderPart);
                     }
                 }
 

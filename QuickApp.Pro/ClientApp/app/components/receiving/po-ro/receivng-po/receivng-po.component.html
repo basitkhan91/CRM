@@ -739,6 +739,7 @@
                                                                 <label>Tag Type</label>
                                                                 <select class="form-control" required>
                                                                     <option value="0">Select</option>
+                                                                    <option *ngFor="let tagType of TagTypeList" [value]="tagType.Key">{{tagType.Value}}</option>
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">
