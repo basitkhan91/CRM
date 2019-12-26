@@ -771,6 +771,9 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.ExpirationDate = employeeTrainingViewModel.ExpirationDate;
                 employeeobject.UnitOfMeasureId = employeeTrainingViewModel.UnitOfMeasureId;
                 employeeobject.CreatedBy = employeeTrainingViewModel.CreatedBy;
+                employeeobject.FrequencyOfTrainingId = employeeTrainingViewModel.FrequencyOfTrainingId;
+             
+               
 
                 employeeobject.CreatedDate = DateTime.Now;
                 employeeobject.UpdatedDate = DateTime.Now;
@@ -807,9 +810,11 @@ namespace QuickApp.Pro.Controllers
                 existingResult.IndustryCode = employeeTrainingViewModel.IndustryCode;
                 existingResult.ExpirationDate = employeeTrainingViewModel.ExpirationDate;
                 existingResult.UnitOfMeasureId = employeeTrainingViewModel.UnitOfMeasureId;
-                existingResult.CreatedDate = DateTime.Now;
+                //existingResult.CreatedDate = DateTime.Now;
                 existingResult.UpdatedDate = DateTime.Now;
                 existingResult.UpdatedBy = employeeTrainingViewModel.UpdatedBy;
+
+                existingResult.FrequencyOfTrainingId = employeeTrainingViewModel.FrequencyOfTrainingId;
                 _unitOfWork.employeeTraining.Update(existingResult);
                 _unitOfWork.SaveChanges();
             }
