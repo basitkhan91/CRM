@@ -4098,18 +4098,19 @@ namespace DAL.Repositories
         {
             try
             {
-                var list = (from sl in _appContext.StockLine
-                            join im in _appContext.ItemMaster on sl.ItemMasterId equals im.ItemMasterId
-                            select new
-                            {
-                                sl.ItemMasterId,
-                                sl.PartNumber,
-                                im.PartDescription,
-                                im.DER,
-                                PMA = im.isPma,
-                                NTE = (im.OverhaulHours == null ? 0 : im.OverhaulHours) + (im.RPHours == null ? 0 : im.RPHours) + (im.mfgHours == null ? 0 : im.mfgHours) + (im.TestHours == null ? 0 : im.TestHours),
-                                TATDaysCurrent = (im.TurnTimeOverhaulHours == null ? 0 : im.TurnTimeOverhaulHours) + (im.TurnTimeRepairHours == null ? 0 : im.TurnTimeRepairHours) + (im.turnTimeMfg == null ? 0 : im.turnTimeMfg) + (im.turnTimeBenchTest == null ? 0 : im.turnTimeBenchTest)
-                            })
+				var list = (from sl in _appContext.StockLine
+							join im in _appContext.ItemMaster on sl.ItemMasterId equals im.ItemMasterId
+							where im.IsActive == true && (im.IsDeleted == false || im.IsDeleted == null)
+							select new
+							{
+								sl.ItemMasterId,
+								sl.PartNumber,
+								im.PartDescription,
+								im.DER,
+								PMA = im.isPma,
+								NTE = (im.OverhaulHours == null ? 0 : im.OverhaulHours) + (im.RPHours == null ? 0 : im.RPHours) + (im.mfgHours == null ? 0 : im.mfgHours) + (im.TestHours == null ? 0 : im.TestHours),
+								TATDaysCurrent = (im.TurnTimeOverhaulHours == null ? 0 : im.TurnTimeOverhaulHours) + (im.TurnTimeRepairHours == null ? 0 : im.TurnTimeRepairHours) + (im.turnTimeMfg == null ? 0 : im.turnTimeMfg) + (im.turnTimeBenchTest == null ? 0 : im.turnTimeBenchTest)
+							})
                             .Distinct()
                             .ToList();
                 return list;
