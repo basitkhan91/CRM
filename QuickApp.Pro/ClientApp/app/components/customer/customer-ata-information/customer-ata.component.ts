@@ -350,7 +350,7 @@ export class CustomerATAInformationComponent implements OnInit {
 
 
         this.customerContactATAMappingId = rowData.customerContactATAMappingId
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })

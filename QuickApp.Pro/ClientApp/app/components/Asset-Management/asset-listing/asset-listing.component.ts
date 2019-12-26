@@ -203,7 +203,7 @@ export class AssetListingComponent implements OnInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.assetService.listCollection = row;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -289,7 +289,7 @@ export class AssetListingComponent implements OnInit {
 
         if (!this.isWorkOrder) {
 
-            this.modal = this.modalService.open(content, { size: 'lg' });
+            this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
             this.modal.result.then(() => {
                 console.log('When user closes');
             }, () => { console.log('Backdrop click') })

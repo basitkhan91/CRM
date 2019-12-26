@@ -1039,7 +1039,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     cunstructCapabilities(content) {
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
 
             console.log('When user closes');
@@ -1364,7 +1364,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.sourceUOM = new UnitOfMeasure();
         this.sourceUOM.isActive = true;
         this.unitName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1600,7 +1600,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     openCapes(content) {
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1640,7 +1640,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.allAircraftinfo.push({ value: models.aircraftModelId, label: models.modelName, aircraftManufacturer: manufacturer });
         }
 
-        this.modal = this.modalService.open(capData, { size: 'sm' });
+        this.modal = this.modalService.open(capData, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1659,7 +1659,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.sourceAction = new Priority();
         this.sourceAction.isActive = true;
         this.priorityName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1690,7 +1690,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.sourceAction = new Itemgroup();
         this.sourceAction.isActive = true;
         this.itemGroupName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1702,7 +1702,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.isDeleteMode = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1721,7 +1721,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.sourceAction = new Integration();
         this.sourceAction.isActive = true;
         this.integrationName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -2213,7 +2213,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -2231,7 +2231,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.itemName = this.sourceAction.itemClassificationCode;
         this.className = this.sourceAction.description;
         this.itemTypeName = this.sourceAction.itemType;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -2765,7 +2765,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.auditHisory = auditHistory;
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -3256,7 +3256,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.sourceAction = new Priority();
         this.sourceAction.isActive = true;
         this.priorityName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -3270,7 +3270,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.sourceAction = row;
         this.priorityName = this.sourceAction.description;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -3289,7 +3289,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.createdDate = row.createdDate;
         this.updatedDate = row.updatedDate;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -3297,7 +3297,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     openHelpText(content) {
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -4877,7 +4877,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.itemName = "";
         this.className = "";
         this.itemTypeName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -4969,7 +4969,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.loadMasterCompanies();
         this.sourceAction.isActive = true;
         this.manufacturerName = " "
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -5014,7 +5014,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.loadMasterCompanies();
         // this.sourceAction = new Provision();
         this.sourceAction.isActive = true;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
         }, () => { console.log('Backdrop click') })
     }
@@ -5022,7 +5022,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     exportUOmOpen(content) {
         console.log("In exportUOmOpen function!!");
         // this.sourceUOM.isActive = true;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
         }, () => { console.log('Backdrop click') })
     }
@@ -5433,7 +5433,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.portalURL = "";
         this.integrationName = "";
         this.sourceAction.description = "";
-        this.modal = this.modalService.open(integration, { size: 'sm' });
+        this.modal = this.modalService.open(integration, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -5785,7 +5785,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.portalURL = "";
         this.integrationName = "";
         this.sourceAction.description = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -5801,7 +5801,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.integrationName = this.sourceAction.description;
         this.portalURL = row.portalURL;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -5836,7 +5836,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.sourceUOM = new UnitOfMeasure();
         this.sourceUOM.isActive = true;
         this.unitName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
