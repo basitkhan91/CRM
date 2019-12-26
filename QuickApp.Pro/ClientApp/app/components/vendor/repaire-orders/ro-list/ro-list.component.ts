@@ -17,7 +17,7 @@ import * as $ from 'jquery';
 	selector: 'app-ro-list',
 	templateUrl: './ro-list.component.html',
 	styleUrls: ['./ro-list.component.scss'],
-	animations: [fadeInOut]
+    animations: [fadeInOut]
 })
 /** Rolist component*/
 export class RoListComponent implements OnInit {
@@ -61,6 +61,7 @@ export class RoListComponent implements OnInit {
     @Input() vendorId: number;
     currentStatus: string = 'open';
     filterText: any = '';
+    currentdate: any = new Date();
 
     constructor(private _route: Router,
         private authService: AuthService,
@@ -76,6 +77,7 @@ export class RoListComponent implements OnInit {
         //this.sourceCustomer = new Customer();
 
     }
+
     ngOnInit() {
         // this.getList();
         this.vendorCapesCols = [
@@ -87,8 +89,7 @@ export class RoListComponent implements OnInit {
 			{ field: 'cost', header: 'Cost' },
 			{ field: 'tat', header: 'TAT' },
 			{ field: 'name', header: 'PN Mfg' },
-		];
-
+        ];
     }
 
     getROListByStatus(status) {
@@ -205,7 +206,7 @@ export class RoListComponent implements OnInit {
         this.pageSize = event.rows;
         event.first = pageIndex;
         this.lazyLoadEventDataInput = event;
-        this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'open' };
+        this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'open', openDate: new Date() };
         if(this.isEnableROList) {
             this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, vendorId: this.vendorId }
         }

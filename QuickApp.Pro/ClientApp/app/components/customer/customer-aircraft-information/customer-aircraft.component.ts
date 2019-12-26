@@ -578,7 +578,7 @@ export class CustomerAircraftComponent implements OnInit {
 
 
         this.airCraftMappingId = id;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })

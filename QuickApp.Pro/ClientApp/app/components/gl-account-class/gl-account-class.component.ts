@@ -212,7 +212,7 @@ export class GlAccountClassComponent implements OnInit {
         this.sourceAction = new GLAccountClass();
         this.sourceAction.isActive = true;
         this.gLAccountType = "";
-		this.modal = this.modalService.open(content, { size: 'sm' });
+		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -230,7 +230,7 @@ export class GlAccountClassComponent implements OnInit {
         this.createdDate = row.createdDate;
         this.updatedDate = row.updatedDate;
 		this.loadMasterCompanies();
-		this.modal = this.modalService.open(content, { size: 'sm' });
+		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -243,7 +243,7 @@ export class GlAccountClassComponent implements OnInit {
         this.code_Name = row.gLAccountType;
         //this.GLCID = row.gLCID ;	
         //this.GL_Account_Type = row.gLAccountType;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         console.log(content);
 		this.modal.result.then(() => {
 			console.log('When user closes');
@@ -258,7 +258,7 @@ export class GlAccountClassComponent implements OnInit {
 		this.sourceAction = row;
         this.gLAccountType = row.gLAccountType;
 		this.loadMasterCompanies();
-		this.modal = this.modalService.open(content, { size: 'sm' });
+		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -417,7 +417,7 @@ export class GlAccountClassComponent implements OnInit {
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.auditHisory = auditHistory;
-		this.modal = this.modalService.open(content, { size: 'lg' });
+		this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
