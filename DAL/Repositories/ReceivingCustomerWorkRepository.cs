@@ -66,8 +66,8 @@ namespace DAL.Repositories
                                   customer.Name,
                                   customer.CustomerCode,
                                   contact.WorkPhone,
-                                  contact.ContactId,
-                                  contact.ContactTitle,
+                                  contactId= contact.ContactId,
+                                  contactTitle=  contact.ContactTitle,
                                   partNumber = stl.PartNumber,
                                   stl.IsTimeLife,
                                   stl.IsExpirationDate,
@@ -79,6 +79,7 @@ namespace DAL.Repositories
                                   stl.TagDate,
                                   location = l.Name,
                                   warehouse = w.Name,
+                                  
                                   im.ExpirationDate,
                                   stl.SerialNumber,
                                   conditionId = co == null ? 0 : co.ConditionId,
@@ -123,6 +124,7 @@ namespace DAL.Repositories
                                   ti,
                                   conditionType = co.Description,
                                   im.ItemTypeId,
+                                  stl.ManagementStructureId
 
                               }).ToList();
                 return result;

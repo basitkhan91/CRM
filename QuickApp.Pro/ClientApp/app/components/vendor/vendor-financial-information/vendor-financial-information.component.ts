@@ -161,7 +161,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
     }
-    private loadData() {
+    private loadData() {        
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
 
@@ -245,6 +245,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
                 }
             });
 
+
             console.log(this.vendorProcess1099Data);
         })
 
@@ -259,9 +260,20 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
                 return {
                     ...x
                     
+                    
                 }
             });
-
+            console.log(this.vendorProcess1099Data);
+            console.log(this.checkedCheckboxesList);
+            for(let j=0; j<this.vendorProcess1099Data.length; j++){
+                if(this.vendorProcess1099Data[j].isDefaultRadio == true || this.vendorProcess1099Data[j].isDefaultRadio == "true"){
+                    this.vendorProcess1099Data[j].isDefaultRadio = this.vendorProcess1099Data[j].description
+                }
+                if(this.vendorProcess1099Data[j].isDefaultCheck == true){
+                    this.checkedCheckboxesList.push(j);
+                }
+            }
+            console.log(this.checkedCheckboxesList, "checkedCheckboxesList++++");
             console.log(this.vendorProcess1099Data);
         })
 
@@ -293,18 +305,18 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allVendors;    
-        console.log(allVendors, "allVendors++++")   
-       // debugger
-        if(allVendors[0].t != null)
-        {
-            this.sourceVendor.v1099RentDefault=allVendors[0].t.v1099RentDefault;
-            this.sourceVendor.v1099RoyaltiesDefault=allVendors[0].t.v1099RoyaltiesDefault;
-            this.sourceVendor.v1099OtherIncomeDefault=allVendors[0].t.v1099OtherIncomeDefault;
-            this.sourceVendor.v1099MedicalHealthPaymentsDefault=allVendors[0].t.v1099MedicalHealthPaymentsDefault;
-            this.sourceVendor.v1099NonEmployeeCompDefault=allVendors[0].t.v1099NonEmployeeCompDefault;
-            this.sourceVendor.v1099GoldenParachuteDefault=allVendors[0].t.v1099GoldenParachuteDefault;
-            this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault=allVendors[0].t.v1099GrossProceedsPaidToAttorneyDefault;
-        }
+    //     console.log(allVendors, "allVendors++++")   
+    //    // debugger
+    //     if(allVendors[0].t != null)
+    //     {
+    //         this.sourceVendor.v1099RentDefault=allVendors[0].t.v1099RentDefault;
+    //         this.sourceVendor.v1099RoyaltiesDefault=allVendors[0].t.v1099RoyaltiesDefault;
+    //         this.sourceVendor.v1099OtherIncomeDefault=allVendors[0].t.v1099OtherIncomeDefault;
+    //         this.sourceVendor.v1099MedicalHealthPaymentsDefault=allVendors[0].t.v1099MedicalHealthPaymentsDefault;
+    //         this.sourceVendor.v1099NonEmployeeCompDefault=allVendors[0].t.v1099NonEmployeeCompDefault;
+    //         this.sourceVendor.v1099GoldenParachuteDefault=allVendors[0].t.v1099GoldenParachuteDefault;
+    //         this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault=allVendors[0].t.v1099GrossProceedsPaidToAttorneyDefault;
+    //     }
        
 
     }
@@ -451,13 +463,13 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     //     }
     // }
 
-    changeCheck1099Required (event, index) {
-        if(event.target.checked){
+    changeCheck1099Required (event, index) { 
+        if(event.target.checked){            
           this.checkedCheckboxesList.push(index);
           this.vendorProcess1099Data[index].isRadioDisabled = false;
-          if(this.checkedCheckboxesList.length == 1){
+           if(this.checkedCheckboxesList.length == 1){
             this.vendorProcess1099Data[index].isDefaultRadio = event.target.value;            
-          }         
+           }         
         } else {  
           let checkedArrayIndex;    
           this.vendorProcess1099Data[index].isDefaultRadio = false;
@@ -465,15 +477,23 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
           this.checkedCheckboxesList.splice(checkedArrayIndex, 1);
           this.vendorProcess1099Data[index].isRadioDisabled = true;
           if(this.checkedCheckboxesList.length >= 1){
+            this.checkedCheckboxesList = this.checkedCheckboxesList.sort();
             this.vendorProcess1099Data[this.checkedCheckboxesList[0]].isRadioDisabled = false;
             this.vendorProcess1099Data[this.checkedCheckboxesList[0]].isDefaultRadio = this.vendorProcess1099Data[this.checkedCheckboxesList[0]].description;
+          } else {
+            for(let i = 0; i < this.vendorProcess1099Data.length; i++){
+                this.vendorProcess1099Data[i].isDefaultRadio = false;
+            }
           }
         }
       }
+      changevalue(event, index) {   
+        for(let i = 0; i < this.vendorProcess1099Data.length; i++){
+              this.vendorProcess1099Data[i].isDefaultRadio = false;
+          }
+          this.vendorProcess1099Data[index].isDefaultRadio = this.vendorProcess1099Data[index].description;
+      }
   
-      changevalue(event, index) {
-          this.vendorProcess1099Data[index].isDefaultCheck = true;
-        }
 
     editItemAndCloseModel(isGoNxt?: boolean) {
         this.isSaving = true;
@@ -541,13 +561,20 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
             if (this.sourceVendor.vendorId) {
                 this.sourceVendor.createdBy = this.userName;
                 this.sourceVendor.updatedBy = this.userName;
+                for(let i = 0; i< this.vendorProcess1099Data.length; i++){
+                    if(this.vendorProcess1099Data[i].isDefaultRadio != true && this.vendorProcess1099Data[i].isDefaultRadio != false){
+                        this.vendorProcess1099Data[i].isDefaultRadio = true;
+                    } 
+                }
                 this.sourceVendor.master1099s = this.vendorProcess1099Data;
                 this.workFlowtService.updatefinanceinfo(this.sourceVendor, this.sourceVendor.vendorId).subscribe(data => {
                     this.localCollection = data;
                     this.workFlowtService.financeCollection = this.local;
                     this.activeIndex = 2;
+                    this.getVendorProcess1099FromTransaction(this.sourceVendor.vendorId);
                     this.workFlowtService.indexObj.next(this.activeIndex);
                     this.savesuccessCompleted(this.sourceVendor, isGoNxt);
+                    
                 })
             }
             else {
