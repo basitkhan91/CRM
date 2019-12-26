@@ -27,8 +27,8 @@ namespace DAL.Repositories.Interfaces
         object GetPurchaseOrderShipvia(long purchaseOrderId, int userType);
         IEnumerable<object> GetVendorCapabilities(long vendorId);
 
-        object PurchaseOrderById(long purchaseOrderId, long workOrderPartNoId);
-        List<PurchaseOrderPart> GetPurchaseOrderParts(long purchaseOrderId);
+        object PurchaseOrderById(long purchaseOrderId);
+        List<PurchaseOrderPart> GetPurchaseOrderParts(long purchaseOrderId, long workOrderPartNoId);
         void DeletePurchaseOrder(long purchaseOrderId, string updatedBy);
         void PurchaseOrderStatus(long purchaseOrderId, bool status, string updatedBy);
 
