@@ -674,7 +674,7 @@ namespace DAL.Repositories
             }
         }
 
-        public object PurchaseOrderById(long purchaseOrderId)
+        public object PurchaseOrderById(long purchaseOrderId, long workOrderPartNoId)
         {
             var data = (from po in _appContext.PurchaseOrder
                         join v in _appContext.Vendor on po.VendorId equals v.VendorId
@@ -685,8 +685,57 @@ namespace DAL.Repositories
                         {
                             po
                         }).FirstOrDefault();
+            if (workOrderPartNoId > 0)
+            {
+                var woPartNo = _appContext.WorkOrderPartNumber.Where(p => p.ID == workOrderPartNoId).FirstOrDefault();
+                if (woPartNo != null)
+                {
+                    var itemMaster = ItemMasterDetails(woPartNo.MasterPartId);
+                    PurchaseOrderPart poPartDto = new PurchaseOrderPart();
+                    poPartDto.AltPartNumber = string.Empty;
+                    poPartDto.ConditionId = woPartNo.ConditionId;
+                    poPartDto.CreatedBy = woPartNo.CreatedBy;
+                    poPartDto.CreatedDate = DateTime.Now;
+                    poPartDto.DiscountAmount = 0;
+                    poPartDto.DiscountPercent = 0;
+                    poPartDto.DiscountPerUnit = 0;
+                    poPartDto.ExtendedCost = 0;
+                    poPartDto.ForeignExchangeRate = 0;
+                    poPartDto.FunctionalCurrencyId = 0;
+                    poPartDto.GeneralLedgerAccounId =Convert.ToInt64(itemMaster.GLAccountId);
+                    poPartDto.IsActive = true;
+                    poPartDto.isParent = true;
+                    poPartDto.ItemMasterId = Convert.ToInt64(itemMaster.ItemMasterId);
+                    poPartDto.ManagementStructureId = 0;
+                    poPartDto.ManufacturerId = Convert.ToInt64(itemMaster.ManufacturerId);
+                    poPartDto.MasterCompanyId = woPartNo.MasterCompanyId;
+                    poPartDto.Memo = "";
+                    poPartDto.NeedByDate = DateTime.Now;
+                    poPartDto.NonInventory = false;
+                    poPartDto.ParentId = 0;
+                    poPartDto.PartDescription = itemMaster.PartDescription;
+                    poPartDto.PartNumber = itemMaster.PartNumber;
+                    poPartDto.PurchaseOrderId = 0;
+                    poPartDto.PurchaseOrderPartRecordId = 0;
+                    poPartDto.QuantityOrdered = Convert.ToInt16(woPartNo.Quantity);
+                    poPartDto.UnitCost = 0;
+                    poPartDto.UOMId = itemMaster.PurchaseUnitOfMeasureId;
+                    poPartDto.UpdatedBy = woPartNo.UpdatedBy;
+                    poPartDto.UpdatedDate = DateTime.Now;
+                    poPartDto.WorkOrderId = woPartNo.WorkOrderId;
 
+                    return poPartDto;
+                }
+            }
             return data;
+        }
+
+        private ItemMaster ItemMasterDetails(long itemMasterId)
+        {
+            var itemMaster = _appContext.ItemMaster.Where(p => p.ItemMasterId == itemMasterId).FirstOrDefault();
+            if (itemMaster == null)
+                itemMaster = new ItemMaster();
+            return itemMaster;
         }
 
         public List<PurchaseOrderPart> GetPurchaseOrderParts(long purchaseOrderId)

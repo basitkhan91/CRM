@@ -183,9 +183,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("pobyid")]
-        public IActionResult PurchaseOrderById(long purchaseOrderId)
+        public IActionResult PurchaseOrderById(long purchaseOrderId, long workOrderPartNoId=0)
         {
-            var result = _unitOfWork.purchaseOrder.PurchaseOrderById(purchaseOrderId);
+            var result = _unitOfWork.purchaseOrder.PurchaseOrderById(purchaseOrderId, workOrderPartNoId);
             return Ok(result);
         }
 
