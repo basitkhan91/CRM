@@ -194,7 +194,7 @@ export class AssetCapesComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.assetServices.listCollection = getAssetData;
-        if (this.assetServices.listCollection != null && this.assetServices.isEditMode == true) {
+        if (this.assetServices.listCollection != null) {
 
             this.showLable = true;
             this.currentAsset = this.assetServices.listCollection;
@@ -1152,7 +1152,8 @@ export class AssetCapesComponent implements OnInit {
         this.assetServices.listCollection = this.local;
         this.activeIndex = 2;
         this.assetServices.indexObj.next(this.activeIndex);
-        this.route.navigateByUrl('/assetmodule/assetpages/app-asset-calibration');
+        const { assetId } = this.local;
+        this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-calibration/${assetId}`);
     }
 
     backClick() {

@@ -7,7 +7,8 @@ import { GlAccountService } from '../../../../services/glAccount/glAccount.servi
 import { VendorService } from '../../../../services/vendor.service';
 import { Vendor } from '../../../../models/vendor.model';
 import { AlertService, DialogType, MessageSeverity } from '../../../../services/alert.service';
-import { Router } from '@angular/router';
+//import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app-asset-maintenance-warranty',
@@ -26,9 +27,15 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
     loadingIndicator: boolean;
     allGlInfo: GlAccount[];
     allVendorInfo: Vendor[];
+    AssetId: any;
+    static assetService;
     /** asset-maintenance-warranty ctor */
-    constructor(private assetService: AssetService, private vendorService: VendorService, private route: Router,
+    constructor(private router: ActivatedRoute,private assetService: AssetService, private vendorService: VendorService, private route: Router,
         private authService: AuthService, private alertService: AlertService, private glAccountService: GlAccountService) {
+        this.AssetId = this.router.snapshot.params['id'];
+        if (this.assetService.listCollection == undefined) {
+            this.GetAssetData(this.AssetId);
+        }
         if ((this.assetService.listCollection != null && this.assetService.isEditMode == true) || (this.assetService.generalCollection != null)) {
 
             if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
@@ -61,7 +68,51 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
             }
         }
     }
+    private GetAssetData(assetid) {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.assetService.getByAssetId(assetid).subscribe(
+            results => this.onassetdataSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private onassetdataSuccessful(getAssetData: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.assetService.listCollection = getAssetData;
+        if (this.assetService.listCollection != null) {
+            this.showLable = true;
+            this.currentMaintenance = this.assetService.listCollection;
+        }
+        if (this.currentMaintenance.warrantyEndDate) {
+            this.currentMaintenance.warrantyEndDate = new Date(this.currentMaintenance.warrantyEndDate);
+        }
+        else {
+            this.currentMaintenance.warrantyEndDate = new Date();
+        }
+        if (this.currentMaintenance.warrantyStartDate) {
+            this.currentMaintenance.warrantyStartDate = new Date(this.currentMaintenance.warrantyStartDate);
+        }
+        else {
+            this.currentMaintenance.warrantyStartDate = new Date();
+        }
+        if (this.assetService.listCollection) {
+            this.local = this.assetService.listCollection;
+            this.currentMaintenance = this.local;
+        }
+        else if (this.assetService.generalCollection) {
+            this.local = this.assetService.generalCollection;
+            this.currentMaintenance = this.local;
+        }
+        this.glList();
+        this.vendorList();
+    }
     ngOnInit(): void {
+        this.AssetId = this.router.snapshot.params['id'];
+        if (this.assetService.listCollection == undefined) {
+            this.GetAssetData(this.AssetId);
+        }
         this.activeIndex = 3;
         this.glList();
         this.vendorList();
@@ -157,6 +208,7 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
         this.assetService.listCollection = this.local;
         this.activeIndex = 2;
         this.assetService.indexObj.next(this.activeIndex);
-        this.route.navigateByUrl('/assetmodule/assetpages/app-asset-calibration');
+        const { assetId } = this.local;
+        this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-calibration/${assetId}`);
     }
 }
