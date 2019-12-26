@@ -46,7 +46,7 @@
                                             </ng-template>
                                         </p-autoComplete>
 
-                                        <a  matTooltip="Create Customer" style="position: absolute;right: -20px;top: 0;z-index:1;"
+                                        <a matTooltip="Create Customer" style="position: absolute;right: -20px;top: 0;z-index:1;"
                                            class=""
                                            [routerLink]="[
       '/customersmodule/customerpages/app-customer-create'
@@ -64,13 +64,13 @@
                                             <p-autoComplete class="pautocomp-cstm" sstyle="font-size: 1px"
                                                             name="customerCode"
                                                             [(ngModel)]="sourcereceving.customerCode" [suggestions]="custcodes"
-                                                            field="customerCode"
                                                             (completeMethod)="filterCodes($event)" [size]="30" #customerCode="ngModel"
                                                             [minLength]="1" [dropdown]="true" required>
-                                                <ng-template let-name pTemplate="item">
-                                                    <div class="ui-helper-clearfix">{{name}}</div>
+                                               <ng-template let-name pTemplate="item">
+        <div class="ui-helper-clearfix">{{customerCode}}</div>
 
-                                                </ng-template>
+    </ng-template>
+                                                <!--field="customerCode"-->
                                             </p-autoComplete>
                                             <a matTooltip="Create Customer" style="position: absolute;right: -20px;top: 0;z-index:1"
                                                class=""
@@ -82,11 +82,10 @@
                                         </div>
 
                                         <!--<label class="control-label col-sm-4">Customer Code<strong class="clr-red">*</strong></label>
-    <p-autoComplete sstyle="font-size: 1px" [(ngModel)]="sourcereceving.customerCode" [ngModelOptions]="{standalone: true}" [suggestions]="custcodes" (completeMethod)="filterCodes($event)" [size]="30"
-                    [minLength]="1" [dropdown]="true" #customerCode="ngModel">-->
-                                        
+        <p-autoComplete sstyle="font-size: 1px" [(ngModel)]="sourcereceving.customerCode" [ngModelOptions]="{standalone: true}" [suggestions]="custcodes" (completeMethod)="filterCodes($event)" [size]="30"
+                        [minLength]="1" [dropdown]="true" #customerCode="ngModel">-->
                                         <!--</p-autoComplete>-->
-                                      
+
 
                                     </div>
                                     <div class="form-group col-sm-12">
@@ -100,7 +99,7 @@
                                         <label class="control-label col-sm-4">Ref<strong class="clr-red">*</strong></label>
                                         <div class="col-sm-8">
 
-                                            <p-autoComplete class="pautocomp-cstm" sstyle="font-size: 1px" [(ngModel)]="sourcereceving.customerReference"  [ngModelOptions]="{standalone: true}" [suggestions]="customerReferenceNames" (completeMethod)="filterReferenceNames($event)" [size]="30"
+                                            <p-autoComplete class="pautocomp-cstm" sstyle="font-size: 1px" [(ngModel)]="sourcereceving.customerReference" [ngModelOptions]="{standalone: true}" [suggestions]="customerReferenceNames" (completeMethod)="filterReferenceNames($event)" [size]="30"
                                                             [minLength]="1" [dropdown]="true">
                                                 <ng-template let-name pTemplate="item">
                                                     <div class="ui-helper-clearfix">{{name}}</div>
@@ -109,6 +108,23 @@
                                             </p-autoComplete>
                                             <!--<input type="text" class="form-control numberids ui-autocomplete-input" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.customerReference">-->
                                         </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-12">
+                                        <label class="control-label col-sm-4">Contact</label>
+                                        <div class="col-sm-8">
+
+                                            <select style="border-radius:5px;" sstyle="font-size: 1px" [(ngModel)]="sourcereceving.customerContactId" [ngModelOptions]="{standalone: true}" (change)="customerContactChange(sourcereceving.customerContactId)">
+                                                <option>--Select</option>
+                                                <option *ngFor="let contact of customerContactList" [ngValue]="contact.contactId">{{contact.contactTitle}}</option>
+                                            </select>
+                                        </div>
+                                        <!--<p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcereceving.customerContactName" [ngModelOptions]="{standalone: true}" (onSelect)="customerContactId($event)" [suggestions]="customerContactList" (completeMethod)="filterFirstNames($event)" [size]="30"
+                        [minLength]="1" [dropdown]="true">
+            <ng-template let-firstNames pTemplate="item">
+                <div class="ui-helper-clearfix">{{firstNames}}</div>
+            </ng-template>
+        </p-autoComplete>-->
                                     </div>
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Contact Phone</label>
@@ -120,16 +136,6 @@
                                             </ng-template>
                                         </p-autoComplete>
 
-                                    </div>
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Contact</label>
-
-                                        <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcereceving.customerContactName" [ngModelOptions]="{standalone: true}" (onSelect)="customerContactId($event)" [suggestions]="firstNames" (completeMethod)="filterFirstNames($event)" [size]="30"
-                                                        [minLength]="1" [dropdown]="true">
-                                            <ng-template let-firstNames pTemplate="item">
-                                                <div class="ui-helper-clearfix">{{firstNames}}</div>
-                                            </ng-template>
-                                        </p-autoComplete>
                                     </div>
                                     <div class="form-group col-sm-12 input-icon1">
                                         <label class="control-label col-sm-4"> PN<strong class="clr-red">*</strong> </label>
@@ -182,7 +188,7 @@
                                         </div>
 
                                         <div *ngIf="sourcereceving.isSerialized" class="serialized-block">
-                                      
+
                                             <div class="form-group col-sm-12">
                                                 <label class="control-label col-sm-4">Serial Number </label>
                                                 <div class="col-sm-8">
