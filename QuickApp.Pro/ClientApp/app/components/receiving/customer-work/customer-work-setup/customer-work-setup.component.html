@@ -11,7 +11,7 @@
                 </nav>
                 <h4 class="page-heading">Receiving</h4>
                 <div class="clear"></div>
-                <form action="#" method="post" id="add-customerwork" name="" class="form-horizontal add-custustomer">
+                <form action="#" method="post" #addcustomerwork="ngForm" id="addcustomerwork" name="" class="form-horizontal add-custustomer">
                     <div class="col-md-12 col-sm-12 col-12">
                         <div class="tab-content form-bg">
                             <div class="tab-pane active" id="home">
@@ -63,13 +63,11 @@
 
                                             <p-autoComplete class="pautocomp-cstm" sstyle="font-size: 1px"
                                                             name="customerCode"
+                                                            field="customerCode"
                                                             [(ngModel)]="sourcereceving.customerCode" [suggestions]="custcodes"
                                                             (completeMethod)="filterCodes($event)" [size]="30" #customerCode="ngModel"
                                                             [minLength]="1" [dropdown]="true" required>
-                                               <ng-template let-name pTemplate="item">
-        <div class="ui-helper-clearfix">{{customerCode}}</div>
 
-    </ng-template>
                                                 <!--field="customerCode"-->
                                             </p-autoComplete>
                                             <a matTooltip="Create Customer" style="position: absolute;right: -20px;top: 0;z-index:1"
@@ -82,8 +80,8 @@
                                         </div>
 
                                         <!--<label class="control-label col-sm-4">Customer Code<strong class="clr-red">*</strong></label>
-        <p-autoComplete sstyle="font-size: 1px" [(ngModel)]="sourcereceving.customerCode" [ngModelOptions]="{standalone: true}" [suggestions]="custcodes" (completeMethod)="filterCodes($event)" [size]="30"
-                        [minLength]="1" [dropdown]="true" #customerCode="ngModel">-->
+                <p-autoComplete sstyle="font-size: 1px" [(ngModel)]="sourcereceving.customerCode" [ngModelOptions]="{standalone: true}" [suggestions]="custcodes" (completeMethod)="filterCodes($event)" [size]="30"
+                                [minLength]="1" [dropdown]="true" #customerCode="ngModel">-->
                                         <!--</p-autoComplete>-->
 
 
@@ -111,30 +109,32 @@
                                     </div>
 
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Contact</label>
+                                        <label class="control-label col-sm-4">Contact<strong class="clr-red">*</strong></label>
                                         <div class="col-sm-8">
 
-                                            <select style="border-radius:5px;" sstyle="font-size: 1px" [(ngModel)]="sourcereceving.customerContactId" [ngModelOptions]="{standalone: true}" (change)="customerContactChange(sourcereceving.customerContactId)">
+                                            <select style="border-radius:5px;" sstyle="font-size: 1px" [(ngModel)]="sourcereceving.contactId" [ngModelOptions]="{standalone: true}" (change)="customerContactChange(sourcereceving.contactId)" required> 
                                                 <option>--Select</option>
                                                 <option *ngFor="let contact of customerContactList" [ngValue]="contact.contactId">{{contact.contactTitle}}</option>
                                             </select>
                                         </div>
                                         <!--<p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcereceving.customerContactName" [ngModelOptions]="{standalone: true}" (onSelect)="customerContactId($event)" [suggestions]="customerContactList" (completeMethod)="filterFirstNames($event)" [size]="30"
-                        [minLength]="1" [dropdown]="true">
-            <ng-template let-firstNames pTemplate="item">
-                <div class="ui-helper-clearfix">{{firstNames}}</div>
-            </ng-template>
-        </p-autoComplete>-->
+                                [minLength]="1" [dropdown]="true">
+                    <ng-template let-firstNames pTemplate="item">
+                        <div class="ui-helper-clearfix">{{firstNames}}</div>
+                    </ng-template>
+                </p-autoComplete>-->
                                     </div>
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Contact Phone</label>
-
-                                        <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcereceving.workPhone" [ngModelOptions]="{standalone: true}" [suggestions]="workPhone" (completeMethod)="filterContacts($event)" [size]="30"
-                                                        [minLength]="1" [dropdown]="true">
-                                            <ng-template let-workPhone pTemplate="item">
-                                                <div class="ui-helper-clearfix">{{workPhone}}</div>
-                                            </ng-template>
-                                        </p-autoComplete>
+                                        <label class="control-label col-sm-4">Contact Phone<strong class="clr-red">*</strong></label>
+                                        <div class="col-sm-8">
+                                            <input sstyle="font-size: 1px" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.workPhone" required>
+                                        </div>
+                                        <!--<p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcereceving.workPhone" [ngModelOptions]="{standalone: true}" [suggestions]="workPhone" (completeMethod)="filterContacts($event)" [size]="30"
+                                [minLength]="1" [dropdown]="true">
+                    <ng-template let-workPhone pTemplate="item">
+                        <div class="ui-helper-clearfix">{{workPhone}}</div>
+                    </ng-template>
+                </p-autoComplete>-->
 
                                     </div>
                                     <div class="form-group col-sm-12 input-icon1">
@@ -241,9 +241,9 @@
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Condtion</label>
+                                        <label class="control-label col-sm-4">Condtion<strong class="clr-red">*</strong></label>
                                         <div class="col-sm-8">
-                                            <select class="form-control" style="border-radius:5px;" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.conditionId">
+                                            <select class="form-control" style="border-radius:5px;" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.conditionId" required>
                                                 <option *ngFor="let condition of allConditionInfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
                                             </select>
                                         </div>
@@ -288,7 +288,7 @@
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Shelf</label>
                                         <div class="col-sm-8">
-                                            <select  style="border-radius:5px;" [(ngModel)]="sourcereceving.shelfId" [ngModelOptions]="{standalone: true}" (change)="shelfValueChange(sourcereceving.shelfId)">
+                                            <select style="border-radius:5px;" [(ngModel)]="sourcereceving.shelfId" [ngModelOptions]="{standalone: true}" (change)="shelfValueChange(sourcereceving.shelfId)">
                                                 <option>--Select</option>
                                                 <option *ngFor="let site of allShelfs" [ngValue]="site.shelfId">{{site.name}}</option>
                                             </select>
@@ -488,7 +488,7 @@
                                         </div>
                                     </div>
                                     <div *ngIf="this.sourcereceving.isTimeLife" class="timelife-block">
-                                     
+
                                         <div class="form-group col-sm-12">
                                             <label class="control-label col-sm-4">Date</label>
                                             <div class="col-sm-8">
@@ -505,64 +505,64 @@
                                         <div class="clear"></div>
 
                                         <!--<div class="table-responsive form-group col-sm-12">
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th colspan="2" class="text-center">Cycles</th>
-                        <th colspan="2" class="text-center">Time</th>
-                        <th colspan="2" class="text-center">Last</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Remaining</td>
-                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesRemaining"></td>
-                        <td>Remaining</td>
-                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeRemaining"></td>
-                        <td>Since New</td>
-                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.lastSinceNew"></td>
-                    </tr>
-                    <tr>
-                        <td>Since New</td>
-                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceNew"></td>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th colspan="2" class="text-center">Cycles</th>
+                                <th colspan="2" class="text-center">Time</th>
+                                <th colspan="2" class="text-center">Last</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Remaining</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesRemaining"></td>
+                                <td>Remaining</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeRemaining"></td>
+                                <td>Since New</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.lastSinceNew"></td>
+                            </tr>
+                            <tr>
+                                <td>Since New</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceNew"></td>
 
-                        <td>Since New</td>
-                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceNew"></td>
-                        <td>Since Ovh</td>
-                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.lastSinceOVH"></td>
-                    </tr>
-                    <tr>
-                        <td>Since Ovh</td>
-                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceOVH"></td>
-                        <td>Since Ovh</td>
-                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceOVH"></td>
-                        <td>Since Insp</td>
-                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.lastSinceInspection"></td>
-                    </tr>
-                    <tr>
-                        <td>Since Insp</td>
-                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceInspection"></td>
-                        <td>Since Insp</td>
-                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceInspection"></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Since Repair</td>
-                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceRepair"></td>
-                        <td>Since Repair</td>
-                        <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceRepair"></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>-->
+                                <td>Since New</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceNew"></td>
+                                <td>Since Ovh</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.lastSinceOVH"></td>
+                            </tr>
+                            <tr>
+                                <td>Since Ovh</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceOVH"></td>
+                                <td>Since Ovh</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceOVH"></td>
+                                <td>Since Insp</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.lastSinceInspection"></td>
+                            </tr>
+                            <tr>
+                                <td>Since Insp</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceInspection"></td>
+                                <td>Since Insp</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceInspection"></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Since Repair</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceRepair"></td>
+                                <td>Since Repair</td>
+                                <td class="clr2"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.timeSinceRepair"></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>-->
 
                                         <div class="clear"></div>
 
                                     </div>
-                               
+
 
                                     <div class="card" style="margin-top: 20px;margin-left:50px">
                                         <div class="card-header" style="padding: 10px 12px;">
@@ -570,7 +570,7 @@
                                         </div>
                                         <div class="card-body" style="padding: 12px 12px 4px;">
                                             <div class="form-group">
-                                                <select  style="border-radius:5px;" class="form-control" name="primaryCompany" [(ngModel)]="sourcereceving.companyId"
+                                                <select style="border-radius:5px;" class="form-control" name="primaryCompany" [(ngModel)]="sourcereceving.companyId"
                                                         (change)="getBUList(sourcereceving.companyId)" #mCompanyName required>
                                                     <option value="0">Select Company</option>
                                                     <option *ngFor="let name of maincompanylist" [ngValue]="name.managementStructureId">{{name.code}}</option>
@@ -595,7 +595,7 @@
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <select style="border-radius:5px;"  class="form-control" [(ngModel)]="sourcereceving.departmentId" name="primaryDept" (change)="getDepartmentId(sourcereceving.departmentId)">
+                                                <select style="border-radius:5px;" class="form-control" [(ngModel)]="sourcereceving.departmentId" name="primaryDept" (change)="getDepartmentId(sourcereceving.departmentId)">
                                                     <option value="0">Select Dept</option>
                                                     <option *ngFor="let name of departmentList" [ngValue]="name.managementStructureId">{{name.code}}</option>
                                                 </select>
@@ -604,7 +604,7 @@
                                     </div>
                                 </div>
                                 <div class="clear"></div>
-                            
+
                                 <!--<a class="btn btn-success pull-right" (click)="saveCustomerwork()">Submit</a>-->
                             </div>
 
@@ -664,7 +664,9 @@
                                     <div class="clear"></div>
                                 </div>
                             </div>
-                            <a class="btn btn-success pull-right" (click)="saveCustomerwork()">Update</a>
+                            <button class="btn btn-primary-cstm float-right" pButton type="button" (click)="saveCustomerwork()" [disabled]="!addcustomerwork.valid" label="Save" style="padding: 0 !important;"></button>
+
+                            <!--<a class="btn btn-success pull-right" (click)="saveCustomerwork()" [disabled]="!addcustomerwork.valid">Update</a>-->
                         </div>
                         <div class="clearfix"></div>
                     </div>

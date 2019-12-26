@@ -31,7 +31,7 @@ import { Site } from '../../../../models/site.model';
 import { LegalEntityService } from '../../../../services/legalentity.service';
 import { Router } from '@angular/router';
 import { getValueFromObjectByKey, getObjectByValue, getValueFromArrayOfObjectById, getObjectById, editValueAssignByCondition } from '../../../../generic/autocomplete';
-
+import { CommonService } from '../../../../services/common.service';
 
 @Component({
     selector: 'app-customer-work-setup',
@@ -123,6 +123,8 @@ export class CustomerWorkSetupComponent
     childManagementInfo: any[] = [];
     customerReferenceNames: any[];
     customerContactList: any[];
+    tempPOHeaderAddress: any = {};
+    sourcePoApproval: any = {};
 	ngOnInit(): void {
 		this.sourcereceving.isCustomerStock = true;
 
@@ -131,13 +133,13 @@ export class CustomerWorkSetupComponent
 		this.ptnumberlistdata();
 		this.Receveingcustomerlist();
 		this.loadDataForCondition();
-		this.customerList();
+		// this.customerList();
 		this.loadItemmasterData();
 		this.vendorList();
         this.loadSiteData();
         this.loadDataCustomerconct();
-        this.loadManagementdata();
-        this.loadManagementdataForTree();
+       // this.loadManagementdata();
+        //this.loadManagementdataForTree();
         this.loadLegalEntityData();
         if (!this.sourcereceving.receivingCustomerWorkId) {
             this.sourcereceving.receivingCustomerNumber = 'Creating';
@@ -145,8 +147,12 @@ export class CustomerWorkSetupComponent
 
 	}
 
-    constructor(private _route: Router,public workFlowtService: CustomerService,private conditionService: ConditionService, public workFlowtService1: LegalEntityService, private siteService: SiteService, private binService: BinService, private vendorservice: VendorService, public employeeService: EmployeeService, private alertService: AlertService, public itemser: ItemMasterService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public receivingCustomerWorkService: ReceivingCustomerWorkService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerservices: CustomerService) {
+    constructor(private _route: Router, public workFlowtService: CustomerService, private conditionService: ConditionService, public workFlowtService1: LegalEntityService, private siteService: SiteService, private binService: BinService, private vendorservice: VendorService, public employeeService: EmployeeService, private alertService: AlertService, public itemser: ItemMasterService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public receivingCustomerWorkService: ReceivingCustomerWorkService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerservices: CustomerService, private commonService: CommonService,) {
         this.dataSource = new MatTableDataSource();
+        this.customerList();
+        this.loadManagementdata();
+        this.loadManagementdataForTree();
+
         //if (this.receivingCustomerWorkService.listCollection == null) {
         //    this.receivingCustomerWorkService.listCollection = {};
         //}
@@ -159,14 +165,15 @@ export class CustomerWorkSetupComponent
             if (this.receivingCustomerWorkService.listCollection.customer) {
                 this.sourcereceving.customerId = this.receivingCustomerWorkService.listCollection.customer.customerId;
                 this.sourcereceving.name = this.receivingCustomerWorkService.listCollection.customer.name;
-                this.sourcereceving.customerCode = getObjectById('customerId', this.receivingCustomerWorkService.listCollection.customer.customerId, this.allCustomer);;
-
-                console.log('customerCode')
-                
-                // this.sourcereceving.customerCode = this.receivingCustomerWorkService.listCollection.customer.customerCode;
-                //this.sourcereceving.customerCode = getObjectById('customerId', this.receivingCustomerWorkService.listCollection.customer.customerId, this.receivingCustomerWorkService.listCollection.customer);
-
+                this.sourcereceving.customerCode = { customerId: this.receivingCustomerWorkService.listCollection.customer.customerId, customerCode: this.receivingCustomerWorkService.listCollection.customer.customerCode }
+                this.sourcereceving.contactId = { contactId: this.receivingCustomerWorkService.listCollection.contactId, contactTitle: this.receivingCustomerWorkService.listCollection.contactTitle }
+                this.sourcereceving.workPhone = this.receivingCustomerWorkService.listCollection.workPhone;
+              
+              
+               
+              
             }
+            
             if (this.receivingCustomerWorkService.listCollection.employee) {
                 this.sourcereceving.employeeId = this.receivingCustomerWorkService.listCollection.employee.employeeId;
                 this.sourcereceving.firstName = this.receivingCustomerWorkService.listCollection.employee.firstName;
@@ -181,7 +188,9 @@ export class CustomerWorkSetupComponent
 
             if (this.sourcereceving.serialNumber == null) {
                 this.sourcereceving.isSerialized = false;
+
             }
+            
             if (this.sourcereceving.siteId) {
                 this.binService.getWareHouseDate(this.sourcereceving.siteId).subscribe(
                     results => this.onDataLoadWareHouse(results),
@@ -206,6 +215,7 @@ export class CustomerWorkSetupComponent
                     results => this.onDataLoadBin(results),
                     error => this.onDataLoadFailed(error));
             }
+          
 
             if (this.sourcereceving.timeLifeDate) {
                 this.sourcereceving.timeLifeDate = new Date(this.sourcereceving.timeLifeDate);
@@ -290,6 +300,13 @@ export class CustomerWorkSetupComponent
                     break;
                 }
             }
+
+
+            if (this.receivingCustomerWorkService.listCollection.managementStructureId != 'undefined') {
+                this.sourcereceving.companyId = this.getManagementStructureDetails(this.receivingCustomerWorkService.listCollection.managementStructureId);
+
+                    }
+             //this.sourcereceving = this.tempPOHeaderAddress;
         }
         
 	}
@@ -297,7 +314,8 @@ export class CustomerWorkSetupComponent
 	sourcereceving: any = {};
 	ngAfterViewInit() {
 	
-	}
+    }
+
 	public allWorkFlows: any[] = [];
 
     receiveCreationForm = new FormGroup({
@@ -309,6 +327,38 @@ export class CustomerWorkSetupComponent
 
 
     });
+    getManagementStructureDetails(id) {
+       
+        this.commonService.getManagementStructureDetails(id).subscribe(res => {
+            if (res.Level1) {
+                this.sourcereceving.companyId = res.Level1;
+                this.getBUList(res.Level1);
+            } else
+                this.sourcereceving.companyId = 0;
+
+            if (res.Level2) {
+               
+                this.sourcereceving.buId = res.Level2;
+                      this.getDivisionlist(res.Level2);
+            } else
+                this.sourcereceving.buId = 0;
+
+            if (res.Level3) {
+               
+                this.sourcereceving.divisionId = res.Level3;
+                this.getDepartmentlist(res.Level3);
+            } else
+                this.sourcereceving.divisionId = 0;
+
+            if (res.Level4) {
+                this.sourcereceving.departmentId = res.Level4;
+                this.getDepartmentId(res.Level4);
+            } else
+                this.sourcereceving.departmentId = 0;
+
+        })
+    }
+
 	private loadData() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
@@ -410,6 +460,7 @@ export class CustomerWorkSetupComponent
             }
 
             else {
+               
                 if ((this.sourcereceving.isTimeLife) && (this.sourcereceving.timeLifeCyclesId == null || this.sourcereceving.timeLifeCyclesId == undefined)) {
                  
                     this.receivingCustomerWorkService.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
@@ -424,6 +475,7 @@ export class CustomerWorkSetupComponent
                     })
                 }
                 else {
+                
                     this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
                         response => this.saveCompleted(this.sourcereceving),
                         error => this.saveFailedHelper(error));
@@ -982,8 +1034,7 @@ export class CustomerWorkSetupComponent
                     this.sourcereceving.customerId = this.allCustomer[i].customerId;
                     //this.sourcereceving.customerCode = this.allCustomer[i].customerCode;
                     this.sourcereceving.customerCode = getObjectById('customerId', this.sourcereceving.customerId, this.allCustomer[i]);
-                    console.log(this.sourcereceving.customerCode)
-
+                   
                     this.selectedActionName = event;
                     this.getAllCustomerContact(this.allCustomer[i].customerId);
 
@@ -1113,6 +1164,7 @@ export class CustomerWorkSetupComponent
 
     }
 
+
     getDivisionlist(buId) {
         this.sourcereceving.managementStructureId = buId;
         this.divisionlist = [];
@@ -1232,6 +1284,7 @@ export class CustomerWorkSetupComponent
             }
         }
     }
+
     getChildDeptlist(partChildList) {
         partChildList.managementStructureId = partChildList.childDivisionId;
         partChildList.childDepartmentlist = [];
@@ -1245,6 +1298,7 @@ export class CustomerWorkSetupComponent
     getChildDeptId(partChildList) {
         partChildList.managementStructureId = partChildList.childDeptId;
     }
+
 
     getTracabletoType(value)
     {
