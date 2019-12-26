@@ -122,6 +122,7 @@ export class CustomerWorkSetupComponent
     parentManagementInfo: any[] = [];
     childManagementInfo: any[] = [];
     customerReferenceNames: any[];
+    customerContactList: any[];
 	ngOnInit(): void {
 		this.sourcereceving.isCustomerStock = true;
 
@@ -158,8 +159,12 @@ export class CustomerWorkSetupComponent
             if (this.receivingCustomerWorkService.listCollection.customer) {
                 this.sourcereceving.customerId = this.receivingCustomerWorkService.listCollection.customer.customerId;
                 this.sourcereceving.name = this.receivingCustomerWorkService.listCollection.customer.name;
-                 this.sourcereceving.customerCode = this.receivingCustomerWorkService.listCollection.customer.customerCode;
-                //this.sourcereceving.customerCode = getObjectById('customerCode', this.sourcereceving.customerId, this.allCustomer);
+                this.sourcereceving.customerCode = getObjectById('customerId', this.receivingCustomerWorkService.listCollection.customer.customerId, this.allCustomer);;
+
+                console.log('customerCode')
+                
+                // this.sourcereceving.customerCode = this.receivingCustomerWorkService.listCollection.customer.customerCode;
+                //this.sourcereceving.customerCode = getObjectById('customerId', this.receivingCustomerWorkService.listCollection.customer.customerId, this.receivingCustomerWorkService.listCollection.customer);
 
             }
             if (this.receivingCustomerWorkService.listCollection.employee) {
@@ -712,7 +717,22 @@ export class CustomerWorkSetupComponent
 			}
 
 		}
-	}
+    }
+
+    getAllCustomerContact(id) {
+        // get Customer Contatcs 
+
+        this.customerservices.getContacts(id).subscribe(res => {
+            this.customerContactList = res[0]
+        })
+    }
+    customerContactChange(customerContact) {
+        for (let i = 0; i < this.customerContactList.length; i++) {
+            if (customerContact == this.customerContactList[i].contactId) {
+                this.sourcereceving.workPhone = this.customerContactList[i].workPhone;
+            }
+        }
+    }
     private onpartnumberloadsuccessfull(allWorkFlows: any[]) {
        
 		this.sourcereceving.partDescription = allWorkFlows[0].partDescription;
@@ -954,15 +974,19 @@ export class CustomerWorkSetupComponent
         }
     }
 
-  customerNameId(event) {
-        //
+    customerNameId(event) {
+       
         if (this.allCustomer) {
             for (let i = 0; i < this.allCustomer.length; i++) {
                 if (event == this.allCustomer[i].name) {
                     this.sourcereceving.customerId = this.allCustomer[i].customerId;
                     //this.sourcereceving.customerCode = this.allCustomer[i].customerCode;
-                  this.sourcereceving.customerCode = getObjectById('customerId', this.sourcereceving.customerId, this.allCustomer[i]);
+                    this.sourcereceving.customerCode = getObjectById('customerId', this.sourcereceving.customerId, this.allCustomer[i]);
+                    console.log(this.sourcereceving.customerCode)
+
                     this.selectedActionName = event;
+                    this.getAllCustomerContact(this.allCustomer[i].customerId);
+
                 }
             }
             this.customerservices.getDescriptionbypart(event).subscribe(
