@@ -205,9 +205,9 @@
                                             <thead>
                                                 <tr>
                                                     <th class="text-center"></th>
-                                                    <th colspan="8" class="text-center"> Materials</th>
+                                                    <th colspan="10" class="text-center"> Materials</th>
                                                     <th colspan="3" class="text-center"> StockLine</th>
-                                                    <th  class="text-center" colspan="3"></th>
+                                                    <th  class="text-center" colspan="4"></th>
                                                    
 
                                                 </tr>
@@ -216,7 +216,10 @@
                                                         Alternate Parts
                                                     </th>
                                                     <th class="text-center">PN </th>
-                                                    <th class="text-center">Description</th>
+                                                    <th class="text-center">Part Description</th>
+                                                    <th class="text-center">Alternate / Equvalency FOR</th>
+                                                    <th class="text-center"> Condition Type</th>
+                                                    <th class="text-center"> OEM/PMA/DER</th>
 
                                                     <th class="text-center">Qty Requried</th>
                                                     <th class="text-center">Qty  Reserved</th>
@@ -244,6 +247,10 @@
 
                                                     <td>{{x.partNumber}}</td>
                                                     <td>{{x.partDescription}}</td>
+                                                    <td>{{x.woReservedIssuedAltParts}}</td>
+
+                                                    <td>{{x.condition}}</td>
+                                                    <td>{{x.oemDer}}</td>
                                                     <td>
                                                         {{x.quantity}}
                             
@@ -270,9 +277,9 @@
                                                         <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityIssued"  (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 1 || statusId ===5">
                                                     </td>
 
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
+                                                    <td>{{x.quantityOnHand}}</td>
+                                                    <td>{{x.quantityAvailable}}</td>
+                                                    <td>{{x.quantityOnOrder}}</td>
 
                                                
                                                     <td>
@@ -297,7 +304,10 @@
     
                                                         </th>
                                                         <th class="text-center">PN </th>
-                                                        <th class="text-center">Description</th>
+                                                        <th class="text-center">Part Description</th>
+                                                        <th class="text-center">Alternate / Equvalency FOR</th>
+                                                        <th class="text-center"> Condition Type</th>
+                                                        <th class="text-center"> OEM/PMA/DER</th>
                                                         <th class="text-center">Qty Requried</th>
                                                         <th class="text-center">Qty Already Reserved</th>
                                                         <th class="text-center">Qty Reserved</th>
@@ -328,6 +338,10 @@
                                                         </td>
                                                         <td>{{x.altPartNumber}}</td>
                                                         <td>{{x.altPartDescription}}</td>
+                                                        <td>{{x.woReservedIssuedAltParts}}</td>
+
+                                                        <td>{{x.condition}}</td>
+                                                        <td>{{x.oemDer}}</td>
                                                         <td>
                                                             {{x.quantity}}
                                                         </td>
