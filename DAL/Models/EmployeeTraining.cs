@@ -30,6 +30,7 @@ namespace DAL.Models
         public bool? IsActive { get; set; }
 
         public long? UnitOfMeasureId { get; set; }
+        public long? FrequencyOfTrainingId { get; set; }
 
         public virtual EmployeeTrainingType EmployeeTrainingType { get; set; }
         public virtual MasterCompany MasterCompany { get; set; }
