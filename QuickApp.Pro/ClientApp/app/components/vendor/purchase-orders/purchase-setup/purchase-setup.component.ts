@@ -277,8 +277,8 @@ export class PurchaseSetupComponent implements OnInit {
 		this.loadvendorDataById(this.vendorIdByParams);
 
 		this.poId = this._actRoute.snapshot.params['id'];
-
 		this.workOrderPartNumberId = this._actRoute.snapshot.params['mpnid'];
+
 		if (this.poId !== 0 && this.poId !== undefined) {
 			this.isEditMode = true;
 			this.getVendorPOById(this.poId);

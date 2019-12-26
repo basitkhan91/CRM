@@ -78,12 +78,12 @@
                                 <th class="text-center">Control</th>
                                 <th class="text-center">Condition</th>
                                 <th class="text-center">Item Type</th>
-                                <th class="text-center">Qunatity Requried</th>
-                                <th class="text-center">Qunatity Reserved</th>
-                                <th class="text-center">Qunatity TurnIn</th>
-                                <th class="text-center">Qunatity Issued</th>
-                                <th class="text-center">Qunatity BackOrder</th>
-                                <th class="text-center">Qunatity Remaining</th>
+                                <th class="text-center">Quantity Requried</th>
+                                <th class="text-center">Quantity Reserved</th>
+                                <th class="text-center">Quantity TurnIn</th>
+                                <th class="text-center">Quantity Issued</th>
+                                <th class="text-center">Quantity BackOrder</th>
+                                <th class="text-center">Quantity Remaining</th>
                                 <th class="text-center">Unit Cost</th>
                                 <th class="text-center">Extended Cost</th>
                                 <th class="text-center">Currency</th>
@@ -192,11 +192,11 @@
           <div class="modal-content">
               <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <h4 class="modal-title" *ngIf="statusId ===1">Reserved Parts</h4>
-                  <h4 class="modal-title" *ngIf="statusId ===2">Issued Parts</h4>
-                  <h4 class="modal-title" *ngIf="statusId ===3">Reserve & Issue Parts</h4>
-                  <h4 class="modal-title" *ngIf="statusId ===4">UnIssue Parts</h4>
-                  <h4 class="modal-title" *ngIf="statusId ===5">UnReserve Parts</h4>
+                  <h4 class="modal-title" *ngIf="statusId === 1">Reserved Parts</h4>
+                  <h4 class="modal-title" *ngIf="statusId === 2">Issued Parts</h4>
+                  <h4 class="modal-title" *ngIf="statusId === 3">Reserve & Issue Parts</h4>
+                  <h4 class="modal-title" *ngIf="statusId === 4">UnIssue Parts</h4>
+                  <h4 class="modal-title" *ngIf="statusId === 5">UnReserve Parts</h4>
               </div>
             <div class="modal-body" *ngIf="reservedList">
         
@@ -206,9 +206,9 @@
                                                 <tr>
                                                     <th class="text-center"></th>
                                                     <th colspan="8" class="text-center"> Materials</th>
-                                                    <th colspan="4" class="text-center"> StockLine</th>
+                                                    <th colspan="3" class="text-center"> StockLine</th>
                                                     <th  class="text-center" colspan="3"></th>
-                                                    <th class="text-center" colspan="3"></th>
+                                                   
 
                                                 </tr>
                                                 <tr>
@@ -219,18 +219,17 @@
                                                     <th class="text-center">Description</th>
 
                                                     <th class="text-center">Qty Requried</th>
-                                                    <th class="text-center">Qty Already Reserved</th>
-                                                    <th class="text-center" *ngIf="statusId ===1 || statusId ===2 || statusId ===3 || statusId ===4">Qty to Reserve</th>
-                                                    <th class="text-center" *ngIf="statusId ===5">Qty to UnReserve</th>
-                                                    <th class="text-center">Qty Turn IN </th>
-                                                    <th class="text-center">Qty Already Issued</th>
-                                                    <th class="text-center" *ngIf="statusId ===2 || statusId ===3 || statusId ===1 || statusId ===5">Qty to Issue</th>
-                                                    <th class="text-center" *ngIf="statusId ===4">Qty to UnIssue</th>
-                                                    <th class="text-center"> Qty ON Hand </th>
-                                                    <th class="text-center"> Qty ON Available </th>
-                                                    <th class="text-center"> Qty ON  ORDER  </th>
-                                                    <th class="text-center">Reserved By</th>
+                                                    <th class="text-center">Qty  Reserved</th>
+                                                    <th class="text-center" > {{ statusId !== 5 ? 'Qty to Reserve' : 'Qty to UnReserve'}}</th>
+                                                    <th class="text-center">{{ statusId !== 3 ?  'Qty  Issued' : 'Qty to Reserve and Issue'  }} </th>
+                                                    <th class="text-center" > {{ statusId !== 4  ?  'Qty to Issue' : 'Qty to UnIssue'}}</th>
+                                               
+                                                    <th class="text-center"> Qty on Hand </th>
+                                                    <th class="text-center"> Qty Avb </th>
+                                                    <th class="text-center"> Qty on ORDER  </th>
+                                                 
                                                     <th class="text-center">Reserved Date</th>
+                                                    <th class="text-center">Reserved By</th>
                                                     <th class="text-center">Issued By</th>
                                                     <th class="text-center">Issed Date</th>
                                                 </tr>
@@ -246,22 +245,28 @@
                                                     <td>{{x.partNumber}}</td>
                                                     <td>{{x.partDescription}}</td>
                                                     <td>
-                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantity">
+                                                        {{x.quantity}}
+                            
                                                     </td>
                                                     <td>
                                                         {{x.quantityAlreadyReserved}}
                                                     </td>
-                                                    <td>
-                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityReserved" (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 2 ||  statusId === 3 ||  statusId === 4">
+                                                    <td *ngIf="(statusId !== 1 && statusId !== 5)" >
+                                                        {{x.quantityReserved}}
                                                     </td>
-                                                    <td>
-                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityTurnIn">
+                                                    <td *ngIf="(statusId === 1 || statusId === 5)">
+                                                            <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityReserved" (keyup)="validatePartsQuantity(x)"  >
 
                                                     </td>
+
                                                     <td>
                                                         {{x.quantityAlreadyIssued}}
                                                     </td>
-                                                    <td>
+                                                    <td *ngIf="(statusId !== 2 && statusId !== 3 && statusId !== 4)">
+                                                        {{x.quantityIssued}}
+                                                    </td>
+                                                    <td *ngIf="(statusId === 2 || statusId === 3 || statusId === 4)">
+
                                                         <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityIssued"  (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 1 || statusId ===5">
                                                     </td>
 
@@ -269,12 +274,13 @@
                                                     <td></td>
                                                     <td></td>
 
-                                                    <td>
-                                                        {{x.reservedBy}}
-                                                    </td>
+                                               
                                                     <td>
                                                         {{x.reservedDate | date:'MM-dd-yyyy'}}
                                                     </td>
+                                                    <td>
+                                                            {{x.reservedBy}}
+                                                        </td>
                                                     <td>
                                                         {{x.issuedBy}}
                                                     </td>
@@ -287,82 +293,88 @@
                                             
                                                 <tr [hidden]="alternatePartData.length === 0">
 
-                                                    <th class="text-center">
+                                                        <th class="text-center">
+    
+                                                        </th>
+                                                        <th class="text-center">PN </th>
+                                                        <th class="text-center">Description</th>
+                                                        <th class="text-center">Qty Requried</th>
+                                                        <th class="text-center">Qty Already Reserved</th>
+                                                        <th class="text-center">Qty Reserved</th>
 
-                                                    </th>
-                                                    <th class="text-center">PN </th>
-                                                    <th class="text-center">Description</th>
-                                                    <th class="text-center">Qty Requried</th>
-                                                    <th class="text-center">Qty Already Reserved</th>
-                                                    <th class="text-center">Qty Reserved</th>
-                                                    <th class="text-center">Qty Turn IN </th>
-                                                    <th class="text-center">Qty Already Issued</th>
-                                                    <th class="text-center">Qty Issued</th>
+                                                        <th class="text-center" > {{ statusId !== 5 ? 'Qty to Reserve' : 'Qty to UnReserve'}}</th>
+                                                        <th class="text-center">{{ statusId !== 3 ?  'Qty  Issued' : 'Qty to Reserve and Issue'  }} </th>
+                                                        <th class="text-center" > {{ statusId !== 4  ?  'Qty to Issue' : 'Qty to UnIssue'}}</th>
+    
+                                                        <th class="text-center"> Qty ON Hand </th>
+                                                        <th class="text-center"> Qty ON Available </th>
+                                                        <th class="text-center"> Qty ON  ORDER  </th>
+    
+    
+    
+    
+                                                        <th class="text-center">Reserved By</th>
+                                                        <th class="text-center">Reserved Date</th>
+                                                        <th class="text-center">Issued By</th>
+                                                        <th class="text-center">Issed Date</th>
+    
+    
+                                                    </tr>
+                                                 
+                                                    <tr *ngFor="let x of alternatePartData; ">
+    
+                                                        <td>
+                                                            <input type="checkbox" [(ngModel)]="x.isChildChecked" name="isChildChecked{{i}}" (change)="selectedParts()">
+                                                        </td>
+                                                        <td>{{x.altPartNumber}}</td>
+                                                        <td>{{x.altPartDescription}}</td>
+                                                        <td>
+                                                            {{x.quantity}}
+                                                        </td>
+                                                        <td>{{x.quantityAlreadyReserved}}</td>
+                                                        <td *ngIf="(statusId !== 1 && statusId !== 5)" >
+                                                                {{x.quantityReserved}}
+                                                            </td>
+                                                            <td *ngIf="(statusId === 1 || statusId === 5)">
+                                                                    <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityReserved" (keyup)="validatePartsQuantity(x)"  >
+        
+                                                            </td>
 
-                                                    <th class="text-center"> Qty ON Hand </th>
-                                                    <th class="text-center"> Qty ON Available </th>
-                                                    <th class="text-center"> Qty ON  ORDER  </th>
-
-
-
-
-                                                    <th class="text-center">Reserved By</th>
-                                                    <th class="text-center">Reserved Date</th>
-                                                    <th class="text-center">Issued By</th>
-                                                    <th class="text-center">Issed Date</th>
-
-
-                                                </tr>
-                                             
-                                                <tr *ngFor="let x of alternatePartData; ">
-
-                                                    <td>
-                                                        <input type="checkbox" [(ngModel)]="x.isChildChecked" name="isChildChecked{{i}}" (change)="selectedParts()">
-                                                    </td>
-                                                    <td>{{x.altPartNumber}}</td>
-                                                    <td>{{x.altPartDescription}}</td>
-                                                    <td>
-                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantity">
-                                                    </td>
-                                                    <td>{{x.quantityAlreadyReserved}}</td>
-                                                    <td>
-                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityReserved" (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 2 ||  statusId === 3 ">
-                                                    </td>
-                                                    <td>
-                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityTurnIn">
-
-                                                    </td>
-                                                    <td>{{x.quantityAlreadyReserved}}</td>
-                                                    <td>
-                                                        <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityIssued" (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 1 || statusId ===5">
-
-                                                    </td>
-
-                                                    <td>
-                                                        {{x.quantityOnHand}}
-                                                        <!-- <input type="number" name="alterHand{{i}}" [(ngModel)]="x.quantityOnHand"> -->
-                                                    </td>
-                                                    <td>
-                                                        {{x.quantityAvailable}}
-                                                        <!-- <input type="number" name="alterAvailable{{i}}" [(ngModel)]="x.quantityAvailable"> -->
-                                                    </td>
-                                                    <td>
-                                                        {{x.quantityOnOrder}}
-                                                        <!-- <input type="number" name="alterOrder{{i}}" [(ngModel)]="x.quantityOnOrder"> -->
-                                                    </td>
-                                                    <td>
-                                                        {{x.reservedBy}}
-                                                    </td>
-                                                    <td>
-                                                        {{x.reservedDate | date:'MM-dd-yyyy'}}
-                                                    </td>
-                                                    <td>
-                                                        {{x.issuedBy}}
-                                                    </td>
-                                                    <td>
-                                                        {{x.issuedDate | date:'MM-dd-yyyy'}}
-                                                    </td>
-                                                </tr>
+                                                        <td>{{x.quantityAlreadyReserved}}</td>
+                                                        
+                                                        <td *ngIf="(statusId !== 2 && statusId !== 3 && statusId !== 4)">
+                                                                {{x.quantityIssued}}
+                                                            </td>
+                                                            <td *ngIf="(statusId === 2 || statusId === 3 || statusId === 4)">
+        
+                                                                <input type="number" name="quantity{{i}}" [(ngModel)]="x.quantityIssued"  (keyup)="validatePartsQuantity(x)" [disabled]="statusId === 1 || statusId ===5">
+                                                            </td>
+    
+                                                        <td>
+                                                            {{x.quantityOnHand}}
+                                                            <!-- <input type="number" name="alterHand{{i}}" [(ngModel)]="x.quantityOnHand"> -->
+                                                        </td>
+                                                        <td>
+                                                            {{x.quantityAvailable}}
+                                                            <!-- <input type="number" name="alterAvailable{{i}}" [(ngModel)]="x.quantityAvailable"> -->
+                                                        </td>
+                                                        <td>
+                                                            {{x.quantityOnOrder}}
+                                                            <!-- <input type="number" name="alterOrder{{i}}" [(ngModel)]="x.quantityOnOrder"> -->
+                                                        </td>
+                                                        <td>
+                                                            {{x.reservedBy}}
+                                                        </td>
+                                                        <td>
+                                                            {{x.reservedDate | date:'MM-dd-yyyy'}}
+                                                        </td>
+                                                        <td>
+                                                            {{x.issuedBy}}
+                                                        </td>
+                                                        <td>
+                                                            {{x.issuedDate | date:'MM-dd-yyyy'}}
+                                                        </td>
+                                                    </tr>
                                                 
 
 
