@@ -128,7 +128,8 @@ namespace DAL.Repositories
                                t.UpdatedDate,
                                JobTypeName=jobtype.JobTypeName,
                                t.CurrencyId,
-                               t.IsHeWorksInShop
+                               t.IsHeWorksInShop,
+                               t.Memo
                                //cc.Description
                            }).Distinct().OrderByDescending(p=>p.UpdatedDate).ToList();
 

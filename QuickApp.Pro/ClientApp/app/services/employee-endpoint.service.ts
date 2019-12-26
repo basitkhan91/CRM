@@ -63,7 +63,7 @@ export class EmployeeEndpoint extends EndpointFactory {
 	private readonly _getStoreEmployeeManagementStructure: string = "/api/Employee/employeeManagementStructure";
 	private readonly _getEmployeeManagementStructure: string = "/api/Employee/getemployeeManagementStructure";
 	private readonly _getEmployeeAuditHistoryByEmpId: string = "/api/Employee/GetEmployeeAuditHistory";
- 
+	private readonly _actionsUrlEmployeeMemoUpdate: string = "/api/Employee/employeeupdatememo";
     
 
 	get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
@@ -464,6 +464,16 @@ export class EmployeeEndpoint extends EndpointFactory {
 		.catch(error => {
 			return this.handleError(error, () => this.getEmployeeAuditDetailsEndPoint(employeeId));
 		});
+	}
+
+	getEmployeeUpdateMemoEndpoint<T>(employeeId: number,memo:any): Observable<T> {
+		let endpointUrl = `${this._actionsUrlEmployeeMemoUpdate}?employyeId=${employeeId}&memo=${memo}`;
+
+		return this.http.put<T>(endpointUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getEmployeeUpdateMemoEndpoint( employeeId,memo));
+			});
+
 	}
 }
 
