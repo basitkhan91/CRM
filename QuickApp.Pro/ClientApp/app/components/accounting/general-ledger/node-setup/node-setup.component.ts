@@ -31,7 +31,7 @@ export class NodeSetupComponent implements OnInit {
         { field: 'ledgerName', header: 'Ledger Name' },
         { field: 'nodeCode', header: 'Node Code' },
         { field: 'nodeName', header: 'Node Name' },
-        { field: 'description', header: 'Description' },
+        { field: 'description', header: 'Node Description' },
         { field: 'parentNodeName', header: 'Parent Node' },
         { field: 'leafNodeCheck', header: 'Leaf Node' },
         { field: 'glAccountNodeType', header: 'Node Type' },
@@ -48,9 +48,9 @@ export class NodeSetupComponent implements OnInit {
     disableSaveForDescription: boolean = false;
     descriptionList: any;
     new = {
-        glAccountNodeId: "",
+        glAccountNodeId: 1,
         ledgerName: "",
-        ledgerNameMgmStructureId: "",
+        ledgerNameMgmStructureId: 1,
         nodeCode: "",
         nodeName: "",
         description: "",
@@ -61,6 +61,7 @@ export class NodeSetupComponent implements OnInit {
         fsType: "",
         masterCompanyId: 1,
         isActive: true,
+        isdelete:true,
     }
     addNew = { ...this.new };
     selectedRecordForEdit: any;
@@ -121,11 +122,12 @@ export class NodeSetupComponent implements OnInit {
     save() {
         const data = {
             ...this.addNew, createdBy: this.userName, updatedBy: this.userName, 
+
         };
         //const data = this.addNew 
         const { selectedCompanysData, ...rest }: any = data;
         if (!this.isEdit) {
-            this.nodeSetupService.add(data).subscribe(() => {
+            this.nodeSetupService.add(rest).subscribe(() => {
                 this.resetForm();
                 this.addGLAccountEntitymapping();
                 this.nodeSetupService.getAll().subscribe(nodes => {
@@ -160,6 +162,7 @@ export class NodeSetupComponent implements OnInit {
         }
 
     }
+
     getList() {
         this.nodeSetupService.getAll().subscribe(res => {
             const responseData = res[0];
@@ -205,6 +208,7 @@ export class NodeSetupComponent implements OnInit {
             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
         })
     }
+
     changePage(event: { first: any; rows: number }) {
         console.log(event);
 
@@ -265,50 +269,19 @@ export class NodeSetupComponent implements OnInit {
 
     edit(rowData) {
         this.isEdit = true;
-        this.parentNode = rowData.parentNodeName;
         this.disableSaveGroupId = false;
         this.disableSaveForDescription = false;
         this.addNew = {
             ...rowData,
             parentNodeId: getObjectById('parenNodeId', rowData.parenNodeId, this.originalData.parentNode),
+            parentNode: getObjectById('parenNode', rowData.parentNodeName, this.originalData.parentNodeName),
 
         };
         this.selectedRecordForEdit = { ...this.addNew }
 
     }
 
-    checkGroupDescriptionExists(field, value) {
-        console.log(this.selectedRecordForEdit);
-        const exists = validateRecordExistsOrNot(field, value, this.parentNodeList, this.selectedRecordForEdit);
-        if (exists.length > 0) {
-            this.disableSaveForDescription = true;
-        }
-        else {
-            this.disableSaveForDescription = false;
-        }
-
-    }
-    filterDescription(event) {
-        this.descriptionList = this.parentNodeList;
-        console.log(this.parentNodeList);
-        const descriptionData = [...this.parentNodeList.filter(x => {
-            return x.nodeCode.toLowerCase().includes(event.query.toLowerCase())
-
-        })]
-        console.log(descriptionData)
-        this.descriptionList = descriptionData;
-    }
-    selectedDescription(object) {
-        for (let i = 0; i < this.parentNodeList.length; i++) {
-            if (event == this.parentNodeList[i].nodeCode) {
-                this.parentNode = this.parentNodeList[i].nodeCode;
-                this.addNew.parentNodeId = this.parentNodeList[i].glAccountNodeId;
-                const exists = selectedValueValidate('parentNode', object, this.selectedRecordForEdit)
-                this.disableSaveForDescription = !exists;
-            }
-        }
-
-    }
+    
     addGLAccountEntitymapping() {
         let data = [];
         if (this.addNew.selectedCompanysData) {
@@ -324,6 +297,7 @@ export class NodeSetupComponent implements OnInit {
             }
         }
     }
+
     updateGLAccountEntity(id) {
         this.nodeSetupService.removeNodeShareEntityMapper(id).subscribe(Nodes => {
             this.nodeSetupList = Nodes[0];
@@ -382,47 +356,6 @@ export class NodeSetupComponent implements OnInit {
 
         });
     }
-    addNodeSetup(): void {
-        if (!(this.currentNodeSetup.nodeName && this.currentNodeSetup.nodeCode && this.currentNodeSetup.parentNodeId && this.currentNodeSetup.fsType)) {
-            this.display = true;
-            this.modelValue = true;
-        }
-        if ((this.currentNodeSetup.nodeName && this.currentNodeSetup.nodeCode && this.currentNodeSetup.parentNodeId && this.currentNodeSetup.fsType)) {
-            this.currentNodeSetup.createdBy = this.userName;
-            this.currentNodeSetup.updatedBy = this.userName;
-            this.nodeSetupService.add(this.currentNodeSetup).subscribe(node => {
-                this.currentNodeSetup.glAccountNodeId = node.glAccountNodeId;
-                this.addGLAccountNodeShareWithEntityMapper();
-                this.alertService.showMessage('Node Setup added successfully.');
-                this.nodeSetupService.getAll().subscribe(Nodes => {
-                    this.nodeSetupListData = Nodes[0];
-                    this.setManagementDesctoList();
-
-                });
-                this.dismissModel();
-            });
-        }
-
-    }
-
-    setNodeSetupToUpdate(id: number, content): void {
-        this.open(content);
-        this.updateMode = true;
-        this.currentNodeSetup = Object.assign({}, this.nodeSetupListData.filter(function (node) {
-            return node.glAccountNodeId == id;
-        })[0]);
-        if (this.currentNodeSetup.parentNodeId) {
-            for (let i = 0; i < this.nodeSetupList.length; i++) {
-                if (this.currentNodeSetup.parentNodeId == this.nodeSetupList[i].glAccountNodeId) {
-                    this.parentNode = this.nodeSetupList[i].nodeName;
-                }
-            }
-
-        }
-
-        this.updateMode = true;
-    }
-
     updateNodeSetup(): void {
         this.currentNodeSetup.updatedBy = this.userName;
         this.nodeSetupService.update(this.currentNodeSetup).subscribe(node => {
