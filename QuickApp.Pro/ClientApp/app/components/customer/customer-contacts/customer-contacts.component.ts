@@ -203,7 +203,7 @@ export class CustomerContactsComponent implements OnInit {
     }
     viewSelectedRowdbl(content,rowData) {
         this.sourceViewforContact = rowData;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -302,7 +302,7 @@ export class CustomerContactsComponent implements OnInit {
   
      
         this.contactId = id;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -430,7 +430,7 @@ export class CustomerContactsComponent implements OnInit {
 
 
         this.contactATAId = rowData.customerContactATAMappingId;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })

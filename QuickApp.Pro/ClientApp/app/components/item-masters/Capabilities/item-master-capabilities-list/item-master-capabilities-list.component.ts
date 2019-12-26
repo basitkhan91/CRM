@@ -253,7 +253,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
     }
 
     openHelpText(content) {
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -269,7 +269,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -365,7 +365,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
         this.itemMasterService.capabilityCollection = this.getSelectedCollection;
         this.isEditMode = false;
         this.isDeleteMode = true;
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -413,7 +413,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
         this.auditHisory = auditHistory;
 
 
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
 
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -435,7 +435,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
 
         this.isEditMode = false;
         this.isDeleteMode = true;
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })

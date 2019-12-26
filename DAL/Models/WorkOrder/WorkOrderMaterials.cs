@@ -28,9 +28,9 @@ namespace DAL.Models
         public int? QuantityReserved { get; set; }
         public int? QuantityTurnIn { get; set; }
         public int? QuantityIssued { get; set; }
-        public string IssuedBy { get; set; }
+        public long? IssuedById { get; set; }
         public DateTime? IssuedDate { get; set; }
-        public string ReservedBy { get; set; }
+        public long? ReservedById { get; set; }
         public DateTime? ReservedDate { get; set; }
         public bool? IsAltPart { get; set; }
         public long? AltPartMasterPartId { get; set; }
@@ -47,7 +47,6 @@ namespace DAL.Models
         public bool IsDeleted { get; set; }
         public bool? IsFromWorkFlow { get; set; }
         public virtual ItemMaster ItemMaster { get; set; }
-
-        
+        public bool? IsEquPart { get; set; }
     }
 }
