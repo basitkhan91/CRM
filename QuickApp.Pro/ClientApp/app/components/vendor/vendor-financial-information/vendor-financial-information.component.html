@@ -298,7 +298,7 @@
 
                                                     <!--<td>{{i+1}}</td>-->
                                                     <td>{{proces.description}} </td>
-                                                    <td><input type="radio" name="isDefaultRadio"  [attr.disabled]="proces.isRadioDisabled === true ||  null" [value]="proces.description"   [(ngModel)]="proces.isDefaultRadio"   class="radio-inline" (change)="changevalue($event, i)"></td>
+                                                    <td><input type="radio" name="isDefaultRadio"  [attr.disabled]="proces.isDefaultCheck == false ||  null" [ngModelOptions]="{standalone: true}" [value]="proces.description" [(ngModel)]="proces.isDefaultRadio"  (change)="changevalue($event, i)"  class="radio-inline" ></td>
 
 
                                                 </tr>
