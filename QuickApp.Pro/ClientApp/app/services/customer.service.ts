@@ -593,4 +593,8 @@ export class CustomerService {
     updatecustomeraircraft(customercntct: any, customerAircraftId: any) {
         return this.customerEndpoint.getUpdateAircraft(customercntct, customerAircraftId);
     }
+
+    getCustomerHistory(customerId) {
+        return this.customerEndpoint.getCustomerHistory(customerId)
+    }
 }

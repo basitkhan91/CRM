@@ -38,9 +38,9 @@ namespace DAL.Models
         public int? QuantityReserved { get; set; }
         public int? QuantityTurnIn { get; set; }
         public int? QuantityIssued { get; set; }
-        public string IssuedBy { get; set; }
+        public long? IssuedById { get; set; }
         public DateTime? IssuedDate { get; set; }
-        public string ReservedBy { get; set; }
+        public long? ReservedById { get; set; }
         public DateTime? ReservedDate { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
@@ -56,7 +56,10 @@ namespace DAL.Models
         public int? UnIssuedQty { get; set; }
         public int? QuantityAlreadyReserved { get; set; }
         public int? QuantityAlreadyIssued { get; set; }
-        
-
+        public string Manufacturer { get; set; }
+        public long? ManufacturerId { get; set; }
+        public string OemDer { get; set; }
+        public bool? IsEquPart { get; set; }
+        public long? EquPartMasterPartId { get; set; }
     }
 }
