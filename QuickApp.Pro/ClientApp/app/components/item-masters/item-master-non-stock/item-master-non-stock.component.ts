@@ -597,7 +597,7 @@ export class ItemMasterNonStockComponent {
 		this.itemName = "";
 		this.className = "";
 		this.itemTypeName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -615,7 +615,7 @@ export class ItemMasterNonStockComponent {
         this.sourcepriority = new Priority();
         this.sourceAction.isActive = true;
         this.priorityName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -631,7 +631,7 @@ export class ItemMasterNonStockComponent {
         this.sourceatamain = new ATAMain();
         this.sourceAction.isActive = true;
         this.ataChapterName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -648,7 +648,7 @@ export class ItemMasterNonStockComponent {
         this.sourceItem = new Itemgroup();
         this.sourceAction.isActive = true;
         this.itemGroupName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -663,7 +663,7 @@ export class ItemMasterNonStockComponent {
         this.loadMasterCompanies();
         this.sourceprovision = new Provision();
         this.sourceAction.isActive = true;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -680,7 +680,7 @@ export class ItemMasterNonStockComponent {
         this.sourceintegratn = new Integration();
         this.sourceAction.isActive = true;
         this.integrationName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -692,7 +692,7 @@ export class ItemMasterNonStockComponent {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -712,7 +712,7 @@ export class ItemMasterNonStockComponent {
 		this.className = this.sourceAction.description;
 		this.itemTypeName = this.sourceAction.itemType;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1032,7 +1032,7 @@ export class ItemMasterNonStockComponent {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.auditHisory = auditHistory;
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1066,7 +1066,7 @@ export class ItemMasterNonStockComponent {
         this.sourceUOM = new UnitOfMeasure();
         this.sourceUOM.isActive = true;
         this.unitName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1191,7 +1191,7 @@ export class ItemMasterNonStockComponent {
         this.createdDate = row.createdDate;
         this.updatedDate = row.updatedDate;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1199,7 +1199,7 @@ export class ItemMasterNonStockComponent {
 
 
     openHelpText(content) {
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1300,7 +1300,7 @@ export class ItemMasterNonStockComponent {
         this.loadMasterCompanies();
         this.sourceAction.isActive = true;
         this.name = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })

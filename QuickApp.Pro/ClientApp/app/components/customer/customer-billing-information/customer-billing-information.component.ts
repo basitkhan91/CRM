@@ -303,7 +303,7 @@ export class CustomerBillingInformationComponent {
         
         this.billingauditHisory = auditHistory;
       
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -368,7 +368,7 @@ export class CustomerBillingInformationComponent {
 
      
         this.customerBillingAddressId = rowData.customerBillingAddressId
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
