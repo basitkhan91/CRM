@@ -65,7 +65,7 @@ namespace DAL.Repositories
                             //attachmentDetails.Memo = "";
 
                             attachmentDetails.FileSize = Math.Round(Convert.ToDecimal(fileSize / (1024 * 1024)), 2);
-                            attachmentDetails.FileName = fileName;
+                            attachmentDetails.FileName = Convert.ToString(fileName + "_" + DateTime.Now.ToString());
                             attachmentDetails.Link = fullPath;
                             attachmentDetails.FileType = file.ContentType;
                             attachmentDetails.IsActive = true;
@@ -129,7 +129,7 @@ namespace DAL.Repositories
                             //attachmentDetails.Memo = "";
 
                             attachmentDetails.FileSize = Math.Round(Convert.ToDecimal(fileSize / (1024 * 1024)), 2);
-                            attachmentDetails.FileName = fileName;
+                            attachmentDetails.FileName = Convert.ToString(fileName + "_" + DateTime.Now.ToString());
                             attachmentDetails.Link = fullPath;
                             attachmentDetails.FileType = file.ContentType;
                             attachmentDetails.IsActive = true;

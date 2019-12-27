@@ -478,10 +478,10 @@ export class EmployeeEndpoint extends EndpointFactory {
 
 	}
 
-	uploadEmployeeTrainingDocEndpoint<T>(file: any): Observable<T> {
-		const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
-		return this.http.post<T>(`${this._addEmployeeTrainingFileUpload}`, file);
-	}
+	// uploadEmployeeTrainingDocEndpoint<T>(file: any): Observable<T> {
+	// 	const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
+	// 	return this.http.post<T>(`${this._addEmployeeTrainingFileUpload}`, file);
+	// }
 
 
 	
