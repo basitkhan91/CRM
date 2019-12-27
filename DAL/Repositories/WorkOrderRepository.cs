@@ -3401,7 +3401,9 @@ namespace DAL.Repositories
                                                   wom.MaterialCostPlus,
                                                   wom.FixedAmount,
                                                   wom.WorkOrderQuoteDetailsId,
-                                                  wom.WorkOrderQuoteMaterialId
+                                                  wom.WorkOrderQuoteMaterialId,
+                                                  wom.ItemClassificationId,
+                                                  wom.ItemMasterId
                                               }).Distinct().ToList();
 
                 return workOrderMaterialsList;
@@ -3573,6 +3575,26 @@ namespace DAL.Repositories
                 _appContext.Entry(workOrderLabor).Property(p => p.UpdatedBy).IsModified = true;
                 _appContext.Entry(workOrderLabor).Property(p => p.UpdatedDate).IsModified = true;
                 _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public object GetWorkOrderQuoteDetails(long workOrderId)
+        {
+            try
+            {
+                var data = (from wo in _appContext.WorkOrder
+                            join woq in _appContext.WorkOrderQuote on wo.WorkOrderId equals woq.WorkOrderId
+                            join wqd in _appContext.WorkOrderQuoteDetails on woq.WorkOrderQuoteId equals wqd.WorkOrderQuoteId
+                            select new
+                            {
+                                wqd
+                            }).FirstOrDefault();
+                return data;
             }
             catch (Exception)
             {
