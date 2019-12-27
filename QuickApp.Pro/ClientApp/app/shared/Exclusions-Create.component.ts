@@ -213,16 +213,24 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     saveExclusionsWorkOrder() {
 
         this.saveExclusionsListForWO.emit(this.workFlow)
+        this.workFlow.exclusions = [];
+        this.addRow();
+        this.workFlow.sumofQty = 0;
+        this.workFlow.sumofExtendedCost = 0;
     }
 
     updateExclusionsWorkOrder() {
         this.updateExclusionsListForWO.emit(this.workFlow);
+        this.workFlow.exclusions = [];
+        this.addRow();
+        this.workFlow.sumofQty = 0;
+        this.workFlow.sumofExtendedCost = 0;
     }
 
     markupChanged(matData) {
         try {
             this.markupList.forEach((markup) => {
-            if (markup.value == matData.markupPercentageId) {
+            if (markup.value == Number(matData.markUpPercentageId)) {
                 matData.costPlusAmount = (matData.extendedPrice) + (((matData.extendedPrice) / 100) * Number(markup.label))
             }
             })
