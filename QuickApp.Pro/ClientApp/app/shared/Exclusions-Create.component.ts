@@ -54,9 +54,11 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
             this.workFlow.exclusions.push(data);
             this.reCalculate();
         } else {
-            this.workFlow.exclusions = [];
-            this.row = this.workFlow.exclusions[0];
-            this.addRow();
+            if (!this.UpdateMode) {
+                this.workFlow.exclusions = [];
+                this.row = this.workFlow.exclusions[0];
+                this.addRow();
+            }
         }
         if (this.isWorkOrder) {
             this.row = this.workFlow.exclusions[0];
