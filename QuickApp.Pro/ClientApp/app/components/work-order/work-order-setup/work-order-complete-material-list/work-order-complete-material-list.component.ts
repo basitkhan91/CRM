@@ -68,6 +68,8 @@ export class WorkOrderCompleteMaterialListComponent {
     isEdit: boolean = false;
     editData: any;
     isShowEqPN: boolean = false;
+    isShowAlternatePN: boolean = false;
+    eqPartData: any[] = [];
 
 
 
@@ -174,6 +176,9 @@ export class WorkOrderCompleteMaterialListComponent {
         this.statusId = statusId;
         this.reservedList = [];
         this.alternatePartData = [];
+        this.eqPartData = [];
+        this.isShowEqPN = false;
+        this.isShowAlternatePN = false;
         if (this.workFlowWorkOrderId) {
             this.workOrderService.getReservedPartsByWorkFlowWOId(this.workFlowWorkOrderId, statusId).subscribe(res => {
                 this.reservedList = res.map(x => {
@@ -183,11 +188,23 @@ export class WorkOrderCompleteMaterialListComponent {
                         isParentSelected: false,
                         showAlternateParts: false,
                         showEqParts: false,
+                        reservedDate: new Date(x.reservedDate),
+                        issuedDate: new Date(x.issuedDate),
                         woReservedIssuedAltParts: x.woReservedIssuedAltParts.map(y => {
                             return {
                                 ...y,
+                                isChildSelected: false,
+                                reservedDate: new Date(y.reservedDate),
+                                issuedDate: new Date(y.issuedDate),
+                            }
+                        }),
+                        woReservedIssuedEquParts: x.woReservedIssuedEquParts.map(y => {
+                            return {
+                                ...y,
+                                isChildSelected: false,
+                                reservedDate: new Date(y.reservedDate),
+                                issuedDate: new Date(y.issuedDate),
 
-                                isChildSelected: false
                             }
                         })
                     }
@@ -211,7 +228,25 @@ export class WorkOrderCompleteMaterialListComponent {
                         ...y,
                         isChildSelected: false
                     }
+                }),
+
+            }
+
+        });
+    }
+    resetEqParts() {
+        this.eqPartData = [];
+        this.reservedList = this.reservedList.map(x => {
+            return {
+                ...x,
+                showAlternateParts: false,
+                woReservedIssuedEquParts: x.woReservedIssuedEquParts.map(y => {
+                    return {
+                        ...y,
+                        isChildSelected: false
+                    }
                 })
+
             }
 
         });
@@ -225,6 +260,13 @@ export class WorkOrderCompleteMaterialListComponent {
         }
     }
 
+    showEquantParts(isChecked, childPart) {
+        this.eqPartData = []
+        this.eqPartData = childPart;
+        if (isChecked === false) {
+            this.eqPartData = []
+        }
+    }
 
     selectedParts() {
         this.checkedParts = [];
@@ -235,29 +277,54 @@ export class WorkOrderCompleteMaterialListComponent {
             }
             x.woReservedIssuedAltParts.map(c => {
                 if (c.isChildSelected) {
-                    this.checkedParts.push({ ...c, partStatusId: this.statusId });
+                    this.checkedParts.push({
+                        ...c,
+                        itemMasterId: c.altPartId,
+                        partNumber: c.altPartNumber,
+                        partStatusId: this.statusId
+                    });
                 }
 
             })
+            x.woReservedIssuedEquParts.map(c => {
+                if (c.isChildSelected) {
+                    this.checkedParts.push({
+                        ...c,
+                        equPartId: c.altPartId,
+                        equPartNumber: c.altPartNumber,
+                        partStatusId: this.statusId
+                    });
+                }
+
+            })
+
         })
-        console.log(this.checkedParts);
+
 
     }
     saveRIPart() {
         this.checkedParts = []
-        const checkedData = this.reservedList.map(x => {
-            if (x.isParentSelected) {
-                const { woReservedIssuedAltParts, ...rest } = x
-                this.checkedParts.push({ ...rest, partStatusId: this.statusId });
-            }
-            x.woReservedIssuedAltParts.map(c => {
-                if (c.isChildSelected) {
-                    this.checkedParts.push({ ...c, partStatusId: this.statusId });
-                }
+        this.selectedParts();
+        // const checkedData = this.reservedList.map(x => {
+        //     if (x.isParentSelected) {
+        //         const { woReservedIssuedAltParts, ...rest } = x
+        //         this.checkedParts.push({ ...rest, partStatusId: this.statusId });
+        //     }
+        //     x.woReservedIssuedAltParts.map(c => {
+        //         if (c.isChildSelected) {
+        //             this.checkedParts.push({ ...c, partStatusId: this.statusId });
+        //         }
 
-            })
-        })
-        console.log
+        //     })
+        //     x.woReservedIssuedEquParts.map(c => {
+        //         if (c.isChildSelected) {
+        //             this.checkedParts.push({ ...c, partStatusId: this.statusId });
+        //         }
+
+        //         })
+        // })
+        // console.log
+
         this.saveRIParts.emit(this.checkedParts);
 
 
