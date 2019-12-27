@@ -306,7 +306,9 @@
                       <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                     </select>
                   </td>
-                  <td>{{rec.labourCostPlus}}</td>
+                  <td>
+                      <input type="number" [(ngModel)]="rec.labourCostPlus" readonly/>
+                  </td>
                 </ng-container>
                 <td>
                   <input type="text" [(ngModel)]="rec.memo" />
