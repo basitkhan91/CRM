@@ -177,6 +177,7 @@ export class CustomersListComponent implements OnInit {
     selectedContactColumns: any[];
     allContacts: any[] = [];
     customerauditHisory: any[];
+    selectedRowforDelete: any;
     customerContactsColumns = [
         { field: 'tag', header: 'Tag' },
         { field: 'firstName', header: 'First Name' },
@@ -651,7 +652,7 @@ export class CustomersListComponent implements OnInit {
 
         this.isDeleteMode = true;
 
-
+        this.selectedRowforDelete = rowData;
         this.customerId = rowData.customerId;
         this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
@@ -660,6 +661,7 @@ export class CustomersListComponent implements OnInit {
     }
     deleteItemAndCloseModel() {
         let customerId = this.customerId;
+
         if (customerId > 0) {
 
             this.customerService.updateListstatus(customerId).subscribe(
@@ -743,7 +745,7 @@ export class CustomersListComponent implements OnInit {
 
         this.customerauditHisory = auditHistory;
 
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false});
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })

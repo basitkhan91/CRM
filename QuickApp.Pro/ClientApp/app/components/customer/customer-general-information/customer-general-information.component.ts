@@ -58,7 +58,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     memoPopupValue: any;
     isCustomerNameAlreadyExists: boolean = false;
     isCustomerCodeAlreadyExists: boolean = false;
-    emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}";
+    emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z0-9.-]{2,}[.]{1}[a-zA-Z0-9]{2,}";
     urlPattern = "^((ht|f)tp(s?))\://([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(/\S*)?$";
 
     classificationNew = {
@@ -419,10 +419,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
                     name: getObjectByValue('name', res.name, this.customerListOriginal),
                     country: getObjectById('countries_id', res.country, this.countryListOriginal),
                     customerParentName: getObjectByValue('name', res.customerParentName, this.customerListOriginal),
-                    customerCode: getObjectByValue('customerCode', res.customerCode, this.customerListOriginal),
+                    customerCode: getObjectByValue('customerCode', res.customerCode, this.customerListOriginal)
 
-                    isAddressForBilling: false,
-                    isAddressForShipping: false
                 };
                 this.generalInformation1 = {
                     ...this.editData,

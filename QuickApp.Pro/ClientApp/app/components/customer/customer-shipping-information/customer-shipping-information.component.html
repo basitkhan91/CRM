@@ -93,14 +93,14 @@
                                     <mat-icon>edit</mat-icon>
                                 </button>
 
-                                <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteDomesticShipping(rowData)">
+                                <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteDomesticShipping(deleteContent,rowData)">
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
                                 <button class="btn btn-danger nobg" data-toggle="tooltip" matTooltip="Add Ship Via" data-original-title="View Shipping Via Information">
                                     <i class="fa fa-truck" data-target="#addDomesticShipVia" data-toggle="modal" (click)="selectedDomesticForShipVia(rowData)"></i>
                                 </button>
 
-                                <button class="btn-history" mat-icon-button matTooltip="history" (click)="openShipaddressHistory(contentHist,rowData)">
+                                <button class="btn-history" mat-icon-button matTooltip="history" (click)="openShipaddressHistory(contentAuditHist,rowData)">
                                     <mat-icon color="green">history</mat-icon>
                                 </button>
 
@@ -190,7 +190,7 @@
                                         <mat-icon>edit</mat-icon>
                                     </button>
 
-                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteInternationalShipping(rowData)">
+                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteInternationalShipping(deleteContent1,rowData)">
                                         <mat-icon color="warn">delete</mat-icon>
                                     </button>
 
@@ -198,7 +198,7 @@
                                         <i class="fa fa-truck" data-target="#addInternationShipVia" data-toggle="modal" (click)="selectedInternationalShipForShipVia(rowData)"></i>
                                     </button>
 
-                                    <button class="btn-history" mat-icon-button matTooltip="history">
+                                    <button class="btn-history" mat-icon-button matTooltip="history" (click)="openInterShippingHistory(contentAuditHistInter,rowData)">
                                         <mat-icon color="green">history</mat-icon>
                                     </button>
 
@@ -333,7 +333,7 @@
                 </ng-template>
 
                 <ng-template pTemplate="body" let-rowData let-columns="columns">
-                    <tr [pSelectableRow]="rowData">
+                    <tr [pSelectableRow]="rowData" [ngStyle]="{'background-color' : rowData.isPrimary === true ? '#79ffe3'  : 'white'  }" >
                         <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                             {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
                         </td>
@@ -524,13 +524,24 @@
                         </div>
 
                         <div class="col-md-3">
-                          
+
                             <div class="form-group">
                                 <label>Ship To Country <span class="clr-red">*</span></label>
                                 <div class="inner-addon right-addon inline-block">
                                     <p-autoComplete class="autocomp-customer-cstm" field="nice_name" [(ngModel)]="domesticShippingInfo.country" name="country" [suggestions]="countrycollection" (completeMethod)="filterCountries($event)" [size]="30"
                                                     [forceSelection]="true" [minLength]="1" [dropdown]="true" required>
                                     </p-autoComplete>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                               </div>
+                            <div class="form-group" style="margin-top: 15px;">
+                                <div class="checkbox-cstm" style="margin-left: 0;">
+                                    <label>
+                                        <input type="checkbox" checked id="isPrimary" name="isPrimary" [(ngModel)]="domesticShippingInfo.isPrimary">
+                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                       Primary
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -672,7 +683,7 @@
                             </div>
                         </div>
                         <div class="col-md-2" style="display:none">
-                            <div class="form-group" >
+                            <div class="form-group">
                                 <label>Shipping Url <span class="clr-red"></span></label>
                                 <input class="form-control" type="text" name="shippingURL" [(ngModel)]="shipViaDomestic.shippingURL">
                             </div>
@@ -736,7 +747,7 @@
                                     <mat-icon>edit</mat-icon>
                                 </button>
 
-                                <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteShipVia(rowData)">
+                                <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteShipVia(deleteContent2,rowData)">
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
 
@@ -757,6 +768,25 @@
 
         </div>
     </form>
+    <ng-template #deleteContent2 let-c="close" let-d="dismiss" data-backdrop="static">
+        <div class="modal-header">
+            <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+            <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <strong>
+                Ship Via:
+                <span class="new-label">{{selectedRowForDeleteVia.shipVia}}</span>
+            </strong>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel2()">Yes</button>
+            <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+        </div>
+    </ng-template>
+
 </div>
 
 <div class="modal fade" id="addInternationShipVia" data-backdrop="static">
@@ -817,18 +847,18 @@
                                 <input class="form-control" type="text" name="shippingAccountinfo" [(ngModel)]="shipViaInternational.shippingAccountInfo" required>
                             </div>
                         </div>
-                        <div class="col-md-2" style="display:none">
+                        <!--<div class="col-md-2" style="display:none">
                             <div class="form-group">
                                 <label>Shipping Url <span class="clr-red"></span></label>
                                 <input class="form-control" type="text" name="shippingURL" [(ngModel)]="shipViaInternational.shippingURL">
                             </div>
-                        </div>
-                        <div class="col-md-2" style="display:none">
+                        </div>-->
+                        <!--<div class="col-md-2" style="display:none">
                             <div class="form-group">
                                 <label>Shipping ID <span class="clr-red">*</span></label>
                                 <input class="form-control" type="text" name="shippingId" [(ngModel)]="shipViaInternational.shippingId" required>
                             </div>
-                        </div>
+                        </div>-->
 
                         <div class="col-md-2">
                             <div class="form-group">
@@ -891,7 +921,7 @@
                                     <mat-icon>edit</mat-icon>
                                 </button>
 
-                                <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteInternationalShippingVia(rowData)">
+                                <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteInternationalShippingVia(deleteContent3,rowData)">
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
 
@@ -910,6 +940,24 @@
             </div>
         </div>
     </form>
+    <ng-template #deleteContent3 let-c="close" let-d="dismiss" data-backdrop="static">
+        <div class="modal-header">
+            <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+            <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <strong>
+                Ship Via:
+                <span class="new-label">{{selectedRowForDeleteInterVia.shipVia}}</span>
+            </strong>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel3()">Yes</button>
+            <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+        </div>
+    </ng-template>
 </div>
 
 <div *ngIf="sourceViewforInterShipping" class="modal" id="viewInterSipVia" data-backdrop="static">
@@ -1017,3 +1065,146 @@
         </div>
     </div>
 </div>
+<ng-template #deleteContent let-c="close" let-d="dismiss" data-backdrop="static">
+    <div class="modal-header">
+        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <strong>
+            Site Name:
+            <span class="new-label">{{selectedRowForDelete.siteName}}</span>
+        </strong>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
+</ng-template>
+<ng-template #deleteContent1 let-c="close" let-d="dismiss" data-backdrop="static">
+    <div class="modal-header">
+        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <strong>
+            Export License:
+            <span class="new-label">{{selectedRowForDeleteInter.exportLicense}}</span>
+        </strong>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel1()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
+</ng-template>
+<ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
+    <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
+    <div class="modal-header">
+
+        <h4 class="modal-title">History of Shipping Info</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+
+    </div>
+    <div class="modal-body">
+
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Site Name</th>
+                        <th>Address1</th>
+                        <th>Address2</th>
+                        <th>City</th>
+                        <th>State</th>
+                        <th>Postal Code</th>
+                        <th>Country</th>
+                        <th>Updated By</th>
+                        <th>Last Updated Time</th>
+                        <th>Created By</th>
+                        <th>Created Time</th>
+
+                    </tr>
+                </thead>
+              
+
+                <tr *ngFor="let audit of shippingauditHisory; let i = index;">
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'siteName', audit.siteName)  ? 'black' : 'red'  }">{{audit.siteName}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'address1', audit.address1)  ? 'black' : 'red'  }">{{audit.address1}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'address2', audit.address2)  ? 'black' : 'red'  }">{{audit.address2}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'city', audit.city)  ? 'black' : 'red'  }">{{audit.city}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'stateOrProvince', audit.stateOrProvince)  ? 'black' : 'red'  }">{{audit.stateOrProvince}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'postalCode', audit.postalCode)  ? 'black' : 'red'  }">{{audit.postalCode}}</td>
+
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'country', audit.country)  ? 'black' : 'red'  }">{{audit.country}}</td>
+
+                    <td>{{audit.updatedBy}}</td>
+                    <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                    <td>{{audit.createdBy}}</td>
+                    <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+    </div>
+</ng-template>
+<ng-template #contentAuditHistInter let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
+    <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
+    <div class="modal-header">
+
+        <h4 class="modal-title">History of International Shipping Info</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+
+    </div>
+    <div class="modal-body">
+
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Export License</th>
+                        <th>Description</th>
+                        <th>Start Date</th>
+                        <th>Expiration Date</th>
+                        <th>Amount</th>
+                        <th>Is Primary</th>
+                        <th>Updated By</th>
+                        <th>Last Updated Time</th>
+                        <th>Created By</th>
+                        <th>Created Time</th>
+
+                    </tr>
+                </thead>
+              
+
+                <tr *ngFor="let audit of interShippingauditHisory; let i = index;">
+                    <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'exportLicense', audit.exportLicense)  ? 'black' : 'red'  }">{{audit.exportLicense}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'startDate', audit.startDate)  ? 'black' : 'red'  }">{{audit.startDate}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'expirationDate', audit.expirationDate)  ? 'black' : 'red'  }">{{audit.expirationDate}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'amount', audit.amount)  ? 'black' : 'red'  }">{{audit.amount}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'isPrimary', audit.isPrimary)  ? 'black' : 'red'  }">{{audit.isPrimary}}</td>
+
+                    <td>{{audit.updatedBy}}</td>
+                    <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                    <td>{{audit.createdBy}}</td>
+                    <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+    </div>
+</ng-template>
