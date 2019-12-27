@@ -58,6 +58,7 @@ export class CustomerATAInformationComponent implements OnInit {
     isDeleteMode: boolean = false;
     public sourceCustomer: any = {}
     customerContactATAMappingId: number;
+    selectedRowForDelete: any;
     //contactList: any;
     constructor(
         private atasubchapter1service: AtaSubChapter1Service,
@@ -345,7 +346,7 @@ export class CustomerATAInformationComponent implements OnInit {
         this.modal.close();
     }
     deleteATAMapping(content, rowData) {
-
+        this.selectedRowForDelete = rowData;
         this.isDeleteMode = true;
 
 

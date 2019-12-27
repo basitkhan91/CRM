@@ -15,7 +15,7 @@ export class CustomerShippingModel {
                 this.country ="" ;
                 this.customerId = null;
                 this.vendorId = null;
-        
+                this.isPrimary = false;
         
                 // this.CustomerShippingId = CustomerShippingId;
                 // this.CustomerId = CustomerId;
@@ -40,7 +40,8 @@ export class CustomerShippingModel {
             public postalCode: string;
             public country : string;
             public customerId : number;
-            public vendorId : number;
+    public vendorId: number;
+    public isPrimary: boolean;
         
             // public CustomerShippingId: number;
             // public CustomerId: number;

@@ -43,7 +43,7 @@
                                     <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Filter" style="height: 28px !important;">
                                 </div>
                                 <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-                                <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
+                                <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selected Data"  (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
                                 <div class="excel-upload excel-upload-cstm">
                                     <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                     <label for="upload">
@@ -89,7 +89,7 @@
                                         <mat-icon>edit</mat-icon>
                                     </button>
 
-                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="openDelete(deleteContent,rowData.contactId)">
+                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="openDelete(deleteContent,rowData)">
                                         <mat-icon color="warn">delete</mat-icon>
                                     </button>
 
@@ -565,9 +565,16 @@
     <ng-template #deleteContent let-c="close" let-d="dismiss">
         <div class="modal-header">
             <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+
             <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
                 <span aria-hidden="true">&times;</span>
             </button>
+        </div>
+        <div class="modal-body">
+            <strong>
+                Contact Name:
+                <span class="new-label">{{selectedRowforDelete.firstName}}</span>
+            </strong>
         </div>
 
         <div class="modal-footer">
@@ -582,7 +589,12 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-
+        <div class="modal-body">
+            <strong>
+                AtaChapter Name:
+                <span class="new-label">{{selectedAtappedRowforDelete.ataChapterName}}</span>
+            </strong>
+        </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel1()">Yes</button>
             <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>

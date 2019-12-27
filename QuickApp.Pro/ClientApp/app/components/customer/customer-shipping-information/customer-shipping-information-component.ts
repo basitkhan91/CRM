@@ -7,6 +7,8 @@ import { AlertService, MessageSeverity } from '../../../services/alert.service';
 import { CustomerShippingModel } from '../../../models/customer-shipping.model';
 import { CustomerInternationalShippingModel, CustomerInternationalShipVia } from '../../../models/customer-internationalshipping.model';
 import { getValueFromObjectByKey, getObjectById, editValueAssignByCondition } from '../../../generic/autocomplete';
+import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
+import { NgbModal, NgbActiveModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 @Component({
     selector: 'app-customer-shipping-information',
     templateUrl: './customer-shipping-information.component.html',
@@ -34,6 +36,13 @@ export class CustomerShippingInformationComponent implements OnInit {
     isEditDomesticShipVia: boolean = false;
     // countryListOriginal: any[];
     countrycollection: any[];
+    customerShippingAddressId: number;
+    selectedRowForDelete: any;
+    selectedRowForDeleteInter: any;
+    public sourceCustomer: any = {}
+    internationalShippingId: number;
+    shippingauditHisory: any[];
+    interShippingauditHisory: any[];
     domesticShippingHeaders = [
         { field: 'siteName', header: 'Site Name' },
         { field: 'address1', header: 'Address1' },
@@ -47,7 +56,7 @@ export class CustomerShippingInformationComponent implements OnInit {
     internationalShippingHeaders = [
         { field: 'exportLicense', header: 'Export License' },
         { field: 'description', header: 'Description' },
-        { field: 'isPrimary', header: 'IsDefault' },
+        { field: 'isPrimary', header: 'Is Primary' },
         { field: 'startDate', header: 'Start Date' },
         { field: 'expirationDate', header: 'Expiration Date' },
         { field: 'amount', header: 'Amount' }
@@ -74,6 +83,7 @@ export class CustomerShippingInformationComponent implements OnInit {
     shipViaDomestic = new CustomerInternationalShipVia();
     editableRowIndexForIS: any;
     id: number;
+    modal: NgbModalRef;
     // selectedShipVia: any;
     selectedColumnsForInternationShipViaTable = [
         { field: 'shipVia', header: 'Ship Via' },
@@ -85,12 +95,18 @@ export class CustomerShippingInformationComponent implements OnInit {
     ];
     selectedShipViaInternational: any;
     selectedShipViaDomestic: any;
+
     customerCode: any;
     customerName: any;
+    isDeleteMode: boolean = false;
+    customerShippingId: number;
+    shippingViaDetailsId: number;
+    selectedRowForDeleteVia: any;
+    selectedRowForDeleteInterVia: any;
     selectedColumnsForDomesticShipVia = this.selectedColumnsForInternationShipViaTable;
 
     constructor(private customerService: CustomerService, private authService: AuthService,
-        private alertService: AlertService,
+        private alertService: AlertService, private activeModal: NgbActiveModal, private modalService: NgbModal,
     ) { }
 
     ngOnInit() {
@@ -136,7 +152,7 @@ export class CustomerShippingInformationComponent implements OnInit {
             updatedBy: this.userName,
             country: getValueFromObjectByKey('countries_id', this.domesticShippingInfo.country),
             masterCompanyId: 1,
-            isPrimary: false,
+            //isPrimary: false,
             isActive: true,
             customerId: this.id
         }
@@ -171,6 +187,7 @@ export class CustomerShippingInformationComponent implements OnInit {
 
     // get domestic shipping by customer Id 
     getDomesticShippingByCustomerId() {
+       
         // const id = this.savedGeneralInformationData.customerId;
         this.customerService.getCustomerShipAddressGet(this.id).subscribe(res => {
             console.log(res);
@@ -208,25 +225,220 @@ export class CustomerShippingInformationComponent implements OnInit {
     addInternationalShipping() {
         this.internationalShippingInfo = new CustomerInternationalShippingModel();
     }
-    deleteDomesticShipping(rowData) {
+    //deleteDomesticShipping(rowData) {
+    //    const obj = {
+    //        isActive: false,
+    //        addressStatus: false,
+    //        updatedBy: this.userName,
+    //        customerShippingAddressId: rowData.customerShippingAddressId
+    //    }
+    //    // delete customer shipping 
+    //    this.customerService.updateStatusHipping(obj).subscribe(() => {
+    //        // toaster
+    //        this.alertService.showMessage(
+    //            'Success',
+    //            `Deleted Shipping Sucessfully `,
+    //            MessageSeverity.success
+    //        );
+    //        this.getDomesticShippingByCustomerId();
+    //    })
+
+
+    //}
+
+    deleteDomesticShipping(content, rowData) {
+        this.isDeleteMode = true;
+        this.selectedRowForDelete = rowData;
+        this.customerShippingAddressId=rowData.customerShippingAddressId
+
+          this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+    deleteItemAndCloseModel() {
         const obj = {
             isActive: false,
             addressStatus: false,
             updatedBy: this.userName,
-            customerShippingAddressId: rowData.customerShippingAddressId
+            customerShippingAddressId: this.customerShippingAddressId
         }
-        // delete customer shipping 
-        this.customerService.updateStatusHipping(obj).subscribe(() => {
-            // toaster
-            this.alertService.showMessage(
-                'Success',
-                `Deleted Shipping Sucessfully `,
-                MessageSeverity.success
-            );
-            this.getDomesticShippingByCustomerId();
-        })
+
+        if (this.customerShippingAddressId > 0) {
+
+            this.customerService.updateStatusHipping(obj).subscribe(
+                response => this.saveCompleted(this.sourceCustomer),
+                error => this.saveFailedHelper(error));
+        }
+        this.modal.close();
+    }
+    private saveCompleted(user?: any) {
+
+        if (this.isDeleteMode == true) {
+            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
+            this.isDeleteMode = false;
+        }
+        else {
+            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+            this.saveCompleted
+        }
+        this.getDomesticShippingByCustomerId();
+    }
+    private saveFailedHelper(error: any) {
+
+        this.alertService.stopLoadingMessage();
+        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+    }
+    deleteInternationalShipping(content, rowData) {
+        this.isDeleteMode = true;
+        this.selectedRowForDeleteInter = rowData;
+        this.internationalShippingId = rowData.internationalShippingId
+
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+    deleteItemAndCloseModel1() {
+     
+        if (this.internationalShippingId > 0) {
+
+            this.customerService.deleteInternationalShipping(this.internationalShippingId, this.userName).subscribe(
+                response => this.saveCompleted1(this.sourceCustomer),
+                error => this.saveFailedHelper1(error));
+        }
+        this.modal.close();
+    }
+    private saveCompleted1(user?: any) {
+
+        if (this.isDeleteMode == true) {
+            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
+            this.isDeleteMode = false;
+        }
+        else {
+            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+            this.saveCompleted
+        }
+        this.getInternationalShippingByCustomerId();
+    }
+    private saveFailedHelper1(error: any) {
+
+        this.alertService.stopLoadingMessage();
+        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+    }
+
+    deleteShipVia(content, rowData) {
+        this.isDeleteMode = true;
+        this.selectedRowForDeleteVia = rowData;
+        this.customerShippingAddressId = rowData.customerShippingAddressId;
+        this.customerShippingId = rowData.customerShippingId
+
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+    deleteItemAndCloseModel2() {
+
+        if (this.customerShippingId > 0) {
+
+            this.customerService.deleteShipViaDetails(this.customerShippingId, this.userName).subscribe(
+                response => this.saveCompleted2(this.sourceCustomer),
+                error => this.saveFailedHelper2(error));
+        }
+        this.modal.close();
+    }
+    private saveCompleted2(user?: any) {
+
+        if (this.isDeleteMode == true) {
+            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
+            this.isDeleteMode = false;
+        }
+        else {
+            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+            this.saveCompleted
+        }
+        this.getShipViaByDomesticShippingId(this.customerShippingAddressId)
+    }
+    private saveFailedHelper2(error: any) {
+
+        this.alertService.stopLoadingMessage();
+        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+    }
 
 
+
+    deleteInternationalShippingVia(content, rowData) {
+        this.isDeleteMode = true;
+        this.selectedRowForDeleteInterVia = rowData;
+        this.shippingViaDetailsId = rowData.shippingViaDetailsId;
+        //this.customerShippingId = rowData.customerShippingId
+
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+    deleteItemAndCloseModel3() {
+
+        if (this.shippingViaDetailsId > 0) {
+
+            this.customerService.deleteInternationalShipViaId(this.shippingViaDetailsId, this.userName).subscribe(
+                response => this.saveCompleted3(this.sourceCustomer),
+                error => this.saveFailedHelper3(error));
+        }
+        this.modal.close();
+    }
+    private saveCompleted3(user?: any) {
+
+        if (this.isDeleteMode == true) {
+            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
+            this.isDeleteMode = false;
+        }
+        else {
+            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+            this.saveCompleted
+        }
+        this.getShipViaDataByInternationalShippingId();
+    }
+    private saveFailedHelper3(error: any) {
+
+        this.alertService.stopLoadingMessage();
+        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+    }
+    //deleteShipVia(rowData) {
+
+    //    this.customerService.deleteShipViaDetails(rowData.customerShippingId, this.userName).subscribe(res => {
+    //        this.getShipViaByDomesticShippingId(rowData.customerShippingAddressId)
+
+    //        this.alertService.showMessage(
+    //            'Success',
+    //            `Sucessfully Deleted  Ship Via`,
+    //            MessageSeverity.success
+    //        );
+
+    //    })
+    //}
+
+    //deleteInternationalShippingVia(rowData) {
+
+    //    this.customerService.deleteInternationalShipViaId(rowData.shippingViaDetailsId, this.userName).subscribe(res => {
+    //        this.getShipViaDataByInternationalShippingId();
+    //        this.alertService.showMessage(
+    //            'Success',
+    //            `Sucessfully Deleted International Ship Via`,
+    //            MessageSeverity.success
+    //        );
+    //    })
+    //}
+
+
+    dismissModel() {
+        this.modal.close();
     }
     saveInternationalShipping() {
         // const id = this.savedGeneralInformationData.customerId;
@@ -360,41 +572,17 @@ export class CustomerShippingInformationComponent implements OnInit {
         this.isEditInternational = false;
         this.internationalShippingInfo = new CustomerInternationalShippingModel()
     }
-    deleteInternationalShipping(rowData) {
-        this.customerService.deleteInternationalShipping(rowData.internationalShippingId, this.userName).subscribe(res => {
-            this.getInternationalShippingByCustomerId();
-            this.alertService.showMessage(
-                'Success',
-                `Sucessfully Deleted International Shipping`,
-                MessageSeverity.success
-            );
-        })
-    }
-    deleteInternationalShippingVia(rowData) {
-      
-        this.customerService.deleteInternationalShipViaId(rowData.shippingViaDetailsId, this.userName).subscribe(res => {
-            this.getShipViaDataByInternationalShippingId();
-            this.alertService.showMessage(
-                'Success',
-                `Sucessfully Deleted International Ship Via`,
-                MessageSeverity.success
-            );
-        })
-    }
-    deleteShipVia(rowData) {
-  
-        this.customerService.deleteShipViaDetails(rowData.customerShippingId, this.userName).subscribe(res => {
-            this.getShipViaByDomesticShippingId(rowData.customerShippingAddressId)
-
-            this.alertService.showMessage(
-                'Success',
-                `Sucessfully Deleted  Ship Via`,
-                MessageSeverity.success
-            );
-           
-        })
-    }
-    async saveshipViaInternational() {
+    //deleteInternationalShipping(rowData) {
+    //    this.customerService.deleteInternationalShipping(rowData.internationalShippingId, this.userName).subscribe(res => {
+    //        this.getInternationalShippingByCustomerId();
+    //        this.alertService.showMessage(
+    //            'Success',
+    //            `Sucessfully Deleted International Shipping`,
+    //            MessageSeverity.success
+    //        );
+    //    })
+    //}
+     async saveshipViaInternational() {
         const data = {
             ...this.shipViaInternational,
             internationalShippingId: this.selectedShipViaInternational.internationalShippingId,
@@ -540,6 +728,72 @@ export class CustomerShippingInformationComponent implements OnInit {
             );
         })
     }
+    openShipaddressHistory(content, row) {
+        const { customerShippingAddressId } = row;
+        this.alertService.startLoadingMessage();
+
+        this.customerService.getCustomerShippingHistory(this.id, customerShippingAddressId).subscribe(
+            results => this.onAuditHistoryLoadSuccessful(results, content),
+            error => this.saveFailedHelper(error));
+    }
+    private onAuditHistoryLoadSuccessful(auditHistory, content) {
+        this.alertService.stopLoadingMessage();
+
+
+        this.shippingauditHisory = auditHistory;
+
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.shippingauditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+
+    openInterShippingHistory(content, row) {
+        
+        const { internationalShippingId } = row;
+        this.alertService.startLoadingMessage();
+
+        this.customerService.getCustomerInterShippingHistory(this.id, internationalShippingId).subscribe(
+            results => this.onInterAuditHistoryLoadSuccessful(results, content),
+            error => this.saveFailedHelper(error));
+    }
+    private onInterAuditHistoryLoadSuccessful(auditHistory, content) {
+        this.alertService.stopLoadingMessage();
+
+
+        this.interShippingauditHisory = auditHistory;
+
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    getColorCodeForInterHistory(i, field, value) {
+        const data = this.interShippingauditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+
+
 
     // countryName: string;
     // countrycollection: any;
