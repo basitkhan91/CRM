@@ -8,6 +8,7 @@ namespace DAL.Models
     {
         public string PartNumber { get; set; }
         public string PartDescription { get; set; }
+
         public List<WOReservedIssuedAltParts> WOReservedIssuedAltParts { get;set;}
         public List<WOReservedIssuedEquParts> WOReservedIssuedEquParts { get; set; }
 
@@ -31,7 +32,9 @@ namespace DAL.Models
 
     public class RevisedIssuedParts
     {
-        public long WorkOrderId { get; set; }
+
+
+		public long WorkOrderId { get; set; }
         public long WorkFlowWorkOrderId { get; set; }
         public long WorkOrderMaterialsId { get; set; }
         public long StockLineId { get; set; }
