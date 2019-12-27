@@ -417,7 +417,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Create GL Account', routerLink: '/generalledgermodule/generalledgerpage/app-account-listing-create' },
                             { label: 'Create Accounting Calendar', routerLink: '/generalledgermodule/generalledgerpage/app-accounting-calendar' },
                             { label: 'Accounting Calendar List', routerLink: '/generalledgermodule/generalledgerpage/app-accounting-listing-calendar' },
-                            { label: 'Open/Close Ledger', routerLink: '/#' },
+                            { label: 'Open/Close Ledger', routerLink: '/generalledgermodule/generalledgerpage/app-open-close-ledger' },
                             { label: 'Intercompany', routerLink: '/#' },
                             {
                                 label: 'Payment Description', items: [

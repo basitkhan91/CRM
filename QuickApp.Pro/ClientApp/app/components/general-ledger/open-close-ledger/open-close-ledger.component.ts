@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { fadeInOut } from '../../../services/animations';
 import { AccountCalenderService } from '../../../services/account-calender/accountcalender.service';
@@ -8,115 +8,168 @@ import { LegalEntityService } from '../../../services/legalentity.service';
 import { AccountListingService } from '../../../services/account-listing/account-listing.service'
 
 @Component({
-    selector: 'app-accounting-calendar',
-    templateUrl: './accounting-calendar.component.html',
-    styleUrls: ['./accounting-calendar.component.scss'],
+    selector: 'app-open-close-ledger',
+    templateUrl: './open-close-ledger.component.html',    
     animations: [fadeInOut]
 })
-/** AccountingCalendar component*/
-export class AccountingCalendarComponent implements OnInit {
-    /** AccountingCalendar ctor */
+
+export class OpenCloseLedgerComponent implements OnInit {
+
+    currentCalendarObj: any = []
     calendarArray: any[] = [];
-    currentCalendarObj: any = {};
-    selectedPeriod: any;
-    showTable: boolean;
-    showCheckBox: boolean = false;
     showManual: boolean = false;
-    period: number = 1;
-    selectedName: any;
-    display: boolean = false; //prime ng Model
-    showCalendarMonths: boolean;
-    showFiscal: boolean;
-    showDefualt: boolean = true;
-    completeCalendarData: any[] = [];
-    isBoolean: boolean = false;
-    ledgerNameObjectData: any[];
-    ledgerNameObject: any[];
-    public minDate: any;
-    entitiesObj: any[] = [];
-    routeData: any;
-    editedData: any;
-    editedData1: any;
-    editCalendarPage: boolean = false;
-    displayShowButton: boolean = true;
-    pageTitle: String = "Create Accounting Calendar";
+    selectedPeriod: any;
+    period;
+    showCheckBox: boolean;
+    isBoolean: boolean;
+    calendarStatus: any[]
+    ledgerNameObjectData: any;
+    ledgerNameObject: any;
+    showTable: boolean;
+    calendarContentDisabled: boolean = true;
+
 
     constructor(private legalEntityservice: LegalEntityService, private route: ActivatedRoute, private router: Router,
-            private accountListingService: AccountListingService, private calendarService: AccountCalenderService, private authService: AuthService, private alertService:AlertService) {
+        private accountListingService: AccountListingService, private calendarService: AccountCalenderService, private authService: AuthService, private alertService: AlertService) {
         //this.currentCalendarObj.fromDate = new Date('2019-01-01');
     }
-    //add Legal Entity///
+
     ngOnInit() {
-        let date = new Date();
-        let year = date.getFullYear();
-        this.minDate= new Date(year + '-' + '01-01');
-       
-        this.loadCompaniesData();
-        this.currentCalendarObj.fiscalYear = year;
-        this.currentCalendarObj.fromDate = new Date('01-01' + '-' + year );
-        this.currentCalendarObj.toDate= new Date('12-31' + '-' + year );
+        this.selectedPeriod = 12;
+        this.calendarStatus = ['Current', 'Open', 'Future JE', 'Closed', 'Never Opened']
         this.getLedgerObject()
-
-        this.editedData = this.calendarService.editedDetailsObject.subscribe(result => {
-            console.log('result :', result)
-            if (result && Object.keys(result).length) {
-                this.editCalendarPage = true;
-                this.loadEditCalendarData(result);
-            }
-        });
-
-    }
-    
-    loadEditCalendarData(value) {
-        const data = value;
-        this.pageTitle = "Accounting Calendar Edit"
-        this.currentCalendarObj.ledgername = {
-            id: value.name,
-            name: value.name
-        };            
-        this.currentCalendarObj.ledgerdescription = value.description;
-        this.currentCalendarObj.entityId = value.legalEntityId;
-        let year = value.fiscalYear;
-        this.currentCalendarObj.fiscalYear = year;
-        this.currentCalendarObj.fromDate = new Date('01-01' + '-' + year);
-        this.currentCalendarObj.toDate = new Date('12-31' + '-' + year);
-        this.currentCalendarObj.periodType = value.periodName;
-        this.currentCalendarObj.noOfPeriods = value.period;
-        //this.addCalendar()
-        this.showTable = true;
-        this.calendarArray = value['data']
-    }
-
-    setSelectedAttribute(value) {
-        this.selectedPeriod = value;
-    }
-    private loadCompaniesData() {
-        this.legalEntityservice.getEntityList().subscribe(entitydata => {
-            this.entitiesObj = entitydata[0];
-            let entityObj = {}
-            let entityCollection = []
-            if (this.entitiesObj) {
-                const x = this.entitiesObj.filter((o, index) => {
-                    entityObj = {
-                        label: this.entitiesObj[index]['name'],
-                        value: this.entitiesObj[index]['legalEntityId']
-                    }
-                    entityCollection.push(entityObj)
-                })
-            }            
-            this.entitiesObj = entityCollection
-        });
     }
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
+    loadLedgerNames(event) {
+        if (this.ledgerNameObjectData) {
+            this.ledgerNameObject = [...this.ledgerNameObjectData.filter(x => {                
+                return x.name.toLowerCase().includes(event.query.toLowerCase())
+            })]
+        }
+    }
 
-    loaddefualtObj(selectedMonth,bool) {
+    getLedgerObject() {
+        this.accountListingService.getLedgerData().subscribe(
+            datalist => {
+                console.log('getLedgerData :', JSON.stringify(datalist))
+                let obj = {}
+                let collection = []
+                const x = datalist.filter((o, index) => {
+                    if (datalist[index]['ledgerName']) {
+                        obj = {
+                            id: datalist[index]['ledgerName'],
+                            name: datalist[index]['ledgerName']
+                        }
+                        collection.push(obj)
+                    }                    
+                })                
+                this.ledgerNameObjectData = collection
+            })
+    }
 
-        if (selectedMonth == 0 && bool==true) {
-             this.isBoolean = true;
+    showCalendar() {      
+        if (!this.currentCalendarObj.fiscalYear && !this.currentCalendarObj.ledgername) {
+            return;
+        }
+        var year = this.currentCalendarObj.fiscalYear;        
+        this.currentCalendarObj.fromDate = new Date('01-01' + '-' + year);
+        this.currentCalendarObj.toDate = new Date('12-31' + '-' + year);
+        this.calendarArray = [];
+        var date2 = new Date(this.currentCalendarObj.fromDate);
+        var date1 = new Date(this.currentCalendarObj.toDate);
+        var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+        var dayDifference = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        if (dayDifference == 365 || dayDifference == 364) {    
+            this.showTable = true;
+            this.calendarArray = [];
+            var date = new Date(this.currentCalendarObj.fromDate);
+            var month = date.getMonth();
+            if (this.selectedPeriod == 12) {
+                this.period = 1;
+                let setBool;
+                for (let i = 0; i < this.selectedPeriod; i++) {
+                    this.calendarArray.push(this.loaddefualtObj(month, setBool));
+                    month++;
+                    if (month == 12) {
+                        month = 0;
+                        setBool = true;
+                    }
+                }
+
+            }
+            if (this.selectedPeriod == 13) {
+                this.period = 1;
+                let setBool;
+                this.showCheckBox = true;
+                for (let i = 0; i < this.selectedPeriod; i++) {
+                    this.calendarArray.push(this.loaddefualtObj(month, setBool));
+                    month++;
+                    if (month == 12) {
+                        month = 0;
+                        setBool = true;
+                    }
+                }
+            }
+            if (this.selectedPeriod == 16) {
+                this.period = 1;
+                this.showCheckBox = true;
+                let setBool;
+                for (let i = 0; i < this.selectedPeriod; i++) {
+                    if (this.calendarArray.length == 3) {
+                        month = month - 1;
+                    }
+                    if (this.calendarArray.length == 7) {
+                        month = month - 1;
+                    }
+                    if (this.calendarArray.length == 11) {
+                        month = month - 1;
+                    }
+                    this.calendarArray.push(this.loaddefualtObj(month, setBool));
+                    month++;
+                    if (month == 12) {
+                        month = 0;
+                        setBool = true;
+                    }
+
+                }
+            }
+            if (this.selectedPeriod == 'Manual') {
+                this.period = 1;
+                let setBool = false;
+                this.calendarArray.push(this.loaddefualtObj(month, setBool));
+            }           
+        }
+        else {
+            this.alertService.showMessage("Please select valid start date and end date");
+        }        
+        
+    }
+
+    setAdjustingPeriod(selectedObj, selectedIndex) {
+        let index = selectedIndex - 1;
+        selectedObj.toDate = this.calendarArray[index].toDate;
+        selectedObj.fromDate = this.calendarArray[index].toDate;
+        var months = ["Select", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "APJ-PD"];
+        if (selectedObj.isAdjustPeriod == true) {
+            selectedObj.fiscalName = months[13];
+            selectedObj.periodName = selectedObj.fiscalName + ' - ' + this.currentCalendarObj.fiscalYear;
+            this.calendarArray[selectedIndex].isAdjustPeriod = selectedObj.isAdjustPeriod;
+        }
+        else {
+            selectedObj.fiscalName = months[0];
+            selectedObj.periodName = "";
+            this.calendarArray[selectedIndex].isAdjustPeriod = false;
+        }
+
+    }
+
+    loaddefualtObj(selectedMonth, bool) {        
+        if (selectedMonth == 0 && bool == true) {
+            this.isBoolean = true;
         }
         if (this.selectedPeriod == '12' || this.selectedPeriod == '13') {
             this.showManual = false;
@@ -135,6 +188,11 @@ export class AccountingCalendarComponent implements OnInit {
             }
             if (this.calendarArray.length <= 11) {
                 let month = selectedMonth + 1;
+                let status = this.setCalendarStatus(month, this.currentCalendarObj.fiscalYear);
+                if (status != 'Closed') {
+                    this.calendarContentDisabled = false
+                }
+                
                 if (month <= 9) {
                     if (this.isBoolean) {
                         var fiscalYear = Number(this.currentCalendarObj.fiscalYear) + 1;
@@ -156,25 +214,26 @@ export class AccountingCalendarComponent implements OnInit {
                     //var lastday = new Date(year, lastmonth + 1, 0).getDate();
                     //var toDate = new Date(year + '-' + '0' + month + '-' + lastday);
 
-                    var lastday = new Date(year,lastmonth + 1, 0).getDate();
+                    var lastday = new Date(year, lastmonth + 1, 0).getDate();
                     var toDate = new Date('0' + month + '-' + lastday + '-' + year);
 
                 }
                 else {
-                 //   var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + month + '-' + '01');
-                    var fromdate = new Date( month + '-' + '01' + '-' + this.currentCalendarObj.fiscalYear);
+                    let status = this.setCalendarStatus(month, this.currentCalendarObj.fiscalYear);
+                    //   var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + month + '-' + '01');
+                    var fromdate = new Date(month + '-' + '01' + '-' + this.currentCalendarObj.fiscalYear);
                     var date = new Date(fromdate);
                     var year = date.getFullYear();
                     var lastmonth = date.getMonth();
                     //var lastday = new Date(year, lastmonth + 1, 0).getDate();
                     //var toDate = new Date(year + '-' + month + '-' + lastday);
 
-                    var lastday = new Date(year,lastmonth + 1, 0).getDate();
-                    var toDate = new Date( month + '-' + lastday + '-' + year);
+                    var lastday = new Date(year, lastmonth + 1, 0).getDate();
+                    var toDate = new Date(month + '-' + lastday + '-' + year);
                 }
 
                 let defualtCalendarObj = {
-
+                    status: status,
                     fiscalName: months[selectedMonth],
                     fiscalYear: this.currentCalendarObj.fiscalYear,
                     period: this.period,
@@ -194,21 +253,22 @@ export class AccountingCalendarComponent implements OnInit {
             }
             else {
                 let month = selectedMonth + 1;
+                
                 if (month <= 9) {
 
-                 //   var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + '0' + month + '-' + '01');
+                    //   var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + '0' + month + '-' + '01');
                     var fromdate = new Date('0' + month + '-' + '01' + '-' + this.currentCalendarObj.fiscalYear);
                     var date = new Date(fromdate);
                     var year = date.getFullYear();
                     var lastmonth = date.getMonth();
                     //var lastday = new Date(year, lastmonth + 1, 0).getDate();
                     //var toDate = new Date(year + '-' + '0' + month + '-' + lastday);
-                    var lastday = new Date(year,lastmonth + 1, 0).getDate();
+                    var lastday = new Date(year, lastmonth + 1, 0).getDate();
                     var toDate = new Date('0' + month + '-' + lastday + '-' + year);
 
                 }
                 else {
-                   // var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + month + '-' + '01');
+                    // var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + month + '-' + '01');
                     var fromdate = new Date(month + '-' + '01' + '-' + this.currentCalendarObj.fiscalYear);
                     var date = new Date(fromdate);
                     var year = date.getFullYear();
@@ -216,7 +276,7 @@ export class AccountingCalendarComponent implements OnInit {
                     //var lastday = new Date(year, lastmonth + 1, 0).getDate();
                     //var toDate = new Date(year + '-' + month + '-' + lastday);
 
-                    var lastday = new Date(year,lastmonth + 1, 0).getDate();
+                    var lastday = new Date(year, lastmonth + 1, 0).getDate();
                     var toDate = new Date(month + '-' + lastday + '-' + year);
                 }
 
@@ -265,7 +325,7 @@ export class AccountingCalendarComponent implements OnInit {
                 else {
                     var fiscalYear = Number(this.currentCalendarObj.fiscalYear);
                 }
-               // var fromdate = new Date(fiscalYear + '-' + '0' + month + '-' + '01');
+                // var fromdate = new Date(fiscalYear + '-' + '0' + month + '-' + '01');
                 var fromdate = new Date('0' + month + '-' + '01' + '-' + fiscalYear);
                 var date = new Date(fromdate);
                 if (this.isBoolean) {
@@ -278,21 +338,21 @@ export class AccountingCalendarComponent implements OnInit {
                 var lastmonth = date.getMonth();
                 //var lastday = new Date(year, lastmonth + 1, 0).getDate();
                 //var toDate = new Date(year + '-' + '0' + month + '-' + lastday);
-                var lastday = new Date(year,lastmonth + 1, 0).getDate();
+                var lastday = new Date(year, lastmonth + 1, 0).getDate();
                 var toDate = new Date('0' + month + '-' + lastday + '-' + year);
 
 
             }
             else {
-               // var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + month + '-' + '01');
-                var fromdate = new Date( month + '-' + '01' + '-' + this.currentCalendarObj.fiscalYear);
+                // var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + month + '-' + '01');
+                var fromdate = new Date(month + '-' + '01' + '-' + this.currentCalendarObj.fiscalYear);
                 var date = new Date(fromdate);
                 var year = date.getFullYear();
                 var lastmonth = date.getMonth();
                 //var lastday = new Date(year, lastmonth + 1, 0).getDate();
                 //var toDate = new Date(year + '-' + month + '-' + lastday);
 
-                var lastday = new Date(year,lastmonth + 1, 0).getDate();
+                var lastday = new Date(year, lastmonth + 1, 0).getDate();
                 var toDate = new Date(month + '-' + lastday + '-' + year);
             }
 
@@ -373,7 +433,7 @@ export class AccountingCalendarComponent implements OnInit {
                     quater: this.currentCalendarObj.quarter,
                     fromDate: this.calendarArray[14].toDate,
                     toDate: this.calendarArray[14].toDate,
-                    periodName: fiscalName+ ' - ' + this.currentCalendarObj.fiscalYear,
+                    periodName: fiscalName + ' - ' + this.currentCalendarObj.fiscalYear,
                     name: this.currentCalendarObj.ledgername.name,
                     entityId: this.currentCalendarObj.entityId,
                     createdBy: this.userName,
@@ -410,8 +470,8 @@ export class AccountingCalendarComponent implements OnInit {
         else {
 
             this.showManual = true;
-            var months = ["Select","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec","APJ-PD"];
-            var qtr = [1, 2, 3,4,5,6,7,8,9,10,11,12];
+            var months = ["Select", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "APJ-PD"];
+            var qtr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
             let defualtCalendarObj = {
                 fiscalNameData: months,
                 fiscalYear: this.currentCalendarObj.fiscalYear,
@@ -424,131 +484,42 @@ export class AccountingCalendarComponent implements OnInit {
                 entityId: this.currentCalendarObj.entityId,
                 createdBy: this.userName,
                 updatedBy: this.userName,
-                isAdjustPeriod:false,
+                isAdjustPeriod: false,
                 legalEntityId: this.currentCalendarObj.legalEntityId
 
             }
 
             return defualtCalendarObj;
-        }
-
+        }       
     }
-    setAdjustingPeriod(selectedObj,selectedIndex) {
-        let index = selectedIndex-1;
-        selectedObj.toDate = this.calendarArray[index].toDate;
-        selectedObj.fromDate = this.calendarArray[index].toDate;
-        var months = ["Select", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "APJ-PD"];
-        if (selectedObj.isAdjustPeriod == true) {
-            selectedObj.fiscalName = months[13];
-            selectedObj.periodName = selectedObj.fiscalName + ' - ' + this.currentCalendarObj.fiscalYear;
-            this.calendarArray[selectedIndex].isAdjustPeriod = selectedObj.isAdjustPeriod;
-        }
-        else {
-            selectedObj.fiscalName = months[0];
-            selectedObj.periodName = "";
-            this.calendarArray[selectedIndex].isAdjustPeriod = false;
-        }
 
-    }
-    addCalendar() {
-        this.isBoolean = false;
-
-        if (!(this.currentCalendarObj.ledgername && this.currentCalendarObj.fiscalYear && this.currentCalendarObj.fromDate && this.currentCalendarObj.toDate && this.currentCalendarObj.periodType
-            && this.currentCalendarObj.entityId && this.currentCalendarObj.noOfPeriods)) {
-            this.display = true;
-        }
-
-        if (!this.display) {
-            if (this.editCalendarPage) {
-                this.selectedPeriod = this.currentCalendarObj.noOfPeriods
+    setCalendarStatus(month, year) {        
+        var date = new Date();
+        var currentYear = date.getFullYear();
+        var currentMonth = date.getMonth() + 1;
+        
+        if (year == currentYear) {
+            if (currentMonth < month) {
+                return 'Never Opened'
             }
 
-            this.calendarArray = [];
-            var date2 = new Date(this.currentCalendarObj.fromDate);
-            var date1 = new Date(this.currentCalendarObj.toDate);
-            var timeDiff = Math.abs(date2.getTime() - date1.getTime());
-            var dayDifference = Math.ceil(timeDiff / (1000 * 3600 * 24));
-            if (dayDifference == 365 || dayDifference==364) {
-                this.showTable = true;
-                this.calendarArray = [];
-                var date = new Date(this.currentCalendarObj.fromDate);
-                var month = date.getMonth();
-                if (this.selectedPeriod == 12) {
-
-                    this.period = 1;
-                    let setBool;
-                    for (let i = 0; i < this.selectedPeriod; i++) {
-                        this.calendarArray.push(this.loaddefualtObj(month, setBool));
-                        month++;
-                        if (month == 12) {
-                            month = 0;
-                             setBool= true;
-                        }
-                    }
-
-                }
-                if (this.selectedPeriod == 13) {
-                    this.period = 1;
-                    let setBool;
-                    this.showCheckBox = true;
-                    for (let i = 0; i < this.selectedPeriod; i++) {
-                        this.calendarArray.push(this.loaddefualtObj(month, setBool));
-                        month++;
-                        if (month == 12) {
-                            month = 0;
-                            setBool = true;
-                        }
-                    }
-                }
-                if (this.selectedPeriod == 16) {
-                    this.period = 1;
-                    this.showCheckBox = true;
-                    let setBool;
-                    for (let i = 0; i < this.selectedPeriod; i++) {
-                        if (this.calendarArray.length == 3) {
-                            month = month - 1;
-                        }
-                        if (this.calendarArray.length == 7) {
-                            month = month - 1;
-                        }
-                        if (this.calendarArray.length == 11) {
-                            month = month - 1;
-                        }
-                        this.calendarArray.push(this.loaddefualtObj(month, setBool));
-                        month++;
-                        if (month == 12) {
-                            month = 0;
-                            setBool = true;
-                        }
-
-                    }
-                }
-                if (this.selectedPeriod == 'Manual') {
-                    this.period = 1;
-                    let setBool = false;
-                    this.calendarArray.push(this.loaddefualtObj(month,setBool));
-                }
+            if (currentMonth == month) {
+                return 'Current'
             }
-            else {
-                this.alertService.showMessage("Please select valid start date and end date");
+
+            if (currentMonth > month) {
+                return 'Closed'
             }
         }
-        else {
+        if (year < currentYear) {
+            return 'Closed'
+        }
 
+        if (year > currentYear) {
+            return 'Future JE'
         }
     }
-    deleteRow(index) {
-        this.calendarArray.splice(index, 1);
-    }
-    setMonthDate() {
 
-        if (!isNaN(new Date('01-01' + '-' + this.currentCalendarObj.fiscalYear).getTime())
-            && typeof (this.currentCalendarObj.fiscalYear) != 'undefined' && this.currentCalendarObj.fiscalYear) {
-            this.currentCalendarObj.fromDate = new Date('01-01' + '-' + this.currentCalendarObj.fiscalYear);
-        //this.currentCalendarObj.toDate = "";
-        this.currentCalendarObj.toDate = new Date('12-31' + '-' + this.currentCalendarObj.fiscalYear);
-        };
-    }
     saveCalendar() {
 
         let date = new Date(this.currentCalendarObj.fromDate);
@@ -556,7 +527,7 @@ export class AccountingCalendarComponent implements OnInit {
         let addDetails = false;
         let showDiff = true;
         var name;
-        this.loadCompaniesData();
+        //this.loadCompaniesData();
         if (this.calendarArray && this.calendarArray.length > 0) {
             let index = 0;
 
@@ -586,145 +557,5 @@ export class AccountingCalendarComponent implements OnInit {
                 name = this.calendarArray[i].name;
             }
         }
-        if (showDiff) {
-            if (this.completeCalendarData.length > 0) {
-                for (let i = 0; i < this.completeCalendarData.length; i++) {
-                    if (year == this.completeCalendarData[i].fiscalYear && name == this.completeCalendarData[i].name) {
-                        addDetails = true;
-                        this.alertService.showMessage("Calendar Year already Exists!");
-                        break;
-
-                    }
-
-                }
-                if (!addDetails) {
-                    this.calendarService.add(this.calendarArray).subscribe(data => {
-                        this.alertService.showMessage("Success", 'Calendar data added successfully.', MessageSeverity.success);                       
-                        this.router.navigateByUrl('/generalledgermodule/generalledgerpage/app-account-listing-calendar');
-                    })
-                }
-            }
-            else {
-                
-                this.calendarService.add(this.calendarArray).subscribe(data => {
-                    this.alertService.showMessage("Success", 'Calendar data added successfully.', MessageSeverity.success);
-                    this.router.navigateByUrl('/generalledgermodule/generalledgerpage/app-account-listing-calendar');
-                })
-            }
-        }
-
-    }
-    addPeriodName(obj, selectedName) {
-        let selectedMonth;
-        var months = ["Select","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        for (let i = 0; i < months.length; i++){
-            if (selectedName == months[i]) {
-                selectedMonth = i;
-            }
-        }
-        let month = selectedMonth;
-        if (month <= 9) {
-
-            var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + '0' + month + '-' + '01');
-            var date = new Date(fromdate);
-            var year = date.getFullYear();
-            var lastmonth = date.getMonth();
-            var lastday = new Date(year, lastmonth + 1, 0).getDate();
-            var toDate = new Date(year + '-' + '0' + month + '-' + lastday);
-            obj.fromDate = fromdate;
-            obj.toDate = toDate;
-
-        }
-        else {
-            var fromdate = new Date(this.currentCalendarObj.fiscalYear + '-' + month + '-' + '01');
-            var date = new Date(fromdate);
-            var year = date.getFullYear();
-            var lastmonth = date.getMonth();
-            var lastday = new Date(year, lastmonth + 1, 0).getDate();
-            var toDate = new Date(year + '-' + month + '-' + lastday);
-            obj.fromDate = fromdate;
-            obj.toDate = toDate;
-        }
-        obj["periodName"] = selectedName + ' - ' + obj.fiscalYear
-    }
-    setDate(obj,index) {
-
-        let nextIndex = index + 1;
-        let yourDate = new Date(obj.toDate.getTime() + (1000 * 60 * 60 * 24));
-        if (this.calendarArray[nextIndex] && obj.adjusting != 'yes') {
-            if (this.calendarArray[nextIndex].adjusting == 'yes') {
-                this.calendarArray[nextIndex].fromDate = obj.toDate;
-                this.calendarArray[nextIndex].toDate = obj.toDate;
-            } else {
-                this.calendarArray[nextIndex].fromDate = new Date(yourDate);
-                //this.calendarArray[nextIndex].toDate = new Date(yourDate);
-            }
-
-        }
-
-
-
-    }
-    addPeriod() {
-        //debugger;
-        if (this.calendarArray && this.calendarArray.length > 0) {
-
-        }
-        this.period++;
-        this.calendarArray.push(this.loaddefualtObj(this.selectedPeriod,false));
-    }
-    showNumofPeriods(event) {
-       // debugger;
-        if (event == 'Calendar Months') {
-            this.showFiscal = false;
-            this.showCalendarMonths = true;
-            this.showDefualt = false;
-        }
-        else if (event == 'Fiscal Month') {
-            this.showCalendarMonths = false;
-            this.showFiscal = true;
-            this.showDefualt = false;
-        }
-        else if (event == 'Select') {
-            this.showDefualt = true;
-            this.showCalendarMonths = false;
-            this.showFiscal = false;
-        }
-    }
-
-    getLedgerObject(){
-         this.accountListingService.getLedgerData().subscribe(
-            datalist=> {
-                console.log('getLedgerData :', JSON.stringify(datalist))
-                 let obj = {}
-                 let collection = []
-                const x = datalist.filter((o, index) => {
-                    if (datalist[index]['ledgerName']) {
-                        obj = {
-                            id: datalist[index]['ledgerName'],
-                            name: datalist[index]['ledgerName']
-                        }
-                        collection.push(obj)
-                    }                  
-                })
-            this.ledgerNameObjectData = collection
-            })
-    }
-
-    loadLedgerNames(event){
-        if(this.ledgerNameObjectData){
-            this.ledgerNameObject = [...this.ledgerNameObjectData.filter(x => {
-                return x.name.toLowerCase().includes(event.query.toLowerCase())
-            })]
-        }
-    }
-    isEmptyOrSpaces(str) {
-        return !str || str.trim() === '';
-    }
-
-    ngOnDestroy() {
-       // this.routeData.unsubscribe();
-        this.editedData.unsubscribe();
-        this.calendarService.emitCalendarDetails([]);
     }
 }

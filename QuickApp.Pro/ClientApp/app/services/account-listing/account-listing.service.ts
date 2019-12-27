@@ -20,7 +20,8 @@ export class AccountListingService extends EndpointFactory {
    private readonly getGlAccountUrl: string = "/api/GlAccount/getAllGLAccount";
    //private readonly getGlAccountByIdUrl: string = "/api/nodesetup/getById";
    private readonly getGlAccountByIdUrl: string = "/api/GlAccount/getById";
-   private readonly getLedgerNamesUrl: string = "/api/nodesetup/getAll";
+   //private readonly getLedgerNamesUrl: string = "/api/nodesetup/getAll";
+   private readonly getLedgerNamesUrl: string = "/api/ManagementStrcture/LedgerNames";
    private readonly getLeafNodeUrl: string = "/api/nodesetup/getAllLeafNode";
 
    get createGlAccountUri() { return this.configurations.baseUrl + this.createGlAccountUrl; }
