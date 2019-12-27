@@ -97,6 +97,14 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
             this.row.taskId = this.workFlow.taskId;
         }
 
+        if(this.isQuote && this.editData.length > 0){
+            this.workFlow.materialList = this.editData;
+        }
+        else if(this.isQuote){
+            this.workFlow.materialList = [];
+            this.addRow();
+        }
+
 
 
 
@@ -382,11 +390,23 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
     }
 
     saveMaterialsWorkOrder() {
-        this.saveMaterialListForWO.emit(this.workFlow)
+        this.saveMaterialListForWO.emit(this.workFlow);
+        this.workFlow.materialList = [];
+        this.addRow();
+        this.workFlow.materialQtySummation = 0;
+        this.workFlow.materialExtendedCostSummation = 0;
+        this.workFlow.totalMaterialCost = 0;
+        this.workFlow.materialExtendedPriceSummation = 0;
     }
 
     updateMaterialsWorkOrder() {
         this.updateMaterialListForWO.emit(this.workFlow);
+        this.workFlow.materialList = [];
+        this.addRow();
+        this.workFlow.materialQtySummation = 0;
+        this.workFlow.materialExtendedCostSummation = 0;
+        this.workFlow.totalMaterialCost = 0;
+        this.workFlow.materialExtendedPriceSummation = 0;
     }
 
     markupChanged(matData){

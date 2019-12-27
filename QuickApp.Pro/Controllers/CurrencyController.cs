@@ -292,5 +292,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(dynamicGridData);
         }
         #endregion
+
+
+        [HttpPost("uploaduomcustomdata")]
+        public IActionResult CurrencyCustomData()
+        {
+            var result = _unitOfWork.Currencys.UploadCurrencyCustomData(Request.Form.Files[0]);
+            return Ok(result);
+        }
     }
 }

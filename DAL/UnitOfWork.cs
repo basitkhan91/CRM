@@ -449,7 +449,7 @@ namespace DAL
             get
             {
                 if (_currencyRepository == null)
-                    _currencyRepository = new CurrencyRepository(_context);
+                    _currencyRepository = new CurrencyRepository(_context, _appSettings);
                 return _currencyRepository;
             }
         }

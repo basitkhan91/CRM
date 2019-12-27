@@ -27,6 +27,7 @@ import { AppTranslationService } from '../../../../services/app-translation.serv
 import $ from "jquery";
 import { CommonService } from '../../../../services/common.service';
 import { getValueFromArrayOfObjectById } from '../../../../generic/autocomplete';
+import { ConfigurationService } from '../../../../services/configuration.service';
 
 
 
@@ -74,6 +75,8 @@ export class EmployeesListComponent implements OnInit {
     auditHistory: any=[];
     getAllFrequencyTrainingInfodrpData;
     frequencyOfTrainingData:any;
+    allEmployeeTrainingDocumentsList: any = [];
+    
 
     ngOnInit(): void {
 
@@ -99,7 +102,7 @@ export class EmployeesListComponent implements OnInit {
     cols: any[];
     modal: NgbModalRef;
     /** employees-list ctor */
-    constructor(private modalService: NgbModal, private translationService: AppTranslationService, private empService: EmployeeService, private router: Router, private authService: AuthService, private alertService: AlertService, public commonService: CommonService) {
+    constructor(private modalService: NgbModal, private translationService: AppTranslationService, private empService: EmployeeService, private router: Router, private authService: AuthService, private alertService: AlertService, public commonService: CommonService,private configurations: ConfigurationService) {
         this.dataSource = new MatTableDataSource();
         this.translationService.closeCmpny = false;
         this.activeIndex = 0;
@@ -299,6 +302,7 @@ export class EmployeesListComponent implements OnInit {
     }
     openView(content, row) {
 
+        this.toGetEmployeeTrainingDocumentsList(row.employeeId);
 
         if (row.managmentLegalEntity != null && row.divmanagmentLegalEntity != null && row.biumanagmentLegalEntity != null && row.compmanagmentLegalEntity != null) {
             this.departname = row.managementStructeInfo.name;
@@ -477,6 +481,18 @@ export class EmployeesListComponent implements OnInit {
             this.getAllFrequencyTrainingInfodrpData = res;
             
         });        
+    }
+
+    toGetEmployeeTrainingDocumentsList(employeeId)
+	{       
+        var moduleId=4;
+        this.commonService.GetDocumentsList(employeeId,moduleId).subscribe(res => {
+			this.allEmployeeTrainingDocumentsList = res;			
+		})
+    }
+    downloadFileUpload(rowData) {	
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
+		window.location.assign(url);       
     }
 
 

@@ -102,7 +102,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
         </div>
     </div>
 
-    <div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog" data-backdrop="static">
+    <div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -124,7 +124,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
         </div>
     </div>
 
-    <div #addCreditTerm id="addCreditTerm" class="modal fade" role="dialog" data-backdrop="static">
+    <div #addCreditTerm id="addCreditTerm" class="modal fade" role="dialog"data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -233,7 +233,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
         </div>
     </div>
 
-    <div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static">
+    <div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -316,7 +316,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     </div>
 
 
-    <div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static">
+    <div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-lg">
 
             <!-- Modal content-->
@@ -375,7 +375,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     </div>
 
 
-    <ng-template #helpText class="modal fade" id="help-popup" role="dialog" data-backdrop="static">
+    <ng-template #helpText class="modal fade" id="help-popup" role="dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>

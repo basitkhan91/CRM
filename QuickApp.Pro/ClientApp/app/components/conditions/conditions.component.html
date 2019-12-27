@@ -94,7 +94,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
         </div>
     </div>
 
-    <div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog" data-backdrop="static">
+    <div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -116,7 +116,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
         </div>
     </div>
 
-    <div #addCondition id="addCondition" class="modal fade" role="dialog" data-backdrop="static">
+    <div #addCondition id="addCondition" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -141,12 +141,13 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                                     [(ngModel)]="addNewCondition.description"
                                                     [suggestions]="conditionList"
                                                     (onSelect)="selectedCondition($event)"
+                                                    (onBlur)="onBlur($event)"
                                                     (completeMethod)="filterConditions($event)"
                                                     (onKeyUp)="checkConditionExists('description', $event.target.value)"
                                                     name="description" [size]="30" [minLength]="1" [dropdown]="true"
                                                     class="p-autoComplete-ctsm" required>
                                     </p-autoComplete>
-                                    <div *ngIf="disableSaveForCondition" style="color:red">Already exist</div>
+                                    <div *ngIf="disableSaveForConditionMsg" style="color:red">Already exist</div>
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -173,7 +174,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                             <div class="clear"></div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="!userForm.valid || disableSaveForCondition" (click)="saveCondition();">Save</button>
+                            <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="!userForm.valid || disableSaveForCondition" (click)="saveCondition();"> {{isEditMode ? 'Update' : 'Save' }}</button>
                             <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetConditionForm()">Close</button>
                         </div>
                     </form>
@@ -184,7 +185,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
         </div>
     </div>
 
-    <div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static">
+    <div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -249,7 +250,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     </div>
 
 
-    <div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static">
+    <div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-lg">
 
             <!-- Modal content-->
@@ -302,7 +303,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     </div>
 
 
-    <ng-template #helpText class="modal fade" id="help-popup" role="dialog" data-backdrop="static">
+    <ng-template #helpText class="modal fade" id="help-popup" role="dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
