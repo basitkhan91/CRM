@@ -237,6 +237,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     filteredBrands: any[];
     localCollection: any[] = [];
     sourceItemMaster: any = {};
+    PDropdownDirectives: any = []
     isEnabeCapes: boolean = false;
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
@@ -410,7 +411,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         this.CurrencyData();
-
+        this.sourceItemMaster = {
+            partNumber: "",
+            partDescription: ""
+        }
+        this.PDropdownDirectives = ["partNumber", "partDescription"];
         //Adding Below Code for By Default Date Should be current Date while Creation
         this.sourceItemMaster.salesLastSalePriceDate = new Date();
         this.sourceItemMaster.salesLastSalesDiscountPercentDate = new Date();
@@ -4679,7 +4684,14 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     saveItemMasterGeneralInformation(addCustomerWorkForm) {
         let errors;
         this.listOfErrors = [];
-        if(addCustomerWorkForm.status === "INVALID"){
+        
+        let emptyFields = []
+        for (let key of Object.keys(this.sourceItemMaster)) {
+            if(this.PDropdownDirectives.includes(key) &&this.sourceItemMaster[key] == ""){
+            emptyFields.push(key)
+            }  
+        }
+        if(addCustomerWorkForm.status === "INVALID" || emptyFields.length > 0){
             Object.keys(addCustomerWorkForm.controls).map(key => {
                 errors = addCustomerWorkForm.controls[key].errors;
                if (errors === null) { return null; }            
@@ -4689,12 +4701,18 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                      titlevalue = document.getElementById(key).getAttribute('title');
                  }
                    this.listOfErrors.push(`${titlevalue} is required`); //test
-                 // return 
                } else {
                this.listOfErrors.push(`${key} has an unknown error`);
-                 // return `${key} has an unknown error`;
                }
              });
+
+             for(let k = 0; k<emptyFields.length; k++){
+                let titlevalue = emptyFields[k];
+                if(document.getElementById(emptyFields[k])){
+                    titlevalue = document.getElementById(emptyFields[k]).getAttribute('title');
+                } 
+                this.listOfErrors.push(`${titlevalue} is required`); 
+             }
             this.display = true;
             this.modelValue = true;
              return false
