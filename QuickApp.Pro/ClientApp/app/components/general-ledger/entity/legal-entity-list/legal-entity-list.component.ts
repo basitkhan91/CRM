@@ -243,7 +243,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
         this.sourceLegalEntity.isBalancingEntity = true;
 		this.sourceLegalEntity.isActive = true;
 		this.entityName = "";
-		this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static' });
+		this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -291,7 +291,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 		this.sourceAction = new Currency();
 		this.sourceAction.isActive = true;
 		this.currencyName = "";
-		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static' });
+		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 
 
@@ -384,7 +384,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 		this.sourceLegalEntity = row;
 		this.sourceLegalEntity.createdDate = new Date(row.createdDate);
 		this.sourceLegalEntity.modifiedDate = new Date(row.updatedDate);
-		this.modal1 = this.modalService.open(content, { size: 'lg', backdrop: 'static' });
+		this.modal1 = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
 		this.modal1.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -397,7 +397,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 
 		this.isSaving = true;
 		this.sourceLegalEntity.parentId = row.legalEntityId;
-		this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static' });
+		this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -406,7 +406,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 		this.sourceLegalEntity = row;
 		this.isEditMode = false;
 		this.isDeleteMode = true;
-		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static' });
+		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -490,7 +490,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
         this.entityViewFeilds.achBankAccountNumber = row.achBankAccountNumber;
         this.entityViewFeilds.achABANumber = row.achABANumber;
         this.entityViewFeilds.achSWIFTID = row.achSWIFTID;
-        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
