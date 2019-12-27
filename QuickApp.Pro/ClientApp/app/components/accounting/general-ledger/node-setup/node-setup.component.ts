@@ -56,7 +56,6 @@ export class NodeSetupComponent implements OnInit {
         description: "",
         selectedCompanysData: "",
         parentNodeId: "",
-        parentNode: "",
         leafNodeCheck: "",
         glAccountNodeType: "",
         fsType: "",
@@ -73,7 +72,6 @@ export class NodeSetupComponent implements OnInit {
 
 
     nodeSetupViewData: any;
-    parentNode: string;
     parentCodeCollection: any[];
     maincompanylist: any[] = [];
     allManagemtninfoData: any[];
@@ -501,7 +499,6 @@ export class NodeSetupComponent implements OnInit {
     }
 
     open(content) {
-        this.parentNode = '';
         this.updateMode = false;
         this.isDeleteMode = false;
         this.currentNodeSetup = new GLAccountNodeSetup();
@@ -611,7 +608,6 @@ export class NodeSetupComponent implements OnInit {
 
             for (let i = 0; i < this.parentNodeList.length; i++) {
                 if (event == this.parentNodeList[i].nodeCode) {
-                    this.parentNode = this.parentNodeList[i].nodeCode;
                     this.currentNodeSetup.parentNodeId = this.parentNodeList[i].glAccountNodeId;
                     this.addNew.parentNodeId = this.parentNodeList[i].glAccountNodeId
                     // this.disablesave = true;
