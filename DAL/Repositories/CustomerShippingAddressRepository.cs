@@ -147,11 +147,13 @@ namespace DAL.Repositories
                             c.CustomerShippingAddressId,
                             c.CreatedDate,
                             c.UpdatedDate,
+                            c.CreatedBy,
+                            c.UpdatedBy,
                             c.CustomerId,
                             c.IsActive,
                             c.IsPrimary,
                             Country = co.countries_name
-                        }).OrderBy(c => c.AuditCustomerShippingAddressId).ToList();
+                        }).OrderByDescending(c => c.AuditCustomerShippingAddressId).ToList();
             return data;
         }
 
