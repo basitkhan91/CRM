@@ -241,7 +241,7 @@ namespace DAL.Repositories
                 {
                     statusId = 3;
                 }
-                
+
                 else if (closed.Contains(woFilters.filters.WorkOrderStatus.ToLower()))
                 {
                     statusId = 2;
@@ -305,12 +305,17 @@ namespace DAL.Repositories
                                 wo.WorkOrderId,
                                 wo.WorkOrderNum,
                                 wo.OpenDate,
-								CustomerName  = cust.Name,
+                                CustomerName = cust.Name,
                                 cust.CustomerCode,
                                 WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Internal" : (wo.WorkOrderTypeId == 3 ? "Tear Down" : "Shop Services")),
                                 wo.IsActive,
                                 wo.CreatedDate,
                                 WorkOrderStatus = wost.Description,
+                                PartNos = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.ItemMaster,
+                                wp=>wp.MasterPartId,
+                                im=>im.ItemMasterId,
+                                (wp,im)=>new {wp,im}).Where(p=>p.wp.WorkOrderId==wo.WorkOrderId)
+                                .Select(p=>p.im.PartNumber)),
                                 TotalRecords = totalRecords
                             }
                           ).Distinct()
@@ -425,7 +430,7 @@ namespace DAL.Repositories
                                     wo.WorkOrderId,
                                     wo.WorkOrderNum,
                                     wo.OpenDate,
-									CustomerName = cust.Name,
+                                    CustomerName = cust.Name,
                                     cust.CustomerCode,
                                     WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Internal" : (wo.WorkOrderTypeId == 3 ? "Tear Down" : "Shop Services")),
                                     wo.IsActive,
@@ -1852,7 +1857,7 @@ namespace DAL.Repositories
                                                    we.CreatedBy,
                                                    we.CreatedDate,
                                                    Epn = im == null ? "" : im.PartNumber,
-                                                   EpnDescription = im==null?"": im.PartDescription,
+                                                   EpnDescription = im == null ? "" : im.PartDescription,
                                                    we.EstimtPercentOccurranceId,
                                                    ExstimtPercentOccurance = eo.Name == null ? "" : eo.Name,
                                                    we.ExtendedCost,
@@ -1862,7 +1867,7 @@ namespace DAL.Repositories
                                                    we.IsFromWorkFlow,
                                                    we.ItemMasterId,
                                                    we.MarkUpPercentageId,
-                                                   MarkUpPercentage = mp==null?0: mp.PercentValue,
+                                                   MarkUpPercentage = mp == null ? 0 : mp.PercentValue,
                                                    we.MasterCompanyId,
                                                    we.Memo,
                                                    we.Quantity,
@@ -2233,9 +2238,9 @@ namespace DAL.Repositories
                                 wom.TaskId,
                                 PartStatusId = wom.PartStatusId == null ? 0 : wom.PartStatusId,
                                 wom.ExtendedCost,
-                                Manufacturer=man.Name,
+                                Manufacturer = man.Name,
                                 im.ManufacturerId,
-                                OemDer= im.PMA == true && im.DER == true ? "PMA&DER" : (im.PMA == true && im.DER == false ? "PMA" : (im.PMA == false && im.DER == true ? "DER" : "")),
+                                OemDer = im.PMA == true && im.DER == true ? "PMA&DER" : (im.PMA == true && im.DER == false ? "PMA" : (im.PMA == false && im.DER == true ? "DER" : "")),
 
                             }
                           ).Distinct()
@@ -2940,9 +2945,9 @@ namespace DAL.Repositories
                                           wq.Warnings,
                                           wq.Memo,
                                           wq.AccountsReceivableBalance,
-                                          BuildMethodId= qd== null?0:qd.BuildMethodId,
-                                          SelectedId=qd == null ? 0 : qd.SelectedId,
-                                          ReferenceNo=qd == null ? "" : qd.ReferenceNo,
+                                          BuildMethodId = qd == null ? 0 : qd.BuildMethodId,
+                                          SelectedId = qd == null ? 0 : qd.SelectedId,
+                                          ReferenceNo = qd == null ? "" : qd.ReferenceNo,
 
                                       }).FirstOrDefault();
                 return workOrderQuote;
