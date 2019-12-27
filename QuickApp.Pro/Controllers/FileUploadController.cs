@@ -134,5 +134,20 @@ namespace QuickApp.Pro.Controllers
             return Ok();
 
         }
+
+        [HttpGet("getFileDocumentDetail/{id}")]
+        public IActionResult GetDocumentDetail(long id, int moduleId)
+        {
+            var allvendorsGenralDocs = _unitOfWork.FileUploadRepository.GetDocumentDetailById(id, moduleId);
+            return Ok(allvendorsGenralDocs);
+        }
+
+        [HttpDelete("AttachmentDelete/{id}")]
+        public IActionResult GetDocumentDelete(long id, string updatedBy)
+        {
+            var deleteStatus = _unitOfWork.FileUploadRepository.GetDocumentDelete(id, updatedBy);
+            return Ok(deleteStatus);
+        }
+
     }
 }

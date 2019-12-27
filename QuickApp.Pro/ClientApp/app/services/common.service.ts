@@ -92,4 +92,12 @@ export class CommonService {
         return this.http.get<any>(`${this.baseUrl}/api/Common/getrestrictedpartswithdesc?moduleId=${moduleId}&referenceId=${referenceId}&partType=${partType}`)
     }
 
+    GetDocumentsList(referenceId, moduleId) {
+        return this.http.get<any>(`${this.baseUrl}/api/FileUpload/getFileDocumentDetail/${referenceId}?moduleId=${moduleId}`, this.authService.getRequestHeaders())
+    }
+
+    GetAttachmentDeleteById(attachmentDetailId, updatedBy) {
+        return this.http.delete(`${this.baseUrl}/api/FileUpload/AttachmentDelete/${attachmentDetailId}?updatedBy=${updatedBy}`, this.authService.getRequestHeaders())
+    }
+
 }
