@@ -33,6 +33,7 @@ export class DisposalTypeComponent implements OnInit {
     private isEditMode: boolean = false;
     modal: NgbModalRef;
     public sourceAction: DisposalType;
+    selectedRow: any;
     display: boolean = false;
     modelValue: boolean = false;
     allComapnies: MasterCompany[] = [];
@@ -66,6 +67,8 @@ export class DisposalTypeComponent implements OnInit {
     pageIndex: number = 0;
     pageSize: number = 10;
     totalPages: number;
+    recordExists: boolean = false;
+    selAssetDisposalTypeId: any;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -185,20 +188,35 @@ export class DisposalTypeComponent implements OnInit {
     eventHandler(event) {
         let value = event.target.value.toLowerCase()
         if (this.selectedreason) {
-            if (value == this.selectedreason.toLowerCase()) {
+            console.log(191);
+            if (value == this.selectedreason.toLowerCase() &&
+                (this.isEditMode && this.selAssetDisposalTypeId != this.selectedRow.assetDisposalTypeId || !this.isEditMode)
+            ) {
                 this.disableSave = true;
+                this.recordExists = true;
             }
             else {
                 this.disableSave = false;
+                this.recordExists = false;
             }
         }
     }
 
     partnmId(event) {
+        //console.log(event.target.value)
         for (let i = 0; i < this.allreasn.length; i++) {
             if (event == this.allreasn[i][0].codeName) {
-                this.disableSave = true;
+                this.selAssetDisposalTypeId = this.allreasn[i][0].assetDisposalTypeId;
+                if ((this.isEditMode && this.selAssetDisposalTypeId != this.selectedRow.assetDisposalTypeId || !this.isEditMode)) {
+                    this.disableSave = true;
+                    this.recordExists = true;
+                }
+                else {
+                    this.disableSave = false;
+                    this.recordExists = false;
+                }
                 this.selectedreason = event;
+                console.log(this.allreasn[i][0]);
             }
         }
     }
@@ -237,6 +255,7 @@ export class DisposalTypeComponent implements OnInit {
         this.isEditMode = false;
         this.disableSave = false;
         this.isSaving = true;
+        this.recordExists = false;
         this.loadMasterCompanies();
         this.sourceAction = new DisposalType();
         this.sourceAction.isActive = true;
@@ -251,10 +270,12 @@ export class DisposalTypeComponent implements OnInit {
     openEdit(content, row) {
        
         this.isEditMode = true;
-        this.disableSave = false;
+        this.disableSave = true;
+        this.recordExists = false;
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourceAction = row;
+        this.selectedRow = row;
         
         this.codeName = row.code;
         this.loadMasterCompanies();
@@ -458,6 +479,23 @@ export class DisposalTypeComponent implements OnInit {
     getDispTypeList() {
 
         this.loadData();
+    }
+
+    onBlurCheck(event, type, field) {
+        console.log(event.target.value);
+        if (this.isEditMode) {
+            if (this.selectedRow[field] == event.value) {
+                this.disableSave = true;
+            }
+            else {
+                this.disableSave = false;
+            }
+        }
+    }
+
+    enableSave() {
+        console.log('on change triggered');
+        this.disableSave = false;
     }
 
 }
