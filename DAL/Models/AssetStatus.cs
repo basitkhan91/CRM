@@ -19,6 +19,6 @@ namespace DAL.Models
         public string Memo { get; set; }
         public Int32? MasterCompanyId { get; set; }
         public bool? IsActive { get; set; }
-        public bool? IsDeleted { get; set; }
+        public bool? IsDelete { get; set; }
     }
 }

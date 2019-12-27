@@ -747,7 +747,7 @@ namespace DAL.Repositories
             foreach (var item in assetStatusList)
             {
 
-                var flag = _appContext.AssetStatus.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.Code)
+                var flag = _appContext.AssetStatus.Any(p => p.IsDelete == false && !string.IsNullOrEmpty(p.Code)
                 && !string.IsNullOrEmpty(p.Code) &&
                 p.Code.ToLower() == item.Code.Trim().ToLower());
                 if (!flag)
