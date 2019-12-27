@@ -506,7 +506,7 @@ export class NodeSetupComponent implements OnInit {
         this.isDeleteMode = false;
         this.currentNodeSetup = new GLAccountNodeSetup();
         this.currentNodeSetup.isActive = true;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -636,7 +636,7 @@ export class NodeSetupComponent implements OnInit {
     showViewData(viewContent, node) {
         this.nodeSetupService.getById(node.glAccountNodeId).subscribe(data => {
             this.nodeSetupViewData = data[0][0];
-            this.modal = this.modalService.open(viewContent, { size: 'lg' });
+            this.modal = this.modalService.open(viewContent, { size: 'lg', backdrop: 'static', keyboard: false });
         })
 
     }
