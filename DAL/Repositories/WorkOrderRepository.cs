@@ -3055,11 +3055,11 @@ namespace DAL.Repositories
 				var workOrderExclusionsList = (from we in _appContext.WorkOrderQuoteExclusions
 											   join wq in _appContext.WorkOrderQuoteDetails on we.WorkOrderQuoteDetailsId equals wq.WorkOrderQuoteDetailsId
 											   join im in _appContext.ItemMaster on we.ItemMasterId equals im.ItemMasterId
-											   join eo in _appContext.ExclusionEstimatedOccurances on we.ExstimtPercentOccuranceId equals eo.Id into weeo
-											   from eo in weeo.DefaultIfEmpty()
-											   join mp in _appContext.Percent on we.MarkUpPercentageId equals mp.PercentId into wemp
-											   from mp in wemp.DefaultIfEmpty()
-											   where we.IsDeleted == false && wq.WorkOrderQuoteId == WorkOrderQuoteId
+                                               join eo in _appContext.ExclusionEstimatedOccurances on we.ExstimtPercentOccuranceId equals eo.Id into weeo
+                                               from eo in weeo.DefaultIfEmpty()
+                                               join mp in _appContext.Percent on we.MarkUpPercentageId equals mp.PercentId into wemp
+                                               from mp in wemp.DefaultIfEmpty()
+                                               where we.IsDeleted == false && wq.WorkOrderQuoteId == WorkOrderQuoteId
 											   select new
 											   {
 												   we.CostPlusAmount,
@@ -3075,7 +3075,7 @@ namespace DAL.Repositories
 												   we.IsDeleted,
 												   we.ItemMasterId,
 												   we.MarkUpPercentageId,
-												   MarkUpPercentage = mp.PercentValue,
+												   MarkUpPercentage= mp==null?0: mp.PercentValue,
 												   we.MasterCompanyId,
 												   we.Memo,
 												   we.Quantity,
