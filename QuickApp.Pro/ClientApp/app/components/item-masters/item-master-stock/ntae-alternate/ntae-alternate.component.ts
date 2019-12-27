@@ -3,58 +3,56 @@ import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'
 import { DOCUMENT } from '@angular/common';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
-import { MasterCompany } from '../../../models/mastercompany.model';
-import { AuditHistory } from '../../../models/audithistory.model';
-import { AuthService } from '../../../services/auth.service';
-import { MessageSeverity, AlertService } from '../../../services/alert.service';
-import { ItemMasterService } from '../../../services/itemMaster.service';
-import { MasterComapnyService } from '../../../services/mastercompany.service';
+import { MasterCompany } from '../../../../models/mastercompany.model';
+import { AuditHistory } from '../../../../models/audithistory.model';
+import { AuthService } from '../../../../services/auth.service';
+import { MessageSeverity, AlertService } from '../../../../services/alert.service';
+import { ItemMasterService } from '../../../../services/itemMaster.service';
+import { MasterComapnyService } from '../../../../services/mastercompany.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Integration } from '../../../models/integration.model';
-import { IntegrationService } from '../../../services/integration-service';
-import { ItemClassificationService } from '../../../services/item-classfication.service';
-import { ItemClassificationModel } from '../../../models/item-classification.model';
+import { Integration } from '../../../../models/integration.model';
+import { IntegrationService } from '../../../../services/integration-service';
+import { ItemClassificationService } from '../../../../services/item-classfication.service';
+import { ItemClassificationModel } from '../../../../models/item-classification.model';
 import { OnInit, AfterViewInit, Component, ViewChild, ChangeDetectorRef, Inject } from '@angular/core';
-import { Itemgroup } from '../../../models/item-group.model';
-import { ItemGroupService } from '../../../services/item-group.service';
-import { Provision } from '../../../models/provision.model';
-import { ProvisionService } from '../../../services/provision.service';
-import { ATAMain } from '../../../models/atamain.model';
-import { AtaMainService } from '../../../services/atamain.service';
-import { Priority } from '../../../models/priority.model';
-import { PriorityService } from '../../../services/priority.service';
-import { Currency } from '../../../models/currency.model';
-import { CurrencyService } from '../../../services/currency.service';
-import { UnitOfMeasureService } from '../../../services/unitofmeasure.service';
-import { UnitOfMeasure } from '../../../models/unitofmeasure.model';
-import { LegalEntityService } from '../../../services/legalentity.service';
-import { ATAChapter } from '../../../models/atachapter.model';
+import { Itemgroup } from '../../../../models/item-group.model';
+import { ItemGroupService } from '../../../../services/item-group.service';
+import { Provision } from '../../../../models/provision.model';
+import { ProvisionService } from '../../../../services/provision.service';
+import { ATAMain } from '../../../../models/atamain.model';
+import { AtaMainService } from '../../../../services/atamain.service';
+import { Priority } from '../../../../models/priority.model';
+import { PriorityService } from '../../../../services/priority.service';
+import { Currency } from '../../../../models/currency.model';
+import { CurrencyService } from '../../../../services/currency.service';
+import { UnitOfMeasureService } from '../../../../services/unitofmeasure.service';
+import { UnitOfMeasure } from '../../../../models/unitofmeasure.model';
+import { LegalEntityService } from '../../../../services/legalentity.service';
+import { ATAChapter } from '../../../../models/atachapter.model';
 import { FormArray } from '@angular/forms';
-import { ItemMasterCapabilitiesModel } from '../../../models/itemMasterCapabilities.model';
-import { GlAccountService } from '../../../services/glAccount/glAccount.service';
-import { GlAccount } from '../../../models/GlAccount.model';
-import { VendorService } from '../../../services/vendor.service';
+import { ItemMasterCapabilitiesModel } from '../../../../models/itemMasterCapabilities.model';
+import { GlAccountService } from '../../../../services/glAccount/glAccount.service';
+import { GlAccount } from '../../../../models/GlAccount.model';
+import { VendorService } from '../../../../services/vendor.service';
 import { MenuItem } from 'primeng/api';
-import { AircraftDashNumber } from '../../../models/dashnumber.model';
-import { AircraftModel } from '../../../models/aircraft-model.model';
-import { AircraftModelService } from '../../../services/aircraft-model/aircraft-model.service';
-import { AircraftManufacturerService } from '../../../services/aircraft-manufacturer/aircraftManufacturer.service';
-import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service';
-import { CustomerService } from '../../../services/customer.service';
-import { PublicationService } from '../../../services/publication.service';
-import { DashNumberService } from '../../../services/dash-number/dash-number.service';
-import { CommonService } from '../../../services/common.service';
-import { ItemMasterExchangeLoanComponent } from '../item-master-exch-loan/item-master-exch-loan.component';
+import { AircraftDashNumber } from '../../../../models/dashnumber.model';
+import { AircraftModel } from '../../../../models/aircraft-model.model';
+import { AircraftModelService } from '../../../../services/aircraft-model/aircraft-model.service';
+import { AircraftManufacturerService } from '../../../../services/aircraft-manufacturer/aircraftManufacturer.service';
+import { AtaSubChapter1Service } from '../../../../services/atasubchapter1.service';
+import { CustomerService } from '../../../../services/customer.service';
+import { PublicationService } from '../../../../services/publication.service';
+import { DashNumberService } from '../../../../services/dash-number/dash-number.service';
+import { CommonService } from '../../../../services/common.service';
 
 @Component({
-    selector: 'app-item-master-stock',
-    templateUrl: './item-master-stock.component.html',
-    styleUrls: ['./item-master-stock.component.scss']
+    selector: 'app-ntae-alternate',
+    templateUrl: './ntae-alternate.component.html',
+    styleUrls: ['./ntae-alternate.component.scss']
 })
 
 /** item-master-stock component*/
-export class ItemMasterStockComponent implements OnInit, AfterViewInit {
-    @ViewChild('exchLoan') exchLoan: ItemMasterExchangeLoanComponent;
+export class NTAEAlternateComponent implements OnInit, AfterViewInit {
     dataSourceValue: MatTableDataSource<Priority>;
     disables: boolean = false;
     disable1: boolean = true;
@@ -336,9 +334,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     enableDNMemo: boolean = true;
     indexOfrow: any;
     activeMenuItem: number = 1;
-    activeNTAEMenuItem: number = 1;
     currentTab: string = 'General';
-    currentNTAETab: string = 'NHA';
     manufacturer: any;
     aircraftManfacturerIdsUrl: any = '';
     aircraftModelsIdUrl: any = '';
@@ -360,7 +356,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     ataSubchapterIdUrl: any = '';
     searchATAParams: string = '';
     isDisabledSteps = false;
-    isNTAEDisabledSteps = true;
     isEdit: boolean = false;
     itemMasterId: number;
     fieldArray: any = [];
@@ -398,6 +393,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     distinctAtaList: any[] = [];
     listOfErrors: any = [];
     conditionList: any;
+     colsaircraftLD: any[] = [
+        { field: "description", header: "Description" },
+        { field: "manufacturer", header: "Manufacturer" }
+    ];
+    pnvalue: any;
 
     // errorLogForPS: string = '';
 
@@ -442,63 +442,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 this.ManufacturerValue = this.sourceItemMaster.manufacturerName;
                 this.alternatePn = this.sourceItemMaster.partAlternatePartId;
 
-                this.itemser.getPurcSaleDetailById(this.itemMasterId).subscribe(res => {
-
-
-                    this.fieldArray = res.map(x => {
-                        return {
-                            Condition: x.condition,
-                            PP_UOMId: x.pP_UOMId,
-                            PP_CurrencyId: x.pP_CurrencyId,
-                            PP_FXRatePerc: x.pP_FXRatePerc,
-                            PP_VendorListPrice: x.pP_VendorListPrice,
-                            PP_LastListPriceDate: x.pP_LastListPriceDate,
-                            PP_PurchaseDiscPerc: x.pP_PurchaseDiscPerc,
-                            PP_LastPurchaseDiscDate: x.pP_LastPurchaseDiscDate,
-                            PP_PurchaseDiscAmount: x.pP_PurchaseDiscAmount,
-                            PP_UnitPurchasePrice: x.pP_UnitPurchasePrice,
-                            SP_FSP_UOMId: x.sP_FSP_UOMId,
-                            SP_FSP_CurrencyId: x.sP_FSP_CurrencyId,
-                            SP_FSP_FXRatePerc: x.sP_FSP_FXRatePerc,
-                            SP_FSP_FlatPriceAmount: x.sP_FSP_FlatPriceAmount,
-                            SP_FSP_LastFlatPriceDate: x.sP_FSP_LastFlatPriceDate,
-                            SP_CalSPByPP_MarkUpPercOnListPrice: x.sP_CalSPByPP_MarkUpPercOnListPrice,
-                            SP_CalSPByPP_MarkUpAmount: x.sP_CalSPByPP_MarkUpAmount,
-                            SP_CalSPByPP_LastMarkUpDate: x.sP_CalSPByPP_LastMarkUpDate,
-                            SP_CalSPByPP_BaseSalePrice: x.sP_CalSPByPP_BaseSalePrice,
-                            SP_CalSPByPP_SaleDiscPerc: x.sP_CalSPByPP_SaleDiscPerc,
-                            SP_CalSPByPP_SaleDiscAmount: x.sP_CalSPByPP_SaleDiscAmount,
-                            SP_CalSPByPP_LastSalesDiscDate: x.sP_CalSPByPP_LastSalesDiscDate,
-                            SP_CalSPByPP_UnitSalePrice: x.sP_CalSPByPP_UnitSalePrice
-                        }
-                    })
-
-                })
-
-
-
-                // binding the export information data on edit
-                this.exportInfo = {
-                    ExportECCN: this.sourceItemMaster.exportECCN,
-                    ITARNumber: this.sourceItemMaster.itarNumber,
-                    ExportUomId: this.sourceItemMaster.exportUomId,
-                    ExportCountryId: this.sourceItemMaster.countryData[0],
-                    ExportValue: this.sourceItemMaster.exportValue,
-                    ExportCurrencyId: this.sourceItemMaster.exportCurrencyId,
-                    ExportWeight: this.sourceItemMaster.exportWeight,
-                    ExportWeightUnit: parseInt(this.sourceItemMaster.exportWeightUnit),
-                    ExportSizeLength: this.sourceItemMaster.exportSizeLength,
-                    ExportSizeWidth: this.sourceItemMaster.exportSizeWidth,
-                    ExportSizeHeight: this.sourceItemMaster.exportSizeHeight,
-                    IsExportUnspecified: this.sourceItemMaster.isExportUnspecified,
-                    IsExportMilitary: this.sourceItemMaster.isExportMilitary,
-                    IsExportNONMilitary: this.sourceItemMaster.isExportNONMilitary,
-                    IsExportDual: this.sourceItemMaster.isExportDual,
-                }
+                
                 // validate classification required in Export Information
                 this.validateClassificationRequired()
-                this.getAircraftMappedDataByItemMasterId();
-                this.getATAMappedDataByItemMasterId();
+
             })
 
         }
@@ -508,66 +455,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     }
 
-    //setting the values for capability //
-    capabilityTypeData: any = [{
-        CapabilityTypeId: 1, Description: 'Manufacturing', formArrayName: 'mfgForm', selectedAircraftDataModels: [],
-        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
-    },
-    {
-        CapabilityTypeId: 2, Description: 'Overhaul', formArrayName: 'overhaulForm', selectedAircraftDataModels: []
-        , selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
-    },
-    {
-        CapabilityTypeId: 3, Description: 'Distribution', formArrayName: 'distributionForm', selectedAircraftDataModels: [],
-        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
-    },
-    {
-        CapabilityTypeId: 4, Description: 'Certification', formArrayName: 'certificationForm', selectedAircraftDataModels: [],
-        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
-    },
-    {
-        CapabilityTypeId: 5, Description: 'Repair', formArrayName: 'repairForm', selectedAircraftDataModels: [],
-        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
-    },
-    {
-        CapabilityTypeId: 6, Description: 'Exchange', formArrayName: 'exchangeForm', selectedAircraftDataModels: [],
-        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
-    }];
-
-    colsaircraftLD: any[] = [
-        { field: "aircraft", header: "Aircraft" },
-        { field: "model", header: "Model" },
-        { field: "dashNumber", header: "Dash Numbers" },
-        { field: "memo", header: "Memo" }
-    ];
-    colaircraft: any[] = [
-        { field: "AircraftType", header: "Aircraft" },
-        { field: "AircraftModel", header: "Model" },
-        { field: "DashNumber", header: "Dash Numbers" },
-    ];
-    capesColumns: any[] = [
-        { field: 'capability', header: "CAPABILITY TYPES" },
-        { field: 'entity', header: "ENTITY" },
-        { field: 'company', header: "COMPANY" },
-        { field: 'bu', header: "BU" },
-        { field: 'division', header: "DIVISION" },
-        { field: 'dep', header: "DEP" },
-        { field: 'manufacturer', header: "MANUFACTURER" },
-        { field: 'aircaft', header: "AIRCRAFT" },
-        { field: 'model', header: "MODEL" },
-        { field: 'dashnumber', header: "DASH NUM" },
-        { field: 'description', header: "DESCRIPTION" },
-        { field: 'ataChapter', header: "ATA CHAPTER" },
-        { field: 'atasubchapter', header: "ATA SUBCHAPTER" },
-        { field: 'entrydate', header: "ENTRY DATE" },
-        { field: 'cmmid', header: "CMM ID" },
-        { field: 'verified', header: "VERIFIED" },
-        { field: 'verifiedby', header: "VERIFIED BY" },
-        { field: 'dateverified', header: "DATE VERIFIED" },
-        { field: 'ntehrs', header: "NTE HRS" },
-        { field: 'tat', header: "TAT" },
-        { field: 'memo', header: "MEMO" },
-    ];
+    
     aircraftListDataValues: any;
     capesListDataValues: any;
 
@@ -631,7 +519,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.CurrencyData();
         this.countryData();
         this.unitofmeasure();
-        this.Purchaseunitofmeasure();
         this.Stockunitofmeasure();
         this.Consumeunitofmeasure();
         this.SOLDunitofmeasure();
@@ -641,10 +528,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.glList();
         this.ptnumberlistdata();
         this.glAccountlistdata();
-        this.getAircraftModelsData();
-        this.getCpaesData();
+
         this.activeIndex = 0;
-        this.countrylist();
         this.sourceItemMaster.salesIsFixedPrice = true;
         this.capabilitiesForm = this.formBuilder.group({
             mfgForm: this.formBuilder.array([]),
@@ -654,44 +539,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             repairForm: this.formBuilder.array([]),
             exchangeForm: this.formBuilder.array([])
         });
-        this.getAllAircraftModels();
-        this.getAllDashNumbers();
-        this.getAllATAChapter();
-        // this.getAllATASubChapter();
-        this.getAllSubChapters();
-        this.getCapabilityType();
+
         this.getConditionsList();
 
 
-
-        // //cutom
-        // this.itemser.getMappedAirCraftDetails(this.ItemMasterId).subscribe(data => {
-        //     this.aircraftListData = data.map(x => {
-        //         return {
-        //             aircraft: x.aircraftType,
-        //             model: x.aircraftModel,
-        //             dashNumber: x.dashNumber,
-        //             memo: x.memo,
-        //         }
-        //     })
-        //     // resetting popup Data
-        //     /*this.aircraftData = undefined;
-        //     this.selectedAircraftId = []
-        //     this.selectedModelId = undefined;
-        //     this.selectedDashnumber = undefined;*/
-        // })
-
-        // //cutom
-        // this.itemser.getMappedATADetails(this.ItemMasterId).subscribe(data => {
-        //     this.aircraftListData = data.map(x => {
-        //         return {
-        //             aircraft: x.aircraftType,
-        //             model: x.aircraftModel,
-        //             dashNumber: x.dashNumber,
-        //             memo: x.memo,
-        //         }
-        //     })
-        // })
 
 
     }
@@ -783,48 +634,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         alert("functionality not yet implemented");
     }
 
-    //loading aircraftmodels data//
-    getAircraftModelsData(): any {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-
-        this.itemser.getAircaftList(this.sourceItemMaster.itemMasterId).subscribe(
-            results => this.onAircarftmodelloadsuccessfull(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-    }
-
-
-    private onAircarftmodelloadsuccessfull(allWorkFlows: any[]) {
-        for (let i = 0; i < allWorkFlows.length; i++) {
-            allWorkFlows[i].checkbox = true;
-        }
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-
-        this.allAircraftsGet = allWorkFlows;
-        this.currentItemMasterModels = allWorkFlows;//All Models Data which has for Current Item Master Id
-        this.allCurrentItemMasterModels = allWorkFlows;
-        if (this.allAircraftsGet.length > 0) {
-            this.enablePlus = true;
-            this.allAircraftinfo = JSON.parse(JSON.stringify(this.allAircraftsGet));
-            this.isDeleteMode = false;
-            this.isEditMode = false;
-            this.isEnabeCapes = true;
-
-        }
-    }
-
-    //loading capability data//
-    getCpaesData(): any {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-
-        this.itemser.getCpaesData(this.sourceItemMaster.itemMasterId).subscribe(
-            results => this.OnCapesLoadSuccessfull(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-    }
 
     alterPnHandler(event) {
         if (event.target.value != "") {
@@ -855,61 +664,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
 
-    private OnCapesLoadSuccessfull(allWorkFlows: any[]) {
-        this.manfacturerAircraftmodelsarray = [];
-        this.distributionAircraftmodelsarray = [];
-        this.overhaulAircraftmodelsarray = [];
-        this.certificationarrayAircraftmodelsarray = [];
-        this.repairAircraftmodelsarray = [];
-        this.exchangeAircraftmodelsarray = [];
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-
-        this.allCapesData = allWorkFlows;
-        if (this.allCapesData) {
-            for (let i = 0; i < this.allCapesData.length; i++) {
-                if (this.allCapesData[i].capabilityTypeId == 1) {
-                    this.manfacturerAircraftmodelsarray.push(JSON.parse(JSON.stringify(this.allCapesData[i])));
-
-                }
-
-                else if (this.allCapesData[i].capabilityTypeId == 2) {
-                    this.getBUListovh(this.allCapesData[i], this.allCapesData[i].masterComapnyId1);
-                    this.getDepartmentlistovh(this.allCapesData[i], this.allCapesData[i].buid1);
-                    this.getDivisionlistovh(this.allCapesData[i], this.allCapesData[i].depid1);
-                    this.overhaulAircraftmodelsarray.push(JSON.parse(JSON.stringify(this.allCapesData[i])));
-
-                }
-                else if (this.allCapesData[i].capabilityTypeId == 3) {
-                    this.getBUListDistribution(this.allCapesData[i], this.allCapesData[i].masterComapnyId1);
-                    this.getDepartmentlistdistribution(this.allCapesData[i], this.allCapesData[i].buid1);
-                    this.getDivisionlistdistrubution(this.allCapesData[i], this.allCapesData[i].depid1);
-                    this.distributionAircraftmodelsarray.push(JSON.parse(JSON.stringify(this.allCapesData[i])));
-
-                }
-                else if (this.allCapesData[i].capabilityTypeId == 4) {
-                    this.getBUListcertificate(this.allCapesData[i], this.allCapesData[i].masterComapnyId1);
-                    this.getDepartmentlistcertificate(this.allCapesData[i], this.allCapesData[i].buid1);
-                    this.getDivisionlistcertificate(this.allCapesData[i], this.allCapesData[i].depid1);
-                    this.certificationarrayAircraftmodelsarray.push(JSON.parse(JSON.stringify(this.allCapesData[i])));
-
-                }
-                else if (this.allCapesData[i].capabilityTypeId == 5) {
-                    this.getBUListrepair(this.allCapesData[i], this.allCapesData[i].masterComapnyId1);
-                    this.getDepartmentlistrepair(this.allCapesData[i], this.allCapesData[i].buid1);
-                    this.getDivisionlistrepair(this.allCapesData[i], this.allCapesData[i].depid1);
-                    this.repairAircraftmodelsarray.push(JSON.parse(JSON.stringify(this.allCapesData[i])));
-
-                }
-                else if (this.allCapesData[i].capabilityTypeId == 6) {
-                    this.getBUListexcahnge(this.allCapesData[i], this.allCapesData[i].masterComapnyId1);
-                    this.getDepartmentlistexcahnge(this.allCapesData[i], this.allCapesData[i].buid1);
-                    this.getDivisionlistexcahnge(this.allCapesData[i], this.allCapesData[i].depid1);
-                    this.exchangeAircraftmodelsarray.push(JSON.parse(JSON.stringify(this.allCapesData[i])));
-                }
-            }
-        }
-    }
     markUpListPriceAfterDisk() {
         this.markupListPriceValue = false;
         this.markUpListPriceAfterDiskValue = true;
@@ -919,33 +673,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         alert(deviceValue);
         this.sourceItemMaster.ataMainId = deviceValue;
     }
-    onFixedSalesPrice() {
-        this.sourceItemMaster.salesIsFixedPrice = true;
-        this.fixedSalesPriceValue = true;
-        this.calculateUsingPurchasePrice = false;
-    }
 
-    onCalculatedUsingPurchasePrice() {
-        this.fixedSalesPriceValue = false;
-        this.calculateUsingPurchasePrice = true;
-    }
-
-    stock() {
-        this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-stock');
-    }
-
-    nonStock() {
-        this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-non-stock');
-    }
-    //equipment() {
-    //    this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-equipment');
-    //}
-    //exchange() {
-    //    this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-exchange');
-    //}
-    //loan() {
-    //    this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-loan');
-    //}
 
 
     ngAfterViewInit() {
@@ -1046,131 +774,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
 
-    cunstructCapabilities(content) {
-        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
 
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-
-        if (this.itemser.capsCollection) {
-            this.capabilityEditCollection = this.itemser.listCollection;
-            this.cunstructFormForEdit()
-        }
-
-        else {
-            this.capabilityTypeData.forEach(item => {
-                item.selectedAircraftDataModels = this.allAircraftinfo;
-                item.selectedAircraftModelTypes = this.selectedModels;
-                item.selectedAircraftTypes = this.selectedAircraftTypes;
-                item.selectedAircraftModelTypes.forEach(value => {
-                    item.selectedAircraftDataModels.forEach(value2 => {
-                        if (value.aircraftModelId == value2.aircraftModelId) {
-                            item.selectedModel.push(value2);
-                        }
-                    })
-                })
-                item.selectedAircraftTypes.forEach(typeVal1 => {
-                    this.manufacturerData.forEach(typeVal2 => {
-                        if (typeVal1 == typeVal2.value) {
-                            item.selectedManufacturer.push(typeVal2);
-                        }
-
-                    })
-                })
-                this.addModels(item);
-
-            })
-        }
-    }
-
-
-    addModels(capData) {
-        this.capabilityTypeData.for
-        let capbilitiesObj = new ItemMasterCapabilitiesModel;
-        capData.selectedManufacturer.forEach(element1 => {
-            capbilitiesObj.itemMasterId = this.ItemMasterId;
-            capbilitiesObj.aircraftTypeId = element1.value;
-            capbilitiesObj.aircraftTypeName = element1.label;
-            capbilitiesObj.capabilityTypeId = capData.CapabilityTypeId;
-            capbilitiesObj.aircraftManufacturer = element1.label;
-            capData.selectedModel.forEach(element2 => {
-                if (element2.aircraftTypeId == element1.value) {
-                    capbilitiesObj.aircraftModelName = element2.label;
-                    capbilitiesObj.aircraftModelId = element2.value;
-                    let mfObj = this.formBuilder.group(capbilitiesObj);
-                    switch (capData.formArrayName) {
-                        case "mfgForm":
-                            let mfgItemExisted = this.checkIsExisted(element1.value, element2.value, this.mfgFormArray, this.capabilityTypeData[0]);
-                            if (mfgItemExisted == false) {
-                                this.mfgFormArray.push(mfObj);
-                                let mfgIndex = this.mfgFormArray.controls.length - 1;
-                                this.mfgFormArray.controls[mfgIndex]['buList'] = [];
-                                this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
-                                this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
-                            }
-
-
-                            break;
-                        case "overhaulForm":
-                            let oralItemExisted = this.checkIsExisted(element1.value, element2.value, this.overhaulFormArray, this.capabilityTypeData[1]);
-                            if (oralItemExisted == false) {
-                                this.overhaulFormArray.push(mfObj);
-                                let overIndex = this.overhaulFormArray.controls.length - 1;
-                                this.overhaulFormArray.controls[overIndex]['buList'] = [];
-                                this.overhaulFormArray.controls[overIndex]['departmentList'] = [];
-                                this.overhaulFormArray.controls[overIndex]['divisionlist'] = [];
-                            }
-                            break;
-                        case "distributionForm":
-                            let distExisted = this.checkIsExisted(element1.value, element2.value, this.distributionFormArray, this.capabilityTypeData[2]);
-                            if (distExisted == false) {
-                                this.distributionFormArray.push(mfObj);
-                                let distIndex = this.distributionFormArray.controls.length - 1;
-                                this.distributionFormArray.controls[distIndex]['buList'] = [];
-                                this.distributionFormArray.controls[distIndex]['departmentList'] = [];
-                                this.distributionFormArray.controls[distIndex]['divisionlist'] = [];
-                            }
-                            break;
-                        case "certificationForm":
-                            let certExisted = this.checkIsExisted(element1.value, element2.value, this.certificationFormArray, this.capabilityTypeData[3]);
-                            if (certExisted == false) {
-                                this.certificationFormArray.push(mfObj);
-                                let certIndex = this.certificationFormArray.controls.length - 1;
-                                this.certificationFormArray.controls[certIndex]['buList'] = [];
-                                this.certificationFormArray.controls[certIndex]['departmentList'] = [];
-                                this.certificationFormArray.controls[certIndex]['divisionlist'] = [];
-                            }
-                            break;
-                        case "repairForm":
-                            let repairExisted = this.checkIsExisted(element1.value, element2.value, this.repairFormArray, this.capabilityTypeData[4]);
-                            if (repairExisted == false) {
-                                this.repairFormArray.push(mfObj);
-                                let repIndex = this.repairFormArray.controls.length - 1;
-                                this.repairFormArray.controls[repIndex]['buList'] = [];
-                                this.repairFormArray.controls[repIndex]['departmentList'] = [];
-                                this.repairFormArray.controls[repIndex]['divisionlist'] = [];
-                            }
-                            break;
-                        case "exchangeForm":
-                            let exchangeExisted = this.checkIsExisted(element1.value, element2.value, this.exchangeFormArray, this.capabilityTypeData[5]);
-                            if (exchangeExisted == false) {
-                                this.exchangeFormArray.push(mfObj);
-                                let excngIndex = this.exchangeFormArray.controls.length - 1;
-                                this.exchangeFormArray.controls[excngIndex]['buList'] = [];
-                                this.exchangeFormArray.controls[excngIndex]['departmentList'] = [];
-                                this.exchangeFormArray.controls[excngIndex]['divisionlist'] = [];
-                            }
-                            break;
-                    }
-                }
-
-            });
-        });
-
-    }
-
-
+    
     manufacturerChange(event, capData) {
         let selectedData = event.value;
         capData.selectedManufacturer = [];
@@ -1182,30 +787,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             })
         })
     }
-
-    resetFormArray(capData) {
-        switch (capData.formArrayName) {
-            case "mfgForm":
-                this.mfgFormArray.controls = [];
-                break;
-            case "overhaulForm":
-                this.overhaulFormArray.controls = [];
-                break;
-            case "distributionForm":
-                this.distributionFormArray.controls = [];
-                break;
-            case "certificationForm":
-                this.certificationFormArray.controls = [];
-                break;
-            case "repairForm":
-                this.repairFormArray.controls = [];
-                break;
-            case "exchangeForm":
-                this.exchangeFormArray.controls = [];
-                break;
-        }
-    }
-
 
 
     private ptnumberlistdata() {
@@ -1285,15 +866,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         );
     }
 
-    private Purchaseunitofmeasure() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-        this.unitService.getUnitOfMeasureList().subscribe(
-            results => this.onDataPurchaseunitSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-
-    }
+    
     private Stockunitofmeasure() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -2289,36 +1862,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
 
-    cunstructFormForEdit() {
-        if (this.manufacturerData.length > 0 && this.allManagemtninfo.length > 0) {
-            this.cunstructItemMastars();
-        }
-    }
 
 
-    cunstructItemMastars() {
-        let mfgData: any = [];
-        this.capabilityEditCollection.forEach(element => {
-            if (element.isDelete != true) {
-                this.ItemMasterId = element.itemMasterId;
-                let index = element.capabilityTypeId - 1;
-                let capData = this.capabilityTypeData[index];
-                let typeIndex = capData.selectedAircraftTypes.indexOf(element.aircraftTypeId);
-                if (typeIndex == -1) {
-                    capData.selectedAircraftTypes.push(element.aircraftTypeId);
-                    capData.selectedManufacturer.push({ value: element.aircraftTypeId, label: this.getAircraftTypeName(element.aircraftTypeId) });
-                }
-                capData.selectedAircraftModelTypes.push(element.aircraftModelId);
-                this.addExistingData(capData, element)
-            }
-        });
-        this.capabilityTypeData.forEach(element1 => {
-            if (element1.selectedAircraftModelTypes.length > 0) {
-                this.loadModalsForExistingRecords(element1);
-            }
-        });
-
-    }
 
 
     loadModalsForExistingRecords(capData) {
@@ -3418,113 +2963,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
 
-    savePurchaseunitofmeasure() {
 
-
-        if (this.isEditMode == false) {
-            this.isSaving = true;
-            this.disableuomvalue = true;
-            this.sourceUOM.createdBy = this.userName;
-            this.sourceUOM.updatedBy = this.userName;
-            this.sourceUOM.description = this.unitName;
-            this.sourceUOM.masterCompanyId = 1;
-            this.unitService.newUnitOfMeasure(this.sourceUOM).subscribe(data => {
-
-                this.sourceItemMaster.purchaseUnitOfMeasureId = data.unitOfMeasureId;
-                this.Purchaseunitofmeasure(), this.Stockunitofmeasure(), this.Consumeunitofmeasure()
-            })
-
-        }
-        else {
-            this.disableuomvalue = false;
-            this.sourceUOM.updatedBy = this.userName;
-            this.sourceUOM.description = this.unitName;
-            this.sourceUOM.masterCompanyId = 1;
-            this.unitService.updateUnitOfMeasure(this.sourceUOM).subscribe(data => { this.Purchaseunitofmeasure(), this.Stockunitofmeasure(), this.Consumeunitofmeasure() });
-        }
-
-        this.modal.close();
-    }
-
-    saveStockunitofmeasure() {
-        this.isSaving = true;
-        if (this.isEditMode == false) {
-            this.disableuomvalue = false;
-            this.sourceUOM.createdBy = this.userName;
-            this.sourceUOM.updatedBy = this.userName;
-            this.sourceUOM.description = this.unitName;
-            this.sourceUOM.masterCompanyId = 1;
-            this.unitService.newUnitOfMeasure(this.sourceUOM).subscribe(
-                data => {
-                    this.sourceItemMaster.stockUnitOfMeasureId = data.unitOfMeasureId;
-                    this.Stockunitofmeasure()
-                },
-                response => this.saveCompleted(this.sourceUOM)
-            )
-        }
-        else {
-            this.disableuomvalue = false;
-            this.sourceUOM.updatedBy = this.userName;
-            this.sourceUOM.description = this.unitName;
-            this.sourceUOM.masterCompanyId = 1;
-            this.unitService.updateUnitOfMeasure(this.sourceUOM).subscribe(
-                response => this.saveCompleted(this.sourceUOM),
-                error => this.saveFailedHelper(error));
-        }
-
-        this.modal.close();
-    }
-
-    saveConsumeunitofmeasure() {
-        this.isSaving = true;
-        if (this.isEditMode == false) {
-            this.disableuomvalue = false;
-            this.sourceUomModel.createdBy = this.userName;
-            this.sourceUomModel.updatedBy = this.userName;
-            this.sourceUomModel.description = this.unitName;
-            this.sourceUomModel.masterCompanyId = 1;
-            this.unitService.newUnitOfMeasure(this.sourceUomModel).subscribe(data => {
-                this.sourceItemMaster.consumeUnitOfMeasureId = data.unitOfMeasureId;
-                this.Consumeunitofmeasure()
-            })
-
-        }
-        else {
-            this.disableuomvalue = false;
-            this.sourceUOM.updatedBy = this.userName;
-            this.sourceUOM.description = this.unitName;
-            this.sourceUOM.masterCompanyId = 1;
-            this.unitService.updateUnitOfMeasure(this.sourceUOM).subscribe(
-                response => this.saveCompleted(this.sourceUOM),
-                error => this.saveFailedHelper(error));
-        }
-
-        this.modal.close();
-    }
-
-    saveSOLDunitofmeasure() {
-        this.isSaving = true;
-
-        if (this.isEditMode == false) {
-            this.sourceUOM.createdBy = this.userName;
-            this.sourceUOM.updatedBy = this.userName;
-            this.sourceUOM.description = this.unitName;
-            this.sourceUOM.masterCompanyId = 1;
-            this.unitService.newUnitOfMeasure(this.sourceUOM).subscribe(data => { this.SOLDunitofmeasure() })
-
-        }
-        else {
-
-            this.sourceUOM.updatedBy = this.userName;
-            this.sourceUOM.description = this.unitName;
-            this.sourceUOM.masterCompanyId = 1;
-            this.unitService.updateUnitOfMeasure(this.sourceUOM).subscribe(
-                response => this.saveCompleted(this.sourceUOM),
-                error => this.saveFailedHelper(error));
-        }
-
-        this.modal.close();
-    }
     savepriority() {
         this.isSaving = true;
         if (this.isEditMode == false) {
@@ -3714,66 +3153,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
 
-    saveexcahneginfo(partid, itemid, data) {
-
-        for (let i = 0; i < data.length; i++) {
-            if (data[i].atcChapterId1 != null) {
-                data[i].itemId = itemid;
-                data[i].partId = partid;
-                data[i].capabilityTypeId = 6;
-                data[i].verifiedBy = data[i].verifiedBy1;
-                data[i].isCMMExist = data[i].isCMMExist1;
-                data[i].description = data[i].modelname1;
-                data[i].isCMMExist = data[i].isCMMExist1;
-                data[i].aTAMainId = data[i].atcChapterId1;
-                data[i].memo = data[i].memo1;
-                data[i].aircraftManufacturer = data[i].aircraftManufacturer;
-                data[i].aircraftModelId = data[i].aircraftModelId;
-                data[i].aircraftTypeId = data[i].aircraftTypeId;
-                data[i].entryDate = data[i].entrydate1;
-
-                this.itemser.saveManfacturerinforcapes(data[i]).subscribe(data11 => {
-                    this.collectionofItemMaster = data11;
-                })
-            }
-
-        }
-    }
-    savecertification(partid, itemid, data) {
-        for (let i = 0; i < data.length; i++) {
-            if (data[i].atcChapterId1 != null) {
-                data[i].itemId = itemid;
-                data[i].partId = partid;
-                data[i].capabilityTypeId = 4;
-                data[i].verifiedBy = data[i].verifiedBy1;
-                data[i].isCMMExist = data[i].isCMMExist1;
-                data[i].description = data[i].modelname1;
-                data[i].isCMMExist = data[i].isCMMExist1;
-                data[i].aTAMainId = data[i].atcChapterId1;
-                data[i].memo = data[i].memo1;
-                data[i].aircraftManufacturer = data[i].aircraftManufacturer;
-                data[i].aircraftModelId = data[i].aircraftModelId;
-                data[i].aircraftTypeId = data[i].aircraftTypeId;
-                data[i].entryDate = data[i].entrydate1;
-
-                this.itemser.saveManfacturerinforcapes(data[i]).subscribe(data11 => {
-                    this.collectionofItemMaster = data11;
-                })
-            }
-        }
-    }
-
-
-    saveAircraftmodelinfo(partid, itemid, data) {
-        for (let i = 0; i < data.length; i++) {
-            data[i].itemMasterId = itemid;
-            this.itemser.saveAircraftinfo(data[i]).subscribe(aircraftdata => {
-                this.collectionofItemMaster = aircraftdata;
-            })
-
-        }
-    }
-
     // Tabs content display logic -- jyotsna
     moveGeneralInfromation() {
         this.showGeneralData = true;
@@ -3782,94 +3161,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.showAircraftData = false;
         this.showAtachapter = false;
     }
-    pnvalue: any;
-    getManufacturer(value) {
-        //console.log(value.originalEvent);
-    }
-    moveAircraftInformation() {
-        //console.log(this.sourceItemMaster.partId);
-        // this.activeTab = 1;
-        this.pnvalue = this.sourceItemMaster.partNumber;
-        this.pnDescription = this.sourceItemMaster.partDescription;
-        // this.ManufacturerValue = this.sourceItemMaster.name;
-        //console.log(this.sourceItemMaster.name);
-        this.alternatePn = this.sourceItemMaster.partAlternatePartId;
-        // this.showAircraftData = true;
-        // this.showGeneralData = false;
-        // this.showpurchaseData = false;
-        // this.showexportData = false;
-        // this.showAtachapter = false;
-        this.currentDashNumberType = new AircraftDashNumber();
-        // this.getAircraftAllList();
-        // this.aircraftManufacturerService.getAll().subscribe(aircraftManufacturer => {
-        //     const responseData = aircraftManufacturer[0];            
-        //     this.aircraftManufacturerList = responseData.map(x => {                
-        //         return {                    
-        //             label: x.description,
-        //             value: x.aircraftTypeId,                     
-        //         }
-        //     })            
-
-        // });            
-        // this.itemser.getMappedAirCraftDetails(this.sourceItemMaster.partId).subscribe(data => {
-        //     const responseData = data;
-
-        //     this.aircraftListData = responseData.map(x => {
-        //             return {
-
-        //             }
-        //     })        
-
-        //     //cutom
-        //     this.itemser.getMappedAirCraftDetails(this.ItemMasterId).subscribe(data => {
-        //         const responseData = data;
-        //         this.aircraftListData = responseData.map(x => {
-        //             return {
-        //                 aircraft: x.aircraftType,
-        //                 model: x.aircraftModel,
-        //                 dashNumber: x.dashNumber,
-        //                 memo: x.memo,
-        //             }
-        //         })
-        //         // resetting popup Data
-        //         this.aircraftData = undefined;
-        //         this.selectedAircraftId = []
-        //         this.selectedModelId = undefined;
-        //         this.selectedDashnumber = undefined;
-        //     })
-
-        // })
-    }
+   
     LoadValues: any[] = [];
     newValue: any;
-    // get aircraft model by type 
-    getAircraftModelByManfacturer(value) {
-        this.newValue = value.originalEvent.target.textContent;
-
-        if (this.newValue) {
-            this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftId).subscribe(models => {
-
-                const responseValue = models[0];
-                this.LoadValues = responseValue.map(models => {
-                    return {
-                        label: models.modelName,
-                        value: models
-                    }
-                });
-
-            });
-            this.selectedModelId = undefined;
-            this.selectedDashnumber = undefined;
-        }
-
-
-
-    }
-    selectedAircraftIdvalue: any;
-    selectedModelIdvalue: any;
-    LoadModelidValues: any[] = [];
-
-
+    
 
     searchByFieldUrlCreateforAircraftInformation() {
         if (this.selectAircraftManfacturer.length > 0) {
@@ -3903,36 +3198,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     }
 
-
-
-    // get AircraftModels By manufacturer Type
-    async getAircraftModelByManfacturerType() {
-
-
-
-        // construct url from array
-        await this.searchByFieldUrlCreateforAircraftInformation();
-        // reset the dropdowns
-        this.selectedAircraftModel = [];
-        this.selectedDashNumbers = []
-        // checks where multi select is empty or not and calls the service
-        if (this.aircraftManfacturerIdsUrl !== '') {
-            this.aircraftModelService
-                .getAircraftModelListByManufactureId(this.aircraftManfacturerIdsUrl)
-                .subscribe(models => {
-                    const responseValue = models[0];
-                    this.aircraftModelList = responseValue.map(models => {
-                        return {
-                            label: models.modelName,
-                            value: models.aircraftModelId
-                        };
-                    });
-                });
-        } else {
-            this.getAllAircraftModels();
-            this.getAllDashNumbers();
-        }
-    }
 
 
 
@@ -4160,219 +3425,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     }
-    selectedMemo: any;
-    saveAircraft() {
+    
 
-        const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-        const aircraftData = this.aircraftData.filter(x => {
-            if (x.IsChecked) {
-                return x;
-            }
-        })
-        const data = aircraftData.map(obj => {
-            console.log(obj);
-
-            return {
-                ...obj,
-                DashNumberId: obj.DashNumber === 'Unknown' ? null : obj.DashNumberId,
-                AircraftModelId: obj.AircraftModel === 'Unknown' ? null : obj.AircraftModelId,
-                ItemMasterId: ItemMasterID,
-                PartNumber: this.pnvalue,
-                MasterCompanyId: 1,
-                CreatedBy: this.userName,
-                UpdatedBy: this.userName,
-                CreatedDate: new Date(),
-                UpdatedDate: new Date(),
-                AircraftTypeId: this.selectedAircraftId,
-                IsActive: true,
-                IsDeleted: false
-
-            }
-        })
-        // posting the DashNumber Mapped data from Popup
-        // Used to get the Data Posted in the Popup
-        this.itemser.newItemMasterAircarftClass(data).subscribe(datas => {
-            this.alertService.showMessage(
-                'Success',
-                'Mapped Aircraft Information Successfully',
-                MessageSeverity.success
-            );
-            // reset poupup aircraft information
-            this.aircraftData = undefined;
-            this.selectedAircraftId = undefined;
-            this.selectedModelId = undefined;
-            this.selectedDashnumber = undefined;
-            this.dashNumberUnknown = false;
-            this.modelUnknown = false;
-
-            // get aircraft Mapped Data 
-            this.getAircraftMappedDataByItemMasterId();
-
-        }, err => {
-            const errorLog = err;
-            this.errorMessageHandler(errorLog);
-            // reset poupup aircraft information
-            this.aircraftData = undefined;
-            this.selectedAircraftId = undefined;
-            this.selectedModelId = undefined;
-            this.selectedDashnumber = undefined;
-            this.dashNumberUnknown = false;
-            this.modelUnknown = false;
-        })
-
-
-        //this.currentTab = 'AircraftInfo';
-        //this.activeMenuItem = 2;
-        this.changeOfTab('AircraftInfo');
-
-    }
-
-
-
-    getAircraftMappedDataByItemMasterId() {
-        // check whether edit or create and send and passes ItemMasterId
-        const id = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-        this.itemser.getMappedAirCraftDetails(id).subscribe(data => {
-            const responseData = data;
-            this.aircraftListDataValues = responseData.map(x => { //aircraftListData
-                return {
-                    ...x,
-                    aircraft: x.aircraftType,
-                    model: x.aircraftModel,
-                    dashNumber: x.dashNumber,
-                    memo: x.memo,
-                }
-            })
-
-
-
-        })
-    }
-
-
-
-    deleteAircraftMapped(data) {
-
-
-        this.itemser.deleteItemMasterAir(data.itemMasterAircraftMappingId).subscribe(res => {
-            this.getAircraftMappedDataByItemMasterId();
-            this.alertService.showMessage(
-                'Success',
-                `Deleted Successfully`,
-                MessageSeverity.success
-            );
-        })
-    }
-    moveAtachapter() {
-        this.changeOfTab('Atachapter');
-        // this.activeTab = 2
-        // this.showAtachapter = true;
-        // this.showAircraftData = false;
-        // this.showGeneralData = false;
-        // this.showpurchaseData = false;
-        // this.showexportData = false;
-        // Created ATA Main
-        this.currentAtaNumber = new ATAChapter();
-        this.getAllATAChapter();
-
-    }
-
-    getAllATAChapter() {
-        this.atamain.getAtaMainList().subscribe(Atachapter => {
-            this.ataMainchapter = Atachapter[0];
-            for (let i = 0; i < this.ataMainchapter.length; i++) {
-                this.LoadAtachapter.push(
-                    { value: this.ataMainchapter[i].ataChapterId, label: `${this.ataMainchapter[i].ataChapterCode}-${this.ataMainchapter[i].ataChapterName}` },
-                );
-            }
-        });
-    }
-
-    getAllATASubChapter() {
-        this.atasubchapter1service.getAtaSubChapter1List().subscribe(res => {
-            this.atasubchapter = res[0].map(x => {
-                return {
-                    label: x.description,
-                    value: x
-                }
-            })
-        })
-    }
-    addNewATA() {
-        this.atasubchapter = [];
-        this.ataform.reset();
-    }
-    addATAMapping() {
-        const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-        const PartNumber = this.isEdit === true ? this.pnvalue : this.collectionofItemMaster.partNumber
-        //console.log(this.selectedModels, this.ataChaptherSelected);
-        const ataMappingData = this.selectedModels.map(x => {
-            return {
-                ItemMasterId: ItemMasterID,
-                ATAChapterId: this.ataChaptherSelected[0].ataChapterId,
-                ATASubChapterId: x.ataSubChapterId,
-                ATAChapterCode: this.ataChaptherSelected[0].ataChapterCode,
-                ATAChapterName: this.ataChaptherSelected[0].ataChapterName,
-                ATASubChapterDescription: x.description,
-                MasterCompanyId: x.masterCompanyId,
-                CreatedBy: this.userName,
-                UpdatedBy: this.userName,
-                CreatedDate: new Date(),
-                UpdatedDate: new Date(),
-                PartNumber: PartNumber,
-                IsActive: true,
-                IsDeleted: false,
-            }
-        })
-
-        this.itemser.postATAMapping(ataMappingData).subscribe(res => {
-            this.ataform.reset();
-            this.getATAMappedDataByItemMasterId();
-
-        })
-
-    }
-
-
-    getATAMappedDataByItemMasterId() {
-        // check whether edit or create and send and passes ItemMasterId
-        const id = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-        this.itemser.getMappedATADetails(id).subscribe(res => {
-            this.ataMappedList = res.map(x => {
-                return {
-                    ...x,
-                    ataChapterName: x.ataChapterName,
-                    ataSubChapterDescription: x.ataSubChapterDescription
-                }
-            })
-
-        })
-    }
-    deleteATAMapped(data) {
-        this.itemser.deleteItemMasterATA(data.itemMasterATAMappingId).subscribe(res => {
-            this.getATAMappedDataByItemMasterId();
-            this.alertService.showMessage(
-                'Success',
-                `Deleted Successfully`,
-                MessageSeverity.success
-            );
-        })
-    }
-
-
-    // get all Aircraft Models
-    getAllAircraftModels() {
-
-        this.aircraftModelService.getAll().subscribe(models => {
-            const responseValue = models[0];
-            this.aircraftModelList = responseValue.map(models => {
-                return {
-                    label: models.modelName,
-                    value: models.aircraftModelId
-                };
-            });
-        });
-    }
 
 
     // get all dashnumber
@@ -4385,73 +3439,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     value: dashnumbers.dashNumberId
                 };
             });
-        });
-    }
-
-
-    // ata search by itemmaster  id
-
-    searchByFieldUrlCreateforATA() {
-
-        if (this.selectedATAchapter.length > 0) {
-            const ataIds = this.selectedATAchapter.reduce((acc, value) => {
-                return `${acc},${value}`;
-            }, '');
-            this.ataChapterIdUrl = ataIds.substr(1);
-        } else {
-            this.ataChapterIdUrl = '';
-        }
-        if (this.selectedATASubChapter.length > 0) {
-            const ataSubchapterIds = this.selectedATASubChapter.reduce((acc, id) => {
-                return `${acc},${id}`;
-            }, '');
-            this.ataSubchapterIdUrl = ataSubchapterIds.substr(1);
-        } else {
-            this.ataSubchapterIdUrl = '';
-        }
-    }
-
-    // get all subchapter for dropdown
-    getAllSubChapters() {
-        this.atasubchapter1service
-            .getAtaSubChapter1List()
-            .subscribe(atasubchapter => {
-                const responseData = atasubchapter[0];
-                this.atasubchapterValues = responseData.map(x => {
-                    return {
-                        label: x.description,
-                        value: x.ataSubChapterId
-                    };
-                });
-            });
-    }
-
-    getSubChapterByATAChapter() {
-        this.searchByFieldUrlCreateforATA();
-
-        if (this.ataChapterIdUrl !== '') {
-            this.ataMainSer
-                .getMultiATASubDesc(this.ataChapterIdUrl)
-                .subscribe(atasubchapter => {
-
-                    const responseData = atasubchapter;
-
-                    this.atasubchapterValues = responseData.map(x => {
-                        return {
-                            label: x.description,
-                            value: x.ataSubChapterId
-                        };
-                    });
-                });
-
-        } else {
-            this.getAllSubChapters();
-        }
-    }
-
-    getCapabilityType() {
-        this.commonService.smartDropDownList("CapabilityType", "CapabilityTypeId", "Description").subscribe(data => {
-            this.capabilityTypeList = data;
         });
     }
 
@@ -4499,115 +3486,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         console.log(this.capeBldList);
     }
 
-    async searchATA() {
-        await this.searchByFieldUrlCreateforATA();
-        this.searchATAParams = '';
-        // checks where multi select is empty or not and calls the service
-        if (this.ataChapterIdUrl !== '' && this.ataSubchapterIdUrl !== '') {
-            this.searchATAParams = `ataChapterId=${
-                this.ataChapterIdUrl
-                }&ataSubChapterId=${this.ataSubchapterIdUrl}`;
-        }
-        else if (this.ataChapterIdUrl !== '') {
-            this.searchATAParams = `ataChapterId=${this.ataChapterIdUrl}`;
-        }
-        else if (this.ataSubchapterIdUrl !== '') {
-            this.searchATAParams = `ataSubChapterId=${this.ataSubchapterIdUrl}`;
-        }
+   
 
-        const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-        this.itemser
-            .searchATAMappedByMultiTypeIdModelIDDashID(
-                ItemMasterID,
-                this.searchATAParams,
-            )
-            .subscribe(res => {
-                this.ataMappedList = res.map(x => {
-                    return {
-                        ataChapterName: x.ataChapterName,
-                        ataSubChapterDescription: x.ataSubChapterDescription,
-                        ataChapterCode: x.ataChapterCode,
-                        ataSubChapterId: x.ataSubChapterId,
-                        ataChapterId: x.ataChapterId
-                    };
-                });
-            });
-    }
-
-
-    movePurchaseInformation() {
-        this.changeOfTab('PurchaseSales');
-        // this.showpurchaseData = true;
-        // this.showGeneralData = false;
-        // this.showexportData = false;
-        // this.showAircraftData = false;
-        // this.showAtachapter = false;
-    }
-
-    moveExportInformation() {
-        // this.showpurchaseData = false;
-        // this.showGeneralData = false;
-        // this.showexportData = true;
-        // this.showAircraftData = false;
-        // this.showAtachapter = false;
-
-        this.savePurchaseandSales();
-
-    }
-
-
-    savePurchaseandSales() {
-        const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-
-        const data = this.fieldArray.map(obj => {
-
-            return {
-                ...obj,
-                ItemMasterId: ItemMasterID,
-                PartNumber: this.pnvalue,
-                MasterCompanyId: 1,
-                CreatedBy: this.userName,
-                UpdatedBy: this.userName,
-                CreatedDate: new Date(),
-                UpdatedDate: new Date(),
-                IsActive: true,
-                IsDeleted: false
-            }
-        })
-        console.log(data);
-
-
-
-
-
-        this.itemser.newItemMasterPurcSaleClass(data).subscribe(datas => {
-            this.alertService.showMessage(
-                'Success',
-                `Saved Purchase and Sale Successfully `,
-                MessageSeverity.success
-            );
-            this.exchLoan.loadData(this.ItemMasterId);
-            this.changeOfTab('Exchange');
-            // console.log(datas);
-        })
-
-        // const isValid = data.map(x => {
-        //     const _ObjectKeys = Object.keys(x);
-
-        //     for (let i = 0; i < _ObjectKeys.length; i++) {
-        //         if (x[_ObjectKeys[i]] === null || x[_ObjectKeys[i]] === undefined || x[_ObjectKeys[i]] === '') {
-        //             return alert('Some Fields are Missing');
-        //         }
-        //     }
-
-
-
-        // })
-
-
-
-
-    }
 
     getConditionsList(){
         this.commonService.smartDropDownList('Condition', 'ConditionId' , 'Description'  ).subscribe(res => {
@@ -4639,234 +3519,13 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     }
 
-    saveExportInformation() {
 
-        const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-        const data = { ...this.exportInfo, ExportCountryId: this.tempExportCountryId, ItemMasterId: ItemMasterID }
-
-        this.itemser.newItemMasterExportInformation(data).subscribe(datas => {
-            this.tempExportCountryId = null;
-            this.alertService.showMessage(
-                'Success',
-                `Saved Export Information Successfully `,
-                MessageSeverity.success
-            );
-            this.router.navigate(['itemmastersmodule/itemmasterpages/app-item-master-list'])
-        })
-    }
-    saveandcreate() {
-        if (this.isValidClassification) {
-            const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-            const data = { ...this.exportInfo, ExportCountryId: this.tempExportCountryId, ItemMasterId: ItemMasterID }
-
-            this.itemser.newItemMasterExportInformation(data).subscribe(datas => {
-                this.tempExportCountryId = null;
-                this.alertService.showMessage(
-                    'Success',
-                    `Saved Export Information Successfully `,
-                    MessageSeverity.success
-                );
-                this.router.navigate(['itemmastersmodule/itemmasterpages/app-item-master-stock']);
-                // Before this line we should clear form but I could not find all forms data and states
-                // so as of now I'm keeping in comments
-                // this.changeOfTab('General');
-            });
-        } else {
-            this.display = true;
-            this.modelValue = true;
-        }
-
-
-    }
 
     selectedOEM(value) {
 
         this.tempOEMpartNumberId = value.itemMasterId;
     }
 
-    saveItemMasterGeneralInformation(addCustomerWorkForm) {
-        let errors;
-        this.listOfErrors = [];
-        
-        let emptyFields = []
-        for (let key of Object.keys(this.sourceItemMaster)) {
-            if(this.PDropdownDirectives.includes(key) &&this.sourceItemMaster[key] == ""){
-            emptyFields.push(key)
-            }  
-        }
-        if(addCustomerWorkForm.status === "INVALID" || emptyFields.length > 0){
-            Object.keys(addCustomerWorkForm.controls).map(key => {
-                errors = addCustomerWorkForm.controls[key].errors;
-               if (errors === null) { return null; }            
-               if (errors['required']) {  
-                 let titlevalue = key;
-                 if(document.getElementById(key)){
-                     titlevalue = document.getElementById(key).getAttribute('title');
-                 }
-                   this.listOfErrors.push(`${titlevalue} is required`); //test
-               } else {
-               this.listOfErrors.push(`${key} has an unknown error`);
-               }
-             });
-
-             for(let k = 0; k<emptyFields.length; k++){
-                let titlevalue = emptyFields[k];
-                if(document.getElementById(emptyFields[k])){
-                    titlevalue = document.getElementById(emptyFields[k]).getAttribute('title');
-                } 
-                this.listOfErrors.push(`${titlevalue} is required`); 
-             }
-            this.display = true;
-            this.modelValue = true;
-             return false
-
-        } else {
-           
-
-
-            this.isSaving = true;
-            if (!this.isItemMasterCreated) //for create ItemMaster
-
-            {
-                this.oemPnData = this.sourceItemMaster.oemPNId;
-                this.sourceItemMaster.createdBy = this.userName;
-                this.sourceItemMaster.updatedBy = this.userName;
-                this.sourceItemMaster.masterCompanyId = 1;
-                this.sourceItemMaster.itemTypeId = 1;
-
-
-                if (this.selectedIntegrationTypes != null) {
-
-                    this.sourceItemMaster.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
-                }
-
-                if (this.sourceItemMaster.isPma) {
-                    this.sourceItemMaster.oemPNId = this.tempOEMpartNumberId;
-                }
-                this.itemser.newItemMaster(this.sourceItemMaster).subscribe(data => {
-
-                    this.sourceItemMaster.oemPNId = this.oemPnData;
-
-                    this.tempOEMpartNumberId = null;
-
-                    this.ManufacturerValue = data.manufacturer.name;
-                    // check whether response it there or not 
-                    if (data != null) {
-                        this.ItemMasterId = data.itemMasterId;
-                        if (this.isSaveCapes == true) {
-                            this.saveCapabilities();
-                        }
-                    }
-
-                    // // get aircraft Mapped Information by ItemMasterId
-                    // this.itemser.getMappedAirCraftDetails(this.ItemMasterId).subscribe(data => {
-                    //     this.aircraftListDataValues = data.map(x => {
-                    //         return {
-                    //             aircraft: x.aircraftType,
-                    //             model: x.aircraftModel,
-                    //             dashNumber: x.dashNumber,
-                    //             memo: x.memo,
-                    //         }
-                    //     })
-                    // })
-
-                    this.isItemMasterCreated = true;
-                    // go to next tab
-                    this.changeOfTab('AircraftInfo');
-                    // response Data after save 
-                    this.collectionofItemMaster = data;
-
-                    this.savesuccessCompleted(this.sourceItemMaster);
-
-                    this.alertService.startLoadingMessage();
-                    this.AddCustomerAircraftdata(this.collectionofItemMaster); //passing ItemMaster Saved Collection for Stote Aircraft Data                                    
-                    // this.value = 1;
-                    // this.activeTab = 2;
-                    this.moveAircraftInformation();
-
-                })
-
-
-
-                // if (this.selectedAircraftTypes != null) //separting Array whic is having ","
-                // {
-                // this.sourceItemMaster.AircraftTypeId = this.selectedAircraftTypes.toString().split(",");
-                // }
-
-                // if (this.selectedIntegrationTypes != null) //separting Array which is having ","
-                // {
-                //     this.sourceItemMaster.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
-                // }
-
-
-            }
-            else if (this.isItemMasterCreated || this.itemMasterId) //for Edit Screen
-
-            {
-
-                const itemMasterId = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-                // takes copy of current object to reassign to UI after submit data only on create edit Method
-
-
-                this.oemPnData = this.sourceItemMaster.oemPNId;
-
-
-                if (this.selectedIntegrationTypes != null) //separting Array whic is having ","
-                {
-                    this.sourceItemMaster.IntegrationPortalId = this.selectedIntegrationTypes.toString().split(",");
-                }
-                this.sourceItemMaster.updatedBy = this.userName;
-                this.sourceItemMaster.masterCompanyId = 1;
-                this.sourceItemMaster.itemTypeId = 1;
-
-                if (this.sourceItemMaster.isPma) {
-                    // checks whether the Change of Data is Happened or not if not and its is in edit mode binds the old data id if not edit and no change it will get the old create oemPnID
-                    this.sourceItemMaster.oemPNId = this.tempOEMpartNumberId === null ? this.isEdit === true ? this.sourceItemMaster.oemPNId.itemMasterId : this.oemPnData.itemMasterId : this.tempOEMpartNumberId;
-                }
-
-                this.sourceItemMaster.itemMasterId = itemMasterId;
-                // Destructing the Object in Services Place Apply Changes there also 
-                this.itemser.updateItemMaster(this.sourceItemMaster).subscribe(data => {
-
-                    this.sourceItemMaster.oemPNId = this.oemPnData;
-                    this.tempOEMpartNumberId = null;
-                    this.changeOfTab('AircraftInfo');
-                    this.collectionofItemMaster = data;
-                    this.saveCompleted(this.sourceItemMaster);
-                    if (data != null) {
-                        if (data.partId && data.itemMasterId) {
-                            if (this.manfacturerAircraftmodelsarray.length >= 0) {
-                                this.savemfginfo(data.partId, data.itemMasterId, this.manfacturerAircraftmodelsarray);
-                            }
-                            if (this.distributionAircraftmodelsarray.length >= 0) {
-                                this.saveDistrbution(data.partId, data.itemMasterId, this.distributionAircraftmodelsarray);
-                            }
-
-                            if (this.overhaulAircraftmodelsarray.length >= 0) {
-                                this.saveovhinfo(data.partId, data.itemMasterId, this.overhaulAircraftmodelsarray);
-                            }
-                            if (this.repairAircraftmodelsarray.length >= 0) {
-                                this.saverepairinfo(data.partId, data.itemMasterId, this.repairAircraftmodelsarray);
-                            }
-                            if (this.certificationarrayAircraftmodelsarray.length >= 0) {
-                                this.savecertification(data.partId, data.itemMasterId, this.certificationarrayAircraftmodelsarray);
-                            }
-                            if (this.exchangeAircraftmodelsarray.length >= 0) {
-                                this.saveexcahneginfo(data.partId, data.itemMasterId, this.exchangeAircraftmodelsarray);
-                            }
-                            if (this.selectedModels.length > 0) {
-                                this.saveAircraftmodelinfo(data.partId, data.itemMasterId, this.selectedModels);
-                            }
-                        }
-                    }
-                    this.alertService.startLoadingMessage();
-                    this.moveAircraftInformation();
-                })
-            }
-
-
-        }
-    }
 
     salesfinalPrice(myValue, percentValue) {
         let afterpercent = percentValue / 100;
@@ -4878,15 +3537,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         let test = afterpercent * myValue;
         this.sourceItemMaster.purchaseListPriceAfterDiscount = myValue - test;
     }
-    //for Insert AircraftData
-    public AddCustomerAircraftdata(ItemMasterobject) {
-        for (let i = 0; i < this.selectedAircraftTypes.length; i++) {
-            ItemMasterobject.aircraftTypeId = this.selectedAircraftTypes[i];
-            this.itemser.AddItemMasteraircrafttype(ItemMasterobject).subscribe(data => {
-                this.localCollection = data;
-            })
-        }
-    }
+
     //Itemclassification Save
     itemclassification(content) {
         this.isEditMode = false;
@@ -5348,45 +3999,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
 
-    saveCapabilities() {
-        let capbilitiesForm = this.capabilitiesForm.value;
-        let capabilityCollection: any = [];
-        let mfgForm = capbilitiesForm.mfgForm;
-        let overhaulForm = capbilitiesForm.overhaulForm;
-        let distributionForm = capbilitiesForm.distributionForm;
-        let certificationForm = capbilitiesForm.certificationForm;
-        let repairForm = capbilitiesForm.repairForm;
-        let exchangeForm = capbilitiesForm.exchangeForm;
-        mfgForm.forEach(element => {
-            element.itemMasterId = this.ItemMasterId
-            capabilityCollection.push(element);
-        });
-        overhaulForm.forEach(element => {
-            element.itemMasterId = this.ItemMasterId
-            capabilityCollection.push(element);
-        });
-        distributionForm.forEach(element => {
-            element.itemMasterId = this.ItemMasterId
-            capabilityCollection.push(element);
-        });
-        certificationForm.forEach(element => {
-            element.itemMasterId = this.ItemMasterId
-            capabilityCollection.push(element);
-        });
-        repairForm.forEach(element => {
-            element.itemMasterId = this.ItemMasterId
-            capabilityCollection.push(element);
-        });
-        exchangeForm.forEach(element => {
-            element.itemMasterId = this.ItemMasterId
-            capabilityCollection.push(element);
-        });
-
-        this.itemser.saveManfacturerinforcapes(capabilityCollection).subscribe(data11 => {
-            this.router.navigateByUrl("/itemmastersmodule/itemmasterpages/app-item-master-list");
-        })
-
-    }
     //calling for ATA Subchapter Data
 
     getATASubChapterData(ataMainId) {
@@ -5442,84 +4054,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         }
     }
 
-    //Add Intehration Model for Add Multi
-
-    addIntegrationModelSingle(integration) {
-        this.isEditMode = false;
-        this.isDeleteMode = false;
-        this.isSaving = true;
-        this.loadMasterCompanies();
-        this.sourceUOM = new UnitOfMeasure();
-        this.sourceUOM.isActive = true;
-        this.portalURL = "";
-        this.integrationName = "";
-        this.sourceAction.description = "";
-        this.modal = this.modalService.open(integration, { size: 'sm', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-    createIntegration() {
-        this.isSaving = true;
-        if (this.isEditMode == false) {
-            this.sourceIntegration.createdBy = this.userName;
-            this.sourceIntegration.updatedBy = this.userName;
-            this.sourceIntegration.portalURL = this.portalURL;
-            this.integrationService.newAction(this.sourceIntegration).subscribe(
-                role => this.saveSuccessHelper(role),
-                error => this.saveFailedHelper(error));
-        }
-        else {
-            this.sourceIntegration.updatedBy = this.userName;
-            this.sourceIntegration.description = this.integrationName;
-            this.sourceIntegration.portalURL = this.portalURL;
-            this.integrationService.updateAction(this.sourceIntegration).subscribe(
-                response => this.saveCompleted(this.sourceIntegration),
-                error => this.saveFailedHelper(error));
-        }
-        this.modal.close();
-    }
-
-
-
-
-    // New code for loading dropdown
-
-    getATASubChapterByATAChapter() {
-        const selectedATAChapterId = this.ataform.value.atanumber;
-        this.ataChaptherSelected = this.ataMainchapter.filter(x => {
-            if (x.ataChapterId === selectedATAChapterId) {
-                return x;
-            }
-        });
-        this.atasubchapter1service.getATASubChapterListByATAChapterId(selectedATAChapterId).subscribe(atasubchapter => {
-            const responseData = atasubchapter[0];
-            this.atasubchapter = responseData.map(x => {
-                return {
-                    label: x.description,
-                    value: x
-                }
-            })
-        })
-
-        this.disables = true;
-        this.view = false;
-    }
-    LoadAircraft: any[];
-    selectedModels1: any;
-    viewcheck1: boolean = false;
-    addDashnumber() {
-        this.viewCheck = false;
-        this.disabled = true;
-        this.disable1 = true;
-        this.viewcheck1 = true;
-        if (this.selectedModels1 == '') {
-            this.viewCheck = true;
-            this.disabled = false;
-            this.disable1 = false;
-            this.viewcheck1 = false;
-        }
-    }
     check($event) {
         this.disables = true;
         this.view = false;
@@ -5565,139 +4099,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.Delete = false;
         }
     }
-    //percentValue(sourcePS: any) {
-    //    if (sourcePS.PP_VendorListPrice && sourcePS.PP_PurchaseDiscPerc && !sourcePS.SP_FSP_FlatPriceAmount) {
-    //        sourcePS.PP_PurchaseDiscAmount = sourcePS.PP_VendorListPrice * sourcePS.PP_PurchaseDiscPerc
-    //    }
-    //    if (sourcePS.PP_PurchaseDiscAmount) {
-    //        sourcePS.PP_UnitPurchasePrice = sourcePS.PP_PurchaseDiscAmount - sourcePS.PP_VendorListPrice
-    //    }
-    //    if (sourcePS.SP_CalSPByPP_MarkUpPercOnListPrice && sourcePS.PP_VendorListPrice) {
-    //        sourcePS.SP_CalSPByPP_MarkUpAmount = sourcePS.PP_VendorListPrice * sourcePS.SP_CalSPByPP_MarkUpPercOnListPrice;
-    //    }
-    //}
-    //salePercent(sourcePS) {
-    //    if (sourcePS.SP_CalSPByPP_BaseSalePrice && sourcePS.SP_CalSPByPP_SaleDiscPerc) {
-    //        sourcePS.SP_CalSPByPP_SaleDiscAmount = sourcePS.SP_CalSPByPP_BaseSalePrice * sourcePS.SP_CalSPByPP_BaseSalePrice
-    //    }
-    //    if (sourcePS.SP_CalSPByPP_SaleDiscAmount && sourcePS.SP_CalSPByPP_BaseSalePrice) {
-    //        sourcePS.SP_CalSPByPP_UnitSalePrice = sourcePS.SP_CalSPByPP_SaleDiscAmount - sourcePS.SP_CalSPByPP_BaseSalePrice
-    //    }
-    ////}
-    percentValue(field) {
-        if (field.PP_VendorListPrice && field.PP_PurchaseDiscPerc && !field.SP_FSP_FlatPriceAmount) {
-            field.PP_PurchaseDiscAmount = ((field.PP_VendorListPrice * field.PP_PurchaseDiscPerc) / 100)
-        }
-        if (field.PP_PurchaseDiscAmount) {
-            field.PP_UnitPurchasePrice = field.PP_VendorListPrice - field.PP_PurchaseDiscAmount
-        }
-        if (field.SP_CalSPByPP_MarkUpPercOnListPrice && field.PP_VendorListPrice) {
-            field.SP_CalSPByPP_MarkUpAmount = ((field.PP_VendorListPrice * field.SP_CalSPByPP_MarkUpPercOnListPrice) / 100)
-        }
-        if (field.PP_UnitPurchasePrice && field.SP_CalSPByPP_MarkUpAmount) {
-
-            field.SP_CalSPByPP_BaseSalePrice = field.PP_VendorListPrice + field.SP_CalSPByPP_MarkUpAmount;
-        }
-
-        if (field.SP_CalSPByPP_UnitSalePrice !== null) {
-            this.salePercent(field);
-        }
-
-    }
-    salePercent(field) {
-        if (field.SP_CalSPByPP_BaseSalePrice && field.SP_CalSPByPP_SaleDiscPerc) {
-            field.SP_CalSPByPP_SaleDiscAmount = ((field.SP_CalSPByPP_BaseSalePrice * field.SP_CalSPByPP_SaleDiscPerc) / 100);
-        }
-
-        if (field.SP_CalSPByPP_SaleDiscAmount && field.SP_CalSPByPP_BaseSalePrice) {
-            field.SP_CalSPByPP_UnitSalePrice = field.SP_CalSPByPP_BaseSalePrice - field.SP_CalSPByPP_SaleDiscAmount;
-
-        }
-    }
-    atasubchapterValues = [];
-    selectedATachapter: any;
-    // selectedAtachapterID() {
-    //     this.atasubchapter1service.getATASubChapterListByATAChapterId(this.selectedATachapter).subscribe(atasubchapter => {
-    //         const responseData = atasubchapter[0];
-    //         this.atasubchapterValues = responseData.map(x => {
-    //             return {
-    //                 label: x.description,
-    //                 value: x.ataSubChapterId
-    //             }
-    //         })
-    //     })
-    // }
-    getAircraftAllList() {
-        this.aircraftManufacturerService.getAll().subscribe(
-            details => this.onDataLoad(details[0]),
-            error => this.onDataLoadFailed(error)
-        );
-    }
-    private onDataLoad(allACList: any[]) {
-        this.alertService.stopLoadingMessage();
-        this.aircraftList = allACList;
-    }
-
-    // getAtachapter() {
-    //     this.atamain.getAtaMainList().subscribe(data => {
-    //         const responseData = data[0].map(x => {
-    //             return {
-    //                 atachapter: x.ataChapterName,
-    //                 atasubchapter: ""
-    //             };
-    //         });
-    //         this.atachapterList = responseData;
-    //     });
-    // }
-
-    private countrylist() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-        this.countryservice.getCountrylist().subscribe(
-            results => this.onDatacountrySuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-    }
-
-    private onDatacountrySuccessful(allWorkFlows: any[]) {
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
-        this.allCountryinfo = allWorkFlows;
-
-        // this.countrycollection = [];
-
-
-
-        // if (this.allCountryinfo.length > 0) {
-        //     for (let i = 0; i < this.allCountryinfo.length; i++) {
-        //         let countryName = this.allCountryinfo[i].nice_name;
-        //         if (countryName) {
-        //             this.countrycollection.push(countryName);
-        //         }
-        //     }
-        // }
-    }
-    selectedExportCountry(value) {
-
-        this.tempExportCountryId = value.countries_id;
-    }
-    filtercountry(event) {
-        this.countrycollection = this.allCountryinfo;
-
-        const countryNameFilterData = [...this.allCountryinfo.filter(x => {
-            return x.nice_name.toLowerCase().includes(event.query.toLowerCase())
-        })]
-        this.countrycollection = countryNameFilterData;
-
-
-        // for (let i = 0; i < this.allCountryinfo.length; i++) {
-        //     let countryName = this.allCountryinfo[i].nice_name;
-        //     if (countryName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-        //         this.countrycollection.push(countryName);
-        //     }
-        // }
-    }
+    
+    
 
     filterUOM(event) {
         this.unitofmeasureValue = [];
@@ -5710,62 +4113,6 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
 
-    // onClickDNCheckbox(rowIndex) {
-    //     this.indexOfrow = rowIndex;
-    //     this.enableDNMemo = !this.enableDNMemo;
-    // }
-
-    changeOfTab(value) {
-        console.log('invoked');
-        console.log(`Parent master id ${this.ItemMasterId}`);
-        if (value === 'General') {
-            this.currentTab = 'General';
-            this.activeMenuItem = 1;
-        } else if (value === 'AircraftInfo') {
-            this.currentTab = 'AircraftInfo';
-            this.activeMenuItem = 2;
-        } else if (value === 'Atachapter') {
-            this.currentTab = 'Atachapter';
-            this.activeMenuItem = 3;
-        } else if (value == "Capes") {
-            this.currentTab = 'Capes';
-            this.activeMenuItem = 4;
-        } else if (value === 'PurchaseSales') {
-            this.currentTab = 'PurchaseSales';
-            this.activeMenuItem = 5;
-        }  else if (value === 'NhaTlaAlternateTab') {
-            this.currentTab = 'NhaTlaAlternateTab';
-            this.activeMenuItem = 6;
-        } else if (value === "Exchange") {
-            this.currentTab = 'Exchange';
-            this.exchLoan.loadData(this.ItemMasterId);
-            this.activeMenuItem = 7;
-        }
-        else if (value === 'ExportInfo') {
-            this.currentTab = 'ExportInfo';
-            this.activeMenuItem = 8;
-        }
-       
-    }
-    changeOfNTAETab(value) {
-        console.log('invoked');
-        console.log(`Parent master id ${this.ItemMasterId}`);
-        if (value === 'NHA') {
-            this.currentNTAETab = 'NHA';
-            this.activeNTAEMenuItem = 1;
-        } else if (value === 'TLA') {
-            this.currentNTAETab = 'TLA';
-            this.activeNTAEMenuItem = 2;
-        } else if (value === 'Alternate') {
-            this.currentNTAETab = 'Alternate';
-            this.activeNTAEMenuItem = 3;
-        } else if (value == "Equivalency") {
-            this.currentNTAETab = 'Equivalency';
-            this.activeNTAEMenuItem = 4;
-        } 
-       
-    }
-    //New Priority
     private loadPriority() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -5814,64 +4161,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             }
         }
     }
-    // Add Integration  
-
-    integrationopen(content) {
-        this.sourceAction = {};
-        this.isEditMode = false;
-        this.isDeleteMode = false;
-        this.disableSave = false;
-        this.isSaving = true;
-        this.integrationData();
-        this.loadMasterCompanies();
-        this.sourceAction.isActive = true;
-        this.portalURL = "";
-        this.integrationName = "";
-        this.sourceAction.description = "";
-        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-
-    integrationopenEdit(content, row) {
-        this.isEditMode = true;
-        this.isSaving = true;
-        this.disableSave = false;
-        this.loadMasterCompanies();
-        this.integrationData();
-        this.sourceAction = row;
-        this.integrationName = this.sourceAction.description;
-        this.portalURL = row.portalURL;
-        this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-
-    integrationeventHandler(event) {
-        let value = event.target.value.toLowerCase();
-        if (this.selectedActionName) {
-            if (value == this.selectedActionName.toLowerCase()) {
-                this.disableSave = true;
-            }
-            else {
-                this.disableSave = false;
-            }
-        }
-
-    }
-    integrationId(event) {
-        //debugger;
-        for (let i = 0; i < this.actionamecolle.length; i++) {
-            if (event == this.actionamecolle[i][0].integrationName) {
-                //alert("Action Name already Exists");
-                this.disableSave = true;
-                this.selectedActionName = event;
-            }
-        }
-    }
+    
     Exportuom(content) {
         this.isDeleteMode = false;
         this.isSaving = true;
@@ -5913,84 +4203,5 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         }
     }
 
-    saveexportuom() {
-        this.isSaving = true;
-        this.disableuomvalue = false;
-        this.sourceUOM.createdBy = this.userName;
-        this.sourceUOM.updatedBy = this.userName;
-        this.sourceUOM.description = this.unitName;
-        this.sourceUOM.masterCompanyId = 1;
-        this.unitService.newUnitOfMeasure(this.sourceUOM).subscribe(data => {
-            this.sourceItemMaster.consumeUnitOfMeasureId = data.unitOfMeasureId;
-            this.Purchaseunitofmeasure();
-        })
-        this.modal.close();
-    }
-
-    filterStandardUOM(event) {
-        this.unitofmeasureValue = [];
-        if (this.allUnitOfMeasureinfo) {
-            for (let i = 0; i < this.allUnitOfMeasureinfo.length; i++) {
-                let unitName = this.allUnitOfMeasureinfo[i].shortName;
-                if (unitName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                    this.unitofmeasureValue.push(unitName)
-                }
-            }
-        }
-
-    }
-    filterconsumeUOM(event) {
-        this.unitofmeasureValue = [];
-        if (this.allUnitOfMeasureinfo) {
-            for (let i = 0; i < this.allUnitOfMeasureinfo.length; i++) {
-                let unitName = this.allUnitOfMeasureinfo[i].standard;
-                if (unitName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                    this.unitofmeasureValue.push(unitName)
-                }
-            }
-        }
-
-    }
-    filterintegrations(event) {
-        this.localmanufacturer = [];
-        for (let i = 0; i < this.allIntegrationInfo.length; i++) {
-            let integrationName = this.allIntegrationInfo[i].description;
-            if (integrationName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.actionamecolle.push([{
-                    "chargeId": this.allIntegrationInfo[i].integrationPortalId,
-                    "integrationName": integrationName
-                }]),
-                    this.localmanufacturer.push(integrationName);
-            }
-        }
-    }
-
-    saveIntegration() {
-
-        this.isSaving = true;
-
-        if (this.isEditMode == false) {
-            this.sourceAction.createdBy = this.userName;
-            this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.portalURL = this.portalURL;
-            this.integrationService.newAction(this.sourceAction).subscribe((data) => { this.Integration(); },
-                role => this.saveSuccessHelper(role)
-            );
-        }
-        else {
-
-            this.sourceAction.updatedBy = this.userName;
-            this.sourceAction.description = this.integrationName;
-            this.sourceAction.portalURL = this.portalURL;
-            this.integrationService.updateAction(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
-        }
-
-        this.modal.close();
-    }
-    onSubmit(value) {
-
-    }
 }
 
