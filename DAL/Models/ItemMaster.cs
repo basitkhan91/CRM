@@ -172,6 +172,8 @@ namespace DAL.Models
         
         public int? oemPNId { get; set; } 
         public  long? RepairUnitOfMeasureId { get; set; }
+        public long? RevisedPartId { get; set; }
+
 
         public virtual Manufacturer Manufacturer { get;set;}
         public virtual Provision Provision {get;set;}
