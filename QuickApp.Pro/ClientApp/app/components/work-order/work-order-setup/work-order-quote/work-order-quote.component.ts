@@ -548,6 +548,7 @@ editMatData: any[] = [];
     .subscribe(
       res => {
         this.materialListQuotation = res.workOrderQuoteMaterial;
+        this.getQuoteMaterialListByWorkOrderQuoteId();
         this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId);
         this.alertService.showMessage(
             this.moduleName,
@@ -623,6 +624,7 @@ editMatData: any[] = [];
     .subscribe(
       res => {
         this.workOrderChargesList = res.workOrderQuoteCharges;
+        this.getQuoteChargesListByWorkOrderQuoteId();
         this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId);
         this.alertService.showMessage(
           this.moduleName,
@@ -637,6 +639,7 @@ editMatData: any[] = [];
     .subscribe(
       res => {
         this.workOrderExclusionsList = res.workOrderQuoteExclusions;
+        this.getExclusionListByWorkOrderId();
         this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId);
         console.log(res);
       }
