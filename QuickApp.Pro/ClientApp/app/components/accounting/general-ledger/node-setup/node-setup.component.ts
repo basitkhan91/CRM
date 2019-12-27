@@ -56,6 +56,7 @@ export class NodeSetupComponent implements OnInit {
         description: "",
         selectedCompanysData: "",
         parentNodeId: "",
+        parentNode: "",
         leafNodeCheck: "",
         glAccountNodeType: "",
         fsType: "",
