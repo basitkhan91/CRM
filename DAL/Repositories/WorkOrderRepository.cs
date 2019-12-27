@@ -2391,6 +2391,7 @@ namespace DAL.Repositories
                         workOrderReserveIssuesPart.IssuedById = item.IssuedById;
                         workOrderReserveIssuesPart.IssuedDate = item.IssuedDate;
                         workOrderReserveIssuesPart.ItemMasterId = item.ItemMasterId;
+						
                         workOrderReserveIssuesPart.PartDescription = item.PartDescription;
                         workOrderReserveIssuesPart.PartNumber = item.PartNumber;
                         workOrderReserveIssuesPart.Quantity = item.Quantity;
@@ -5080,7 +5081,7 @@ namespace DAL.Repositories
                             im.PartNumber,
                             im.PartDescription,
                             alt.ItemMasterId,
-                            sl.ConditionId,
+							ConditionId= sl == null ? 0 : sl.ConditionId,
                             Condition = con.Description,
                             QuantityOnHand = sl == null ? 0 : sl.QuantityOnHand,
                             QuantityAvailable = sl == null ? 0 : sl.QuantityAvailable,
@@ -5091,8 +5092,8 @@ namespace DAL.Repositories
                             //QuantityReserved = wom == null ? 0 : wom.QuantityReserved,
                             QuantityReserved = wom.Quantity - wom.QuantityReserved,
                             QuantityAlreadyReserved = wom == null ? 0 : wom.QuantityReserved,
-                            wom.UnReservedQty,
-                            wom.UnIssuedQty,
+							UnReservedQty = wom == null ? 0 : wom.UnReservedQty,
+							UnIssuedQty = wom == null ? 0 : wom.UnIssuedQty,
                             QuantityTurnIn = wom == null ? 0 : wom.QuantityTurnIn,
                             IssuedById = wom == null ? 0 : wom.IssuedById,
                             IssuedDate = wom == null ? DateTime.Now : wom.IssuedDate,
@@ -5102,7 +5103,7 @@ namespace DAL.Repositories
                             im.PurchaseUnitOfMeasureId,
                             im.ItemClassificationId,
                             PartStatusId = wom.PartStatusId == null ? 0 : wom.PartStatusId,
-                            wom.ExtendedCost,
+							ExtendedCost= wom == null ? 0 : wom.ExtendedCost,
                             Manufacturer = man.Name,
                             im.ManufacturerId,
                             OemDer = im.PMA == true && im.DER == true ? "PMA&DER" : (im.PMA == true && im.DER == false ? "PMA" : (im.PMA == false && im.DER == true ? "DER" : "")),
