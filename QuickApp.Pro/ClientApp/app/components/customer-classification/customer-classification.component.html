@@ -125,7 +125,7 @@
 </ng-template>
 
 
-<div #contentEdit id="contentEdit" class="modal fade" role="dialog" data-backdrop="static">
+<div #contentEdit id="contentEdit" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -174,7 +174,7 @@
     </div>
 </div>
 
-<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static">
+<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -217,7 +217,7 @@
     </div>
 </div>
 
-<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static">
+<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -243,7 +243,7 @@
     </div>
 </div>
 
-<ng-template #helpText class="modal fade" id="help-popup" role="dialog" data-backdrop="static">
+<ng-template #helpText class="modal fade" id="help-popup" role="dialog">
 
     <div class="modal-content">
         <div class="modal-header">

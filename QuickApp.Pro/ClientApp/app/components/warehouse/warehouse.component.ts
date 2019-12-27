@@ -526,7 +526,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 
 		
 
-		this.modal = this.modalService.open(content, { size: 'lg' });
+		this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -540,7 +540,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 		this.isDeleteMode = true;
 		this.sourceWarehouse = row;
 		this.warehouse_Name = row.name;
-		this.modal = this.modalService.open(content, { size: 'sm' });
+		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -575,7 +575,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 		})
 
 		this.name = this.sourceWarehouse.name;
-		this.modal = this.modalService.open(content, { size: 'lg' });
+		this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -611,7 +611,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 		this.createdDate = row.createdDate;
 		this.updatedDate = row.updatedDate;
 		this.loadMasterCompanies();
-		this.modal = this.modalService.open(content, { size: 'lg' });
+		this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -619,7 +619,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 
 	//OpenHelpText
 	openHelpText(content) {
-		this.modal = this.modalService.open(content, { size: 'sm' });
+		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -647,7 +647,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 		this.auditHisory = auditHistory;
 
 
-		this.modal = this.modalService.open(content, { size: 'lg' });
+		this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
 
 		this.modal.result.then(() => {
 			console.log('When user closes');
@@ -784,7 +784,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 
     showAuditPopup(template, id): void {
         this.auditWarehouse(id);
-        this.modal = this.modalService.open(template, { size: 'sm' });
+        this.modal = this.modalService.open(template, { size: 'sm', backdrop: 'static', keyboard: false });
     }
 
     auditWarehouse(warehouseId: number): void {

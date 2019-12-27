@@ -105,7 +105,7 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
         this.sourceAction = row;
         //this.itemName = this.sourceAction.itemClassificationCode;
         //this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -128,7 +128,7 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourcePORPCategory = row;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -198,7 +198,7 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
         this.poroCategoryToUpdate = Object.assign({}, this.poroCategoryList.filter(function (asset) {
             return asset.poroCategoryId == id;
         })[0]);
-        this.modal = this.modalService.open(editporoCategoryPopup, { size: 'sm' });
+        this.modal = this.modalService.open(editporoCategoryPopup, { size: 'sm', backdrop: 'static', keyboard: false });
     }
 
     updateporoCategory(): void {
@@ -243,7 +243,7 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
         this.poroCategoryToRemove = Object.assign({}, this.poroCategoryList.filter(function (poroCategory) {
             return poroCategory.poroCategoryId == id;
         })[0]);;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
     }
 
     toggleIsActive(poroCategory: any, event): void {
@@ -288,7 +288,7 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
 
     showAuditPopup(template, id): void {
         this.auditPOROCategory(id);
-        this.modal = this.modalService.open(template, { size: 'sm' });
+        this.modal = this.modalService.open(template, { size: 'sm', backdrop: 'static', keyboard: false });
     }
 
     auditPOROCategory(poroCategoryId: number): void {
