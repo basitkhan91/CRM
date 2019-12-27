@@ -41,6 +41,7 @@ export class CurrencyComponent implements OnInit {
         { field: 'memo', header: 'Memo' }
     ];
     selectedColumns = this.headers;
+    formData = new FormData()
     new = {
         code: "",
         displayName: "",
@@ -366,26 +367,45 @@ export class CurrencyComponent implements OnInit {
     }
 
     customExcelUpload(event) {
-        // const file = event.target.files;
+        const file = event.target.files;
+      
+        if (file.length > 0) {
 
-        // console.log(file);
-        // if (file.length > 0) {
+            this.formData.append('file', file[0])
+            this.currencyService.currencyFileUpload(this.formData).subscribe(res => {
+                event.target.value = '';
 
-        //     this.formData.append('file', file[0])
-        //     this.unitofmeasureService.UOMFileUpload(this.formData).subscribe(res => {
-        //         event.target.value = '';
+                this.formData = new FormData();
+                this.existingRecordsResponse = res;
 
-        //         this.formData = new FormData();
-        //         this.existingRecordsResponse = res;
-        //         this.getList();
-        //         this.alertService.showMessage(
-        //             'Success',
-        //             `Successfully Uploaded  `,
-        //             MessageSeverity.success
-        //         );
+                var result = this.existingRecordsResponse[0].uploadStatus;
+                if (result == "Duplicate") {
 
-        //     })
-        // }
+                    this.alertService.showMessage(
+                        'Duplicate',
+                        `Duplicate Records found `,
+                        MessageSeverity.warn
+                    );
+                }
+                if (result === "Success") {
+                    this.alertService.showMessage(
+                        'Success',
+                        `Success Records found `,
+                        MessageSeverity.success
+                    );
+                }
+
+                if (result === "Failed") {
+                    this.alertService.showMessage(
+                        'Failed',
+                        `Failed `,
+                        MessageSeverity.error
+                    );
+                }
+                this.getList();
+            })
+        }
+
 
     }
     sampleExcelDownload() {

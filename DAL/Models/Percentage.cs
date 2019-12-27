@@ -9,13 +9,13 @@ namespace DAL.Models
     /// <summary>
     /// Class representing percentage
     /// </summary>
-    public  class Percentage : PasBase
+    public class Percentage : PasBase, IAudit
     {
         [Key]
-        public long PercentageId { get; set; }
-        public string Name { get; set; }
-        public decimal Value { get; set; }
-        public string Memo { get; set; }
+        public long PercentId { get; set; }
+
+        public decimal PercentValue { get; set; }  
+   
         public bool? IsActive { get; set; }
         [ForeignKey("MasterCompanyId")]
         public Int32 MasterCompanyId { get; set; }
