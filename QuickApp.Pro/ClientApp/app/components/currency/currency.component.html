@@ -105,7 +105,7 @@
 </ng-template>
 
 
-<div  *ngIf="selectedRowforDelete" #delete id="delete"  class="modal fade" role="dialog" data-backdrop="static">
+<div  *ngIf="selectedRowforDelete" #delete id="delete"  class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -127,7 +127,7 @@
   </div>
 
 
-  <div #add  id="add"class="modal fade" role="dialog" data-backdrop="static">
+  <div #add  id="add"class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
   
       <!-- Modal content-->
@@ -225,7 +225,7 @@
   </div>
 
 
-<div *ngIf="existingRecordsResponse" id="duplicateRecords" #duplicateRecords class="modal fade" role="dialog"  data-backdrop="static">
+<div *ngIf="existingRecordsResponse" id="duplicateRecords" #duplicateRecords class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
                             <div class="modal-dialog modal-lg">
                           
                              
@@ -269,7 +269,7 @@
                             </div>
 </div>
 
-                          <div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog"  data-backdrop="static">
+                          <div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
                             <div class="modal-dialog modal-lg">
                           
                               <!-- Modal content-->
@@ -299,7 +299,7 @@
                                                              <td [ngStyle]="{'color': getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.shortName}}</td>
                                                         
                                                              <td [ngStyle]="{'color': getColorCodeForHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>
-                                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+                                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'is Active', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
                                                             <td >{{audit.updatedBy}}</td>
                                                             <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
                                                         </tr>
@@ -326,7 +326,7 @@
 
 
 
-<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static">
+<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog modal-sm">
     <div class="modal-content">
         <div class="modal-header">
@@ -367,7 +367,7 @@
                 </p>
                 <p>
                     <span class="label ">
-                        <b class="view-Header">IsActive</b>
+                        <b class="view-Header">Is Active</b>
                     </span>
                     <span class="value">{{viewRowData.isActive === true ? 'Yes' : 'No'}}</span>
                 </p>

@@ -73,11 +73,12 @@ export class ConditionsComponent implements OnInit {
             description: "",
             masterCompanyId: 1,
             isActive: true,
-            isDelete: false,
+            isDeleted: false,
             memo: ""
         };
     addNewCondition = { ...this.newCondition };
     disableSaveForCondition: boolean;
+    disableSaveForConditionMsg: boolean;
     /** Currency ctor */
     constructor(public router: Router, private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, private masterComapnyService: MasterComapnyService, private modalService: NgbModal, public conditionService: ConditionService, private dialog: MatDialog) {
 
@@ -101,6 +102,35 @@ export class ConditionsComponent implements OnInit {
             this.totalRecords = respData.totalRecords;
             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
         });
+    }
+
+    onBlur(event) {
+        //console.log(event.target.value);
+        //console.log(this.addNew);
+
+        const value = event.target.value;
+        this.disableSaveForCondition = false;
+        for (let i = 0; i < this.conditionData.length; i++) {
+            let description = this.conditionData[i].description;
+            let conditionId = this.conditionData[i].conditionId;
+            if (description.toLowerCase() == value.toLowerCase()) {
+                if (!this.isEditMode) {
+                    this.disableSaveForConditionMsg = true;
+                    this.disableSaveForCondition = true;
+                }
+                else if (conditionId != this.selectedRecordForEdit.conditionId) {
+                    this.disableSaveForConditionMsg = true;
+                    this.disableSaveForCondition = false;
+                }
+                else {
+                    this.disableSaveForConditionMsg = false;
+                    this.disableSaveForCondition = false;
+                }
+                console.log('description :', description);
+                break;
+            }
+        }
+
     }
 
     resetConditionForm() {
@@ -155,8 +185,10 @@ export class ConditionsComponent implements OnInit {
     checkConditionExists(field, value) {
         for (var i = 0; i < this.conditionData.length; i++) {
             if (value.toLowerCase() == this.conditionData[i].description.toLowerCase()) {
+                this.disableSaveForConditionMsg = true;
                 this.disableSaveForCondition = true;
             } else {
+                this.disableSaveForConditionMsg = false;
                 this.disableSaveForCondition = false;
             }
         }
@@ -178,7 +210,7 @@ export class ConditionsComponent implements OnInit {
 
     }
     selectedCondition(object) {
-        const exists = selectedValueValidate('description', object, this.selectedRecordForEdit)
+        const exists = selectedValueValidate('description', object, this.selectedRecordForEdit)      
 
         this.disableSaveForCondition = !exists;
     }
@@ -219,7 +251,8 @@ export class ConditionsComponent implements OnInit {
     edit(rowData) {
         console.log(rowData);
         this.isEditMode = true;
-        this.disableSaveForCondition = false;
+        this.disableSaveForCondition = true;
+        this.disableSaveForConditionMsg = false;
         this.addNewCondition = { ...rowData, description: getObjectById('conditionId', rowData.conditionId, this.conditionData) };
         this.selectedRecordForEdit = { ...this.addNewCondition }
         console.log(this.addNewCondition);
@@ -261,7 +294,7 @@ export class ConditionsComponent implements OnInit {
 
 
     openHelpText(content) {
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })

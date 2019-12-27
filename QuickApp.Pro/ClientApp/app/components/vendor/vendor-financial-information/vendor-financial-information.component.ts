@@ -73,6 +73,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     SelectedCurrencyInfo: any;
     vendorProcess1099Data: any;
     checkedCheckboxesList : any = [];
+    listOfErrors: any[];
 
     ngOnInit(): void {
         this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-financial-information';
@@ -495,12 +496,35 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
       }
   
 
-    editItemAndCloseModel(isGoNxt?: boolean) {
+    editItemAndCloseModel(userForm, isGoNxt?: boolean) {
         this.isSaving = true;
-        if (!(this.sourceVendor.creditLimit && this.sourceVendor.creditTermsId && this.sourceVendor.currencyId)) {
+        let errors;
+        this.listOfErrors = [];        
+
+        if(userForm.status === "INVALID"){
+            Object.keys(userForm.controls).map(key => {
+                errors = userForm.controls[key].errors;
+               if (errors === null) { return null; }            
+               if (errors['required']) {  
+                 let titlevalue = key;
+                 if(document.getElementById(key)){
+                     titlevalue = document.getElementById(key).getAttribute('title');
+                 }
+                   this.listOfErrors.push(`${titlevalue} is required`); //test
+               } else {
+               this.listOfErrors.push(`${key} has an unknown error`);
+               }
+             });
+
             this.display = true;
             this.modelValue = true;
-        }
+             return false
+
+        } 
+        // if (!(this.sourceVendor.creditLimit && this.sourceVendor.creditTermsId && this.sourceVendor.currencyId)) {
+        //     this.display = true;
+        //     this.modelValue = true;
+        // }
         if (!this.creditTermName) {
             this.showCreditTearms = true;
         }
