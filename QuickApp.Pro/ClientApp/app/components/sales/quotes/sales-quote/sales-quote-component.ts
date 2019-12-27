@@ -35,7 +35,7 @@ export class SalesQuoteComponent implements OnInit {
   viewSelectedRow(rowData) {
    
     console.log(rowData);
-    this.modal = this.modalService.open(CustomerViewComponent, { size: 'lg' });
+    this.modal = this.modalService.open(CustomerViewComponent, { size: 'lg', backdrop: 'static', keyboard: false });
     this.modal.componentInstance.customerId = rowData.customerId;
     this.modal.result.then(() => {
         console.log('When user closes');
