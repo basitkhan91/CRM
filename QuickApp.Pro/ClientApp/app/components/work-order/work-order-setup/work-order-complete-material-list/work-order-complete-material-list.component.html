@@ -572,7 +572,7 @@
 
    
             <div class="modal-footer">
-                    <button  class="btn btn-primary btn-primary-cstm" data-dismiss="modal"  (click)="saveRIPart()" [disabled]="!checkedParts.length > 0" style="padding: 6px 12px !important;">Save </button>
+                    <button  class="btn btn-primary btn-primary-cstm" data-dismiss="modal"  (click)="saveRIPart()" [disabled]="!(checkedParts.length>0)" style="padding: 6px 12px !important;">Save </button>
               <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
             </div>
           </div>
