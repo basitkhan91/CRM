@@ -8,8 +8,10 @@ namespace DAL.Models
     {
         public string PartNumber { get; set; }
         public string PartDescription { get; set; }
+
         public List<WOReservedIssuedAltParts> WOReservedIssuedAltParts { get;set;}
-        
+        public List<WOReservedIssuedEquParts> WOReservedIssuedEquParts { get; set; }
+
     }
 
     public class WOReservedIssuedAltParts: RevisedIssuedParts
@@ -20,9 +22,19 @@ namespace DAL.Models
         
     }
 
+    public class WOReservedIssuedEquParts : RevisedIssuedParts
+    {
+        public long EquPartId { get; set; }
+        public string EquPartNumber { get; set; }
+        public string EquPartDescription { get; set; }
+
+    }
+
     public class RevisedIssuedParts
     {
-        public long WorkOrderId { get; set; }
+
+
+		public long WorkOrderId { get; set; }
         public long WorkFlowWorkOrderId { get; set; }
         public long WorkOrderMaterialsId { get; set; }
         public long StockLineId { get; set; }
@@ -38,9 +50,9 @@ namespace DAL.Models
         public int? QuantityReserved { get; set; }
         public int? QuantityTurnIn { get; set; }
         public int? QuantityIssued { get; set; }
-        public string IssuedBy { get; set; }
+        public long? IssuedById { get; set; }
         public DateTime? IssuedDate { get; set; }
-        public string ReservedBy { get; set; }
+        public long? ReservedById { get; set; }
         public DateTime? ReservedDate { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
@@ -56,7 +68,12 @@ namespace DAL.Models
         public int? UnIssuedQty { get; set; }
         public int? QuantityAlreadyReserved { get; set; }
         public int? QuantityAlreadyIssued { get; set; }
-        
+        public string Manufacturer { get; set; }
+        public long? ManufacturerId { get; set; }
+        public string OemDer { get; set; }
+        public bool? IsEquPart { get; set; }
+        public long? EquPartMasterPartId { get; set; }
+        public string ParentPartNo { get; set; }
 
     }
 }

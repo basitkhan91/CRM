@@ -875,7 +875,15 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
+        [HttpGet("getwoquotedetails")]
+        public IActionResult GetWorkOrderQuoteDetails(long workOrderId)
+        {
+            unitOfWork.WorkOrderRepository.GetWorkOrderQuoteDetails(workOrderId);
+            return Ok();
+        }
 
+
+        
         #endregion
 
         #region Work Order Freight

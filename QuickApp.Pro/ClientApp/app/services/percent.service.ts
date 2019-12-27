@@ -33,4 +33,17 @@ export class PercentService {
             this.percentEndpoint.getAllPercentages<Percent[]>());
     }
 
+    newPercentage(action: any) {
+        return this.percentEndpoint.getNewGatecodeEndpoint<any>(action);
+    }
+
+    historyAcion(actionId: number) {
+        return this.percentEndpoint.getHistoryActionEndpoint<any[]>(actionId);
+    }
+  
+
+    updatePercentage(action: any) {
+        return this.percentEndpoint.getUpdatePercentageEndpoint(action, action.percentId);
+    }
+
 }

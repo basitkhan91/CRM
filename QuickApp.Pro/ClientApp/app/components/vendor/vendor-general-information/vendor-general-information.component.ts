@@ -383,7 +383,7 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         this.sourceAction.isActive = true;
         this.vendorName = "";
         this.vendorClassName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
 
         // below line doing nothing
         this.modal.result.then(() => {
@@ -551,7 +551,7 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.auditHisory = auditHistory;
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         // does nothing here too
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -588,7 +588,7 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         this.loadMasterCompanies();
         this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
         this.actionName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         //remove
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -599,7 +599,7 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceVendor = row;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -612,7 +612,7 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         this.isSaving = true;
         this.sourceVendor = row;
         this.loadMasterCompanies();      
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -627,13 +627,13 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         this.updatedDate = row.updatedDate;
         this.loadMasterCompanies();
         this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
     openHelpText(content) {
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })

@@ -390,6 +390,7 @@ namespace DAL
         public DbSet<AssetCapesAudit> AssetCapesAudit { get; set; }
 
         public DbSet<CustomerInternationalShipping> CustomerInternationalShipping { get; set; }
+        public DbSet<CustomerInternationalShippingAudit> CustomerInternationalShippingAudit { get; set; }
         public DbSet<ShippingViaDetails> ShippingViaDetails { get; set; }
         public DbSet<CustomerDocumentDetail> CustomerDocumentDetails { get; set; }
         public DbSet<Attachment> Attachment { get; set; }
@@ -424,9 +425,10 @@ namespace DAL
 
 
         public DbSet<Dropdowns> Dropdowns { get; set; }
-        public DbSet<Percentage> Percentage { get; set; }
+        public DbSet<Percentage> Percent { get; set; }
+        public DbSet<PercentageAudit> PercentAudit { get; set; }
         public DbSet<AssetIntangibleAttributeType> AssetIntangibleAttributeType { get; set; }
-        public DbSet<Percent> Percent { get; set; }
+       // public DbSet<Percent> Percent { get; set; }
         public DbSet<PurchaseOrderApprover> PurchaseOrderApprover { get; set; }
         public DbSet<PurchaseOrderApproverList> PurchaseOrderApproverList { get; set; }
         public DbSet<POBillingShippingAddress> POBillingShippingAddress { get; set; }
@@ -475,6 +477,9 @@ namespace DAL
         public DbSet<DAL.Models.Sales.SalesOrderQuoteApproverList> SalesOrderQuoteApproverList { get; set; }
         public DbSet<DAL.Models.Sales.SalesOrderQuotePart> SalesOrderQuotePart { get; set; }
         public DbSet<Master1099Audit> Master1099Audit { get; set; }
+        public DbSet<TagType> TagType { get; set; }
+        public DbSet<CustomerAircraftMappingAudit> CustomerAircraftMappingAudit { get; set; }
+
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

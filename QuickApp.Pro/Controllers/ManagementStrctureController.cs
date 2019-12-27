@@ -122,7 +122,8 @@ namespace QuickApp.Pro.Controllers
                        {
                            t.LegalEntityId,
                            t.Name,
-                           t.LedgerName
+                           t.LedgerName,
+                           t.ParentId
                        }).ToList();
             return Ok(res);
         }

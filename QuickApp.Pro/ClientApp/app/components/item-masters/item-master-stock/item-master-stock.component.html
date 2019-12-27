@@ -100,7 +100,7 @@
                                     </div>
                                     <div>
                                         <p-autoComplete id="partNumber" title="Part Number" [(ngModel)]="sourceItemMaster.partNumber"
-                                                        (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event)" [name]="partNumber"
+                                                        (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event)" [name]="partNumber" field="name" dataKey="id" 
                                                         [required]="true" [suggestions]="partCollection" [ngModelOptions]="{standalone: true}"
                                                         (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
                                                         [dropdown]="true" class="autocomplete-customer">
@@ -114,7 +114,7 @@
                                         PN Description <strong class="clr-red">*</strong>
                                     </label>
                                     <div>
-                                        <p-autoComplete (onKeyUp)=descriptionHandler($event)
+                                        <p-autoComplete id="partDescription" title="Part Description" (onKeyUp)=descriptionHandler($event)
                                                         (onSelect)="partdescriptionId($event)"
                                                         [suggestions]="descriptionCollection"
                                                         [ngModelOptions]="{standalone: true}"
@@ -577,6 +577,21 @@
                                                    [(ngModel)]="sourceItemMaster.memo" type="text" [disabled]="true" pInputText class="form-control input-value" />
                                         </span>
                                         <i class="fa memo fa-info-circle fa-lg" pTooltip="{{memoNotes}}" tooltipPosition="top" data-toggle="modal" data-target="#rro-memo" NTE></i>
+                                    </div>
+                                    <div class="inline-adjust inline-block display-flex">
+
+                                        <label class="control-label spacing-label">
+                                            Revised Part                                            
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <select [ngModelOptions]="{standalone: true}"
+                                                [(ngModel)]="sourceItemMaster.RevisedPartId">
+                                            <option class="form-control" *ngFor="let partCollectionItem of partCollection"
+                                                    [ngValue]="partCollectionItem">
+                                                {{partCollectionItem}}
+                                            </option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -1352,7 +1367,7 @@
 
 
     <!--New code for dialogue-->
-    <div id="ModalDashNumber" class="modal fade custom-popup" role="dialog" data-backdrop="static">
+    <div id="ModalDashNumber" class="modal fade custom-popup" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-full">
             <!-- Modal content-->
             <div class="modal-content">
@@ -1500,7 +1515,7 @@
     </div>
     <div id="ModalViewCapes"
          class="modal fade custom-popup"
-          role="dialog" data-backdrop="static">
+          role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-full">
             <!-- Modal content-->
             <form #capeForm="ngForm" >
@@ -2639,7 +2654,7 @@
 
 </ng-template>
 
-<div class="modal fade" id="rro-memo" role="dialog" data-backdrop="static">
+<div class="modal fade" id="rro-memo" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm" style="max-width: 400px !important;">
         <div class="modal-content">
             <div class="modal-header">
@@ -2723,7 +2738,7 @@
 
 </ng-template>
 
-<div id="EditMemo" class="modal fade custom-popup" role="dialog" data-backdrop="static">
+<div id="EditMemo" class="modal fade custom-popup" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">

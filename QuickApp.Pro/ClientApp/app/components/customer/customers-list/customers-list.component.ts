@@ -176,6 +176,8 @@ export class CustomersListComponent implements OnInit {
     contactcols: any[];
     selectedContactColumns: any[];
     allContacts: any[] = [];
+    customerauditHisory: any[];
+    selectedRowforDelete: any;
     customerContactsColumns = [
         { field: 'tag', header: 'Tag' },
         { field: 'firstName', header: 'First Name' },
@@ -441,7 +443,7 @@ export class CustomersListComponent implements OnInit {
         this.getCustomerRestrictedPMAByCustomerId(customerId);
         this.getCustomerRestrictedDERByCustomerId(customerId);
         this.getCustomerClassificationByCustomerId(customerId)
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -576,9 +578,9 @@ export class CustomersListComponent implements OnInit {
             }
         })
     }
-    getAuditHistoryById(rowData) {
-        //alert('This functionality is not implemented');
-    }
+    //getAuditHistoryById(rowData) {
+    //    //alert('This functionality is not implemented');
+    //}
     ExpandAllCustomerDetailsModel() {
         $('#step1').collapse('show');
         $('#step2').collapse('show');
@@ -650,15 +652,16 @@ export class CustomersListComponent implements OnInit {
 
         this.isDeleteMode = true;
 
-
+        this.selectedRowforDelete = rowData;
         this.customerId = rowData.customerId;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
     deleteItemAndCloseModel() {
         let customerId = this.customerId;
+
         if (customerId > 0) {
 
             this.customerService.updateListstatus(customerId).subscribe(
@@ -689,7 +692,7 @@ export class CustomersListComponent implements OnInit {
 
     openContactList(content, row) {
         this.selectedRow = row;
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -727,6 +730,37 @@ export class CustomersListComponent implements OnInit {
     private onDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();
         
+    }
+    getAuditHistoryById(content, row) {
+        
+        this.alertService.startLoadingMessage();
+
+        this.customerService.getCustomerHistory(row.customerId).subscribe(
+            results => this.onAuditHistoryLoadSuccessful(results, content),
+            error => this.saveFailedHelper(error));
+    }
+    private onAuditHistoryLoadSuccessful(auditHistory, content) {
+        this.alertService.stopLoadingMessage();
+
+
+        this.customerauditHisory = auditHistory;
+
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false});
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.customerauditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
     }
 
     // ngAfterViewInit() {

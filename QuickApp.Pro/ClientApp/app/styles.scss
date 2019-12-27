@@ -7223,6 +7223,10 @@ input[type="text"] {
         margin: 0;
     }
 
+    table.table-border-modal{
+        height : 300px !important;
+    }
+
     .btns2 {
         width: 60px;
     }
@@ -13071,7 +13075,13 @@ button {
         font-weight: normal !important;
         width: 194px !important;
       }
-
+      .p-checkbox-label-womaterial .ui-chkbox-label{
+        margin-top: 16px !important;
+        margin-left: 15px;
+        font-size: 12px !important;
+        font-weight: normal !important;
+        width: auto !important;
+      }
 
 
       p-checkbox.checkbox-table .ui-chkbox.ui-widget {
@@ -13902,6 +13912,16 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     color: #295d92 !important;
     margin-left: 6px;
 }
+.po-head-15f{
+    font-weight: bold;
+    font-size: 15px !important;
+    color: #295d92 !important;
+    margin-left: 6px;
+}
+.p-dropdown-custom-md-Header-table .ui-dropdown {
+    width: 136px !important;
+}
+
 .pas-table-cstm tr th {
     padding: 8px 4px !important;
 }
@@ -14178,6 +14198,7 @@ input[type="date"]::-webkit-inner-spin-button {
     top: 43% !important;
     left: 36% !important;
 }
+
 .new-margin {
     margin-top: 10px;
 }

@@ -194,7 +194,7 @@ export class AssetCapesComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.assetServices.listCollection = getAssetData;
-        if (this.assetServices.listCollection != null && this.assetServices.isEditMode == true) {
+        if (this.assetServices.listCollection != null) {
 
             this.showLable = true;
             this.currentAsset = this.assetServices.listCollection;
@@ -943,7 +943,7 @@ export class AssetCapesComponent implements OnInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.assetServices.CapeslistCollection = row;
-        this.modal = this.modalService.open(content2, { size: 'sm' });
+        this.modal = this.modalService.open(content2, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1086,7 +1086,7 @@ export class AssetCapesComponent implements OnInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.mfgFormArray.controls = [];
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1142,7 +1142,7 @@ export class AssetCapesComponent implements OnInit {
             }
         });
 
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
          this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1152,7 +1152,8 @@ export class AssetCapesComponent implements OnInit {
         this.assetServices.listCollection = this.local;
         this.activeIndex = 2;
         this.assetServices.indexObj.next(this.activeIndex);
-        this.route.navigateByUrl('/assetmodule/assetpages/app-asset-calibration');
+        const { assetId } = this.local;
+        this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-calibration/${assetId}`);
     }
 
     backClick() {

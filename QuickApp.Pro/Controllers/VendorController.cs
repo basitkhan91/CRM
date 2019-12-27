@@ -324,8 +324,9 @@ namespace QuickApp.Pro.Controllers
 
         [HttpGet("getVendorCapabilityList")]
         [Produces(typeof(List<VendorCapabiliy>))]
-        public IActionResult GetvendorCapabilityList()
+        public IActionResult GetvendorCapabilityList(string status = "all")
         {
+            if (status.ToLower() == "all")
             {
                 var data = (from vc in _context.VendorCapabiliy
                             join v in _context.Vendor on vc.VendorId equals v.VendorId
@@ -333,11 +334,9 @@ namespace QuickApp.Pro.Controllers
                             from im in imm.DefaultIfEmpty()
                             join vct in _context.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId into vctt
                             from vct in vctt.DefaultIfEmpty()
-                            join vcat in _context.capabilityType on vct.CapabilityTypeId equals vcat.CapabilityTypeId into vcatt
+                            join vcat in _context.capabilityType on Convert.ToInt32(vc.CapabilityId) equals vcat.CapabilityTypeId into vcatt
                             from vcat in vcatt.DefaultIfEmpty()
-                                //join vct in _appContext.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId
-                                //join vcat in _appContext.vendorCapabilityAircraftType on vc.VendorCapabilityId equals vcat.VendorCapabilityId
-                                //join vcam in _appContext.vendorCapabiltiyAircraftModel on vc.VendorCapabilityId equals vcam.VendorCapabilityId
+                            where vc.IsDeleted != true
                             select new
                             {
                                 v.VendorName,
@@ -366,16 +365,69 @@ namespace QuickApp.Pro.Controllers
                                 vc.IsPMA,
                                 vc.IsDER,
                                 //vct.CapabilityTypeId,
-
                                 //vcat.AircraftTypeId,
-
                                 //vcam.AircraftModelId
 
+                            }).OrderByDescending(p => p.CreatedDate).ToList();
 
-                            }).OrderByDescending(p => p.UpdatedDate).ToList();
-                // return data;
                 return Ok(data);
             }
+            else
+            {
+                bool sStatus = false;
+                if (status.ToLower() == "active")
+                {
+                    sStatus = true;
+                }
+
+                var data = (from vc in _context.VendorCapabiliy
+                            join v in _context.Vendor on vc.VendorId equals v.VendorId
+                            join im in _context.ItemMaster on vc.ItemMasterId equals im.ItemMasterId into imm
+                            from im in imm.DefaultIfEmpty()
+                            join vct in _context.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId into vctt
+                            from vct in vctt.DefaultIfEmpty()
+                            join vcat in _context.capabilityType on Convert.ToInt32(vc.CapabilityId) equals vcat.CapabilityTypeId into vcatt
+                            from vcat in vcatt.DefaultIfEmpty()
+                            where vc.IsDeleted != true && vc.IsActive == sStatus
+                            select new
+                            {
+                                v.VendorName,
+                                v.VendorCode,
+                                im.PartNumber,
+                                im.PartDescription,
+                                im.ManufacturerId,
+                                manufacturerName = im.Manufacturer.Name,
+                                vc.VendorCapabilityId,
+                                vc.VendorId,
+                                vc.VendorRanking,
+                                vc.PMA_DER,
+                                vc.ItemMasterId,
+                                vc.TAT,
+                                vc.Cost,
+                                vc.AlternatePartId,
+                                vc.ATAChapterId,
+                                vc.ATASubchapterId,
+                                vc.Memo,
+                                vc.CreatedDate,
+                                vc.UpdatedDate,
+                                vc.capabilityDescription,
+                                vc.IsActive,
+                                CapabilityType = vcat.Description,
+                                vc.CapabilityId,
+                                vc.IsPMA,
+                                vc.IsDER,
+                                //vct.CapabilityTypeId,
+                                //vcat.AircraftTypeId,
+                                //vcam.AircraftModelId
+
+                            }).OrderByDescending(p => p.CreatedDate).ToList();
+
+                return Ok(data);
+
+
+            }
+
+
         }
 
         [HttpGet("getVendorCapabilitybyId/{id}")]
@@ -3892,7 +3944,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("searchForGetAirCraftByVendorCapsId/{vendorCapabilityId}")]
-      
+
         public IActionResult orAirMappedMultiDashId(long vendorCapabilityId, string aircraftTypeID, string aircraftModelID, string dashNumberId)
         {
             var result = _unitOfWork.Vendor.searchItemAircraftMappingDataByMultiTypeIdModelIDDashID(vendorCapabilityId, aircraftTypeID, aircraftModelID, dashNumberId);

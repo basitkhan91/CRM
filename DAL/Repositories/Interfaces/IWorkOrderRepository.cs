@@ -95,7 +95,7 @@ namespace DAL.Repositories.Interfaces
         object GetWorkOrderQuoteLabor(long WorkOrderQuoteId);
         void DeleteWorkOrderQuoteLabor(long workOrderQuoteLaborId, string updatedBy);
 
-
+        object GetWorkOrderQuoteDetails(long workOrderId);
 
 
 

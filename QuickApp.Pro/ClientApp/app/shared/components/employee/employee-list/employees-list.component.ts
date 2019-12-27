@@ -25,6 +25,9 @@ import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { Router } from '@angular/router';
 import { AppTranslationService } from '../../../../services/app-translation.service';
 import $ from "jquery";
+import { CommonService } from '../../../../services/common.service';
+import { getValueFromArrayOfObjectById } from '../../../../generic/autocomplete';
+import { ConfigurationService } from '../../../../services/configuration.service';
 
 
 
@@ -70,6 +73,10 @@ export class EmployeesListComponent implements OnInit {
     public shiftMapArray: any;
     //public auditHistory: AuditHistory[] = [];
     auditHistory: any=[];
+    getAllFrequencyTrainingInfodrpData;
+    frequencyOfTrainingData:any;
+    allEmployeeTrainingDocumentsList: any = [];
+    
 
     ngOnInit(): void {
 
@@ -82,6 +89,7 @@ export class EmployeesListComponent implements OnInit {
         this.empService.ShowPtab = false;
 
         this.empService.alertObj.next(this.empService.ShowPtab);
+        this.getAllFrequencyTrainingData();
 
     }
 
@@ -94,7 +102,7 @@ export class EmployeesListComponent implements OnInit {
     cols: any[];
     modal: NgbModalRef;
     /** employees-list ctor */
-    constructor(private modalService: NgbModal, private translationService: AppTranslationService, private empService: EmployeeService, private router: Router, private authService: AuthService, private alertService: AlertService) {
+    constructor(private modalService: NgbModal, private translationService: AppTranslationService, private empService: EmployeeService, private router: Router, private authService: AuthService, private alertService: AlertService, public commonService: CommonService,private configurations: ConfigurationService) {
         this.dataSource = new MatTableDataSource();
         this.translationService.closeCmpny = false;
         this.activeIndex = 0;
@@ -294,6 +302,7 @@ export class EmployeesListComponent implements OnInit {
     }
     openView(content, row) {
 
+        this.toGetEmployeeTrainingDocumentsList(row.employeeId);
 
         if (row.managmentLegalEntity != null && row.divmanagmentLegalEntity != null && row.biumanagmentLegalEntity != null && row.compmanagmentLegalEntity != null) {
             this.departname = row.managementStructeInfo.name;
@@ -323,10 +332,16 @@ export class EmployeesListComponent implements OnInit {
 
         }
         else {
-            console.log("no Info Presnts")
+            //console.log("no Info Presnts")
         }
-        console.log(row);
-
+      
+        if(row.employeetraingInfo.frequencyOfTrainingId > 0)
+        {
+            this.frequencyOfTrainingData = getValueFromArrayOfObjectById('label', 'value', row.employeetraingInfo.frequencyOfTrainingId, this.getAllFrequencyTrainingInfodrpData);
+        }
+        else{
+            this.frequencyOfTrainingData="";
+        }
 
         if (row.empSupervisor != null) {
             this.supervisiorname = row.empSupervisor.firstName
@@ -350,11 +365,6 @@ export class EmployeesListComponent implements OnInit {
             this.empTrainningInfo = row.employeetraingType.description
 
         }
-
-
-
-
-
 
         if (row.managementStructeInfo != null) {
             this.companyCode = row.managementStructeInfo.code;
@@ -385,7 +395,7 @@ export class EmployeesListComponent implements OnInit {
             results => this.onemployeeDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
-
+      
         // this.modal = this.modalService.open(content, { size: 'lg' });
         // this.modal.result.then(() => {
         //     console.log('When user closes');
@@ -398,14 +408,14 @@ export class EmployeesListComponent implements OnInit {
     handleChange(rowData, e) {
         if (e.checked == false) {
 
-            console.log("In active");
+            //console.log("In active");
             this.sourceEmployee = rowData;
             this.sourceEmployee.updatedBy = this.userName;
             this.sourceEmployee.IsActive = false;
             var employpeeleaveTypeId = [];
             employpeeleaveTypeId.push(this.sourceEmployee.employeeLeaveTypeId);
 
-            console.log(employpeeleaveTypeId);
+            //console.log(employpeeleaveTypeId);
             this.sourceEmployee.employeeLeaveTypeId = employpeeleaveTypeId;
 
             this.Active = "In Active";
@@ -416,7 +426,7 @@ export class EmployeesListComponent implements OnInit {
             //alert(e);
         }
         else {
-            console.log("active");
+            //console.log("active");
             var employpeeleaveTypeId = [];
             this.sourceEmployee = rowData;
             employpeeleaveTypeId.push(this.sourceEmployee.employeeLeaveTypeId);
@@ -464,6 +474,25 @@ export class EmployeesListComponent implements OnInit {
                 return data[i + 1][field] === value
             }
         }
+    }
+
+    async getAllFrequencyTrainingData() {
+        await this.commonService.smartDropDownList('FrequencyOfTraining', 'FrequencyOfTrainingId', 'FrequencyName').subscribe(res => {
+            this.getAllFrequencyTrainingInfodrpData = res;
+            
+        });        
+    }
+
+    toGetEmployeeTrainingDocumentsList(employeeId)
+	{       
+        var moduleId=4;
+        this.commonService.GetDocumentsList(employeeId,moduleId).subscribe(res => {
+			this.allEmployeeTrainingDocumentsList = res;			
+		})
+    }
+    downloadFileUpload(rowData) {	
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
+		window.location.assign(url);       
     }
 
 

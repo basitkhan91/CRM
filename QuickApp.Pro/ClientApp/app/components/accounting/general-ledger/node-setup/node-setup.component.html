@@ -103,7 +103,7 @@
         </div>
     </div>
 </div>
-<div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog"  data-backdrop="static">
+<div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -124,7 +124,7 @@
     </div>
 </div>
 
-<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog"  data-backdrop="static">
+<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
@@ -217,7 +217,7 @@
 
 </div>
 
-<div #add id="add" class="modal fade" role="dialog"  data-backdrop="static">
+<div #add id="add" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
 
         <!-- Modal content-->
@@ -238,7 +238,7 @@
                             <div class="col-sm-5">
                                 <select name="aircraftType" [(ngModel)]="addNew.ledgerName" #ledgerNameMgmStructureId="ngModel" required>
                                     <option>-- Select --</option>
-                                    <option *ngFor="let object of ledgerList" [ngValue]="addNew.LegalEntityId">{{object.ledgerName}}</option>
+                                    <option *ngFor="let object of ledgerList" [ngValue]="object.ledgerName">{{object.ledgerName}}</option>
                                 </select>
                             </div>
                         </div>
@@ -271,7 +271,7 @@
                         </div>
                         <div class="col-sm-12">
                             <div class="col-sm-5">
-                                <label for="description" class="control-label">Node Name                                   
+                                <label for="description" class="control-label">Node Name<span class="clr-red">*</span>                                   
                                 </label>
                             </div>
                             <div class="col-sm-5">
@@ -284,10 +284,10 @@
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <p-autoComplete (onSelect)="parentCodeNodeSelect($event)" class="p-autoComplete-ctsm" (onKeyUp)=parentCodeNodeHandler($event) [(ngModel)]="addNew.parentNode"
+                                <p-autoComplete (onSelect)="parentCodeNodeSelect($event)" class="p-autoComplete-ctsm" (onKeyUp)=parentCodeNodeHandler($event) [(ngModel)]="addNew.parentNodeId"
                                                 name="parentNode" [suggestions]="parentCodeCollection" (completeMethod)="filterParentNodeCodes($event)"
                                                 [size]="30" [minLength]="1" [dropdown]="true">
-                                    {{parentNode}}
+                                    
                                 </p-autoComplete>
                             </div>
                         </div>
@@ -332,9 +332,7 @@
                         </div>
                         <div class="col-sm-12">
                             <div class="col-sm-5">
-                                <label for="description" class="control-label">Node Description
-                                    <span class="clr-red">*</span>
-                                </label>
+                                <label for="description" class="control-label">Node Description</label>
                             </div>
                             <div class="col-sm-5">
                                 <textarea [(ngModel)]="addNew.description" name="description"></textarea>
@@ -342,24 +340,10 @@
                         </div>
 
                     </div>
-                    <div class="form-group">
-                        <div class="col-sm-6">
-                            <div class="checkbox-cstm">
-                                <label>
-                                    <input type="checkbox" name="isActive" [(ngModel)]="addNew.isActive">
-                                    <span class="cr">
-                                        <i class="cr-icon pi pi-check"></i>
-                                    </span>
-                                    Active
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="create.invalid || disableSaveGroupId && disableSaveForDescription "
+                <button class="btn btn-primary-cstm" data-dismiss="modal" 
                     (click)="save();">
                     {{isEdit ? 'Update' : 'Save' }}</button>
                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetForm()">Close</button>

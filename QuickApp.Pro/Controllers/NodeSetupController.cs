@@ -87,10 +87,26 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                   // node.MasterCompanyId = 1;
-                    node.CreatedDate = DateTime.Now;
-                    node.UpdatedDate = DateTime.Now;
-                    unitOfWork.Repository<GLAccountNode>().Add(node);
+                    GLAccountNode node1 = new GLAccountNode();
+
+                    node1.CreatedDate = DateTime.Now;
+                    node1.UpdatedDate = DateTime.Now;
+                    node1.CreatedBy = node.CreatedBy;
+                    node1.Description = node.Description;
+                    node1.FSType = node.FSType;
+                    node1.GLAccountNodeType = node.GLAccountNodeType;
+                    node1.IsActive = node.IsActive;
+                    node1.IsDelete = node.IsDelete;
+                    node1.LeafNodeCheck = node.LeafNodeCheck;
+                    node1.LedgerName = node.LedgerName;
+                    node1.LedgerNameMgmStructureId = node.LedgerNameMgmStructureId;
+                    node1.MasterCompanyId = node.MasterCompanyId;
+                    node1.NodeCode = node.NodeCode;
+                    node1.NodeName = node.NodeName;
+                    node1.ParentNode = node.ParentNode;
+                    node1.ParentNodeId = node.ParentNodeId;
+                    node1.UpdatedBy = node.UpdatedBy;
+                    unitOfWork.Repository<GLAccountNode>().Add(node1);
                     unitOfWork.SaveChanges();
                     return Ok(node);
                 }

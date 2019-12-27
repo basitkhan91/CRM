@@ -169,7 +169,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
         else { this.showViewProperties.timeLifeCyclesId = "" }
 
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -207,7 +207,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
         this.auditHisory = auditHistory;
 
 
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
 
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -237,7 +237,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourcereceving = row;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })

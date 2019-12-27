@@ -148,7 +148,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     workOrderAssetList: any = [];
     // workOrderId;
     // workFlowWorkOrderId: any = 0;
-    workOrderMaterialList: any;
+    workOrderMaterialList: any = [];
     mpnPartNumbersList: any = [];
     stockLineList: any;
     workOrderWorkFlowOriginalData: any;
@@ -398,7 +398,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     viewCustomerDetails(customerId) {
 
         console.log();
-        this.modal = this.modalService.open(CustomerViewComponent, { size: 'lg' });
+        this.modal = this.modalService.open(CustomerViewComponent, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.componentInstance.customerId = customerId;
         this.modal.result.then(() => {
             console.log('When user closes');

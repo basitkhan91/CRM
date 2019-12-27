@@ -130,7 +130,7 @@
 </ng-template>
 
 
-<div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog" data-backdrop="static">
+<div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -154,7 +154,7 @@
 </div>
 
 
-<div #add id="add" class="modal fade" role="dialog" data-backdrop="static">
+<div #add id="add" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
 
         <!-- Modal content-->
@@ -249,7 +249,7 @@
 </div>
 
 
-<div *ngIf="existingRecordsResponse" id="duplicateRecords" #duplicateRecords class="modal fade" role="dialog" data-backdrop="static">
+<div *ngIf="existingRecordsResponse" id="duplicateRecords" #duplicateRecords class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
 
 
@@ -291,7 +291,7 @@
     </div>
 </div>
 
-<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static">
+<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->
@@ -357,7 +357,7 @@
 
 
 
-<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static">
+<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -434,7 +434,7 @@
 
 </div>
 
-<ng-template #helpText class="modal fade" id="help-popup" role="dialog" data-backdrop="static">
+<ng-template #helpText class="modal fade" id="help-popup" role="dialog">
     <div class="modal-content">
         <div class="modal-header">
 

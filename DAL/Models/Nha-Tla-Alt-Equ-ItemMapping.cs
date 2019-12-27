@@ -23,13 +23,7 @@ namespace DAL.Models
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
 
-        public virtual ItemMaster ItemMaster { get; set; }
-        public virtual MasterCompany MasterCompany { get; set; }
     }
 
-    public class Nha_Tla_Alt_Equ_ItemMapping_List
-    {
-        public ItemMaster ItemMaster { get; set; }
-        public string MappingMemo { get; set; }
-    }
+    
 }

@@ -315,7 +315,7 @@ export class VendorBillingInformationComponent {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.auditHisory = auditHistory;
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -338,7 +338,7 @@ export class VendorBillingInformationComponent {
         this.isSaving = true;
         this.loadMasterCompanies();
         this.actionName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -347,14 +347,13 @@ export class VendorBillingInformationComponent {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceVendor = row;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
 
     openEdit(row) {
-        debugger
         this.isEditMode = true;
         this.isSaving = true;
         this.sourceVendor = row;
@@ -376,13 +375,13 @@ export class VendorBillingInformationComponent {
         this.updatedDate = row.updatedDate;
         this.isPrimary = row.isPrimary;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
     openHelpText(content) {
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -412,7 +411,7 @@ export class VendorBillingInformationComponent {
 
         this.billingauditHisory = auditHistory;
 
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -518,7 +517,7 @@ export class VendorBillingInformationComponent {
         this.loadShipViaCollection(rowData);
         this.loadMasterCompanies();
         this.sourceAction.isActive = true;
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })

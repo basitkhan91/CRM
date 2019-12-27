@@ -37,7 +37,7 @@ import { GlAccountService } from '../../../../services/glAccount/glAccount.servi
 import { Console } from '@angular/core/src/console';
 import { ShippingService } from '../../../../services/shipping/shipping-service';
 import { forEach } from '@angular/router/src/utils/collection';
-
+import { TagTypeService } from '../../../../services/tagtype.service';
 @Component({
     selector: 'app-receivng-po',
     templateUrl: './receivng-po.component.html',
@@ -74,6 +74,7 @@ export class ReceivngPoComponent implements OnInit {
     ShippingReferenceList: DropDownData[];
     ShippingViaList: DropDownData[];
     ShippingAccountList: DropDownData[];
+    TagTypeList: DropDownData[];
 
     ConditionId: number = 0;
     allPartGLAccountId: number;
@@ -176,6 +177,7 @@ export class ReceivngPoComponent implements OnInit {
         private glAccountService: GlAccountService,
         private shippingService: ShippingService,
         private _actRoute: ActivatedRoute,
+        private tagTypeService: TagTypeService,
     ) {
         this.getAllSite();
         this.getCustomers();
@@ -186,6 +188,7 @@ export class ReceivngPoComponent implements OnInit {
         this.getShippingReference();
         this.getShippingVia();
         this.getShippingAccount();
+        this.getTagType();
     }
 
     ngOnInit() {
@@ -1515,6 +1518,18 @@ export class ReceivngPoComponent implements OnInit {
         if (event.ctrlKey && event.keyCode == 38) {
             this.moveStockLinePage('stockline', part.currentSERIndex - 1, part);
         }
+    }
+
+    private getTagType(): void {
+        this.tagTypeService.getAll().subscribe(results => {
+            this.TagTypeList = [];
+            for (let tagType of results[0]) {
+                var dropdown = new DropDownData();
+                dropdown.Key = tagType.tagTypeId.toLocaleString();
+                dropdown.Value = tagType.name;
+                this.TagTypeList.push(dropdown);
+            }
+        });
     }
 }
 
