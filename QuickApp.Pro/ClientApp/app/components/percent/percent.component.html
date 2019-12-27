@@ -20,9 +20,9 @@
                                 <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect [maxSelectedLabels]="2" [options]="headers" optionLabel="header" [(ngModel)]="selectedColumns" [style]="{minWidth: '200px'}"
                                         style="float:left" (onChange)="columnsChanges()"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download" matTooltipPosition="above"
                                         iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download" matTooltipPosition="above"
                                         iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
 
@@ -33,7 +33,7 @@
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" matTooltip="Sample File download" (click)="sampleExcelDownload()">Sample File Download
+                                        <button class="btn btn-primary-cstm"  matTooltipPosition="above" matTooltip="Sample File download" (click)="sampleExcelDownload()">Sample File Download
                                         </button>
                                     </div>
                                 </div>
@@ -63,11 +63,14 @@
                                         (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                     </td>
                                     <td style="width:200px" *ngIf="selectedColumns.length> 0">
-                                        <p-inputSwitch [(ngModel)]="rowData['isActive']" matTooltip="Update" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>
+                                        <!--<p-inputSwitch [(ngModel)]="rowData['isActive']" matTooltip="Update" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>-->
+                                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 
                                         <span data-toggle="modal" data-target="#view">
                                             <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" matTooltip="view" data-target="#view"
-                                                data-toggle="modal">
+                                               data-toggle="modal">
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         </span>
@@ -132,13 +135,13 @@
 </div>
 
 
-<div #add id="add" class="modal fade" role="dialog">
+<div #add id="add" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
 
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="close" data-dismiss="modal" (click)="resetForm()">&times;</button>
                 <h4 class="modal-title">{{isEdit ? 'Edit' : 'Add' }} Percent</h4>
             </div>
             <div class="modal-body">
@@ -151,24 +154,24 @@
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <p-autoComplete field="percentValue" [(ngModel)]="addNew.percentValue
-                                " (onSelect)="selectedDescription($event)" (onKeyUp)="checkGroupDescriptionExists('percentValue', $event.target.value)"
-                                    name="description" [suggestions]="descriptionList" (completeMethod)="filterDescription($event)"
-                                    [size]="30" [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                <p-autoComplete field="percentValue" [(ngModel)]="addNew.percentValue" (onSelect)="selectedDescription($event)" 
+                                       (onBlur)="onBlur($event)"    (onKeyUp)="checkGroupDescriptionExists('percentValue', $event.target.value)"
+                                    name="percent" [suggestions]="descriptionList" (completeMethod)="filterDescription($event)"
+                                    [size]="30" [dropdown]="true" class="p-autoComplete-ctsm" required>
 
                                 </p-autoComplete>
-                                <div *ngIf="disableSaveForDescription" class="clr-red">Already Exists</div>
+                                <div *ngIf="disableSaveForDescriptionMsg" class="clr-red">Already Exists</div>
                                 <div class="clear"></div>
                             </div>
                         </div>
-                        <div class="col-sm-12">
+                        <!--<div class="col-sm-12">
                             <div class="col-sm-5">
                                 <label for="description" class="control-label">Memo</label>
                             </div>
                             <div class="col-sm-5">
-                                <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription" [(ngModel)]="addNew.memo" minlength="2"></textarea>
+                                <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription" [(ngModel)]="addNew.percentId"></textarea>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                     <div class="form-group">
                         <div class="col-sm-6">
@@ -187,7 +190,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="create.invalid || disableSaveGroupId && disableSaveForDescription "
+                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="create.invalid || disableSaveForDescription"
                     (click)="save();">
                     {{isEdit ? 'Update' : 'Save' }}</button>
                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetForm()">Close</button>
@@ -256,7 +259,7 @@
                             <tr>
                                 <!-- <th>UMID</th> -->                        
                                 <th>Percent</th>
-                                <th>Memo</th>
+                               
                                 <th>IsActive</th>
                                 <th>Updated By</th>
                                 <th>Updated Time</th>
@@ -267,8 +270,7 @@
                                 <!-- auditHistory[i>0 ? i-1 : i] -->                              
                                 <td [ngStyle]="{'color': getColorCodeForHistory(i, 'percentValue', audit.percentValue)  ? 'black' : 'red'  }">
                                     {{audit.percentValue}}</td>
-                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">
-                                    {{audit.memo}}</td>
+                                <!--<td [ngStyle]="{'color': getColorCodeForHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>-->
                                 <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">
                                     {{audit.isActive}}</td>
                                 <td>{{audit.updatedBy}}</td>
@@ -311,15 +313,15 @@
                         </span>
                         <span class="value">{{ viewRowData.percentValue}}</span>
                     </p>
-                    <p>
+                    <!--<p>
                         <span class="label ">
                             <b class="view-Header">Memo: </b>
                         </span>
                         <span class="value">{{viewRowData.memo}}</span>
-                    </p>
+                    </p>-->
                     <p>
                         <span class="label ">
-                            <b class="view-Header">IsActive</b>
+                            <b class="view-Header">Is Active</b>
                         </span>
                         <span class="value">{{viewRowData.isActive === true ? 'Yes' : 'No'}}</span>
                     </p>

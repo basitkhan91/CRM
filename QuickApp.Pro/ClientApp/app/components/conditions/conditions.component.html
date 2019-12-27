@@ -116,7 +116,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
         </div>
     </div>
 
-    <div #addCondition id="addCondition" class="modal fade" role="dialog">
+    <div #addCondition id="addCondition" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -141,12 +141,13 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                                     [(ngModel)]="addNewCondition.description"
                                                     [suggestions]="conditionList"
                                                     (onSelect)="selectedCondition($event)"
+                                                    (onBlur)="onBlur($event)"
                                                     (completeMethod)="filterConditions($event)"
                                                     (onKeyUp)="checkConditionExists('description', $event.target.value)"
                                                     name="description" [size]="30" [minLength]="1" [dropdown]="true"
                                                     class="p-autoComplete-ctsm" required>
                                     </p-autoComplete>
-                                    <div *ngIf="disableSaveForCondition" style="color:red">Already exist</div>
+                                    <div *ngIf="disableSaveForConditionMsg" style="color:red">Already exist</div>
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -173,7 +174,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                             <div class="clear"></div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="!userForm.valid || disableSaveForCondition" (click)="saveCondition();">Save</button>
+                            <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="!userForm.valid || disableSaveForCondition" (click)="saveCondition();"> {{isEditMode ? 'Update' : 'Save' }}</button>
                             <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetConditionForm()">Close</button>
                         </div>
                     </form>

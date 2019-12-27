@@ -422,9 +422,10 @@ namespace DAL
 
 
         public DbSet<Dropdowns> Dropdowns { get; set; }
-        public DbSet<Percentage> Percentage { get; set; }
+        public DbSet<Percentage> Percent { get; set; }
+        public DbSet<PercentageAudit> PercentAudit { get; set; }
         public DbSet<AssetIntangibleAttributeType> AssetIntangibleAttributeType { get; set; }
-        public DbSet<Percent> Percent { get; set; }
+       // public DbSet<Percent> Percent { get; set; }
         public DbSet<PurchaseOrderApprover> PurchaseOrderApprover { get; set; }
         public DbSet<PurchaseOrderApproverList> PurchaseOrderApproverList { get; set; }
         public DbSet<POBillingShippingAddress> POBillingShippingAddress { get; set; }

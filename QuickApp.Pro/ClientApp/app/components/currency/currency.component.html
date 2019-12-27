@@ -127,7 +127,7 @@
   </div>
 
 
-  <div #add  id="add"class="modal fade" role="dialog">
+  <div #add  id="add"class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
   
       <!-- Modal content-->
@@ -299,7 +299,7 @@
                                                              <td [ngStyle]="{'color': getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.shortName}}</td>
                                                         
                                                              <td [ngStyle]="{'color': getColorCodeForHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>
-                                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+                                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'is Active', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
                                                             <td >{{audit.updatedBy}}</td>
                                                             <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
                                                         </tr>
@@ -367,7 +367,7 @@
                 </p>
                 <p>
                     <span class="label ">
-                        <b class="view-Header">IsActive</b>
+                        <b class="view-Header">Is Active</b>
                     </span>
                     <span class="value">{{viewRowData.isActive === true ? 'Yes' : 'No'}}</span>
                 </p>
