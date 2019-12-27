@@ -15,7 +15,7 @@
                     </p>
                 </div>
                 <div class="clear"></div>
-                <form action="#" method="post" id="" name="" class="form-horizontal add-custustomer">
+                <form #finInfoForm="ngForm"  class="form-horizontal add-custustomer">
                     <div class="tab-content">
                         <div class="" id="menu2">
                             <div class="form-group row">
@@ -217,13 +217,13 @@
                                 <div class="form-group col-sm-12">
                                     <label class="control-label col-sm-4">Credit Limit <strong class="clr-red">*</strong></label>
                                     <div class="col-sm-7">
-                                        <input class="form-control" type="number" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.creditLimit">
+                                        <input class="form-control" type="number" id="creditlimit" title="Credit Limit" required name="creditlimit" [(ngModel)]="sourceVendor.creditLimit">
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-12 input-icon2">
                                     <label class="control-label col-sm-4">Credit Terms <strong class="clr-red">*</strong></label>
                                     <div class="inner-addon col-sm-7 display-flex">
-                                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.creditTermsId">
+                                        <select id="creditTermsId" title="Credit Terms" name="creditTermsId" required [(ngModel)]="sourceVendor.creditTermsId">
                                             <ng-container *ngFor="let creditTermsId of allcreditTermInfo">
                                                 <option *ngIf="creditTermsId.isActive" [ngValue]="creditTermsId.creditTermsId">{{creditTermsId.name}}</option>
                                             </ng-container>
@@ -236,7 +236,7 @@
                                 <div class="form-group col-sm-12  input-icon2">
                                     <label class="control-label col-sm-4">Currency <strong class="clr-red">*</strong></label>
                                     <div class="inner-addon col-sm-7 display-flex">
-                                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.currencyId">
+                                        <select  id="currencyId" title="Currency" name="currencyId" required [(ngModel)]="sourceVendor.currencyId">
                                             <ng-container *ngFor="let currencyName of allCurrencyInfo">
                                                 <option class="form-control" *ngIf="currencyName.isActive" [ngValue]="currencyName.currencyId">{{currencyName.symbol}}</option>
                                             </ng-container>
@@ -357,9 +357,9 @@
                                  </div>
                             <div class="clear"></div>
                             <hr>
-                            <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canAdd" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()">Save</button>
+                            <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canAdd" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel(finInfoForm)">Save</button>
 
-                            <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canUpdate" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()">Update</button>
+                            <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canUpdate" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel(finInfoForm)">Update</button>
 
 
                         </div>
@@ -367,7 +367,7 @@
                     </div>
                 </form>
             </div>
-            <button type="button" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel(true)">Save & Next</button>
+            <button type="button" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel(finInfoForm,true)">Save & Next</button>
             <button type="button" class="btn btn-primary-cstm pull-right" (click)="previousClick()">Previous</button>
         </div>
     </div>
@@ -1087,5 +1087,8 @@
     <h5 [ngStyle]="{'color':'red'}">
         Please Enter (*) Mandatory Fields
     </h5>
+    <ul  [ngStyle]="{'color':'red'}">
+        <li *ngFor="let error of listOfErrors">{{error}}</li>
+    </ul>
 
 </p-dialog>

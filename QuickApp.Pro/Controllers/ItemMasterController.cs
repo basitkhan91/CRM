@@ -540,6 +540,7 @@ namespace QuickApp.Pro.Controllers
                     itemmaserObj.MasterCompanyId = 1;
                     itemmaserObj.IsActive = true;
                     itemmaserObj.PartNumber = itemMasterViewModel.PartNumber;
+                    itemmaserObj.RevisedPartId = itemMasterViewModel.RevisedPartId;
 
                     itemmaserObj.oemPNId = itemMasterViewModel.oemPNId;
                     itemmaserObj.PartDescription = itemMasterViewModel.Partdescription;

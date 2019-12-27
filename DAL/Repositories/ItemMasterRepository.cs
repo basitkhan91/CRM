@@ -145,6 +145,7 @@ namespace DAL.Repositories
                                 iM.IsExportNONMilitary,
                                 iM.IsExportMilitary,
                                 iM.IsExportDual,
+                                iM.RevisedPartId,
                                 ManufacturerName = mfgs == null ? "" : mfgs.Name,
                                 CountryData = countryID.ToList(),
                                 //CountryName = ct == null ? "" : ct.countries_name,
@@ -152,6 +153,7 @@ namespace DAL.Repositories
                                 IntegrationPortalIds = iPortalIds.Select(e => e.IntegrationPortalId).ToList(),
                                 //IntegrationPortalIds = iPortalIds.ToList(),
                                 oemPNData = Imast.ToList(),
+                                
 
                             }).ToList();
 
