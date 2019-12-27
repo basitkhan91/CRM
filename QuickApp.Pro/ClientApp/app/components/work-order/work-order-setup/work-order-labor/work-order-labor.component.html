@@ -301,12 +301,14 @@
                   </td>
                   <td>
                       <!-- <input [(ngModel)]="matQuotation.markup" /> -->
-                    <select class="form-control custom-select wf-pub-id" (change)="markupChanged(rec)" [(ngModel)]="rec.markupPercentageId">
+                    <select class="form-control" (change)="markupChanged(rec)" [(ngModel)]="rec.markupPercentageId">
                       <option value="">Select</option>
                       <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                     </select>
                   </td>
-                  <td>{{rec.labourCostPlus}}</td>
+                  <td>
+                      <input type="number" [(ngModel)]="rec.labourCostPlus" readonly/>
+                  </td>
                 </ng-container>
                 <td>
                   <input type="text" [(ngModel)]="rec.memo" />

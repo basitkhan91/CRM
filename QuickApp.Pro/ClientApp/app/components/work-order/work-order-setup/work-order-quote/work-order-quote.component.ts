@@ -376,6 +376,29 @@ editMatData: any[] = [];
   }
   gridTabChange(value) {
     this.gridActiveTab = value;
+    if(this.isEdit){
+      switch(value){
+        case 'materialList': {
+          this.getQuoteMaterialListByWorkOrderQuoteId();
+          break;
+        }
+        case 'labor': {
+          for(let task in this.labor.workOrderLaborList[0]){
+            this.labor.workOrderLaborList[0][task] = [new AllTasks()];
+          }
+          this.getQuoteLaborListByWorkOrderQuoteId();
+          break;
+        }
+        case 'charges': {
+          this.getQuoteChargesListByWorkOrderQuoteId();
+          break;
+        }
+        case 'exclusions': {
+          this.getQuoteExclusionListByWorkOrderQuoteId();
+          break;
+        }
+      }
+    }
     if(this.selectedBuildMethod == 'use historical wos' && this.selectedWorkFlowOrWorkOrder){
         this.clearQuoteData();
         if(value == 'materialList') {
@@ -741,7 +764,7 @@ saveWorkOrderExclusionsList(data) {
       "ItemMasterId":ex.itemMasterId,
       "SourceId":1,
       "Reference":2,
-      "ExstimtPercentOccuranceId":ex.estimtPercentOccurrance,
+      "ExstimtPercentOccuranceId":ex.exstimtPercentOccuranceId,
       "Memo":ex.memo,
       "Quantity":ex.quantity,
       "UnitCost":ex.unitCost,
@@ -896,16 +919,25 @@ getQuoteTabData() {
 getQuoteExclusionListByWorkOrderQuoteId() {
   this.workOrderService.getQuoteExclusionList(this.quotationHeader['workOrderQuoteId']).subscribe(res => {
       this.workOrderExclusionsList = res;
+      if(res.length > 0){
+        this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
+      }
   })
 }
 getQuoteMaterialListByWorkOrderQuoteId() {
   this.workOrderService.getQuoteMaterialList(this.quotationHeader['workOrderQuoteId']).subscribe(res => {
       this.materialListQuotation = res;
+      if(res.length > 0){
+        this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
+      }
   })
 }
  getQuoteChargesListByWorkOrderQuoteId() {
   this.workOrderService.getQuoteChargesList(this.quotationHeader['workOrderQuoteId']).subscribe(res => {
       this.workOrderChargesList = res;
+      if(res.length > 0){
+        this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
+      }
   })
 }
  getQuoteLaborListByWorkOrderQuoteId() {
@@ -914,6 +946,7 @@ getQuoteMaterialListByWorkOrderQuoteId() {
           // this.workOrderLaborList = res;
           this.laborPayload.WorkOrderQuoteLaborHeader = res;
           if(res){
+            this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId)
             let laborList = this.labor.workOrderLaborList;
             this.labor = {...res, workOrderLaborList: laborList};
             this.taskList.forEach((tl)=>{
