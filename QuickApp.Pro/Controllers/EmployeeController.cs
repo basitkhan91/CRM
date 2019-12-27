@@ -382,12 +382,17 @@ namespace QuickApp.Pro.Controllers
                 existingResult.IsHourly = employeeViewModel.IsHourly;
                 existingResult.HourlyPay = employeeViewModel.HourlyPay;
                 existingResult.ManagementStructureId = employeeViewModel.ManagementStructureId;
-                existingResult.LegalEntityId = entityobject.LegalEntityId;
+                //existingResult.LegalEntityId = entityobject.LegalEntityId;
                 existingResult.SupervisorId = employeeViewModel.SupervisorId;
                 existingResult.EmployeeCertifyingStaff = employeeViewModel.EmployeeCertifyingStaff;
                 existingResult.MasterCompanyId = 1;
                 existingResult.Memo = employeeViewModel.Memo;
                 existingResult.CurrencyId = employeeViewModel.CurrencyId;
+
+                if (entityobject != null && entityobject.LegalEntityId != null)
+                {
+                    existingResult.LegalEntityId = entityobject.LegalEntityId;
+                }                
 
                 if (employeeViewModel.IsHeWorksInShop == null)
                 {

@@ -1,5 +1,6 @@
 import { Injectable, Injector } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
 
 import { ConfigurationService } from './configuration.service';
 import { EndpointFactory } from './endpoint-factory.service';
@@ -99,5 +100,10 @@ export class CommonService {
     GetAttachmentDeleteById(attachmentDetailId, updatedBy) {
         return this.http.delete(`${this.baseUrl}/api/FileUpload/AttachmentDelete/${attachmentDetailId}?updatedBy=${updatedBy}`, this.authService.getRequestHeaders())
     }
+
+    uploadDocumentsEndpoint<T>(file: any): Observable<T> {        
+		const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
+		return this.http.post<T>(`${this.baseUrl}/api/FileUpload/commonDocumentUpload`, file);
+	}
 
 }

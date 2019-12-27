@@ -224,9 +224,9 @@ export class EmployeeService {
         return this.employeeEndpoint.getEmployeeUpdateMemoEndpoint(employeeId, memo);
     }
 
-    uploadEmployeeTrainingDoc(action: any) {
-        return this.employeeEndpoint.uploadEmployeeTrainingDocEndpoint<any>(action);
-    }
+    // uploadEmployeeTrainingDoc(action: any) {
+    //     return this.employeeEndpoint.uploadEmployeeTrainingDocEndpoint<any>(action);
+    // }
     
    
 }
