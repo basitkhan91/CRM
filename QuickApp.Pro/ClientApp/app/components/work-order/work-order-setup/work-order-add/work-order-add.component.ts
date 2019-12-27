@@ -148,7 +148,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     workOrderAssetList: any = [];
     // workOrderId;
     // workFlowWorkOrderId: any = 0;
-    workOrderMaterialList: any;
+    workOrderMaterialList: any = [];
     mpnPartNumbersList: any = [];
     stockLineList: any;
     workOrderWorkFlowOriginalData: any;

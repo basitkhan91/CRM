@@ -17,6 +17,7 @@ export class CurrencyEndpoint extends EndpointFactory {
     private readonly _actionsUrlNewAuditHistory: string = "/api/Currency/auditHistoryById";
     private readonly getCurrencyAuditById: string = "/api/Currency/audits";
     private readonly getCurrency: string = "/api/Currency/pagination";
+    private readonly excelUpload: string = "/api/Currency/uploaduomcustomdata"
 
     get CurrencyUrl() { return this.configurations.baseUrl + this._currencyUrl; }
     get paginate() { return this.configurations.baseUrl + this.getCurrency; }
@@ -89,6 +90,13 @@ export class CurrencyEndpoint extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getCurrencyRecords(paginationOption));
             });
+    }
+
+
+    currencyFileUploadCustomUpload(file) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}`, file)
+
+
     }
 
 }

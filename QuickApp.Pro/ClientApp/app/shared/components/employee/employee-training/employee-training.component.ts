@@ -415,17 +415,24 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
                         employeeId:this.empId,
                         masterCompanyId: 1,
                         createdBy: this.userName,
-                        updatedBy: this.userName
+                        updatedBy: this.userName,
+                        moduleId:4
                     }
             
                     for (var key in vdata) {
                         this.formData.append(key, vdata[key]);
                     }
-                    this.employeeService.uploadEmployeeTrainingDoc(this.formData).subscribe(res => {
+                    // this.employeeService.uploadEmployeeTrainingDoc(this.formData).subscribe(res => {
+                    //     this.saveSuccessHelper(data);
+                    //     this.formData = new FormData();
+                    //     this.toGetEmployeeTrainingDocumentsList(this.empId);
+                    // });
+                    this.commonService.uploadDocumentsEndpoint(this.formData).subscribe(res => {
                         this.saveSuccessHelper(data);
                         this.formData = new FormData();
                         this.toGetEmployeeTrainingDocumentsList(this.empId);
                     });
+                    
 
                     //this.saveSuccessHelper(data);
                 });
@@ -439,23 +446,33 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
                     // error => this.saveFailedHelper(error)
                     data => {
                      
+                        // const vdata = {                           
+                        //     employeeId:this.empId,
+                        //     masterCompanyId: 1,
+                        //     createdBy: this.userName,
+                        //     updatedBy: this.userName
+                        // }
                         const vdata = {                           
                             employeeId:this.empId,
                             masterCompanyId: 1,
                             createdBy: this.userName,
-                            updatedBy: this.userName
+                            updatedBy: this.userName,
+                            moduleId:4
                         }
                 
                         for (var key in vdata) {
                             this.formData.append(key, vdata[key]);
                         }
-                        this.employeeService.uploadEmployeeTrainingDoc(this.formData).subscribe(res => {
+                        // this.employeeService.uploadEmployeeTrainingDoc(this.formData).subscribe(res => {
+                        //     this.saveSuccessHelper(data);
+                        //     this.formData = new FormData();
+                        //     this.toGetEmployeeTrainingDocumentsList(this.empId);
+                        // });  
+                        this.commonService.uploadDocumentsEndpoint(this.formData).subscribe(res => {
                             this.saveSuccessHelper(data);
                             this.formData = new FormData();
                             this.toGetEmployeeTrainingDocumentsList(this.empId);
                         });
-    
-                        //this.saveSuccessHelper(data);
                     }
                     
                     );

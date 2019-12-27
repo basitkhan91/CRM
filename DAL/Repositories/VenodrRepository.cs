@@ -1014,10 +1014,12 @@ namespace DAL.Repositories
                             join vct in _appContext.vendorCapabilityType on vca.VendorCapabilityId equals vct.VendorCapabilityId
                             into vctt
                             from vct in vctt.DefaultIfEmpty()
-
-                            join vcat in _appContext.capabilityType on vct.CapabilityTypeId equals vcat.CapabilityTypeId
+                            join vcat in _appContext.capabilityType on Convert.ToInt32(vca.CapabilityId) equals vcat.CapabilityTypeId
                             into vcatt
                             from vcat in vcatt.DefaultIfEmpty()
+
+                            join itm in _appContext.ItemMaster on vca.ItemMasterId equals itm.ItemMasterId into itmm
+                            from itm in itmm.DefaultIfEmpty()
                             where vca.VendorCapabilityId == VendorCapabilityId && vca.VendorId == VendorId
                             select new
                             {
@@ -1040,8 +1042,10 @@ namespace DAL.Repositories
                                 vca.CreatedBy,
                                 vca.UpdatedBy,
                                 vca.capabilityDescription,
-                                vca.IsActive,
-                                CapabilityType = vcat.Description
+                                vca.IsActive,                                
+                                CapabilityType = vcat.Description,
+                                itm.PartNumber,
+                                itm.PartDescription
 
                             }).OrderByDescending(p=>p.AuditVendorCapabilityId).ToList();
                 return list;

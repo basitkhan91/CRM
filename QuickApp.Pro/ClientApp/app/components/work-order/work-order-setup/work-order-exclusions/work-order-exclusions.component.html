@@ -74,12 +74,12 @@
                                                                         <th class="text-center">Quantity</th>
                                                                         <th class="text-center">Unit Cost</th>
                                                                         <th class="text-center">Extended Cost</th>
-                                                                        <th class="text-center">Memo</th>
                                                                         <ng-container *ngIf="isQuote">
-                                                                            <th>Mark up</th>
-                                                                            <th>Cost Plus Amount</th>
-                                                                            <th>Fixed Amount</th>
+                                                                          <th>Mark up</th>
+                                                                          <th>Cost Plus Amount</th>
+                                                                          <th>Fixed Amount</th>
                                                                         </ng-container>
+                                                                        <th class="text-center">Memo</th>
                                                                         <th colspan="4" class="text-center"></th>
                                                                     </tr> 
                                                                 </thead>
@@ -92,12 +92,12 @@
                                                                       <td>{{w.quantity}}</td>
                                                                       <td>{{w.unitCost}}</td>
                                                                       <td>{{w.extendedCost}}</td>
-                                                                      <td>{{w.memo}}</td>
                                                                       <ng-container *ngIf="isQuote">
-                                                                          <td>{{w.markupPercentageId}}</td>
-                                                                          <td>{{w.costPlusAmount}}</td>
-                                                                          <td>{{w.fixedAmount}}</td>
+                                                                        <td>{{w.markUpPercentageId}}</td>
+                                                                        <td>{{w.costPlusAmount}}</td>
+                                                                        <td>{{w.fixedAmount}}</td>
                                                                       </ng-container>
+                                                                      <td>{{w.memo}}</td>
 
                                                                       <td>
                                                                         <button
