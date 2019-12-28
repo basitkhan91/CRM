@@ -327,7 +327,7 @@ namespace DAL
         public DbSet<PublicationAudit> PublicationAudit { get; set; }
         public DbSet<ReasonAudit> ReasonAudit { get; set; }
         public DbSet<SiteAudit> SiteAudit { get; set; }
-        public DbSet<TaxRatesAudit> TaxRateAudit { get; set; }
+        public DbSet<TaxRatesAudit> TaxRatesAudit { get; set; }
 
         //public DbSet<UnitOfMeasureAudit> UnitOfMeasureAudit { get; set; }
         public DbSet<VendorClassificationAudit> VendorClassificationAudit { get; set; }

@@ -678,7 +678,7 @@ export class AssetCapesComponent implements OnInit {
             }
         });
         this.capabilityTypeData.forEach(element1 => {
-            if (element1.selectedAircraftModelTypes.length > 0) {
+            if (element1 && element1.selectedAircraftModelTypes && element1.selectedAircraftModelTypes.length > 0) {
                 this.loadModalsForExistingRecords(element1);
                 // if(this.mfgFormArray)
             }

@@ -281,7 +281,7 @@ export class AssetStatusComponent implements OnInit {
             Memo: this.sourceAction.memo,
             assetStatusId: this.sourceAction.assetStatusId,
             IsActive: this.sourceAction.isActive,
-            IsDeleted: this.isDelete,
+            IsDelete: this.isDelete,
             masterCompanyId: 1
         };
         if (this.isEditMode == false) {
@@ -343,7 +343,7 @@ export class AssetStatusComponent implements OnInit {
             Name: rowData.name,
             Memo: rowData.memo,
             isActive: rowData.isActive,
-            IsDeleted: false,
+            IsDelete: false,
             masterCompanyId: 1,
             assetStatusId: rowData.assetStatusId
         };
