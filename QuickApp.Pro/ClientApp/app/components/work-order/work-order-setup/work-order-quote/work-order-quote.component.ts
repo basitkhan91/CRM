@@ -110,12 +110,10 @@ editMatData: any[] = [];
     console.log(this.quoteForm);
     this.router.queryParams.subscribe((params: Params) => {
       if(params['workorderid']){
-        this.getEmployeeList();
+        this.getEmployeeList(params['workorderid']);
         this.getTaskList();
         this.getMarkup();
         this.loadCurrency();
-        this.getWorkOrderInfo(params['workorderid']);
-        this.getMPNDetails(params['workorderid']);
       }
     });
   }
@@ -261,11 +259,13 @@ editMatData: any[] = [];
       }
     )
   }
-  getEmployeeList(){
+  getEmployeeList(woId){
     this.commonService.smartDropDownList('Employee','EmployeeId','FirstName')
     .subscribe(
       (employeeList: any[])=>{
         this.employeeList = employeeList;
+        this.getWorkOrderInfo(woId);
+        this.getMPNDetails(woId);
       }
     )
   }
@@ -310,7 +310,7 @@ editMatData: any[] = [];
     this.mpnPartNumbersList.forEach((mpn)=>{
       if(mpn.label == this.selectedPartNumber){
         msId = mpn.value.masterPartId;
-        this.labor.workFlowWorkOrderId = mpn.value.workOrderWorkFlowId;
+        this.labor.workFlowWorkOrderId = mpn;
       }
     })
     this.savedWorkOrderData.partNumbers.forEach((pns)=>{
@@ -384,7 +384,7 @@ editMatData: any[] = [];
         }
         case 'labor': {
           for(let task in this.labor.workOrderLaborList[0]){
-            this.labor.workOrderLaborList[0][task] = [new AllTasks()];
+            this.labor.workOrderLaborList[0][task] = [];
           }
           this.getQuoteLaborListByWorkOrderQuoteId();
           break;
@@ -566,11 +566,16 @@ editMatData: any[] = [];
         if(res){
           let laborList = this.labor.workOrderLaborList;
           this.labor = {...res.workOrderQuoteLaborHeader, workOrderLaborList: laborList};
+          this.mpnPartNumbersList.forEach((mpn)=>{
+            if(mpn.label == this.selectedPartNumber){
+              this.labor.workFlowWorkOrderId = mpn;
+            }
+          })
           this.taskList.forEach((tl)=>{
-            this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [new AllTasks()];
+            this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
             res.workOrderQuoteLaborHeader.workOrderQuoteLabor.forEach((rt)=>{
               if(rt['taskId'] == tl['taskId']){
-                if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
+                if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0] && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
                   this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
                 }
                 let labor = {}
@@ -667,7 +672,7 @@ editMatData: any[] = [];
 
 formTaskList(){
   this.taskList.forEach(task => {
-      this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [new AllTasks()];
+      this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [];
   });
 }
 
@@ -683,7 +688,7 @@ saveworkOrderLabor(data) {
   this.laborPayload.WorkOrderQuoteLaborHeader.DataEnteredBy = data.dataEnteredBy;
   this.laborPayload.WorkOrderQuoteLaborHeader.HoursorClockorScan = data.hoursorClockorScan;
   this.laborPayload.WorkOrderQuoteLaborHeader.IsTaskCompletedByOne = data.isTaskCompletedByOne;
-  this.laborPayload.WorkOrderQuoteLaborHeader.WorkOrderHoursType = 1;
+  this.laborPayload.WorkOrderQuoteLaborHeader.WorkOrderHoursType = data['workOrderHoursType'];
   this.laborPayload.WorkOrderQuoteLaborHeader.LabourMemo = "";
   this.laborPayload.WorkOrderQuoteLaborHeader.EmployeeId = data.employeeId;
   this.laborPayload.WorkOrderQuoteLaborHeader.ExpertiseId = data.expertiseId;
@@ -693,6 +698,7 @@ saveworkOrderLabor(data) {
   this.laborPayload.WorkOrderQuoteLaborHeader.UpdatedBy = "admin" 
   this.laborPayload.WorkOrderQuoteLaborHeader.IsActive = true 
   this.laborPayload.WorkOrderQuoteLaborHeader.IsDeleted = false;
+  this.laborPayload.WorkOrderQuoteLaborHeader['WorkFlowWorkOrderId'] = data.workFlowWorkOrderId.value;
   var laborList = [];
   for (let labor in data.workOrderLaborList){
     laborList = [...laborList, ...data.workOrderLaborList[labor]];
@@ -947,15 +953,17 @@ getQuoteMaterialListByWorkOrderQuoteId() {
   this.workOrderService.getQuoteLaborList(this.quotationHeader['workOrderQuoteId']).subscribe(res => {
       if (res) {
           // this.workOrderLaborList = res;
+          let wowfId = this.labor.workFlowWorkOrderId;
           this.laborPayload.WorkOrderQuoteLaborHeader = res;
           if(res){
             this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId)
             let laborList = this.labor.workOrderLaborList;
             this.labor = {...res, workOrderLaborList: laborList};
+            this.labor.workFlowWorkOrderId = wowfId;
             this.taskList.forEach((tl)=>{
               res.laborList.forEach((rt)=>{
                 if(rt['taskId'] == tl['taskId']){
-                  if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
+                  if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0] && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
                     this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
                   }
                   let labor = {}
@@ -970,6 +978,55 @@ getQuoteMaterialListByWorkOrderQuoteId() {
   })
 
 }
+
+getTotalQuantity(){
+  let totalQuantity = 0;
+  this.materialListQuotation.forEach(
+    (material)=>{
+      if(material.quantity){
+        totalQuantity += material.quantity;
+      }
+    }
+  )
+  return totalQuantity;
+}
+
+getTotalUnitCost(){
+  let total = 0;
+  this.materialListQuotation.forEach(
+    (material)=>{
+      if(material.unitCost){
+        total += Number(material.unitCost);
+      }
+    }
+  )
+  return total;
+}
+
+getMaterialCostPlus(){
+  let total = 0;
+  this.materialListQuotation.forEach(
+    (material)=>{
+      if(material.materialCostPlus){
+        total += material.materialCostPlus;
+      }
+    }
+  )
+  return total;
+}
+
+getTotalFixedAmount(){
+  let total = 0;
+  this.materialListQuotation.forEach(
+    (material)=>{
+      if(material.fixedAmount){
+        total += Number(material.fixedAmount);
+      }
+    }
+  )
+  return total;
+}
+
 getEmpData(empId): object{
   let result = {};
   this.employeeList.forEach(

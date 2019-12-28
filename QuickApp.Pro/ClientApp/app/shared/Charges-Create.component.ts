@@ -287,4 +287,28 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
             console.log(e);
         }
     }
+    
+    getTotalCostPlusAmount(){
+        let total = 0;
+        this.workFlow.charges.forEach(
+          (material)=>{
+            if(material.chargesCostPlus){
+              total += material.chargesCostPlus;
+            }
+          }
+        )
+        return total;
+    }
+
+    getTotalFixedAmount(){
+        let total = 0;
+        this.workFlow.charges.forEach(
+          (material)=>{
+            if(material.fixedAmount){
+              total += Number(material.fixedAmount);
+            }
+          }
+        )
+        return total;
+    }
 }

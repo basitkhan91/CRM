@@ -422,5 +422,29 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
     }
     }
 
+    getTotalCostPlusAmount(){
+        let total = 0;
+        this.workFlow.materialList.forEach(
+          (material)=>{
+            if(material.materialCostPlus){
+              total += material.materialCostPlus;
+            }
+          }
+        )
+        return total;
+    }
+
+    getTotalFixedAmount(){
+        let total = 0;
+        this.workFlow.materialList.forEach(
+          (material)=>{
+            if(material.fixedAmount){
+              total += Number(material.fixedAmount);
+            }
+          }
+        )
+        return total;
+    }
+
 
 }

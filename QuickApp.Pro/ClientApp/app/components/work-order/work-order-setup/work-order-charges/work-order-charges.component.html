@@ -118,6 +118,22 @@
               </tr>
             </ng-container>
           </tbody>
+          <tfoot *ngIf="isQuote">
+            <tr>
+                <td>Total Charges</td>
+                <td>&nbsp;</td>
+                <td>{{getTotalQuantity()}}</td>
+                <td>{{getTotalUnitCost()}}</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>{{getChargesCostPlus()}}</td>
+                <td>{{getTotalFixedAmount()}}</td>
+                <td>&nbsp;</td>
+            </tr>
+          </tfoot>
         </table>
         <button class="btn btn-primary-cstm pull-right" (click)="createChargeQuote()">Save</button>
       </div>
