@@ -3,7 +3,8 @@
     public enum PartMappingTypeEnum
     {
         AltParts = 1,
-        EquParts = 2,
-        NhaParts = 3
+        EquParts,
+        NhaParts,
+        TlaParts
     }
 }

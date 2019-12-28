@@ -22,7 +22,7 @@ export class CustomerBillingInformationComponent {
 	@Output() tab = new EventEmitter<any>();
 	countryList: any[];
 	// countryListOriginal: any[];
-
+    selectedRowForDelete: any;
 	billingInfo = new CustomerBillingAddressModel()
 	billingInfoList: any;
 	billingInfoTableHeaders = [
@@ -364,6 +364,7 @@ export class CustomerBillingInformationComponent {
     }
     deleteBillingInfo(content, rowData) {
 
+        this.selectedRowForDelete = rowData;
         this.isDeleteMode = true;
 
      
