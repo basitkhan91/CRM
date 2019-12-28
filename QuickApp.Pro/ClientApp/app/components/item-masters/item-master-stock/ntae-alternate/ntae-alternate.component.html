@@ -1,0 +1,109 @@
+﻿<div class="card">
+        <div class="col-sm-12 font-padding">
+            <div class="col-sm-2">
+                PN: <span style="color:red">{{pnvalue}}</span>
+            </div>
+            <div class="col-sm-3">
+                PN Description: <span style="color:red">{{pnDescription}}</span>
+            </div>
+            <!-- <div class="col-sm-3">
+                Alternate PN: <span style="color:red">{{alternatePn}}</span>
+            </div> -->
+            <div class="col-sm-3">
+                Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="col-md-12 ">
+                <div class="shadow-Box">
+                    <div class="col-sm-12">
+                        <h4 class="float-left">Alternate</h4>
+                        <h4 class="float-right">
+                            Add New
+                            <a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ModalDashNumber"><i class="fa fa-plus-circle fa-lg"></i></a>
+                        </h4>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group ">
+                            <label class="fs12">PN </label>
+                            <p-multiSelect [options]="manufacturerData" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectAircraftManfacturer" (onChange)="getAircraftModelByManfacturerType()"
+                                            class="pub-multi"></p-multiSelect>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="fs12">
+                                PN DESCRIPTION
+                            </label>
+                            <p-multiSelect [maxSelectedLabels]="2" [options]="aircraftModelList" [(ngModel)]="selectedAircraftModel" [ngModelOptions]="{standalone: true}"
+                                            class="pub-multi" (onChange)="getDashNumberByManfacturerandModel()" [selectionLimit]="30"></p-multiSelect>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="fs12">MANUFCTURER </label>
+                            <p-multiSelect [maxSelectedLabels]="2" [options]="dashNumberList" [(ngModel)]="selectedDashNumbers" [ngModelOptions]="{standalone: true}"
+                                            class="pub-multi" [selectionLimit]="30"></p-multiSelect>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-1 add-new-align">
+                        <div class="form-group">
+                            <button class="btn btn-primary mtop20" (click)="searchAircraftInformation()">
+                                <i class="pi pi-search pi-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+    <div class="card">
+        <p-table [value]="aircraftListDataValues" [rows]="6" [columns]="colsaircraftLD" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th>PN</th>
+                    <th *ngFor="let col of columns">
+                        {{col.header}}
+                    </th>
+                    <th>Action</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                <tr>
+                    <td>{{i+1}}</td>
+                    <td *ngFor="let col of columns">
+                        {{rowData[col.field]}}
+                    </td>
+                    <td>
+                        <button class="btn btn-danger nobg" (click)="deleteAircraftMapped(rowData)">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <br />
+        <div class="col-sm-12">
+            <div class="col-sm-3 font">
+                Schematic: <input type="checkbox" data-md-icheck (change)="onSchematic($event)" />
+            </div>
+            <div class="col-sm-6 font inline-block display-flex" *ngIf="schematic">
+                Attach Drawing..
+                <div class="upload">
+                    <input type="file" name="upload[]" id="upload" class="inputfile upload-file" data-multiple-caption="{count} files selected" multiple="">
+                    <label>
+                        <figure><i class="fa fa-upload"></i></figure>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-sm-12 mt8">
+        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveGeneralInfromation(); changeOfTab('General')" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
+        <button class="btn btn-primary-cstm float-right" pButton (click)="moveAtachapter()" type="button" icon="pi pi-angle-right" iconPos="right" label="Go to Next Step" style="padding: 0 !important;"></button>
+    </div> 
