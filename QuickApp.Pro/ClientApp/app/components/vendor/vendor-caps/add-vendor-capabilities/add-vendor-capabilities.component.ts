@@ -1309,9 +1309,9 @@ export class AddVendorCapabilitiesComponent implements OnInit{
         }
 
 		// const ItemMasterID = this.isEditMode === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-		 console.log(this.itemMasterId);		 
+		 console.log(this.vendorCapabilityId);		 
 
-        this.itemser.searchAirMappedByMultiTypeIdModelIDDashID(this.itemMasterId, this.searchAircraftParams).subscribe(res => {
+        this.vendorCapesService.searchAirMappedByMultiTypeIdModelIDDashID(this.vendorCapabilityId, this.searchAircraftParams).subscribe(res => {
             this.aircraftListDataValues = res.map(x => {
                 return {
 					...x,

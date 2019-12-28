@@ -89,9 +89,9 @@ export class VendorService {
             this.actionEndpoint.getvendorEndpoint<any[]>());
     }
 
-    getVendorCapabilityList() {
+    getVendorCapabilityList(status) {
         return Observable.forkJoin(
-            this.actionEndpoint.getvendorCapabilityListEndpoint<any[]>());
+            this.actionEndpoint.getvendorCapabilityListEndpoint<any[]>(status));
     }
 
 
