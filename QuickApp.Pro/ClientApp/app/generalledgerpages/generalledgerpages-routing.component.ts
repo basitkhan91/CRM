@@ -24,7 +24,7 @@ import { InterCompanySetupComponent } from '../components/general-ledger/interco
 import { AccountListingComponent } from '../components/general-ledger/account-listing/account-listing.component';
 import { AccountListingCreateComponent } from '../components/general-ledger/account-listing-create/account-listing-create.component';
 import { AccountingListingCalendarComponent } from '../components/general-ledger/accounting-listing-calendar/accounting-listing-calendar.component';
-
+import { OpenCloseLedgerComponent } from '../components/general-ledger/open-close-ledger/open-close-ledger.component';
 
 const generalledgerpageRoutes: Routes = [
     {
@@ -51,7 +51,8 @@ const generalledgerpageRoutes: Routes = [
             { path: "app-account-listing", component: AccountListingComponent, data: { title: "AccountListing" } },
             { path: "app-account-listing-create", component: AccountListingCreateComponent, data: { title: "AccountListingCreate" } },
             { path: "app-account-listing-create/:id", component: AccountListingCreateComponent, data: { title: "AccountListingEdit" } },
-            { path: "app-accounting-listing-calendar", component: AccountingListingCalendarComponent, data: { title: "AccountingCalendarList", mode: "listing" } }
+            { path: "app-accounting-listing-calendar", component: AccountingListingCalendarComponent, data: { title: "AccountingCalendarList", mode: "listing" } },
+            { path: "app-open-close-ledger", component: OpenCloseLedgerComponent, data: { title: "OpenCloseLedger" } }
         ]
     }
 ];
