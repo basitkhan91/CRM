@@ -107,6 +107,8 @@ namespace QuickApp.Pro.Controllers
                 Parts = partsView.ToList()
             };
 
+            response = BindDefaultDataSources(response);
+
             return Ok(response);
         }
 
