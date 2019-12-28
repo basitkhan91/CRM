@@ -26,8 +26,10 @@
                     <div class="col-md-3">
                         <div class="form-group ">
                             <label class="fs12">PN </label>
-                            <p-multiSelect [options]="manufacturerData" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectAircraftManfacturer" (onChange)="getAircraftModelByManfacturerType()"
-                                            class="pub-multi"></p-multiSelect>
+                            <!--<p-multiSelect [options]="manufacturerData" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectAircraftManfacturer" (onChange)="getAircraftModelByManfacturerType()"
+                    class="pub-multi"></p-multiSelect>-->
+                            <p-multiSelect [options]="manufacturerData" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectAircraftManfacturer" 
+                    class="pub-multi"></p-multiSelect>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -104,6 +106,8 @@
 
     </div>
     <div class="col-sm-12 mt8">
-        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveGeneralInfromation(); changeOfTab('General')" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
-        <button class="btn btn-primary-cstm float-right" pButton (click)="moveAtachapter()" type="button" icon="pi pi-angle-right" iconPos="right" label="Go to Next Step" style="padding: 0 !important;"></button>
+        <!--<button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveGeneralInfromation(); changeOfTab('General')" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>-->
+        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveGeneralInfromation();" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
+        <!--<button class="btn btn-primary-cstm float-right" pButton (click)="moveAtachapter()" type="button" icon="pi pi-angle-right" iconPos="right" label="Go to Next Step" style="padding: 0 !important;"></button>-->
+        <button class="btn btn-primary-cstm float-right"  type="button" icon="pi pi-angle-right" iconPos="right" label="Go to Next Step" style="padding: 0 !important;"></button>
     </div> 

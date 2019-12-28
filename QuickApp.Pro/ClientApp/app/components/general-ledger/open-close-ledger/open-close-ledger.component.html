@@ -139,7 +139,7 @@
 
 </div>
 
-<p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
+<!--<p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
           [width]="350" [minWidth]="200" [responsive]="true"
           [minY]="1050" [baseZIndex]="1100000">
     <h5 [ngStyle]="{'color':'red'}">
@@ -147,5 +147,16 @@
     </h5>
     <p-footer>
         <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
+    </p-footer>
+</p-dialog>-->
+
+<p-dialog header="Alert" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
+          [width]="350" [minWidth]="200" [responsive]="true"
+          [minY]="1050" [baseZIndex]="1100000">
+    <h5 [ngStyle]="{'color':'red'}">
+        Please Enter (*) Mandatory Fields
+    </h5>
+    <p-footer>
+        <button type="button" pButton icon="pi pi-check" label="Close"></button>
     </p-footer>
 </p-dialog>
