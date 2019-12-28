@@ -16,11 +16,6 @@
       <th><label>Unit Cost</label></th>
       <th><label>Extended </label></th>
       <th><label>Estimated % Occurance</label></th>
-      <ng-container *ngIf="isQuote">
-        <th>MARKUP</th>
-        <th>Cost plus amount</th>
-        <th>Fixed Amount</th>
-      </ng-container>
       <th><label>Memo</label></th>
       <th><label>Action </label></th>
     </tr>
@@ -110,17 +105,6 @@
           >
         </select>
       </td>
-      <ng-container *ngIf="isQuote">
-          <td>
-            <!-- <input [(ngModel)]="matQuotation.markup" /> -->
-            <select class="form-control custom-select wf-pub-id" (change)="markupChanged(exclusion)" [(ngModel)]="exclusion.markUpPercentageId">
-              <option value="">Select</option>
-              <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
-            </select>
-          </td>
-          <td><input [(ngModel)]="exclusion.costPlusAmount" readonly/></td>
-          <td><input [(ngModel)]="exclusion.fixedAmount" /></td>
-      </ng-container>
       <td>
         <!--<input type="text" class="form-control" pInputText [(ngModel)]="exclusion.memo" value="{{exclusion.memo}}" style="width:90px;">-->
         <textarea

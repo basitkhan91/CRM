@@ -245,6 +245,11 @@
         <td>{{ workFlow.materialExtendedCostSummation }}</td>
         <td>{{ workFlow.totalMaterialCost }}</td>
         <td>{{ workFlow.materialExtendedPriceSummation }}</td>
+        <ng-container *ngIf="isQuote">
+          <td>&nbsp;</td>
+          <td>{{getTotalCostPlusAmount()}}</td>
+          <td>{{getTotalFixedAmount()}}</td>
+        </ng-container>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>

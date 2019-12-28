@@ -433,6 +433,27 @@
             </tr>
           </ng-container>
         </tbody>
+        <tfoot>
+          <tr>
+            <td>
+              Total
+            </td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>{{getTotalQuantity()}}</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>{{ getTotalUnitCost() }}</td>
+            <td>&nbsp;</td>
+            <td></td>
+            <td>{{getMaterialCostPlus()}}</td>
+            <td>{{getTotalFixedAmount()}}</td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tfoot>
       </table>
       <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save</button>
     </div>
@@ -497,6 +518,27 @@
             </td>
           </tr>
         </tbody>
+        <tfoot>
+          <tr>
+            <td>
+              Total
+            </td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>{{getTotalQuantity()}}</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>{{ getTotalUnitCost() }}</td>
+            <td>&nbsp;</td>
+            <td></td>
+            <td>{{getMaterialCostPlus()}}</td>
+            <td>{{getTotalFixedAmount()}}</td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tfoot>
       </table>
       <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save</button>
     </div>
