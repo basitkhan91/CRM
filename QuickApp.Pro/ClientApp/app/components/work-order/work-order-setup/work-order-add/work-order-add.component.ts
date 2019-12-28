@@ -653,7 +653,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     onSelectedPartNumber(object, currentRecord, index) {
         console.log('Sample PN');
 
-
+        debugger;
         // currentRecord = new WorkOrderPartNumber();
 
         const { itemMasterId } = object;
@@ -671,7 +671,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         currentRecord.nte = object.nte;
         currentRecord.isPMA = object.pma === null ? false : object.pma;
         currentRecord.isDER = object.der === null ? false : object.der;
-        currentRecord.tatDaysCurrent = object.tatDaysCurrent === null ? '' : object.tatDaysCurrent
+        currentRecord.tatDaysStandard = object.tatDaysStandard === null ? '' : object.tatDaysStandard
+        currentRecord.revisedPartNo = object.revisedPartNo
     }
 
 
