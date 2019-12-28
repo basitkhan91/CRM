@@ -343,7 +343,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" data-dismiss="modal" 
+                <button class="btn btn-primary-cstm" data-dismiss="modal"  [disabled]="create.invalid || disableSaveGroupId && disableSaveForDescription"
                     (click)="save();">
                     {{isEdit ? 'Update' : 'Save' }}</button>
                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetForm()">Close</button>

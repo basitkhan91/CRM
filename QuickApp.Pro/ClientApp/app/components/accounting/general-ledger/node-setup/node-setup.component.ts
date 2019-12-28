@@ -272,9 +272,7 @@ export class NodeSetupComponent implements OnInit {
         this.disableSaveForDescription = false;
         this.addNew = {
             ...rowData,
-            parentNodeId: getObjectById('parenNodeId', rowData.parenNodeId, this.originalData.parentNode),
-            parentNode: getObjectById('parenNode', rowData.parentNodeName, this.originalData.parentNodeName),
-
+            parentNodeId: getObjectById('parenNodeId', rowData.parenNodeId, this.originalData.parentNode)
         };
         this.selectedRecordForEdit = { ...this.addNew }
 
