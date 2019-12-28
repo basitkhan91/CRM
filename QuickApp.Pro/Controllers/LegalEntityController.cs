@@ -529,6 +529,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("ChildentitiesByParentId")]
+        public IActionResult GetChildentitiesByParentId(long parentId)
+        {
+            var result = _unitOfWork.LegalEntity.GetChildEntitiesByParentId(parentId);
+            return Ok(result);
+        }
+
         [HttpGet("legalentityaddress")]
         public IActionResult GetLegalEntityAddress(long addressId)
         {

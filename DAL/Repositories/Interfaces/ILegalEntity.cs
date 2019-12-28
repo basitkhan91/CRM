@@ -24,6 +24,9 @@ namespace DAL.Repositories.Interfaces
         object LegalEntityShippingAddressById(long ShippingAddressId);
 
         IEnumerable<object> GetLegalEntitySiteNames(long legalEntityId);
+
+        IEnumerable<object> GetChildEntitiesByParentId(long parentId);
+        
         object GetLegalEntityAddress(long addressId);
         IEnumerable<object> GetLegalEntityContacts(long legalEntityId);
 
