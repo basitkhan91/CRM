@@ -25,5 +25,17 @@ namespace QuickApp.Pro.ViewModels.SalesViews
         public string UpdatedBy { get; set; }
         public DateTime UpdatedOn { get; set; }
         public bool IsDeleted { get; set; }
+
+        public string partNumber { get; set; }
+
+        public string partDescription { get; set; }
+
+        public string stockLineNumber { get; set; }
+
+        public bool isOEM { get; set; }
+
+        public bool isPMA { get; set; }
+
+        public bool isDER { get; set; }
     }
 }
