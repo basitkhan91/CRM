@@ -216,4 +216,17 @@ export class EmployeeService {
         return this.employeeEndpoint.getStoredEmployeeManagementStructure(employeeId);
     }
 
+    getEmployeeAuditDetails(employeeId: any){
+        return this.employeeEndpoint.getEmployeeAuditDetailsEndPoint(employeeId);
+    }
+
+    updateEmployeeMemo(employeeId: any,memo:any) {
+        return this.employeeEndpoint.getEmployeeUpdateMemoEndpoint(employeeId, memo);
+    }
+
+    // uploadEmployeeTrainingDoc(action: any) {
+    //     return this.employeeEndpoint.uploadEmployeeTrainingDocEndpoint<any>(action);
+    // }
+    
+   
 }

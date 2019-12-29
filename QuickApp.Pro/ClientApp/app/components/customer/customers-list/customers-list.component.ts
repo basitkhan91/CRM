@@ -172,6 +172,12 @@ export class CustomersListComponent implements OnInit {
     viewDataGeneralInformation: any[];
     viewDataclassification: any[];
     customerContacts: any;
+    selectedRow: any;
+    contactcols: any[];
+    selectedContactColumns: any[];
+    allContacts: any[] = [];
+    customerauditHisory: any[];
+    selectedRowforDelete: any;
     customerContactsColumns = [
         { field: 'tag', header: 'Tag' },
         { field: 'firstName', header: 'First Name' },
@@ -262,6 +268,7 @@ export class CustomersListComponent implements OnInit {
     disableRestrictedPMA: boolean = false;
     classificationIds: any[];
     filteredText: string;
+    dataSource: MatTableDataSource<any>;
     //     NameInput:any;
     //     customerCodeInput:any;
     //     customerClassificationInput:any;
@@ -286,6 +293,7 @@ export class CustomersListComponent implements OnInit {
         // this.activeIndex = 0;
         // this.workFlowtService.listCollection = null;
         //this.sourceCustomer = new Customer();
+        this.dataSource = new MatTableDataSource();
 
     }
     ngOnInit() {
@@ -435,7 +443,7 @@ export class CustomersListComponent implements OnInit {
         this.getCustomerRestrictedPMAByCustomerId(customerId);
         this.getCustomerRestrictedDERByCustomerId(customerId);
         this.getCustomerClassificationByCustomerId(customerId)
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -570,9 +578,9 @@ export class CustomersListComponent implements OnInit {
             }
         })
     }
-    getAuditHistoryById(rowData) {
-        //alert('This functionality is not implemented');
-    }
+    //getAuditHistoryById(rowData) {
+    //    //alert('This functionality is not implemented');
+    //}
     ExpandAllCustomerDetailsModel() {
         $('#step1').collapse('show');
         $('#step2').collapse('show');
@@ -644,15 +652,16 @@ export class CustomersListComponent implements OnInit {
 
         this.isDeleteMode = true;
 
-
+        this.selectedRowforDelete = rowData;
         this.customerId = rowData.customerId;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
     deleteItemAndCloseModel() {
         let customerId = this.customerId;
+
         if (customerId > 0) {
 
             this.customerService.updateListstatus(customerId).subscribe(
@@ -680,6 +689,80 @@ export class CustomersListComponent implements OnInit {
         this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
+
+    openContactList(content, row) {
+        this.selectedRow = row;
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+        this.loadContactDataData(row.customerId);
+    }
+    private loadContactDataData(customerId) {
+        this.alertService.startLoadingMessage();
+       
+        this.customerService.getContacts(customerId).subscribe(
+            results => this.onContactDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+
+        this.contactcols = [
+            { field: 'tag', header: 'Tag' },
+            { field: 'firstName', header: 'First Name' },
+            { field: 'lastName', header: 'Last  Name' },
+            { field: 'contactTitle', header: 'Contact Title' },
+            { field: 'email', header: 'Email' },
+            { field: 'mobilePhone', header: 'Mobile Phone' },
+            { field: 'fax', header: 'Fax' }
+            //{ field: 'createdBy', header: 'Created By' },
+            //{ field: 'updatedBy', header: 'Updated By' },
+            //{ field: 'updatedDate', header: 'Updated Date' },
+            //{ field: 'createdDate', header: 'Created Date' }
+        ];
+        this.selectedContactColumns = this.contactcols;
+    }
+    private onContactDataLoadSuccessful(allWorkFlows: any[]) {
+        this.alertService.stopLoadingMessage();
+   
+        this.dataSource.data = allWorkFlows;
+        this.allContacts = allWorkFlows;
+    }
+    private onDataLoadFailed(error: any) {
+        this.alertService.stopLoadingMessage();
+        
+    }
+    getAuditHistoryById(content, row) {
+        
+        this.alertService.startLoadingMessage();
+
+        this.customerService.getCustomerHistory(row.customerId).subscribe(
+            results => this.onAuditHistoryLoadSuccessful(results, content),
+            error => this.saveFailedHelper(error));
+    }
+    private onAuditHistoryLoadSuccessful(auditHistory, content) {
+        this.alertService.stopLoadingMessage();
+
+
+        this.customerauditHisory = auditHistory;
+
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false});
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.customerauditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+
     // ngAfterViewInit() {
     //     this.dataSource.paginator = this.paginator;
     //     this.dataSource.sort = this.sort;

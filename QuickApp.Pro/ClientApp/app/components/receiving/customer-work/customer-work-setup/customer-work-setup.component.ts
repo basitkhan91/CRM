@@ -30,7 +30,8 @@ import { SiteService } from '../../../../services/site.service';
 import { Site } from '../../../../models/site.model';
 import { LegalEntityService } from '../../../../services/legalentity.service';
 import { Router } from '@angular/router';
-
+import { getValueFromObjectByKey, getObjectByValue, getValueFromArrayOfObjectById, getObjectById, editValueAssignByCondition } from '../../../../generic/autocomplete';
+import { CommonService } from '../../../../services/common.service';
 
 @Component({
     selector: 'app-customer-work-setup',
@@ -61,10 +62,13 @@ export class CustomerWorkSetupComponent
 	allActions: any[] = [];
 	customerId: any;
     customerNames: any[];
+    partListData: any[] = [];
+    custcodes: { customerId: any; name: any; }[];
     customerNamecoll: any;
     selectedColumns: any;
     cols: any;
     disableSavepartDescription: boolean;
+    disableSavemanufacturer: boolean;
     descriptionbyPart: any[]=[];
     allConditionInfo: Condition[];
     sourceTimeLife: any = {};
@@ -109,6 +113,18 @@ export class CustomerWorkSetupComponent
     showVendor2: boolean;
     showCompany2: boolean;
     obtainFrom: string;
+    alllegalEntityInfo: any[] = [];
+    departmentList: any[] = [];
+    bulist: any[] = [];
+    divisionlist: any[] = [];
+    updateMode: boolean = false;
+    managementStructureData: any[];
+    parentManagementInfo: any[] = [];
+    childManagementInfo: any[] = [];
+    customerReferenceNames: any[];
+    customerContactList: any[];
+    tempPOHeaderAddress: any = {};
+    sourcePoApproval: any = {};
 	ngOnInit(): void {
 		this.sourcereceving.isCustomerStock = true;
 
@@ -117,20 +133,26 @@ export class CustomerWorkSetupComponent
 		this.ptnumberlistdata();
 		this.Receveingcustomerlist();
 		this.loadDataForCondition();
-		this.customerList();
+		// this.customerList();
 		this.loadItemmasterData();
 		this.vendorList();
         this.loadSiteData();
         this.loadDataCustomerconct();
-        this.loadManagementdata();
+       // this.loadManagementdata();
+        //this.loadManagementdataForTree();
+        this.loadLegalEntityData();
         if (!this.sourcereceving.receivingCustomerWorkId) {
             this.sourcereceving.receivingCustomerNumber = 'Creating';
         }
 
 	}
 
-    constructor(private _route: Router,public workFlowtService: CustomerService,private conditionService: ConditionService, public workFlowtService1: LegalEntityService, private siteService: SiteService, private binService: BinService, private vendorservice: VendorService, public employeeService: EmployeeService, private alertService: AlertService, public itemser: ItemMasterService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public receivingCustomerWorkService: ReceivingCustomerWorkService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerservices: CustomerService) {
+    constructor(private _route: Router, public workFlowtService: CustomerService, private conditionService: ConditionService, public workFlowtService1: LegalEntityService, private siteService: SiteService, private binService: BinService, private vendorservice: VendorService, public employeeService: EmployeeService, private alertService: AlertService, public itemser: ItemMasterService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public receivingCustomerWorkService: ReceivingCustomerWorkService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerservices: CustomerService, private commonService: CommonService,) {
         this.dataSource = new MatTableDataSource();
+        this.customerList();
+        this.loadManagementdata();
+        this.loadManagementdataForTree();
+
         //if (this.receivingCustomerWorkService.listCollection == null) {
         //    this.receivingCustomerWorkService.listCollection = {};
         //}
@@ -138,11 +160,20 @@ export class CustomerWorkSetupComponent
 
             this.showLable = true;
             this.sourcereceving = this.receivingCustomerWorkService.listCollection;
+          
             this.sourcereceving.serialNumber = this.receivingCustomerWorkService.listCollection.serialNumber;
             if (this.receivingCustomerWorkService.listCollection.customer) {
                 this.sourcereceving.customerId = this.receivingCustomerWorkService.listCollection.customer.customerId;
                 this.sourcereceving.name = this.receivingCustomerWorkService.listCollection.customer.name;
+                this.sourcereceving.customerCode = { customerId: this.receivingCustomerWorkService.listCollection.customer.customerId, customerCode: this.receivingCustomerWorkService.listCollection.customer.customerCode }
+                this.sourcereceving.contactId = { contactId: this.receivingCustomerWorkService.listCollection.contactId, contactTitle: this.receivingCustomerWorkService.listCollection.contactTitle }
+                this.sourcereceving.workPhone = this.receivingCustomerWorkService.listCollection.workPhone;
+              
+              
+               
+              
             }
+            
             if (this.receivingCustomerWorkService.listCollection.employee) {
                 this.sourcereceving.employeeId = this.receivingCustomerWorkService.listCollection.employee.employeeId;
                 this.sourcereceving.firstName = this.receivingCustomerWorkService.listCollection.employee.firstName;
@@ -157,7 +188,9 @@ export class CustomerWorkSetupComponent
 
             if (this.sourcereceving.serialNumber == null) {
                 this.sourcereceving.isSerialized = false;
+
             }
+            
             if (this.sourcereceving.siteId) {
                 this.binService.getWareHouseDate(this.sourcereceving.siteId).subscribe(
                     results => this.onDataLoadWareHouse(results),
@@ -182,6 +215,7 @@ export class CustomerWorkSetupComponent
                     results => this.onDataLoadBin(results),
                     error => this.onDataLoadFailed(error));
             }
+          
 
             if (this.sourcereceving.timeLifeDate) {
                 this.sourcereceving.timeLifeDate = new Date(this.sourcereceving.timeLifeDate);
@@ -266,6 +300,13 @@ export class CustomerWorkSetupComponent
                     break;
                 }
             }
+
+
+            if (this.receivingCustomerWorkService.listCollection.managementStructureId != 'undefined') {
+                this.sourcereceving.companyId = this.getManagementStructureDetails(this.receivingCustomerWorkService.listCollection.managementStructureId);
+
+                    }
+             //this.sourcereceving = this.tempPOHeaderAddress;
         }
         
 	}
@@ -273,9 +314,50 @@ export class CustomerWorkSetupComponent
 	sourcereceving: any = {};
 	ngAfterViewInit() {
 	
-	}
+    }
+
 	public allWorkFlows: any[] = [];
 
+    receiveCreationForm = new FormGroup({
+
+     
+        companyId: new FormControl('companyId', Validators.minLength(1))
+
+
+
+
+    });
+    getManagementStructureDetails(id) {
+       
+        this.commonService.getManagementStructureDetails(id).subscribe(res => {
+            if (res.Level1) {
+                this.sourcereceving.companyId = res.Level1;
+                this.getBUList(res.Level1);
+            } else
+                this.sourcereceving.companyId = 0;
+
+            if (res.Level2) {
+               
+                this.sourcereceving.buId = res.Level2;
+                      this.getDivisionlist(res.Level2);
+            } else
+                this.sourcereceving.buId = 0;
+
+            if (res.Level3) {
+               
+                this.sourcereceving.divisionId = res.Level3;
+                this.getDepartmentlist(res.Level3);
+            } else
+                this.sourcereceving.divisionId = 0;
+
+            if (res.Level4) {
+                this.sourcereceving.departmentId = res.Level4;
+                this.getDepartmentId(res.Level4);
+            } else
+                this.sourcereceving.departmentId = 0;
+
+        })
+    }
 
 	private loadData() {
 		this.alertService.startLoadingMessage();
@@ -356,6 +438,9 @@ export class CustomerWorkSetupComponent
                                 this.sourcereceving.timeLifeDate = '';
                                 this.sourcereceving.timeLifeOrigin = '';
                             }
+                          
+
+                            console.log(this.sourcereceving)
                             this.receivingCustomerWorkService.newReason(this.sourcereceving).subscribe(
                                 role => this.saveSuccessHelper(role),
                                 error => this.saveFailedHelper(error));
@@ -375,6 +460,7 @@ export class CustomerWorkSetupComponent
             }
 
             else {
+               
                 if ((this.sourcereceving.isTimeLife) && (this.sourcereceving.timeLifeCyclesId == null || this.sourcereceving.timeLifeCyclesId == undefined)) {
                  
                     this.receivingCustomerWorkService.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
@@ -389,6 +475,7 @@ export class CustomerWorkSetupComponent
                     })
                 }
                 else {
+                
                     this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
                         response => this.saveCompleted(this.sourcereceving),
                         error => this.saveFailedHelper(error));
@@ -537,6 +624,32 @@ export class CustomerWorkSetupComponent
             }
         }
     }
+    filterCodes(event) {
+        this.custcodes = this.allCustomer;
+        this.custcodes = [...this.allCustomer.filter(x => {
+            return x.customerCode.toLowerCase().includes(event.query.toLowerCase())
+        })]
+
+    }
+    filterReferenceNames(event) {
+
+        this.customerReferenceNames = [];
+        if (this.allCustomer) {
+            if (this.allCustomer.length > 0) {
+                for (let i = 0; i < this.allCustomer.length; i++) {
+                    let name = this.allCustomer[i].name;
+                    if (name.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                        this.customerReferenceNames.push(name);
+                    }
+                }
+            }
+        }
+    }
+
+   
+   
+
+
 	filterpartItems(event) {
 
 		this.partCollection = [];
@@ -642,22 +755,44 @@ export class CustomerWorkSetupComponent
 			let value = event.target.value.toLowerCase();
 			if (this.selectedActionName) {
 				if (value == this.selectedActionName.toLowerCase()) {
-					this.disableSavepartNumber = true;
+                    this.disableSavepartNumber = true;
+                    this.disableSavemanufacturer = true;
 
 				}
 				else {
 					this.disableSavepartNumber = false;
-					this.sourcereceving.partDescription = "";
-					this.disableSavepartDescription = false;
+                    this.sourcereceving.partDescription = "";
+                    this.sourcereceving.manufacturer = "";
+                    this.disableSavepartDescription = false;
+                    this.disableSavemanufacturer = false;
 				}
 			}
 
 		}
-	}
-	private onpartnumberloadsuccessfull(allWorkFlows: any[]) {
+    }
+
+    getAllCustomerContact(id) {
+        // get Customer Contatcs 
+
+        this.customerservices.getContacts(id).subscribe(res => {
+            this.customerContactList = res[0]
+        })
+    }
+    customerContactChange(customerContact) {
+        for (let i = 0; i < this.customerContactList.length; i++) {
+            if (customerContact == this.customerContactList[i].contactId) {
+                this.sourcereceving.workPhone = this.customerContactList[i].workPhone;
+            }
+        }
+    }
+    private onpartnumberloadsuccessfull(allWorkFlows: any[]) {
+       
 		this.sourcereceving.partDescription = allWorkFlows[0].partDescription;
         this.sourcereceving.isSerialized = allWorkFlows[0].isSerialized;
 
+        this.sourcereceving.manufacturer = allWorkFlows[0].manufacturer.name;
+        //this.sourcereceving.manufacturerId = allWorkFlows[0].manufacturerId;
+  
         this.sourcereceving.isTimeLife = allWorkFlows[0].isTimeLife;
 		if (this.sourcereceving.isSerialized == true) {
 			this.showRestrictQuantity = true;
@@ -745,7 +880,8 @@ export class CustomerWorkSetupComponent
 		this.dataSource.data = allCustomerFlows;
 		this.allCustomer = allCustomerFlows;
 
-	}
+    }
+ 
 	private customerList() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
@@ -754,7 +890,9 @@ export class CustomerWorkSetupComponent
 			results => this.onCustomerDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
-	}
+    }
+
+  
 	private onVendorDataLoadSuccessful(allVendorWorkFlows: any[]) {
 		//debugger;
 		this.alertService.stopLoadingMessage();
@@ -863,37 +1001,43 @@ export class CustomerWorkSetupComponent
 		this.dataSource.data = getSiteList; //need
 		this.allSites = getSiteList; //Contain first array of Loaded table Data will put in Html as [value]
 	}
-	private onManagemtntdataLoad(getAtaMainList: any[]) {
-		// alert('success');
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.dataSource.data = getAtaMainList;
-		this.allManagemtninfo = getAtaMainList;
-		for (let i = 0; i < this.allManagemtninfo.length; i++) {
+	
+    private loadManagementdata() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
 
-			if (this.allManagemtninfo[i].parentId == null) {
-				this.maincompanylist.push(this.allManagemtninfo[i]);
-
-			}
-		}
+        this.workFlowtService1.getManagemententity().subscribe(
+            results => this.onManagemtntdataLoad(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
     }
-	private loadManagementdata() {
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
+    private onManagemtntdataLoad(getAtaMainList: any[]) {
+        // alert('success');
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = getAtaMainList;
+        this.allManagemtninfo = getAtaMainList;
+        for (let i = 0; i < this.allManagemtninfo.length; i++) {
 
-		this.workFlowtService1.getManagemententity().subscribe(
-			results => this.onManagemtntdataLoad(results[0]),
-			error => this.onDataLoadFailed(error)
-		);
+            if (this.allManagemtninfo[i].parentId == null) {
+                this.maincompanylist.push(this.allManagemtninfo[i]);
+
+            }
+        }
     }
 
     customerNameId(event) {
-        //
+       
         if (this.allCustomer) {
             for (let i = 0; i < this.allCustomer.length; i++) {
                 if (event == this.allCustomer[i].name) {
                     this.sourcereceving.customerId = this.allCustomer[i].customerId;
+                    //this.sourcereceving.customerCode = this.allCustomer[i].customerCode;
+                    this.sourcereceving.customerCode = getObjectById('customerId', this.sourcereceving.customerId, this.allCustomer[i]);
+                   
                     this.selectedActionName = event;
+                    this.getAllCustomerContact(this.allCustomer[i].customerId);
+
                 }
             }
             this.customerservices.getDescriptionbypart(event).subscribe(
@@ -902,6 +1046,8 @@ export class CustomerWorkSetupComponent
             );
         }
     }
+
+    
     customerContactId(event) {
         //
         if (this.allActions) {
@@ -935,6 +1081,224 @@ export class CustomerWorkSetupComponent
       // this.sourcereceving.customerReference = this.allCustomer[i][0].contractReference;
         
     }
+    loadLegalEntityData() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+
+        this.workFlowtService1.getManagemtentLengalEntityData().subscribe(
+            results => this.onManagemtntlegaldataLoad(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+
+    }
+    private onManagemtntlegaldataLoad(getAtaMainList: any[]) {
+        // alert('success');
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.alllegalEntityInfo = getAtaMainList;
+        for (let i = 0; i < this.alllegalEntityInfo.length; i++) {
+
+            if (this.alllegalEntityInfo[i].parentId == null) {
+                this.maincompanylist.push(this.alllegalEntityInfo[i]);
+
+            }
+        }
+
+    }
+   
+
+    checkMSParents(msId) {
+        this.managementStructureData.push(msId);
+        for (let a = 0; a < this.allManagemtninfo.length; a++) {
+            if (this.allManagemtninfo[a].managementStructureId == msId) {
+                if (this.allManagemtninfo[a].parentId) {
+                    this.checkMSParents(this.allManagemtninfo[a].parentId);
+                    break;
+                }
+            }
+        }
+
+    }
+    private loadManagementdataForTree() {
+        this.workFlowtService1.getManagemententity().subscribe(
+            results => this.onManagemtntdataLoadTree(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private onManagemtntdataLoadTree(managementInfo: any[]) {
+        //console.log(managementInfo);
+        this.allManagemtninfo = managementInfo;
+        this.parentManagementInfo = managementInfo;
+        this.childManagementInfo = managementInfo;
+        for (let i = 0; i < this.allManagemtninfo.length; i++) {
+            if (this.allManagemtninfo[i].parentId == null) {
+                this.bulist = [];
+                this.divisionlist = [];
+                this.departmentList = [];
+                this.maincompanylist.push(this.allManagemtninfo[i]);
+            }
+        }
+    }
+
+    getBUList(companyId) {
+        this.sourcereceving.managementStructureId = companyId;
+        this.bulist = [];
+        this.divisionlist = [];
+        this.departmentList = [];
+        for (let i = 0; i < this.allManagemtninfo.length; i++) {
+            if (this.allManagemtninfo[i].parentId == companyId) {
+                this.bulist.push(this.allManagemtninfo[i]);
+            }
+        }
+        for (let i = 0; i < this.partListData.length; i++) {
+            this.partListData[i].parentCompanyId = companyId;
+            this.getParentBUList(this.partListData[i]);
+            if (this.partListData[i].childList) {
+                for (let j = 0; j < this.partListData[i].childList.length; j++) {
+                    this.partListData[i].childList[j].childCompanyId = companyId;
+                    this.getChildBUList(this.partListData[i].childList[j]);
+                }
+            }
+        }
+
+    }
+
+
+    getDivisionlist(buId) {
+        this.sourcereceving.managementStructureId = buId;
+        this.divisionlist = [];
+        this.departmentList = [];
+        for (let i = 0; i < this.allManagemtninfo.length; i++) {
+            if (this.allManagemtninfo[i].parentId == buId) {
+                this.divisionlist.push(this.allManagemtninfo[i]);
+            }
+        }
+        for (let i = 0; i < this.partListData.length; i++) {
+            this.partListData[i].parentbuId = buId;
+            this.getParentDivisionlist(this.partListData[i]);
+            if (this.partListData[i].childList) {
+                for (let j = 0; j < this.partListData[i].childList.length; j++) {
+                    this.partListData[i].childList[j].childbuId = buId;
+                    this.getChildDivisionlist(this.partListData[i].childList[j]);
+                }
+            }
+        }
+    }
+
+    getDepartmentlist(divisionId) {
+        this.sourcereceving.managementStructureId = divisionId;
+        this.departmentList = [];
+        for (let i = 0; i < this.allManagemtninfo.length; i++) {
+            if (this.allManagemtninfo[i].parentId == divisionId) {
+                this.departmentList.push(this.allManagemtninfo[i]);
+            }
+        }
+        for (let i = 0; i < this.partListData.length; i++) {
+            this.partListData[i].parentDivisionId = divisionId;
+            this.getParentDeptlist(this.partListData[i]);
+            if (this.partListData[i].childList) {
+                for (let j = 0; j < this.partListData[i].childList.length; j++) {
+                    this.partListData[i].childList[j].childDivisionId = divisionId;
+                    this.getChildDeptlist(this.partListData[i].childList[j]);
+                }
+            }
+        }
+    }
+
+    getDepartmentId(departmentId) {
+        this.sourcereceving.managementStructureId = departmentId;
+        for (let i = 0; i < this.partListData.length; i++) {
+            this.partListData[i].parentDeptId = departmentId;
+        }
+        for (let i = 0; i < this.partListData.length; i++) {
+            this.partListData[i].parentDeptId = departmentId;
+            this.getParentDeptId(this.partListData[i]);
+            if (this.partListData[i].childList) {
+                for (let j = 0; j < this.partListData[i].childList.length; j++) {
+                    this.partListData[i].childList[j].childDeptId = departmentId;
+                    this.getChildDeptId(this.partListData[i].childList[j]);
+                }
+            }
+        }
+    }
+
+    getParentBUList(partList) {
+        partList.managementStructureId = partList.parentCompanyId;
+        partList.parentBulist = []
+        partList.parentDivisionlist = [];
+        partList.parentDepartmentlist = [];
+        for (let i = 0; i < this.parentManagementInfo.length; i++) {
+            if (this.parentManagementInfo[i].parentId == partList.parentCompanyId) {
+                partList.parentBulist.push(this.parentManagementInfo[i]);
+            }
+        }
+    }
+
+    getParentDivisionlist(partList) {
+        partList.managementStructureId = partList.parentbuId;
+        partList.parentDivisionlist = [];
+        partList.parentDepartmentlist = [];
+        for (let i = 0; i < this.parentManagementInfo.length; i++) {
+            if (this.parentManagementInfo[i].parentId == partList.parentbuId) {
+                partList.parentDivisionlist.push(this.parentManagementInfo[i]);
+            }
+        }
+    }
+
+    getParentDeptlist(partList) {
+        partList.managementStructureId = partList.parentDivisionId;
+        partList.parentDepartmentlist = [];
+        for (let i = 0; i < this.parentManagementInfo.length; i++) {
+            if (this.parentManagementInfo[i].parentId == partList.parentDivisionId) {
+                partList.parentDepartmentlist.push(this.parentManagementInfo[i]);
+            }
+        }
+    }
+
+    getParentDeptId(partList) {
+        partList.managementStructureId = partList.parentDeptId;
+    }
+
+    getChildBUList(partChildList) {
+        partChildList.managementStructureId = partChildList.childCompanyId;
+        console.log(partChildList.managementStructureId);
+
+        partChildList.childBulist = [];
+        partChildList.childDivisionlist = [];
+        partChildList.childDepartmentlist = [];
+        for (let i = 0; i < this.childManagementInfo.length; i++) {
+            if (this.childManagementInfo[i].parentId == partChildList.childCompanyId) {
+                partChildList.childBulist.push(this.childManagementInfo[i]);
+            }
+        }
+    }
+
+    getChildDivisionlist(partChildList) {
+        partChildList.managementStructureId = partChildList.childbuId;
+        partChildList.childDivisionlist = [];
+        partChildList.childDepartmentlist = [];
+        for (let i = 0; i < this.childManagementInfo.length; i++) {
+            if (this.childManagementInfo[i].parentId == partChildList.childbuId) {
+                partChildList.childDivisionlist.push(this.childManagementInfo[i]);
+            }
+        }
+    }
+
+    getChildDeptlist(partChildList) {
+        partChildList.managementStructureId = partChildList.childDivisionId;
+        partChildList.childDepartmentlist = [];
+        for (let i = 0; i < this.childManagementInfo.length; i++) {
+            if (this.childManagementInfo[i].parentId == partChildList.childDivisionId) {
+                partChildList.childDepartmentlist.push(this.childManagementInfo[i]);
+            }
+        }
+    }
+
+    getChildDeptId(partChildList) {
+        partChildList.managementStructureId = partChildList.childDeptId;
+    }
+
 
     getTracabletoType(value)
     {

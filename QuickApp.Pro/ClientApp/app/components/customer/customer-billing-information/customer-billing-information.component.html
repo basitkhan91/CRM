@@ -115,7 +115,7 @@
                 <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
 
                 <div class="clear"></div>
-                <div class="modal fade success-msg" id="success-popup" role="dialog">
+                <div class="modal fade success-msg" id="success-popup" role="dialog" data-backdrop="static" data-keyboard="false">
                     <div class="modal-dialog modal-sm popup-timeout">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -239,7 +239,7 @@
     </div>
 
 
-<div class="modal fade" id="addBillingInfo" role="dialog">
+<div class="modal fade" id="addBillingInfo" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -327,7 +327,7 @@
 </div>
 
 
-<div  *ngIf="viewData" class="modal"id="view">
+<div  *ngIf="viewData" class="modal"id="view" data-backdrop="static">
         <div class="modal-dialog">
           <div class="modal-content">
       
@@ -361,20 +361,25 @@
           </div>
         </div>
       </div>
-<ng-template #deleteContent let-c="close" let-d="dismiss">
+<ng-template #deleteContent let-c="close" let-d="dismiss" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title">Are You Sure Want to Delete?</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-
+    <div class="modal-body">
+        <strong>
+            Site Name:
+            <span class="new-label">{{selectedRowForDelete.siteName}}</span>
+        </strong>
+    </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
         <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
     </div>
 </ng-template>
-<ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
     <div class="modal-header">
 
@@ -391,7 +396,13 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Memo</th>
+                        <th>Site Name</th>
+                        <th>Address1</th>
+                        <th>Address2</th>
+                        <th>City</th>
+                        <th>State</th>
+                        <th>Postal Code</th>
+                        <th>Country</th>
                         <th>Updated By</th>
                         <th>Last Updated Time</th>
                         <th>Created By</th>
@@ -408,13 +419,21 @@
 
                 </tr> -->
 
-                <tr *ngFor="let audit of billingauditHisory; let i = index;">
-                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'siteName', audit.siteName)  ? 'black' : 'red'  }">{{audit.siteName}}</td>
-                    <td>{{audit.updatedBy}}</td>
-                    <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                    <td>{{audit.createdBy}}</td>
-                    <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                </tr>
+            <tr *ngFor="let audit of billingauditHisory; let i = index;">
+                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'siteName', audit.siteName)  ? 'black' : 'red'  }">{{audit.siteName}}</td>
+                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'line1', audit.line1)  ? 'black' : 'red'  }">{{audit.line1}}</td>
+                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'line2', audit.line2)  ? 'black' : 'red'  }">{{audit.line2}}</td>
+                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'city', audit.city)  ? 'black' : 'red'  }">{{audit.city}}</td>
+                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'stateOrProvince', audit.stateOrProvince)  ? 'black' : 'red'  }">{{audit.stateOrProvince}}</td>
+                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'postalCode', audit.postalCode)  ? 'black' : 'red'  }">{{audit.postalCode}}</td>
+
+                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'country', audit.country)  ? 'black' : 'red'  }">{{audit.country}}</td>
+
+                <td>{{audit.updatedBy}}</td>
+                <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                <td>{{audit.createdBy}}</td>
+                <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+            </tr>
             </table>
         </div>
     </div>
@@ -422,34 +441,3 @@
         <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>
- <!-- <div *ngIf="viewData" class="modal fade modal-sm " id="view" role="dialog">
-
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" id="" name="">×</button>
-                <h4 class="modal-title">Details of Customer Billing Information</h4>
-            </div>
-            <div class="modal-body viewform-cstm">
-
-
-                <div class="col-sm-12">
-                    <p><span class="label"><b>Site Name: </b></span><span class="value">{{viewData.siteName}}</span></p>
-                    <p><span class="label"><b>Bill To Address 1: </b></span><span class="value">{{viewData.address1}}</span></p>
-                    <p><span class="label"><b>Bill To Address 2: </b></span><span class="value">{{viewData.address2}}</span></p>
-                    <p><span class="label"><b>Bill To Address 3: </b></span><span class="value">{{viewData.address3}}</span></p>
-                    <p><span class="label"><b>Bill To City: </b></span><span class="value">{{viewData.city}}</span></p>
-                    <p><span class="label"><b>Bill To State/Prov: </b></span><span class="value">{{viewData.stateOrProvince}}</span></p>
-                    <p><span class="label"><b>Bill To Postal Code :</b></span><span class="value">{{viewData.postalCode}}</span></p>
-                    <p><span class="label"><b>Bill To Country: </b></span><span class="value">{{viewData.country}}</span></p>
-
-                    <div class="clear"></div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" >Close</button>
-            </div>
-        </div>
-
-</div>  -->
-
-

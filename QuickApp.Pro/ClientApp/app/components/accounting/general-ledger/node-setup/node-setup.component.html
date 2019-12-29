@@ -20,9 +20,9 @@
                                 <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect [maxSelectedLabels]="2" [options]="headers" optionLabel="header" [(ngModel)]="selectedColumns" [style]="{minWidth: '200px'}"
                                         style="float:left" (onChange)="columnsChanges()"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" pButton icon="fa-download"
                                         iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" pButton icon="fa-download"
                                         iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
 
@@ -67,8 +67,7 @@
                                         <p-inputSwitch [(ngModel)]="rowData['isActive']" matTooltip="Update" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>
 
                                         <span data-toggle="modal" data-target="#view">
-                                            <a class="btn btn-info boxed-float-btn nobg" matTooltip="View" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" data-target="#view"
-                                                data-toggle="modal">
+                                            <a class="btn btn-info boxed-float-btn nobg" matTooltip="View" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" data-target="#view">
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         </span>
@@ -78,9 +77,6 @@
 
                                         <button class="btn-delete" mat-icon-button matTooltip="Delete" data-target="#delete" data-toggle="modal" (click)="delete(rowData)">
                                             <mat-icon color="warn">delete</mat-icon>
-                                        </button>
-                                        <button class="btn-history" mat-icon-button matTooltip="History" data-target="#contentHist" data-toggle="modal" (click)="getAuditHistoryById(rowData)">
-                                            <mat-icon color="green">history</mat-icon>
                                         </button>
                                     </td>
                                 </tr>
@@ -103,7 +99,7 @@
         </div>
     </div>
 </div>
-<div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog">
+<div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -124,7 +120,7 @@
     </div>
 </div>
 
-<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog">
+<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
@@ -217,7 +213,7 @@
 
 </div>
 
-<div #add id="add" class="modal fade" role="dialog">
+<div #add id="add" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
 
         <!-- Modal content-->
@@ -236,16 +232,14 @@
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <select name="aircraftType" [(ngModel)]="addNew.ledgerName" #ledgerNameMgmStructureId="ngModel" required>
-                                    <option>-- Select --</option>
-                                    <option *ngFor="let object of maincompanylist" [ngValue]="object.code">{{object.code}}</option>
+                                <select name="aircraftType" [(ngModel)]="addNew.ledgerName" #ledgerNameMgmStructureId="ngModel" (onSelect)="ledgerSelect($event)" required>
+                                    <option *ngFor="let object of ledgerList" [ngValue]="object.ledgerName">{{object.ledgerName}}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-sm-12">
                             <div class="col-sm-5">
                                 <label for="description" class="control-label">Share with the Other Entities
-                                  
                                 </label>
                             </div>
                             <div class="col-sm-5">
@@ -272,7 +266,7 @@
                         </div>
                         <div class="col-sm-12">
                             <div class="col-sm-5">
-                                <label for="description" class="control-label">Node Name                                   
+                                <label for="description" class="control-label">Node Name<span class="clr-red">*</span>                                   
                                 </label>
                             </div>
                             <div class="col-sm-5">
@@ -285,17 +279,16 @@
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <p-autoComplete (onSelect)="parentCodeNodeSelect($event)" class="p-autoComplete-ctsm" (onKeyUp)=parentCodeNodeHandler($event) [(ngModel)]="addNew.parentNodeId"
-                                    name="parentNode" [suggestions]="parentCodeCollection" (completeMethod)="filterParentNodeCodes($event)"
-                                    [size]="30" [minLength]="1" [dropdown]="true">
+                                <p-autoComplete (onSelect)="parentCodeNodeSelect($event)" class="p-autoComplete-ctsm" (onKeyUp)=parentCodeNodeHandler($event) [(ngModel)]="addNew.parentNodeName"
+                                                name="parentNode" [suggestions]="parentCodeCollection" (completeMethod)="filterParentNodeCodes($event)"
+                                                [size]="30" [minLength]="1" [dropdown]="true">
                                 </p-autoComplete>
+                                <div *ngIf="addNew.leafNodeCheck" class="clr-red">Mandatory if current Node is a Leaf Node</div>
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
                             <div class="col-sm-5">
-                                <label for="description" class="control-label">Leaf Node
-                                   
-                                </label>
+                                <label for="description" class="control-label">Leaf Node</label>
                             </div>
                             <div class="col-sm-5 checkbox-cstm">
                                 <label>
@@ -332,9 +325,7 @@
                         </div>
                         <div class="col-sm-12">
                             <div class="col-sm-5">
-                                <label for="description" class="control-label">Node Description
-                                    <span class="clr-red">*</span>
-                                </label>
+                                <label for="description" class="control-label">Node Description</label>
                             </div>
                             <div class="col-sm-5">
                                 <textarea [(ngModel)]="addNew.description" name="description"></textarea>
@@ -342,24 +333,10 @@
                         </div>
 
                     </div>
-                    <div class="form-group">
-                        <div class="col-sm-6">
-                            <div class="checkbox-cstm">
-                                <label>
-                                    <input type="checkbox" name="isActive" [(ngModel)]="addNew.isActive">
-                                    <span class="cr">
-                                        <i class="cr-icon pi pi-check"></i>
-                                    </span>
-                                    Active
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="create.invalid || disableSaveGroupId && disableSaveForDescription "
+                <button class="btn btn-primary-cstm" data-dismiss="modal"  [disabled]="create.invalid || disableSaveGroupId && disableSaveForDescription"
                     (click)="save();">
                     {{isEdit ? 'Update' : 'Save' }}</button>
                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetForm()">Close</button>
@@ -368,86 +345,7 @@
     </div>
 </div>
 
-
-<!-- <div [@fadeInOut] class="page-content">
-    <div class="right_col" role="main">
-        <div class="x_panel">
-            <div class="x_content">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item" aria-current="page">Accounting</li>
-                        <li class="breadcrumb-item" aria-current="page">General Ledger</li>
-                        <li class="breadcrumb-item active" aria-current="page">Nodes</li>
-                    </ol>
-                </nav>
-                <h4 class="page-heading clr-green">Nodes</h4>
-
-                <div class="table-responsive">
-                    <br />
-                    <a class="btn btn-success pull-right" (click)="open(contentEdit)">Add Node</a>
-                    <br />
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>Ledgere Name</th>
-                                <th>Share with the Other Entities</th>
-                                <th>Node Code</th>
-                                <th>Node Name</th>
-                                <th>Description</th>
-                                <th>Leaf Node</th>
-                                <th>Parent Node</th>
-                                <th>Node Type</th>
-                                <th>&nbsp;</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let nodeSetup of nodeSetupListData">
-                                <td>{{nodeSetup.ledgerName}}</td>
-                                <td>{{nodeSetup.comapnycodes}}</td>
-                                <td>{{nodeSetup.nodeCode}}</td>
-                                <td>{{nodeSetup.nodeName}}</td>
-                                <td>{{nodeSetup.description}}</td>
-                                <td>{{nodeSetup.leafNodeCheck}}</td>
-                                <td>{{nodeSetup?.parentNode?.nodeCode}}</td>
-                                <td>{{nodeSetup.fsType}}</td>
-                                <td>
-                                    <p-inputSwitch *ngIf="nodeSetup['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(nodeSetup,$event)"
-                                        [(ngModel)]="nodeSetup['isActive']"></p-inputSwitch>
-                                    <p-inputSwitch *ngIf="nodeSetup['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(nodeSetup,$event)"
-                                        [(ngModel)]="nodeSetup['isActive']"></p-inputSwitch>
-                                    <p-inputSwitch *ngIf="nodeSetup['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(nodeSetup,$event)"
-                                        [(ngModel)]="nodeSetup['isActive']"></p-inputSwitch>
-                                    <span (click)="showViewData(contentView,nodeSetup)" data-toggle="modal" data-target="#view">
-                                        <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" title="" data-original-title="View" matTooltip="View">
-                                            <i class="fa fa-eye"></i>
-                                        </a>
-                                    </span>
-                                    <span (click)="setNodeSetupToUpdate(nodeSetup.glAccountNodeId,contentEdit)" data-toggle="modal" data-target="#edit">
-                                        <a data-toggle="tooltip" title="" class="btn btn-primary nobg" data-original-title="" edit="">
-                                            <i class="fa fa-edit"></i>
-                                        </a>
-                                    </span>
-                                    <span data-toggle="modal" data-target="#history">
-                                        <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
-                                            <i class="fa fa-history"></i>
-                                        </a>
-                                    </span>
-                                    <span (click)="removeNodeSetup(nodeSetup.glAccountNodeId)" data-toggle="modal" data-target="#data">
-                                        <a class="btn btn-danger nobg" data-toggle="tooltip" title="" data-original-title="Delete">
-                                            <i class="fa fa-trash"></i>
-                                        </a>
-                                    </span>
-                                </td>
-                            </tr>
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
-<ng-template #content let-c="close" let-d="dismiss">
+<ng-template #content let-c="close" let-d="dismiss" >
     <div class="modal-header">
         <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
@@ -462,107 +360,6 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
         <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
-    </div>
-</ng-template>
-
-<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
-    <div class="modal-header">
-        <h4 class="modal-title" *ngIf="isEditMode">Edit Nodes</h4>
-        <h4 class="modal-title" *ngIf="!isEditMode">Add Nodes</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <form #userForm="ngForm" class="form-horizontal">
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Ledger Name
-                    <span class="clr-red">*</span>
-                </label>
-                <div class="col-sm-7">
-                    <select [(ngModel)]="currentNodeSetup.ledgerName" [ngModelOptions]="{standalone: true}">
-                        <option *ngFor="let company of maincompanylist" [ngValue]="company.code">{{company.code}}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Share with the Other Entities</label>
-                <div class="col-sm-7">
-                    <p-multiSelect [options]="mainCompanylistMultiSelectData" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentNodeSetup.selectedCompanysData"
-                        [panelStyle]="{minWidth:'12em'}"></p-multiSelect>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Node Code
-                    <span class="clr-red">*</span>
-                </label>
-                <div class="col-sm-7">
-                    <p-autoComplete (onSelect)="codeSelect($event)" (onKeyUp)=codeHandler($event) [(ngModel)]="currentNodeSetup.nodeCode" [ngModelOptions]="{standalone: true}"
-                        [suggestions]="localCollection" (completeMethod)="filterCodes($event)" [size]="30" [minLength]="1" [dropdown]="true">
-                        <ng-template let-nodeCode pTemplate="item">
-                            <div class="ui-helper-clearfix">{{nodeCode}}</div>
-                        </ng-template>
-                    </p-autoComplete>
-                    <div *ngIf="disablesave" class="clr-red">Already Exists</div>
-
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Node Name
-                    <span class="clr-red">*</span>
-                </label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="text" [(ngModel)]="currentNodeSetup.nodeName" [ngModelOptions]="{standalone: true}">
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Parent Node</label>
-                <div class="col-sm-7">
-                    <p-autoComplete (onSelect)="parentCodeNodeSelect($event)" (onKeyUp)=parentCodeNodeHandler($event) [(ngModel)]="parentNode"
-                        [ngModelOptions]="{standalone: true}" [suggestions]="parentCodeCollection" (completeMethod)="filterParentNodeCodes($event)"
-                        [size]="30" [minLength]="1" [dropdown]="true">
-                    </p-autoComplete>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Leaf Node</label>
-                <div class="col-sm-7">
-                    <input class="form-control" type="checkbox" [(ngModel)]="currentNodeSetup.leafNodeCheck" [ngModelOptions]="{standalone: true}">
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">Node Type
-                    <span class="clr-red">*</span>
-                </label>
-                <div class="col-sm-7">
-                    <select [(ngModel)]="currentNodeSetup.glAccountNodeType" [ngModelOptions]="{standalone: true}">
-                        <option *ngFor="let glAccountClass of allGLAccountClassData" [ngValue]="glAccountClass.glAccountClassName">{{glAccountClass.glAccountClassName}}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group col-sm-12">
-                <label class="control-label col-sm-4">F/S Type
-                    <span class="clr-red">*</span>
-                </label>
-                <div class="col-sm-7">
-                    <select [(ngModel)]="currentNodeSetup.fsType" [ngModelOptions]="{standalone: true}">
-                        <option value="incomeStatement">Income Statement</option>
-                        <option value="balanceSheet">Balance Sheet</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-sm-4" for="description">Node Description</label>
-                <div class="control-data">
-                    <textarea style="width: 300px;height: 100px;" [(ngModel)]="currentNodeSetup.description" [ngModelOptions]="{standalone: true}"></textarea>
-                </div>
-            </div>
-            <div class="clear"></div>
-            <div class="modal-footer">
-                <button class="btn btn-success pull-right submit-btn" [disabled]="disablesave" *ngIf="!this.updateMode" (click)="addNodeSetup()">Save</button>
-                <button class="btn btn-success pull-right submit-btn" [disabled]="disablesave" *ngIf="this.updateMode" (click)="updateNodeSetup()">Save</button>
-            </div>
-        </form>
     </div>
 </ng-template>
 

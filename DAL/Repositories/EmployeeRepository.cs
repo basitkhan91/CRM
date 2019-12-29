@@ -126,7 +126,10 @@ namespace DAL.Repositories
                                t.CreatedBy,
                                t.UpdatedBy,
                                t.UpdatedDate,
-                               JobTypeName=jobtype.JobTypeName
+                               JobTypeName=jobtype.JobTypeName,
+                               t.CurrencyId,
+                               t.IsHeWorksInShop,
+                               t.Memo
                                //cc.Description
                            }).Distinct().OrderByDescending(p=>p.UpdatedDate).ToList();
 
@@ -341,6 +344,117 @@ namespace DAL.Repositories
                         select ems).ToList();
             return data;
         }
+
+        public IEnumerable<object> GetEmployeeAuditHistoryData(long employeeId)
+        {
+            var retData = (from t in _appContext.EmployeeAudit
+
+                           join orgCountries in _appContext.Countries on t.OriginatingCountryId equals orgCountries.countries_id into cre
+                           from orgCountries in cre.DefaultIfEmpty()
+
+                           join nationalCountryId in _appContext.Countries on t.NationalityCountryId equals nationalCountryId.countries_id into nationalCounty
+                           from nationalCountryId in nationalCounty.DefaultIfEmpty()
+
+                           join managementStructeInfo in _appContext.ManagementStructure on t.ManagementStructureId equals managementStructeInfo.ManagementStructureId into managmentCompany
+                           from managementStructeInfo in managmentCompany.DefaultIfEmpty()
+
+                           join ext in _appContext.EmployeeExpertise on t.EmployeeExpertiseId equals ext.EmployeeExpertiseId into employeeExpertiseInfos
+                           from ext in employeeExpertiseInfos.DefaultIfEmpty()
+
+                           join tpy in _appContext.JobType on t.JobTypeId equals tpy.JobTypeId into jobTypeInfos
+                           from tpy in jobTypeInfos.DefaultIfEmpty()
+
+                           join jt in _appContext.JobTitle on t.JobTitleId equals jt.JobTitleId into jobTitleInfos
+                           from jt in jobTitleInfos.DefaultIfEmpty()
+
+                           join managmentLegalEntity in _appContext.ManagementStructure on t.ManagementStructureId equals managmentLegalEntity.ManagementStructureId into mainCompanyTree
+                           from managmentLegalEntity in mainCompanyTree.DefaultIfEmpty()
+                               //join mle in _appContext.ManagementStructure on t.ManagementStructureId equals mle.ManagementStructureId into mainCompanyTree
+                               //from mle in mainCompanyTree.DefaultIfEmpty()
+
+                           join divmanagmentLegalEntity in _appContext.ManagementStructure on managmentLegalEntity.ParentId equals divmanagmentLegalEntity.ManagementStructureId into mainDivCompany
+                           from divmanagmentLegalEntity in mainDivCompany.DefaultIfEmpty()
+
+                           join biumanagmentLegalEntity in _appContext.ManagementStructure on divmanagmentLegalEntity.ParentId equals biumanagmentLegalEntity.ManagementStructureId into BIUDivCompany
+                           from biumanagmentLegalEntity in BIUDivCompany.DefaultIfEmpty()
+
+                           join compmanagmentLegalEntity in _appContext.ManagementStructure on biumanagmentLegalEntity.ParentId equals compmanagmentLegalEntity.ManagementStructureId into comivCompany
+                           from compmanagmentLegalEntity in comivCompany.DefaultIfEmpty()
+                            
+                           join employeetraingInfo in _appContext.EmployeeTraining on t.EmployeeId equals employeetraingInfo.EmployeeId into employeeTraingInfo
+                           from employeetraingInfo in employeeTraingInfo.DefaultIfEmpty()
+
+                           join employeetraingType in _appContext.EmployeeTrainingType on employeetraingInfo.EmployeeTrainingTypeId equals employeetraingType.EmployeeTrainingTypeId into employeeTraingTypeInfo
+                           from employeetraingType in employeeTraingTypeInfo.DefaultIfEmpty()
+                           
+                           where t.EmployeeId== employeeId
+                           select new
+                           {
+                               t.AuditEmployeeId,
+                               t.EmployeeId,
+                               t.FirstName,
+                               t.LastName,
+                               t.MiddleName,
+                               t.EmployeeIdAsPerPayroll,
+                               t.StationId,
+                               t.JobTitleId,
+                               t.JobTypeId,
+                               t.EmployeeExpertiseId,
+                               t.DateOfBirth,
+                               t.OriginatingCountryId,
+                               t.NationalityCountryId,
+                               t.StartDate,
+                               // cc,
+                               t.EmployeeCode,
+                               t.MobilePhone,
+                               t.WorkPhone,
+                               orgCountries,
+                               nationalCountryId,
+                               managementStructeInfo,
+                               employeeExpertise= ext.Description,
+                               // empSupervisor,
+                               Jobtitle= jt.Description,
+                               JobType= tpy.JobTypeName,
+                               t.Fax,
+                               t.Email,
+                               t.SSN,
+
+                               //legal entrities
+
+                               managmentLegalEntity,
+                               divmanagmentLegalEntity,
+                               biumanagmentLegalEntity,
+                               compmanagmentLegalEntity,
+                               employeetraingInfo,
+                               employeetraingType,                            
+
+                               t.IsHourly,
+                               t.HourlyPay,
+                               t.EmployeeCertifyingStaff,
+                               t.EmployeeLeaveTypeId,
+                               t.SupervisorId,
+                               t.MasterCompanyId,
+                               t.IsDeleted,
+                               t.ManagementStructureId,                              
+                               t.IsActive,
+                               t.CreatedDate,
+                               t.CreatedBy,
+                               t.UpdatedBy,
+                               t.UpdatedDate,
+                               JobTypeName = tpy.JobTypeName,
+                               t.CurrencyId,
+                               t.IsHeWorksInShop,
+                               payType= Convert.ToBoolean(t.IsHourly) ? "Hourly" : "Yearly",
+                               company= divmanagmentLegalEntity.Name
+                               //cc.Description
+                           }).Distinct().OrderByDescending(p => p.AuditEmployeeId).ToList();
+
+           
+
+            return retData;
+        }
+
+        
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 

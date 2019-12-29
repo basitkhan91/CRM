@@ -60,6 +60,7 @@
                                         (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                     </td>
                                     <td style="width:200px" *ngIf="selectedColumns.length> 0">
+
                                         <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                         <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                         <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
@@ -109,8 +110,7 @@
     </div>
 </ng-template>
 
-
-<div  *ngIf="selectedRowforDelete" #delete id="delete"  class="modal fade" role="dialog">
+<div  *ngIf="selectedRowforDelete" #delete id="delete"  class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -130,7 +130,6 @@
   
     </div>
   </div>
-
 
   <div #add  id="add"class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
@@ -199,8 +198,7 @@
     </div>
   </div>
 
-
-<div *ngIf="existingRecordsResponse" id="duplicateRecords" #duplicateRecords class="modal fade" role="dialog" >
+<div *ngIf="existingRecordsResponse" id="duplicateRecords" #duplicateRecords class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
                             <div class="modal-dialog modal-lg">
                           
                              
@@ -244,7 +242,7 @@
                             </div>
 </div>
 
-                          <div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" >
+<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
                             <div class="modal-dialog modal-lg">
                           
                               <!-- Modal content-->
@@ -296,9 +294,7 @@
                             </div>
                           </div>
 
-
-
-<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog">
+<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog modal-sm">
     <div class="modal-content">
         <div class="modal-header">
@@ -309,43 +305,43 @@
             <div class="col-sm-12">
                 <p>
                     <span class="label " >
-                        <b class="view-Header">Tax Type: </b>
+                        <b >Tax Type: </b>
                     </span>
                     <span class="value">{{ viewRowData.description}}</span>
                 </p>
                 <p>
                     <span class="label ">
-                        <b class="view-Header">Memo: </b>
+                        <b >Memo: </b>
                     </span>
                     <span class="value">{{viewRowData.memo}}</span>
                 </p>
                 <p>
                     <span class="label ">
-                        <b class="view-Header">Is Active</b>
+                        <b >Is Active</b>
                     </span>
                     <span class="value">{{viewRowData.isActive === true ? 'Yes' : 'No'}}</span>
                 </p>
                 <p>
                     <span class="label ">
-                        <b class="view-Header">Created By: </b>
+                        <b >Created By: </b>
                     </span>
                     <span class="value">{{viewRowData.createdBy }}</span>
                 </p>
                 <p>
                     <span class="label ">
-                        <b class="view-Header">Created Date: </b>
+                        <b >Created Date: </b>
                     </span>
                     <span class="value">{{viewRowData.createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
                 </p>
                 <p>
                     <span class="label ">
-                        <b class="view-Header">Updated By: </b>
+                        <b >Updated By: </b>
                     </span>
                     <span class="value">{{viewRowData.updatedBy}}</span>
                 </p>
                 <p>
                     <span class="label ">
-                        <b class="view-Header">Updated Date: </b>
+                        <b >Updated Date: </b>
                     </span>
                     <span class="value">{{viewRowData.updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
                 </p>
@@ -361,7 +357,7 @@
 
 </div>
 
-<ng-template #helpText class="modal fade" id="help-popup" role="dialog">
+<ng-template #helpText class="modal fade" id="help-popup" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-content">
         <div class="modal-header">
             

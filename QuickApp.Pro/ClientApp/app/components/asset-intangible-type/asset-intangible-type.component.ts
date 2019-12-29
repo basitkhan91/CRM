@@ -10,6 +10,7 @@ import { AssetIntangibleTypeService } from "../../services/asset-intangible-type
 import { ModeOfOperation } from "../../models/ModeOfOperation.enum";
 import { ConfigurationService } from '../../services/configuration.service';
 import { validateRecordExistsOrNot, editValueAssignByCondition, getObjectById, selectedValueValidate, getObjectByValue } from '../../generic/autocomplete';
+import { UploadTag } from "../../models/UploadTag.enum";
 
 @Component({
     selector: 'app-asset-intangible-type',
@@ -242,22 +243,19 @@ export class AssetIntangibleTypeComponent implements OnInit {
 
     sampleExcelDownload() {
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=AssetIntangibleType&fileName=AssetIntangibleType.xlsx`;
-
         window.location.assign(url);
     }
 
     customExcelUpload(event) {
         const file = event.target.files;
-
-        console.log(file);
         if (file.length > 0) {
-
-            this.formData.append('file', file[0])
+            this.formData.append('file', file[0]);
             this.coreDataService.bulkUpload(this.formData).subscribe(res => {
                 event.target.value = '';
-
                 this.formData = new FormData();
                 this.existingRecordsResponse = res;
+                let bulkUploadResult = res;
+                this.showBulkUploadResult(bulkUploadResult);
                 this.getItemList();
                 this.alertService.showMessage(
                     'Success',
@@ -270,7 +268,15 @@ export class AssetIntangibleTypeComponent implements OnInit {
 
             })
         }
+    }
 
+    showBulkUploadResult(items: any) {
+        let successCount = items.filter(item => item.UploadTag == UploadTag.Success);
+        let failedCount = items.filter(item => item.UploadTag == UploadTag.Failed);
+        let duplicateCount = items.filter(item => item.UploadTag == UploadTag.Duplicate);
+        this.alertService.showMessage('Success', `${successCount} ${this.rowName}${successCount > 1 ? 's' : ''} uploaded successfully.`, MessageSeverity.success);
+        this.alertService.showMessage('Error', `${failedCount} ${this.rowName}${failedCount > 1 ? 's' : ''} failed to upload.`, MessageSeverity.error);
+        this.alertService.showMessage('Info', `${duplicateCount} ${duplicateCount > 1 ? 'duplicates' : 'duplicate'} ignored.`, MessageSeverity.info);
     }
 
     eventHandler(event) {
@@ -334,4 +340,18 @@ export class AssetIntangibleTypeComponent implements OnInit {
 
     }
 
+    viewItemDetailsClick(content, row) {
+        //console.log(content);
+        this.itemDetails = row;
+        //this.loadMasterCompanies();
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    dismissModel() {
+        this.currentModeOfOperation = ModeOfOperation.None;
+        this.modal.close();
+    }
 }

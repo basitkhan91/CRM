@@ -48,6 +48,7 @@ namespace DAL.Models
         public bool? IsDeleted { get; set; }
         public bool? IsBankingInfo { get; set; }
 
+        public string LedgerName { get; set; }
 
 
     }

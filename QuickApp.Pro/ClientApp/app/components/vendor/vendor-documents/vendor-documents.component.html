@@ -43,7 +43,7 @@
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
                                     </div>
 
-                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
+                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
                                     <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
                                     <!-- <div class="excel-upload excel-upload-cstm">
                                         <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
@@ -115,7 +115,7 @@
         </div>
     </div>
 </div>
-<ng-template #deleteContent let-c="close" let-d="dismiss">
+<ng-template #deleteContent let-c="close" let-d="dismiss" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title">Are You Sure Want to Delete?</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
@@ -129,8 +129,7 @@
     </div>
 </ng-template>
 
-<ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto">
-    <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
+<ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
 
         <h4 class="modal-title">History of Vendor Documents</h4>
@@ -177,7 +176,7 @@
     </div>
 </ng-template>
 
-<div id="view" #view class="modal fade" role="dialog">
+<div id="view" #view class="modal fade" role="dialog" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -248,9 +247,7 @@
     </div>
 </div>
 
-
-
-<div class="modal fade" id="addDocumentDetails" role="dialog">
+<div class="modal fade" id="addDocumentDetails" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">

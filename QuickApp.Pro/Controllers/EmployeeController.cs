@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DAL;
+using DAL.Common;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -215,6 +216,18 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.UpdatedBy = employeeViewModel.UpdatedBy;
                 employeeobject.Memo = employeeViewModel.Memo;
 
+                employeeobject.CurrencyId = employeeViewModel.CurrencyId;
+
+                if(employeeViewModel.IsHeWorksInShop == null)
+                {
+                    employeeobject.IsHeWorksInShop = false;
+                }
+                else
+                {
+                    employeeobject.IsHeWorksInShop = employeeViewModel.IsHeWorksInShop;
+                }
+               
+
                 _unitOfWork.employee.Add(employeeobject);
                 _unitOfWork.SaveChanges();
 
@@ -369,12 +382,27 @@ namespace QuickApp.Pro.Controllers
                 existingResult.IsHourly = employeeViewModel.IsHourly;
                 existingResult.HourlyPay = employeeViewModel.HourlyPay;
                 existingResult.ManagementStructureId = employeeViewModel.ManagementStructureId;
-                existingResult.LegalEntityId = entityobject.LegalEntityId;
+                //existingResult.LegalEntityId = entityobject.LegalEntityId;
                 existingResult.SupervisorId = employeeViewModel.SupervisorId;
                 existingResult.EmployeeCertifyingStaff = employeeViewModel.EmployeeCertifyingStaff;
                 existingResult.MasterCompanyId = 1;
                 existingResult.Memo = employeeViewModel.Memo;
-                
+                existingResult.CurrencyId = employeeViewModel.CurrencyId;
+
+                if (entityobject != null && entityobject.LegalEntityId != null)
+                {
+                    existingResult.LegalEntityId = entityobject.LegalEntityId;
+                }                
+
+                if (employeeViewModel.IsHeWorksInShop == null)
+                {
+                    existingResult.IsHeWorksInShop = false;
+                }
+                else
+                {
+                    existingResult.IsHeWorksInShop = employeeViewModel.IsHeWorksInShop;
+                }
+
                 if (employeeViewModel.EmployeeLeaveTypeId != null)
                 {
                     var integrationList = _unitOfWork.EmployeeLeaveTypeMappingRepository.GetAllData().ToList();
@@ -749,6 +777,9 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.ExpirationDate = employeeTrainingViewModel.ExpirationDate;
                 employeeobject.UnitOfMeasureId = employeeTrainingViewModel.UnitOfMeasureId;
                 employeeobject.CreatedBy = employeeTrainingViewModel.CreatedBy;
+                employeeobject.FrequencyOfTrainingId = employeeTrainingViewModel.FrequencyOfTrainingId;
+             
+               
 
                 employeeobject.CreatedDate = DateTime.Now;
                 employeeobject.UpdatedDate = DateTime.Now;
@@ -785,9 +816,11 @@ namespace QuickApp.Pro.Controllers
                 existingResult.IndustryCode = employeeTrainingViewModel.IndustryCode;
                 existingResult.ExpirationDate = employeeTrainingViewModel.ExpirationDate;
                 existingResult.UnitOfMeasureId = employeeTrainingViewModel.UnitOfMeasureId;
-                existingResult.CreatedDate = DateTime.Now;
+                //existingResult.CreatedDate = DateTime.Now;
                 existingResult.UpdatedDate = DateTime.Now;
                 existingResult.UpdatedBy = employeeTrainingViewModel.UpdatedBy;
+
+                existingResult.FrequencyOfTrainingId = employeeTrainingViewModel.FrequencyOfTrainingId;
                 _unitOfWork.employeeTraining.Update(existingResult);
                 _unitOfWork.SaveChanges();
             }
@@ -1045,6 +1078,62 @@ namespace QuickApp.Pro.Controllers
         {
             var result = _unitOfWork.employee.GetEmpoyeeManagementStructure(employeeId);
             return Ok(result);
+        }
+
+        [HttpGet("GetEmployeeAuditHistory/{employeeId}")]        
+        public IActionResult GetEmployeeAuditHistoryByEmployeeId(long employeeId)
+        {
+            var result = _unitOfWork.employee.GetEmployeeAuditHistoryData(employeeId);
+            return Ok(result);
+        }
+
+        [HttpPost("employeeDocumentUpload")]
+        [Produces("application/json")]
+        public IActionResult EmployeeDocumentUploadAction()
+        {
+            try
+            {
+                Attachment objAttachment = new Attachment();
+              
+                if (ModelState.IsValid)
+                {
+                    if (Request.Form == null)
+                        return BadRequest($"{nameof(objAttachment)} cannot be null");
+                    objAttachment.MasterCompanyId = 1;
+                    objAttachment.UpdatedBy = Request.Form["UpdatedBy"];
+                    objAttachment.ReferenceId = Convert.ToInt64(Request.Form["EmployeeId"]);
+                    //objAttachment.ModuleId= Convert.ToInt32(Request.Form["ModuleId"]);
+                    //string moduleName = Request.Form["ModuleName"];
+                   
+
+                    if (objAttachment.ReferenceId > 0)
+                    {
+                        var attachmentData = _context.Attachment.Where(p => p.ReferenceId == objAttachment.ReferenceId && p.ModuleId == Convert.ToInt32(ModuleEnum.Employee)).FirstOrDefault();
+
+                        if (attachmentData != null)
+                        {
+                            objAttachment.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objAttachment.ReferenceId,
+                                                         Convert.ToInt32(ModuleEnum.Employee), Convert.ToString(ModuleEnum.Employee), objAttachment.UpdatedBy, objAttachment.MasterCompanyId, attachmentData.AttachmentId);
+
+
+                        }
+                        else
+                        {
+                            objAttachment.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objAttachment.ReferenceId,
+                                                                       Convert.ToInt32(ModuleEnum.Employee), Convert.ToString(ModuleEnum.Employee), objAttachment.UpdatedBy, objAttachment.MasterCompanyId);
+
+                        }
+
+                    }
+
+                    return Ok(objAttachment);
+                }
+                return Ok(ModelState);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

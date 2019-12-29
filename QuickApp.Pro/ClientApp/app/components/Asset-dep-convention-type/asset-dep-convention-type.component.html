@@ -2,19 +2,19 @@
     <div class="right_col" role="main">
         <div class="x_panel">
             <div class="x_content">
-                <nav aria-label="breadcrumb">
+                <!-- <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item" aria-current="page">Asset Management</li>
                         <li class="breadcrumb-item" aria-current="page">Asset Management Maintanance</li>
                         <li class="breadcrumb-item active" aria-current="page">Depreciation Convension</li>
                     </ol>
-                </nav>
+                </nav> -->
                 <div class="card">
                     <div class="card-body">
                         <div class="inline-block display-flex">
                             <h3 class="po-head lead"> Depreciation Convension</h3>
                             &nbsp;&nbsp;
-                            <a class="plusicon-cstm new-margin" pTooltip="Add  Depreciation Convention" tooltipPosition="right" (click)="open(contentEdit)">
+                            <a class="plusicon-cstm new-margin" pTooltip="Add Depreciation Convention" tooltipPosition="right" (click)="open(contentEdit)">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
@@ -35,9 +35,9 @@
                                 <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect [maxSelectedLabels]="2" [options]="selectedData" optionLabel="header" [(ngModel)]="selectedColumns"
                                                    [style]="{minWidth: '200px'}" style="float:left"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download All" tooltipPosition="top" pButton icon="fa-download"
                                             iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected Data" tooltipPosition="top" pButton icon="fa-download"
                                             iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
                                         <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
@@ -48,7 +48,7 @@
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()">Sample File Download</button>
+                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()" pTooltip="Download Sample File"  tooltipPosition="top">Sample File Download</button>
                                     </div>
                                 </div>
                             </ng-template>
@@ -182,7 +182,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
 
 </ng-template>
 <!--Confirmation for Delete-->
-<ng-template #content let-c="close" let-d="dismiss">
+<ng-template #content let-c="close" let-d="dismiss" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
@@ -201,7 +201,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     </div>
 </ng-template>
 
-<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Dep Convension</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Dep Convension</h4>
@@ -283,7 +283,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     </div>
 </ng-template>
 
-<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog">
+<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->

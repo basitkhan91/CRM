@@ -18,6 +18,7 @@
                                                 name="name"
                                                 [(ngModel)]="currentCalendarObj.ledgername" [suggestions]="ledgerNameObject"
                                                 field="name" emptyMessage="No results"
+                                                [forceSelection]="true" 
                                                 (completeMethod)="loadLedgerNames($event)" [size]="30"
                                                 [minLength]="1" [dropdown]="true" required>
                                 </p-autoComplete>

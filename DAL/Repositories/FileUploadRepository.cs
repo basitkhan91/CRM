@@ -65,7 +65,7 @@ namespace DAL.Repositories
                             //attachmentDetails.Memo = "";
 
                             attachmentDetails.FileSize = Math.Round(Convert.ToDecimal(fileSize / (1024 * 1024)), 2);
-                            attachmentDetails.FileName = fileName;
+                            attachmentDetails.FileName = Convert.ToString(fileName + "_" + DateTime.Now.ToString());
                             attachmentDetails.Link = fullPath;
                             attachmentDetails.FileType = file.ContentType;
                             attachmentDetails.IsActive = true;
@@ -129,7 +129,7 @@ namespace DAL.Repositories
                             //attachmentDetails.Memo = "";
 
                             attachmentDetails.FileSize = Math.Round(Convert.ToDecimal(fileSize / (1024 * 1024)), 2);
-                            attachmentDetails.FileName = fileName;
+                            attachmentDetails.FileName = Convert.ToString(fileName + "_" + DateTime.Now.ToString());
                             attachmentDetails.Link = fullPath;
                             attachmentDetails.FileType = file.ContentType;
                             attachmentDetails.IsActive = true;
@@ -339,6 +339,46 @@ namespace DAL.Repositories
                     break;
             }
         }
+
+
+        public IEnumerable<object> GetDocumentDetailById(long id, int moduleId)
+        {
+            var result = (from at in _appContext.Attachment
+                          join atd in _appContext.AttachmentDetails on at.AttachmentId equals atd.AttachmentId
+                          where at.ReferenceId == id && at.ModuleId == moduleId && atd.IsActive == true && atd.IsDeleted == false
+                          select atd).ToList();
+
+            return result;
+
+        }
+        public bool GetDocumentDelete(long id, string updatedBy)
+        {
+            bool result = false;
+            try
+            {
+                AttachmentDetails attachmentDetails = new AttachmentDetails();
+                attachmentDetails.AttachmentDetailId = id;
+                attachmentDetails.UpdatedDate = DateTime.Now;
+                attachmentDetails.UpdatedBy = updatedBy;
+                attachmentDetails.IsDeleted = true;
+
+                _appContext.AttachmentDetails.Attach(attachmentDetails);
+                _appContext.Entry(attachmentDetails).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(attachmentDetails).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(attachmentDetails).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+                result = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
+
+        }
+
+
 
         public List<T> BindCustomData<T>(IFormFile file, string primaryKeyColumn, string moduleName) where T : class
         {
@@ -707,7 +747,7 @@ namespace DAL.Repositories
             foreach (var item in assetStatusList)
             {
 
-                var flag = _appContext.AssetStatus.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.Code)
+                var flag = _appContext.AssetStatus.Any(p => p.IsDelete == false && !string.IsNullOrEmpty(p.Code)
                 && !string.IsNullOrEmpty(p.Code) &&
                 p.Code.ToLower() == item.Code.Trim().ToLower());
                 if (!flag)
@@ -791,7 +831,7 @@ namespace DAL.Repositories
             foreach (var item in ConditionList)
             {
 
-                var flag = _appContext.Condition.Any(p => p.IsDelete == false && !string.IsNullOrEmpty(p.Description)
+                var flag = _appContext.Condition.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.Description)
                 && !string.IsNullOrEmpty(p.Description) &&
                 p.Description.ToLower() == item.Description.Trim().ToLower());
                 if (!flag)

@@ -62,7 +62,10 @@ export class EmployeeEndpoint extends EndpointFactory {
 	private readonly _getEmployeeRolesUrl: string = "/api/Employee/getEmployeeRoles";
 	private readonly _getStoreEmployeeManagementStructure: string = "/api/Employee/employeeManagementStructure";
 	private readonly _getEmployeeManagementStructure: string = "/api/Employee/getemployeeManagementStructure";
- 
+	private readonly _getEmployeeAuditHistoryByEmpId: string = "/api/Employee/GetEmployeeAuditHistory";
+	private readonly _actionsUrlEmployeeMemoUpdate: string = "/api/Employee/employeeupdatememo";
+	private readonly _addEmployeeTrainingFileUpload: string = "/api/Employee/employeeDocumentUpload";
+
     
 
 	get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
@@ -457,6 +460,31 @@ export class EmployeeEndpoint extends EndpointFactory {
 			return this.handleError(error, () => this.getEmployeeEndpoint());
 		});
 	}
+
+	getEmployeeAuditDetailsEndPoint<T>(employeeId): Observable<T> {
+		return this.http.get<T>(`${this._getEmployeeAuditHistoryByEmpId}/${employeeId}`, this.getRequestHeaders())
+		.catch(error => {
+			return this.handleError(error, () => this.getEmployeeAuditDetailsEndPoint(employeeId));
+		});
+	}
+
+	getEmployeeUpdateMemoEndpoint<T>(employeeId: number,memo:any): Observable<T> {
+		let endpointUrl = `${this._actionsUrlEmployeeMemoUpdate}?employyeId=${employeeId}&memo=${memo}`;
+
+		return this.http.put<T>(endpointUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getEmployeeUpdateMemoEndpoint( employeeId,memo));
+			});
+
+	}
+
+	// uploadEmployeeTrainingDocEndpoint<T>(file: any): Observable<T> {
+	// 	const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
+	// 	return this.http.post<T>(`${this._addEmployeeTrainingFileUpload}`, file);
+	// }
+
+
+	
 }
 
 

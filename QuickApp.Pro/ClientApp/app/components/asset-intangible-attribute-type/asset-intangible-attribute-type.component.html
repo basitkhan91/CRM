@@ -70,7 +70,7 @@
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()">Sample File Download</button>
+                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()"  pTooltip="Download Sample File"  tooltipPosition="top">Sample File Download</button>
                                     </div>
                                 </div>
 
@@ -100,7 +100,10 @@
                                         {{rowData[col.field]}}
                                     </td>
                                     <td style="width:200px" *ngIf="selectedColumns.length> 0">
-                                        <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="toggleActiveStatus(rowData)" matTooltip="Toggle Status"></p-inputSwitch>
+                                        <p-inputSwitch [(ngModel)]="rowData['isActive']"
+                                                       name="isActive{{rowIndex}}" (onChange)="toggleActiveStatus(rowData)"
+                                                       [matTooltip]="rowData['isActive'] ? 'Active' : 'Inactive' ">
+                                        </p-inputSwitch>
                                         <span data-toggle="modal" data-target="#view">
                                             <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewItemDetails(rowData)" data-target="#view" data-toggle="modal" matTooltip="View">
                                                 <i class="fa fa-eye"></i>
@@ -136,7 +139,7 @@
     <!--to-do:use same modal to view, add, update, and delete-->
     <!--Modal for view only-->
 
-    <div #view *ngIf="itemDetails" class="modal fade" id="view" role="dialog">
+    <div #view *ngIf="itemDetails" class="modal fade" id="view" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -237,7 +240,7 @@
     </div>
 
     <!--Step x: Modal for Edit-->
-    <div #editItem id="editItem" class="modal fade editModal" role="dialog" *ngIf="currentModeOfOperation === 2 || currentModeOfOperation === 3">
+    <div #editItem id="editItem" class="modal fade editModal" role="dialog" *ngIf="currentModeOfOperation === 2 || currentModeOfOperation === 3" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -448,7 +451,7 @@
     </div>
 
     <!--Modal for delete only-->
-    <div #delete *ngIf="currentModeOfOperation === 4" id="delete" class="modal fade" role="dialog">
+    <div #delete *ngIf="currentModeOfOperation === 4" id="delete" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -472,7 +475,7 @@
 
 
     <!--Step x: Audit modal-->
-    <div #itemHistory *ngIf="currentModeOfOperation === 5" class="modal fade" id="itemHistory" role="dialog">
+    <div #itemHistory *ngIf="currentModeOfOperation === 5" class="modal fade" id="itemHistory" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

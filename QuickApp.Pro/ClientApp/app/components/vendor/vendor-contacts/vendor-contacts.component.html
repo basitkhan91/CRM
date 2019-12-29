@@ -16,7 +16,6 @@
                         </p>
                     </div>
                     <div class="table-responsive">
-
                         <div>
                             <div class="col-md-12" style="margin-bottom: -10px;">
                                 <h4 class="float-right">
@@ -39,8 +38,8 @@
                                         <i class="fa fa-search"></i>
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
                                     </div>
-                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding:5px 10px !important;"></button>
-                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>
+                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Data" (click)="dt.exportCSV()" style="padding:5px 10px !important;"></button>
+                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selected Data" (click)="dt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>
                                     
                                     <!-- <div class="excel-upload excel-upload-cstm">
                                         <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
@@ -112,7 +111,7 @@
     </div>
 </div>
 
-<ng-template #deleteContent let-c="close" let-d="dismiss">
+<ng-template #deleteContent let-c="close" let-d="dismiss" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title">Are You Sure Want to Delete?</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
@@ -126,48 +125,7 @@
     </div>
 </ng-template>
 
-
-<!--<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
-    <div class="modal-header">
-
-        <h4 class="modal-title">History of Action</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-
-    </div>
-    <div class="modal-body">
-
-        <div class="table-responsive">
-            <table class="table table-bordered cus-contact-table">
-                <thead>
-                    <tr>
-                        <th>AID</th>
-                        <th>Colum Name</th>
-                        <th>Previous Value</th>
-                        <th>New Value</th>
-                        <th>Last Updated By</th>
-                        <th>Last Updated Time</th>
-                    </tr>
-                </thead>
-                <tr *ngFor="let audit of auditHisory" (dblclick)="openEdit(contentEdit,rowData)">
-                    <td>{{audit.auditHistoryId}}</td>
-                    <td>{{audit.columnName}}</td>
-                    <td>{{audit.previousValue}}</td>
-                    <td>{{audit.newValue}}</td>
-                    <td>{{audit.updatedBy}}</td>
-                    <td>{{audit.updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
-    </div>
-</ng-template>-->
-
-<ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto">
-    <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
+<ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
 
         <h4 class="modal-title">History of Contact Information</h4>
@@ -384,4 +342,3 @@
         </div>
     </div>
 </div>
-

@@ -76,8 +76,8 @@
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
     <Exec Command="npm install" />
-    <Exec Command="node --max_old_space_size=6120  node_modules/webpack/bin/webpack.js --config webpack.config.vendor.js  --env.prod" />
-    <Exec Command="node --max_old_space_size=6120  node_modules/webpack/bin/webpack.js  --env.prod " />
+    <Exec Command="node --max_old_space_size=8192  node_modules/webpack/bin/webpack.js --config webpack.config.vendor.js  --env.prod" />
+    <Exec Command="node --max_old_space_size=8192  node_modules/webpack/bin/webpack.js  --env.prod " />
 
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
@@ -119,6 +119,7 @@
     <None Remove="ClientApp\app\models\percent.model.ts" />
     <None Remove="ClientApp\app\models\site.model.ts" />
     <None Remove="ClientApp\app\models\stockline.model.ts" />
+    <None Remove="ClientApp\app\models\tagtype.model.ts" />
     <None Remove="ClientApp\app\models\taxtype.model.ts" />
     <None Remove="ClientApp\app\models\vendorcapabilities.model.ts" />
     <None Remove="ClientApp\app\models\vendorprocess1099.model.ts" />
@@ -143,6 +144,7 @@
     <None Remove="ClientApp\app\services\stockline.service.ts" />
     <None Remove="ClientApp\app\services\stocklineadjustment-endpoint.service.ts" />
     <None Remove="ClientApp\app\services\stocklineadjustment.service.ts" />
+    <None Remove="ClientApp\app\services\tagtype-endpoint.service.ts" />
     <None Remove="ClientApp\app\services\taxtype-endpoint.service.ts" />
     <None Remove="ClientApp\app\services\VendorCapabilities-endpoint.service.ts" />
     <None Remove="ClientApp\app\services\vendorcapabilities.service.ts" />
@@ -406,6 +408,7 @@
     <TypeScriptCompile Include="ClientApp\app\models\laborandoverheadcostsetup.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\site.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\stockline.model.ts" />
+    <TypeScriptCompile Include="ClientApp\app\models\tagtype.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\taxtype.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\vendorcapabilities.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\vendorprocess1099.model.ts" />
@@ -430,6 +433,7 @@
     <TypeScriptCompile Include="ClientApp\app\services\stockline-endpoint.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\stockline.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\stocklineadjustment-endpoint.service.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\tagtype-endpoint.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\taxtype-endpoint.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\VendorCapabilities-endpoint.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\vendorcapabilities.service.ts" />

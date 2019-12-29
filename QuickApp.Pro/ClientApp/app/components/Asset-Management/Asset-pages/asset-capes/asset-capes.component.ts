@@ -14,11 +14,12 @@ import { LegalEntityService } from '../../../../services/legalentity.service';
 import { AtaMainService } from '../../../../services/atamain.service';
 import { ATAMain } from '../../../../models/atamain.model';
 import { ItemMasterCapabilitiesModel } from '../../../../models/itemMasterCapabilities.model';
-import { Router } from '@angular/router';
+//import { Router } from '@angular/router';
 import { AssetService } from '../../../../services/asset/Assetservice';
 import { DashNumberService } from '../../../../services/dash-number/dash-number.service';
 import { AircraftModel } from "../../../../models/aircraft-model.model";
 import { CommonService } from '../../../../services/common.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app-asset-capes',
@@ -84,10 +85,16 @@ export class AssetCapesComponent implements OnInit {
     search_AircraftDashNumberList: any;
     capabilityTypeData: any[];
     currentRow: any;
+    AssetId: any;
+    static assetService;
 
-    constructor(private modalService: NgbModal, private alertService: AlertService, public itemMasterService: ItemMasterService, private route: Router,
+    constructor(private router: ActivatedRoute,private modalService: NgbModal, private alertService: AlertService, public itemMasterService: ItemMasterService, private route: Router,
         private assetServices: AssetService, private dashnumberservices: DashNumberService, private formBuilder: FormBuilder,private commonservice: CommonService) {
 
+        this.AssetId = this.router.snapshot.params['id'];
+        if (this.assetServices.listCollection == undefined) {
+            this.GetAssetData(this.AssetId);
+        }
         if (this.assetServices.listCollection != null && this.assetServices.isEditMode == true) {
 
             this.showLable = true;
@@ -155,7 +162,10 @@ export class AssetCapesComponent implements OnInit {
        /* this.capabilityTypeData.forEach(element => {
             this.resetFormArray(element);
         });*/
-
+        this.AssetId = this.router.snapshot.params['id'];
+        if (this.assetServices.listCollection == null) {
+            this.GetAssetData(this.AssetId);
+        }
         this.getAssetsList(); //calling for getting Asset List Data
         this.ptnumberlistdata();
         this.aircraftManfacturerData();
@@ -171,7 +181,46 @@ export class AssetCapesComponent implements OnInit {
 
         })
     }
+    private GetAssetData(assetid) {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.assetServices.getByAssetId(assetid).subscribe(
+            results => this.onassetdataSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
 
+    private onassetdataSuccessful(getAssetData: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.assetServices.listCollection = getAssetData;
+        if (this.assetServices.listCollection != null) {
+
+            this.showLable = true;
+            this.currentAsset = this.assetServices.listCollection;
+            if (this.assetServices.listCollection) {
+                this.local = this.assetServices.listCollection;
+            }
+            this.loadCapesData();
+            this.aircraftManfacturerData();
+            this.manufacturerdata();
+        }
+        else if (this.assetServices.generalCollection != null) {
+            this.showLable = true;
+            this.currentAsset = this.assetServices.generalCollection;
+            if (this.assetServices.generalCollection) {
+                this.local = this.assetServices.generalCollection;
+                this.currentCapes = this.local;
+            }
+            this.loadCapesData();
+            this.aircraftManfacturerData();
+            this.manufacturerdata();
+        }
+        this.getAssetsList(); //calling for getting Asset List Data
+        this.ptnumberlistdata();
+        this.getAllDashNumbers();
+        this.getCapabilityTypeData();
+    }
     private ptnumberlistdata() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -629,7 +678,7 @@ export class AssetCapesComponent implements OnInit {
             }
         });
         this.capabilityTypeData.forEach(element1 => {
-            if (element1.selectedAircraftModelTypes.length > 0) {
+            if (element1 && element1.selectedAircraftModelTypes && element1.selectedAircraftModelTypes.length > 0) {
                 this.loadModalsForExistingRecords(element1);
                 // if(this.mfgFormArray)
             }
@@ -894,7 +943,7 @@ export class AssetCapesComponent implements OnInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.assetServices.CapeslistCollection = row;
-        this.modal = this.modalService.open(content2, { size: 'sm' });
+        this.modal = this.modalService.open(content2, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1037,7 +1086,7 @@ export class AssetCapesComponent implements OnInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.mfgFormArray.controls = [];
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1093,7 +1142,7 @@ export class AssetCapesComponent implements OnInit {
             }
         });
 
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
          this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1103,7 +1152,8 @@ export class AssetCapesComponent implements OnInit {
         this.assetServices.listCollection = this.local;
         this.activeIndex = 2;
         this.assetServices.indexObj.next(this.activeIndex);
-        this.route.navigateByUrl('/assetmodule/assetpages/app-asset-calibration');
+        const { assetId } = this.local;
+        this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-calibration/${assetId}`);
     }
 
     backClick() {

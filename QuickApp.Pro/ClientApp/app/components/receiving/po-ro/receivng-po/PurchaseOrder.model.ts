@@ -34,7 +34,9 @@ export class PurchaseOrder {
     billToContactName: string;
     billToMemo: string;
     masterCompanyId: number;
+
     shipToUserType: number;
+    billToUserId: number;
     billToUserType: number;
     shipToUserName: string;
     billToUserName: string;
@@ -73,7 +75,7 @@ export class PurchaseOrderPart {
     trace: string;
     conditionCode: string;
     quantityActuallyReceived: number;
-    quantityRejected: string;
+    quantityRejected: number;
     uomId: number;
 
     quantityOrdered: number;
@@ -323,6 +325,7 @@ export class ReceiveParts {
     purchaseOrderPartRecordId: number;
     stockLines: StockLine[];
     timeLife: TimeLife[];
+    quantityRejected: number;
 }
 
 export class DropDownData {

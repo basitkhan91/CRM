@@ -503,9 +503,7 @@
 
             </div>
             <div class="clear"></div>
-            <div id="myModal"
-                 class="modal fade custom-popup"
-                 role="dialog">
+            <div id="myModal" class="modal fade custom-popup" role="dialog" data-backdrop="static">
                 <div class="modal-dialog">
                     <!-- Modal content-->
                     <div class="modal-content">
@@ -551,7 +549,7 @@
         </div>
         <div class="clear"></div>
     </div>
-    <ng-template #deleteConfirm let-c="close" let-d="dismiss">
+    <ng-template #deleteConfirm let-c="close" let-d="dismiss" data-backdrop="static">
         <div class="modal-title">
             <h4>Confirm workflow delete</h4>
         </div>

@@ -473,7 +473,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.auditHisory = auditHistory;
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -496,7 +496,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
         this.isSaving = true;
         this.loadMasterCompanies();
         this.actionName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -507,7 +507,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceVendor = row;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -532,13 +532,13 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
         this.createddate = row.createdDate;
         this.updatedDate = row.updatedDate;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
     openHelpText(content) {
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -998,5 +998,9 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
             }
 
         }
+	}
+	
+	onAddPaymentInfo() {
+        //this.sourceVendor = {};
     }
 }

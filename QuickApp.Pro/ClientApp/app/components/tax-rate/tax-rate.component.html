@@ -32,7 +32,7 @@
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()">Sample File Download</button>
+                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()"  pTooltip="Download Sample File"  tooltipPosition="top">Sample File Download</button>
                                     </div>
 
                                 </div>
@@ -62,8 +62,10 @@
                                         }}
                                     </td>
                                     <td style="width:200px" *ngIf="selectedColumns.length> 0">
-                                        <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>
-
+                                        <p-inputSwitch [(ngModel)]="rowData['isActive']"
+                                                       name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"
+                                                       [matTooltip]="rowData['isActive'] ? 'Active' : 'Inactive' ">
+                                        </p-inputSwitch>
                                         <span data-toggle="modal" data-target="#view">
                                             <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" data-target="#view" data-toggle="modal">
                                                 <i class="fa fa-eye"></i>
@@ -102,14 +104,13 @@
 </div>
 
 
-<ng-template #auditContent let-c="close" let-d="dismiss">
+<ng-template #auditContent let-c="close" let-d="dismiss" data-backdrop="static">
     <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
         <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
     </div>
 </ng-template>
 
-
-<div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog">
+<div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -131,8 +132,7 @@
     </div>
 </div>
 
-
-<div #add id="add" class="modal fade" role="dialog">
+<div #add id="add" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
 
         <!-- Modal content-->
@@ -214,8 +214,7 @@
     </div>
 </div>
 
-
-<div *ngIf="existingRecordsResponse" id="duplicateRecords" #duplicateRecords class="modal fade" role="dialog">
+<div *ngIf="existingRecordsResponse" id="duplicateRecords" #duplicateRecords class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
 
 
@@ -257,7 +256,7 @@
     </div>
 </div>
 
-<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog">
+<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->
@@ -311,9 +310,7 @@
     </div>
 </div>
 
-
-
-<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog">
+<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -324,49 +321,49 @@
                 <div class="col-sm-12">
                     <p>
                         <span class="label ">
-                            <b class="view-Header">Tax Type: </b>
+                            <b >Tax Type: </b>
                         </span>
                         <span class="value">{{ viewRowData.taxTypeName}}</span>
                     </p>
                     <p>
                         <span class="label ">
-                            <b class="view-Header">Tax Rate: </b>
+                            <b >Tax Rate: </b>
                         </span>
                         <span class="value">{{ viewRowData.taxRate}}</span>
                     </p>
                     <p>
                         <span class="label ">
-                            <b class="view-Header">Memo: </b>
+                            <b >Memo: </b>
                         </span>
                         <span class="value">{{viewRowData.memo}}</span>
                     </p>
                     <p>
                         <span class="label ">
-                            <b class="view-Header">IsActive</b>
+                            <b >IsActive</b>
                         </span>
                         <span class="value">{{viewRowData.isActive === true ? 'Yes' : 'No'}}</span>
                     </p>
                     <p>
                         <span class="label ">
-                            <b class="view-Header">Created By: </b>
+                            <b >Created By: </b>
                         </span>
                         <span class="value">{{viewRowData.createdBy }}</span>
                     </p>
                     <p>
                         <span class="label ">
-                            <b class="view-Header">Created Date: </b>
+                            <b >Created Date: </b>
                         </span>
                         <span class="value">{{viewRowData.createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
                     </p>
                     <p>
                         <span class="label ">
-                            <b class="view-Header">Updated By: </b>
+                            <b >Updated By: </b>
                         </span>
                         <span class="value">{{viewRowData.updatedBy}}</span>
                     </p>
                     <p>
                         <span class="label ">
-                            <b class="view-Header">Updated Date: </b>
+                            <b >Updated Date: </b>
                         </span>
                         <span class="value">{{viewRowData.updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
                     </p>

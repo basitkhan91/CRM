@@ -33,6 +33,8 @@ namespace DAL.Repositories
                         from international in inter.DefaultIfEmpty()
                         join ach in _appContext.ACH on legal.ACHId equals ach.ACHId into ac
                         from ach in ac.DefaultIfEmpty()
+                        join curr in _appContext.Currency on legal.FunctionalCurrencyId equals curr.CurrencyId into currCode
+                        from curr in currCode.DefaultIfEmpty()
                             //where legal.IsDeleted == true || legal.IsDeleted == null
                         where legal.IsActive == true
                         select new
@@ -54,6 +56,9 @@ namespace DAL.Repositories
                             legal.FunctionalCurrencyId,
                             legal.ReportingCurrencyId,
                             legal.IsBankingInfo,
+                            legal.LedgerName,
+
+                            CurrencyCode = curr.DisplayName,
 
                             address1 = adress.Line1,
                             address2 = adress.Line2,
@@ -468,6 +473,26 @@ namespace DAL.Repositories
                                 lba.LegalEntityBillingAddressId,
                                 lba.SiteName
                             }).OrderBy(p => p.SiteName).ToList();
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public IEnumerable<object> GetChildEntitiesByParentId(long parentId)
+        {
+            try
+            {
+                var list = (from lba in _appContext.LegalEntity
+                            where lba.IsDeleted == false && lba.ParentId == parentId
+                            select new
+                            {
+                                lba.LegalEntityId,
+                                lba.Description,
+                                lba.Name,
+                            }).OrderBy(p => p.LegalEntityId).ToList();
                 return list;
             }
             catch (Exception ex)

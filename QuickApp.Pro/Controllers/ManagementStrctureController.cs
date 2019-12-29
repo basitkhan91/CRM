@@ -109,9 +109,25 @@ namespace QuickApp.Pro.Controllers
 
 
         }
-    
 
-    [HttpGet("ManagementGetView")]
+
+        [HttpGet("LedgerNames")]
+        [Produces(typeof(List<LegalEntityViewModel>))]
+        public IActionResult GetLedgerNames()
+        {
+            var res = (from t in _context.LegalEntity
+                       where !string.IsNullOrEmpty(t.LedgerName)
+                       select new
+                       {
+                           t.LegalEntityId,
+                           t.Name,
+                           t.LedgerName,
+                           t.ParentId
+                       }).ToList();
+            return Ok(res);
+        }
+
+        [HttpGet("ManagementGetView")]
     [Produces(typeof(List<LegalEntityViewModel>))]
     public IActionResult GetforEView()
     {

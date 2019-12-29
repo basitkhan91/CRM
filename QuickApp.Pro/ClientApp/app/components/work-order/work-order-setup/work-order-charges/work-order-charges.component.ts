@@ -54,7 +54,7 @@ export class WorkOrderChargesComponent implements OnChanges {
   }
   delete(rowData, i) {
     if (this.isQuote) {
-      this.workOrderChargesList.splice(i, 1);
+      this.workOrderChargesList[i].isDeleted = true;
     } else {
       console.log(rowData);
 
@@ -95,14 +95,62 @@ export class WorkOrderChargesComponent implements OnChanges {
   markupChanged(matData) {
     try {
       this.markupList.forEach((markup) => {
-        if (markup.value == matData.markup) {
-          matData.costPlusAmount = (matData.quantity * matData.unitCost) + (((matData.quantity * matData.unitCost) / 100) * Number(markup.label))
+        if (markup.value == matData.markupPercentageId) {
+          matData.chargesCostPlus = (matData.quantity * matData.extendedCost) + (((matData.quantity * matData.extendedCost) / 100) * Number(markup.label))
         }
       })
     }
     catch (e) {
       console.log(e);
     }
+  }
+
+  getTotalQuantity(){
+    let totalQuantity = 0;
+    this.workOrderChargesList.forEach(
+      (material)=>{
+        if(material.quantity){
+          totalQuantity += material.quantity;
+        }
+      }
+    )
+    return totalQuantity;
+  }
+  
+  getTotalUnitCost(){
+    let total = 0;
+    this.workOrderChargesList.forEach(
+      (material)=>{
+        if(material.unitCost){
+          total += Number(material.unitCost);
+        }
+      }
+    )
+    return total;
+  }
+  
+  getChargesCostPlus(){
+    let total = 0;
+    this.workOrderChargesList.forEach(
+      (material)=>{
+        if(material.chargesCostPlus){
+          total += material.chargesCostPlus;
+        }
+      }
+    )
+    return total;
+  }
+  
+  getTotalFixedAmount(){
+    let total = 0;
+    this.workOrderChargesList.forEach(
+      (material)=>{
+        if(material.fixedAmount){
+          total += Number(material.fixedAmount);
+        }
+      }
+    )
+    return total;
   }
 
 }

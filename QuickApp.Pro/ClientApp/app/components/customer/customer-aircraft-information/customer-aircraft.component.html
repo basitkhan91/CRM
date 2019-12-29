@@ -30,13 +30,6 @@
               (onChange)="getAircraftModelByManfacturerType($event.value)"
                       
             ></p-dropdown>
-            <!-- <p-multiSelect
-              [options]="manufacturerData"
-              name="searchAircraft"
-              [(ngModel)]="selectAircraftManfacturer"
-              (onChange)="getAircraftModelByManfacturerType()"
-              class="pub-multi"
-            ></p-multiSelect> -->
           </div>
         </div>
         <div class="col-md-3">
@@ -127,39 +120,19 @@
             </button>
             <button class="btn btn-danger nobg"
                     (click)="
-              deleteAircraftMappedInventory(deleteContent,rowData.customerAircraftMappingId)
+              deleteAircraftMappedInventory(deleteContent,rowData)
             "
                     matTooltip="Delete">
                 <i class="fa fa-trash"></i>
+            </button>
+            <button class="btn-history" mat-icon-button matTooltip="history" (click)="getCustomerAircraftHistory(contentAuditHist,rowData)">
+                <mat-icon color="green">history</mat-icon>
             </button>
         </td>
       </tr>
     </ng-template>
   </p-table>
   <br />
-  <!-- <div class="col-sm-12">
-    <div class="col-sm-3 font">
-      Schematic:
-      <input type="checkbox" data-md-icheck (change)="onSchematic($event)" />
-    </div>
-    <div class="col-sm-6 font inline-block display-flex" *ngIf="schematic">
-      Attach Drawing..
-      <div class="upload">
-        <input
-          type="file"
-          name="upload[]"
-          id="upload"
-          class="inputfile upload-file"
-          data-multiple-caption="{count} files selected"
-          multiple=""
-        />
-        <label>
-          <figure><i class="fa fa-upload"></i></figure>
-        </label>
-      </div>
-    </div>
-  </div> -->
-
   <div>
     <button
       type="button"
@@ -178,12 +151,7 @@
   </div>
 </div>
 
-<!-- <div class="col-sm-12 mt8">
-        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveGeneralInfromation(); changeOfTab('General')" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
-        <button class="btn btn-primary-cstm float-right" pButton (click)="moveAtachapter()" type="button" icon="pi pi-angle-right" iconPos="right" label="Go to Next Step" style="padding: 0 !important;"></button>
-    </div> -->
-
-<div id="addInventory" class="modal fade custom-popup" role="dialog">
+<div id="addInventory" class="modal fade custom-popup" role="dialog" data-backdrop="static">
   <div class="modal-dialog modal-full">
     <!-- Modal content-->
     <div class="modal-content">
@@ -379,7 +347,7 @@
     </div>
   </div>
 </div>
-<div class="modal fade" id="editAirCraftDetails" role="dialog">
+<div class="modal fade" id="editAirCraftDetails" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -420,16 +388,77 @@
 
     </div>
 </div>
-<ng-template #deleteContent let-c="close" let-d="dismiss">
+<ng-template #deleteContent let-c="close" let-d="dismiss" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title">Are You Sure Want to Delete?</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-
+    <div class="modal-body">
+        <strong>
+             Aircraft Name:
+            <span class="new-label">{{selectedRowForDelete.aircraftType}}</span>
+        </strong>
+    </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
         <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
+</ng-template>
+<ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
+    <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
+    <div class="modal-header">
+
+        <h4 class="modal-title">History of Aircraft Info</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+
+    </div>
+    <div class="modal-body">
+
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Aircraft Type</th>
+                        <th>Aircraft Model</th>
+                        <th>Dash Number</th>
+                        <th>Inventory</th>
+                        <th>Memo</th>
+                        <th>Updated By</th>
+                        <th>Last Updated Time</th>
+                        <th>Created By</th>
+                        <th>Created Time</th>
+
+                    </tr>
+                </thead>
+                <!-- <tr *ngFor="let audit of billingauditHisory">
+                    <td>{{audit.siteName}}</td>
+                    <td>{{audit.updatedBy}}</td>
+                    <td>{{audit.updatedDate}}</td>
+                    <td>{{audit.createdBy}}</td>
+                    <td>{{audit.createdDate}}</td>
+
+                </tr> -->
+
+            <tr *ngFor="let audit of aircraftauditHisory; let i = index;">
+                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'aircraftType', audit.aircraftType)  ? 'black' : 'red'  }">{{audit.aircraftType}}</td>
+                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'aircraftModel', audit.aircraftModel)  ? 'black' : 'red'  }">{{audit.aircraftModel}}</td>
+                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'inventory', audit.inventory)  ? 'black' : 'red'  }">{{audit.inventory}}</td>
+                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'dashNumber', audit.dashNumber)  ? 'black' : 'red'  }">{{audit.dashNumber}}</td>
+                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>
+                <td>{{audit.updatedBy}}</td>
+                <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                <td>{{audit.createdBy}}</td>
+                <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+            </tr>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>

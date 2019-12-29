@@ -545,19 +545,11 @@
             [routerLink]="['/singlepages/singlepages/app-publication']">
             Next
           </button>
-
-          <!-- <button
-            class="btn btn-primary-cstm pull-right button-save-cstm"
-            type="submit"
-            (click)="changeOfTab('Atachapter')"
-          >
-            Save
-          </button> -->
         </div>
       </div>
     </div>
  <!-- Add DashNumber Popup -->
- <div id="addDashNumber" class="modal fade" role="dialog">
+ <div id="addDashNumber" class="modal fade" role="dialog" data-backdrop="static">
   <div class="modal-dialog">
     <!-- Modal content-->
     <div class="modal-content">
@@ -639,7 +631,7 @@
   </div>
 </div>
 
-<div  *ngIf="selectedRowforDelete" #delete id="delete"  class="modal fade" role="dialog">
+<div  *ngIf="selectedRowforDelete" #delete id="delete"  class="modal fade" role="dialog" data-backdrop="static">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -660,7 +652,7 @@
   </div>
 </div>
 
-<div *ngIf="isEditMode" class="modal fade" id="revisionNum" role="dialog">
+<div *ngIf="isEditMode" class="modal fade" id="revisionNum" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
         <div class="modal-header">

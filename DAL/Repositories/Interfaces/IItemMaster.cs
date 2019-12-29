@@ -43,10 +43,19 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> searchgetItemATAMappingDataByMultiTypeIdATAIDATASUBID(long ItemMasterid, string ATAChapterId, string ATASubChapterID);
         IEnumerable<object> gePurcSaleByItemMasterID(long ItemMasterid);
 
-        void DeleteNhaTlaAltEquItemMapping(long id, string updatedBy);
-        void NhaTlaAltEquItemMappingStatus(long id, bool status, string updatedBy);
-        GetData<Nha_Tla_Alt_Equ_ItemMapping_List> NhaTlaAltEquItemMappingList(int mappingType, int pageNumber, int pageSize);
-        Nha_Tla_Alt_Equ_ItemMapping NhaTlaAltEquItemMappingById(long itemMappingId, int mappingType);
+
+
+
+        Nha_Tla_Alt_Equ_ItemMapping CreateNhaTlaAltEquPart(Nha_Tla_Alt_Equ_ItemMapping part);
+        Nha_Tla_Alt_Equ_ItemMapping UpdateNhaTlaAltEquPart(Nha_Tla_Alt_Equ_ItemMapping part);
+        IEnumerable<object> NhaTlaAltEquPartList(Filters<NhaAltEquFilters> filters);
+        void DeleteNhaTlaAltEquPart(long mappingId, string updatedBy);
+        void NhaTlaAltEquPartStatus(long mappingId, bool status, string updatedBy);
+        IEnumerable<object> GetAlterEquParts(long itemMasterId);
+
+
+
+
 
         IEnumerable<ItemMaster> SearchItemMaster(ItemMaster master);
     }

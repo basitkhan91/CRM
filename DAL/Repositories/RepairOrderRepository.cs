@@ -683,8 +683,8 @@ namespace DAL.Repositories
                                 GLAccount = gla.AccountName,
                                 UnitOfMeasure = uom.Description,
                                 Condition = cond.Description,
-                                FunctionalCurrency = fcurr.DisplayName,
-                                RerortCurrency = rcurr.DisplayName,
+                                FunctionalCurrency = fcurr.Symbol,
+                                RerortCurrency = rcurr.Symbol,
                                 WorkOrderNo = wo.WorkOrderNum,
                                 SalesOrderNo = rop.SalesOrderId,
                             }).ToList();

@@ -50,6 +50,7 @@
                                             pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm" pTooltip="Download All Data" tooltipPosition="top"
                                             pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    <!--
                                     <div class="excel-upload  excel-upload-cstm">
                                         <input type="file" id="file" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
                                                accept=".xlsx, .xls, .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -61,6 +62,18 @@
                                         </label>
                                         &nbsp; &nbsp;
                                         <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()">Sample File Download</button>
+                                    </div>
+                                    -->
+                                    <div class="excel-upload  excel-upload-cstm">
+                                        <input type="file" name="upload[]" id="upload" (change)="bulkUpload($event)" class="uploaddoc upload-file"
+                                               accept=".xlsx, .xls, .csv">
+                                        <label for="upload">
+                                            <span matTooltip="Upload Data (Excel)">
+                                                <i class="fa fa-upload"></i>
+                                            </span>
+                                        </label>
+                                        &nbsp; &nbsp;
+                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()" pTooltip="Download Sample File"  tooltipPosition="top">Sample File Download</button>
                                     </div>
                                 </div>
 
@@ -86,12 +99,15 @@
 
                             <!--body-->
                             <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                                <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="viewItemDetails(rowData)">
+                                <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="viewItemDetailsClick(viewClick, rowData)">
                                     <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                         {{rowData[col.field]}}
                                     </td>
                                     <td style="width:200px" *ngIf="selectedColumns.length> 0">
-                                        <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="toggleActiveStatus(rowData)" matTooltip="Toggle Status"></p-inputSwitch>
+                                        <p-inputSwitch [(ngModel)]="rowData['isActive']"
+                                                       name="isActive{{rowIndex}}" (onChange)="toggleActiveStatus(rowData)"
+                                                       [matTooltip]="rowData['isActive'] ? 'Active' : 'Inactive' ">
+                                        </p-inputSwitch>
                                         <span data-toggle="modal" data-target="#view">
                                             <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewItemDetails(rowData)" data-target="#view" data-toggle="modal" matTooltip="View">
                                                 <i class="fa fa-eye"></i>
@@ -138,7 +154,7 @@
 
     <!--to-do:use same modal to view, add, update, and delete-->
     <!--Step x: Modal for view only-->
-    <div #view *ngIf="itemDetails" class="modal fade" id="view" role="dialog">
+    <div #view *ngIf="itemDetails" class="modal fade" id="view" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -207,8 +223,75 @@
 
     </div>
 
+    <ng-template #viewClick class="modal fade " id="view" role="dialog">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+                <h4 class="modal-title"> Asset Class Details</h4>
+            </div>
+            <div class="modal-body viewform">
+                <div class="col-sm-12">
+                    <p>
+                        <span class="label">
+                            <b>Id: </b>
+                        </span>
+                        <span class="value">{{itemDetails.assetTypeId}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Name: </b>
+                        </span>
+                        <span class="value">{{itemDetails.assetTypeName}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Memo: </b>
+                        </span>
+                        <span class="value">{{itemDetails.assetTypeMemo}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Active: </b>
+                        </span>
+                        <span class="value">{{itemDetails.isActive ? 'True' : 'False'}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Created By: </b>
+                        </span>
+                        <span class="value">{{itemDetails.createdBy}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Created Date: </b>
+                        </span>
+                        <span class="value">{{itemDetails.createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Last Updated By: </b>
+                        </span>
+                        <span class="value">{{itemDetails.updatedBy}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Last Updated Date: </b>
+                        </span>
+                        <span class="value">{{itemDetails.updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
+                    </p>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+            </div>
+        </div>
+
+    </ng-template>
+
     <!--Step x: Modal for Edit-->
-    <div #editItem id="editItem" class="modal fade editModal" role="dialog" *ngIf="currentModeOfOperation === 2 || currentModeOfOperation === 3">
+    <div #editItem id="editItem" class="modal fade editModal" role="dialog" *ngIf="currentModeOfOperation === 2 || currentModeOfOperation === 3" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -224,7 +307,7 @@
                                 </div>
                                 <div class="col-sm-5">
                                     <!--<textarea class="text-item" #memo="ngModel" id="name" name="name" [(ngModel)]="selectedRowforEdit.assetTypeName" minlength="2" (onChange)="check"></textarea>
-        -->
+                                    -->
                                     <p-autoComplete field="assetTypeName"
                                                     [(ngModel)]="selectedRowforEdit.assetTypeName"
                                                     (onSelect)="selectedAssetType($event)"
@@ -244,7 +327,7 @@
                                     <label for="description" class="control-label">Memo</label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="memo" 
+                                    <textarea class="text-item" #memo="ngModel" id="memo"
                                               name="assetTypeMemo" [(ngModel)]="selectedRowforEdit.assetTypeMemo" minlength="2"></textarea>
                                 </div>
                             </div>
@@ -275,7 +358,7 @@
     </div>
 
     <!--Modal for delete only-->
-    <div #delete *ngIf="currentModeOfOperation === 4" id="delete" class="modal fade" role="dialog">
+    <div #delete *ngIf="currentModeOfOperation === 4" id="delete" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -299,7 +382,7 @@
 
 
     <!--Step x: Audit modal-->
-    <div #itemHistory *ngIf="currentModeOfOperation === 5" class="modal fade" id="itemHistory" role="dialog">
+    <div #itemHistory *ngIf="currentModeOfOperation === 5" class="modal fade" id="itemHistory" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

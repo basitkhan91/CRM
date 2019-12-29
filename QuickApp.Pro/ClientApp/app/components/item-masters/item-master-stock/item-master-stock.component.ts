@@ -1,5 +1,6 @@
 ﻿import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog, SELECT_MULTIPLE_PANEL_PADDING_X } from '@angular/material';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { DOCUMENT } from '@angular/common';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { MasterCompany } from '../../../models/mastercompany.model';
@@ -13,7 +14,7 @@ import { Integration } from '../../../models/integration.model';
 import { IntegrationService } from '../../../services/integration-service';
 import { ItemClassificationService } from '../../../services/item-classfication.service';
 import { ItemClassificationModel } from '../../../models/item-classification.model';
-import { OnInit, AfterViewInit, Component, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { OnInit, AfterViewInit, Component, ViewChild, ChangeDetectorRef, Inject } from '@angular/core';
 import { Itemgroup } from '../../../models/item-group.model';
 import { ItemGroupService } from '../../../services/item-group.service';
 import { Provision } from '../../../models/provision.model';
@@ -174,7 +175,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     localprovision: any[] = [];
     localgroup: any[] = [];
     //allProvisonInfo: Provision[];
-    allProvisonInfo: any=[];   
+    allProvisonInfo: any = [];
     activeTab: number = 0;
     itemQuantity = [];
     items1: MenuItem[];
@@ -236,6 +237,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     filteredBrands: any[];
     localCollection: any[] = [];
     sourceItemMaster: any = {};
+    PDropdownDirectives: any = []
     isEnabeCapes: boolean = false;
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
@@ -304,7 +306,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     modelUnknown = false;
     dashNumberUnknown = false;
     newFields = {
-        Condition: "NEW",
+        Condition: null ,
         PP_UOMId: null,
         PP_CurrencyId: null,
         PP_FXRatePerc: null,
@@ -334,7 +336,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     enableDNMemo: boolean = true;
     indexOfrow: any;
     activeMenuItem: number = 1;
+    activeNTAEMenuItem: number = 1;
     currentTab: string = 'General';
+    currentNTAETab: string = 'NHA';
     manufacturer: any;
     aircraftManfacturerIdsUrl: any = '';
     aircraftModelsIdUrl: any = '';
@@ -356,6 +360,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     ataSubchapterIdUrl: any = '';
     searchATAParams: string = '';
     isDisabledSteps = false;
+    isNTAEDisabledSteps = true;
     isEdit: boolean = false;
     itemMasterId: number;
     fieldArray: any = [];
@@ -391,6 +396,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     selectedCapabilityTypes: any = [];
     capeBldList: any = [];
     distinctAtaList: any[] = [];
+    listOfErrors: any = [];
+    conditionList: any;
 
     // errorLogForPS: string = '';
 
@@ -401,13 +408,17 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         public priority: PriorityService, public inteService: IntegrationService,
         public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService,
         public proService: ProvisionService, private dialog: MatDialog,
-        private masterComapnyService: MasterComapnyService, public commonService: CommonService) {
+        private masterComapnyService: MasterComapnyService, public commonService: CommonService, @Inject(DOCUMENT) document) {
         this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-stock';
         this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
         this.CurrencyData();
-
+        this.sourceItemMaster = {
+            partNumber: "",
+            partDescription: ""
+        }
+        this.PDropdownDirectives = ["partNumber", "partDescription"];
         //Adding Below Code for By Default Date Should be current Date while Creation
         this.sourceItemMaster.salesLastSalePriceDate = new Date();
         this.sourceItemMaster.salesLastSalesDiscountPercentDate = new Date();
@@ -491,6 +502,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             })
 
         }
+        this.Integration();
 
 
 
@@ -645,9 +657,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.getAllAircraftModels();
         this.getAllDashNumbers();
         this.getAllATAChapter();
-        this.getAllATASubChapter();
+        // this.getAllATASubChapter();
         this.getAllSubChapters();
         this.getCapabilityType();
+        this.getConditionsList();
 
 
 
@@ -1034,7 +1047,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     cunstructCapabilities(content) {
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
 
             console.log('When user closes');
@@ -1359,7 +1372,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.sourceUOM = new UnitOfMeasure();
         this.sourceUOM.isActive = true;
         this.unitName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1476,9 +1489,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     private onprodataSuccessful(getProvisionList: Provision[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-      //  this.allProvisonInfofilter = getProvisionList;
+        //  this.allProvisonInfofilter = getProvisionList;
 
-       // alert(JSON.stringify(this.allProvisonInfo.));
+        // alert(JSON.stringify(this.allProvisonInfo.));
 
         if (getProvisionList != null) {
             for (let i = 0; i < getProvisionList.length; i++) {
@@ -1575,7 +1588,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     openModelPopups(capData) {
-    
+
         if (this.itemser.isEditMode == false) {
 
             //Adding for Aircraft manafacturer List Has empty then List Should be null
@@ -1595,7 +1608,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     openCapes(content) {
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1635,7 +1648,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.allAircraftinfo.push({ value: models.aircraftModelId, label: models.modelName, aircraftManufacturer: manufacturer });
         }
 
-        this.modal = this.modalService.open(capData, { size: 'sm' });
+        this.modal = this.modalService.open(capData, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1654,7 +1667,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.sourceAction = new Priority();
         this.sourceAction.isActive = true;
         this.priorityName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1685,7 +1698,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.sourceAction = new Itemgroup();
         this.sourceAction.isActive = true;
         this.itemGroupName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1697,7 +1710,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.isDeleteMode = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -1716,7 +1729,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.sourceAction = new Integration();
         this.sourceAction.isActive = true;
         this.integrationName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -2208,7 +2221,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -2226,7 +2239,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.itemName = this.sourceAction.itemClassificationCode;
         this.className = this.sourceAction.description;
         this.itemTypeName = this.sourceAction.itemType;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -2760,7 +2773,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.auditHisory = auditHistory;
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -3251,7 +3264,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.sourceAction = new Priority();
         this.sourceAction.isActive = true;
         this.priorityName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -3265,7 +3278,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.sourceAction = row;
         this.priorityName = this.sourceAction.description;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -3284,7 +3297,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.createdDate = row.createdDate;
         this.updatedDate = row.updatedDate;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -3292,7 +3305,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     openHelpText(content) {
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -4269,7 +4282,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.ataMainchapter = Atachapter[0];
             for (let i = 0; i < this.ataMainchapter.length; i++) {
                 this.LoadAtachapter.push(
-                    { value: this.ataMainchapter[i].ataChapterId, label: this.ataMainchapter[i].ataChapterName },
+                    { value: this.ataMainchapter[i].ataChapterId, label: `${this.ataMainchapter[i].ataChapterCode}-${this.ataMainchapter[i].ataChapterName}` },
                 );
             }
         });
@@ -4285,7 +4298,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             })
         })
     }
-
+    addNewATA() {
+        this.atasubchapter = [];
+        this.ataform.reset();
+    }
     addATAMapping() {
         const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
         const PartNumber = this.isEdit === true ? this.pnvalue : this.collectionofItemMaster.partNumber
@@ -4592,6 +4608,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     }
+
+    getConditionsList(){
+        this.commonService.smartDropDownList('Condition', 'ConditionId' , 'Description'  ).subscribe(res => {
+            this.conditionList = res;
+        })
+    }
     moveExportInformation1() {
         this.showpurchaseData = true;
         this.showGeneralData = false;
@@ -4662,12 +4684,45 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.tempOEMpartNumberId = value.itemMasterId;
     }
 
-    saveItemMasterGeneralInformation() {
-        if (!(this.sourceItemMaster.partNumber && this.sourceItemMaster.partDescription && this.sourceItemMaster.purchaseUnitOfMeasureId && this.sourceItemMaster.glAccountId && this.sourceItemMaster.manufacturerId && this.sourceItemMaster.itemClassificationId)) {
-            console.log("this.sourceItemMaster.itemClassificationId before form save:::", this.sourceItemMaster.itemClassificationId);
+    saveItemMasterGeneralInformation(addCustomerWorkForm) {
+        let errors;
+        this.listOfErrors = [];
+        
+        let emptyFields = []
+        for (let key of Object.keys(this.sourceItemMaster)) {
+            if(this.PDropdownDirectives.includes(key) &&this.sourceItemMaster[key] == ""){
+            emptyFields.push(key)
+            }  
+        }
+        if(addCustomerWorkForm.status === "INVALID" || emptyFields.length > 0){
+            Object.keys(addCustomerWorkForm.controls).map(key => {
+                errors = addCustomerWorkForm.controls[key].errors;
+               if (errors === null) { return null; }            
+               if (errors['required']) {  
+                 let titlevalue = key;
+                 if(document.getElementById(key)){
+                     titlevalue = document.getElementById(key).getAttribute('title');
+                 }
+                   this.listOfErrors.push(`${titlevalue} is required`); //test
+               } else {
+               this.listOfErrors.push(`${key} has an unknown error`);
+               }
+             });
+
+             for(let k = 0; k<emptyFields.length; k++){
+                let titlevalue = emptyFields[k];
+                if(document.getElementById(emptyFields[k])){
+                    titlevalue = document.getElementById(emptyFields[k]).getAttribute('title');
+                } 
+                this.listOfErrors.push(`${titlevalue} is required`); 
+             }
             this.display = true;
             this.modelValue = true;
+             return false
+
         } else {
+           
+
 
             this.isSaving = true;
             if (!this.isItemMasterCreated) //for create ItemMaster
@@ -4843,7 +4898,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.itemName = "";
         this.className = "";
         this.itemTypeName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -4935,7 +4990,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.loadMasterCompanies();
         this.sourceAction.isActive = true;
         this.manufacturerName = " "
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -4980,15 +5035,15 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.loadMasterCompanies();
         // this.sourceAction = new Provision();
         this.sourceAction.isActive = true;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
         }, () => { console.log('Backdrop click') })
     }
 
     exportUOmOpen(content) {
         console.log("In exportUOmOpen function!!");
-       // this.sourceUOM.isActive = true;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        // this.sourceUOM.isActive = true;
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
         }, () => { console.log('Backdrop click') })
     }
@@ -5399,7 +5454,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.portalURL = "";
         this.integrationName = "";
         this.sourceAction.description = "";
-        this.modal = this.modalService.open(integration, { size: 'sm' });
+        this.modal = this.modalService.open(integration, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -5430,7 +5485,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     // New code for loading dropdown
 
-    getATASubChapterByATAChapter(atachapterId?) {
+    getATASubChapterByATAChapter() {
         const selectedATAChapterId = this.ataform.value.atanumber;
         this.ataChaptherSelected = this.ataMainchapter.filter(x => {
             if (x.ataChapterId === selectedATAChapterId) {
@@ -5678,15 +5733,37 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         } else if (value === 'PurchaseSales') {
             this.currentTab = 'PurchaseSales';
             this.activeMenuItem = 5;
+        }  else if (value === 'NhaTlaAlternateTab') {
+            this.currentTab = 'NhaTlaAlternateTab';
+            this.activeMenuItem = 6;
         } else if (value === "Exchange") {
             this.currentTab = 'Exchange';
             this.exchLoan.loadData(this.ItemMasterId);
-            this.activeMenuItem = 6;
+            this.activeMenuItem = 7;
         }
         else if (value === 'ExportInfo') {
             this.currentTab = 'ExportInfo';
-            this.activeMenuItem = 7;
+            this.activeMenuItem = 8;
         }
+       
+    }
+    changeOfNTAETab(value) {
+        console.log('invoked');
+        console.log(`Parent master id ${this.ItemMasterId}`);
+        if (value === 'NHA') {
+            this.currentNTAETab = 'NHA';
+            this.activeNTAEMenuItem = 1;
+        } else if (value === 'TLA') {
+            this.currentNTAETab = 'TLA';
+            this.activeNTAEMenuItem = 2;
+        } else if (value === 'Alternate') {
+            this.currentNTAETab = 'Alternate';
+            this.activeNTAEMenuItem = 3;
+        } else if (value == "Equivalency") {
+            this.currentNTAETab = 'Equivalency';
+            this.activeNTAEMenuItem = 4;
+        } 
+       
     }
     //New Priority
     private loadPriority() {
@@ -5751,7 +5828,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.portalURL = "";
         this.integrationName = "";
         this.sourceAction.description = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -5767,7 +5844,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.integrationName = this.sourceAction.description;
         this.portalURL = row.portalURL;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -5802,7 +5879,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.sourceUOM = new UnitOfMeasure();
         this.sourceUOM.isActive = true;
         this.unitName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })

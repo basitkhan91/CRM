@@ -73,7 +73,7 @@
             <div class="form-group ">
               <label for="accountsReceivableBalance">AR Balance
               </label>
-              <input class="form-control" type="text" [(ngModel)]="accountsReceivableBalance" name="accountsReceivableBalance"/>
+              <input class="form-control" type="number" [(ngModel)]="accountsReceivableBalance" name="accountsReceivableBalance"/>
             </div>
             
           </div>
@@ -122,7 +122,7 @@
             </div>
             <div class="form-group ">
               <label> DSO <span class="clr-red">*</span></label>
-              <input class="form-control" type="number" [(ngModel)]="dso" name="DSO" />
+              <input class="form-control" type="text" [(ngModel)]="dso" name="DSO" />
             </div>
             
           </div>
@@ -255,6 +255,7 @@
         <td>
           <input [value]="workOrderPart['workScope']" readonly/>
         </td>
+      </tr>
   </tbody>
   </table>
 </div>
@@ -288,7 +289,7 @@
       </div>
     </div>
 
-    <div class="col-md-12" *ngIf="selectedPartNumber != ''">
+    <div class="col-md-12" *ngIf="selectedPartNumber != '' && !isEdit">
       <div class="form-group ">
         <label class="fs12">Build Method:
         </label>
@@ -357,7 +358,7 @@
 
     </div>
   </div>
-  <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;" *ngIf="selectedBuildMethod != 'build from scratch' && selectedBuildMethod != '' && selectedWorkFlowOrWorkOrder">
+  <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;" *ngIf="(selectedBuildMethod != 'build from scratch' && selectedBuildMethod != '' && selectedWorkFlowOrWorkOrder) || (isEdit && selectedPartNumber != '')">
       <div class="form-group ">
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'materialList'?'btn-primary-cstm':'btn-light-cstm'" (click)="gridTabChange('materialList');">Material List</button>
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'labor'?'btn-primary-cstm':'btn-light-cstm'" (click)="gridTabChange('labor');">Labor</button>
@@ -392,49 +393,72 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="mpn-row" *ngFor="let matQuotation of materialListQuotation; let in=index;">
-            <td>{{matQuotation.partNumber}}</td>
-            <td>{{matQuotation.partDescription}}</td>
-            <td>{{matQuotation.partDescription}}</td>
-            <td>{{matQuotation.partDescription}}</td>
-            <td>{{matQuotation.quantity}}</td>
-            <td>{{matQuotation.unitOfMeasureId}}</td>
-            <td>{{matQuotation.conditionCodeId}}</td>
-            <td>{{matQuotation.isDeferred}}</td>
-            <td>{{matQuotation.unitCost}}</td>
-            <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
-            <td>{{matQuotation.markup}}</td>
-            <td>{{matQuotation.costPlusAmount}}</td>
-            <td>{{matQuotation.fixedAmount}}</td>
-            <td>
-                <button
-                  class="btn-edit ptable-wo-btns"
-                  mat-icon-button
-                  data-target="#addNewMaterials"
-                  data-toggle="modal"
-                  (click)="editMaterialList(matQuotation)"
-                  matTooltip="Edit"
-                >
-                  <mat-icon>edit</mat-icon>
-                </button>
-            </td>
-            <td>
-                <button
-                  class="btn-delete ptable-wo-btns"
-                  mat-icon-button
-                  matTooltip="Delete"
-                  (click)="deleteMaterialList(in)"
-                >
-                  <mat-icon color="warn">delete</mat-icon>
-                </button>
-            </td>
-          </tr>
+          <ng-container *ngFor="let matQuotation of materialListQuotation; let in=index;">
+            <tr class="mpn-row" *ngIf="!matQuotation['isDeleted']">
+              <td>{{matQuotation.partNumber}}</td>
+              <td>{{matQuotation.partDescription}}</td>
+              <td>{{matQuotation.partDescription}}</td>
+              <td>{{matQuotation.partDescription}}</td>
+              <td>{{matQuotation.quantity}}</td>
+              <td>{{matQuotation.unitOfMeasureId}}</td>
+              <td>{{matQuotation.conditionCodeId}}</td>
+              <td>{{matQuotation.isDeferred}}</td>
+              <td>{{matQuotation.unitCost}}</td>
+              <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
+              <td>{{matQuotation.markupPercentageId}}</td>
+              <td>{{matQuotation.materialCostPlus}}</td>
+              <td>{{matQuotation.fixedAmount}}</td>
+              <td>
+                  <button
+                    class="btn-edit ptable-wo-btns"
+                    mat-icon-button
+                    data-target="#addNewMaterials"
+                    data-toggle="modal"
+                    (click)="editMaterialList(matQuotation)"
+                    matTooltip="Edit"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+              </td>
+              <td>
+                  <button
+                    class="btn-delete ptable-wo-btns"
+                    mat-icon-button
+                    matTooltip="Delete"
+                    (click)="deleteMaterialList(in)"
+                  >
+                    <mat-icon color="warn">delete</mat-icon>
+                  </button>
+              </td>
+            </tr>
+          </ng-container>
         </tbody>
+        <tfoot>
+          <tr>
+            <td>
+              Total
+            </td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>{{getTotalQuantity()}}</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>{{ getTotalUnitCost() }}</td>
+            <td>&nbsp;</td>
+            <td></td>
+            <td>{{getMaterialCostPlus()}}</td>
+            <td>{{getTotalFixedAmount()}}</td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tfoot>
       </table>
       <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save</button>
     </div>
 
-    <div *ngIf="selectedBuildMethod == 'use historical wos'">
+    <div *ngIf="selectedBuildMethod == 'use historical wos' || isEdit">
       <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" >
         <thead>
           <tr>
@@ -467,8 +491,8 @@
             <td>{{matQuotation.oem}}</td>
             <td>{{matQuotation.unitCost}}</td>
             <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
-            <td>{{matQuotation.markup}}</td>
-            <td>{{matQuotation.costPlusAmount}}</td>
+            <td>{{matQuotation.markupPercentageId}}</td>
+            <td>{{matQuotation.materialCostPlus}}</td>
             <td>{{matQuotation.fixedAmount}}</td>
             <td>
                 <button
@@ -494,6 +518,27 @@
             </td>
           </tr>
         </tbody>
+        <tfoot>
+          <tr>
+            <td>
+              Total
+            </td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>{{getTotalQuantity()}}</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>{{ getTotalUnitCost() }}</td>
+            <td>&nbsp;</td>
+            <td></td>
+            <td>{{getMaterialCostPlus()}}</td>
+            <td>{{getTotalFixedAmount()}}</td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tfoot>
       </table>
       <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save</button>
     </div>
@@ -515,7 +560,7 @@
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'labor'">
       <app-work-order-labor [taskList]="taskList" [laborForm]="labor" [workOrderLaborList]="workOrderLaborList" [workOrderWorkFlowOriginalData]="workOrderWorkFlowOriginalData" [savedWorkOrderData]="savedWorkOrderData" 
-      (saveworkOrderLabor)="saveworkOrderLabor($event)"
+      (saveworkOrderLabor)="saveworkOrderLabor($event)" [isQuote]="isQuote" [markupList]="markupList"
       ></app-work-order-labor>
 
   </div>
@@ -534,7 +579,7 @@
   </div>
 
 
-  <div class="modal fade " id="viewcustomerDetailsinQuote" role="dialog" >
+  <div class="modal fade " id="viewcustomerDetailsinQuote" role="dialog"  data-backdrop="static">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -895,7 +940,7 @@
       </div>
     </div>
   </div> 
-  <div id="addNewMaterials" class="modal fade" role="dialog">
+  <div id="addNewMaterials" class="modal fade" role="dialog" data-backdrop="static">
       <div class="modal-dialog modal-lg">
     
         <!-- Modal content-->

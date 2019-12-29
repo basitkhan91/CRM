@@ -36,6 +36,10 @@ export class AssetListingComponent implements OnInit {
     unitOfMeasureId: any;
     assetTypeId: any;
     selectedColumn: any;
+    totalRecords: any;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number;
 
     // comented for asset audit
     //AuditDetails: SingleScreenAuditDetails[];
@@ -67,10 +71,21 @@ export class AssetListingComponent implements OnInit {
         this.assetService.listCollection = null;
     }
 
+    //Functionality for pagination.
+    //to-do: Build lazy loading
+    changePage(event: { first: any; rows: number }) {
+        const pageIndex = (event.first / event.rows);
+        this.pageIndex = pageIndex;
+        this.pageSize = event.rows;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    }
+
     private onDataLoadSuccessful(allWorkFlows: any[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allAssetInfo = allWorkFlows;
+        this.totalRecords = this.allAssetInfo.length;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
     }
 
     private loadData() {
@@ -118,13 +133,15 @@ export class AssetListingComponent implements OnInit {
     private onGlAccountLoad(getGl: GlAccount) {
         //console.log(getGl);
         //console.log(getGl[0]);
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.assetViewList.inspectionGlaAccountName = getGl[0].accountName;
+        if (getGl) {
+            this.alertService.stopLoadingMessage();
+            this.loadingIndicator = false;
+            this.assetViewList.inspectionGlaAccountName = getGl[0].accountName;
+        }
     }
 
-    private getInsecVendorName() {
-        //console.log('107', this.assetViewList.inspectionDefaultVendorId);
+    private getInspecVendorName() {
+        console.log('129', this.assetViewList.inspectionDefaultVendorId);
         this.vendorEndpointService.getVendorsDatawithid(this.assetViewList.inspectionDefaultVendorId).subscribe(
             results => this.onVendorLoad(results[0]),
             error => this.onDataLoadFailed(error)
@@ -168,7 +185,7 @@ export class AssetListingComponent implements OnInit {
 
     }
 
-    toggleIsActive(asset: any, e) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        toggleIsActive(asset: any, e) {
         if (e.checked == false) {
             this.assetTypeToUpdate = asset;
             this.Active = "In Active";
@@ -201,7 +218,7 @@ export class AssetListingComponent implements OnInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.assetService.listCollection = row;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -243,7 +260,7 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.inspectionDefaultCost = row.inspectionDefaultCost;
         this.assetViewList.inspectionGlaAccountId = row.inspectionGlaAccountId;
         this.getInsecGLAccName();
-        this.getInsecVendorName();
+        this.getInspecVendorName();
         this.assetViewList.inspectionMemo = row.inspectionMemo;
         this.assetViewList.manufacturedDate = row.manufacturedDate;
         this.assetViewList.isSerialized = row.isSerialized;
@@ -287,7 +304,7 @@ export class AssetListingComponent implements OnInit {
 
         if (!this.isWorkOrder) {
 
-            this.modal = this.modalService.open(content, { size: 'lg' });
+            this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
             this.modal.result.then(() => {
                 console.log('When user closes');
             }, () => { console.log('Backdrop click') })

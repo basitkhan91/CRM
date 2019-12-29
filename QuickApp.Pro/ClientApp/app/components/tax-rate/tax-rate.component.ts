@@ -398,7 +398,12 @@ export class TaxRateComponent implements OnInit {
     }
     viewSelectedRow(rowData) {
         //console.log(rowData);
-        this.viewRowData = rowData;
+        let data = 
+            {
+                ...rowData,
+            taxTypeName: editValueAssignByCondition('description', rowData.taxTypeId),
+            };
+        this.viewRowData = data;
     }
     resetViewData() {
         this.viewRowData = undefined;
@@ -429,9 +434,10 @@ export class TaxRateComponent implements OnInit {
     showHistory(rowData): void {
         this.currentModeOfOperation = ModeOfOperation.Audit;
         this.taxRateService.getTaxRateAudit(rowData.taxRateId).subscribe(audits => {
-            //console.log('audits',audits);
-            if (audits.length > 0) {
-                this.auditHistory = audits;
+            //console.log('audits', audits);
+            //console.log('audits', audits[0].result);
+            if (audits) {
+                this.auditHistory = audits[0].result;
             }
         });
         //console.log(this.auditHistory);

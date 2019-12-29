@@ -50,6 +50,15 @@ namespace QuickApp.Pro.Controllers
             return Ok(allActions);
 
         }
+
+        [HttpGet("GetVendorAuditHistory/{vendorId}")]
+        public IActionResult GetVendorAuditListDetails(long vendorId)
+        {
+            var allVendorlistDetails = _unitOfWork.Vendor.GetVendorsAuditHistory(vendorId);
+            return Ok(allVendorlistDetails);
+
+        }
+
         /// <summary>
         /// Method that gets basic info namely id and name only
         /// </summary>
@@ -315,20 +324,19 @@ namespace QuickApp.Pro.Controllers
 
         [HttpGet("getVendorCapabilityList")]
         [Produces(typeof(List<VendorCapabiliy>))]
-        public IActionResult GetvendorCapabilityList()
+        public IActionResult GetvendorCapabilityList(string status = "all")
         {
+            if (status.ToLower() == "all")
             {
                 var data = (from vc in _context.VendorCapabiliy
                             join v in _context.Vendor on vc.VendorId equals v.VendorId
                             join im in _context.ItemMaster on vc.ItemMasterId equals im.ItemMasterId into imm
-                            from im in imm.DefaultIfEmpty() 
+                            from im in imm.DefaultIfEmpty()
                             join vct in _context.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId into vctt
                             from vct in vctt.DefaultIfEmpty()
-                            join vcat in _context.capabilityType on vct.CapabilityTypeId equals vcat.CapabilityTypeId into vcatt
+                            join vcat in _context.capabilityType on Convert.ToInt32(vc.CapabilityId) equals vcat.CapabilityTypeId into vcatt
                             from vcat in vcatt.DefaultIfEmpty()
-                                //join vct in _appContext.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId
-                                //join vcat in _appContext.vendorCapabilityAircraftType on vc.VendorCapabilityId equals vcat.VendorCapabilityId
-                                //join vcam in _appContext.vendorCapabiltiyAircraftModel on vc.VendorCapabilityId equals vcam.VendorCapabilityId
+                            where vc.IsDeleted != true
                             select new
                             {
                                 v.VendorName,
@@ -352,15 +360,118 @@ namespace QuickApp.Pro.Controllers
                                 vc.UpdatedDate,
                                 vc.capabilityDescription,
                                 vc.IsActive,
-                                CapabilityType = vcat.Description
+                                CapabilityType = vcat.Description,
+                                vc.CapabilityId,
+                                vc.IsPMA,
+                                vc.IsDER,
                                 //vct.CapabilityTypeId,
-
                                 //vcat.AircraftTypeId,
-
                                 //vcam.AircraftModelId
 
+                            }).OrderByDescending(p => p.CreatedDate).ToList();
 
-                            }).OrderByDescending(p => p.UpdatedDate).ToList();
+                return Ok(data);
+            }
+            else
+            {
+                bool sStatus = false;
+                if (status.ToLower() == "active")
+                {
+                    sStatus = true;
+                }
+
+                var data = (from vc in _context.VendorCapabiliy
+                            join v in _context.Vendor on vc.VendorId equals v.VendorId
+                            join im in _context.ItemMaster on vc.ItemMasterId equals im.ItemMasterId into imm
+                            from im in imm.DefaultIfEmpty()
+                            join vct in _context.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId into vctt
+                            from vct in vctt.DefaultIfEmpty()
+                            join vcat in _context.capabilityType on Convert.ToInt32(vc.CapabilityId) equals vcat.CapabilityTypeId into vcatt
+                            from vcat in vcatt.DefaultIfEmpty()
+                            where vc.IsDeleted != true && vc.IsActive == sStatus
+                            select new
+                            {
+                                v.VendorName,
+                                v.VendorCode,
+                                im.PartNumber,
+                                im.PartDescription,
+                                im.ManufacturerId,
+                                manufacturerName = im.Manufacturer.Name,
+                                vc.VendorCapabilityId,
+                                vc.VendorId,
+                                vc.VendorRanking,
+                                vc.PMA_DER,
+                                vc.ItemMasterId,
+                                vc.TAT,
+                                vc.Cost,
+                                vc.AlternatePartId,
+                                vc.ATAChapterId,
+                                vc.ATASubchapterId,
+                                vc.Memo,
+                                vc.CreatedDate,
+                                vc.UpdatedDate,
+                                vc.capabilityDescription,
+                                vc.IsActive,
+                                CapabilityType = vcat.Description,
+                                vc.CapabilityId,
+                                vc.IsPMA,
+                                vc.IsDER,
+                                //vct.CapabilityTypeId,
+                                //vcat.AircraftTypeId,
+                                //vcam.AircraftModelId
+
+                            }).OrderByDescending(p => p.CreatedDate).ToList();
+
+                return Ok(data);
+
+
+            }
+
+
+        }
+
+        [HttpGet("getVendorCapabilitybyId/{id}")]
+        public IActionResult GetvendorCapabilityById(long id)
+        {
+            {
+                var data = (from vc in _context.VendorCapabiliy
+                            join v in _context.Vendor on vc.VendorId equals v.VendorId
+                            join im in _context.ItemMaster on vc.ItemMasterId equals im.ItemMasterId into imm
+                            from im in imm.DefaultIfEmpty()
+                            join vct in _context.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId into vctt
+                            from vct in vctt.DefaultIfEmpty()
+                            join vcat in _context.capabilityType on vc.CapabilityId equals Convert.ToInt64(vcat.CapabilityTypeId) into vcatt
+                            from vcat in vcatt.DefaultIfEmpty()
+                            where vc.VendorCapabilityId == id
+                            select new
+                            {
+                                v.VendorName,
+                                v.VendorCode,
+                                im.PartNumber,
+                                im.PartDescription,
+                                im.ManufacturerId,
+                                manufacturerName = im.Manufacturer.Name,
+                                vc.VendorCapabilityId,
+                                vc.VendorId,
+                                vc.VendorRanking,
+                                vc.PMA_DER,
+                                vc.ItemMasterId,
+                                vc.TAT,
+                                vc.Cost,
+                                vc.AlternatePartId,
+                                vc.ATAChapterId,
+                                vc.ATASubchapterId,
+                                vc.Memo,
+                                vc.CreatedDate,
+                                vc.UpdatedDate,
+                                vc.capabilityDescription,
+                                vc.IsActive,
+                                vc.CapabilityId,
+                                vc.IsPMA,
+                                vc.IsDER,
+                                CapabilityType = vcat.Description
+
+                            }).OrderByDescending(p => p.UpdatedDate).FirstOrDefault();
                 // return data;
                 return Ok(data);
             }
@@ -1310,6 +1421,14 @@ namespace QuickApp.Pro.Controllers
                 actionobject.UpdatedBy = vendorViewModel.UpdatedBy;
                 actionobject.IsAddressForBilling = vendorViewModel.IsAddressForBilling;
                 actionobject.IsAddressForShipping = vendorViewModel.IsAddressForShipping;
+                if (vendorViewModel.IsAllowNettingAPAR == null)
+                {
+                    actionobject.IsAllowNettingAPAR = false;
+                }
+                else
+                {
+                    actionobject.IsAllowNettingAPAR = vendorViewModel.IsAllowNettingAPAR;
+                }
 
                 //actionobject.vendorc
                 AddAddress(vendorViewModel);
@@ -1535,6 +1654,16 @@ namespace QuickApp.Pro.Controllers
                 actionobject.UpdatedBy = vendorViewModel.UpdatedBy;
                 actionobject.IsAddressForBilling = vendorViewModel.IsAddressForBilling;
                 actionobject.IsAddressForShipping = vendorViewModel.IsAddressForShipping;
+
+                if (vendorViewModel.IsAllowNettingAPAR == null)
+                {
+                    actionobject.IsAllowNettingAPAR = false;
+                }
+                else
+                {
+                    actionobject.IsAllowNettingAPAR = vendorViewModel.IsAllowNettingAPAR;
+                }
+
                 address.Line1 = vendorViewModel.Address1;
                 address.Line2 = vendorViewModel.Address2;
                 address.Line3 = vendorViewModel.Address3;
@@ -3248,6 +3377,8 @@ namespace QuickApp.Pro.Controllers
             disc.ATASubchapterId = vendorCapability.ATASubchapterId;
             disc.Memo = vendorCapability.Memo;
             disc.IsActive = vendorCapability.IsActive;
+            disc.IsPMA = vendorCapability.IsPMA;
+            disc.IsDER = vendorCapability.IsDER;
 
             _unitOfWork.Repository<VendorCapabiliy>().Update(disc);
 
@@ -3810,6 +3941,22 @@ namespace QuickApp.Pro.Controllers
             }
             return Ok(vendorAircraftModel);
             // return Ok(ModelState);
+        }
+
+        [HttpGet("searchForGetAirCraftByVendorCapsId/{vendorCapabilityId}")]
+
+        public IActionResult orAirMappedMultiDashId(long vendorCapabilityId, string aircraftTypeID, string aircraftModelID, string dashNumberId)
+        {
+            var result = _unitOfWork.Vendor.searchItemAircraftMappingDataByMultiTypeIdModelIDDashID(vendorCapabilityId, aircraftTypeID, aircraftModelID, dashNumberId);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
         }
 
         [HttpGet("GetListforCapes")]

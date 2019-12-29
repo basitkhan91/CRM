@@ -7,6 +7,7 @@ import { Table } from 'primeng/table';
 import { AuthService } from '../../../services/auth.service';
 import { AlertService, MessageSeverity } from '../../../services/alert.service';
 import { Router } from '@angular/router';
+import { listSearchFilterObjectCreation } from '../../../generic/autocomplete';
 
 
 @Component({
@@ -30,9 +31,10 @@ export class WorkOrderListComponent implements OnInit {
     private table: Table;
     lazyLoadEventData: any;
     headers = [
-        // { field: 'workOrderNum', header: 'WorkOrder Number' },
-        { field: 'name', header: 'Customer Name' },
-        { field: 'customerCode', header: 'customerCode' },
+        { field: 'workOrderNum', header: 'WorkOrder Number' },
+        { field: 'customerName', header: 'Customer Name' },
+        { field: 'customerCode', header: 'CustomerCode' },
+        { field: 'partNos', header: 'Part No(s)' },
         { field: 'workOrderType', header: 'WorkOrder Type' },
         { field: 'openDate', header: 'Open Date' },
         { field: 'workOrderStatus', header: 'WorkOrder Status' },
@@ -69,6 +71,8 @@ export class WorkOrderListComponent implements OnInit {
     selectedOtherSubTask: string = ''
     activeIndex: number;
     otherOptionShow: boolean = false;
+    currentStatus = 'open'
+    isGlobalFilter: boolean = false;
     constructor(private workOrderService: WorkOrderService,
         private route: Router,
         private authService: AuthService,
@@ -112,11 +116,36 @@ export class WorkOrderListComponent implements OnInit {
         this.pageIndex = pageIndex;
         this.pageSize = event.rows;
         event.first = pageIndex;
-        this.getAllWorkOrderList(event)
+        if (!this.isGlobalFilter) {
+            this.getAllWorkOrderList(event);
+        } else {
+            this.globalSearch()
+        }
     }
 
+    changeOfStatus(value) {
+        const lazyEvent = this.lazyLoadEventData;
+        this.currentStatus = value;
+
+        this.getAllWorkOrderList({ ...lazyEvent, filters: { ...lazyEvent.filters, workOrderStatus: this.currentStatus } })
+
+    }
+    fieldSearch(value, field) {
+        this.isGlobalFilter = false;
+        if (field === 'workOrderStatus') {
+            this.currentStatus = 'open';
+        }
+    }
+
+
+
+
+
     getAllWorkOrderList(data) {
-        this.workOrderService.getWorkOrderList(this.pageIndex, this.pageSize).subscribe(res => {
+        console.log(data);
+
+        const PagingData = { ...data, filters: listSearchFilterObjectCreation(data.filters) }
+        this.workOrderService.getWorkOrderList(PagingData).subscribe(res => {
             this.workOrderData = res;
             if (res.length > 0) {
                 this.totalRecords = res[0].totalRecords;
@@ -130,15 +159,20 @@ export class WorkOrderListComponent implements OnInit {
         this.otherOptionShow = false;
     }
 
-    globalSearch(value) {
-        // this.pageIndex = 0;
-        // this.workOrderService.getGlobalSearch(value, this.pageIndex, this.pageSize).subscribe(res => {
-        //     this.data = res;
-        //     if (res.length > 0) {
-        //         this.totalRecords = res[0].totalRecords;
-        //         this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
-        //     }
-        // })
+    globalSearch(value?) {
+
+        // this.inputGlobalSearch = value;
+        if (!this.isGlobalFilter) {
+            this.pageIndex = 0;
+        }
+        this.isGlobalFilter = true;
+        this.workOrderService.getWorkOrderGlobalSearch(value, this.pageIndex, this.pageSize).subscribe(res => {
+            this.workOrderData = res;
+            if (res.length > 0) {
+                this.totalRecords = res[0].totalRecords;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            }
+        })
     }
 
 

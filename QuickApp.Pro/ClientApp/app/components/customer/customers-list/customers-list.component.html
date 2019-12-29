@@ -27,19 +27,6 @@
                  [reorderableColumns]="true"
                  [totalRecords]="totalRecords"
                  [scrollable]="true" scrollHeight="450px">
-
-            <!-- <ng-template pTemplate="caption">
-           (onPage)="changePage($event)"
-        <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
-        <input
-          type="text"
-          pInputText
-          size="50"
-          placeholder="Global Filter"
-          (input)="globalSearch($event.target.value)"
-          style="width:auto"
-        />
-      </ng-template> -->
             <ng-template pTemplate="caption">
                 <div style="text-align: right;margin-left:-6px !important; min-height: 30px;">
                     <p-multiSelect [maxSelectedLabels]="2"
@@ -87,20 +74,6 @@
                             label="Refresh"
                             style="left:-10px;"
                             (click)="refreshList();"></button>
-                    <!-- <div class="excel-upload  excel-upload-cstm">
-                <input type="file"
-                       name="upload[]"
-                       id="upload"
-                       (change)="customExcelUpload($event)"
-                       class="uploaddoc upload-file"
-                       style="left:-10px;"
-                       accept=".xlsx, .xls, .csv" />
-                <label for="upload">
-                    <span matTooltip="Upload Data (Excel)">
-                        <i class="fa fa-upload"></i>
-                    </span>
-                </label>
-            </div> -->
                 </div>
             </ng-template>
             <ng-template pTemplate="colgroup" let-columns>
@@ -127,9 +100,7 @@
                 </tr>
                 <tr>
                     <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
-                        <!-- <input type="text" style="width:100%;" pInputText   (keyup)="filterData($event)"> -->
                         <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
-
                     </th>
                     <th style="width:200px;position:sticky"></th>
                 </tr>
@@ -149,9 +120,6 @@
                         }}
                     </td>
                     <td style="width:200px" *ngIf="selectedColumns.length > 0">
-                        <!--<p-inputSwitch [(ngModel)]="rowData['isActive']"
-                               name="isActive{{ rowIndex }}"
-                               (onChange)="changeStatus(rowData)"></p-inputSwitch>-->
 
                         <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                         <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
@@ -171,7 +139,10 @@
                                 matTooltip="Edit">
                             <mat-icon>edit</mat-icon>
                         </button>
+                        <i class="fa fa-users" mat-icon-button matTooltip="Contacts"
+                           (click)="openContactList(contentcontact,rowData)">
 
+                        </i>
                         <button class="btn-delete"
                                 mat-icon-button
                                 matTooltip="Delete"
@@ -183,19 +154,14 @@
                         <button class="btn-history"
                                 mat-icon-button
                                 matTooltip="History"
-                                data-target="#contentHist"
+                                data-target="#contentAuditHist"
                                 data-toggle="modal"
-                                (click)="getAuditHistoryById(rowData)">
+                                (click)="getAuditHistoryById(contentAuditHist,rowData)">
                             <mat-icon color="green">history</mat-icon>
                         </button>
                     </td>
                 </tr>
             </ng-template>
-            <!-- <ng-template #auditContent let-c="close" let-d="dismiss">
-                <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
-                    <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
-                </div>
-            </ng-template> -->
             <ng-template pTemplate="summary" id="footer">
                 <label id="footer" class="footer">No'of records:</label>
                 <input style="width: 5%;"
@@ -407,35 +373,14 @@
                                                             </tr>
                                                         </ng-template>
                                                     </p-table>
-                                                    <!--<p-table class="table-responsive" [value]="restrictedPMAParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
-            <ng-template pTemplate="header" let-columns>
-                <tr>
-                    <th *ngFor="let col of columns">
-                        {{col.header}}
-                    </th>
-
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
-                <tr>
-                    <td *ngFor="let col of columns">
-                        {{part[col.field]}}
-                    </td>
-
-                </tr>
-            </ng-template>
-        </p-table>-->
                                                 </div>
 
                                                 <p>
                                                     <span class="label"><b>Restrict DER: </b></span><span class="value">
-                                                        {{
-                          viewDataGeneralInformation.restrictDERMemo
-                                                        }}
+                                                        {{viewDataGeneralInformation.restrictDERMemo}}
                                                     </span>
                                                 </p>
                                                 <div>
-
                                                     <p-table class="rpo-table-cstm"
                                                              [columns]="customerDERColumns"
                                                              [value]="restrictedDERParts"
@@ -466,9 +411,7 @@
                                                 </div>
                                                 <p>
                                                     <span class="label"><b>URL to Customer site: </b></span><span class="value">
-                                                        {{
-                          viewDataGeneralInformation.customerURL
-                                                        }}
+                                                        {{viewDataGeneralInformation.customerURL}}
                                                     </span>
                                                 </p>
                                             </div>
@@ -477,8 +420,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step12">Contact</a> </h4>
@@ -518,8 +459,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step13">Aircraft Info</a> </h4>
@@ -559,7 +498,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step14">ATA Info</a> </h4>
@@ -599,8 +537,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step15">Financial Info</a> </h4>
@@ -614,18 +550,11 @@
                                         <p><span class="label"><b>Allow Netting of AP/AR: </b></span><span class="value">{{viewDataGeneralInformation.allowNettingOfAPAR}}</span></p>
                                         <p><span class="label"><b>Allow Partial Billing: </b></span><span class="value">{{viewDataGeneralInformation.allowPartialBilling}}</span></p>
                                         <p><span class="label"><b>Allow ProForma Billing: </b></span><span class="value">{{viewDataGeneralInformation.allowProformaBilling}}</span></p>
-
                                         <p><span class="label"><b>Taxable Exempt: </b></span><span class="value">{{viewDataGeneralInformation.isTaxExempt}}</span></p>
-                                        <!--<p><span class="label"><b>Tax Type: </b></span><span class="value">{{viewDataGeneralInformation.taxTypeName}}</span></p>-->
-
-
                                         <p><span class="label"><b>Tax Rate - State/Prov: </b></span><span class="value">{{viewDataGeneralInformation.taxRateName}}</span></p>
                                         <p><span class="label"><b>Tax Rate - Other: </b></span><span class="value">{{viewDataGeneralInformation.taxRateOther}}</span></p>
                                     </div>
                                     <div class="col-sm-6">
-                                        <!--<p><span class="label"><b>EDI: </b></span><span class="value">{{viewDataGeneralInformation.ediDescription}}</span></p>-->
-                                        <!--<p><span class="label"><b>Deferred PO: </b></span><span class="value">{{customerVfinanceiewFeilds.customerCode}}</span></p>
-                    <p><span class="label"><b>Deferred RO: </b></span><span class="value">{{customerViewFeilds.customerCode}}</span></p>-->
                                         <p><span class="label"><b>Currency: </b></span><span class="value">{{viewDataGeneralInformation.currency}}</span></p>
 
                                         <p-table [value]="taxTypeRateMapping" [paginator]="true" [rows]="3" *ngIf="taxTypeRateMapping">
@@ -644,11 +573,6 @@
 
                                                     <td>{{t.taxType}}</td>
                                                     <td>{{t.taxRate}}</td>
-                                                    <!--<td>
-                                    <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="deleteTaxTypeRate(deleteContent1,t);">
-                                        <mat-icon color="warn">delete</mat-icon>
-                                    </button>
-                                </td>-->
                                                 </tr>
                                             </ng-template>
                                         </p-table>
@@ -657,8 +581,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step16">Bill Information</a> </h4>
@@ -698,8 +620,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step17">Shipping Information</a> </h4>
@@ -772,8 +692,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step18">Sales Person/Agent Info</a> </h4>
@@ -792,7 +710,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step19">Warnings</a> </h4>
@@ -882,17 +799,125 @@
             </div>
         </div>
     </div>
-    </ng-template>
-    <ng-template #content1 let-c="close" let-d="dismiss">
-        <div class="modal-header">
-            <h4 class="modal-title">Are You Sure Want to Delete?</h4>
-            <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
+ </ng-template>
 
-        <div class="modal-footer">
-            <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
-            <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+<ng-template #contentcontact let-c="close" let-d="dismiss" class="modal fade" role="dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+            <h4 class="modal-title"> Contacts of {{this.selectedRow['name']}}</h4>
         </div>
-    </ng-template>
+        <div class="modal-body viewform">
+            <p-table class="table-responsive" #dt *ngIf="allContacts.length > 0" [value]="allContacts" [metaKeySelection]="true" [rows]="10" [paginator]="true"
+                     [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedContactColumns"
+                     [resizableColumns]="true" [reorderableColumns]="true">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th *ngFor="let col of columns" pResizableColumn pReorderableColumn
+                            [pSortableColumn]="col.field">
+                            {{col.header}}
+                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                        </th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-rowData let-columns="columns">
+                    <tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)">
+                        <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                            {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <div class="contact-no-record" *ngIf="allContacts.length == 0">
+                No Records found
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
+        </div>
+    </div>
+</ng-template>
+
+
+
+<ng-template #content1 let-c="close" let-d="dismiss" data-backdrop="static">
+
+    <div class="modal-header">
+        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <strong>
+            Customer Name:
+            <span class="new-label">{{selectedRowforDelete.name}}</span>
+        </strong>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
+</ng-template>
+<ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
+    <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
+    <div class="modal-header">
+
+        <h4 class="modal-title">History of Customer</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+
+    </div>
+    <div class="modal-body">
+
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Customer Name</th>
+                        <th>Customer Code</th>
+                        <th>Customer Phone</th>
+                        <th>Customer Email</th>
+                        <th>Address1</th>
+                        <th>Address2</th>
+                        <th>Customer City</th>
+                        <th>Customer State</th>
+                        <th>Postal Code</th>
+                        <th>Country</th>
+                        <th>Updated By</th>
+                        <th>Last Updated Time</th>
+                        <th>Created By</th>
+                        <th>Created Time</th>
+
+                    </tr>
+                </thead>
+              
+
+                <tr *ngFor="let audit of customerauditHisory; let i = index;">
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'name', audit.name)  ? 'black' : 'red'  }">{{audit.name}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'customerCode', audit.customerCode)  ? 'black' : 'red'  }">{{audit.customerCode}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'customerPhone', audit.customerPhone)  ? 'black' : 'red'  }">{{audit.customerPhone}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'email', audit.email)  ? 'black' : 'red'  }">{{audit.email}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'address1', audit.address1)  ? 'black' : 'red'  }">{{audit.address1}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'address2', audit.address2)  ? 'black' : 'red'  }">{{audit.address2}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'city', audit.city)  ? 'black' : 'red'  }">{{audit.city}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'stateOrProvince', audit.stateOrProvince)  ? 'black' : 'red'  }">{{audit.stateOrProvince}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'postalCode', audit.postalCode)  ? 'black' : 'red'  }">{{audit.postalCode}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'countryName', audit.countryName)  ? 'black' : 'red'  }">{{audit.countryName}}</td>
+
+                    <td>{{audit.updatedBy}}</td>
+                    <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                    <td>{{audit.createdBy}}</td>
+                    <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+    </div>
+</ng-template>

@@ -19,7 +19,7 @@
                            <p-autoComplete  class="autocomp-customer-cstm" 
                             name="name"                            
                              [(ngModel)]="glAccountObj.ledgername" [suggestions]="ledgerNameObject" formControlName="ledgerName" 
-                             field="name" emptyMessage="No results"
+                             field="name" emptyMessage="No results" [forceSelection]="true" 
                              (completeMethod)="loadLedgerNames($event)" [size]="30"
                                             [minLength]="1" [dropdown]="true" required>
                                 

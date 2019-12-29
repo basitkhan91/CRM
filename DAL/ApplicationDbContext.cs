@@ -104,6 +104,7 @@ namespace DAL
         public DbSet<CustomerType> CustomerType { get; set; }
         public DbSet<Charge> Charge { get; set; }
         public DbSet<Vendor> Vendor { get; set; }
+        public DbSet<VendorAudit> VendorAudit { get; set; }
         public DbSet<CustomerContact> CustomerContact { get; set; }
         public DbSet<CustomerShipping> CustomerShipping { get; set; }
         public DbSet<CustomerShippingAddress> CustomerShippingAddress { get; set; }
@@ -135,6 +136,7 @@ namespace DAL
         public DbSet<VendorWarnings> VendorWarning { get; set; }
         public DbSet<CustomerWarning> CustomerWarning { get; set; }
         public DbSet<Employee> Employee { get; set; }
+        public DbSet<EmployeeAudit> EmployeeAudit { get; set; }
         public DbSet<shift> Shift { get; set; }
         public DbSet<Countries> Countries { get; set; }
         public DbSet<EmployeeLeaveType> EmployeeLeaveType { get; set; }
@@ -325,7 +327,7 @@ namespace DAL
         public DbSet<PublicationAudit> PublicationAudit { get; set; }
         public DbSet<ReasonAudit> ReasonAudit { get; set; }
         public DbSet<SiteAudit> SiteAudit { get; set; }
-        public DbSet<TaxRatesAudit> TaxRateAudit { get; set; }
+        public DbSet<TaxRatesAudit> TaxRatesAudit { get; set; }
 
         //public DbSet<UnitOfMeasureAudit> UnitOfMeasureAudit { get; set; }
         public DbSet<VendorClassificationAudit> VendorClassificationAudit { get; set; }
@@ -388,6 +390,7 @@ namespace DAL
         public DbSet<AssetCapesAudit> AssetCapesAudit { get; set; }
 
         public DbSet<CustomerInternationalShipping> CustomerInternationalShipping { get; set; }
+        public DbSet<CustomerInternationalShippingAudit> CustomerInternationalShippingAudit { get; set; }
         public DbSet<ShippingViaDetails> ShippingViaDetails { get; set; }
         public DbSet<CustomerDocumentDetail> CustomerDocumentDetails { get; set; }
         public DbSet<Attachment> Attachment { get; set; }
@@ -474,6 +477,9 @@ namespace DAL
         public DbSet<DAL.Models.Sales.SalesOrderQuoteApproverList> SalesOrderQuoteApproverList { get; set; }
         public DbSet<DAL.Models.Sales.SalesOrderQuotePart> SalesOrderQuotePart { get; set; }
         public DbSet<Master1099Audit> Master1099Audit { get; set; }
+        public DbSet<TagType> TagType { get; set; }
+        public DbSet<CustomerAircraftMappingAudit> CustomerAircraftMappingAudit { get; set; }
+
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

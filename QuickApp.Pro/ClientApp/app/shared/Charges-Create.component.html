@@ -134,12 +134,12 @@
       <ng-container *ngIf="isQuote">
           <td>
             <!-- <input [(ngModel)]="matQuotation.markup" /> -->
-            <select class="form-control custom-select wf-pub-id" (change)="markupChanged(charge)" [(ngModel)]="charge.markup">
+            <select class="form-control custom-select wf-pub-id" (change)="markupChanged(charge)" [(ngModel)]="charge.markupPercentageId">
               <option value="">Select</option>
               <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
             </select>
           </td>
-          <td>{{charge.costPlusAmount}}</td>
+          <td><input [(ngModel)]="charge.chargesCostPlus" readonly/></td>
           <td><input [(ngModel)]="charge.fixedAmount" /></td>
       </ng-container>
       <td>
@@ -160,6 +160,11 @@
       <td>&nbsp;</td>
       <td>{{ workFlow.totalChargesCost }}</td>
       <td>&nbsp;</td>
+      <ng-container *ngIf="isQuote">
+        <td>&nbsp;</td>
+        <td>{{getTotalCostPlusAmount()}}</td>
+        <td>{{getTotalFixedAmount()}}</td>
+      </ng-container>
       <td>&nbsp;</td>
     </tr>
   </table>

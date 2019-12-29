@@ -77,6 +77,9 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetCustomerFinanceDocumentDetailById(long id, int moduleId);
         bool GetCustomerFinanceDocumentDelete(long id, string updatedBy);
         IEnumerable<object> GetCustomerContacts(long id);
+        IEnumerable<object> GetCustomerAuditHistoryByid(long customerId);
+        IEnumerable<object> GetAircraftMappedAudit(long customerAircraftMappingId);
+        IEnumerable<object> GetCustomerInternationalShippingAuditHistoryByid(long customerId,long InternationalShippingId);
     }
 
 }

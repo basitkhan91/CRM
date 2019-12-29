@@ -21,8 +21,8 @@ namespace DAL.Repositories
                               join im in _appContext.ItemMaster on stl.PartNumber equals im.PartNumber
 
 
-                              join co in _appContext.Condition on stl.ConditionId equals co.ConditionId
-
+                              join co in _appContext.Condition on stl.ConditionId equals co.ConditionId into conn
+                              from co in conn.DefaultIfEmpty()
 
                               join si in _appContext.Site on stl.SiteId equals si.SiteId into sit
                               from si in sit.DefaultIfEmpty()
@@ -64,8 +64,10 @@ namespace DAL.Repositories
                                   customer,
                                   employee.FirstName,
                                   customer.Name,
+                                  customer.CustomerCode,
                                   contact.WorkPhone,
-                                  contact.ContactId,
+                                  contactId= contact.ContactId,
+                                  contactTitle=  contact.ContactTitle,
                                   partNumber = stl.PartNumber,
                                   stl.IsTimeLife,
                                   stl.IsExpirationDate,
@@ -77,9 +79,11 @@ namespace DAL.Repositories
                                   stl.TagDate,
                                   location = l.Name,
                                   warehouse = w.Name,
+                                  
                                   im.ExpirationDate,
                                   stl.SerialNumber,
-                                  conditionId = co.ConditionId,
+                                  conditionId = co == null ? 0 : co.ConditionId,
+                                  //conditionId = co.ConditionId,
                                   stl.ChangePartNumber,
                                   partDescription = im.PartDescription,
                                   stl.Quantity,
@@ -113,13 +117,14 @@ namespace DAL.Repositories
                                   stl.TagType,
                                   stl.TraceableToType,
                                   stl.TimeLifeCyclesId,
+                                  stl.Manufacturer,
                                   co,
                                   w,
                                   l,
                                   ti,
-                                 
                                   conditionType = co.Description,
                                   im.ItemTypeId,
+                                  stl.ManagementStructureId
 
                               }).ToList();
                 return result;

@@ -251,24 +251,24 @@ export class AppComponent implements OnInit, AfterViewInit {
                     { label: 'Vendor List', routerLink: '/vendorsmodule/vendorpages/app-vendors-list' },
                      { label: 'Create Vendor', routerLink: '/vendorsmodule/vendorpages/app-vendor-general-information' },
                     //{ label: 'Create Vendor',  command: (event?: any) => { this.newVendorClick(); } },
-                    { label: 'Vendor Classification', routerLink: '/singlepages/singlepages/app-vendor-classification' },
-                    { label: 'Process 1099', routerLink: '/singlepages/singlepages/app-vendor-process1099' },
+                    //{ label: 'Vendor Classification', routerLink: '/singlepages/singlepages/app-vendor-classification' },
+                    //{ label: 'Process 1099', routerLink: '/singlepages/singlepages/app-vendor-process1099' },
                     {
                         label: 'Vendor Capabilities', items: [{ label: 'Vendor Caps List', routerLink: '/vendorsmodule/vendorpages/app-vendor-capabilities-list' },
                         { label: 'Add Vendor Caps', routerLink: '/vendorsmodule/vendorpages/app-add-vendor-capabilities' },
                             { label: 'Reports and Forms', items: [{ label: 'Caps Report', routerLink: '/singlepages/singlepages/app-caps-report' }] }],
                     },
-                    {
-                        label: 'Purchase Order', items: [{ label: 'PO List', routerLink: '/vendorsmodule/vendorpages/app-polist' },
-                        { label: 'Create PO', routerLink: '/vendorsmodule/vendorpages/app-create-po' },
-                        { label: 'PO Approval', routerLink: '/#' },
-                        { label: 'Create Vendor RMA', routerLink: '/#' }]
-                    },
-                    {
-                        label: 'Repair Order', items: [{ label: 'RO List', routerLink: '/vendorsmodule/vendorpages/app-ro-list' },
-                        { label: 'Create RO', routerLink: '/vendorsmodule/vendorpages/app-create-ro' },
-                        { label: 'RO Approval', routerLink: '/#' }]
-                    },
+                    // {
+                    //     label: 'Purchase Order', items: [{ label: 'PO List', routerLink: '/vendorsmodule/vendorpages/app-polist' },
+                    //     { label: 'Create PO', routerLink: '/vendorsmodule/vendorpages/app-create-po' },
+                    //     { label: 'PO Approval', routerLink: '/#' },
+                    //     { label: 'Create Vendor RMA', routerLink: '/#' }]
+                    // },
+                    // {
+                    //     label: 'Repair Order', items: [{ label: 'RO List', routerLink: '/vendorsmodule/vendorpages/app-ro-list' },
+                    //     { label: 'Create RO', routerLink: '/vendorsmodule/vendorpages/app-create-ro' },
+                    //     { label: 'RO Approval', routerLink: '/#' }]
+                    // },
                     {
                         label: 'Reports and Forms', items: [{ label: 'Open Ro Report', routerLink: '/#' },
                         { label: 'RO by WO', routerLink: '/#' },
@@ -280,12 +280,31 @@ export class AppComponent implements OnInit, AfterViewInit {
                 ]
             },
             {
+                label: 'Purchase Order',
+                icon: 'fa fa-fw fa-shopping-cart',
+                items: [     
+                    { label: 'PO List', routerLink: '/vendorsmodule/vendorpages/app-polist' },
+                    { label: 'Create PO', routerLink: '/vendorsmodule/vendorpages/app-create-po' },
+                    { label: 'PO Approval', routerLink: '/#' },
+                    { label: 'Create Vendor RMA', routerLink: '/#' }
+                ]
+            },
+            {
+                label: 'Repair Order',
+                icon: 'fa fa-fw fa-cog',
+                items: [ 
+                    { label: 'RO List', routerLink: '/vendorsmodule/vendorpages/app-ro-list' },
+                    { label: 'Create RO', routerLink: '/vendorsmodule/vendorpages/app-create-ro' },
+                    { label: 'RO Approval', routerLink: '/#' }
+                ]
+            },
+            {
                 label: 'Receiving',
                 icon: 'fa fa-fw fa-download',
                 items: [
                     {
                         label: 'Customer Work', items: [
-                            { label: 'Customer Work', routerLink: '/receivingmodule/receivingpages/app-customer-works-list' },
+                            { label: 'Customer Work List', routerLink: '/receivingmodule/receivingpages/app-customer-works-list' },
                             { label: 'Create Customer', routerLink: '/receivingmodule/receivingpages/app-customer-work-edit' }
                         ]
                     },
@@ -398,7 +417,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Create GL Account', routerLink: '/generalledgermodule/generalledgerpage/app-account-listing-create' },
                             { label: 'Create Accounting Calendar', routerLink: '/generalledgermodule/generalledgerpage/app-accounting-calendar' },
                             { label: 'Accounting Calendar List', routerLink: '/generalledgermodule/generalledgerpage/app-accounting-listing-calendar' },
-                            { label: 'Open/Close Ledger', routerLink: '/#' },
+                            { label: 'Open/Close Ledger', routerLink: '/generalledgermodule/generalledgerpage/app-open-close-ledger' },
                             { label: 'Intercompany', routerLink: '/#' },
                             {
                                 label: 'Payment Description', items: [
@@ -411,7 +430,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'Financial Statement', items: [
-                            { label: 'Node Setup', routerLink: '/generalledgermodule/generalledgerpage/app-node-setup' },
+                            { label: 'Node List', routerLink: '/generalledgermodule/generalledgerpage/app-node-setup' },
                             { label: 'Income Statement', routerLink: '/#' },
                             { label: 'Balance Sheet', routerLink: '/#' },
                             { label: 'Statement of CashFlows', routerLink: '/#' },
@@ -439,7 +458,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'Organisation', items: [
-                            { label: 'Entity List', routerLink: '/generalledgermodule/generalledgerpage/app-legal-entity-list' },
+                            { label: 'Legal Entity List', routerLink: '/generalledgermodule/generalledgerpage/app-legal-entity-list' },
                             { label: 'Legal Structure', routerLink: '/#' },
                             { label: 'Management Structure', routerLink: '/generalledgermodule/generalledgerpage/app-managemententity-structure' },
                         ]
@@ -605,21 +624,25 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'General', items: [
-                            { label: 'Documents', routerLink: '/singlepages/singlepages/app-documents' },
-                            { label: 'Default Messages', routerLink: '/singlepages/singlepages/app-defaultmessage' },
-                            { label: 'Aircraft Manufacturer', routerLink: '/singlepages/singlepages/app-aircraft-manufacturer' },
-                            { label: 'Aircraft Model', routerLink: '/singlepages/singlepages/app-aircraft-model' },
-                            { label: 'Dash Numbers', routerLink: '/singlepages/singlepages/app-dashnumber' },
                             { label: 'Ata Chapter', routerLink: '/singlepages/singlepages/app-ata-main' },
                             { label: 'Ata Sub-Chapter', routerLink: '/singlepages/singlepages/app-ata-sub-chapter1' },
+                            { label: 'Aircraft Manufacturer', routerLink: '/singlepages/singlepages/app-aircraft-manufacturer' },
+                            { label: 'Aircraft Model', routerLink: '/singlepages/singlepages/app-aircraft-model' },
                             { label: 'Conditions', routerLink: '/singlepages/singlepages/app-conditions' },
-                            { label: 'Percent', routerLink: '/singlepages/singlepages/app-percent' },
-                            { label: 'Site', routerLink: '/singlepages/singlepages/app-site' },
-                            { label: 'Integration', routerLink: '/singlepages/singlepages/app-integration' },
-                            { label: 'Priority', routerLink: '/singlepages/singlepages/app-priority' },
-                            { label: 'Work Scope', routerLink: '/singlepages/singlepages/app-work-scope' },
-                            { label: 'Provision', routerLink: '/singlepages/singlepages/app-provision' },
                             { label: 'Customer Classification', routerLink: '/singlepages/singlepages/app-customer-classification' },
+                            { label: 'Dash Numbers', routerLink: '/singlepages/singlepages/app-dashnumber' },
+                            { label: 'Default Messages', routerLink: '/singlepages/singlepages/app-defaultmessage' },                         
+                            { label: 'Documents', routerLink: '/singlepages/singlepages/app-documents' },
+                            { label: 'Integration', routerLink: '/singlepages/singlepages/app-integration' },
+                            { label: 'Percent', routerLink: '/singlepages/singlepages/app-percent' },
+                            { label: 'Priority', routerLink: '/singlepages/singlepages/app-priority' },
+                            { label: 'Process 1099', routerLink: '/singlepages/singlepages/app-vendor-process1099' },
+                            { label: 'Provision', routerLink: '/singlepages/singlepages/app-provision' },
+                            { label: 'Site', routerLink: '/singlepages/singlepages/app-site' },     
+                            { label: 'Vendor Classification', routerLink: '/singlepages/singlepages/app-vendor-classification' },                    
+                            { label: 'Work Scope', routerLink: '/singlepages/singlepages/app-work-scope' },
+                           
+                           
                         ]
                     },
                     {
@@ -629,14 +652,14 @@ export class AppComponent implements OnInit, AfterViewInit {
                                 label: 'Asset Attributes', items: [
                                     { label: 'Asset Attribute Type', routerLink: '/singlepages/singlepages/app-asset-attribute-type' },
                                     { label: 'Depreciation - Book', routerLink: '/#' },
-                                    { label: 'Depreciaiton - Tax', routerLink: '/#' },
-                                    { label: 'Depreciaiton Date', routerLink: '/#' },
+                                    { label: 'Depreciation - Tax', routerLink: '/#' },
+                                    { label: 'Depreciation Date', routerLink: '/#' },
 
                                 ]
                             },
                             { label: 'Asset Status', routerLink: '/singlepages/singlepages/asset-status' },
                             { label: 'Depreciation Method', routerLink: '/singlepages/singlepages/app-depriciation-method' },
-                            { label: 'Depreciaiton Convention', routerLink: '/singlepages/singlepages/app-asset-dep-convention-type' },
+                            { label: 'Depreciation Convention', routerLink: '/singlepages/singlepages/app-asset-dep-convention-type' },
                             { label: 'Depreciation Intervals', routerLink: '/singlepages/singlepages/app-depreciation-intervals' },
                             { label: 'Asset Disposal Type', routerLink: '/singlepages/singlepages/app-disposal-type' },
                             { label: 'Asset Intangible Type', routerLink: '/singlepages/singlepages/app-asset-intangible-type' },

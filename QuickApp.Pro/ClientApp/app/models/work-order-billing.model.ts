@@ -42,15 +42,15 @@ export class Billing {
     availableCredit: number;
     creditTerm: string;
     shipAccountInfo: string;
-    totalWorkOrderCost : number;
-    totalWorkOrderCostPlus : number;
-    materialCost : number;
-    materialCostPlus : number;
-    laborOverHeadCost : number;
-    laborOverHeadCostPlus : number;
-    miscChargesCost : number;
-    miscChargesCostPlus : number;
-    grandtotal : number;
+    totalWorkOrderCost: number;
+    totalWorkOrderCostPlus: number;
+    materialCost: number;
+    materialCostPlus: number;
+    laborOverHeadCost: number;
+    laborOverHeadCostPlus: number;
+    miscChargesCost: number;
+    miscChargesCostPlus: number;
+    grandtotal: number;
     constructor() {
         this.woOpenDate = null;
         this.customerRef = '';
@@ -103,6 +103,6 @@ export class Billing {
         this.laborOverHeadCostPlus = null;
         this.miscChargesCost = null;
         this.miscChargesCostPlus = null;
-        this.grandtotal  = null;
+        this.grandtotal = null;
     }
 }

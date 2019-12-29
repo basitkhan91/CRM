@@ -186,13 +186,21 @@ namespace QuickApp.Pro.Controllers
         public IActionResult PurchaseOrderById(long purchaseOrderId)
         {
             var result = _unitOfWork.purchaseOrder.PurchaseOrderById(purchaseOrderId);
-            return Ok(result);
+
+			if(result != null)
+			{
+				return Ok(result);
+			} else
+			{
+				return NotFound();
+			}
+            
         }
 
         [HttpGet("purchaseorderparts")]
-        public IActionResult GetPurchaseOrderParts(long purchaseOrderId)
+        public IActionResult GetPurchaseOrderParts(long purchaseOrderId, long workOrderPartNoId=0)
         {
-            var result = _unitOfWork.purchaseOrder.GetPurchaseOrderParts(purchaseOrderId);
+            var result = _unitOfWork.purchaseOrder.GetPurchaseOrderParts(purchaseOrderId, workOrderPartNoId);
             return Ok(result);
         }
 

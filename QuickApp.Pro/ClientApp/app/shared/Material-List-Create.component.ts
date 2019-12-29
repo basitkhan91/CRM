@@ -97,6 +97,14 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
             this.row.taskId = this.workFlow.taskId;
         }
 
+        if(this.isQuote && this.editData.length > 0){
+            this.workFlow.materialList = this.editData;
+        }
+        else if(this.isQuote){
+            this.workFlow.materialList = [];
+            this.addRow();
+        }
+
 
 
 
@@ -382,24 +390,60 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
     }
 
     saveMaterialsWorkOrder() {
-        this.saveMaterialListForWO.emit(this.workFlow)
+        this.saveMaterialListForWO.emit(this.workFlow);
+        this.workFlow.materialList = [];
+        this.addRow();
+        this.workFlow.materialQtySummation = 0;
+        this.workFlow.materialExtendedCostSummation = 0;
+        this.workFlow.totalMaterialCost = 0;
+        this.workFlow.materialExtendedPriceSummation = 0;
     }
 
     updateMaterialsWorkOrder() {
         this.updateMaterialListForWO.emit(this.workFlow);
+        this.workFlow.materialList = [];
+        this.addRow();
+        this.workFlow.materialQtySummation = 0;
+        this.workFlow.materialExtendedCostSummation = 0;
+        this.workFlow.totalMaterialCost = 0;
+        this.workFlow.materialExtendedPriceSummation = 0;
     }
 
     markupChanged(matData){
     try{
         this.markupList.forEach((markup)=>{
-        if(markup.value == matData.markup){
-            matData.costPlusAmount = (matData.quantity * matData.unitCost) + ( ((matData.quantity * matData.unitCost)/100) *  Number(markup.label))
+        if(markup.value == matData.markupPercentageId){
+            matData.materialCostPlus = (matData.extendedPrice) + ( ((matData.extendedPrice)/100) *  Number(markup.label))
         }
         })
     }
     catch(e){
         console.log(e);
     }
+    }
+
+    getTotalCostPlusAmount(){
+        let total = 0;
+        this.workFlow.materialList.forEach(
+          (material)=>{
+            if(material.materialCostPlus){
+              total += material.materialCostPlus;
+            }
+          }
+        )
+        return total;
+    }
+
+    getTotalFixedAmount(){
+        let total = 0;
+        this.workFlow.materialList.forEach(
+          (material)=>{
+            if(material.fixedAmount){
+              total += Number(material.fixedAmount);
+            }
+          }
+        )
+        return total;
     }
 
 

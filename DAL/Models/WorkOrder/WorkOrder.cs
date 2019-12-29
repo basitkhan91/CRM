@@ -49,6 +49,7 @@ namespace DAL.Models
         public long SalesPersonId { get; set; }
         public string CustomerReference { get; set; }
         public string CSR { get; set; }
+        public long ManagementStructureId { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public Nullable<DateTime> CreatedDate { get; set; }
@@ -67,6 +68,7 @@ namespace DAL.Models
         public CustomerDetails CustomerDetails { get;set;}
         [NotMapped]
         public bool IsSubWorkOrder { get; set; }
+        
 
 
     }

@@ -205,7 +205,7 @@
         </ng-template>
     </div>
 </div>
-<ng-template #view class="modal fade " id="view" role="dialog">
+<ng-template #view class="modal fade " id="view"   data-backdrop="static">
 
     <div class="modal-body viewform">
         <div id="adminsearchlocationajax" class="table-responsive default-bg clear">
@@ -214,8 +214,7 @@
                         name="">
                     x
                 </button>
-                <h4 class="modal-title">Details of {{vendorName}}</h4>
-
+                <h4 class="modal-title">Details of Vendor: <span>"{{vendorName}}"</span></h4>
                 <div>
                     <button type="button" class="btn btn-success" (click)="ExpandAllVenodrDetailsModel()">Expand All</button>
                     <button type="button" class="btn btn-info" (click)="CloseAllVenodrDetailsModel()">Collapse All</button>
@@ -277,7 +276,7 @@
                                     </div>
                                     <div class="col-sm-6">
                                             <p>
-                                                    <span class="label"><b>Phone No: </b></span><span class="value">{{vendorPhoneNo}}-{{vendorPhoneExt}}</span>
+                                                    <span class="label"><b>Phone No: </b></span><span class="value">{{vendorPhoneNo}}, {{vendorPhoneExt}}</span>
                                                 <!-- <span class="label">Ext:</span><span class="value">{{vendorPhoneExt}}</span> -->
                                                 </p>
                                         <p>
@@ -364,6 +363,11 @@
                                             <p>
                                                     <span class="label"><b>Is this Vendor also a Customer: </b></span><span class="value">{{isVendorCustomer}}</span>
                                                 </p>
+
+                                                <p>
+                                                    <span class="label"><b>Allow Netting of AP/AR: </b></span><span class="value">{{isAllowNettingAPAR}}</span>
+                                                </p>
+                                                
                                     </div>
 
 
@@ -716,7 +720,7 @@
     </div>
 </ng-template>
 
-<ng-template #content1 let-c="close" let-d="dismiss">
+<ng-template #content1 let-c="close" let-d="dismiss" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title">Are You Sure Want to Delete?</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">

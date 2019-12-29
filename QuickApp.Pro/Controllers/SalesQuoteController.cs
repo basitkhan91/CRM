@@ -81,6 +81,39 @@ namespace QuickApp.Pro.Controllers
             return Ok(model);
         }
 
+        // POST: api/SalesQuote/get/{id}
+        [HttpGet("get/{id}")]
+        public IActionResult Get(long id)
+        {
+
+            SalesOrderQuote quote = this.UnitOfWork.SalesOrderQuote.Get(id);
+
+            if (quote == null) return NotFound($"{id} doesnot exist.");
+
+            IEnumerable<SalesOrderQuoteApproverList> approverList =  this.UnitOfWork.SalesOrderQuoteApproverList.GetApproverList(id);
+
+            IEnumerable<SalesOrderQuotePartView> partsView = GetSalesOrderQuotePartsView(id);
+            
+            //IEnumerable<SalesOrderQuotePart> parts = this.UnitOfWork.SalesOrderQuotePart.GetPartsBySalesQuoteId(id);
+
+            var quoteView = Mapper.Map<SalesOrderQuote, SalesOrderQuoteView>(quote);
+
+            var approverListView = Mapper.Map<IEnumerable<SalesOrderQuoteApproverList>, IEnumerable<SalesOrderQuoteApproverListView>>(approverList);
+
+            //var partsView = Mapper.Map<IEnumerable<SalesOrderQuotePart>, IEnumerable<SalesOrderQuotePartView>>(parts);
+
+            var response = new SalesQuoteView
+            {
+                SalesOrderQuote = quoteView,
+                ApproverList = approverListView.ToList(),  
+                Parts = partsView.ToList()
+            };
+
+            response = BindDefaultDataSources(response);
+
+            return Ok(response);
+        }
+
         // POST: api/SalesQuote
         [HttpPost]
         public IActionResult Post([FromBody]SalesQuoteView quoteView)
@@ -164,6 +197,44 @@ namespace QuickApp.Pro.Controllers
             this.UnitOfWork.SalesOrderQuote.Delete(id);
 
             return Ok(true);
+        }
+
+        private IEnumerable<SalesOrderQuotePartView> GetSalesOrderQuotePartsView(long salesQuoteId)
+        {
+            IEnumerable<SalesOrderQuotePartView> partsView = from part in Context.SalesOrderQuotePart
+                                                             join stockLine in Context.StockLine on part.StockLineId equals stockLine.StockLineId into quoteToSl
+                                                             from qs in quoteToSl.DefaultIfEmpty()
+                                                             join itemMaster in Context.ItemMaster on part.ItemMasterId equals itemMaster.ItemMasterId
+                                                             where part.SalesOrderQuoteId == salesQuoteId
+                                                             select new SalesOrderQuotePartView
+                                                             {
+                                                                  SalesOrderQuotePartId = part.SalesOrderQuotePartId, 
+                                                                  SalesOrderQuoteId = part.SalesOrderQuoteId, 
+                                                                  ItemMasterId = part.ItemMasterId, 
+                                                                  StockLineId = part.StockLineId,  
+                                                                  stockLineNumber = qs.StockLineNumber,  
+                                                                  FxRate = part.FxRate, 
+                                                                  QtyQuoted = part.QtyQuoted,  
+                                                                  UnitSalePrice = part.UnitSalePrice,  
+                                                                  MarkUpPercentage = part.MarkUpPercentage,  
+                                                                  SalesBeforeDiscount = part.SalesBeforeDiscount,  
+                                                                  Discount = part.Discount,  
+                                                                  DiscountAmount = part.DiscountAmount,  
+                                                                  NetSales = part.NetSales,  
+                                                                  MasterCompanyId = part.MasterCompanyId,  
+                                                                  CreatedBy = part.CreatedBy,  
+                                                                  CreatedOn = part.CreatedOn,  
+                                                                  UpdatedBy = part.UpdatedBy,  
+                                                                  UpdatedOn = part.UpdatedOn,  
+                                                                  partNumber = qs.PartNumber,  
+                                                                  partDescription = itemMaster.PartDescription,  
+                                                                  isOEM = qs.OEM.HasValue ? qs.OEM.Value : false,  
+                                                                  isPMA = itemMaster.PMA.HasValue ? itemMaster.PMA.Value : false, 
+                                                                  isDER = itemMaster.DER.HasValue ? itemMaster.DER.Value : false
+                                                             };
+
+            return partsView;
+
         }
     }
 }

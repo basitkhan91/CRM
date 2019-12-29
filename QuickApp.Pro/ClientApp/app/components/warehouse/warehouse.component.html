@@ -97,8 +97,6 @@
 							<ng-template pTemplate="summary" id="footer">
 								<label id="footer" class="footer">No'of records:</label>
 								<input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-								<!-- <label id="footer" class="footer1">Pages Count:</label>
-								<input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" /> -->
 							</ng-template>
 						</p-table>
 					</div>
@@ -110,7 +108,7 @@
 
 
 
-<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
 	<div class="modal-header">
 		<h4 class="modal-title" *ngIf="isEditMode">Edit WareHouse</h4>
 		<h4 class="modal-title" *ngIf="!isEditMode">Add WareHouse</h4>
@@ -262,7 +260,7 @@
 </ng-template>
 
 <!-- Delete -->
-<ng-template #content let-c="close" let-d="dismiss">
+<ng-template #content let-c="close" let-d="dismiss" data-backdrop="static">
 	<div class="modal-header">
 		<h4 class="modal-title">Are You Sure Want to Delete ?</h4>
 		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
@@ -289,7 +287,7 @@
 <!-- History -->
 
 
-<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
 	<div class="modal-header">
 		<h4 class="modal-title">History of Credit Terms</h4>
 		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">

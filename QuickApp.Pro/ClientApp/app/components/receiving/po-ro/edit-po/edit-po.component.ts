@@ -1106,6 +1106,11 @@ export class EditPoComponent implements OnInit {
                         return;
                     }
 
+                    if (stockLine.purchaseOrderUnitCost == undefined || (stockLine.purchaseOrderUnitCost != undefined && stockLine.purchaseOrderUnitCost.toString() == '')) {
+                        this.alertService.showMessage(this.pageTitle, "Please enter Unit Cost in Part No. " + part.itemMaster.partNumber + " of stockline " + stockLine.stockLineNumber, MessageSeverity.error);
+                        return;
+                    }
+
                     for (var tl of part.timeLife) {
                         if (tl.stockLineId == stockLine.stockLineId) {
                             timeLife.push(tl);

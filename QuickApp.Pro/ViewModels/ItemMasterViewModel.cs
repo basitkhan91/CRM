@@ -372,6 +372,7 @@ namespace QuickApp.Pro.ViewModels
         public bool? IsExportDual { get; set; }
         public int? oemPNId { get; set; }
         public string[] IntegrationPortalId { get; set; }
+        public long? RevisedPartId { get; set; }
         public class ItemMasterViewModelValidator : AbstractValidator<ItemMasterViewModel>
         {
             public ItemMasterViewModelValidator()

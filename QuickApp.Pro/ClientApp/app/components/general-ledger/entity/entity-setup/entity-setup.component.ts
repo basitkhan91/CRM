@@ -227,7 +227,7 @@ export class ManagementStructureComponent implements OnInit, AfterViewInit {
 		this.isEditMode = false;
 		this.isDeleteMode = true;
 		this.sourceAction = row;
-		this.modal = this.modalService.open(content, { size: 'lg' });
+		this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -249,7 +249,7 @@ export class ManagementStructureComponent implements OnInit, AfterViewInit {
         this.managementViewData.code = row.code;
         this.managementViewData.name = row.name;
         this.managementViewData.description = row.description;
-        this.modal = this.modalService.open(viewContent, { size: 'sm' });
+        this.modal = this.modalService.open(viewContent, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })    
@@ -352,7 +352,7 @@ export class ManagementStructureComponent implements OnInit, AfterViewInit {
 			this.sourceLegalEntity.isAssignable = true;
 		}
 		console.log(this.sourceLegalEntity);
-		this.modal1 = this.modalService.open(content, { size: 'sm' });
+		this.modal1 = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
 		this.modal1.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -369,7 +369,7 @@ export class ManagementStructureComponent implements OnInit, AfterViewInit {
 		//this.sourceLegalEntity = new ATAMain();
 		this.sourceLegalEntity.isActive = true;
 		this.entityName = "";
-		this.modal = this.modalService.open(content, { size: 'sm' });
+		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 
 
@@ -424,7 +424,7 @@ export class ManagementStructureComponent implements OnInit, AfterViewInit {
 		this.sourceAction = new Currency();
 		this.sourceAction.isActive = true;
 		this.currencyName = "";
-		this.modal = this.modalService.open(content, { size: 'sm' });
+		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 
 
@@ -432,6 +432,7 @@ export class ManagementStructureComponent implements OnInit, AfterViewInit {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
 	}
+
 	editItemAndCloseModel() {
 		
 			if (!(this.sourceLegalEntity.code && this.sourceLegalEntity.name && this.sourceLegalEntity.legalEntityId)) {
@@ -532,7 +533,7 @@ export class ManagementStructureComponent implements OnInit, AfterViewInit {
 		
 		//this.entityName = this.sourceLegalEntity.entityName;
 		this.loadMasterCompanies();
-		this.modal = this.modalService.open(content, { size: 'sm' });
+		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })

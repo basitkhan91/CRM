@@ -61,13 +61,13 @@
     </div>
 </div>
 
-<ng-template #auditContent let-c="close" let-d="dismiss">
+<ng-template #auditContent let-c="close" let-d="dismiss" data-backdrop="static">
     <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
         <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
     </div>
 </ng-template>
 
-<ng-template #content let-c="close" let-d="dismiss">
+<ng-template #content let-c="close" let-d="dismiss" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title">Are You Sure Want to Delete?</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
@@ -82,7 +82,7 @@
 
 </ng-template>
 
-<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Vendor capabilities</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add  Vendor capabilities</h4>
@@ -126,7 +126,7 @@
 
 </ng-template>
 
-<ng-template #view class="modal fade " id="view" role="dialog">
+<ng-template #view class="modal fade " id="view" role="dialog" data-backdrop="static">
 
     <div class="modal-content">
         <div class="modal-header">
@@ -145,7 +145,7 @@
 
 </ng-template>
 
-<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
 
         <h4 class="modal-title">History of Vendor Capabilities</h4>

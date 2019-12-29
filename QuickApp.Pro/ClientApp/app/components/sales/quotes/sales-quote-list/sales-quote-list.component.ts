@@ -2,6 +2,9 @@ import { Component, OnInit } from "@angular/core";
 import { SalesQuoteService } from "../../../../services/salesquote.service";
 import { ISalesSearchParameters } from "../../../../models/sales/ISalesSearchParameters";
 import { SalesSearchParameters } from "../../../../models/sales/SalesSearchParameters";
+import { AlertService, DialogType, MessageSeverity } from '../../../../services/alert.service';
+import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-sales-quote-list",
@@ -12,12 +15,21 @@ export class SalesQuoteListComponent implements OnInit {
 
   searchParameters:ISalesSearchParameters;
   sales:any[];
-  constructor(private salesQuoteService: SalesQuoteService) { }
+  selected:any;
+  modal: NgbModalRef;
+  constructor(
+    private salesQuoteService: SalesQuoteService,
+    private alertService: AlertService,
+     private modalService: NgbModal,
+     private router: Router,
+     ) { }
 
   ngOnInit() {
 
     this.searchParameters = new SalesSearchParameters();
   }
+
+
 
 
   /* 
@@ -51,12 +63,43 @@ export class SalesQuoteListComponent implements OnInit {
     this.salesQuoteService.search(searchParameters);
     */
 
-    
+   this.alertService.startLoadingMessage();
    this.salesQuoteService
    .search(this.searchParameters)
    .subscribe((data: any) => {
      this.sales = data[0];
      console.log(this.sales);
+     this.alertService.stopLoadingMessage();
    });
+  }
+
+
+
+  dismissModel() {
+    // this.isDeleteMode = false;
+   
+     this.modal.close();
+   }
+   openDelete(content, rowData) {
+     this.selected = rowData.salesQuoteId;
+     this.modal = this.modalService.open(content, { size: 'sm' });
+     this.modal.result.then(() => {
+         console.log('When user closes');
+     }, () => { console.log('Backdrop click') })
+   }
+   deleteQuote(): void {
+     this.salesQuoteService.delete(this.selected).subscribe(response => {
+         //this.alertService.showMessage("Asset removed successfully.");
+         this.modal.close();
+         this.alertService.showMessage("Success", `Asset removed successfully.`, MessageSeverity.success);
+        this.onSearch();
+     });
+   
+   }
+   openQuoteToEdit(row) {
+    const { salesQuoteId } = row;
+    let customerId  = row.customerId;
+    console.log(row);
+    this.router.navigateByUrl(`salesmodule/salespages/sales-quote-edit/${customerId}/${salesQuoteId}`);
   }
 }

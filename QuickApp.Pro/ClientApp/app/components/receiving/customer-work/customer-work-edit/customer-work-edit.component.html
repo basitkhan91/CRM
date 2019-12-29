@@ -3,9 +3,13 @@
         <div class="x_panel" style="">
             <div class="x_content add-customer-work">
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item active" aria-current="page">Edit Customer Work</li>
-                    </ol>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item" aria-current="page">Receiving</li>
+                            <li class="breadcrumb-item" aria-current="page">Customer Work</li>
+                            <li class="breadcrumb-item active" aria-current="page">Create Customer Work</li>
+                        </ol>
+                    </nav>
                 </nav>
                 <div class="pheading">
                     <h4 class="page-heading clr-green">Receiving</h4>
@@ -13,21 +17,34 @@
                 <div class="clear"></div>
                 <div class="tab-content form-bg">
                     <div class="tab-pane active" id="home">
-                <form action="#" method="post" id="add-customerwork" name="" class="form-horizontal add-custustomer">
+                <form action="#" #addcustomerwork="ngForm" method="post" id="addcustomerwork" name="" class="form-horizontal add-custustomer">
 
                     <div class="card">
                         <div class="form-row col-row col-row1">
                                 <div class="col-sm-4 blocks3">
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Employee Name</label>
-                                        <p-autoComplete [(ngModel)]="sourcereceving.firstName" [ngModelOptions]="{standalone: true}"  (onSelect)="empnameId($event)" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
-                                                        [minLength]="1" [dropdown]="true">
-                                            <ng-template let-firstName pTemplate="item">
-                                                <div class="ui-helper-clearfix">{{firstName}}</div>
-                                            </ng-template>
-                                        </p-autoComplete>
+
+                                        <label class="control-label col-sm-4">Employee Name<strong class="clr-red">*</strong></label>
+                                        <div class="col-sm-7 add-icon-inline-right">
+                                            <!--<div class="inner-addon right-addon inline-block">-->
+
+                                                <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcereceving.firstName" [ngModelOptions]="{standalone: true}" (onSelect)="empnameId($event)" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30" required
+                                                                [minLength]="1" [dropdown]="true" >
+                                                    <ng-template let-firstName pTemplate="item">
+                                                        <div class="ui-helper-clearfix">{{firstName}}</div>
+                                                    </ng-template>
+                                                </p-autoComplete>
+                                                <a matTooltip="Create Employee" style="position: absolute;right: -20px;top: 0;"
+                                                   class=""
+                                                   [routerLink]="[
+      '/employeesmodule/employeepages/app-employee-general-information'
+    ]">
+                                                    <i class="fa fa-plus-circle fa-lg"></i>
+                                                </a>
+                                            <!--</div>-->
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
                         </div>
                     </div>
                                 <div class="clear"></div>
@@ -37,393 +54,467 @@
                                 <div class="col-sm-4 blocks3">
 
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Customer Name</label>
-                                        <div class="col-sm-7">
-                                            <div class="inner-addon right-addon inline-block">
-                                                <p-autoComplete sstyle="font-size: 1px" [(ngModel)]="sourcereceving.name" (onSelect)="customerNameId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30"
-                                                                [minLength]="1" [dropdown]="true">
-                                                    <ng-template let-name pTemplate="item">
-                                                        <div class="ui-helper-clearfix">{{name}}</div>
-                                                    </ng-template>
-                                                </p-autoComplete>
-                                                <!--<div *ngIf="disableSaveCusName" class="clr-red">Entry Already Exists</div>-->
-                                            </div>
+                                        <label class="control-label col-sm-4">Customer Name<strong class="clr-red">*</strong></label>
+                                        <div class="col-sm-7 add-icon-inline-right">
+
+                                            <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcereceving.name" (onSelect)="customerNameId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30" required
+                                                            [minLength]="1" [dropdown]="true">
+                                                <ng-template let-name pTemplate="item">
+                                                    <div class="ui-helper-clearfix">{{name}}</div>
+                                                </ng-template>
+                                            </p-autoComplete>
+                                            <a matTooltip="Create Customer" style="position: absolute;right: -20px;top: 0;"
+                                     class=""
+                                     [routerLink]="[
+      '/customersmodule/customerpages/app-customer-create'
+    ]">
+                                      <i class="fa fa-plus-circle fa-lg"></i>
+                                  </a>
+                                            <!--<div *ngIf="disableSaveCusName" class="clr-red">Entry Already Exists</div>-->
+
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Customer Code</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.customerCode" readonly>
+                                            <label class="control-label col-sm-4">Customer Code<strong class="clr-red">*</strong></label>
+                                            <div class="col-sm-7  add-icon-inline-right">
+                                                <p-autoComplete class="pautocomp-cstm" sstyle="font-size: 1px"
+                                                                name="customerCode"
+                                                                [(ngModel)]="sourcereceving.customerCode" [suggestions]="custcodes"
+                                                                field="customerCode"
+                                                                (completeMethod)="filterCodes($event)" [size]="30" #customerCode="ngModel"
+                                                                [minLength]="1" [dropdown]="true" required>
+
+                                                </p-autoComplete>
+                                                <a matTooltip="Create Customer" style="position: absolute;right: -20px;top: 0;"
+                                     class=""
+                                     [routerLink]="[
+      '/customersmodule/customerpages/app-customer-create'
+    ]">
+                                      <i class="fa fa-plus-circle fa-lg"></i>
+                                  </a>
+                                                <!--<input sstyle="font-size: 1px" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.customerCode" readonly>-->
                                             </div>
                                         </div>
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">RECEIVING NUM</label>
                                         <div class="col-sm-7">
-                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.receivingCustomerNumber" readonly>
+                                            <input sstyle="font-size: 1px" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.receivingCustomerNumber" readonly>
                                         </div>
                                     </div>
 
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Ref</label>
+                                        <label class="control-label col-sm-4">Ref<strong class="clr-red">*</strong></label>
                                         <div class="col-sm-7">
                                             <div class="inner-addon right-addon inline-block">
-                                                <i class="fa fa-search"></i>
-                                                <input type="text" class="form-control numberids ui-autocomplete-input" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.customerReference">
+                                                <!--<i class="fa fa-search"></i>-->
+                                                <!--<input sstyle="font-size: 1px" type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.customerReference">-->
+                                                <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcereceving.customerReference"  [ngModelOptions]="{standalone: true}" [suggestions]="customerReferenceNames" (completeMethod)="filterReferenceNames($event)" [size]="30"
+                                                                [minLength]="1" [dropdown]="true" required>
+                                                    <ng-template let-name pTemplate="item">
+                                                        <div class="ui-helper-clearfix">{{name}}</div>
+                                                    </ng-template>
+                                                </p-autoComplete>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Contact</label>
+                                        <label class="control-label col-sm-4">Contact<strong class="clr-red">*</strong></label>
                                         <div class="col-sm-7">
                                            
-                                            <select [(ngModel)]="sourcereceving.customerContactId" [ngModelOptions]="{standalone: true}" (change)="customerContactChange(sourcereceving.customerContactId)">
+                                            <select style="border-radius:5px;" sstyle="font-size: 1px" [(ngModel)]="sourcereceving.customerContactId" [ngModelOptions]="{standalone: true}" (change)="customerContactChange(sourcereceving.customerContactId)" required>
                                                     <option>--Select</option>
                                                     <option *ngFor="let contact of customerContactList" [ngValue]="contact.contactId">{{contact.contactTitle}}</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Contact Phone</label>
+                                        <label class="control-label col-sm-4">Contact Phone<strong class="clr-red">*</strong></label>
                                         <div class="col-sm-7">
-                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.workPhone">
+                                            <input sstyle="font-size: 1px" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.workPhone" required>
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-12 input-icon1">
-                                        <label class="control-label col-sm-4">PN </label>
-                                        <p-autoComplete [(ngModel)]="sourcereceving.partNumber" (onSelect)="partnmId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
-                                                        [minLength]="1" [dropdown]="true">
-                                            <ng-template let-partName pTemplate="part">
-                                                <div class="ui-helper-clearfix">{{partName}}</div>
-                                            </ng-template>
-                                        </p-autoComplete>
-                                    </div>
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">PN Description</label>
-                                        <div class="col-sm-7">
-                                            <input class="form-control" [disabled]="true" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.partDescription">
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4">Manufacturer</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" [disabled]="true" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.manufacturer">
-                                            </div>
-                                        </div>
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Change PN </label>
-                                        <p-autoComplete [(ngModel)]="sourcereceving.changePartNumber" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
-                                                        [minLength]="1" [dropdown]="true">
-                                            <ng-template let-partName1 pTemplate="part">
-                                                <div class="ui-helper-clearfix">{{partName1}}</div>
-                                            </ng-template>
-                                        </p-autoComplete>
-                                    </div>
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Serialized</label>
-                                        <div class="col-sm-7">
-                                            <input class="form-control serialized-checkbox" [disabled]="true" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.isSerialized">
-                                        </div>
+                                        <label class="control-label col-sm-4">PN<strong class="clr-red">*</strong> </label>
+                                        <div class="col-sm-7 add-icon-inline-right">
+                                            <!--<div class="inner-addon right-addon inline-block">-->
 
-                                        <div *ngIf="sourcereceving.isSerialized" class="serialized-block">
-                                            <hr>
+                                                <p-autoComplete class="pautocomp-cstm" sstyle="font-size: 1px" [(ngModel)]="sourcereceving.partNumber" (onSelect)="partnmId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
+                                                                [minLength]="1" [dropdown]="true" required>
+                                                    <ng-template let-partName pTemplate="part">
+                                                        <div class="ui-helper-clearfix">{{partName}}</div>
+                                                    </ng-template>
+                                                </p-autoComplete>
+                                                <a matTooltip="Create Item master" style="position: absolute;right: -20px;top: 0;"
+                                                   class=""
+                                                   [routerLink]="[
+      '/itemmastersmodule/itemmasterpages/app-item-master-stock'
+    ]">
+                                                    <i class="fa fa-plus-circle fa-lg"></i>
+                                                </a>
+                                            <!--</div>-->
+                                            </div>
+                                            </div>
                                             <div class="form-group col-sm-12">
-                                                <label class="control-label col-sm-4">Serial Number </label>
+                                                <label class="control-label col-sm-4">PN Description</label>
                                                 <div class="col-sm-7">
-                                                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.serialNumber">
+                                                    <input class="form-control" [disabled]="true" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.partDescription">
                                                 </div>
                                             </div>
                                             <div class="form-group col-sm-12">
-                                                <label class="control-label col-sm-4">Cert By</label>
+                                                <label class="control-label col-sm-4">Manufacturer</label>
                                                 <div class="col-sm-7">
-                                                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.certifiedBy">
+                                                    <input class="form-control" [disabled]="true" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.manufacturer">
                                                 </div>
                                             </div>
                                             <div class="form-group col-sm-12">
-                                                <label class="control-label col-sm-4">Tag Date</label>
-                                                <div class="col-sm-7">
-                                                    <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.tagDate"></p-calendar>
-                                                    <!--<input class="form-control datepicker hasDatepicker" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.tagDate">-->
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label col-sm-4">Tag Type</label>
-                                                <div class="col-sm-7">
-                                                    <input type="text" class="form-control numberids ui-autocomplete-input" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.tagType">
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label col-sm-4">Parts Cert Num</label>
-                                                <div class="col-sm-7">
-                                                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.partCertificationNumber">
-                                                </div>
-                                            </div>
-                                            <div class="clear"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4 blocks3">
+                                                <label class="control-label col-sm-4">Revised PN </label>
+                                                <div class="col-sm-7 add-icon-inline-right">
+                                                    <!--<div class="inner-addon right-addon inline-block">-->
 
-
-                                    <div class="clear"></div>
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">QTY</label>
-                                        <div class="col-sm-7">
-                                            <input class="form-control qty-input" *ngIf="showNormalQuantity" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.quantity">
-                                            <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.quantity">
-                                            <input class="form-control qty-input" *ngIf="showFreeQuantity" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.quantity">
-
-                                            <!--<input class="form-control" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.quantity">-->
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Condtion</label>
-                                        <div class="col-sm-7">
-                                            <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.conditionCodeId">
-                                                <option *ngFor="let condition of allConditionInfo" [ngValue]="condition.conditionCodeId">{{condition.description}}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Site <strong class="clr-red">*</strong></label>
-                                        <div class="col-sm-7">
-
-                                            <select [(ngModel)]="sourcereceving.siteId" [ngModelOptions]="{standalone: true}" (change)="siteValueChange($event.target.value)">
-                                                <option>--Select</option>
-                                                <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
-                                            </select>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Warehouse</label>
-                                        <div class="col-sm-7">
-                                            <select [(ngModel)]="sourcereceving.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(sourcereceving.warehouseId)">
-                                                <option>--Select</option>
-                                                <option *ngFor="let site of allWareHouses" [ngValue]="site.warehouseId">{{site.warehouseName}}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Location</label>
-                                        <div class="col-sm-7">
-                                            <select [(ngModel)]="sourcereceving.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(sourcereceving.locationId)">
-                                                <option>--Select</option>
-                                                <option *ngFor="let site of allLocations" [ngValue]="site.locationId">{{site.name}}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Shelf</label>
-                                        <div class="col-sm-7">
-                                            <select [(ngModel)]="sourcereceving.shelfId" [ngModelOptions]="{standalone: true}" (change)="shelfValueChange(sourcereceving.shelfId)">
-                                                <option>--Select</option>
-                                                <option *ngFor="let site of allShelfs" [ngValue]="site.shelfId">{{site.name}}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Bin</label>
-                                        <div class="col-sm-7">
-                                            <select [(ngModel)]="sourcereceving.binId" [ngModelOptions]="{standalone: true}" (change)="binValueSelect(sourcereceving.binId)">
-                                                <option>--Select</option>
-                                                <option *ngFor="let site of allBins" [ngValue]="site.binId">{{site.name}}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Owner</label>
-                                        <p-autoComplete sstyle="font-size: 1px" [(ngModel)]="sourcereceving.owner" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30"
-                                                        [minLength]="1" [dropdown]="true">
-                                            <ng-template let-name pTemplate="item">
-                                                <div class="ui-helper-clearfix">{{name}}</div>
-                                            </ng-template>
-                                        </p-autoComplete>
-                                    </div>
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Customer Stock</label>
-                                        <div class="col-sm-7">
-                                            <input class="" type="checkbox" id="" checked="checked" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.isCustomerStock">
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4" for="obtainFrom">Tracable to</label>
-                                        <div class="col-sm-7">
-                                            <select id="obtainFrom" [(ngModel)]="sourcereceving.traceableToType" [ngModelOptions]="{standalone: true}" class="form-control">
-
-                                                <option [value]="1">Customer</option>
-                                                <option [value]="2">Other </option>
-                                                <option [value]="3">Vendor</option>
-                                                <option [value]="4">Company</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4"></label>
-                                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.traceableToType == 1">
-                                                <select [(ngModel)]="sourcereceving.traceableToCustomerId" [ngModelOptions]="{standalone: true}">
-                                                    <option *ngFor="let customer of allCustomer" [ngValue]="customer.customerId">{{customer.name}}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4"></label>
-                                            <div class="col-sm-7" *ngIf="sourcereceving.traceableToType == 2">
-                                                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.traceableToOther">
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4"></label>
-                                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.traceableToType == 3">
-                                                <select [(ngModel)]="sourcereceving.traceableToVendorId" [ngModelOptions]="{standalone: true}">
-                                                    <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorId">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4"></label>
-                                            <div lass="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.traceableToType == 4">
-                                                <select [(ngModel)]="sourcereceving.traceableToCompanyId" [ngModelOptions]="{standalone: true}">
-                                                    <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4 blocks3">
-
-
-
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Obtain From</label>
-                                        <div class="col-sm-7">
-                                            <select [(ngModel)]="sourcereceving.obtainFromType" [ngModelOptions]="{standalone: true}" class="form-control">
-                                                <option>--Select--</option>
-                                                <option value="1">Customer</option>
-                                                <option value="2">Other </option>
-                                                <option value="3">Vendor</option>
-                                                <option value="4">Company</option>
-                                            </select>
-                                        </div>
-                                        <label class="control-label col-sm-4"></label>
-                                        <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.obtainFromType == 1">
-                                            <select [(ngModel)]="sourcereceving.obtainFromCustomerId" [ngModelOptions]="{standalone: true}">
-                                                <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-7" *ngIf="sourcereceving.obtainFromType == 2">
-                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.obtainFromOther">
-                                        </div>
-                                        <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.obtainFromType == 3">
-                                            <select [(ngModel)]="sourcereceving.obtainFromVendorId" [ngModelOptions]="{standalone: true}">
-                                                <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option>
-                                            </select>
-                                        </div>
-                                        <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.obtainFromType == 4">
-                                                <select [(ngModel)]="sourcereceving.obtainFromCompanyId" [ngModelOptions]="{standalone: true}">
-                                                        <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-                                                </select>
-                                            </div>
-                                    </div>
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">MFG Date</label>
-                                        <div class="col-sm-1">
-                                            <input [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.isMFGDate" type="checkbox">
-                                            <div *ngIf="sourcereceving.isMFGDate">
-                                                <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.manufacturingDate"></p-calendar>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">MFG Trace </label>
-                                        <div class="col-sm-7">
-                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.manufacturingTrace">
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">MFG Lot </label>
-                                        <div class="col-sm-7">
-                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.manufacturingLotNumber">
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Exp Date</label>
-                                        <div class="col-sm-1">
-                                            <input class="" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.isExpirationDate" id="expdate-input">
-                                        </div>
-                                        <div *ngIf="sourcereceving.isExpirationDate">
-                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.expirationDate "></p-calendar>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-sm-12">
-                                        <label class="control-label col-sm-4">Time Life</label>
-                                        <div class="col-sm-7">
-                                            <input class="" type="checkbox" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.isTimeLife">
-                                        </div>
-                                    </div>
-                                    <div *ngIf="this.sourcereceving.isTimeLife" class="timelife-block">
-                                            <hr>
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label col-sm-4">Date</label>
-                                                <div class="col-sm-7">
-                                                    <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.timeLifeDate"></p-calendar>
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label col-sm-4">Origin</label>
-                                                <div class="col-sm-7">
-                                                    <input class="" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.timeLifeOrigin ">
-                                                </div>
-                                            </div>
-                                            <div class="clear"></div>
-                                        </div>
-
-                                        <div class="form-group col-sm-12">
-                                                <div class="col-sm-4">
+                                                        <p-autoComplete class="pautocomp-cstm" sstyle="font-size: 1px" [(ngModel)]="sourcereceving.changePartNumber" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
+                                                                        [minLength]="1" [dropdown]="true">
+                                                            <ng-template let-partName1 pTemplate="part">
+                                                                <div class="ui-helper-clearfix">{{partName1}}</div>
+                                                            </ng-template>
+                                                        </p-autoComplete>
+                                                        <a matTooltip="Create Item master" style="position: absolute;right: -20px;top: 0;"
+                                                           class=""
+                                                           [routerLink]="[
+      '/itemmastersmodule/itemmasterpages/app-item-master-stock'
+    ]">
+                                                            <i class="fa fa-plus-circle fa-lg"></i>
+                                                        </a>
+                                                    <!--</div>-->
                                                     </div>
-                                                    <div class="col-sm-7">
-                                                <div class="card" style="margin-top: 20px;">
-                                                        <div class="card-header" style="padding: 10px 12px;">
-                                                            <h5 style="margin-bottom: 0; font-size: 12px;">Management Structure <span class="clr-red">*</span></h5>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Serialized</label>
+                                                        <div class="col-sm-7">
+                                                            <input class="form-control serialized-checkbox" [disabled]="true" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.isSerialized">
                                                         </div>
-                                                        <div class="card-body" style="padding: 12px 12px 4px;">
-                                                            <div class="form-group">
-                                                                <select class="form-control" name="primaryCompany" [(ngModel)]="sourcereceving.companyId" 
-                                                                (change)="getBUList(sourcereceving.companyId)" #mCompanyName required>
-                                                                    <option value="0">Select Company</option>
-                                                    <option *ngFor="let name of maincompanylist" [ngValue]="name.managementStructureId">{{name.code}}</option>
-                                                                </select>
-                                                                <div *ngIf="mCompanyName.invalid && (mCompanyName.dirty || mCompanyName.touched)" class="alert alert-danger alert-danger-cstm">
-                                                                        <div *ngIf="mCompanyName.errors.required">
-                                                                            <small> Company Name is required </small>
-                                                                        </div>
+
+                                                        <div *ngIf="sourcereceving.isSerialized" class="serialized-block">
+                                                            
+                                                            <div class="form-group col-sm-12">
+                                                                <label class="control-label col-sm-4">Serial Number </label>
+                                                                <div class="col-sm-7">
+                                                                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.serialNumber">
                                                                 </div>
-                            
                                                             </div>
-                                                            <div class="form-group">
-                                                                <select [(ngModel)]="sourcereceving.buId" name="primaryBU" (change)="getDivisionlist(sourcereceving.buId)" class="form-control">
-                                                                    <option value="0">Select BU</option>
-                                                                    <option *ngFor="let name of bulist" [ngValue]="name.managementStructureId">{{name.code}}</option>
-                                                                </select>
+                                                            <div class="form-group col-sm-12">
+                                                                <label class="control-label col-sm-4">Cert By</label>
+                                                                <div class="col-sm-7">
+                                                                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.certifiedBy">
+                                                                </div>
                                                             </div>
-                                                            <div class="form-group">
-                                                                <select class="form-control" [(ngModel)]="sourcereceving.divisionId" name="primaryDivision" (change)="getDepartmentlist(sourcereceving.divisionId)">
-                                                                    <option value="0">Select Division</option>
-                                                                    <option *ngFor="let name of divisionlist" [ngValue]="name.managementStructureId">{{name.code}}</option>
-                                                                </select>
+                                                            <div class="form-group col-sm-12">
+                                                                <label class="control-label col-sm-4">Tag Date</label>
+                                                                <div class="col-sm-7">
+                                                                    <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.tagDate"></p-calendar>
+                                                                    <!--<input class="form-control datepicker hasDatepicker" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.tagDate">-->
+                                                                </div>
                                                             </div>
-                                                            <div class="form-group">
-                                                                <select class="form-control" [(ngModel)]="sourcereceving.departmentId" name="primaryDept" (change)="getDepartmentId(sourcereceving.departmentId)">
-                                                                    <option value="0">Select Dept</option>
-                                                                    <option *ngFor="let name of departmentList" [ngValue]="name.managementStructureId">{{name.code}}</option>
-                                                                </select>
+                                                            <div class="form-group col-sm-12">
+                                                                <label class="control-label col-sm-4">Tag Type</label>
+                                                                <div class="col-sm-7">
+                                                                    <input type="text" class="form-control numberids ui-autocomplete-input" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.tagType">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-sm-12">
+                                                                <label class="control-label col-sm-4">Parts Cert Num</label>
+                                                                <div class="col-sm-7">
+                                                                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.partCertificationNumber">
+                                                                </div>
+                                                            </div>
+                                                            <div class="clear"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4 blocks3">
+
+
+                                                    <div class="clear"></div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4" *ngIf="showNormalQuantity||showRestrictQuantity||showFreeQuantity">QTY</label>
+                                                        <div class="col-sm-7">
+                                                            <input class="form-control qty-input" *ngIf="showNormalQuantity" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.quantity">
+                                                            <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.quantity">
+                                                            <input class="form-control qty-input" *ngIf="showFreeQuantity" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.quantity">
+
+                                                            <!--<input class="form-control" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.quantity">-->
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Condtion<strong class="clr-red">*</strong></label>
+                                                        <div class="col-sm-7">
+                                                            <select style="border-radius:5px;" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.conditionCodeId" required>
+                                                                <option *ngFor="let condition of allConditionInfo" [ngValue]="condition.conditionCodeId">{{condition.description}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Site <strong class="clr-red">*</strong></label>
+                                                        <div class="col-sm-7">
+
+                                                            <select required style="border-radius:5px;" [(ngModel)]="sourcereceving.siteId" [ngModelOptions]="{standalone: true}" (change)="siteValueChange($event.target.value)">
+                                                                <option>--Select</option>
+                                                                <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                                            </select>
+                                                            <a matTooltip="Create Site" style="position: absolute;right: -20px;top: 0;"
+                                                               class=""
+                                                               [routerLink]="[
+                                                 '/singlepages/singlepages/app-site'
+                                                         ]">
+                                                                <i class="fa fa-plus-circle fa-lg"></i>
+                                                            </a>
+
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Warehouse <strong class="clr-red">*</strong></label>
+                                                        <div class="col-sm-7">
+                                                            <select required style="border-radius:5px;" [(ngModel)]="sourcereceving.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(sourcereceving.warehouseId)">
+                                                                <option>--Select</option>
+                                                                <option *ngFor="let site of allWareHouses" [ngValue]="site.warehouseId">{{site.warehouseName}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Location<strong class="clr-red">*</strong></label>
+                                                        <div class="col-sm-7">
+                                                            <select required style="border-radius:5px;" [(ngModel)]="sourcereceving.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(sourcereceving.locationId)">
+                                                                <option>--Select</option>
+                                                                <option *ngFor="let site of allLocations" [ngValue]="site.locationId">{{site.name}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Shelf</label>
+                                                        <div class="col-sm-7">
+                                                            <select style="border-radius:5px;" [(ngModel)]="sourcereceving.shelfId" [ngModelOptions]="{standalone: true}" (change)="shelfValueChange(sourcereceving.shelfId)">
+                                                                <option>--Select</option>
+                                                                <option *ngFor="let site of allShelfs" [ngValue]="site.shelfId">{{site.name}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Bin</label>
+                                                        <div class="col-sm-7">
+                                                            <select style="border-radius:5px;" [(ngModel)]="sourcereceving.binId" [ngModelOptions]="{standalone: true}" (change)="binValueSelect(sourcereceving.binId)">
+                                                                <option>--Select</option>
+                                                                <option *ngFor="let site of allBins" [ngValue]="site.binId">{{site.name}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-sm-12">
+                                                        <label class="control-label col-sm-4">Owner</label>
+
+                                                        <div class="col-sm-7 add-icon-inline-right">
+                                                            <!--<div class="inner-addon right-addon inline-block add-icon-inline-right">-->
+
+                                                                <p-autoComplete class="pautocomp-cstm" sstyle="font-size: 1px" [(ngModel)]="sourcereceving.owner" [ngModelOptions]="{standalone: true}" [suggestions]="customerNames" (completeMethod)="filterNames($event)" [size]="30"
+                                                                                [minLength]="1" [dropdown]="true">
+                                                                    <ng-template let-name pTemplate="item">
+                                                                        <div class="ui-helper-clearfix">{{name}}</div>
+                                                                    </ng-template>
+                                                                </p-autoComplete>
+                                                                <a matTooltip="Create Customer" style="position: absolute;right: -20px;top: 0;"
+                                                                   class=""
+                                                                   [routerLink]="[
+      '/customersmodule/customerpages/app-customer-create'
+    ]">
+                                                                    <i class="fa fa-plus-circle fa-lg"></i>
+                                                                </a>
+                                                            <!--</div>-->
+                                                            </div>
+                                                        </div>
+                                                            <div class="form-group col-sm-12">
+                                                                <label class="control-label col-sm-4">Customer Stock</label>
+                                                                <div class="col-sm-7">
+                                                                    <input class="" type="checkbox" id="" checked="checked" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.isCustomerStock">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-sm-12">
+                                                                <label class="control-label col-sm-4" for="obtainFrom">Tracable to</label>
+                                                                <div class="col-sm-7">
+                                                                    <select style="border-radius:5px;" id="obtainFrom" [(ngModel)]="sourcereceving.traceableToType" [ngModelOptions]="{standalone: true}" class="form-control">
+
+                                                                        <option [value]="1">Customer</option>
+                                                                        <option [value]="2">Other </option>
+                                                                        <option [value]="3">Vendor</option>
+                                                                        <option [value]="4">Company</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="form-group col-sm-12">
+                                                                    <label class="control-label col-sm-4"></label>
+                                                                    <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.traceableToType == 1">
+                                                                        <select [(ngModel)]="sourcereceving.traceableToCustomerId" [ngModelOptions]="{standalone: true}">
+                                                                            <option *ngFor="let customer of allCustomer" [ngValue]="customer.customerId">{{customer.name}}</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-sm-12">
+                                                                    <label class="control-label col-sm-4"></label>
+                                                                    <div class="col-sm-7" *ngIf="sourcereceving.traceableToType == 2">
+                                                                        <input style="border-radius:5px;" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.traceableToOther">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-sm-12">
+                                                                    <label class="control-label col-sm-4"></label>
+                                                                    <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.traceableToType == 3">
+                                                                        <select [(ngModel)]="sourcereceving.traceableToVendorId" [ngModelOptions]="{standalone: true}">
+                                                                            <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorId">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-sm-12">
+                                                                    <label class="control-label col-sm-4"></label>
+                                                                    <div lass="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.traceableToType == 4">
+                                                                        <select [(ngModel)]="sourcereceving.traceableToCompanyId" [ngModelOptions]="{standalone: true}">
+                                                                            <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4 blocks3">
+
+
+
+                                                            <div class="form-group col-sm-12">
+                                                                <label class="control-label col-sm-4">Obtain From</label>
+                                                                <div class="col-sm-7">
+                                                                    <select style="border-radius:5px;" [(ngModel)]="sourcereceving.obtainFromType" [ngModelOptions]="{standalone: true}" class="form-control">
+                                                                        <option>--Select--</option>
+                                                                        <option value="1">Customer</option>
+                                                                        <option value="2">Other </option>
+                                                                        <option value="3">Vendor</option>
+                                                                        <option value="4">Company</option>
+                                                                    </select>
+                                                                </div>
+                                                                <label class="control-label col-sm-4"></label>
+                                                                <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.obtainFromType == 1">
+                                                                    <select [(ngModel)]="sourcereceving.obtainFromCustomerId" [ngModelOptions]="{standalone: true}">
+                                                                        <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-sm-7" *ngIf="sourcereceving.obtainFromType == 2">
+                                                                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.obtainFromOther">
+                                                                </div>
+                                                                <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.obtainFromType == 3">
+                                                                    <select [(ngModel)]="sourcereceving.obtainFromVendorId" [ngModelOptions]="{standalone: true}">
+                                                                        <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.obtainFromType == 4">
+                                                                    <select [(ngModel)]="sourcereceving.obtainFromCompanyId" [ngModelOptions]="{standalone: true}">
+                                                                        <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-sm-12">
+                                                                <label class="control-label col-sm-4">MFG Date</label>
+                                                                <div class="col-sm-7">
+                                                                    <input [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.isMFGDate" type="checkbox">
+                                                                    <div *ngIf="sourcereceving.isMFGDate">
+                                                                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.manufacturingDate"></p-calendar>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-sm-12">
+                                                                <label class="control-label col-sm-4">MFG Trace </label>
+                                                                <div class="col-sm-7">
+                                                                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.manufacturingTrace">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-sm-12">
+                                                                <label class="control-label col-sm-4">MFG Lot </label>
+                                                                <div class="col-sm-7">
+                                                                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.manufacturingLotNumber">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-sm-12">
+                                                                <label class="control-label col-sm-4">Exp Date</label>
+                                                                <div class="col-sm-7">
+                                                                    <input class="" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.isExpirationDate" id="expdate-input">
+
+                                                                    <div *ngIf="sourcereceving.isExpirationDate">
+                                                                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.expirationDate "></p-calendar>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-sm-12">
+                                                                <label class="control-label col-sm-4">Time Life</label>
+                                                                <div class="col-sm-7">
+                                                                    <input class="" type="checkbox" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.isTimeLife">
+                                                                </div>
+                                                            </div>
+                                                            <div *ngIf="this.sourcereceving.isTimeLife" class="timelife-block">
+                                                               
+                                                                <div class="form-group col-sm-12">
+                                                                    <label class="control-label col-sm-4">Date</label>
+                                                                    <div class="col-sm-7">
+                                                                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.timeLifeDate"></p-calendar>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-sm-12">
+                                                                    <label class="control-label col-sm-4">Origin</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input class="" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.timeLifeOrigin ">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="clear"></div>
+                                                            </div>
+
+                                                            <div class="form-group col-sm-12">
+                                                                <div class="col-sm-3">
+                                                                </div>
+                                                                <div class="col-sm-8">
+                                                                    <div class="card" style="margin-top: 20px;">
+                                                                        <div class="card-header" style="padding: 10px 12px;">
+                                                                            <h5 style="margin-bottom: 0; font-size: 12px;">Management Structure <span class="clr-red">*</span></h5>
+                                                                        </div>
+                                                                        <div class="card-body" style="padding: 12px 12px 4px;">
+                                                                            <div class="form-group">
+                                                                                <select style="border-radius:5px;" class="form-control" name="primaryCompany" [(ngModel)]="sourcereceving.companyId"
+                                                                                        (change)="getBUList(sourcereceving.companyId)" #mCompanyName required>
+                                                                                    <option value="0">Select Company</option>
+                                                                                    <option *ngFor="let name of maincompanylist" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                                                                </select>
+                                                                                <div *ngIf="mCompanyName.invalid && (mCompanyName.dirty || mCompanyName.touched)" class="alert alert-danger alert-danger-cstm">
+                                                                                    <div *ngIf="mCompanyName.errors.required">
+                                                                                        <small> Company Name is required </small>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <select style="border-radius:5px;" [(ngModel)]="sourcereceving.buId" name="primaryBU" (change)="getDivisionlist(sourcereceving.buId)" class="form-control">
+                                                                                    <option value="0">Select BU</option>
+                                                                                    <option *ngFor="let name of bulist" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <select style="border-radius:5px;" class="form-control" [(ngModel)]="sourcereceving.divisionId" name="primaryDivision" (change)="getDepartmentlist(sourcereceving.divisionId)">
+                                                                                    <option value="0">Select Division</option>
+                                                                                    <option *ngFor="let name of divisionlist" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <select style="border-radius:5px;" class="form-control" [(ngModel)]="sourcereceving.departmentId" name="primaryDept" (change)="getDepartmentId(sourcereceving.departmentId)">
+                                                                                    <option value="0">Select Dept</option>
+                                                                                    <option *ngFor="let name of departmentList" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    </div>
-
-                                        </div>
-                                </div>
-                            </div>
 
                              
                                         <div class="clear"></div>
@@ -500,7 +591,7 @@
                                         <div class="col-sm-6">
                                         </div>
                                         <div class="col-sm-6">
-                                            <button class="btn btn-primary-cstm float-right" pButton type="button" (click)="editItemAndCloseModel()" icon="pi pi-angle-right" iconPos="right" label="Submit" style="padding: 0 !important;"></button>
+                                            <button class="btn btn-primary-cstm float-right" pButton type="button" (click)="editItemAndCloseModel()"   [disabled]="!addcustomerwork.valid"  label="Save" style="padding: 0 !important;"></button>
                                         </div>
                                     </div>
 
@@ -511,8 +602,7 @@
                 </form>
             </div>
             </div>
-                <div class="pull-right"> © 2018 <a routerLink="/">PAS</a> </div>
-            </div>
+              </div>
 
 
         </div>

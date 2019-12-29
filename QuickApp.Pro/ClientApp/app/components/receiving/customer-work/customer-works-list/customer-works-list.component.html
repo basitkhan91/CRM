@@ -76,7 +76,7 @@
     </div>
 </div>
 
-<ng-template #content let-c="close" let-d="dismiss">
+<ng-template #content let-c="close" let-d="dismiss" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title">Are You Sure Want to Delete?</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
@@ -91,12 +91,7 @@
     </div>
 </ng-template>
 
-
-
-
-      
-
-<ng-template #view>
+<ng-template #view data-backdrop="static">
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" (click)="dismissModel()">×</button>
@@ -173,54 +168,9 @@
                     </div>
                 </div>
             </div>
-            <!--<div id="" class="table-responsive default-bg clear">
-                <p class="lead">Receiving Work Order</p>
-                <div class="panel-body">
-                    <div class="col-sm-6">
-                        <p><span class="label"><b>WO Number : </b></span><span class="value">WO1251</span></p>
-                        <p><span class="label"><b>Open Date : </b></span><span class="value">02/08/2018</span></p>
-                        <p><span class="label"><b>Customer Request Date : </b></span><span class="value">02/25/2018</span></p>
-                        <p><span class="label"><b>Promise Date : </b></span><span class="value">02/30/2018</span></p>
-                        <p><span class="label"><b>Est Completion Date : </b></span><span class="value">02/25/2018</span></p>
-                    </div>
-                    <div class="col-sm-6">
-                        <p><span class="label"><b>Work Scope : </b></span><span class="value">OVH</span></p>
-                        <p><span class="label"><b>WO Workflow ID : </b></span><span class="value">ACC415</span></p>
-                        <p><span class="label"><b>CMM ID : </b></span><span class="value">CMM12345</span></p>
-                        <p><span class="label"><b>Priority : </b></span><span class="value">Critical</span></p>
-                        <p><span class="label"><b>Status Code : </b></span><span class="value">60</span></p>
-                    </div>
-                </div>
-            </div>-->
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-info" data-dismiss="modal" (click)="dismissModel()">Close</button>
         </div>
     </div>
 </ng-template>
-<!--<ng-template #view class="modal fade " id="view" role="dialog">
-
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-            <h4 class="modal-title">ATA Main Details</h4>
-        </div>
-        <div class="modal-body viewform">
-            <div class="col-sm-6">
-                <p><span class="label"><b>ChangePartNumber: </b></span><span class="value">{{changePartNumber}}</span></p>
-                <p><span class="label"><b>PartCertificationNumber: </b></span><span class="value">{{partCertificationNumber}}</span></p>
-                <p><span class="label"><b>Quantity: </b></span><span class="value">{{quantity}}</span></p>
-                <p><span class="label"><b>Owner: </b></span><span class="value">{{owner}}</span></p>
-                <p><span class="label"><b>Created By: </b></span><span class="value">{{createdBy}}</span></p>
-
-                <p><span class="label"><b>Updated By: </b></span><span class="value">{{updatedBy}}</span></p>
-            </div>
-
-            <div class="clear"></div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
-        </div>
-    </div>
-
-</ng-template>-->

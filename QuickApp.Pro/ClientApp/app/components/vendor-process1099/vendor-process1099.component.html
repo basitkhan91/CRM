@@ -22,11 +22,6 @@
                                     <button type="button" class="btn btn-primary-cstm " matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download"
                                             iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
 
-                                    <!-- <a matTooltip="Add Vendor Classification" (click)="resetVendorClassificationForm()" data-target="#addVendorClassification" data-toggle="modal"
-                                                                   class="btn btn-success nobg btn-cstm"><span><i class="fa fa-plus"></i></span></a>
-                                    -->
-
-
                                     <div class="excel-upload  excel-upload-cstm">
 
                                         <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
@@ -40,15 +35,6 @@
 
                                          <button class="btn btn-primary-cstm" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownload()">Sample File Download</button> 
                                     </div>
-
-                                    <!-- <div class="inline-block display-flex">
-
-                                        &nbsp;&nbsp;
-                                        <a class="plusicon-cstm new-margin" pTooltip="Add Vendor Classification" tooltipPosition="right" (click)="resetVendorClassificationForm()" data-target="#addVendorClassification" data-toggle="modal">
-                                            <i class="fa fa-plus-circle fa-lg"></i>
-                                        </a>
-                                    </div> -->
-
                                 </div>
                             </ng-template>
 
@@ -76,7 +62,6 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                         }}
                                     </td>
                                     <td style="width:200px" *ngIf="selectedColumns.length> 0">
-                                        <!--<p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>-->
                                         <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                         <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                         <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
@@ -115,13 +100,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     </div>
 </div>
 
-<!--<ng-template #auditContent let-c="close" let-d="dismiss">
-    <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
-        <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
-    </div>
-</ng-template>-->
-
-<div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog">
+<div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -142,7 +121,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
 
     </div>
 </div>
-<div #addVendorProcess1099 id="addVendorProcess1099" class="modal fade" role="dialog">
+<div #addVendorProcess1099 id="addVendorProcess1099" class="modal fade" role="dialog" data-backdrop="static">
     <div class="modal-dialog">
 
         <!-- Modal content-->
@@ -206,7 +185,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
 
     </div>
 </div>
-<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog">
+<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -269,15 +248,12 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     </div>
 
 </div>
-<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog">
+<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">History of Vendor Process 1099</h4>
-                <!--<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-                    <span aria-hidden="true">&times;</span>
-                </button>-->
             </div>
             <div class="modal-body">
                 <div class="table-responsive  rro-table-cstm">

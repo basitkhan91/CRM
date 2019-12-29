@@ -18,5 +18,6 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetEmployeeUserRole(long employeeId);
         IEnumerable<object> EmpoyeeManagementStructure(List<EmployeeManagementStructure> objEmployeeManagementStructure);
         IEnumerable<object> GetEmpoyeeManagementStructure(long employeeId);
+        IEnumerable<object> GetEmployeeAuditHistoryData(long employeeId);
     }
 }

@@ -101,6 +101,9 @@ export class WorkOrderQuoteService {
     getQuoteLaborList(workOrderQuoteId) {
         return this.quoteEndPointService.getQuoteLaborList(workOrderQuoteId);
     }
+    getWorkOrderQuoteDetail(workOrderId, workFlowWorkOrderId){
+        return this.quoteEndPointService.getWorkOrderQuoteDetail(workOrderId, workFlowWorkOrderId)
+    }
 
 
 

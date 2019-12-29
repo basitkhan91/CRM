@@ -50,7 +50,7 @@ import {DropdownModule} from 'primeng/dropdown';
 
 import { CommonService } from "../services/common.service";
 import { AccountingListingCalendarComponent } from '../components/general-ledger/accounting-listing-calendar/accounting-listing-calendar.component';
-
+import { OpenCloseLedgerComponent } from '../components/general-ledger/open-close-ledger/open-close-ledger.component';
 
 @NgModule({
     imports: [
@@ -91,7 +91,8 @@ import { AccountingListingCalendarComponent } from '../components/general-ledger
         InterCompanySetupComponent,
         AccountListingComponent,
         AccountListingCreateComponent,
-        AccountingListingCalendarComponent
+        AccountingListingCalendarComponent,
+        OpenCloseLedgerComponent
     ],
     providers: [
         NodeSetupService,

@@ -19,11 +19,6 @@
                                 <div style="text-align: right; margin-left: -6px;">
                                     <p-multiSelect [options]="cols" [maxSelectedLabels]="1"  [(ngModel)]="selectedColumns" optionLabel="header" selectedItemsLabel="{0} columns selected"
                                         [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-                                    <!-- <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
-										<i class="fa fa-search"></i>
-										<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')"
-										 placeholder="Global Filter">
-									</div> -->
                                     <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
                                         iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
@@ -98,8 +93,6 @@
                             <ng-template pTemplate="summary" id="footer">
                                 <label id="footer" class="footer">No'of records:</label>
                                 <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-                                <!-- <label id="footer" class="footer1">Pages Count:</label>
-                                <input style="width: 5%;" [(ngModel)]="totelPages" [disabled]="true" pInputText type="text" /> -->
                             </ng-template>
                         </p-table>
                     </div>
@@ -110,14 +103,14 @@
 </div>
 
 
-<ng-template #auditContent let-c="close" let-d="dismiss">
+<ng-template #auditContent let-c="close" let-d="dismiss" data-backdrop="static">
     <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
         <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
     </div>
 </ng-template>
 
 
-<ng-template #content let-c="close" let-d="dismiss">
+<ng-template #content let-c="close" let-d="dismiss" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title">Are You Sure Want to Delete?</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
@@ -137,7 +130,7 @@
 
 </ng-template>
 
-<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Default Message</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Default Message</h4>
@@ -209,7 +202,7 @@
 
 </ng-template>
 
-<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
+<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
 
         <h4 class="modal-title">History of Default Message</h4>

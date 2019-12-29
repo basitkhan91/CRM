@@ -27,15 +27,9 @@
                                         <i class="fa fa-search"></i>
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')">
                                     </div>
-                                    <button type="button" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
 
-                                    <!-- <div class="excel-upload">
-                                        <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                        <label for="upload">
-                                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above"><i class="fa fa-upload"></i></span>
-                                        </label>
-                                    </div> -->
                                 </div>
 
 
@@ -97,18 +91,6 @@
                         <div class="tab-content">
                             <div class="" id="menu4">
                                 <div class="form-group row">
-                                    <!--<div class="form-group vendor-details-heading marginr50">
-            <p class="fs10">
-                <label class="control-label text-left">Vendor Name:</label>
-                {{local?.vendorName}}
-            </p>
-        </div>
-        <div class="form-group vendor-details-heading">
-            <p class="fs10">
-                <label class="control-label text-left">Vendor Code:</label>
-                {{local?.vendorCode}}
-            </p>
-        </div>-->
                                 </div>
                                 <h5 class="heading">{{viewName}} Billing Info</h5>
                                 <div class="col-sm-6 w400 page-2blocks">
@@ -177,12 +159,6 @@
                                         </div>
 
                                     </div>
-                                    <!-- <div class="form-group col-sm-12">
-        <label class="control-label col-sm-4">&nbsp;</label>
-        <div class="checkbox col-sm-7">
-            <button type="button" class="btn btn-warning" id="vbill-map-check" (click)="getlatlng(sourceVendor.address1+sourceVendor.address2)">Check Address</button>
-        </div>
-    </div> -->
                                 </div>
                                 <div class="col-sm-6 vBill-map map page-2blocks" id="map" *ngIf="checkAddress">
                                     <p-gmap #gmap [style]="{'height':'320px'}" [options]="options" [overlays]="overlays"></p-gmap>
@@ -194,7 +170,6 @@
                                     </div>
                                 </div>
                                 <div class="clear"></div>
-                                <!--<button type="button" [validate] moduleName="app-vendor-Billing-information" requirePermission="canAdd" [disabled]="disablesave" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()">Save</button>-->
                                 <button type="button"    moduleName="app-vendor-Billing-information"  *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()">Save</button>
 
 
@@ -287,11 +262,6 @@
                     <div class="clear"></div>
                 </div>
                 <div class="form-group">
-                    <!--<div class="col-sm-6">
-                        <label class="form-check-label" for="isActive">
-                            <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
-                        </label>
-                    </div>-->
                     <div class="clear"></div>
                 </div>
 
@@ -299,22 +269,6 @@
             </div>
 
             <div class="clear"></div>
-
-
-
-            <!--<div class="form-group">
-                <label for="masterCompanyId" class="control-label">Company</label>
-                <div class="">
-                    <select name="masterCompanyId" class="form-control form-control-lg w150" required #masterCompanyId="ngModel" id="masterCompanyId" [(ngModel)]="sourceAction.masterCompanyId">
-                        <option *ngFor="let pow of allComapnies" [value]="pow.masterCompanyId">{{pow.companyName}}</option>
-                    </select>
-                </div>
-                <div *ngIf="masterCompanyId.dirty && masterCompanyId.errors?.required && masterCompanyId.errors" class="invalid-form-error-message">
-                    Master company required.
-                </div>
-                <div class="clear"></div>
-            </div>-->
-
 
             <p-table #dt [value]="allBillViaDetails" [metaKeySelection]="true" [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" [columns]="selectedBillViaColumn" selectionMode="multiple" [(selection)]="selectedBillViaColumns" [resizableColumns]="true" [reorderableColumns]="true">
 
@@ -365,14 +319,6 @@
                         </td>
 
                         <td>
-                            <!--<p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off"  [ngModelOptions]="{standalone: true}"  (onChange)="handleChangeforBillVia(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                            <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off"  [ngModelOptions]="{standalone: true}"  (onChange)="handleChangeforBillVia(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                            <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off"  [ngModelOptions]="{standalone: true}"  (onChange)="handleChangeforBillVia(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>-->
-                            <!--<p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                            <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                            <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>-->
-                            <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>-->
-
                             <button class="btn-edit" mat-icon-button (click)="openBillViaEdit(rowData)" matTooltip="edit">
                                 <mat-icon>edit</mat-icon>
                             </button>
@@ -403,47 +349,7 @@
 </ng-template>
 
 
-<!--<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
-    <div class="modal-header">
-
-        <h4 class="modal-title">History of Billing</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-
-
-    </div>
-    <div class="modal-body">
-
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>PID</th>
-                        <th>Description</th>
-                        <th>previousValue</th>
-                        <th>newValue</th>
-                        <th>Last Updated By</th>
-                        <th>Last Updated Time</th>
-                    </tr>
-                </thead>
-                <tr *ngFor="let audit of auditHisory">
-                    <td>{{audit.auditHistoryId}}</td>
-                    <td>{{audit.columnName}}</td>
-                    <td>{{audit.previousValue}}</td>
-                    <td>{{audit.newValue}}</td>
-                    <td>{{audit.updatedBy}}</td>
-                    <td>{{audit.updatedDate}}</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-    </div>
-</ng-template>-->
-<ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto">
-    <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
+<ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
 
         <h4 class="modal-title">History of Billing Information</h4>

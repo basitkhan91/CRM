@@ -46,7 +46,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Requisitioner</label>
-                            <input type="text" disabled="disabled"  class="form-control"  value="{{purchaseOrderData.requestedByText}}" />
+                            <input type="text" disabled="disabled" class="form-control" value="{{purchaseOrderData.requestedByText}}" />
                             <!--<p-autoComplete disabled="disabled" [size]="32" class="rpo-acomp-header"
                                             [minLength]="1" [dropdown]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.requestedBy">
                             </p-autoComplete>-->
@@ -251,9 +251,9 @@
                                             {{part.stockLineCount}}
                                         </td>
 
-                                        <td>{{part?.userName}}</td>
+                                        <td>{{part.quantityRejected}}</td>
                                         <td>
-                                            {{part.quantityOrdered - part.stockLineCount}}
+                                            {{part.stockLineCount == 0 ? 0 : part.quantityOrdered - part.stockLineCount}}
                                         </td>
                                         <td>{{part.stockLineCount == 0 ? 'Pending' : part.stockLineCount < part.quantityOrdered ? 'Fulfilling' : 'Received'}}</td>
                                         <td colspan="3"></td>
@@ -306,7 +306,7 @@
                                         <td>{{part?.quantityOrdered}}</td>
                                         <td>{{part?.stockLineCount}}</td>
 
-                                        <td>{{'NA'}}</td>
+                                        <td>{{part?.quantityRejected}}</td>
                                         <td>{{part.quantityOrdered - part.stockLineCount}}</td>
                                         <td>
                                             {{part.stockLineCount == 0 ? 'Pending' : part.stockLineCount < part.quantityOrdered ? 'Fulfilling' : 'Received'}}
@@ -710,7 +710,7 @@
                                                                 <p-calendar class="pas-clder" [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].expirationDate"></p-calendar>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label>Unit Cost</label>
+                                                                <label>Unit Cost<span class="clr-red">*</span></label>
                                                                 <input type="text" class="form-control" pInputText pKeyFilter="pnum" (focusout)="calculateExtendedCost($event, part)" [(ngModel)]="part.stocklineListObj[part.currentSLIndex].purchaseOrderUnitCost">
                                                             </div>
                                                             <div class="form-group">
@@ -739,6 +739,7 @@
                                                                 <label>Tag Type</label>
                                                                 <select class="form-control" required>
                                                                     <option value="0">Select</option>
+                                                                    <option *ngFor="let tagType of TagTypeList" [value]="tagType.Key">{{tagType.Value}}</option>
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">
@@ -785,7 +786,7 @@
                                                         <div class="col-md-3">
                                                             <div class="form-group">
                                                                 <label>Serial Num</label>
-                                                                <input class="form-control"  (keyup)="moveByKey($event, part)" disabled="{{part.stocklineListObj[part.currentSERIndex].serialNumberNotProvided}}" [(ngModel)]="part.stocklineListObj[part.currentSERIndex].serialNumber" type="text" pInputText [maxLength]="25">
+                                                                <input class="form-control" (keyup)="moveByKey($event, part)" disabled="{{part.stocklineListObj[part.currentSERIndex].serialNumberNotProvided}}" [(ngModel)]="part.stocklineListObj[part.currentSERIndex].serialNumber" type="text" pInputText [maxLength]="25">
                                                                 <div class="checkbox-cstm" style="margin-top: 4px">
                                                                     <label style="width: 200px;">
                                                                         <input type="checkbox" class="form-control" [(ngModel)]="part.stocklineListObj[part.currentSERIndex].serialNumberNotProvided" (click)="onSerialNumberNotProvided(part.stocklineListObj[part.currentSERIndex])">

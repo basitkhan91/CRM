@@ -46,14 +46,16 @@
                                             pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm" pTooltip="Download Selected" tooltipPosition="top"
                                             pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
-                                    <div class="excel-upload excel-upload-cstm">
-                                        <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
-                                               accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" (change)="bulkUpload($event)">
+                                    <div class="excel-upload  excel-upload-cstm">
+                                        <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
+                                               accept=".xlsx, .xls, .csv">
                                         <label for="upload">
                                             <span matTooltip="Upload Data (Excel)">
                                                 <i class="fa fa-upload"></i>
                                             </span>
                                         </label>
+                                        &nbsp; &nbsp;
+                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()" pTooltip="Download Sample File"  tooltipPosition="top">Sample File Download</button>
                                     </div>
                                 </div>
 
@@ -78,14 +80,17 @@
 
                             <!--body-->
                             <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                                <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="viewItemDetails(rowData)">
+                                <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="viewItemDetailsClick(viewClick, rowData)">
                                     <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                         {{rowData[col.field]}}
                                     </td>
                                     <td style="width:200px" *ngIf="selectedColumns.length> 0">
-                                        <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="toggleActiveStatus(rowData)" matTooltip="Toggle Status"></p-inputSwitch>
+                                        <p-inputSwitch [(ngModel)]="rowData['isActive']"
+                                                       name="isActive{{rowIndex}}" (onChange)="toggleActiveStatus(rowData)"
+                                                       [matTooltip]="rowData['isActive'] ? 'Active' : 'Inactive' ">
+                                        </p-inputSwitch>
                                         <span data-toggle="modal" data-target="#view">
-                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewItemDetails(rowData)" data-target="#view" data-toggle="modal" matTooltip="View">
+                                            <a class="btn btn-info boxed-float-btn nobg" (click)="viewItemDetails(rowData)" data-target="#view" data-toggle="modal" matTooltip="View">
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         </span>
@@ -119,7 +124,7 @@
     <!--to-do:use same modal to view, add, update, and delete-->
     <!--Modal for view only-->
 
-    <div #view *ngIf="itemDetails" class="modal fade" id="view" role="dialog">
+    <div #view *ngIf="itemDetails" class="modal fade" id="view" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -164,12 +169,6 @@
                                 <b>Residual Percentage: </b>
                             </span>
                             <span class="value">{{itemDetails.residualPercentage}}</span>
-                        </p>
-                        <p>
-                            <span class="label">
-                                <b>Residual Value: </b>
-                            </span>
-                            <span class="value">{{itemDetails.residualValue}}</span>
                         </p>
                         <p>
                             <span class="label">
@@ -262,7 +261,7 @@
     </div>
 
     <!--Step x: Modal for Edit-->
-        <div #editItem id="editItem" class="modal fade assetattributetype" role="dialog" *ngIf="currentModeOfOperation === 2 || currentModeOfOperation === 3">
+    <div #editItem id="editItem" class="modal fade assetattributetype" role="dialog" *ngIf="currentModeOfOperation === 2 || currentModeOfOperation === 3" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -286,7 +285,7 @@
                                                     [dropdown]="true" class="p-autoComplete-ctsm" [required]="true">
                                     </p-autoComplete> -->
                                     <select name="assetTypeId" [(ngModel)]="currentRow.assetTypeId" (ngModelChange)="selectedAssetType($event)" required>
-                                        <option *ngFor="let allAssetType of allAssetTypes" [ngValue]="allAssetType" >{{allAssetType.assetTypeName}}</option>
+                                        <option *ngFor="let allAssetType of allAssetTypes" [ngValue]="allAssetType">{{allAssetType.assetTypeName}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -380,7 +379,7 @@
                                 <div class="col-sm-5">
                                     <p-autoComplete field="accountName" [(ngModel)]="currentRow.acquiredGLAccountId" name="acquiredGLAccountId"
                                                     [suggestions]="filteredGLAccountList" (completeMethod)="filterGLAccount($event)"
-                                                    [forceSelection]="true" [size]="30" [minLength]="1" 
+                                                    [forceSelection]="true" [size]="30" [minLength]="1"
                                                     (ngModelChange)="onChangeSelectField($event, 'acquiredGLAccountId')"
                                                     [dropdown]="true" class="p-autoComplete-ctsm" required>
                                     </p-autoComplete>
@@ -414,7 +413,7 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-5">
-                                    <label for="assetSale" class="control-label">Asset Sale  GL Account<span class="clr-red">*</span></label>
+                                    <label for="assetSale" class="control-label">Asset Sale  GL Account<span class="clr-red"> *</span></label>
                                 </div>
                                 <div class="col-sm-5">
                                     <p-autoComplete field="accountCode" [(ngModel)]="currentRow.assetSale" name="assetSale"
@@ -426,7 +425,7 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-5">
-                                    <label for="assetWriteOff" class="control-label">Asset Write Off  GL Account<span class="clr-red">*</span></label>
+                                    <label for="assetWriteOff" class="control-label">Asset Write Off  GL Account<span class="clr-red"> *</span></label>
                                 </div>
                                 <div class="col-sm-5">
                                     <p-autoComplete field="accountCode" [(ngModel)]="currentRow.assetWriteOff" name="assetWriteOff"
@@ -438,7 +437,7 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-5">
-                                    <label for="assetWriteDown" class="control-label">Asset Write Down  GL Account<span class="clr-red">*</span></label>
+                                    <label for="assetWriteDown" class="control-label">Asset Write Down  GL Account<span class="clr-red"> *</span></label>
                                 </div>
                                 <div class="col-sm-5">
                                     <p-autoComplete field="accountCode" [(ngModel)]="currentRow.assetWriteDown" name="assetWriteDown"
@@ -462,7 +461,7 @@
                                     </p-multiSelect>
                                 </div>
                             </div>
-                        </div> 
+                        </div>
                         <div class="form-group">
                             <div class="col-sm-5">
                                 <div class="checkbox-cstm">
@@ -479,8 +478,10 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary-cstm" data-dismiss="modal" 
-                            [disabled]="AssetType.invalid || disableSave" (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();"> {{currentModeOfOperation == 3 ? 'Update' : 'Save' }}</button>
+                    <button class="btn btn-primary-cstm" data-dismiss="modal"
+                            [disabled]="AssetType.invalid || disableSave" (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();">
+                        {{currentModeOfOperation == 3 ? 'Update' : 'Save' }}
+                    </button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetFromData()">Close</button>
 
                 </div>
@@ -489,7 +490,7 @@
         </div>
     </div>
     <!--Modal for delete only-->
-    <div #delete *ngIf="currentModeOfOperation === 4" id="delete" class="modal fade" role="dialog">
+    <div #delete *ngIf="currentModeOfOperation === 4" id="delete" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -513,12 +514,12 @@
 
 
     <!--Step x: Audit modal-->
-    <div #itemHistory *ngIf="currentModeOfOperation === 5" class="modal fade" id="itemHistory" role="dialog">
+    <div #itemHistory *ngIf="currentModeOfOperation === 5" class="modal fade" id="itemHistory" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">History of {{rowName}}</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal" (click)="dismissModal()">&times;</button>
                 </div>
 
                 <div class="modal-body">
@@ -556,7 +557,6 @@
                                 <td>{{audit.assetAttributeTypeName}}</td>
                                 <td>{{audit.conventionType}}</td>
                                 <td>{{audit.residualPercentage}}</td>
-                                <td>{{audit.residualValue}}</td>
                                 <td>{{audit.assetLife}}</td>
                                 <td>{{audit.depreciationFrequencyId}}</td>
                                 <td>{{audit.acquiredGLAccountId}}</td>
@@ -580,4 +580,137 @@
         </div>
     </div>
 
+
+    <ng-template #viewClick class="modal fade " id="viewClick" role="dialog">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" (click)="dismissModel()">×</button>
+                <h4 class="modal-title">{{rowName}} Details</h4>
+            </div>
+            <div class="modal-body viewform">
+                <div class="col-sm-12">
+                    <p>
+                        <span class="label">
+                            <b>Asset Class: </b>
+                        </span>
+                        <span class="value">{{itemDetails.assetTypeName}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Name: </b>
+                        </span>
+                        <span class="value">{{itemDetails.assetAttributeTypeName}}</span>
+                    </p>
+
+                    <p>
+                        <span class="label">
+                            <b>Description: </b>
+                        </span>
+                        <span class="value">{{itemDetails.description}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Convention Type: </b>
+                        </span>
+                        <span class="value">{{itemDetails.conventionTypeName}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Depreciation Method: </b>
+                        </span>
+                        <span class="value">{{itemDetails.depreciationMethodName}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Residual Percentage: </b>
+                        </span>
+                        <span class="value">{{itemDetails.residualPercentage}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Asset Life: </b>
+                        </span>
+                        <span class="value">{{itemDetails.assetLife}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Depreciation Frequency: </b>
+                        </span>
+                        <span class="value">{{itemDetails.depreciationFrequencyName}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Acquired GL Account: </b>
+                        </span>
+                        <span class="value">{{itemDetails.acquiredGLAccountName}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Depr Expense GL Account: </b>
+                        </span>
+                        <span class="value">{{itemDetails.deprExpenseGLAccountName}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Ad Deps GL Account: </b>
+                        </span>
+                        <span class="value">{{itemDetails.adDepsGLAccountName}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Asset Sale: </b>
+                        </span>
+                        <span class="value">{{itemDetails.assetSaleName}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Asset WriteOff: </b>
+                        </span>
+                        <span class="value">{{itemDetails.assetWriteOffName}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Asset WriteDown: </b>
+                        </span>
+                        <span class="value">{{itemDetails.assetWriteDownName}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Active: </b>
+                        </span>
+                        <span class="value">{{itemDetails.isActive ? 'true' : 'false'}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Created By: </b>
+                        </span>
+                        <span class="value">{{itemDetails.createdBy}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Created Date: </b>
+                        </span>
+                        <span class="value">{{itemDetails.createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Last Updated By: </b>
+                        </span>
+                        <span class="value">{{itemDetails.updatedBy}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Last Updated Date: </b>
+                        </span>
+                        <span class="value">{{itemDetails.updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
+                    </p>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+            </div>
+        </div>
+    </ng-template>
 </div>

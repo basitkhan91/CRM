@@ -544,7 +544,7 @@ export class BinComponent {
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.auditHisory = auditHistory;
-		this.modal = this.modalService.open(content, { size: 'sm' });
+		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -591,7 +591,7 @@ export class BinComponent {
 		this.postalCode = "";
 		this.stateOrProvince ="";
 		this.name = "";
-		this.modal = this.modalService.open(content, { size: 'lg' });
+		this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -603,7 +603,7 @@ export class BinComponent {
 		this.isDeleteMode = true;
 		this.sourceBin = row;
 		this.binName = row.name;
-		this.modal = this.modalService.open(content, { size: 'sm' });
+		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -643,7 +643,7 @@ export class BinComponent {
 			this.selectedNodeTest = this.gridData1;
 		})
 
-		this.modal = this.modalService.open(content, { size: 'lg' });
+		this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -684,7 +684,7 @@ export class BinComponent {
 		this.createdDate = row.createdDate;
 		this.updatedDate = row.updatedDate;
 		this.loadMasterCompanies();
-		this.modal = this.modalService.open(content, { size: 'lg' });
+		this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -692,7 +692,7 @@ export class BinComponent {
 
 	//OpenHelpText
 	openHelpText(content) {
-		this.modal = this.modalService.open(content, { size: 'sm' });
+		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -817,7 +817,7 @@ export class BinComponent {
 
     showAuditPopup(template, id): void {
         this.auditBin(id);
-        this.modal = this.modalService.open(template, { size: 'sm' });
+        this.modal = this.modalService.open(template, { size: 'sm', backdrop: 'static', keyboard: false });
     }
 
     auditBin(binId: number): void {

@@ -385,12 +385,12 @@
                                 <td><input type="number" [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" [(ngModel)]="partList.extendedCost" name="extendedCost{{row_index}}" pKeyFilter="pint" disabled required></td>
                                 <td>
                                     <p-autoComplete field="symbol" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm"
-                                    [(ngModel)]="partList.functionalCurrencyId" name="functionalCurrencyId{{row_index}}" [suggestions]="functionalCurrList" (completeMethod)="filterFunctionalCurrency($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" required>
+                                    [(ngModel)]="partList.functionalCurrencyId" name="functionalCurrencyId{{row_index}}" [suggestions]="functionalCurrList" (completeMethod)="filterFunctionalCurrency($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="getFXRate(partList)" (onBlur)="getFXRate(partList)" required>
                                     </p-autoComplete>
                                 </td>
-                                <td><input type="number" [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" [(ngModel)]="partList.foreignExchangeRate" name="foreignExchangeRate{{row_index}}" pKeyFilter="num" required></td>
+                                <td><input type="number" [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" [(ngModel)]="partList.foreignExchangeRate" name="foreignExchangeRate{{row_index}}" pKeyFilter="num" (keyup)="getFXRate(partList)" required></td>
                                 <td>
-                                    <p-autoComplete field="symbol" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" [(ngModel)]="partList.reportCurrencyId" name="reportCurrencyId{{row_index}}" [suggestions]="functionalTransList" (completeMethod)="filterTransCurrency($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" required
+                                    <p-autoComplete field="symbol" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" [(ngModel)]="partList.reportCurrencyId" name="reportCurrencyId{{row_index}}" [suggestions]="functionalTransList" (completeMethod)="filterTransCurrency($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="getFXRate(partList)" (onBlur)="getFXRate(partList)" required
                                     > <!--[disabled]=true-->          
                                     </p-autoComplete>
                                 </td>
@@ -879,22 +879,22 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>Shipping Cost <span class="clr-red">*</span></label>
-                            <input [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" type="number" name="cusShippingCost" [(ngModel)]="sourcePoApproval.shippingCost" #cusShippingCost="ngModel" required><!--required-->
-                            <div *ngIf="cusShippingCost.invalid && (cusShippingCost.dirty || cusShippingCost.touched)" class="alert alert-danger alert-danger-cstm">
+                            <label>Shipping Cost</label>
+                            <input class="form-control" type="number" name="cusShippingCost" [(ngModel)]="sourcePoApproval.shippingCost"><!--#cusShippingCost="ngModel" required-->
+                            <!-- <div *ngIf="cusShippingCost.invalid && (cusShippingCost.dirty || cusShippingCost.touched)" class="alert alert-danger alert-danger-cstm">
                                 <div *ngIf="cusShippingCost.errors.required">
                                     <small> Shipping Cost is required </small>
                                 </div>
-                        </div>
+                        </div> -->
                         </div>
                         <div class="form-group">
-                            <label>Handling Cost <span class="clr-red">*</span></label>
-                            <input [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" type="number" name="cusHandlingCost" [(ngModel)]="sourcePoApproval.handlingCost" #cusHandlingCost="ngModel" required><!--required-->
-                            <div *ngIf="cusHandlingCost.invalid && (cusHandlingCost.dirty || cusHandlingCost.touched)" class="alert alert-danger alert-danger-cstm">
+                            <label>Handling Cost</label>
+                            <input class="form-control" type="number" name="cusHandlingCost" [(ngModel)]="sourcePoApproval.handlingCost"><!--#cusHandlingCost="ngModel" required-->
+                            <!-- <div *ngIf="cusHandlingCost.invalid && (cusHandlingCost.dirty || cusHandlingCost.touched)" class="alert alert-danger alert-danger-cstm">
                                 <div *ngIf="cusHandlingCost.errors.required">
                                     <small> Handling Cost is required </small>
                                 </div>
-                        </div>
+                            </div> -->
                         </div>
                         <div class="form-group">
                             <label>Shipping Acct Num <span class="clr-red">*</span></label>
@@ -942,22 +942,22 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>Shipping Cost <span class="clr-red">*</span></label>
-                            <input [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" type="number" name="cusShippingCost" [(ngModel)]="sourcePoApproval.shippingCost" #cusShippingCost="ngModel" required><!--required-->
-                            <div *ngIf="cusShippingCost.invalid && (cusShippingCost.dirty || cusShippingCost.touched)" class="alert alert-danger alert-danger-cstm">
+                            <label>Shipping Cost</label>
+                            <input class="form-control" type="number" name="cusShippingCost" [(ngModel)]="sourcePoApproval.shippingCost" ><!--required-->
+                            <!-- <div *ngIf="cusShippingCost.invalid && (cusShippingCost.dirty || cusShippingCost.touched)" class="alert alert-danger alert-danger-cstm">
                                 <div *ngIf="cusShippingCost.errors.required">
                                     <small> Shipping Cost is required </small>
                                 </div>
-                        </div>
+                        </div> -->
                         </div>
                         <div class="form-group">
-                            <label>Handling Cost <span class="clr-red">*</span></label>
-                            <input [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" type="number" name="cusHandlingCost" [(ngModel)]="sourcePoApproval.handlingCost" #cusHandlingCost="ngModel" required><!--required-->
-                            <div *ngIf="cusHandlingCost.invalid && (cusHandlingCost.dirty || cusHandlingCost.touched)" class="alert alert-danger alert-danger-cstm">
+                            <label>Handling Cost</label>
+                            <input class="form-control" type="number" name="cusHandlingCost" [(ngModel)]="sourcePoApproval.handlingCost" ><!--required-->
+                            <!-- <div *ngIf="cusHandlingCost.invalid && (cusHandlingCost.dirty || cusHandlingCost.touched)" class="alert alert-danger alert-danger-cstm">
                                 <div *ngIf="cusHandlingCost.errors.required">
                                     <small> Handling Cost is required </small>
                                 </div>
-                        </div>
+                        </div> -->
                         </div>
                         <div class="form-group">
                             <label>Shipping Acct Num <span class="clr-red">*</span></label>
@@ -1004,22 +1004,22 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>Shipping Cost <span class="clr-red">*</span></label>
-                            <input [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" type="number" name="cusShippingCost" [(ngModel)]="sourcePoApproval.shippingCost" #cusShippingCost="ngModel" required><!--required-->
-                            <div *ngIf="cusShippingCost.invalid && (cusShippingCost.dirty || cusShippingCost.touched)" class="alert alert-danger alert-danger-cstm">
+                            <label>Shipping Cost</label>
+                            <input class="form-control" type="number" name="cusShippingCost" [(ngModel)]="sourcePoApproval.shippingCost" ><!--required-->
+                            <!-- <div *ngIf="cusShippingCost.invalid && (cusShippingCost.dirty || cusShippingCost.touched)" class="alert alert-danger alert-danger-cstm">
                                 <div *ngIf="cusShippingCost.errors.required">
                                     <small> Shipping Cost is required </small>
                                 </div>
-                        </div>
+                            </div> -->
                         </div>
                         <div class="form-group">
-                            <label>Handling Cost <span class="clr-red">*</span></label>
-                            <input [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" type="number" name="cusHandlingCost" [(ngModel)]="sourcePoApproval.handlingCost" #cusHandlingCost="ngModel" required><!--required-->
-                            <div *ngIf="cusHandlingCost.invalid && (cusHandlingCost.dirty || cusHandlingCost.touched)" class="alert alert-danger alert-danger-cstm">
+                            <label>Handling Cost</label>
+                            <input class="form-control" type="number" name="cusHandlingCost" [(ngModel)]="sourcePoApproval.handlingCost" ><!--required-->
+                            <!-- <div *ngIf="cusHandlingCost.invalid && (cusHandlingCost.dirty || cusHandlingCost.touched)" class="alert alert-danger alert-danger-cstm">
                                 <div *ngIf="cusHandlingCost.errors.required">
                                     <small> Handling Cost is required </small>
                                 </div>
-                        </div>
+                        </div> -->
                         </div>
                         <div class="form-group">
                             <label>Shipping Acct Num <span class="clr-red">*</span></label>

@@ -103,7 +103,7 @@
 </div>
 
 
-<ng-template #auditContent let-c="close" let-d="dismiss">
+<ng-template #auditContent let-c="close" let-d="dismiss" data-backdrop="static">
     <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
         <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
     </div>
@@ -122,11 +122,10 @@
         <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
         <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
     </div>
-
 </ng-template>
 
 
-<div #contentEdit id="contentEdit" class="modal fade" role="dialog">
+<div #contentEdit id="contentEdit" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -144,9 +143,6 @@
                                 <p-autoComplete field="description" [(ngModel)]="sourceAction" (onSelect)="selectedClassification($event)" (onKeyUp)="checkIfClassificationExists('description',$event.target.value)" name="description"
                                                 [suggestions]="localClassificationsCollection" (completeMethod)="filterclassifications($event)" [size]="30" [minLength]="1"
                                                 [dropdown]="true" class="p-autoComplete-ctsm" required>
-                                    <!--<ng-template let-classificationName pTemplate="item">
-                                        <div class="ui-helper-clearfix">{{classificationName}}</div>
-                                    </ng-template>-->
                                 </p-autoComplete>
                                 <div *ngIf="disableSave" class="clr-red">Entry Already Exists</div>
                                 <div class="clear"></div>
@@ -178,15 +174,12 @@
     </div>
 </div>
 
-<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog">
+<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">History of Customer Classification</h4>
-                <!--<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-                    <span aria-hidden="true">&times;</span>
-                </button>-->
             </div>
             <div class="modal-body">
                 <div class="table-responsive  rro-table-cstm">
@@ -202,7 +195,6 @@
                         </thead>
                         <tbody *ngIf="auditHistory.length> 0">
                             <tr *ngFor="let audit of auditHistory; let i = index;">
-                                <!--<td [ngStyle]="{'color': 'black'}">{{audit.customerClassificationId}}</td>-->
                                 <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
                                 <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'memo', audit.description)  ? 'black' : 'red'  }">{{audit.memo}}</td>
                                 <td>{{audit.updatedBy}}</td>
@@ -225,7 +217,7 @@
     </div>
 </div>
 
-<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog">
+<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">

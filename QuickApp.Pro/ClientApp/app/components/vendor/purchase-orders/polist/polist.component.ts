@@ -67,6 +67,7 @@ export class PolistComponent implements OnInit {
     currentStatusPO: string = 'open';
     modal: NgbModalRef;
     filterText: any = '';
+    currentdate: any = new Date();
 
     constructor(private _route: Router,
         private authService: AuthService,
@@ -211,7 +212,7 @@ export class PolistComponent implements OnInit {
         this.pageSize = event.rows;
         event.first = pageIndex;
         this.lazyLoadEventDataInput = event;
-        this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'open' }
+        this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'open', openDate: new Date() }
         if(this.isEnablePOList) {
             this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, vendorId: this.vendorId }
         }
@@ -224,8 +225,10 @@ export class PolistComponent implements OnInit {
         console.log(event);
     }
 
-    onChangeInputField(value, field) {
+    onChangeInputField(value, field, el) {
         console.log(value, field);
+        if (value === '') { el.classList.add("hidePlaceHolder"); }
+        else el.classList.remove("hidePlaceHolder");
         // if(field == "purchaseOrderId") {
         //     this.purchaseOrderIdInput = value;
         // }

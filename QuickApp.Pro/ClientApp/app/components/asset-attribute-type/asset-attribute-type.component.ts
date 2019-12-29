@@ -19,11 +19,13 @@ import { PercentService } from '../../services/percent.service';
 import { DepriciationMethodService } from '../../services/depriciation-method/depriciation.service';
 import { DepriciationMethod } from '../../models/depriciation-method.model';
 import { CommonService } from '../../services/common.service';
+import { ConfigurationService } from '../../services/configuration.service';
+import { UploadTag } from "../../models/UploadTag.enum";
 
 @Component({
     selector: 'app-asset-attribute-type',
     templateUrl: './asset-attribute-type.component.html',
-    styleUrls: ['asset-attribute-type.component.scss'],
+    styleUrls: ['./asset-attribute-type.component.scss'],
     animations: [fadeInOut]
 })
 export class AssetAttributeTypeComponent implements OnInit {
@@ -75,8 +77,9 @@ export class AssetAttributeTypeComponent implements OnInit {
     filteredWriteOffList: any[] = [];
     assetWriteDownList: any[] = [];
     filteredAssetWriteDownList: any[] = [];
+    formData: FormData;
 
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private alertService: AlertService, private depriciationMethodService: DepriciationMethodService, private coreDataService: AssetAttributeTypeService, private assetTypeService: AssetTypeService, private glAccountService: GlAccountService, public legalEntityService: LegalEntityService, public percentService: PercentService, private modalService: NgbModal, private authService: AuthService
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private alertService: AlertService, private configurations: ConfigurationService, private depriciationMethodService: DepriciationMethodService, private coreDataService: AssetAttributeTypeService, private assetTypeService: AssetTypeService, private glAccountService: GlAccountService, public legalEntityService: LegalEntityService, public percentService: PercentService, private modalService: NgbModal, private authService: AuthService
         ,private commonservice: CommonService) {
     }
     ngOnInit(): void {
@@ -367,7 +370,8 @@ export class AssetAttributeTypeComponent implements OnInit {
             this.conventionTypeList = res;
             ////console.log('conventionTypeList', this.conventionTypeList);
             this.loadSelectedNames();
-        })
+        });
+        //console.log('itemList',this.itemList);
     }
 
     filterPercentage(event) {
@@ -614,7 +618,7 @@ export class AssetAttributeTypeComponent implements OnInit {
         this.currentRow = { ...this.currentRow };
         this.mgmtStructureId = this.currentRow.managementStructureId;
         this.populateMgmtStructure(this.currentRow.managementStructureId);
-        console.log("conventionType = " + this.currentRow);
+        //console.log("conventionType = " + this.currentRow);
     }
 
     //turn the item active/inActive
@@ -751,11 +755,77 @@ export class AssetAttributeTypeComponent implements OnInit {
     }
 
     onChangeSelectField(object, field) {
-        if (this.currentRowData[field] == object[field]) {
-            this.disableSave = true;
+        if (this.currentModeOfOperation = ModeOfOperation.Update) {
+            if (this.currentRowData[field] == object[field]) {
+                this.disableSave = true;
+            }
+            else {
+                this.disableSave = false;
+            }
         }
-        else {
-            this.disableSave = false;
+    }
+
+    viewItemDetailsClick(content, row) {
+        //console.log(content);
+        this.itemDetails = row;
+        //this.loadMasterCompanies();
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    dismissModel() {
+        this.currentModeOfOperation = ModeOfOperation.None;
+        this.modal.close();
+    }
+
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=AssetAttributeType&fileName=AssetAttributeType.xlsx`;
+        window.location.assign(url);
+    }
+
+    customExcelUpload(event) {
+        this.formData = new FormData();
+        const file = event.target.files;
+        //console.log(file[0]);
+        if (file.length > 0) {
+            this.formData.append('file', file[0]);
+            console.log(this.formData);
+            this.coreDataService.bulkUpload(this.formData).subscribe(response => {
+                event.target.value = '';
+                this.formData = new FormData();
+                console.log(response);
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+                //let bulkUploadResult = response;
+                this.showBulkUploadResult(response);
+            })
         }
+    }
+
+    showBulkUploadResult(items: any) {
+        if (items) {
+            console.log(items);
+            let successCount = items.filter(item => item.UploadTag == UploadTag.Success);
+            let failedCount = items.filter(item => item.UploadTag == UploadTag.Failed);
+            let duplicateCount = items.filter(item => item.UploadTag == UploadTag.Duplicate);
+
+            if (successCount)
+                this.alertService.showMessage('Success', `${successCount} ${this.rowName}${successCount > 1 ? 's' : ''} uploaded successfully.`,
+                    MessageSeverity.success);
+
+            if (failedCount)
+                this.alertService.showMessage('Error', `${failedCount} ${this.rowName}${
+                    failedCount > 1 ? 's' : ''} failed to upload.`, MessageSeverity.error);
+
+            if (duplicateCount)
+                this.alertService.showMessage('Info', `${duplicateCount} ${duplicateCount > 1 ? 'duplicates' : 'duplicate'} ignored.`,
+                    MessageSeverity.info);
+        }
+        this.getItemList();
     }
 }

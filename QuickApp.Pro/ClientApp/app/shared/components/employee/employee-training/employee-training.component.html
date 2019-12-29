@@ -74,17 +74,53 @@
                                             <label>Duration</label>
                                             <input type="number" class="form-control" name="duration" [(ngModel)]="sourceEmployee.duration">
                                         </div>
-                                        <div class="form-group upload">
-                                            <label>Certification Received</label>
-                                            <input type="file" name="upload[]" id="upload" class="inputfile upload-file" data-multiple-caption="{count} files selected" multiple />
-                                            <label for="upload" style="margin-top: 7px;"><figure><i class="fa fa-upload"></i></figure> <span>Choose a file&hellip;</span></label>
+                                        <div class="form-group">
+                                            <!-- <label>Certification Received</label> -->
+                                            <!-- <input type="file" name="CertificationFile[]" class="inputfile upload-file" data-multiple-caption="{count} files selected" (onSelect)="fileUpload($event,'Certification')" multiple />
+                                              <label for="upload" style="margin-top: 7px;"><figure><i class="fa fa-upload"></i></figure> <span>Choose a file&hellip;</span></label> -->
+                                            <p-fileUpload name="CertificationFile[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event,'Certification')">
+                                            </p-fileUpload>
+                                          
+                                          
                                         </div>
+                                                                               
+                                <div class="form-group">
+                                    <div class="table-responsive table-overflow" *ngIf="allEmployeeTrainingDocumentsList.length> 0">
+                                        <h4 class="panel-title" >Attachment Details:</h4>
+                                        <table class="table table-bordered ">
+                                                <thead>                                                         <tr>
+                                                                <th>File Name</th>
+                                                                <th>Download</th>
+                                                                <th>Delete</th>
+                                                        </tr>
+                                                </thead>
+
+                                            <tbody *ngFor="let f of allEmployeeTrainingDocumentsList">
+                                                    <tr>                                                             
+                                                        <td>{{f.fileName}}</td>
+                                                        <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a> </td>
+                                                        <td>  <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="getEmployeeAttachmentDelete(f)">
+                                                        <mat-icon color="warn">delete</mat-icon> </button>
+                                                    </td>
+                                                    </tr>
+                                                
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                </div>
+                                       
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Frequency of Training</label>
-                                            <div>
-                                                <div class="col-sm-7">
+                                            
+                                                <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.frequencyOfTrainingId">
+                                                    <option value="0">Select </option>
+                                                    <option *ngFor="let trainingData of getAllFrequencyTrainingInfodrpData" [ngValue]="trainingData.value">  {{trainingData.label}}</option>
+                                                </select>
+                                                <!--<div>
+                                                     <div class="col-sm-7">
                                                     <input type="number" class="form-control" name="frequencyOfTraining" [(ngModel)]="sourceEmployee.frequencyOfTraining">
                                                 </div>
                                                 <div class="col-sm-5">
@@ -92,7 +128,7 @@
                                                         <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo" [ngValue]="unitName.unitOfMeasureId">{{unitName.shortName}}</option>
                                                     </select>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </div>
                                         <div class="form-group" style="margin-top: 25px;">
                                             <label>Provider</label>

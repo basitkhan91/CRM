@@ -72,6 +72,9 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     disableSaveCurrency: boolean;
     SelectedCurrencyInfo: any;
     vendorProcess1099Data: any;
+    checkedCheckboxesList : any = [];
+    listOfErrors: any[];
+
     ngOnInit(): void {
         this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-financial-information';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
@@ -159,7 +162,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
     }
-    private loadData() {
+    private loadData() {        
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
 
@@ -233,13 +236,16 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.workFlowtService.getVendorProcess1099Data(companyId).subscribe(res => {
+            console.log(res[0], "res[0]")
             this.vendorProcess1099Data = res[0].map(x => {
                 return {
                     ...x,
                     isDefaultCheck: false,
-                    isDefaultRadio: false
+                    isDefaultRadio: false,
+                    isRadioDisabled: true
                 }
             });
+
 
             console.log(this.vendorProcess1099Data);
         })
@@ -255,9 +261,20 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
                 return {
                     ...x
                     
+                    
                 }
             });
-
+            console.log(this.vendorProcess1099Data);
+            console.log(this.checkedCheckboxesList);
+            for(let j=0; j<this.vendorProcess1099Data.length; j++){
+                if(this.vendorProcess1099Data[j].isDefaultRadio == true || this.vendorProcess1099Data[j].isDefaultRadio == "true"){
+                    this.vendorProcess1099Data[j].isDefaultRadio = this.vendorProcess1099Data[j].description
+                }
+                if(this.vendorProcess1099Data[j].isDefaultCheck == true){
+                    this.checkedCheckboxesList.push(j);
+                }
+            }
+            console.log(this.checkedCheckboxesList, "checkedCheckboxesList++++");
             console.log(this.vendorProcess1099Data);
         })
 
@@ -288,18 +305,19 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     private onVendorsLoadSuccssfull(allVendors: any) {        
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.dataSource.data = allVendors;       
-       // debugger
-        if(allVendors[0].t != null)
-        {
-            this.sourceVendor.v1099RentDefault=allVendors[0].t.v1099RentDefault;
-            this.sourceVendor.v1099RoyaltiesDefault=allVendors[0].t.v1099RoyaltiesDefault;
-            this.sourceVendor.v1099OtherIncomeDefault=allVendors[0].t.v1099OtherIncomeDefault;
-            this.sourceVendor.v1099MedicalHealthPaymentsDefault=allVendors[0].t.v1099MedicalHealthPaymentsDefault;
-            this.sourceVendor.v1099NonEmployeeCompDefault=allVendors[0].t.v1099NonEmployeeCompDefault;
-            this.sourceVendor.v1099GoldenParachuteDefault=allVendors[0].t.v1099GoldenParachuteDefault;
-            this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault=allVendors[0].t.v1099GrossProceedsPaidToAttorneyDefault;
-        }
+        this.dataSource.data = allVendors;    
+    //     console.log(allVendors, "allVendors++++")   
+    //    // debugger
+    //     if(allVendors[0].t != null)
+    //     {
+    //         this.sourceVendor.v1099RentDefault=allVendors[0].t.v1099RentDefault;
+    //         this.sourceVendor.v1099RoyaltiesDefault=allVendors[0].t.v1099RoyaltiesDefault;
+    //         this.sourceVendor.v1099OtherIncomeDefault=allVendors[0].t.v1099OtherIncomeDefault;
+    //         this.sourceVendor.v1099MedicalHealthPaymentsDefault=allVendors[0].t.v1099MedicalHealthPaymentsDefault;
+    //         this.sourceVendor.v1099NonEmployeeCompDefault=allVendors[0].t.v1099NonEmployeeCompDefault;
+    //         this.sourceVendor.v1099GoldenParachuteDefault=allVendors[0].t.v1099GoldenParachuteDefault;
+    //         this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault=allVendors[0].t.v1099GrossProceedsPaidToAttorneyDefault;
+    //     }
        
 
     }
@@ -318,7 +336,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.auditHisory = auditHistory;
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -344,7 +362,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.isSaving = true;
         this.loadMasterCompanies();
         this.actionName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -355,7 +373,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceVendor = row;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -367,7 +385,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.isSaving = true;
         this.sourceVendor = row;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -381,13 +399,13 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.createddate = row.createdDate;
         this.updatedDate = row.updatedDate;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
     openHelpText(content) {
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -410,48 +428,103 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         }
     }
 
-    changevalue(value) {
-        debugger
-        this.sourceVendor.v1099RentDefault = false;
-        this.sourceVendor.v1099RoyaltiesDefault = false;
-        this.sourceVendor.v1099OtherIncomeDefault = false;
-        this.sourceVendor.v1099MedicalHealthPaymentsDefault = false;
-        this.sourceVendor.v1099NonEmployeeCompDefault = false;
-        this.sourceVendor.v1099GoldenParachuteDefault = false;
-        this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = false;
+    // changevalue(value) {
+    //     debugger
+    //     this.sourceVendor.v1099RentDefault = false;
+    //     this.sourceVendor.v1099RoyaltiesDefault = false;
+    //     this.sourceVendor.v1099OtherIncomeDefault = false;
+    //     this.sourceVendor.v1099MedicalHealthPaymentsDefault = false;
+    //     this.sourceVendor.v1099NonEmployeeCompDefault = false;
+    //     this.sourceVendor.v1099GoldenParachuteDefault = false;
+    //     this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = false;
 
-        if (value == "sourceVendor.v1099RentDefault") {
-            this.sourceVendor.v1099RentDefault = true;            
-        }
-        else if (value == "sourceVendor.v1099RoyaltiesDefault") {
-            this.sourceVendor.v1099RoyaltiesDefault = true;          
-        }
-        else if (value == "sourceVendor.v1099OtherIncomeDefault") {
-            this.sourceVendor.v1099OtherIncomeDefault = true;            
-        }
-        else if (value == "sourceVendor.v1099MedicalHealthPaymentsDefault") {
-            this.sourceVendor.v1099MedicalHealthPaymentsDefault = true;            
-        }
-        else if (value == "sourceVendor.v1099NonEmployeeCompDefault") {
-            this.sourceVendor.v1099NonEmployeeCompDefault = true;            
-        }
-        else if (value == "sourceVendor.v1099GoldenParachuteDefault") {
-            this.sourceVendor.v1099GoldenParachuteDefault = true;          
-        }
-        else if (value == "sourceVendor.v1099GrossProceedsPaidToAttorneyDefault") {
-            this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = true;         
-        }
-        else{
-            this.sourceVendor.v1099RentDefault = true;   
-        }
-    }
+    //     if (value == "sourceVendor.v1099RentDefault") {
+    //         this.sourceVendor.v1099RentDefault = true;            
+    //     }
+    //     else if (value == "sourceVendor.v1099RoyaltiesDefault") {
+    //         this.sourceVendor.v1099RoyaltiesDefault = true;          
+    //     }
+    //     else if (value == "sourceVendor.v1099OtherIncomeDefault") {
+    //         this.sourceVendor.v1099OtherIncomeDefault = true;            
+    //     }
+    //     else if (value == "sourceVendor.v1099MedicalHealthPaymentsDefault") {
+    //         this.sourceVendor.v1099MedicalHealthPaymentsDefault = true;            
+    //     }
+    //     else if (value == "sourceVendor.v1099NonEmployeeCompDefault") {
+    //         this.sourceVendor.v1099NonEmployeeCompDefault = true;            
+    //     }
+    //     else if (value == "sourceVendor.v1099GoldenParachuteDefault") {
+    //         this.sourceVendor.v1099GoldenParachuteDefault = true;          
+    //     }
+    //     else if (value == "sourceVendor.v1099GrossProceedsPaidToAttorneyDefault") {
+    //         this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault = true;         
+    //     }
+    //     else{
+    //         this.sourceVendor.v1099RentDefault = true;   
+    //     }
+    // }
 
-    editItemAndCloseModel(isGoNxt?: boolean) {
+    changeCheck1099Required (event, index) { 
+        if(event.target.checked){            
+          this.checkedCheckboxesList.push(index);
+          this.vendorProcess1099Data[index].isRadioDisabled = false;
+           if(this.checkedCheckboxesList.length == 1){
+            this.vendorProcess1099Data[index].isDefaultRadio = event.target.value;            
+           }         
+        } else {  
+          let checkedArrayIndex;    
+          this.vendorProcess1099Data[index].isDefaultRadio = false;
+           checkedArrayIndex = this.checkedCheckboxesList.indexOf(index);
+          this.checkedCheckboxesList.splice(checkedArrayIndex, 1);
+          this.vendorProcess1099Data[index].isRadioDisabled = true;
+          if(this.checkedCheckboxesList.length >= 1){
+            this.checkedCheckboxesList = this.checkedCheckboxesList.sort();
+            this.vendorProcess1099Data[this.checkedCheckboxesList[0]].isRadioDisabled = false;
+            this.vendorProcess1099Data[this.checkedCheckboxesList[0]].isDefaultRadio = this.vendorProcess1099Data[this.checkedCheckboxesList[0]].description;
+          } else {
+            for(let i = 0; i < this.vendorProcess1099Data.length; i++){
+                this.vendorProcess1099Data[i].isDefaultRadio = false;
+            }
+          }
+        }
+      }
+      changevalue(event, index) {   
+        for(let i = 0; i < this.vendorProcess1099Data.length; i++){
+              this.vendorProcess1099Data[i].isDefaultRadio = false;
+          }
+          this.vendorProcess1099Data[index].isDefaultRadio = this.vendorProcess1099Data[index].description;
+      }
+  
+
+    editItemAndCloseModel(userForm, isGoNxt?: boolean) {
         this.isSaving = true;
-        if (!(this.sourceVendor.creditLimit && this.sourceVendor.creditTermsId && this.sourceVendor.currencyId)) {
+        let errors;
+        this.listOfErrors = [];        
+
+        if(userForm.status === "INVALID"){
+            Object.keys(userForm.controls).map(key => {
+                errors = userForm.controls[key].errors;
+               if (errors === null) { return null; }            
+               if (errors['required']) {  
+                 let titlevalue = key;
+                 if(document.getElementById(key)){
+                     titlevalue = document.getElementById(key).getAttribute('title');
+                 }
+                   this.listOfErrors.push(`${titlevalue} is required`); //test
+               } else {
+               this.listOfErrors.push(`${key} has an unknown error`);
+               }
+             });
+
             this.display = true;
             this.modelValue = true;
-        }
+             return false
+
+        } 
+        // if (!(this.sourceVendor.creditLimit && this.sourceVendor.creditTermsId && this.sourceVendor.currencyId)) {
+        //     this.display = true;
+        //     this.modelValue = true;
+        // }
         if (!this.creditTermName) {
             this.showCreditTearms = true;
         }
@@ -512,13 +585,20 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
             if (this.sourceVendor.vendorId) {
                 this.sourceVendor.createdBy = this.userName;
                 this.sourceVendor.updatedBy = this.userName;
+                for(let i = 0; i< this.vendorProcess1099Data.length; i++){
+                    if(this.vendorProcess1099Data[i].isDefaultRadio != true && this.vendorProcess1099Data[i].isDefaultRadio != false){
+                        this.vendorProcess1099Data[i].isDefaultRadio = true;
+                    } 
+                }
                 this.sourceVendor.master1099s = this.vendorProcess1099Data;
                 this.workFlowtService.updatefinanceinfo(this.sourceVendor, this.sourceVendor.vendorId).subscribe(data => {
                     this.localCollection = data;
                     this.workFlowtService.financeCollection = this.local;
                     this.activeIndex = 2;
+                    this.getVendorProcess1099FromTransaction(this.sourceVendor.vendorId);
                     this.workFlowtService.indexObj.next(this.activeIndex);
                     this.savesuccessCompleted(this.sourceVendor, isGoNxt);
+                    
                 })
             }
             else {
@@ -612,7 +692,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.sourceAction = new Currency();
         this.sourceAction.isActive = true;
         this.currencyName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -629,7 +709,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.sourceAction.isDeleted = false;
         this.creditTermName = "";
         this.creditTermsId = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -909,7 +989,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.sourceAction = new DiscountValue();
         this.sourceAction.isActive = true;
         this.discontValue = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
