@@ -116,8 +116,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetLedgerNames()
         {
             var res = (from t in _context.LegalEntity
-                       where t.IsActive == true || t.IsActive == null || 
-                       !string.IsNullOrEmpty(t.LedgerName)
+                       where !string.IsNullOrEmpty(t.LedgerName)
                        select new
                        {
                            t.LegalEntityId,
