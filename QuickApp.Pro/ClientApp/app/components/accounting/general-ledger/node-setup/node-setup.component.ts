@@ -56,12 +56,13 @@ export class NodeSetupComponent implements OnInit {
         description: "",
         selectedCompanysData: "",
         parentNodeId: "",
+        parentNodeName:"",
         leafNodeCheck: "",
         glAccountNodeType: "",
         fsType: "",
         masterCompanyId: 1,
         isActive: true,
-        isdelete:true,
+        isdelete: false,
     }
     addNew = { ...this.new };
     selectedRecordForEdit: any;
@@ -247,6 +248,13 @@ export class NodeSetupComponent implements OnInit {
         console.log(rowData);
         this.viewRowData = rowData;
     }
+
+    //getAuditHistoryById(rowData) {
+    //    this.nodeSetupService.getNodeAuditeDetails(rowData.GLAccountNodeId).subscribe(res => {
+    //        this.auditHistory = res;
+    //    })
+    //}
+
     columnsChanges() {
         this.refreshList();
     }
@@ -272,7 +280,7 @@ export class NodeSetupComponent implements OnInit {
         this.disableSaveForDescription = false;
         this.addNew = {
             ...rowData,
-            parentNodeId: getObjectById('parenNodeId', rowData.parenNodeId, this.originalData.parentNode)
+            //parentNodeId: getObjectById('parenNodeId', rowData.parenNodeId, this.originalData.parentNode)
         };
         this.selectedRecordForEdit = { ...this.addNew }
 
@@ -554,6 +562,20 @@ export class NodeSetupComponent implements OnInit {
                 }
             }
 
+        }
+    }
+
+    ledgerSelect(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedCodeName) {
+                if (value == this.selectedCodeName.toLowerCase()) {
+                    this.disablesave = true;
+                }
+                else {
+                    this.disablesave = false;
+                }
+            }
         }
     }
 
