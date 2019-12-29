@@ -97,8 +97,9 @@ export class SalesQuoteListComponent implements OnInit {
    
    }
    openQuoteToEdit(row) {
-   // this.salesQuoteService.isEditMode = true;
-    const { quoteId } = row;
-   // this.router.navigateByUrl(`assetmodule/assetpages/app-edit-quoteId/${quoteId}`);
-}
+    const { salesQuoteId } = row;
+    let customerId  = row.customerId;
+    console.log(row);
+    this.router.navigateByUrl(`salesmodule/salespages/sales-quote-edit/${customerId}/${salesQuoteId}`);
+  }
 }

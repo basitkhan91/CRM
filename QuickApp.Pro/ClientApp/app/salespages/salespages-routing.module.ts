@@ -25,6 +25,10 @@ const salesPagesRoutes: Routes = [
         path: "sales-quote-create/:customerId",
         component: SalesQuoteCreateComponent
       },
+      {
+        path: "sales-quote-edit/:customerId/:id",
+        component: SalesQuoteCreateComponent
+      },
       { path: "sales-quote-edit/:id", component: null },
       {
         path: "sales-quote-list",
