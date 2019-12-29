@@ -43,6 +43,11 @@ namespace QuickApp.Pro.ViewModels.SalesViews
         {
             get; set;
         }
+
+        public IEnumerable<SalesViews.MasterSalesOrderQuoteStatusView> Status
+        {
+            get; set;
+        }
         #endregion 
     }
 }

@@ -479,7 +479,8 @@ namespace DAL
         public DbSet<Master1099Audit> Master1099Audit { get; set; }
         public DbSet<TagType> TagType { get; set; }
         public DbSet<CustomerAircraftMappingAudit> CustomerAircraftMappingAudit { get; set; }
-
+        
+        public DbSet<Models.Sales.MasterSalesOrderQuoteStatus> MasterSalesOrderQuoteStatus { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

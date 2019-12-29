@@ -94,6 +94,7 @@ namespace QuickApp.Pro.Controllers
             var creditTerms = this.UnitOfWork.MasterSalesCreditTermsRepository.GetAll();
             var salesProbabilities = this.UnitOfWork.MasterSalesProbablityRepository.GetAll();
             var leadSources = this.UnitOfWork.MasterSalesLeadSourcesRepository.GetAll();
+            var status = this.UnitOfWork.MasterSalesOrderQuoteStatusRepository.GetAll();
 
             if (customer != null)
             {
@@ -155,6 +156,16 @@ namespace QuickApp.Pro.Controllers
                 });
             }
 
+            if (status.Any())
+            {
+                model.Status = status.Select(s => new MasterSalesOrderQuoteStatusView
+                {
+                    Id = s.Id, 
+                    Name = s.Name,  
+                    DisplayInDropdown = s.DisplayInDropdown,  
+                    Description = s.Description
+                });
+            }
             return model;
         }
     }

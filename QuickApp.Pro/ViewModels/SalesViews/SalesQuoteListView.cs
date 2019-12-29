@@ -18,6 +18,8 @@ namespace QuickApp.Pro.ViewModels.SalesViews
 
         public string Status { get; set; }
 
+        public int StatusId { get; set; }
+
         public decimal SalesPrice { get; set; }
 
         public decimal Cost { get; set; }

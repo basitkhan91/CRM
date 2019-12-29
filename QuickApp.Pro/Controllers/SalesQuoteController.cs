@@ -60,7 +60,7 @@ namespace QuickApp.Pro.Controllers
                        CustomerId = c.CustomerId,
                        CustomerName = c.Name,
                        CustomerCode = c.CustomerCode,
-                       Status = "Open",  // Hardcoded for time being, will be removed in next version  
+                       Status = "Open",  // Hardcoded for time being, will be removed in next version 
                    };
                    
             return Ok(list);
@@ -72,7 +72,8 @@ namespace QuickApp.Pro.Controllers
         {
             var model = new SalesQuoteViewModel
             {
-                CustomerId = customerId
+                CustomerId = customerId, 
+                StatusId = 1,
             };
 
             model = BindDefaultDataSources(model);
@@ -118,8 +119,12 @@ namespace QuickApp.Pro.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]SalesQuoteView quoteView)
         {
-            SalesOrderQuote quote = Mapper.Map<SalesOrderQuoteView, SalesOrderQuote>(quoteView.SalesOrderQuote);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
+            quoteView.SalesOrderQuote.StatusId = 1;  // Defualt to "Open" 
+
+            SalesOrderQuote quote = Mapper.Map<SalesOrderQuoteView, SalesOrderQuote>(quoteView.SalesOrderQuote);
+            
             IEnumerable<SalesOrderQuoteApproverList> approverList = Mapper.Map<List<SalesOrderQuoteApproverListView>, List<SalesOrderQuoteApproverList>>(quoteView.ApproverList);
 
             IEnumerable<SalesOrderQuotePart> parts = Mapper.Map<List<SalesOrderQuotePartView>, List<SalesOrderQuotePart>>(quoteView.Parts);
