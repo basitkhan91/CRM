@@ -23,6 +23,8 @@ import { SalesOrderQuote } from "../models/sales/SalesOrderQuote";
 import { ItemMasterSearchQuery } from "../components/sales/quotes/models/item-master-search-query";
 import { IPartJson } from "../components/sales/shared/models/ipart-json";
 import { PartDetail } from "../components/sales/shared/models/part-detail";
+import { ISalesOrderQuoteApproverList } from '../models/sales/ISalesOrderQuoteApproverList';
+import { SalesOrderQuoteApproverList } from '../models/sales/SalesOrderQuoteApproverList';
 
 export type RolesChangedOperation = "add" | "delete" | "modify";
 export type RolesChangedEventArg = {
@@ -40,6 +42,11 @@ export class SalesQuoteService {
   constructor(private salesQuoteEndPointSevice: SalesQuoteEndpointService) {
     this.salesOrderQuote = new SalesOrderQuote();
     this.approvers = [];
+    this.approvers.push(new SalesOrderQuoteApproverList());
+    this.approvers.push(new SalesOrderQuoteApproverList());
+    this.approvers.push(new SalesOrderQuoteApproverList());
+    this.approvers.push(new SalesOrderQuoteApproverList());
+    this.approvers.push(new SalesOrderQuoteApproverList());
     this.parts = [];
     this.selectedParts = [];
     this.query = new ItemMasterSearchQuery();

@@ -65,6 +65,7 @@ export class SalesQuoteCreateComponent implements OnInit {
   };
   salesQuoteForm: FormGroup;
   display: boolean = false;
+  id:any;
 
   @ViewChild("newSalesQuoteForm") public newSalesQuoteForm: NgForm;
   constructor(
@@ -86,7 +87,9 @@ export class SalesQuoteCreateComponent implements OnInit {
 
   ngOnInit() {
     this.customerId = +this.route.snapshot.paramMap.get("customerId");
+    this.id = +this.route.snapshot.paramMap.get("id");
     console.log(`customer id: ${this.customerId}`);
+    console.log(`customer id: ${this.id}`);
   
 
     this.salesQuoteService.resetSalesOrderQuote();
@@ -111,7 +114,12 @@ export class SalesQuoteCreateComponent implements OnInit {
     this.getAllCustomerContact();
     this.getCustomerWarningsData();
     this.getAccountTypes();
-    this.getNewSalesQuoteInstance(this.customerId);
+
+    if(this.id)
+      this.getSalesQuoteInstance(this.id);
+    else
+      this.getNewSalesQuoteInstance(this.customerId);
+
 
   }
   get userName(): string {
@@ -207,6 +215,10 @@ private getCustomerList() {
     this.customerService.getCustomerdataById(this.customerId).subscribe(res => {
       this.customerDetails = res[0];
       console.log(this.customerDetails);
+
+      this.salesQuote.customerName = this.customerDetails.name;
+      this.salesQuote.customerCode = this.customerDetails.customerCode;
+
       this.salesQuote.creditLimit = this.customerDetails.creditLimit;
       this.salesQuote.creditLimitTermsId = this.customerDetails.creditTermsId;
       this.salesQuote.contractReferenceName = this.customerDetails.contractReference;
@@ -298,6 +310,98 @@ onWarningSelect(event) {
 }
 
 
+getSalesQuoteInstance(salesQuoteId: number) {
+  this.alertService.startLoadingMessage();
+  this.salesQuoteService
+    .getSalesQuote(salesQuoteId)
+    .subscribe(data => {
+      this.salesQuoteView = data && data.length ? data[0] : null;
+      this.salesOrderQuote = this.salesQuoteView.salesOrderQuote;
+     // this.approvers = this.salesQuoteView.approverList;
+     // this.salesQuoteService.updateApprovers(this.approvers);
+     if(this.approvers.length>0){
+      for (let i = 0; i < this.salesQuoteView.approverList.length; i++) {
+        this.approvers[i].employeeId = this.salesQuoteView.approverList[i].employeeId;
+       }
+     }
+     
+
+      let partList:any[] = this.salesQuoteView.parts;
+
+      for (let i = 0; i < partList.length; i++) {
+  
+        let selectedPart  = partList[0];
+        let partNumberObj = new PartDetail();
+        partNumberObj.itemMasterId = selectedPart.itemMasterId;
+        partNumberObj.stockLineId = selectedPart.stockLineId;
+        partNumberObj.fixRate = selectedPart.fxRate;
+        partNumberObj.quantityFromThis = selectedPart.qtyQuoted;
+
+        partNumberObj.salesPricePerUnit = selectedPart.unitSalePrice;
+        partNumberObj.salesPriceExtended = selectedPart.salesBeforeDiscount;
+        partNumberObj.salesDiscount = selectedPart.discount;
+        partNumberObj.salesDiscountPerUnit = selectedPart.discountAmount;
+        partNumberObj.netSalesPriceExtended = selectedPart.netSales;
+        partNumberObj.masterCompanyId = selectedPart.masterCompanyId;
+        partNumberObj.quantityFromThis = selectedPart.qtyQuoted;
+        this.selectedParts.push(partNumberObj);  
+      }
+      console.log(this.salesQuoteView);
+
+      
+
+      this.salesQuote.salesOrderQuoteId = this.salesOrderQuote.salesOrderQuoteId
+      this.salesQuote.quoteTypeId = this.salesOrderQuote.quoteTypeId;
+      this.salesQuote.openDate = new Date(this.salesOrderQuote.openDate);
+      this.salesQuote.customerRequestDate = new Date(this.salesOrderQuote.customerRequestDate);
+      this.salesQuote.customerPromisedDate = new Date(this.salesOrderQuote.promisedDate);
+      this.salesQuote.estimatedShipDate = new Date(this.salesOrderQuote.estimatedShipDate);
+      this.salesQuote.validForDays = this.salesOrderQuote.validForDays;
+      this.salesQuote.quoteExpiryDate = new Date(this.salesOrderQuote.quoteExpireDate);
+      this.salesQuote.priorityId = this.salesOrderQuote.priorityId;
+      this.salesQuote.accountTypeId = this.salesOrderQuote.accountTypeId;
+      this.salesQuote.customerId = this.salesOrderQuote.customerId;
+      this.salesQuote.customerContactId = this.salesOrderQuote.customerContactId;
+      this.salesQuote.customerReferenceName = this.salesOrderQuote.customerReference;
+      this.salesQuote.contractReferenceName = this.salesOrderQuote.contractReference;
+
+      this.salesQuote.salesPersonName =  getObjectById('employeeId', this.salesOrderQuote.salesPersonId, this.allEmployeeinfo);
+      // this.salesQuote.secondarySalesPersonId: getObjectById('employeeId', this.customerDetails.secondarySalesPersonId, this.employeeListOriginal),
+       this.salesQuote.customerServiceRepName = getObjectById('employeeId', this.salesOrderQuote.customerSeviceRepId, this.allEmployeeinfo);
+       this.salesQuote.agentName = getObjectById('employeeId', this.salesOrderQuote.employeeId, this.allEmployeeinfo);
+       this.salesQuote.employeeName = getObjectById('employeeId', this.salesOrderQuote.employeeId, this.allEmployeeinfo);
+
+       this.salesOrderQuote.billToContactId = getObjectById('customerId', this.salesOrderQuote.billToContactId, this.allEmployeeinfo);
+       this.salesOrderQuote.shipToContactId = getObjectById('customerId', this.salesOrderQuote.shipToContactId, this.allEmployeeinfo);
+      
+
+     
+      this.salesQuote.probabilityId = this.salesOrderQuote.probabilityId;
+      this.salesQuote.leadSourceId = this.salesOrderQuote.leadSourceId;
+      this.salesQuote.creditLimit = this.salesOrderQuote.creditLimit;
+      this.salesQuote.creditLimitTermsId = this.salesOrderQuote.creditTermId;
+       this.salesQuote.restrictPMA = this.salesOrderQuote.restrictPMA;
+      this.salesQuote.restrictDER = this.salesOrderQuote.restrictDER;
+      if(this.salesOrderQuote.approvedDate)
+        this.salesQuote.approvedDate = new Date(this.salesOrderQuote.approvedDate);
+      this.salesQuote.currencyId = this.salesOrderQuote.currencyId;
+      this.salesQuote.warningId = this.salesOrderQuote.customerWarningId;
+       this.salesQuote.memo = this.salesOrderQuote.memo;
+      this.salesQuote.notes = this.salesOrderQuote.notes;
+
+  
+      this.getCustomerDetails();
+     
+      //this.getDefaultContact();
+     console.log(this.salesQuote);
+     /* this.customer = {
+        customerName: this.salesQuote.customerName,
+        customerCode: this.salesQuote.customerCode,
+        promisedDate: this.salesQuote.customerPromisedDate
+      };*/
+      this.alertService.stopLoadingMessage();
+    });
+}
 
   getNewSalesQuoteInstance(customerId: number) {
     this.alertService.startLoadingMessage();
@@ -310,11 +414,11 @@ onWarningSelect(event) {
        
         this.getDefaultContact();
        console.log(this.salesQuote);
-        this.customer = {
+       /* this.customer = {
           customerName: this.salesQuote.customerName,
           customerCode: this.salesQuote.customerCode,
           promisedDate: this.salesQuote.customerPromisedDate
-        };
+        };*/
         this.alertService.stopLoadingMessage();
       });
   }
