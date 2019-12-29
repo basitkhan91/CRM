@@ -102,6 +102,7 @@ export class SalesQuoteCreateComponent implements OnInit {
     .getSalesOrderQuteApprovers()
     .subscribe(data => {
       this.approvers = data;
+      console.log(this.approvers);
     });
     this.salesQuoteService.getSelectedParts()
     .subscribe(data => {
@@ -319,6 +320,7 @@ getSalesQuoteInstance(salesQuoteId: number) {
       this.salesOrderQuote = this.salesQuoteView.salesOrderQuote;
      // this.approvers = this.salesQuoteView.approverList;
      // this.salesQuoteService.updateApprovers(this.approvers);
+     console.log(this.approvers);
      if(this.approvers.length>0){
       for (let i = 0; i < this.salesQuoteView.approverList.length; i++) {
         this.approvers[i].employeeId = this.salesQuoteView.approverList[i].employeeId;
