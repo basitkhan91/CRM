@@ -21,6 +21,7 @@ import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/route
 import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
 import { GMapModule } from 'primeng/gmap';
+import * as $ from 'jquery';
 declare const google: any;
 
 @Component({
@@ -139,7 +140,9 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	countrycollection: any;
 	selectedCountries: any;
     private isEditMode: boolean = false;
-    private isDeleteMode: boolean = false;
+	private isDeleteMode: boolean = false;
+	isEditPaymentInfo: boolean = false;
+
 	constructor(private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		if (this.workFlowtService.financeCollection) {
 			this.local = this.workFlowtService.financeCollection;
@@ -513,11 +516,12 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
         }, () => { console.log('Backdrop click') })
     }
 
-    openEdit(content, row) {
+    openEdit(row) {
         this.isEditMode = true;
         this.isSaving = true;
-        this.sourceVendor = row;
-        this.loadMasterCompanies();
+        this.sourceVendor = {...row};
+		this.loadMasterCompanies();
+		this.isEditPaymentInfo = true;
     }
     openView(content, row) {
         this.sourceVendor = row;
@@ -660,10 +664,10 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		}
 		else
 		{
-		}
+		}		
+		$('#addPaymentInfo').modal('hide');
 	}
 
-	
 
     saveDomesticPaymentInfo() {
 		this.isSaving = true;
@@ -1001,6 +1005,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	}
 	
 	onAddPaymentInfo() {
-        //this.sourceVendor = {};
+		this.sourceVendor = {};
+		this.isEditPaymentInfo = false;
     }
 }
