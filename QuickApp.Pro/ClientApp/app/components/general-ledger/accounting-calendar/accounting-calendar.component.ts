@@ -698,12 +698,14 @@ export class AccountingCalendarComponent implements OnInit {
                 console.log('getLedgerData :', JSON.stringify(datalist))
                  let obj = {}
                  let collection = []
-                const x = datalist.filter( (o, index) => {
-                  obj = {
-                    id: datalist[index]['ledgerName'],
-                    name: datalist[index]['ledgerName']
-                  }
-                  collection.push(obj)
+                const x = datalist.filter((o, index) => {
+                    if (datalist[index]['ledgerName']) {
+                        obj = {
+                            id: datalist[index]['ledgerName'],
+                            name: datalist[index]['ledgerName']
+                        }
+                        collection.push(obj)
+                    }                  
                 })
             this.ledgerNameObjectData = collection
             })

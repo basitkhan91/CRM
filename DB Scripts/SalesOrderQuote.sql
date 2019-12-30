@@ -70,8 +70,8 @@ CREATE TABLE [dbo].[SalesOrderQuote](
 	[CreatedOn] [datetime2] NOT NULL,  
 	[UpdatedBy] [varchar](256) NULL,
 	[UpdatedOn] [datetime2] NULL,  
-	[IsDeleted] [bit] NOT NULL DEFAULT 0
-
+	[IsDeleted] [bit] NOT NULL DEFAULT 0,
+	[StatusId] [int] NOT NULL DEFAULT 1
 
  CONSTRAINT [PK_SalesOrderQuote] PRIMARY KEY CLUSTERED 
 (
@@ -81,59 +81,59 @@ CREATE TABLE [dbo].[SalesOrderQuote](
 GO
 
 
+--# Commented for time being will be fixing it in upcoming releases  
+-- ALTER TABLE [dbo].[SalesOrderQuote]
+-- ADD CONSTRAINT FK_SalesOrderQuote_QuoteTypeId FOREIGN KEY (QuoteTypeId)
+-- REFERENCES [dbo].[MasterSalesOrderQuoteTypes](Id)
 
-ALTER TABLE [dbo].[SalesOrderQuote]
-ADD CONSTRAINT FK_SalesOrderQuote_QuoteTypeId FOREIGN KEY (QuoteTypeId)
-REFERENCES [dbo].[MasterSalesOrderQuoteTypes](Id)
 
-
-ALTER TABLE [dbo].[SalesOrderQuote]
-ADD CONSTRAINT FK_SalesOrderQuote_PriorityId FOREIGN KEY (PriorityId)
-REFERENCES [dbo].[Priority](PriorityId)
+-- ALTER TABLE [dbo].[SalesOrderQuote]
+-- ADD CONSTRAINT FK_SalesOrderQuote_PriorityId FOREIGN KEY (PriorityId)
+-- REFERENCES [dbo].[Priority](PriorityId)
 	
-ALTER TABLE [dbo].[SalesOrderQuote]
-ADD CONSTRAINT FK_SalesOrderQuote_CustomerId FOREIGN KEY (CustomerId)
-REFERENCES [dbo].[Customer](CustomerId)
+-- ALTER TABLE [dbo].[SalesOrderQuote]
+-- ADD CONSTRAINT FK_SalesOrderQuote_CustomerId FOREIGN KEY (CustomerId)
+-- REFERENCES [dbo].[Customer](CustomerId)
 	
 	
-ALTER TABLE [dbo].[SalesOrderQuote]
-ADD CONSTRAINT FK_SalesOrderQuote_SalesPersonId FOREIGN KEY (SalesPersonId)
-REFERENCES [dbo].[Employee](EmployeeId)
+-- ALTER TABLE [dbo].[SalesOrderQuote]
+-- ADD CONSTRAINT FK_SalesOrderQuote_SalesPersonId FOREIGN KEY (SalesPersonId)
+-- REFERENCES [dbo].[Employee](EmployeeId)
 	
-ALTER TABLE [dbo].[SalesOrderQuote]
-ADD CONSTRAINT FK_SalesOrderQuote_CustomerSeviceRepId FOREIGN KEY (CustomerSeviceRepId)
-REFERENCES [dbo].[Employee](EmployeeId)
+-- ALTER TABLE [dbo].[SalesOrderQuote]
+-- ADD CONSTRAINT FK_SalesOrderQuote_CustomerSeviceRepId FOREIGN KEY (CustomerSeviceRepId)
+-- REFERENCES [dbo].[Employee](EmployeeId)
 
-ALTER TABLE [dbo].[SalesOrderQuote]
-ADD CONSTRAINT FK_SalesOrderQuote_ProbabilityId FOREIGN KEY (ProbabilityId)
-REFERENCES [dbo].[MasterSalesProbablity](Id)
+-- ALTER TABLE [dbo].[SalesOrderQuote]
+-- ADD CONSTRAINT FK_SalesOrderQuote_ProbabilityId FOREIGN KEY (ProbabilityId)
+-- REFERENCES [dbo].[MasterSalesProbablity](Id)
 
-ALTER TABLE [dbo].[SalesOrderQuote]
-ADD CONSTRAINT FK_SalesOrderQuote_LeadSourceId FOREIGN KEY (LeadSourceId)
-REFERENCES [dbo].[MasterSalesLeadSources](Id)
+-- ALTER TABLE [dbo].[SalesOrderQuote]
+-- ADD CONSTRAINT FK_SalesOrderQuote_LeadSourceId FOREIGN KEY (LeadSourceId)
+-- REFERENCES [dbo].[MasterSalesLeadSources](Id)
 	
-ALTER TABLE [dbo].[SalesOrderQuote]
-ADD CONSTRAINT FK_SalesOrderQuote_CreditTermId FOREIGN KEY (CreditTermId)
-REFERENCES [dbo].[CreditTerms](CreditTermsId)
+-- ALTER TABLE [dbo].[SalesOrderQuote]
+-- ADD CONSTRAINT FK_SalesOrderQuote_CreditTermId FOREIGN KEY (CreditTermId)
+-- REFERENCES [dbo].[CreditTerms](CreditTermsId)
 
-ALTER TABLE [dbo].[SalesOrderQuote]
-ADD CONSTRAINT FK_SalesOrderQuote_EmployeeId FOREIGN KEY (EmployeeId)
-REFERENCES [dbo].[Employee](EmployeeId)
+-- ALTER TABLE [dbo].[SalesOrderQuote]
+-- ADD CONSTRAINT FK_SalesOrderQuote_EmployeeId FOREIGN KEY (EmployeeId)
+-- REFERENCES [dbo].[Employee](EmployeeId)
 
-ALTER TABLE [dbo].[SalesOrderQuote]
-ADD CONSTRAINT FK_SalesOrderQuote_CurrencyId FOREIGN KEY (CurrencyId)
-REFERENCES [dbo].[Currency](CurrencyId)
+-- ALTER TABLE [dbo].[SalesOrderQuote]
+-- ADD CONSTRAINT FK_SalesOrderQuote_CurrencyId FOREIGN KEY (CurrencyId)
+-- REFERENCES [dbo].[Currency](CurrencyId)
 
-ALTER TABLE [dbo].[SalesOrderQuote]
-ADD CONSTRAINT FK_SalesOrderQuote_CustomerWarningId FOREIGN KEY (CustomerWarningId)
-REFERENCES [dbo].[CustomerWarning](CustomerWarningId)
+-- ALTER TABLE [dbo].[SalesOrderQuote]
+-- ADD CONSTRAINT FK_SalesOrderQuote_CustomerWarningId FOREIGN KEY (CustomerWarningId)
+-- REFERENCES [dbo].[CustomerWarning](CustomerWarningId)
 
-ALTER TABLE [dbo].[SalesOrderQuote]
-ADD CONSTRAINT FK_SalesOrderQuote_ShipToContactId FOREIGN KEY (ShipToContactId)
-REFERENCES [dbo].[Employee](EmployeeId)
+-- ALTER TABLE [dbo].[SalesOrderQuote]
+-- ADD CONSTRAINT FK_SalesOrderQuote_ShipToContactId FOREIGN KEY (ShipToContactId)
+-- REFERENCES [dbo].[Employee](EmployeeId)
 
-ALTER TABLE [dbo].[SalesOrderQuote]
-ADD CONSTRAINT FK_SalesOrderQuote_BillToContactId FOREIGN KEY (BillToContactId)
-REFERENCES [dbo].[Employee](EmployeeId)
+-- ALTER TABLE [dbo].[SalesOrderQuote]
+-- ADD CONSTRAINT FK_SalesOrderQuote_BillToContactId FOREIGN KEY (BillToContactId)
+-- REFERENCES [dbo].[Employee](EmployeeId)
 
 

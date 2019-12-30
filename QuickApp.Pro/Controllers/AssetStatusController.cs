@@ -44,14 +44,14 @@ namespace QuickApp.Pro.Controllers
                 columHeaders.Add(columnHeader);
             }
             dynamicGridData.columHeaders = columHeaders;
-            dynamicGridData.ColumnData = unitOfWork.Repository<AssetStatus>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.AssetStatusId); ;
+            dynamicGridData.ColumnData = unitOfWork.Repository<AssetStatus>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.AssetStatusId); ;
             return Ok(dynamicGridData);
         }               
 
         [HttpGet("getById/{id}")]
         public IActionResult getAssetById(long id)
         {
-            var asset = unitOfWork.Repository<AssetStatus>().Find(x => x.AssetStatusId == id && x.IsDeleted != true);
+            var asset = unitOfWork.Repository<AssetStatus>().Find(x => x.AssetStatusId == id && x.IsDelete != true);
             return Ok(asset);
         }
 
@@ -115,7 +115,7 @@ namespace QuickApp.Pro.Controllers
             if (asset != null)
             {
                 asset.UpdatedDate = DateTime.Now;
-                asset.IsDeleted = true;
+                asset.IsDelete = true;
                 unitOfWork.Repository<AssetStatus>().Update(asset);
                 unitOfWork.SaveChanges();
                 return Ok();

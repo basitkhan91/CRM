@@ -259,10 +259,20 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
 
     saveChargesWorkOrder() {
         this.saveChargesListForWO.emit(this.workFlow)
+        this.workFlow.charges = [];
+        this.addRow();
+        this.workFlow.qtySummation = 0;
+        this.workFlow.extendedCostSummation = 0;
+        this.workFlow.totalChargesCost = 0;
     }
 
     updateChargesWorkOrder() {
         this.updateChargesListForWO.emit(this.workFlow);
+        this.workFlow.charges = [];
+        this.addRow();
+        this.workFlow.qtySummation = 0;
+        this.workFlow.extendedCostSummation = 0;
+        this.workFlow.totalChargesCost = 0;
     }
 
     markupChanged(matData) {
@@ -276,5 +286,29 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         catch (e) {
             console.log(e);
         }
+    }
+    
+    getTotalCostPlusAmount(){
+        let total = 0;
+        this.workFlow.charges.forEach(
+          (material)=>{
+            if(material.chargesCostPlus){
+              total += material.chargesCostPlus;
+            }
+          }
+        )
+        return total;
+    }
+
+    getTotalFixedAmount(){
+        let total = 0;
+        this.workFlow.charges.forEach(
+          (material)=>{
+            if(material.fixedAmount){
+              total += Number(material.fixedAmount);
+            }
+          }
+        )
+        return total;
     }
 }

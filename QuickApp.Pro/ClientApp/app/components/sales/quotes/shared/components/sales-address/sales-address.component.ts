@@ -70,7 +70,8 @@ export class SalesAddressComponent {
       console.log(res);
       
       this.siteList = res[0];
-      this.getDefaultShipping();
+      if(!this.salesOrderQuote.salesOrderQuoteId)
+        this.getDefaultShipping();
       
   })
 }
@@ -95,8 +96,9 @@ getDefaultShipping() {
 }
 getBillingDataById() {
   this.customerService.getCustomerBillViaDetails(this.customerId).subscribe(res => {
-    this.billingInfoList = res[0]
-    this.getDefaultBilling();
+    this.billingInfoList = res[0];
+    if(!this.salesOrderQuote.salesOrderQuoteId)
+      this.getDefaultBilling();
   })
 }
 getDefaultBilling() {

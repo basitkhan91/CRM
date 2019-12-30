@@ -26,7 +26,7 @@
                                         <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file" 
                                                accept=".xlsx, .xls, .csv">
                                         <label for="upload">
-                                            <span matTooltip="Upload Data (Excel)">
+                                            <span pTooltip="Upload Data (Excel)" tooltipPosition="top">
                                                 <i class="fa fa-upload"></i>
                                             </span>
                                         </label>
@@ -63,7 +63,12 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                         }}
                                     </td>
                                     <td style="width:150px" *ngIf="selectedColumns.length> 0">
-                                        <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>
+                                        <!--<p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>-->
+                                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+
+
                                         <span data-toggle="modal" data-target="#view">
                                             <a class="btn btn-info boxed-float-btn nobg" data-toggle="modal" (click)="viewSelectedRow(rowData)" data-target="#view" matTooltip="View">
                                                 <i class="fa fa-eye"></i>
@@ -94,7 +99,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
         </div>
     </div>
 
-    <div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog" data-backdrop="static">
+    <div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -116,7 +121,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
         </div>
     </div>
 
-    <div #addCondition id="addCondition" class="modal fade" role="dialog" data-backdrop="static">
+    <div #addCondition id="addCondition" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -141,12 +146,13 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                                     [(ngModel)]="addNewCondition.description"
                                                     [suggestions]="conditionList"
                                                     (onSelect)="selectedCondition($event)"
+                                                    (onBlur)="onBlur($event)"
                                                     (completeMethod)="filterConditions($event)"
                                                     (onKeyUp)="checkConditionExists('description', $event.target.value)"
                                                     name="description" [size]="30" [minLength]="1" [dropdown]="true"
                                                     class="p-autoComplete-ctsm" required>
                                     </p-autoComplete>
-                                    <div *ngIf="disableSaveForCondition" style="color:red">Already exist</div>
+                                    <div *ngIf="disableSaveForConditionMsg" style="color:red">Already exist</div>
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -173,7 +179,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                             <div class="clear"></div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="!userForm.valid || disableSaveForCondition" (click)="saveCondition();">Save</button>
+                            <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="!userForm.valid || disableSaveForCondition" (click)="saveCondition();"> {{isEditMode ? 'Update' : 'Save' }}</button>
                             <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetConditionForm()">Close</button>
                         </div>
                     </form>
@@ -184,7 +190,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
         </div>
     </div>
 
-    <div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static">
+    <div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -208,7 +214,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
 
                         <p>
                             <span class="label ">
-                                <b class="view-Header">IsActive</b>
+                                <b class="view-Header">Is Active</b>
                             </span>
                             <span class="value">{{viewRowData.isActive === true ? 'Yes' : 'No'}}</span>
                         </p>
@@ -249,7 +255,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     </div>
 
 
-    <div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static">
+    <div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-lg">
 
             <!-- Modal content-->
@@ -276,7 +282,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                     <!-- auditHistory[i>0 ? i-1 : i] -->
                                     <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
                                     <td [ngStyle]="{'color': getColorCodeForHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>
-                                    <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+                                    <td [ngStyle]="{'color': getColorCodeForHistory(i, 'is Active', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
                                     <td>{{audit.updatedBy}}</td>
                                     <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
                                 </tr>
@@ -302,7 +308,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     </div>
 
 
-    <ng-template #helpText class="modal fade" id="help-popup" role="dialog" data-backdrop="static">
+    <ng-template #helpText class="modal fade" id="help-popup" role="dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>

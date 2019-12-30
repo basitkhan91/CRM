@@ -6,6 +6,7 @@ import { ISalesProbablity } from "./ISalesProbablity";
 import { ILeadSource } from "./ILeadSource";
 
 export interface ISalesQuote {
+  salesOrderQuoteId: number;
   quoteTypeId: number;
 
   openDate: Date;

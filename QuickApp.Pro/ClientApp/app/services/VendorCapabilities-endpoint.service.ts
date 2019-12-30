@@ -95,6 +95,15 @@ export class VendorCapabilitiesEndpoint extends EndpointFactory {
     getVendorAircraftGetDataByCapsId(vendorCapesId){
 		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/VendorAircraftGetDataByCapsId/${vendorCapesId}`)
     }
+
+    searchAirMappedByMultiTypeIDModelIDDashID<T>(vendorCapesId: number, searchUrl: string): Observable<T> {
+        let endpointUrl = `${this.configurations.baseUrl}/api/Vendor/searchForGetAirCraftByVendorCapsId/${vendorCapesId}?${searchUrl}`;
+        return this.http
+            .get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.searchAirMappedByMultiTypeIDModelIDDashID(vendorCapesId, searchUrl));
+            });
+    }
    
 
 }

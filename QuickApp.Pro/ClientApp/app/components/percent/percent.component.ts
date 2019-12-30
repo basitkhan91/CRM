@@ -21,7 +21,7 @@ import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-scre
 
 import { CustomerService } from '../../services/customer.service';
 import { Table } from '../../../../node_modules/primeng/table';
-import { validateRecordExistsOrNot, selectedValueValidate } from '../../generic/autocomplete';
+import { validateRecordExistsOrNot, getObjectByValue, selectedValueValidate, editValueAssignByCondition, getObjectById} from '../../generic/autocomplete';
 import { PercentService } from '../../services/percent.service';
 
 @Component({
@@ -39,9 +39,8 @@ export class PercentComponent implements OnInit {
     pageIndex: number = 0;
     pageSize: number = 10;
     totalPages: number;
-    headers = [        
-        { field: 'percentValue', header: 'Percent' },
-        { field: 'memo', header: 'Memo' },
+    headers = [
+        { field: 'percentValue', header: 'percentValue' }
     ]
     selectedColumns = this.headers;
     formData = new FormData()
@@ -52,13 +51,15 @@ export class PercentComponent implements OnInit {
     disableSaveGroupId: boolean = false;
     PortalList: any;
     disableSaveForDescription: boolean = false;
+    disableSaveForDescriptionMsg: boolean = false;
     descriptionList: any;
+    percentData: any;
+    
 
     new = {
         percentValue: "",
         masterCompanyId: 1,
-        isActive: true,
-        memo: "",
+        isActive: true        
     }
     addNew = { ...this.new };
     selectedRecordForEdit: any;
@@ -98,6 +99,35 @@ export class PercentComponent implements OnInit {
         // this.table.sortField = '';
 
         this.getList();
+    }
+
+    onBlur(event) {
+        //console.log(event.target.value);
+        //console.log(this.addNew);
+
+        const value = event.target.value;
+        this.disableSaveForDescriptionMsg = false;
+        for (let i = 0; i < this.originalData.length; i++) {
+            let percentValue = this.originalData[i].percentValue;
+            let percenteId = this.originalData[i].percenteId;
+            if (percentValue == value) {
+                if (!this.isEdit) {
+                    this.disableSaveForDescriptionMsg = true;
+                    this.disableSaveForDescription = true;
+                }
+                else if (percenteId != this.selectedRecordForEdit.percenteId) {
+                    this.disableSaveForDescriptionMsg = true;
+                    this.disableSaveForDescription = false;
+                }
+                else {
+                    this.disableSaveForDescriptionMsg = false;
+                    this.disableSaveForDescription = false;
+                }
+                console.log('percentValue :', percentValue);
+                break;
+            }
+        }
+
     }
 
     customExcelUpload(event) {
@@ -148,21 +178,23 @@ export class PercentComponent implements OnInit {
 
 
     checkGroupDescriptionExists(field, value) {
-        console.log(this.selectedRecordForEdit);
-        const exists = validateRecordExistsOrNot(field, value, this.originalData, this.selectedRecordForEdit);
+         console.log(this.selectedRecordForEdit);
+
+        const exists = validateRecordExistsOrNot(field, parseInt(value), this.originalData, this.selectedRecordForEdit);
         if (exists.length > 0) {
             this.disableSaveForDescription = true;
+            this.disableSaveForDescriptionMsg = true;
         }
         else {
             this.disableSaveForDescription = false;
+            this.disableSaveForDescriptionMsg = false;
         }
 
     }
     filterDescription(event) {
         this.descriptionList = this.originalData;
-
         const descriptionData = [...this.originalData.filter(x => {
-            return x.percentValue.toLowerCase().includes(event.query.toLowerCase())
+            return x.percentValue.toString().toLowerCase().includes(event.query.toString().toLowerCase())
         })]
         this.descriptionList = descriptionData;
     }
@@ -173,34 +205,37 @@ export class PercentComponent implements OnInit {
     }
 
     save() {
-        // const data = {
-        //    // ...this.addNew, createdBy: this.userName, updatedBy: this.userName,
-        //   //  ataChapterName: editValueAssignByCondition('ataChapterName', this.addNew.ataChapterName),
-        //    // ataChapterCategory: editValueAssignByCondition('ataChapterCategory', this.addNew.ataChapterCategory)
-        // };
-        // if (!this.isEdit) {
-        //     this.atamainService.newATAMain(data).subscribe(() => {
-        //         this.resetForm();
-        //         this.getList();
-        //         this.alertService.showMessage(
-        //             'Success',
-        //             `Added  New Percent Successfully`,
-        //             MessageSeverity.success
-        //         );
-        //     })
-        // } else {
-        //     this.atamainService.updateATAMain(data).subscribe(() => {
-        //         this.selectedRecordForEdit = undefined;
-        //         this.isEdit = false;
-        //         this.resetForm();
-        //         this.getList();
-        //         this.alertService.showMessage(
-        //             'Success',
-        //             `Updated Percent Successfully`,
-        //             MessageSeverity.success
-        //         );
-        //     })
-        // }
+         const data = {
+             ...this.addNew, createdBy: this.userName, updatedBy: this.userName,
+           
+            percentValue: editValueAssignByCondition('percentValue', this.addNew.percentValue),
+
+        };
+
+        if (!this.isEdit) {
+            data.percentValue = parseFloat(this.addNew.percentValue);         
+             this.percentService.newPercentage(data).subscribe(() => {
+                 this.resetForm();
+                 this.getList();
+                 this.alertService.showMessage(
+                     'Success',
+                     `Added  New Percent Successfully`,
+                     MessageSeverity.success
+                 );
+             })
+         } else {
+             this.percentService.updatePercentage(data).subscribe(() => {
+                 this.selectedRecordForEdit = undefined;
+                 this.isEdit = false;
+                 this.resetForm();
+                 this.getList();
+                 this.alertService.showMessage(
+                     'Success',
+                     `Updated Percent Successfully`,
+                     MessageSeverity.success
+                 );
+             })
+         }
     }
 
     resetForm() {
@@ -212,15 +247,16 @@ export class PercentComponent implements OnInit {
 
     edit(rowData) {
         console.log(rowData);
+       
         this.isEdit = true;
         this.disableSaveGroupId = false;
-        this.disableSaveForDescription = false;
-
+        this.disableSaveForDescription = true;
+        this.disableSaveForDescriptionMsg = false;
 
         this.addNew = {
-            ...rowData,
-         //   ataChapterName: getObjectByValue('ataChapterName', rowData.ataChapterName, this.originalData),
+            ...rowData, percentValue: getObjectById('percentId', rowData.percentId, this.originalData)
         };
+       // alert(JSON.stringify(this.addNew.percentValue));
         this.selectedRecordForEdit = { ...this.addNew }
 
     }
@@ -228,14 +264,14 @@ export class PercentComponent implements OnInit {
     changeStatus(rowData) {
         console.log(rowData);
         const data = { ...rowData }
-        // this.atamainService.updateATAMain(data).subscribe(() => {
+        this.percentService.updatePercentage(data).subscribe(() => {
 
-        //     this.alertService.showMessage(
-        //         'Success',
-        //         `Updated Status Successfully  `,
-        //         MessageSeverity.success
-        //     );
-        // })
+             this.alertService.showMessage(
+                 'Success',
+                 `Updated Status Successfully  `,
+                 MessageSeverity.success
+             );
+         })
 
     }
     viewSelectedRow(rowData) {
@@ -265,9 +301,9 @@ export class PercentComponent implements OnInit {
     }
 
     getAuditHistoryById(rowData) {
-        // this.atamainService.getAtaChapterAudit(rowData.ataChapterId).subscribe(res => {
-        //     this.auditHistory = res;
-        // })
+        this.percentService.historyAcion(rowData.percentId).subscribe(res => {
+             this.auditHistory = res;
+         })
     }
     getColorCodeForHistory(i, field, value) {
         const data = this.auditHistory;

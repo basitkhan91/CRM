@@ -68,6 +68,7 @@ namespace DAL.Models
         public CustomerDetails CustomerDetails { get;set;}
         [NotMapped]
         public bool IsSubWorkOrder { get; set; }
+        
 
 
     }

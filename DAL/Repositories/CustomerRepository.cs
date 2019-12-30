@@ -99,7 +99,7 @@ namespace DAL.Repositories
                             t.Name,
                             t.CustomerCode,
                             t.Email,
-                            CustomerType = type.Description,
+                            AccountType = type.Description,
                             CustomerClassification = ct.Description,
                             City = ad.City,
                             StateOrProvince = ad.StateOrProvince,
@@ -108,7 +108,7 @@ namespace DAL.Repositories
                             t.CreatedDate,
                             t.IsActive,
                             t.IsDeleted,
-                            AccountType = AccountTyp.description,
+                            CustomerType = AccountTyp.description,
                             TotalRecords = totalRecords
                         }).Distinct().OrderByDescending(p => p.CreatedDate)
                              .Skip(skip)
@@ -2067,6 +2067,61 @@ namespace DAL.Repositories
 
             }
 
+        }
+        public IEnumerable<object> GetAircraftMappedAudit(long customerAircraftMappingId)
+        {
+            {
+
+                var data = (from c in _appContext.CustomerAircraftMappingAudit
+                            where c.CustomerAircraftMappingId == customerAircraftMappingId 
+                            select new
+                            {
+                                c.CustomerAircraftMappingId,
+                                c.AuditCustomerAircraftMappingId,
+                                c.CustomerId,
+                                c.AircraftTypeId,
+                                c.AircraftType,
+                                c.AircraftModelId,
+                                c.DashNumberId,
+                                c.CreatedBy,
+                                c.UpdatedBy,
+                                c.UpdatedDate,
+                                c.CreatedDate,
+                                c.DashNumber,
+                                c.AircraftModel,
+                                c.Memo,
+                                c.Inventory,
+                                c.MasterCompanyId
+                            }).OrderByDescending(c => c.UpdatedDate).ToList();
+                return data;
+            }
+        }
+        public IEnumerable<object> GetCustomerInternationalShippingAuditHistoryByid(long customerId, long internationalShippingId)
+        {
+            {
+
+                var data = (from c in _appContext.CustomerInternationalShippingAudit
+                            where c.CustomerId == customerId && c.InternationalShippingId== internationalShippingId
+                            select new
+                            {
+                                c.InternationalShippingId,
+                                c.AuditInternationalShippingId,
+                                c.CustomerId,
+                                c.ExportLicense,
+                                c.StartDate,
+                                c.ExpirationDate,
+                                c.Amount,
+                                c.Description,
+                                c.IsPrimary,
+                                c.CreatedBy,
+                                c.UpdatedBy,
+                                c.UpdatedDate,
+                                c.CreatedDate,
+                               
+                                c.MasterCompanyId
+                            }).OrderByDescending(c => c.UpdatedDate).ToList();
+                return data;
+            }
         }
 
     }

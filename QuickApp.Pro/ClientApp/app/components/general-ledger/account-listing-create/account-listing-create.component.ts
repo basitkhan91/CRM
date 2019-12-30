@@ -102,9 +102,7 @@ export class AccountListingCreateComponent implements OnInit {
 
     ngOnInit(): void {
         
-        this.route.paramMap.subscribe(params => {
-            console.log('params :', params)
-            console.log('snapshot :', this.route.snapshot.paramMap)
+        this.route.paramMap.subscribe(params => {           
              this.accountId = params.get("id")
              if(this.accountId){
                 this.editMode = true

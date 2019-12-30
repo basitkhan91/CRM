@@ -93,18 +93,23 @@
       
               <div style="margin-top:15px;">
                 <h4 class="po-head">Quote List</h4>
-                <p-table [value]="sales">
+              <p-table [value]="sales" class="rpo-table-cstm rro-table-cstm" [columns]="columns" [scrollable]="true" [style]="{ width: '100%' }">
+                  <ng-template pTemplate="colgroup" let-columns>
+                            <colgroup>
+                              <col *ngFor="let col of columns" style="width:200px" />
+                            </colgroup>
+                  </ng-template> 
             <ng-template pTemplate="header">
               <tr>
-                <th>Quote number</th>
-                <th>Quote Date</th>
-                <th>Version Number</th>
-                <th>Customer Name</th>
-                <th>Customer Code</th>
-                <th>Status</th>
-                <th>Sales Price</th>
-                <th>Cost</th>
-                <th>numberOfItems</th>
+                <th pResizableColumn>Quote number</th>
+                <th pResizableColumn>Quote Date</th>
+                <th pResizableColumn>Version Number</th>
+                <th pResizableColumn>Customer Name</th>
+                <th pResizableColumn>Customer Code</th>
+                <th pResizableColumn>Status</th>
+                <th pResizableColumn>Sales Price</th>
+                <th pResizableColumn>Cost</th>
+                <th pResizableColumn>numberOfItems</th>
                 <th>
                   &nbsp;
                 </th>

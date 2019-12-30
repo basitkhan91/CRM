@@ -310,8 +310,8 @@ export class VendorEndpointService extends EndpointFactory {
 			});
 	}
 
-	getvendorCapabilityListEndpoint<T>(): Observable<T> {
-		return this.http.get<T>(this.vendorCapabilityListsUrl, this.getRequestHeaders())
+	getvendorCapabilityListEndpoint<T>(status): Observable<T> {
+		return this.http.get<T>(`${this.vendorCapabilityListsUrl}/?status=${status}`, this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.getvendorEndpoint());
 			});

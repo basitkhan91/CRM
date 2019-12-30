@@ -28,7 +28,8 @@ CREATE TABLE [dbo].[SalesOrderQuotePart](
 	[CreatedOn] [datetime2] NOT NULL,  
 	[UpdatedBy] [varchar](256) NULL,
 	[UpdatedOn] [datetime2] NULL,
-	[IsDeleted] [bit] NOT NULL DEFAULT 0
+	[IsDeleted] [bit] NOT NULL DEFAULT 0,  
+	[Method] [char](1) NOT NULL
 
  CONSTRAINT [PK_SalesOrderQuotePart] PRIMARY KEY CLUSTERED 
 (
@@ -38,15 +39,16 @@ CREATE TABLE [dbo].[SalesOrderQuotePart](
 GO
 
 
-ALTER TABLE [dbo].[SalesOrderQuotePart]
-ADD CONSTRAINT FK_SalesOrderQuote_SalesOrderQuoteId FOREIGN KEY (SalesOrderQuoteId)
-REFERENCES [dbo].[SalesOrderQuote](SalesOrderQuoteId)
+--# Commented for time being. Will be fixing it in upcoming release 
+-- ALTER TABLE [dbo].[SalesOrderQuotePart]
+-- ADD CONSTRAINT FK_SalesOrderQuote_SalesOrderQuoteId FOREIGN KEY (SalesOrderQuoteId)
+-- REFERENCES [dbo].[SalesOrderQuote](SalesOrderQuoteId)
 
 
-ALTER TABLE [dbo].[SalesOrderQuotePart]
-ADD CONSTRAINT FK_SalesOrderQuote_ItemMasterId FOREIGN KEY (ItemMasterId)
-REFERENCES [dbo].[ItemMaster](ItemMasterId)
+-- ALTER TABLE [dbo].[SalesOrderQuotePart]
+-- ADD CONSTRAINT FK_SalesOrderQuote_ItemMasterId FOREIGN KEY (ItemMasterId)
+-- REFERENCES [dbo].[ItemMaster](ItemMasterId)
 
-ALTER TABLE [dbo].[SalesOrderQuotePart]
-ADD CONSTRAINT FK_SalesOrderQuote_StockLineId FOREIGN KEY (StockLineId)
-REFERENCES [dbo].[StockLine](StockLineId)
+-- ALTER TABLE [dbo].[SalesOrderQuotePart]
+-- ADD CONSTRAINT FK_SalesOrderQuote_StockLineId FOREIGN KEY (StockLineId)
+-- REFERENCES [dbo].[StockLine](StockLineId)

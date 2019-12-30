@@ -67,8 +67,7 @@
                                         <p-inputSwitch [(ngModel)]="rowData['isActive']" matTooltip="Update" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>
 
                                         <span data-toggle="modal" data-target="#view">
-                                            <a class="btn btn-info boxed-float-btn nobg" matTooltip="View" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" data-target="#view"
-                                                data-toggle="modal">
+                                            <a class="btn btn-info boxed-float-btn nobg" matTooltip="View" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" data-target="#view">
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         </span>
@@ -78,9 +77,6 @@
 
                                         <button class="btn-delete" mat-icon-button matTooltip="Delete" data-target="#delete" data-toggle="modal" (click)="delete(rowData)">
                                             <mat-icon color="warn">delete</mat-icon>
-                                        </button>
-                                        <button class="btn-history" mat-icon-button matTooltip="History" data-target="#contentHist" data-toggle="modal" (click)="getAuditHistoryById(rowData)">
-                                            <mat-icon color="green">history</mat-icon>
                                         </button>
                                     </td>
                                 </tr>
@@ -103,7 +99,7 @@
         </div>
     </div>
 </div>
-<div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog"  data-backdrop="static">
+<div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -124,7 +120,7 @@
     </div>
 </div>
 
-<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog"  data-backdrop="static">
+<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
@@ -217,7 +213,7 @@
 
 </div>
 
-<div #add id="add" class="modal fade" role="dialog"  data-backdrop="static">
+<div #add id="add" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
 
         <!-- Modal content-->
@@ -236,8 +232,7 @@
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <select name="aircraftType" [(ngModel)]="addNew.ledgerName" #ledgerNameMgmStructureId="ngModel" required>
-                                    <option>-- Select --</option>
+                                <select name="aircraftType" [(ngModel)]="addNew.ledgerName" #ledgerNameMgmStructureId="ngModel" (onSelect)="ledgerSelect($event)" required>
                                     <option *ngFor="let object of ledgerList" [ngValue]="object.ledgerName">{{object.ledgerName}}</option>
                                 </select>
                             </div>
@@ -284,18 +279,16 @@
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <p-autoComplete (onSelect)="parentCodeNodeSelect($event)" class="p-autoComplete-ctsm" (onKeyUp)=parentCodeNodeHandler($event) [(ngModel)]="addNew.parentNode"
+                                <p-autoComplete (onSelect)="parentCodeNodeSelect($event)" class="p-autoComplete-ctsm" (onKeyUp)=parentCodeNodeHandler($event) [(ngModel)]="addNew.parentNodeName"
                                                 name="parentNode" [suggestions]="parentCodeCollection" (completeMethod)="filterParentNodeCodes($event)"
                                                 [size]="30" [minLength]="1" [dropdown]="true">
-                                    
                                 </p-autoComplete>
+                                <div *ngIf="addNew.leafNodeCheck" class="clr-red">Mandatory if current Node is a Leaf Node</div>
                             </div>
                         </div>
                         <div class="form-group col-sm-12">
                             <div class="col-sm-5">
-                                <label for="description" class="control-label">Leaf Node
-                                   
-                                </label>
+                                <label for="description" class="control-label">Leaf Node</label>
                             </div>
                             <div class="col-sm-5 checkbox-cstm">
                                 <label>
@@ -343,7 +336,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" data-dismiss="modal" 
+                <button class="btn btn-primary-cstm" data-dismiss="modal"  [disabled]="create.invalid || disableSaveGroupId && disableSaveForDescription"
                     (click)="save();">
                     {{isEdit ? 'Update' : 'Save' }}</button>
                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetForm()">Close</button>

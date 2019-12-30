@@ -56,8 +56,8 @@ namespace QuickApp.Pro.ViewModels
         public Nullable<bool> IsActive { get; set; }
 
         public int ManagementStructureId { get; set; }
-        public decimal ShippingCost { get; set; }
-        public decimal HandlingCost { get; set; }
+        public decimal? ShippingCost { get; set; }
+        public decimal? HandlingCost { get; set; }
         public string ShippingId { get; set; }
         public string ShippingURL{get;set;}
         public long BillToContactId { get; set; }

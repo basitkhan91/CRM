@@ -1,5 +1,6 @@
 import { Injectable, Injector } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
 
 import { ConfigurationService } from './configuration.service';
 import { EndpointFactory } from './endpoint-factory.service';
@@ -91,5 +92,18 @@ export class CommonService {
     getRestrictedPartsWithDesc(moduleId, referenceId, partType) {
         return this.http.get<any>(`${this.baseUrl}/api/Common/getrestrictedpartswithdesc?moduleId=${moduleId}&referenceId=${referenceId}&partType=${partType}`)
     }
+
+    GetDocumentsList(referenceId, moduleId) {
+        return this.http.get<any>(`${this.baseUrl}/api/FileUpload/getFileDocumentDetail/${referenceId}?moduleId=${moduleId}`, this.authService.getRequestHeaders())
+    }
+
+    GetAttachmentDeleteById(attachmentDetailId, updatedBy) {
+        return this.http.delete(`${this.baseUrl}/api/FileUpload/AttachmentDelete/${attachmentDetailId}?updatedBy=${updatedBy}`, this.authService.getRequestHeaders())
+    }
+
+    uploadDocumentsEndpoint<T>(file: any): Observable<T> {        
+		const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
+		return this.http.post<T>(`${this.baseUrl}/api/FileUpload/commonDocumentUpload`, file);
+	}
 
 }

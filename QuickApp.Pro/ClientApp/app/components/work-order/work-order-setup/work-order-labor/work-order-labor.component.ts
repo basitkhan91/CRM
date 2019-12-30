@@ -65,6 +65,17 @@ console.log(this.workOrderLaborList);
   ngOnChanges(){
     this.getAllEmployees();
     this.workOrderWorkFlowList = this.workOrderWorkFlowOriginalData;
+    if(this.laborForm['workOrderHoursType']){
+      if(this.laborForm['workOrderHoursType'] == 1){
+        this.laborForm.workFloworSpecificTaskorWorkOrder = 'workFlow';
+      }
+      else if(this.laborForm['workOrderHoursType'] == 2){
+        this.laborForm.workFloworSpecificTaskorWorkOrder = 'specificTasks';
+      }
+      else {
+        this.laborForm.workFloworSpecificTaskorWorkOrder = "workOrder";
+      }
+    }
     this.calculateTotalWorkHours();
     if(this.workOrderLaborList){
       this.laborForm.workFlowWorkOrderId = this.workOrderLaborList['workFlowWorkOrderId'];
@@ -288,8 +299,15 @@ console.log(this.workOrderLaborList);
     //     workOrderId : this.id }]
     //   };
     // }
-
-
+    if(this.laborForm.workFloworSpecificTaskorWorkOrder == 'workFlow'){
+      this.saveFormdata['workOrderHoursType'] = 1;
+    }
+    else if(this.laborForm.workFloworSpecificTaskorWorkOrder == 'specificTasks'){
+      this.saveFormdata['workOrderHoursType'] = 2;
+    }
+    else {
+      this.saveFormdata['workOrderHoursType'] = 3;
+    }
 
     this.saveworkOrderLabor.emit(this.saveFormdata);  
 
@@ -396,7 +414,7 @@ console.log(this.workOrderLaborList);
     this.laborForm.totalWorkHours = 0;
     if(this.laborForm.workOrderLaborList){
       for(let task in this.laborForm.workOrderLaborList[0]){
-        if(this.laborForm.workOrderLaborList[0][task][0]['hours'] != null){
+        if(this.laborForm.workOrderLaborList[0][task][0] && this.laborForm.workOrderLaborList[0][task][0]['hours'] != null){
           for (let taskList of this.laborForm.workOrderLaborList[0][task] ){
             // hoursArr = taskList['hours'].split(":");
             // if(hoursArr.length == 1){ hoursArr.push(0)}
@@ -407,6 +425,18 @@ console.log(this.workOrderLaborList);
         }
       }
     }
+  }
+
+  getTotalCostPlusAmount(){
+    let total = 0;
+    this.laborForm.workOrderLaborList.forEach(
+      (material)=>{
+        if(material.labourCostPlus){
+          total += material.labourCostPlus;
+        }
+      }
+    )
+    return total;
   }
   // tasks : this.laborForm.tasks[0][keysArray[i]].map(x => {
   //   return {

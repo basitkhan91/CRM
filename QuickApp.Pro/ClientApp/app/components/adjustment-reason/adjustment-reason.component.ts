@@ -200,7 +200,7 @@ export class AdjustmentReasonComponent implements OnInit, AfterViewInit
         this.auditHisory = auditHistory;
 
 
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
 
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -218,7 +218,7 @@ export class AdjustmentReasonComponent implements OnInit, AfterViewInit
         this.sourceAction = new StocklineAdjustmentReason();
         this.sourceAction.isActive = true;
         this.stockAdjustmentReason = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -229,7 +229,7 @@ export class AdjustmentReasonComponent implements OnInit, AfterViewInit
         this.isDeleteMode = true;
         this.sourceAction = row;
         this.code_Name = row.stockAdjustmentReason;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         console.log(content);
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -244,7 +244,7 @@ export class AdjustmentReasonComponent implements OnInit, AfterViewInit
 		this.sourceAction = row;       
         this.stockAdjustmentReason = row.stockAdjustmentReason;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -326,13 +326,13 @@ export class AdjustmentReasonComponent implements OnInit, AfterViewInit
         this.createdDate = row.createdDate;
         this.updatedDate = row.updatedDate;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
     openHelpText(content) {
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })

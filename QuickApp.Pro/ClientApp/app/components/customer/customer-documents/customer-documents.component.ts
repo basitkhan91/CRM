@@ -48,6 +48,7 @@ export class CustomerDocumentsComponent implements OnInit {
 	customerName: any;
     sourceViewforDocument: any;
     localCollection: any;
+    selectedRowForDelete: any;
 	 modal: NgbModalRef;
     sourceViewforDocumentList: any = [];
     headersforAttachment = [
@@ -192,7 +193,7 @@ export class CustomerDocumentsComponent implements OnInit {
 		this.tab.emit('Warnings');
     }
     openDelete(content, row) {
-        
+        this.selectedRowForDelete = row;
         this.isDeleteMode = true;
         delete row.updatedBy;
         this.localCollection = row;

@@ -17,6 +17,7 @@ export class SalesQuoteListComponent implements OnInit {
   sales:any[];
   selected:any;
   modal: NgbModalRef;
+  columns:any[];
   constructor(
     private salesQuoteService: SalesQuoteService,
     private alertService: AlertService,
@@ -27,6 +28,23 @@ export class SalesQuoteListComponent implements OnInit {
   ngOnInit() {
 
     this.searchParameters = new SalesSearchParameters();
+    this.initColumns();
+  }
+
+  initColumns() {
+    this.columns = [
+      { field: 'salesQuoteId', header: 'Quote number', width: '100px' },
+      { field: 'quoteDate', header: 'Quote Date', width: '200px' },
+      { field: 'versionNumber', header: 'Version Number', width: '200px' },
+      { field: 'customerName', header: 'Customer Name', width: '200px' },
+      { field: 'customerCode', header: 'Customer Code', width: '200px' },
+      { field: 'status', header: 'Status', width: '100px' },
+      { field: 'salesPrice', header: 'Sales Price', width: '200px' },
+      { field: 'cost', header: 'Cost', width: '200px' },
+      { field: 'numberOfItems', header: 'numberOfItems', width: '200px' },
+      { field: '', header: 'actions', width: '200px' }
+  
+    ]
   }
 
 
@@ -97,8 +115,9 @@ export class SalesQuoteListComponent implements OnInit {
    
    }
    openQuoteToEdit(row) {
-   // this.salesQuoteService.isEditMode = true;
-    const { quoteId } = row;
-   // this.router.navigateByUrl(`assetmodule/assetpages/app-edit-quoteId/${quoteId}`);
-}
+    const { salesQuoteId } = row;
+    let customerId  = row.customerId;
+    console.log(row);
+    this.router.navigateByUrl(`salesmodule/salespages/sales-quote-edit/${customerId}/${salesQuoteId}`);
+  }
 }

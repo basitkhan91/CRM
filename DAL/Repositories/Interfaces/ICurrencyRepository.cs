@@ -1,4 +1,5 @@
 ﻿using DAL.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,7 @@ namespace DAL.Repositories.Interfaces
     {
         IEnumerable<Currency> GetAllCurrencyData();
         new IQueryable<Currency> GetPaginationData();
+
+        IEnumerable<DAL.Models.Currency> UploadCurrencyCustomData(IFormFile file);
     }
 }

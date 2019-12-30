@@ -358,7 +358,7 @@
 
     </div>
   </div>
-  <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;" *ngIf="(selectedBuildMethod != 'build from scratch' && selectedBuildMethod != '' && selectedWorkFlowOrWorkOrder) || isEdit">
+  <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;" *ngIf="(selectedBuildMethod != 'build from scratch' && selectedBuildMethod != '' && selectedWorkFlowOrWorkOrder) || (isEdit && selectedPartNumber != '')">
       <div class="form-group ">
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'materialList'?'btn-primary-cstm':'btn-light-cstm'" (click)="gridTabChange('materialList');">Material List</button>
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'labor'?'btn-primary-cstm':'btn-light-cstm'" (click)="gridTabChange('labor');">Labor</button>
@@ -433,6 +433,27 @@
             </tr>
           </ng-container>
         </tbody>
+        <tfoot>
+          <tr>
+            <td>
+              Total
+            </td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>{{getTotalQuantity()}}</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>{{ getTotalUnitCost() }}</td>
+            <td>&nbsp;</td>
+            <td></td>
+            <td>{{getMaterialCostPlus()}}</td>
+            <td>{{getTotalFixedAmount()}}</td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tfoot>
       </table>
       <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save</button>
     </div>
@@ -497,6 +518,27 @@
             </td>
           </tr>
         </tbody>
+        <tfoot>
+          <tr>
+            <td>
+              Total
+            </td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>{{getTotalQuantity()}}</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>{{ getTotalUnitCost() }}</td>
+            <td>&nbsp;</td>
+            <td></td>
+            <td>{{getMaterialCostPlus()}}</td>
+            <td>{{getTotalFixedAmount()}}</td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tfoot>
       </table>
       <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save</button>
     </div>

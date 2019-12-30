@@ -63,4 +63,8 @@ export class CurrencyService {
         return Observable.forkJoin(
             this.currencyEndpoint.getCurrencyRecords<Currency[]>(serverSidePagesData));
     }
+
+    currencyFileUpload(file) {
+        return this.currencyEndpoint.currencyFileUploadCustomUpload(file);
+    }
 }

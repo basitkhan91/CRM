@@ -164,7 +164,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                 items: [
                     { label: 'Customers List', routerLink: '/customersmodule/customerpages/app-customers-list' },
                     { label: 'Create Customer', routerLink: '/customersmodule/customerpages/app-customer-create' },
-                    { label: 'Classification', routerLink: '/singlepages/singlepages/app-customer-classification' },
+                    //{ label: 'Classification', routerLink: '/singlepages/singlepages/app-customer-classification' },
                     {
                         label: 'Invoice', items: [
                             { label: 'Invoice List', routerLink: '/#' },
@@ -251,8 +251,8 @@ export class AppComponent implements OnInit, AfterViewInit {
                     { label: 'Vendor List', routerLink: '/vendorsmodule/vendorpages/app-vendors-list' },
                      { label: 'Create Vendor', routerLink: '/vendorsmodule/vendorpages/app-vendor-general-information' },
                     //{ label: 'Create Vendor',  command: (event?: any) => { this.newVendorClick(); } },
-                    { label: 'Vendor Classification', routerLink: '/singlepages/singlepages/app-vendor-classification' },
-                    { label: 'Process 1099', routerLink: '/singlepages/singlepages/app-vendor-process1099' },
+                    //{ label: 'Vendor Classification', routerLink: '/singlepages/singlepages/app-vendor-classification' },
+                    //{ label: 'Process 1099', routerLink: '/singlepages/singlepages/app-vendor-process1099' },
                     {
                         label: 'Vendor Capabilities', items: [{ label: 'Vendor Caps List', routerLink: '/vendorsmodule/vendorpages/app-vendor-capabilities-list' },
                         { label: 'Add Vendor Caps', routerLink: '/vendorsmodule/vendorpages/app-add-vendor-capabilities' },
@@ -417,7 +417,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Create GL Account', routerLink: '/generalledgermodule/generalledgerpage/app-account-listing-create' },
                             { label: 'Create Accounting Calendar', routerLink: '/generalledgermodule/generalledgerpage/app-accounting-calendar' },
                             { label: 'Accounting Calendar List', routerLink: '/generalledgermodule/generalledgerpage/app-accounting-listing-calendar' },
-                            { label: 'Open/Close Ledger', routerLink: '/#' },
+                            { label: 'Open/Close Ledger', routerLink: '/generalledgermodule/generalledgerpage/app-open-close-ledger' },
                             { label: 'Intercompany', routerLink: '/#' },
                             {
                                 label: 'Payment Description', items: [
@@ -624,21 +624,25 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'General', items: [
-                            { label: 'Documents', routerLink: '/singlepages/singlepages/app-documents' },
-                            { label: 'Default Messages', routerLink: '/singlepages/singlepages/app-defaultmessage' },
-                            { label: 'Aircraft Manufacturer', routerLink: '/singlepages/singlepages/app-aircraft-manufacturer' },
-                            { label: 'Aircraft Model', routerLink: '/singlepages/singlepages/app-aircraft-model' },
-                            { label: 'Dash Numbers', routerLink: '/singlepages/singlepages/app-dashnumber' },
                             { label: 'Ata Chapter', routerLink: '/singlepages/singlepages/app-ata-main' },
                             { label: 'Ata Sub-Chapter', routerLink: '/singlepages/singlepages/app-ata-sub-chapter1' },
+                            { label: 'Aircraft Manufacturer', routerLink: '/singlepages/singlepages/app-aircraft-manufacturer' },
+                            { label: 'Aircraft Model', routerLink: '/singlepages/singlepages/app-aircraft-model' },
                             { label: 'Conditions', routerLink: '/singlepages/singlepages/app-conditions' },
-                            { label: 'Percent', routerLink: '/singlepages/singlepages/app-percent' },
-                            { label: 'Site', routerLink: '/singlepages/singlepages/app-site' },
-                            { label: 'Integration', routerLink: '/singlepages/singlepages/app-integration' },
-                            { label: 'Priority', routerLink: '/singlepages/singlepages/app-priority' },
-                            { label: 'Work Scope', routerLink: '/singlepages/singlepages/app-work-scope' },
-                            { label: 'Provision', routerLink: '/singlepages/singlepages/app-provision' },
                             { label: 'Customer Classification', routerLink: '/singlepages/singlepages/app-customer-classification' },
+                            { label: 'Dash Numbers', routerLink: '/singlepages/singlepages/app-dashnumber' },
+                            { label: 'Default Messages', routerLink: '/singlepages/singlepages/app-defaultmessage' },                         
+                            { label: 'Documents', routerLink: '/singlepages/singlepages/app-documents' },
+                            { label: 'Integration', routerLink: '/singlepages/singlepages/app-integration' },
+                            { label: 'Percent', routerLink: '/singlepages/singlepages/app-percent' },
+                            { label: 'Priority', routerLink: '/singlepages/singlepages/app-priority' },
+                            { label: 'Process 1099', routerLink: '/singlepages/singlepages/app-vendor-process1099' },
+                            { label: 'Provision', routerLink: '/singlepages/singlepages/app-provision' },
+                            { label: 'Site', routerLink: '/singlepages/singlepages/app-site' },     
+                            { label: 'Vendor Classification', routerLink: '/singlepages/singlepages/app-vendor-classification' },                    
+                            { label: 'Work Scope', routerLink: '/singlepages/singlepages/app-work-scope' },
+                           
+                           
                         ]
                     },
                     {

@@ -52,7 +52,8 @@ export class VendorCapabilitiesListComponent implements OnInit{
         { field: "model", header: "Model" },
         { field: "dashNumber", header: "Dash Numbers" },
         { field: "memo", header: "Memo" }
-	];
+    ];
+    vendorNameHist: any;
 
     constructor(private vendorService: VendorService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService, private vendorCapesService: VendorCapabilitiesService)
     {
@@ -82,7 +83,8 @@ export class VendorCapabilitiesListComponent implements OnInit{
 
     private loadData()
     {
-        this.vendorService.getVendorCapabilityList().subscribe(
+        const status = 'active';
+        this.vendorService.getVendorCapabilityList(status).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -110,6 +112,13 @@ export class VendorCapabilitiesListComponent implements OnInit{
         this.dataSource.data = allWorkFlows;
         this.allvendorCapsList = allWorkFlows;
         console.log(this.allvendorCapsList);
+    }
+
+    getVenCapesListByStatus(status) {
+        this.vendorService.getVendorCapabilityList(status).subscribe(
+            results => this.onDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
     }
 
     ngAfterViewInit()
@@ -253,6 +262,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
         this.loadingIndicator = true;
        
         this.isSaving = true;
+        this.vendorNameHist = row.vendorName;
         this.vendorService.getVendorCapabilityAuditHistory(row.vendorCapabilityId, row.vendorId).subscribe(
             results => this.onAuditHistoryLoadSuccessful(results, content),
             error => this.saveFailedHelper(error));
@@ -271,6 +281,19 @@ export class VendorCapabilitiesListComponent implements OnInit{
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.capabilityauditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+
     gotoCreatePO(rowData) {
        
         console.log(rowData);

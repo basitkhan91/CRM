@@ -222,9 +222,9 @@ namespace DAL.Repositories
             short workOrderTypeId = 0;
 
             var open = "open";
-            var pending = "pending";
-            var fulfilling = "fulfilling";
+            var canceled = "canceled";
             var closed = "closed";
+            var all = "all";
 
             var customer = "customer";
             var shopinternal = "internal";
@@ -237,7 +237,7 @@ namespace DAL.Repositories
                 {
                     statusId = 1;
                 }
-                else if (pending.Contains(woFilters.filters.WorkOrderStatus.ToLower()))
+                else if (canceled.Contains(woFilters.filters.WorkOrderStatus.ToLower()))
                 {
                     statusId = 3;
                 }
@@ -246,9 +246,9 @@ namespace DAL.Repositories
                 {
                     statusId = 2;
                 }
-                else if (fulfilling.Contains(woFilters.filters.WorkOrderStatus.ToLower()))
+                else if (all.Contains(woFilters.filters.WorkOrderStatus.ToLower()))
                 {
-                    statusId = 4;
+                    statusId = 0;
                 }
             }
 
@@ -312,10 +312,10 @@ namespace DAL.Repositories
                                 wo.CreatedDate,
                                 WorkOrderStatus = wost.Description,
                                 PartNos = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.ItemMaster,
-                                wp=>wp.MasterPartId,
-                                im=>im.ItemMasterId,
-                                (wp,im)=>new {wp,im}).Where(p=>p.wp.WorkOrderId==wo.WorkOrderId)
-                                .Select(p=>p.im.PartNumber)),
+                                wp => wp.MasterPartId,
+                                im => im.ItemMasterId,
+                                (wp, im) => new { wp, im }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                .Select(p => p.im.PartNumber)),
                                 TotalRecords = totalRecords
                             }
                           ).Distinct()
@@ -352,8 +352,8 @@ namespace DAL.Repositories
             short workOrderTypeId = 0;
 
             var open = "open";
-            var pending = "pending";
-            var fulfilling = "fulfilling";
+            var canceled = "canceled";
+            var all = "all";
             var closed = "closed";
 
             var customer = "customer";
@@ -367,17 +367,17 @@ namespace DAL.Repositories
                 {
                     statusId = 1;
                 }
-                else if (pending.Contains(filterText.ToLower()))
-                {
-                    statusId = 2;
-                }
-                else if (fulfilling.Contains(filterText.ToLower()))
+                else if (canceled.Contains(filterText.ToLower()))
                 {
                     statusId = 3;
                 }
+                else if (all.Contains(filterText.ToLower()))
+                {
+                    statusId = 0;
+                }
                 else if (closed.Contains(filterText.ToLower()))
                 {
-                    statusId = 4;
+                    statusId = 2;
                 }
 
                 if (customer.Contains(filterText.ToLower()))
@@ -508,6 +508,17 @@ namespace DAL.Repositories
                 {
                     workOrder.PartNumbers = _appContext.Set<WorkOrderPartNumber>().Where(x => x.WorkOrderId == workOrderId && x.IsDeleted == false).OrderBy(x => x.ID).ToList();
 
+                    if(workOrder.PartNumbers!=null && workOrder.PartNumbers.Count>0)
+                    {
+                        foreach(var part in workOrder.PartNumbers)
+                        {
+                            var revisedPartId = _appContext.ItemMaster.Where(p => p.ItemMasterId == part.MasterPartId).FirstOrDefault().RevisedPartId;
+                            if(revisedPartId!=null && revisedPartId>0)
+                            {
+                                part.RevisedPartNo = _appContext.ItemMaster.Where(p => p.ItemMasterId == revisedPartId).Select(p => p.PartNumber).FirstOrDefault().ToString();
+                            }
+                        }
+                    }
                 }
 
                 var customer = _appContext.Customer.Where(p => p.CustomerId == workOrder.CustomerId).FirstOrDefault();
@@ -2153,7 +2164,10 @@ namespace DAL.Repositories
                                                   wom.ExtendedPrice,
                                                   wom.WorkOrderMaterialsId,
                                                   wom.WorkFlowWorkOrderId,
-                                                  wom.WorkOrderId
+                                                  wom.WorkOrderId,
+                                                  im.ItemMasterId,
+                                                  im.ItemClassificationId,
+                                                  im.PurchaseUnitOfMeasureId
                                               }).Distinct().ToList();
 
                 return workOrderMaterialsList;
@@ -2268,6 +2282,7 @@ namespace DAL.Repositories
                         workOrderReserveIssuesPart.ReservedById = item.ReservedById;
                         workOrderReserveIssuesPart.ReservedDate = item.ReservedDate;
                         workOrderReserveIssuesPart.WOReservedIssuedAltParts = GetWOReservedIssuedAltParts(item.ItemMasterId, item.WorkFlowWorkOrderId, item.WorkOrderId, item.TaskId);
+                        workOrderReserveIssuesPart.WOReservedIssuedEquParts = GetWOReservedIssuedEquParts(item.ItemMasterId, item.WorkFlowWorkOrderId, item.WorkOrderId, item.TaskId);
                         workOrderReserveIssuesPart.WorkOrderId = item.WorkOrderId;
                         workOrderReserveIssuesPart.WorkFlowWorkOrderId = item.WorkFlowWorkOrderId;
                         workOrderReserveIssuesPart.WorkOrderMaterialsId = item.WorkOrderMaterialsId;
@@ -2396,6 +2411,7 @@ namespace DAL.Repositories
                         workOrderReserveIssuesPart.IssuedById = item.IssuedById;
                         workOrderReserveIssuesPart.IssuedDate = item.IssuedDate;
                         workOrderReserveIssuesPart.ItemMasterId = item.ItemMasterId;
+
                         workOrderReserveIssuesPart.PartDescription = item.PartDescription;
                         workOrderReserveIssuesPart.PartNumber = item.PartNumber;
                         workOrderReserveIssuesPart.Quantity = item.Quantity;
@@ -2408,6 +2424,7 @@ namespace DAL.Repositories
                         workOrderReserveIssuesPart.ReservedById = item.ReservedById;
                         workOrderReserveIssuesPart.ReservedDate = item.ReservedDate;
                         workOrderReserveIssuesPart.WOReservedIssuedAltParts = GetWOReservedAltParts(item.ItemMasterId, item.WorkFlowWorkOrderId, item.WorkOrderId, item.TaskId);
+                        workOrderReserveIssuesPart.WOReservedIssuedEquParts = GetWOReservedEquParts(item.ItemMasterId, item.WorkFlowWorkOrderId, item.WorkOrderId, item.TaskId);
                         workOrderReserveIssuesPart.WorkOrderId = item.WorkOrderId;
                         workOrderReserveIssuesPart.WorkFlowWorkOrderId = item.WorkFlowWorkOrderId;
                         workOrderReserveIssuesPart.WorkOrderMaterialsId = item.WorkOrderMaterialsId;
@@ -2520,6 +2537,7 @@ namespace DAL.Repositories
                         workOrderReserveIssuesPart.ReservedById = item.ReservedById;
                         workOrderReserveIssuesPart.ReservedDate = item.ReservedDate;
                         workOrderReserveIssuesPart.WOReservedIssuedAltParts = GetWOUnReservedAltParts(item.ItemMasterId, item.WorkFlowWorkOrderId, item.WorkOrderId, item.TaskId);
+                        workOrderReserveIssuesPart.WOReservedIssuedEquParts = GetWOUnReservedEquParts(item.ItemMasterId, item.WorkFlowWorkOrderId, item.WorkOrderId, item.TaskId);
                         workOrderReserveIssuesPart.WorkOrderId = item.WorkOrderId;
                         workOrderReserveIssuesPart.WorkFlowWorkOrderId = item.WorkFlowWorkOrderId;
                         workOrderReserveIssuesPart.WorkOrderMaterialsId = item.WorkOrderMaterialsId;
@@ -2632,6 +2650,7 @@ namespace DAL.Repositories
                         workOrderReserveIssuesPart.ReservedById = item.ReservedById;
                         workOrderReserveIssuesPart.ReservedDate = item.ReservedDate;
                         workOrderReserveIssuesPart.WOReservedIssuedAltParts = GetWOIssuedAltParts(item.ItemMasterId, item.WorkFlowWorkOrderId, item.WorkOrderId, item.TaskId);
+                        workOrderReserveIssuesPart.WOReservedIssuedEquParts = GetWOIssuedEquParts(item.ItemMasterId, item.WorkFlowWorkOrderId, item.WorkOrderId, item.TaskId);
                         workOrderReserveIssuesPart.WorkOrderId = item.WorkOrderId;
                         workOrderReserveIssuesPart.WorkFlowWorkOrderId = item.WorkFlowWorkOrderId;
                         workOrderReserveIssuesPart.WorkOrderMaterialsId = item.WorkOrderMaterialsId;
@@ -2744,6 +2763,7 @@ namespace DAL.Repositories
                         workOrderReserveIssuesPart.ReservedById = item.ReservedById;
                         workOrderReserveIssuesPart.ReservedDate = item.ReservedDate;
                         workOrderReserveIssuesPart.WOReservedIssuedAltParts = GetWOUnIssuedAltParts(item.ItemMasterId, item.WorkFlowWorkOrderId, item.WorkOrderId, item.TaskId);
+                        workOrderReserveIssuesPart.WOReservedIssuedEquParts = GetWOUnIssuedEquParts(item.ItemMasterId, item.WorkFlowWorkOrderId, item.WorkOrderId, item.TaskId);
                         workOrderReserveIssuesPart.WorkOrderId = item.WorkOrderId;
                         workOrderReserveIssuesPart.WorkFlowWorkOrderId = item.WorkFlowWorkOrderId;
                         workOrderReserveIssuesPart.WorkOrderMaterialsId = item.WorkOrderMaterialsId;
@@ -3069,7 +3089,7 @@ namespace DAL.Repositories
                                                    we.IsDeleted,
                                                    we.ItemMasterId,
                                                    we.MarkUpPercentageId,
-                                                   MarkUpPercentage = mp.PercentValue,
+                                                   MarkUpPercentage = mp == null ? 0 : mp.PercentValue,
                                                    we.MasterCompanyId,
                                                    we.Memo,
                                                    we.Quantity,
@@ -4167,12 +4187,20 @@ namespace DAL.Repositories
                             select new
                             {
                                 sl.ItemMasterId,
-                                sl.PartNumber,
+                                im.PartNumber,
                                 im.PartDescription,
                                 im.DER,
                                 PMA = im.isPma,
-                                NTE = (im.OverhaulHours == null ? 0 : im.OverhaulHours) + (im.RPHours == null ? 0 : im.RPHours) + (im.mfgHours == null ? 0 : im.mfgHours) + (im.TestHours == null ? 0 : im.TestHours),
-                                TATDaysCurrent = (im.TurnTimeOverhaulHours == null ? 0 : im.TurnTimeOverhaulHours) + (im.TurnTimeRepairHours == null ? 0 : im.TurnTimeRepairHours) + (im.turnTimeMfg == null ? 0 : im.turnTimeMfg) + (im.turnTimeBenchTest == null ? 0 : im.turnTimeBenchTest)
+                                NTEOverhaulHours = im.OverhaulHours == null ? 0 : im.OverhaulHours,
+                                NTERepairHours=im.RPHours == null ? 0 : im.RPHours,
+                                NTEMfgHours=im.mfgHours == null ? 0 : im.mfgHours,
+                                NTEBenchTestHours=im.TestHours == null ? 0 : im.TestHours,
+                                TurnTimeOverhaulHours=im.TurnTimeOverhaulHours == null ? 0 : im.TurnTimeOverhaulHours,
+                                TurnTimeRepairHours=im.TurnTimeRepairHours == null ? 0 : im.TurnTimeRepairHours,
+                                TurnTimeMfg=im.turnTimeMfg == null ? 0 : im.turnTimeMfg,
+                                TurnTimeBenchTest=im.turnTimeBenchTest == null ? 0 : im.turnTimeBenchTest,
+                                RevisedPartId = im.RevisedPartId == null ? 0 : im.RevisedPartId,
+                                RevisedPartNo = im.RevisedPartId == null ? "" : (_appContext.ItemMaster.Where(p => p.ItemMasterId == im.RevisedPartId).Select(p => p.PartNumber).FirstOrDefault().ToString())
                             })
                             .Distinct()
                             .ToList();
@@ -4184,6 +4212,8 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
+
 
         public IEnumerable<object> GetStockLineDetailsByPartNo(long itemMasterId, long conditionId)
         {
@@ -4995,6 +5025,7 @@ namespace DAL.Repositories
         }
 
 
+        /* Alternative Parts */
         private List<WOReservedIssuedAltParts> GetWOReservedIssuedAltParts(long? itemMasterId, long wokorderWorkFlowId, long workOrderId, long taskId)
         {
             List<WOReservedIssuedAltParts> woReservedIssuedAltParts = new List<WOReservedIssuedAltParts>();
@@ -5002,6 +5033,7 @@ namespace DAL.Repositories
 
             var list = (from alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping
                         join im in _appContext.ItemMaster on alt.MappingItemMasterId equals im.ItemMasterId
+                        join im1 in _appContext.ItemMaster on alt.ItemMasterId equals im1.ItemMasterId
                         join sl in _appContext.StockLine on alt.MappingItemMasterId equals sl.ItemMasterId into altsl
                         from sl in altsl.DefaultIfEmpty()
                         join con in _appContext.Condition on sl.ConditionId equals con.ConditionId into slcon
@@ -5009,7 +5041,7 @@ namespace DAL.Repositories
                         join wom in _appContext.WorkOrderMaterials on im.ItemMasterId equals wom.ItemMasterId into imwom
                         from wom in imwom.DefaultIfEmpty()
                         join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
-                        where alt.ItemMasterId == itemMasterId && alt.IsDeleted == false && alt.IsActive == true
+                        where alt.ItemMasterId == itemMasterId && alt.IsDeleted == false && alt.IsActive == true && alt.MappingType == Convert.ToInt32(PartMappingTypeEnum.AltParts)
                         && (wom.PartStatusId == null || wom.PartStatusId == 0 || wom.Quantity - wom.QuantityReserved > 0 || wom.QuantityReserved - wom.QuantityReserved > 0)
                         select new
                         {
@@ -5017,7 +5049,7 @@ namespace DAL.Repositories
                             im.PartNumber,
                             im.PartDescription,
                             alt.ItemMasterId,
-                            sl.ConditionId,
+                            ConditionId = sl == null ? 0 : sl.ConditionId,
                             Condition = con.Description,
                             QuantityOnHand = sl == null ? 0 : sl.QuantityOnHand,
                             QuantityAvailable = sl == null ? 0 : sl.QuantityAvailable,
@@ -5035,10 +5067,11 @@ namespace DAL.Repositories
                             im.PurchaseUnitOfMeasureId,
                             im.ItemClassificationId,
                             PartStatusId = wom.PartStatusId == null ? 0 : wom.PartStatusId,
-                            wom.ExtendedCost,
+                            ExtendedCost = wom == null ? 0 : wom.ExtendedCost,
                             Manufacturer = man.Name,
                             im.ManufacturerId,
                             OemDer = im.PMA == true && im.DER == true ? "PMA&DER" : (im.PMA == true && im.DER == false ? "PMA" : (im.PMA == false && im.DER == true ? "DER" : "")),
+                            ParentPartNo = im1.PartNumber
                         })
                          .Distinct()
                          .ToList();
@@ -5077,6 +5110,7 @@ namespace DAL.Repositories
                     woReservedIssuedAltPart.Manufacturer = item.Manufacturer;
                     woReservedIssuedAltPart.ManufacturerId = item.ManufacturerId;
                     woReservedIssuedAltPart.OemDer = item.OemDer;
+                    woReservedIssuedAltPart.ParentPartNo = item.ParentPartNo;
 
                     woReservedIssuedAltParts.Add(woReservedIssuedAltPart);
                 }
@@ -5092,6 +5126,7 @@ namespace DAL.Repositories
 
             var list = (from alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping
                         join im in _appContext.ItemMaster on alt.MappingItemMasterId equals im.ItemMasterId
+                        join im1 in _appContext.ItemMaster on alt.ItemMasterId equals im1.ItemMasterId
                         join sl in _appContext.StockLine on alt.MappingItemMasterId equals sl.ItemMasterId into altsl
                         from sl in altsl.DefaultIfEmpty()
                         join con in _appContext.Condition on sl.ConditionId equals con.ConditionId into slcon
@@ -5099,7 +5134,7 @@ namespace DAL.Repositories
                         join wom in _appContext.WorkOrderMaterials on im.ItemMasterId equals wom.ItemMasterId into imwom
                         from wom in imwom.DefaultIfEmpty()
                         join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
-                        where alt.ItemMasterId == itemMasterId && alt.IsDeleted == false && alt.IsActive == true
+                        where alt.ItemMasterId == itemMasterId && alt.IsDeleted == false && alt.IsActive == true && alt.MappingType == Convert.ToInt32(PartMappingTypeEnum.AltParts)
                         && (wom.PartStatusId == null || wom.PartStatusId == 0 || wom.Quantity - wom.QuantityReserved > 0)
                         select new
                         {
@@ -5107,7 +5142,7 @@ namespace DAL.Repositories
                             im.PartNumber,
                             im.PartDescription,
                             alt.ItemMasterId,
-                            sl.ConditionId,
+                            ConditionId = sl == null ? 0 : sl.ConditionId,
                             Condition = con.Description,
                             QuantityOnHand = sl == null ? 0 : sl.QuantityOnHand,
                             QuantityAvailable = sl == null ? 0 : sl.QuantityAvailable,
@@ -5118,8 +5153,8 @@ namespace DAL.Repositories
                             //QuantityReserved = wom == null ? 0 : wom.QuantityReserved,
                             QuantityReserved = wom.Quantity - wom.QuantityReserved,
                             QuantityAlreadyReserved = wom == null ? 0 : wom.QuantityReserved,
-                            wom.UnReservedQty,
-                            wom.UnIssuedQty,
+                            UnReservedQty = wom == null ? 0 : wom.UnReservedQty,
+                            UnIssuedQty = wom == null ? 0 : wom.UnIssuedQty,
                             QuantityTurnIn = wom == null ? 0 : wom.QuantityTurnIn,
                             IssuedById = wom == null ? 0 : wom.IssuedById,
                             IssuedDate = wom == null ? DateTime.Now : wom.IssuedDate,
@@ -5129,10 +5164,11 @@ namespace DAL.Repositories
                             im.PurchaseUnitOfMeasureId,
                             im.ItemClassificationId,
                             PartStatusId = wom.PartStatusId == null ? 0 : wom.PartStatusId,
-                            wom.ExtendedCost,
+                            ExtendedCost = wom == null ? 0 : wom.ExtendedCost,
                             Manufacturer = man.Name,
                             im.ManufacturerId,
                             OemDer = im.PMA == true && im.DER == true ? "PMA&DER" : (im.PMA == true && im.DER == false ? "PMA" : (im.PMA == false && im.DER == true ? "DER" : "")),
+                            ParentPartNo = im1.PartNumber
                         })
                          .Distinct()
                          .ToList();
@@ -5175,6 +5211,7 @@ namespace DAL.Repositories
                     woReservedIssuedAltPart.Manufacturer = item.Manufacturer;
                     woReservedIssuedAltPart.ManufacturerId = item.ManufacturerId;
                     woReservedIssuedAltPart.OemDer = item.OemDer;
+                    woReservedIssuedAltPart.ParentPartNo = item.PartNumber;
 
                     woReservedIssuedAltParts.Add(woReservedIssuedAltPart);
                 }
@@ -5190,6 +5227,7 @@ namespace DAL.Repositories
 
             var list = (from alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping
                         join im in _appContext.ItemMaster on alt.MappingItemMasterId equals im.ItemMasterId
+                        join im1 in _appContext.ItemMaster on alt.ItemMasterId equals im1.ItemMasterId
                         join sl in _appContext.StockLine on alt.MappingItemMasterId equals sl.ItemMasterId into altsl
                         from sl in altsl.DefaultIfEmpty()
                         join con in _appContext.Condition on sl.ConditionId equals con.ConditionId into slcon
@@ -5197,7 +5235,7 @@ namespace DAL.Repositories
                         join wom in _appContext.WorkOrderMaterials on im.ItemMasterId equals wom.ItemMasterId into imwom
                         from wom in imwom.DefaultIfEmpty()
                         join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
-                        where alt.ItemMasterId == itemMasterId && alt.IsDeleted == false && alt.IsActive == true
+                        where alt.ItemMasterId == itemMasterId && alt.IsDeleted == false && alt.IsActive == true && alt.MappingType == Convert.ToInt32(PartMappingTypeEnum.AltParts)
                         && wom.QuantityReserved - wom.QuantityIssued > 0
                         select new
                         {
@@ -5205,7 +5243,7 @@ namespace DAL.Repositories
                             im.PartNumber,
                             im.PartDescription,
                             alt.ItemMasterId,
-                            sl.ConditionId,
+                            ConditionId = sl == null ? 0 : sl.ConditionId,
                             Condition = con.Description,
                             QuantityOnHand = sl == null ? 0 : sl.QuantityOnHand,
                             QuantityAvailable = sl == null ? 0 : sl.QuantityAvailable,
@@ -5216,8 +5254,8 @@ namespace DAL.Repositories
                             //QuantityReserved = wom == null ? 0 : wom.QuantityReserved,
                             QuantityReserved = wom.Quantity - wom.QuantityReserved,
                             QuantityAlreadyReserved = wom == null ? 0 : wom.QuantityReserved,
-                            wom.UnReservedQty,
-                            wom.UnIssuedQty,
+                            UnReservedQty = wom == null ? 0 : wom.UnReservedQty,
+                            UnIssuedQty = wom == null ? 0 : wom.UnIssuedQty,
                             QuantityTurnIn = wom == null ? 0 : wom.QuantityTurnIn,
                             IssuedById = wom == null ? 0 : wom.IssuedById,
                             IssuedDate = wom == null ? DateTime.Now : wom.IssuedDate,
@@ -5227,10 +5265,11 @@ namespace DAL.Repositories
                             im.PurchaseUnitOfMeasureId,
                             im.ItemClassificationId,
                             PartStatusId = wom.PartStatusId == null ? 0 : wom.PartStatusId,
-                            wom.ExtendedCost,
+                            ExtendedCost = wom == null ? 0 : wom.ExtendedCost,
                             Manufacturer = man.Name,
                             im.ManufacturerId,
                             OemDer = im.PMA == true && im.DER == true ? "PMA&DER" : (im.PMA == true && im.DER == false ? "PMA" : (im.PMA == false && im.DER == true ? "DER" : "")),
+                            ParentPartNo = im1.PartNumber
                         })
                          .Distinct()
                          .ToList();
@@ -5273,6 +5312,7 @@ namespace DAL.Repositories
                     woReservedIssuedAltPart.Manufacturer = item.Manufacturer;
                     woReservedIssuedAltPart.ManufacturerId = item.ManufacturerId;
                     woReservedIssuedAltPart.OemDer = item.OemDer;
+                    woReservedIssuedAltPart.ParentPartNo = item.ParentPartNo;
 
                     woReservedIssuedAltParts.Add(woReservedIssuedAltPart);
                 }
@@ -5288,6 +5328,7 @@ namespace DAL.Repositories
 
             var list = (from alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping
                         join im in _appContext.ItemMaster on alt.MappingItemMasterId equals im.ItemMasterId
+                        join im1 in _appContext.ItemMaster on alt.ItemMasterId equals im1.ItemMasterId
                         join sl in _appContext.StockLine on alt.MappingItemMasterId equals sl.ItemMasterId into altsl
                         from sl in altsl.DefaultIfEmpty()
                         join con in _appContext.Condition on sl.ConditionId equals con.ConditionId into slcon
@@ -5295,7 +5336,7 @@ namespace DAL.Repositories
                         join wom in _appContext.WorkOrderMaterials on im.ItemMasterId equals wom.ItemMasterId into imwom
                         from wom in imwom.DefaultIfEmpty()
                         join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
-                        where alt.ItemMasterId == itemMasterId && alt.IsDeleted == false && alt.IsActive == true
+                        where alt.ItemMasterId == itemMasterId && alt.IsDeleted == false && alt.IsActive == true && alt.MappingType == Convert.ToInt32(PartMappingTypeEnum.AltParts)
                         && wom.QuantityReserved - wom.QuantityReserved > 0
                         select new
                         {
@@ -5303,7 +5344,7 @@ namespace DAL.Repositories
                             im.PartNumber,
                             im.PartDescription,
                             alt.ItemMasterId,
-                            sl.ConditionId,
+                            ConditionId = sl == null ? 0 : sl.ConditionId,
                             Condition = con.Description,
                             QuantityOnHand = sl == null ? 0 : sl.QuantityOnHand,
                             QuantityAvailable = sl == null ? 0 : sl.QuantityAvailable,
@@ -5314,8 +5355,8 @@ namespace DAL.Repositories
                             //QuantityReserved = wom == null ? 0 : wom.QuantityReserved,
                             QuantityReserved = wom.Quantity - wom.QuantityReserved,
                             QuantityAlreadyReserved = wom == null ? 0 : wom.QuantityReserved,
-                            wom.UnReservedQty,
-                            wom.UnIssuedQty,
+                            UnReservedQty = wom == null ? 0 : wom.UnReservedQty,
+                            UnIssuedQty = wom == null ? 0 : wom.UnIssuedQty,
                             QuantityTurnIn = wom == null ? 0 : wom.QuantityTurnIn,
                             IssuedById = wom == null ? 0 : wom.IssuedById,
                             IssuedDate = wom == null ? DateTime.Now : wom.IssuedDate,
@@ -5325,10 +5366,11 @@ namespace DAL.Repositories
                             im.PurchaseUnitOfMeasureId,
                             im.ItemClassificationId,
                             PartStatusId = wom.PartStatusId == null ? 0 : wom.PartStatusId,
-                            wom.ExtendedCost,
+                            ExtendedCost = wom == null ? 0 : wom.ExtendedCost,
                             Manufacturer = man.Name,
                             im.ManufacturerId,
                             OemDer = im.PMA == true && im.DER == true ? "PMA&DER" : (im.PMA == true && im.DER == false ? "PMA" : (im.PMA == false && im.DER == true ? "DER" : "")),
+                            ParentPartNo = im1.PartNumber
                         })
                          .Distinct()
                          .ToList();
@@ -5371,6 +5413,7 @@ namespace DAL.Repositories
                     woReservedIssuedAltPart.Manufacturer = item.Manufacturer;
                     woReservedIssuedAltPart.ManufacturerId = item.ManufacturerId;
                     woReservedIssuedAltPart.OemDer = item.OemDer;
+                    woReservedIssuedAltPart.ParentPartNo = item.ParentPartNo;
 
                     woReservedIssuedAltParts.Add(woReservedIssuedAltPart);
                 }
@@ -5386,6 +5429,7 @@ namespace DAL.Repositories
 
             var list = (from alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping
                         join im in _appContext.ItemMaster on alt.MappingItemMasterId equals im.ItemMasterId
+                        join im1 in _appContext.ItemMaster on alt.ItemMasterId equals im1.ItemMasterId
                         join sl in _appContext.StockLine on alt.MappingItemMasterId equals sl.ItemMasterId into altsl
                         from sl in altsl.DefaultIfEmpty()
                         join con in _appContext.Condition on sl.ConditionId equals con.ConditionId into slcon
@@ -5393,7 +5437,7 @@ namespace DAL.Repositories
                         join wom in _appContext.WorkOrderMaterials on im.ItemMasterId equals wom.ItemMasterId into imwom
                         from wom in imwom.DefaultIfEmpty()
                         join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
-                        where alt.ItemMasterId == itemMasterId && alt.IsDeleted == false && alt.IsActive == true
+                        where alt.ItemMasterId == itemMasterId && alt.IsDeleted == false && alt.IsActive == true && alt.MappingType == Convert.ToInt32(PartMappingTypeEnum.AltParts)
                         && wom.QuantityIssued > 0
                         select new
                         {
@@ -5401,7 +5445,7 @@ namespace DAL.Repositories
                             im.PartNumber,
                             im.PartDescription,
                             alt.ItemMasterId,
-                            sl.ConditionId,
+                            ConditionId = sl == null ? 0 : sl.ConditionId,
                             Condition = con.Description,
                             QuantityOnHand = sl == null ? 0 : sl.QuantityOnHand,
                             QuantityAvailable = sl == null ? 0 : sl.QuantityAvailable,
@@ -5412,8 +5456,8 @@ namespace DAL.Repositories
                             //QuantityReserved = wom == null ? 0 : wom.QuantityReserved,
                             QuantityReserved = wom.Quantity - wom.QuantityReserved,
                             QuantityAlreadyReserved = wom == null ? 0 : wom.QuantityReserved,
-                            wom.UnReservedQty,
-                            wom.UnIssuedQty,
+                            UnReservedQty = wom == null ? 0 : wom.UnReservedQty,
+                            UnIssuedQty = wom == null ? 0 : wom.UnIssuedQty,
                             QuantityTurnIn = wom == null ? 0 : wom.QuantityTurnIn,
                             IssuedById = wom == null ? 0 : wom.IssuedById,
                             IssuedDate = wom == null ? DateTime.Now : wom.IssuedDate,
@@ -5423,10 +5467,11 @@ namespace DAL.Repositories
                             im.PurchaseUnitOfMeasureId,
                             im.ItemClassificationId,
                             PartStatusId = wom.PartStatusId == null ? 0 : wom.PartStatusId,
-                            wom.ExtendedCost,
+                            ExtendedCost = wom == null ? 0 : wom.ExtendedCost,
                             Manufacturer = man.Name,
                             im.ManufacturerId,
                             OemDer = im.PMA == true && im.DER == true ? "PMA&DER" : (im.PMA == true && im.DER == false ? "PMA" : (im.PMA == false && im.DER == true ? "DER" : "")),
+                            ParentPartNo = im1.PartNumber
                         })
                          .Distinct()
                          .ToList();
@@ -5469,6 +5514,7 @@ namespace DAL.Repositories
                     woReservedIssuedAltPart.Manufacturer = item.Manufacturer;
                     woReservedIssuedAltPart.ManufacturerId = item.ManufacturerId;
                     woReservedIssuedAltPart.OemDer = item.OemDer;
+                    woReservedIssuedAltPart.ParentPartNo = item.ParentPartNo;
 
                     woReservedIssuedAltParts.Add(woReservedIssuedAltPart);
                 }
@@ -5476,6 +5522,502 @@ namespace DAL.Repositories
 
             return woReservedIssuedAltParts;
         }
+
+
+        /* Equivalent Parts */
+        private List<WOReservedIssuedEquParts> GetWOReservedIssuedEquParts(long? itemMasterId, long wokorderWorkFlowId, long workOrderId, long taskId)
+        {
+            List<WOReservedIssuedEquParts> woReservedIssuedAltParts = new List<WOReservedIssuedEquParts>();
+            WOReservedIssuedEquParts woReservedIssuedAltPart;
+
+            var list = (from alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping
+                        join im in _appContext.ItemMaster on alt.MappingItemMasterId equals im.ItemMasterId
+                        join im1 in _appContext.ItemMaster on alt.ItemMasterId equals im1.ItemMasterId
+                        join sl in _appContext.StockLine on alt.MappingItemMasterId equals sl.ItemMasterId into altsl
+                        from sl in altsl.DefaultIfEmpty()
+                        join con in _appContext.Condition on sl.ConditionId equals con.ConditionId into slcon
+                        from con in slcon.DefaultIfEmpty()
+                        join wom in _appContext.WorkOrderMaterials on im.ItemMasterId equals wom.ItemMasterId into imwom
+                        from wom in imwom.DefaultIfEmpty()
+                        join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
+                        where alt.ItemMasterId == itemMasterId && alt.IsDeleted == false && alt.IsActive == true && alt.MappingType == Convert.ToInt32(PartMappingTypeEnum.EquParts)
+                        && (wom.PartStatusId == null || wom.PartStatusId == 0 || wom.Quantity - wom.QuantityReserved > 0 || wom.QuantityReserved - wom.QuantityReserved > 0)
+                        select new
+                        {
+                            alt.MappingItemMasterId,
+                            im.PartNumber,
+                            im.PartDescription,
+                            alt.ItemMasterId,
+                            ConditionId = sl == null ? 0 : sl.ConditionId,
+                            Condition = con.Description,
+                            QuantityOnHand = sl == null ? 0 : sl.QuantityOnHand,
+                            QuantityAvailable = sl == null ? 0 : sl.QuantityAvailable,
+                            QuantityOnOrder = sl == null ? 0 : sl.QuantityOnOrder,
+                            StockLineId = sl == null ? 0 : sl.StockLineId,
+                            Quantity = wom == null ? 0 : wom.Quantity,
+                            QuantityIssued = wom == null ? 0 : wom.QuantityIssued,
+                            QuantityReserved = wom == null ? 0 : wom.QuantityReserved,
+                            QuantityTurnIn = wom == null ? 0 : wom.QuantityTurnIn,
+                            IssuedById = wom == null ? 0 : wom.IssuedById,
+                            IssuedDate = wom == null ? DateTime.Now : wom.IssuedDate,
+                            ReservedById = wom == null ? 0 : wom.ReservedById,
+                            ReservedDate = wom == null ? DateTime.Now : wom.ReservedDate,
+                            WorkOrderMaterialsId = wom == null ? 0 : wom.WorkOrderMaterialsId,
+                            im.PurchaseUnitOfMeasureId,
+                            im.ItemClassificationId,
+                            PartStatusId = wom.PartStatusId == null ? 0 : wom.PartStatusId,
+                            ExtendedCost = wom == null ? 0 : wom.ExtendedCost,
+                            Manufacturer = man.Name,
+                            im.ManufacturerId,
+                            OemDer = im.PMA == true && im.DER == true ? "PMA&DER" : (im.PMA == true && im.DER == false ? "PMA" : (im.PMA == false && im.DER == true ? "DER" : "")),
+                            ParentPartNo = im1.PartNumber
+                        })
+                         .Distinct()
+                         .ToList();
+            if (list != null && list.Count > 0)
+            {
+                foreach (var item in list)
+                {
+                    woReservedIssuedAltPart = new WOReservedIssuedEquParts();
+                    woReservedIssuedAltPart.EquPartDescription = item.PartDescription;
+                    woReservedIssuedAltPart.EquPartId = item.MappingItemMasterId;
+                    woReservedIssuedAltPart.EquPartNumber = item.PartNumber;
+                    woReservedIssuedAltPart.EquPartMasterPartId = item.ItemMasterId;
+                    woReservedIssuedAltPart.QuantityAvailable = item.QuantityAvailable;
+                    woReservedIssuedAltPart.QuantityOnHand = item.QuantityOnHand;
+                    woReservedIssuedAltPart.QuantityOnOrder = item.QuantityOnOrder;
+                    woReservedIssuedAltPart.ConditionId = item.ConditionId;
+                    woReservedIssuedAltPart.Condition = item.Condition;
+                    woReservedIssuedAltPart.IsEquPart = true;
+                    woReservedIssuedAltPart.Quantity = item.Quantity;
+                    woReservedIssuedAltPart.QuantityIssued = item.QuantityIssued;
+                    woReservedIssuedAltPart.QuantityReserved = item.QuantityReserved;
+                    woReservedIssuedAltPart.QuantityTurnIn = item.QuantityTurnIn;
+                    woReservedIssuedAltPart.WorkFlowWorkOrderId = wokorderWorkFlowId;
+                    woReservedIssuedAltPart.WorkOrderId = workOrderId;
+                    woReservedIssuedAltPart.WorkOrderMaterialsId = item.WorkOrderMaterialsId;
+                    woReservedIssuedAltPart.IssuedById = item.IssuedById;
+                    woReservedIssuedAltPart.IssuedDate = item.IssuedDate;
+                    woReservedIssuedAltPart.ReservedById = item.ReservedById;
+                    woReservedIssuedAltPart.ReservedDate = item.ReservedDate;
+                    woReservedIssuedAltPart.TaskId = taskId;
+                    woReservedIssuedAltPart.UnitOfMeasureId = item.PurchaseUnitOfMeasureId;
+                    woReservedIssuedAltPart.ItemClassificationId = item.ItemClassificationId;
+                    woReservedIssuedAltPart.ItemMasterId = itemMasterId;
+                    woReservedIssuedAltPart.PartStatusId = item.PartStatusId;
+                    woReservedIssuedAltPart.ExtendedCost = item.ExtendedCost;
+                    woReservedIssuedAltPart.Manufacturer = item.Manufacturer;
+                    woReservedIssuedAltPart.ManufacturerId = item.ManufacturerId;
+                    woReservedIssuedAltPart.OemDer = item.OemDer;
+                    woReservedIssuedAltPart.ParentPartNo = item.ParentPartNo;
+
+                    woReservedIssuedAltParts.Add(woReservedIssuedAltPart);
+                }
+            }
+
+            return woReservedIssuedAltParts;
+        }
+        private List<WOReservedIssuedEquParts> GetWOReservedEquParts(long? itemMasterId, long wokorderWorkFlowId, long workOrderId, long taskId)
+        {
+            List<WOReservedIssuedEquParts> woReservedIssuedAltParts = new List<WOReservedIssuedEquParts>();
+            WOReservedIssuedEquParts woReservedIssuedAltPart;
+
+            var list = (from alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping
+                        join im in _appContext.ItemMaster on alt.MappingItemMasterId equals im.ItemMasterId
+                        join im1 in _appContext.ItemMaster on alt.ItemMasterId equals im1.ItemMasterId
+                        join sl in _appContext.StockLine on alt.MappingItemMasterId equals sl.ItemMasterId into altsl
+                        from sl in altsl.DefaultIfEmpty()
+                        join con in _appContext.Condition on sl.ConditionId equals con.ConditionId into slcon
+                        from con in slcon.DefaultIfEmpty()
+                        join wom in _appContext.WorkOrderMaterials on im.ItemMasterId equals wom.ItemMasterId into imwom
+                        from wom in imwom.DefaultIfEmpty()
+                        join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
+                        where alt.ItemMasterId == itemMasterId && alt.IsDeleted == false && alt.IsActive == true && alt.MappingType == Convert.ToInt32(PartMappingTypeEnum.EquParts)
+                        && (wom.PartStatusId == null || wom.PartStatusId == 0 || wom.Quantity - wom.QuantityReserved > 0)
+                        select new
+                        {
+                            alt.MappingItemMasterId,
+                            im.PartNumber,
+                            im.PartDescription,
+                            alt.ItemMasterId,
+                            ConditionId = sl == null ? 0 : sl.ConditionId,
+                            Condition = con.Description,
+                            QuantityOnHand = sl == null ? 0 : sl.QuantityOnHand,
+                            QuantityAvailable = sl == null ? 0 : sl.QuantityAvailable,
+                            QuantityOnOrder = sl == null ? 0 : sl.QuantityOnOrder,
+                            StockLineId = sl == null ? 0 : sl.StockLineId,
+                            Quantity = wom == null ? 0 : wom.Quantity,
+                            QuantityIssued = wom == null ? 0 : wom.QuantityIssued,
+                            //QuantityReserved = wom == null ? 0 : wom.QuantityReserved,
+                            QuantityReserved = wom.Quantity - wom.QuantityReserved,
+                            QuantityAlreadyReserved = wom == null ? 0 : wom.QuantityReserved,
+                            UnReservedQty = wom == null ? 0 : wom.UnReservedQty,
+                            UnIssuedQty = wom == null ? 0 : wom.UnIssuedQty,
+                            QuantityTurnIn = wom == null ? 0 : wom.QuantityTurnIn,
+                            IssuedById = wom == null ? 0 : wom.IssuedById,
+                            IssuedDate = wom == null ? DateTime.Now : wom.IssuedDate,
+                            ReservedById = wom == null ? 0 : wom.ReservedById,
+                            ReservedDate = wom == null ? DateTime.Now : wom.ReservedDate,
+                            WorkOrderMaterialsId = wom == null ? 0 : wom.WorkOrderMaterialsId,
+                            im.PurchaseUnitOfMeasureId,
+                            im.ItemClassificationId,
+                            PartStatusId = wom == null ? 0 : wom.PartStatusId,
+                            ExtendedCost = wom == null ? 0 : wom.ExtendedCost,
+                            Manufacturer = man.Name,
+                            im.ManufacturerId,
+                            OemDer = im.PMA == true && im.DER == true ? "PMA&DER" : (im.PMA == true && im.DER == false ? "PMA" : (im.PMA == false && im.DER == true ? "DER" : "")),
+                            ParentPartNo = im1.PartNumber
+                        })
+                         .Distinct()
+                         .ToList();
+
+            if (list != null && list.Count > 0)
+            {
+                foreach (var item in list)
+                {
+                    woReservedIssuedAltPart = new WOReservedIssuedEquParts();
+                    woReservedIssuedAltPart.EquPartDescription = item.PartDescription;
+                    woReservedIssuedAltPart.EquPartId = item.MappingItemMasterId;
+                    woReservedIssuedAltPart.EquPartNumber = item.PartNumber;
+                    woReservedIssuedAltPart.EquPartMasterPartId = item.ItemMasterId;
+                    woReservedIssuedAltPart.QuantityAvailable = item.QuantityAvailable;
+                    woReservedIssuedAltPart.QuantityOnHand = item.QuantityOnHand;
+                    woReservedIssuedAltPart.QuantityOnOrder = item.QuantityOnOrder;
+                    woReservedIssuedAltPart.ConditionId = item.ConditionId;
+                    woReservedIssuedAltPart.Condition = item.Condition;
+                    woReservedIssuedAltPart.IsEquPart = true;
+                    woReservedIssuedAltPart.Quantity = item.Quantity;
+                    woReservedIssuedAltPart.QuantityIssued = item.QuantityIssued;
+                    woReservedIssuedAltPart.QuantityReserved = item.QuantityReserved;
+                    woReservedIssuedAltPart.QuantityTurnIn = item.QuantityTurnIn;
+                    woReservedIssuedAltPart.WorkFlowWorkOrderId = wokorderWorkFlowId;
+                    woReservedIssuedAltPart.WorkOrderId = workOrderId;
+                    woReservedIssuedAltPart.WorkOrderMaterialsId = item.WorkOrderMaterialsId;
+                    woReservedIssuedAltPart.IssuedById = item.IssuedById;
+                    woReservedIssuedAltPart.IssuedDate = item.IssuedDate;
+                    woReservedIssuedAltPart.ReservedById = item.ReservedById;
+                    woReservedIssuedAltPart.ReservedDate = item.ReservedDate;
+                    woReservedIssuedAltPart.TaskId = taskId;
+                    woReservedIssuedAltPart.UnitOfMeasureId = item.PurchaseUnitOfMeasureId;
+                    woReservedIssuedAltPart.ItemClassificationId = item.ItemClassificationId;
+                    woReservedIssuedAltPart.ItemMasterId = itemMasterId;
+                    woReservedIssuedAltPart.PartStatusId = item.PartStatusId;
+                    woReservedIssuedAltPart.ExtendedCost = item.ExtendedCost;
+                    woReservedIssuedAltPart.QuantityAlreadyReserved = item.QuantityAlreadyReserved;
+                    woReservedIssuedAltPart.UnIssuedQty = item.UnIssuedQty;
+                    woReservedIssuedAltPart.UnReservedQty = item.UnReservedQty;
+                    woReservedIssuedAltPart.Manufacturer = item.Manufacturer;
+                    woReservedIssuedAltPart.ManufacturerId = item.ManufacturerId;
+                    woReservedIssuedAltPart.OemDer = item.OemDer;
+                    woReservedIssuedAltPart.ParentPartNo = item.PartNumber;
+
+                    woReservedIssuedAltParts.Add(woReservedIssuedAltPart);
+                }
+            }
+
+            return woReservedIssuedAltParts;
+        }
+        private List<WOReservedIssuedEquParts> GetWOUnReservedEquParts(long? itemMasterId, long wokorderWorkFlowId, long workOrderId, long taskId)
+        {
+            List<WOReservedIssuedEquParts> woReservedIssuedAltParts = new List<WOReservedIssuedEquParts>();
+            WOReservedIssuedEquParts woReservedIssuedAltPart;
+
+            var list = (from alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping
+                        join im in _appContext.ItemMaster on alt.MappingItemMasterId equals im.ItemMasterId
+                        join im1 in _appContext.ItemMaster on alt.ItemMasterId equals im1.ItemMasterId
+                        join sl in _appContext.StockLine on alt.MappingItemMasterId equals sl.ItemMasterId into altsl
+                        from sl in altsl.DefaultIfEmpty()
+                        join con in _appContext.Condition on sl.ConditionId equals con.ConditionId into slcon
+                        from con in slcon.DefaultIfEmpty()
+                        join wom in _appContext.WorkOrderMaterials on im.ItemMasterId equals wom.ItemMasterId into imwom
+                        from wom in imwom.DefaultIfEmpty()
+                        join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
+                        where alt.ItemMasterId == itemMasterId && alt.IsDeleted == false && alt.IsActive == true && alt.MappingType == Convert.ToInt32(PartMappingTypeEnum.EquParts)
+                        && wom.QuantityReserved - wom.QuantityIssued > 0
+                        select new
+                        {
+                            alt.MappingItemMasterId,
+                            im.PartNumber,
+                            im.PartDescription,
+                            alt.ItemMasterId,
+                            ConditionId = sl == null ? 0 : sl.ConditionId,
+                            Condition = con.Description,
+                            QuantityOnHand = sl == null ? 0 : sl.QuantityOnHand,
+                            QuantityAvailable = sl == null ? 0 : sl.QuantityAvailable,
+                            QuantityOnOrder = sl == null ? 0 : sl.QuantityOnOrder,
+                            StockLineId = sl == null ? 0 : sl.StockLineId,
+                            Quantity = wom == null ? 0 : wom.Quantity,
+                            QuantityIssued = wom == null ? 0 : wom.QuantityIssued,
+                            //QuantityReserved = wom == null ? 0 : wom.QuantityReserved,
+                            QuantityReserved = wom.Quantity - wom.QuantityReserved,
+                            QuantityAlreadyReserved = wom == null ? 0 : wom.QuantityReserved,
+                            UnReservedQty = wom == null ? 0 : wom.UnReservedQty,
+                            UnIssuedQty = wom == null ? 0 : wom.UnIssuedQty,
+                            QuantityTurnIn = wom == null ? 0 : wom.QuantityTurnIn,
+                            IssuedById = wom == null ? 0 : wom.IssuedById,
+                            IssuedDate = wom == null ? DateTime.Now : wom.IssuedDate,
+                            ReservedById = wom == null ? 0 : wom.ReservedById,
+                            ReservedDate = wom == null ? DateTime.Now : wom.ReservedDate,
+                            WorkOrderMaterialsId = wom == null ? 0 : wom.WorkOrderMaterialsId,
+                            im.PurchaseUnitOfMeasureId,
+                            im.ItemClassificationId,
+                            PartStatusId = wom.PartStatusId == null ? 0 : wom.PartStatusId,
+                            ExtendedCost = wom == null ? 0 : wom.ExtendedCost,
+                            Manufacturer = man.Name,
+                            im.ManufacturerId,
+                            OemDer = im.PMA == true && im.DER == true ? "PMA&DER" : (im.PMA == true && im.DER == false ? "PMA" : (im.PMA == false && im.DER == true ? "DER" : "")),
+                            ParentPartNo = im1.PartNumber
+                        })
+                         .Distinct()
+                         .ToList();
+
+            if (list != null && list.Count > 0)
+            {
+                foreach (var item in list)
+                {
+                    woReservedIssuedAltPart = new WOReservedIssuedEquParts();
+                    woReservedIssuedAltPart.EquPartDescription = item.PartDescription;
+                    woReservedIssuedAltPart.EquPartId = item.MappingItemMasterId;
+                    woReservedIssuedAltPart.EquPartNumber = item.PartNumber;
+                    woReservedIssuedAltPart.EquPartMasterPartId = item.ItemMasterId;
+                    woReservedIssuedAltPart.QuantityAvailable = item.QuantityAvailable;
+                    woReservedIssuedAltPart.QuantityOnHand = item.QuantityOnHand;
+                    woReservedIssuedAltPart.QuantityOnOrder = item.QuantityOnOrder;
+                    woReservedIssuedAltPart.ConditionId = item.ConditionId;
+                    woReservedIssuedAltPart.Condition = item.Condition;
+                    woReservedIssuedAltPart.IsEquPart = true;
+                    woReservedIssuedAltPart.Quantity = item.Quantity;
+                    woReservedIssuedAltPart.QuantityIssued = item.QuantityIssued;
+                    woReservedIssuedAltPart.QuantityReserved = item.QuantityReserved;
+                    woReservedIssuedAltPart.QuantityTurnIn = item.QuantityTurnIn;
+                    woReservedIssuedAltPart.WorkFlowWorkOrderId = wokorderWorkFlowId;
+                    woReservedIssuedAltPart.WorkOrderId = workOrderId;
+                    woReservedIssuedAltPart.WorkOrderMaterialsId = item.WorkOrderMaterialsId;
+                    woReservedIssuedAltPart.IssuedById = item.IssuedById;
+                    woReservedIssuedAltPart.IssuedDate = item.IssuedDate;
+                    woReservedIssuedAltPart.ReservedById = item.ReservedById;
+                    woReservedIssuedAltPart.ReservedDate = item.ReservedDate;
+                    woReservedIssuedAltPart.TaskId = taskId;
+                    woReservedIssuedAltPart.UnitOfMeasureId = item.PurchaseUnitOfMeasureId;
+                    woReservedIssuedAltPart.ItemClassificationId = item.ItemClassificationId;
+                    woReservedIssuedAltPart.ItemMasterId = itemMasterId;
+                    woReservedIssuedAltPart.PartStatusId = item.PartStatusId;
+                    woReservedIssuedAltPart.ExtendedCost = item.ExtendedCost;
+                    woReservedIssuedAltPart.QuantityAlreadyReserved = item.QuantityAlreadyReserved;
+                    woReservedIssuedAltPart.UnIssuedQty = item.UnIssuedQty;
+                    woReservedIssuedAltPart.UnReservedQty = item.UnReservedQty;
+                    woReservedIssuedAltPart.Manufacturer = item.Manufacturer;
+                    woReservedIssuedAltPart.ManufacturerId = item.ManufacturerId;
+                    woReservedIssuedAltPart.OemDer = item.OemDer;
+                    woReservedIssuedAltPart.ParentPartNo = item.ParentPartNo;
+
+                    woReservedIssuedAltParts.Add(woReservedIssuedAltPart);
+                }
+            }
+
+            return woReservedIssuedAltParts;
+        }
+        private List<WOReservedIssuedEquParts> GetWOIssuedEquParts(long? itemMasterId, long wokorderWorkFlowId, long workOrderId, long taskId)
+        {
+            List<WOReservedIssuedEquParts> woReservedIssuedAltParts = new List<WOReservedIssuedEquParts>();
+            WOReservedIssuedEquParts woReservedIssuedAltPart;
+
+            var list = (from alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping
+                        join im in _appContext.ItemMaster on alt.MappingItemMasterId equals im.ItemMasterId
+                        join im1 in _appContext.ItemMaster on alt.ItemMasterId equals im1.ItemMasterId
+                        join sl in _appContext.StockLine on alt.MappingItemMasterId equals sl.ItemMasterId into altsl
+                        from sl in altsl.DefaultIfEmpty()
+                        join con in _appContext.Condition on sl.ConditionId equals con.ConditionId into slcon
+                        from con in slcon.DefaultIfEmpty()
+                        join wom in _appContext.WorkOrderMaterials on im.ItemMasterId equals wom.ItemMasterId into imwom
+                        from wom in imwom.DefaultIfEmpty()
+                        join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
+                        where alt.ItemMasterId == itemMasterId && alt.IsDeleted == false && alt.IsActive == true && alt.MappingType == Convert.ToInt32(PartMappingTypeEnum.EquParts)
+                        && wom.QuantityReserved - wom.QuantityReserved > 0
+                        select new
+                        {
+                            alt.MappingItemMasterId,
+                            im.PartNumber,
+                            im.PartDescription,
+                            alt.ItemMasterId,
+                            ConditionId = sl == null ? 0 : sl.ConditionId,
+                            Condition = con.Description,
+                            QuantityOnHand = sl == null ? 0 : sl.QuantityOnHand,
+                            QuantityAvailable = sl == null ? 0 : sl.QuantityAvailable,
+                            QuantityOnOrder = sl == null ? 0 : sl.QuantityOnOrder,
+                            StockLineId = sl == null ? 0 : sl.StockLineId,
+                            Quantity = wom == null ? 0 : wom.Quantity,
+                            QuantityIssued = wom == null ? 0 : wom.QuantityIssued,
+                            //QuantityReserved = wom == null ? 0 : wom.QuantityReserved,
+                            QuantityReserved = wom.Quantity - wom.QuantityReserved,
+                            QuantityAlreadyReserved = wom == null ? 0 : wom.QuantityReserved,
+                            UnReservedQty = wom == null ? 0 : wom.UnReservedQty,
+                            UnIssuedQty = wom == null ? 0 : wom.UnIssuedQty,
+                            QuantityTurnIn = wom == null ? 0 : wom.QuantityTurnIn,
+                            IssuedById = wom == null ? 0 : wom.IssuedById,
+                            IssuedDate = wom == null ? DateTime.Now : wom.IssuedDate,
+                            ReservedById = wom == null ? 0 : wom.ReservedById,
+                            ReservedDate = wom == null ? DateTime.Now : wom.ReservedDate,
+                            WorkOrderMaterialsId = wom == null ? 0 : wom.WorkOrderMaterialsId,
+                            im.PurchaseUnitOfMeasureId,
+                            im.ItemClassificationId,
+                            PartStatusId = wom == null ? 0 : wom.PartStatusId,
+                            ExtendedCost = wom == null ? 0 : wom.ExtendedCost,
+                            Manufacturer = man.Name,
+                            im.ManufacturerId,
+                            OemDer = im.PMA == true && im.DER == true ? "PMA&DER" : (im.PMA == true && im.DER == false ? "PMA" : (im.PMA == false && im.DER == true ? "DER" : "")),
+                            ParentPartNo = im1.PartNumber
+                        })
+                         .Distinct()
+                         .ToList();
+
+            if (list != null && list.Count > 0)
+            {
+                foreach (var item in list)
+                {
+                    woReservedIssuedAltPart = new WOReservedIssuedEquParts();
+                    woReservedIssuedAltPart.EquPartDescription = item.PartDescription;
+                    woReservedIssuedAltPart.EquPartId = item.MappingItemMasterId;
+                    woReservedIssuedAltPart.EquPartNumber = item.PartNumber;
+                    woReservedIssuedAltPart.EquPartMasterPartId = item.ItemMasterId;
+                    woReservedIssuedAltPart.QuantityAvailable = item.QuantityAvailable;
+                    woReservedIssuedAltPart.QuantityOnHand = item.QuantityOnHand;
+                    woReservedIssuedAltPart.QuantityOnOrder = item.QuantityOnOrder;
+                    woReservedIssuedAltPart.ConditionId = item.ConditionId;
+                    woReservedIssuedAltPart.Condition = item.Condition;
+                    woReservedIssuedAltPart.IsEquPart = true;
+                    woReservedIssuedAltPart.Quantity = item.Quantity;
+                    woReservedIssuedAltPart.QuantityIssued = item.QuantityIssued;
+                    woReservedIssuedAltPart.QuantityReserved = item.QuantityReserved;
+                    woReservedIssuedAltPart.QuantityTurnIn = item.QuantityTurnIn;
+                    woReservedIssuedAltPart.WorkFlowWorkOrderId = wokorderWorkFlowId;
+                    woReservedIssuedAltPart.WorkOrderId = workOrderId;
+                    woReservedIssuedAltPart.WorkOrderMaterialsId = item.WorkOrderMaterialsId;
+                    woReservedIssuedAltPart.IssuedById = item.IssuedById;
+                    woReservedIssuedAltPart.IssuedDate = item.IssuedDate;
+                    woReservedIssuedAltPart.ReservedById = item.ReservedById;
+                    woReservedIssuedAltPart.ReservedDate = item.ReservedDate;
+                    woReservedIssuedAltPart.TaskId = taskId;
+                    woReservedIssuedAltPart.UnitOfMeasureId = item.PurchaseUnitOfMeasureId;
+                    woReservedIssuedAltPart.ItemClassificationId = item.ItemClassificationId;
+                    woReservedIssuedAltPart.ItemMasterId = itemMasterId;
+                    woReservedIssuedAltPart.PartStatusId = item.PartStatusId;
+                    woReservedIssuedAltPart.ExtendedCost = item.ExtendedCost;
+                    woReservedIssuedAltPart.QuantityAlreadyReserved = item.QuantityAlreadyReserved;
+                    woReservedIssuedAltPart.UnIssuedQty = item.UnIssuedQty;
+                    woReservedIssuedAltPart.UnReservedQty = item.UnReservedQty;
+                    woReservedIssuedAltPart.Manufacturer = item.Manufacturer;
+                    woReservedIssuedAltPart.ManufacturerId = item.ManufacturerId;
+                    woReservedIssuedAltPart.OemDer = item.OemDer;
+                    woReservedIssuedAltPart.ParentPartNo = item.ParentPartNo;
+
+                    woReservedIssuedAltParts.Add(woReservedIssuedAltPart);
+                }
+            }
+
+            return woReservedIssuedAltParts;
+        }
+        private List<WOReservedIssuedEquParts> GetWOUnIssuedEquParts(long? itemMasterId, long wokorderWorkFlowId, long workOrderId, long taskId)
+        {
+            List<WOReservedIssuedEquParts> woReservedIssuedAltParts = new List<WOReservedIssuedEquParts>();
+            WOReservedIssuedEquParts woReservedIssuedAltPart;
+
+            var list = (from alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping
+                        join im in _appContext.ItemMaster on alt.MappingItemMasterId equals im.ItemMasterId
+                        join im1 in _appContext.ItemMaster on alt.ItemMasterId equals im1.ItemMasterId
+                        join sl in _appContext.StockLine on alt.MappingItemMasterId equals sl.ItemMasterId into altsl
+                        from sl in altsl.DefaultIfEmpty()
+                        join con in _appContext.Condition on sl.ConditionId equals con.ConditionId into slcon
+                        from con in slcon.DefaultIfEmpty()
+                        join wom in _appContext.WorkOrderMaterials on im.ItemMasterId equals wom.ItemMasterId into imwom
+                        from wom in imwom.DefaultIfEmpty()
+                        join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
+                        where alt.ItemMasterId == itemMasterId && alt.IsDeleted == false && alt.IsActive == true && alt.MappingType == Convert.ToInt32(PartMappingTypeEnum.EquParts)
+                        && wom.QuantityIssued > 0
+                        select new
+                        {
+                            alt.MappingItemMasterId,
+                            im.PartNumber,
+                            im.PartDescription,
+                            alt.ItemMasterId,
+                            ConditionId = sl == null ? 0 : sl.ConditionId,
+                            Condition = con.Description,
+                            QuantityOnHand = sl == null ? 0 : sl.QuantityOnHand,
+                            QuantityAvailable = sl == null ? 0 : sl.QuantityAvailable,
+                            QuantityOnOrder = sl == null ? 0 : sl.QuantityOnOrder,
+                            StockLineId = sl == null ? 0 : sl.StockLineId,
+                            Quantity = wom == null ? 0 : wom.Quantity,
+                            QuantityIssued = wom == null ? 0 : wom.QuantityIssued,
+                            //QuantityReserved = wom == null ? 0 : wom.QuantityReserved,
+                            QuantityReserved = wom.Quantity - wom.QuantityReserved,
+                            QuantityAlreadyReserved = wom == null ? 0 : wom.QuantityReserved,
+                            UnReservedQty = wom == null ? 0 : wom.UnReservedQty,
+                            UnIssuedQty = wom == null ? 0 : wom.UnIssuedQty,
+                            QuantityTurnIn = wom == null ? 0 : wom.QuantityTurnIn,
+                            IssuedById = wom == null ? 0 : wom.IssuedById,
+                            IssuedDate = wom == null ? DateTime.Now : wom.IssuedDate,
+                            ReservedById = wom == null ? 0 : wom.ReservedById,
+                            ReservedDate = wom == null ? DateTime.Now : wom.ReservedDate,
+                            WorkOrderMaterialsId = wom == null ? 0 : wom.WorkOrderMaterialsId,
+                            im.PurchaseUnitOfMeasureId,
+                            im.ItemClassificationId,
+                            PartStatusId = wom.PartStatusId == null ? 0 : wom.PartStatusId,
+                            ExtendedCost = wom == null ? 0 : wom.ExtendedCost,
+                            Manufacturer = man.Name,
+                            im.ManufacturerId,
+                            OemDer = im.PMA == true && im.DER == true ? "PMA&DER" : (im.PMA == true && im.DER == false ? "PMA" : (im.PMA == false && im.DER == true ? "DER" : "")),
+                            ParentPartNo = im1.PartNumber
+                        })
+                         .Distinct()
+                         .ToList();
+
+            if (list != null && list.Count > 0)
+            {
+                foreach (var item in list)
+                {
+                    woReservedIssuedAltPart = new WOReservedIssuedEquParts();
+                    woReservedIssuedAltPart.EquPartDescription = item.PartDescription;
+                    woReservedIssuedAltPart.EquPartId = item.MappingItemMasterId;
+                    woReservedIssuedAltPart.EquPartNumber = item.PartNumber;
+                    woReservedIssuedAltPart.EquPartMasterPartId = item.ItemMasterId;
+                    woReservedIssuedAltPart.QuantityAvailable = item.QuantityAvailable;
+                    woReservedIssuedAltPart.QuantityOnHand = item.QuantityOnHand;
+                    woReservedIssuedAltPart.QuantityOnOrder = item.QuantityOnOrder;
+                    woReservedIssuedAltPart.ConditionId = item.ConditionId;
+                    woReservedIssuedAltPart.Condition = item.Condition;
+                    woReservedIssuedAltPart.IsEquPart = true;
+                    woReservedIssuedAltPart.Quantity = item.Quantity;
+                    woReservedIssuedAltPart.QuantityIssued = item.QuantityIssued;
+                    woReservedIssuedAltPart.QuantityReserved = item.QuantityReserved;
+                    woReservedIssuedAltPart.QuantityTurnIn = item.QuantityTurnIn;
+                    woReservedIssuedAltPart.WorkFlowWorkOrderId = wokorderWorkFlowId;
+                    woReservedIssuedAltPart.WorkOrderId = workOrderId;
+                    woReservedIssuedAltPart.WorkOrderMaterialsId = item.WorkOrderMaterialsId;
+                    woReservedIssuedAltPart.IssuedById = item.IssuedById;
+                    woReservedIssuedAltPart.IssuedDate = item.IssuedDate;
+                    woReservedIssuedAltPart.ReservedById = item.ReservedById;
+                    woReservedIssuedAltPart.ReservedDate = item.ReservedDate;
+                    woReservedIssuedAltPart.TaskId = taskId;
+                    woReservedIssuedAltPart.UnitOfMeasureId = item.PurchaseUnitOfMeasureId;
+                    woReservedIssuedAltPart.ItemClassificationId = item.ItemClassificationId;
+                    woReservedIssuedAltPart.ItemMasterId = itemMasterId;
+                    woReservedIssuedAltPart.PartStatusId = item.PartStatusId;
+                    woReservedIssuedAltPart.ExtendedCost = item.ExtendedCost;
+                    woReservedIssuedAltPart.QuantityAlreadyReserved = item.QuantityAlreadyReserved;
+                    woReservedIssuedAltPart.UnIssuedQty = item.UnIssuedQty;
+                    woReservedIssuedAltPart.UnReservedQty = item.UnReservedQty;
+                    woReservedIssuedAltPart.Manufacturer = item.Manufacturer;
+                    woReservedIssuedAltPart.ManufacturerId = item.ManufacturerId;
+                    woReservedIssuedAltPart.OemDer = item.OemDer;
+                    woReservedIssuedAltPart.ParentPartNo = item.ParentPartNo;
+
+                    woReservedIssuedAltParts.Add(woReservedIssuedAltPart);
+                }
+            }
+
+            return woReservedIssuedAltParts;
+        }
+
 
         private void SaveWorkOrderMaterial(WorkOrderReserveIssuesParts part)
         {

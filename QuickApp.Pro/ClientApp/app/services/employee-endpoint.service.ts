@@ -64,6 +64,8 @@ export class EmployeeEndpoint extends EndpointFactory {
 	private readonly _getEmployeeManagementStructure: string = "/api/Employee/getemployeeManagementStructure";
 	private readonly _getEmployeeAuditHistoryByEmpId: string = "/api/Employee/GetEmployeeAuditHistory";
 	private readonly _actionsUrlEmployeeMemoUpdate: string = "/api/Employee/employeeupdatememo";
+	private readonly _addEmployeeTrainingFileUpload: string = "/api/Employee/employeeDocumentUpload";
+
     
 
 	get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
@@ -475,6 +477,14 @@ export class EmployeeEndpoint extends EndpointFactory {
 			});
 
 	}
+
+	// uploadEmployeeTrainingDocEndpoint<T>(file: any): Observable<T> {
+	// 	const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
+	// 	return this.http.post<T>(`${this._addEmployeeTrainingFileUpload}`, file);
+	// }
+
+
+	
 }
 
 

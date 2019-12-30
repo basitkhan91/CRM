@@ -56,13 +56,13 @@ export class NodeSetupComponent implements OnInit {
         description: "",
         selectedCompanysData: "",
         parentNodeId: "",
-        parentNode: "",
+        parentNodeName:"",
         leafNodeCheck: "",
         glAccountNodeType: "",
         fsType: "",
         masterCompanyId: 1,
         isActive: true,
-        isdelete:true,
+        isdelete: false,
     }
     addNew = { ...this.new };
     selectedRecordForEdit: any;
@@ -73,7 +73,6 @@ export class NodeSetupComponent implements OnInit {
 
 
     nodeSetupViewData: any;
-    parentNode: string;
     parentCodeCollection: any[];
     maincompanylist: any[] = [];
     allManagemtninfoData: any[];
@@ -249,6 +248,13 @@ export class NodeSetupComponent implements OnInit {
         console.log(rowData);
         this.viewRowData = rowData;
     }
+
+    //getAuditHistoryById(rowData) {
+    //    this.nodeSetupService.getNodeAuditeDetails(rowData.GLAccountNodeId).subscribe(res => {
+    //        this.auditHistory = res;
+    //    })
+    //}
+
     columnsChanges() {
         this.refreshList();
     }
@@ -274,9 +280,7 @@ export class NodeSetupComponent implements OnInit {
         this.disableSaveForDescription = false;
         this.addNew = {
             ...rowData,
-            parentNodeId: getObjectById('parenNodeId', rowData.parenNodeId, this.originalData.parentNode),
-            parentNode: getObjectById('parenNode', rowData.parentNodeName, this.originalData.parentNodeName),
-
+            //parentNodeId: getObjectById('parenNodeId', rowData.parenNodeId, this.originalData.parentNode)
         };
         this.selectedRecordForEdit = { ...this.addNew }
 
@@ -501,12 +505,11 @@ export class NodeSetupComponent implements OnInit {
     }
 
     open(content) {
-        this.parentNode = '';
         this.updateMode = false;
         this.isDeleteMode = false;
         this.currentNodeSetup = new GLAccountNodeSetup();
         this.currentNodeSetup.isActive = true;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -562,6 +565,20 @@ export class NodeSetupComponent implements OnInit {
         }
     }
 
+    ledgerSelect(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedCodeName) {
+                if (value == this.selectedCodeName.toLowerCase()) {
+                    this.disablesave = true;
+                }
+                else {
+                    this.disablesave = false;
+                }
+            }
+        }
+    }
+
     codeSelect(event) {
         if (this.nodeSetupListData) {
 
@@ -611,7 +628,6 @@ export class NodeSetupComponent implements OnInit {
 
             for (let i = 0; i < this.parentNodeList.length; i++) {
                 if (event == this.parentNodeList[i].nodeCode) {
-                    this.parentNode = this.parentNodeList[i].nodeCode;
                     this.currentNodeSetup.parentNodeId = this.parentNodeList[i].glAccountNodeId;
                     this.addNew.parentNodeId = this.parentNodeList[i].glAccountNodeId
                     // this.disablesave = true;
@@ -636,7 +652,7 @@ export class NodeSetupComponent implements OnInit {
     showViewData(viewContent, node) {
         this.nodeSetupService.getById(node.glAccountNodeId).subscribe(data => {
             this.nodeSetupViewData = data[0][0];
-            this.modal = this.modalService.open(viewContent, { size: 'lg' });
+            this.modal = this.modalService.open(viewContent, { size: 'lg', backdrop: 'static', keyboard: false });
         })
 
     }

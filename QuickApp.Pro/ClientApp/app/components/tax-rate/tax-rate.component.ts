@@ -434,9 +434,10 @@ export class TaxRateComponent implements OnInit {
     showHistory(rowData): void {
         this.currentModeOfOperation = ModeOfOperation.Audit;
         this.taxRateService.getTaxRateAudit(rowData.taxRateId).subscribe(audits => {
-            //console.log('audits',audits);
-            if (audits.length > 0) {
-                this.auditHistory = audits;
+            //console.log('audits', audits);
+            //console.log('audits', audits[0].result);
+            if (audits) {
+                this.auditHistory = audits[0].result;
             }
         });
         //console.log(this.auditHistory);

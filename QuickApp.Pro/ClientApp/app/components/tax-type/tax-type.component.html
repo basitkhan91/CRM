@@ -15,24 +15,24 @@
                             [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple"     (onPage)="changePage($event)" 
                             [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" [totalRecords]="totalRecords" scrollHeight="450px" >
                             <ng-template pTemplate="caption">
-                                <div style="text-align: right;margin-left:-6px !important;">
+                                <div style="text-align: right;margin-left:-6px">
                                     <p-multiSelect  [maxSelectedLabels]="2" [options]="headers"  optionLabel="header" [(ngModel)]="selectedColumns"  
                                         [style]="{minWidth: '200px'}"  style="float:left" (onChange)="columnsChanges()"  ></p-multiSelect>
-                                     <button type="button" class="btn btn-primary-cstm " matTooltip="Download Data" tooltipPosition="top" pButton icon="fa-download"
+                                     <button type="button" class="btn btn-primary-cstm" pTooltip="Download All Data" matTooltipPosition="above" tooltipPosition="top" pButton icon="fa-download"
                                         iconPos="left" label="Export Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary-cstm" pTooltip="Download Selected" matTooltipPosition="above" tooltipPosition="top" pButton icon="fa-download"
                                         iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button> 
                                     <div class="excel-upload  excel-upload-cstm">
                                         
                                         <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)"   class="uploaddoc upload-file" 
                                         accept=".xlsx, .xls, .csv">
                                         <label for="upload">
-                                            <span matTooltip="Upload Data (Excel)">
+                                            <span pTooltip="Upload Data (Excel)" matTooltipPosition="above" tooltipPosition="top">
                                                 <i class="fa fa-upload"></i>
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()" matTooltip="Download Sample File" tooltipPosition="top" >Sample File Download</button>
+                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()" matTooltipPosition="above" pTooltip="Download Sample File" tooltipPosition="top" >Sample File Download</button>
                                     </div>
                                     
                                 </div>
@@ -60,10 +60,12 @@
                                         (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                     </td>
                                     <td style="width:200px" *ngIf="selectedColumns.length> 0">
-                                        <p-inputSwitch [(ngModel)]="rowData['isActive']"
-                                                       name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"
-                                                       [matTooltip]="rowData['isActive'] ? 'Active' : 'Inactive' ">
-                                        </p-inputSwitch>
+
+                                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <!--<p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>-->
+
                                         <span data-toggle="modal" data-target="#view">
                                             <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" data-target="#view" data-toggle="modal">
                                                 <i class="fa fa-eye"></i>
@@ -102,13 +104,13 @@
 </div>
 
 
-<ng-template #auditContent let-c="close" let-d="dismiss" data-backdrop="static">
+<ng-template #auditContent let-c="close" let-d="dismiss">
     <div *ngIf="AuditDetails != undefined && AuditDetails.length > 0">
         <app-audit [Data]="AuditDetails" [Modal]="modal"></app-audit>
     </div>
 </ng-template>
 
-<div  *ngIf="selectedRowforDelete" #delete id="delete"  class="modal fade" role="dialog" data-backdrop="static">
+<div  *ngIf="selectedRowforDelete" #delete id="delete"  class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -129,7 +131,7 @@
     </div>
   </div>
 
-  <div #add  id="add"class="modal fade" role="dialog" data-backdrop="static">
+  <div #add  id="add"class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
   
       <!-- Modal content-->
@@ -157,8 +159,7 @@
                                 [dropdown]="true" class="p-autoComplete-ctsm" required>
            
                             </p-autoComplete>
-                            <div *ngIf="disableSaveTaxtype && addNew.description" class="clr-red">Already Exists</div>
-                            <div class="clear"></div>
+                            <div *ngIf="disableSaveTaxtypeMsg" class="clr-red">Already Exists</div>
                         </div>
                     </div>
 
@@ -197,7 +198,7 @@
     </div>
   </div>
 
-<div *ngIf="existingRecordsResponse" id="duplicateRecords" #duplicateRecords class="modal fade" role="dialog"  data-backdrop="static">
+<div *ngIf="existingRecordsResponse" id="duplicateRecords" #duplicateRecords class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
                             <div class="modal-dialog modal-lg">
                           
                              
@@ -241,7 +242,7 @@
                             </div>
 </div>
 
-<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static" >
+<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
                             <div class="modal-dialog modal-lg">
                           
                               <!-- Modal content-->
@@ -293,7 +294,7 @@
                             </div>
                           </div>
 
-<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static">
+<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static" data-keyboard="false">
 <div class="modal-dialog modal-sm">
     <div class="modal-content">
         <div class="modal-header">
@@ -356,7 +357,7 @@
 
 </div>
 
-<ng-template #helpText class="modal fade" id="help-popup" role="dialog" data-backdrop="static">
+<ng-template #helpText class="modal fade" id="help-popup" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-content">
         <div class="modal-header">
             

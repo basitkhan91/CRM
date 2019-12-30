@@ -77,5 +77,9 @@ export class VendorCapabilitiesService {
     getVendorAircraftGetDataByCapsId(vendorCapesId){
         return this.vendorCapabilitiesEndpoint.getVendorAircraftGetDataByCapsId(vendorCapesId);
     }
+
+    searchAirMappedByMultiTypeIdModelIDDashID(vendorCapesId: number, searchUrl: string) {
+        return this.vendorCapabilitiesEndpoint.searchAirMappedByMultiTypeIDModelIDDashID<any>(vendorCapesId, searchUrl);
+    }
     
 }

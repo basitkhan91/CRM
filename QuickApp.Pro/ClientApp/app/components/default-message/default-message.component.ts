@@ -190,7 +190,7 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
         this.sourceAction = new DefaultMessage();
         this.sourceAction.isActive = true;
         this.messageName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
 
 
@@ -206,7 +206,7 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
         this.isDeleteMode = true;
         this.sourceAction = row;
         this.defaultMessage_Name = row.defaultMessageCode;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -233,7 +233,7 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
         this.sourceAction = row;
         this.messageName = this.sourceAction.defaultMessageCode;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -262,13 +262,13 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
         this.createdDate = row.createdDate;
         this.updatedDate = row.updatedDate;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
     openHelpText(content) {
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -320,7 +320,7 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
         this.auditHisory = auditHistory;
 
 
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
 
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -418,7 +418,7 @@ export class DefaultMessageComponent implements OnInit, AfterViewInit {
 
     showAuditPopup(template, defaultMessageId): void {
         this.auditDefault(defaultMessageId);
-        this.modal = this.modalService.open(template, { size: 'sm' });
+        this.modal = this.modalService.open(template, { size: 'sm', backdrop: 'static', keyboard: false });
     }
 
     auditDefault(defaultMessageId: number): void {

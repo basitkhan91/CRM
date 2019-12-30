@@ -38,7 +38,7 @@ export class JobTypeComponent implements OnInit {
     totalPages: number;
     jobTypeHeaders = [
         { field: 'jobTypeName', header: 'Job Type' },
-        { field: 'jobTypeMemo', header: 'memo' },
+        { field: 'jobTypeMemo', header: 'Memo' },
     ]
     selectedColumns = this.jobTypeHeaders;
     formData = new FormData()

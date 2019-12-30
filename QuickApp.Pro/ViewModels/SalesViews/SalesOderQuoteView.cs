@@ -18,6 +18,9 @@ namespace QuickApp.Pro.ViewModels.SalesViews
         public long PriorityId { get; set; }
         public int AccountTypeId { get; set; }
         public long CustomerId { get; set; }
+        public string CustomerName { get; set; }
+
+        public string CustomerCode { get; set; }
         public int CustomerContactId { get; set; }
         public string CustomerReference { get; set; }
         public string ContractReference { get; set; }
@@ -70,6 +73,7 @@ namespace QuickApp.Pro.ViewModels.SalesViews
         public DateTime UpdatedOn { get; set; }
         public bool IsDeleted { get; set; }
 
-        List<SalesOrderQuoteApproverListView> ApproverList { get; set; }
+        public int StatusId { get; set; }
+
     }
 }

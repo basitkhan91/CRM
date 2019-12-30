@@ -8,8 +8,10 @@ namespace DAL.Models
     {
         public string PartNumber { get; set; }
         public string PartDescription { get; set; }
+
         public List<WOReservedIssuedAltParts> WOReservedIssuedAltParts { get;set;}
-        
+        public List<WOReservedIssuedEquParts> WOReservedIssuedEquParts { get; set; }
+
     }
 
     public class WOReservedIssuedAltParts: RevisedIssuedParts
@@ -20,9 +22,19 @@ namespace DAL.Models
         
     }
 
+    public class WOReservedIssuedEquParts : RevisedIssuedParts
+    {
+        public long EquPartId { get; set; }
+        public string EquPartNumber { get; set; }
+        public string EquPartDescription { get; set; }
+
+    }
+
     public class RevisedIssuedParts
     {
-        public long WorkOrderId { get; set; }
+
+
+		public long WorkOrderId { get; set; }
         public long WorkFlowWorkOrderId { get; set; }
         public long WorkOrderMaterialsId { get; set; }
         public long StockLineId { get; set; }
@@ -61,5 +73,7 @@ namespace DAL.Models
         public string OemDer { get; set; }
         public bool? IsEquPart { get; set; }
         public long? EquPartMasterPartId { get; set; }
+        public string ParentPartNo { get; set; }
+
     }
 }

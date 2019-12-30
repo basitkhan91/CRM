@@ -43,7 +43,7 @@
                                     <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Filter" style="height: 28px !important;">
                                 </div>
                                 <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-                                <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
+                                <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selected Data"  (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
                                 <div class="excel-upload excel-upload-cstm">
                                     <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                     <label for="upload">
@@ -89,7 +89,7 @@
                                         <mat-icon>edit</mat-icon>
                                     </button>
 
-                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="openDelete(deleteContent,rowData.contactId)">
+                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="openDelete(deleteContent,rowData)">
                                         <mat-icon color="warn">delete</mat-icon>
                                     </button>
 
@@ -244,15 +244,15 @@
                             <div class="form-group">
                                 <label>First Name <span class="clr-red">*</span></label>
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                    <input type="text" class="form-control" [(ngModel)]="contactInformation.firstName" name="firstName" required>
-                                    <!-- <p-autoComplete class="autocomp-customer-cstm"
+                                    <!--<input type="text" class="form-control" [(ngModel)]="contactInformation.firstName" name="firstName" required>-->
+                                     <p-autoComplete class="autocomp-customer-cstm"
                                         [(ngModel)]="contactInformation.firstName"  name="firstName" field="firstName" [suggestions]="firstNamesList" (completeMethod)="filterFirstNames($event)" [size]="30"
-                                        [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required>
+                                        [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}"  (onSelect)="onFirstNameSelected()" (onKeyUp)=checkfirstNameExist($event.target.value) required>
 
 
-                        </p-autoComplete> -->
+                        </p-autoComplete> 
                                 </div>
-                                <!-- <div *ngIf="disableSaveFirstName" class="clr-red">Entry Already Exists</div> -->
+                                 <div *ngIf="disablesaveForFirstname" class="clr-red">Entry Already Exists</div> 
                                 <!-- <div class="form-group col-sm-12 Customer-details-heading" *ngIf="showFirstName">
                         <p class="fs10">
                             Please Enter Required fields
@@ -262,27 +262,27 @@
                             <div class="form-group">
                                 <label>Middle Name</label>
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                    <input type="text" class="form-control" [(ngModel)]="contactInformation.middleName" name="middleName">
-                                    <!-- <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="contactInformation.middleName"
+                                    <!--<input type="text" class="form-control" [(ngModel)]="contactInformation.middleName" name="middleName">-->
+                                     <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="contactInformation.middleName"
                                         name="middleName"  [suggestions]="middleNamesList" field="middleName" (completeMethod)="filterMiddleNames($event)" [size]="30"
-                                        [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}">
+                                        [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" (onSelect)="onMiddleNameSelected()" (onKeyUp)=checkmiddleNameExist($event.target.value)>
 
-                        </p-autoComplete> -->
+                        </p-autoComplete> 
                                 </div>
 
-                                <!-- <div *ngIf="disableSaveMiddleName" class="clr-red">Entry Already Exists</div> -->
+                                 <div *ngIf="disableSaveMiddleName" class="clr-red">Entry Already Exists</div> 
                             </div>
                             <div class="form-group">
                                 <label>Last Name <span class="clr-red">*</span></label>
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                    <input type="text" class="form-control" [(ngModel)]="contactInformation.lastName" name="lastName" required>
-                                    <!-- <p-autoComplete class="autocomp-customer-cstm"  [(ngModel)]="contactInformation.lastName"
+                                    <!--<input type="text" class="form-control" [(ngModel)]="contactInformation.lastName" name="lastName" required>-->
+                                     <p-autoComplete class="autocomp-customer-cstm"  [(ngModel)]="contactInformation.lastName"
                          name="lastName" [suggestions]="lastNamesList" field="lastName" (completeMethod)="filterLastNames($event)"
 
-                                        [size]="30" [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required>
+                                        [size]="30" [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required (onSelect)="onLastNameSelected()" (onKeyUp)=checklastNameExist($event.target.value)>
 
-                        </p-autoComplete> -->
-                                    <!-- <div *ngIf="disableSaveLastName" class="clr-red">Entry Already Exists</div> -->
+                        </p-autoComplete> 
+                                     <div *ngIf="disableSaveLastName" class="clr-red">Entry Already Exists</div> 
                                 </div>
                                 <!-- <div class="form-group col-sm-12 Customer-details-heading" *ngIf="showLastName">
                         <p class="fs10">
@@ -369,8 +369,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" *ngIf="!isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" [disabled]="!addContactForm.valid ||contactEmail.errors" (click)="saveContactInformation()" data-dismiss="modal">Save</button>
-                    <button type="button" *ngIf="isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" (click)="updateCustomerContact()" [disabled]="!addContactForm.valid ||contactEmail.errors" data-dismiss="modal">Update</button>
+                    <button type="button" *ngIf="!isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" [disabled]="!addContactForm.valid ||contactEmail.errors || disablesaveForFirstname || disableSaveMiddleName ||disableSaveLastName" (click)="saveContactInformation()" data-dismiss="modal">Save</button>
+                    <button type="button" *ngIf="isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" (click)="updateCustomerContact()" [disabled]="!addContactForm.valid ||contactEmail.errors|| disablesaveForFirstname ||disableSaveMiddleName ||disableSaveLastName" data-dismiss="modal">Update</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                 </div>
             </form>
@@ -565,9 +565,16 @@
     <ng-template #deleteContent let-c="close" let-d="dismiss">
         <div class="modal-header">
             <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+
             <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
                 <span aria-hidden="true">&times;</span>
             </button>
+        </div>
+        <div class="modal-body">
+            <strong>
+                Contact Name:
+                <span class="new-label">{{selectedRowforDelete.firstName}}</span>
+            </strong>
         </div>
 
         <div class="modal-footer">
@@ -582,7 +589,12 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-
+        <div class="modal-body">
+            <strong>
+                AtaChapter Name:
+                <span class="new-label">{{selectedAtappedRowforDelete.ataChapterName}}</span>
+            </strong>
+        </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel1()">Yes</button>
             <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>

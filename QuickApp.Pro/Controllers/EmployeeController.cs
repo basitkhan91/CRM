@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DAL;
+using DAL.Common;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -381,12 +382,17 @@ namespace QuickApp.Pro.Controllers
                 existingResult.IsHourly = employeeViewModel.IsHourly;
                 existingResult.HourlyPay = employeeViewModel.HourlyPay;
                 existingResult.ManagementStructureId = employeeViewModel.ManagementStructureId;
-                existingResult.LegalEntityId = entityobject.LegalEntityId;
+                //existingResult.LegalEntityId = entityobject.LegalEntityId;
                 existingResult.SupervisorId = employeeViewModel.SupervisorId;
                 existingResult.EmployeeCertifyingStaff = employeeViewModel.EmployeeCertifyingStaff;
                 existingResult.MasterCompanyId = 1;
                 existingResult.Memo = employeeViewModel.Memo;
                 existingResult.CurrencyId = employeeViewModel.CurrencyId;
+
+                if (entityobject != null && entityobject.LegalEntityId != null)
+                {
+                    existingResult.LegalEntityId = entityobject.LegalEntityId;
+                }                
 
                 if (employeeViewModel.IsHeWorksInShop == null)
                 {
@@ -1079,6 +1085,55 @@ namespace QuickApp.Pro.Controllers
         {
             var result = _unitOfWork.employee.GetEmployeeAuditHistoryData(employeeId);
             return Ok(result);
+        }
+
+        [HttpPost("employeeDocumentUpload")]
+        [Produces("application/json")]
+        public IActionResult EmployeeDocumentUploadAction()
+        {
+            try
+            {
+                Attachment objAttachment = new Attachment();
+              
+                if (ModelState.IsValid)
+                {
+                    if (Request.Form == null)
+                        return BadRequest($"{nameof(objAttachment)} cannot be null");
+                    objAttachment.MasterCompanyId = 1;
+                    objAttachment.UpdatedBy = Request.Form["UpdatedBy"];
+                    objAttachment.ReferenceId = Convert.ToInt64(Request.Form["EmployeeId"]);
+                    //objAttachment.ModuleId= Convert.ToInt32(Request.Form["ModuleId"]);
+                    //string moduleName = Request.Form["ModuleName"];
+                   
+
+                    if (objAttachment.ReferenceId > 0)
+                    {
+                        var attachmentData = _context.Attachment.Where(p => p.ReferenceId == objAttachment.ReferenceId && p.ModuleId == Convert.ToInt32(ModuleEnum.Employee)).FirstOrDefault();
+
+                        if (attachmentData != null)
+                        {
+                            objAttachment.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objAttachment.ReferenceId,
+                                                         Convert.ToInt32(ModuleEnum.Employee), Convert.ToString(ModuleEnum.Employee), objAttachment.UpdatedBy, objAttachment.MasterCompanyId, attachmentData.AttachmentId);
+
+
+                        }
+                        else
+                        {
+                            objAttachment.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objAttachment.ReferenceId,
+                                                                       Convert.ToInt32(ModuleEnum.Employee), Convert.ToString(ModuleEnum.Employee), objAttachment.UpdatedBy, objAttachment.MasterCompanyId);
+
+                        }
+
+                    }
+
+                    return Ok(objAttachment);
+                }
+                return Ok(ModelState);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

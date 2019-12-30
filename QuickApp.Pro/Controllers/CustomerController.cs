@@ -2114,6 +2114,20 @@ namespace QuickApp.Pro.Controllers
             _unitOfWork.SaveChanges();
             return Ok(id);
         }
+        [HttpGet("getCustomerAircraftMappedAudit/{customerAircraftMappingId}")]
+        [Produces(typeof(List<CustomerAircraftMappingAudit>))]
+        public IActionResult AircraftMappedAudit(long customerAircraftMappingId)
+        {
+            var result = _unitOfWork.Customer.GetAircraftMappedAudit(customerAircraftMappingId);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
 
         #endregion
 
@@ -3218,6 +3232,14 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetCustomerAuditHistoryByid(long customerId)
         {
             var customerDtails = _unitOfWork.Customer.GetCustomerAuditHistoryByid(customerId); //.GetAllCustomersData();
+            return Ok(customerDtails);
+
+        }
+        [HttpGet("GetCustomerInternationalShippingAuditHistoryByid")]
+        [Produces(typeof(List<CustomerViewModel>))]
+        public IActionResult GetCustomerInternationalShippingAuditHistoryByid(long customerId,long internationalShippingId)
+        {
+            var customerDtails = _unitOfWork.Customer.GetCustomerInternationalShippingAuditHistoryByid(customerId, internationalShippingId); //.GetAllCustomersData();
             return Ok(customerDtails);
 
         }
