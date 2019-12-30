@@ -284,6 +284,7 @@ namespace DAL.Repositories
                                     && cust.CustomerCode.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerCode) ? woFilters.filters.CustomerCode : cust.CustomerCode)
                                     && wo.WorkOrderStatusId == (statusId > 0 ? statusId : wo.WorkOrderStatusId)
                                     && wo.WorkOrderTypeId == (workOrderTypeId > 0 ? workOrderTypeId : wo.WorkOrderTypeId)
+                                     && wo.OpenDate == (woFilters.filters.OpenDate != null ? woFilters.filters.OpenDate : wo.OpenDate)
                                     select new
                                     {
                                         wo.WorkOrderId,
@@ -300,6 +301,7 @@ namespace DAL.Repositories
                                     && cust.CustomerCode.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerCode) ? woFilters.filters.CustomerCode : cust.CustomerCode)
                                     && wo.WorkOrderStatusId == (statusId > 0 ? statusId : wo.WorkOrderStatusId)
                                     && wo.WorkOrderTypeId == (workOrderTypeId > 0 ? workOrderTypeId : wo.WorkOrderTypeId)
+                                    && wo.OpenDate==(woFilters.filters.OpenDate != null? woFilters.filters.OpenDate:wo.OpenDate)
                             select new
                             {
                                 wo.WorkOrderId,
@@ -324,15 +326,15 @@ namespace DAL.Repositories
                           .Take(take)
                           .ToList();
 
-                if (woFilters.filters.OpenDate != null)
-                {
-                    if (list != null && list.Any())
-                    {
-                        list = list
-                            .Where(x => x.OpenDate == woFilters.filters.OpenDate)
-                            .ToList();
-                    }
-                }
+                //if (woFilters.filters.OpenDate != null)
+                //{
+                //    if (list != null && list.Any())
+                //    {
+                //        list = list
+                //            .Where(x => x.OpenDate == woFilters.filters.OpenDate)
+                //            .ToList();
+                //    }
+                //}
 
                 return list;
             }
