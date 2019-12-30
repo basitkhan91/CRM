@@ -4419,7 +4419,7 @@ namespace QuickApp.Pro.Controllers
                         if (index < vendorCapes.Count)
                         {
                             currentRank = Convert.ToInt32(vendorCapes[0].VendorRanking);
-                            var nextRank = (index + 1) <= vendorCapes.Count ? Convert.ToInt32(vendorCapes[index + 1].VendorRanking) : 0;
+                            var nextRank = (index + 1) <= vendorCapes.Count ? Convert.ToInt32(vendorCapes[index].VendorRanking) : 0;
                             if ((nextRank - currentRank) == 1)
                             {
                                 capes.VendorRanking = (Convert.ToInt32(capes.VendorRanking) + 1).ToString();
