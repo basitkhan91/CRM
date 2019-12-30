@@ -10,6 +10,7 @@ import { JournalManual } from '../../../../../models/journal-manual';
 import { Router } from '@angular/router';
 import { LegalEntityService } from '../../../../../services/legalentity.service';
 import { EmployeeService } from '../../../../../services/employee.service';
+import { MatTableDataSource } from '@angular/material';
 
 @Component({
     selector: 'app-list-journel',
@@ -36,8 +37,19 @@ export class ListJournelComponent implements OnInit {
     selectedColumns: any[];
     companyList: any[] = [];
     allEmployeeinfo: any[] = [];
-    constructor(public employeeService: EmployeeService,private legalEntityservice: LegalEntityService,private router: Router,private journelService: JournelService, private alertService: AlertService, private modalService: NgbModal, private authService: AuthService) {
 
+    dataSource: MatTableDataSource<{}>;
+    journalList: any[];
+    
+    constructor(public employeeService: EmployeeService,
+                private legalEntityservice: LegalEntityService,
+                private router: Router,
+                private journelService: JournelService, 
+                private alertService: AlertService, 
+                private modalService: NgbModal, 
+                private authService: AuthService) {
+
+        this.dataSource = new MatTableDataSource();                    
     }
 
     ngOnInit(): void
@@ -48,16 +60,18 @@ export class ListJournelComponent implements OnInit {
         this.journelService.manulaJournelCollection = null;
 
         this.journelService.getAllJournel().subscribe(manualJournel => {
+            console.log(' journal list : ', manualJournel);
             this.manualJournelList = manualJournel[0];
             this.manualJournelList.forEach(function (manualJournel) {
                 manualJournel.isActive = manualJournel.isActive == false ? false : true;
             });
+            this.journalList = manualJournel;
         });
 
         this.contactcols = [
             { field: 'glAccountId', header: 'ledger Name' },
-            { field: 'journalManualBatchNumber', header: 'batch Number' },
-            { field: 'journalManualBatchName', header: 'batch Name' },
+            { field: 'journalManualBatchNumber', header: 'Batch Number' },
+            { field: 'journalManualBatchName', header: 'Batch Name' },
             { field: 'journalManualBalanceTypeId', header: 'Balance Type' },
             { field: 'journalManualCategoryId', header: 'Category' },
             { field: 'journalManualTypeId', header: 'Journel Type' },
