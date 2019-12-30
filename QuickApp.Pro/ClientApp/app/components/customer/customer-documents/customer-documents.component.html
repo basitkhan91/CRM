@@ -88,7 +88,7 @@
                                         <mat-icon color="warn">delete</mat-icon>
                                     </button>
 
-                                    <button class="btn-history" mat-icon-button matTooltip="history">
+                                    <button class="btn-history" mat-icon-button matTooltip="history" (click)="openHistory(contentAuditHist,rowData)">
                                         <mat-icon color="green">history</mat-icon>
                                     </button>
 
@@ -231,3 +231,49 @@
         </div>
     </div>
 </div>
+<ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
+    <div class="modal-header">
+
+        <h4 class="modal-title">History of Customer Documents</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+
+    </div>
+    <div class="modal-body">
+
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Document Name</th>
+                        <th>Memo</th>
+                        <th>Description</th>
+                        <th>Updated By</th>
+                        <th>Last Updated Time</th>
+                        <th>Created By</th>
+                        <th>Created Time</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let audit of documentauditHisory">
+                    <tr *ngFor="let audit of documentauditHisory; let i = index;">
+                        <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'docName', audit.docName)  ? 'black' : 'red'  }">{{audit.docName}}</td>
+                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'docDescription', audit.docDescription)  ? 'black' : 'red'  }">{{audit.docDescription}}</td>
+                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'docMemo', audit.docMemo)  ? 'black' : 'red'  }">{{audit.docMemo}}</td>
+                        <td>{{audit.updatedBy}}</td>
+                        <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                        <td>{{audit.createdBy}}</td>
+                        <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+    </div>
+</ng-template>

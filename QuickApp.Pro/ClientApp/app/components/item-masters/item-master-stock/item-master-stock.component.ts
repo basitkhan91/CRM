@@ -45,6 +45,7 @@ import { PublicationService } from '../../../services/publication.service';
 import { DashNumberService } from '../../../services/dash-number/dash-number.service';
 import { CommonService } from '../../../services/common.service';
 import { ItemMasterExchangeLoanComponent } from '../item-master-exch-loan/item-master-exch-loan.component';
+import { ConfigurationService } from '../../../services/configuration.service';
 
 @Component({
     selector: 'app-item-master-stock',
@@ -399,6 +400,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     listOfErrors: any = [];
     conditionList: any;
     revisedPartNumbersList: any = [];
+    formData = new FormData();
+    allUploadedDocumentsList: any = [];
+    documentDeleted: boolean;
 
     // errorLogForPS: string = '';
 
@@ -409,7 +413,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         public priority: PriorityService, public inteService: IntegrationService,
         public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService,
         public proService: ProvisionService, private dialog: MatDialog,
-        private masterComapnyService: MasterComapnyService, public commonService: CommonService, @Inject(DOCUMENT) document) {
+        private masterComapnyService: MasterComapnyService, public commonService: CommonService, @Inject(DOCUMENT) document,private configurations: ConfigurationService) {
         this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-stock';
         this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
         this.displayedColumns.push('action');
@@ -500,6 +504,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 this.validateClassificationRequired()
                 this.getAircraftMappedDataByItemMasterId();
                 this.getATAMappedDataByItemMasterId();
+                this.toGetAllDocumentsList(this.ItemMasterId);
             })
 
         }
@@ -4774,6 +4779,26 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                         if (this.isSaveCapes == true) {
                             this.saveCapabilities();
                         }
+                      
+
+                        const vdata = {                           
+                            referenceId:this.ItemMasterId,
+                            masterCompanyId: 1,
+                            createdBy: this.userName,
+                            updatedBy: this.userName,
+                            moduleId:22
+                        }
+                
+                        for (var key in vdata) {
+                            this.formData.append(key, vdata[key]);
+                        }
+                       
+                        this.commonService.uploadDocumentsEndpoint(this.formData).subscribe(res => {
+                            //this.saveSuccessHelper(data);
+                            this.formData = new FormData();
+                            this.toGetAllDocumentsList(this.ItemMasterId);
+                        });
+                        
                     }
 
                     // // get aircraft Mapped Information by ItemMasterId
@@ -4793,6 +4818,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     this.changeOfTab('AircraftInfo');
                     // response Data after save 
                     this.collectionofItemMaster = data;
+                    
 
                     this.savesuccessCompleted(this.sourceItemMaster);
 
@@ -4877,6 +4903,23 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                                 this.saveAircraftmodelinfo(data.partId, data.itemMasterId, this.selectedModels);
                             }
                         }
+                        const vdata = {                           
+                            referenceId:this.ItemMasterId,
+                            masterCompanyId: 1,
+                            createdBy: this.userName,
+                            updatedBy: this.userName,
+                            moduleId:22
+                        }
+                
+                        for (var key in vdata) {
+                            this.formData.append(key, vdata[key]);
+                        }
+                       
+                        this.commonService.uploadDocumentsEndpoint(this.formData).subscribe(res => {
+                            //this.saveSuccessHelper(data);
+                            this.formData = new FormData();
+                            this.toGetAllDocumentsList(this.ItemMasterId);
+                        });
                     }
                     this.alertService.startLoadingMessage();
                     this.moveAircraftInformation();
@@ -6010,6 +6053,47 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
     onSubmit(value) {
 
+    }
+
+
+    fileUpload(event,fileType) {    
+              
+		if (event.files.length === 0)
+			return;
+
+        for (let file of event.files)
+        {       
+            this.formData.append(fileType, file);            
+        }			
+    }
+  
+
+    toGetAllDocumentsList(itemMasterId)
+	{       
+        var moduleId=22;
+        this.commonService.GetDocumentsList(itemMasterId,moduleId).subscribe(res => {
+			this.allUploadedDocumentsList = res;
+			//console.log(this.allEmployeeTrainingDocumentsList);
+		})
+    }
+    // downloadFileUpload(rowData) {	
+    //     const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
+	// 	window.location.assign(url);       
+    // }
+    downloadFileUpload(rowData) {	       
+		this.commonService.toDownLoadFile(rowData.link);		
+    }
+
+    getAttachmentDeleteById(rowData)
+    {
+
+       let attachmentDetailId=rowData.attachmentDetailId;
+       let updatedBy=this.userName;
+
+        this.commonService.GetAttachmentDeleteById(attachmentDetailId,updatedBy).subscribe(res => {	           
+            this.toGetAllDocumentsList(this.itemMasterId);
+            this.documentDeleted=true;
+		})
     }
 }
 

@@ -920,12 +920,12 @@ namespace QuickApp.Pro.Controllers
 
 
 
-        [HttpGet("customercontactauditdetails/{customercontactId}")]
-        public IActionResult GetAuditHistoryById(long customercontactId)
+        [HttpGet("customercontactauditdetails")]
+        public IActionResult GetAuditHistoryById(long customercontactId, long customerId)
         {
             try
             {
-                var result = _unitOfWork.CustomerContact.GetCustomerContactAuditDetails(customercontactId);
+                var result = _unitOfWork.CustomerContact.GetCustomerContactAuditDetails(customercontactId,customerId);
                 return Ok(result);
             }
             catch (Exception)
@@ -1449,6 +1449,21 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetShipvia(long id, [FromBody] CustomerShippingViewModel CustomerShippingViewModel)
         {
             var result = _unitOfWork.CustomerShippingAddress.GetAllShipViaDetails(id);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+
+
+        [HttpGet("GetShipViaAudit")]
+        public IActionResult GetShipviaAudit(long customerId, long customerShippingAddressId, long customerShippingId)
+        {
+            var result = _unitOfWork.CustomerShippingAddress.GetCustomerShippingAudit(customerId,customerShippingAddressId,customerShippingId);
             if (result == null)
             {
                 return BadRequest();
@@ -2832,7 +2847,13 @@ namespace QuickApp.Pro.Controllers
             var result = _unitOfWork.Customer.GetShippingViaDetailsById(id);
             return Ok(result);
         }
-
+        [HttpGet("getauditshippingviadetailsbyid")]
+        public IActionResult GetShippingViaDetailsById(long customerId, long internationalShippingId, long shippingViaDetailsId)
+        {
+            var result = _unitOfWork.Customer.GetAuditShippingViaDetailsById(customerId,internationalShippingId,shippingViaDetailsId);
+            return Ok(result);
+        }
+      
         [HttpGet("getrestrictedparts")]
         public IActionResult GetRestrictedParts(int moduleId, long? referenceId, string partType)
         {
@@ -2898,6 +2919,7 @@ namespace QuickApp.Pro.Controllers
                         var customerDocObj = _unitOfWork.Customer.GetCustomerDocumentDetailById(CustomerDocumentDetailId);
                         //objVendorDocumentDetail.MasterCompanyId = 1;      
                         customerDocObj.CustomerId = Convert.ToInt64(Request.Form["CustomerId"]);
+
                         customerDocObj.UpdatedBy = Request.Form["UpdatedBy"];
                         customerDocObj.DocName = Request.Form["DocName"];
                         customerDocObj.DocMemo = Request.Form["DocMemo"];
@@ -3016,7 +3038,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(id);
         }
 
+        [HttpGet("getCustomerDocumentAudit/{id}")]
+        [Produces(typeof(CustomerDocumentDetailAudit))]
+        public IActionResult GetCustomerDocumentDetailAudit(long id)
+        {
+            var allvendorsDoc = _unitOfWork.Customer.GetCustomerDocumentDetailsAudit(id);
+            return Ok(allvendorsDoc);
 
+        }
         #endregion
 
         [HttpGet("getCustomerBillingHistory/{id}")]

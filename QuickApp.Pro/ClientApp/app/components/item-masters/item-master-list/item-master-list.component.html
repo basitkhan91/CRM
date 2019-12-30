@@ -404,7 +404,7 @@
                                             <!--<p><span class="label"><b>Dash Number: </b></span><span class="value">456789</span></p>-->
                                             <p><span class="label"><b>Chapter: </b></span><span class="value">{{ataChapterId}}</span></p>
                                             <p><span class="label"><b>National Stock Number (NSN): </b></span><span class="value">{{nationalStockNumber}}</span></p>
-                                            <p><span class="label"><b>Schematic: </b></span><span class="value">{{isSchematic}}</span></p>
+                                           
                                             <!--<p><span class="label"><b>Not To Exceed: </b></span><span class="value">20 hours</span></p>-->
                                             <p><span class="label"><b>Ovh: </b></span><span class="value">{{overhaulHours}}</span></p>
                                             <p><span class="label"><b>RP: </b></span><span class="value">{{rpHours}}</span></p>
@@ -412,7 +412,33 @@
                                             <p><span class="label"><b>List Price: </b></span><span class="value">{{listPrice}}</span></p>
                                             <!--<p><span class="label"><b>Price Date: </b></span><span class="value">02/21/2018</span></p>-->
                                             <p><span class="label"><b>Mark Up (%) of List: </b></span><span class="value">{{salesMarkUpOnListPrice}}</span></p>
-                                            <p><span class="label"><b>CUR: </b></span><span class="value">{{currencyId}}</span></p>
+											<p><span class="label"><b>CUR: </b></span><span class="value">{{currencyId}}</span></p>
+											<p><span class="label"><b>Schematic: </b></span><span class="value">{{isSchematic}}</span></p>
+										
+											<div class="col-sm-12">
+												<div class="table-responsive table-overflow" *ngIf="allUploadedDocumentsList.length> 0">
+													<h4 class="panel-title" >Attachment Details:</h4>
+													<table class="table table-bordered ">
+															<thead>  
+																<tr>
+																			<th>File Name</th>
+																			<th>Download</th>
+																			
+																	</tr>
+															</thead>
+			
+														<tbody *ngFor="let f of allUploadedDocumentsList">
+																<tr>                                                             
+																	<td>{{f.fileName}}</td>
+																	<td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span ><i class="fa fa-download" style="color:black" ></i></span></a> </td>
+																	
+																</tr>
+															
+														</tbody>
+			
+													</table>
+												</div>
+											</div>
                                             <!--<p><span class="label"><b>Discount (%) on Purchases: </b></span><span class="value">10%</span></p>
         <p><span class="label"><b>Discount (%) on Sales: </b></span><span class="value">5%</span></p>-->
                                         </div>

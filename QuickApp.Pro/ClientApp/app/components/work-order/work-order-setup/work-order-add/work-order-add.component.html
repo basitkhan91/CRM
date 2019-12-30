@@ -411,7 +411,7 @@
                                     <th colspan="2">Restrictions</th>
                                     <th rowspan="2">Tech Name</th>
                                     <th rowspan="2">Tech Station</th>
-                                    <th rowspan="2">Tear Down Report</th>
+                                    <th rowspan="2" style="display:none">Tear Down Report</th>
                                     <th colspan="2">TAT (Days)</th>
                                     <th rowspan="2"></th>
                                     <!--<th rowspan="2"></th>
@@ -578,7 +578,7 @@
                                         </p-dropdown>
 
                                     </td>
-                                    <td>
+                                    <td style="display:none">
                                         <p-dropdown placeholder="Select" name="tearDown{{i}}" #tearDown="ngModel" [options]="tearDownReportList" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.tearDownReport">
                                         </p-dropdown>
 

@@ -8,6 +8,7 @@ import { NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MasterComapnyService } from '../../../services/mastercompany.service';
 import { MasterCompany } from '../../../models/mastercompany.model';
 import { AlertService, MessageSeverity } from '../../../services/alert.service';
+import { CommonService } from '../../../services/common.service';
 
 @Component({
 	selector: 'app-item-master-list',
@@ -137,9 +138,10 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 	isEditMode: boolean;
 	isSaving: boolean;
 	itemName: string;
+	allUploadedDocumentsList: any = [];
 	//selectedColumns: any;
 	/** item-master-list ctor */
-	constructor(private authService: AuthService, private route: Router, private alertService: AlertService, private router: Router, public itemMasterService: ItemMasterService, private modalService: NgbModal, private masterComapnyService: MasterComapnyService) {
+	constructor(private authService: AuthService, private route: Router, private alertService: AlertService, private router: Router, public itemMasterService: ItemMasterService, private modalService: NgbModal, private masterComapnyService: MasterComapnyService, public commonService: CommonService) {
 		this.itemMasterService.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-list';
 		this.itemMasterService.bredcrumbObj.next(this.itemMasterService.currentUrl);//Bread Crumb
 		this.itemMasterService.listCollection = null;
@@ -660,6 +662,8 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
 	}
 	openView(content, row) {
+
+		this.toGetAllDocumentsList(row.itemMasterId);
         this.viewItemMaster = row;
 		this.partNumber = row.partNumber;
 		this.description = row.partDescription;
@@ -881,4 +885,16 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		this.route.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-equipment')
 
 	}
+
+	toGetAllDocumentsList(itemMasterId)
+	{       
+        var moduleId=22;
+        this.commonService.GetDocumentsList(itemMasterId,moduleId).subscribe(res => {
+			this.allUploadedDocumentsList = res;
+			//console.log(this.allEmployeeTrainingDocumentsList);
+		})
+	}
+	downloadFileUpload(rowData) {	       
+		this.commonService.toDownLoadFile(rowData.link);		
+    }
 }

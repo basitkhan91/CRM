@@ -1,316 +1,179 @@
-﻿<div></div>
-<!--<div class="x_content">
-    <div>
-        <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="tab-content form-bg">
-                <div class="tab-pane active">
-                    <div class="col-sm-12">
-                        <div class="form-group col-sm-12">
-                            <label class="wauto" data-toggle="tooltip" title="Note, this is for a manual Entry">
-                                <input type="radio" checked name="journal-type" [(ngModel)]="currentManualJournel.isManual">
-                                Manual
-                            </label>
-                            <label class="wauto" data-toggle="tooltip" title="Import UI to be developed">
-                                <input type="radio" name="journal-type" id="import">
-                                Import
-                            </label>
-                        </div>
-                    </div>
-                    <div class="clear"></div>
-                    <hr class="hr-dark">
-                    <div class="col-sm-3">
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Ledger Name</label>
-                            <div class="col-sm-7">
-                                <select [(ngModel)]="currentManualJournel.glAccountId" [ngModelOptions]="{standalone: true}" (change)="getLegalEntityData(currentManualJournel.glAccountId)">
-                                    <option *ngFor="let entity of companyList" [ngValue]="entity.legalEntityId">  {{entity.name}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Batch Num</label>
-                            <div class="col-sm-7 inner-addon right-addon inline-block">
-                                <input type="number" [disabled]="true" class="form-control numberids ui-autocomplete-input" id="" name="" autocomplete="off" placeholder="creating">
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Batch Name</label>
-                            <div class="col-sm-7 inner-addon right-addon inline-block">
-                                <input type="text" maxlength="150" [(ngModel)]="currentManualJournel.journalManualBatchName" class="form-control numberids ui-autocomplete-input" id="" name="" autocomplete="off">
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Batch Description</label>
-                            <div class="col-sm-7">
-                                <input class="form-control wauto" type="text" [(ngModel)]="currentManualJournel.journalManualBatchDescription">
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Balance Type</label>
-                            <div class="col-sm-7">
-                                <select class="form-control w150" [(ngModel)]="currentManualJournel.journalManualBalanceTypeId">
-                                    <option>-- Select --</option>
-                                    <option value="1">Actual</option>
-                                    <option value="2">Budget</option>
-                                    <option value="3">Forecast</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Category</label>
-                            <div class="col-sm-7">
-                                <select class="form-control w150" [(ngModel)]="currentManualJournel.journalManualCategoryId">
-                                    <option>-- Select --</option>
-                                    <option value="1">Manual</option>
-                                    <option value="2">Adjustment</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Journal Type</label>
-                            <div class="col-sm-7">
-                                <select class="form-control w150" [(ngModel)]="currentManualJournel.journalManualTypeId">
-                                    <option>-- Select --</option>
-                                    <option value="1">Standard</option>
-                                    <option value="2">Intercompany</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Entry Date</label>
-                            <div class="col-sm-7">
-                                <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualEntryDate"></p-calendar>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Effective Date</label>
-                            <div class="col-sm-7">
-                                <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualEffectiveDate"></p-calendar>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Period Name</label>
-                            <div class="col-sm-7">
-                                <input type="text" [(ngModel)]="currentManualJournel.journalManualPeriodName" class="form-control wauto" name="" id="">
-                            </div>
-                        </div>
+﻿
+<div>
+    <div class="card">
+        <h4 class="page-heading clr-green"> Create Journal</h4>
+        <div >
+            <div class="x_content">
+                <form [formGroup]="journalForm" class="form-horizontal" >
+                    <div class="col-md-12 col-sm-12 col-12">
+                        
+                                <div class="form-row" style="margin-left: 13px;margin-top: 10px;" >
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Ledger Name <span class="clr-red">*</span></label>
+                                            <select class="form-control" formControlName="gLAccountId" [(ngModel)]="currentManualJournel.gLAccountId" >
+                                                <option *ngFor="let gl of generalLedgerList" [ngValue]="gl.glAccountId" >{{gl.accountName}}</option>
+                                            </select>
+                                            <div class="error-message" *ngIf="journalForm.controls.gLAccountId.errors && formSubmitted" >Ledger Name is required</div>
+                                        </div>
 
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Employee</label>
-                            <div class="col-sm-7">
-                                <div class="inner-addon right-addon inline-block">
-                                    <p-autoComplete [(ngModel)]="employeeName" (onSelect)="onEmployeeselected($event)" [ngModelOptions]="{standalone: true}" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30"
-                                                    [minLength]="1" [dropdown]="true">
-                                        <ng-template let-firstName pTemplate="item">
-                                            <div class="ui-helper-clearfix">{{firstName}}</div>
-                                        </ng-template>
-                                    </p-autoComplete>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <h5 class="form-block-heading">Conversion</h5>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Local Currency</label>
-                            <div class="col-sm-7">
-                                <select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualLocalCurrencyId">
-                                    <option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">{{currencyName.symbol}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Reporting Currency</label>
-                            <div class="col-sm-7">
-                                <select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualReportingCurrencyId">
-                                    <option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">{{currencyName.symbol}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Currency Date</label>
-                            <div class="col-sm-7">
-                                <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualEntryDate"></p-calendar>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Type</label>
-                            <div class="col-sm-7">
-                                <select class="form-control w150" [(ngModel)]="currentManualJournel.journalManualcurrencytype" [ngModelOptions]="{standalone: true}">
-                                    <option>-- Select --</option>
-                                    <option value="1">Corporate</option>
-                                    <option value="2">Spot</option>
-                                    <option value="3">Daily</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Rate</label>
-                            <div class="col-sm-7">
-                                <input type="number" [(ngModel)]="currentManualJournel.journalManualcurrencyrate" [ngModelOptions]="{standalone: true}" class="form-control wauto" name="" id="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-3 switch-block">
-                        <h5 class="form-block-heading">
-                            <input type="checkbox" [(ngModel)]="currentManualJournel.isReversing" (click)="toggleReversingData(currentManualJournel.isReversing)">Reversing
-                        </h5>
+                                        <div class="form-group">
+                                            <label>Batch Number</label>
+                                            <input class="form-control" type="text" formControlName="journalManualBatchNumber" >
+                                        </div>
 
-                        <div class="switch-content" style="display: block;" *ngIf="toggleReversingGrid">
-                            <div class="form-group col-sm-12">
-                                <label class="control-label col-sm-4">Date</label>
-                                <div class="col-sm-7">
-                                    <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualReversingDate"></p-calendar>
-                                </div>
-                            </div>
-                            <div class="form-group col-sm-12">
-                                <label class="control-label col-sm-4">Period Name</label>
-                                <div class="col-sm-7">
-                                    <input type="text" [(ngModel)]="currentManualJournel.reversingPeriodName" class="form-control wauto" name="" id="">
-                                </div>
-                            </div>
-                            <div class="form-group col-sm-12">
-                                <label class="control-label col-sm-4">Status</label>
-                                <div class="col-sm-7">
-                                    <p>Not Reversed</p>
-                                </div>
-                            </div>
-                        </div>
+                                        <div class="form-group">
+                                            <label>Batch Name</label>
+                                            <input class="form-control" type="text" formControlName="journalManualBatchName" [(ngModel)]="currentManualJournel.journalManualBatchName" >
+                                        </div>
 
-                    </div>
-                    <div class="col-sm-3 switch-block">
-                        <h5 class="form-block-heading">
-                            <input type="checkbox" [(ngModel)]="currentManualJournel.isRecurring" (click)="toggleRecurringData(currentManualJournel.isRecurring)">Recurring
-                        </h5>
-                        <div class="switch-content" style="display: block;" *ngIf="toggleRecurringGrid">
-                            <div class="form-group col-sm-12">
-                                <label class="control-label col-sm-4">Date</label>
-                                <div class="col-sm-7">
-                                    <input type="date" [(ngModel)]="currentManualJournel.journalManualRecurringDate" class="form-control datepicker wauto hasDatepicker" name="" id="dp1558439422098">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
-                    </div>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-            <div class="clear"></div>
-            <div id="" class="table-responsive default-bg ">
-                <br>
-                <button *ngIf="!updateJournelButton" class="btn btn-success" (click)="addJournelManual()">Save</button>
-                <button *ngIf="updateJournelButton" class="btn btn-success" (click)="updateManualJournel()">Update</button>
-                <a href="#" class="btn btn-success" data-toggle="tooltip" title="This will follow the approval rule. Note:  If no approval rule is set up in global approval engine this this button is not an option for the user">Submit for Approval</a>
-                <a href="#" class="btn btn-success" data-toggle="tooltip" title="This (inherirntly) Saves and post (update) the general ledget at the same time">Post</a>
-                <a href="#" class="btn btn-success" data-toggle="tooltip" title="Ability to upload supporting doc or analysis and accociate with the Batch #">Upload Doc</a>
+                                        <div class="form-group">
+                                            <label>Batch Description</label>
+                                            <input class="form-control" type="text" formControlName="journalManualBatchDescription" [(ngModel)]="currentManualJournel.journalManualBatchDescription" >
+                                        </div>
 
-                <button type="button" id="" name="" class="btn btn-success add pull-right mleft10" data-toggle="modal" data-target="#success-popup"><span data-dismiss="modal">Sent to Approval</span></button>
-                <a href="journal-batches.php" class="btn btn-success pull-right">Post</a>
-                <table class="table table-bordered table-striped input-85">
-                    <thead>
-                        <tr>
-                            <th colspan="6"></th>
-                            <th colspan="2">USD <span class="comments-show-btn" data-toggle="tooltip" title="This is the functional currency picked up the currency above"><i class="fa fa-info"></i></span></th>
-                            <th colspan="2">CDN <span class="comments-show-btn" data-toggle="tooltip" title="This is defaulted from the currency set up table (this is the reporting currency)"><i class="fa fa-info"></i></span></th>
-                            <th></th>
-                        </tr>
-                        <tr>
-                            <th>Line <span class="comments-show-btn" data-toggle="tooltip" title="Starts with 1 and Increment by 1"><i class="fa fa-info"></i></span></th>
-                            <th>CO <span class="comments-show-btn" data-toggle="tooltip" title="1. Default to the company associated with the ledger selected in the header of this journal entry"><i class="fa fa-info"></i></span></th>
-                            <th>BU <span class="comments-show-btn" data-toggle="tooltip" title="1. Default to the BU associated with the ledger selected in the header of this journal entry"><i class="fa fa-info"></i></span></th>
-                            <th>Div <span class="comments-show-btn" data-toggle="tooltip" title="1. Default to the Div associated with the ledger selected in the header of this journal entry"><i class="fa fa-info"></i></span></th>
-                            <th>Dept <span class="comments-show-btn" data-toggle="tooltip" title="1. Default to the Dept associated with the ledger selected in the header of this journal entry"><i class="fa fa-info"></i></span></th>
-                            <th>Account <span class="comments-show-btn" data-toggle="tooltip" title="User has to select via a pop up (drown down allowing user to search by Description or Acct # and then select the correct acct (note the acct number ONLY is then populated in this field"><i class="fa fa-info"></i></span></th>
-                            <th>Dr.</th>
-                            <th>Cr.</th>
-                            <th>Dr.</th>
-                            <th>Cr.</th>
-                            <th>Description <span class="comments-show-btn" data-toggle="tooltip" title="Each row will Default to description in header but any row can be changed manually in this grid"><i class="fa fa-info"></i></span></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>
-                                <select [(ngModel)]="companyId" [ngModelOptions]="{standalone: true}" (change)="getBUList(companyId)">
-                                    <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select [(ngModel)]="businessUnitId" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(businessUnitId)">
-                                    <option *ngFor="let ataName of bulist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select [(ngModel)]="departmentId" [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(departmentId)">
-                                    <option *ngFor="let ataName of departmentList " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select [(ngModel)]="divisionId" [ngModelOptions]="{standalone: true}" (change)="getDivisionChangeManagementCode(divisionId)">
-                                    <option *ngFor="let ataName of divisionlist " [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualReportingCurrencyId">
-                                    <option *ngFor="let account of accountNumberCollection" [ngValue]="account.currencyId">{{account.accountNO}}</option>
-                                </select>
-                            </td>
-                            <td><input type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualLocalDebitCurrency" (change)="localDebitCurrencyChange(currentManualJournel.journalManualLocalDebitCurrency)" class="form-control"></td>
-                            <td><input type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualLocalCreditCurrency" class="form-control"></td>
-                            <td><input type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualReposrtingDebitCurrency" class="form-control"></td>
-                            <td><input type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualReposrtingCreditCurrency" class="form-control"></td>
-                            <td><input type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentManualJournel.journalManualDescription" class="form-control"></td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>
-                                <select>
-                                    <option>01</option>
-                                    <option selected="">02</option>
-                                    <option>03</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select>
-                                    <option>20</option>
-                                    <option>30</option>
-                                    <option>40</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select>
-                                    <option selected="">000</option>
-                                    <option>300</option>
-                                    <option>400</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select>
-                                    <option selected="">0000</option>
-                                    <option>1000</option>
-                                    <option>2000</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select>
-                                    <option>60201</option>
-                                    <option selected="">20200</option>
-                                    <option>20780</option>
-                                </select>
-                            </td>
-                            <td><input type="text" class="form-control"></td>
-                            <td><input type="text" value="10,000.00" class="form-control"></td>
-                            <td><input type="text" class="form-control"></td>
-                            <td><input type="text" value="12,900.00" class="form-control"></td>
-                            <td>March Vacation Accrual</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="clear"></div>
-                <hr>
+                                        <div class="form-group">
+                                            <label>Balance Type <span class="clr-red">*</span></label>
+                                            <select class="form-control" formControlName="journalManualBalanceTypeId" [(ngModel)]="currentManualJournel.journalManualBalanceTypeId">
+                                                <option *ngFor="let balanceType of balanceTypes" [ngValue]="balanceType.balanceTypeId" >{{balanceType.balanceTypeName}}</option>
+                                            </select>
+                                            <div class="error-message" *ngIf="journalForm.controls.journalManualBalanceTypeId.errors && formSubmitted" >Balance Type is required</div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Category <span class="clr-red">*</span></label>
+                                            <select class="form-control" formControlName="journalManualCategoryId" [(ngModel)]="currentManualJournel.journalManualCategoryId">
+                                                <option *ngFor="let categoryType of categoryTypes" [ngValue]="categoryType.categoryId" >{{categoryType.categoryName}}</option>
+                                            </select>
+                                            <div class="error-message" *ngIf="journalForm.controls.journalManualCategoryId.errors && formSubmitted" >Category is required</div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Journal Type <span class="clr-red">*</span></label>
+                                            <select class="form-control" formControlName="journalManualTypeId" [(ngModel)]="currentManualJournel.journalManualTypeId">
+                                                <option *ngFor="let journalType of journalTypes" [ngValue]="journalType.journalTypeId" >{{journalType.journalTypeName}}</option>
+                                            </select>
+                                            <div class="error-message" *ngIf="journalForm.controls.journalManualTypeId.errors && formSubmitted" >Journal Type is required</div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Entry Date</label>
+                                            <!-- <input class="form-control" type="date" name="entryDate" > -->
+                                            <p-calendar [showIcon]="true" formControlName="journalManualEntryDate" [(ngModel)]="currentManualJournel.journalManualEntryDate"></p-calendar>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Effective Date</label>
+                                            <!-- <input class="form-control" type="date" name="effectiveDate" > -->
+                                            <p-calendar [showIcon]="true" formControlName="journalManualEffectiveDate" [(ngModel)]="currentManualJournel.journalManualEffectiveDate" ></p-calendar>
+                                            <!-- <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.priceDate"></p-calendar> -->
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Period Name</label>
+                                            <input class="form-control" type="text" formControlName="journalManualPeriodName" [(ngModel)]="currentManualJournel.journalManualPeriodName" >
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Employee <span class="clr-red">*</span></label>
+                                            <select class="form-control" formControlName="journalManualEmployeeId" [(ngModel)]="currentManualJournel.journalManualEmployeeId" >
+                                                <option *ngFor="let employee of allEmployeeinfo" [ngValue]="employee.employeeId" >{{employee.firstName}} {{employee.lastName}}</option>                                                
+                                            </select>
+                                            <div class="error-message" *ngIf="journalForm.controls.journalManualEmployeeId.errors && formSubmitted" >Employee is required</div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-3" >
+                                        <div class="form-group">
+                                            <label>Local Currency <span class="clr-red">*</span></label>
+                                            <select class="form-control" formControlName="journalManualLocalCurrencyId" [(ngModel)]="currentManualJournel.journalManualLocalCurrencyId" >            
+                                                <option *ngFor="let currency of allCurrencyInfo" [ngValue]="currency.currencyId" >{{currency.displayName}} [{{currency.symbol}}]</option>
+                                            </select>
+                                            <div class="error-message" *ngIf="journalForm.controls.journalManualLocalCurrencyId.errors && formSubmitted" >Local Currency is required</div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Reporting Currency <span class="clr-red">*</span></label>
+                                            <select class="form-control" formControlName="journalManualReportingCurrencyId" [(ngModel)]="currentManualJournel.journalManualReportingCurrencyId" >
+                                                <option *ngFor="let currency of allCurrencyInfo" [ngValue]="currency.currencyId" >{{currency.displayName}} [{{currency.symbol}}]</option>
+                                            </select>
+                                            <div class="error-message" *ngIf="journalForm.controls.journalManualReportingCurrencyId.errors && formSubmitted" >Reporting Currency is required</div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Currency Date</label>
+                                            <p-calendar [showIcon]="true" formControlName="journalManualCurrencyDate" [(ngModel)]="currentManualJournel.journalManualCurrencyDate" ></p-calendar>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Currency Type <span class="clr-red">*</span></label>
+                                            <select name="type" required>
+                                                <option >user</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Currency Rate</label>
+                                            <input class="form-control" type="text" formControlName="journalManualcurrencyrate" [(ngModel)]="currentManualJournel.journalManualcurrencyrate" >
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                        <p-radioButton name="groupname" value="2" label="Reversing" class="p-radiobutton-label-horizontal p-radiobutton-cstm"
+                                        formControlName="isreversing" [(ngModel)]="currentManualJournel.isreversing"
+                                       ></p-radioButton>
+                                        <p-radioButton name="groupname" value="1" label="Reccuring" class="p-radiobutton-label-horizontal p-radiobutton-cstm"
+                                        formControlName="isreversing" [(ngModel)]="currentManualJournel.isreversing"
+                                       ></p-radioButton>        
+                                        </div>
+                                        
+                                        <div class="form-group" *ngIf="journalForm.controls.isreversing.value == 2">
+                                            <label>Reversing Date</label>
+                                            <p-calendar [showIcon]="true" formControlName="journalManualReversingDate" [(ngModel)]="currentManualJournel.journalManualReversingDate" ></p-calendar>
+                                        </div>
+    
+                                        <div class="form-group" *ngIf="journalForm.controls.isreversing.value == 2" >
+                                            <label>Period Name</label>
+                                            <input class="form-control" type="text" formControlName="reversingPeriodName" [(ngModel)]="currentManualJournel.reversingPeriodName" >
+                                        </div>
+    
+                                        <div class="form-group" *ngIf="journalForm.controls.isreversing.value == 2">
+                                            <label>Status</label>
+                                            <input class="form-control" type="text" formControlName="reversingstatus" [(ngModel)]="currentManualJournel.reversingstatus" >
+                                        </div>
+    
+                                        <div class="form-group" *ngIf="journalForm.controls.isreversing.value == 1" >
+                                            <label>Recurring Date</label>
+                                            <p-calendar [showIcon]="true" formControlName="journalManualRecurringDate" [(ngModel)]="currentManualJournel.journalManualRecurringDate" ></p-calendar>
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                            
+                                
+                                <button type="submit" class="btn btn-primary-cstm pull-right " (click)="onSubmit('Post');">
+                                    Post
+                                </button>
+
+                                <button type="submit" class="btn btn-primary-cstm pull-right " (click)="onSubmit('Submit For Approval');">
+                                    Submit For Approval
+                                </button>
+                                
+                                <button type="submit" class="btn btn-primary-cstm pull-right " (click)="onSubmit('Save');">
+                                    Save
+                                </button>
+                        
+                    </div>
+                </form>
             </div>
         </div>
-    </div>-->
+    </div>
+</div>
