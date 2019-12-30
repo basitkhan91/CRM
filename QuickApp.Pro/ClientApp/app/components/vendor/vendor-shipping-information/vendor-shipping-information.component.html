@@ -3,7 +3,17 @@
         <div class="right_col" role="main">
             <div class="x_panel">
                 <div class="x_content">
-                    <div class="form-group col-sm-4 vendor-details-heading marginr50" style="display: inline-block;margin: 10px 5px 0 5px;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="fs12">Vendor Name : </label>
+                            <span class="span-header-red"> {{ local?.vendorName }}</span>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="fs12">Vendor Code : </label>
+                            <span class="span-header-red"> {{ local?.vendorCode }}</span>
+                        </div>
+                    </div>
+                    <!-- <div class="form-group col-sm-4 vendor-details-heading marginr50" style="display: inline-block;margin: 10px 5px 0 5px;">
                         <p class="fs10">
                             <label class="control-label w100">Vendor Name:</label>
                             {{local?.vendorName}}
@@ -14,7 +24,7 @@
                             <label class="control-label w100">Vendor Code:</label>
                             {{local?.vendorCode}}
                         </p>
-                    </div>
+                    </div> -->
                     <div>
                         <div>
                             <div class="col-md-12" style="margin-bottom: -10px;">
@@ -57,7 +67,7 @@
                             </ng-template>
 
                             <ng-template pTemplate="body" let-rowData let-columns="columns">
-                                <tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)" [ngClass]="{'row-primary': rowData.isPrimary === true}">
+                                <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" pReorderableRowHandle (dblclick)="openView(view,rowData)" [ngClass]="{'row-primary': rowData.isPrimary === true}">
 
 
                                     <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
@@ -108,6 +118,11 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
+    <div class="modal-body">
+        <strong>Site Name:
+            <span class="new-label">{{selectedRowforDelete.siteName}}</span>
+        </strong>
+    </div>
 
     <div class="modal-footer">
         <button type="button" class="btn btn-primary-cstm" (click)="deleteVendorShippingAddress()">Yes</button>
@@ -143,7 +158,7 @@
         <form #userForm="ngForm" class="form-horizontal">
             <div class="col-sm-4">
                 <div class="form-group">
-                    <label for="description" class="control-label">Ship Via<span class="clr-red">*</span></label>
+                    <label for="description" class="control-label">Ship Via <span class="clr-red">*</span></label>
                     <div class="control-data">
                         <p-autoComplete (onSelect)="onShipVia($event)" (onKeyUp)=eventShipviaHandler($event) [(ngModel)]="shipViaObj.shipVia" [ngModelOptions]="{standalone: true}" [suggestions]="shipviacollection" (completeMethod)="filterShipVia($event)" [size]="30" [minLength]="1" [dropdown]="true" class="pautocomp-vendor-shipvia"> <!--pautocomp-vendor-shipvia-->
                             <ng-template let-shipName pTemplate="item">
@@ -206,11 +221,10 @@
                             <i class="fa fa-search"></i>
                             <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="tt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
                         </div>
-                        <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" matTooltip="Download Data" matTooltipPosition="above" label="Export Data" (click)="tt.exportCSV()" style="padding:5px 10px !important;"></button>
-                        <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" matTooltip="Download Selected Data" matTooltipPosition="above" iconPos="left" label="Export Selected Data" *ngIf="selectedShipViaColumns" (click)="tt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>
+                        <!-- <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" matTooltip="Download Data" matTooltipPosition="above" label="Export Data" (click)="tt.exportCSV()" style="padding:5px 10px !important;"></button>
+                        <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" matTooltip="Download Selected Data" matTooltipPosition="above" iconPos="left" label="Export Selected Data" *ngIf="selectedShipViaColumns" (click)="tt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button> -->
 
                     </div>
-
 
                 </ng-template>
 
@@ -318,14 +332,14 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-            <h4 class="modal-title">Vendor Details</h4>
+            <h4 class="modal-title">View Shipping Info</h4>
         </div>
         <div class="modal-body viewform">
             <p><span class="label"><b>Primary : </b></span><span class="value">{{isPrimary}}</span></p>
             <p><span class="label"><b>Site Name: </b></span><span class="value">{{siteName}}</span></p>
             <p><span class="label"><b> Address 1: </b></span><span class="value">{{address1}}</span></p>
             <p><span class="label"><b> Address 2: </b></span><span class="value">{{address2}}</span></p>
-            <p><span class="label"><b> Address 3: </b></span><span class="value">{{address3}}</span></p>
+            <!-- <p><span class="label"><b> Address 3: </b></span><span class="value">{{address3}}</span></p> -->
             <p><span class="label"><b> City </b></span><span class="value">{{city}}</span></p>
             <p><span class="label"><b>State Or Province: </b></span><span class="value">{{stateOrProvince}}</span></p>
             <p><span class="label"><b>Postal Code : </b></span><span class="value">{{postalCode}}</span></p>
@@ -334,7 +348,7 @@
             <div class="clear"></div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" name="" (click)="dismissModel()">Close</button>
+            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
         </div>
     </div>
 
@@ -345,7 +359,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Shipping Info</h4>
+                    <h4 class="modal-title">{{isEditShippingInfo ? 'Edit' : 'Add'}} Shipping Info</h4>
                 </div>
                 <form #addShippingForm="ngForm" class="form-horizontal">
                     <div class="modal-body">
@@ -362,7 +376,7 @@
                                     </div>                                    
                                 </div>
                                 <div class="form-group">
-                                    <label>Ship To <span class="clr-red">*</span></label>
+                                    <label>Site Name <span class="clr-red">*</span></label>
                                     <input class="form-control" type="text" name="shiptositename" [(ngModel)]="sourceVendor.siteName" required>
                                 </div>
                                 <div class="form-group">
