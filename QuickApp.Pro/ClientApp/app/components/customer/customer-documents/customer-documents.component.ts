@@ -51,6 +51,7 @@ export class CustomerDocumentsComponent implements OnInit {
     selectedRowForDelete: any;
 	 modal: NgbModalRef;
     sourceViewforDocumentList: any = [];
+    documentauditHisory: any[];
     headersforAttachment = [
         { field: 'fileName', header: 'File Name' },
         //{ field: 'link', header: 'Action' },
@@ -125,7 +126,8 @@ export class CustomerDocumentsComponent implements OnInit {
 			...this.documentInformation,
 			customerId: this.id,
 			masterCompanyId: 1,
-			updatedBy: this.userName
+            updatedBy: this.userName,
+            createdBy: this.userName
 		}
 
 		for (var key in data) {
@@ -228,6 +230,46 @@ export class CustomerDocumentsComponent implements OnInit {
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
         window.location.assign(url);
     }
+
+    openHistory(content, rowData) {
+        //const { customerShippingAddressId } = rowData.customerShippingAddressId;
+        //const { customerShippingId } = rowData.customerShippingId;
+        this.alertService.startLoadingMessage();
+
+        this.customerService.getCustomerDocumentHistory(rowData.customerDocumentDetailId).subscribe(
+            results => this.onAuditHistoryLoadSuccessful(results, content),
+            error => this.saveFailedHelper(error));
+    }
+    private onAuditHistoryLoadSuccessful(auditHistory, content) {
+        this.alertService.stopLoadingMessage();
+
+
+        this.documentauditHisory = auditHistory;
+
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.documentauditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+    private saveFailedHelper(error: any) {
+
+        this.alertService.stopLoadingMessage();
+        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+    }
+
 }
 
 

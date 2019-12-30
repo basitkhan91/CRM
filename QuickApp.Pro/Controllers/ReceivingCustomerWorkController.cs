@@ -167,7 +167,10 @@ namespace QuickApp.Pro.Controllers
             receivingCustomerWorkModel.ManagementStructureId = receivingCustomerWorkViewModel.ManagementStructureId;
             receivingCustomerWorkModel.CreatedBy = receivingCustomerWorkViewModel.CreatedBy;
             receivingCustomerWorkModel.UpdatedBy = receivingCustomerWorkViewModel.UpdatedBy;
-            receivingCustomerWorkModel.MasterCompanyId = receivingCustomerWorkViewModel.MasterCompanyId;
+            receivingCustomerWorkModel.UpdatedDate = DateTime.Now;
+            receivingCustomerWorkModel.MasterCompanyId = 1;
+
+            //receivingCustomerWorkModel.MasterCompanyId = receivingCustomerWorkViewModel.MasterCompanyId;
             receivingCustomerWorkModel.Manufacturer = receivingCustomerWorkViewModel.Manufacturer;
 
             return receivingCustomerWorkModel;
@@ -191,12 +194,26 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPut("UpdatereceivingCustomerWork")]
-        public IActionResult updatereceivingcustomer([FromBody] ReceivingCustomerWork rcwork)
+        public IActionResult updatereceivingcustomer([FromBody] ReceivingCustomerWorkViewModel receivingCustomerWorkViewModel)
         {
             if (ModelState.IsValid)
-                rcwork.MasterCompanyId = 1;
-            _unitOfWork.Repository<ReceivingCustomerWork>().Update(rcwork);
-            _unitOfWork.SaveChanges();
+               // rcwork.MasterCompanyId = 1;
+            if (_context.ReceivingCustomerWork.Any(o => o.ReceivingCustomerWorkId == receivingCustomerWorkViewModel.ReceivingCustomerWorkId))
+            {
+                // UPDATE
+                var existingModel = GetReceivingCustomerWork(receivingCustomerWorkViewModel.ReceivingCustomerWorkId);
+                if (existingModel != null)
+                {
+                    existingModel = FillReceivingCustomerWork(existingModel, receivingCustomerWorkViewModel);
+                    existingModel.UpdatedDate = DateTime.Now;
+                    _context.ReceivingCustomerWork.Update(existingModel);
+                    _unitOfWork.SaveChanges();
+                }
+                return Ok(existingModel);
+            }
+
+           // _unitOfWork.Repository<ReceivingCustomerWork>().Update(rcwork);
+            //_unitOfWork.SaveChanges();
             return Ok();
         }
 
@@ -273,6 +290,8 @@ namespace QuickApp.Pro.Controllers
         public IActionResult UpdateTimeLifeIfExist([FromBody] TimeLife timelife)
         {
             if (ModelState.IsValid)
+                timelife.UpdatedDate = DateTime.Now;
+            timelife.MasterCompanyId = 1;
                 _unitOfWork.Repository<TimeLife>().Update(timelife);
             _unitOfWork.SaveChanges();
             return Ok();
