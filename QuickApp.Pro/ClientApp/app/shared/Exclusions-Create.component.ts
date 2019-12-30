@@ -62,7 +62,7 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
         }
         if (this.isWorkOrder) {
             this.row = this.workFlow.exclusions[0];
-            
+
             // this.row = this.workFlow.exclusions[0];
             // this.addRow();
         } else {
@@ -139,28 +139,28 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
                 }
             }
         }
-
     }
     filterpartItems(event) {
-
         this.partCollection = [];
         this.itemclaColl = [];
-        if (this.allPartnumbersInfo) {
-            if (this.allPartnumbersInfo.length > 0) {
-
-                for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
-                    let partName = this.allPartnumbersInfo[i].partNumber;
-                    if (partName) {
-                        if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                            this.itemclaColl.push([{
-                                "partId": this.allPartnumbersInfo[i].itemMasterId,
-                                "partName": partName,
-                                "description": this.allPartnumbersInfo[i].partDescription
-                            }]);
-
-                            this.partCollection.push(partName);
-                        }
-                    }
+        if (this.allPartnumbersInfo != undefined && this.allPartnumbersInfo.length > 0) {
+            for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
+                let partName = this.allPartnumbersInfo[i].partNumber;
+                
+                let isMaterialListPart: any;
+                if (this.workFlow.materialList != undefined && this.workFlow.materialList.length > 0) {
+                    isMaterialListPart = this.workFlow.materialList.find(x => x.itemMasterId == this.allPartnumbersInfo[i].itemMasterId);
+                    if (isMaterialListPart != undefined)
+                        continue;
+                }
+                
+                if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0 && isMaterialListPart == undefined) {
+                    this.itemclaColl.push([{
+                        "partId": this.allPartnumbersInfo[i].itemMasterId,
+                        "partName": partName,
+                        "description": this.allPartnumbersInfo[i].partDescription
+                    }]);
+                    this.partCollection.push(partName);
                 }
             }
         }
@@ -230,6 +230,7 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     markupChanged(matData) {
         try {
             this.markupList.forEach((markup) => {
+
             if (markup.value == Number(matData.markUpPercentageId)) {
                 matData.costPlusAmount = (matData.extendedPrice) + (((matData.extendedPrice) / 100) * Number(markup.label))
             }
