@@ -66,12 +66,12 @@ namespace DAL.Repositories
                                 where po.IsDeleted == false
                                 && po.VendorId == (vendorId > 0 ? vendorId : po.VendorId)
                                 && po.PurchaseOrderNumber.Contains(!String.IsNullOrEmpty(poFilters.filters.PurchaseOrderNo) ? poFilters.filters.PurchaseOrderNo : po.PurchaseOrderNumber)
-                                //&& Convert.ToString(po.OpenDate) == (Convert.ToString(poFilters.filters.OpenDate) == "1/1/0001 12:00:00 AM" ? Convert.ToString(po.OpenDate) : Convert.ToString(poFilters.filters.OpenDate))
-                                //&& Convert.ToString(po.ClosedDate) == (Convert.ToString(poFilters.filters.ClosedDate) == "1/1/0001 12:00:00 AM" ? Convert.ToString(po.ClosedDate) : Convert.ToString(poFilters.filters.ClosedDate))
                                 && v.VendorName.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorName) ? poFilters.filters.VendorName : v.VendorName)
                                 && v.VendorCode.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorCode) ? poFilters.filters.VendorCode : v.VendorCode)
                                 && po.StatusId == (statusId > 0 ? statusId : po.StatusId)
                                 && emp.FirstName.Contains(!String.IsNullOrEmpty(poFilters.filters.ApprovedBy) ? poFilters.filters.ApprovedBy : emp.FirstName)
+                                && po.OpenDate == (poFilters.filters.OpenDate != null ? poFilters.filters.OpenDate : po.OpenDate)
+                                && po.ClosedDate == (poFilters.filters.ClosedDate != null ? poFilters.filters.ClosedDate : po.ClosedDate)
                                 select new
                                 {
                                     po.PurchaseOrderId
@@ -91,6 +91,8 @@ namespace DAL.Repositories
                                      && v.VendorCode.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorCode) ? poFilters.filters.VendorCode : v.VendorCode)
                                      && po.StatusId == (statusId > 0 ? statusId : po.StatusId)
                                      && emp.FirstName.Contains(!String.IsNullOrEmpty(poFilters.filters.ApprovedBy) ? poFilters.filters.ApprovedBy : emp.FirstName)
+                                     && po.OpenDate == (poFilters.filters.OpenDate != null ? poFilters.filters.OpenDate : po.OpenDate)
+                                     && po.ClosedDate == (poFilters.filters.ClosedDate != null ? poFilters.filters.ClosedDate : po.ClosedDate)
                                      select new
                                      {
                                          po.PurchaseOrderId,
@@ -110,25 +112,25 @@ namespace DAL.Repositories
                                     .Take(take)
                                     .ToList();
 
-            if (poFilters.filters.OpenDate != null)
-            {
-                if (purchaseOrderList != null && purchaseOrderList.Any())
-                {
-                    purchaseOrderList = purchaseOrderList
-                        .Where(x => x.OpenDate == poFilters.filters.OpenDate)
-                        .ToList();
-                }
-            }
+            //if (poFilters.filters.OpenDate != null)
+            //{
+            //    if (purchaseOrderList != null && purchaseOrderList.Any())
+            //    {
+            //        purchaseOrderList = purchaseOrderList
+            //            .Where(x => x.OpenDate == poFilters.filters.OpenDate)
+            //            .ToList();
+            //    }
+            //}
 
-            if (poFilters.filters.ClosedDate != null)
-            {
-                if (purchaseOrderList != null && purchaseOrderList.Any())
-                {
-                    purchaseOrderList = purchaseOrderList
-                        .Where(x => x.ClosedDate == poFilters.filters.ClosedDate)
-                        .ToList();
-                }
-            }
+            //if (poFilters.filters.ClosedDate != null)
+            //{
+            //    if (purchaseOrderList != null && purchaseOrderList.Any())
+            //    {
+            //        purchaseOrderList = purchaseOrderList
+            //            .Where(x => x.ClosedDate == poFilters.filters.ClosedDate)
+            //            .ToList();
+            //    }
+            //}
 
             return purchaseOrderList;
         }
@@ -256,7 +258,7 @@ namespace DAL.Repositories
                                         .ToList();
                 return purchaseOrderList;
             }
-           
+
         }
 
         public IEnumerable<object> RecevingPolist()
@@ -677,19 +679,19 @@ namespace DAL.Repositories
         public object PurchaseOrderById(long purchaseOrderId)
         {
             var data = (from po in _appContext.PurchaseOrder
-                        //join v in _appContext.Vendor on po.VendorId equals v.VendorId
-                        //join vc in _appContext.VendorContact on v.VendorId equals vc.VendorId
-                        //join con in _appContext.Contact on vc.ContactId equals con.ContactId
+                            //join v in _appContext.Vendor on po.VendorId equals v.VendorId
+                            //join vc in _appContext.VendorContact on v.VendorId equals vc.VendorId
+                            //join con in _appContext.Contact on vc.ContactId equals con.ContactId
                         where po.PurchaseOrderId == purchaseOrderId
                         select new
                         {
                             po
                         }).FirstOrDefault();
-            
+
             return data;
         }
 
-        private ItemMaster ItemMasterDetails(long itemMasterId)
+        private ItemMaster ItemMasterDetails(long? itemMasterId)
         {
             var itemMaster = _appContext.ItemMaster.Where(p => p.ItemMasterId == itemMasterId).FirstOrDefault();
             if (itemMaster == null)
@@ -811,10 +813,10 @@ namespace DAL.Repositories
 
                 if (workOrderPartNoId > 0)
                 {
-                    var woPartNo = _appContext.WorkOrderPartNumber.Where(p => p.ID == workOrderPartNoId).FirstOrDefault();
+                    var woPartNo = _appContext.WorkOrderMaterials.Where(p => p.WorkOrderMaterialsId == workOrderPartNoId).FirstOrDefault();
                     if (woPartNo != null)
                     {
-                        var itemMaster = ItemMasterDetails(woPartNo.MasterPartId);
+                        var itemMaster = ItemMasterDetails(woPartNo.ItemMasterId);
                         purchaseOrderPart = new PurchaseOrderPart();
                         purchaseOrderPart.PurchaseOrderSplitParts = new List<PurchaseOrderSplitParts>();
 
@@ -822,17 +824,17 @@ namespace DAL.Repositories
                         purchaseOrderPart.PurchaseOrderPartRecordId = 0;
                         purchaseOrderPart.PurchaseOrderId = 0;
                         purchaseOrderPart.isParent = true;
-                        purchaseOrderPart.SerialNumber = woPartNo.SerialNumber;
-                        purchaseOrderPart.ItemMasterId = woPartNo.MasterPartId;
-                        purchaseOrderPart.ManufacturerId =Convert.ToInt64(itemMaster.ManufacturerId);
+                        purchaseOrderPart.SerialNumber = string.Empty;
+                        purchaseOrderPart.ItemMasterId = Convert.ToInt64(woPartNo.ItemMasterId);
+                        purchaseOrderPart.ManufacturerId = Convert.ToInt64(itemMaster.ManufacturerId);
                         purchaseOrderPart.GeneralLedgerAccounId = Convert.ToInt64(itemMaster.GLAccountId);
                         purchaseOrderPart.UOMId = itemMaster.PurchaseUnitOfMeasureId;
                         purchaseOrderPart.NeedByDate = DateTime.Now;
-                        purchaseOrderPart.ConditionId = woPartNo.ConditionId;
+                        purchaseOrderPart.ConditionId = woPartNo.ConditionCodeId;
                         purchaseOrderPart.QuantityOrdered = Convert.ToInt16(woPartNo.Quantity);
-                        purchaseOrderPart.UnitCost =0;
-                        purchaseOrderPart.DiscountAmount =0;
-                        purchaseOrderPart.DiscountPercent =0;
+                        purchaseOrderPart.UnitCost = 0;
+                        purchaseOrderPart.DiscountAmount = 0;
+                        purchaseOrderPart.DiscountPercent = 0;
                         purchaseOrderPart.ExtendedCost = 0;
                         purchaseOrderPart.FunctionalCurrencyId = 0;
                         purchaseOrderPart.ReportCurrencyId = 0;
