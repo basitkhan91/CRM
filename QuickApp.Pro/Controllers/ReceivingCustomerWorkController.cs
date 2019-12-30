@@ -135,8 +135,10 @@ namespace QuickApp.Pro.Controllers
             receivingCustomerWorkModel.SiteId = receivingCustomerWorkViewModel.SiteId;
             receivingCustomerWorkModel.BinId = receivingCustomerWorkViewModel.BinId;
             receivingCustomerWorkModel.ShelfId = receivingCustomerWorkViewModel.ShelfId;
+            if(receivingCustomerWorkViewModel.WarehouseId !=0)
             receivingCustomerWorkModel.WarehouseId = receivingCustomerWorkViewModel.WarehouseId;
-            receivingCustomerWorkModel.LocationId = receivingCustomerWorkViewModel.LocationId;
+            if (receivingCustomerWorkViewModel.LocationId != 0)
+                receivingCustomerWorkModel.LocationId = receivingCustomerWorkViewModel.LocationId;
             receivingCustomerWorkModel.ObtainFromType = receivingCustomerWorkViewModel.ObtainFromType;
             receivingCustomerWorkModel.PartDescription = receivingCustomerWorkViewModel.PartDescription;
             receivingCustomerWorkModel.Owner = receivingCustomerWorkViewModel.Owner;

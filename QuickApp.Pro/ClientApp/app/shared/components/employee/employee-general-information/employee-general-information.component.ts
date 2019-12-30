@@ -263,16 +263,28 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
             }
 
+          
             if (this.sourceEmployee.inMultipleShifts == true) {
                 this.sourceEmployee.multiShift = "multiShift";
                 this.showsingle = false;
                 this.showMultiple = true;
             }
-            if (this.sourceEmployee.inMultipleShifts == false) {
+            else    {
+                
                 this.sourceEmployee.singleShift = "singleShift";
+                //this.sourceEmployee.singleShift=true;
                 this.showsingle = true;
                 this.showMultiple = false;
             }
+
+            // if (this.sourceEmployee.inMultipleShifts == false) {
+                
+            //     this.sourceEmployee.singleShift = "singleShift";
+            //     //this.sourceEmployee.singleShift=true;
+            //     this.showsingle = true;
+            //     this.showMultiple = false;
+            // }
+            
             if (this.sourceEmployee.isHourly == true) {
                 //this.sourceEmployee.hourlypayType = "Hourly";
                 this.hourly = true
@@ -324,6 +336,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.activeIndex = 0;
         this.employeeService.indexObj.next(this.activeIndex);
         // this.sourceEmployee.employeeId = 1;
+        this.loadCurrencyData();   
         this.loadManagementdata();
         this.loadData();
         this.loadJobtitlesData();
@@ -335,14 +348,13 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.EmployeeLeaveType();
         this.loadjobtypesData();
         this.loadLegalEntityData();
-        this.loadCurrencyData();        
+             
 
     }
 
     private loadCurrencyData() {
-		this.currencyService.getCurrencyList().subscribe(currencydata => {
-			console.log(currencydata)
-			this.allCurrencyData = currencydata[0];
+		this.currencyService.getCurrencyList().subscribe(currencydata => {           
+            this.allCurrencyData = currencydata[0];           
 		})
     }
     
@@ -610,7 +622,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             );
         }
         else {
-        console.log(this.sourceEmployee.ShiftId);
+        //console.log(this.sourceEmployee.ShiftId);
 
         if (this.sourceEmployee.shifId !== undefined) {
             this.selectedshiftValues.push(this.sourceEmployee.shifId);
@@ -985,17 +997,23 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
     singleClick(click) {
         if (click == 'single') {
+            this.sourceEmployee.shifId="";
+            this.selectedshiftValues= [];
             this.showsingle = true;
             this.showMultiple = false;
             this.sourceEmployee.inMultipleShifts = false;
-            this.sourceEmployee.inMultipleShifts = true;
+           
+            //this.sourceEmployee.inMultipleShifts = true;
 
         }
         if (click == 'multiple') {
+            this.sourceEmployee.shifId="";
+            this.selectedshiftValues= [];
             this.showMultiple = true;
             this.showsingle = false;
+           
             this.sourceEmployee.inMultipleShifts = true;
-            this.sourceEmployee.inMultipleShifts = false;
+            //this.sourceEmployee.inMultipleShifts = false;
         }
 
     }
@@ -1098,8 +1116,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
         this.allEmployeeinfo = getEmployeeCerficationList;
-        console.log("this.allEmployeeinfo")
-        console.log(this.allEmployeeinfo);
+        //console.log("this.allEmployeeinfo")
+        //console.log(this.allEmployeeinfo);
         if(this.sourceEmployee.firstName) {
             this.sourceEmployee.firstName = getObjectById('employeeId', this.sourceEmployee.employeeId, this.allEmployeeinfo);
         }
@@ -1108,6 +1126,10 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         }
         if(this.sourceEmployee.lastName) {
             this.sourceEmployee.lastName = getObjectById('employeeId', this.sourceEmployee.employeeId, this.allEmployeeinfo);
+        }
+       
+        if(this.sourceEmployee.currencyId > 0) {
+            this.sourceEmployee.currencyId = getObjectById('currencyId', this.sourceEmployee.currencyId, this.allCurrencyData);            
         }
         
     }
@@ -1118,7 +1140,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.dataSource.data = getEmployeeCerficationList;
         this.allLeaves = getEmployeeCerficationList;
         //   this.leavemultiValues = getEmployeeCerficationList;
-        console.log(getEmployeeCerficationList);
+        //console.log(getEmployeeCerficationList);
     }
     private onCountryloadsuccessfull(getEmployeeCerficationList: any[]) {
         this.alertService.stopLoadingMessage();
@@ -1131,14 +1153,19 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.loadingIndicator = false;
         this.dataSource.data = getEmployeeCerficationList;
         this.allShiftdetails = getEmployeeCerficationList;
+
+
         if (this.allShiftdetails.length > 0) {
             this.shiftValues = [];
             for (let i = 0; i < this.allShiftdetails.length; i++)
                 this.shiftValues.push(
-                    { value: this.allShiftdetails[i].shiftId, label: this.allShiftdetails[i].description },
+                    {
+                         value: this.allShiftdetails[i].shiftId, label: this.allShiftdetails[i].description },
 
 
                 );
+
+               
         }
         let valAirCraft = [];
         this.employeeService.getemployeeshiftsList(this.sourceEmployee.employeeId)
@@ -1147,10 +1174,11 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
                 if (results != null) {
                     for (let i = 0; i < this.allAircraftManufacturer.length; i++) {
                         valAirCraft.push(this.allAircraftManufacturer[i].shiftId);
+                        this.sourceEmployee.shifId=this.allAircraftManufacturer[i].shiftId;
                     }
                     this.selectedshiftValues = valAirCraft;
-                    this.sessionShiftValues = this.selectedshiftValues;
-                    console.log(this.selectedshiftValues);
+                    this.sessionShiftValues = this.selectedshiftValues;                    
+                  
                 }
 
             },

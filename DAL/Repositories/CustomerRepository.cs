@@ -99,7 +99,7 @@ namespace DAL.Repositories
                             t.Name,
                             t.CustomerCode,
                             t.Email,
-                            CustomerType = type.Description,
+                            AccountType = type.Description,
                             CustomerClassification = ct.Description,
                             City = ad.City,
                             StateOrProvince = ad.StateOrProvince,
@@ -108,7 +108,7 @@ namespace DAL.Repositories
                             t.CreatedDate,
                             t.IsActive,
                             t.IsDeleted,
-                            AccountType = AccountTyp.description,
+                            CustomerType = AccountTyp.description,
                             TotalRecords = totalRecords
                         }).Distinct().OrderByDescending(p => p.CreatedDate)
                              .Skip(skip)

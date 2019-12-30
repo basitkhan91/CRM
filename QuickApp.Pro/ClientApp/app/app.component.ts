@@ -164,7 +164,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                 items: [
                     { label: 'Customers List', routerLink: '/customersmodule/customerpages/app-customers-list' },
                     { label: 'Create Customer', routerLink: '/customersmodule/customerpages/app-customer-create' },
-                    { label: 'Classification', routerLink: '/singlepages/singlepages/app-customer-classification' },
+                    //{ label: 'Classification', routerLink: '/singlepages/singlepages/app-customer-classification' },
                     {
                         label: 'Invoice', items: [
                             { label: 'Invoice List', routerLink: '/#' },

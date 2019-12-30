@@ -163,8 +163,7 @@ export class CustomerWorkEditComponent {
     }
     ngOnInit(): void {
         this.sourcereceving.isCustomerStock = true;
-
-        this.employeedata();
+         this.employeedata();
         this.loadData();
         this.ptnumberlistdata();
         this.Receveingcustomerlist();
@@ -177,6 +176,11 @@ export class CustomerWorkEditComponent {
         this.loadManagementdataForTree();
         if (!this.sourcereceving.receivingCustomerWorkId) {
             this.sourcereceving.receivingCustomerNumber = 'Creating';
+            this.sourcereceving.expirationDate = new Date();
+            this.sourcereceving.tagDate = new Date();
+            this.sourcereceving.manufacturingDate = new Date();
+            this.sourcereceving.timeLifeDate = new Date();
+
         }
         else {
             this.sourcereceivingEdit.receivingCustomerWorkId = this.sourcereceving.receivingCustomerWorkId;
@@ -672,7 +676,15 @@ export class CustomerWorkEditComponent {
             );
         }
     }
+    patternMobilevalidationWithSpl(event: any) {
+        const pattern = /[0-9\+\-()\ ]/;
 
+        let inputChar = String.fromCharCode(event.charCode);
+        if (event.keyCode != 8 && !pattern.test(inputChar)) {
+            event.preventDefault();
+        }
+
+    }
     customerNameId(event) {
        
         if (this.allCustomer) {

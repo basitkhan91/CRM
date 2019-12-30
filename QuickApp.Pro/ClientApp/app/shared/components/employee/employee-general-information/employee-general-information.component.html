@@ -186,7 +186,14 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Shift</label>
-                                            <div>
+                                            <div class="col-md-12">
+                                                <p-radioButton name="groupname" value="0" label="Single Shift" class="p-radiobutton-label-horizontal p-radiobutton-cstm"
+                                                               [(ngModel)]="sourceEmployee.inMultipleShifts" (click)="singleClick('single')" ></p-radioButton>
+                                                <p-radioButton name="groupname" value="1" label="Multiple Shifts" class="p-radiobutton-label-horizontal p-radiobutton-cstm"
+                                                               [(ngModel)]="sourceEmployee.inMultipleShifts" (click)="singleClick('multiple')" ></p-radioButton>
+                                                
+                                            </div>
+                                            <!-- <div>
                                                 <label class="radio-cstm wauto pull-left" style="margin-right: 10px;">
                                                     <input type="radio" name="shift" id="shiftsingle" class="form-control" value="singleShift" (change)="handlePayType($event)" [(ngModel)]="sourceEmployee.singleShift" (click)="singleClick('single')">
                                                     <span class="checkmark"></span>
@@ -197,7 +204,7 @@
                                                     <span class="checkmark"></span>
                                                     Multiple Shifts
                                                 </label>
-                                            </div>
+                                            </div> -->
 
                                             <!-- <div class="inner-addon right-addon inline-block">
                                                 <label class="radio-inline"><input type="radio" name="shift" id="shiftsingle" value="singleShift" (change)="handlePayType($event)" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEmployee.singleShift" (click)="singleClick('single')">Single Shift</label>
