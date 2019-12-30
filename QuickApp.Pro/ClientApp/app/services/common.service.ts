@@ -104,6 +104,12 @@ export class CommonService {
     uploadDocumentsEndpoint<T>(file: any): Observable<T> {        
 		const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
 		return this.http.post<T>(`${this.baseUrl}/api/FileUpload/commonDocumentUpload`, file);
-	}
+    }
+    
+    toDownLoadFile(fileUrl) {
+        const url = `${this.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${fileUrl}`;
+		window.location.assign(url);  
+    }
+    
 
 }

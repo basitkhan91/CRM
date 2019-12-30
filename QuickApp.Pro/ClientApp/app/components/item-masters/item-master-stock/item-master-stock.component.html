@@ -399,6 +399,23 @@
                                             </ng-container>
                                         </select>
                                     </div>
+                                    <div class="inline-block display-flex">
+                                        <label class="control-label">RFQ Tracking</label>
+                                        <input class="form-control new-checkbox" type="checkbox"
+                                               [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="sourceItemMaster.rfqTracking">
+                                    </div>
+<!-- 
+                                    <div class="inline-block display-flex spacing-label">
+                                        <div class="checkbox-cstm">
+                                            <label>
+                                                <input type="checkbox" [ngModelOptions]="{standalone: true}"
+                                                       [(ngModel)]="sourceItemMaster.isSchematic" class="new-checkbox">
+                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                Schematic
+                                            </label>
+                                        </div>
+                                    </div> -->
                                     <div class="inline-block display-flex spacing-label">
                                         <label class="control-label">Schematic</label>
                                         <input class="form-control new-checkbox" type="checkbox"
@@ -406,23 +423,53 @@
                                                [(ngModel)]="sourceItemMaster.isSchematic">
                                     </div>
                                     <div class="schematic-block form-group col-sm-12" *ngIf="sourceItemMaster.isSchematic">
-                                        <label class="control-label col-sm-6" style="margin-left: -6px">Attach Drawing</label>
-                                        <div class="col-sm-6 upload" style="margin-left: -8px; margin-top: 5px">
+                                        <!-- <label class="control-label col-sm-6" style="margin-left: -6px">Attach Drawing</label> -->
+                                        <!-- <div class="col-sm-6 upload" style="margin-left: -8px; margin-top: 5px">
                                             <input type="file" name="upload[]" id="upload" class="inputfile upload-file"
                                                    data-multiple-caption="{count} files selected" multiple="">
                                             <label for="upload">
                                                 <figure> <i class="fa fa-upload"></i></figure>
                                                 <span>Choose a file…</span>
                                             </label>
+                                        </div> -->
+
+                                        <div class="col-sm-12">
+                                            <p-fileUpload name="isSchematic[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event,'SchematicFile')">
+                                               
+                                            </p-fileUpload>
+
+                                            <div class="form-group">
+                                                <div class="table-responsive table-overflow" *ngIf="allUploadedDocumentsList.length> 0">
+                                                    <h4 class="panel-title" >Attachment Details:</h4>
+                                                    <table class="table table-bordered ">
+                                                            <thead>  
+                                                                <tr>
+                                                                            <th>File Name</th>
+                                                                            <th>Download</th>
+                                                                            <th>Delete</th>
+                                                                    </tr>
+                                                            </thead>
+            
+                                                        <tbody *ngFor="let f of allUploadedDocumentsList">
+                                                                <tr>                                                             
+                                                                    <td>{{f.fileName}}</td>
+                                                                    <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span ><i class="fa fa-download" style="color:black" ></i></span></a> </td>
+                                                                    <td>  <button class="btn-delete" type="button" mat-icon-button matTooltip="Delete" (click)="getAttachmentDeleteById(f)">
+                                                                    <mat-icon color="warn">delete</mat-icon> </button>
+                                                                </td>
+                                                                </tr>
+                                                            
+                                                        </tbody>
+            
+                                                    </table>
+                                                </div>
+                                            </div>
+                                           
+
                                         </div>
                                     </div>
                                     <div class="clear"></div>
-                                    <div class="inline-block display-flex">
-                                        <label class="control-label">RFQ Tracking</label>
-                                        <input class="form-control new-checkbox" type="checkbox"
-                                               [ngModelOptions]="{standalone: true}"
-                                               [(ngModel)]="sourceItemMaster.rfqTracking">
-                                    </div>
+                                    
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -820,7 +867,7 @@
                             </ng-template>
                         </p-table>
                         <br />
-                        <div class="col-sm-12">
+                        <!-- <div class="col-sm-12">
                             <div class="col-sm-3 font">
                                 Schematic: <input type="checkbox" data-md-icheck (change)="onSchematic($event)" />
                             </div>
@@ -833,7 +880,7 @@
                                     </label>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                     </div>
                     <div class="col-sm-12 mt8">
