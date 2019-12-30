@@ -3,7 +3,17 @@
         <div class="right_col" role="main">
             <div>
                 <div class="x_content">
-                    <div class="form-group col-sm-4  vendor-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="fs12">Vendor Name : </label>
+                            <span class="span-header-red"> {{ local?.vendorName }}</span>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="fs12">Vendor Code : </label>
+                            <span class="span-header-red"> {{ local?.vendorCode }}</span>
+                        </div>
+                    </div>
+                    <!-- <div class="form-group col-sm-4  vendor-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
                         <p class="fs10">
                             <label class="control-label w100">Vendor Name:</label>
                             {{local?.vendorName}}
@@ -14,8 +24,8 @@
                             <label class="control-label w100">Vendor Code:</label>
                             {{local?.vendorCode}}
                         </p>
-                    </div>
-                    <div class="table-responsive">
+                    </div> -->
+                    <div>
                         <div>
                             <div class="col-md-12" style="margin-bottom: -10px;">
                                 <h4 class="float-right">
@@ -66,7 +76,7 @@
                             </ng-template>
 
                             <ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">                                 
-                                <tr [pSelectableRow]="rowData" data-toggle="modal" data-target="#view" (dblclick)="toggledbldisplay(rowData)" [ngClass]="{'row-primary': rowData.isDefaultContact === true}">
+                                <tr [pSelectableRow]="rowData"  [pSelectableRowDblClick]="rowData" pReorderableRowHandle (dblclick)="opencontactView(view,rowData)" [ngClass]="{'row-primary': rowData.isDefaultContact === true}">
                                     <!--[ngStyle]="{'background-color' : rowData.isDefaultContact === true ? '#79ffe3'  : 'white'}"-->
 
                                     <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
@@ -113,10 +123,15 @@
 
 <ng-template #deleteContent let-c="close" let-d="dismiss" data-backdrop="static">
     <div class="modal-header">
-        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+        <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
             <span aria-hidden="true">&times;</span>
         </button>
+    </div>
+    <div class="modal-body">
+        <strong>First Name:
+            <span class="new-label">{{selectedRowforDelete.firstName}}</span>
+        </strong>
     </div>
 
     <div class="modal-footer">
@@ -135,37 +150,55 @@
 
 
     </div>
-    <div class="modal-body">
-
-        <div class="table-responsive">
-            <table class="table table-bordered">
+    <div class="modal-body" *ngIf="contactauditHisory">
+        <div class="table-responsive rro-table-cstm">
+            <table class="table table-bordered" *ngIf="contactauditHisory.length> 0 else noDatavailable">
                 <thead>
                     <tr>
-                        <th>Fist Name</th>
+                        <th>First Name</th>
                         <th>Last Name</th>
+                        <th>Contact Title</th>
                         <th>Email</th>
                         <th>Mobile Phone</th>
+                        <th>Work Phone</th>
+                        <th>Fax</th>
+                        <th>IsActive</th>
                         <th>Updated By</th>
-                        <th>Last Updated Time</th>
-                        <th>Created By</th>
-                        <th>Created Time</th>
-
+                        <th>Updated Time</th>
                     </tr>
                 </thead>
-                <tr *ngFor="let audit of contactauditHisory">
+                <tbody class="audithistory-cstm"> <!--*ngIf="auditHistory.length> 0"-->
+                    <tr *ngFor="let audit of contactauditHisory; let i = index;">
+                        <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'firstName', audit.firstName)  ? 'black' : 'red'  }">{{audit.firstName}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'lastName', audit.lastName)  ? 'black' : 'red'  }">{{audit.lastName}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'contactTitle', audit.contactTitle)  ? 'black' : 'red'  }">{{audit.contactTitle}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'email', audit.email)  ? 'black' : 'red'  }">{{audit.email}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'mobilePhone', audit.mobilePhone)  ? 'black' : 'red'  }">{{audit.mobilePhone}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'workPhone', audit.workPhone)  ? 'black' : 'red'  }">{{audit.workPhone}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'fax', audit.fax)  ? 'black' : 'red'  }">{{audit.fax}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+                        <td >{{audit.updatedBy}}</td>
+                        <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                    </tr>
+                </tbody> 
+                <!-- <tr *ngFor="let audit of contactauditHisory">
                     <td>{{audit.firstName}}</td>
                     <td>{{audit.lastName}}</td>
                     <td>{{audit.email}}</td>
                     <td>{{audit.mobilePhone}}</td>
                     <td>{{audit.updatedBy}}</td>
                     <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                    
-                    <!--<td>{{audit.field == 'createdDate'?  (rowData[audit.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[audit.field] && audit.field == 'updatedDate'?  (rowData[audit.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[audit.field]}}</td>-->
                     <td>{{audit.createdBy}}</td>
                     <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
 
-                </tr>
+                </tr> -->
             </table>
+            <ng-template #noDatavailable>
+                <div class="text-center"> 
+                        <img src="../../../assets/images/binoculars.png" style="height: 100px; width: 100px;">
+                        <h4 style="color: #ff5663;">No History Found </h4>
+                </div>
+            </ng-template> 
         </div>
     </div>
     <div class="modal-footer">
@@ -178,9 +211,10 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-            <h4 class="modal-title">Vendor Details</h4>
+            <h4 class="modal-title">View Contact Info</h4>
         </div>
         <div class="modal-body viewform">
+            <p><span class="label"><b>Primary Contact: </b></span><span class="value">{{sourceVendorforView.isDefaultContact}}</span></p>
             <p><span class="label"><b>Prefix: </b></span><span class="value">{{sourceVendorforView.prefix}}</span></p>
             <p><span class="label"><b>First Name: </b></span><span class="value">{{sourceVendorforView.firstName}}</span></p>
             <p><span class="label"><b>Middle Name: </b></span><span class="value">{{sourceVendorforView.middleName}}</span></p>
@@ -195,7 +229,6 @@
                    
                 </span>
             </p>
-            <p><span class="label"><b>Primary Contact: </b></span><span class="value">{{sourceVendorforView.isDefaultContact}}</span></p>
             <p><span class="label"><b>Email: </b></span><span class="value">{{sourceVendorforView.email}}</span></p>
             <p><span class="label"><b>Mobile Phone : </b></span><span class="value">{{sourceVendorforView.mobilePhone}}</span></p>
             <p><span class="label"><b>Alternate Phone : </b></span><span class="value">{{sourceVendorforView.alternatePhone}}</span></p>
@@ -226,7 +259,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title"> Contact Details</h4>
+                <h4 class="modal-title">{{isEditContactInfo ? 'Edit' : 'Add'}} Contact Details</h4>
             </div>
             <form #addContactForm="ngForm" class="form-horizontal">
                 <div class="modal-body">
@@ -337,6 +370,7 @@
                 <div class="modal-footer">
                     <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canAdd" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary-cstm pull-right submit-btn" (click)="editItemAndCloseModel()" data-dismiss="modal" [disabled]="!addContactForm.valid">Save</button>
                     <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canUpdate" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary-cstm pull-right submit-btn" (click)="editItemAndCloseModel()" data-dismiss="modal" [disabled]="!addContactForm.valid">Update</button>
+                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                 </div>
             </form>
         </div>

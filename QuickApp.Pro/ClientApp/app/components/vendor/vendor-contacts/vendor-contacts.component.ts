@@ -110,6 +110,8 @@ export class VendorContactsComponent implements OnInit {
     comName: string;
     isEditMode: boolean = false;
     isDeleteMode: boolean = false;
+    isEditContactInfo: boolean = false;
+    selectedRowforDelete: any;
     vendorContactsColumns = [
         { field: 'firstName', header: 'First Name' },
         { field: 'lastName', header: 'Last Name' },
@@ -338,7 +340,8 @@ export class VendorContactsComponent implements OnInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         delete row.updatedBy;
-        this.localCollection = row;       
+        this.localCollection = row;  
+        this.selectedRowforDelete = row;     
         this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -350,6 +353,7 @@ export class VendorContactsComponent implements OnInit {
         this.isSaving = true;
         this.sourceVendor = { ...row };       
         this.loadMasterCompanies();
+        this.isEditContactInfo = true;
     }    
     openView(content, row) {
         this.sourceVendor = row;
@@ -405,10 +409,17 @@ export class VendorContactsComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
 
-
-
-
-
+    getColorCodeForHistory(i, field, value) {
+        const data = this.contactauditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
 
     onBlurMethod(data) {
         if (data == 'firstName') {
@@ -425,7 +436,7 @@ export class VendorContactsComponent implements OnInit {
         }
     }
 
-    editItemAndCloseModel() {
+    editItemAndCloseModel() {        
         this.isSaving = true;
         if (!(this.sourceVendor.firstName && this.sourceVendor.lastName && this.sourceVendor.workPhone &&
             this.sourceVendor.email
@@ -653,8 +664,8 @@ export class VendorContactsComponent implements OnInit {
 
     onAddContactInfo() {
         this.sourceVendor = {};
+        this.isEditContactInfo = false;
     }
-
 
     patternMobilevalidationWithSpl(event: any) {
         const pattern = /[0-9\+\-()\ ]/;

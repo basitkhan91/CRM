@@ -330,10 +330,10 @@ export class VendorShippingInformationComponent {
        
         this.shippingauditHisory = auditHistory;
        
-        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+        // this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        // this.modal.result.then(() => {
+        //     console.log('When user closes');
+        // }, () => { console.log('Backdrop click') })
     }
     private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
         this.alertService.stopLoadingMessage();
@@ -422,9 +422,8 @@ export class VendorShippingInformationComponent {
             results => this.onAuditHistoryLoadSuccessful(results, content),
             error => this.saveFailedHelper(error));
 
-
-       
-    }
+      
+    }    
 
     editItemAndCloseModel() {
         this.isSaving = true;
@@ -456,8 +455,9 @@ export class VendorShippingInformationComponent {
                 this.sourceVendor.masterCompanyId = 1;
                 this.workFlowtService.updateshippinginfo(this.sourceVendor).subscribe(data => {
                     this.updatedCollection = data;
-                    this.loadData();
+                    this.loadData();                    
                     this.sourceVendor = {};
+                    this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
                 })
             }
 
@@ -757,16 +757,15 @@ export class VendorShippingInformationComponent {
         }
     }
 
-    getAuditHistoryById(rowData) {
-        // this.publicationService.getPublicationAuditDetails(rowData.publicationRecordId).subscribe(res => {
-        //     console.log(res);            
-        //     this.auditHistory = res;
-        // })
+    shippingInfoHistory(rowData) {
+        this.sourceVendor = rowData;
+        this.workFlowtService.getShipaddressHistory(this.sourceVendor.vendorId, this.sourceVendor.vendorShippingAddressId).subscribe(res => {
+            this.auditHistory = res;
+        })
     }
 
-
     getColorCodeForHistory(i, field, value) {
-        const data = this.shippingauditHisory;
+        const data = this.auditHistory;
         const dataLength = data.length;
         if (i >= 0 && i <= dataLength) {
             if ((i + 1) === dataLength) {
