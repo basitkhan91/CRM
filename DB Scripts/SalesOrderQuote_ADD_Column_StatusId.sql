@@ -1,0 +1,4 @@
+IF EXISTS ( SELECT 1 FROM SYS.TABLES WHERE NAME = 'SalesOrderQuote' ) 
+BEGIN  
+	ALTER TABLE SalesOrderQuote ADD [StatusId] [int] NOT NULL DEFAULT 1
+END

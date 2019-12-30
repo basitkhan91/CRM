@@ -73,5 +73,7 @@ namespace QuickApp.Pro.ViewModels.SalesViews
         public DateTime UpdatedOn { get; set; }
         public bool IsDeleted { get; set; }
 
+        public int StatusId { get; set; }
+
     }
 }
