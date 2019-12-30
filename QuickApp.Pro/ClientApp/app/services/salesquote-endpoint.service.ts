@@ -54,7 +54,8 @@ export class SalesQuoteEndpointService extends EndpointFactory {
   update(
     salesQuote: ISalesQuoteView
   ): Observable<ISalesOrderQuote> {
-    return this.http.put(this.saleQuote, JSON.stringify(salesQuote), this.getRequestHeaders())
+    let url: string = `${this.saleQuote}/${salesQuote.salesOrderQuote.salesOrderQuoteId}`;
+    return this.http.put(url, JSON.stringify(salesQuote), this.getRequestHeaders())
       .catch(error => {
         return this.handleError(error, () => this.create(salesQuote));
       });
