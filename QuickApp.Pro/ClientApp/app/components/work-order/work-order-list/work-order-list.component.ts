@@ -116,6 +116,7 @@ export class WorkOrderListComponent implements OnInit {
         this.pageIndex = pageIndex;
         this.pageSize = event.rows;
         event.first = pageIndex;
+        this.lazyLoadEventData.filters = { ...this.lazyLoadEventData.filters, workOrderStatus: 'open' }
         if (!this.isGlobalFilter) {
             this.getAllWorkOrderList(event);
         } else {

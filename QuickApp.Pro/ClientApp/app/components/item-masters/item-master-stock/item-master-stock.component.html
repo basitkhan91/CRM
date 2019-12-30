@@ -107,13 +107,13 @@
                                 <div class="form-group" style="margin-left: 13px">
                                     <div>
                                         <label for="customerName" class="control-label">
-                                            PN<strong class="clr-red">*</strong>
+                                            PN<strong class="clr-red">*</strong> 
                                         </label>
                                     </div>
                                     <div>
                                         <p-autoComplete id="partNumber" title="Part Number" [(ngModel)]="sourceItemMaster.partNumber"
-                                                        (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event)" [name]="partNumber" field="name" dataKey="id" 
-                                                        [required]="true" [suggestions]="partCollection" [ngModelOptions]="{standalone: true}"
+                                                        (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event)"   
+                                                        [suggestions]="partCollection" [ngModelOptions]="{standalone: true}"
                                                         (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
                                                         [dropdown]="true" class="autocomplete-customer">
                                             <ng-template let-partName pTemplate="part">
@@ -599,7 +599,7 @@
                                     <div>
                                         <select [ngModelOptions]="{standalone: true}"
                                             [(ngModel)]="sourceItemMaster.revisedPartId">
-                                            <option class="form-control" *ngFor="let partCollectionItem of allPartnumbersInfo"
+                                            <option class="form-control" *ngFor="let partCollectionItem of revisedPartNumbersList"
                                                 [ngValue]="partCollectionItem.itemMasterId">
                                             {{partCollectionItem.partNumber}}
                                         </option>

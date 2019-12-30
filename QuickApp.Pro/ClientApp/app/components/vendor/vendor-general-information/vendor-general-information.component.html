@@ -213,12 +213,34 @@
                                         </label>
                                     </div>
                                 </div>
-                                <div class="form-group" style="margin-top: 15px;">
+                                <div class="form-group" style="margin-top: 10px;">
                                     <div class="checkbox-cstm" style="margin-left: 0;">
                                         <label>
                                             <input type="checkbox" name="isAddressForShipping" [(ngModel)]="sourceVendor.isAddressForShipping">
                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                             Is this Address For Shipping
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="width: 100%; margin-top: 10px;">
+                                    <div class="checkbox-cstm">
+                                        <label>
+                                            <input type="checkbox" class="" value="" id="" style="margin-top: 1px;"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    [(ngModel)]="sourceVendor.isVendorAlsoCustomer">
+                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                            Is this Vendor also a Customer?
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group" *ngIf="sourceVendor.isVendorAlsoCustomer" style="width: 100%;">
+                                    <div class="checkbox-cstm">
+                                        <label>
+                                            <input type="checkbox" class="" value="" id="" style="margin-top: 1px;"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    [(ngModel)]="sourceVendor.isAllowNettingAPAR">
+                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                            Allow Netting of AP/AR
                                         </label>
                                     </div>
                                 </div>
@@ -389,29 +411,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group" style="width: 100%;">
-                                            <div class="checkbox-cstm">
-                                                <label>
-                                                    <input type="checkbox" class="" value="" id="" style="margin-top: 1px;"
-                                                           [ngModelOptions]="{standalone: true}"
-                                                           [(ngModel)]="sourceVendor.isVendorAlsoCustomer">
-                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                    Is this Vendor also a Customer?
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group" *ngIf="sourceVendor.isVendorAlsoCustomer" style="width: 100%;">
-                                            <div class="checkbox-cstm">
-                                                <label>
-                                                    <input type="checkbox" class="" value="" id="" style="margin-top: 1px;"
-                                                           [ngModelOptions]="{standalone: true}"
-                                                           [(ngModel)]="sourceVendor.isAllowNettingAPAR">
-                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                    Allow Netting of AP/AR
-                                                </label>
-                                            </div>
-                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>

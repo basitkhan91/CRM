@@ -396,7 +396,7 @@
                                     <th rowspan="2">Work Scope *</th>
                                     <th rowspan="2">NTE</th>
                                     <!-- <th rowspan="2">Qty *</th> -->
-                                    <th rowspan="2">Condition Id *</th>
+                                    <th rowspan="2">Condition*</th>
                                     <th rowspan="2">Stock Line Num *</th>
                                     <th rowspan="2">Serial Num </th>
                                     <th rowspan="2">CMM/Pub Ref</th>
@@ -411,7 +411,7 @@
                                     <th colspan="2">Restrictions</th>
                                     <th rowspan="2">Tech Name</th>
                                     <th rowspan="2">Tech Station</th>
-                                    <th rowspan="2">Tear Down Report</th>
+                                    <th rowspan="2" style="display:none">Tear Down Report</th>
                                     <th colspan="2">TAT (Days)</th>
                                     <th rowspan="2"></th>
                                     <!--<th rowspan="2"></th>
@@ -578,7 +578,7 @@
                                         </p-dropdown>
 
                                     </td>
-                                    <td>
+                                    <td style="display:none">
                                         <p-dropdown placeholder="Select" name="tearDown{{i}}" #tearDown="ngModel" [options]="tearDownReportList" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.tearDownReport">
                                         </p-dropdown>
 

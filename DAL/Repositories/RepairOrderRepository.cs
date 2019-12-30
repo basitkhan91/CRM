@@ -268,6 +268,8 @@ namespace DAL.Repositories
                                       && ro.StatusId == (statusId > 0 ? statusId : ro.StatusId)
                                       && emp.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.ApprovedBy) ? roFilters.filters.ApprovedBy : emp.FirstName)
                                       && emp.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.RequestedBy) ? roFilters.filters.RequestedBy : emp.FirstName)
+                                      && ro.OpenDate == (roFilters.filters.OpenDate != null ? roFilters.filters.OpenDate : ro.OpenDate)
+                                     && ro.ClosedDate == (roFilters.filters.ClosedDate != null ? roFilters.filters.ClosedDate : ro.ClosedDate)
                                 select new
                                 {
                                     ro.RepairOrderId
@@ -288,6 +290,8 @@ namespace DAL.Repositories
                                    && ro.StatusId == (statusId > 0 ? statusId : ro.StatusId)
                                    && emp.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.ApprovedBy) ? roFilters.filters.ApprovedBy : emp.FirstName)
                                    && emp.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.RequestedBy) ? roFilters.filters.RequestedBy : emp.FirstName)
+                                   && ro.OpenDate == (roFilters.filters.OpenDate != null ? roFilters.filters.OpenDate : ro.OpenDate)
+                                   && ro.ClosedDate == (roFilters.filters.ClosedDate != null ? roFilters.filters.ClosedDate : ro.ClosedDate)
                                    select new
                                    {
                                        ro.RepairOrderId,
@@ -307,25 +311,25 @@ namespace DAL.Repositories
                                    .Take(take)
                                    .ToList();
 
-            if (roFilters.filters.OpenDate != null)
-            {
-                if (repairOrderList != null && repairOrderList.Any())
-                {
-                    repairOrderList = repairOrderList
-                        .Where(x => x.OpenDate == roFilters.filters.OpenDate)
-                        .ToList();
-                }
-            }
+            //if (roFilters.filters.OpenDate != null)
+            //{
+            //    if (repairOrderList != null && repairOrderList.Any())
+            //    {
+            //        repairOrderList = repairOrderList
+            //            .Where(x => x.OpenDate == roFilters.filters.OpenDate)
+            //            .ToList();
+            //    }
+            //}
 
-            if (roFilters.filters.ClosedDate != null)
-            {
-                if (repairOrderList != null && repairOrderList.Any())
-                {
-                    repairOrderList = repairOrderList
-                        .Where(x => x.ClosedDate == roFilters.filters.ClosedDate)
-                        .ToList();
-                }
-            }
+            //if (roFilters.filters.ClosedDate != null)
+            //{
+            //    if (repairOrderList != null && repairOrderList.Any())
+            //    {
+            //        repairOrderList = repairOrderList
+            //            .Where(x => x.ClosedDate == roFilters.filters.ClosedDate)
+            //            .ToList();
+            //    }
+            //}
 
             return repairOrderList;
         }

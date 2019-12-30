@@ -398,6 +398,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     distinctAtaList: any[] = [];
     listOfErrors: any = [];
     conditionList: any;
+    revisedPartNumbersList: any = [];
 
     // errorLogForPS: string = '';
 
@@ -1224,6 +1225,23 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = false;
 
         this.allPartnumbersInfo = allWorkFlows;
+        console.log(allWorkFlows, "allWorkFlows+++")
+        this.revisedPartNumbersList = [];
+        for(let i = 0; i<allWorkFlows.length; i++){
+            if(this.isEdit == true){
+                if(allWorkFlows[i].itemMasterId != this.itemMasterId){
+                    this.revisedPartNumbersList.push({
+                        itemMasterId: allWorkFlows[i].itemMasterId,
+                        partNumber: allWorkFlows[i].partNumber
+                    })
+                }
+            } else {
+                this.revisedPartNumbersList.push({
+                    itemMasterId: allWorkFlows[i].itemMasterId,
+                    partNumber: allWorkFlows[i].partNumber
+                })
+            }
+        }
         this.allpnNumbers = allWorkFlows;
     }
 
@@ -4825,6 +4843,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 }
 
                 this.sourceItemMaster.itemMasterId = itemMasterId;
+                console.log(this.sourceItemMaster, "this.sourceItemMaster+++")
                 // Destructing the Object in Services Place Apply Changes there also 
                 this.itemser.updateItemMaster(this.sourceItemMaster).subscribe(data => {
 

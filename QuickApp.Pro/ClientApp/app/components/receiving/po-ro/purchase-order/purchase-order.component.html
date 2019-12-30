@@ -58,7 +58,7 @@
                                 <ng-template pTemplate="body" let-rowData let-columns="columns">
                                     <tr [pSelectableRow]="rowData">
                                         <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                            {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
+                                            {{col.field == 'openDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'closedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                         </td>
                                         <td>
                                             <span data-toggle="modal" data-target="#view" (click)="viewSelectedRow(rowData)">
