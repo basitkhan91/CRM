@@ -17,7 +17,7 @@ namespace DAL.Repositories
 
         public IEnumerable<Vendor> GetVendors()
         {
-            return _appContext.Vendor.OrderByDescending(c => c.VendorId).ToList();
+            return _appContext.Vendor.Where(c => (c.IsDelete == false || c.IsDelete == null) && (c.IsActive == true)).OrderByDescending(c => c.VendorId).ToList();
         }
 
         public IEnumerable<object> GetVendorsAuditHistory(long vendorId)
