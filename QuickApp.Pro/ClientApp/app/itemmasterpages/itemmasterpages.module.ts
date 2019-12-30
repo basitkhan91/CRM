@@ -50,6 +50,7 @@ import { DashNumberEndpointService } from "../services/dash-number/dash-number-e
 import { TooltipModule } from "primeng/tooltip";
 import {CommonService} from '../services/common.service';
 import { NTAEAlternateComponent } from "../components/item-masters/item-master-stock/ntae-alternate/ntae-alternate.component";
+import{ FileUploadModule } from 'primeng/fileupload';
 
 
 @NgModule({
@@ -78,7 +79,8 @@ import { NTAEAlternateComponent } from "../components/item-masters/item-master-s
         , RadioButtonModule,
         CalendarModule, StepsModule, BreadcrumbModule,
         DialogModule,
-        AuditModule
+        AuditModule,
+        FileUploadModule
     ],
     declarations: [
    
