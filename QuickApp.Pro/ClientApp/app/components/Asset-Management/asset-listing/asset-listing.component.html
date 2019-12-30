@@ -6,34 +6,34 @@
                 <h4 class="page-heading clr-green">Asset List</h4>
                 <span class="help-icon" data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info"
                         data-toggle="modal" data-target="#help-popup"></i></span>
-                <p-table #dt [value]="allAssetInfo" [metaKeySelection]="true" [rows]="20" [paginator]="true"
-                    [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" [columns]="selectedColumns"
-                    selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true"
-                    [reorderableColumns]="true">
+                <p-table #dt [value]="allAssetInfo" [metaKeySelection]="true" [rows]="10" [paginator]="true"
+                         [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns"
+                         selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true"
+                         [reorderableColumns]="true">
                     <ng-template pTemplate="caption">
                         <div style="text-align: right">
                             <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
-                                selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}"
-                                defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
+                                           selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}"
+                                           defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
                             <div class="inner-addon right-addon w200 inline-block">
                                 <i class="fa fa-search"></i>
                                 <input type="text" pInputText size="50" class="form-control ui-autocomplete-input"
-                                    (input)="dt.filterGlobal($event.target.value, 'contains')"
-                                    placeholder="Filter">
+                                       (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                       placeholder="Filter">
                             </div>
                             <button type="button" pButton icon="fa-download" iconPos="left" label="Export Data" matTooltip="Download Data" matTooltipPosition="above" (click)="dt.exportCSV()"></button>
                             <button type="button" pButton icon="fa-download" iconPos="left"
-                                label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
                             <a matTooltip="Add Asset" matTooltipPosition="above" class="btn btn-success nobg"
-                                (click)="navigateTogeneralInfo()"><span><i class="fa fa-plus"></i></span></a>
+                               (click)="navigateTogeneralInfo()"><span><i class="fa fa-plus"></i></span></a>
                             <!-- <div class="excel-upload">
-                                <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file"
-                                    data-multiple-caption="{count} files selected"
-                                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                <label for="upload">
-                                    <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-                                </label>
-                            </div> -->
+                <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file"
+                    data-multiple-caption="{count} files selected"
+                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                <label for="upload">
+                    <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+                </label>
+            </div> -->
                         </div>
                     </ng-template>
                     <ng-template pTemplate="header" let-columns>
@@ -58,37 +58,45 @@
                             <td style="width:150px">
 
                                 <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on"
-                                    offLabel="off" (onChange)="toggleIsActive(rowData,$event)"
-                                    [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                               offLabel="off" (onChange)="toggleIsActive(rowData,$event)"
+                                               [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                 <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on"
-                                    offLabel="off" (onChange)="toggleIsActive(rowData,$event)"
-                                    [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                               offLabel="off" (onChange)="toggleIsActive(rowData,$event)"
+                                               [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                 <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on"
-                                    offLabel="off" (onChange)="toggleIsActive(rowData,$event)"
-                                    [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                               offLabel="off" (onChange)="toggleIsActive(rowData,$event)"
+                                               [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 
-                                <span data-toggle="modal" data-target="#view"> <a
-                                        class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip"
-                                        (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a>
+                                <span data-toggle="modal" data-target="#view">
+                                    <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip"
+                                       (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a>
                                 </span>
                                 <button class="btn-edit" mat-icon-button (click)="openAssetToEdit(rowData)"
-                                    matTooltip="edit">
+                                        matTooltip="edit">
                                     <mat-icon>edit</mat-icon>
                                 </button>
                                 <!--Audit method for Asset creation
-                                <span (click)="showAuditPopup(auditContent,rowData.assetRecordId)" matTooltip="History" data-toggle="modal" data-target="#history">
-                                    <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
-                                        <i class="fa fa-history"></i>
-                                    </a>
-                                </span>-->
+                <span (click)="showAuditPopup(auditContent,rowData.assetRecordId)" matTooltip="History" data-toggle="modal" data-target="#history">
+                    <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
+                        <i class="fa fa-history"></i>
+                    </a>
+                </span>-->
 
                                 <button class="btn-delete" mat-icon-button matTooltip="Delete"
-                                    (click)="openDelete(content,rowData)">
+                                        (click)="openDelete(content,rowData)">
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
                             </td>
 
                         </tr>
+                    </ng-template>
+                    <ng-template pTemplate="summary" id="footer">
+                        <div style="text-align: right;">
+                            <label id="footer" class="footer">No. of records:</label>
+                            <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                            <label id="footer" class="footer1">Pages Count:</label>
+                            <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
+                        </div>
                     </ng-template>
                 </p-table>
             </div>

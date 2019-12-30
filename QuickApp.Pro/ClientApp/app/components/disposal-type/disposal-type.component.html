@@ -36,12 +36,13 @@
                                         <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
                                                accept=".xlsx, .xls, .csv">
                                         <label for="upload">
-                                            <span matTooltip="Upload Data (Excel)">
+                                            <span matTooltip="Upload Data (Excel)" tooltipPosition="top">
                                                 <i class="fa fa-upload"></i>
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()">Sample File Download</button>
+                                        <button class="btn btn-primary-cstm" pTooltip="Download Sample File" 
+                                                (click)="sampleExcelDownload()" tooltipPosition="top">Sample File Download</button>
                                     </div>
                                 </div>
                             </ng-template>
@@ -113,7 +114,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     </div>
 </div>
 
-<ng-template #view class="modal fade " id="view" role="dialog" data-backdrop="static">
+<ng-template #view class="modal fade " id="view" role="dialog">
 
     <div class="modal-content">
         <div class="modal-header">
@@ -124,20 +125,20 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
             <div class="col-sm-12">
                 <p>
                     <span class="label">
-                        <b> Asset Disposal Type Code: </b>
+                        <b> Asset Disposal Type: </b>
                     </span>
                     <span class="value">{{code}}</span>
                 </p>
                 <p>
                     <span class="label">
-                        <b> Asset Disposal Name: </b>
+                        <b> Name: </b>
                     </span>
                     <span class="value">{{name}}</span>
                 </p>
 
                 <p>
                     <span class="label">
-                        <b> Asset Disposal Type Memo: </b>
+                        <b> Memo: </b>
                     </span>
                     <span class="value">{{memo}}</span>
                 </p>
@@ -213,14 +214,17 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                         </label>
                     </div>
                     <div class="col-sm-5">
-                        <p-autoComplete [(ngModel)]="codeName" name="codeName" (onSelect)="partnmId($event)" (onKeyUp)="eventHandler($event)" [suggestions]="localCollection" (completeMethod)="filterDisposalType($event)" [size]="30"
+                        <p-autoComplete [(ngModel)]="codeName" name="codeName" (onSelect)="partnmId($event)" 
+                                        (onKeyUp)="eventHandler($event)" [suggestions]="localCollection" 
+                                        (completeMethod)="filterDisposalType($event)" [size]="30"
+                                        (onBlur)="onBlurCheck($event, 'select', 'codeName')"
                                         [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
                             <ng-template let-codeName pTemplate="item">
                                 <div class="ui-helper-clearfix">{{codeName}}</div>
                             </ng-template>
 
                         </p-autoComplete>
-                        <div *ngIf="disableSave" class="clr-red">Already Exists</div>
+                        <div *ngIf="recordExists && codeName" class="clr-red">Already Exists</div>
                         <div class="clear"></div>
                     </div>
                 </div>
@@ -232,7 +236,8 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                         </label>
                     </div>
                     <div class="col-sm-5">
-                        <input type="text" name="name" class="form-control" required #Name="ngModel" [(ngModel)]="sourceAction.name" minlength="2">
+                        <input type="text" name="name" class="form-control" 
+                               required #Name="ngModel" [(ngModel)]="sourceAction.name" minlength="2" (change)="enableSave()" >
                         <div *ngIf="Name.dirty && Name.errors?.required && Name.errors" class="invalid-form-error-message">
                             Asset Disposal Type Name required.
                         </div>
@@ -248,7 +253,8 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                         <label for="AssetDisposalMemo" class="control-label">Memo</label>
                     </div>
                     <div class="col-sm-5">
-                        <textarea class="text-item" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2"></textarea>
+                        <textarea class="text-item" #memo="ngModel" (change)="enableSave()" 
+                                  id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2"></textarea>
                     </div>
                     <div class="clear"></div>
                 </div>
@@ -257,7 +263,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                 <div class="col-sm-6">
                     <div class="checkbox-cstm check-value">
                         <label>
-                            <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input trigger2" checked id="isActive" [(ngModel)]="sourceAction.isActive" [ngModelOptions]="{standalone: true}">
+                            <input type="checkbox" name="isActive" (change)="enableSave()" #isActive="ngModel" class="form-check-input trigger2" checked id="isActive" [(ngModel)]="sourceAction.isActive" [ngModelOptions]="{standalone: true}">
                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                             Active
                         </label>
@@ -268,12 +274,12 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
         </form>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSave" (click)="SaveandEditDisposalType()">Save</button>
+        <button class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSave || recordExists" (click)="SaveandEditDisposalType()">{{isEditMode ? 'Update' : 'Save' }}</button>
         <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>
 
-<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static">
+<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->

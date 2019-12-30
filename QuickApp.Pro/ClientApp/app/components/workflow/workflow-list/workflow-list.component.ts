@@ -158,7 +158,7 @@ export class WorkflowListComponent implements OnInit {
 
     confirmDelete(confirmDeleteTemplate, rowData) {
         this.currentWorkflow = rowData;
-        this.modal = this.modalService.open(confirmDeleteTemplate, { size: 'sm' });
+        this.modal = this.modalService.open(confirmDeleteTemplate, { size: 'sm', backdrop: 'static', keyboard: false });
     }
 
     removeWorkFlow(): void {

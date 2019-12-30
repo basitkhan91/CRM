@@ -58,7 +58,9 @@ export class CustomerContactsComponent implements OnInit {
     isDeleteMode: boolean = false;
     public sourceCustomer: any = {}
 	contactInformation = new CustomerContactModel()
-	customerContacts: any = [];
+    customerContacts: any = [];
+    selectedRowforDelete: any;
+    selectedAtappedRowforDelete: any;
 	customerContactsColumns = [
 		{ field: 'tag', header: 'Tag' },
 		{ field: 'firstName', header: 'First Name' },
@@ -74,7 +76,7 @@ export class CustomerContactsComponent implements OnInit {
 		{ field: 'createdDate', header: 'Created Date' }
 	];
 	selectedColumns = this.customerContactsColumns;
-
+    selectedColumn: any;
 	ediData: any;
 	isEditButton: boolean = false;
     id: number;
@@ -84,7 +86,7 @@ export class CustomerContactsComponent implements OnInit {
     customerName: any;
     modal: NgbModalRef;
     localCollection: any;
-	emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}";
+	emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z0-9.-]{2,}[.]{1}[a-zA-Z0-9]{2,}";
 	urlPattern = "^((ht|f)tp(s?))\://([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(/\S*)?$";
 	sourceViewforContact: any;
 	add_SelectedId: any;
@@ -203,7 +205,7 @@ export class CustomerContactsComponent implements OnInit {
     }
     viewSelectedRowdbl(content,rowData) {
         this.sourceViewforContact = rowData;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -296,13 +298,16 @@ export class CustomerContactsComponent implements OnInit {
 	//		);
 	//	})
 	//}
-    openDelete(content, id) {
+
+    openDelete(content, rowData) {
+      
+        this.selectedRowforDelete = rowData;
+
         this.sourceViewforContact = '';
         this.isDeleteMode = true;
-  
-     
-        this.contactId = id;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        
+        this.contactId = rowData.contactId;
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -425,12 +430,14 @@ export class CustomerContactsComponent implements OnInit {
 
 
     deleteATAMapped(content, rowData) {
+        
+        this.selectedAtappedRowforDelete = rowData;
         this.sourceViewforContact = '';
         this.isDeleteMode = true;
 
 
         this.contactATAId = rowData.customerContactATAMappingId;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })

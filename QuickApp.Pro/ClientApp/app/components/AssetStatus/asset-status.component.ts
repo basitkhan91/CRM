@@ -154,7 +154,7 @@ export class AssetStatusComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.auditHisory = auditHistory;
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -242,7 +242,7 @@ export class AssetStatusComponent implements OnInit {
         this.sourceAction.isActive = true;
 
         this.codeName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -260,7 +260,7 @@ export class AssetStatusComponent implements OnInit {
           
         this.assetStatusId = this.assetStatusId;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -281,7 +281,7 @@ export class AssetStatusComponent implements OnInit {
             Memo: this.sourceAction.memo,
             assetStatusId: this.sourceAction.assetStatusId,
             IsActive: this.sourceAction.isActive,
-            IsDeleted: this.isDelete,
+            IsDelete: this.isDelete,
             masterCompanyId: 1
         };
         if (this.isEditMode == false) {
@@ -343,7 +343,7 @@ export class AssetStatusComponent implements OnInit {
             Name: rowData.name,
             Memo: rowData.memo,
             isActive: rowData.isActive,
-            IsDeleted: false,
+            IsDelete: false,
             masterCompanyId: 1,
             assetStatusId: rowData.assetStatusId
         };
@@ -373,7 +373,7 @@ export class AssetStatusComponent implements OnInit {
         this.createdDate = row.createdDate;
         this.updatedDate = row.updatedDate;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -385,7 +385,7 @@ export class AssetStatusComponent implements OnInit {
         this.isDeleteMode = true;
         this.sourceAction = row;
         this.code_Name = row.code;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })

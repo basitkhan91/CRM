@@ -1014,10 +1014,12 @@ namespace DAL.Repositories
                             join vct in _appContext.vendorCapabilityType on vca.VendorCapabilityId equals vct.VendorCapabilityId
                             into vctt
                             from vct in vctt.DefaultIfEmpty()
-
-                            join vcat in _appContext.capabilityType on vct.CapabilityTypeId equals vcat.CapabilityTypeId
+                            join vcat in _appContext.capabilityType on Convert.ToInt32(vca.CapabilityId) equals vcat.CapabilityTypeId
                             into vcatt
                             from vcat in vcatt.DefaultIfEmpty()
+
+                            join itm in _appContext.ItemMaster on vca.ItemMasterId equals itm.ItemMasterId into itmm
+                            from itm in itmm.DefaultIfEmpty()
                             where vca.VendorCapabilityId == VendorCapabilityId && vca.VendorId == VendorId
                             select new
                             {
@@ -1040,8 +1042,10 @@ namespace DAL.Repositories
                                 vca.CreatedBy,
                                 vca.UpdatedBy,
                                 vca.capabilityDescription,
-                                vca.IsActive,
-                                CapabilityType = vcat.Description
+                                vca.IsActive,                                
+                                CapabilityType = vcat.Description,
+                                itm.PartNumber,
+                                itm.PartDescription
 
                             }).OrderByDescending(p=>p.AuditVendorCapabilityId).ToList();
                 return list;
@@ -1429,7 +1433,7 @@ namespace DAL.Repositories
                             from acm in acmt.DefaultIfEmpty()
                             join acd in _appContext.AircraftDashNumber on it.DashNumberId equals acd.DashNumberId into acdt
                             from acd in acdt.DefaultIfEmpty()
-                            where it.IsActive == true && it.ItemMasterId == VendorCapabilityId && it.IsDeleted != true
+                            where it.IsActive == true && it.VendorCapabilityId == VendorCapabilityId && it.IsDeleted != true
                             select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, DashNumber = acd.DashNumber, AircraftType = acy.Description, AircraftModel = acm.ModelName, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;

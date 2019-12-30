@@ -32,6 +32,10 @@ import { DBkeys } from '../../../../services/db-Keys';
 import { User } from '../../../../models/user.model';
 import { ItemMasterService } from '../../../../services/itemMaster.service';
 import { editValueAssignByCondition } from '../../../../generic/autocomplete';
+import { CommonService } from '../../../../services/common.service';
+import { ConfigurationService } from '../../../../services/configuration.service';
+
+
 
 
 
@@ -49,6 +53,7 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
 	allPurchaseUnitOfMeasureinfo: any[];
 	localunit: any[];
     manufacturerData: any;
+    getAllFrequencyTrainingInfodrpData;
 
 	ngOnInit(): void {
 		this.employeeService.currentUrl = '/employeesmodule/employeepages/app-employee-training';
@@ -62,6 +67,7 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
 		this.loadTariningTypes();
         this.Purchaseunitofmeasure();
         this.getAllAircraftManfacturer();
+        this.getAllFrequencyTrainingData();
     }
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -95,13 +101,15 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
     public lastName: any;
     public nextbuttonEnable = false;
     public userA: any;
+    formData = new FormData();
+    allEmployeeTrainingDocumentsList: any = [];
 
     /** Actions ctor */
 
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
     Active: string = "Active";
-    constructor(private route: ActivatedRoute, private itemser: ItemMasterService, private translationService: AppTranslationService, public unitService: UnitOfMeasureService, public authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, private router: Router, public employeeService: EmployeeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private localStorage: LocalStoreManager,) {
+    constructor(private route: ActivatedRoute, private itemser: ItemMasterService, private translationService: AppTranslationService, public unitService: UnitOfMeasureService, public authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, private router: Router, public employeeService: EmployeeService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private localStorage: LocalStoreManager, public commonService: CommonService,private configurations: ConfigurationService) {
         this.displayedColumns.push('action');
 		this.dataSource = new MatTableDataSource();
 		if (this.employeeService.generalCollection) {
@@ -110,18 +118,21 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
 		if (this.employeeService.listCollection && this.employeeService.isEditMode == true) {
             this.sourceEmployee = this.employeeService.listCollection;
             this.empId = this.sourceEmployee.employeeId;
+
             if (this.sourceEmployee.employeeId) {
                 this.nextbuttonEnable = true;
 
             }
             this.firstName = editValueAssignByCondition('firstName', this.sourceEmployee.firstName);
             this.lastName = editValueAssignByCondition('lastName', this.sourceEmployee.lastName);
-            console.log(this.sourceEmployee.employeeTrainingTypeId);
+            //console.log(this.sourceEmployee.employeeTrainingTypeId);
 
-            console.log("traingi");
-            console.log(this.sourceEmployee );
-			this.local = this.employeeService.listCollection;
+            //console.log("traingi");
+            //console.log(this.sourceEmployee );
+            this.local = this.employeeService.listCollection;
+            this.getAllFrequencyTrainingData();
             this.loadData();
+            this.toGetEmployeeTrainingDocumentsList(this.sourceEmployee.employeeId)
         }
         let user = this.localStorage.getDataObject<User>(DBkeys.CURRENT_USER);
         this.userA = user.userName;
@@ -133,7 +144,7 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
         this.route.queryParams
             .filter(params => params.order)
             .subscribe(params => {
-                console.log(params); // {order: "popular"}
+                //console.log(params); // {order: "popular"}
                 //  console.log(params.order);
                 this.empId = params.order;
 
@@ -144,11 +155,11 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
 
                 }
                 else {
-                    console.log('no buttion')
+                   // console.log('no buttion')
                 }
                 this.firstName = params.firstname;
                 this.lastName = params.lastname;
-                console.log(this.empId);
+                //console.log(this.empId);
             });
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -157,7 +168,7 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
 
     private loadData() {
 
-        console.log("this.empId"+this.empId);
+       // console.log("this.empId"+this.empId);
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.employeeService.getTrainingList(this.empId).subscribe(
@@ -230,13 +241,13 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
 
             
             this.sourceEmployee = this.allEmployeeinfo[0].t;
-            console.log(this.sourceEmployee);
+           // console.log(this.sourceEmployee);
 			this.sourceEmployee.scheduleDate = new Date(this.sourceEmployee.scheduleDate);
 			this.sourceEmployee.completionDate = new Date(this.sourceEmployee.completionDate);
             this.sourceEmployee.expirationDate = new Date(this.sourceEmployee.expirationDate);
             this.sourceEmployee.aircraftModelId = this.sourceEmployee.aircraftModelId;
 
-            console.log(" this.sourceEmployee.aircraftModelId" + this.sourceEmployee.aircraftModelId);
+            //console.log(" this.sourceEmployee.aircraftModelId" + this.sourceEmployee.aircraftModelId);
             
 		}
     }
@@ -387,7 +398,7 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
 
         }
         else {
-            console.log("trainig id  exists");
+            //console.log("trainig id  exists");
             if (!this.sourceEmployee.employeeTrainingId) {
                 this.sourceEmployee.createdBy = this.userName;
                 this.sourceEmployee.updatedBy = this.userName;
@@ -397,17 +408,75 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
                 this.sourceEmployee.createdBy = this.userA;
                 this.sourceEmployee.updatedBy = this.userA;
 
-                this.employeeService.newAddTraining(this.sourceEmployee).subscribe(
-                    role => this.saveSuccessHelper(role),
-                    error => this.saveFailedHelper(error));
+                this.employeeService.newAddTraining(this.sourceEmployee).subscribe(data => {
+                    // role => this.saveSuccessHelper(role),
+                    // error => this.saveFailedHelper(error)
+                    const vdata = {                           
+                        employeeId:this.empId,
+                        masterCompanyId: 1,
+                        createdBy: this.userName,
+                        updatedBy: this.userName,
+                        moduleId:4
+                    }
+            
+                    for (var key in vdata) {
+                        this.formData.append(key, vdata[key]);
+                    }
+                    // this.employeeService.uploadEmployeeTrainingDoc(this.formData).subscribe(res => {
+                    //     this.saveSuccessHelper(data);
+                    //     this.formData = new FormData();
+                    //     this.toGetEmployeeTrainingDocumentsList(this.empId);
+                    // });
+                    this.commonService.uploadDocumentsEndpoint(this.formData).subscribe(res => {
+                        this.saveSuccessHelper(data);
+                        this.formData = new FormData();
+                        this.toGetEmployeeTrainingDocumentsList(this.empId);
+                    });
+                    
+
+                    //this.saveSuccessHelper(data);
+                });
 
             }
             else {
                 this.sourceEmployee.updatedBy = this.userName;
                 this.sourceEmployee.masterCompanyId = 1;
                 this.employeeService.updateTrainingDetails(this.sourceEmployee).subscribe(
-                    response => this.saveCompleted(this.sourceEmployee),
-                    error => this.saveFailedHelper(error));
+                    // response => this.saveCompleted(this.sourceEmployee),
+                    // error => this.saveFailedHelper(error)
+                    data => {
+                     
+                        // const vdata = {                           
+                        //     employeeId:this.empId,
+                        //     masterCompanyId: 1,
+                        //     createdBy: this.userName,
+                        //     updatedBy: this.userName
+                        // }
+                        const vdata = {                           
+                            employeeId:this.empId,
+                            masterCompanyId: 1,
+                            createdBy: this.userName,
+                            updatedBy: this.userName,
+                            moduleId:4
+                        }
+                
+                        for (var key in vdata) {
+                            this.formData.append(key, vdata[key]);
+                        }
+                        // this.employeeService.uploadEmployeeTrainingDoc(this.formData).subscribe(res => {
+                        //     this.saveSuccessHelper(data);
+                        //     this.formData = new FormData();
+                        //     this.toGetEmployeeTrainingDocumentsList(this.empId);
+                        // });  
+                        this.commonService.uploadDocumentsEndpoint(this.formData).subscribe(res => {
+                            this.saveSuccessHelper(data);
+                            this.formData = new FormData();
+                            this.toGetEmployeeTrainingDocumentsList(this.empId);
+                        });
+                    }
+                    
+                    );
+                    
             }
 
             this.activeIndex = 3;
@@ -525,5 +594,47 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
 		//this.saveCompleted(this.sourceCustomer);
 		this.router.navigateByUrl('/employeesmodule/employeepages/app-employee-certification');
 
-	}
+    }
+    
+    
+    async getAllFrequencyTrainingData() {
+        await this.commonService.smartDropDownList('FrequencyOfTraining', 'FrequencyOfTrainingId', 'FrequencyName').subscribe(res => {
+            this.getAllFrequencyTrainingInfodrpData = res;
+            //console.log(this.getAllFrequencyTrainingInfodrpData);
+        });        
+    }
+
+    fileUpload(event,fileType) {                
+		if (event.files.length === 0)
+			return;
+
+        for (let file of event.files)
+        {       
+            this.formData.append(fileType, file);            
+        }			
+    }
+
+    toGetEmployeeTrainingDocumentsList(employeeId)
+	{       
+        var moduleId=4;
+        this.commonService.GetDocumentsList(this.empId,moduleId).subscribe(res => {
+			this.allEmployeeTrainingDocumentsList = res;
+			//console.log(this.allEmployeeTrainingDocumentsList);
+		})
+    }
+    downloadFileUpload(rowData) {	
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
+		window.location.assign(url);       
+    }
+
+    getEmployeeAttachmentDelete(rowData)
+    {
+       let  attachmentDetailId=rowData.attachmentDetailId;
+       let updatedBy=this.userName;
+
+        this.commonService.GetAttachmentDeleteById(attachmentDetailId,updatedBy).subscribe(res => {		
+            this.toGetEmployeeTrainingDocumentsList(this.empId)
+		})
+    }
+
 }

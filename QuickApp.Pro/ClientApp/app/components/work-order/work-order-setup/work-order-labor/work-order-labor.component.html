@@ -162,8 +162,10 @@
             End Date and Time
           </th>
           <th class="text-center">Hours/Mins</th>
-          <th class="text-center">Adjustments</th>
-          <th class="text-center">Adjusted Hours</th>
+          <ng-container *ngIf="!isQuote">
+              <th class="text-center">Adjustments</th>
+              <th class="text-center">Adjusted Hours</th>
+          </ng-container>
           <ng-container *ngIf="isQuote">
             <th>
               Direct Labor OH Cost
@@ -181,6 +183,40 @@
         <!-- Receive -->
         <ng-container *ngFor="let task of taskList; let taskIndex = index">
           <!-- <ng-container *ngIf="isAllowedTask(task.taskId)"> -->
+          <tr *ngIf="laborForm.workOrderLaborList[0][task.description | lowercase].length == 0">
+            <td>
+                {{task.description}}
+                <i
+                  class="float-right float-right fa fa-plus-circle fa-lg"
+                  (click)="addNewTask(task.description.toLowerCase())"
+                ></i>
+            </td>
+            <td></td>
+            <td>
+                
+            </td>
+            <td></td>
+            <td
+              *ngIf="laborForm.hoursorClockorScan !== 1 && laborForm.hoursorClockorScan !== 3"
+            >
+            </td>
+            <td
+              *ngIf="laborForm.hoursorClockorScan !== 1"
+            >
+            </td>
+            <td
+              *ngIf="laborForm.hoursorClockorScan !== 1"
+            >
+            </td>
+            <td>
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+            </td>
+          </tr>
           <ng-container *ngFor="let rec of laborForm.workOrderLaborList[0][task.description | lowercase]; let i = index">
             <tr *ngIf="!rec['isDeleted']">
                 <td *ngIf="i < 1">
@@ -200,7 +236,7 @@
                       [(ngModel)]="rec.expertiseId"
                     ></p-dropdown> -->
 
-                    <select [(ngModel)]="rec.expertiseId">
+                    <select [(ngModel)]="rec.expertiseId" style="width: 130px;">
                       <option>Select</option>
                       <ng-container *ngFor="let exp of expertiseTypeList">
                         <option [value]="exp.value">{{exp.label}}</option> 
@@ -289,24 +325,28 @@
                 <td *ngIf="laborForm.hoursorClockorScan === 1"> 
                   <input type="number" (blur)="calculateHoursDifference(rec)" [(ngModel)]="rec.hours" name="hours" [disabled]="checkDisability(rec, task.taskId)"> 
                 </td>
-                <td>
-                  <input type="number" (blur)="calculateHoursDifference(rec)" [(ngModel)]="rec.adjustments" [disabled]="laborForm.workFloworSpecificTaskorWorkOrder == 'workOrder'"/>
-                </td>
-                <td>
-                  {{ rec.adjustedHours }}
-                </td>
+                <ng-container *ngIf="!isQuote">
+                  <td>
+                    <input type="number" (blur)="calculateHoursDifference(rec)" [(ngModel)]="rec.adjustments" [disabled]="laborForm.workFloworSpecificTaskorWorkOrder == 'workOrder'"/>
+                  </td>
+                  <td>
+                    {{ rec.adjustedHours }}
+                  </td>
+                </ng-container>
                 <ng-container *ngIf="isQuote">
                   <td>
                     <input type="number" [(ngModel)]="rec.directLaborOHCost" />
                   </td>
                   <td>
                       <!-- <input [(ngModel)]="matQuotation.markup" /> -->
-                    <select class="form-control custom-select wf-pub-id" (change)="markupChanged(rec)" [(ngModel)]="rec.markupPercentageId">
+                    <select class="form-control" (change)="markupChanged(rec)" [(ngModel)]="rec.markupPercentageId" style="width: 130px;">
                       <option value="">Select</option>
                       <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                     </select>
                   </td>
-                  <td>{{rec.labourCostPlus}}</td>
+                  <td>
+                      <input type="number" [(ngModel)]="rec.labourCostPlus" readonly/>
+                  </td>
                 </ng-container>
                 <td>
                   <input type="text" [(ngModel)]="rec.memo" />

@@ -481,6 +481,26 @@ namespace DAL.Repositories
             }
         }
 
+        public IEnumerable<object> GetChildEntitiesByParentId(long parentId)
+        {
+            try
+            {
+                var list = (from lba in _appContext.LegalEntity
+                            where lba.IsDeleted == false && lba.ParentId == parentId
+                            select new
+                            {
+                                lba.LegalEntityId,
+                                lba.Description,
+                                lba.Name,
+                            }).OrderBy(p => p.LegalEntityId).ToList();
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public object GetLegalEntityAddress(long addressId)
         {
             try

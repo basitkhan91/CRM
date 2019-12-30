@@ -60,7 +60,9 @@ export class CustomerAircraftComponent implements OnInit {
     airCraftMappingId: number;
     inventoryData: any = [];
     editAirCraftData: any = [];
+    selectedRowForDelete: any;
     aircraftdata: any = [];
+    aircraftauditHisory: any[];
     colaircraft: any[] = [
         { field: "AircraftType", header: "Aircraft" },
         { field: "AircraftModel", header: "Model" },
@@ -558,6 +560,38 @@ export class CustomerAircraftComponent implements OnInit {
             this.aircraftListDataValues = res;
         })
     }
+    getCustomerAircraftHistory(content, row) {
+        const { customerAircraftMappingId } = row;
+        this.alertService.startLoadingMessage();
+
+        this.customerService.getMappedAirCraftDetailsAudit(customerAircraftMappingId).subscribe(
+            results => this.onAuditHistoryLoadSuccessful(results, content),
+            error => this.saveFailedHelper(error));
+    }
+    private onAuditHistoryLoadSuccessful(auditHistory, content) {
+        this.alertService.stopLoadingMessage();
+
+
+        this.aircraftauditHisory = auditHistory;
+
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.aircraftauditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+   // getMappedAirCraftDetailsAudit
 
     //deleteAircraftMappedInventory(customerAircraftMappingId) {
     //    this.customerService.deleteAircraftInvetoryById(customerAircraftMappingId).subscribe(res => {
@@ -572,19 +606,19 @@ export class CustomerAircraftComponent implements OnInit {
     dismissModel() {
         this.modal.close();
     }
-    deleteAircraftMappedInventory(content, id) {
+    deleteAircraftMappedInventory(content, rowData) {
       
         this.isDeleteMode = true;
+        this.selectedRowForDelete = rowData;
 
-
-        this.airCraftMappingId = id;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.airCraftMappingId = rowData.customerAircraftMappingId;
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
     deleteItemAndCloseModel() {
-
+        
         let airCraftingMappingId = this.airCraftMappingId;
         if (airCraftingMappingId > 0) {
 

@@ -10,19 +10,25 @@ using DAL.Common;
 
 namespace DAL.Repositories
 {
-    public class PercentageRepository : Repository<Percentage>,IPercentageRepository
+    public class PercentageRepository : Repository<DAL.Models.Percentage>, IPercentageRepository
     {
         private AppSettings AppSettings { get; set; }
-        public PercentageRepository(DbContext context, IOptions<AppSettings> settings) : base(context)
+        public PercentageRepository(ApplicationDbContext context, IOptions<AppSettings> settings) : base(context)
         {
             AppSettings = settings.Value;
         }
 
         public IEnumerable<Percentage> GetPercentages()
         {
-            return _appContext.Percentage.Where(c => c.IsDeleted == false && c.IsActive == true).ToList();
+            return _appContext.Percent.Where(c => c.IsDeleted == false ).ToList();
         }
 
-         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
+        public IEnumerable<PercentageAudit> GetpercentageAuditDetails(long Id)
+        {
+            return _appContext.PercentAudit.Where(c => c.PercentId == Id).OrderByDescending(p => p.UpdatedDate).ToList();
+
+        }
+
+        private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
 }

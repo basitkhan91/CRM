@@ -68,20 +68,32 @@
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
                     </div>
+
+                    <!-- NHA, TLA, Alternate, Equivalency -->
                     <div class="md-step"
-                        [ngClass]="{ active: activeMenuItem >= 6 , editable : activeMenuItem === 6 }"
+                         [ngClass]="{ active: activeMenuItem >= 6 , editable : activeMenuItem === 6}"
+                         (click)="changeOfTab('NhaTlaAlternateTab')"
+                         [class.isDisabled]="!isDisabledSteps">
+                        <div class="md-step-circle"><span>5</span></div>
+                        <div class="md-step-title">NHA, TLA, Alternate, Equivalency</div>
+                        <div class="md-step-bar-left"></div>
+                        <div class="md-step-bar-right"></div>
+                    </div>
+
+                    <div class="md-step"
+                        [ngClass]="{ active: activeMenuItem >= 67 , editable : activeMenuItem === 7 }"
                         (click)="changeOfTab('Exchange')"
                         [class.isDisabled]="!isDisabledSteps">
-                        <div class="md-step-circle"><span>5</span></div>
+                        <div class="md-step-circle"><span>6</span></div>
                         <div class="md-step-title">Exchange and Loans</div>
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
                     </div>
                     <div class="md-step"
-                         [ngClass]="{ active: activeMenuItem >= 7 , editable : activeMenuItem === 7 }"
+                         [ngClass]="{ active: activeMenuItem >= 8 , editable : activeMenuItem === 8 }"
                          (click)="changeOfTab('ExportInfo')"
                          [class.isDisabled]="!isDisabledSteps">
-                        <div class="md-step-circle"><span>6</span></div>
+                        <div class="md-step-circle"><span>7</span></div>
                         <div class="md-step-title">Export Info</div>
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
@@ -100,7 +112,7 @@
                                     </div>
                                     <div>
                                         <p-autoComplete id="partNumber" title="Part Number" [(ngModel)]="sourceItemMaster.partNumber"
-                                                        (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event)" [name]="partNumber"
+                                                        (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event)" [name]="partNumber" field="name" dataKey="id" 
                                                         [required]="true" [suggestions]="partCollection" [ngModelOptions]="{standalone: true}"
                                                         (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
                                                         [dropdown]="true" class="autocomplete-customer">
@@ -114,7 +126,7 @@
                                         PN Description <strong class="clr-red">*</strong>
                                     </label>
                                     <div>
-                                        <p-autoComplete (onKeyUp)=descriptionHandler($event)
+                                        <p-autoComplete id="partDescription" title="Part Description" (onKeyUp)=descriptionHandler($event)
                                                         (onSelect)="partdescriptionId($event)"
                                                         [suggestions]="descriptionCollection"
                                                         [ngModelOptions]="{standalone: true}"
@@ -577,6 +589,21 @@
                                                    [(ngModel)]="sourceItemMaster.memo" type="text" [disabled]="true" pInputText class="form-control input-value" />
                                         </span>
                                         <i class="fa memo fa-info-circle fa-lg" pTooltip="{{memoNotes}}" tooltipPosition="top" data-toggle="modal" data-target="#rro-memo" NTE></i>
+                                    </div>
+                                    <div class="inline-adjust inline-block display-flex">
+
+                                        <label class="control-label spacing-label">
+                                            Revised Part                                            
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <select [ngModelOptions]="{standalone: true}"
+                                            [(ngModel)]="sourceItemMaster.revisedPartId">
+                                            <option class="form-control" *ngFor="let partCollectionItem of allPartnumbersInfo"
+                                                [ngValue]="partCollectionItem.itemMasterId">
+                                            {{partCollectionItem.partNumber}}
+                                        </option>
+                                    </select>
                                     </div>
                                 </div>
                             </div>
@@ -1176,6 +1203,57 @@
                         </div>
                     </form>
                 </div>
+                <!-- NHA, TLA, Alternate, Equivalency OPEN-->
+                <div [ngClass]="{hideTab : currentTab !== 'NhaTlaAlternateTab'}">
+                    <div class="clear"></div>
+                    <div class="md-stepper-horizontal orange">
+                        <div class="md-step"
+                                [ngClass]="{ active: activeNTAEMenuItem >= 1 , editable : activeNTAEMenuItem === 1}" 
+                                (click)="changeOfNTAETab('NHA')">
+                            <div class="md-step-title">NHA</div>
+                            <div class="md-step-bar-left"></div>
+                            <div class="md-step-bar-right"></div>
+                        </div>
+                        <div class="md-step"
+                                [ngClass]="{ active: activeNTAEMenuItem >= 2, editable : activeNTAEMenuItem === 2 }"
+                                (click)="changeOfNTAETab('TLA')"
+                                [class.isDisabled]="!isNTAEDisabledSteps">
+                            <div class="md-step-title">TLA</div>
+                            <div class="md-step-bar-left"></div>
+                            <div class="md-step-bar-right"></div>
+                        </div>
+                        <div class="md-step"
+                                [ngClass]="{ active: activeNTAEMenuItem >= 3 , editable : activeNTAEMenuItem === 3 }"
+                                (click)="changeOfNTAETab('Alternate')"
+                                [class.isDisabled]="!isNTAEDisabledSteps">
+                            <div class="md-step-title">Alternate</div>
+                            <div class="md-step-bar-left"></div>
+                            <div class="md-step-bar-right"></div>
+                        </div>
+
+                        <div class="md-step"
+                                [ngClass]="{ active: activeNTAEMenuItem >= 4 , editable : activeNTAEMenuItem === 4}"
+                                (click)="changeOfNTAETab('Equivalency')"
+                                [class.isDisabled]="!isNTAEDisabledSteps">
+                            <div class="md-step-title">Equivalency</div>
+                            <div class="md-step-bar-left"></div>
+                            <div class="md-step-bar-right"></div>
+                        </div>    
+                    </div>
+                    <div [ngClass]="{hideTab : currentNTAETab !== 'NHA'}">
+
+                    </div>
+                    <div [ngClass]="{hideTab : currentNTAETab !== 'TLA'}">
+                    </div>
+                    <div [ngClass]="{hideTab : currentNTAETab !== 'Alternate'}">
+                            <app-ntae-alternate></app-ntae-alternate>
+                        </div>
+                    <div [ngClass]="{hideTab : currentNTAETab !== 'Equivalency'}">
+
+                    </div>
+                                           
+                </div>
+                <!-- NHA, TLA, Alternate, Equivalency CLOSE-->
                 <!--Exchange and loans Tab  -->
                 <div [ngClass]="{hideTab : currentTab !== 'Exchange'}">
                         <app-item-master-exch-loan  #exchLoan
@@ -1352,7 +1430,7 @@
 
 
     <!--New code for dialogue-->
-    <div id="ModalDashNumber" class="modal fade custom-popup" role="dialog" data-backdrop="static">
+    <div id="ModalDashNumber" class="modal fade custom-popup" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-full">
             <!-- Modal content-->
             <div class="modal-content">
@@ -1500,7 +1578,7 @@
     </div>
     <div id="ModalViewCapes"
          class="modal fade custom-popup"
-          role="dialog" data-backdrop="static">
+          role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-full">
             <!-- Modal content-->
             <form #capeForm="ngForm" >
@@ -2639,7 +2717,7 @@
 
 </ng-template>
 
-<div class="modal fade" id="rro-memo" role="dialog" data-backdrop="static">
+<div class="modal fade" id="rro-memo" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm" style="max-width: 400px !important;">
         <div class="modal-content">
             <div class="modal-header">
@@ -2723,7 +2801,7 @@
 
 </ng-template>
 
-<div id="EditMemo" class="modal fade custom-popup" role="dialog" data-backdrop="static">
+<div id="EditMemo" class="modal fade custom-popup" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">

@@ -218,6 +218,8 @@ namespace DAL
         ISalesOrderQuoteApproverList _salesOrderQuoteApproverListRepository;
 
         ISalesOrderQuotePartRepository _salesOrderQuotePartRepository;
+
+        IMasterSalesOrderQuoteStatusRepository _masterSalesOrderQuoteStatusRepository;
         public UnitOfWork(ApplicationDbContext context, IOptions<AppSettings> appSettings)
         {
             _context = context;
@@ -449,7 +451,7 @@ namespace DAL
             get
             {
                 if (_currencyRepository == null)
-                    _currencyRepository = new CurrencyRepository(_context);
+                    _currencyRepository = new CurrencyRepository(_context, _appSettings);
                 return _currencyRepository;
             }
         }
@@ -1956,6 +1958,16 @@ namespace DAL
                 if (_salesOrderQuotePartRepository == null)
                     _salesOrderQuotePartRepository = new SalesOrderQuotePartRepository(_context);
                 return _salesOrderQuotePartRepository;
+            }
+        }
+
+        public IMasterSalesOrderQuoteStatusRepository MasterSalesOrderQuoteStatusRepository
+        {
+            get
+            {
+                if (_masterSalesOrderQuoteStatusRepository == null)
+                    _masterSalesOrderQuoteStatusRepository = new MasterSalesOrderQuoteStatusRepository(_context);
+                return _masterSalesOrderQuoteStatusRepository;
             }
         }
     }

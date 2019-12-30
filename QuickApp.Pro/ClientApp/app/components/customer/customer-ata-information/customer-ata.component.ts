@@ -58,6 +58,7 @@ export class CustomerATAInformationComponent implements OnInit {
     isDeleteMode: boolean = false;
     public sourceCustomer: any = {}
     customerContactATAMappingId: number;
+    selectedRowForDelete: any;
     //contactList: any;
     constructor(
         private atasubchapter1service: AtaSubChapter1Service,
@@ -345,12 +346,12 @@ export class CustomerATAInformationComponent implements OnInit {
         this.modal.close();
     }
     deleteATAMapping(content, rowData) {
-
+        this.selectedRowForDelete = rowData;
         this.isDeleteMode = true;
 
 
         this.customerContactATAMappingId = rowData.customerContactATAMappingId
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })

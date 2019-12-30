@@ -25,6 +25,7 @@ import { OnInit, AfterViewInit } from '@angular/core/src/metadata/lifecycle_hook
 import { Router, ActivatedRoute } from '@angular/router';
 import { AppTranslationService } from '../../../../services/app-translation.service';
 import { LegalEntityService } from '../../../../services/legalentity.service';
+import { editValueAssignByCondition } from '../../../../generic/autocomplete';
 
 
 
@@ -45,6 +46,13 @@ export class EmployeesManagementStructureComponent implements OnInit,AfterViewIn
     empId: any;
     firstName: any;
     lastName: any;
+    local: any;
+    modal: NgbModalRef;
+    employeeName: string;
+    filteredBrands: any[];
+    localCollection: any[] = [];
+    sourceEmployee: any = {};
+    memoData:any;
 
     dropdownSettings = {
         singleSelection: false,
@@ -57,15 +65,30 @@ export class EmployeesManagementStructureComponent implements OnInit,AfterViewIn
     
     constructor(private router: Router, private route: ActivatedRoute, public employeeService: EmployeeService, private legalEntityService: LegalEntityService, private alertService: AlertService){
 
+       
+        if (this.employeeService.generalCollection) {
+            this.local = this.employeeService.generalCollection;
+        }
+        if (this.employeeService.listCollection && this.employeeService.isEditMode == true) {
+            this.sourceEmployee = this.employeeService.listCollection;
+            this.empId = this.sourceEmployee.employeeId;            
+            this.firstName = editValueAssignByCondition('firstName', this.sourceEmployee.firstName);
+            this.lastName = editValueAssignByCondition('lastName', this.sourceEmployee.lastName);           
+            this.local = this.employeeService.listCollection;
+          
+        }       
     }
 
     ngOnInit(){
-        console.log(this.employeeService.listCollection);
+       // console.log(this.employeeService.listCollection);
         this.structureInit();
         this.loadEmployeeRoles();
-        
+      
         if (this.employeeService.listCollection != null && this.employeeService.isEditMode == true) {
             // this.employeeService.storeEmployeeManagementStructure
+            
+            this.memoText=this.sourceEmployee.memo;
+          
         }
     }
 
@@ -182,8 +205,11 @@ export class EmployeesManagementStructureComponent implements OnInit,AfterViewIn
     }
     
     saveManagementStructure(){
-        this.employeeService.employeeStored['memo'] = this.memoText;
-        this.employeeService.updateEmployee(this.employeeService.employeeStored).subscribe(
+        
+        //this.employeeService.employeeStored['memo'] = this.memoText;
+
+        //this.employeeService.updateEmployee(this.employeeService.employeeStored).subscribe(
+            this.employeeService.updateEmployeeMemo(this.empId,this.memoText).subscribe(
             results => {
                 this.employeeService.storeEmployeeRoles(this.getEmployeeRolesList()).subscribe(
                     (result)=>{

@@ -49,6 +49,7 @@ import { DashNumberService } from "../services/dash-number/dash-number.service";
 import { DashNumberEndpointService } from "../services/dash-number/dash-number-endpoint.service";
 import { TooltipModule } from "primeng/tooltip";
 import {CommonService} from '../services/common.service';
+import { NTAEAlternateComponent } from "../components/item-masters/item-master-stock/ntae-alternate/ntae-alternate.component";
 
 
 @NgModule({
@@ -91,7 +92,8 @@ import {CommonService} from '../services/common.service';
         ItemMasterLoanComponent,
         ItemMasterCreateCapabilitiesComponent,
         ItemMasterCapabilitiesListComponent,
-        ItemMasterExchangeLoanComponent
+        ItemMasterExchangeLoanComponent,
+        NTAEAlternateComponent
 
 
     ],

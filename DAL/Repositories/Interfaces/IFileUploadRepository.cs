@@ -12,5 +12,7 @@ namespace DAL.Repositories.Interfaces
         void DeleteAttachement(List<long> attachmentDetailIds, string deletedBy);
 
         void UploadCustomFile(string moduleName, IFormFile file);
+        IEnumerable<object> GetDocumentDetailById(long id, int moduleId);
+        bool GetDocumentDelete(long id, string updatedBy);
     }
 }

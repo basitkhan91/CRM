@@ -197,13 +197,25 @@ initColumns() {
       partObj.masterCompanyId =  this.part.masterCompanyId;
       partObj.conditionType =  this.part.conditionType;
       partObj.currency =  this.part.currency;
+      partObj.fixRate = this.part.fixRate;
       partObj.salesDiscount = this.part.salesDiscount;
+      partObj.salesDiscountPerUnit = this.part.salesDiscountPerUnit;
+      partObj.salesDiscountExtended = this.part.salesDiscountExtended;
       partObj.unitCostPerUnit = this.part.unitCostPerUnit;
+      partObj.unitCostExtended = this.part.unitCostExtended;
       partObj.markupPerUnit = this.part.markupPerUnit;
+      partObj.markUpPercentage = this.part.markUpPercentage;
+      partObj.markupExtended = this.part.markupExtended;
+      
+      partObj.marginPercentagePerUnit = this.part.marginPercentagePerUnit;
+      partObj.marginAmountExtended = this.part.marginAmountExtended;
+      partObj.marginAmountPerUnit = this.part.marginAmountPerUnit;
       partObj.quantityRequested = this.part.quantityRequested;
       partObj.quantityToBeQuoted = this.part.quantityToBeQuoted;
       partObj.quantityFromThis = this.part.quantityFromThis;
       partObj.quantityAlreadyQuoted =this.part.quantityAlreadyQuoted;
+      partObj.netSalesPriceExtended = this.part.netSalesPriceExtended;
+      
       this.selectedParts.push(partObj);
       this.salesMarginModal.close();
       this.openPartNumber();

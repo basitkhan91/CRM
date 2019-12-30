@@ -42,6 +42,8 @@ namespace QuickApp.Pro.ViewModels
         public DateTime UpdatedDate { get; set; }
         public long? UnitOfMeasureId { get; set; }
 
+        public long? FrequencyOfTrainingId { get; set; }
+
         public MasterCompany MasterCompany { get; set; }
     }
 }

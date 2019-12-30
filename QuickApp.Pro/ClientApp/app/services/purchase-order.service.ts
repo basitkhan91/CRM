@@ -11,17 +11,17 @@ import { PurchaseOrderEndpoint } from './purchase-order-endpoint.service';
 
 @Injectable()
 export class PurchaseOrderService {
-    constructor(
-        private router: Router,
-        private http: HttpClient,
-       	private purchaseOrderEndpoint: PurchaseOrderEndpoint) { let currentUrl = this.router.url; }
-    getPurchaseOrdersBasic() {
-		return Observable.forkJoin(
-			this.purchaseOrderEndpoint.getPurchaseOrderBasicList<any[]>());
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private purchaseOrderEndpoint: PurchaseOrderEndpoint) { let currentUrl = this.router.url; }
+  getPurchaseOrdersBasic() {
+    return Observable.forkJoin(
+      this.purchaseOrderEndpoint.getPurchaseOrderBasicList<any[]>());
   }
-  
+
   /*vendor PO*/
-  getVendorPOById(Id: number) {
+  getVendorPOById(Id: number, ) {
     return this.purchaseOrderEndpoint.getVendorPOById<any>(Id);
   }
 
@@ -30,38 +30,38 @@ export class PurchaseOrderService {
   }
 
   updatePOApproval(action: any) {
-      return this.purchaseOrderEndpoint.updatePOApproval<any>(action);
+    return this.purchaseOrderEndpoint.updatePOApproval<any>(action);
   }
 
-  getPOApproverList(purchaseOrderId){
+  getPOApproverList(purchaseOrderId) {
     return this.purchaseOrderEndpoint.getPOApproverList(purchaseOrderId);
   }
 
-  getPurchaseOrderPartsById(purchaseOrderId){
-    return this.purchaseOrderEndpoint.getPurchaseOrderPartsById(purchaseOrderId);
+  getPurchaseOrderPartsById(purchaseOrderId, workOrderPartNumberId: any) {
+    return this.purchaseOrderEndpoint.getPurchaseOrderPartsById(purchaseOrderId, workOrderPartNumberId);
   }
 
-  getPOStatus(purchaseOrderId, status, updatedBy){
+  getPOStatus(purchaseOrderId, status, updatedBy) {
     return this.purchaseOrderEndpoint.getPOStatus(purchaseOrderId, status, updatedBy);
   }
 
-  getPOHistory(purchaseOrderId){
+  getPOHistory(purchaseOrderId) {
     return this.purchaseOrderEndpoint.getPOHistory(purchaseOrderId);
   }
 
-  deletePO(purchaseOrderId, updatedBy){
+  deletePO(purchaseOrderId, updatedBy) {
     return this.purchaseOrderEndpoint.deletePO(purchaseOrderId, updatedBy);
   }
 
-  getPOViewById(purchaseOrderId){
+  getPOViewById(purchaseOrderId) {
     return this.purchaseOrderEndpoint.getPOViewById(purchaseOrderId);
   }
 
-  getPOPartsViewById(purchaseOrderId){
+  getPOPartsViewById(purchaseOrderId) {
     return this.purchaseOrderEndpoint.getPOPartsViewById(purchaseOrderId);
   }
 
-  purchaseOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId){
+  purchaseOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId) {
     return this.purchaseOrderEndpoint.purchaseOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId);
   }
   /*./vendor PO*/

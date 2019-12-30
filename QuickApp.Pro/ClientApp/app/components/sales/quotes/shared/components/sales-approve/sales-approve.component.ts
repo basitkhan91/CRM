@@ -2,10 +2,10 @@ import { Component } from "@angular/core";
 import { ISalesOrderQuoteApproverList } from '../../../../../../models/sales/ISalesOrderQuoteApproverList';
 import { SalesOrderQuoteApproverList } from '../../../../../../models/sales/SalesOrderQuoteApproverList';
 import { ISalesOrderQuote } from "../../../../../../models/sales/ISalesOrderQuote";
-import { SalesOrderQuote } from "../../../../../../models/sales/SalesOrderQuote";
 import { SalesQuoteService } from "../../../../../../services/salesquote.service";
 import { EmployeeService } from '../../../../../../services/employee.service';
 import { AuthService } from '../../../../../../services/auth.service';
+import { ISalesQuote } from "../../../../../../models/sales/ISalesQuote.model";
 
 @Component({
   selector: "app-sales-approve",
@@ -14,6 +14,7 @@ import { AuthService } from '../../../../../../services/auth.service';
 })
 export class SalesApproveComponent {
   selectedApprover1: any;
+  salesOrderQuote: ISalesOrderQuote;
   approvers: any[];
   allEmployeeinfo: any[] = [];
   employeeList: any[] = [];
@@ -23,18 +24,27 @@ export class SalesApproveComponent {
  
   }
   ngOnInit(): void {
+
+    this.salesQuoteService
+    .getSalesOrderQuteInstance()
+    .subscribe(data => {
+      this.salesOrderQuote = data;
+      this.getApprovers();
+    });
+   
+    this.getEmployeedata();
+  }
+  private getApprovers() {
     this.salesQuoteService
     .getSalesOrderQuteApprovers()
     .subscribe(data => {
       this.approvers = data;
-      this.approvers.push(new SalesOrderQuoteApproverList());
-      this.approvers.push(new SalesOrderQuoteApproverList());
-      this.approvers.push(new SalesOrderQuoteApproverList());
-      this.approvers.push(new SalesOrderQuoteApproverList());
-      this.approvers.push(new SalesOrderQuoteApproverList());
+      if(!this.salesOrderQuote.salesOrderQuoteId){
+       
+      }
+     
     });
-    this.getEmployeedata();
-	}
+  }
 
   private getEmployeedata() {
     this.employeeService.getEmployeeList().subscribe(

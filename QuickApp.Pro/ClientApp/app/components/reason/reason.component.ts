@@ -217,7 +217,7 @@ export class ReasonComponent {
         this.sourceAction.isActive = true;
         this.reasonName = "";
 
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
 
 
@@ -236,13 +236,13 @@ export class ReasonComponent {
         this.createdDate = row.createdDate;
         this.updatedDate = row.updatedDate;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
     openHelpText(content) {
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -253,7 +253,7 @@ export class ReasonComponent {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -271,7 +271,7 @@ export class ReasonComponent {
         this.sourceAction = row;
         this.reasonName = this.sourceAction.reasonCode;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -494,7 +494,7 @@ export class ReasonComponent {
 
     showAuditPopup(template, id): void {
         this.auditAssetStatus(id);
-        this.modal = this.modalService.open(template, { size: 'sm' });
+        this.modal = this.modalService.open(template, { size: 'sm', backdrop: 'static', keyboard: false });
     }
 
     auditAssetStatus(reasonId: number): void {

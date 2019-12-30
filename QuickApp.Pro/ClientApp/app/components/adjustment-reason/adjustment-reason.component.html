@@ -114,7 +114,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     </div>
 </div>
 
-<ng-template #view class="modal fade " id="view" role="dialog" data-backdrop="static">
+<ng-template #view class="modal fade " id="view" role="dialog">
 
     <div class="modal-content">
         <div class="modal-header">
@@ -259,7 +259,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
 
 
 
-<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static">
+<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->

@@ -335,7 +335,7 @@ export class VendorsListComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.auditHisory = auditHistory;
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -352,7 +352,7 @@ export class VendorsListComponent implements OnInit {
         this.isSaving = true;
         this.loadMasterCompanies();
         this.actionName = "";
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -372,7 +372,7 @@ export class VendorsListComponent implements OnInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceVendor = rowData;
-        this.modal = this.modalService.open(content1, { size: 'sm' });
+        this.modal = this.modalService.open(content1, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -628,13 +628,13 @@ export class VendorsListComponent implements OnInit {
         this.loadWarningsData(row.vendorId);
         this.loadMemosData(row.vendorId);
         this.loadVendorDocumentsData(row.vendorId);
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
     openHelpText(content) {
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -743,7 +743,7 @@ export class VendorsListComponent implements OnInit {
         this.createddate = row.createdDate;
         this.updatedDate = row.updatedDate;
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -763,7 +763,7 @@ export class VendorsListComponent implements OnInit {
     }
     openViewforfinance(content, row) {
         this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -800,7 +800,7 @@ export class VendorsListComponent implements OnInit {
     }
     openContactList(content, row) {
         this.selectedRow = row;
-        this.modal = this.modalService.open(content, { size: 'lg' });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })

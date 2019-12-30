@@ -92,7 +92,7 @@ export class CreateAssetComponent implements OnInit {
                 this.assetService.listCollection = null;
                 this.assetService.currentUrl = '/assetmodule/assetpages/app-create-asset';
         }
-        if (this.assetService.listCollection == undefined) {
+        if (this.assetService.listCollection == undefined && this.AssetId != null) {
             this.GetAssetData(this.AssetId);
         }
         if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
@@ -135,7 +135,7 @@ export class CreateAssetComponent implements OnInit {
     ngOnInit() {
 
         this.AssetId = this.router.snapshot.params['id'];
-        if (this.assetService.listCollection == undefined) {
+        if (this.assetService.listCollection == undefined && this.AssetId != null) {
             this.GetAssetData(this.AssetId);
         }
 		if (this.AssetId) {
@@ -222,7 +222,7 @@ export class CreateAssetComponent implements OnInit {
         this.getAssetsList();
         this.assetService.alertObj.next(this.assetService.ShowPtab); //steps
         this.activeIndex = 0;
-        this.loadManagementdata();
+        //this.loadManagementdata();
         this.manufacturerdata();
         this.unitOfMeasureList();
         this.CurrencyData();
@@ -694,7 +694,8 @@ export class CreateAssetComponent implements OnInit {
         if (this.currentAsset.isDepreciable == true) {
             if (!(this.currentAsset.assetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
                 && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId
-                && this.currentAsset.companyId && this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId)) {
+                && this.currentAsset.companyId // && this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId
+            )) {
                 this.display = true;
                 this.modelValue = true;
             }
@@ -704,7 +705,8 @@ export class CreateAssetComponent implements OnInit {
 
             if (this.currentAsset.isIntangible == true) {
                 if (!(this.currentAsset.assetId && this.currentAsset.alternateAssetId && this.currentAsset.name && this.currentAsset.assetIntangibleTypeId
-                    && this.currentAsset.companyId && this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId)) {
+                    && this.currentAsset.companyId // && this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId
+                )) {
                     this.display = true;
                     this.modelValue = true;
                 }

@@ -327,7 +327,7 @@ namespace DAL
         public DbSet<PublicationAudit> PublicationAudit { get; set; }
         public DbSet<ReasonAudit> ReasonAudit { get; set; }
         public DbSet<SiteAudit> SiteAudit { get; set; }
-        public DbSet<TaxRatesAudit> TaxRateAudit { get; set; }
+        public DbSet<TaxRatesAudit> TaxRatesAudit { get; set; }
 
         //public DbSet<UnitOfMeasureAudit> UnitOfMeasureAudit { get; set; }
         public DbSet<VendorClassificationAudit> VendorClassificationAudit { get; set; }
@@ -390,6 +390,7 @@ namespace DAL
         public DbSet<AssetCapesAudit> AssetCapesAudit { get; set; }
 
         public DbSet<CustomerInternationalShipping> CustomerInternationalShipping { get; set; }
+        public DbSet<CustomerInternationalShippingAudit> CustomerInternationalShippingAudit { get; set; }
         public DbSet<ShippingViaDetails> ShippingViaDetails { get; set; }
         public DbSet<CustomerDocumentDetail> CustomerDocumentDetails { get; set; }
         public DbSet<Attachment> Attachment { get; set; }
@@ -424,9 +425,10 @@ namespace DAL
 
 
         public DbSet<Dropdowns> Dropdowns { get; set; }
-        public DbSet<Percentage> Percentage { get; set; }
+        public DbSet<Percentage> Percent { get; set; }
+        public DbSet<PercentageAudit> PercentAudit { get; set; }
         public DbSet<AssetIntangibleAttributeType> AssetIntangibleAttributeType { get; set; }
-        public DbSet<Percent> Percent { get; set; }
+       // public DbSet<Percent> Percent { get; set; }
         public DbSet<PurchaseOrderApprover> PurchaseOrderApprover { get; set; }
         public DbSet<PurchaseOrderApproverList> PurchaseOrderApproverList { get; set; }
         public DbSet<POBillingShippingAddress> POBillingShippingAddress { get; set; }
@@ -476,6 +478,9 @@ namespace DAL
         public DbSet<DAL.Models.Sales.SalesOrderQuotePart> SalesOrderQuotePart { get; set; }
         public DbSet<Master1099Audit> Master1099Audit { get; set; }
         public DbSet<TagType> TagType { get; set; }
+        public DbSet<CustomerAircraftMappingAudit> CustomerAircraftMappingAudit { get; set; }
+        
+        public DbSet<Models.Sales.MasterSalesOrderQuoteStatus> MasterSalesOrderQuoteStatus { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

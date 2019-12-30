@@ -593,4 +593,18 @@ export class CustomerService {
     updatecustomeraircraft(customercntct: any, customerAircraftId: any) {
         return this.customerEndpoint.getUpdateAircraft(customercntct, customerAircraftId);
     }
+
+    getCustomerHistory(customerId) {
+        return this.customerEndpoint.getCustomerHistory(customerId)
+    }
+    getMappedAirCraftDetailsAudit(customerAircraftMappingId: number) {
+        return this.customerEndpoint.getAircraftMappingEndpointAudit<any>(customerAircraftMappingId);
+    }
+
+    getCustomerShippingHistory(customerId, customerShippingAddressId) {
+        return this.customerEndpoint.getCustomerShippingHistory(customerId, customerShippingAddressId)
+    }
+    getCustomerInterShippingHistory(customerId, customerInterShippingId) {
+        return this.customerEndpoint.getCustomerInterShippingHistory(customerId, customerInterShippingId)
+    }
 }

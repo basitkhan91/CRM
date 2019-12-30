@@ -40,7 +40,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
     taxrateList: any;
     state_taxRateList: any;
     id: number;
-    legalEntityId :number;
+    legalEntityId: number;
+    selectedRowForDelete: any;
     intergationNew = {
         allowPartialBilling: true,
         allowProformaBilling: true,
@@ -782,9 +783,10 @@ export class CustomerFinancialInformationComponent implements OnInit {
         
         this.isDeleteMode = true;
         this.localcollection = rowData;
+        this.selectedRowForDelete = rowData;
         
         this.customerTaxRateMappingId = rowData.customerTaxTypeRateMappingId;
-        this.modal = this.modalService.open(content, { size: 'sm' });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })

@@ -540,6 +540,7 @@ namespace QuickApp.Pro.Controllers
                     itemmaserObj.MasterCompanyId = 1;
                     itemmaserObj.IsActive = true;
                     itemmaserObj.PartNumber = itemMasterViewModel.PartNumber;
+                    itemmaserObj.RevisedPartId = itemMasterViewModel.RevisedPartId;
 
                     itemmaserObj.oemPNId = itemMasterViewModel.oemPNId;
                     itemmaserObj.PartDescription = itemMasterViewModel.Partdescription;
@@ -1650,65 +1651,65 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
-        [ApiExplorerSettings(IgnoreApi = true)]
-        [HttpPost]
-        public IActionResult CreateNhaTlaAltEquItemMapping(Nha_Tla_Alt_Equ_ItemMapping model)
+        
+        [HttpPost("createnhatlaaltequpart")]
+        public IActionResult CreateNhaTlaAltEquPart([FromBody]Nha_Tla_Alt_Equ_ItemMapping model)
         {
             if (ModelState.IsValid)
             {
                 if (model == null)
                     return BadRequest($"{nameof(model)} cannot be null");
-                _context.Nha_Tla_Alt_Equ_ItemMapping.Add(model);
-                _context.SaveChanges();
+
+                var result=_unitOfWork.itemMaster.CreateNhaTlaAltEquPart(model);
+                return Ok(result);
             }
             return Ok(ModelState);
         }
 
-        [ApiExplorerSettings(IgnoreApi = true)]
-        [HttpPost]
-        public IActionResult UpdateNhaTlaAltEquItemMapping(Nha_Tla_Alt_Equ_ItemMapping model)
+        [HttpPost("updatenhatlaaltequpart")]
+        public IActionResult UpdateNhaTlaAltEquPart([FromBody]Nha_Tla_Alt_Equ_ItemMapping model)
         {
             if (ModelState.IsValid)
             {
                 if (model == null)
                     return BadRequest($"{nameof(model)} cannot be null");
-                _context.Nha_Tla_Alt_Equ_ItemMapping.Update(model);
-                _context.SaveChanges();
+
+                var result = _unitOfWork.itemMaster.UpdateNhaTlaAltEquPart(model);
+                return Ok(result);
             }
             return Ok(ModelState);
         }
-
-        [ApiExplorerSettings(IgnoreApi = true)]
-        [HttpGet]
-        public IActionResult DeleteNhaTlaAltEquItemMapping(long id, string updatedBy)
+        
+        [HttpPost("nhatlaaltequpartlist")]
+        public IActionResult NhaTlaAltEquPartList([FromBody]Filters<NhaAltEquFilters> filters)
         {
-            _unitOfWork.itemMaster.DeleteNhaTlaAltEquItemMapping(id, updatedBy);
-            return Ok();
-        }
-
-        [ApiExplorerSettings(IgnoreApi = true)]
-        [HttpGet]
-        public IActionResult NhaTlaAltEquItemMappingStatus(long id, bool status, string updatedBy)
-        {
-            _unitOfWork.itemMaster.NhaTlaAltEquItemMappingStatus(id, status, updatedBy);
-            return Ok();
-        }
-
-        [ApiExplorerSettings(IgnoreApi = true)]
-        [HttpGet]
-        public IActionResult NhaTlaAltEquItemMappingList(int mappingType, int pageNumber, int pageSize)
-        {
-            var result = _unitOfWork.itemMaster.NhaTlaAltEquItemMappingList(mappingType, pageNumber, pageSize);
+            var result = _unitOfWork.itemMaster.NhaTlaAltEquPartList(filters);
             return Ok(result);
         }
 
-        [ApiExplorerSettings(IgnoreApi = true)]
-        [HttpGet]
-        public IActionResult NhaTlaAltEquItemMappingById(long itemMappingId, int mappingType)
+        [HttpGet("deletenhatlaaltequpart")]
+        public IActionResult DeleteNhaTlaAltEquPart(long mappingId, string updatedBy)
         {
-            var result = _unitOfWork.itemMaster.NhaTlaAltEquItemMappingById(itemMappingId, mappingType);
+            _unitOfWork.itemMaster.DeleteNhaTlaAltEquPart(mappingId, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("nhatlaaltequpartstatus")]
+        public IActionResult NhaTlaAltEquPartStatus(long mappingId, bool status, string updatedBy)
+        {
+            _unitOfWork.itemMaster.NhaTlaAltEquPartStatus(mappingId, status, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("getalterqquparts")]
+        public IActionResult GetAlterEquParts(long itemMasterId)
+        {
+           var result= _unitOfWork.itemMaster.GetAlterEquParts(itemMasterId);
             return Ok(result);
         }
+
+
+
 
         [HttpGet("GetpartdetailsWithid/{partsList}")]
         public Object getPartwithid(string partsList)

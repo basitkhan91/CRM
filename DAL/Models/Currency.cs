@@ -10,7 +10,7 @@ namespace DAL.Models
     {
         [Key]
         public Int32 CurrencyId { get; set; }
-
+         
         public string Code { get; set; }
 
         public string Symbol { get; set; }
@@ -29,6 +29,9 @@ namespace DAL.Models
 
         public virtual MasterCompany MasterCompany { get; set; }
         public bool? IsDeleted { get; set; }
+
+        [NotMapped]
+        public string UploadStatus { get; set; }
 
 
     }

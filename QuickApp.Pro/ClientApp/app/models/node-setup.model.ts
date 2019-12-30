@@ -4,6 +4,7 @@
     nodeCode: string;
     nodeName: string;
     parentNodeId: number;
+    parentNodeName: string;
     leafNodeCheck: boolean;
     GLAccountNodeType: string;
     fsType: boolean;
