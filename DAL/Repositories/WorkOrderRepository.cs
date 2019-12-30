@@ -222,9 +222,9 @@ namespace DAL.Repositories
             short workOrderTypeId = 0;
 
             var open = "open";
-            var pending = "pending";
-            var fulfilling = "fulfilling";
+            var canceled = "canceled";
             var closed = "closed";
+            var all = "all";
 
             var customer = "customer";
             var shopinternal = "internal";
@@ -237,7 +237,7 @@ namespace DAL.Repositories
                 {
                     statusId = 1;
                 }
-                else if (pending.Contains(woFilters.filters.WorkOrderStatus.ToLower()))
+                else if (canceled.Contains(woFilters.filters.WorkOrderStatus.ToLower()))
                 {
                     statusId = 3;
                 }
@@ -246,9 +246,9 @@ namespace DAL.Repositories
                 {
                     statusId = 2;
                 }
-                else if (fulfilling.Contains(woFilters.filters.WorkOrderStatus.ToLower()))
+                else if (all.Contains(woFilters.filters.WorkOrderStatus.ToLower()))
                 {
-                    statusId = 4;
+                    statusId = 0;
                 }
             }
 
@@ -352,8 +352,8 @@ namespace DAL.Repositories
             short workOrderTypeId = 0;
 
             var open = "open";
-            var pending = "pending";
-            var fulfilling = "fulfilling";
+            var canceled = "canceled";
+            var all = "all";
             var closed = "closed";
 
             var customer = "customer";
@@ -367,17 +367,17 @@ namespace DAL.Repositories
                 {
                     statusId = 1;
                 }
-                else if (pending.Contains(filterText.ToLower()))
-                {
-                    statusId = 2;
-                }
-                else if (fulfilling.Contains(filterText.ToLower()))
+                else if (canceled.Contains(filterText.ToLower()))
                 {
                     statusId = 3;
                 }
+                else if (all.Contains(filterText.ToLower()))
+                {
+                    statusId = 0;
+                }
                 else if (closed.Contains(filterText.ToLower()))
                 {
-                    statusId = 4;
+                    statusId = 2;
                 }
 
                 if (customer.Contains(filterText.ToLower()))
@@ -2164,7 +2164,10 @@ namespace DAL.Repositories
                                                   wom.ExtendedPrice,
                                                   wom.WorkOrderMaterialsId,
                                                   wom.WorkFlowWorkOrderId,
-                                                  wom.WorkOrderId
+                                                  wom.WorkOrderId,
+                                                  im.ItemMasterId,
+                                                  im.ItemClassificationId,
+                                                  im.PurchaseUnitOfMeasureId
                                               }).Distinct().ToList();
 
                 return workOrderMaterialsList;
@@ -4184,12 +4187,18 @@ namespace DAL.Repositories
                             select new
                             {
                                 sl.ItemMasterId,
-                                sl.PartNumber,
+                                im.PartNumber,
                                 im.PartDescription,
                                 im.DER,
                                 PMA = im.isPma,
-                                NTE = (im.OverhaulHours == null ? 0 : im.OverhaulHours) + (im.RPHours == null ? 0 : im.RPHours) + (im.mfgHours == null ? 0 : im.mfgHours) + (im.TestHours == null ? 0 : im.TestHours),
-                                TatDaysStandard = (im.TurnTimeOverhaulHours == null ? 0 : im.TurnTimeOverhaulHours) + (im.TurnTimeRepairHours == null ? 0 : im.TurnTimeRepairHours) + (im.turnTimeMfg == null ? 0 : im.turnTimeMfg) + (im.turnTimeBenchTest == null ? 0 : im.turnTimeBenchTest),
+                                NTEOverhaulHours = im.OverhaulHours == null ? 0 : im.OverhaulHours,
+                                NTERepairHours=im.RPHours == null ? 0 : im.RPHours,
+                                NTEMfgHours=im.mfgHours == null ? 0 : im.mfgHours,
+                                NTEBenchTestHours=im.TestHours == null ? 0 : im.TestHours,
+                                TurnTimeOverhaulHours=im.TurnTimeOverhaulHours == null ? 0 : im.TurnTimeOverhaulHours,
+                                TurnTimeRepairHours=im.TurnTimeRepairHours == null ? 0 : im.TurnTimeRepairHours,
+                                TurnTimeMfg=im.turnTimeMfg == null ? 0 : im.turnTimeMfg,
+                                TurnTimeBenchTest=im.turnTimeBenchTest == null ? 0 : im.turnTimeBenchTest,
                                 RevisedPartId = im.RevisedPartId == null ? 0 : im.RevisedPartId,
                                 RevisedPartNo = im.RevisedPartId == null ? "" : (_appContext.ItemMaster.Where(p => p.ItemMasterId == im.RevisedPartId).Select(p => p.PartNumber).FirstOrDefault().ToString())
                             })
