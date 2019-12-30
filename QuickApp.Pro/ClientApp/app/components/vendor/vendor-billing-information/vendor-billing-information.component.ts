@@ -458,6 +458,7 @@ export class VendorBillingInformationComponent {
                     this.updatedCollection = data;
                     this.loadData();
                     this.sourceVendor = {};
+                    this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
                 })
             }
 
