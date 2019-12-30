@@ -176,12 +176,12 @@ namespace DAL.Repositories
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 DAL.Models.ATAChapter aTAChapter = new DAL.Models.ATAChapter();               
                 aTAChapter.ATAChapterName = atachapterName;
                 aTAChapter.Memo = memo;
-                aTAChapter.UploadStatus = "Failed";
+                aTAChapter.UploadStatus = ex.InnerException.Message;
                 ATAChapters.Add(aTAChapter);
             }
             return ATAChapters;

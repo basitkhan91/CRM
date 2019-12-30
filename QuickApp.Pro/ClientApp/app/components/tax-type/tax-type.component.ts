@@ -127,6 +127,7 @@ export class TaxTypeComponent implements OnInit {
     addNew = { ...this.new };
     selectedRecordForEdit: any;
     viewRowData: any;
+    disableSaveTaxtypeMsg:boolean;
     selectedRowforDelete: any;
     // originalData: any;
     existingRecordsResponse = []
@@ -232,9 +233,11 @@ export class TaxTypeComponent implements OnInit {
         console.log(exists);
         if (exists.length > 0) {
             this.disableSaveTaxtype = true;
+            this.disableSaveTaxtypeMsg = true;
         }
         else {
             this.disableSaveTaxtype = false;
+            this.disableSaveTaxtypeMsg = false;
         }
 
     }
@@ -254,7 +257,7 @@ export class TaxTypeComponent implements OnInit {
         }
         else {
             this.disableSaveTaxtype = false;
-        }
+       }
         
     }
 
@@ -303,7 +306,8 @@ export class TaxTypeComponent implements OnInit {
     edit(rowData) {
         console.log(rowData);
         this.isEdit = true;
-        this.disableSaveTaxtype = false;
+        this.disableSaveTaxtype = true;
+        this.disableSaveTaxtypeMsg = false;
 
 
 
@@ -372,23 +376,23 @@ export class TaxTypeComponent implements OnInit {
     }
 
     onBlur(event) {
-        //console.log(event.target.value);
-        //console.log(this.addNew);
-        
         const value = event.target.value;
-        this.disableSaveTaxtype = false;
+        this.disableSaveTaxtypeMsg = false;
         for (let i = 0; i < this.originalData.length; i++) {
             let description = this.originalData[i].description;
             let taxTypeId = this.originalData[i].taxTypeId;
             if (description.toLowerCase() == value.toLowerCase()) {
-                if (!this.isEdit) {
+                if (!this.isEdit || this.isEdit) {
                     this.disableSaveTaxtype = true;
+                    this.disableSaveTaxtypeMsg = true;
                 }
                 else if (taxTypeId != this.selectedRecordForEdit.taxTypeId) {
-                    this.disableSaveTaxtype = true;
+                    this.disableSaveTaxtype = false;
+                    this.disableSaveTaxtypeMsg = true;
                 }
                 else {
                     this.disableSaveTaxtype = false;
+                    this.disableSaveTaxtypeMsg = false;
                 }
                 console.log('description :', description);
                 break;

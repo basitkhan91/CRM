@@ -57,6 +57,7 @@ export class AtaMainComponent implements OnInit {
     disableSaveGroupId: boolean = false;
     PortalList: any;
     disableSaveForDescription: boolean = false;
+    disableSaveForDescriptionMsg: boolean = false;
     descriptionList: any;
 
     new = {
@@ -134,11 +135,11 @@ export class AtaMainComponent implements OnInit {
                      );
                  }   
 
-                 if (result === "Failed") {
+                 if (result != "Duplicate" && result != "Success") {
                      this.alertService.showMessage(
                          'Failed',
-                         `Failed `,
-                         MessageSeverity.success
+                         result,
+                         MessageSeverity.warn
                      );
                  }   
                  this.getList();  
@@ -175,9 +176,11 @@ export class AtaMainComponent implements OnInit {
         const exists = validateRecordExistsOrNot(field, value, this.originalData, this.selectedRecordForEdit);
         if (exists.length > 0) {
             this.disableSaveForDescription = true;
+            this.disableSaveForDescriptionMsg = true;
         }
         else {
             this.disableSaveForDescription = false;
+            this.disableSaveForDescriptionMsg = false;
         }
 
     }
@@ -193,6 +196,32 @@ export class AtaMainComponent implements OnInit {
         const exists = selectedValueValidate('ataChapterName', object, this.selectedRecordForEdit)
 
         this.disableSaveForDescription = !exists;
+    }
+
+    onBlur(event) {
+        const value = event.target.value;
+        this.disableSaveForDescriptionMsg = false;
+        for (let i = 0; i < this.originalData.length; i++) {
+            let ataChapterName = this.originalData[i].ataChapterName;
+            let ataChapterId = this.originalData[i].ataChapterId;
+            if (ataChapterName.toLowerCase() == value.toLowerCase()) {
+                if (!this.isEdit || this.isEdit) {
+                    this.disableSaveForDescription = true;
+                    this.disableSaveForDescriptionMsg = true;
+                }
+                else if (ataChapterId != this.selectedRecordForEdit.ataChapterId) {
+                    this.disableSaveForDescription = false;
+                    this.disableSaveForDescriptionMsg = true;
+                }
+                else {
+                    this.disableSaveForDescription = false;
+                    this.disableSaveForDescriptionMsg = false;
+                }
+                console.log('ataChapterName :', ataChapterName);
+                break;
+            }
+        }
+
     }
 
     save() {
@@ -237,9 +266,8 @@ export class AtaMainComponent implements OnInit {
         console.log(rowData);
         this.isEdit = true;
         this.disableSaveGroupId = false;
-        this.disableSaveForDescription = false;
-
-
+        this.disableSaveForDescription = true;
+        this.disableSaveForDescriptionMsg = false;
         this.addNew = {
             ...rowData,
             ataChapterName: getObjectByValue('ataChapterName', rowData.ataChapterName, this.originalData),
