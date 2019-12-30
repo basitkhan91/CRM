@@ -42,6 +42,8 @@ export class CustomerShippingInformationComponent implements OnInit {
     public sourceCustomer: any = {}
     internationalShippingId: number;
     shippingauditHisory: any[];
+    shippingViaauditHisory: any[];
+    intershippingViaauditHisory: any[];
     interShippingauditHisory: any[];
     domesticShippingHeaders = [
         { field: 'siteName', header: 'Site Name' },
@@ -793,6 +795,71 @@ export class CustomerShippingInformationComponent implements OnInit {
         }
     }
 
+    openShipViaHistory(content, rowData) {
+        //const { customerShippingAddressId } = rowData.customerShippingAddressId;
+        //const { customerShippingId } = rowData.customerShippingId;
+       this.alertService.startLoadingMessage();
+
+        this.customerService.getCustomerShipViaHistory(this.id, rowData.customerShippingAddressId, rowData.customerShippingId).subscribe(
+            results => this.onAuditShipViaHistoryLoadSuccessful(results, content),
+            error => this.saveFailedHelper(error));
+    }
+    private onAuditShipViaHistoryLoadSuccessful(auditHistory, content) {
+        this.alertService.stopLoadingMessage();
+
+
+        this.shippingViaauditHisory = auditHistory;
+
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    getColorCodeForShipViaHistory(i, field, value) {
+        const data = this.shippingViaauditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+
+    openInterShipViaHistory(content, rowData) {
+        //const { customerShippingAddressId } = rowData.customerShippingAddressId;
+        //const { customerShippingId } = rowData.customerShippingId;
+        this.alertService.startLoadingMessage();
+
+        this.customerService.getCustomerInterShipViaHistory(this.id, rowData.internationalShippingId, rowData.shippingViaDetailsId).subscribe(
+            results => this.onAuditInterShipViaHistoryLoadSuccessful(results, content),
+            error => this.saveFailedHelper(error));
+    }
+    private onAuditInterShipViaHistoryLoadSuccessful(auditHistory, content) {
+        this.alertService.stopLoadingMessage();
+
+
+        this.intershippingViaauditHisory = auditHistory;
+
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    getColorCodeForInterShipViaHistory(i, field, value) {
+        const data = this.intershippingViaauditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
 
 
     // countryName: string;

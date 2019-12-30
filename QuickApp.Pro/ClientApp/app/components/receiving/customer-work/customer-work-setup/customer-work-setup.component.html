@@ -112,7 +112,7 @@
                                         <label class="control-label col-sm-4">Contact<strong class="clr-red">*</strong></label>
                                         <div class="col-sm-8">
 
-                                            <select style="border-radius:5px;" sstyle="font-size: 1px" [(ngModel)]="sourcereceving.contactId" [ngModelOptions]="{standalone: true}" (change)="customerContactChange(sourcereceving.contactId)" required> 
+                                            <select style="border-radius:5px;" sstyle="font-size: 1px" [(ngModel)]="sourcereceving.customerContactId" [ngModelOptions]="{standalone: true}" (change)="customerContactChange(sourcereceving.customerContactId)" required> 
                                                 <option>--Select</option>
                                                 <option *ngFor="let contact of customerContactList" [ngValue]="contact.contactId">{{contact.contactTitle}}</option>
                                             </select>

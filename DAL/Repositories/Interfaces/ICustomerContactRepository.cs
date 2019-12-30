@@ -10,7 +10,7 @@ namespace DAL.Repositories
     {
         IEnumerable<CustomerContact> GetCustomerContact();
 
-		IEnumerable<object> GetCustomerContactAuditDetails(long customercontactId);
+		IEnumerable<object> GetCustomerContactAuditDetails(long customercontactId,long customerId);
 
 
 		//  void CreateAction(DAL.Models.Action action);

@@ -55,7 +55,7 @@
                                 <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
                             </div>
                             <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-                            <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedrowsFromDomestic" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
+                            <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only"  (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
 
                             <div class="excel-upload excel-upload-cstm">
                                 <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
@@ -534,13 +534,13 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                               </div>
+                            </div>
                             <div class="form-group" style="margin-top: 15px;">
                                 <div class="checkbox-cstm" style="margin-left: 0;">
                                     <label>
                                         <input type="checkbox" checked id="isPrimary" name="isPrimary" [(ngModel)]="domesticShippingInfo.isPrimary">
                                         <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                       Primary
+                                        Primary
                                     </label>
                                 </div>
                             </div>
@@ -554,6 +554,52 @@
             </form>
         </div>
     </div>
+    <ng-template #contentAuditHistShipVia let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
+        <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
+        <div class="modal-header">
+
+            <h4 class="modal-title">History of  Ship Via  Info</h4>
+            <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+
+        </div>
+        <div class="modal-body">
+
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Ship Via</th>
+                            <th>Shipping Account Info</th>
+                            <th>Memo</th>
+                            <th>Updated By</th>
+                            <th>Last Updated Time</th>
+                            <th>Created By</th>
+                            <th>Created Time</th>
+
+                        </tr>
+                    </thead>
+
+
+                    <tr *ngFor="let audit of shippingViaauditHisory; let i = index;">
+                        <td [ngStyle]="{'color':  getColorCodeForShipViaHistory(i, 'shipVia', audit.shipVia)  ? 'black' : 'red'  }">{{audit.shipVia}}</td>
+                        <td [ngStyle]="{'color':  getColorCodeForShipViaHistory(i, 'shippingAccountInfo', audit.shippingAccountInfo)  ? 'black' : 'red'  }">{{audit.shippingAccountInfo}}</td>
+                        <td [ngStyle]="{'color':  getColorCodeForShipViaHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>
+                       
+                        <td>{{audit.updatedBy}}</td>
+                        <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                        <td>{{audit.createdBy}}</td>
+                        <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+        </div>
+    </ng-template>
 </div>
 
 <div class="modal fade" id="addInternationalShippingInfo" role="dialog" data-backdrop="static">
@@ -751,7 +797,7 @@
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
 
-                                <button class="btn-history" mat-icon-button matTooltip="history">
+                                <button class="btn-history" mat-icon-button matTooltip="history" (click)="openShipViaHistory(contentAuditHistShipVia,rowData)">
                                     <mat-icon color="green">history</mat-icon>
                                 </button>
 
@@ -784,6 +830,52 @@
         <div class="modal-footer">
             <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel2()">Yes</button>
             <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+        </div>
+    </ng-template>
+    <ng-template #contentAuditHistInterShipVia let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
+        <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
+        <div class="modal-header">
+
+            <h4 class="modal-title">History of International  Ship Via  Info</h4>
+            <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+
+        </div>
+        <div class="modal-body">
+
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Ship Via</th>
+                            <th>Shipping Account Info</th>
+                            <th>Memo</th>
+                            <th>Updated By</th>
+                            <th>Last Updated Time</th>
+                            <th>Created By</th>
+                            <th>Created Time</th>
+
+                        </tr>
+                    </thead>
+
+
+                    <tr *ngFor="let audit of intershippingViaauditHisory; let i = index;">
+                        <td [ngStyle]="{'color':  getColorCodeForInterShipViaHistory(i, 'shipVia', audit.shipVia)  ? 'black' : 'red'  }">{{audit.shipVia}}</td>
+                        <td [ngStyle]="{'color':  getColorCodeForInterShipViaHistory(i, 'shippingAccountInfo', audit.shippingAccountInfo)  ? 'black' : 'red'  }">{{audit.shippingAccountInfo}}</td>
+                        <td [ngStyle]="{'color':  getColorCodeForInterShipViaHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>
+
+                        <td>{{audit.updatedBy}}</td>
+                        <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                        <td>{{audit.createdBy}}</td>
+                        <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
         </div>
     </ng-template>
 
@@ -925,7 +1017,7 @@
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
 
-                                <button class="btn-history" mat-icon-button matTooltip="history">
+                                <button class="btn-history" mat-icon-button matTooltip="history" (click)="openInterShipViaHistory(contentAuditHistInterShipVia,rowData)">
                                     <mat-icon color="green">history</mat-icon>
                                 </button>
                             </td>

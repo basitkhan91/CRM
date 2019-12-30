@@ -18,11 +18,12 @@ const accountingPagesRoutes: Routes = [
         component: AccountingPagesComponent,
         children: [
             { path: "app-view-batch", component: ViewBatchTsComponent, data: { title: "ViewBatch" } },
-            { path: "app-create-batch", component: CreateBatchComponent, data: { title: "CreateBatch" } },
-            { path: "app-create-journel", component: CreateJournelComponent, data: { title: "CreateJournel" } },
+            { path: "app-create-batch", component: CreateBatchComponent, data: { title: "CreateBatch" } },            
             { path: "app-import", component: ImportComponent, data: { title: "import Component" } },
-            { path: "app-schedule", component: ScheduleComponent, data: { title: "Schedule Component" } },
-            { path: "app-list-journel", component: ListJournelComponent, data: { title: "journel List Component" } },
+            
+            { path: "app-list-journel", component: ListJournelComponent, data: { title: "Journel List" } },
+            { path: "app-create-journel", component: CreateJournelComponent, data: { title: "Create Journel" } },            
+            { path: "app-schedule", component: ScheduleComponent, data: { title: "Schedule" } },
         ]
     }
 ];

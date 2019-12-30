@@ -412,7 +412,7 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
                     // role => this.saveSuccessHelper(role),
                     // error => this.saveFailedHelper(error)
                     const vdata = {                           
-                        employeeId:this.empId,
+                        referenceId:this.empId,
                         masterCompanyId: 1,
                         createdBy: this.userName,
                         updatedBy: this.userName,
@@ -453,7 +453,7 @@ export class EmployeeTrainingComponent implements OnInit, AfterViewInit {
                         //     updatedBy: this.userName
                         // }
                         const vdata = {                           
-                            employeeId:this.empId,
+                            referenceId:this.empId,
                             masterCompanyId: 1,
                             createdBy: this.userName,
                             updatedBy: this.userName,

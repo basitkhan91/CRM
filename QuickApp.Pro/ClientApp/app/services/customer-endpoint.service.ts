@@ -149,8 +149,11 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _customerHistory: string = "/api/Customer/GetCustomerAuditHistoryByid"
     private readonly _customerShippingHistory: string = "/api/Customer/getCustomerShippingHistory"
     private readonly _customerInterShippingHistory: string = "/api/Customer/GetCustomerInternationalShippingAuditHistoryByid";
+    private readonly _customerShipViaHistory: string = "/api/Customer/GetShipViaAudit"
+    private readonly _customerInterShipViaHistory: string = "/api/Customer/getauditshippingviadetailsbyid"
+    private readonly _getCustomerDocumentHistory: string = "/api/Customer/getCustomerDocumentAudit"
 
-
+    
     get globalSearch() { return this.configurations.baseUrl + this.getGlobalCustomer; }
     get paginate() { return this.configurations.baseUrl + this.getCustomer; }
     get customerBillAddressUrl() { return this.configurations.baseUrl + this._customerBillAddressUrl; }
@@ -279,10 +282,10 @@ export class CustomerEndpoint extends EndpointFactory {
 
 
 
-    getCustomerContactAuditDetails<T>(customerContactId) {
+    getCustomerContactAuditDetails<T>(customerContactId,customerId) {
 
 
-        return this.http.get<T>(`${this.configurations.baseUrl}${this._customerContactHistory}/${customerContactId}`, this.getRequestHeaders())
+        return this.http.get<T>(`${this.configurations.baseUrl}${this._customerContactHistory}?customerContactId=${customerContactId}&customerId=${customerId}`, this.getRequestHeaders())
     }
 
     //getcustomerEndpoint<T>(): Observable<T> {
@@ -1361,6 +1364,16 @@ export class CustomerEndpoint extends EndpointFactory {
     }
     getCustomerInterShippingHistory(customerId, customerInterShippingId) {
         return this.http.get(`${this.configurations.baseUrl}/${this._customerInterShippingHistory}?customerId=${customerId}&internationalShippingId=${customerInterShippingId}`)
+    }
+
+    getCustomerShipViaHistory(customerId, customerShippingAddressId, customerShippingId) {
+        return this.http.get(`${this.configurations.baseUrl}/${this._customerShipViaHistory}?customerId=${customerId}&customerShippingAddressId=${customerShippingAddressId}&customerShippingId=${customerShippingId}`)
+    }
+    getCustomerInterShipViaHistory(customerId, internationalShippingId, shippingViaDetailsId) {
+        return this.http.get(`${this.configurations.baseUrl}/${this._customerInterShipViaHistory}?customerId=${customerId}&internationalShippingId=${internationalShippingId}&shippingViaDetailsId=${shippingViaDetailsId}`)
+    }
+    getCustomerDocumentAuditHistory(id) {
+        return this.http.get<any>(`${this._getCustomerDocumentHistory}/${id}`, this.getRequestHeaders())
     }
 }
 

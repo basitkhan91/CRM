@@ -177,7 +177,7 @@ export class CustomerContactsComponent implements OnInit {
 
 		// create a new contact in the contact table
         const data = {
-            ...this.contactInformation, createdBy: this.userName, updatedBy: this.userName,
+            ...this.contactInformation, createdBy: this.userName, updatedBy: this.userName, isActive: true,
             masterCompanyId: 1,
             firstName: editValueAssignByCondition('firstName', this.contactInformation.firstName),
             middleName: editValueAssignByCondition('middleName', this.contactInformation.middleName),
@@ -483,8 +483,8 @@ export class CustomerContactsComponent implements OnInit {
         this.modal.close();
     }
 
-	getAuditHistoryById(rowData) {
-		this.customerService.getCustomerContactAuditDetails(rowData.customerContactId).subscribe(res => {
+    getAuditHistoryById(rowData) {
+        this.customerService.getCustomerContactAuditDetails(rowData.customerContactId, rowData.customerId).subscribe(res => {
 			this.auditHistory = res;
 		})
     }

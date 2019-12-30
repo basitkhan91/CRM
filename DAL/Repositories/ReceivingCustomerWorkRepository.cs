@@ -51,7 +51,7 @@ namespace DAL.Repositories
                               join ti in _appContext.TimeLife on stl.TimeLifeCyclesId equals ti.TimeLifeCyclesId into time
                               from ti in time.DefaultIfEmpty()
 
-                              join contact in _appContext.Contact on stl.WorkPhone equals contact.WorkPhone into con
+                              join contact in _appContext.Contact on Convert.ToInt64(stl.ContactId) equals contact.ContactId into con
                               from contact in con.DefaultIfEmpty()
 
 

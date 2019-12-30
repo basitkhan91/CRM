@@ -11,6 +11,8 @@ import { LegalEntityService } from '../../../../../services/legalentity.service'
 import { EmployeeService } from '../../../../../services/employee.service';
 import { Currency } from '../../../../../models/currency.model';
 import { CurrencyService } from '../../../../../services/currency.service';
+import { AccountListingService } from '../../../../../services/account-listing/account-listing.service';
+import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
     selector: 'app-create-journel',
@@ -30,6 +32,10 @@ export class CreateJournelComponent implements OnInit
     toggleRecurringGrid: boolean;
     toggleReversingGrid: boolean;
     allEmployeeinfo: any[] = [];
+    balanceTypes: any[] = [];
+    categoryTypes: any[] = [];
+    journalTypes: any[] = [];
+    generalLedgerList: any[] = [];
     firstCollection: any[];
     loadingIndicator: boolean;
     allCurrencyInfo: any[];
@@ -48,8 +54,22 @@ export class CreateJournelComponent implements OnInit
     companyList: any[] = [];
     AddRors: Array<any> = [];
 
+    disableSaveLedgerName: boolean = false;
+    ledgerNames: any[];
+    ledgerName: string;
+    formSubmitted: boolean = false;
+
     /** create-journel ctor */
-    constructor(public legalService: LegalEntityService,public currency: CurrencyService,public employeeService: EmployeeService,private legalEntityservice:LegalEntityService,private alertService: AlertService, private journelService: JournelService, private modalService: NgbModal, private authService: AuthService)
+    constructor(public legalService: LegalEntityService,
+                public currency: CurrencyService,
+                public employeeService: EmployeeService,
+                private legalEntityservice:LegalEntityService,
+                private alertService: AlertService, 
+                private journelService: JournelService, 
+                private modalService: NgbModal, 
+                private authService: AuthService,
+                private accountListingService: AccountListingService,
+                private fb: FormBuilder)
     {
         if (this.journelService.manulaJournelCollection)
         {
@@ -84,20 +104,94 @@ export class CreateJournelComponent implements OnInit
         this.CurrencyData();
         this.employeedata();
         this.loadManagementdata();
+        this.loadBalanceTypes();
+        this.loadCategoryTypes();
+        this.loadJournalTypes();
+        this.loadGeneralLedgerList();
         this.Add();
+        this.formInitialise();
+        console.log(this);
+    }
+    gLAccountId;
+    journalForm: FormGroup;
+    private formInitialise(){
+        this.journalForm = this.fb.group({
+            gLAccountId: new FormControl('', Validators.required),
+            journalManualBatchNumber: new FormControl({value:'Creating', disabled: true}),
+            journalManualBatchName: new FormControl(),
+            journalManualBatchDescription: new FormControl(),
+            journalManualBalanceTypeId: new FormControl('', Validators.required),
+            journalManualCategoryId: new FormControl('', Validators.required),
+            journalManualTypeId: new FormControl('', Validators.required),
+            journalManualEntryDate: new FormControl,
+            journalManualEffectiveDate: new FormControl,
+            journalManualPeriodName: new FormControl,
+            journalManualEmployeeId: new FormControl('', Validators.required),
+            journalManualLocalCurrencyId: new FormControl('', Validators.required),
+            journalManualReportingCurrencyId: new FormControl('', Validators.required),
+            journalManualCurrencyDate: new FormControl,
+            journalManualcurrencyrate: new FormControl,
+            isreversing: new FormControl,
+            reversingstatus: new FormControl,
+
+        });
+        
+    }
+    onSubmit(type: string){
+        this.formSubmitted = true;
+        if(!this.journalForm.valid){
+            console.log('Form control has not been passed. please check.');
+            console.log(this);
+            return false;
+        }
+        this.addJournelManual(type);
     }
     private loadCompaniesData() {
         this.legalEntityservice.getEntityList().subscribe(entitydata => {
             this.companyList = entitydata[0];
         });
     }
+
+    private loadBalanceTypes(){
+        this.balanceTypes = [
+            {balanceTypeId:1, balanceTypeName:'Actual'},
+            {balanceTypeId:2, balanceTypeName:'Budget'},
+            {balanceTypeId:3, balanceTypeName:'Forecast'},
+        ];
+    }
+
+    private loadCategoryTypes(){
+        this.categoryTypes = [
+            {categoryId:1, categoryName:'Manual'},
+            {categoryId:2, categoryName:'Adjustment'}
+        ];
+    }
+    private loadJournalTypes(){
+        this.journalTypes = [
+            {journalTypeId:1, journalTypeName: 'Standard'},
+            {journalTypeId:2, journalTypeName: 'Intercompany'}
+        ];
+    }
+
+    private loadGeneralLedgerList(){
+        this.generalLedgerList = [];
+        this.accountListingService.getAll().subscribe(
+            datalist=> {
+                this.generalLedgerList = datalist;                
+            },
+            error => {
+                console.log('error in getting information')
+            }
+        );
+    }
     get userName(): string
     {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
-    addJournelManual(): void
+    addJournelManual(type): void
     {
+        console.log('Type of post : ', type);
         this.currentManualJournel.createdBy = this.userName;
         this.currentManualJournel.updatedBy = this.userName;
         this.journelService.addJournel(this.currentManualJournel).subscribe(journel => {
