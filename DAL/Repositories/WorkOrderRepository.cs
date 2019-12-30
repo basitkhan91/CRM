@@ -5211,7 +5211,7 @@ namespace DAL.Repositories
                     woReservedIssuedAltPart.Manufacturer = item.Manufacturer;
                     woReservedIssuedAltPart.ManufacturerId = item.ManufacturerId;
                     woReservedIssuedAltPart.OemDer = item.OemDer;
-                    woReservedIssuedAltPart.ParentPartNo = item.PartNumber;
+                    woReservedIssuedAltPart.ParentPartNo = item.ParentPartNo;
 
                     woReservedIssuedAltParts.Add(woReservedIssuedAltPart);
                 }
@@ -5709,7 +5709,7 @@ namespace DAL.Repositories
                     woReservedIssuedAltPart.Manufacturer = item.Manufacturer;
                     woReservedIssuedAltPart.ManufacturerId = item.ManufacturerId;
                     woReservedIssuedAltPart.OemDer = item.OemDer;
-                    woReservedIssuedAltPart.ParentPartNo = item.PartNumber;
+                    woReservedIssuedAltPart.ParentPartNo = item.ParentPartNo;
 
                     woReservedIssuedAltParts.Add(woReservedIssuedAltPart);
                 }
