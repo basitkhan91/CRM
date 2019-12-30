@@ -373,4 +373,17 @@ export class ItemMasterService {
         return Observable.forkJoin(
             this.itemMasterEndpoint.searchPartNumber<any[]>(partNumber));
     }
+
+    getalterqquparts(ItemMasterId: number){
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getalterqquparts<any>(ItemMasterId));
+    }
+
+    createnhatlaaltequpart(data: any) {
+        return this.itemMasterEndpoint.createnhatlaaltequpart<any>(data);
+    }
+
+    getnhatlaaltequpartlis(data: any) {
+        return this.itemMasterEndpoint.getnhatlaaltequpartlis<any>(data);
+    }
 }

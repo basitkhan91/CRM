@@ -87,6 +87,12 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly _vendorGetAircraftMapped: string = "/api/Vendor/VendorAircraftGetDataByCapsId";
     private readonly _vendorItemMasterAircraftMappedDelete: string = "/api/Vendor/vendorAircrafDelete";
 
+    //NTAE
+    private readonly _getalterqquparts : string = "/api/itemmaster/getalterqquparts";
+    private readonly _saveNtaeParts : string = "/api/itemmaster/createnhatlaaltequpart";
+    private readonly _getnhatlaaltequpartlis : string = "/api/itemmaster/nhatlaaltequpartlist";
+
+    
 
 
 
@@ -121,7 +127,9 @@ export class ItemMasterEndpoint extends EndpointFactory {
     get ExchangeLoanUrl() { return this.configurations.baseUrl + this._getExchangeLoan };
     get getSearchUrl() { return this.configurations.baseUrl + this._searchItemMaster };
     get searchPartNumberUrl() { return this.configurations.baseUrl + this._searchPartNumberUrl; }
-
+    get getalterqqupartsUrl() { return this.configurations.baseUrl + this._getalterqquparts; }
+    get saveNtaePartsUrl() {return this.configurations.baseUrl + this._saveNtaeParts; }
+    get getnhatlaaltequpartlisUrl() {return this.configurations.baseUrl + this._getnhatlaaltequpartlis; } 
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -1026,5 +1034,33 @@ export class ItemMasterEndpoint extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.searchPartNumber(partNumber));
             });
+    }
+
+    getalterqquparts<T>(itemMasterId: number): Observable<T> {
+        let endpointUrl = `${this.getalterqqupartsUrl}/?itemMasterId=${itemMasterId}`;
+
+        return this.http
+            .get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getalterqquparts(itemMasterId));
+            });
+    }
+
+    createnhatlaaltequpart<T>(userObject: any): Observable<T> {
+
+        return this.http.post<T>(this.saveNtaePartsUrl, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.createnhatlaaltequpart(userObject));
+            })
+       
+    }
+    
+    getnhatlaaltequpartlis<T>(userObject: any): Observable<T> {
+
+        return this.http.post<T>(this.getnhatlaaltequpartlisUrl, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getnhatlaaltequpartlis(userObject));
+            })
+       
     }
 }
