@@ -529,8 +529,8 @@ export class CustomerService {
         return this.customerEndpoint.getDeleteDocumentEndpoint(actionId);
     }
 
-    getCustomerContactAuditDetails(customerContactId) {
-        return this.customerEndpoint.getCustomerContactAuditDetails<any>(customerContactId)
+    getCustomerContactAuditDetails(customerContactId,customerId) {
+        return this.customerEndpoint.getCustomerContactAuditDetails<any>(customerContactId,customerId)
     }
     getDocumentList(customerId) {
         return this.customerEndpoint.getDocumentList(customerId)
@@ -606,5 +606,15 @@ export class CustomerService {
     }
     getCustomerInterShippingHistory(customerId, customerInterShippingId) {
         return this.customerEndpoint.getCustomerInterShippingHistory(customerId, customerInterShippingId)
+    }
+
+    getCustomerShipViaHistory(customerId, customerShippingAddressId, customerShippingId) {
+        return this.customerEndpoint.getCustomerShipViaHistory(customerId, customerShippingAddressId, customerShippingId)
+    }
+    getCustomerInterShipViaHistory(customerId, internationalShippingId, shippingViaDetailsId) {
+        return this.customerEndpoint.getCustomerInterShipViaHistory(customerId, internationalShippingId, shippingViaDetailsId)
+    }
+    getCustomerDocumentHistory(id) {
+        return this.customerEndpoint.getCustomerDocumentAuditHistory(id)
     }
 }

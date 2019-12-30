@@ -152,7 +152,7 @@ export class CustomerWorkSetupComponent
         this.customerList();
         this.loadManagementdata();
         this.loadManagementdataForTree();
-
+        this.getAllCustomerContact(this.receivingCustomerWorkService.listCollection.customer.customerId);
         //if (this.receivingCustomerWorkService.listCollection == null) {
         //    this.receivingCustomerWorkService.listCollection = {};
         //}
@@ -160,15 +160,18 @@ export class CustomerWorkSetupComponent
 
             this.showLable = true;
             this.sourcereceving = this.receivingCustomerWorkService.listCollection;
-          
+            console.log(this.sourcereceving,'edit')
             this.sourcereceving.serialNumber = this.receivingCustomerWorkService.listCollection.serialNumber;
+            this.sourcereceving.customerContactId = this.sourcereceving.contactId;// { contactId: this.receivingCustomerWorkService.listCollection.contactId, contactTitle: this.receivingCustomerWorkService.listCollection.contactTitle }
+
+            //this.sourcereceving.customerContactId = { contactId: this.receivingCustomerWorkService.listCollection.contactId, contactTitle: this.receivingCustomerWorkService.listCollection.contactTitle }
+            this.sourcereceving.workPhone = this.receivingCustomerWorkService.listCollection.workPhone;
+
             if (this.receivingCustomerWorkService.listCollection.customer) {
                 this.sourcereceving.customerId = this.receivingCustomerWorkService.listCollection.customer.customerId;
                 this.sourcereceving.name = this.receivingCustomerWorkService.listCollection.customer.name;
                 this.sourcereceving.customerCode = { customerId: this.receivingCustomerWorkService.listCollection.customer.customerId, customerCode: this.receivingCustomerWorkService.listCollection.customer.customerCode }
-                this.sourcereceving.contactId = { contactId: this.receivingCustomerWorkService.listCollection.contactId, contactTitle: this.receivingCustomerWorkService.listCollection.contactTitle }
-                this.sourcereceving.workPhone = this.receivingCustomerWorkService.listCollection.workPhone;
-              
+               
               
                
               

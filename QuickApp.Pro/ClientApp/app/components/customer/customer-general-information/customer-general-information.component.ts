@@ -838,18 +838,21 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     checkCustomerNameExist(value) {
         this.changeName = true;
+       
         this.isCustomerNameAlreadyExists = false;
         this.disableSaveCustomerName = false;
-        for (let i = 0; i < this.customerListOriginal.length; i++) {
-           
-            if (this.generalInformation.name == this.customerListOriginal[i].name || value == this.customerListOriginal[i].name ) {
-                this.isCustomerNameAlreadyExists = true;
-                // this.disableSave = true;
-                this.disableSaveCustomerName = true;
-                this.selectedActionName = event;
-                return;
+        if (value != this.generalInformation1.name) {
+            for (let i = 0; i < this.customerListOriginal.length; i++) {
+
+                if (this.generalInformation.name == this.customerListOriginal[i].name || value == this.customerListOriginal[i].name) {
+                    this.isCustomerNameAlreadyExists = true;
+                    // this.disableSave = true;
+                    this.disableSaveCustomerName = true;
+                    this.selectedActionName = event;
+                    return;
+                }
+
             }
-           
         }
 
     }

@@ -308,9 +308,9 @@ export class CustomerWorkEditComponent {
     }
 
     openEdit(content, row) {
-
+        
         this.isEditMode = true;
-
+       
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourcereceving = row; if (this.sourcereceving.timeLifeDate) {

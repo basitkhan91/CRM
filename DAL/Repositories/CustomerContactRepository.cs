@@ -19,11 +19,42 @@ namespace DAL.Repositories
 
 
 
-		public IEnumerable<object> GetCustomerContactAuditDetails(long customercontactId)
+		public IEnumerable<object> GetCustomerContactAuditDetails(long customercontactId, long customerId)
 		{
-			return _appContext.CustomerContactAudit.Where(c => c.CustomerContactId == customercontactId).OrderByDescending(p => p.UpdatedDate).ToList();
-
-		}
+            //return _appContext.CustomerContactAudit.Where(c => c.CustomerContactId == customercontactId).OrderByDescending(p => p.UpdatedDate).ToList();
+            var data = (from c in _appContext.Contact
+                        join vc in _appContext.AuditCustomerContact on c.ContactId equals vc.ContactId
+                        where vc.CustomerId == customerId && vc.CustomerContactId == customercontactId
+                        select new
+                        {
+                            c.ContactId,
+                            c.ContactTitle,
+                            c.AlternatePhone,
+                            c.CreatedBy,
+                            c.UpdatedBy,
+                            c.Email,
+                            c.Tag,
+                            c.Fax,
+                            c.FirstName,
+                            c.LastName,
+                            c.MiddleName,
+                            c.MobilePhone,
+                            c.Notes,
+                            c.Prefix,
+                            c.Suffix,
+                            c.WebsiteURL,
+                            c.WorkPhone,
+                            c.IsActive,
+                            vc.AuditCustomerContactId,
+                            vc.CustomerContactId,
+                            vc.CustomerId,
+                            c.CreatedDate,
+                            c.UpdatedDate,
+                            c.WorkPhoneExtn,
+                            vc.IsDefaultContact
+                        }).OrderByDescending(c => c.AuditCustomerContactId).ToList();
+            return data;
+        }
 
 		//Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 

@@ -247,8 +247,8 @@
                                                     <div class="form-group col-sm-12">
                                                         <label class="control-label col-sm-4">Condtion<strong class="clr-red">*</strong></label>
                                                         <div class="col-sm-7">
-                                                            <select style="border-radius:5px;" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.conditionCodeId" required>
-                                                                <option *ngFor="let condition of allConditionInfo" [ngValue]="condition.conditionCodeId">{{condition.description}}</option>
+                                                            <select style="border-radius:5px;" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.conditionId" required>
+                                                                <option *ngFor="let condition of allConditionInfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
                                                             </select>
                                                         </div>
                                                     </div>
