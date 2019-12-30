@@ -66,6 +66,7 @@ export class SalesQuoteCreateComponent implements OnInit {
   salesQuoteForm: FormGroup;
   display: boolean = false;
   id:any;
+  selectedApprovers:any[]=[];
 
   @ViewChild("newSalesQuoteForm") public newSalesQuoteForm: NgForm;
   constructor(
@@ -310,6 +311,19 @@ onWarningSelect(event) {
   }
 }
 
+getApproverList(approvers) {
+
+  if (this.allEmployeeinfo) {
+    for (let i = 0; i < this.allEmployeeinfo.length; i++) {
+      for (let j = 0; j < approvers.length; j++) {
+        let employeeId = approvers[0].employeeId;
+        if (employeeId == this.allEmployeeinfo[i].employeeId) {
+          this.selectedApprovers.push(this.allEmployeeinfo[i]);
+        }
+      }
+    }
+}
+}
 
 getSalesQuoteInstance(salesQuoteId: number) {
   this.alertService.startLoadingMessage();
@@ -320,10 +334,29 @@ getSalesQuoteInstance(salesQuoteId: number) {
       this.salesOrderQuote = this.salesQuoteView.salesOrderQuote;
      // this.approvers = this.salesQuoteView.approverList;
      // this.salesQuoteService.updateApprovers(this.approvers);
+     this.getApproverList(this.salesQuoteView.approverList);
      console.log(this.approvers);
      if(this.approvers.length>0){
       for (let i = 0; i < this.salesQuoteView.approverList.length; i++) {
-        this.approvers[i].employeeId = this.salesQuoteView.approverList[i].employeeId;
+        let level = this.salesQuoteView.approverList[i].level;
+        switch(level){
+          case 1:
+          this.approvers[0] = this.salesQuoteView.approverList[i];
+          break;
+          case 2:
+          this.approvers[1] = this.salesQuoteView.approverList[i];
+          break;
+          case 3:
+          this.approvers[2] = this.salesQuoteView.approverList[i];
+          break;
+          case 4:
+          this.approvers[3] = this.salesQuoteView.approverList[i];
+          break;
+          case 5:
+          this.approvers[4] = this.salesQuoteView.approverList[i];
+          break;
+        }
+       // this.approvers[i].employeeId = this.salesQuoteView.approverList[i].employeeId;
        }
      }
      
@@ -339,6 +372,16 @@ getSalesQuoteInstance(salesQuoteId: number) {
         partNumberObj.fixRate = selectedPart.fxRate;
         partNumberObj.quantityFromThis = selectedPart.qtyQuoted;
 
+        partNumberObj.partNumber = selectedPart.partNumber;
+        partNumberObj.description = selectedPart.partDescription;
+        partNumberObj.stockLineNumber = selectedPart.stockLineNumber;
+        if(selectedPart.isOEM)
+          partNumberObj.pmaStatus = 'ODA';
+        if(selectedPart.isPMA)
+          partNumberObj.pmaStatus = 'PMA';
+        if(selectedPart.isDER)
+          partNumberObj.pmaStatus = 'DER';
+
         partNumberObj.salesPricePerUnit = selectedPart.unitSalePrice;
         partNumberObj.salesPriceExtended = selectedPart.salesBeforeDiscount;
         partNumberObj.salesDiscount = selectedPart.discount;
@@ -346,12 +389,16 @@ getSalesQuoteInstance(salesQuoteId: number) {
         partNumberObj.netSalesPriceExtended = selectedPart.netSales;
         partNumberObj.masterCompanyId = selectedPart.masterCompanyId;
         partNumberObj.quantityFromThis = selectedPart.qtyQuoted;
+        partNumberObj.markUpPercentage = selectedPart.markUpPercentage;
+        partNumberObj.unitCostExtended = selectedPart.unitSalePrice * selectedPart.qtyQuoted;
         this.selectedParts.push(partNumberObj);  
       }
       console.log(this.salesQuoteView);
 
       
-
+      this.salesQuote.priorities = this.salesQuoteView.priorities;
+      this.salesQuote.leadSources = this.salesQuoteView.leadSources;
+      this.salesQuote.salesQuoteTypes = this.salesQuoteView.salesQuoteTypes;
       this.salesQuote.salesOrderQuoteId = this.salesOrderQuote.salesOrderQuoteId
       this.salesQuote.quoteTypeId = this.salesOrderQuote.quoteTypeId;
       this.salesQuote.openDate = new Date(this.salesOrderQuote.openDate);
@@ -554,16 +601,30 @@ onSaveDescription() {
     }
     this.salesQuoteView.parts = partList;
 
-    this.salesQuoteService
-    .create(this.salesQuoteView)
-    .subscribe(data => { 
-      console.log(data);
-      this.alertService.stopLoadingMessage();
-      this.alertService.showMessage("Success", `Quote created successfully.`, MessageSeverity.success);
-      this.router.navigateByUrl(
-        `salesmodule/salespages/sales-quote-list`
-      );
-    });
+    if(this.id){
+      this.salesQuoteService
+      .update(this.salesQuoteView)
+      .subscribe(data => { 
+        console.log(data);
+        this.alertService.stopLoadingMessage();
+        this.alertService.showMessage("Success", `Quote updated successfully.`, MessageSeverity.success);
+        this.router.navigateByUrl(
+          `salesmodule/salespages/sales-quote-list`
+        );
+      });
+    }else{
+      this.salesQuoteService
+      .create(this.salesQuoteView)
+      .subscribe(data => { 
+        console.log(data);
+        this.alertService.stopLoadingMessage();
+        this.alertService.showMessage("Success", `Quote created successfully.`, MessageSeverity.success);
+        this.router.navigateByUrl(
+          `salesmodule/salespages/sales-quote-list`
+        );
+      });
+    }
+ 
     console.log(this.salesQuote);
     console.log(this.salesOrderQuote);
     console.log(this.approvers);
