@@ -127,11 +127,11 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
         }
     }
 
-    ngOnChanges(){
-        if(this.isQuote && this.editData.length > 0){
+    ngOnChanges() {
+        if (this.isQuote && this.editData.length > 0) {
             this.workFlow.materialList = this.editData;
         }
-        else if(this.isQuote){
+        else if (this.isQuote) {
             this.workFlow.materialList = [];
             this.addRow();
         }
@@ -145,29 +145,24 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
     }
 
     filterpartItems(event) {
-
         this.partCollection = [];
         this.itemclaColl = [];
-        if (this.allPartnumbersInfo) {
-            if (this.allPartnumbersInfo.length > 0) {
-                //this.partCollection.push(" ");
-                for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
-                    let partName = this.allPartnumbersInfo[i].partNumber;
-                    if (partName) {
-                        if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                            if (this.workFlow.partNumber != this.allPartnumbersInfo[i].itemMasterId) {
-                                this.itemclaColl.push([{
-                                    "partId": this.allPartnumbersInfo[i].itemMasterId,
-                                    "partName": partName,
-                                    "description": this.allPartnumbersInfo[i].partDescription,
-                                    "itemClassificationId": this.allPartnumbersInfo[i].itemClassificationId,
-                                }]);
+        
+        if (this.allPartnumbersInfo != undefined && this.allPartnumbersInfo.length > 0) {
+            for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
+                let partName = this.allPartnumbersInfo[i].partNumber;
 
+                if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
 
-                                this.partCollection.push(partName);
-                            }
-
-                        }
+                    var alreadySelected = this.workFlow.materialList.find(x => x.itemMasterId == this.allPartnumbersInfo[i].itemMasterId && this.workFlow.taskId == x.taskId);
+                    if (this.workFlow.partNumber != this.allPartnumbersInfo[i].itemMasterId && alreadySelected == undefined) {
+                        this.itemclaColl.push([{
+                            "partId": this.allPartnumbersInfo[i].itemMasterId,
+                            "partName": partName,
+                            "description": this.allPartnumbersInfo[i].partDescription,
+                            "itemClassificationId": this.allPartnumbersInfo[i].itemClassificationId,
+                        }]);
+                        this.partCollection.push(partName);
                     }
                 }
             }
@@ -176,24 +171,31 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
 
     onPartSelect(event, material) {
         if (this.itemclaColl) {
-            var duplicate = this.workFlow.materialList.filter(x => x.partNumber == event && x.taskId == this.workFlow.taskId);
+            var materialObj = this.workFlow.materialList.find(x => x.partNumber == event && x.taskId == this.workFlow.taskId);
 
-            if (duplicate.length > 1) {
-                material.itemMasterId = '';
-                material.partDescription = '';
-                material.partNumber = '';
-                material.itemClassificationId = '';
-                event = '';
-                this.alertService.showMessage("Workflow", "Part Number is already in use in Material List.", MessageSeverity.error);
-                return;
+            var itemMasterId = this.itemclaColl.find(x => x[0].partName == event)[0].partId;
+
+            if (materialObj != undefined) {
+                var isPartExcluded = this.workFlow.exclusions.find(x => x.itemMasterId != '' && x.itemMasterId == itemMasterId && x.taskId == this.workFlow.taskId)
+                if (isPartExcluded != undefined) {
+                    material.itemMasterId = '';
+                    material.partDescription = '';
+                    material.partNumber = '';
+                    material.itemClassificationId = '';
+                    material.partName = '';
+                    event = '';
+                    this.alertService.showMessage("Workflow", "Part Number already exist in Exclusion List.", MessageSeverity.error);
+                    return;
+                }
             }
-
+            
             for (let i = 0; i < this.itemclaColl.length; i++) {
                 if (event == this.itemclaColl[i][0].partName) {
                     material.itemMasterId = this.itemclaColl[i][0].partId;
                     material.partDescription = this.itemclaColl[i][0].description;
                     material.partNumber = this.itemclaColl[i][0].partName;
                     material.itemClassificationId = this.itemclaColl[i][0].itemClassificationId;
+                    material.unitOfMeasureId = this.allPartDetails.find(x => x.itemMasterId == material.itemMasterId).purchaseUnitOfMeasureId;
                 }
             };
 
@@ -389,17 +391,17 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
         this.updateMaterialListForWO.emit(this.workFlow);
     }
 
-    markupChanged(matData){
-    try{
-        this.markupList.forEach((markup)=>{
-        if(markup.value == matData.markupPercentageId){
-            matData.materialCostPlus = (matData.extendedPrice) + ( ((matData.extendedPrice)/100) *  Number(markup.label))
+    markupChanged(matData) {
+        try {
+            this.markupList.forEach((markup) => {
+                if (markup.value == matData.markupPercentageId) {
+                    matData.materialCostPlus = (matData.extendedPrice) + (((matData.extendedPrice) / 100) * Number(markup.label))
+                }
+            })
         }
-        })
-    }
-    catch(e){
-        console.log(e);
-    }
+        catch (e) {
+            console.log(e);
+        }
     }
 
 
