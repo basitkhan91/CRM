@@ -123,6 +123,7 @@ namespace DAL
         public DbSet<ContactAudit> ContactAudit { get; set; }
         public DbSet<VendorCheckPayment> VendorCheckPayment { get; set; }
         public DbSet<CheckPayment> CheckPayment { get; set; }
+        public DbSet<CheckPaymentAudit> CheckPaymentAudit { get; set; }
 
         public DbSet<VendorDomesticWirePayment> VendorDomesticWirePayment { get; set; }
 
