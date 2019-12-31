@@ -1,17 +1,22 @@
 ﻿<div class="card">
 	<div class="card-body">
-		<div class="inline-block display-flex">
+        <div class="inline-block display-flex">
 
-			<h3 class="po-head lead">Journal List</h3>
-			&nbsp;&nbsp;&nbsp;&nbsp;
-			<a (click)="open(contentEdit)"
-				matTooltip="Add Entity"
-               class="plusicon-cstm new-margin"
-               >
+            <h3 class="po-head lead">Journal List</h3>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <!--<a (click)="open(contentEdit)"
+        matTooltip="Add Entity"
+       class="plusicon-cstm new-margin"
+       >
+        <i class="fa fa-plus-circle fa-lg"></i>
+    </a>-->
+            <a 
+               matTooltip="Add Entity"
+               class="plusicon-cstm new-margin">
                 <i class="fa fa-plus-circle fa-lg"></i>
             </a>
-			<!-- <span class="help-icon"  data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span> -->
-		</div>
+            <!-- <span class="help-icon"  data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span> -->
+        </div>
 
 		<p-table 
 			#dt
@@ -24,7 +29,7 @@
 			[rowsPerPageOptions]="[10,20,50,100]" 
 			[columns]="selectedColumns" 
 			selectionMode="multiple" 
-			[(selection)]="selectedColumn" 
+			[(selection)]="selectedColumns" 
 			[resizableColumns]="true" 
 			[reorderableColumns]="true" 
 			[scrollable]="true" 
