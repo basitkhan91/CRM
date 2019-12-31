@@ -714,13 +714,34 @@ export class CreateAssetComponent implements OnInit {
         if (this.currentAsset.assetId == this.currentAsset.assetParentId) {
             this.isSaving = false;
             this.alertService.stopLoadingMessage();
-            this.alertService.showMessage("", `Parent Asset cannot be equal to Asset ID.`, MessageSeverity.error);
+            this.alertService.showMessage("", `Asset Parent cannot be equal to Asset ID.`, MessageSeverity.error);
+            return;
         }
+        if (this.currentAsset.manufacturedDate > this.currentAsset.expirationDate) {
+            this.isSaving = false;
+            this.alertService.stopLoadingMessage();
+            this.alertService.showMessage("", `Expiration date cannot be earlier than Manufacturer date.`, MessageSeverity.error);
+            return;
+        }
+        if (this.currentAsset.expirationDate < this.currentAsset.entryDate) {
+            this.isSaving = false;
+            this.alertService.stopLoadingMessage();
+            this.alertService.showMessage("", `Expiration date cannot be later than entry date.`, MessageSeverity.error);
+            return;
+        }
+        if (this.currentAsset.manufacturedDate < this.currentAsset.entryDate) {
+            this.isSaving = false;
+            this.alertService.stopLoadingMessage();
+            this.alertService.showMessage("", `Manufactured date cannot be later than entry date.`, MessageSeverity.error);
+            return;
+        }
+        //&& this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId
         if ((this.currentAsset.assetId && this.currentAsset.name && this.currentAsset.assetIntangibleTypeId)
             || (this.currentAsset.assetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
                 && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId
-                && this.currentAsset.companyId && this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId
-            && this.currentAsset.assetId != this.currentAsset.assetParentId)) {
+                && this.currentAsset.companyId 
+                && this.currentAsset.assetId != this.currentAsset.assetParentId && this.currentAsset.manufacturedDate < this.currentAsset.expirationDate
+            && this.currentAsset.expirationDate > this.currentAsset.entryDate && this.currentAsset.manufacturedDate > this.currentAsset.entryDate)) {
             this.isSaving = true;
 
             if (!this.currentAsset.assetRecordId) {

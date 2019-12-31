@@ -31,7 +31,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getAll")]
         public IActionResult getAll()
         {
-            List<AssetType> items = _unitOfWork.Repository<AssetType>().GetAll().Where(x => !x.IsDelete).OrderByDescending(x => x.AssetTypeId).ToList();
+            List<AssetType> items = _unitOfWork.Repository<AssetType>().GetAll().Where(x => !x.IsDelete && x.IsActive == true).OrderByDescending(x => x.AssetTypeId).ToList();
             return Ok(items);
         }
 

@@ -174,7 +174,8 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetManfacturerDetails()
         {
 
-            var obj = _context.Manufacturer.OrderByDescending(c => c.ManufacturerId).Where(c => c.IsDeleted == false).ToList();
+            //var obj = _context.Manufacturer.OrderByDescending(c => c.ManufacturerId).Where(c => c.IsDeleted == false || c.IsDeleted == null).ToList();
+            var obj = _context.Manufacturer.Where(c => (c.IsActive == true && c.IsDeleted == false)).OrderByDescending(c => c.ManufacturerId).ToList();
             return Ok(obj);
         }
 

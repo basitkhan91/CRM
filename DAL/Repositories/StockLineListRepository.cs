@@ -723,10 +723,10 @@ namespace DAL.Repositories
                                                from ti in time.DefaultIfEmpty()
                                                join man in _appContext.Manufacturer on stl.ManufacturerId equals man.ManufacturerId into manufa
                                                from man in manufa.DefaultIfEmpty()
-                                    where (stl.PartNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartNumber) ? stockListFilters.filters.PartNumber : stl.PartNumber)
-                                     && stl.StockLineNumber.Contains(!String.IsNullOrEmpty(stockListFilters.filters.StocklineNumber) ? stockListFilters.filters.StocklineNumber : stl.StockLineNumber)
-                                     && stl.SerialNumber.Contains(!String.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber))
-                                    // && co.ConditionId == (stockListFilters.filters.ConditionId == 0 ? stockListFilters.filters.ConditionId : co.ConditionId))
+                                    //where (stl.PartNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartNumber) ? stockListFilters.filters.PartNumber : stl.PartNumber)
+                                    // && stl.StockLineNumber.Contains(!String.IsNullOrEmpty(stockListFilters.filters.StocklineNumber) ? stockListFilters.filters.StocklineNumber : stl.StockLineNumber)
+                                    // && stl.SerialNumber.Contains(!String.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber))
+                                    //// && co.ConditionId == (stockListFilters.filters.ConditionId == 0 ? stockListFilters.filters.ConditionId : co.ConditionId))
                                     select new
                                                            {
                                                                stl.StockLineNumber,
@@ -782,9 +782,9 @@ namespace DAL.Repositories
 
                                                   join man in _appContext.Manufacturer on stl.ManufacturerId equals man.ManufacturerId into manufa
                                                   from man in manufa.DefaultIfEmpty()
-                                                  where (stl.PartNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartNumber) ? stockListFilters.filters.PartNumber : stl.PartNumber)
-                                                 && stl.StockLineNumber.Contains(!String.IsNullOrEmpty(stockListFilters.filters.StocklineNumber) ? stockListFilters.filters.StocklineNumber : stl.StockLineNumber)
-                                                 && stl.SerialNumber.Contains(!String.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber))
+                                                 // where (stl.PartNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartNumber) ? stockListFilters.filters.PartNumber : stl.PartNumber)
+                                                 //&& stl.StockLineNumber.Contains(!String.IsNullOrEmpty(stockListFilters.filters.StocklineNumber) ? stockListFilters.filters.StocklineNumber : stl.StockLineNumber)
+                                                 //&& stl.SerialNumber.Contains(!String.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber))
                                                   // && co.ConditionId == (stockListFilters.filters.ConditionId == 0 ? stockListFilters.filters.ConditionId : co.ConditionId))
                                                   select new
                                                   {
