@@ -68,6 +68,7 @@ namespace DAL.Repositories
                                   contact.WorkPhone,
                                   contactId= contact.ContactId,
                                   contactTitle=  contact.ContactTitle,
+                                  ContactFirstName=contact.FirstName,
                                   partNumber = stl.PartNumber,
                                   stl.IsTimeLife,
                                   stl.IsExpirationDate,

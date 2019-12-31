@@ -10,12 +10,14 @@ import { CustomerClassificationService } from '../../../services/CustomerClassif
 import { TaxTypeService } from '../../../services/taxtype.service';
 import { AuthService } from '../../../services/auth.service';
 import { AlertService, MessageSeverity } from '../../../services/alert.service';
-import { validateRecordExistsOrNot } from '../../../generic/autocomplete';
+import { validateRecordExistsOrNot, editValueAssignByCondition, getValueFromArrayOfObjectById } from '../../../generic/autocomplete';
 import { CommonService } from '../../../services/common.service';
 import { PercentService } from '../../../services/percent.service';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { NgbModal, NgbActiveModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { ConfigurationService } from '../../../services/configuration.service';
+import { getValueFromObjectByKey, getObjectByValue, getObjectById, selectedValueValidate } from '../../../generic/autocomplete';
+
 @Component({
     selector: 'app-customer-financial-information',
     templateUrl: './customer-financial-information.component.html',
@@ -69,7 +71,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     taxRateNew = {
         taxTypeId:'',
        taxRateId:0,
-        taxRate: 0,
+        taxRate: '',
         isActive: true,
         isDeleted: false,
         memo: ''
@@ -101,6 +103,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     customerCode: any;
     customerName: any;
     selectedTaxRates = [];
+
     selectedTaxType: any;
     taxTypeRateMapping: any = [];
     selectedConsume: any;
@@ -273,7 +276,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         }
 
         // this.id = this.savedGeneralInformationData.customerId;
-        this.generateValue();
+        //this.generateValue();
         this.getAllcreditTermList();
         this.getAllDiscountList();
        // this.getAllMarkUp();
@@ -283,7 +286,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.getAllTaxTypes();
         this.getTaxRates();
         this.getAllDiscountList1();
-
+        this.getAllTaxRates();
     
     }
 
@@ -292,13 +295,13 @@ export class CustomerFinancialInformationComponent implements OnInit {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
-    generateValue() {
-        for (var i = 1; i <= 100; i++) {
-            this.taxRatesList.push({ label: `${i}%`, value: `${i}%` });
+    //generateValue() {
+    //    for (var i = 1; i <= 100; i++) {
+    //        this.taxRatesList.push({ label: `${i}%`, value: `${i}%` });
 
 
-        }
-    }
+    //    }
+    //}
     getAllcreditTermList() {
         this.commonservice.smartDropDownList('CreditTerms', 'CreditTermsId', 'Name').subscribe(res => {
             this.creditTermList = res;
@@ -332,7 +335,13 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.percentageList = res;
         })
     }
+    getAllTaxRates() {
+        this.commonservice.smartDropDownList('[Percent]', 'PercentId', 'PercentValue').subscribe(res => {
 
+            //this.percentService.getPercentages().subscribe(res => {
+            this.taxRatesList = res;
+        })
+    }
     //getTaxRates() {
     //    this.taxRateService.getTaxRateList().subscribe(res => {
     //        this.taxRateList = res[0];
@@ -424,9 +433,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
     filterTaxRate(event) {
 
         console.log(parseInt(event.query));
-        this._TaxRateList = this.taxRateList;
+        this._TaxRateList = this.percentageList;
 
-        this._TaxRateList = [...this.taxRateList.filter(x => {
+        this._TaxRateList = [...this.percentageList.filter(x => {
             console.log(x);
             return x.label.includes(event.query.toLowerCase())
 
@@ -532,6 +541,20 @@ export class CustomerFinancialInformationComponent implements OnInit {
     //        this.markUpList = res[0];
     //    })
     //}
+    checkPercentExists(value) {
+
+        this.isTaxRateExists = false;
+
+        for (let i = 0; i < this.percentageList.length; i++) {
+            if (this.discontValue == this.percentageList[i].label || value == this.percentageList[i].label) {
+                this.isTaxRateExists = true;
+                // this.disableSave = true;
+
+                return;
+            }
+
+        }
+    }
 
 
     getAllTaxList() {
@@ -558,14 +581,18 @@ export class CustomerFinancialInformationComponent implements OnInit {
     }
     mapTaxTypeandRate() {
         // let i = 0;
-        if ( this.selectedTaxType.length > 0 ) {
+        
+        if ( this.selectedTaxType > 0 ) {
+
+        //const    taxType= getObjectByValue('value', this.selectedTaxType, this.taxTypeList)
 
             const data = this.selectedTaxRates.map(x => {
                 // i++;
                 this.taxTypeRateMapping.push({
                     // id: i,
                     customerId: this.id,
-                    taxType: this.selectedTaxType,
+                    //taxType: this.selectedTaxType,
+                    taxType: getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList),
                     taxRate: x
                 })
             })
@@ -589,7 +616,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
          this.customerService.updatefinanceinfo({
             ...this.savedGeneralInformationData,
             CustomerTaxTypeRateMapping: this.taxTypeRateMapping,
-            updatedBy: this.userName
+             updatedBy: this.userName,
+
         }, this.id).subscribe(res => {
 
 
@@ -739,25 +767,47 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     }
     newTaxRateAdd() {
+        //const data = {
+        //    ...this.addNewTaxRate,
+        //    masterCompanyId: 1,
+        //    createdBy: this.userName,
+        //    updatedBy: this.userName,
+        //    createdDate: new Date(),
+        //    updatedDate: new Date()
+        //}
         const data = {
-            ...this.addNewTaxRate,
-            masterCompanyId: 1,
-            createdBy: this.userName,
-            updatedBy: this.userName,
-            createdDate: new Date(),
-            updatedDate: new Date()
-        }
+            ...this.addNewTaxRate, createdBy: this.userName, updatedBy: this.userName, masterCompanyId: 1,
 
-        this.taxRateService.newTaxRate(data).subscribe(data => {
-            this.getAllTaxTypes();
-            this.alertService.showMessage(
-                'Success',
-                `Added New Tax Rate  Successfully `,
-                MessageSeverity.success
-            );
-            this.resetTaxType();
-            //this.savedGeneralInformationData.discountId = data.discountId;
-        })
+            percentValue: editValueAssignByCondition('percentValue', this.addNewTaxRate.taxRate),
+
+        };
+
+    
+        //data.percentValue = parseFloat(this.addNewTaxRate.percentValue);
+            this.percentService.newPercentage(data).subscribe(() => {
+                this.resetTaxType();
+                this.getAllTaxTypes();
+                this.getAllTaxRates();
+                this.getAllPercentage();
+                this.addNewTaxRate = { ...this.taxRateNew }
+                
+                this.alertService.showMessage(
+                    'Success',
+                    `Added New Tax Rate  Successfully`,
+                    MessageSeverity.success
+                );
+            })
+        //this.taxRateService.newTaxRate(data).subscribe(data => {
+        //    this.getAllTaxTypes();
+        //    this.getAllTaxRates();
+        //    this.alertService.showMessage(
+        //        'Success',
+        //        `Added New Tax Rate  Successfully `,
+        //        MessageSeverity.success
+        //    );
+        //    this.resetTaxType();
+        //    //this.savedGeneralInformationData.discountId = data.discountId;
+        //})
 
 
 
