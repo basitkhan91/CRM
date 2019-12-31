@@ -210,6 +210,7 @@ namespace DAL
 
 
         public DbSet<ReceivingCustomerWork> ReceivingCustomerWork { get; set; }
+        public DbSet<ReceivingCustomerWorkAudit> ReceivingCustomerWorkAudit { get; set; }
 
         public DbSet<ManagementStructure> ManagementStructure { get; set; }
 

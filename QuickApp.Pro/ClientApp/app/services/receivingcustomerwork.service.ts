@@ -76,5 +76,9 @@ export class ReceivingCustomerWorkService {
     updateActionforActive(receivingCustomerWork: any) {
         return this.receivingCustomerWorkEndpoint.getUpdateActionforActive(receivingCustomerWork, receivingCustomerWork.receivingCustomerWorkId);
     }
+    getAuditHistory(receivingCustomerWorkId: number) {
+        return Observable.forkJoin(this.receivingCustomerWorkEndpoint.getAuditHistory(receivingCustomerWorkId));
+    }
+
 }
 
