@@ -40,6 +40,16 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpGet("GetAudit")]
+        [Produces(typeof(List<ReceivingCustomerWorkViewModel>))]
+        public IActionResult GetAudit(long receivingCustomerWorkId)
+        {
+            var result = _unitOfWork.receivingCustomerWork.GetAllreceivingCustomerWorkAudit(receivingCustomerWorkId); //GetAllSite Information
+            return Ok(result);
+
+
+        }
+
         [HttpGet("auditHistoryById/{id}")]
         [Produces(typeof(List<AuditHistory>))]
         public IActionResult GetAuditHostoryById(long id)
