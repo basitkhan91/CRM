@@ -478,7 +478,7 @@ export class AccountListingCreateComponent implements OnInit {
                  let collection = []
                 const x = datalist.filter( (o, index) => {
                   obj = {
-                    id: datalist[index]['ledgerName'],
+                    id: datalist[index]['parentId'],
                     name: datalist[index]['ledgerName']
                   }
                   collection.push(obj)
@@ -596,6 +596,10 @@ export class AccountListingCreateComponent implements OnInit {
         }
         console.log('array :', this.selectedBalanceType)
         console.log("Interests array => " + JSON.stringify(this.selectedBalanceType, null, 2));
-  }
+    }
+
+    loadEntityByParentId(event) {
+         
+    }
 
 }
