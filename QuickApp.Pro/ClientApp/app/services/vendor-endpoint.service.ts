@@ -1659,4 +1659,8 @@ export class VendorEndpointService extends EndpointFactory {
 	repairOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId) {
 		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/roglobalsearch?filterText=${filterText}&pageNumber=${pageNumber}&pageSize=${pageSize}&vendorId=${vendorId}`)
 	  }
+
+	  getHistoryForVendor(vendorId) {
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/GetVendorAuditHistory/${vendorId}`)
+	  }
 }
