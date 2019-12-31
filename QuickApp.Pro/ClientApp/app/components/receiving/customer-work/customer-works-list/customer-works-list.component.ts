@@ -196,7 +196,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
 		this.loadingIndicator = true;
 		this.sourcereceving = row;
 		this.isSaving = true;
-        debugger;
+       
         this.receivingCustomerWorkService.historyReason(this.sourcereceving.chargeId).subscribe(
 			results => this.onHistoryLoadSuccessful(results[0], content),
 			error => this.saveFailedHelper(error));

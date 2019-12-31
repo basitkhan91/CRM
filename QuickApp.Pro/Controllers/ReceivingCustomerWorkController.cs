@@ -131,7 +131,8 @@ namespace QuickApp.Pro.Controllers
             receivingCustomerWorkModel.ChangePartNumber = receivingCustomerWorkViewModel.ChangePartNumber;
             receivingCustomerWorkModel.PartCertificationNumber = receivingCustomerWorkViewModel.PartCertificationNumber;
             receivingCustomerWorkModel.Quantity = receivingCustomerWorkViewModel.Quantity;
-            receivingCustomerWorkModel.ConditionId = receivingCustomerWorkViewModel.ConditionId;
+            if (receivingCustomerWorkViewModel.ConditionId != 0)
+                receivingCustomerWorkModel.ConditionId = receivingCustomerWorkViewModel.ConditionId;
             receivingCustomerWorkModel.SiteId = receivingCustomerWorkViewModel.SiteId;
             receivingCustomerWorkModel.BinId = receivingCustomerWorkViewModel.BinId;
             receivingCustomerWorkModel.ShelfId = receivingCustomerWorkViewModel.ShelfId;
@@ -194,28 +195,16 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPut("UpdatereceivingCustomerWork")]
-        public IActionResult updatereceivingcustomer([FromBody] ReceivingCustomerWorkViewModel receivingCustomerWorkViewModel)
+        public IActionResult updatereceivingcustomer([FromBody] ReceivingCustomerWork rcwork)
         {
             if (ModelState.IsValid)
-               // rcwork.MasterCompanyId = 1;
-            if (_context.ReceivingCustomerWork.Any(o => o.ReceivingCustomerWorkId == receivingCustomerWorkViewModel.ReceivingCustomerWorkId))
-            {
-                // UPDATE
-                var existingModel = GetReceivingCustomerWork(receivingCustomerWorkViewModel.ReceivingCustomerWorkId);
-                if (existingModel != null)
-                {
-                    existingModel = FillReceivingCustomerWork(existingModel, receivingCustomerWorkViewModel);
-                    existingModel.UpdatedDate = DateTime.Now;
-                    _context.ReceivingCustomerWork.Update(existingModel);
-                    _unitOfWork.SaveChanges();
-                }
-                return Ok(existingModel);
-            }
-
-           // _unitOfWork.Repository<ReceivingCustomerWork>().Update(rcwork);
-            //_unitOfWork.SaveChanges();
+                rcwork.MasterCompanyId = 1;
+            rcwork.UpdatedDate = DateTime.Now;
+            _unitOfWork.Repository<ReceivingCustomerWork>().Update(rcwork);
+            _unitOfWork.SaveChanges();
             return Ok();
         }
+
 
         [HttpPost("PostTimeLine")]
         public IActionResult Timesaveadjustment([FromBody] TimeLifeViewModel timeLifeViewModel)
