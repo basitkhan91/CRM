@@ -792,6 +792,9 @@ export class VendorService {
     repairOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId){
         return this.actionEndpoint.repairOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId);
       }
+      getHistoryForVendor(vendorId){
+        return this.actionEndpoint.getHistoryForVendor(vendorId);
+      }
 }
 
 
