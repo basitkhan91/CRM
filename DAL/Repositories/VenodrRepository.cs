@@ -129,7 +129,18 @@ namespace DAL.Repositories
                                 vc.ClassificationName,
                                 VendorCapabilityName = vca.capabilityDescription,
                                 VendorPhoneContact = t.VendorPhone + " - " + t.VendorPhoneExt,
-                               
+                                VendorClassifications = string.Join(",", _appContext.Vendor
+                                .Join(_appContext.ClassificationMapping,
+                                v => v.VendorId,
+                                mp => mp.ReferenceId,
+                                (v, mp) => new { v, mp })
+                                 .Join(_appContext.VendorClassification,
+                                  mp1 => mp1.mp.ClasificationId,
+                                  vc => vc.VendorClassificationId,
+                                (mp1, vc) => new { mp1, vc })
+                                .Where(p => p.mp1.v.VendorId == t.VendorId)
+                                .Select(p => p.vc.ClassificationName)),
+
                             })/*.Where(t => t.IsActive == true)*/.OrderByDescending(c => c.CreatedDate).ToList();
                 return data;
 
@@ -680,23 +691,25 @@ namespace DAL.Repositories
         {
             try
             {
-                var vsha = _appContext.VendorShippingAddress.Where(x => x.VendorShippingAddressId == shippingAddressId).FirstOrDefault();
-                if (vsha != null)
-                {
-                    _appContext.VendorShippingAddress.Remove(vsha);
-                    _appContext.SaveChanges();
-                }
-                //VendorShippingAddress shippingAddress = new VendorShippingAddress();
-                //shippingAddress.VendorShippingAddressId = billingAddressId;
-                //shippingAddress.UpdatedDate = DateTime.Now;
-                //shippingAddress.UpdatedBy = updatedBy;
+                //var vsha = _appContext.VendorShippingAddress.Where(x => x.VendorShippingAddressId == shippingAddressId).FirstOrDefault();
+                //if (vsha != null)
+                //{
+                //    _appContext.VendorShippingAddress.Remove(vsha);
+                //    _appContext.SaveChanges();
+                //}
+                VendorShippingAddress shippingAddress = new VendorShippingAddress();
+                shippingAddress.VendorShippingAddressId = shippingAddressId;
+                shippingAddress.UpdatedDate = DateTime.Now;
+                shippingAddress.UpdatedBy = updatedBy;
+                shippingAddress.IsDelete = true;
 
-                //_appContext.VendorShippingAddress.Attach(shippingAddress);
+                _appContext.VendorShippingAddress.Attach(shippingAddress);
 
-                //_appContext.Entry(shippingAddress).Property(p => p.UpdatedDate).IsModified = true;
-                //_appContext.Entry(shippingAddress).Property(p => p.UpdatedBy).IsModified = true;
+                _appContext.Entry(shippingAddress).Property(p => p.IsDelete).IsModified = true;
+                _appContext.Entry(shippingAddress).Property(p => p.UpdatedDate).IsModified = true;
+                _appContext.Entry(shippingAddress).Property(p => p.UpdatedBy).IsModified = true;
 
-                //_appContext.SaveChanges();
+                _appContext.SaveChanges();
             }
             catch (Exception ex)
             {
