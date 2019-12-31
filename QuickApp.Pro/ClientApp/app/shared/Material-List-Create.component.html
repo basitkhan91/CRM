@@ -193,12 +193,20 @@
         <ng-container *ngIf="isQuote">
           <td>
             <!-- <input [(ngModel)]="matQuotation.markup" /> -->
-            <select class="form-control custom-select wf-pub-id" (change)="markupChanged(material, index)" [(ngModel)]="material.markupPercentageId">
+            <select
+              class="form-control custom-select wf-pub-id"
+              (change)="markupChanged(material, index)"
+              [(ngModel)]="material.markupPercentageId"
+            >
               <option value="">Select</option>
-              <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+              <option
+                *ngFor="let markUp of markupList"
+                [value]="markUp.value"
+                >{{ markUp.label }}</option
+              >
             </select>
           </td>
-          <td><input [(ngModel)]="material.materialCostPlus" readonly/></td>
+          <td><input [(ngModel)]="material.materialCostPlus" readonly /></td>
           <td><input [(ngModel)]="material.fixedAmount" /></td>
         </ng-container>
         <td style="width:30px;">
@@ -246,8 +254,8 @@
         <td>{{ workFlow.materialExtendedPriceSummation }}</td>
         <ng-container *ngIf="isQuote">
           <td>&nbsp;</td>
-          <td>{{getTotalCostPlusAmount()}}</td>
-          <td>{{getTotalFixedAmount()}}</td>
+          <td>{{ getTotalCostPlusAmount() }}</td>
+          <td>{{ getTotalFixedAmount() }}</td>
         </ng-container>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
