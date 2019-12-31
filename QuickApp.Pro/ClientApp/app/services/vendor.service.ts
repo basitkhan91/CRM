@@ -792,7 +792,17 @@ export class VendorService {
     repairOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId){
         return this.actionEndpoint.repairOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId);
       }
+
+      GetVendorBillingAddressDelete(billingAddressId, updatedBy)
+      {
+        return this.actionEndpoint.GetVendorBillingAddressDeleteEndpoint(billingAddressId, updatedBy);
+      }
+
+      GetUpdateVendorBillingAddressStatus(billingAddressId, status, updatedBy)
+      {
+        return this.actionEndpoint.GetUpdateVendorBillingAddressStatusEndpoint(billingAddressId,status, updatedBy);
+      }
+
+      
 }
-
-
 

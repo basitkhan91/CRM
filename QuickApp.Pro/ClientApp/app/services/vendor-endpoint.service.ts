@@ -178,6 +178,10 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _vendorDeleteAttachment: string = "/api/Vendor/vendorAttachmentDelete";
 	private readonly _vendorProcess1099Id: string = "/api/Vendor/getVendorProcess1099ListForFinance";
 	private readonly _vendorProcess1099IdFromTransaction: string = "/api/Vendor/getVendorProcess1099ListFromTransaction";
+	private readonly _deleteVendorBillingAddressDelete: string = "/api/Vendor/deletevendorbillingaddress";
+	private readonly _updateVendorBillingAddressStatus: string = "/api/Vendor/vendorbillingaddressstatus";
+	
+	
 
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
 	get vendorlistsUrl() { return this.configurations.baseUrl + this._vendrUrl; }
@@ -1659,4 +1663,15 @@ export class VendorEndpointService extends EndpointFactory {
 	repairOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId) {
 		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/roglobalsearch?filterText=${filterText}&pageNumber=${pageNumber}&pageSize=${pageSize}&vendorId=${vendorId}`)
 	  }
+
+
+	  GetVendorBillingAddressDeleteEndpoint(billingAddressId, updatedBy) {
+		return this.http.get<any>(`${this._deleteVendorBillingAddressDelete}?billingAddressId=${billingAddressId}&updatedBy=${updatedBy}`, this.getRequestHeaders())
+	}
+
+	GetUpdateVendorBillingAddressStatusEndpoint(billingAddressId,status, updatedBy) {
+		return this.http.get<any>(`${this._updateVendorBillingAddressStatus}?billingAddressId=${billingAddressId}&status=${status}&updatedBy=${updatedBy}`, this.getRequestHeaders())
+	}
+	
+
 }
