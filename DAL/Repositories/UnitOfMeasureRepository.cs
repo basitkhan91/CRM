@@ -25,12 +25,12 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.UnitOfMeasure> getUnitOfMeasureData()
         {
-            return _appContext.UnitOfMeasure.Include("MasterCompany").Where(c => c.IsDeleted == false || c.IsDeleted == null).OrderByDescending(c => c.UnitOfMeasureId).ToList();
+            return _appContext.UnitOfMeasure.Include("MasterCompany").Where(c => c.IsDeleted == false && c.IsActive == true).OrderByDescending(c => c.UnitOfMeasureId).ToList();
         }
 
         public IQueryable<DAL.Models.UnitOfMeasure> GetPaginationData()
         {
-            return _appContext.UnitOfMeasure.Where(c => (c.IsDeleted == false))
+            return _appContext.UnitOfMeasure.Where(c => (c.IsDeleted == false && c.IsActive == true))
                 .OrderByDescending(c => c.UnitOfMeasureId).ToList().AsQueryable();
         }
 

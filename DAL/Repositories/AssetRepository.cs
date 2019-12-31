@@ -13,7 +13,7 @@ namespace DAL.Repositories
        
         IEnumerable<object> IAssetRepository.getAllAssetList()
         {
-            var data = _appContext.Asset.Where(c => c.IsDelete == false || c.IsDelete == null);
+            var data = _appContext.Asset.Where(c => (c.IsDelete == false || c.IsDelete == null) && (c.IsActive == true));
             var temp = data.Include("Manufacturer");
             var temp1 = temp.Include("GLAccount");
             var temp2 = temp1.Include("Currency");
@@ -24,7 +24,7 @@ namespace DAL.Repositories
         }
 
         public IEnumerable<Asset> getAllAsset() {
-            var asset = _appContext.Asset.Where(c => c.IsDelete == false || c.IsDelete == null);
+            var asset = _appContext.Asset.Where(c => (c.IsDelete == false || c.IsDelete == null) && (c.IsActive == true));
             return asset.Include("AssetType").ToList();
         }
 

@@ -106,7 +106,7 @@ namespace DAL.Repositories
 
 			   from x in _appContext.AircraftModel
 			   join ad in _appContext.AircraftType on x.AircraftTypeId equals ad.AircraftTypeId
-			   where myInts.Contains(x.AircraftTypeId) && x.IsDeleted != true
+			   where myInts.Contains(x.AircraftTypeId) && x.IsDeleted != true && x.IsActive == true
 			   select new
 			   {
 				   x.AircraftModelId,

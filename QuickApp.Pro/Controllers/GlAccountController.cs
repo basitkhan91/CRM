@@ -36,7 +36,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
 
-                var glAccountData = unitOfWork.Repository<GLAccount>().GetAll().Where(x => x.IsDelete != true).OrderByDescending(x => x.GLAccountId);
+                var glAccountData = unitOfWork.Repository<GLAccount>().GetAll().Where(x => x.IsDelete != true && x.IsActive == true).OrderByDescending(x => x.GLAccountId);
                 return Ok(glAccountData);
             }
             catch (Exception ex)
