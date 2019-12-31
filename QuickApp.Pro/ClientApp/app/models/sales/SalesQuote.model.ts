@@ -7,6 +7,7 @@ import { ILeadSource } from "./ILeadSource";
 import { ISalesQuote } from "./ISalesQuote.model";
 
 export class SalesQuote implements ISalesQuote {
+  salesOrderQuoteId: number;
   quoteTypeId: number;
 
   openDate: Date;

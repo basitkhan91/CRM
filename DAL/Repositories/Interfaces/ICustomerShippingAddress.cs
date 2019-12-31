@@ -9,6 +9,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<CustomerShippingAddress> GetCustomerShippingAddress();
         IEnumerable<Object> GetAllShippingAddressDetails(long id);
         IEnumerable<object> GetAllShipViaDetails(long Selectedrow);
+        IEnumerable<Object> GetCustomerShippingAudit(long customerId, long customerShippingAddressId, long customerShippingId);
         IEnumerable<object> GetAllCusShippingHistory(long selectedrow);
         //  void CreateAction(DAL.Models.Action action);
         IEnumerable<object> GetCustomerShippingAddressAudit(long customerId,long customerShippingAddressId);

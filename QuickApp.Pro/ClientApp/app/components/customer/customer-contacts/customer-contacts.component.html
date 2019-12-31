@@ -244,15 +244,15 @@
                             <div class="form-group">
                                 <label>First Name <span class="clr-red">*</span></label>
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                    <input type="text" class="form-control" [(ngModel)]="contactInformation.firstName" name="firstName" required>
-                                    <!-- <p-autoComplete class="autocomp-customer-cstm"
+                                    <!--<input type="text" class="form-control" [(ngModel)]="contactInformation.firstName" name="firstName" required>-->
+                                     <p-autoComplete class="autocomp-customer-cstm"
                                         [(ngModel)]="contactInformation.firstName"  name="firstName" field="firstName" [suggestions]="firstNamesList" (completeMethod)="filterFirstNames($event)" [size]="30"
-                                        [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required>
+                                        [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}"  (onSelect)="onFirstNameSelected()" (onKeyUp)=checkfirstNameExist($event.target.value) required>
 
 
-                        </p-autoComplete> -->
+                        </p-autoComplete> 
                                 </div>
-                                <!-- <div *ngIf="disableSaveFirstName" class="clr-red">Entry Already Exists</div> -->
+                                 <div *ngIf="disablesaveForFirstname" class="clr-red">Entry Already Exists</div> 
                                 <!-- <div class="form-group col-sm-12 Customer-details-heading" *ngIf="showFirstName">
                         <p class="fs10">
                             Please Enter Required fields
@@ -262,27 +262,27 @@
                             <div class="form-group">
                                 <label>Middle Name</label>
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                    <input type="text" class="form-control" [(ngModel)]="contactInformation.middleName" name="middleName">
-                                    <!-- <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="contactInformation.middleName"
+                                    <!--<input type="text" class="form-control" [(ngModel)]="contactInformation.middleName" name="middleName">-->
+                                     <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="contactInformation.middleName"
                                         name="middleName"  [suggestions]="middleNamesList" field="middleName" (completeMethod)="filterMiddleNames($event)" [size]="30"
-                                        [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}">
+                                        [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" (onSelect)="onMiddleNameSelected()" (onKeyUp)=checkmiddleNameExist($event.target.value)>
 
-                        </p-autoComplete> -->
+                        </p-autoComplete> 
                                 </div>
 
-                                <!-- <div *ngIf="disableSaveMiddleName" class="clr-red">Entry Already Exists</div> -->
+                                 <div *ngIf="disableSaveMiddleName" class="clr-red">Entry Already Exists</div> 
                             </div>
                             <div class="form-group">
                                 <label>Last Name <span class="clr-red">*</span></label>
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                    <input type="text" class="form-control" [(ngModel)]="contactInformation.lastName" name="lastName" required>
-                                    <!-- <p-autoComplete class="autocomp-customer-cstm"  [(ngModel)]="contactInformation.lastName"
+                                    <!--<input type="text" class="form-control" [(ngModel)]="contactInformation.lastName" name="lastName" required>-->
+                                     <p-autoComplete class="autocomp-customer-cstm"  [(ngModel)]="contactInformation.lastName"
                          name="lastName" [suggestions]="lastNamesList" field="lastName" (completeMethod)="filterLastNames($event)"
 
-                                        [size]="30" [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required>
+                                        [size]="30" [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required (onSelect)="onLastNameSelected()" (onKeyUp)=checklastNameExist($event.target.value)>
 
-                        </p-autoComplete> -->
-                                    <!-- <div *ngIf="disableSaveLastName" class="clr-red">Entry Already Exists</div> -->
+                        </p-autoComplete> 
+                                     <div *ngIf="disableSaveLastName" class="clr-red">Entry Already Exists</div> 
                                 </div>
                                 <!-- <div class="form-group col-sm-12 Customer-details-heading" *ngIf="showLastName">
                         <p class="fs10">
@@ -337,11 +337,11 @@
                             </div>
                             <div class="form-group">
                                 <label>Mobile Phone</label>
-                                <input class="form-control" pKeyFilter="pint" type="text" name="mobilePhone" [(ngModel)]="contactInformation.mobilePhone">
+                                <input class="form-control"  type="text" name="mobilePhone" [(ngModel)]="contactInformation.mobilePhone" (keypress)="patternMobilevalidationWithSpl($event)">
                             </div>
                             <div class="form-group">
                                 <label>Alternate Phone</label>
-                                <input class="form-control" pKeyFilter="pint" type="text" name="alternatePhone" [(ngModel)]="contactInformation.alternatePhone">
+                                <input class="form-control"  type="text" name="alternatePhone" [(ngModel)]="contactInformation.alternatePhone" (keypress)="patternMobilevalidationWithSpl($event)">
                             </div>
                             <div class="form-group">
                                 <label>Fax</label>
@@ -369,8 +369,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" *ngIf="!isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" [disabled]="!addContactForm.valid ||contactEmail.errors" (click)="saveContactInformation()" data-dismiss="modal">Save</button>
-                    <button type="button" *ngIf="isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" (click)="updateCustomerContact()" [disabled]="!addContactForm.valid ||contactEmail.errors" data-dismiss="modal">Update</button>
+                    <button type="button" *ngIf="!isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" [disabled]="!addContactForm.valid ||contactEmail.errors || disablesaveForFirstname || disableSaveMiddleName ||disableSaveLastName" (click)="saveContactInformation()" data-dismiss="modal">Save</button>
+                    <button type="button" *ngIf="isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" (click)="updateCustomerContact()" [disabled]="!addContactForm.valid ||contactEmail.errors|| disablesaveForFirstname ||disableSaveMiddleName ||disableSaveLastName" data-dismiss="modal">Update</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                 </div>
             </form>

@@ -165,7 +165,7 @@ namespace QuickApp.Pro.Controllers
                         return BadRequest($"{nameof(objAttachment)} cannot be null");
                     objAttachment.MasterCompanyId = Convert.ToInt32(Request.Form["MasterCompanyId"]);
                     objAttachment.UpdatedBy = Request.Form["UpdatedBy"];
-                    objAttachment.ReferenceId = Convert.ToInt64(Request.Form["EmployeeId"]);
+                    objAttachment.ReferenceId = Convert.ToInt64(Request.Form["ReferenceId"]);
                     objAttachment.ModuleId = Convert.ToInt32(Request.Form["ModuleId"]);
 
 

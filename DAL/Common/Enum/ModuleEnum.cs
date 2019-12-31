@@ -22,6 +22,7 @@
         GLAccountCategory,
         ExpenditureCategory,
         AssetAttributeType,
-        AssetIntangibleAttributeType
+        AssetIntangibleAttributeType,
+        ItemMaster,
     }
 }

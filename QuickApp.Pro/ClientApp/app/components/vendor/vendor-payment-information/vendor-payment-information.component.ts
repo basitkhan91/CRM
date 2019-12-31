@@ -21,6 +21,7 @@ import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/route
 import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
 import { GMapModule } from 'primeng/gmap';
+import * as $ from 'jquery';
 declare const google: any;
 
 @Component({
@@ -75,6 +76,8 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	updatedCollection: {};
     siteName: any;
     address1: any;
+    address2: any;
+    isPrimary: boolean = false;
     city: any;
 	stateOrProvince: any;
 	postalCode: number;
@@ -82,7 +85,9 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
     defaultPaymentMethod: number;
     disablesaveforCountry: boolean;
     disablesavefoInternalrCountry: boolean;
-    disablesaveforBeneficiary: boolean;
+	disablesaveforBeneficiary: boolean;
+	selectedRowforDelete: any;
+
     ngOnInit(): void {
 		this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-payment-information';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
@@ -139,7 +144,9 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	countrycollection: any;
 	selectedCountries: any;
     private isEditMode: boolean = false;
-    private isDeleteMode: boolean = false;
+	private isDeleteMode: boolean = false;
+	isEditPaymentInfo: boolean = false;
+
 	constructor(private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 		if (this.workFlowtService.financeCollection) {
 			this.local = this.workFlowtService.financeCollection;
@@ -313,7 +320,8 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		);
         this.cols = [
             { field: 'siteName', header: 'Site Name' },
-            { field: 'address1', header: 'Address' },
+            { field: 'address1', header: 'Address1' },
+            { field: 'address2', header: 'Address2' },
             { field: 'city', header: 'City' },
             { field: 'stateOrProvince', header: 'State/Prov' },
 			{ field: 'postalCode', header: 'Postal Code' },
@@ -513,16 +521,19 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
         }, () => { console.log('Backdrop click') })
     }
 
-    openEdit(content, row) {
+    openEdit(row) {
         this.isEditMode = true;
         this.isSaving = true;
-        this.sourceVendor = row;
-        this.loadMasterCompanies();
+        this.sourceVendor = {...row};
+		this.loadMasterCompanies();
+		this.isEditPaymentInfo = true;
     }
     openView(content, row) {
         this.sourceVendor = row;
 		this.siteName = row.siteName;
 		this.address1 = row.address1;
+		this.address2 = row.address2;
+		this.isPrimary = row.isPrimary ? row.isPrimary : false;
 		this.city = row.city;
 		this.stateOrProvince = row.stateOrProvince;
 		this.postalCode = row.postalCode;
@@ -554,11 +565,9 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
             error => this.saveFailedHelper(error));
 	}
 
-	toggledbldisplay(data) {
-
-		this.sourceVendor = data;
-	}
-
+	// toggledbldisplay(data) {
+	// 	this.sourceVendor = data;
+	// }
 	
     private onAddressDataLoadSuccessful(alladdress: any[]) {
         this.alertService.stopLoadingMessage();
@@ -660,10 +669,10 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		}
 		else
 		{
-		}
+		}		
+		$('#addPaymentInfo').modal('hide');
 	}
 
-	
 
     saveDomesticPaymentInfo() {
 		this.isSaving = true;
@@ -699,6 +708,8 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			this.domasticWireValue = true;
 			this.internationalValue = false;
 		}
+		this.domesticSaveObj = {};
+
     }
 
 	saveInternationalPaymentInfo() {
@@ -735,6 +746,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			this.internationalValue = true;
 			this.defaultPaymentValue = false;
 		}
+		this.internationalSaveObj = {};
 	}
 	
 	saveDefaultPaymentInfo() {
@@ -773,13 +785,32 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	
 		
 			
-	deleteItemAndCloseModel(checkPaymentId) {
-        this.isSaving = true;
-        this.sourceVendor.isActive = false;
-        this.sourceVendor.updatedBy = this.userName;
-		this.workFlowtService.deleteCheckPayment(checkPaymentId).subscribe(
-            response => this.saveCompleted(this.sourceVendor),
-            error => this.saveFailedHelper(error));
+	// deleteItemAndCloseModel(checkPaymentId) {
+    //     this.isSaving = true;
+    //     this.sourceVendor.isActive = false;
+    //     this.sourceVendor.updatedBy = this.userName;
+	// 	this.workFlowtService.deleteCheckPayment(checkPaymentId).subscribe(
+    //         response => this.saveCompleted(this.sourceVendor),
+    //         error => this.saveFailedHelper(error));
+	// }
+	
+	deletePaymentInfo(rowData) {
+		this.selectedRowforDelete = rowData;
+	}
+
+    deleteConformation(value) {
+        if (value === 'Yes') {
+            this.workFlowtService.deleteCheckPayment(this.selectedRowforDelete.checkPaymentId).subscribe(() => {
+                this.loadData();
+                this.alertService.showMessage(
+                    'Success',
+                    `Action was deleted successfully`,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            this.selectedRowforDelete = undefined;
+        }
     }
 
     updateVendorCheckPayment(updateObj: any) {
@@ -1001,6 +1032,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	}
 	
 	onAddPaymentInfo() {
-        //this.sourceVendor = {};
+		this.sourceVendor = {};
+		this.isEditPaymentInfo = false;
     }
 }

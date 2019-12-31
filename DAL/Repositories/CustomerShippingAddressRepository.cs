@@ -157,6 +157,43 @@ namespace DAL.Repositories
             return data;
         }
 
+        public IEnumerable<Object> GetCustomerShippingAudit(long customerId, long customerShippingAddressId, long customerShippingId)
+        {
+            var data = (from cs in _appContext.CustomerShippingAudit
+                        join csa in _appContext.CustomerShippingAddress on cs.CustomerShippingAddressId equals csa.CustomerShippingAddressId
+                        where ((cs.CustomerShippingAddressId == customerShippingAddressId) && (cs.IsDeleted == false || cs.IsDeleted == null) && cs.CustomerShippingId==customerShippingId && cs.CustomerId==customerId)
+
+                        // select new { t, ad, vt }).ToList();
+                        select new
+                        {
+                            csa.SiteName,
+                            cs.CustomerShippingId,
+                            cs.Memo,
+                            cs.ShipVia,
+                            ShippingAccountInfo = cs.ShippingAccountinfo,
+                            cs.ShippingURL,
+                            cs.ShippingId,
+                            cs.IsActive,
+                            cs.CustomerId,
+                            cs.CustomerShippingAddressId,
+                            cs.CreatedDate,
+                            cs.UpdatedDate,
+                            cs.CreatedBy,
+                            cs.UpdatedBy,
+                            cs.AuditCustomerShippingId
+                            //csa.Amount,
+                            //csa.StartDate,
+                            //csa.ExpirationDate,
+                            //csa.Description,
+                            //csa.ExportLicenseNumber
+
+
+                        }).OrderByDescending(c => c.AuditCustomerShippingId).ToList();
+            return data;
+        }
+
+
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }

@@ -12,7 +12,7 @@
                     </nav>
                 </nav>
                 <div class="pheading">
-                    <h4 class="page-heading clr-green">Receiving</h4>
+                    <h4 class="page-heading clr-green">Create Customer Work</h4>
                 </div>
                 <div class="clear"></div>
                 <div class="tab-content form-bg">
@@ -34,13 +34,13 @@
                                                         <div class="ui-helper-clearfix">{{firstName}}</div>
                                                     </ng-template>
                                                 </p-autoComplete>
-                                                <a matTooltip="Create Employee" style="position: absolute;right: -20px;top: 0;"
+                                                <!--<a matTooltip="Create Employee" style="position: absolute;right: -20px;top: 0;"
                                                    class=""
                                                    [routerLink]="[
       '/employeesmodule/employeepages/app-employee-general-information'
     ]">
                                                     <i class="fa fa-plus-circle fa-lg"></i>
-                                                </a>
+                                                </a>-->
                                             <!--</div>-->
                                             </div>
                                         </div>
@@ -63,13 +63,13 @@
                                                     <div class="ui-helper-clearfix">{{name}}</div>
                                                 </ng-template>
                                             </p-autoComplete>
-                                            <a matTooltip="Create Customer" style="position: absolute;right: -20px;top: 0;"
+                                            <!--<a matTooltip="Create Customer" style="position: absolute;right: -20px;top: 0;"
                                      class=""
                                      [routerLink]="[
       '/customersmodule/customerpages/app-customer-create'
     ]">
                                       <i class="fa fa-plus-circle fa-lg"></i>
-                                  </a>
+                                  </a>-->
                                             <!--<div *ngIf="disableSaveCusName" class="clr-red">Entry Already Exists</div>-->
 
                                         </div>
@@ -85,13 +85,13 @@
                                                                 [minLength]="1" [dropdown]="true" required>
 
                                                 </p-autoComplete>
-                                                <a matTooltip="Create Customer" style="position: absolute;right: -20px;top: 0;"
+                                                <!--<a matTooltip="Create Customer" style="position: absolute;right: -20px;top: 0;"
                                      class=""
                                      [routerLink]="[
       '/customersmodule/customerpages/app-customer-create'
     ]">
                                       <i class="fa fa-plus-circle fa-lg"></i>
-                                  </a>
+                                  </a>-->
                                                 <!--<input sstyle="font-size: 1px" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.customerCode" readonly>-->
                                             </div>
                                         </div>
@@ -130,7 +130,7 @@
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Contact Phone<strong class="clr-red">*</strong></label>
                                         <div class="col-sm-7">
-                                            <input sstyle="font-size: 1px" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.workPhone" required>
+                                            <input sstyle="font-size: 1px" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.workPhone" required (keypress)="patternMobilevalidationWithSpl($event)">
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-12 input-icon1">
@@ -144,13 +144,13 @@
                                                         <div class="ui-helper-clearfix">{{partName}}</div>
                                                     </ng-template>
                                                 </p-autoComplete>
-                                                <a matTooltip="Create Item master" style="position: absolute;right: -20px;top: 0;"
+                                                <!--<a matTooltip="Create Item master" style="position: absolute;right: -20px;top: 0;"
                                                    class=""
                                                    [routerLink]="[
       '/itemmastersmodule/itemmasterpages/app-item-master-stock'
     ]">
                                                     <i class="fa fa-plus-circle fa-lg"></i>
-                                                </a>
+                                                </a>-->
                                             <!--</div>-->
                                             </div>
                                             </div>
@@ -177,13 +177,13 @@
                                                                 <div class="ui-helper-clearfix">{{partName1}}</div>
                                                             </ng-template>
                                                         </p-autoComplete>
-                                                        <a matTooltip="Create Item master" style="position: absolute;right: -20px;top: 0;"
+                                                        <!--<a matTooltip="Create Item master" style="position: absolute;right: -20px;top: 0;"
                                                            class=""
                                                            [routerLink]="[
       '/itemmastersmodule/itemmasterpages/app-item-master-stock'
     ]">
                                                             <i class="fa fa-plus-circle fa-lg"></i>
-                                                        </a>
+                                                        </a>-->
                                                     <!--</div>-->
                                                     </div>
                                                     </div>
@@ -247,8 +247,8 @@
                                                     <div class="form-group col-sm-12">
                                                         <label class="control-label col-sm-4">Condtion<strong class="clr-red">*</strong></label>
                                                         <div class="col-sm-7">
-                                                            <select style="border-radius:5px;" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.conditionCodeId" required>
-                                                                <option *ngFor="let condition of allConditionInfo" [ngValue]="condition.conditionCodeId">{{condition.description}}</option>
+                                                            <select style="border-radius:5px;" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.conditionId" required>
+                                                                <option *ngFor="let condition of allConditionInfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -273,7 +273,7 @@
 
 
                                                     <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Warehouse <strong class="clr-red">*</strong></label>
+                                                        <label class="control-label col-sm-4">Warehouse </label>
                                                         <div class="col-sm-7">
                                                             <select required style="border-radius:5px;" [(ngModel)]="sourcereceving.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(sourcereceving.warehouseId)">
                                                                 <option>--Select</option>
@@ -282,7 +282,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Location<strong class="clr-red">*</strong></label>
+                                                        <label class="control-label col-sm-4">Location</label>
                                                         <div class="col-sm-7">
                                                             <select required style="border-radius:5px;" [(ngModel)]="sourcereceving.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(sourcereceving.locationId)">
                                                                 <option>--Select</option>
@@ -320,13 +320,13 @@
                                                                         <div class="ui-helper-clearfix">{{name}}</div>
                                                                     </ng-template>
                                                                 </p-autoComplete>
-                                                                <a matTooltip="Create Customer" style="position: absolute;right: -20px;top: 0;"
+                                                                <!--<a matTooltip="Create Customer" style="position: absolute;right: -20px;top: 0;"
                                                                    class=""
                                                                    [routerLink]="[
       '/customersmodule/customerpages/app-customer-create'
     ]">
                                                                     <i class="fa fa-plus-circle fa-lg"></i>
-                                                                </a>
+                                                                </a>-->
                                                             <!--</div>-->
                                                             </div>
                                                         </div>
@@ -441,7 +441,7 @@
                                                                     <input class="" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.isExpirationDate" id="expdate-input">
 
                                                                     <div *ngIf="sourcereceving.isExpirationDate">
-                                                                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.expirationDate "></p-calendar>
+                                                                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.expirationDate"></p-calendar>
                                                                     </div>
                                                                 </div>
                                                             </div>

@@ -289,5 +289,7 @@ namespace DAL
 
         ISalesOrderQuotePartRepository SalesOrderQuotePart { get; }
 
+        IMasterSalesOrderQuoteStatusRepository MasterSalesOrderQuoteStatusRepository { get; }
+
     }
 }

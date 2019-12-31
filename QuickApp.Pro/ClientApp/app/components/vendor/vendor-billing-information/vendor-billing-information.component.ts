@@ -21,6 +21,7 @@ import { debounce } from 'rxjs/operators/debounce';
 import { HttpClient } from '@angular/common/http';
 import { GMapModule } from 'primeng/gmap';
 import { Router } from '@angular/router';
+import * as $ from 'jquery';
 declare const google: any;
 @Component({
     selector: 'app-vendor-billing-information',
@@ -59,7 +60,7 @@ export class VendorBillingInformationComponent {
     siteName: any;
     address1: any;
     address2: any;
-    address3: any;
+    // address3: any;
     city: any;
     stateOrProvince: any;
     postalCode: number;
@@ -113,6 +114,8 @@ export class VendorBillingInformationComponent {
     selectedCountries: any;
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
+    isEditBillingInfo: boolean = false;
+    selectedRowforDelete: any;
 
     constructor(private http: HttpClient, private router: Router,
         private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
@@ -135,7 +138,7 @@ export class VendorBillingInformationComponent {
             this.sourceVendor.siteName = this.local.vendorName;
             this.sourceVendor.address1 = this.local.address1;
             this.sourceVendor.address2 = this.local.address2;
-            this.sourceVendor.address3 = this.local.address3;
+            // this.sourceVendor.address3 = this.local.address3;
             this.sourceVendor.city = this.local.city;
             this.sourceVendor.country = this.local.country;
             this.sourceVendor.stateOrProvince = this.local.stateOrProvince;
@@ -212,7 +215,7 @@ export class VendorBillingInformationComponent {
             { field: 'siteName', header: 'Site Name' },
             { field: 'address1', header: 'Address1' },
             { field: 'address2', header: 'Address2' },
-            { field: 'address3', header: 'Address3' },
+            // { field: 'address3', header: 'Address3' },
             { field: 'city', header: 'City' },
             { field: 'stateOrProvince', header: 'State/Prov' },
             { field: 'postalCode', header: 'Postal Code' },
@@ -355,8 +358,9 @@ export class VendorBillingInformationComponent {
 
     openEdit(row) {
         this.isEditMode = true;
+        this.isEditBillingInfo = true;
         this.isSaving = true;
-        this.sourceVendor = row;
+        this.sourceVendor = {...row};
         this.loadMasterCompanies();
     }
     openView(content, row) {
@@ -368,7 +372,7 @@ export class VendorBillingInformationComponent {
         this.postalCode = row.postalCode;
         this.country = row.country;
         this.address2 = row.address2;
-        this.address3 = row.address3;
+        // this.address3 = row.address3;
         this.createdBy = row.createdBy;
         this.updatedBy = row.updatedBy;
         this.createddate = row.createdDate;
@@ -454,10 +458,12 @@ export class VendorBillingInformationComponent {
                     this.updatedCollection = data;
                     this.loadData();
                     this.sourceVendor = {};
+                    this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
                 })
             }
 
         }
+        $('#addBillingInfo').modal('hide');
     }
     saveVendorShipViaDetails() {
         this.isSaving = true;
@@ -535,15 +541,33 @@ export class VendorBillingInformationComponent {
         })
     }
 
-    deleteItemAndCloseModel(vendorBillingAddressId) {
-        this.isSaving = true;
-        this.sourceVendor.isActive = false;
-        this.sourceVendor.addressStatus = false;
-        this.sourceVendor.updatedBy = this.userName;
-        this.sourceVendor.vendorBillingAddressId = vendorBillingAddressId;
-        this.workFlowtService.deleteAcion(this.sourceVendor).subscribe(
-            response => this.saveCompleted(this.sourceVendor),
-            error => this.saveFailedHelper(error));
+    // deleteItemAndCloseModel(vendorBillingAddressId) {
+    //     this.isSaving = true;
+    //     this.sourceVendor.isActive = false;
+    //     this.sourceVendor.addressStatus = false;
+    //     this.sourceVendor.updatedBy = this.userName;
+    //     this.sourceVendor.vendorBillingAddressId = vendorBillingAddressId;
+    //     this.workFlowtService.deleteAcion(this.sourceVendor).subscribe(
+    //         response => this.saveCompleted(this.sourceVendor),
+    //         error => this.saveFailedHelper(error));
+    // }
+
+    deleteBillingInfo(rowData) {
+        this.selectedRowforDelete = rowData;
+    }
+    deleteConformation(value) {
+        if (value === 'Yes') {
+            this.workFlowtService.deleteAcion(this.selectedRowforDelete.vendorBillingAddressId).subscribe(() => {
+                this.loadData();
+                this.alertService.showMessage(
+                    'Success',
+                    `Action was deleted successfully`,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            this.selectedRowforDelete = undefined;
+        }
     }
 
     deleteItemBillingCloseModel(vendorBillingId) {
@@ -610,9 +634,9 @@ export class VendorBillingInformationComponent {
         }
     }
 
-    toggledbldisplay(data) {
-        this.sourceVendor = data;
-    }
+    // toggledbldisplay(data) {
+    //     this.sourceVendor = data;
+    // }
     nextClick() {
         if (this.local) {
             this.workFlowtService.billingCollection = this.local;
@@ -718,7 +742,6 @@ export class VendorBillingInformationComponent {
         }
     }
 
-
     getColorCodeForHistory(i, field, value) {
         const data = this.billingauditHisory;
         const dataLength = data.length;
@@ -729,6 +752,11 @@ export class VendorBillingInformationComponent {
                 return data[i + 1][field] === value
             }
         }
+    }
+
+    onAddBillingInfo() {
+        this.sourceVendor = {};
+        this.isEditBillingInfo = false;
     }
 
 }

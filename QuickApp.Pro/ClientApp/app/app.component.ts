@@ -164,7 +164,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                 items: [
                     { label: 'Customers List', routerLink: '/customersmodule/customerpages/app-customers-list' },
                     { label: 'Create Customer', routerLink: '/customersmodule/customerpages/app-customer-create' },
-                    { label: 'Classification', routerLink: '/singlepages/singlepages/app-customer-classification' },
+                    //{ label: 'Classification', routerLink: '/singlepages/singlepages/app-customer-classification' },
                     {
                         label: 'Invoice', items: [
                             { label: 'Invoice List', routerLink: '/#' },
@@ -446,14 +446,9 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'Journals', items: [
-                            { label: 'View Batch', routerLink: '/accountmodule/accountpages/app-view-batch' },
-                            { label: 'Journal Approvals Rules', routerLink: '/singlepages/singlepages/app-journal-approvals' },
-                            {
-                                label: 'Reports and Forms', items: [
-                                    { label: 'Journal Batches', routerLink: '/#' },
-                                    { label: 'Journal Entry', routerLink: '/#' },
-                                ]
-                            },
+                            { label: 'Journal List', routerLink: '/accountmodule/accountpages/app-list-journel' },
+                            { label: 'Create Journal Entry', routerLink: '/accountmodule/accountpages/app-create-journel' },
+                            { label: 'Schedule', routerLink: '/accountmodule/accountpages/app-schedule' },
                         ]
                     },
                     {

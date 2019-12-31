@@ -55,6 +55,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     constructor(private receivingCustomerWorkService: ReceivingCustomerWorkService, private masterComapnyService: MasterComapnyService, private _route: Router, private authService: AuthService, private alertService: AlertService, private modalService: NgbModal) {
         this.dataSource = new MatTableDataSource();
         this.receivingCustomerWorkService.isEditMode = false;
+       // this.loadData();
     }
 
      

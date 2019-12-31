@@ -257,25 +257,30 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.workFlowtService.getVendorProcess1099DataFromTransaction(vendorId).subscribe(res => {
-            this.vendorProcess1099Data = res[0].map(x => {
-                return {
-                    ...x
-                    
-                    
+            if(res[0].length != 0) {
+                this.vendorProcess1099Data = res[0].map(x => {
+                    return {
+                        ...x
+                        
+                        
+                    }
+                });
+                console.log(this.vendorProcess1099Data);
+                console.log(this.checkedCheckboxesList);
+                for(let j=0; j<this.vendorProcess1099Data.length; j++){
+                    if(this.vendorProcess1099Data[j].isDefaultRadio == true || this.vendorProcess1099Data[j].isDefaultRadio == "true"){
+                        this.vendorProcess1099Data[j].isDefaultRadio = this.vendorProcess1099Data[j].description
+                    }
+                    if(this.vendorProcess1099Data[j].isDefaultCheck == true){
+                        this.checkedCheckboxesList.push(j);
+                    }
                 }
-            });
-            console.log(this.vendorProcess1099Data);
-            console.log(this.checkedCheckboxesList);
-            for(let j=0; j<this.vendorProcess1099Data.length; j++){
-                if(this.vendorProcess1099Data[j].isDefaultRadio == true || this.vendorProcess1099Data[j].isDefaultRadio == "true"){
-                    this.vendorProcess1099Data[j].isDefaultRadio = this.vendorProcess1099Data[j].description
-                }
-                if(this.vendorProcess1099Data[j].isDefaultCheck == true){
-                    this.checkedCheckboxesList.push(j);
-                }
+                console.log(this.checkedCheckboxesList, "checkedCheckboxesList++++");
+                console.log(this.vendorProcess1099Data);
+            } else {
+                this.getVendorProcess1099();
             }
-            console.log(this.checkedCheckboxesList, "checkedCheckboxesList++++");
-            console.log(this.vendorProcess1099Data);
+            
         })
 
 

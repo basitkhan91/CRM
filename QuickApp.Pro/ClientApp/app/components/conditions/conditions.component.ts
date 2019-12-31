@@ -114,7 +114,7 @@ export class ConditionsComponent implements OnInit {
             let description = this.conditionData[i].description;
             let conditionId = this.conditionData[i].conditionId;
             if (description.toLowerCase() == value.toLowerCase()) {
-                if (!this.isEditMode) {
+                if (!this.isEditMode  || this.isEditMode) {
                     this.disableSaveForConditionMsg = true;
                     this.disableSaveForCondition = true;
                 }

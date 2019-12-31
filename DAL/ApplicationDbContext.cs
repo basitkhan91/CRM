@@ -107,6 +107,8 @@ namespace DAL
         public DbSet<VendorAudit> VendorAudit { get; set; }
         public DbSet<CustomerContact> CustomerContact { get; set; }
         public DbSet<CustomerShipping> CustomerShipping { get; set; }
+        public DbSet<CustomerShippingAudit> CustomerShippingAudit { get; set; }
+
         public DbSet<CustomerShippingAddress> CustomerShippingAddress { get; set; }
         public DbSet<CustomerShippingAddressAudit> CustomerShippingAddressAudit { get; set; }
 
@@ -392,7 +394,11 @@ namespace DAL
         public DbSet<CustomerInternationalShipping> CustomerInternationalShipping { get; set; }
         public DbSet<CustomerInternationalShippingAudit> CustomerInternationalShippingAudit { get; set; }
         public DbSet<ShippingViaDetails> ShippingViaDetails { get; set; }
+        public DbSet<ShippingViaDetailsAudit> ShippingViaDetailsAudit { get; set; }
+
         public DbSet<CustomerDocumentDetail> CustomerDocumentDetails { get; set; }
+        public DbSet<CustomerDocumentDetailAudit> CustomerDocumentDetailsAudit { get; set; }
+
         public DbSet<Attachment> Attachment { get; set; }
         public DbSet<AttachmentDetails> AttachmentDetails { get; set; }
         public DbSet<ClassificationMapping> ClassificationMapping { get; set; }
@@ -479,8 +485,9 @@ namespace DAL
         public DbSet<Master1099Audit> Master1099Audit { get; set; }
         public DbSet<TagType> TagType { get; set; }
         public DbSet<CustomerAircraftMappingAudit> CustomerAircraftMappingAudit { get; set; }
-
-
+        
+        public DbSet<Models.Sales.MasterSalesOrderQuoteStatus> MasterSalesOrderQuoteStatus { get; set; }
+        public DbSet<AuditCustomerContact> AuditCustomerContact { get; set; }
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

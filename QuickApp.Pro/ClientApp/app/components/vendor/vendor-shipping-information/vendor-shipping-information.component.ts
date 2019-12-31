@@ -21,6 +21,7 @@ import { debounce } from 'rxjs/operators/debounce';
 import { HttpClient } from '@angular/common/http';
 import { GMapModule } from 'primeng/gmap';
 import { Router } from '@angular/router';
+import * as $ from 'jquery';
 declare const google: any;
 @Component({
     selector: 'app-vendor-shipping-information',
@@ -58,7 +59,7 @@ export class VendorShippingInformationComponent {
     siteName: any;
     address1: any;
     address2: any;
-    address3: any;
+    // address3: any;
     city: any;
     stateOrProvince: any;
     postalCode: number;
@@ -114,6 +115,8 @@ export class VendorShippingInformationComponent {
     selectedCountries: any;
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
+    isEditShippingInfo: boolean = false;
+    selectedRowforDelete: any;
     auditHistory: any = [];
 
     constructor(private http: HttpClient, private router: Router,
@@ -137,7 +140,7 @@ export class VendorShippingInformationComponent {
             this.sourceVendor.siteName = this.local.vendorName;
             this.sourceVendor.address1 = this.local.address1;
             this.sourceVendor.address2 = this.local.address2;
-            this.sourceVendor.address3 = this.local.address3;
+            // this.sourceVendor.address3 = this.local.address3;
             this.sourceVendor.city = this.local.city;
             this.sourceVendor.country = this.local.country;
             this.sourceVendor.stateOrProvince = this.local.stateOrProvince;
@@ -210,7 +213,7 @@ export class VendorShippingInformationComponent {
             error => this.onDataLoadFailed(error)
         );
         this.cols = [
-            { field: 'siteName', header: 'Ship To' },
+            { field: 'siteName', header: 'Site Name' },
             { field: 'address1', header: 'Address1' },
             { field: 'address2', header: 'Address2' },
             // { field: 'address3', header: 'Address3' },
@@ -327,10 +330,10 @@ export class VendorShippingInformationComponent {
        
         this.shippingauditHisory = auditHistory;
        
-        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+        // this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        // this.modal.result.then(() => {
+        //     console.log('When user closes');
+        // }, () => { console.log('Backdrop click') })
     }
     private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
         this.alertService.stopLoadingMessage();
@@ -359,6 +362,7 @@ export class VendorShippingInformationComponent {
         this.isDeleteMode = true;
         //this.sourceVendor = row;
         this.localCollection = row;
+        this.selectedRowforDelete = row;
         this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -368,8 +372,9 @@ export class VendorShippingInformationComponent {
     openEdit(row) {
         this.isEditMode = true;
         this.isSaving = true;
-        this.sourceVendor = row;
+        this.sourceVendor = {...row};
         this.loadMasterCompanies();
+        this.isEditShippingInfo = true;
     }
     openView(content, row) {
         this.sourceVendor = row;
@@ -381,7 +386,7 @@ export class VendorShippingInformationComponent {
         this.postalCode = row.postalCode;
         this.country = row.country;
         this.address2 = row.address2;
-        this.address3 = row.address3;
+        // this.address3 = row.address3;
         this.createdBy = row.createdBy;
         this.updatedBy = row.updatedBy;
         this.createddate = row.createdDate;
@@ -417,9 +422,8 @@ export class VendorShippingInformationComponent {
             results => this.onAuditHistoryLoadSuccessful(results, content),
             error => this.saveFailedHelper(error));
 
-
-       
-    }
+      
+    }    
 
     editItemAndCloseModel() {
         this.isSaving = true;
@@ -451,12 +455,14 @@ export class VendorShippingInformationComponent {
                 this.sourceVendor.masterCompanyId = 1;
                 this.workFlowtService.updateshippinginfo(this.sourceVendor).subscribe(data => {
                     this.updatedCollection = data;
-                    this.loadData();
+                    this.loadData();                    
                     this.sourceVendor = {};
+                    this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
                 })
             }
 
         }
+        $('#addShippingInfo').modal('hide');
     }
     saveVendorShipViaDetails() {        
         this.isSaving = true;
@@ -751,16 +757,15 @@ export class VendorShippingInformationComponent {
         }
     }
 
-    getAuditHistoryById(rowData) {
-        // this.publicationService.getPublicationAuditDetails(rowData.publicationRecordId).subscribe(res => {
-        //     console.log(res);            
-        //     this.auditHistory = res;
-        // })
+    shippingInfoHistory(rowData) {
+        this.sourceVendor = rowData;
+        this.workFlowtService.getShipaddressHistory(this.sourceVendor.vendorId, this.sourceVendor.vendorShippingAddressId).subscribe(res => {
+            this.auditHistory = res;
+        })
     }
 
-
     getColorCodeForHistory(i, field, value) {
-        const data = this.shippingauditHisory;
+        const data = this.auditHistory;
         const dataLength = data.length;
         if (i >= 0 && i <= dataLength) {
             if ((i + 1) === dataLength) {
@@ -773,6 +778,7 @@ export class VendorShippingInformationComponent {
 
     onAddShippingInfo() {
         this.sourceVendor = {};
+        this.isEditShippingInfo = false;
     }
 
 

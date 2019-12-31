@@ -99,7 +99,7 @@ namespace DAL.Repositories
                             t.Name,
                             t.CustomerCode,
                             t.Email,
-                            CustomerType = type.Description,
+                            AccountType = type.Description,
                             CustomerClassification = ct.Description,
                             City = ad.City,
                             StateOrProvince = ad.StateOrProvince,
@@ -108,7 +108,7 @@ namespace DAL.Repositories
                             t.CreatedDate,
                             t.IsActive,
                             t.IsDeleted,
-                            AccountType = AccountTyp.description,
+                            CustomerType = AccountTyp.description,
                             TotalRecords = totalRecords
                         }).Distinct().OrderByDescending(p => p.CreatedDate)
                              .Skip(skip)
@@ -2121,6 +2121,41 @@ namespace DAL.Repositories
                                 c.MasterCompanyId
                             }).OrderByDescending(c => c.UpdatedDate).ToList();
                 return data;
+            }
+        }
+        public IEnumerable<object> GetAuditShippingViaDetailsById(long customerId, long internationalShippingId,long ShippingViaDetailsId)
+        {
+            var data = (from c in _appContext.ShippingViaDetailsAudit
+                        where c.CustomerId == customerId && c.ShippingViaDetailsId ==c.ShippingViaDetailsId && c.InternationalShippingId==internationalShippingId
+                        select new
+                        {
+                            c.AuditShippingViaDetailsId,
+                            c.ShippingViaDetailsId,
+                            c.CustomerId,
+                            
+                            c.CreatedBy,
+                            c.UpdatedBy,
+                            c.UpdatedDate,
+                            c.CreatedDate,
+                           
+                            c.Memo,
+                           c.ShipVia,
+                           c.ShippingAccountInfo,
+                            c.ShippingURL,
+                            c.MasterCompanyId
+                        }).OrderByDescending(c => c.UpdatedDate).ToList();
+            return data;
+        }
+        public List<CustomerDocumentDetailAudit> GetCustomerDocumentDetailsAudit(long id)
+        {
+            try
+            {
+                return _appContext.CustomerDocumentDetailsAudit.Where(p => p.IsActive == true && p.CustomerDocumentDetailId == id).OrderByDescending(p => p.UpdatedDate).ToList();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 

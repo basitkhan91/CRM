@@ -60,7 +60,7 @@ namespace QuickApp.Pro.Controllers
                        CustomerId = c.CustomerId,
                        CustomerName = c.Name,
                        CustomerCode = c.CustomerCode,
-                       Status = "Open",  // Hardcoded for time being, will be removed in next version  
+                       Status = "Open",  // Hardcoded for time being, will be removed in next version 
                    };
                    
             return Ok(list);
@@ -72,7 +72,8 @@ namespace QuickApp.Pro.Controllers
         {
             var model = new SalesQuoteViewModel
             {
-                CustomerId = customerId
+                CustomerId = customerId, 
+                StatusId = 1,
             };
 
             model = BindDefaultDataSources(model);
@@ -92,13 +93,15 @@ namespace QuickApp.Pro.Controllers
 
             IEnumerable<SalesOrderQuoteApproverList> approverList =  this.UnitOfWork.SalesOrderQuoteApproverList.GetApproverList(id);
 
-            IEnumerable<SalesOrderQuotePart> parts = this.UnitOfWork.SalesOrderQuotePart.GetPartsBySalesQuoteId(id);
+            IEnumerable<SalesOrderQuotePartView> partsView = GetSalesOrderQuotePartsView(id);
+            
+            //IEnumerable<SalesOrderQuotePart> parts = this.UnitOfWork.SalesOrderQuotePart.GetPartsBySalesQuoteId(id);
 
             var quoteView = Mapper.Map<SalesOrderQuote, SalesOrderQuoteView>(quote);
 
             var approverListView = Mapper.Map<IEnumerable<SalesOrderQuoteApproverList>, IEnumerable<SalesOrderQuoteApproverListView>>(approverList);
 
-            var partsView = Mapper.Map<IEnumerable<SalesOrderQuotePart>, IEnumerable<SalesOrderQuotePartView>>(parts);
+            //var partsView = Mapper.Map<IEnumerable<SalesOrderQuotePart>, IEnumerable<SalesOrderQuotePartView>>(parts);
 
             var response = new SalesQuoteView
             {
@@ -116,8 +119,12 @@ namespace QuickApp.Pro.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]SalesQuoteView quoteView)
         {
-            SalesOrderQuote quote = Mapper.Map<SalesOrderQuoteView, SalesOrderQuote>(quoteView.SalesOrderQuote);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
+            quoteView.SalesOrderQuote.StatusId = 1;  // Defualt to "Open" 
+
+            SalesOrderQuote quote = Mapper.Map<SalesOrderQuoteView, SalesOrderQuote>(quoteView.SalesOrderQuote);
+            
             IEnumerable<SalesOrderQuoteApproverList> approverList = Mapper.Map<List<SalesOrderQuoteApproverListView>, List<SalesOrderQuoteApproverList>>(quoteView.ApproverList);
 
             IEnumerable<SalesOrderQuotePart> parts = Mapper.Map<List<SalesOrderQuotePartView>, List<SalesOrderQuotePart>>(quoteView.Parts);
@@ -195,6 +202,44 @@ namespace QuickApp.Pro.Controllers
             this.UnitOfWork.SalesOrderQuote.Delete(id);
 
             return Ok(true);
+        }
+
+        private IEnumerable<SalesOrderQuotePartView> GetSalesOrderQuotePartsView(long salesQuoteId)
+        {
+            IEnumerable<SalesOrderQuotePartView> partsView = from part in Context.SalesOrderQuotePart
+                                                             join stockLine in Context.StockLine on part.StockLineId equals stockLine.StockLineId into quoteToSl
+                                                             from qs in quoteToSl.DefaultIfEmpty()
+                                                             join itemMaster in Context.ItemMaster on part.ItemMasterId equals itemMaster.ItemMasterId
+                                                             where part.SalesOrderQuoteId == salesQuoteId
+                                                             select new SalesOrderQuotePartView
+                                                             {
+                                                                  SalesOrderQuotePartId = part.SalesOrderQuotePartId, 
+                                                                  SalesOrderQuoteId = part.SalesOrderQuoteId, 
+                                                                  ItemMasterId = part.ItemMasterId, 
+                                                                  StockLineId = part.StockLineId,  
+                                                                  stockLineNumber = qs.StockLineNumber,  
+                                                                  FxRate = part.FxRate, 
+                                                                  QtyQuoted = part.QtyQuoted,  
+                                                                  UnitSalePrice = part.UnitSalePrice,  
+                                                                  MarkUpPercentage = part.MarkUpPercentage,  
+                                                                  SalesBeforeDiscount = part.SalesBeforeDiscount,  
+                                                                  Discount = part.Discount,  
+                                                                  DiscountAmount = part.DiscountAmount,  
+                                                                  NetSales = part.NetSales,  
+                                                                  MasterCompanyId = part.MasterCompanyId,  
+                                                                  CreatedBy = part.CreatedBy,  
+                                                                  CreatedOn = part.CreatedOn,  
+                                                                  UpdatedBy = part.UpdatedBy,  
+                                                                  UpdatedOn = part.UpdatedOn,  
+                                                                  partNumber = qs.PartNumber,  
+                                                                  partDescription = itemMaster.PartDescription,  
+                                                                  isOEM = qs.OEM.HasValue ? qs.OEM.Value : false,  
+                                                                  isPMA = itemMaster.PMA.HasValue ? itemMaster.PMA.Value : false, 
+                                                                  isDER = itemMaster.DER.HasValue ? itemMaster.DER.Value : false
+                                                             };
+
+            return partsView;
+
         }
     }
 }

@@ -39,6 +39,7 @@ export class CreditTermsComponent implements OnInit {
     netDayList:number[]=[];
     creditTermData: any;
     creditTermsList: any;
+    disableSaveForCreditTermMSg : boolean = false;
     creditTermHeaders = [
 
         { field: 'name', header: 'Credit Term Name' },
@@ -114,6 +115,7 @@ export class CreditTermsComponent implements OnInit {
     resetCreditTermsForm() {
         this.isEditMode = false;
         this.disableSaveForCreditTerm = false;
+        this.disableSaveForCreditTermMSg = false;
 
         this.selectedRecordForEdit = undefined;
         this.addNewCreditTerm = { ...this.newCreditTerm };
@@ -133,6 +135,35 @@ export class CreditTermsComponent implements OnInit {
 
     }
 
+    onBlur(event) {
+        const value = event.target.value;
+      
+        this.disableSaveForCreditTermMSg = false;
+        for (let i = 0; i < this.creditTermData.length; i++) {
+            let name = this.creditTermData[i].name;
+            let CreditTermsId = this.creditTermData[i].CreditTermsId;
+            if (name.toLowerCase() == value.toLowerCase()) {
+                if (this.isEditMode  || !this.isEditMode) {
+                    this.disableSaveForCreditTermMSg = true;
+                    this.disableSaveForCreditTerm = true;
+                }
+                else if (CreditTermsId != this.selectedRecordForEdit.CreditTermsId) {
+                    this.disableSaveForCreditTermMSg = true;
+                    this.disableSaveForCreditTerm = false;
+
+                }
+                else {
+                   
+                    this.disableSaveForCreditTermMSg = false;
+                    this.disableSaveForCreditTerm = false;
+                }
+                console.log('name :', name);
+                break;
+            }
+        }
+
+    }
+
     filterCreditTerms(event) {
         this.creditTermsList = this.creditTermData;
 
@@ -145,9 +176,11 @@ export class CreditTermsComponent implements OnInit {
     checkCreditTermExists(field, value) {
         const exists = validateRecordExistsOrNot(field, value, this.creditTermData, this.selectedRecordForEdit);
         if (exists.length > 0) {
+            this.disableSaveForCreditTermMSg = true;
             this.disableSaveForCreditTerm = true;
         }
         else {
+            this.disableSaveForCreditTermMSg = false;
             this.disableSaveForCreditTerm = false;
         }
 
@@ -194,7 +227,8 @@ export class CreditTermsComponent implements OnInit {
     edit(rowData) {
         console.log(rowData);
         this.isEditMode = true;
-        this.disableSaveForCreditTerm = false;
+        this.disableSaveForCreditTerm = true;
+        this.disableSaveForCreditTermMSg = false;
         this.addNewCreditTerm = { ...rowData, name: getObjectById('creditTermsId', rowData.creditTermsId, this.creditTermData) };
         this.selectedRecordForEdit = { ...this.addNewCreditTerm }
         console.log(this.addNewCreditTerm);

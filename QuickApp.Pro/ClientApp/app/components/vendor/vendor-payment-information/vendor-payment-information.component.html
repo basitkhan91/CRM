@@ -34,7 +34,7 @@
                                                                selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
                                                 <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
                                                     <i class="fa fa-search"></i>
-                                                    <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')">
+                                                    <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
                                                 </div>
                                                 <button type="button" class="btn btn-primary-cstm" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Data" (click)="dt.exportCSV()" style="padding:5px 10px !important;"></button>
                                                 <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selected Data" (click)="dt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>
@@ -57,8 +57,7 @@
                                         </ng-template>
             
                                         <ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">
-                                            <tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)" [ngClass]="{'row-primary': rowData.isDefaultContact === true}">
-            
+                                            <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" pReorderableRowHandle (dblclick)="openView(view,rowData)" [ngClass]="{'row-primary': rowData.isDefaultContact === true}">
             
                                                 <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                                     {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
@@ -79,11 +78,11 @@
                                                     </p-inputSwitch>
             
                                                     <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-                                                    <button class="btn-edit" mat-icon-button (click)="openEdit(contentEdit,rowData)" matTooltip="edit">
+                                                    <button class="btn-edit" mat-icon-button data-target="#addPaymentInfo" data-toggle="modal" (click)="openEdit(rowData)" matTooltip="edit">
                                                         <mat-icon>edit</mat-icon>
                                                     </button>
             
-                                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteItemAndCloseModel(rowData.checkPaymentId)">
+                                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deletePaymentInfo(rowData)" data-toggle="modal" data-target="#deletePaymentInfo">
                                                         <mat-icon color="warn">delete</mat-icon>
                                                     </button>
             
@@ -288,6 +287,9 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-row" style="margin-top: 10px;">
+                                <button type="button" class="btn btn-primary-cstm" (click)="saveDefaultPaymentInfo()">Save</button>
+                            </div>
                         </p-tabPanel>
                     </p-tabView>
                 </div>
@@ -343,13 +345,15 @@
 
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-                <h4 class="modal-title">Vendor Details</h4>
+                <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal">×</button>
+                <h4 class="modal-title">View Payment Info</h4>
             </div>
             <div class="modal-body viewform">
-                <p><span class="label"><b>Vendor Name: </b></span><span class="value">{{siteName}}</span></p>
-                <p><span class="label"><b> Address 1: </b></span><span class="value">{{address1}}</span></p>
-                <p><span class="label"><b> City </b></span><span class="value">{{city}}</span></p>
+                <p><span class="label"><b>Primary: </b></span><span class="value">{{isPrimary}}</span></p>
+                <p><span class="label"><b>Site Name: </b></span><span class="value">{{siteName}}</span></p>
+                <p><span class="label"><b>Address 1: </b></span><span class="value">{{address1}}</span></p>
+                <p><span class="label"><b>Address 2: </b></span><span class="value">{{address2}}</span></p>
+                <p><span class="label"><b>City: </b></span><span class="value">{{city}}</span></p>
                 <p><span class="label"><b>State Or Province: </b></span><span class="value">{{stateOrProvince}}</span></p>
                 <p><span class="label"><b>Postal Code : </b></span><span class="value">{{postalCode}}</span></p>
                 <p><span class="label"><b>Country : </b></span><span class="value">{{country}}</span></p>
@@ -357,7 +361,7 @@
                 <div class="clear"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
             </div>
         </div>
 
@@ -378,7 +382,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Add Payment Information</h4>
+                            <h4 class="modal-title">{{isEditPaymentInfo ? 'Edit' : 'Add'}} Payment Information</h4>
                         </div>
                         <form #addPaymentForm="ngForm" class="form-horizontal">
                             <div class="modal-body">
@@ -440,11 +444,32 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary-cstm pull-right" (click)="saveCheckPaymentInfo()" [disabled]="!addPaymentForm.valid" data-dismiss="modal">Save</button>
-                                <button type="button" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary-cstm pull-right" (click)="saveCheckPaymentInfo()" [disabled]="!addPaymentForm.valid" data-dismiss="modal">Update</button>
+                                <button type="button" *ngIf="sourceVendor.checkPaymentId == undefined" class="btn btn-primary-cstm pull-right" (click)="saveCheckPaymentInfo()" [disabled]="!addPaymentForm.valid" data-dismiss="modal">Save</button>
+                                <button type="button" *ngIf="sourceVendor.checkPaymentId != undefined && sourceVendor.checkPaymentId !=0" class="btn btn-primary-cstm pull-right" (click)="saveCheckPaymentInfo()" [disabled]="!addPaymentForm.valid" data-dismiss="modal">Update</button>
                                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
+
+            <div *ngIf="selectedRowforDelete" id="deletePaymentInfo" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
+                        </div>
+                        <div class="modal-body">
+                          <strong>Site Name:
+                            <span class="new-label">{{selectedRowforDelete.siteName}}</span>
+                        </strong>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
+                            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
+                        </div>
+                      </div>
+                  
+                    </div>
+                </div>

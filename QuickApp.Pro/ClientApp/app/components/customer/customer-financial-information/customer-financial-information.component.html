@@ -36,11 +36,14 @@
                                             <label>
                                                 <span class="pull-left">Mark Up %</span>
                                                 <span style="margin-left:3px;cursor:pointer;">
-                                                    <a data-dismiss="modal"
-                                                       [routerLink]="[
-                        '/singlepages/singlepages/app-percent'
-                      ]"><i class="fa fa-plus-circle fa-lg"></i></a>
+                                                    <!--<a data-dismiss="modal"
+                                     [routerLink]="[
+      '/singlepages/singlepages/app-percent'
+    ]"><i class="fa fa-plus-circle fa-lg"></i></a>-->
+                                                    <!--<a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addMarkUp"></a>-->
+
                                                 </span>
+                                              
                                             </label>
                                             <select name="markUpPercentageId" [(ngModel)]="savedGeneralInformationData.markUpPercentageId">
                                                 <option *ngFor="let Percentlist of percentageList" [ngValue]="Percentlist.value">{{Percentlist.label}}</option>
@@ -159,12 +162,14 @@
                                                     Tax Type
                                                 </label>
                                                 <span style="margin-left:3px;cursor:pointer;">
-                                                    <a data-dismiss="modal"
-                                                       [routerLink]="[
-                        '/singlepages/singlepages/app-tax-type'
-                      ]"><i class="fa fa-plus-circle fa-lg"></i></a>
+                                                    <!--<a data-dismiss="modal"
+                                     [routerLink]="[
+      '/singlepages/singlepages/app-tax-type'
+    ]"><i class="fa fa-plus-circle fa-lg"></i></a>-->
+                                                    <a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addTaxType"></a>
+
                                                 </span>
-                                                
+                                               
                                                 <p-dropdown class="p-dropdown-custom" [options]="taxtypesList" placeholder="Select TaxType" name="taxType" [(ngModel)]="selectedTaxType"></p-dropdown>
                                             </div>
                                         </div>
@@ -174,12 +179,14 @@
                                                     Tax Rate
                                                 </label>
                                                 <span style="margin-left:3px;cursor:pointer;">
-                                                    <a data-dismiss="modal"
-                                                       [routerLink]="[
-                        '/singlepages/singlepages/app-percent'
-                      ]"><i class="fa fa-plus-circle fa-lg"></i></a>
-                                                </span>
+                                                    <!--<a data-dismiss="modal"
+                                     [routerLink]="[
+      '/singlepages/singlepages/app-percent'
+    ]"><i class="fa fa-plus-circle fa-lg"></i></a>-->
+                                                    <a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addTaxRate"></a>
 
+                                                </span>
+                                               
                                                 <p-multiSelect class="autocomp-customer-cstm" [options]="taxRatesList" name="taxRates" [(ngModel)]="selectedTaxRates"></p-multiSelect>
                                             </div>
                                         </div>

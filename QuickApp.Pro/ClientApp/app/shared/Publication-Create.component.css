@@ -64,9 +64,9 @@ select:disabled {
 .dropdown-select {
     background: url("../assets/images/ddrp-arrow.png") 98% center no-repeat;
 }
-.workflow-table-pub tr td {
+/*.workflow-table-pub tr td {
     padding: 4px;
-}
+}*/
 .workflow-table-pub tr th:first-child {
     padding: 0 10px !important;
 }

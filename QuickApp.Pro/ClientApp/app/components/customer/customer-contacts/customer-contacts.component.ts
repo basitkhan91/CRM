@@ -61,6 +61,11 @@ export class CustomerContactsComponent implements OnInit {
     customerContacts: any = [];
     selectedRowforDelete: any;
     selectedAtappedRowforDelete: any;
+    selectedFirstName: any;
+    disablesaveForFirstname: boolean;
+    disableSaveMiddleName: boolean;
+    disableSaveLastName: boolean;
+    disablesaveForlastname: boolean;
 	customerContactsColumns = [
 		{ field: 'tag', header: 'Tag' },
 		{ field: 'firstName', header: 'First Name' },
@@ -140,12 +145,14 @@ export class CustomerContactsComponent implements OnInit {
 			return x.firstName.toLowerCase().includes(event.query.toLowerCase())
 		})]
 	}
-	filterMiddleNames(event) {
+    filterMiddleNames(event) {
+        
 		console.log(event);
 		this.middleNamesList = this.contactsListOriginal
-		this.middleNamesList = [...this.contactsListOriginal.filter(x => {
-			if (x.lastName! == null) {
-				return x.middleName.toLowerCase().includes(event.query.toLowerCase())
+        this.middleNamesList = [...this.contactsListOriginal.filter(x => {
+            
+            if (x.middleName !== null && x.middleName !=="") {
+                return x.middleName.toLowerCase().indexOf(event.query.toLowerCase())
 			}
 
 		})]
@@ -156,6 +163,7 @@ export class CustomerContactsComponent implements OnInit {
 			return x.lastName.toLowerCase().includes(event.query.toLowerCase())
 		})]
 	}
+
     patternMobilevalidationWithSpl(event: any) {
         const pattern = /[0-9\+\-()\ ]/;
 
@@ -168,7 +176,14 @@ export class CustomerContactsComponent implements OnInit {
 	async saveContactInformation() {
 
 		// create a new contact in the contact table
-		const data = { ...this.contactInformation, createdBy: this.userName, updatedBy: this.userName, masterCompanyId: 1 }
+        const data = {
+            ...this.contactInformation, createdBy: this.userName, updatedBy: this.userName, isActive: true,
+            masterCompanyId: 1,
+            firstName: editValueAssignByCondition('firstName', this.contactInformation.firstName),
+            middleName: editValueAssignByCondition('middleName', this.contactInformation.middleName),
+            lastName: editValueAssignByCondition('lastName', this.contactInformation.lastName)
+
+        }
 		await this.customerService.newAddContactInfo(data).subscribe(res => {
 			const responseForCustomerCreate = res;
 
@@ -178,7 +193,7 @@ export class CustomerContactsComponent implements OnInit {
 
 					this.contactInformation = new CustomerContactModel()
 					// get all contacts
-					// this.getAllContacts();
+					 this.getAllContacts();
 					// get Customer Contatcs 
 					this.getAllCustomerContact();
 					this.alertService.showMessage(
@@ -218,14 +233,15 @@ export class CustomerContactsComponent implements OnInit {
 
 
     }
-	editCustomerContact(rowData) {
+    editCustomerContact(rowData) {
+        
 		this.ediData = { ...rowData };
 		this.isEditButton = true;
 		this.contactInformation = {
 			...this.ediData,
-			// firstName: getObjectByValue('firstName', this.ediData.firstName, this.contactsListOriginal),
-			// middleName: getObjectByValue('middleName', this.ediData.middleName, this.contactsListOriginal),
-			// lastName: getObjectByValue('lastName', this.ediData.lastName, this.contactsListOriginal),
+            firstName: getObjectByValue('firstName',rowData.firstName, this.contactsListOriginal),
+            middleName: getObjectByValue('middleName', rowData.middleName, this.contactsListOriginal),
+            lastName: getObjectByValue('lastName', rowData.lastName, this.contactsListOriginal),
 		}
         console.log(this.contactInformation);
         this.sourceViewforContact = '';
@@ -246,7 +262,9 @@ export class CustomerContactsComponent implements OnInit {
 
 		}
 		this.customerService.updateContactinfo(data).subscribe(res => {
-			this.getAllCustomerContact();
+            this.getAllContacts();
+            this.getAllCustomerContact();
+            
 			this.alertService.showMessage(
 				'Success',
 				`Sucessfully Updated Contact`,
@@ -259,7 +277,9 @@ export class CustomerContactsComponent implements OnInit {
 	getAllCustomerContact() {
 		// get Customer Contatcs 
 		this.customerService.getContacts(this.id).subscribe(res => {
-			this.customerContacts = res[0]
+            this.customerContacts = res[0]
+           
+
 		})
 	}
 
@@ -270,7 +290,7 @@ export class CustomerContactsComponent implements OnInit {
 		const data = { ...rowData, updatedBy: this.userName };
 
 		this.customerService.updateContactinfo(data).subscribe(res => {
-
+            this.getAllContacts();
 			this.getAllCustomerContact();
 			this.alertService.showMessage(
 				'Success',
@@ -463,8 +483,8 @@ export class CustomerContactsComponent implements OnInit {
         this.modal.close();
     }
 
-	getAuditHistoryById(rowData) {
-		this.customerService.getCustomerContactAuditDetails(rowData.customerContactId).subscribe(res => {
+    getAuditHistoryById(rowData) {
+        this.customerService.getCustomerContactAuditDetails(rowData.customerContactId, rowData.customerId).subscribe(res => {
 			this.auditHistory = res;
 		})
     }
@@ -513,6 +533,78 @@ export class CustomerContactsComponent implements OnInit {
     }
 
 
+    onFirstNameSelected() {
+                 this.disablesaveForFirstname = true;
+             
+    }
+    onMiddleNameSelected() {
+        this.disableSaveMiddleName = true;
+
+    }
+    onLastNameSelected() {
+        this.disableSaveLastName = true;
+
+    }
+    //eventFirstNameHandler(event) {
+    //    if (event.target.value != "") {
+    //        let value = event.target.value.toLowerCase();
+    //        if (this.selectedFirstName) {
+    //            if (value == this.selectedFirstName.toLowerCase()) {
+    //                this.disablesaveForFirstname = true;
+    //            }
+    //            else {
+    //                this.disablesaveForFirstname = false;
+    //            }
+    //        }
+    //    }
+    //}
+    checkfirstNameExist(value) {
+       
+        this.disablesaveForFirstname = false;
+       
+        for (let i = 0; i < this.contactsListOriginal.length; i++) {
+
+            if (this.contactInformation.firstName == this.contactsListOriginal[i].firstName || value == this.contactsListOriginal[i].firstName) {
+                this.disablesaveForFirstname = true;
+                return;
+            }
+
+        }
+
+    }
+
+    checkmiddleNameExist(value) {
+        
+
+        this.disableSaveMiddleName = false;
+
+        for (let i = 0; i < this.contactsListOriginal.length; i++) {
+
+            if (this.contactInformation.middleName == this.contactsListOriginal[i].middleName || value == this.contactsListOriginal[i].middleName) {
+                this.disableSaveMiddleName = true;
+                return;
+            }
+
+        }
+        if (value == "") {
+            this.disableSaveMiddleName = false;
+        }
+
+    }
+    checklastNameExist(value) {
+
+        this.disableSaveLastName = false;
+
+        for (let i = 0; i < this.contactsListOriginal.length; i++) {
+
+            if (this.contactInformation.lastName == this.contactsListOriginal[i].lastName || value == this.contactsListOriginal[i].lastName) {
+                this.disableSaveLastName = true;
+                return;
+            }
+
+        }
+
+    }
 
 
 

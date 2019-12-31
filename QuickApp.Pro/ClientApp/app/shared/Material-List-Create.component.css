@@ -70,9 +70,9 @@ select {
 .workflow-table-material {
     height: 350px;
 }
-.workflow-table-material .material-tr td {
+/*.workflow-table-material .material-tr td {
     padding: 4px;
-}
+}*/
 .workflow-table-material tr th:first-child {
         padding: 0 10px !important;
 }

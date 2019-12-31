@@ -23,6 +23,8 @@ import { SalesOrderQuote } from "../models/sales/SalesOrderQuote";
 import { ItemMasterSearchQuery } from "../components/sales/quotes/models/item-master-search-query";
 import { IPartJson } from "../components/sales/shared/models/ipart-json";
 import { PartDetail } from "../components/sales/shared/models/part-detail";
+import { ISalesOrderQuoteApproverList } from '../models/sales/ISalesOrderQuoteApproverList';
+import { SalesOrderQuoteApproverList } from '../models/sales/SalesOrderQuoteApproverList';
 
 export type RolesChangedOperation = "add" | "delete" | "modify";
 export type RolesChangedEventArg = {
@@ -40,10 +42,20 @@ export class SalesQuoteService {
   constructor(private salesQuoteEndPointSevice: SalesQuoteEndpointService) {
     this.salesOrderQuote = new SalesOrderQuote();
     this.approvers = [];
+   
+    console.log(this.approvers);
     this.parts = [];
     this.selectedParts = [];
     this.query = new ItemMasterSearchQuery();
     this.query.partSearchParamters.quantityAlreadyQuoted = 0;
+  }
+  initializeApprovals(){
+    this.approvers.push(new SalesOrderQuoteApproverList());
+    this.approvers.push(new SalesOrderQuoteApproverList());
+    this.approvers.push(new SalesOrderQuoteApproverList());
+    this.approvers.push(new SalesOrderQuoteApproverList());
+    this.approvers.push(new SalesOrderQuoteApproverList());
+    console.log(this.approvers);
   }
 
   getNewSalesQuoteInstance(customerId: number) {
@@ -71,6 +83,7 @@ export class SalesQuoteService {
   }
   resetSalesOrderQuote(){
     this.approvers = [];
+    this.initializeApprovals();
     this.selectedParts = [];
     this.salesOrderQuote = new SalesOrderQuote();
   }
@@ -84,6 +97,8 @@ export class SalesQuoteService {
   }
   getSalesOrderQuteApprovers() {
     return Observable.create(observer => {
+      if(this.approvers.length<1)
+          this.initializeApprovals();
       observer.next(this.approvers);
       observer.complete();
 

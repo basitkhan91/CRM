@@ -88,6 +88,8 @@ namespace QuickApp.Pro.ViewModels
 
         public string Notes { get; set; }
 
+        public int StatusId { get; set; }
+
         #region Data Source
         public IEnumerable<PriorityViewModel> Priorities
         {
@@ -115,6 +117,11 @@ namespace QuickApp.Pro.ViewModels
         }
 
         public IEnumerable<MasterSalesLeadSourcesViewModel> LeadSources
+        {
+            get; set;
+        }
+
+        public IEnumerable<SalesViews.MasterSalesOrderQuoteStatusView> Status
         {
             get; set;
         }
