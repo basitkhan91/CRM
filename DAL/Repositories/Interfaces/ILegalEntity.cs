@@ -8,7 +8,7 @@ namespace DAL.Repositories.Interfaces
   public  interface ILegalEntity : IRepository<LegalEntity>
     {
         IEnumerable<object> GetAllLegalEntityData();
-
+        IEnumerable<object> GetParentEntities();  
         long CreateLegalEntityBillingAddress(LegalEntityBillingAddress billingAddress);
         void UpdateLegalEntityBillingAddress(LegalEntityBillingAddress billingAddress);
         void DeleteLegalEntityBillingAddress(long billingAddressId, string updatedBy);
