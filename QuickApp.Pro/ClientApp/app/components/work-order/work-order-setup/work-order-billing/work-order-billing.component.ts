@@ -79,22 +79,25 @@ export class WorkOrderBillingComponent implements OnInit {
         this.getInvoiceList();
 
 
+
         if (this.isEditBilling) {
+            console.log(this.billingorInvoiceForm);
             this.getSiteNamesBySoldCustomerId(data.soldToCustomerId);
             this.getSiteNamesByShipCustomerId(data.shipToCustomerId);
-            this.commonService.getManagementStructureDetails(data.managementStructureId).subscribe(res => {
-                this.selectedLegalEntity(res.Level1);
-                this.selectedBusinessUnit(res.Level2);
-                this.selectedDivision(res.Level3);
-                this.selectedDepartment(res.Level4);
-                this.managementStructure = {
-                    companyId: res.Level1 !== undefined ? res.Level1 : null,
-                    buId: res.Level2 !== undefined ? res.Level2 : null,
-                    divisionId: res.Level3 !== undefined ? res.Level3 : null,
-                    departmentId: res.Level4 !== undefined ? res.Level4 : null,
-                }
+            this.bindManagementStructure(data);
+            // this.commonService.getManagementStructureDetails(data.managementStructureId).subscribe(res => {
+            //     this.selectedLegalEntity(res.Level1);
+            //     this.selectedBusinessUnit(res.Level2);
+            //     this.selectedDivision(res.Level3);
+            //     this.selectedDepartment(res.Level4);
+            //     this.managementStructure = {
+            //         companyId: res.Level1 !== undefined ? res.Level1 : null,
+            //         buId: res.Level2 !== undefined ? res.Level2 : null,
+            //         divisionId: res.Level3 !== undefined ? res.Level3 : null,
+            //         departmentId: res.Level4 !== undefined ? res.Level4 : null,
+            //     }
 
-            })
+            // })
             if (this.billingorInvoiceForm.soldToCustomerId) {
                 this.soldCustomerAddress = {
                     city: data.city,
@@ -122,12 +125,34 @@ export class WorkOrderBillingComponent implements OnInit {
 
 
 
+        } else {
+            this.bindManagementStructure(this.billingorInvoiceForm);
         }
+
     }
 
-    getPercentageList(){
+    async bindManagementStructure(data) {
+        console.log(data);
+
+        await this.commonService.getManagementStructureDetails(data.managementStructureId).subscribe(res => {
+            this.selectedLegalEntity(res.Level1);
+            this.selectedBusinessUnit(res.Level2);
+            this.selectedDivision(res.Level3);
+            this.selectedDepartment(res.Level4);
+            this.managementStructure = {
+                companyId: res.Level1 !== undefined ? res.Level1 : null,
+                buId: res.Level2 !== undefined ? res.Level2 : null,
+                divisionId: res.Level3 !== undefined ? res.Level3 : null,
+                departmentId: res.Level4 !== undefined ? res.Level4 : null,
+            }
+
+        })
+    }
+
+
+    getPercentageList() {
         this.commonService.smartDropDownList('[Percent]', 'PercentId', 'PercentValue').subscribe(res => {
-            this.markUpList =  res;
+            this.markUpList = res;
         })
     }
 
@@ -149,6 +174,7 @@ export class WorkOrderBillingComponent implements OnInit {
     //         this.legalEntityList = res;
     //     })
     // }
+
 
 
 

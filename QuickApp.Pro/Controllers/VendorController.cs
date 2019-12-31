@@ -2368,6 +2368,20 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.Address.Add(address);
                 _unitOfWork.SaveChanges();
                 checkPaymentObj.AddressId = address.AddressId.Value;
+
+                if (checkPaymentViewModel.IsPrimayPayment == true)
+                {
+                    var vendorConcatData = _context.CheckPayment.Where(p => p.AddressId == checkPaymentObj.AddressId).ToList();
+
+                    foreach (var objContactdata in vendorConcatData)
+                    {
+                        objContactdata.IsPrimayPayment = false;
+                        _unitOfWork.vendorPaymentRepository.Update(objContactdata);
+                    }
+                    _unitOfWork.SaveChanges();
+                }
+
+
                 _unitOfWork.vendorPaymentRepository.Add(checkPaymentObj);
                 _unitOfWork.SaveChanges();
                 return Ok(checkPaymentObj);
@@ -2389,7 +2403,7 @@ namespace QuickApp.Pro.Controllers
                 checkPaymentObj.SiteName = checkPaymentViewModel.SiteName;
                 checkPaymentObj.MasterCompanyId = 1;
                 // checkPaymentObj.IsActive = checkPaymentViewModel.IsActive;
-                checkPaymentObj.IsPrimayPayment = checkPaymentViewModel.IsPrimayPayment;
+              
                 checkPaymentObj.CreatedDate = DateTime.Now;
                 checkPaymentObj.UpdatedDate = DateTime.Now;
                 checkPaymentObj.CreatedBy = checkPaymentViewModel.CreatedBy;
@@ -2407,6 +2421,20 @@ namespace QuickApp.Pro.Controllers
                 addressObj.CreatedDate = DateTime.Now;
                 addressObj.UpdatedDate = DateTime.Now;
                 _unitOfWork.Address.Update(addressObj);
+
+                if (checkPaymentViewModel.IsPrimayPayment == true)
+                {
+                    var vendorConcatData = _context.CheckPayment.Where(p => p.AddressId == checkPaymentObj.AddressId).ToList();
+
+                    foreach (var objContactdata in vendorConcatData)
+                    {
+                        objContactdata.IsPrimayPayment = false;
+                        _unitOfWork.vendorPaymentRepository.Update(objContactdata);
+                    }
+                    _unitOfWork.SaveChanges();
+                }
+                checkPaymentObj.IsPrimayPayment = checkPaymentViewModel.IsPrimayPayment;
+
                 _unitOfWork.vendorPaymentRepository.Update(checkPaymentObj);
                 _unitOfWork.SaveChanges();
                 return Ok(checkPaymentObj);
@@ -3020,19 +3048,15 @@ namespace QuickApp.Pro.Controllers
 
 
         }
-        [HttpGet("getCheckPayHist/{id}", Name = "getCheckPayHist")]
-        [Produces(typeof(List<AuditHistory>))]
-
+        [HttpGet("getCheckPayHist/{id}")]        
         public IActionResult getCheckPayHist(long id)
-        {
-            var result = _unitOfWork.AuditHistory.GetAllHistory("CheckPayment", id); //.GetAllCustomersData();
-
+        {           
 
             try
             {
-                var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
-
-                return Ok(resul1);
+                var allVendorCheckDetails = _unitOfWork.Vendor.GetVendorsCheckAuditHistory(id);
+                return Ok(allVendorCheckDetails);
+               
             }
             catch (Exception ex)
             {

@@ -69,6 +69,15 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpGet("ParentEntities")]
+        [Produces(typeof(List<LegalEntityViewModel>))]
+        public IActionResult GetParentEntities()
+        {
+            var allentity = _unitOfWork.LegalEntity.GetParentEntities();
+            return Ok(allentity);
+
+        }
+
         [HttpGet("GetforEdigt")]
         [Produces(typeof(List<LegalEntityViewModel>))]
         public IActionResult GetforEdigt()
@@ -122,7 +131,6 @@ namespace QuickApp.Pro.Controllers
                 if (legalEntityViewModel.ParentId == null)
                 {
                     entityobject.ParentId = null;
-
                 }
                 entityobject.ParentId = legalEntityViewModel.ParentId;
                 AddAddress(legalEntityViewModel);
@@ -253,6 +261,7 @@ namespace QuickApp.Pro.Controllers
                     var lockAddress = _context.Address.Where(a => a.AddressId == entityobject.LockBoxAddressId).SingleOrDefault();
                     var ach = _context.ACH.Where(a => a.ACHId == entityobject.ACHId).SingleOrDefault();
                     entityobject.MasterCompanyId = 1;
+                    entityobject.ParentId = legalEntityViewModel.ParentId;
                     entityobject.Name = legalEntityViewModel.Name;
                     entityobject.Description = legalEntityViewModel.Description;
                     entityobject.DoingLegalAs = legalEntityViewModel.DoingLegalAs;
@@ -266,6 +275,7 @@ namespace QuickApp.Pro.Controllers
                     entityobject.IsLastLevel = legalEntityViewModel.IsLastLevel;
                     entityobject.LockBoxAddressId = legalEntityViewModel.LockBoxAddressId;
                     entityobject.ReportingCurrencyId = legalEntityViewModel.ReportingCurrencyId;
+                    entityobject.LedgerName = legalEntityViewModel.LedgerName;
                     entityobject.TaxId = legalEntityViewModel.TaxId;
                     entityobject.CreatedDate = DateTime.Now;
                     entityobject.UpdatedDate = DateTime.Now;

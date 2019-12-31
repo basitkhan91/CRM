@@ -17,7 +17,7 @@ namespace DAL.Repositories
 
         public IEnumerable<Vendor> GetVendors()
         {
-            return _appContext.Vendor.OrderByDescending(c => c.VendorId).ToList();
+            return _appContext.Vendor.Where(c => (c.IsDelete == false || c.IsDelete == null) && (c.IsActive == true)).OrderByDescending(c => c.VendorId).ToList();
         }
 
         public IEnumerable<object> GetVendorsAuditHistory(long vendorId)
@@ -96,7 +96,7 @@ namespace DAL.Repositories
                             join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
                             from vc in vcd.DefaultIfEmpty()
                             join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
-                            from vca in vcad.DefaultIfEmpty()
+                            from vca in vcad.DefaultIfEmpty()                           
                             where t.IsDelete != true
                             && t.IsActive == (isActive == true ? true : t.IsActive)
                             select new
@@ -128,7 +128,8 @@ namespace DAL.Repositories
                                 DiscountLevel = di == null ? 0 : di.DiscontValue,
                                 vc.ClassificationName,
                                 VendorCapabilityName = vca.capabilityDescription,
-                                VendorPhoneContact = t.VendorPhone + " - " + t.VendorPhoneExt
+                                VendorPhoneContact = t.VendorPhone + " - " + t.VendorPhoneExt,
+                               
                             })/*.Where(t => t.IsActive == true)*/.OrderByDescending(c => c.CreatedDate).ToList();
                 return data;
 
@@ -882,7 +883,8 @@ namespace DAL.Repositories
                                 vba.CreatedDate,
                                 vba.UpdatedBy,
                                 vba.UpdatedDate,
-                                vba.CreatedBy
+                                vba.CreatedBy,
+                                vba.IsActive
                             }).OrderByDescending(p => p.AuditVendorBillingAddressId).ToList();
                 return list;
             }
@@ -1440,5 +1442,39 @@ namespace DAL.Repositories
             }
         }
 
+
+        public IEnumerable<object> GetVendorsCheckAuditHistory(long id)
+        {
+            var retData = (from t in _appContext.CheckPaymentAudit
+                           join ad in _appContext.Address on t.AddressId equals ad.AddressId                          
+                           where t.CheckPaymentId == id
+                           select new
+                           {
+                               t.AuditCheckPaymentId,
+                               t.CheckPaymentId,
+                               t.AddressId,                               
+                               t.MasterCompanyId,
+                               t.SiteName,
+                               t.IsActive,
+                               t.AccountNumber,
+                               t.RoutingNumber,
+                               Address1 = ad.Line1,
+                               Address2 = ad.Line2,
+                               Address3 = ad.Line3,                    
+                               ad.City,
+                               ad.StateOrProvince,
+                               ad.PostalCode,
+                               ad.Country,
+                               t.CreatedBy,
+                               t.UpdatedBy,
+                               t.CreatedDate,
+                               t.UpdatedDate
+                             
+                           }).OrderByDescending(c => c.AuditCheckPaymentId).ToList();
+
+            return retData;
+
+
+        }
     }
 }

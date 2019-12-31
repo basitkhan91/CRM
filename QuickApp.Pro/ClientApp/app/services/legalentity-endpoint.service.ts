@@ -15,6 +15,7 @@ export class LegalEntityEndpontService extends EndpointFactory {
 
     private readonly _managementUrl: string = "/api/ManagementStrcture/ManagementGet";
 	private readonly _managementLegalUrl: string = "/api/ManagementStrcture/ManagementGetView"; 
+	private readonly _parentEntityUrl: string = "/api/legalEntity/ParentEntities"; 
 	private readonly _ledgerUrl: string = "/api/ManagementStrcture/LedgerNames";
 	private readonly _entityediturl: string = "/api/legalEntity/GetforEdigt";
 	private readonly _entityUrlNew: string = "/api/legalEntity/legalEntitypost";
@@ -30,6 +31,7 @@ export class LegalEntityEndpontService extends EndpointFactory {
 	get entityurl() { return this.configurations.baseUrl + this._entityurl; }
     get managemententityurl() { return this.configurations.baseUrl + this._managementUrl; }
 	get managementlengalentityurl() { return this.configurations.baseUrl + this._managementLegalUrl; } 
+	get parentEntityUrl() { return this.configurations.baseUrl + this._parentEntityUrl; }  
 	get ledgerNamesurl() { return this.configurations.baseUrl + this._ledgerUrl; }
 	get entityediturl() { return this.configurations.baseUrl + this._entityediturl; }
 
@@ -60,6 +62,13 @@ export class LegalEntityEndpontService extends EndpointFactory {
                 return this.handleError(error, () => this.getLegalEntityEndpontService());
             });
     }
+
+	loadParentEntities<T>(): Observable<T> {
+		return this.http.get<T>(this.parentEntityUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getLegalEntityEndpontService());
+			});
+	}
 
 	getLedgerNamesData<T>(): Observable<T> {
 

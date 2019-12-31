@@ -13,5 +13,6 @@ namespace DAL.Models
         public string WorkOrderType { get; set; }
         public DateTime? OpenDate { get; set; }
         public string WorkOrderStatus { get; set; }
+        public string PartNos { get; set; }
     }
 }

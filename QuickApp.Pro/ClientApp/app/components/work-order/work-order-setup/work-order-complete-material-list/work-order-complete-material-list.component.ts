@@ -121,7 +121,8 @@ export class WorkOrderCompleteMaterialListComponent {
         this.cdRef.detectChanges();
         this.isEdit = true;
         this.addNewMaterial = true;
-        this.editData = rowData;
+        this.editData = { ...rowData };
+        console.log(rowData);
     }
     delete(rowData) {
 

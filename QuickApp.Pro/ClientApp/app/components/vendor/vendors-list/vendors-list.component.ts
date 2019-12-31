@@ -79,8 +79,8 @@ export class VendorsListComponent implements OnInit {
     vendorPhoneNo: any = "";
     vendorPhoneExt: any = "";
     is1099Required: any = "";      
-    isCertified: any = "";
-    isVendorAudit: any = "";
+    isCertified: boolean = false;
+    isVendorAudit: boolean = false;
     isVendorCustomer:any="";
     showGeneralData: boolean = true;
     showcontactdata: boolean = true;
@@ -219,8 +219,10 @@ export class VendorsListComponent implements OnInit {
             { field: 'vendorName', header: 'Vendor Name' },
             { field: 'vendorCode', header: 'Vendor Code' },
             { field: 'description', header: 'Vendor Type' },
-            { field: 'stateOrProvince', header: 'Vendor Classification' },
-            { field: 'vendorEmail', header: 'Vendor Email' },
+            { field: 'vendorRanking', header: 'Vendor Ranking' },
+            { field: 'classificationName', header: 'Vendor Classification' },
+            { field: 'vendorCapabilityName', header: 'Vendor Capabilities' },
+            { field: 'vendorEmail', header: 'Email' },
             { field: 'city', header: 'Vendor City' },
             { field: 'stateOrProvince', header: 'Vendor State' },
             { field: 'vendorPhoneContact', header: 'Vendor Contact' }
@@ -335,10 +337,23 @@ export class VendorsListComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.auditHisory = auditHistory;
+        console.log(this.auditHisory);        
         this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
+    }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
     }
 
     private onDataLoadFailed(error: any) {
@@ -646,8 +661,8 @@ export class VendorsListComponent implements OnInit {
         this.sourceVendor = row;
         this.isSaving = true;
         this.selectedRow = row;
-        this.workFlowtService.vendorHistory(this.sourceVendor.vendorId).subscribe(
-            results => this.onHistoryLoadSuccessful(results[0], content),
+        this.workFlowtService.getHistoryForVendor(this.sourceVendor.vendorId).subscribe(
+            results => this.onHistoryLoadSuccessful(results, content),
             error => this.saveFailedHelper(error));
     }
     AddPage() {
