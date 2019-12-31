@@ -256,6 +256,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
         this.GetPartNumberList();
         this.getMaterialMandatory();
         this.loadUOMData();
+        this.loadConditionData();
         this.sourceWorkFlow.workflowCreateDate = new Date();
         this.sourceWorkFlow.version = "V-1";
 
@@ -1074,7 +1075,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
 
     private loadConditionData() {
         this.conditionService.getConditionList().subscribe(data => {
-            this.allconditioninfo = data[0];
+            this.allconditioninfo = data[0];            
         })
     }
 
@@ -1721,7 +1722,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             conditionCodeId: this.getDefaultConditionId('new'),
             mandatoryOrSupplemental: 'Mandatory',
             itemClassificationId: '',
-            quantity: "",
+            quantity: '',
             unitOfMeasureId: this.getDefaultUOMId('Ea'),
             unitCost: "",
             extendedCost: "",
