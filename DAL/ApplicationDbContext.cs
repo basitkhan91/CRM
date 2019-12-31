@@ -123,6 +123,7 @@ namespace DAL
         public DbSet<ContactAudit> ContactAudit { get; set; }
         public DbSet<VendorCheckPayment> VendorCheckPayment { get; set; }
         public DbSet<CheckPayment> CheckPayment { get; set; }
+        public DbSet<CheckPaymentAudit> CheckPaymentAudit { get; set; }
 
         public DbSet<VendorDomesticWirePayment> VendorDomesticWirePayment { get; set; }
 
@@ -488,6 +489,8 @@ namespace DAL
         
         public DbSet<Models.Sales.MasterSalesOrderQuoteStatus> MasterSalesOrderQuoteStatus { get; set; }
         public DbSet<AuditCustomerContact> AuditCustomerContact { get; set; }
+        public DbSet<WorkOrderSettings> WorkOrderSettings { get; set; }
+
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

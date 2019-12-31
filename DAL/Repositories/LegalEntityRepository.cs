@@ -13,12 +13,20 @@ namespace DAL.Repositories
         public LegalEntityRepository(ApplicationDbContext context) : base(context)
         { }
 
-        //public IEnumerable<DAL.Models.LegalEntity> GetAllLegalEntityData()
-        //{
-        //    return _appContext.LegalEntity.Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.LegalEntityId).ToList();
+        public IEnumerable<object> GetParentEntities()
+        {
+            var data = (from legal in _appContext.LegalEntity
+                        where legal.ParentId == null
+                        select new
+                        {
+                            parentId = legal.LegalEntityId,
+                            legal.Name,
+                            legal.Description,
+                            legal.LedgerName,
 
-        //}
-
+                        }).OrderByDescending(p => p.Name).ToList();
+            return data;
+        }
 
         public IEnumerable<object> GetAllLegalEntityData()
         {
@@ -43,6 +51,7 @@ namespace DAL.Repositories
                             legal.Name,
                             legal.Description,
                             legal.DoingLegalAs,
+                            legal.ParentId,
                             phoneNumber1 = legal.PhoneNumber1,
                             faxNumber = legal.FaxNumber,
                             legal.IsBalancingEntity,
@@ -486,7 +495,7 @@ namespace DAL.Repositories
             try
             {
                 var list = (from lba in _appContext.LegalEntity
-                            where lba.IsDeleted == false && lba.ParentId == parentId
+                            where (lba.IsDeleted == false || lba.IsDeleted == null) && (lba.ParentId == parentId)
                             select new
                             {
                                 lba.LegalEntityId,
