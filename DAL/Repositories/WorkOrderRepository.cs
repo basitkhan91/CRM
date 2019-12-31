@@ -40,13 +40,44 @@ namespace DAL.Repositories
         {
             try
             {
+                string workOrderNo = string.Empty;
+                string latestWoNo = string.Empty;
+                long incWoNo = 0;
+
+                var exisWorkOrder = _appContext.WorkOrder.OrderByDescending(p => p.WorkOrderId).FirstOrDefault();
+
                 workOrder.CreatedDate = workOrder.UpdatedDate = DateTime.Now;
                 workOrder.IsActive = true;
                 workOrder.IsDeleted = false;
                 _appContext.WorkOrder.Add(workOrder);
                 _appContext.SaveChanges();
 
-                workOrder.WorkOrderNum = "WO" + workOrder.WorkOrderId;
+
+                var workOrderSettings = _appContext.WorkOrderSettings.Where(p => p.WorkOrderTypeId == workOrder.WorkOrderTypeId && p.IsActive == true && p.IsDeleted == false).FirstOrDefault();
+                if (workOrderSettings != null)
+                {
+                    workOrderNo = workOrderSettings.Prefix + workOrderSettings.StartCode;
+                }
+
+
+                if (exisWorkOrder != null)
+                {
+                    if (!string.IsNullOrEmpty(workOrderNo))
+                    {
+
+                        latestWoNo = exisWorkOrder.WorkOrderNum.Substring(workOrderNo.Length);
+                        incWoNo = Convert.ToInt64(latestWoNo) + 1;
+                    }
+                    else
+                    {
+                        incWoNo = 1;
+                    }
+                }
+                else
+                {
+                    incWoNo = 1;
+                }
+                workOrder.WorkOrderNum = workOrderNo + incWoNo;
                 _appContext.WorkOrder.Update(workOrder);
                 _appContext.SaveChanges();
 
@@ -258,15 +289,15 @@ namespace DAL.Repositories
                 {
                     workOrderTypeId = 1;
                 }
-                else if (shopinternal.Contains(woFilters.filters.WorkOrderType.ToLower()))
+                if (shopinternal.Contains(woFilters.filters.WorkOrderType.ToLower()))
                 {
                     workOrderTypeId = 2;
                 }
-                else if (liquidation.Contains(woFilters.filters.WorkOrderType.ToLower()))
+                if (liquidation.Contains(woFilters.filters.WorkOrderType.ToLower()))
                 {
                     workOrderTypeId = 3;
                 }
-                else if (services.Contains(woFilters.filters.WorkOrderType.ToLower()))
+                if (services.Contains(woFilters.filters.WorkOrderType.ToLower()))
                 {
                     workOrderTypeId = 4;
                 }
@@ -278,13 +309,15 @@ namespace DAL.Repositories
                                     join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
                                     join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
                                     join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
+                                    join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
                                     where wo.IsDeleted == false
                                     && wo.WorkOrderNum.Contains(!String.IsNullOrEmpty(woFilters.filters.workOrderNum) ? woFilters.filters.workOrderNum : wo.WorkOrderNum)
                                     && cust.Name.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerName) ? woFilters.filters.CustomerName : cust.Name)
                                     && cust.CustomerCode.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerCode) ? woFilters.filters.CustomerCode : cust.CustomerCode)
                                     && wo.WorkOrderStatusId == (statusId > 0 ? statusId : wo.WorkOrderStatusId)
                                     && wo.WorkOrderTypeId == (workOrderTypeId > 0 ? workOrderTypeId : wo.WorkOrderTypeId)
-                                     && wo.OpenDate == (woFilters.filters.OpenDate != null ? woFilters.filters.OpenDate : wo.OpenDate)
+                                    && wo.OpenDate.Date == (woFilters.filters.OpenDate != null ? woFilters.filters.OpenDate : wo.OpenDate.Date)
+                                    && im.PartNumber.Contains(!String.IsNullOrEmpty(woFilters.filters.PartNos) ? woFilters.filters.PartNos : im.PartNumber)
                                     select new
                                     {
                                         wo.WorkOrderId,
@@ -295,13 +328,15 @@ namespace DAL.Repositories
                             join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
                             join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
                             join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
+                            join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
                             where wo.IsDeleted == false
-                             && wo.WorkOrderNum.Contains(!String.IsNullOrEmpty(woFilters.filters.workOrderNum) ? woFilters.filters.workOrderNum : wo.WorkOrderNum)
-                                    && cust.Name.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerName) ? woFilters.filters.CustomerName : cust.Name)
-                                    && cust.CustomerCode.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerCode) ? woFilters.filters.CustomerCode : cust.CustomerCode)
-                                    && wo.WorkOrderStatusId == (statusId > 0 ? statusId : wo.WorkOrderStatusId)
-                                    && wo.WorkOrderTypeId == (workOrderTypeId > 0 ? workOrderTypeId : wo.WorkOrderTypeId)
-                                    && wo.OpenDate==(woFilters.filters.OpenDate != null? woFilters.filters.OpenDate:wo.OpenDate)
+                            && wo.WorkOrderNum.Contains(!String.IsNullOrEmpty(woFilters.filters.workOrderNum) ? woFilters.filters.workOrderNum : wo.WorkOrderNum)
+                            && cust.Name.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerName) ? woFilters.filters.CustomerName : cust.Name)
+                            && cust.CustomerCode.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerCode) ? woFilters.filters.CustomerCode : cust.CustomerCode)
+                            && wo.WorkOrderStatusId == (statusId > 0 ? statusId : wo.WorkOrderStatusId)
+                            && wo.WorkOrderTypeId == (workOrderTypeId > 0 ? workOrderTypeId : wo.WorkOrderTypeId)
+                            && wo.OpenDate.Date == (woFilters.filters.OpenDate != null ? woFilters.filters.OpenDate : wo.OpenDate.Date)
+                            && im.PartNumber.Contains(!String.IsNullOrEmpty(woFilters.filters.PartNos) ? woFilters.filters.PartNos : im.PartNumber)
                             select new
                             {
                                 wo.WorkOrderId,
@@ -405,12 +440,14 @@ namespace DAL.Repositories
                                         join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
                                         join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
                                         join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
+                                        join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
                                         where wo.IsDeleted == false
                                         && (wo.WorkOrderNum.Contains(filterText)
                                         || cust.Name.Contains(filterText)
                                         || cust.CustomerCode.Contains(filterText)
                                         || wo.WorkOrderStatusId == statusId
                                         || wo.WorkOrderTypeId == workOrderTypeId)
+                                        || im.PartNumber.Contains(filterText)
                                         select new
                                         {
                                             wo.WorkOrderId,
@@ -421,12 +458,14 @@ namespace DAL.Repositories
                                 join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
                                 join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
                                 join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
+                                join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
                                 where wo.IsDeleted == false
-                                 && (wo.WorkOrderNum.Contains(filterText)
-                                        || cust.Name.Contains(filterText)
-                                        || cust.CustomerCode.Contains(filterText)
-                                        || wo.WorkOrderStatusId == statusId
-                                        || wo.WorkOrderTypeId == workOrderTypeId)
+                                && (wo.WorkOrderNum.Contains(filterText)
+                                || cust.Name.Contains(filterText)
+                                || cust.CustomerCode.Contains(filterText)
+                                || wo.WorkOrderStatusId == statusId
+                                || wo.WorkOrderTypeId == workOrderTypeId)
+                                || im.PartNumber.Contains(filterText)
                                 select new
                                 {
                                     wo.WorkOrderId,
@@ -438,6 +477,11 @@ namespace DAL.Repositories
                                     wo.IsActive,
                                     wo.CreatedDate,
                                     WorkOrderStatus = wost.Description,
+                                    PartNos = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.ItemMaster,
+                                wp => wp.MasterPartId,
+                                im => im.ItemMasterId,
+                                (wp, im) => new { wp, im }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                .Select(p => p.im.PartNumber)),
                                     TotalRecords = totalRecords
                                 }
                               ).Distinct()
@@ -478,12 +522,17 @@ namespace DAL.Repositories
                                     wo.WorkOrderId,
                                     wo.WorkOrderNum,
                                     wo.OpenDate,
-                                    cust.Name,
+                                    CustomerName = cust.Name,
                                     cust.CustomerCode,
                                     WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Internal" : (wo.WorkOrderTypeId == 3 ? "Tear Down" : "Shop Services")),
                                     wo.IsActive,
                                     wo.CreatedDate,
                                     WorkOrderStatus = wost.Description,
+                                    PartNos = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.ItemMaster,
+                                wp => wp.MasterPartId,
+                                im => im.ItemMasterId,
+                                (wp, im) => new { wp, im }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                .Select(p => p.im.PartNumber)),
                                     TotalRecords = totalRecords
                                 }
                               ).Distinct()
@@ -510,12 +559,12 @@ namespace DAL.Repositories
                 {
                     workOrder.PartNumbers = _appContext.Set<WorkOrderPartNumber>().Where(x => x.WorkOrderId == workOrderId && x.IsDeleted == false).OrderBy(x => x.ID).ToList();
 
-                    if(workOrder.PartNumbers!=null && workOrder.PartNumbers.Count>0)
+                    if (workOrder.PartNumbers != null && workOrder.PartNumbers.Count > 0)
                     {
-                        foreach(var part in workOrder.PartNumbers)
+                        foreach (var part in workOrder.PartNumbers)
                         {
                             var revisedPartId = _appContext.ItemMaster.Where(p => p.ItemMasterId == part.MasterPartId).FirstOrDefault().RevisedPartId;
-                            if(revisedPartId!=null && revisedPartId>0)
+                            if (revisedPartId != null && revisedPartId > 0)
                             {
                                 part.RevisedPartNo = _appContext.ItemMaster.Where(p => p.ItemMasterId == revisedPartId).Select(p => p.PartNumber).FirstOrDefault().ToString();
                             }
@@ -4194,13 +4243,13 @@ namespace DAL.Repositories
                                 im.DER,
                                 PMA = im.isPma,
                                 NTEOverhaulHours = im.OverhaulHours == null ? 0 : im.OverhaulHours,
-                                NTERepairHours=im.RPHours == null ? 0 : im.RPHours,
-                                NTEMfgHours=im.mfgHours == null ? 0 : im.mfgHours,
-                                NTEBenchTestHours=im.TestHours == null ? 0 : im.TestHours,
-                                TurnTimeOverhaulHours=im.TurnTimeOverhaulHours == null ? 0 : im.TurnTimeOverhaulHours,
-                                TurnTimeRepairHours=im.TurnTimeRepairHours == null ? 0 : im.TurnTimeRepairHours,
-                                TurnTimeMfg=im.turnTimeMfg == null ? 0 : im.turnTimeMfg,
-                                TurnTimeBenchTest=im.turnTimeBenchTest == null ? 0 : im.turnTimeBenchTest,
+                                NTERepairHours = im.RPHours == null ? 0 : im.RPHours,
+                                NTEMfgHours = im.mfgHours == null ? 0 : im.mfgHours,
+                                NTEBenchTestHours = im.TestHours == null ? 0 : im.TestHours,
+                                TurnTimeOverhaulHours = im.TurnTimeOverhaulHours == null ? 0 : im.TurnTimeOverhaulHours,
+                                TurnTimeRepairHours = im.TurnTimeRepairHours == null ? 0 : im.TurnTimeRepairHours,
+                                TurnTimeMfg = im.turnTimeMfg == null ? 0 : im.turnTimeMfg,
+                                TurnTimeBenchTest = im.turnTimeBenchTest == null ? 0 : im.turnTimeBenchTest,
                                 RevisedPartId = im.RevisedPartId == null ? 0 : im.RevisedPartId,
                                 RevisedPartNo = im.RevisedPartId == null ? "" : (_appContext.ItemMaster.Where(p => p.ItemMasterId == im.RevisedPartId).Select(p => p.PartNumber).FirstOrDefault().ToString())
                             })
