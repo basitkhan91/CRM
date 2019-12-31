@@ -1674,4 +1674,9 @@ export class VendorEndpointService extends EndpointFactory {
 	}
 	
 
+
+	  getHistoryForVendor(vendorId) {
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/GetVendorAuditHistory/${vendorId}`)
+	  }
+
 }

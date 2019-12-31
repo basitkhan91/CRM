@@ -469,6 +469,7 @@ export class CustomerWorkSetupComponent
                     this.receivingCustomerWorkService.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
                         this.collectionofstockLine = data;
                         this.sourcereceving.timeLifeCyclesId = data.timeLifeCyclesId;
+                        this.sourcereceving.contactId = this.sourcereceving.customerContactId;
                         this.value = 1;
                         if (data != null) {
                             this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
@@ -478,7 +479,9 @@ export class CustomerWorkSetupComponent
                     })
                 }
                 else {
-                
+                    console.log(this.sourcereceving.customerContactId, 'contact')
+                    this.sourcereceving.contactId = this.sourcereceving.customerContactId;
+
                     this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
                         response => this.saveCompleted(this.sourcereceving),
                         error => this.saveFailedHelper(error));

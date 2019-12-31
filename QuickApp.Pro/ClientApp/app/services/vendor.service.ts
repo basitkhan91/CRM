@@ -793,6 +793,13 @@ export class VendorService {
         return this.actionEndpoint.repairOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId);
       }
 
+
+      getHistoryForVendor(vendorId){
+        return this.actionEndpoint.getHistoryForVendor(vendorId);
+      }
+
+
+
       GetVendorBillingAddressDelete(billingAddressId, updatedBy)
       {
         return this.actionEndpoint.GetVendorBillingAddressDeleteEndpoint(billingAddressId, updatedBy);
