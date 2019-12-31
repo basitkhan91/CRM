@@ -43,7 +43,8 @@ namespace DAL.Repositories
                             c.SiteName,
                             vc.CheckPaymentId,
                             vc,
-                            c
+                            c,
+                            c.IsPrimayPayment
                         }).ToList();
             return data;
         }

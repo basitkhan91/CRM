@@ -55,6 +55,10 @@ export class LegalEntityService {
         return Observable.forkJoin(
             this.legalEntityEndpont.getManagemtentLengalEntityData<any[]>());
 	}
+	loadParentEntities() {
+		return Observable.forkJoin(
+			this.legalEntityEndpont.loadParentEntities<any[]>());
+	}
 	getLedgerNamesData() {
 		return Observable.forkJoin(
 			this.legalEntityEndpont.getLedgerNamesData<any[]>());

@@ -268,9 +268,14 @@ namespace DAL.Repositories
                                     join man in _appContext.Manufacturer on stl.ManufacturerId equals man.ManufacturerId into manufa
                                     from man in manufa.DefaultIfEmpty()
                                     where (stl.PartNumber.Contains(value)
+                                    || im.PartDescription.Contains(value)
+                                    || ig.Description.Contains(value)
+                                    ||stl.QuantityOnHand.ToString().Contains(value)
+                                    ||stl.QuantityAvailable.ToString().Contains(value)
                                      || stl.StockLineNumber.Contains(value)
-                                     || stl.SerialNumber.Contains(value))
-                                     //|| co.ConditionId.ToString() == value)
+                                     || stl.SerialNumber.Contains(value)
+                                     || co.Description.Contains(value)
+                                     || im.GLAccount.AccountName.Contains(value))
                                     select new
                                     {
                                         stl.StockLineNumber,
@@ -327,9 +332,14 @@ namespace DAL.Repositories
                             join man in _appContext.Manufacturer on stl.ManufacturerId equals man.ManufacturerId into manufa
                             from man in manufa.DefaultIfEmpty()
                             where (stl.PartNumber.Contains(value)
-                            && stl.StockLineNumber.Contains(value)
-                            && stl.SerialNumber.Contains(value))
-                           //&& co.ConditionId.ToString() == value)
+                                   || im.PartDescription.Contains(value)
+                                   || ig.Description.Contains(value)
+                                   || stl.QuantityOnHand.ToString().Contains(value)
+                                   || stl.QuantityAvailable.ToString().Contains(value)
+                                    || stl.StockLineNumber.Contains(value)
+                                    || stl.SerialNumber.Contains(value)
+                                    || co.Description.Contains(value)
+                                    || im.GLAccount.AccountName.Contains(value))
                             select new
                             {
                                 stl,
@@ -443,8 +453,8 @@ namespace DAL.Repositories
                                 stl.CreatedDate,
                                 totalRecords
                             }).OrderByDescending(p => p.CreatedDate).Skip(skip)
-                                 .Take(take)
-                                 .ToList();
+                                                     .Take(take)
+                                                     .ToList();
 
 
 
@@ -625,6 +635,7 @@ namespace DAL.Repositories
                                   stl.UnitCostAdjustmentReasonTypeId,
                                   stl.UnitSalePriceAdjustmentReasonTypeId,
                                   stl.TimeLifeCyclesId,
+                                  stl.isActive,
                                   ti.CyclesRemaining,
                                   ti.CyclesSinceNew,
                                   ti.CyclesSinceOVH,
@@ -653,8 +664,10 @@ namespace DAL.Repositories
                                   mana,
                                   stl.CreatedDate,
                                   totalRecords
-                              }).ToList().OrderByDescending(p => p.CreatedDate);
-                
+                              }).OrderByDescending(p => p.CreatedDate).Skip(skip)
+                                                     .Take(take)
+                                                     .ToList();
+
                 return result;
             }
         }

@@ -529,11 +529,12 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.isEditPaymentInfo = true;
     }
     openView(content, row) {
+		
         this.sourceVendor = row;
 		this.siteName = row.siteName;
 		this.address1 = row.address1;
 		this.address2 = row.address2;
-		this.isPrimary = row.isPrimary ? row.isPrimary : false;
+		this.isPrimary = row.isPrimayPayment ? row.isPrimayPayment : false;
 		this.city = row.city;
 		this.stateOrProvince = row.stateOrProvince;
 		this.postalCode = row.postalCode;
