@@ -346,9 +346,8 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
         }, 0);
 
         this.workFlow.materialList.forEach(function (material) {
-            material.quantity = parseInt(material.quantity);
+            material.quantity = material.quantity != '' ? parseInt(material.quantity) : '';
         });
-
     }
 
     validateQuantity(event, material): void {
