@@ -171,7 +171,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     workOrderExclusionsList: Object;
     isEditLabor: boolean = false;
     // mpnId: any;
-    billing: Billing = new Billing();
+    billing: Billing = undefined;
     loginDetailsForCreate: any;
     workOrderPartNumberId: any;
     isEditBilling: boolean = false;
@@ -1392,6 +1392,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     billingCreateOrEdit() {
         this.getQuoteIdByWfandWorkOrderId();
         this.workOrderService.getBillingEditData(this.workOrderId, this.workOrderPartNumberId).subscribe(res => {
+            // Edit
             this.billing = {
                 ...res,
                 shipDate: new Date(res.shipDate),
@@ -1406,13 +1407,15 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             }
             this.isEditBilling = true;
         }, error => {
-            this.getCustomerDetailsFromHeader();
+            this.getWorkOrderDetailsFromHeader();
         })
     }
 
-    getCustomerDetailsFromHeader() {
+    getWorkOrderDetailsFromHeader() {
         this.workOrderService.viewWorkOrderHeader(this.workOrderId).subscribe(res => {
             const data = res;
+            // create
+            this.billing = new Billing();
             this.billing = {
                 ...this.billing,
                 customerRef: data.customerReference,
@@ -1421,7 +1424,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 salesPerson: data.salesperson,
                 woType: data.workOrderType,
                 creditTerm: data.creditTerm,
-                workScope: this.workScope
+                workScope: this.workScope,
+                managementStructureId: data.managementStructureId
 
             }
         })
