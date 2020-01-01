@@ -19,8 +19,10 @@ export class ReceivingCustomerWorkEndpoint extends EndpointFactory {
     private readonly _actionsTimeUrlNew: string = "/api/ReceivingCustomerWork/PostTimeLine";
     private readonly _TimeLifeUpdate: string = "/api/ReceivingCustomerWork/timeLifeUpdate";
     private readonly _updateActiveInactive: string = "/api/ReceivingCustomerWork/updateForActive";
+    private readonly _actionsUrlAudit: string = "/api/ReceivingCustomerWork/GetAudit";
 
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
+   
 
 	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -175,6 +177,9 @@ export class ReceivingCustomerWorkEndpoint extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getUpdateForActive(roleObject, receivingCustomerWorkId));
             });
+    }
+    getAuditHistory(receivingCustomerWorkId) {
+        return this.http.get(`${this.configurations.baseUrl}/${this._actionsUrlAudit}?receivingCustomerWorkId=${receivingCustomerWorkId}`)
     }
 
 }
