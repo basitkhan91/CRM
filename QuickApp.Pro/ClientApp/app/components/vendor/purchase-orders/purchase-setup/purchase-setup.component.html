@@ -200,9 +200,9 @@
                                 </div>
                                 <div class="card-body" style="padding: 12px 12px 4px;">
                                     <div class="form-group">
-                                        <select class="form-control" name="primaryCompany" [(ngModel)]="sourcePoApproval.companyId" 
-                                        (change)="getBUList(sourcePoApproval.companyId)" #mCompanyName required>
-                                            <option value="0">Select Company</option>
+                                        <select [ngClass]="managementValidCheck ? 'select-validate-cstm' : ''" class="form-control" name="primaryCompany" [(ngModel)]="sourcePoApproval.companyId" 
+                                        (change)="getBUList(sourcePoApproval.companyId); checkValidOnChange(sourcePoApproval.companyId, 'companyId');" #mCompanyName required>
+                                            <option value="null">Select Legal Entity</option>
                             <option *ngFor="let name of maincompanylist" [ngValue]="name.managementStructureId">{{name.code}}</option>
                                         </select>
                                         <div *ngIf="mCompanyName.invalid && (mCompanyName.dirty || mCompanyName.touched)" class="alert alert-danger alert-danger-cstm">
@@ -214,19 +214,19 @@
                                     </div>
                                     <div class="form-group">
                                         <select [(ngModel)]="sourcePoApproval.buId" name="primaryBU" (change)="getDivisionlist(sourcePoApproval.buId)" class="form-control">
-                                            <option value="0">Select BU</option>
+                                            <option value="0">Select</option>
                                             <option *ngFor="let name of bulist" [ngValue]="name.managementStructureId">{{name.code}}</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <select class="form-control" [(ngModel)]="sourcePoApproval.divisionId" name="primaryDivision" (change)="getDepartmentlist(sourcePoApproval.divisionId)">
-                                            <option value="0">Select Division</option>
+                                            <option value="0">Select</option>
                                             <option *ngFor="let name of divisionlist" [ngValue]="name.managementStructureId">{{name.code}}</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <select class="form-control" [(ngModel)]="sourcePoApproval.departmentId" name="primaryDept" (change)="getDepartmentId(sourcePoApproval.departmentId)">
-                                            <option value="0">Select Dept</option>
+                                            <option value="0">Select</option>
                                             <option *ngFor="let name of departmentList" [ngValue]="name.managementStructureId">{{name.code}}</option>
                                         </select>
                                     </div>
@@ -277,7 +277,7 @@
                             <th>Disc Percent <span class="clr-red">*</span></th>
                             <th>Disc./unit</th>
                             <th>Disc. Amount</th> <!--Disc. Cost/unit-->
-                            <th>Ext Cost <span class="clr-red">*</span></th>
+                            <th>Ext Cost</th>
                             <th>Functional CUR <span class="clr-red">*</span></th>
                             <th>FX Rate <span class="clr-red">*</span></th>
                             <th>Report CUR <span class="clr-red">*</span></th>
@@ -382,7 +382,7 @@
                                 </td>
                                 <td><input type="number" class="form-control" [(ngModel)]="partList.discountPerUnit" name="discountPerUnit{{row_index}}" pKeyFilter="pint" disabled></td>
                                 <td><input type="number" class="form-control" [(ngModel)]="partList.discountAmount" name="discountAmount{{row_index}}" pKeyFilter="pint" disabled></td>
-                                <td><input type="number" [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" [(ngModel)]="partList.extendedCost" name="extendedCost{{row_index}}" pKeyFilter="pint" disabled required></td>
+                                <td><input type="number" [ngClass]="inputValidCheck ? 'input-validate' : ''" class="form-control" [(ngModel)]="partList.extendedCost" name="extendedCost{{row_index}}" pKeyFilter="pint" disabled></td>
                                 <td>
                                     <p-autoComplete field="symbol" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm"
                                     [(ngModel)]="partList.functionalCurrencyId" name="functionalCurrencyId{{row_index}}" [suggestions]="functionalCurrList" (completeMethod)="filterFunctionalCurrency($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="getFXRate(partList)" (onBlur)="getFXRate(partList)" required>
@@ -691,8 +691,8 @@
                     <h5 class="po-head">Ship To</h5>
                     <div class="form-group">
                         <label>User Type <span class="clr-red">*</span></label>
-                        <select class="form-control" name="shipToUserTypeId" [(ngModel)]="sourcePoApproval.shipToUserTypeId" (change)="clearInputShipTo()" #shipUserType="ngModel" required>
-                            <option value="0">Select</option>
+                        <select [ngClass]="shipToUserTypeValidCheck ? 'select-validate-cstm' : ''" class="form-control" name="shipToUserTypeId" [(ngModel)]="sourcePoApproval.shipToUserTypeId" (change)="clearInputShipTo(); checkValidOnChange(sourcePoApproval.shipToUserTypeId, 'shipToUserTypeId');" #shipUserType="ngModel" required>
+                            <option value="null">-- Select --</option>
                             <option value="1">Customer</option>
                             <option value="2">Vendor</option>
                             <option value="3">Company</option>
@@ -761,8 +761,8 @@
                             <span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourcePoApproval.shipToUserId" class="fa fa-plus-circle fa-lg" matTooltip="Add Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('AddCusSiteName')"></a></span>
                             <span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourcePoApproval.shipToUserId" class="fa fa-edit fa-lg" matTooltip="Edit Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('EditCusSiteName', sourcePoApproval)"></a></span>
                         </label>
-                        <select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" (change)="onShipToGetAddress(sourcePoApproval , sourcePoApproval.shipToAddressId)" name="shipCusSiteName" [(ngModel)]="sourcePoApproval.shipToAddressId" #shipCusSiteName="ngModel" required>
-                            <option>-- Select --</option>
+                        <select [ngClass]="shipToSiteNameValidCheck ? 'select-validate-cstm' : ''" class="form-control" (change)="onShipToGetAddress(sourcePoApproval , sourcePoApproval.shipToAddressId); checkValidOnChange(sourcePoApproval.shipToAddressId, 'shipToAddressId');" name="shipCusSiteName" [(ngModel)]="sourcePoApproval.shipToAddressId" #shipCusSiteName="ngModel" required>
+                            <option value="null">-- Select --</option>
                             <option *ngFor="let object of shipToCusData" 
                             [ngValue]="object.customerShippingAddressId">{{object.siteName}}</option>
                         </select>
@@ -778,8 +778,8 @@
                             <span style="margin-left:3px;cursor:pointer;"><a  *ngIf="sourcePoApproval.shipToUserId" class="fa fa-plus-circle fa-lg" matTooltip="Add Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('AddVenSiteName')"></a></span>
                             <span style="margin-left:5px;cursor:pointer;"><a  *ngIf="sourcePoApproval.shipToUserId" class="fa fa-edit fa-lg" matTooltip="Edit Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('EditVenSiteName', sourcePoApproval)"></a></span>
                         </label>
-                        <select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" (change)="onShipToGetAddress(sourcePoApproval ,sourcePoApproval.shipToAddressId)" name="shipVenSiteName" [(ngModel)]="sourcePoApproval.shipToAddressId" #shipVenSiteName="ngModel" required>
-                            <option>-- Select --</option>
+                        <select [ngClass]="shipToSiteNameValidCheck ? 'select-validate-cstm' : ''" class="form-control" (change)="onShipToGetAddress(sourcePoApproval ,sourcePoApproval.shipToAddressId); checkValidOnChange(sourcePoApproval.shipToAddressId, 'shipToAddressId');" name="shipVenSiteName" [(ngModel)]="sourcePoApproval.shipToAddressId" #shipVenSiteName="ngModel" required>
+                            <option value="null">-- Select --</option>
                             <option *ngFor="let object of vendorSelected"  
                             [ngValue]="object.vendorShippingAddressId">{{object.siteName}}</option>
                         </select>
@@ -795,8 +795,9 @@
                             <span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourcePoApproval.shipToUserId" class="fa fa-plus-circle fa-lg" matTooltip="Add Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('AddComSiteName')"></a></span>
                             <span style="margin-left:5px;cursor:pointer;"><a  *ngIf="sourcePoApproval.shipToUserId" class="fa fa-edit fa-lg" matTooltip="Edit Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('EditComSiteName', sourcePoApproval)"></a></span>
                         </label>
-                        <select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" (change)="onShipToGetCompanyAddress(sourcePoApproval.shipToAddressId)" name="shipCompSiteName" [(ngModel)]="sourcePoApproval.shipToAddressId" #shipCompSiteName="ngModel" required>
-                            <option>-- Select --</option>
+                        <select [ngClass]="shipToSiteNameValidCheck ? 'select-validate-cstm' : ''" class="form-control" (change)="onShipToGetCompanyAddress(sourcePoApproval.shipToAddressId); checkValidOnChange(sourcePoApproval.shipToAddressId, 'shipToAddressId');" name="shipCompSiteName" [(ngModel)]="sourcePoApproval.shipToAddressId" #shipCompSiteName="ngModel" required>
+                            <!-- <option>-- Select --</option> -->
+                            <option value="null">-- Select --</option>
                             <option *ngFor="let site of companySiteList_Shipping" [ngValue]="site.legalEntityShippingAddressId">{{site.siteName}}</option>
                         </select>
                         <div *ngIf="shipCompSiteName.invalid && (shipCompSiteName.dirty || shipCompSiteName.touched)" class="alert alert-danger alert-danger-cstm">
@@ -868,8 +869,8 @@
                                 <span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourcePoApproval.shipToUserId" class="fa fa-plus-circle fa-lg" matTooltip="Add Ship Via" matTooltipPosition="above" data-toggle="modal" data-target="#shipToShipVia" (click)="resetAddressShipViaForm();"></a></span>
                                 <span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourcePoApproval.shipToUserId" class="fa fa-edit fa-lg" matTooltip="Edit Ship Via" matTooltipPosition="above" data-toggle="modal" data-target="#shipToShipVia" (click)="onEditShipVia(sourcePoApproval)"></a></span>
                             </label>
-                            <select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" name="cusShipViaId"  (ngModelChange)="getShipViaDetails($event)" [(ngModel)]="sourcePoApproval.shipViaId" #cusShipViaId="ngModel" required> <!--required-->
-                                <option>-- Select --</option>
+                            <select [ngClass]="shipViaValidCheck ? 'select-validate-cstm' : ''" class="form-control" name="cusShipViaId"  (ngModelChange)="getShipViaDetails($event); checkValidOnChange(sourcePoApproval.shipViaId, 'shipViaId');" [(ngModel)]="sourcePoApproval.shipViaId" #cusShipViaId="ngModel" required>
+                                <option value="null">-- Select --</option>
                                 <option *ngFor="let object of shipViaList" [ngValue]="object.shippingViaId">{{object.name}}</option>
                             </select>
                             <div *ngIf="cusShipViaId.invalid && (cusShipViaId.dirty || cusShipViaId.touched)" class="alert alert-danger alert-danger-cstm">
@@ -897,26 +898,16 @@
                             </div> -->
                         </div>
                         <div class="form-group">
-                            <label>Shipping Acct Num <span class="clr-red">*</span></label>
-                            <input class="form-control" type="text" name="cusShippingAcctNum" [(ngModel)]="sourcePoApproval.shippingAcctNum" required disabled><!--required-->
+                            <label>Shipping Acct Num</label>
+                            <input class="form-control" type="text" name="cusShippingAcctNum" [(ngModel)]="sourcePoApproval.shippingAcctNum" disabled>
                         </div>
                         <div class="form-group">
-                            <label>Shipping Id (AWB) <span class="clr-red">*</span></label>
-                            <input class="form-control" type="text" name="cusShippingId" [(ngModel)]="sourcePoApproval.shippingId" #cusShippingId="ngModel" required disabled><!--required-->
-                            <div *ngIf="cusShippingId.invalid && (cusShippingId.dirty || cusShippingId.touched)" class="alert alert-danger alert-danger-cstm">
-                                <div *ngIf="cusShippingId.errors.required">
-                                    <small> Shipping Id is required </small>
-                                </div>
-                        </div>
+                            <label>Shipping Id (AWB)</label>
+                            <input class="form-control" type="text" name="cusShippingId" [(ngModel)]="sourcePoApproval.shippingId" disabled>
                         </div>
                         <div class="form-group">
-                            <label>URL <span class="clr-red">*</span></label>
-                            <input class="form-control" type="text" name="cusShippingURL" [(ngModel)]="sourcePoApproval.shippingURL" #cusShippingURL="ngModel" required disabled><!--required-->
-                            <div *ngIf="cusShippingURL.invalid && (cusShippingURL.dirty || cusShippingURL.touched)" class="alert alert-danger alert-danger-cstm">
-                                <div *ngIf="cusShippingURL.errors.required">
-                                    <small> Shipping URL is required </small>
-                                </div>
-                        </div>
+                            <label>URL</label>
+                            <input class="form-control" type="text" name="cusShippingURL" [(ngModel)]="sourcePoApproval.shippingURL" disabled>
                         </div>
                     </div>
                     
@@ -928,8 +919,8 @@
                                 <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Ship Via" matTooltipPosition="above" data-toggle="modal" data-target="#shipToShipVia" (click)="resetAddressShipViaForm();"></a></span>
                                 <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" matTooltip="Edit Ship Via" matTooltipPosition="above" data-toggle="modal" data-target="#shipToShipVia" (click)="onEditShipVia(sourcePoApproval)"></a></span>
                             </label>
-                            <select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" name="cusShipViaId"    (ngModelChange)="getShipViaDetails($event)" [(ngModel)]="sourcePoApproval.shipViaId" #cusShipViaId="ngModel" required> <!--required-->
-                                <option>-- Select --</option>
+                            <select [ngClass]="shipViaValidCheck ? 'select-validate-cstm' : ''" class="form-control" name="cusShipViaId"    (ngModelChange)="getShipViaDetails($event); checkValidOnChange(sourcePoApproval.shipViaId, 'shipViaId');" [(ngModel)]="sourcePoApproval.shipViaId" #cusShipViaId="ngModel" required>
+                                <option value="null">-- Select --</option>
                                 <option *ngFor="let object of shipViaList" 
                              
                                 [ngValue]="object.shippingViaId">{{object.name}}</option>
@@ -960,26 +951,16 @@
                         </div> -->
                         </div>
                         <div class="form-group">
-                            <label>Shipping Acct Num <span class="clr-red">*</span></label>
-                            <input class="form-control" type="text" name="cusShippingAcctNum" [(ngModel)]="sourcePoApproval.shippingAcctNum" required disabled><!--required-->
+                            <label>Shipping Acct Num</label>
+                            <input class="form-control" type="text" name="cusShippingAcctNum" [(ngModel)]="sourcePoApproval.shippingAcctNum" disabled>
                         </div>
                         <div class="form-group">
-                            <label>Shipping Id (AWB) <span class="clr-red">*</span></label>
-                            <input class="form-control" type="text" name="cusShippingId" [(ngModel)]="sourcePoApproval.shippingId" #cusShippingId="ngModel" disabled required><!--required-->
-                            <div *ngIf="cusShippingId.invalid && (cusShippingId.dirty || cusShippingId.touched)" class="alert alert-danger alert-danger-cstm">
-                                <div *ngIf="cusShippingId.errors.required">
-                                    <small> Shipping Id is required </small>
-                                </div>
-                        </div>
+                            <label>Shipping Id (AWB)</label>
+                            <input class="form-control" type="text" name="cusShippingId" [(ngModel)]="sourcePoApproval.shippingId" disabled>                        
                         </div>
                         <div class="form-group">
-                            <label>URL <span class="clr-red">*</span></label>
-                            <input class="form-control" type="text" name="cusShippingURL" [(ngModel)]="sourcePoApproval.shippingURL" #cusShippingURL="ngModel" disabled required><!--required-->
-                            <div *ngIf="cusShippingURL.invalid && (cusShippingURL.dirty || cusShippingURL.touched)" class="alert alert-danger alert-danger-cstm">
-                                <div *ngIf="cusShippingURL.errors.required">
-                                    <small> Shipping URL is required </small>
-                                </div>
-                        </div>
+                            <label>URL</label>
+                            <input class="form-control" type="text" name="cusShippingURL" [(ngModel)]="sourcePoApproval.shippingURL" disabled>                            
                         </div>
                     </div>
 
@@ -990,8 +971,8 @@
                                 <span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourcePoApproval.shipToUserId" class="fa fa-plus-circle fa-lg" matTooltip="Add Ship Via" matTooltipPosition="above" data-toggle="modal" data-target="#shipToShipVia" (click)="resetAddressShipViaForm();"></a></span>
                                 <span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourcePoApproval.shipToUserId" class="fa fa-edit fa-lg" matTooltip="Edit Ship Via" matTooltipPosition="above" data-toggle="modal" data-target="#shipToShipVia" (click)="onEditShipVia(sourcePoApproval)"></a></span>
                             </label>
-                            <select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" name="cusShipViaId"  (ngModelChange)="getShipViaDetails($event)" [(ngModel)]="sourcePoApproval.shipViaId" #cusShipViaId="ngModel" required> <!--required-->
-                                <option>-- Select --</option>
+                            <select [ngClass]="shipViaValidCheck ? 'select-validate-cstm' : ''" class="form-control" name="cusShipViaId"  (ngModelChange)="getShipViaDetails($event); checkValidOnChange(sourcePoApproval.shipViaId, 'shipViaId');" [(ngModel)]="sourcePoApproval.shipViaId" #cusShipViaId="ngModel" required>
+                                <option value="null">-- Select --</option>
                                 <option *ngFor="let object of shipViaList" 
                                
                                 [ngValue]="object.shippingViaId">{{object.name}}</option>
@@ -1022,26 +1003,18 @@
                         </div> -->
                         </div>
                         <div class="form-group">
-                            <label>Shipping Acct Num <span class="clr-red">*</span></label>
-                            <input class="form-control" type="text" name="cusShippingAcctNum" [(ngModel)]="sourcePoApproval.shippingAcctNum" required disabled><!--required-->
+                            <label>Shipping Acct Num</label>
+                            <input class="form-control" type="text" name="cusShippingAcctNum" [(ngModel)]="sourcePoApproval.shippingAcctNum" disabled>
                         </div>
                         <div class="form-group">
-                            <label>Shipping Id (AWB) <span class="clr-red">*</span></label>
-                            <input class="form-control" type="text" name="cusShippingId" [(ngModel)]="sourcePoApproval.shippingId" #cusShippingId="ngModel" required disabled><!--required-->
-                            <div *ngIf="cusShippingId.invalid && (cusShippingId.dirty || cusShippingId.touched)" class="alert alert-danger alert-danger-cstm">
-                                <div *ngIf="cusShippingId.errors.required">
-                                    <small> Shipping Id is required </small>
-                                </div>
-                        </div>
+                            <label>Shipping Id (AWB)</label>
+                            <input class="form-control" type="text" name="cusShippingId" [(ngModel)]="sourcePoApproval.shippingId" disabled>
+                            
                         </div>
                         <div class="form-group">
-                            <label>URL <span class="clr-red">*</span></label>
-                            <input class="form-control" type="text" name="cusShippingURL" [(ngModel)]="sourcePoApproval.shippingURL" #cusShippingURL="ngModel" required disabled><!--required-->
-                            <div *ngIf="cusShippingURL.invalid && (cusShippingURL.dirty || cusShippingURL.touched)" class="alert alert-danger alert-danger-cstm">
-                                <div *ngIf="cusShippingURL.errors.required">
-                                    <small> Shipping URL is required </small>
-                                </div>
-                        </div>
+                            <label>URL</label>
+                            <input class="form-control" type="text" name="cusShippingURL" [(ngModel)]="sourcePoApproval.shippingURL" disabled>
+                            
                         </div>
                     </div>
     
@@ -1050,8 +1023,9 @@
                     <h5 class="po-head">Bill To</h5>
                     <div class="form-group">
                         <label>User Type <span class="clr-red">*</span></label>
-                        <select class="form-control" name="billToUserTypeId" [(ngModel)]="sourcePoApproval.billToUserTypeId" (change)="clearInputBillTo()" #billUserType="ngModel" required>
-                            <option value="0">Select</option>
+                        <select [ngClass]="billToUserTypeValidCheck ? 'select-validate-cstm' : ''" class="form-control" name="billToUserTypeId" [(ngModel)]="sourcePoApproval.billToUserTypeId" (change)="clearInputBillTo(); checkValidOnChange(sourcePoApproval.billToUserTypeId, 'billToUserTypeId');" #billUserType="ngModel" required>
+                            <!-- <option value="0">Select</option> -->
+                            <option value="null">-- Select --</option>
                             <option value="1">Customer</option>
                             <option value="2">Vendor</option>
                             <option value="3">Company</option>
@@ -1120,8 +1094,8 @@
                             <span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourcePoApproval.billToUserId"  class="fa fa-plus-circle fa-lg" matTooltip="Add Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('AddCusSiteName')"></a></span>
                             <span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourcePoApproval.billToUserId" class="fa fa-edit fa-lg" matTooltip="Edit Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('EditCusSiteName', sourcePoApproval)"></a></span>
                         </label>
-                        <select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" (change)="onBillToGetAddress(sourcePoApproval , sourcePoApproval.billToAddressId)" name="billCusSiteName" [(ngModel)]="sourcePoApproval.billToAddressId" #billCusSiteName="ngModel" required>
-                            <option>-- Select --</option>
+                        <select [ngClass]="billToSiteNameValidCheck ? 'select-validate-cstm' : ''" class="form-control" (change)="onBillToGetAddress(sourcePoApproval , sourcePoApproval.billToAddressId); checkValidOnChange(sourcePoApproval.billToAddressId, 'billToAddressId');" name="billCusSiteName" [(ngModel)]="sourcePoApproval.billToAddressId" #billCusSiteName="ngModel" required>
+                            <option value="null">-- Select --</option>
                             <option *ngFor="let object of billToCusData" [ngValue]="object.customerBillingAddressId">{{object.siteName}} </option>
                         </select>
                         <div *ngIf="billCusSiteName.invalid && (billCusSiteName.dirty || billCusSiteName.touched)" class="alert alert-danger alert-danger-cstm">
@@ -1136,8 +1110,8 @@
                             <span style="margin-left:3px;cursor:pointer;"><a  *ngIf="sourcePoApproval.billToUserId" class="fa fa-plus-circle fa-lg" matTooltip="Add Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('AddVenSiteName')"></a></span>
                             <span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourcePoApproval.billToUserId" class="fa fa-edit fa-lg" matTooltip="Edit Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('EditVenSiteName', sourcePoApproval)"></a></span>
                         </label>
-                        <select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" (change)="onBillToGetAddress(sourcePoApproval , sourcePoApproval.billToAddressId)" name="billVendorSiteName" [(ngModel)]="sourcePoApproval.billToAddressId" #billVendorSiteName="ngModel" required>
-                            <option>-- Select --</option>
+                        <select [ngClass]="billToSiteNameValidCheck ? 'select-validate-cstm' : ''" class="form-control" (change)="onBillToGetAddress(sourcePoApproval , sourcePoApproval.billToAddressId); checkValidOnChange(sourcePoApproval.billToAddressId, 'billToAddressId');" name="billVendorSiteName" [(ngModel)]="sourcePoApproval.billToAddressId" #billVendorSiteName="ngModel" required>
+                            <option value="null">-- Select --</option>
                             <option *ngFor="let object of vendorSelectedForBillTo" [ngValue]="object.vendorBillingAddressId">{{object.siteName}} </option>
                         </select>
                         <div *ngIf="billVendorSiteName.invalid && (billVendorSiteName.dirty || billVendorSiteName.touched)" class="alert alert-danger alert-danger-cstm">
@@ -1152,8 +1126,8 @@
                             <span style="margin-left:3px;cursor:pointer;"><a *ngIf="sourcePoApproval.billToUserId" class="fa fa-plus-circle fa-lg" matTooltip="Add Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('AddComSiteName')"></a></span>
                             <span style="margin-left:5px;cursor:pointer;"><a *ngIf="sourcePoApproval.billToUserId" class="fa fa-edit fa-lg" matTooltip="Edit Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('EditComSiteName', sourcePoApproval)"></a></span>
                         </label>
-                        <select [ngClass]="inputValidCheck ? 'select-validate' : ''" class="form-control" (change)="onBillToGetCompanyAddress(sourcePoApproval.billToAddressId)" name="billCompSiteName" [(ngModel)]="sourcePoApproval.billToAddressId" #billCompSiteName="ngModel" required> <!--selectedValue2-->
-                            <option>-- Select --</option>
+                        <select [ngClass]="billToSiteNameValidCheck ? 'select-validate-cstm' : ''" class="form-control" (change)="onBillToGetCompanyAddress(sourcePoApproval.billToAddressId); checkValidOnChange(sourcePoApproval.billToAddressId, 'billToAddressId');" name="billCompSiteName" [(ngModel)]="sourcePoApproval.billToAddressId" #billCompSiteName="ngModel" required> <!--selectedValue2-->
+                            <option value="null">-- Select --</option>
                             <option *ngFor="let site of companySiteList_Billing" [ngValue]="site.legalEntityBillingAddressId">{{site.siteName}}</option>
                         </select>
                         <div *ngIf="billCompSiteName.invalid && (billCompSiteName.dirty || billCompSiteName.touched)" class="alert alert-danger alert-danger-cstm">

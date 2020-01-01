@@ -202,6 +202,12 @@ export class PurchaseSetupComponent implements OnInit {
 	venContactLastNames: any = [];
 	venContactMiddleNames: any = [];
 	workOrderPartNumberId: any = 0;
+	managementValidCheck: boolean;
+	shipToUserTypeValidCheck: boolean;
+	shipToSiteNameValidCheck: boolean;
+	shipViaValidCheck: boolean;
+	billToUserTypeValidCheck: boolean;
+	billToSiteNameValidCheck: boolean;
 
 	constructor(private route: Router,
 		public legalEntityService: LegalEntityService,
@@ -247,7 +253,7 @@ export class PurchaseSetupComponent implements OnInit {
 		this.getCountriesList();
 		this.loadPercentData();
 		this.loadVendorContactInfo();
-		this.sourcePoApproval.companyId = 0;
+		this.sourcePoApproval.companyId = "null";
 		this.sourcePoApproval.buId = 0;
 		this.sourcePoApproval.divisionId = 0;
 		this.sourcePoApproval.departmentId = 0;
@@ -641,6 +647,7 @@ export class PurchaseSetupComponent implements OnInit {
 	getShipViaEdit(data) {
 		this.commonService.getShipViaDetailsByModule(data.shipToUserType, this.shipToSelectedvalue).subscribe(response => {
 			this.shipViaList = response;
+			data.shippingAcctNum = data.shippingAccountNo;
 			this.sourcePoApproval.shipViaId = data.shipViaId;
 			if (data.shipViaId == 0) {
 				this.shipViaList.push({ shippingViaId: 0, name: data.shipVia, shippingAccountInfo: data.shippingAcctNum, shippingId: data.shippingId, shippingURL: data.shippingURL });
@@ -795,76 +802,94 @@ export class PurchaseSetupComponent implements OnInit {
 	savePurchaseOrder() {
 		console.log(this.sourcePoApproval);
 
-		this.sourcePoApprovalObj = {
-			purchaseOrderNumber: this.sourcePoApproval.purchaseOrderNumber,
-			openDate: this.datePipe.transform(this.sourcePoApproval.openDate, "MM/dd/yyyy"),//new Date(this.sourcePoApproval.openDate),
-			closedDate: this.datePipe.transform(this.sourcePoApproval.closedDate, "MM/dd/yyyy"),
-			needByDate: this.datePipe.transform(this.sourcePoApproval.needByDate, "MM/dd/yyyy"),
-			priorityId: this.sourcePoApproval.priorityId ? this.getPriorityId(this.sourcePoApproval.priorityId) : 0,
-			deferredReceiver: this.sourcePoApproval.deferredReceiver ? this.sourcePoApproval.deferredReceiver : false,
-			vendorId: this.sourcePoApproval.vendorId ? this.getVendorId(this.sourcePoApproval.vendorId) : 0,
-			//vendorId: 671,
-			vendorContactId: this.sourcePoApproval.vendorContactId ? this.getVendorContactId(this.sourcePoApproval.vendorContactId) : 0,
-			//vendorContactId: 200,
-			vendorContactPhone: this.sourcePoApproval.vendorContactPhone ? this.getVendorContactPhone(this.sourcePoApproval.vendorContactPhone) : '',
-			creditLimit: this.sourcePoApproval.creditLimit ? this.sourcePoApproval.creditLimit : '',
-			creditTermsId: this.sourcePoApproval.creditTermsId ? this.sourcePoApproval.creditTermsId : 0,
-			requisitionerId: this.sourcePoApproval.requisitionerId ? this.getEmployeeId(this.sourcePoApproval.requisitionerId) : 0,
-			approverId: this.sourcePoApproval.approverId ? this.getEmployeeId(this.sourcePoApproval.approverId) : 0,
-			approvedDate: this.datePipe.transform(this.sourcePoApproval.approvedDate, "MM/dd/yyyy"),
-			statusId: this.sourcePoApproval.statusId ? this.sourcePoApproval.statusId : 0,
-			resale: this.sourcePoApproval.resale ? this.sourcePoApproval.resale : false,
-			managementStructureId: this.sourcePoApproval.managementStructureId ? this.sourcePoApproval.managementStructureId : 0,
-			poMemo: this.sourcePoApproval.poMemo ? this.sourcePoApproval.poMemo : '',
-			shipToUserTypeId: this.sourcePoApproval.shipToUserTypeId ? parseInt(this.sourcePoApproval.shipToUserTypeId) : 0,
-			shipToUserId: this.sourcePoApproval.shipToUserId ? this.getShipToBillToUserId(this.sourcePoApproval.shipToUserId) : 0,
-			shipToAddressId: this.sourcePoApproval.shipToAddressId ? this.sourcePoApproval.shipToAddressId : 0,
-			//shipToContactId: this.sourcePoApproval.shipToContactId ? this.getShipBillContactId(this.sourcePoApproval.shipToContactId) : 0,
-			shipToContactId: this.sourcePoApproval.shipToContactId ? editValueAssignByCondition('contactId', this.sourcePoApproval.shipToContactId) : 0,
-			shipViaId: this.sourcePoApproval.shipViaId,
-			shippingCost: this.sourcePoApproval.shippingCost,
-			handlingCost: this.sourcePoApproval.handlingCost,
-			shipVia: this.sourcePoApproval.shipVia,
-			shippingAcctNum: this.sourcePoApproval.shippingAcctNum,
-			shippingURL: this.sourcePoApproval.shippingURL,
-			shippingId: this.sourcePoApproval.shippingId,
-			shipToMemo: this.sourcePoApproval.shipToMemo ? this.sourcePoApproval.shipToMemo : '',
-			billToUserTypeId: this.sourcePoApproval.billToUserTypeId ? parseInt(this.sourcePoApproval.billToUserTypeId) : 0,
-			billToUserId: this.sourcePoApproval.billToUserId ? this.getShipToBillToUserId(this.sourcePoApproval.billToUserId) : 0,
-			billToAddressId: this.sourcePoApproval.billToAddressId ? this.sourcePoApproval.billToAddressId : 0,
-			//billToContactId: this.sourcePoApproval.billToContactId ? this.getShipBillContactId(this.sourcePoApproval.billToContactId) : 0,
-			billToContactId: this.sourcePoApproval.billToContactId ? editValueAssignByCondition('contactId', this.sourcePoApproval.billToContactId) : 0,
-			billToMemo: this.sourcePoApproval.billToMemo ? this.sourcePoApproval.billToMemo : '',
-			shipToSiteName: this.postSiteNameForShipping(this.sourcePoApproval.shipToUserTypeId, this.sourcePoApproval.shipToAddressId),
-			shipToAddress1: this.shipToAddress.address1,
-			shipToAddress2: this.shipToAddress.address2,
-			// shipToAddress3: this.shipToAddress.address3,
-			shipToCity: this.shipToAddress.city,
-			shipToStateOrProvince: this.shipToAddress.stateOrProvince,
-			shipToPostalCode: this.shipToAddress.postalCode,
-			shipToCountry: this.shipToAddress.country,
-			billToSiteName: this.postSiteNameForBilling(this.sourcePoApproval.billToUserTypeId, this.sourcePoApproval.billToAddressId),
-			billToAddress1: this.billToAddress.address1,
-			billToAddress2: this.billToAddress.address2,
-			// billToAddress3: this.billToAddress.address3,
-			billToCity: this.billToAddress.city,
-			billToStateOrProvince: this.billToAddress.stateOrProvince,
-			billToPostalCode: this.billToAddress.postalCode,
-			billToCountry: this.billToAddress.country,
-			shipToSiteId: this.sourcePoApproval.shipToAddressId ? this.sourcePoApproval.shipToAddressId : 0,
-			billToSiteId: this.sourcePoApproval.billToAddressId ? this.sourcePoApproval.billToAddressId : 0,
-			createdBy: this.userName,
-			updatedBy: this.userName
-		}
-		console.log(this.sourcePoApprovalObj);
-
-		if (this.createPOForm.invalid) { //invalid
-			//  $('.createPO-form input.ng-invalid, .createPO-form select.ng-invalid, .createPO-form p-calendar.ng-invalid input').addClass('border-red-clr');
-			//  $('.createPO-form input.ng-valid, .createPO-form select.ng-valid').removeClass('border-red-clr');
-			alert('Please enter required fields!');
+		if (this.createPOForm.invalid || this.sourcePoApproval.companyId == "null" || this.sourcePoApproval.shipToUserTypeId == "null" || this.sourcePoApproval.shipToAddressId == "null" || this.sourcePoApproval.shipViaId == "null" || this.sourcePoApproval.billToUserTypeId == "null" || this.sourcePoApproval.billToAddressId == "null") {
+			// alert('Please enter required fields!');
+			this.alertService.showMessage('Purchase Order', "Please enter required highlighted fields!", MessageSeverity.error);
 			this.inputValidCheck = true;
+
+			if(this.sourcePoApproval.companyId == "null") {
+				this.managementValidCheck = true;
+			}
+			if(this.sourcePoApproval.shipToUserTypeId == "null") {
+				this.shipToUserTypeValidCheck = true;
+			}
+			if(this.sourcePoApproval.shipToAddressId == "null") {
+				this.shipToSiteNameValidCheck = true;
+			}
+			if(this.sourcePoApproval.shipViaId == "null") {
+				this.shipViaValidCheck = true;
+			}
+			if(this.sourcePoApproval.billToUserTypeId == "null") {
+				this.billToUserTypeValidCheck = true;
+			}
+			if(this.sourcePoApproval.billToAddressId == "null") {
+				this.billToSiteNameValidCheck = true;
+			}
 		}
 		else {
+			this.sourcePoApprovalObj = {
+				purchaseOrderNumber: this.sourcePoApproval.purchaseOrderNumber,
+				openDate: this.datePipe.transform(this.sourcePoApproval.openDate, "MM/dd/yyyy"),//new Date(this.sourcePoApproval.openDate),
+				closedDate: this.datePipe.transform(this.sourcePoApproval.closedDate, "MM/dd/yyyy"),
+				needByDate: this.datePipe.transform(this.sourcePoApproval.needByDate, "MM/dd/yyyy"),
+				priorityId: this.sourcePoApproval.priorityId ? this.getPriorityId(this.sourcePoApproval.priorityId) : 0,
+				deferredReceiver: this.sourcePoApproval.deferredReceiver ? this.sourcePoApproval.deferredReceiver : false,
+				vendorId: this.sourcePoApproval.vendorId ? this.getVendorId(this.sourcePoApproval.vendorId) : 0,
+				//vendorId: 671,
+				vendorContactId: this.sourcePoApproval.vendorContactId ? this.getVendorContactId(this.sourcePoApproval.vendorContactId) : 0,
+				//vendorContactId: 200,
+				vendorContactPhone: this.sourcePoApproval.vendorContactPhone ? this.getVendorContactPhone(this.sourcePoApproval.vendorContactPhone) : '',
+				creditLimit: this.sourcePoApproval.creditLimit ? this.sourcePoApproval.creditLimit : '',
+				creditTermsId: this.sourcePoApproval.creditTermsId ? this.sourcePoApproval.creditTermsId : 0,
+				requisitionerId: this.sourcePoApproval.requisitionerId ? this.getEmployeeId(this.sourcePoApproval.requisitionerId) : 0,
+				approverId: this.sourcePoApproval.approverId ? this.getEmployeeId(this.sourcePoApproval.approverId) : 0,
+				approvedDate: this.datePipe.transform(this.sourcePoApproval.approvedDate, "MM/dd/yyyy"),
+				statusId: this.sourcePoApproval.statusId ? this.sourcePoApproval.statusId : 0,
+				resale: this.sourcePoApproval.resale ? this.sourcePoApproval.resale : false,
+				managementStructureId: this.sourcePoApproval.managementStructureId ? this.sourcePoApproval.managementStructureId : 0,
+				poMemo: this.sourcePoApproval.poMemo ? this.sourcePoApproval.poMemo : '',
+				shipToUserTypeId: this.sourcePoApproval.shipToUserTypeId ? parseInt(this.sourcePoApproval.shipToUserTypeId) : 0,
+				shipToUserId: this.sourcePoApproval.shipToUserId ? this.getShipToBillToUserId(this.sourcePoApproval.shipToUserId) : 0,
+				shipToAddressId: this.sourcePoApproval.shipToAddressId ? this.sourcePoApproval.shipToAddressId : 0,
+				//shipToContactId: this.sourcePoApproval.shipToContactId ? this.getShipBillContactId(this.sourcePoApproval.shipToContactId) : 0,
+				shipToContactId: this.sourcePoApproval.shipToContactId ? editValueAssignByCondition('contactId', this.sourcePoApproval.shipToContactId) : 0,
+				shipViaId: this.sourcePoApproval.shipViaId,
+				shippingCost: this.sourcePoApproval.shippingCost,
+				handlingCost: this.sourcePoApproval.handlingCost,
+				shipVia: this.sourcePoApproval.shipVia,
+				shippingAcctNum: this.sourcePoApproval.shippingAcctNum,
+				shippingURL: this.sourcePoApproval.shippingURL,
+				shippingId: this.sourcePoApproval.shippingId,
+				shipToMemo: this.sourcePoApproval.shipToMemo ? this.sourcePoApproval.shipToMemo : '',
+				billToUserTypeId: this.sourcePoApproval.billToUserTypeId ? parseInt(this.sourcePoApproval.billToUserTypeId) : 0,
+				billToUserId: this.sourcePoApproval.billToUserId ? this.getShipToBillToUserId(this.sourcePoApproval.billToUserId) : 0,
+				billToAddressId: this.sourcePoApproval.billToAddressId ? this.sourcePoApproval.billToAddressId : 0,
+				//billToContactId: this.sourcePoApproval.billToContactId ? this.getShipBillContactId(this.sourcePoApproval.billToContactId) : 0,
+				billToContactId: this.sourcePoApproval.billToContactId ? editValueAssignByCondition('contactId', this.sourcePoApproval.billToContactId) : 0,
+				billToMemo: this.sourcePoApproval.billToMemo ? this.sourcePoApproval.billToMemo : '',
+				shipToSiteName: this.postSiteNameForShipping(this.sourcePoApproval.shipToUserTypeId, this.sourcePoApproval.shipToAddressId),
+				shipToAddress1: this.shipToAddress.address1,
+				shipToAddress2: this.shipToAddress.address2,
+				// shipToAddress3: this.shipToAddress.address3,
+				shipToCity: this.shipToAddress.city,
+				shipToStateOrProvince: this.shipToAddress.stateOrProvince,
+				shipToPostalCode: this.shipToAddress.postalCode,
+				shipToCountry: this.shipToAddress.country,
+				billToSiteName: this.postSiteNameForBilling(this.sourcePoApproval.billToUserTypeId, this.sourcePoApproval.billToAddressId),
+				billToAddress1: this.billToAddress.address1,
+				billToAddress2: this.billToAddress.address2,
+				// billToAddress3: this.billToAddress.address3,
+				billToCity: this.billToAddress.city,
+				billToStateOrProvince: this.billToAddress.stateOrProvince,
+				billToPostalCode: this.billToAddress.postalCode,
+				billToCountry: this.billToAddress.country,
+				shipToSiteId: this.sourcePoApproval.shipToAddressId ? this.sourcePoApproval.shipToAddressId : 0,
+				billToSiteId: this.sourcePoApproval.billToAddressId ? this.sourcePoApproval.billToAddressId : 0,
+				createdBy: this.userName,
+				updatedBy: this.userName
+			}
+			console.log(this.sourcePoApprovalObj);
+
 			// header save 
 			if (!this.isEditMode) {
 				this.vendorService.savePurchaseorder({ ...this.sourcePoApprovalObj }).subscribe(saveddata => {
@@ -1653,6 +1678,8 @@ export class PurchaseSetupComponent implements OnInit {
 
 	// bill to
 	onBillToCustomerSelected(customerId, res?, id?) {
+		console.log(res);		
+		res.billToStateOrProvince = res.billToState;
 		this.clearInputOnClickUserIdBillTo();
 		this.billToSelectedvalue = customerId;
 		this.customerService.getCustomerBillViaDetails(customerId).subscribe(
@@ -1734,6 +1761,7 @@ export class PurchaseSetupComponent implements OnInit {
 
 	onBillToGetAddress(data, id) {
 		console.log(data, id);
+		console.log(this.billToCusData);		
 		if (data.billToUserTypeId == 1 || data.billToUserType == 1) {
 			// this.customerService.getCustomerBillViaDetails(id).subscribe(res => {
 			const resp = getObjectById('customerBillingAddressId', id, this.billToCusData);
@@ -1746,8 +1774,8 @@ export class PurchaseSetupComponent implements OnInit {
 				this.billToAddress.city = resp.city;
 				this.billToAddress.stateOrProvince = resp.stateOrProvince;
 				this.billToAddress.postalCode = resp.postalCode;
-				this.billToAddress.country = resp.country ? getValueFromArrayOfObjectById('label', 'value', resp.country, this.countriesList) : '';
-				//this.billToAddress.country = resp.country;
+				this.billToAddress.country = resp.country;
+				// this.billToAddress.country = resp.country ? getValueFromArrayOfObjectById('label', 'value', resp.country, this.countriesList) : '';
 			} else {
 				this.billToAddress.address1 = '';
 				this.billToAddress.address2 = '';
@@ -2336,10 +2364,10 @@ export class PurchaseSetupComponent implements OnInit {
 
 	clearInputShipTo() {
 		this.sourcePoApproval.shipToUserId = null;
-		this.sourcePoApproval.shipToAddressId = null;
+		this.sourcePoApproval.shipToAddressId = "null";
 		this.sourcePoApproval.shipToContactId = null;
 		this.sourcePoApproval.shipToMemo = '';
-		this.sourcePoApproval.shipViaId = null;
+		this.sourcePoApproval.shipViaId = "null";
 		this.sourcePoApproval.shippingCost = null;
 		this.sourcePoApproval.handlingCost = null;
 		this.sourcePoApproval.shippingAcctNum = null;
@@ -2347,13 +2375,16 @@ export class PurchaseSetupComponent implements OnInit {
 		this.sourcePoApproval.shippingURL = '';
 		this.shipToAddress = {};
 		this.shipViaList = [];
+		this.shipToCusData = [];
+		this.vendorSelected = [];
+		this.companySiteList_Shipping = [];
 	}
 
 	clearInputOnClickUserIdShipTo() {
-		this.sourcePoApproval.shipToAddressId = null;
+		this.sourcePoApproval.shipToAddressId = "null";
 		this.sourcePoApproval.shipToContactId = null;
 		this.sourcePoApproval.shipToMemo = '';
-		this.sourcePoApproval.shipViaId = null;
+		this.sourcePoApproval.shipViaId = "null";
 		this.sourcePoApproval.shippingCost = null;
 		this.sourcePoApproval.handlingCost = null;
 		this.sourcePoApproval.shippingAcctNum = null;
@@ -2361,21 +2392,30 @@ export class PurchaseSetupComponent implements OnInit {
 		this.sourcePoApproval.shippingURL = '';
 		this.shipToAddress = {};
 		this.shipViaList = [];
+		this.shipToCusData = [];
+		this.vendorSelected = [];
+		this.companySiteList_Shipping = [];
 	}
 
 	clearInputBillTo() {
 		this.sourcePoApproval.billToUserId = null;
-		this.sourcePoApproval.billToAddressId = null;
+		this.sourcePoApproval.billToAddressId = "null";
 		this.sourcePoApproval.billToContactId = null;
 		this.billToAddress = {};
 		this.sourcePoApproval.billToMemo = '';
+		this.billToCusData = [];
+		this.vendorSelectedForBillTo = [];
+		this.companySiteList_Billing = [];
 	}
 
 	clearInputOnClickUserIdBillTo() {
-		this.sourcePoApproval.billToAddressId = null;
+		this.sourcePoApproval.billToAddressId = "null";
 		this.sourcePoApproval.billToContactId = null;
 		this.billToAddress = {};
 		this.sourcePoApproval.billToMemo = '';
+		this.billToCusData = [];
+		this.vendorSelectedForBillTo = [];
+		this.companySiteList_Billing = [];
 	}
 
 	eventHandler(event) {
@@ -3127,7 +3167,7 @@ export class PurchaseSetupComponent implements OnInit {
 	}
 
 	async saveShipViaForShipTo() {
-		this.sourcePoApproval.shipViaId = null;
+		this.sourcePoApproval.shipViaId = "null";
 		this.sourcePoApproval.shippingAcctNum = '';
 		this.sourcePoApproval.shippingId = '';
 		this.sourcePoApproval.shippingURL = '';
@@ -3637,6 +3677,27 @@ export class PurchaseSetupComponent implements OnInit {
 			if (funcCurrency == reportCurrency) {
 				partList.foreignExchangeRate = 1;
 			}
+		}
+	}
+
+	checkValidOnChange(condition, value) {
+		if(condition != 'null' && value == "companyId") {
+			this.managementValidCheck = false;
+		}
+		if(condition != 'null' && value == "shipToUserTypeId") {
+			this.shipToUserTypeValidCheck = false;
+		}
+		if(condition != 'null' && value == "shipToAddressId") {
+			this.shipToSiteNameValidCheck = false;
+		}
+		if(condition != 'null' && value == "shipViaId") {
+			this.shipViaValidCheck = false;
+		}
+		if(condition != 'null' && value == "billToUserTypeId") {
+			this.billToUserTypeValidCheck = false;
+		}
+		if(condition != 'null' && value == "billToAddressId") {
+			this.billToSiteNameValidCheck = false;
 		}
 	}
 
