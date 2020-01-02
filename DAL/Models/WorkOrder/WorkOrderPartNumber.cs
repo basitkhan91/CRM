@@ -31,7 +31,7 @@ namespace DAL.Models
         public long ConditionId { get; set; }
         public long MappingItemMasterId { get; set; }
         public int? TATDaysCurrent { get; set; }
-
+        public long? RevisedPartId { get; set; }
 
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }

@@ -31,13 +31,18 @@ export class WorkOrderListComponent implements OnInit {
     private table: Table;
     lazyLoadEventData: any;
     headers = [
-        { field: 'workOrderNum', header: 'WorkOrder Number' },
+        { field: 'workOrderNum', header: 'WO NO' },
         { field: 'customerName', header: 'Customer Name' },
-        { field: 'customerCode', header: 'CustomerCode' },
+        { field: 'customerCode', header: 'Customer Code' },
         { field: 'partNos', header: 'Part No(s)' },
-        { field: 'workOrderType', header: 'WorkOrder Type' },
+        { field: 'pnDescription', header: 'PN Description(s)' },
+        { field: 'revisedPN', header: 'Revised PN(s)' },
+        { field: 'workScope', header: 'Work Scope(s)' },
+        { field: 'priority', header: 'Priority(s)' },
+        { field: 'stage', header: 'Stage(s)' },
+        { field: 'workOrderType', header: 'WO Type' },
         { field: 'openDate', header: 'Open Date' },
-        { field: 'workOrderStatus', header: 'WorkOrder Status' },
+        { field: 'workOrderStatus', header: 'WO Status' },
     ]
     selectedColumns = this.headers;
     pageIndex: number = 0;
