@@ -180,7 +180,7 @@
                                 <th>Vendor Name</th>
                                 <th>Vendor Code</th>
                                 <th>Vendor Type</th>
-                                <th>Vendor Ranking</th>
+                                <!-- <th>Vendor Ranking</th> -->
                                 <th>Vendor Classification</th>
                                 <th>Vendor Capabilities</th>
                                 <th>Email</th>
@@ -197,7 +197,6 @@
                                 <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'vendorName', audit.vendorName)  ? 'black' : 'red'  }">{{audit.vendorName}}</td>
                                     <td [ngStyle]="{'color': getColorCodeForHistory(i, 'vendorCode', audit.vendorCode)  ? 'black' : 'red'  }">{{audit.vendorCode}}</td>
                                     <td [ngStyle]="{'color': getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
-                                    <td [ngStyle]="{'color': getColorCodeForHistory(i, 'vendorRanking', audit.vendorRanking)  ? 'black' : 'red'  }">{{audit.vendorRanking}}</td>
                                     <td [ngStyle]="{'color': getColorCodeForHistory(i, 'classificationName', audit.classificationName)  ? 'black' : 'red'  }">{{audit.classificationName}}</td>
                                     <td [ngStyle]="{'color': getColorCodeForHistory(i, 'vendorCapabilityName', audit.vendorCapabilityName)  ? 'black' : 'red'  }">{{audit.vendorCapabilityName}}</td>
                                     <td [ngStyle]="{'color': getColorCodeForHistory(i, 'vendorEmail', audit.vendorEmail)  ? 'black' : 'red'  }">{{audit.vendorEmail}}</td>
