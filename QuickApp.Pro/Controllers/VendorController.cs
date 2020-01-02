@@ -1677,14 +1677,14 @@ namespace QuickApp.Pro.Controllers
                 address.UpdatedBy = vendorViewModel.UpdatedBy ?? "Admin";//Hotfix
                 address.CreatedDate = DateTime.Now;
 
-
+                _unitOfWork.Vendor.Update(actionobject);
+                _unitOfWork.SaveChanges();
+                
                 address.UpdatedDate = DateTime.Now;
                 _unitOfWork.Address.Update(address);
                 _unitOfWork.SaveChanges();
 
-                _unitOfWork.Vendor.Update(actionobject);
-                _unitOfWork.SaveChanges();
-
+             
                 if (vendorViewModel.VendorClassificationIds != null)
                 {
                     var classificationList = _context.ClassificationMapping.Where(a => a.ReferenceId == id && a.ModuleId == Convert.ToInt32(ModuleEnum.Vendor)).ToList();
@@ -1832,6 +1832,49 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IActionResult AddContact(VendorViewModel vendorViewModel)
+        {
+            try
+            {
+                Contact contactObj = new Contact();              
+                //contactObj.ContactId = vendorViewModel.ContactId;
+                //contactObj.ContactTitle = vendorViewModel.ContactTitle;
+                //contactObj.AlternatePhone = vendorViewModel.AlternatePhone;
+                //contactObj.IsDefaultContact = vendorViewModel.IsDefaultContact;
+                contactObj.Email = vendorViewModel.Email;
+                //contactObj.Prefix = vendorViewModel.Prefix;
+                //contactObj.Suffix = vendorViewModel.Suffix;
+                //contactObj.Fax = vendorViewModel.Fax;
+                contactObj.FirstName = vendorViewModel.VendorName;
+                contactObj.LastName = "NA";
+                //contactObj.MiddleName = vendorViewModel.MiddleName;
+                //contactObj.ContactTitle = vendorViewModel.ContactTitle;
+                //contactObj.MobilePhone = vendorViewModel.MobilePhone;
+                //contactObj.Notes = vendorViewModel.Notes;
+                contactObj.WorkPhone = vendorViewModel.VendorPhone;
+                contactObj.WorkPhoneExtn = vendorViewModel.VendorPhoneExt;
+                //contactObj.WebsiteURL = vendorViewModel.WebsiteURL;
+                //contactObj.MasterCompanyId = vendorViewModel.MasterCompanyId;
+                //contactObj.IsActive = true;
+                contactObj.IsActive = true;
+                contactObj.CreatedDate = DateTime.Now;
+                contactObj.UpdatedDate = DateTime.Now;
+                contactObj.CreatedBy = vendorViewModel.CreatedBy;
+                contactObj.UpdatedBy = vendorViewModel.UpdatedBy;
+              
+                _unitOfWork.ContactRepository.Add(contactObj);
+                _unitOfWork.SaveChanges();
+                return null;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         [HttpPost("insertDiscount")]
         public IActionResult CreateAction([FromBody] DiscountViewModel discountViewModel)
         {
@@ -1884,6 +1927,8 @@ namespace QuickApp.Pro.Controllers
             vendorViewModel.AddressId = address.AddressId.Value;
             return Ok(ModelState);
         }
+        
+        
 
         [HttpPost("vendorContactPost")]
         public IActionResult CreateContact([FromBody] ContactViewModel contactViewModel)
@@ -2903,6 +2948,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject.ShippingId = vendorShippingDetailsViewModel.ShippingId;
                 actionobject.ShippingURL = vendorShippingDetailsViewModel.ShippingURL;
                 actionobject.MasterCompanyId = vendorShippingDetailsViewModel.MasterCompanyId;
+                actionobject.Memo = vendorShippingDetailsViewModel.Memo;
                 //actionobject.IsActive = true;
                 actionobject.IsActive = vendorShippingDetailsViewModel.IsActive;
                 actionobject.CreatedDate = DateTime.Now;

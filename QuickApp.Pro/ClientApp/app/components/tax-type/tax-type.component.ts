@@ -288,7 +288,7 @@ export class TaxTypeComponent implements OnInit {
                 this.getList();
                 this.alertService.showMessage(
                     'Success',
-                    `Added  Updated Tax Type Successfully  `,
+                    `Updated Tax Type Successfully  `,
                     MessageSeverity.success
                 );
             })

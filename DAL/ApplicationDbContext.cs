@@ -491,6 +491,7 @@ namespace DAL
         public DbSet<Models.Sales.MasterSalesOrderQuoteStatus> MasterSalesOrderQuoteStatus { get; set; }
         public DbSet<AuditCustomerContact> AuditCustomerContact { get; set; }
         public DbSet<WorkOrderSettings> WorkOrderSettings { get; set; }
+        public DbSet<WorkOrderStageAndStatus> WorkOrderStageAndStatus { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
