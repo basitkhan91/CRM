@@ -65,7 +65,6 @@
              (onLazyLoad)="loadData($event)"
              [resizableColumns]="true"
              [reorderableColumns]="true"
-             [scrollable]="true"
              [totalRecords]="totalRecords"
              [dataKey]="workOrderPartListDataKeys">
         <ng-template pTemplate="caption">
@@ -100,7 +99,7 @@
                         icon="fa-download"
                         iconPos="left"
                         label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above"
-                        (click)="dt.exportCSV({ selectionOnly: true })"></button>
+                        (click)="dt.exportCSV({selectionOnly:true})"></button>
                 <!-- <div class="excel-upload  excel-upload-cstm">
                   <input
                     type="file"
@@ -130,7 +129,8 @@
         <ng-template pTemplate="header" let-columns>
             <tr>
 
-                <th *ngFor="let col of columns">
+                <th *ngFor="let col of columns" pResizableColumn pReorderableColumn
+                [pSortableColumn]="col.field" style="text-align:center;">
                     {{ col.header }}
                 </th>
                 <th style="position:sticky" *ngIf="selectedColumns.length > 0">
@@ -167,7 +167,7 @@
                    </a>
 
                  </td> -->
-                <td *ngFor="let col of columns">
+                <td *ngFor="let col of columns" style="text-overflow: ellipsis; " pTooltip={{rowData[col.field]}}>
                     {{
           col.field == 'openDate'
             ? (rowData[col.field] | date: 'MM/dd/yyyy')
@@ -176,6 +176,7 @@
             : rowData[col.field]
                     }}
                 </td>
+
                 <td style="width:200px" *ngIf="selectedColumns.length > 0">
                     <p-inputSwitch [(ngModel)]="rowData['isActive']"
                                    name="isActive{{ rowIndex }}"

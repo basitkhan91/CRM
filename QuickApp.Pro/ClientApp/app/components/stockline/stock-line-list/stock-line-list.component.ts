@@ -286,10 +286,10 @@ export class StockLineListComponent implements OnInit {
     openView(content, row) {
 
         this.sourceViewOptions = row;
-        this.company = row.compmanagmentLegalEntity.name;
-        this.businessUnitName = row.biumanagmentLegalEntity.name;
-        this.division = row.divmanagmentLegalEntity.name;
-        this.departmentName = row.mana.name;
+        if (row.compmanagmentLegalEntity) this.company = row.compmanagmentLegalEntity.name;
+        if (row.biumanagmentLegalEntity) this.businessUnitName = row.biumanagmentLegalEntity.name;
+        if (row.divmanagmentLegalEntity) this.division = row.divmanagmentLegalEntity.name;
+        if (row.mana) this.departmentName = row.mana.name;
         this.partNumber = row.partNumber;
         this.glAccountId = row.glAccountId;
         this.glAccountName = row.glAccountName;

@@ -28,6 +28,9 @@ import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service'
 
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 
+import { emailPattern, urlPattern } from '../../../validations/validation-pattern';
+
+
 @Component({
 	selector: 'app-customer-contacts',
 	templateUrl: './customer-contacts.component.html',
@@ -37,35 +40,35 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 export class CustomerContactsComponent implements OnInit {
 	@Input() savedGeneralInformationData;
 	@Input() editMode;
-    @Input() editGeneralInformationData;
-   
+	@Input() editGeneralInformationData;
+
 	@Input() add_ataChapterList;
 
 	// @Input() ataListDataValues;
 	@Output() tab = new EventEmitter<any>();
 	@Output() saveCustomerContactATAMapped = new EventEmitter();
 	@Output() refreshCustomerATAMapped = new EventEmitter();
-    @Output() refreshCustomerATAByCustomerId = new EventEmitter();
-    @Output() refreshCustomerContactMapped = new EventEmitter();
+	@Output() refreshCustomerATAByCustomerId = new EventEmitter();
+	@Output() refreshCustomerContactMapped = new EventEmitter();
 
-	
-    
-    
+
+
+
 	contactsListOriginal: any;
 	firstNamesList: any;
 	middleNamesList: any;
-    lastNamesList: any;
-    isDeleteMode: boolean = false;
-    public sourceCustomer: any = {}
+	lastNamesList: any;
+	isDeleteMode: boolean = false;
+	public sourceCustomer: any = {}
 	contactInformation = new CustomerContactModel()
-    customerContacts: any = [];
-    selectedRowforDelete: any;
-    selectedAtappedRowforDelete: any;
-    selectedFirstName: any;
-    disablesaveForFirstname: boolean;
-    disableSaveMiddleName: boolean;
-    disableSaveLastName: boolean;
-    disablesaveForlastname: boolean;
+	customerContacts: any = [];
+	selectedRowforDelete: any;
+	selectedAtappedRowforDelete: any;
+	selectedFirstName: any;
+	disablesaveForFirstname: boolean;
+	disableSaveMiddleName: boolean;
+	disableSaveLastName: boolean;
+	disablesaveForlastname: boolean;
 	customerContactsColumns = [
 		{ field: 'tag', header: 'Tag' },
 		{ field: 'firstName', header: 'First Name' },
@@ -81,18 +84,22 @@ export class CustomerContactsComponent implements OnInit {
 		{ field: 'createdDate', header: 'Created Date' }
 	];
 	selectedColumns = this.customerContactsColumns;
-    selectedColumn: any;
+	selectedColumn: any;
 	ediData: any;
 	isEditButton: boolean = false;
-    id: number;
-    contactId: number;
-    contactATAId: number;
+	id: number;
+	contactId: number;
+	contactATAId: number;
 	customerCode: any;
-    customerName: any;
-    modal: NgbModalRef;
-    localCollection: any;
-	emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z0-9.-]{2,}[.]{1}[a-zA-Z0-9]{2,}";
-	urlPattern = "^((ht|f)tp(s?))\://([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(/\S*)?$";
+	customerName: any;
+	modal: NgbModalRef;
+	localCollection: any;
+
+	emailPattern = emailPattern()
+	urlPattern = urlPattern()
+
+	// emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z0-9.-]{2,}[.]{1}[a-zA-Z0-9]{2,}";
+	// urlPattern = "^((ht|f)tp(s?))\://([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(/\S*)?$";
 	sourceViewforContact: any;
 	add_SelectedId: any;
 	add_SelectedModels: any;
@@ -104,10 +111,20 @@ export class CustomerContactsComponent implements OnInit {
 	]
 	ataListDataValues = []
 	auditHistory: any[] = [];
-    @ViewChild('ATAADD') myModal;
+	@ViewChild('ATAADD') myModal;
 
-	constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService,
-		private dialog: MatDialog, private atasubchapter1service: AtaSubChapter1Service, private masterComapnyService: MasterComapnyService) {
+	constructor(private router: ActivatedRoute,
+
+		private route: Router,
+		private authService: AuthService,
+		private modalService: NgbModal,
+		private activeModal: NgbActiveModal,
+		private _fb: FormBuilder,
+		private alertService: AlertService,
+		public customerService: CustomerService,
+		private dialog: MatDialog,
+		private atasubchapter1service: AtaSubChapter1Service,
+		private masterComapnyService: MasterComapnyService) {
 	}
 
 	ngOnInit() {
@@ -125,7 +142,7 @@ export class CustomerContactsComponent implements OnInit {
 		}
 
 		this.getAllContacts();
-       // this.getATACustomerContactMapped();
+		// this.getATACustomerContactMapped();
 	}
 
 
@@ -145,14 +162,14 @@ export class CustomerContactsComponent implements OnInit {
 			return x.firstName.toLowerCase().includes(event.query.toLowerCase())
 		})]
 	}
-    filterMiddleNames(event) {
-        
+	filterMiddleNames(event) {
+
 		console.log(event);
 		this.middleNamesList = this.contactsListOriginal
-        this.middleNamesList = [...this.contactsListOriginal.filter(x => {
-            
-            if (x.middleName !== null && x.middleName !=="") {
-                return x.middleName.toLowerCase().indexOf(event.query.toLowerCase())
+		this.middleNamesList = [...this.contactsListOriginal.filter(x => {
+
+			if (x.middleName !== null && x.middleName !== "") {
+				return x.middleName.toLowerCase().indexOf(event.query.toLowerCase())
 			}
 
 		})]
@@ -164,26 +181,26 @@ export class CustomerContactsComponent implements OnInit {
 		})]
 	}
 
-    patternMobilevalidationWithSpl(event: any) {
-        const pattern = /[0-9\+\-()\ ]/;
+	patternMobilevalidationWithSpl(event: any) {
+		const pattern = /[0-9\+\-()\ ]/;
 
-        let inputChar = String.fromCharCode(event.charCode);
-        if (event.keyCode != 8 && !pattern.test(inputChar)) {
-            event.preventDefault();
-        }
+		let inputChar = String.fromCharCode(event.charCode);
+		if (event.keyCode != 8 && !pattern.test(inputChar)) {
+			event.preventDefault();
+		}
 
-    }
+	}
 	async saveContactInformation() {
 
 		// create a new contact in the contact table
-        const data = {
-            ...this.contactInformation, createdBy: this.userName, updatedBy: this.userName, isActive: true,
-            masterCompanyId: 1,
-            firstName: editValueAssignByCondition('firstName', this.contactInformation.firstName),
-            middleName: editValueAssignByCondition('middleName', this.contactInformation.middleName),
-            lastName: editValueAssignByCondition('lastName', this.contactInformation.lastName)
+		const data = {
+			...this.contactInformation, createdBy: this.userName, updatedBy: this.userName, isActive: true,
+			masterCompanyId: 1,
+			firstName: editValueAssignByCondition('firstName', this.contactInformation.firstName),
+			middleName: editValueAssignByCondition('middleName', this.contactInformation.middleName),
+			lastName: editValueAssignByCondition('lastName', this.contactInformation.lastName)
 
-        }
+		}
 		await this.customerService.newAddContactInfo(data).subscribe(res => {
 			const responseForCustomerCreate = res;
 
@@ -193,7 +210,7 @@ export class CustomerContactsComponent implements OnInit {
 
 					this.contactInformation = new CustomerContactModel()
 					// get all contacts
-					 this.getAllContacts();
+					this.getAllContacts();
 					// get Customer Contatcs 
 					this.getAllCustomerContact();
 					this.alertService.showMessage(
@@ -215,36 +232,36 @@ export class CustomerContactsComponent implements OnInit {
 	// }
 
 	viewSelectedRow(rowData) {
-        this.sourceViewforContact = rowData;
-        
-    }
-    viewSelectedRowdbl(content,rowData) {
-        this.sourceViewforContact = rowData;
-        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+		this.sourceViewforContact = rowData;
 
-    }
-    
-    onAddContactInfo() {
-        this.isEditButton = false;
-        this.contactInformation = new CustomerContactModel()
+	}
+	viewSelectedRowdbl(content, rowData) {
+		this.sourceViewforContact = rowData;
+		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+		this.modal.result.then(() => {
+			console.log('When user closes');
+		}, () => { console.log('Backdrop click') })
+
+	}
+
+	onAddContactInfo() {
+		this.isEditButton = false;
+		this.contactInformation = new CustomerContactModel()
 
 
-    }
-    editCustomerContact(rowData) {
-        
+	}
+	editCustomerContact(rowData) {
+
 		this.ediData = { ...rowData };
 		this.isEditButton = true;
 		this.contactInformation = {
 			...this.ediData,
-            firstName: getObjectByValue('firstName',rowData.firstName, this.contactsListOriginal),
-            middleName: getObjectByValue('middleName', rowData.middleName, this.contactsListOriginal),
-            lastName: getObjectByValue('lastName', rowData.lastName, this.contactsListOriginal),
+			firstName: getObjectByValue('firstName', rowData.firstName, this.contactsListOriginal),
+			middleName: getObjectByValue('middleName', rowData.middleName, this.contactsListOriginal),
+			lastName: getObjectByValue('lastName', rowData.lastName, this.contactsListOriginal),
 		}
-        console.log(this.contactInformation);
-        this.sourceViewforContact = '';
+		console.log(this.contactInformation);
+		this.sourceViewforContact = '';
 
 	}
 
@@ -262,9 +279,9 @@ export class CustomerContactsComponent implements OnInit {
 
 		}
 		this.customerService.updateContactinfo(data).subscribe(res => {
-            this.getAllContacts();
-            this.getAllCustomerContact();
-            
+			this.getAllContacts();
+			this.getAllCustomerContact();
+
 			this.alertService.showMessage(
 				'Success',
 				`Sucessfully Updated Contact`,
@@ -277,20 +294,20 @@ export class CustomerContactsComponent implements OnInit {
 	getAllCustomerContact() {
 		// get Customer Contatcs 
 		this.customerService.getContacts(this.id).subscribe(res => {
-            this.customerContacts = res[0]
-           
+			this.customerContacts = res[0]
+
 
 		})
 	}
 
-    handleChange(rowData) {
-        this.sourceViewforContact = '';
+	handleChange(rowData) {
+		this.sourceViewforContact = '';
 
 		// if (e.checked == false) {
 		const data = { ...rowData, updatedBy: this.userName };
 
 		this.customerService.updateContactinfo(data).subscribe(res => {
-            this.getAllContacts();
+			this.getAllContacts();
 			this.getAllCustomerContact();
 			this.alertService.showMessage(
 				'Success',
@@ -319,56 +336,56 @@ export class CustomerContactsComponent implements OnInit {
 	//	})
 	//}
 
-    openDelete(content, rowData) {
-      
-        this.selectedRowforDelete = rowData;
+	openDelete(content, rowData) {
 
-        this.sourceViewforContact = '';
-        this.isDeleteMode = true;
-        
-        this.contactId = rowData.contactId;
-        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-    deleteItemAndCloseModel() {
-        let contactId = this.contactId ;
-        if (contactId > 0) {
-      
-            this.customerService.deleteContact(contactId).subscribe(
-                response => {
+		this.selectedRowforDelete = rowData;
+
+		this.sourceViewforContact = '';
+		this.isDeleteMode = true;
+
+		this.contactId = rowData.contactId;
+		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+		this.modal.result.then(() => {
+			console.log('When user closes');
+		}, () => { console.log('Backdrop click') })
+	}
+	deleteItemAndCloseModel() {
+		let contactId = this.contactId;
+		if (contactId > 0) {
+
+			this.customerService.deleteContact(contactId).subscribe(
+				response => {
 					this.saveCompleted(this.sourceCustomer);
 					this.refreshCustomerATAByCustomerId.emit(this.id)
 				},
-                error => this.saveFailedHelper(error));
-              
-           
+				error => this.saveFailedHelper(error));
 
-        }
 
-        this.modal.close();
-    }
-    addATAChapter(rowData) {
-        this.sourceViewforContact = '';
-        this.add_SelectedModels = undefined;
-        this.add_SelectedId = undefined;
+
+		}
+
+		this.modal.close();
+	}
+	addATAChapter(rowData) {
+		this.sourceViewforContact = '';
+		this.add_SelectedModels = undefined;
+		this.add_SelectedId = undefined;
 		this.selectedContact = rowData;
-        this.ataListDataValues = [];
-        this.add_ataSubChapterList = '';
-       
-        this.getATACustomerContactMapped();
+		this.ataListDataValues = [];
+		this.add_ataSubChapterList = '';
+
+		this.getATACustomerContactMapped();
 
 
 	}
-      dismissModel() {
-        this.modal.close();
-    }
+	dismissModel() {
+		this.modal.close();
+	}
 
 
 
 	// get subchapter by Id in the add ATA Mapping
-    getATASubChapterByATAChapter() {
+	getATASubChapterByATAChapter() {
 
 		const selectedATAId = getValueFromObjectByKey('ataChapterId', this.add_SelectedId)
 		this.atasubchapter1service.getATASubChapterListByATAChapterId(selectedATAId).subscribe(atasubchapter => {
@@ -381,8 +398,8 @@ export class CustomerContactsComponent implements OnInit {
 			})
 		})
 	}
-    // post the ata Mapping 
-    async addATAMapping() {
+	// post the ata Mapping 
+	async addATAMapping() {
 		// const id = this.savedGeneralInformationData.customerId;
 		const ataMappingData = this.add_SelectedModels.map(x => {
 			return {
@@ -400,35 +417,35 @@ export class CustomerContactsComponent implements OnInit {
 				UpdatedDate: new Date(),
 				IsDeleted: false,
 			}
-        })
-       
+		})
+
 		this.add_SelectedModels = undefined;
-        this.add_SelectedId = undefined;
-        //debugger
-        this.add_ataSubChapterList = '';
-        await this.saveCustomerContactATAMapped.emit(ataMappingData);
+		this.add_SelectedId = undefined;
+		//debugger
+		this.add_ataSubChapterList = '';
+		await this.saveCustomerContactATAMapped.emit(ataMappingData);
 
-        setTimeout(() => {  
-            this.getATACustomerContactMapped();
-        }, 1000);
-
-         
-       
-        this.refreshCustomerContactMapped.emit(this.id);
-     
-        //this.openModel();
+		setTimeout(() => {
+			this.getATACustomerContactMapped();
+		}, 1000);
 
 
 
-    }
-    openModel() {
-        this.myModal.nativeElement.className = 'modal fade show';
-        this.getATACustomerContactMapped();
+		this.refreshCustomerContactMapped.emit(this.id);
 
-       
-    }
+		//this.openModel();
 
-    async getATACustomerContactMapped() {
+
+
+	}
+	openModel() {
+		this.myModal.nativeElement.className = 'modal fade show';
+		this.getATACustomerContactMapped();
+
+
+	}
+
+	async getATACustomerContactMapped() {
 		this.customerService.getATAMappedByContactId(this.selectedContact.contactId).subscribe(res => {
 			console.log(res);
 			this.ataListDataValues = res;
@@ -449,46 +466,46 @@ export class CustomerContactsComponent implements OnInit {
 	//}
 
 
-    deleteATAMapped(content, rowData) {
-        
-        this.selectedAtappedRowforDelete = rowData;
-        this.sourceViewforContact = '';
-        this.isDeleteMode = true;
+	deleteATAMapped(content, rowData) {
+
+		this.selectedAtappedRowforDelete = rowData;
+		this.sourceViewforContact = '';
+		this.isDeleteMode = true;
 
 
-        this.contactATAId = rowData.customerContactATAMappingId;
-        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
+		this.contactATAId = rowData.customerContactATAMappingId;
+		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+		this.modal.result.then(() => {
+			console.log('When user closes');
+		}, () => { console.log('Backdrop click') })
+	}
 
-    deleteItemAndCloseModel1() {
-        let contactATAId = this.contactATAId;
-        if (contactATAId > 0) {
+	deleteItemAndCloseModel1() {
+		let contactATAId = this.contactATAId;
+		if (contactATAId > 0) {
 
-            this.customerService.deleteATAMappedByContactId(contactATAId).subscribe(
-                response => {
-                    this.saveCompleted(this.sourceCustomer);
-                    this.getATACustomerContactMapped();
-              	   this.refreshCustomerATAMapped.emit(this.id)
-                    this.refreshCustomerContactMapped.emit(this.id);
-                },
-                error => this.saveFailedHelper(error));
+			this.customerService.deleteATAMappedByContactId(contactATAId).subscribe(
+				response => {
+					this.saveCompleted(this.sourceCustomer);
+					this.getATACustomerContactMapped();
+					this.refreshCustomerATAMapped.emit(this.id)
+					this.refreshCustomerContactMapped.emit(this.id);
+				},
+				error => this.saveFailedHelper(error));
 
 
 
-        }
+		}
 
-        this.modal.close();
-    }
+		this.modal.close();
+	}
 
-    getAuditHistoryById(rowData) {
-        this.customerService.getCustomerContactAuditDetails(rowData.customerContactId, rowData.customerId).subscribe(res => {
+	getAuditHistoryById(rowData) {
+		this.customerService.getCustomerContactAuditDetails(rowData.customerContactId, rowData.customerId).subscribe(res => {
 			this.auditHistory = res;
 		})
-    }
-  
+	}
+
 	getColorCodeForHistory(i, field, value) {
 		const data = this.auditHistory;
 		const dataLength = data.length;
@@ -508,103 +525,103 @@ export class CustomerContactsComponent implements OnInit {
 	backClick() {
 		this.tab.emit('General');
 	}
-   
 
 
-    private saveCompleted(user?: any) {
-        
-        if (this.isDeleteMode == true) {
-            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
-            this.isDeleteMode = false;
-        }
-        else {
-            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
-            this.saveCompleted
-        }
-        
-        
-        this.getAllCustomerContact();
-    }
-    private saveFailedHelper(error: any) {
-        
-        this.alertService.stopLoadingMessage();
-        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
-        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
-    }
+
+	private saveCompleted(user?: any) {
+
+		if (this.isDeleteMode == true) {
+			this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
+			this.isDeleteMode = false;
+		}
+		else {
+			this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+			this.saveCompleted
+		}
 
 
-    onFirstNameSelected() {
-                 this.disablesaveForFirstname = true;
-             
-    }
-    onMiddleNameSelected() {
-        this.disableSaveMiddleName = true;
+		this.getAllCustomerContact();
+	}
+	private saveFailedHelper(error: any) {
 
-    }
-    onLastNameSelected() {
-        this.disableSaveLastName = true;
+		this.alertService.stopLoadingMessage();
+		this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+	}
 
-    }
-    //eventFirstNameHandler(event) {
-    //    if (event.target.value != "") {
-    //        let value = event.target.value.toLowerCase();
-    //        if (this.selectedFirstName) {
-    //            if (value == this.selectedFirstName.toLowerCase()) {
-    //                this.disablesaveForFirstname = true;
-    //            }
-    //            else {
-    //                this.disablesaveForFirstname = false;
-    //            }
-    //        }
-    //    }
-    //}
-    checkfirstNameExist(value) {
-       
-        this.disablesaveForFirstname = false;
-       
-        for (let i = 0; i < this.contactsListOriginal.length; i++) {
 
-            if (this.contactInformation.firstName == this.contactsListOriginal[i].firstName || value == this.contactsListOriginal[i].firstName) {
-                this.disablesaveForFirstname = true;
-                return;
-            }
+	onFirstNameSelected() {
+		this.disablesaveForFirstname = true;
 
-        }
+	}
+	onMiddleNameSelected() {
+		this.disableSaveMiddleName = true;
 
-    }
+	}
+	onLastNameSelected() {
+		this.disableSaveLastName = true;
 
-    checkmiddleNameExist(value) {
-        
+	}
+	//eventFirstNameHandler(event) {
+	//    if (event.target.value != "") {
+	//        let value = event.target.value.toLowerCase();
+	//        if (this.selectedFirstName) {
+	//            if (value == this.selectedFirstName.toLowerCase()) {
+	//                this.disablesaveForFirstname = true;
+	//            }
+	//            else {
+	//                this.disablesaveForFirstname = false;
+	//            }
+	//        }
+	//    }
+	//}
+	checkfirstNameExist(value) {
 
-        this.disableSaveMiddleName = false;
+		this.disablesaveForFirstname = false;
 
-        for (let i = 0; i < this.contactsListOriginal.length; i++) {
+		for (let i = 0; i < this.contactsListOriginal.length; i++) {
 
-            if (this.contactInformation.middleName == this.contactsListOriginal[i].middleName || value == this.contactsListOriginal[i].middleName) {
-                this.disableSaveMiddleName = true;
-                return;
-            }
+			if (this.contactInformation.firstName == this.contactsListOriginal[i].firstName || value == this.contactsListOriginal[i].firstName) {
+				this.disablesaveForFirstname = true;
+				return;
+			}
 
-        }
-        if (value == "") {
-            this.disableSaveMiddleName = false;
-        }
+		}
 
-    }
-    checklastNameExist(value) {
+	}
 
-        this.disableSaveLastName = false;
+	checkmiddleNameExist(value) {
 
-        for (let i = 0; i < this.contactsListOriginal.length; i++) {
 
-            if (this.contactInformation.lastName == this.contactsListOriginal[i].lastName || value == this.contactsListOriginal[i].lastName) {
-                this.disableSaveLastName = true;
-                return;
-            }
+		this.disableSaveMiddleName = false;
 
-        }
+		for (let i = 0; i < this.contactsListOriginal.length; i++) {
 
-    }
+			if (this.contactInformation.middleName == this.contactsListOriginal[i].middleName || value == this.contactsListOriginal[i].middleName) {
+				this.disableSaveMiddleName = true;
+				return;
+			}
+
+		}
+		if (value == "") {
+			this.disableSaveMiddleName = false;
+		}
+
+	}
+	checklastNameExist(value) {
+
+		this.disableSaveLastName = false;
+
+		for (let i = 0; i < this.contactsListOriginal.length; i++) {
+
+			if (this.contactInformation.lastName == this.contactsListOriginal[i].lastName || value == this.contactsListOriginal[i].lastName) {
+				this.disableSaveLastName = true;
+				return;
+			}
+
+		}
+
+	}
 
 
 

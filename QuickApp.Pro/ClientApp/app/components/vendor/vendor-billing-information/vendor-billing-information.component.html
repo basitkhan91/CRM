@@ -375,41 +375,57 @@
 
 
     </div>
-    <div class="modal-body">
-
-        <div class="table-responsive">
-            <table class="table table-bordered">
+    <div class="modal-body" *ngIf="billingauditHisory">
+        <div class="table-responsive rro-table-cstm">
+            <table class="table table-bordered" *ngIf="billingauditHisory.length> 0 else noDatavailable">
                 <thead>
                     <tr>
-                        <th>Memo</th>
+                        <th>Site Name</th>
+                        <th>Address1</th>
+                        <th>Address2</th>
+                        <th>City</th>
+                        <th>State/Prov</th>
+                        <th>Postal Code</th>
+                        <th>Country</th>
+                        <th>IsActive</th>
                         <th>Updated By</th>
-                        <th>Last Updated Time</th>
-                        <th>Created By</th>
-                        <th>Created Time</th>
-
+                        <th>Updated Time</th>
                     </tr>
                 </thead>
-                <!-- <tr *ngFor="let audit of billingauditHisory">
-                    <td>{{audit.siteName}}</td>
-                    <td>{{audit.updatedBy}}</td>
-                    <td>{{audit.updatedDate}}</td>
-                    <td>{{audit.createdBy}}</td>
-                    <td>{{audit.createdDate}}</td>
 
-                </tr> -->
+                <tbody class="audithistory-cstm"> <!--*ngIf="auditHistory.length> 0"-->
+                    <tr *ngFor="let audit of billingauditHisory; let i = index;">
+                        <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'siteName', audit.siteName)  ? 'black' : 'red'  }">{{audit.siteName}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'line1', audit.line1)  ? 'black' : 'red'  }">{{audit.line1}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'line2', audit.line2)  ? 'black' : 'red'  }">{{audit.line2}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'city', audit.city)  ? 'black' : 'red'  }">{{audit.city}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'stateOrProvince', audit.stateOrProvince)  ? 'black' : 'red'  }">{{audit.stateOrProvince}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'postalCode', audit.postalCode)  ? 'black' : 'red'  }">{{audit.postalCode}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'country', audit.country)  ? 'black' : 'red'  }">{{audit.country}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+                        <td >{{audit.updatedBy}}</td>
+                        <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                    </tr>
+                </tbody> 
 
-                <tr *ngFor="let audit of billingauditHisory; let i = index;">                                       
+                <!-- <tr *ngFor="let audit of billingauditHisory; let i = index;">                                       
                     <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'siteName', audit.siteName)  ? 'black' : 'red'  }">{{audit.siteName}}</td>
                     <td>{{audit.updatedBy}}</td>
                     <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
                     <td>{{audit.createdBy}}</td>
                     <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-            </tr>   
+            </tr>    -->
             </table>
+            <ng-template #noDatavailable>
+                <div class="text-center"> 
+                        <img src="../../../assets/images/binoculars.png" style="height: 100px; width: 100px;">
+                        <h4 style="color: #ff5663;">No History Found </h4>
+                </div>
+            </ng-template> 
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>
 
@@ -421,6 +437,7 @@
             <h4 class="modal-title">View Billing Info</h4>
         </div>
         <div class="modal-body viewform">
+            <p><span class="label"><b>Primary : </b></span><span class="value">{{isPrimary}}</span></p>
             <p><span class="label"><b>Site Name: </b></span><span class="value">{{siteName}}</span></p>
             <p><span class="label"><b>Address 1: </b></span><span class="value">{{address1}}</span></p>
             <p><span class="label"><b>Address 2: </b></span><span class="value">{{address2}}</span></p>
@@ -429,7 +446,6 @@
             <p><span class="label"><b>State Or Province: </b></span><span class="value">{{stateOrProvince}}</span></p>
             <p><span class="label"><b>Postal Code : </b></span><span class="value">{{postalCode}}</span></p>
             <p><span class="label"><b>Country : </b></span><span class="value">{{country}}</span></p>
-            <p><span class="label"><b>Primary : </b></span><span class="value">{{isPrimary}}</span></p>
 
             <div class="clear"></div>
         </div>

@@ -123,7 +123,7 @@
                                            
                                             <select style="border-radius:5px;" sstyle="font-size: 1px" [(ngModel)]="sourcereceving.customerContactId" [ngModelOptions]="{standalone: true}" (change)="customerContactChange(sourcereceving.customerContactId)" required>
                                                     <option>--Select</option>
-                                                    <option *ngFor="let contact of customerContactList" [ngValue]="contact.contactId">{{contact.contactTitle}}</option>
+                                                    <option *ngFor="let contact of customerContactList" [ngValue]="contact.contactId">{{contact.firstName}}</option>
                                             </select>
                                         </div>
                                     </div>
@@ -349,30 +349,30 @@
                                                                 </div>
                                                                 <div class="form-group col-sm-12">
                                                                     <label class="control-label col-sm-4"></label>
-                                                                    <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.traceableToType == 1">
-                                                                        <select [(ngModel)]="sourcereceving.traceableToCustomerId" [ngModelOptions]="{standalone: true}">
+                                                                    <div class="inner-addon col-sm-7" *ngIf="sourcereceving.traceableToType == 1">
+                                                                        <select style="border-radius:5px;" [(ngModel)]="sourcereceving.traceableToCustomerId" [ngModelOptions]="{standalone: true}">
                                                                             <option *ngFor="let customer of allCustomer" [ngValue]="customer.customerId">{{customer.name}}</option>
                                                                         </select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group col-sm-12">
                                                                     <label class="control-label col-sm-4"></label>
-                                                                    <div class="col-sm-7" *ngIf="sourcereceving.traceableToType == 2">
+                                                                    <div class="inner-addon col-sm-7" *ngIf="sourcereceving.traceableToType == 2">
                                                                         <input style="border-radius:5px;" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.traceableToOther">
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group col-sm-12">
                                                                     <label class="control-label col-sm-4"></label>
-                                                                    <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.traceableToType == 3">
-                                                                        <select [(ngModel)]="sourcereceving.traceableToVendorId" [ngModelOptions]="{standalone: true}">
+                                                                    <div class="inner-addon col-sm-7" *ngIf="sourcereceving.traceableToType == 3">
+                                                                        <select style="border-radius:5px;" [(ngModel)]="sourcereceving.traceableToVendorId" [ngModelOptions]="{standalone: true}">
                                                                             <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorId">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                                                                         </select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group col-sm-12">
                                                                     <label class="control-label col-sm-4"></label>
-                                                                    <div lass="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.traceableToType == 4">
-                                                                        <select [(ngModel)]="sourcereceving.traceableToCompanyId" [ngModelOptions]="{standalone: true}">
+                                                                    <div class="inner-addon col-sm-7" *ngIf="sourcereceving.traceableToType == 4">
+                                                                        <select style="border-radius:5px;" [(ngModel)]="sourcereceving.traceableToCompanyId" [ngModelOptions]="{standalone: true}">
                                                                             <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
                                                                         </select>
                                                                     </div>
@@ -394,126 +394,141 @@
                                                                         <option value="4">Company</option>
                                                                     </select>
                                                                 </div>
-                                                                <label class="control-label col-sm-4"></label>
-                                                                <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.obtainFromType == 1">
-                                                                    <select [(ngModel)]="sourcereceving.obtainFromCustomerId" [ngModelOptions]="{standalone: true}">
-                                                                        <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
-                                                                    </select>
-                                                                </div>
-                                                                <div class="col-sm-7" *ngIf="sourcereceving.obtainFromType == 2">
-                                                                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.obtainFromOther">
-                                                                </div>
-                                                                <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.obtainFromType == 3">
-                                                                    <select [(ngModel)]="sourcereceving.obtainFromVendorId" [ngModelOptions]="{standalone: true}">
-                                                                        <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option>
-                                                                    </select>
-                                                                </div>
-                                                                <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourcereceving.obtainFromType == 4">
-                                                                    <select [(ngModel)]="sourcereceving.obtainFromCompanyId" [ngModelOptions]="{standalone: true}">
-                                                                        <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group col-sm-12">
-                                                                <label class="control-label col-sm-4">MFG Date</label>
-                                                                <div class="col-sm-7">
-                                                                    <input [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.isMFGDate" type="checkbox">
-                                                                    <div *ngIf="sourcereceving.isMFGDate">
-                                                                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.manufacturingDate"></p-calendar>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group col-sm-12">
-                                                                <label class="control-label col-sm-4">MFG Trace </label>
-                                                                <div class="col-sm-7">
-                                                                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.manufacturingTrace">
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group col-sm-12">
-                                                                <label class="control-label col-sm-4">MFG Lot </label>
-                                                                <div class="col-sm-7">
-                                                                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.manufacturingLotNumber">
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group col-sm-12">
-                                                                <label class="control-label col-sm-4">Exp Date</label>
-                                                                <div class="col-sm-7">
-                                                                    <input class="" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.isExpirationDate" id="expdate-input">
-
-                                                                    <div *ngIf="sourcereceving.isExpirationDate">
-                                                                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.expirationDate"></p-calendar>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group col-sm-12">
-                                                                <label class="control-label col-sm-4">Time Life</label>
-                                                                <div class="col-sm-7">
-                                                                    <input class="" type="checkbox" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.isTimeLife">
-                                                                </div>
-                                                            </div>
-                                                            <div *ngIf="this.sourcereceving.isTimeLife" class="timelife-block">
-                                                               
                                                                 <div class="form-group col-sm-12">
-                                                                    <label class="control-label col-sm-4">Date</label>
-                                                                    <div class="col-sm-7">
-                                                                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.timeLifeDate"></p-calendar>
+                                                                    <label class="control-label col-sm-4"></label>
+                                                                    <div class="inner-addon col-sm-7" *ngIf="sourcereceving.obtainFromType == 1">
+
+                                                                        <select style="border-radius:5px;" [(ngModel)]="sourcereceving.obtainFromCustomerId" [ngModelOptions]="{standalone: true}">
+                                                                            <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
+                                                                        </select>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group col-sm-12">
-                                                                    <label class="control-label col-sm-4">Origin</label>
-                                                                    <div class="col-sm-7">
-                                                                        <input class="" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.timeLifeOrigin ">
+                                                                    <label class="control-label col-sm-4"></label>
+
+                                                                    <div class="col-sm-7" *ngIf="sourcereceving.obtainFromType == 2">
+                                                                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.obtainFromOther">
                                                                     </div>
                                                                 </div>
-                                                                <div class="clear"></div>
-                                                            </div>
+                                                                <div class="form-group col-sm-12">
+                                                                    <label class="control-label col-sm-4"></label>
 
-                                                            <div class="form-group col-sm-12">
-                                                                <div class="col-sm-3">
+                                                                    <div class="inner-addon col-sm-7" *ngIf="sourcereceving.obtainFromType == 3">
+                                                                        <select style="border-radius:5px;" [(ngModel)]="sourcereceving.obtainFromVendorId" [ngModelOptions]="{standalone: true}">
+                                                                            <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option>
+                                                                        </select>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-sm-8">
-                                                                    <div class="card" style="margin-top: 20px;">
-                                                                        <div class="card-header" style="padding: 10px 12px;">
-                                                                            <h5 style="margin-bottom: 0; font-size: 12px;">Management Structure <span class="clr-red">*</span></h5>
+                                                                <div class="form-group col-sm-12">
+                                                                    <label class="control-label col-sm-4"></label>
+
+                                                                    <div class="inner-addon col-sm-7 " *ngIf="sourcereceving.obtainFromType == 4">
+                                                                        <select style="border-radius:5px;" [(ngModel)]="sourcereceving.obtainFromCompanyId" [ngModelOptions]="{standalone: true}">
+                                                                            <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                </div>
+                                                                <div class="form-group col-sm-12">
+                                                                    <label class="control-label col-sm-4">MFG Date</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.isMFGDate" type="checkbox">
+                                                                        <div *ngIf="sourcereceving.isMFGDate">
+                                                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.manufacturingDate"></p-calendar>
                                                                         </div>
-                                                                        <div class="card-body" style="padding: 12px 12px 4px;">
-                                                                            <div class="form-group">
-                                                                                <select style="border-radius:5px;" class="form-control" name="primaryCompany" [(ngModel)]="sourcereceving.companyId"
-                                                                                        (change)="getBUList(sourcereceving.companyId)" #mCompanyName required>
-                                                                                    <option value="0">Select Company</option>
-                                                                                    <option *ngFor="let name of maincompanylist" [ngValue]="name.managementStructureId">{{name.code}}</option>
-                                                                                </select>
-                                                                                <div *ngIf="mCompanyName.invalid && (mCompanyName.dirty || mCompanyName.touched)" class="alert alert-danger alert-danger-cstm">
-                                                                                    <div *ngIf="mCompanyName.errors.required">
-                                                                                        <small> Company Name is required </small>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-sm-12">
+                                                                    <label class="control-label col-sm-4">MFG Trace </label>
+                                                                    <div class="col-sm-7">
+                                                                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.manufacturingTrace">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-sm-12">
+                                                                    <label class="control-label col-sm-4">MFG Lot </label>
+                                                                    <div class="col-sm-7">
+                                                                        <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.manufacturingLotNumber">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-sm-12">
+                                                                    <label class="control-label col-sm-4">Exp Date</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input class="" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.isExpirationDate" id="expdate-input">
+
+                                                                        <div *ngIf="sourcereceving.isExpirationDate">
+                                                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.expirationDate"></p-calendar>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-sm-12">
+                                                                    <label class="control-label col-sm-4">Time Life</label>
+                                                                    <div class="col-sm-7">
+                                                                        <input class="" type="checkbox" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.isTimeLife">
+                                                                    </div>
+                                                                </div>
+                                                                <div *ngIf="this.sourcereceving.isTimeLife" class="timelife-block">
+
+                                                                    <div class="form-group col-sm-12">
+                                                                        <label class="control-label col-sm-4">Date</label>
+                                                                        <div class="col-sm-7">
+                                                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.timeLifeDate"></p-calendar>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group col-sm-12">
+                                                                        <label class="control-label col-sm-4">Origin</label>
+                                                                        <div class="col-sm-7">
+                                                                            <input class="" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.timeLifeOrigin ">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="clear"></div>
+                                                                </div>
+
+                                                                <div class="form-group col-sm-12">
+                                                                    <div class="col-sm-3">
+                                                                    </div>
+                                                                    <div class="col-sm-8">
+                                                                        <div class="card" style="margin-top: 20px;">
+                                                                            <div class="card-header" style="padding: 10px 12px;">
+                                                                                <h5 style="margin-bottom: 0; font-size: 12px;">Management Structure <span class="clr-red">*</span></h5>
+                                                                            </div>
+                                                                            <div class="card-body" style="padding: 12px 12px 4px;">
+                                                                                <div class="form-group">
+                                                                                    <select style="border-radius:5px;" class="form-control" name="primaryCompany" [(ngModel)]="sourcereceving.companyId"
+                                                                                            (change)="getBUList(sourcereceving.companyId)" #mCompanyName required>
+                                                                                        <option value="0">Select Company</option>
+                                                                                        <option *ngFor="let name of maincompanylist" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                                                                    </select>
+                                                                                    <div *ngIf="mCompanyName.invalid && (mCompanyName.dirty || mCompanyName.touched)" class="alert alert-danger alert-danger-cstm">
+                                                                                        <div *ngIf="mCompanyName.errors.required">
+                                                                                            <small> Company Name is required </small>
+                                                                                        </div>
                                                                                     </div>
-                                                                                </div>
 
-                                                                            </div>
-                                                                            <div class="form-group">
-                                                                                <select style="border-radius:5px;" [(ngModel)]="sourcereceving.buId" name="primaryBU" (change)="getDivisionlist(sourcereceving.buId)" class="form-control">
-                                                                                    <option value="0">Select BU</option>
-                                                                                    <option *ngFor="let name of bulist" [ngValue]="name.managementStructureId">{{name.code}}</option>
-                                                                                </select>
-                                                                            </div>
-                                                                            <div class="form-group">
-                                                                                <select style="border-radius:5px;" class="form-control" [(ngModel)]="sourcereceving.divisionId" name="primaryDivision" (change)="getDepartmentlist(sourcereceving.divisionId)">
-                                                                                    <option value="0">Select Division</option>
-                                                                                    <option *ngFor="let name of divisionlist" [ngValue]="name.managementStructureId">{{name.code}}</option>
-                                                                                </select>
-                                                                            </div>
-                                                                            <div class="form-group">
-                                                                                <select style="border-radius:5px;" class="form-control" [(ngModel)]="sourcereceving.departmentId" name="primaryDept" (change)="getDepartmentId(sourcereceving.departmentId)">
-                                                                                    <option value="0">Select Dept</option>
-                                                                                    <option *ngFor="let name of departmentList" [ngValue]="name.managementStructureId">{{name.code}}</option>
-                                                                                </select>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <select style="border-radius:5px;" [(ngModel)]="sourcereceving.buId" name="primaryBU" (change)="getDivisionlist(sourcereceving.buId)" class="form-control">
+                                                                                        <option value="0">Select BU</option>
+                                                                                        <option *ngFor="let name of bulist" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <select style="border-radius:5px;" class="form-control" [(ngModel)]="sourcereceving.divisionId" name="primaryDivision" (change)="getDepartmentlist(sourcereceving.divisionId)">
+                                                                                        <option value="0">Select Division</option>
+                                                                                        <option *ngFor="let name of divisionlist" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <select style="border-radius:5px;" class="form-control" [(ngModel)]="sourcereceving.departmentId" name="primaryDept" (change)="getDepartmentId(sourcereceving.departmentId)">
+                                                                                        <option value="0">Select Dept</option>
+                                                                                        <option *ngFor="let name of departmentList" [ngValue]="name.managementStructureId">{{name.code}}</option>
+                                                                                    </select>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
 
+                                                                </div>
                                                             </div>
-                                                        </div>
                                                     </div>
 
                              

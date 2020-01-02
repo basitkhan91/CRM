@@ -202,6 +202,12 @@ export class RoSetupComponent implements OnInit {
 	allStocklineInfo: any = [];
 	allStocklineDetails: any = [];
 	workOrderPartNumberId: any = 0;
+	managementValidCheck: boolean;
+	shipToUserTypeValidCheck: boolean;
+	shipToSiteNameValidCheck: boolean;
+	shipViaValidCheck: boolean;
+	billToUserTypeValidCheck: boolean;
+	billToSiteNameValidCheck: boolean;
 
 	/** ro-approval ctor */
 	constructor(private route: Router,
@@ -249,7 +255,7 @@ export class RoSetupComponent implements OnInit {
 		this.getCountriesList();
 		//this.getStocklineList();
 		this.loadPercentData();
-		this.sourceRoApproval.companyId = 0;
+		this.sourceRoApproval.companyId = "null";
 		this.sourceRoApproval.buId = 0;
 		this.sourceRoApproval.divisionId = 0;
 		this.sourceRoApproval.departmentId = 0;
@@ -633,6 +639,7 @@ export class RoSetupComponent implements OnInit {
 	getShipViaEdit(data) {
 		this.commonService.getShipViaDetailsByModule(data.shipToUserTypeId, this.shipToSelectedvalue).subscribe(response => {
 			this.shipViaList = response;
+			data.shippingAcctNum = data.shippingAccountNo;
 			this.sourceRoApproval.shipViaId = data.shipViaId;
 			if (data.shipViaId == 0) {
 				this.shipViaList.push({ shippingViaId: 0, name: data.shipVia, shippingAccountInfo: data.shippingAcctNum, shippingId: data.shippingId, shippingURL: data.shippingURL });
@@ -785,77 +792,96 @@ export class RoSetupComponent implements OnInit {
 	saveRepairOrder() {
 		console.log(this.sourceRoApproval);
 
-		this.sourceRoApprovalObj = {
-			repairOrderNumber: this.sourceRoApproval.repairOrderNumber,
-			openDate: this.datePipe.transform(this.sourceRoApproval.openDate, "MM/dd/yyyy"),//new Date(this.sourceRoApproval.openDate),
-			closedDate: this.datePipe.transform(this.sourceRoApproval.closedDate, "MM/dd/yyyy"),
-			needByDate: this.datePipe.transform(this.sourceRoApproval.needByDate, "MM/dd/yyyy"),
-			priorityId: this.sourceRoApproval.priorityId ? this.getPriorityId(this.sourceRoApproval.priorityId) : 0,
-			deferredReceiver: this.sourceRoApproval.deferredReceiver ? this.sourceRoApproval.deferredReceiver : false,
-			vendorId: this.sourceRoApproval.vendorId ? this.getVendorId(this.sourceRoApproval.vendorId) : 0,
-			//vendorId: 671,
-			vendorContactId: this.sourceRoApproval.vendorContactId ? this.getVendorContactId(this.sourceRoApproval.vendorContactId) : 0,
-			//vendorContactId: 200,
-			vendorContactPhone: this.sourceRoApproval.vendorContactPhone ? this.getVendorContactPhone(this.sourceRoApproval.vendorContactPhone) : '',
-			creditLimit: this.sourceRoApproval.creditLimit ? this.sourceRoApproval.creditLimit : '',
-			creditTermsId: this.sourceRoApproval.creditTermsId ? this.sourceRoApproval.creditTermsId : 0,
-			requisitionerId: this.sourceRoApproval.requisitionerId ? this.getValueByObj(this.sourceRoApproval.requisitionerId) : 0,
-			approverId: this.sourceRoApproval.approverId ? this.getValueByObj(this.sourceRoApproval.approverId) : 0,
-			approvedDate: this.datePipe.transform(this.sourceRoApproval.approvedDate, "MM/dd/yyyy"),
-			statusId: this.sourceRoApproval.statusId ? this.sourceRoApproval.statusId : 0,
-			resale: this.sourceRoApproval.resale ? this.sourceRoApproval.resale : false,
-			managementStructureId: this.sourceRoApproval.managementStructureId ? this.sourceRoApproval.managementStructureId : 0,
-			roMemo: this.sourceRoApproval.roMemo ? this.sourceRoApproval.roMemo : '',
-			shipToUserTypeId: this.sourceRoApproval.shipToUserTypeId ? parseInt(this.sourceRoApproval.shipToUserTypeId) : 0,
-			shipToUserId: this.sourceRoApproval.shipToUserId ? this.getShipToBillToUserId(this.sourceRoApproval.shipToUserId) : 0,
-			shipToAddressId: this.sourceRoApproval.shipToAddressId ? this.sourceRoApproval.shipToAddressId : 0,
-			//shipToContactId: this.sourceRoApproval.shipToContactId ? this.getShipBillContactId(this.sourceRoApproval.shipToContactId) : 0,
-			shipToContactId: this.sourceRoApproval.shipToContactId ? editValueAssignByCondition('contactId', this.sourceRoApproval.shipToContactId) : 0,
-			shipViaId: this.sourceRoApproval.shipViaId,
-			shippingCost: this.sourceRoApproval.shippingCost,
-			handlingCost: this.sourceRoApproval.handlingCost,
-			shipVia: this.sourceRoApproval.shipVia,
-			shippingAcctNum: this.sourceRoApproval.shippingAcctNum,
-			shippingURL: this.sourceRoApproval.shippingURL,
-			shippingId: this.sourceRoApproval.shippingId,
-			//shippingId: 0,
-			shipToMemo: this.sourceRoApproval.shipToMemo ? this.sourceRoApproval.shipToMemo : '',
-			billToUserTypeId: this.sourceRoApproval.billToUserTypeId ? parseInt(this.sourceRoApproval.billToUserTypeId) : 0,
-			billToUserId: this.sourceRoApproval.billToUserId ? this.getShipToBillToUserId(this.sourceRoApproval.billToUserId) : 0,
-			billToAddressId: this.sourceRoApproval.billToAddressId ? this.sourceRoApproval.billToAddressId : 0,
-			//billToContactId: this.sourceRoApproval.billToContactId ? this.getShipBillContactId(this.sourceRoApproval.billToContactId) : 0,
-			billToContactId: this.sourceRoApproval.billToContactId ? editValueAssignByCondition('contactId', this.sourceRoApproval.billToContactId) : 0,
-			billToMemo: this.sourceRoApproval.billToMemo ? this.sourceRoApproval.billToMemo : '',
-			shipToSiteName: this.postSiteNameForShipping(this.sourceRoApproval.shipToUserTypeId, this.sourceRoApproval.shipToAddressId),
-			shipToAddress1: this.shipToAddress.address1,
-			shipToAddress2: this.shipToAddress.address2,
-			//shipToAddress3: this.shipToAddress.address3,
-			shipToCity: this.shipToAddress.city,
-			shipToStateOrProvince: this.shipToAddress.stateOrProvince,
-			shipToPostalCode: this.shipToAddress.postalCode,
-			shipToCountry: this.shipToAddress.country,
-			billToSiteName: this.postSiteNameForBilling(this.sourceRoApproval.billToUserTypeId, this.sourceRoApproval.billToAddressId),
-			billToAddress1: this.billToAddress.address1,
-			billToAddress2: this.billToAddress.address2,
-			//billToAddress3: this.billToAddress.address3,
-			billToCity: this.billToAddress.city,
-			billToStateOrProvince: this.billToAddress.stateOrProvince,
-			billToPostalCode: this.billToAddress.postalCode,
-			billToCountry: this.billToAddress.country,
-			shipToSiteId: this.sourceRoApproval.shipToAddressId ? this.sourceRoApproval.shipToAddressId : 0,
-			billToSiteId: this.sourceRoApproval.billToAddressId ? this.sourceRoApproval.billToAddressId : 0,
-			createdBy: this.userName,
-			updatedBy: this.userName
-		}
-		console.log(this.sourceRoApprovalObj);
+		
 
-		if (this.createPOForm.invalid) { //invalid
-			//  $('.createPO-form input.ng-invalid, .createPO-form select.ng-invalid, .createPO-form p-calendar.ng-invalid input').addClass('border-red-clr');
-			//  $('.createPO-form input.ng-valid, .createPO-form select.ng-valid').removeClass('border-red-clr');		
-			alert('Please enter required fields!');
+		if (this.createPOForm.invalid || this.sourceRoApproval.companyId == "null" || this.sourceRoApproval.shipToUserTypeId == "null" || this.sourceRoApproval.shipToAddressId == "null" || this.sourceRoApproval.shipViaId == "null" || this.sourceRoApproval.billToUserTypeId == "null" || this.sourceRoApproval.billToAddressId == "null") { 		
+			// alert('Please enter required fields!');
+			this.alertService.showMessage('Repair Order', "Please enter required highlighted fields!", MessageSeverity.error);
 			this.inputValidCheck = true;
+
+			if(this.sourceRoApproval.companyId == "null") {
+				this.managementValidCheck = true;
+			}
+			if(this.sourceRoApproval.shipToUserTypeId == "null") {
+				this.shipToUserTypeValidCheck = true;
+			}
+			if(this.sourceRoApproval.shipToAddressId == "null") {
+				this.shipToSiteNameValidCheck = true;
+			}
+			if(this.sourceRoApproval.shipViaId == "null") {
+				this.shipViaValidCheck = true;
+			}
+			if(this.sourceRoApproval.billToUserTypeId == "null") {
+				this.billToUserTypeValidCheck = true;
+			}
+			if(this.sourceRoApproval.billToAddressId == "null") {
+				this.billToSiteNameValidCheck = true;
+			}
 		}
 		else {
+			this.sourceRoApprovalObj = {
+				repairOrderNumber: this.sourceRoApproval.repairOrderNumber,
+				openDate: this.datePipe.transform(this.sourceRoApproval.openDate, "MM/dd/yyyy"),//new Date(this.sourceRoApproval.openDate),
+				closedDate: this.datePipe.transform(this.sourceRoApproval.closedDate, "MM/dd/yyyy"),
+				needByDate: this.datePipe.transform(this.sourceRoApproval.needByDate, "MM/dd/yyyy"),
+				priorityId: this.sourceRoApproval.priorityId ? this.getPriorityId(this.sourceRoApproval.priorityId) : 0,
+				deferredReceiver: this.sourceRoApproval.deferredReceiver ? this.sourceRoApproval.deferredReceiver : false,
+				vendorId: this.sourceRoApproval.vendorId ? this.getVendorId(this.sourceRoApproval.vendorId) : 0,
+				//vendorId: 671,
+				vendorContactId: this.sourceRoApproval.vendorContactId ? this.getVendorContactId(this.sourceRoApproval.vendorContactId) : 0,
+				//vendorContactId: 200,
+				vendorContactPhone: this.sourceRoApproval.vendorContactPhone ? this.getVendorContactPhone(this.sourceRoApproval.vendorContactPhone) : '',
+				creditLimit: this.sourceRoApproval.creditLimit ? this.sourceRoApproval.creditLimit : '',
+				creditTermsId: this.sourceRoApproval.creditTermsId ? this.sourceRoApproval.creditTermsId : 0,
+				requisitionerId: this.sourceRoApproval.requisitionerId ? this.getValueByObj(this.sourceRoApproval.requisitionerId) : 0,
+				approverId: this.sourceRoApproval.approverId ? this.getValueByObj(this.sourceRoApproval.approverId) : 0,
+				approvedDate: this.datePipe.transform(this.sourceRoApproval.approvedDate, "MM/dd/yyyy"),
+				statusId: this.sourceRoApproval.statusId ? this.sourceRoApproval.statusId : 0,
+				resale: this.sourceRoApproval.resale ? this.sourceRoApproval.resale : false,
+				managementStructureId: this.sourceRoApproval.managementStructureId ? this.sourceRoApproval.managementStructureId : 0,
+				roMemo: this.sourceRoApproval.roMemo ? this.sourceRoApproval.roMemo : '',
+				shipToUserTypeId: this.sourceRoApproval.shipToUserTypeId ? parseInt(this.sourceRoApproval.shipToUserTypeId) : 0,
+				shipToUserId: this.sourceRoApproval.shipToUserId ? this.getShipToBillToUserId(this.sourceRoApproval.shipToUserId) : 0,
+				shipToAddressId: this.sourceRoApproval.shipToAddressId ? this.sourceRoApproval.shipToAddressId : 0,
+				//shipToContactId: this.sourceRoApproval.shipToContactId ? this.getShipBillContactId(this.sourceRoApproval.shipToContactId) : 0,
+				shipToContactId: this.sourceRoApproval.shipToContactId ? editValueAssignByCondition('contactId', this.sourceRoApproval.shipToContactId) : 0,
+				shipViaId: this.sourceRoApproval.shipViaId,
+				shippingCost: this.sourceRoApproval.shippingCost,
+				handlingCost: this.sourceRoApproval.handlingCost,
+				shipVia: this.sourceRoApproval.shipVia,
+				shippingAcctNum: this.sourceRoApproval.shippingAcctNum,
+				shippingURL: this.sourceRoApproval.shippingURL,
+				shippingId: this.sourceRoApproval.shippingId,
+				//shippingId: 0,
+				shipToMemo: this.sourceRoApproval.shipToMemo ? this.sourceRoApproval.shipToMemo : '',
+				billToUserTypeId: this.sourceRoApproval.billToUserTypeId ? parseInt(this.sourceRoApproval.billToUserTypeId) : 0,
+				billToUserId: this.sourceRoApproval.billToUserId ? this.getShipToBillToUserId(this.sourceRoApproval.billToUserId) : 0,
+				billToAddressId: this.sourceRoApproval.billToAddressId ? this.sourceRoApproval.billToAddressId : 0,
+				//billToContactId: this.sourceRoApproval.billToContactId ? this.getShipBillContactId(this.sourceRoApproval.billToContactId) : 0,
+				billToContactId: this.sourceRoApproval.billToContactId ? editValueAssignByCondition('contactId', this.sourceRoApproval.billToContactId) : 0,
+				billToMemo: this.sourceRoApproval.billToMemo ? this.sourceRoApproval.billToMemo : '',
+				shipToSiteName: this.postSiteNameForShipping(this.sourceRoApproval.shipToUserTypeId, this.sourceRoApproval.shipToAddressId),
+				shipToAddress1: this.shipToAddress.address1,
+				shipToAddress2: this.shipToAddress.address2,
+				//shipToAddress3: this.shipToAddress.address3,
+				shipToCity: this.shipToAddress.city,
+				shipToStateOrProvince: this.shipToAddress.stateOrProvince,
+				shipToPostalCode: this.shipToAddress.postalCode,
+				shipToCountry: this.shipToAddress.country,
+				billToSiteName: this.postSiteNameForBilling(this.sourceRoApproval.billToUserTypeId, this.sourceRoApproval.billToAddressId),
+				billToAddress1: this.billToAddress.address1,
+				billToAddress2: this.billToAddress.address2,
+				//billToAddress3: this.billToAddress.address3,
+				billToCity: this.billToAddress.city,
+				billToStateOrProvince: this.billToAddress.stateOrProvince,
+				billToPostalCode: this.billToAddress.postalCode,
+				billToCountry: this.billToAddress.country,
+				shipToSiteId: this.sourceRoApproval.shipToAddressId ? this.sourceRoApproval.shipToAddressId : 0,
+				billToSiteId: this.sourceRoApproval.billToAddressId ? this.sourceRoApproval.billToAddressId : 0,
+				createdBy: this.userName,
+				updatedBy: this.userName
+			}
+			console.log(this.sourceRoApprovalObj);
 			// header save 
 			if (!this.isEditMode) {
 				this.vendorService.saveRepairOrder({ ...this.sourceRoApprovalObj }).subscribe(saveddata => {
@@ -1655,6 +1681,7 @@ export class RoSetupComponent implements OnInit {
 
 	// bill to
 	onBillToCustomerSelected(customerId, res?, id?) {
+		//res.billToStateOrProvince = res.billToState;
 		this.clearInputOnClickUserIdBillTo();
 		this.billToSelectedvalue = customerId;
 		this.customerService.getCustomerBillViaDetails(customerId).subscribe(
@@ -1748,8 +1775,8 @@ export class RoSetupComponent implements OnInit {
 				this.billToAddress.city = resp.city;
 				this.billToAddress.stateOrProvince = resp.stateOrProvince;
 				this.billToAddress.postalCode = resp.postalCode;
-				this.billToAddress.country = resp.country ? getValueFromArrayOfObjectById('label', 'value', resp.country, this.countriesList) : '';
-				//this.billToAddress.country = resp.country;
+				// this.billToAddress.country = resp.country ? getValueFromArrayOfObjectById('label', 'value', resp.country, this.countriesList) : '';
+				this.billToAddress.country = resp.countryName ? resp.countryName : resp.country;
 			} else {
 				this.billToAddress.address1 = '';
 				this.billToAddress.address2 = '';
@@ -2337,10 +2364,10 @@ export class RoSetupComponent implements OnInit {
 
 	clearInputShipTo() {
 		this.sourceRoApproval.shipToUserId = null;
-		this.sourceRoApproval.shipToAddressId = null;
+		this.sourceRoApproval.shipToAddressId = "null";
 		this.sourceRoApproval.shipToContactId = null;
 		this.sourceRoApproval.shipToMemo = '';
-		this.sourceRoApproval.shipViaId = null;
+		this.sourceRoApproval.shipViaId = "null";
 		this.sourceRoApproval.shippingCost = null;
 		this.sourceRoApproval.handlingCost = null;
 		this.sourceRoApproval.shippingAcctNum = null;
@@ -2348,13 +2375,16 @@ export class RoSetupComponent implements OnInit {
 		this.sourceRoApproval.shippingURL = '';
 		this.shipToAddress = {};
 		this.shipViaList = [];
+		this.shipToCusData = [];
+		this.vendorSelected = [];
+		this.companySiteList_Shipping = [];
 	}
 
 	clearInputOnClickUserIdShipTo() {
-		this.sourceRoApproval.shipToAddressId = null;
+		this.sourceRoApproval.shipToAddressId = "null";
 		this.sourceRoApproval.shipToContactId = null;
 		this.sourceRoApproval.shipToMemo = '';
-		this.sourceRoApproval.shipViaId = null;
+		this.sourceRoApproval.shipViaId = "null";
 		this.sourceRoApproval.shippingCost = null;
 		this.sourceRoApproval.handlingCost = null;
 		this.sourceRoApproval.shippingAcctNum = null;
@@ -2362,21 +2392,30 @@ export class RoSetupComponent implements OnInit {
 		this.sourceRoApproval.shippingURL = '';
 		this.shipToAddress = {};
 		this.shipViaList = [];
+		this.shipToCusData = [];
+		this.vendorSelected = [];
+		this.companySiteList_Shipping = [];
 	}
 
 	clearInputBillTo() {
 		this.sourceRoApproval.billToUserId = null;
-		this.sourceRoApproval.billToAddressId = null;
+		this.sourceRoApproval.billToAddressId = "null";
 		this.sourceRoApproval.billToContactId = null;
 		this.billToAddress = {};
 		this.sourceRoApproval.billToMemo = '';
+		this.billToCusData = [];
+		this.vendorSelectedForBillTo = [];
+		this.companySiteList_Billing = [];
 	}
 
 	clearInputOnClickUserIdBillTo() {
-		this.sourceRoApproval.billToAddressId = null;
+		this.sourceRoApproval.billToAddressId = "null";
 		this.sourceRoApproval.billToContactId = null;
 		this.billToAddress = {};
 		this.sourceRoApproval.billToMemo = '';
+		this.billToCusData = [];
+		this.vendorSelectedForBillTo = [];
+		this.companySiteList_Billing = [];
 	}
 
 	eventHandler(event) {
@@ -3136,7 +3175,7 @@ export class RoSetupComponent implements OnInit {
 	}
 
 	async saveShipViaForShipTo() {
-		this.sourceRoApproval.shipViaId = null;
+		this.sourceRoApproval.shipViaId = "null";
 		this.sourceRoApproval.shippingAcctNum = '';
 		this.sourceRoApproval.shippingId = '';
 		this.sourceRoApproval.shippingURL = '';
@@ -3571,6 +3610,27 @@ export class RoSetupComponent implements OnInit {
 			if(funcCurrency == reportCurrency) {
 				partList.foreignExchangeRate = 1;
 			}
+		}
+	}
+
+	checkValidOnChange(condition, value) {
+		if(condition != 'null' && value == "companyId") {
+			this.managementValidCheck = false;
+		}
+		if(condition != 'null' && value == "shipToUserTypeId") {
+			this.shipToUserTypeValidCheck = false;
+		}
+		if(condition != 'null' && value == "shipToAddressId") {
+			this.shipToSiteNameValidCheck = false;
+		}
+		if(condition != 'null' && value == "shipViaId") {
+			this.shipViaValidCheck = false;
+		}
+		if(condition != 'null' && value == "billToUserTypeId") {
+			this.billToUserTypeValidCheck = false;
+		}
+		if(condition != 'null' && value == "billToAddressId") {
+			this.billToSiteNameValidCheck = false;
 		}
 	}
 }

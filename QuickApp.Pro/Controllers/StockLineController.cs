@@ -432,6 +432,12 @@ namespace QuickApp.Pro.Controllers
                 actionobject1.ShippingAccount = stockLineViewModel.ShippingAccount;
                 actionobject1.ShippingReference = stockLineViewModel.ShippingReference;
                 actionobject1.TimeLifeDetailsNotProvided = stockLineViewModel.TimeLifeDetailsNotProvided;
+                actionobject1.CreatedDate = DateTime.Now;
+                actionobject1.UpdatedDate = DateTime.Now;
+                itemobject.CreatedBy = stockLineViewModel.CreatedBy;
+                itemobject.UpdatedBy = stockLineViewModel.UpdatedBy;
+                actionobject1.isActive = true;
+                actionobject1.IsDeleted = false;
 
                 _context.StockLine.Add(actionobject1);
                 _context.SaveChanges();

@@ -10,7 +10,6 @@
                >
                 <i class="fa fa-plus-circle fa-lg"></i>
             </a>
-			<!-- <span class="help-icon"  data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span> -->
 		</div>
 
 		<p-table 
@@ -63,24 +62,17 @@
 						iconPos="left" 
 						label="Export Data" 
 						matTooltip="Download Data" 
+						matTooltipPosition="above"
 						(click)="dt.exportCSV()"></button>
 
-					<!--<button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>-->
-					<!-- <a (click)="open(contentEdit)" matTooltip="Add Entity" class="btn btn-success"><span><i class="fa fa-plus"></i></span></a> -->
-					
 					<div class="excel-upload  excel-upload-cstm">
 						<input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">	
 						<label for="upload">
-							<span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+							<span matTooltip="Upload Data (Excel)" matTooltipPosition="above"><i class="fa fa-upload"></i></span>
 						</label>
 					</div>
 				</div>
-
-
 		</ng-template>
-
-
-		
 			<ng-template pTemplate="header" let-columns>
 				<tr>
 					<th style="width:160px"
@@ -99,9 +91,7 @@
 				</tr>
 				<tr>
                     <th style="width:160px" *ngFor="let col of columns" [ngSwitch]="col.field">
-                        <!-- <input type="text" style="width:100%;" pInputText   (keyup)="filterData($event)"> -->
                         <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
-
                     </th>
                     <th style="width:200px;position:sticky"></th>
                 </tr>
@@ -109,7 +99,7 @@
 			</ng-template>
 
 			<ng-template pTemplate="body" let-rowData let-columns="columns">
-				<tr [pSelectableRow]="rowData" [pSelectableRow]="rowData" pReorderableRowHandle >
+				<tr [pSelectableRow]="rowData" pReorderableRowHandle >
 					<td style="width:160px" 
 						*ngFor="let col of columns" 
 						class="ui-resizable-column" 
@@ -132,7 +122,6 @@
 						<button class="btn-delete" mat-icon-button matTooltip="delete" (click)="openDelete(content,rowData)">
 							<mat-icon color="warn">delete</mat-icon>
 						</button>
-						<!--<a (click)="openHist(content,rowData)" matTooltip="Hist" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a>-->
 						<button class="btn-history" mat-icon-button matTooltip="history">
 							<mat-icon color="green">history</mat-icon>
 						</button>
@@ -179,8 +168,8 @@
 										<div class="form-group col-sm-12">
 											<label class="col-sm-4">Parent Company</label>
 											<div class="col-sm-7">
-												<select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.masterCompanyId">
-													<option *ngFor="let companyName of allComapnies" [ngValue]="companyName.masterCompanyId">{{companyName.companyName}}</option>
+												<select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.parentId">
+													<option *ngFor="let parentEntity of parentLegalEntity" [ngValue]="parentEntity.parentId">{{parentEntity.name}}</option>
 												</select>
 											</div>
 										</div>

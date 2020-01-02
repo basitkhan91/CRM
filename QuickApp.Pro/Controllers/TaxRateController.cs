@@ -57,8 +57,8 @@ namespace QuickApp.Pro.Controllers
         public IActionResult Get()
         {
             var allTaxrateInfo = _unitOfWork.TaxRate.GetAllTaxRateData(); //.GetAllCustomersData();
-            return Ok(Mapper.Map<IEnumerable<TaxRateViewModel>>(allTaxrateInfo));
-
+            //return Ok(Mapper.Map<IEnumerable<TaxRateViewModel>>(allTaxrateInfo));
+            return Ok(allTaxrateInfo);
         }
 
         [HttpGet("auditHistoryById/{id}")]

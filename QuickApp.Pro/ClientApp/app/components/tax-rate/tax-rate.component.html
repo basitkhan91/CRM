@@ -7,7 +7,7 @@
                         <div class="inline-block display-flex">
                             <h3 class="po-head lead">Tax Rate</h3>
                             &nbsp;&nbsp;
-                            <a class="plusicon-cstm new-margin" pTooltip="Add Tax Type" tooltipPosition="right" data-target="#add" data-toggle="modal">
+                            <a class="plusicon-cstm new-margin" pTooltip="Add Tax Type" tooltipPosition="right" data-target="#add" data-toggle="modal" (click)="resetForm()">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
@@ -90,10 +90,12 @@
                                 </div>
                             </ng-template>
                             <ng-template pTemplate="summary" id="footer">
-                                <label id="footer" class="footer">No'of records:</label>
-                                <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-                                <label id="footer" class="footer1">Pages Count:</label>
-                                <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
+                                <div style="text-align: right;">
+                                    <label id="footer" class="footer">No'of records:</label>
+                                    <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                                    <label id="footer" class="footer1">Pages Count:</label>
+                                    <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
+                                </div>
                             </ng-template>
                         </p-table>
                     </div>
@@ -323,7 +325,7 @@
                         <span class="label ">
                             <b >Tax Type: </b>
                         </span>
-                        <span class="value">{{ viewRowData.taxTypeName}}</span>
+                        <span class="value">{{ viewRowData.taxType}}</span>
                     </p>
                     <p>
                         <span class="label ">

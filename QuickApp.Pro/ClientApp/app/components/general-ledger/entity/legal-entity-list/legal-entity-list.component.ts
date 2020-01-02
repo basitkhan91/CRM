@@ -30,6 +30,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 	/** EntityList ctor */
 	allCurrencyInfo: any[];
 	sourceLegalEntity: any = {};
+	parentLegalEntity: any = {};
 	selectedNode1: TreeNode;
 	dataSource: MatTableDataSource<{}>;
 	displayedColumns: any;
@@ -88,6 +89,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
         this.loadData();
 		this.countrylist();
 		this.loadMasterCompanies();
+		this.loadParentEntities();
 	}
 
 	modal: NgbModalRef;
@@ -99,6 +101,22 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 	}
 	public allWorkFlows: any[] = [];
 
+	private loadParentEntities() {
+		this.alertService.startLoadingMessage();
+		this.loadingIndicator = true;
+
+		this.workFlowtService.loadParentEntities().subscribe(
+			results => this.onloadParentEntitiesLoadSuccessful(results[0]),
+			error => this.onDataLoadFailed(error)
+		);
+	}
+
+	private onloadParentEntitiesLoadSuccessful(allEntities: MasterCompany[]) {
+		this.alertService.stopLoadingMessage();
+		this.loadingIndicator = false;
+		this.parentLegalEntity = allEntities;
+
+	}
 
 	private loadMasterCompanies() {
 		this.alertService.startLoadingMessage();
@@ -139,14 +157,6 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 		this.loadingIndicator = false;
 		this.dataSource.data = getAtaMainList;
 		this.allATAMaininfo = getAtaMainList;
-		//debugger;
-
-		//this.gridData = this.makeNestedObj(this.allATAMaininfo, null);
-		//this.cols1 = [
-		//	{ field: 'name', header: 'Name' },
-
-		//];
-		//this.selectedColumns1 = this.cols1;
 	}
 
 	makeNestedObj(arr, parent) {
@@ -231,11 +241,8 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 		this.ACHStyle = true;
 	}
 	showDomesticWire() {
-
 		this.DomesticWire();
 	}
-
-
 
     open(content) {
         this.GeneralInformation();
@@ -312,7 +319,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 				this.sourceLegalEntity.createdBy = this.userName;
 				this.sourceLegalEntity.updatedBy = this.userName;
 
-				//this.sourceLegalEntity.masterCompanyId = 1;
+				this.sourceLegalEntity.masterCompanyId = 1;
 				this.workFlowtService.newAddEntity(this.sourceLegalEntity).subscribe(data => {
 					this.alertService.showMessage('Legal Entity added successfully.');
 					this.loadData();
@@ -323,7 +330,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 
 				this.sourceLegalEntity.createdBy = this.userName;
 				this.sourceLegalEntity.updatedBy = this.userName;
-				//this.sourceLegalEntity.masterCompanyId = 1;
+				this.sourceLegalEntity.masterCompanyId = 1;
 				this.workFlowtService.updateEntity(this.sourceLegalEntity).subscribe(data => {
 					this.alertService.showMessage('Legal Entity updated successfully.');
 					this.loadData();

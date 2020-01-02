@@ -57,8 +57,7 @@
                                         </ng-template>
             
                                         <ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">
-                                            <tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)" [ngClass]="{'row-primary': rowData.isDefaultContact === true}">
-            
+                                            <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" pReorderableRowHandle (dblclick)="openView(view,rowData)" [ngClass]="{'row-primary': rowData.isPrimayPayment === true}">
             
                                                 <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                                     {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
@@ -83,7 +82,7 @@
                                                         <mat-icon>edit</mat-icon>
                                                     </button>
             
-                                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteItemAndCloseModel(rowData.checkPaymentId)">
+                                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deletePaymentInfo(rowData)" data-toggle="modal" data-target="#deletePaymentInfo">
                                                         <mat-icon color="warn">delete</mat-icon>
                                                     </button>
             
@@ -288,7 +287,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-row pull-right">
+                            <div class="form-row" style="margin-top: 10px;">
                                 <button type="button" class="btn btn-primary-cstm" (click)="saveDefaultPaymentInfo()">Save</button>
                             </div>
                         </p-tabPanel>
@@ -318,19 +317,29 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>AID</th>
-                            <th>Colum Name</th>
-                            <th>Previous Value</th>
-                            <th>New Value</th>
-                            <th>Last Updated By</th>
-                            <th>Last Updated Time</th>
+                            <!-- <th>AID</th> -->
+                            <th>Site Name</th>
+                            <th>Address1</th>
+                            <th>Address2</th>
+                            <th>City</th>
+                            <th>State</th>
+                            <th>Postal Code</th>
+                            <th>Country</th>
+                            <th>Status</th>
+                            <th>Updated By</th>
+                            <th>Updated Date</th>
                         </tr>
                     </thead>
                     <tr *ngFor="let audit of auditHisory">
-                        <td>{{audit.auditHistoryId}}</td>
-                        <td>{{audit.columnName}}</td>
-                        <td>{{audit.previousValue}}</td>
-                        <td>{{audit.newValue}}</td>
+                        <!-- <td>{{audit.auditHistoryId}}</td> -->
+                        <td>{{audit.siteName}}</td>
+                        <td>{{audit.address1}}</td>
+                        <td>{{audit.address2}}</td>
+                        <td>{{audit.city}}</td>
+                        <td>{{audit.stateOrProvince}}</td>
+                        <td>{{audit.postalCode}}</td>
+                        <td>{{audit.country}}</td>
+                        <td>{{audit.isActive}}</td>
                         <td>{{audit.updatedBy}}</td>
                         <td>{{audit.updatedDate | date: 'MM/dd/yyyy'}}</td>
                     </tr>
@@ -346,13 +355,15 @@
 
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-                <h4 class="modal-title">Vendor Details</h4>
+                <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal">×</button>
+                <h4 class="modal-title">View Payment Info</h4>
             </div>
             <div class="modal-body viewform">
-                <p><span class="label"><b>Vendor Name: </b></span><span class="value">{{siteName}}</span></p>
-                <p><span class="label"><b> Address 1: </b></span><span class="value">{{address1}}</span></p>
-                <p><span class="label"><b> City </b></span><span class="value">{{city}}</span></p>
+                <p><span class="label"><b>Primary: </b></span><span class="value">{{isPrimary}}</span></p>
+                <p><span class="label"><b>Site Name: </b></span><span class="value">{{siteName}}</span></p>
+                <p><span class="label"><b>Address 1: </b></span><span class="value">{{address1}}</span></p>
+                <p><span class="label"><b>Address 2: </b></span><span class="value">{{address2}}</span></p>
+                <p><span class="label"><b>City: </b></span><span class="value">{{city}}</span></p>
                 <p><span class="label"><b>State Or Province: </b></span><span class="value">{{stateOrProvince}}</span></p>
                 <p><span class="label"><b>Postal Code : </b></span><span class="value">{{postalCode}}</span></p>
                 <p><span class="label"><b>Country : </b></span><span class="value">{{country}}</span></p>
@@ -360,7 +371,7 @@
                 <div class="clear"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
             </div>
         </div>
 
@@ -391,7 +402,7 @@
                                             <div class="form-group" style="margin-top: 13px; margin-bottom: 20px;">
                                                 <span class="checkbox-cstm">
                                                     <label>
-                                                        <input type="checkbox" name="isDefaultContact" [(ngModel)]="sourceVendor.isPrimary">
+                                                        <input type="checkbox" name="isDefaultContact" [(ngModel)]="sourceVendor.isPrimayPayment">
                                                         <span class="cr"><i class="cr-icon pi pi-check"></i></span> Primary
                                                     </label>
                                                 </span>
@@ -443,11 +454,32 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary-cstm pull-right" (click)="saveCheckPaymentInfo()" [disabled]="!addPaymentForm.valid" data-dismiss="modal">Save</button>
-                                <button type="button" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary-cstm pull-right" (click)="saveCheckPaymentInfo()" [disabled]="!addPaymentForm.valid" data-dismiss="modal">Update</button>
+                                <button type="button" *ngIf="sourceVendor.checkPaymentId == undefined" class="btn btn-primary-cstm pull-right" (click)="saveCheckPaymentInfo()" [disabled]="!addPaymentForm.valid" data-dismiss="modal">Save</button>
+                                <button type="button" *ngIf="sourceVendor.checkPaymentId != undefined && sourceVendor.checkPaymentId !=0" class="btn btn-primary-cstm pull-right" (click)="saveCheckPaymentInfo()" [disabled]="!addPaymentForm.valid" data-dismiss="modal">Update</button>
                                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
+
+            <div *ngIf="selectedRowforDelete" id="deletePaymentInfo" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
+                        </div>
+                        <div class="modal-body">
+                          <strong>Site Name:
+                            <span class="new-label">{{selectedRowforDelete.siteName}}</span>
+                        </strong>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
+                            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
+                        </div>
+                      </div>
+                  
+                    </div>
+                </div>

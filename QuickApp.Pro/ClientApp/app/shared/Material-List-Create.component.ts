@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, EventEmitter, Output } from "@angular/core";
+import { Component, Input, OnChanges, OnInit, EventEmitter, Output, OnDestroy } from "@angular/core";
 import { IWorkFlow } from "../Workflow/WorkFlow";
 import { IMaterialCondition } from "../Workflow/MaterialCondition";
 import { IMaterialMandatory } from "../Workflow/MaterialMandatory";
@@ -73,6 +73,7 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
 
         if (this.isWorkOrder) {
             this.row = this.workFlow.materialList[0];
+            console.log(this.editData)
             if (this.isEdit) {
                 this.workFlow.materialList = [];
                 // const data = {
@@ -87,6 +88,10 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
                 this.workFlow.materialList = [];
                 this.row = this.workFlow.materialList[0];
                 this.addRow();
+                this.workFlow.materialQtySummation = 0;
+                this.workFlow.materialExtendedCostSummation = 0;
+                this.workFlow.totalMaterialCost = 0;
+                this.workFlow.materialExtendedPriceSummation = 0;
             }
 
         } else {
@@ -97,10 +102,10 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
             this.row.taskId = this.workFlow.taskId;
         }
 
-        if(this.isQuote && this.editData.length > 0){
+        if (this.isQuote && this.editData.length > 0) {
             this.workFlow.materialList = this.editData;
         }
-        else if(this.isQuote){
+        else if (this.isQuote) {
             this.workFlow.materialList = [];
             this.addRow();
         }
@@ -135,6 +140,8 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
         }
     }
 
+
+
     ngOnChanges() {
         if (this.isQuote && this.editData.length > 0) {
             this.workFlow.materialList = this.editData;
@@ -155,7 +162,7 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
     filterpartItems(event) {
         this.partCollection = [];
         this.itemclaColl = [];
-        
+
         if (this.allPartnumbersInfo != undefined && this.allPartnumbersInfo.length > 0) {
             for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
                 let partName = this.allPartnumbersInfo[i].partNumber;
@@ -196,7 +203,7 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
                     return;
                 }
             }
-            
+
             for (let i = 0; i < this.itemclaColl.length; i++) {
                 if (event == this.itemclaColl[i][0].partName) {
                     material.itemMasterId = this.itemclaColl[i][0].partId;
@@ -257,9 +264,15 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
             var defaultUOM = this.materialUOM.find(x => x.shortName.trim().toLowerCase() == "ea".toLowerCase());
             this.defaultUOMId = defaultUOM != undefined ? defaultUOM.defaultUOMId : 0;
 
+            console.log(this.isEdit)
+
+
             if ((this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') && !this.isEdit && this.workFlow.materialList[0] != undefined) {
+
                 this.workFlow.materialList[0].unitOfMeasureId = this.defaultUOMId;
             }
+
+
         });
     }
 
@@ -346,9 +359,8 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
         }, 0);
 
         this.workFlow.materialList.forEach(function (material) {
-            material.quantity = parseInt(material.quantity);
+            material.quantity = material.quantity != '' ? parseInt(material.quantity) : '';
         });
-
     }
 
     validateQuantity(event, material): void {
@@ -424,26 +436,26 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
         }
     }
 
-    getTotalCostPlusAmount(){
+    getTotalCostPlusAmount() {
         let total = 0;
         this.workFlow.materialList.forEach(
-          (material)=>{
-            if(material.materialCostPlus){
-              total += material.materialCostPlus;
+            (material) => {
+                if (material.materialCostPlus) {
+                    total += material.materialCostPlus;
+                }
             }
-          }
         )
         return total;
     }
 
-    getTotalFixedAmount(){
+    getTotalFixedAmount() {
         let total = 0;
         this.workFlow.materialList.forEach(
-          (material)=>{
-            if(material.fixedAmount){
-              total += Number(material.fixedAmount);
+            (material) => {
+                if (material.fixedAmount) {
+                    total += Number(material.fixedAmount);
+                }
             }
-          }
         )
         return total;
     }

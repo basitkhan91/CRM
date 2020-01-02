@@ -108,6 +108,7 @@ namespace DAL.Models
         public long? RepairOrderPartRecordId { get; set; }
 
         public bool isActive { get; set; }
+        public bool IsDeleted { get; set; }
         public decimal? WorkOrderExtendedCost { get; set; }
         public virtual PurchaseOrder PurchaseOrder { get; set; }
         public virtual PurchaseOrderPart PurchaseOrderPartRecord { get; set; }

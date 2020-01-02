@@ -179,6 +179,7 @@
                                                                 <span *ngIf="!allEmployeelist.isHourly" class="label"><b>Pay: </b></span>
                                                                 <span class="value">{{allEmployeelist.hourlyPay ? allEmployeelist.hourlyPay : '-'}}</span>
                                                             </p>   
+                                                            <p><span class="label"><b>Currency: </b></span><span class="value">{{currencyName}}</span></p>
                                                             <p><span class="label"><b>Leave: </b></span><span class="value">
                                                                 <div *ngFor="let leave of leaveMapArray">
                                                                     <span class="value">{{leave.employeeLeaveTypeId}}</span>

@@ -150,5 +150,6 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> WorkOrderROlist();
 
         object GetWorkOrderPartDetailsById(long workOrderPartNoId);
+        object GetWorkOrderStageandStatus();
     }
 }

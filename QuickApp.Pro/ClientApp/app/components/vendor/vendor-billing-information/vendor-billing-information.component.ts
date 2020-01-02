@@ -458,6 +458,7 @@ export class VendorBillingInformationComponent {
                     this.updatedCollection = data;
                     this.loadData();
                     this.sourceVendor = {};
+                    this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
                 })
             }
 
@@ -556,7 +557,7 @@ export class VendorBillingInformationComponent {
     }
     deleteConformation(value) {
         if (value === 'Yes') {
-            this.workFlowtService.deleteAcion(this.selectedRowforDelete.vendorBillingAddressId).subscribe(() => {
+            this.workFlowtService.GetVendorBillingAddressDelete(this.selectedRowforDelete.vendorBillingAddressId,this.userName).subscribe(() => {
                 this.loadData();
                 this.alertService.showMessage(
                     'Success',
@@ -646,22 +647,30 @@ export class VendorBillingInformationComponent {
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
     }
     handleChanges(rowData, e) {
+        console.log(rowData);
         if (e.checked == false) {
             this.sourceVendor = rowData;
             this.sourceVendor.updatedBy = this.userName;
             this.Active = "In Active";
             this.sourceVendor.isActive == false;
-            this.workFlowtService.updateActionforActiveforBilling(this.sourceVendor).subscribe(
+            // this.workFlowtService.updateActionforActiveforBilling(this.sourceVendor).subscribe(
+            //     response => this.saveCompleted(this.sourceVendor),
+            //     error => this.saveFailedHelper(error));
+            this.workFlowtService.GetUpdateVendorBillingAddressStatus(this.sourceVendor.vendorBillingAddressId, this.sourceVendor.isActive,this.userName).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
             this.sourceVendor = "";
+            
         }
         else {
             this.sourceVendor = rowData;
             this.sourceVendor.updatedBy = this.userName;
             this.Active = "Active";
             this.sourceVendor.isActive == true;
-            this.workFlowtService.updateActionforActiveforBilling(this.sourceVendor).subscribe(
+            // this.workFlowtService.updateActionforActiveforBilling(this.sourceVendor).subscribe(
+            //     response => this.saveCompleted(this.sourceVendor),
+            //     error => this.saveFailedHelper(error));
+            this.workFlowtService.GetUpdateVendorBillingAddressStatus(this.sourceVendor.vendorBillingAddressId, this.sourceVendor.isActive,this.userName).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
             this.sourceVendor = "";
