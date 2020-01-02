@@ -1748,6 +1748,66 @@ namespace DAL.Repositories
 
 
         #endregion
+        public void AddCustomecontact(Customer objCustomer)
+        {
+            CustomerContact data = _appContext.CustomerContact.AsNoTracking().Where(p => p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
+            if (data == null)
+            {
+
+                Contact contactObj = new Contact();
+                objCustomer.MasterCompanyId = 1;
+
+                //contactObj.ContactTitle = objCustomer.ContactTitle;
+                //contactObj.AlternatePhone = objCustomer.AlternatePhone;
+                contactObj.Email = objCustomer.Email;
+                //contactObj.Fax = objCustomer.Fax;
+                //contactObj.Tag = objCustomer.Tag;
+                contactObj.FirstName = objCustomer.Name;
+                contactObj.LastName = "NA";
+                contactObj.Tag = "NA";
+
+                //contactObj.MiddleName = objCustomer.MiddleName;
+                //contactObj.ContactTitle = objCustomer.ContactTitle;
+                //contactObj.MobilePhone = objCustomer.MobilePhone;
+                //contactObj.Notes = objCustomer.Notes;
+                contactObj.WorkPhone = objCustomer.CustomerPhone;
+                //contactObj.WebsiteURL = objCustomer.WebsiteURL;
+                contactObj.MasterCompanyId = 1;
+                contactObj.WorkPhoneExtn = objCustomer.CustomerPhoneExt;
+                contactObj.IsActive = true;
+                contactObj.CreatedDate = DateTime.Now;
+                contactObj.UpdatedDate = DateTime.Now;
+                contactObj.CreatedBy = objCustomer.CreatedBy;
+                contactObj.UpdatedBy = objCustomer.UpdatedBy;
+                contactObj.WorkPhoneExtn = contactObj.WorkPhoneExtn;
+                _appContext.Contact.Add(contactObj);
+
+                _appContext.SaveChanges();
+                long? contactId = contactObj.ContactId;
+
+                if (contactId != null)
+                {
+                    CustomerContact customercontactObj = new CustomerContact();
+
+                    customercontactObj.ContactId = contactId;
+                    customercontactObj.CustomerId = objCustomer.CustomerId;
+                    customercontactObj.IsDefaultContact = true;
+                    customercontactObj.MasterCompanyId = 1;
+                    customercontactObj.IsActive = objCustomer.IsActive;
+                    customercontactObj.CreatedDate = DateTime.Now;
+                    customercontactObj.UpdatedDate = DateTime.Now;
+                    customercontactObj.CreatedBy = objCustomer.CreatedBy;
+                    customercontactObj.UpdatedBy = objCustomer.UpdatedBy;
+
+
+                    _appContext.CustomerContact.Add(customercontactObj);
+
+
+                    _appContext.SaveChanges();
+                }
+                // return objCustomerShippingAddress;
+            }
+        }
 
         public void DeleteRestrictedParts(long id, string updatedBy)
         {
