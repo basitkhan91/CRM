@@ -17,7 +17,7 @@
                         <label class="">Ledger Name <span class="clr-red">*</span></label>
                         <div class="inner-addon right-addon inline-block">
                            <p-autoComplete  class="autocomp-customer-cstm" 
-                            name="name"                            
+                            name="name" (onSelect)="loadEntityByParentId($event)"                            
                              [(ngModel)]="glAccountObj.ledgername" [suggestions]="ledgerNameObject" formControlName="ledgerName" 
                              field="name" emptyMessage="No results" [forceSelection]="true" 
                              (completeMethod)="loadLedgerNames($event)" [size]="30"

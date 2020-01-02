@@ -1436,6 +1436,12 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.Vendor.Add(actionobject);
                 _unitOfWork.SaveChanges();
 
+                if (actionobject.VendorId > 0)
+                {
+                    vendorViewModel.VendorId = actionobject.VendorId;
+                    AddContact(vendorViewModel);
+                }
+
                 if (vendorViewModel.VendorClassificationIds != null)
                 {
                     List<ClassificationMapping> listofEClassificationMappings = vendorViewModel
@@ -1679,12 +1685,18 @@ namespace QuickApp.Pro.Controllers
 
                 _unitOfWork.Vendor.Update(actionobject);
                 _unitOfWork.SaveChanges();
-                
+
+                if (actionobject.VendorId > 0)
+                {
+                    vendorViewModel.VendorId = actionobject.VendorId;
+                    AddContact(vendorViewModel);
+                }
+
                 address.UpdatedDate = DateTime.Now;
                 _unitOfWork.Address.Update(address);
                 _unitOfWork.SaveChanges();
 
-             
+
                 if (vendorViewModel.VendorClassificationIds != null)
                 {
                     var classificationList = _context.ClassificationMapping.Where(a => a.ReferenceId == id && a.ModuleId == Convert.ToInt32(ModuleEnum.Vendor)).ToList();
@@ -1832,40 +1844,47 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult AddContact(VendorViewModel vendorViewModel)
+        //[ApiExplorerSettings(IgnoreApi = true)]
+        public void AddContact(VendorViewModel vendorViewModel)
         {
             try
             {
-                Contact contactObj = new Contact();              
-                //contactObj.ContactId = vendorViewModel.ContactId;
-                //contactObj.ContactTitle = vendorViewModel.ContactTitle;
-                //contactObj.AlternatePhone = vendorViewModel.AlternatePhone;
-                //contactObj.IsDefaultContact = vendorViewModel.IsDefaultContact;
-                contactObj.Email = vendorViewModel.Email;
-                //contactObj.Prefix = vendorViewModel.Prefix;
-                //contactObj.Suffix = vendorViewModel.Suffix;
-                //contactObj.Fax = vendorViewModel.Fax;
-                contactObj.FirstName = vendorViewModel.VendorName;
-                contactObj.LastName = "NA";
-                //contactObj.MiddleName = vendorViewModel.MiddleName;
-                //contactObj.ContactTitle = vendorViewModel.ContactTitle;
-                //contactObj.MobilePhone = vendorViewModel.MobilePhone;
-                //contactObj.Notes = vendorViewModel.Notes;
-                contactObj.WorkPhone = vendorViewModel.VendorPhone;
-                contactObj.WorkPhoneExtn = vendorViewModel.VendorPhoneExt;
-                //contactObj.WebsiteURL = vendorViewModel.WebsiteURL;
-                //contactObj.MasterCompanyId = vendorViewModel.MasterCompanyId;
-                //contactObj.IsActive = true;
-                contactObj.IsActive = true;
-                contactObj.CreatedDate = DateTime.Now;
-                contactObj.UpdatedDate = DateTime.Now;
-                contactObj.CreatedBy = vendorViewModel.CreatedBy;
-                contactObj.UpdatedBy = vendorViewModel.UpdatedBy;
-              
-                _unitOfWork.ContactRepository.Add(contactObj);
-                _unitOfWork.SaveChanges();
-                return null;
+
+                VendorContact vdata = _context.VendorContact.AsNoTracking().Where(p => p.VendorId == vendorViewModel.VendorId).FirstOrDefault();
+                if (vdata == null)
+                {
+                    Contact contactObj = new Contact();
+
+                    contactObj.Email = vendorViewModel.VendorEmail;
+                    contactObj.FirstName = vendorViewModel.VendorName;
+                    contactObj.LastName = "NA";
+                    contactObj.WorkPhone = vendorViewModel.VendorPhone;
+                    contactObj.WorkPhoneExtn = vendorViewModel.VendorPhoneExt;
+                    contactObj.MasterCompanyId = vendorViewModel.MasterCompanyId;
+                    contactObj.IsActive = true;
+                    contactObj.CreatedDate = DateTime.Now;
+                    contactObj.UpdatedDate = DateTime.Now;
+                    contactObj.CreatedBy = vendorViewModel.CreatedBy;
+                    contactObj.UpdatedBy = vendorViewModel.UpdatedBy;
+
+                    _unitOfWork.ContactRepository.Add(contactObj);
+                    _unitOfWork.SaveChanges();
+
+                    VendorContact vendorContactObj = new VendorContact();
+
+                    vendorContactObj.ContactId = contactObj.ContactId;
+                    vendorContactObj.VendorId = vendorViewModel.VendorId;
+                    vendorContactObj.IsDefaultContact = true;
+                    vendorContactObj.RecordCreateDate = DateTime.Now; ;
+                    vendorContactObj.MasterCompanyId = vendorViewModel.MasterCompanyId;
+                    vendorContactObj.IsActive = true;
+                    vendorContactObj.CreatedDate = DateTime.Now;
+                    vendorContactObj.UpdatedDate = DateTime.Now;
+                    vendorContactObj.CreatedBy = vendorViewModel.CreatedBy;
+                    vendorContactObj.UpdatedBy = vendorViewModel.UpdatedBy;
+                    _unitOfWork.vendorContactRepository.Add(vendorContactObj);
+                    _unitOfWork.SaveChanges();
+                }
 
             }
             catch (Exception)
@@ -1927,8 +1946,8 @@ namespace QuickApp.Pro.Controllers
             vendorViewModel.AddressId = address.AddressId.Value;
             return Ok(ModelState);
         }
-        
-        
+
+
 
         [HttpPost("vendorContactPost")]
         public IActionResult CreateContact([FromBody] ContactViewModel contactViewModel)
@@ -2448,7 +2467,7 @@ namespace QuickApp.Pro.Controllers
                 checkPaymentObj.SiteName = checkPaymentViewModel.SiteName;
                 checkPaymentObj.MasterCompanyId = 1;
                 // checkPaymentObj.IsActive = checkPaymentViewModel.IsActive;
-              
+
                 checkPaymentObj.CreatedDate = DateTime.Now;
                 checkPaymentObj.UpdatedDate = DateTime.Now;
                 checkPaymentObj.CreatedBy = checkPaymentViewModel.CreatedBy;
@@ -3094,15 +3113,15 @@ namespace QuickApp.Pro.Controllers
 
 
         }
-        [HttpGet("getCheckPayHist/{id}")]        
+        [HttpGet("getCheckPayHist/{id}")]
         public IActionResult getCheckPayHist(long id)
-        {           
+        {
 
             try
             {
                 var allVendorCheckDetails = _unitOfWork.Vendor.GetVendorsCheckAuditHistory(id);
                 return Ok(allVendorCheckDetails);
-               
+
             }
             catch (Exception ex)
             {

@@ -23,6 +23,7 @@ export class AccountListingService extends EndpointFactory {
    //private readonly getLedgerNamesUrl: string = "/api/nodesetup/getAll";
    private readonly getLedgerNamesUrl: string = "/api/ManagementStrcture/LedgerNames";
    private readonly getLeafNodeUrl: string = "/api/nodesetup/getAllLeafNode";
+    private readonly getEntitiesByParentIdUrl: string = "/api/Legalentity/childentitiesbyparentid";
 
    get createGlAccountUri() { return this.configurations.baseUrl + this.createGlAccountUrl; }
    get updateGlAccountUri() { return this.configurations.baseUrl + this.updateGlAccountUrl; }
@@ -31,6 +32,7 @@ export class AccountListingService extends EndpointFactory {
    get getGlAccountByIdUri() { return this.configurations.baseUrl + this.getGlAccountByIdUrl; }
    get getLedgerNamesUri() { return this.configurations.baseUrl + this.getLedgerNamesUrl; }
    get getLeafNodeUri() { return this.configurations.baseUrl + this.getLeafNodeUrl; }
+    get getEntitiesByParentIdUri() { return this.configurations.baseUrl + this.getEntitiesByParentIdUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -62,6 +64,11 @@ export class AccountListingService extends EndpointFactory {
         //return Observable.forkJoin(this.accountListEndpointservice.getData<any[]>());
     }
 
+    public getEntitiesByParentId(parentId): Observable<any> {
+        //return this.http.get('dist/assets/data/accountlisting.json').pipe(map((response: any) => response)); 
+        return this.http.get(`${this.getEntitiesByParentIdUri}/${parentId}`).pipe(map((response: any) => response));
+        //return Observable.forkJoin(this.accountListEndpointservice.getData<any[]>());
+    }
 
     createGlAccount(data: any): Observable<any> {
       let body = JSON.stringify(data);
