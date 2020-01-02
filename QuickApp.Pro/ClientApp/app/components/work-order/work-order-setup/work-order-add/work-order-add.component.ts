@@ -198,6 +198,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         divisionId: null,
         departmentId: null,
     }
+    revisedPartId: any;
 
 
 
@@ -566,6 +567,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             customerContactId: 68,
             createdBy: this.userName,
             updatedBy: this.userName,
+            revisedPartId: this.revisedPartId,
             partNumbers: generalInfo.partNumbers.map(x => {
 
                 return {
@@ -651,9 +653,6 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
     onSelectedPartNumber(object, currentRecord, index) {
-        console.log('Sample PN');
-
-        debugger;
         // currentRecord = new WorkOrderPartNumber();
 
         const { itemMasterId } = object;
@@ -672,7 +671,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         currentRecord.isPMA = object.pma === null ? false : object.pma;
         currentRecord.isDER = object.der === null ? false : object.der;
         currentRecord.tatDaysStandard = object.tatDaysStandard === null ? '' : object.tatDaysStandard
-        currentRecord.revisedPartNo = object.revisedPartNo
+        currentRecord.revisedPartNo = object.revisedPartNo;
+        this.revisedPartId = object.revisedPartId;
     }
 
 

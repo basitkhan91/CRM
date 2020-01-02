@@ -88,6 +88,10 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
                 this.workFlow.materialList = [];
                 this.row = this.workFlow.materialList[0];
                 this.addRow();
+                this.workFlow.materialQtySummation = 0;
+                this.workFlow.materialExtendedCostSummation = 0;
+                this.workFlow.totalMaterialCost = 0;
+                this.workFlow.materialExtendedPriceSummation = 0;
             }
 
         } else {
@@ -260,10 +264,11 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
             var defaultUOM = this.materialUOM.find(x => x.shortName.trim().toLowerCase() == "ea".toLowerCase());
             this.defaultUOMId = defaultUOM != undefined ? defaultUOM.defaultUOMId : 0;
 
-            console.log(this.workFlow.workflowId, this.isEdit);
+            console.log(this.isEdit)
+
 
             if ((this.workFlow.workflowId == undefined || this.workFlow.workflowId == '0') && !this.isEdit && this.workFlow.materialList[0] != undefined) {
-                console.log('Sample')
+
                 this.workFlow.materialList[0].unitOfMeasureId = this.defaultUOMId;
             }
 
