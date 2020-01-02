@@ -24,7 +24,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { SingleScreenAuditDetails } from '../../models/single-screen-audit-details.model';
-import { validateRecordExistsOrNot, selectedValueValidate, editValueAssignByCondition, getObjectByValue, getObjectById } from '../../generic/autocomplete';
+import { validateRecordExistsOrNot, selectedValueValidate, editValueAssignByCondition, getObjectByValue, getObjectById, getValueFromArrayOfObjectById } from '../../generic/autocomplete';
 import { ConfigurationService } from '../../services/configuration.service';
 import { ModeOfOperation } from "../../models/ModeOfOperation.enum";
 
@@ -107,7 +107,7 @@ export class TaxRateComponent implements OnInit {
     totalPages: number;
     currentModeOfOperation: ModeOfOperation;
     headers = [
-        { field: 'taxTypeId', header: 'Tax Type' },
+        { field: 'taxType', header: 'Tax Type' },
         { field: 'taxRate', header: 'Tax Rate' },
         { field: 'memo', header: 'Memo' },
     ]
@@ -163,8 +163,7 @@ export class TaxRateComponent implements OnInit {
 
 
 
-    ngOnInit(): void {
-        this.getList();
+    ngOnInit(): void {        
         this.addNew.isActive = true;
         //this.addNew.taxRate = 0;
         this.getAllPercentage();
@@ -179,6 +178,7 @@ export class TaxRateComponent implements OnInit {
         // ];
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-tax-rate';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
+        this.getList();
         // this.selectedColumns = this.cols;
     }
     
@@ -267,7 +267,13 @@ export class TaxRateComponent implements OnInit {
             const responseData = res[0];
             // this.uomHeaders = responseData.columHeaders;
             // this.selectedColumns = responseData.columHeaders;
-            this.originalData = responseData;
+            this.originalData = responseData.map(x => {
+                return {
+                    ...x,
+                    //taxType: getValueFromArrayOfObjectById('description', 'taxTypeId', x.taxTypeId, this.allTaxTypes)
+                }
+            });
+            console.log(this.originalData);
             this.totalRecords = responseData.length;
             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
         })
@@ -305,7 +311,7 @@ export class TaxRateComponent implements OnInit {
         if (!this.isEdit) {
             const data = {
                 ...this.addNew, createdBy: this.userName, updatedBy: this.userName,
-                taxTypeId: editValueAssignByCondition('description', this.addNew.taxTypeId),
+                taxTypeId: editValueAssignByCondition('taxTypeId', this.addNew.taxTypeId),
                 taxRateId: editValueAssignByCondition('value', this.addNew.taxRate),
                 taxRate: editValueAssignByCondition('value', this.addNew.taxRate),
                 masterCompanyId: 1,
@@ -324,7 +330,8 @@ export class TaxRateComponent implements OnInit {
         } else {
             const data = {
                 ...this.addNew, updatedBy: this.userName,
-                taxTypeId: editValueAssignByCondition('description', this.addNew.taxTypeId),
+                taxTypeId: editValueAssignByCondition('taxTypeId', this.addNew.taxTypeId),
+                //taxTypeId: editValueAssignByCondition('description', this.addNew.taxTypeId),
                 taxRate: editValueAssignByCondition('value', this.addNew.taxRate),
                 masterCompanyId: 1,
             };
@@ -353,35 +360,36 @@ export class TaxRateComponent implements OnInit {
 
 
     edit(rowData) {
-        //console.log('rowData',rowData);
+        console.log('rowData',rowData);
         this.isEdit = true;
         this.disableSave = false;
         //console.log(this.getTaxTypeId(rowData.taxTypeId));
         this.addNew = {
             ...rowData,
-            taxTypeId: getObjectById('taxTypeId', this.getTaxTypeId(rowData.taxTypeId), this.allTaxTypes),
+            //taxTypeId: getObjectById('taxTypeId', this.getTaxTypeId(rowData.taxTypeId), this.allTaxTypes),
+            taxTypeId: getObjectById('taxTypeId', rowData.taxTypeId, this.allTaxTypes),
             taxRate: getObjectById('value', rowData.taxRate, this.percentageList),
         };
         this.addNew = {
             ...this.addNew
         };
-        //console.log('addNew', this.addNew);
+        console.log('addNew', this.addNew);
         this.selectedRecordForEdit = { ...this.addNew }
 
     }
 
-    getTaxTypeId(value) {
-        //console.log(value);
-        for (let i = 0; i < this.allTaxTypes.length; i++) {
-            let description = this.allTaxTypes[i].description;
-            let taxTypeId = this.allTaxTypes[i].taxTypeId;
-            //console.log(description,value);
-            if (description.toLowerCase() == value.toLowerCase()) {
-                return taxTypeId.toString();
-            }
-        }
-        return '0';
-    }
+    // getTaxTypeId(value) {
+    //     //console.log(value);
+    //     for (let i = 0; i < this.allTaxTypes.length; i++) {
+    //         let description = this.allTaxTypes[i].description;
+    //         let taxTypeId = this.allTaxTypes[i].taxTypeId;
+    //         //console.log(description,value);
+    //         if (description.toLowerCase() == value.toLowerCase()) {
+    //             return taxTypeId.toString();
+    //         }
+    //     }
+    //     return '0';
+    // }
 
     changeStatus(rowData) {
         //console.log(rowData);
@@ -401,7 +409,7 @@ export class TaxRateComponent implements OnInit {
         let data = 
             {
                 ...rowData,
-            taxTypeName: editValueAssignByCondition('description', rowData.taxTypeId),
+            //taxTypeName: editValueAssignByCondition('description', rowData.taxTypeId),
             };
         this.viewRowData = data;
     }
