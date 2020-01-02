@@ -227,8 +227,10 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
         this.isDeleteMode = true;
         this.sourcereceving.isdelete = false;
         this.sourcereceving.updatedBy = this.userName;
-        this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId).subscribe(
-            response => this.saveCompleted(this.sourcereceving),
+        this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId, this.userName).subscribe(
+
+        //this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId).subscribe(
+         response => this.saveCompleted(this.sourcereceving),
             error => this.saveFailedHelper(error));
         this.modal.close();
     }

@@ -10,7 +10,7 @@
                     </ol>
                 </nav>
                 <h4 class="page-heading">Receiving - Customer Work List</h4>
-                <span class="help-icon" data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span>
+                <!--<span class="help-icon" data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span>-->
                 <p-table #dt [value]="allRecevinginfo" [metaKeySelection]="true" [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true">
                     <ng-template pTemplate="caption">
                         <div style="text-align: right">
@@ -86,8 +86,13 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-
-
+    
+    <div class="modal-body">
+        <strong>
+          Recev. No.:
+            <span class="new-label">{{sourcereceving.receivingCustomerNumber}}</span>
+        </strong>
+    </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
         <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
@@ -189,6 +194,7 @@
 
 
     </div>
+
     <div class="modal-body">
 
         <div class="table-responsive">

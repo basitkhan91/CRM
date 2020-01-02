@@ -163,6 +163,7 @@ export class CustomerWorkSetupComponent
             console.log(this.sourcereceving,'edit')
             this.sourcereceving.serialNumber = this.receivingCustomerWorkService.listCollection.serialNumber;
             this.sourcereceving.customerContactId = this.sourcereceving.contactId;// { contactId: this.receivingCustomerWorkService.listCollection.contactId, contactTitle: this.receivingCustomerWorkService.listCollection.contactTitle }
+            this.sourcereceving.managementStructureId = this.receivingCustomerWorkService.listCollection.managementstructureId;// { contactId: this.receivingCustomerWorkService.listCollection.contactId, contactTitle: this.receivingCustomerWorkService.listCollection.contactTitle }
 
             //this.sourcereceving.customerContactId = { contactId: this.receivingCustomerWorkService.listCollection.contactId, contactTitle: this.receivingCustomerWorkService.listCollection.contactTitle }
             this.sourcereceving.workPhone = this.receivingCustomerWorkService.listCollection.workPhone;
@@ -411,7 +412,7 @@ export class CustomerWorkSetupComponent
 	}
     
     saveCustomerwork() {
-        
+       
         if (!(this.sourcereceving.partNumber && this.sourcereceving.partDescription && this.sourcereceving.siteId && this.sourcereceving.customerId) ) {
             this.display = true;
             this.modelValue = true;
@@ -501,7 +502,9 @@ export class CustomerWorkSetupComponent
 	deleteItemAndCloseModel() {
         this.isSaving = true;
         this.sourcereceving.updatedBy = this.userName;
-        this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId).subscribe(
+        this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId, this.userName).subscribe(
+
+   //     this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId).subscribe(
 			response => this.saveCompleted(this.sourceAction),
 			error => this.saveFailedHelper(error));
 		this.modal.close();

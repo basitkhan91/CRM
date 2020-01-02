@@ -141,14 +141,20 @@ export class ReceivingCustomerWorkEndpoint extends EndpointFactory {
 			});
 	}
 
-	getDeleteReasonEndpoint<T>(receivingCustomerWorkId: number): Observable<T> {
-		let endpointUrl = `${this._actionDeleteUrlNew}/${receivingCustomerWorkId}`;
+	//getDeleteReasonEndpoint<T>(receivingCustomerWorkId: number): Observable<T> {
+	//	let endpointUrl = `${this._actionDeleteUrlNew}/${receivingCustomerWorkId}`;
 
-		return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
-			.catch(error => {
-				return this.handleError(error, () => this.getDeleteReasonEndpoint(receivingCustomerWorkId));
-			});
-	}
+	//	return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
+	//		.catch(error => {
+	//			return this.handleError(error, () => this.getDeleteReasonEndpoint(receivingCustomerWorkId));
+	//		});
+ //   }
+    getDeleteReasonEndpoint<T>(id, updatedBy) {
+        return this.http.get<T>(`${this._actionDeleteUrlNew}?id=${id}&updatedBy=${updatedBy}`)
+            .catch(error => {
+                return this.handleError(error, () => this.getDeleteReasonEndpoint(id, updatedBy));
+            });
+    }
     getNewTimeAdjustmentEndpoint<T>(userObject: any): Observable<T> {
 
         return this.http.post<T>(this._actionsTimeUrlNew, JSON.stringify(userObject), this.getRequestHeaders())

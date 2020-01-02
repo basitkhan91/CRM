@@ -291,30 +291,12 @@ namespace QuickApp.Pro.Controllers
         //    return Ok(id);
         //}
 
-        [HttpPut("deletereceivingCustomerWork/{id}")]
-        [Produces(typeof(ReceivingCustomerWorkViewModel))]
-
-        public IActionResult DeleteAction(long id, [FromBody] ReceivingCustomerWorkViewModel receivingCustomerWorkViewModel)
+        [HttpGet("deletereceivingCustomerWork")]
+        public IActionResult DeleteReceivingCustomer(long id, string updatedBy)
         {
-            if (ModelState.IsValid)
-            {
-                if (receivingCustomerWorkViewModel == null)
-                    return BadRequest($"{nameof(receivingCustomerWorkViewModel)} cannot be null");
-                var receiveCust = _unitOfWork.receivingCustomerWork.GetSingleOrDefault(c => c.ReceivingCustomerWorkId == id);
-                receiveCust.IsActive = receivingCustomerWorkViewModel.IsActive;
-                receiveCust.MasterCompanyId = 1;
-                receiveCust.IsDeleted = true;
-                receiveCust.UpdatedDate = DateTime.Now;
-                receiveCust.CreatedBy = receivingCustomerWorkViewModel.CreatedBy;
-                receiveCust.UpdatedBy = receivingCustomerWorkViewModel.UpdatedBy;
-                _unitOfWork.receivingCustomerWork.Update(receiveCust);
-                _unitOfWork.SaveChanges();
-                return Ok(receiveCust);
-            }
-            return Ok(ModelState);
+            _unitOfWork.receivingCustomerWork.DeleteReceivingCustomer(id, updatedBy);
+            return Ok();
         }
-
-
         [HttpPut("updateForActive/{id}")]
         public IActionResult customersUpdateforActive(long id, [FromBody]ReceivingCustomerWork receivingCustomerWork)
         {
