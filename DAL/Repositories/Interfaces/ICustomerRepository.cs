@@ -82,6 +82,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetCustomerInternationalShippingAuditHistoryByid(long customerId,long InternationalShippingId);
         IEnumerable<object> GetAuditShippingViaDetailsById(long customerId, long internationalShippingId, long ShippingViaDetailsId);
         List<CustomerDocumentDetailAudit> GetCustomerDocumentDetailsAudit(long id);
+        void AddCustomecontact(Customer objCustomer);
     }
 
 }

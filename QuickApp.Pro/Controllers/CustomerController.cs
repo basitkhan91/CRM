@@ -433,7 +433,12 @@ namespace QuickApp.Pro.Controllers
                         actionobject.CustomerId, actionobject.CreatedBy);
                 }
 
+                if (actionobject.CustomerId > 0)
+                {
+                    _unitOfWork.Customer.AddCustomecontact(actionobject);
 
+
+                }
                 //if (customerViewModel.IntegrationPortalId != null)
                 //{
 
@@ -639,7 +644,12 @@ namespace QuickApp.Pro.Controllers
                     _unitOfWork.Customer.AddCustomerBillinggAddress(actionobject);
                 }
             }
+            if (actionobject.CustomerId > 0)
+            {
+                _unitOfWork.Customer.AddCustomecontact(actionobject);
 
+
+            }
             _unitOfWork.CommonRepository.UpdateRestrictedParts(customerViewModel.RestrictedPMAParts, actionobject.CustomerId, Convert.ToInt32(ModuleEnum.Customer));
             _unitOfWork.CommonRepository.UpdateRestrictedParts(customerViewModel.RestrictedDERParts, actionobject.CustomerId, Convert.ToInt32(ModuleEnum.Customer));
 
