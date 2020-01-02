@@ -199,6 +199,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         departmentId: null,
     }
     revisedPartId: any;
+    csrList: any;
 
 
 
@@ -413,6 +414,16 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
 
+    filterCsr(event){
+        this.csrList = this.employeesOriginalData;
+
+        if (event.query !== undefined && event.query !== null) {
+            const employee = [...this.employeesOriginalData.filter(x => {
+                return x.label.toLowerCase().includes(event.query.toLowerCase())
+            })]
+            this.csrList = employee;
+        }
+    }
 
     filterEmployee(event): void {
 
@@ -563,6 +574,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             customerId: getValueFromObjectByKey('customerId', generalInfo.customerId),
             employeeId: getValueFromObjectByKey('value', generalInfo.employeeId),
             salesPersonId: getValueFromObjectByKey('value', generalInfo.salesPersonId),
+            csr : getValueFromObjectByKey ('value' ,  generalInfo.csr ),
             masterCompanyId: 1,
             customerContactId: 68,
             createdBy: this.userName,
@@ -572,7 +584,6 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
                 return {
                     ...x,
-
                     masterPartId: getValueFromObjectByKey('itemMasterId', x.masterPartId),
                     // mappingItemMasterId: getValueFromObjectByKey('itemMasterId', x.masterPartId),
                     mappingItemMasterId: getValueFromObjectByKey('mappingItemMasterId', x.mappingItemMasterId),
