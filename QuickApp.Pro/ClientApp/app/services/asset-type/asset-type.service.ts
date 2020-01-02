@@ -17,6 +17,12 @@ export class AssetTypeService {
         );
     }
 
+    getAllActive() {
+        return Observable.forkJoin(
+            this.endpointService.getAllItemsActive<AssetType[]>()
+        );
+    }
+
     getById(id: number) {
         return Observable.forkJoin(
             this.endpointService.getItemById<AssetType>(id)

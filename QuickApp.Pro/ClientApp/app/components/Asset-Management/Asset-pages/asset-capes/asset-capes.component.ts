@@ -193,6 +193,9 @@ export class AssetCapesComponent implements OnInit {
     private onassetdataSuccessful(getAssetData: any[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
+        this.assetServices.isEditMode = true;
+        this.activeIndex = 1;
+        this.assetServices.indexObj.next(this.activeIndex);
         this.assetServices.listCollection = getAssetData;
         if (this.assetServices.listCollection != null) {
 

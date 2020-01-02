@@ -43,7 +43,7 @@ export class AssetCalibrationComponent implements OnInit {
         if (this.assetService.listCollection == undefined) {
             this.GetAssetData(this.AssetId);
         }
-        if ((this.assetService.listCollection != null && this.assetService.isEditMode == true) || (this.assetService.generalCollection != null)) {
+        if ((this.assetService.listCollection != null) || (this.assetService.generalCollection != null)) {
 
             if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
                 this.showLable = true;
@@ -119,6 +119,9 @@ export class AssetCalibrationComponent implements OnInit {
     private onassetdataSuccessful(getAssetData: any[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
+        this.assetService.isEditMode = true;
+        this.activeIndex = 2;
+        this.assetService.indexObj.next(this.activeIndex);
         this.assetService.listCollection = getAssetData;
         if (this.assetService.listCollection != null) {
             this.showLable = true;
