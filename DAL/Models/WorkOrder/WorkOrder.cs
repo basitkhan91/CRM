@@ -30,11 +30,9 @@ namespace DAL.Models
 
         public string Contract { get; set; }
 
-        public long CustomerContactId { get; set; }
+       // public long CustomerContactId { get; set; }
 
-        public Int16 CreditTermsId { get; set; }
-
-        public decimal CreditLimit { get; set; }
+        
 
 
         [Required(ErrorMessage = "Status is required")]
@@ -47,8 +45,7 @@ namespace DAL.Models
 
         [Required(ErrorMessage = "Sales person is required")]
         public long SalesPersonId { get; set; }
-        public string CustomerReference { get; set; }
-        public string CSR { get; set; }
+       
         public long ManagementStructureId { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
@@ -68,8 +65,18 @@ namespace DAL.Models
         public CustomerDetails CustomerDetails { get;set;}
         [NotMapped]
         public bool IsSubWorkOrder { get; set; }
-        
-
+        [NotMapped]
+        public string PrimarySalesPersonId { get; set; }
+        [NotMapped]
+        public Int16 CreditTermsId { get; set; }
+        [NotMapped]
+        public decimal CreditLimit { get; set; }
+        [NotMapped]
+        public string ContractReference { get; set; }
+        [NotMapped]
+        public string CustomerReference { get; set; }
+        [NotMapped]
+        public string CSR { get; set; }
 
     }
 

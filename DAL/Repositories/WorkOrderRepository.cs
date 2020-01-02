@@ -52,6 +52,7 @@ namespace DAL.Repositories
                 _appContext.WorkOrder.Add(workOrder);
                 _appContext.SaveChanges();
 
+                UpdateCustomer(workOrder);
 
                 var workOrderSettings = _appContext.WorkOrderSettings.Where(p => p.WorkOrderTypeId == workOrder.WorkOrderTypeId && p.IsActive == true && p.IsDeleted == false).FirstOrDefault();
                 if (workOrderSettings != null)
@@ -114,6 +115,8 @@ namespace DAL.Repositories
                     if (workScope != null)
                         item.WorkScope = workScope.Description;
                 }
+
+                UpdateCustomer(workOrder);
 
                 workOrder.WorkFlowWorkOrderId = CreateWorkFlowWorkOrderFromWorkFlow(workOrder.PartNumbers, workOrder.WorkOrderId, workOrder.CreatedBy);
 
@@ -696,32 +699,28 @@ namespace DAL.Repositories
                 {
                     workOrder.CustomerDetails = new CustomerDetails();
 
-                    var customerContact = (from cust in _appContext.Customer
-                                           join cc in _appContext.CustomerContact on cust.CustomerId equals cc.CustomerId into custcc
-                                           from cc in custcc.DefaultIfEmpty()
-
-                                           join con in _appContext.Contact on cc.ContactId equals con.ContactId into custcon
-                                           from con in custcon.DefaultIfEmpty()
+                    var primarySalesPerson = (from cust in _appContext.Customer
+                                           join csr in _appContext.Employee on cust.PrimarySalesPersonId equals Convert.ToString(csr.EmployeeId) into custcsr
+                                           from csr in custcsr.DefaultIfEmpty()
                                            where cust.CustomerId == workOrder.CustomerId
                                            select new
                                            {
-                                               con
+                                               csr
                                            }).FirstOrDefault();
 
-                    workOrder.CustomerDetails.CSRName = workOrder.CSR;
-                    workOrder.CustomerDetails.CustomerRef = workOrder.CustomerReference;
+                    workOrder.CSR = workOrder.CustomerDetails.CSRName = primarySalesPerson!=null && primarySalesPerson.csr!=null ?primarySalesPerson.csr.FirstName:"";
+                    workOrder.CustomerDetails.CustomerRef = customer.ContractReference;
                     workOrder.CustomerDetails.CustomerName = customer.Name;
-                    workOrder.CustomerDetails.CreditLimit = workOrder.CreditLimit;
-                    workOrder.CustomerDetails.CreditTermsId = workOrder.CreditTermsId;
+                    workOrder.CustomerDetails.CreditLimit = customer.CreditLimit;
+                    workOrder.CustomerDetails.CreditTermsId = customer.CreditTermsId;
                     workOrder.CustomerDetails.CustomerId = workOrder.CustomerId;
                     workOrder.CustomerDetails.CustomerName = customer.Name;
                     workOrder.CustomerDetails.CustomerEmail = customer.Email;
                     workOrder.CustomerDetails.CustomerPhone = customer.CustomerPhone;
 
-                    if (customerContact != null && customerContact.con != null)
-                        workOrder.CustomerDetails.CustomerContact = customerContact.con.FirstName;
-                    else
-                        workOrder.CustomerDetails.CustomerContact = string.Empty;
+                    workOrder.CreditLimit= Convert.ToInt64(customer.CreditLimit);
+                    workOrder.CreditTermsId = Convert.ToInt16(customer.CreditTermsId);
+                    workOrder.CustomerReference = customer.ContractReference;
                 }
 
                 foreach (var part in workOrder.PartNumbers)
@@ -761,11 +760,13 @@ namespace DAL.Repositories
             {
                 var workOrderHeader = (from wo in _appContext.WorkOrder
                                        join c in _appContext.Customer on wo.CustomerId equals c.CustomerId
-                                       join ct in _appContext.CreditTerms on wo.CreditTermsId equals ct.CreditTermsId
+                                       join ct in _appContext.CreditTerms on c.CreditTermsId equals ct.CreditTermsId
                                        join e in _appContext.Employee on wo.EmployeeId equals e.EmployeeId
                                        join sp in _appContext.Employee on wo.SalesPersonId equals sp.EmployeeId
                                        join ws in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals ws.Id
                                        join wf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wf.WorkOrderId
+                                       join ps in _appContext.Employee on c.PrimarySalesPersonId equals Convert.ToString(ps.EmployeeId) into cps
+                                       from ps in cps.DefaultIfEmpty()
                                        where wo.WorkOrderId == workOrderId
                                        select new
                                        {
@@ -776,7 +777,7 @@ namespace DAL.Repositories
                                            wo.IsContractAvl,
                                            wo.Contract,
                                            CreditTerm = ct.Name,
-                                           wo.CreditLimit,
+                                           c.CreditLimit,
                                            wo.OpenDate,
                                            c.ContractReference,
                                            Employee = e.FirstName,
@@ -784,8 +785,8 @@ namespace DAL.Repositories
                                            WOStatus = ws.Description,
                                            c.CustomerCode,
                                            c.CustomerContact,
-                                           wo.CSR,
-                                           wo.CustomerReference,
+                                           CSR = ps==null?"":ps.FirstName,
+                                           CustomerReference= c.ContractReference,
                                            workFlowWorkOrderId = wo.IsSinglePN == true ? wf.WorkFlowWorkOrderId : 0,
                                            workFlowId = wo.IsSinglePN == true ? wf.WorkflowId : 0,
                                            wo.ManagementStructureId
@@ -4125,9 +4126,11 @@ namespace DAL.Repositories
                             join sp in _appContext.Employee on wo.SalesPersonId equals sp.EmployeeId
                             join cur in _appContext.Currency on bi.CurrencyId equals cur.CurrencyId into custcur
                             from cur in custcur.DefaultIfEmpty()
-                            join ct in _appContext.CreditTerms on wo.CreditTermsId equals ct.CreditTermsId
+                            join ct in _appContext.CreditTerms on cust.CreditTermsId equals ct.CreditTermsId
                             join sv in _appContext.ShippingVia on bi.ShipViaId equals sv.ShippingViaId into bisv
                             from sv in bisv.DefaultIfEmpty()
+                            join ps in _appContext.Employee on cust.PrimarySalesPersonId equals Convert.ToString(ps.EmployeeId) into custps
+                            from ps in custps.DefaultIfEmpty()
                             where bi.WorkOrderId == WorkOrderId && bi.WorkOrderPartNoId == workOrderPartNoId
                             select new
                             {
@@ -4159,8 +4162,8 @@ namespace DAL.Repositories
                                 SalesPerson = sp.FirstName,
                                 bi.CurrencyId,
                                 Currency = cur.DisplayName,
-                                wo.CreditLimit,
-                                wo.CreditTermsId,
+                                cust.CreditLimit,
+                                cust.CreditTermsId,
                                 CreditTerm = ct.Name,
                                 bi.GateStatus,
                                 bi.SoldToCustomerId,
@@ -4207,8 +4210,8 @@ namespace DAL.Repositories
                                 ShippingAccountinfo = sv.ShippingAccountInfo,
                                 bi.WayBillRef,
                                 bi.Tracking,
-                                wo.CSR,
-                                wo.CustomerReference,
+                               CSR=ps==null?"":ps.FirstName,
+                                CustomerReference=cust.ContractReference,
                                 CustomerName = cust.Name,
                                 wo.CustomerId,
                                 cust.Email,
@@ -6830,6 +6833,29 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
+        private void UpdateCustomer(WorkOrder workOrder)
+        {
+            Customer customer = new Customer();
+            customer.CustomerId = workOrder.CustomerId;
+            //customer.PrimarySalesPersonId = workOrder.CSR;
+            customer.ContractReference = workOrder.CustomerReference;
+            customer.CreditTermsId = workOrder.CreditTermsId;
+            customer.CreditLimit = workOrder.CreditLimit;
+
+            customer.UpdatedBy = workOrder.UpdatedBy;
+            customer.UpdatedDate = DateTime.Now;
+            _appContext.Customer.Attach(customer);
+
+            _appContext.Entry(customer).Property(p => p.PrimarySalesPersonId).IsModified = true;
+            _appContext.Entry(customer).Property(p => p.ContractReference).IsModified = true;
+            _appContext.Entry(customer).Property(p => p.CreditTermsId).IsModified = true;
+            _appContext.Entry(customer).Property(p => p.CreditLimit).IsModified = true;
+            _appContext.Entry(customer).Property(p => p.UpdatedBy).IsModified = true;
+            _appContext.Entry(customer).Property(p => p.UpdatedDate).IsModified = true;
+            _appContext.SaveChanges();
+        }
+
         #endregion
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
