@@ -367,6 +367,8 @@ export class CustomerWorkEditComponent {
           
             this.sourcereceving.createdBy = this.userName;
             this.sourcereceving.updatedBy = this.userName;
+            this.sourceTimeLife.createdBy = this.userName;
+            this.sourceTimeLife.updatedBy = this.userName;
             this.sourcereceving.masterCompanyId = 1;
             this.sourcereceving.isActive = true;
             console.log(this.sourcereceving);
@@ -416,7 +418,7 @@ export class CustomerWorkEditComponent {
                             role => this.saveSuccessHelper(role),
                             error => this.saveFailedHelper(error));
                         this.sourcereceving = {};
-                        this.router.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
+                       // this.router.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
 
                     }
 
@@ -427,7 +429,7 @@ export class CustomerWorkEditComponent {
                         role => this.saveSuccessHelper(role),
                         error => this.saveFailedHelper(error));
                     this.sourcereceving = {};
-                    this.router.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
+                   // this.router.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
 
                 }
             }
@@ -445,6 +447,8 @@ export class CustomerWorkEditComponent {
                 console.log("Update Timelife");
                 this.receivingCustomerWorkService.updateStockLineTimelife(this.sourceTimeLife).subscribe(data => {
                     this.collectionofstockLine = data;
+                    this.router.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
+
                     
                 })
 
@@ -456,19 +460,20 @@ export class CustomerWorkEditComponent {
                     this.collectionofstockLine = data;
 
                     this.value = 1;
+                    this.router.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
+
                   
                 })
             }
             this.sourcereceving = {};
-            this.router.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
-
-        }
+             }
     }
 
     deleteItemAndCloseModel() {
         this.isSaving = true;
         this.sourcereceving.updatedBy = this.userName;
-        this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId).subscribe(
+        this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId, this.userName).subscribe(
+
             response => this.saveCompleted(this.sourceAction),
             error => this.saveFailedHelper(error));
         this.modal.close();
@@ -481,7 +486,7 @@ export class CustomerWorkEditComponent {
 
     private saveCompleted(user?: any) {
         this.isSaving = false;
-
+        this.router.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
         if (this.isDeleteMode == true) {
             this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
             this.isDeleteMode = false;
@@ -496,6 +501,7 @@ export class CustomerWorkEditComponent {
 
     private saveSuccessHelper(role?: true) {
         this.isSaving = false;
+        this.router.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
         this.loadData();
@@ -508,6 +514,7 @@ export class CustomerWorkEditComponent {
 
     private saveFailedHelper(error: any) {
         this.isSaving = false;
+        this.router.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
         this.alertService.stopLoadingMessage();
         this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);

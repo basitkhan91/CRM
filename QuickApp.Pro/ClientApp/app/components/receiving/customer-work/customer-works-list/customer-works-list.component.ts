@@ -38,7 +38,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     isDeleteMode: boolean;
     sourcereceving: any;
     modal: any;
-    auditHisory: any[];
+    customerWorkHisory: any[];
     sourceAction: any;
     allComapnies: MasterCompany[];
     customerId: any;
@@ -51,7 +51,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     selectedColumn: any;
     Active: string = "Active";
    
-
+   auditHisory: any[];
     constructor(private receivingCustomerWorkService: ReceivingCustomerWorkService, private masterComapnyService: MasterComapnyService, private _route: Router, private authService: AuthService, private alertService: AlertService, private modalService: NgbModal) {
         this.dataSource = new MatTableDataSource();
         this.receivingCustomerWorkService.isEditMode = false;
@@ -227,8 +227,10 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
         this.isDeleteMode = true;
         this.sourcereceving.isdelete = false;
         this.sourcereceving.updatedBy = this.userName;
-        this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId).subscribe(
-            response => this.saveCompleted(this.sourcereceving),
+        this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId, this.userName).subscribe(
+
+        //this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId).subscribe(
+         response => this.saveCompleted(this.sourcereceving),
             error => this.saveFailedHelper(error));
         this.modal.close();
     }
@@ -287,4 +289,38 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
         }
 
     }
+    openHistory(content, rowData) {
+        //const { customerShippingAddressId } = rowData.customerShippingAddressId;
+        //const { customerShippingId } = rowData.customerShippingId;
+        this.alertService.startLoadingMessage();
+
+        this.receivingCustomerWorkService.getAuditHistory(rowData.receivingCustomerWorkId).subscribe(
+            results => this.onAuditHistoryLoadSuccessful(results[0], content),
+            error => this.saveFailedHelper(error));
+    }
+    private onAuditHistoryLoadSuccessful(auditHistory, content) {
+        this.alertService.stopLoadingMessage();
+
+
+        this.customerWorkHisory = auditHistory;
+        console.log(this.customerWorkHisory,'audit')
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.customerWorkHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+
+    
 }

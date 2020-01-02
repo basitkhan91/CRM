@@ -14286,6 +14286,9 @@ input[type="date"]::-webkit-inner-spin-button {
 .select-validate.ng-untouched.ng-invalid, .select-validate.ng-touched.ng-invalid {
     border: 1px solid #ff586b;
 }
+.select-validate-cstm {
+    border: 1px solid #ff586b;
+}
 .cus-contact-table tr th {
     padding: 7px !important;
 }

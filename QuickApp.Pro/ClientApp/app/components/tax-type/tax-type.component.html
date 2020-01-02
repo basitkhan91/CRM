@@ -67,7 +67,7 @@
                                         <!--<p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>-->
 
                                         <span data-toggle="modal" data-target="#view">
-                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" data-target="#view" data-toggle="modal">
+                                            <a class="btn btn-info boxed-float-btn nobg" matTooltip="View" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" data-target="#view" data-toggle="modal">
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         </span>
@@ -90,10 +90,12 @@
                                 </div>
                             </ng-template>
                             <ng-template pTemplate="summary" id="footer">
-                                <label id="footer" class="footer">No'of records:</label>
-                                <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp; 
-                                <label id="footer" class="footer1">Pages Count:</label>
-                                <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" /> 
+                                <div style="text-align: right;">
+                                    <label id="footer" class="footer">No'of records:</label>
+                                    <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp; 
+                                    <label id="footer" class="footer1">Pages Count:</label>
+                                    <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" /> 
+                                </div>
                             </ng-template>
                         </p-table>
                     </div>
@@ -176,7 +178,7 @@
                     <div class="col-sm-6">
                         <div class="checkbox-cstm">
                             <label>
-                                <input type="checkbox" name="isActive"  [(ngModel)]="addNew.isActive">
+                                <input type="checkbox" name="isActive" [(ngModel)]="addNew.isActive">
                                 <span class="cr">
                                     <i class="cr-icon pi pi-check"></i>
                                 </span>

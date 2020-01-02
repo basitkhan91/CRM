@@ -61,9 +61,15 @@ export class ReceivingCustomerWorkService {
 		return this.receivingCustomerWorkEndpoint.getUpdateReasonEndpoint(receivingCustomerWork, receivingCustomerWork.receivingCustomerWorkId);
 	}
 
-	deleteReason(receivingCustomerWorkId: number) {
+	//deleteReason(receivingCustomerWorkId: number) {
 
-		return this.receivingCustomerWorkEndpoint.getDeleteReasonEndpoint(receivingCustomerWorkId);
+	//	return this.receivingCustomerWorkEndpoint.getDeleteReasonEndpoint(receivingCustomerWorkId);
+
+ //   }
+   
+    deleteReason(receivingCustomerWorkId: number, updatedBy: string) {
+
+        return this.receivingCustomerWorkEndpoint.getDeleteReasonEndpoint(receivingCustomerWorkId, updatedBy);
 
     }
     newStockLineTimeLife(sourcereceving: any) {
@@ -76,5 +82,9 @@ export class ReceivingCustomerWorkService {
     updateActionforActive(receivingCustomerWork: any) {
         return this.receivingCustomerWorkEndpoint.getUpdateActionforActive(receivingCustomerWork, receivingCustomerWork.receivingCustomerWorkId);
     }
+    getAuditHistory(receivingCustomerWorkId: number) {
+        return Observable.forkJoin(this.receivingCustomerWorkEndpoint.getAuditHistory(receivingCustomerWorkId));
+    }
+
 }
 

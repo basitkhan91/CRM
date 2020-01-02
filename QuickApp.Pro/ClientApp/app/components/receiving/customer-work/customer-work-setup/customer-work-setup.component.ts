@@ -163,6 +163,7 @@ export class CustomerWorkSetupComponent
             console.log(this.sourcereceving,'edit')
             this.sourcereceving.serialNumber = this.receivingCustomerWorkService.listCollection.serialNumber;
             this.sourcereceving.customerContactId = this.sourcereceving.contactId;// { contactId: this.receivingCustomerWorkService.listCollection.contactId, contactTitle: this.receivingCustomerWorkService.listCollection.contactTitle }
+            this.sourcereceving.managementStructureId = this.receivingCustomerWorkService.listCollection.managementstructureId;// { contactId: this.receivingCustomerWorkService.listCollection.contactId, contactTitle: this.receivingCustomerWorkService.listCollection.contactTitle }
 
             //this.sourcereceving.customerContactId = { contactId: this.receivingCustomerWorkService.listCollection.contactId, contactTitle: this.receivingCustomerWorkService.listCollection.contactTitle }
             this.sourcereceving.workPhone = this.receivingCustomerWorkService.listCollection.workPhone;
@@ -411,7 +412,7 @@ export class CustomerWorkSetupComponent
 	}
     
     saveCustomerwork() {
-        
+       
         if (!(this.sourcereceving.partNumber && this.sourcereceving.partDescription && this.sourcereceving.siteId && this.sourcereceving.customerId) ) {
             this.display = true;
             this.modelValue = true;
@@ -479,19 +480,20 @@ export class CustomerWorkSetupComponent
                     })
                 }
                 else {
-                    console.log(this.sourcereceving.customerContactId, 'contact')
+                   
                     this.sourcereceving.contactId = this.sourcereceving.customerContactId;
-
+                    this.receivingCustomerWorkService.updateStockLineTimelife(this.sourceTimeLife).subscribe(data => {
+                        this.collectionofstockLine = data;
+                      
+                    })
                     this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
                         response => this.saveCompleted(this.sourcereceving),
                         error => this.saveFailedHelper(error));
-                    this.receivingCustomerWorkService.updateStockLineTimelife(this.sourceTimeLife).subscribe(data => {
-                        this.collectionofstockLine = data;
-                    })
+                   
                 }
 
               
-                this._route.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
+                //this._route.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
                 this.sourcereceving = {};
             }
         }
@@ -500,7 +502,9 @@ export class CustomerWorkSetupComponent
 	deleteItemAndCloseModel() {
         this.isSaving = true;
         this.sourcereceving.updatedBy = this.userName;
-        this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId).subscribe(
+        this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId, this.userName).subscribe(
+
+   //     this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId).subscribe(
 			response => this.saveCompleted(this.sourceAction),
 			error => this.saveFailedHelper(error));
 		this.modal.close();
@@ -513,6 +517,7 @@ export class CustomerWorkSetupComponent
 
 	private saveCompleted(user?: any) {
 		this.isSaving = false;
+        this._route.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
 
 		if (this.isDeleteMode == true) {
 			this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
@@ -527,7 +532,8 @@ export class CustomerWorkSetupComponent
 	}
 
 	private saveSuccessHelper(role?: true) {
-		this.isSaving = false;
+        this.isSaving = false;
+        this._route.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
 		this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
 		this.loadData();

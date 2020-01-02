@@ -86,7 +86,7 @@ namespace DAL.Models
         public long? WorkOrderId { get; set; }
         public string ReasonForRemoval { get; set; }
         public string WorkPhone { get; set; }
-        public short? OwnerType { get; set; }
+        public int? OwnerType { get; set; }
 
         #endregion NOT USED
 

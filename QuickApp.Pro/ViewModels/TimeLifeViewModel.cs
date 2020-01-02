@@ -24,6 +24,8 @@ namespace QuickApp.Pro.ViewModels
         public bool? IsActive { get; set; }
         public long? PurchaseOrderId { get; set; }
         public long? PurchaseOrderPartRecordId { get; set; }
+        public long? RepairOrderId { get; set; }
+        public long? RepairOrderPartRecordId { get; set; }
         public long StockLineId { get; set; }
         public bool DetailsNotProvided { get; set; }
         public string CreatedBy { get; set; }
