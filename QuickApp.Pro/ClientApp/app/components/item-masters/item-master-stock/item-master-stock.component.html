@@ -1287,17 +1287,23 @@
                             <div class="md-step-bar-right"></div>
                         </div>    
                     </div>
-                    <div [ngClass]="{hideTab : currentNTAETab !== 'NHA'}">
-
+                    <div *ngIf="currentNTAETab != ''">
+                        <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
+                    </div>
+                       
+                    <!-- <div [ngClass]="{hideTab : currentNTAETab !== 'NHA'}">
+                        <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
                     </div>
                     <div [ngClass]="{hideTab : currentNTAETab !== 'TLA'}">
+                            <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
                     </div>
                     <div [ngClass]="{hideTab : currentNTAETab !== 'Alternate'}">
-                            <app-ntae-alternate></app-ntae-alternate>
+                            <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
                         </div>
                     <div [ngClass]="{hideTab : currentNTAETab !== 'Equivalency'}">
+                         <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
 
-                    </div>
+                    </div> -->
                                            
                 </div>
                 <!-- NHA, TLA, Alternate, Equivalency CLOSE-->

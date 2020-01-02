@@ -91,7 +91,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly _getalterqquparts : string = "/api/itemmaster/getalterqquparts";
     private readonly _saveNtaeParts : string = "/api/itemmaster/createnhatlaaltequpart";
     private readonly _getnhatlaaltequpartlis : string = "/api/itemmaster/nhatlaaltequpartlist";
-
+    private readonly _deleteNTAERow: string = "/api/itemmaster/deletenhatlaaltequpart";
     
 
 
@@ -130,7 +130,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     get getalterqqupartsUrl() { return this.configurations.baseUrl + this._getalterqquparts; }
     get saveNtaePartsUrl() {return this.configurations.baseUrl + this._saveNtaeParts; }
     get getnhatlaaltequpartlisUrl() {return this.configurations.baseUrl + this._getnhatlaaltequpartlis; } 
-
+    get deleteNTAERowUrl() { return this.configurations.baseUrl + this._deleteNTAERow; }
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
@@ -1062,5 +1062,16 @@ export class ItemMasterEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getnhatlaaltequpartlis(userObject));
             })
        
+    }
+
+    
+    deleteNTAERow<T>(itemMasterId: number, userId: string): Observable<T> {
+        let endpointUrl = `${this.deleteNTAERowUrl}?mappingId=${itemMasterId}&updatedBy=${userId}`;
+
+        return this.http
+            .get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.deleteNTAERow(itemMasterId, userId));
+            });
     }
 }

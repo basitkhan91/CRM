@@ -34,7 +34,7 @@ export class ListJournelComponent implements OnInit {
     modelValue: boolean = false;
     Active: string;
     contactcols: any[];
-    selectedColumns: any[];
+    selectedColumns: any[] = [];
     companyList: any[] = [];
     allEmployeeinfo: any[] = [];
 

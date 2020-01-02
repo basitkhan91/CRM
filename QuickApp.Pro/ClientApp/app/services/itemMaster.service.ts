@@ -386,4 +386,8 @@ export class ItemMasterService {
     getnhatlaaltequpartlis(data: any) {
         return this.itemMasterEndpoint.getnhatlaaltequpartlis<any>(data);
     }
+
+    deleteNTAERow(ItemMasterId: any, userId: any) {
+        return this.itemMasterEndpoint.deleteNTAERow<any>(ItemMasterId,userId);
+    }
 }

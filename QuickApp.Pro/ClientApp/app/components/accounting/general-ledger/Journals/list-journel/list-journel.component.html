@@ -4,7 +4,7 @@
 
 			<h3 class="po-head lead">Journal List</h3>
 			&nbsp;&nbsp;&nbsp;&nbsp;
-			<a (click)="open(contentEdit)"
+			<a 
 				matTooltip="Add Entity"
                class="plusicon-cstm new-margin"
                >
@@ -24,7 +24,7 @@
 			[rowsPerPageOptions]="[10,20,50,100]" 
 			[columns]="selectedColumns" 
 			selectionMode="multiple" 
-			[(selection)]="selectedColumn" 
+			[(selection)]="selectedColumns" 
 			[resizableColumns]="true" 
 			[reorderableColumns]="true" 
 			[scrollable]="true" 
