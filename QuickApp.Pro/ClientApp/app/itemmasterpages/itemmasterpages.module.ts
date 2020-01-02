@@ -82,6 +82,7 @@ import{ FileUploadModule } from 'primeng/fileupload';
         AuditModule,
         FileUploadModule
     ],
+    
     declarations: [
    
         ItemmasterPagesComponent,
@@ -98,6 +99,9 @@ import{ FileUploadModule } from 'primeng/fileupload';
         NTAEAlternateComponent
 
 
+    ],
+    exports: [
+        NTAEAlternateComponent
     ],
     providers: [
         AircraftModelService,
