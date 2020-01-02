@@ -191,7 +191,7 @@
            </form>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary-cstm"  data-dismiss="modal" [disabled]="create.invalid || disableSaveTaxtype || enableUpdateBtnOnEdit" (click)="save();"> {{isEdit ? 'Update' : 'Save' }}</button>
+            <button class="btn btn-primary-cstm"  data-dismiss="modal" [disabled]="create.invalid || disableSaveTaxtype" (click)="save();"> {{isEdit ? 'Update' : 'Save' }}</button>
             <button type="button" class="btn btn-danger-cstm"  data-dismiss="modal" (click)="resetForm()">Close</button>
     
         </div>
