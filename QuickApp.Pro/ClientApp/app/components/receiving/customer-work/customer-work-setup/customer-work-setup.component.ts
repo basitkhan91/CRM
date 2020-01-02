@@ -479,19 +479,20 @@ export class CustomerWorkSetupComponent
                     })
                 }
                 else {
-                    console.log(this.sourcereceving.customerContactId, 'contact')
+                   
                     this.sourcereceving.contactId = this.sourcereceving.customerContactId;
-
+                    this.receivingCustomerWorkService.updateStockLineTimelife(this.sourceTimeLife).subscribe(data => {
+                        this.collectionofstockLine = data;
+                      
+                    })
                     this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
                         response => this.saveCompleted(this.sourcereceving),
                         error => this.saveFailedHelper(error));
-                    this.receivingCustomerWorkService.updateStockLineTimelife(this.sourceTimeLife).subscribe(data => {
-                        this.collectionofstockLine = data;
-                    })
+                   
                 }
 
               
-                this._route.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
+                //this._route.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
                 this.sourcereceving = {};
             }
         }
@@ -513,6 +514,7 @@ export class CustomerWorkSetupComponent
 
 	private saveCompleted(user?: any) {
 		this.isSaving = false;
+        this._route.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
 
 		if (this.isDeleteMode == true) {
 			this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
@@ -527,7 +529,8 @@ export class CustomerWorkSetupComponent
 	}
 
 	private saveSuccessHelper(role?: true) {
-		this.isSaving = false;
+        this.isSaving = false;
+        this._route.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
 		this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
 		this.loadData();
