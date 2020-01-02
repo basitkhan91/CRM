@@ -28,6 +28,7 @@ import $ from "jquery";
 import { CommonService } from '../../../../services/common.service';
 import { getValueFromArrayOfObjectById } from '../../../../generic/autocomplete';
 import { ConfigurationService } from '../../../../services/configuration.service';
+import { CurrencyService } from '../../../../services/currency.service';
 
 
 
@@ -70,12 +71,16 @@ export class EmployeesListComponent implements OnInit {
     public supervisiorname: any;
     public empTrainningInfo: any;
     public leaveMapArray: any;
-    public shiftMapArray: any;
+    public shiftMapArray: any = [];
     //public auditHistory: AuditHistory[] = [];
     auditHistory: any=[];
     getAllFrequencyTrainingInfodrpData;
     frequencyOfTrainingData:any;
     allEmployeeTrainingDocumentsList: any = [];
+    allCurrencyData: any[] = [];
+    allShiftData: any[] = [];
+    selectedShiftData:any;
+    currencyName: any;
     
 
     ngOnInit(): void {
@@ -90,6 +95,8 @@ export class EmployeesListComponent implements OnInit {
 
         this.empService.alertObj.next(this.empService.ShowPtab);
         this.getAllFrequencyTrainingData();
+        this.loadCurrencyData();
+        //this.loadShiftData();
 
     }
 
@@ -102,7 +109,7 @@ export class EmployeesListComponent implements OnInit {
     cols: any[];
     modal: NgbModalRef;
     /** employees-list ctor */
-    constructor(private modalService: NgbModal, private translationService: AppTranslationService, private empService: EmployeeService, private router: Router, private authService: AuthService, private alertService: AlertService, public commonService: CommonService,private configurations: ConfigurationService) {
+    constructor(private modalService: NgbModal, private translationService: AppTranslationService, private empService: EmployeeService, private router: Router, private authService: AuthService, private alertService: AlertService, public commonService: CommonService,private configurations: ConfigurationService, public currencyService: CurrencyService) {
         this.dataSource = new MatTableDataSource();
         this.translationService.closeCmpny = false;
         this.activeIndex = 0;
@@ -121,14 +128,26 @@ export class EmployeesListComponent implements OnInit {
 
 
     }
-    private onemployeeDataLoadSuccessful(allWorkFlows: any[]) {
+    private onemployeeDataLoadSuccessful(allWorkFlows: any) {
         console.log(allWorkFlows);
         if (allWorkFlows[0].employeeLeaveTypeMapping != null) {
             this.employeeLeaveType = allWorkFlows[0].employeeLeaveTypeMapping.employeeLeaveTypeId;
             this.shiftId = allWorkFlows[0].employeeShiftMapping.shiftId;
             this.leaveMapArray = allWorkFlows[0].employeeLeaveTypeMapping;
             this.shiftMapArray = allWorkFlows[0].employeeShiftMapping;
-           
+                 
+        // if(this.shiftMapArray.length>0)
+        // {
+        //     console.log(this.shiftMapArray);
+  
+        //     for(var i=0; i< this.shiftMapArray; i++){
+
+        //         this.selectedShiftData += getValueFromArrayOfObjectById('description', 'shiftId', this.shiftMapArray[i].shiftId , this.allCurrencyData); 
+        //     }
+            
+        // }
+       
+  
 
         }
         //debugger;
@@ -302,6 +321,7 @@ export class EmployeesListComponent implements OnInit {
     }
     openView(content, row) {
 
+       
         this.toGetEmployeeTrainingDocumentsList(row.employeeId);
 
         if (row.managmentLegalEntity != null && row.divmanagmentLegalEntity != null && row.biumanagmentLegalEntity != null && row.compmanagmentLegalEntity != null) {
@@ -342,6 +362,16 @@ export class EmployeesListComponent implements OnInit {
         else{
             this.frequencyOfTrainingData="";
         }
+
+        if(row.currencyId > 0)
+        {           
+            this.currencyName = getValueFromArrayOfObjectById('symbol', 'currencyId', row.currencyId, this.allCurrencyData);            
+        }
+        else{
+            this.currencyName="";
+        }
+
+
 
         if (row.empSupervisor != null) {
             this.supervisiorname = row.empSupervisor.firstName
@@ -494,6 +524,19 @@ export class EmployeesListComponent implements OnInit {
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
 		window.location.assign(url);       
     }
+
+    private loadCurrencyData() {
+		this.currencyService.getCurrencyList().subscribe(currencydata => {           
+            this.allCurrencyData = currencydata[0];           
+		})
+    }
+
+    // private loadShiftData() {       
+    //     this.empService.getshift().subscribe(data => {           
+    //             this.allShiftData = data[0];     
+    //             console.log(this.allShiftData);
+    //         })
+    // }
 
 
 }
