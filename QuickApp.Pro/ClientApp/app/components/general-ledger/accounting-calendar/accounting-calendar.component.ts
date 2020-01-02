@@ -699,9 +699,9 @@ export class AccountingCalendarComponent implements OnInit {
                  let obj = {}
                  let collection = []
                 const x = datalist.filter((o, index) => {
-                    if (datalist[index]['ledgerName']) {
+                    if (datalist[index]['ledgerName'] && datalist[index]['parentId']) {
                         obj = {
-                            id: datalist[index]['ledgerName'],
+                            id: datalist[index]['parentId'],
                             name: datalist[index]['ledgerName']
                         }
                         collection.push(obj)
@@ -716,6 +716,13 @@ export class AccountingCalendarComponent implements OnInit {
             this.ledgerNameObject = [...this.ledgerNameObjectData.filter(x => {
                 return x.name.toLowerCase().includes(event.query.toLowerCase())
             })]
+        }
+    }
+    loadEntityByParentId(event) {
+        if (Object.keys(event).length) {
+            this.accountListingService.getEntitiesByParentId(event.id).subscribe(entitydata => {
+                console.log('entitydata :', entitydata)
+            });
         }
     }
     isEmptyOrSpaces(str) {
