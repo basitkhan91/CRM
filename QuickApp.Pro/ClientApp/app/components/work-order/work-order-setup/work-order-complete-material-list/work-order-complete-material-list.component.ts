@@ -117,7 +117,9 @@ export class WorkOrderCompleteMaterialListComponent {
         this.addNewMaterial = true;
     }
     edit(rowData) {
-        this.createNew();
+        // this.createNew();
+        // this.isEdit = false;
+        this.editData = undefined;
         this.cdRef.detectChanges();
         this.isEdit = true;
         this.addNewMaterial = true;
@@ -331,8 +333,9 @@ export class WorkOrderCompleteMaterialListComponent {
 
 
     }
-    createNewPoWorkOrder() {
-        window.open(`/vendorsmodule/vendorpages/workorder-po-create/${0}/${this.mpnId}`)
+    createNewPoWorkOrder(rowData) {
+        const { workOrderMaterialsId } = rowData;
+        window.open(`/vendorsmodule/vendorpages/workorder-po-create/${0}/${workOrderMaterialsId}`)
     }
 
 
