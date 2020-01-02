@@ -10,7 +10,7 @@ namespace DAL.Repositories.Interfaces
     {
         IEnumerable<object> GetAllreceivingCustomerWork();
         IEnumerable<object> GetAllreceivingCustomerWorkAudit(long receivingCustomerWorkId);
-
+        IEnumerable<object> GetreceivingCustomerWorkById(long receivingCustomerWorkId);
         IEnumerable<object> GetAllTimeLifeData(long id);
 
         //  void CreateAction(DAL.Models.Action action);

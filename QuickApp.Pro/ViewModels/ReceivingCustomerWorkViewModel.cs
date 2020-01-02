@@ -63,7 +63,8 @@ namespace QuickApp.Pro.ViewModels
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public string Manufacturer { get; set; }
-
+        public string ReasonForRemoval { get; set; }
+        public int? OwnerType { get; set; }
         #region NOT USED
 
         //public long? CustomerClassificationId { get; set; }

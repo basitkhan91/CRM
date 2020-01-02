@@ -121,14 +121,21 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+        [HttpGet("receivingCustomerWorkById/{receivingCustomerWorkId}")]
+        [Produces(typeof(List<ReceivingCustomerWorkViewModel>))]
 
+        private IActionResult GetReceivingCustomerWorkById(long receivingCustomerWorkId)
+        {
+                 var result = _unitOfWork.receivingCustomerWork.GetreceivingCustomerWorkById(receivingCustomerWorkId); //GetAllSite Information
+            return Ok(result);
+        }
         private ReceivingCustomerWork GetReceivingCustomerWork(long ReceivingCustomerWorkId)
         {
             return _context.ReceivingCustomerWork
-                           .Where(a => a.ReceivingCustomerWorkId == ReceivingCustomerWorkId)
-                           .SingleOrDefault();
-        }
+                          .Where(a => a.ReceivingCustomerWorkId == ReceivingCustomerWorkId)
+                            .SingleOrDefault();
 
+        }
         private ReceivingCustomerWork FillReceivingCustomerWork(ReceivingCustomerWork receivingCustomerWorkModel, ReceivingCustomerWorkViewModel receivingCustomerWorkViewModel)
         {
             receivingCustomerWorkModel.CustomerId = receivingCustomerWorkViewModel.CustomerId;
@@ -153,6 +160,9 @@ namespace QuickApp.Pro.Controllers
             receivingCustomerWorkModel.ObtainFromType = receivingCustomerWorkViewModel.ObtainFromType;
             receivingCustomerWorkModel.PartDescription = receivingCustomerWorkViewModel.PartDescription;
             receivingCustomerWorkModel.Owner = receivingCustomerWorkViewModel.Owner;
+            if(receivingCustomerWorkViewModel.OwnerType !=null)
+            receivingCustomerWorkModel.OwnerType = Convert.ToInt16(receivingCustomerWorkViewModel.OwnerType);
+
             receivingCustomerWorkModel.IsCustomerStock = receivingCustomerWorkViewModel.IsCustomerStock;
             receivingCustomerWorkModel.ManufacturingDate = receivingCustomerWorkViewModel.ManufacturingDate;
             receivingCustomerWorkModel.ExpirationDate = receivingCustomerWorkViewModel.ExpirationDate;
@@ -178,8 +188,12 @@ namespace QuickApp.Pro.Controllers
             receivingCustomerWorkModel.ManagementStructureId = receivingCustomerWorkViewModel.ManagementStructureId;
             receivingCustomerWorkModel.CreatedBy = receivingCustomerWorkViewModel.CreatedBy;
             receivingCustomerWorkModel.UpdatedBy = receivingCustomerWorkViewModel.UpdatedBy;
+            receivingCustomerWorkModel.ReasonForRemoval = receivingCustomerWorkViewModel.ReasonForRemoval;
             receivingCustomerWorkModel.UpdatedDate = DateTime.Now;
+            receivingCustomerWorkModel.CreatedDate = DateTime.Now;
             receivingCustomerWorkModel.MasterCompanyId = 1;
+            //receivingCustomerWorkModel.OwnerType= receivingCustomerWorkViewModel.
+                 //receivingCustomerWorkModel.wo = receivingCustomerWorkViewModel.
 
             //receivingCustomerWorkModel.MasterCompanyId = receivingCustomerWorkViewModel.MasterCompanyId;
             receivingCustomerWorkModel.Manufacturer = receivingCustomerWorkViewModel.Manufacturer;
@@ -244,6 +258,18 @@ namespace QuickApp.Pro.Controllers
                 actionobject.LastSinceInspection = timeLifeViewModel.LastSinceInspection;
                 actionobject.CreatedDate = DateTime.Now;
                 actionobject.UpdatedDate = DateTime.Now;
+                actionobject.CreatedBy = timeLifeViewModel.CreatedBy;
+                actionobject.UpdatedBy = timeLifeViewModel.UpdatedBy;
+                actionobject.IsActive = true;
+                actionobject.MasterCompanyId = 1;
+                actionobject.PurchaseOrderId = timeLifeViewModel.PurchaseOrderId;
+                actionobject.PurchaseOrderPartRecordId = timeLifeViewModel.PurchaseOrderPartRecordId;
+                actionobject.RepairOrderId = timeLifeViewModel.RepairOrderPartRecordId;
+                actionobject.StockLineId = timeLifeViewModel.StockLineId;
+                actionobject.DetailsNotProvided = timeLifeViewModel.DetailsNotProvided;
+
+
+
                 _context.TimeLife.Add(actionobject);
                 _context.SaveChanges();
                 return Ok(actionobject);
@@ -254,16 +280,40 @@ namespace QuickApp.Pro.Controllers
 
 
 
-        [HttpDelete("deletereceivingCustomerWork/{id}")]
-        [Produces(typeof(ReceivingCustomerWorkViewModel))]
-        public IActionResult DeleteAction(long id)
-        {
-            var existingResult = _unitOfWork.receivingCustomerWork.GetSingleOrDefault(c => c.ReceivingCustomerWorkId == id);
-            _unitOfWork.receivingCustomerWork.Remove(existingResult);
-            _unitOfWork.SaveChanges();
+        //[HttpDelete("deletereceivingCustomerWork/{id}")]
+        //[Produces(typeof(ReceivingCustomerWorkViewModel))]
+        //public IActionResult DeleteAction(long id)
+        //{
+        //    var existingResult = _unitOfWork.receivingCustomerWork.GetSingleOrDefault(c => c.ReceivingCustomerWorkId == id);
+        //    _unitOfWork.receivingCustomerWork.Remove(existingResult);
+        //    _unitOfWork.SaveChanges();
 
-            return Ok(id);
+        //    return Ok(id);
+        //}
+
+        [HttpPut("deletereceivingCustomerWork/{id}")]
+        [Produces(typeof(ReceivingCustomerWorkViewModel))]
+
+        public IActionResult DeleteAction(long id, [FromBody] ReceivingCustomerWorkViewModel receivingCustomerWorkViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (receivingCustomerWorkViewModel == null)
+                    return BadRequest($"{nameof(receivingCustomerWorkViewModel)} cannot be null");
+                var receiveCust = _unitOfWork.receivingCustomerWork.GetSingleOrDefault(c => c.ReceivingCustomerWorkId == id);
+                receiveCust.IsActive = receivingCustomerWorkViewModel.IsActive;
+                receiveCust.MasterCompanyId = 1;
+                receiveCust.IsDeleted = true;
+                receiveCust.UpdatedDate = DateTime.Now;
+                receiveCust.CreatedBy = receivingCustomerWorkViewModel.CreatedBy;
+                receiveCust.UpdatedBy = receivingCustomerWorkViewModel.UpdatedBy;
+                _unitOfWork.receivingCustomerWork.Update(receiveCust);
+                _unitOfWork.SaveChanges();
+                return Ok(receiveCust);
+            }
+            return Ok(ModelState);
         }
+
 
         [HttpPut("updateForActive/{id}")]
         public IActionResult customersUpdateforActive(long id, [FromBody]ReceivingCustomerWork receivingCustomerWork)

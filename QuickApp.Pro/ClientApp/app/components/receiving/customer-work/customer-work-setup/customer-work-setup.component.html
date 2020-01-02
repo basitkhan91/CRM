@@ -345,7 +345,7 @@
                                         </div>
                                         <div class="form-group col-sm-12" *ngIf="showCompany2">
                                             <label class="control-label col-sm-4"></label>
-                                            <div class="inner-addon col-sm-8 inline-block display-flex" *ngIf="sourcereceving.ownerType == 4">
+                                            <div class="inner-addon  inline-block display-flex" *ngIf="sourcereceving.ownerType == 4">
                                                 <select style="border-radius:5px;" [(ngModel)]="sourcereceving.owner" [ngModelOptions]="{standalone: true}">
                                                     <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.code">{{ataName.code}}</option>
                                                 </select>
@@ -380,7 +380,7 @@
                                         <div class="form-group col-sm-12" *ngIf="showOther">
                                             <label class="control-label col-sm-4"></label>
                                             <div class="col-sm-8" *ngIf="sourcereceving.traceableToType == 2">
-                                                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.traceableTo">
+                                                <input  class="form-control"  type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.traceableTo">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-12" *ngIf="showVendor">
@@ -433,7 +433,7 @@
                                         <div class="form-group col-sm-12" *ngIf="showVendor1">
                                             <label class="control-label col-sm-4"></label>
                                             <div class="inner-addon inline-block display-flex" *ngIf="sourcereceving.obtainFromType == 3">
-                                                <select [(ngModel)]="sourcereceving.obtainFrom" [ngModelOptions]="{standalone: true}">
+                                                <select  style="border-radius:5px;"[(ngModel)]="sourcereceving.obtainFrom" [ngModelOptions]="{standalone: true}">
                                                     <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option>
                                                 </select>
                                             </div>
@@ -441,7 +441,7 @@
                                         <div class="form-group col-sm-12" *ngIf="showCompany1">
                                             <label class="control-label col-sm-4"></label>
                                             <div class="inner-addon inline-block display-flex" *ngIf="sourcereceving.obtainFromType == 4">
-                                                <select [(ngModel)]="sourcereceving.obtainFrom" [ngModelOptions]="{standalone: true}">
+                                                <select style="border-radius:5px;" [(ngModel)]="sourcereceving.obtainFrom" [ngModelOptions]="{standalone: true}">
                                                     <option *ngFor="let ataName of maincompanylist" [ngValue]="ataName.code">{{ataName.code}}</option>
                                                 </select>
                                             </div>
