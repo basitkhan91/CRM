@@ -121,11 +121,11 @@ namespace DAL.Repositories
                           .Take(take)
                           .ToList();
 
-            if (!string.IsNullOrEmpty(vendorFilters.SortOrder) && !string.IsNullOrEmpty(vendorFilters.SortColumn))
+            if (vendorFilters.SortOrder.HasValue && !string.IsNullOrEmpty(vendorFilters.SortField))
             {
-                if (vendorFilters.SortOrder.ToLower() == "desc")
+                if (vendorFilters.SortOrder.Value == -1)
                 {
-                    switch (vendorFilters.SortColumn)
+                    switch (vendorFilters.SortField)
                     {
                         case "VendorName":
                             return list.OrderByDescending(p => p.VendorName).ToList();
@@ -152,7 +152,7 @@ namespace DAL.Repositories
                 }
                 else
                 {
-                    switch (vendorFilters.SortColumn)
+                    switch (vendorFilters.SortField)
                     {
                         case "VendorName":
                             return list.OrderBy(p => p.VendorName).ToList();

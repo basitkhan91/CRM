@@ -429,7 +429,7 @@ namespace DAL.Repositories
                           .Take(take)
                           .ToList();
 
-                if(!string.IsNullOrEmpty(woFilters.SortOrder) && !string.IsNullOrEmpty(woFilters.SortField))
+                if(woFilters.SortOrder.HasValue && !string.IsNullOrEmpty(woFilters.SortField))
                 {
                     if(woFilters.SortOrder == -1)
                     {
