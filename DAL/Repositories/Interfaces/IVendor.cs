@@ -1,4 +1,5 @@
-﻿using DAL.Models;
+﻿using DAL.Common;
+using DAL.Models;
 using System.Collections.Generic;
 
 namespace DAL.Repositories.Interfaces
@@ -7,6 +8,8 @@ namespace DAL.Repositories.Interfaces
 
     public interface IVendor : IRepository<Vendor>
     {
+        
+        IEnumerable<object> GetVendorsList(Filters<VendorFilters> vendorFilters);
         IEnumerable<Vendor> GetVendors();
         IEnumerable<object> GetVendorsAuditHistory(long vendorId);       
         

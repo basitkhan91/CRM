@@ -1,10 +1,14 @@
-﻿using System;
+﻿using DAL.Models;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DAL.Repositories.Interfaces
 {
-    public interface IEmployeeStationRepository
+    public interface IEmployeeStationRepository : IRepository<EmployeeStation>
     {
+        IEnumerable<object> GetAllEmployeeStationData(bool isActive);
+        object EmployeeStationEdit(long id);
+        bool EmployeeStationStatusUpdate(long id, bool status, string updatedBy);
+        bool EmployeeStationDelete(long id, string updatedBy);
+        IEnumerable<object> GetAllEmployeeStationDataAudit(long stationId);
     }
 }
