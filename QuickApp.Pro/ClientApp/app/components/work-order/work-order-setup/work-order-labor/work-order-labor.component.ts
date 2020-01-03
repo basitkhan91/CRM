@@ -188,7 +188,10 @@ console.log(this.workOrderLaborList);
   }
 
   addNewTask(taskName) {
-    this.laborForm.workOrderLaborList[0][taskName].push(new AllTasks());
+    let taskData = new AllTasks();
+    taskData.expertiseId = Number(this.laborForm.expertiseId);
+    taskData.employeeId = this.laborForm.employeeId;
+    this.laborForm.workOrderLaborList[0][taskName].push(taskData);
     }
 
   startandStop(currentRecord) {
@@ -438,6 +441,7 @@ console.log(this.workOrderLaborList);
     )
     return total;
   }
+
   // tasks : this.laborForm.tasks[0][keysArray[i]].map(x => {
   //   return {
   //     ...x,

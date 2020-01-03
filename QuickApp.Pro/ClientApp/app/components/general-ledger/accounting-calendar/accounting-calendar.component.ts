@@ -51,7 +51,7 @@ export class AccountingCalendarComponent implements OnInit {
         let year = date.getFullYear();
         this.minDate= new Date(year + '-' + '01-01');
        
-        this.loadCompaniesData();
+        //this.loadCompaniesData();
         this.currentCalendarObj.fiscalYear = year;
         this.currentCalendarObj.fromDate = new Date('01-01' + '-' + year );
         this.currentCalendarObj.toDate= new Date('12-31' + '-' + year );
@@ -556,7 +556,7 @@ export class AccountingCalendarComponent implements OnInit {
         let addDetails = false;
         let showDiff = true;
         var name;
-        this.loadCompaniesData();
+        //this.loadCompaniesData();
         if (this.calendarArray && this.calendarArray.length > 0) {
             let index = 0;
 
@@ -718,10 +718,22 @@ export class AccountingCalendarComponent implements OnInit {
             })]
         }
     }
+
     loadEntityByParentId(event) {
         if (Object.keys(event).length) {
             this.accountListingService.getEntitiesByParentId(event.id).subscribe(entitydata => {
-                console.log('entitydata :', entitydata)
+                if (entitydata) {
+                    var entityObj = {}
+                    var entityCollection = []
+                    const x = entitydata.filter((o, index) => {
+                        entityObj = {
+                            label: entitydata[index]['name'],
+                            value: entitydata[index]['legalEntityId']
+                        }
+                        entityCollection.push(entityObj)
+                    })
+                    this.entitiesObj = entityCollection
+                }
             });
         }
     }

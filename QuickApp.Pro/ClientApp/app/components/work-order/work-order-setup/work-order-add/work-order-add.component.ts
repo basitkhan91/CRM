@@ -1019,7 +1019,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                     this.labor.workOrderLaborList[0] = {}
                     this.taskList = taskList;
                     this.taskList.forEach(task => {
-                        this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [new AllTasks()];
+                        this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [];
                     });
                 },
                 (error) => {
@@ -1222,7 +1222,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     clearLaborList() {
 
         for (let task of this.taskList) {
-            this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [new AllTasks()];
+            this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [];
         }
     }
 
@@ -1276,6 +1276,16 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                     }
                 }
                 console.log(this.workOrderLaborList);
+            })
+        }
+        if(this.workOrderGeneralInformation.isSinglePN == true){
+            this.labor['employeeId'] = this.workOrderGeneralInformation.partNumbers[0]['technicianId'];
+        }
+        else{
+            this.workOrderGeneralInformation.partNumbers.forEach(pn=>{
+                if(pn['id'] == this.workOrderPartNumberId){
+                    this.labor['employeeId'] = pn['technicianId'];
+                }
             })
         }
     }

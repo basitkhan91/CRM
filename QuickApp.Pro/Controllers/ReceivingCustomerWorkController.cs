@@ -223,6 +223,9 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
                 rcwork.MasterCompanyId = 1;
+
+            if (rcwork.LocationId == 0)
+                rcwork.LocationId = null;
             rcwork.UpdatedDate = DateTime.Now;
             _unitOfWork.Repository<ReceivingCustomerWork>().Update(rcwork);
             _unitOfWork.SaveChanges();
@@ -297,17 +300,16 @@ namespace QuickApp.Pro.Controllers
             _unitOfWork.receivingCustomerWork.DeleteReceivingCustomer(id, updatedBy);
             return Ok();
         }
-        [HttpPut("updateForActive/{id}")]
-        public IActionResult customersUpdateforActive(long id, [FromBody]ReceivingCustomerWork receivingCustomerWork)
+        [HttpGet("updateForActive")]
+        public IActionResult customersUpdateforActive(long id,  bool status, string updatedBy)
         {
             if (ModelState.IsValid)
             {
                 var customerWork = _unitOfWork.receivingCustomerWork.GetSingleOrDefault(a => a.ReceivingCustomerWorkId == id);
-                receivingCustomerWork.MasterCompanyId = 1;
-                customerWork.IsActive = receivingCustomerWork.IsActive;
+                  customerWork.IsActive = status;
                 customerWork.UpdatedDate = DateTime.Now;
-                customerWork.UpdatedBy = receivingCustomerWork.UpdatedBy;
-                customerWork.ReceivingCustomerWorkId = receivingCustomerWork.ReceivingCustomerWorkId;
+                customerWork.UpdatedBy = updatedBy;
+                customerWork.ReceivingCustomerWorkId = id;
                 _unitOfWork.receivingCustomerWork.Update(customerWork);
                 _unitOfWork.SaveChanges();
                 return Ok(customerWork);

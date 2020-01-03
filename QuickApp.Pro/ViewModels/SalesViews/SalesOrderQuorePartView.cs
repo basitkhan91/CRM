@@ -14,6 +14,8 @@ namespace QuickApp.Pro.ViewModels.SalesViews
         public decimal FxRate { get; set; }
         public int QtyQuoted { get; set; }
         public decimal UnitSalePrice { get; set; }
+        public decimal UnitCost { get; set; }
+
         public int MarkUpPercentage { get; set; }
         public decimal SalesBeforeDiscount { get; set; }
         public int Discount { get; set; }

@@ -24,5 +24,6 @@
         AssetAttributeType,
         AssetIntangibleAttributeType,
         ItemMaster,
+        NhaTlaAltEquItemMapping,
     }
 }

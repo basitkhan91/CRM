@@ -2,8 +2,8 @@ export class WorkOrderLabor {
     workOrderLaborHeaderId: number;
   workFlowWorkOrderId: number;
   dataEnteredBy: number;
-  expertiseId: null;
-  employeeId: null;
+  expertiseId: number;
+  employeeId: any;
   isTaskCompletedByOne: false;
   workFloworSpecificTaskorWorkOrder: string;
     hoursorClockorScan: number;
@@ -25,7 +25,7 @@ export class WorkOrderLabor {
 export class AllTasks {
     workOrderLaborHeaderId: number;
     workOrderLaborId: number;
-  expertiseId: string;
+  expertiseId: number;
   employeeId: number;
   billableId: number;
   startDate: Date;
