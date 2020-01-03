@@ -118,7 +118,10 @@ export class VendorBillingInformationComponent {
     selectedRowforDelete: any;
 
     constructor(private http: HttpClient, private router: Router,
-        private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+        private authService: AuthService, private modalService: NgbModal, 
+        private activeModal: NgbActiveModal, private _fb: FormBuilder, 
+        private alertService: AlertService, 
+        public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         this.dataSource = new MatTableDataSource();
         if (this.local) {
             this.workFlowtService.contactCollection = this.local;

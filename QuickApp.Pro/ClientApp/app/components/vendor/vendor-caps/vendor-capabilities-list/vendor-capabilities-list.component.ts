@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, Input } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -54,6 +54,8 @@ export class VendorCapabilitiesListComponent implements OnInit{
         { field: "memo", header: "Memo" }
     ];
     vendorNameHist: any;
+    @Input() isEnableVendor: boolean;
+    @Input() vendorId: number = 0;
 
     constructor(private vendorService: VendorService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService, private vendorCapesService: VendorCapabilitiesService)
     {
@@ -63,13 +65,15 @@ export class VendorCapabilitiesListComponent implements OnInit{
     ngOnInit()
     {
         this.loadData();
-        this.activeIndex = 0;
-        this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-capabilities-list';
-
-        this.vendorService.ShowPtab = false;
-        this.vendorService.alertObj.next(this.vendorService.ShowPtab);
-
-        this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+        if(!this.vendorId) {
+            this.activeIndex = 0;
+            this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-capabilities-list';
+    
+            this.vendorService.ShowPtab = false;
+            this.vendorService.alertObj.next(this.vendorService.ShowPtab);
+    
+            this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+        }
     }
 
     dataSource: MatTableDataSource<any>;
@@ -84,7 +88,8 @@ export class VendorCapabilitiesListComponent implements OnInit{
     private loadData()
     {
         const status = 'active';
-        this.vendorService.getVendorCapabilityList(status).subscribe(
+
+        this.vendorService.getVendorCapabilityList(status, this.vendorId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -115,7 +120,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
     }
 
     getVenCapesListByStatus(status) {
-        this.vendorService.getVendorCapabilityList(status).subscribe(
+        this.vendorService.getVendorCapabilityList(status, this.vendorId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );

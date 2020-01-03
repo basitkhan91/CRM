@@ -1,7 +1,7 @@
 ﻿
 <div class="x_content">
 	<div class="card">
-		<div class="card-header">
+		<div class="card-header" *ngIf="!isEnableVendor">
 			<nav aria-label="breadcrumb">
 				<ol class="breadcrumb rpo-bcrumb" style="background-color: transparent;">
 					<li class="breadcrumb-item" aria-current="page">{{isEditMode ? 'Edit' : 'Add'}} Vendor Capabilities</li>

@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef, Input } from '@angular/core';
 import { ConditionService } from '../../../../services/condition.service';
 import { Condition } from '../../../../models/condition.model';
 import { fadeInOut } from '../../../../services/animations';
@@ -120,6 +120,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	sselectedVendorName: string = '';
 	sselectedVendorCode: number;
 	selectedVendorId: number;
+	@Input() isEnableVendor: boolean;
 
 	colsaircraftLD: any[] = [
         { field: "aircraft", header: "Aircraft" },
@@ -145,6 +146,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	selectedGeneralInfo: boolean = true;
 	vendorCapabilityId: number;
 	rowDataToDelete: any = {};
+	@Input() vendorId: number;
 
 	/** add-vendor-capabilities ctor */
     constructor(private _route: Router,private modalService: NgbModal,public ataSubChapter1Service: AtaSubChapter1Service,public ataservice: AtaMainService,public vendorService: VendorService, private alertService: AlertService, public itemser: ItemMasterService, public commonService: CommonService, private aircraftModelService: AircraftModelService, private dashNumService: DashNumberService, private authService: AuthService, private _actRoute: ActivatedRoute, private vendorCapesService: VendorCapabilitiesService)
@@ -156,11 +158,13 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		this.matSpinner = false;
 		//this.workFlowtService.MatSpinner = true;//App Mat Spinner Testing
 		
-		this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-add-vendor-capabilitiesn';
-        this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+		if(!this.vendorId) {
+			this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-add-vendor-capabilitiesn';
+			this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
 
-        this.vendorService.ShowPtab = false;
-        this.vendorService.alertObj.next(this.vendorService.ShowPtab);
+			this.vendorService.ShowPtab = false;
+			this.vendorService.alertObj.next(this.vendorService.ShowPtab);
+		}
 
 		this.loadVendorData();
 		this.ptnumberlistdata();

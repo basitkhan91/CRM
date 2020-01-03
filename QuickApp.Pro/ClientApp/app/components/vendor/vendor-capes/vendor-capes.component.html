@@ -1,0 +1,50 @@
+﻿﻿<div class="card">
+        <div class="card-body">
+            <div class="right_col" role="main">
+                <div>
+                    <div class="x_content">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="fs12">Vendor Name : </label>
+                                <span class="span-header-red"> {{ local?.vendorName }}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="fs12">Vendor Code : </label>
+                                <span class="span-header-red"> {{ local?.vendorCode }}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div>
+                                <div class="col-md-12" style="margin-bottom: -10px;">
+                                    <h4 class="float-right">
+                                        Add Capability
+                                        <a class="plusicon-cstm" data-target="#addCapabilityInfo" data-toggle="modal"><i class="fa fa-plus-circle fa-lg"></i></a>
+                                    </h4>
+                                </div>
+    
+                                <div class="clear"></div>
+                                <hr />
+    
+                            </div>
+                            <app-vendor-capabilities-list [isEnableVendor]="isEnableVendor" [vendorId]="vendorId"></app-vendor-capabilities-list>
+                        </div>
+    
+                        <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="nextClick()">Next</button>
+                        <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="previousClick()">Previous</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="addCapabilityInfo" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Capability Details</h4>
+                </div>
+                <app-add-vendor-capabilities [isEnableVendor]="isEnableVendor" [vendorId]="vendorId"></app-add-vendor-capabilities>
+            </div>
+        </div>
+    </div>
