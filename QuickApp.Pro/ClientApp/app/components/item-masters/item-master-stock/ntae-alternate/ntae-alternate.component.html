@@ -103,7 +103,7 @@
                     </div>
                 </div>
                 
-                <div class="col-md-1 add-new-align">
+                <div class="col-md-1">
                     <div class="form-group">
                         <button class="btn btn-primary mtop20" (click)="getNtaeData()">
                             <i class="pi pi-search pi-search"></i>
@@ -149,7 +149,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeModal()">×</button>
                 <h4 class="modal-title">Add {{selectedTab}}</h4>
             </div>
             <div class="modal-body">
@@ -207,7 +207,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="saveAlternate()">Save</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="closeModal()">Close</button>
             </div>
         </div>
     </div>

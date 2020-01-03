@@ -13,11 +13,7 @@ import { MessageSeverity, AlertService } from '../../../../services/alert.servic
 /** item-master-stock component*/
 export class NTAEAlternateComponent implements OnInit {
     itemMasterId: number;
-    itemMasterData: any = {
-        partNumber: String,
-        partDescription: String,
-        Manufacturer: String
-    };
+    itemMasterData: any = {};
     filterItemMaster: any = {
         MappingPNumber: "",
         Description: "",
@@ -214,6 +210,8 @@ export class NTAEAlternateComponent implements OnInit {
             this.formData.append('masterCompanyId', JSON.stringify(1));
             this.formData.append('CreatedBy', "admin");
             this.formData.append('UpdatedBy', "admin");
+            this.formData.append('CreatedDate', "admin");
+            this.formData.append('UpdatedDate', "admin");
             this.formData.append('IsActive', "true");
             this.formData.append('IsDeleted', "false");
 
@@ -231,6 +229,7 @@ console.log(reqData, "reqData++++++++")
                 MessageSeverity.success
             );
             this.getNtaeData();
+            this.closeModal()
 
             // this.getAircraftMappedDataByItemMasterId();
 
@@ -354,7 +353,7 @@ console.log(reqData, "reqData++++++++")
     deleteNTAERow(itemMasterId, index){        
         this.itemser.deleteNTAERow(itemMasterId, "admin").subscribe(res => {
             console.log(res, "response of itemMaster+++++++++++++");
-            this.getNtaeData()
+            // this.getNtaeData()
             return false;
             // this.itemMasterData = res[0];
         }),
@@ -363,7 +362,10 @@ console.log(reqData, "reqData++++++++")
         }
     }
 
-    
+    closeModal(){
+        this.alternateData = {}
+        this.formData = new FormData()
+    }
 
     errorMessageHandler(log) {
         this.alertService.showMessage(
@@ -378,6 +380,7 @@ console.log(reqData, "reqData++++++++")
         this.loadingIndicator = false;
 
     }
+
 
 
 
