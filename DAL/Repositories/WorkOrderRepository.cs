@@ -6838,7 +6838,7 @@ namespace DAL.Repositories
         {
             Customer customer = new Customer();
             customer.CustomerId = workOrder.CustomerId;
-            //customer.PrimarySalesPersonId = workOrder.CSR;
+            customer.PrimarySalesPersonId = workOrder.CSR;
             customer.ContractReference = workOrder.CustomerReference;
             customer.CreditTermsId = workOrder.CreditTermsId;
             customer.CreditLimit = workOrder.CreditLimit;
