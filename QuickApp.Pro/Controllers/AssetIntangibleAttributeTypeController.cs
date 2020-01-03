@@ -95,6 +95,15 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpPost("bulkUpload")]
+        public IActionResult BulkUpload()
+        {
+            var result = unitOfWork.AssetIntangibleAttributeTypeRepository.BulkUpload(Request.Form.Files[0]);
+
+            return Ok(result);
+        }
+
         [HttpGet("getAll")]
         public IActionResult GetAll()
         {
@@ -118,7 +127,7 @@ namespace QuickApp.Pro.Controllers
 
             
 
-            IEnumerable<AssetIntangibleAttributeType> items = unitOfWork.AssetIntangibleAttributeType.GetAllItems();
+            IEnumerable<AssetIntangibleAttributeType> items = unitOfWork.AssetIntangibleAttributeTypeRepository.GetAllItems();
             return Ok(items);
             //IEnumerable<AssetIntangibleAttributeType> items = unitOfWork.Repository<AssetIntangibleAttributeType>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.AssetIntangibleAttributeTypeId);
             //return Ok(items);

@@ -125,10 +125,12 @@
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="summary" id="footer">
-                                <label id="footer" class="footer">No. of records:</label>
-                                <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-                                <label id="footer" class="footer1">Pages Count:</label>
-                                <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
+                                <div style="text-align: right;">
+                                    <label id="footer" class="footer">No. of records:</label>
+                                    <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                                    <label id="footer" class="footer1">Pages Count:</label>
+                                    <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
+                                </div>
                             </ng-template>
                         </p-table>
                     </div>
@@ -270,11 +272,11 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-5">
-                                    <label for="depreciationMethodId" class="control-label">Amortization Method <span class="clr-red">*</span></label>
+                                    <label for="assetDepreciationMethodId" class="control-label">Amortization Method <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <select field="label" name="value" [(ngModel)]="currentRow.depreciationMethod" required>
-                                        <option *ngFor="let depMethod of depreciationMethod" [ngValue]="depMethod">{{depMethod.label}}</option>
+                                    <select name="assetDepreciationMethodId" [(ngModel)]="currentRow.assetDepreciationMethodId" required>
+                                        <option *ngFor="let depMethod of depreciationMethodList" [ngValue]="depMethod">{{depMethod.label}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -289,11 +291,11 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="col-sm-5">
-                                    <label for="depreciationFrequencyId" class="control-label">Amort Frequency <span class="clr-red">*</span></label>
+                                    <label for="assetAmortizationIntervalId" class="control-label">Amort Frequency<span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <select field="label" name="value" [(ngModel)]="currentRow.amortizationFrequency" required>
-                                        <option *ngFor="let freq of depreciationFreq" [ngValue]="freq">{{freq.label}}</option>
+                                    <select name="assetAmortizationIntervalId" [(ngModel)]="currentRow.assetAmortizationIntervalId" required>
+                                        <option *ngFor="let freq of depreciationFreqList" [ngValue]="freq">{{freq.label}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -438,8 +440,7 @@
                 <div class="modal-footer">
                     <button class="btn btn-primary-cstm" data-dismiss="modal"
                             [disabled]="IntangibleAttrType.invalid || disableSave "
-                            (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();"
-                            ng-disabled="IntangibleAttrType.$pristine">
+                            (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();" >
                         {{currentModeOfOperation == 3 ? 'Update' : 'Save' }}
                     </button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
