@@ -11,6 +11,7 @@ export class AssetTypeEndpointService extends EndpointFactory {
 
     private readonly item: string = "AssetType";
     private readonly getAllItemsEndPointTemplate: string = "getAll";
+    private readonly getAllItemsActiveEndPointTemplate: string = "getAllActive";
     private readonly getItemByIdEndPointTemplate: string = "getById";
     private readonly addItemEndPointTemplate: string = "add";
     private readonly updateItemEndPointTemplate: string = "update";
@@ -20,6 +21,7 @@ export class AssetTypeEndpointService extends EndpointFactory {
 
 
     get getAll() { return `${this.configurations.baseUrl}/api/${this.item}/${this.getAllItemsEndPointTemplate}`; }
+    get getAllActive() { return `${this.configurations.baseUrl}/api/${this.item}/${this.getAllItemsActiveEndPointTemplate}`; }
     get getById() { return `${this.configurations.baseUrl}/api/${this.item}/${this.getItemByIdEndPointTemplate}`; }
     get add() { return `${this.configurations.baseUrl}/api/${this.item}/${this.addItemEndPointTemplate}`; }
     get update() { return `${this.configurations.baseUrl}/api/${this.item}/${this.updateItemEndPointTemplate}`; }
@@ -50,6 +52,15 @@ export class AssetTypeEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getAllItems());
+            });
+    }
+
+    getAllItemsActive<T>(): Observable<T> {
+        let endpointUrl = this.getAllActive;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAllItemsActive());
             });
     }
 
