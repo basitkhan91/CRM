@@ -493,6 +493,10 @@ namespace DAL
         public DbSet<AuditCustomerContact> AuditCustomerContact { get; set; }
         public DbSet<WorkOrderSettings> WorkOrderSettings { get; set; }
         public DbSet<WorkOrderStageAndStatus> WorkOrderStageAndStatus { get; set; }
+        public DbSet<EmployeeStation> EmployeeStation { get; set; }
+        public DbSet<EmployeeStationAudit> EmployeeStationAudit { get; set; }
+
+
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

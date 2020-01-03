@@ -220,12 +220,15 @@ namespace DAL
         ISalesOrderQuotePartRepository _salesOrderQuotePartRepository;
 
         IMasterSalesOrderQuoteStatusRepository _masterSalesOrderQuoteStatusRepository;
+        IEmployeeStationRepository _employeeStationRepository;
+
+
         public UnitOfWork(ApplicationDbContext context, IOptions<AppSettings> appSettings)
         {
             _context = context;
             _appSettings = appSettings;
         }
-
+        
 
         IVendorWarning _vendorWarning;
 
@@ -1968,6 +1971,17 @@ namespace DAL
                 if (_masterSalesOrderQuoteStatusRepository == null)
                     _masterSalesOrderQuoteStatusRepository = new MasterSalesOrderQuoteStatusRepository(_context);
                 return _masterSalesOrderQuoteStatusRepository;
+            }
+        }
+
+        public IEmployeeStationRepository employeeStationRepository
+        {
+            get
+            {
+                if (_employeeStationRepository == null)
+                    _employeeStationRepository = new EmployeeStationRepository(_context);
+
+                return _employeeStationRepository;
             }
         }
     }

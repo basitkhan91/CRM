@@ -40,10 +40,24 @@ namespace QuickApp.Pro.Controllers
             _smtpConfig = smtpConfig;
         }
 
+
+        [HttpPost("vendorlist")]
+        public IActionResult GetVendorsList([FromBody]Filters<VendorFilters> vendorFilters)
+        {
+            var result = _unitOfWork.Vendor.GetVendorsList(vendorFilters);
+            return Ok(result);
+        }
+
+        //[HttpGet("vendorglobalsearch")]
+        //public IActionResult VendorGlobalSearch(string filterText, int pageNumber = 0, int pageSize = 10)
+        //{
+        //    var result = _unitOfWork.Vendor.VendorGlobalSearch(filterText, pageNumber, pageSize);
+        //    return Ok(result);
+        //}
+
         // GET: api/values
         [HttpGet("Get")]
         [Produces(typeof(List<VendorViewModel>))]
-
         public IActionResult Get()
         {
             var allActions = _unitOfWork.Vendor.GetVendors(); //.GetAllCustomersData();
