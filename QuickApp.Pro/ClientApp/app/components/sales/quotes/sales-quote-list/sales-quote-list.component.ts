@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit,ViewChild } from "@angular/core";
 import * as $ from 'jquery';
 import { SalesQuoteService } from "../../../../services/salesquote.service";
 import { ISalesSearchParameters } from "../../../../models/sales/ISalesSearchParameters";
@@ -30,11 +30,15 @@ import { getValueFromObjectByKey, getObjectById, editValueAssignByCondition, get
 })
 export class SalesQuoteListComponent implements OnInit {
 
+  @ViewChild('dt')
   searchParameters:ISalesSearchParameters;
   sales:any[];
   selected:any;
   modal: NgbModalRef;
   columns:any[];
+  totalRecords: number = 0;
+  totalPages: number = 0;
+
   partColumns:any[];
 
   customerDetails:any;
@@ -75,6 +79,7 @@ export class SalesQuoteListComponent implements OnInit {
    
     this.getAccountTypes();
     this.initPartColumns();
+    this.onSearch();
   }
   get userName(): string {
     return this.authService.currentUser ? this.authService.currentUser.userName : "";
@@ -126,6 +131,35 @@ export class SalesQuoteListComponent implements OnInit {
   
     ]
   }
+
+
+  /*getList(data) {
+
+    // this.filterObjectCreate(data.filters);
+    const PagingData = { ...data, filters: listSearchFilterObjectCreation(data.filters) }
+    this.customerService.getCustomerAll(PagingData).subscribe(res => {
+        this.data = res;
+        if (res.length > 0) {
+            this.totalRecords = res[0].totalRecords;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+        }
+
+    })
+  }*/
+
+
+loadData(event) {
+   
+   // this.lazyLoadEventData = event;
+   // const pageIndex = parseInt(event.first) / event.rows;;
+   // this.pageIndex = pageIndex;
+   // this.pageSize = event.rows;
+   // event.first = pageIndex;
+      // this.getList(event)
+      this.onSearch();
+    
+    console.log(event);
+}
 
 
 
@@ -369,17 +403,7 @@ private onempDataLoadSuccessful(getEmployeeCerficationList: any[]) {
       this.salesQuote.customerName = this.customerDetails.name;
       this.salesQuote.customerCode = this.customerDetails.customerCode;
 
-      this.salesQuote.creditLimit = this.customerDetails.creditLimit;
-      this.salesQuote.creditLimitTermsId = this.customerDetails.creditTermsId;
-      this.salesQuote.contractReferenceName = this.customerDetails.contractReference;
-      this.salesQuote.restrictPMA = this.customerDetails.restrictPMA;
-      this.salesQuote.restrictDER = this.customerDetails.restrictBER;
-      this.salesQuote.accountTypeId = this.customerDetails.customerTypeId;
-      this.salesQuote.salesPersonName =  getObjectById('employeeId', this.customerDetails.primarySalesPersonId, this.allEmployeeinfo);
-     // this.salesQuote.secondarySalesPersonId: getObjectById('employeeId', this.customerDetails.secondarySalesPersonId, this.employeeListOriginal),
-      this.salesQuote.customerServiceRepName = getObjectById('employeeId', this.customerDetails.csrId, this.allEmployeeinfo);
-      this.salesQuote.agentName = getObjectById('employeeId', this.customerDetails.saId, this.allEmployeeinfo);
-      this.salesQuote.employeeName = getObjectById('employeeId', this.userId, this.allEmployeeinfo);
+     
       this.alertService.stopLoadingMessage();
     })
     }

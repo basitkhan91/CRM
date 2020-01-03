@@ -48,8 +48,8 @@
             </div>
             <div class="col-3 column">
                 <div class="form-group">
-                  <label>Quantity from this</label>
-                  <input type="number" pInputText name="quantityFromThis" (change)="calculate()"
+                  <label>Quantity from this <span *ngIf="part.method=='Item Master'">PN</span><span *ngIf="part.method=='Stock Line'">S-LINE</span></label>
+                  <input type="text" pInputText name="quantityFromThis" (change)="calculate()"
                     [(ngModel)]="part.quantityFromThis" />
                 </div>
               </div>
