@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace DAL.Repositories
 {
-   public class AssetIntangibleAttributeTypeRepository : Repository<AssetIntangibleAttributeType>, IAssetIntangibleAttributeType
+   public class AssetIntangibleAttributeTypeRepository : Repository<AssetIntangibleAttributeType>, IAssetIntangibleAttributeTypeRepository
     {
         private AppSettings AppSettings { get; set; }
 
