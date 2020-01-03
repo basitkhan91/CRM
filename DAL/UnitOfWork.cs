@@ -195,7 +195,7 @@ namespace DAL
 
         IAssetCapes _assetCapes;
 
-        IAssetIntangibleAttributeType _assetIntangibleAttributeType;
+        IAssetIntangibleAttributeTypeRepository _assetIntangibleAttributeTypeRepository;
         IAssetDepreciationInterval _assetDepreciationInterval;
 
         IAssetDepreciationMethod _assetDepreciationMethod;
@@ -1725,13 +1725,13 @@ namespace DAL
             }
         }
 
-        IAssetIntangibleAttributeType IUnitOfWork.AssetIntangibleAttributeType
+        IAssetIntangibleAttributeTypeRepository IUnitOfWork.AssetIntangibleAttributeTypeRepository
         {
             get
             {
-                if (_assetIntangibleAttributeType == null)
-                    _assetIntangibleAttributeType = new AssetIntangibleAttributeTypeRepository(_context, _appSettings);
-                return _assetIntangibleAttributeType;
+                if (_assetIntangibleAttributeTypeRepository == null)
+                    _assetIntangibleAttributeTypeRepository = new AssetIntangibleAttributeTypeRepository(_context, _appSettings);
+                return _assetIntangibleAttributeTypeRepository;
             }
         }
 

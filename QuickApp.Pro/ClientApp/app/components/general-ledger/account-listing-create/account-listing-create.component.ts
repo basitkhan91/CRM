@@ -120,7 +120,7 @@ export class AccountListingCreateComponent implements OnInit {
         });
         this.loadcurrencyData();
         this.loadGLAccountTypeData();
-        this.loadCompaniesData();
+       // this.loadCompaniesData();
         this.load1099Miscdata();
         this.loadGLCashFlowClassification();
         this.loadNodeSetup();
@@ -476,12 +476,14 @@ export class AccountListingCreateComponent implements OnInit {
                 console.log('getLedgerData :', JSON.stringify(datalist))
                  let obj = {}
                  let collection = []
-                const x = datalist.filter( (o, index) => {
-                  obj = {
-                    id: datalist[index]['ledgerName'],
-                    name: datalist[index]['ledgerName']
-                  }
-                  collection.push(obj)
+                const x = datalist.filter((o, index) => {
+                    if (datalist[index]['ledgerName'] && datalist[index]['parentId']) {
+                        obj = {
+                            id: datalist[index]['parentId'],
+                            name: datalist[index]['ledgerName']
+                        }
+                        collection.push(obj)
+                    }                  
                 })
             this.ledgerNameObjectData = collection
             })
@@ -596,6 +598,25 @@ export class AccountListingCreateComponent implements OnInit {
         }
         console.log('array :', this.selectedBalanceType)
         console.log("Interests array => " + JSON.stringify(this.selectedBalanceType, null, 2));
-  }
+    }
+
+    loadEntityByParentId(event) {       
+        if (Object.keys(event).length) {            
+            this.accountListingService.getEntitiesByParentId(event.id).subscribe(entitydata => {
+                if (entitydata) {
+                    var entityObj = {}
+                    var entityCollection = []
+                    const x = entitydata.filter((o, index) => {
+                        entityObj = {
+                            label: entitydata[index]['name'],
+                            value: entitydata[index]['legalEntityId']
+                        }
+                        entityCollection.push(entityObj)
+                    })
+                    this.entitiesObj = entityCollection
+                }
+            });
+        }        
+    }
 
 }

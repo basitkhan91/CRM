@@ -539,7 +539,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-        [HttpGet("ChildentitiesByParentId")]
+        [HttpGet("ChildentitiesByParentId/{parentId}")]
         public IActionResult GetChildentitiesByParentId(long parentId)
         {
             var result = _unitOfWork.LegalEntity.GetChildEntitiesByParentId(parentId);

@@ -227,8 +227,10 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
         this.isDeleteMode = true;
         this.sourcereceving.isdelete = false;
         this.sourcereceving.updatedBy = this.userName;
-        this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId).subscribe(
-            response => this.saveCompleted(this.sourcereceving),
+        this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId, this.userName).subscribe(
+
+        //this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId).subscribe(
+         response => this.saveCompleted(this.sourcereceving),
             error => this.saveFailedHelper(error));
         this.modal.close();
     }
@@ -253,7 +255,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     }
     private saveCompleted(user?: any) {
         this.isSaving = false;
-
+        this.loadData();
         if (this.isDeleteMode == true) {
             this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
             this.isDeleteMode = false;
@@ -263,16 +265,17 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
 
         }
 
-        this.loadData();
+        
     }
 
     toggleIsActive(rowData, e) {
+      
         if (e.checked == false) {
             this.sourcereceving = rowData;
             this.sourcereceving.updatedBy = this.userName;
             this.Active = "In Active";
             this.sourcereceving.isActive == false;
-            this.receivingCustomerWorkService.updateActionforActive(this.sourcereceving).subscribe(
+            this.receivingCustomerWorkService.updateActionforActive(this.sourcereceving.receivingCustomerWorkId, this.sourcereceving.isActive, this.userName).subscribe(
                 response => this.saveCompleted(this.sourcereceving),
                 error => this.saveFailedHelper(error));
         }
@@ -281,7 +284,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
             this.sourcereceving.updatedBy = this.userName;
             this.Active = "Active";
             this.sourcereceving.isActive == true;
-            this.receivingCustomerWorkService.updateActionforActive(this.sourcereceving).subscribe(
+            this.receivingCustomerWorkService.updateActionforActive(this.sourcereceving.receivingCustomerWorkId, this.sourcereceving.isActive, this.userName).subscribe(
                 response => this.saveCompleted(this.sourcereceving),
                 error => this.saveFailedHelper(error));
         }

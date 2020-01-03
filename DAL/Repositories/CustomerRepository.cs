@@ -40,7 +40,6 @@ namespace DAL.Repositories
             var take = customerFilters.rows;
             var skip = take * (pageNumber - 1);
 
-
             var totalRecords = (from t in _appContext.Customer
                                 join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
                                 join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
@@ -115,6 +114,65 @@ namespace DAL.Repositories
                              .Take(take)
                              .ToList();
 
+            if (!string.IsNullOrEmpty(customerFilters.SortOrder) && !string.IsNullOrEmpty(customerFilters.SortColumn))
+            {
+                if (customerFilters.SortOrder.ToLower() == "-1")
+                {
+                    switch (customerFilters.SortColumn)
+                    {
+                        case "name":
+                            return data.OrderByDescending(p => p.Name).ToList();
+                        case "customerCode":
+                            return data.OrderByDescending(p => p.CustomerCode).ToList();
+                        case "accountType":
+                            return data.OrderByDescending(p => p.AccountType).ToList();
+                        case "customerType":
+                            return data.OrderByDescending(p => p.CustomerType).ToList();
+                        case "customerClassification":
+                            return data.OrderByDescending(p => p.CustomerClassification).ToList();
+                        case "email":
+                            return data.OrderByDescending(p => p.Email).ToList();
+                        case "city":
+                            return data.OrderByDescending(p => p.City).ToList();
+                        case "stateOrProvince":
+                            return data.OrderByDescending(p => p.StateOrProvince).ToList();
+                        case "contact":
+                            return data.OrderByDescending(p => p.Contact).ToList();
+                        case "salesPersonPrimary":
+                            return data.OrderByDescending(p => p.SalesPersonPrimary).ToList();
+
+
+                    }
+                }
+                else
+                {
+                    switch (customerFilters.SortColumn)
+                    {
+                        case "name":
+                            return data.OrderBy(p => p.Name).ToList();
+                        case "customerCode":
+                            return data.OrderBy(p => p.CustomerCode).ToList();
+                        case "accountType":
+                            return data.OrderBy(p => p.AccountType).ToList();
+                        case "customerType":
+                            return data.OrderBy(p => p.CustomerType).ToList();
+                        case "customerClassification":
+                            return data.OrderBy(p => p.CustomerClassification).ToList();
+                        case "email":
+                            return data.OrderBy(p => p.Email).ToList();
+                        case "city":
+                            return data.OrderBy(p => p.City).ToList();
+                        case "stateOrProvince":
+                            return data.OrderBy(p => p.StateOrProvince).ToList();
+                        case "contact":
+                            return data.OrderBy(p => p.Contact).ToList();
+                        case "salesPersonPrimary":
+                            return data.OrderBy(p => p.SalesPersonPrimary).ToList();
+
+
+                    }
+                }
+            }
 
 
             return (data);
@@ -1748,6 +1806,66 @@ namespace DAL.Repositories
 
 
         #endregion
+        public void AddCustomecontact(Customer objCustomer)
+        {
+            CustomerContact data = _appContext.CustomerContact.AsNoTracking().Where(p => p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
+            if (data == null)
+            {
+
+                Contact contactObj = new Contact();
+                objCustomer.MasterCompanyId = 1;
+
+                //contactObj.ContactTitle = objCustomer.ContactTitle;
+                //contactObj.AlternatePhone = objCustomer.AlternatePhone;
+                contactObj.Email = objCustomer.Email;
+                //contactObj.Fax = objCustomer.Fax;
+                //contactObj.Tag = objCustomer.Tag;
+                contactObj.FirstName = objCustomer.Name;
+                contactObj.LastName = "NA";
+                contactObj.Tag = "NA";
+
+                //contactObj.MiddleName = objCustomer.MiddleName;
+                //contactObj.ContactTitle = objCustomer.ContactTitle;
+                //contactObj.MobilePhone = objCustomer.MobilePhone;
+                //contactObj.Notes = objCustomer.Notes;
+                contactObj.WorkPhone = objCustomer.CustomerPhone;
+                //contactObj.WebsiteURL = objCustomer.WebsiteURL;
+                contactObj.MasterCompanyId = 1;
+                contactObj.WorkPhoneExtn = objCustomer.CustomerPhoneExt;
+                contactObj.IsActive = true;
+                contactObj.CreatedDate = DateTime.Now;
+                contactObj.UpdatedDate = DateTime.Now;
+                contactObj.CreatedBy = objCustomer.CreatedBy;
+                contactObj.UpdatedBy = objCustomer.UpdatedBy;
+                contactObj.WorkPhoneExtn = contactObj.WorkPhoneExtn;
+                _appContext.Contact.Add(contactObj);
+
+                _appContext.SaveChanges();
+                long? contactId = contactObj.ContactId;
+
+                if (contactId != null)
+                {
+                    CustomerContact customercontactObj = new CustomerContact();
+
+                    customercontactObj.ContactId = contactId;
+                    customercontactObj.CustomerId = objCustomer.CustomerId;
+                    customercontactObj.IsDefaultContact = true;
+                    customercontactObj.MasterCompanyId = 1;
+                    customercontactObj.IsActive = objCustomer.IsActive;
+                    customercontactObj.CreatedDate = DateTime.Now;
+                    customercontactObj.UpdatedDate = DateTime.Now;
+                    customercontactObj.CreatedBy = objCustomer.CreatedBy;
+                    customercontactObj.UpdatedBy = objCustomer.UpdatedBy;
+
+
+                    _appContext.CustomerContact.Add(customercontactObj);
+
+
+                    _appContext.SaveChanges();
+                }
+                // return objCustomerShippingAddress;
+            }
+        }
 
         public void DeleteRestrictedParts(long id, string updatedBy)
         {

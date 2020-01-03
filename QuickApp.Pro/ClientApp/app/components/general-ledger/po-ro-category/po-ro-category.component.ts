@@ -1,13 +1,12 @@
 ﻿import { OnInit, Component, AfterViewInit} from "@angular/core";
 import { NgbModalRef, NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { forEach } from "@angular/router/src/utils/collection";
 import { fadeInOut } from "../../../services/animations";
 import { POROCategory } from "../../../models/po-ro-category.model";
 import { SingleScreenAuditDetails } from "../../../models/single-screen-audit-details.model";
 import { AuthService } from "../../../services/auth.service";
 import { POROCategoryService } from "../../../services/porocategory/po-ro-category.service";
 import { AlertService, MessageSeverity } from '../../../services/alert.service';
-import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
+import {  MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { MenuItem } from 'primeng/api';//bread crumb
 
 @Component({
@@ -150,8 +149,8 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
 
         this.cols = [
             { field: 'categoryName', header: 'Name' }
-            //,{ field: 'isPO', header: 'PO' },
-            //{ field: 'isRO', header: 'RO' }
+            ,{ field: 'isPO', header: 'PO' },
+            { field: 'isRO', header: 'RO' }
             //{ field: 'createdBy', header: 'Created By' },
             //{ field: 'updatedBy', header: 'Updated By' },
             //{ field: 'updatedDate', header: 'Updated Date' },

@@ -1678,8 +1678,10 @@ export class PurchaseSetupComponent implements OnInit {
 
 	// bill to
 	onBillToCustomerSelected(customerId, res?, id?) {
-		console.log(res);		
-		res.billToStateOrProvince = res.billToState;
+		console.log(res);
+		if(res) {
+			res.billToStateOrProvince = res.billToState ? res.billToState : '';
+		}		
 		this.clearInputOnClickUserIdBillTo();
 		this.billToSelectedvalue = customerId;
 		this.customerService.getCustomerBillViaDetails(customerId).subscribe(
@@ -1774,7 +1776,7 @@ export class PurchaseSetupComponent implements OnInit {
 				this.billToAddress.city = resp.city;
 				this.billToAddress.stateOrProvince = resp.stateOrProvince;
 				this.billToAddress.postalCode = resp.postalCode;
-				this.billToAddress.country = resp.country;
+				this.billToAddress.country = resp.countryName ? resp.countryName : resp.country;
 				// this.billToAddress.country = resp.country ? getValueFromArrayOfObjectById('label', 'value', resp.country, this.countriesList) : '';
 			} else {
 				this.billToAddress.address1 = '';

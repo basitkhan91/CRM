@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using DAL.Models;
 
 namespace DAL.Repositories
 {
@@ -53,7 +54,7 @@ namespace DAL.Repositories
 
                               join contact in _appContext.Contact on Convert.ToInt64(stl.ContactId) equals contact.ContactId into con
                               from contact in con.DefaultIfEmpty()
-
+                              where stl.IsDeleted !=true
 
                               select new
                               {
@@ -65,7 +66,8 @@ namespace DAL.Repositories
                                   employee.FirstName,
                                   customer.Name,
                                   customer.CustomerCode,
-                                  contact.WorkPhone,
+                                  //contact.WorkPhone,
+                                  stl.WorkPhone,
                                   contactId= contact.ContactId,
                                   contactTitle=  contact.ContactTitle,
                                   ContactFirstName=contact.FirstName,
@@ -99,6 +101,7 @@ namespace DAL.Repositories
                                   condition = co.Description,
                                   stl.Shelf,
                                   stl.Bin,
+                                  stl.IsActive,
                                   siteName = si.Name,
                                   shelfName = sh.Name,
                                   binName = bi.Name,
@@ -226,6 +229,7 @@ namespace DAL.Repositories
                                   condition = co.Description,
                                   stl.Shelf,
                                   stl.Bin,
+                                  stl.IsActive,
                                   siteName = si.Name,
                                   shelfName = sh.Name,
                                   binName = bi.Name,
@@ -416,6 +420,30 @@ public IEnumerable<object> GetAllreceivingCustomerWorkAudit(long receivingCustom
 
                               }).ToList();
                 return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public void DeleteReceivingCustomer(long id, string updatedBy)
+        {
+            try
+            {
+                ReceivingCustomerWork model = new ReceivingCustomerWork();
+                model.ReceivingCustomerWorkId = id;
+                model.UpdatedDate = DateTime.Now;
+                model.IsDeleted = true;
+                model.UpdatedBy = updatedBy;
+
+                _appContext.ReceivingCustomerWork.Attach(model);
+
+                _appContext.Entry(model).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+
             }
             catch (Exception ex)
             {

@@ -472,7 +472,8 @@ export class CustomerWorkEditComponent {
     deleteItemAndCloseModel() {
         this.isSaving = true;
         this.sourcereceving.updatedBy = this.userName;
-        this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId).subscribe(
+        this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId, this.userName).subscribe(
+
             response => this.saveCompleted(this.sourceAction),
             error => this.saveFailedHelper(error));
         this.modal.close();

@@ -51,7 +51,7 @@ export class AccountingCalendarComponent implements OnInit {
         let year = date.getFullYear();
         this.minDate= new Date(year + '-' + '01-01');
        
-        this.loadCompaniesData();
+        //this.loadCompaniesData();
         this.currentCalendarObj.fiscalYear = year;
         this.currentCalendarObj.fromDate = new Date('01-01' + '-' + year );
         this.currentCalendarObj.toDate= new Date('12-31' + '-' + year );
@@ -556,7 +556,7 @@ export class AccountingCalendarComponent implements OnInit {
         let addDetails = false;
         let showDiff = true;
         var name;
-        this.loadCompaniesData();
+        //this.loadCompaniesData();
         if (this.calendarArray && this.calendarArray.length > 0) {
             let index = 0;
 
@@ -699,9 +699,9 @@ export class AccountingCalendarComponent implements OnInit {
                  let obj = {}
                  let collection = []
                 const x = datalist.filter((o, index) => {
-                    if (datalist[index]['ledgerName']) {
+                    if (datalist[index]['ledgerName'] && datalist[index]['parentId']) {
                         obj = {
-                            id: datalist[index]['ledgerName'],
+                            id: datalist[index]['parentId'],
                             name: datalist[index]['ledgerName']
                         }
                         collection.push(obj)
@@ -716,6 +716,25 @@ export class AccountingCalendarComponent implements OnInit {
             this.ledgerNameObject = [...this.ledgerNameObjectData.filter(x => {
                 return x.name.toLowerCase().includes(event.query.toLowerCase())
             })]
+        }
+    }
+
+    loadEntityByParentId(event) {
+        if (Object.keys(event).length) {
+            this.accountListingService.getEntitiesByParentId(event.id).subscribe(entitydata => {
+                if (entitydata) {
+                    var entityObj = {}
+                    var entityCollection = []
+                    const x = entitydata.filter((o, index) => {
+                        entityObj = {
+                            label: entitydata[index]['name'],
+                            value: entitydata[index]['legalEntityId']
+                        }
+                        entityCollection.push(entityObj)
+                    })
+                    this.entitiesObj = entityCollection
+                }
+            });
         }
     }
     isEmptyOrSpaces(str) {

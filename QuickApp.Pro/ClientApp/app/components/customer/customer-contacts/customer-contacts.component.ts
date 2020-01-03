@@ -138,7 +138,9 @@ export class CustomerContactsComponent implements OnInit {
 		} else {
 			this.id = this.savedGeneralInformationData.customerId;
 			this.customerCode = this.savedGeneralInformationData.customerCode;
-			this.customerName = this.savedGeneralInformationData.name;
+            this.customerName = this.savedGeneralInformationData.name;
+            this.getAllCustomerContact();
+
 		}
 
 		this.getAllContacts();

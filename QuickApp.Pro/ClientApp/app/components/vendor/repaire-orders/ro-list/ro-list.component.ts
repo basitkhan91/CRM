@@ -1,4 +1,5 @@
 ﻿import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { AuditHistory } from '../../../../models/audithistory.model';
 import { AuthService } from '../../../../services/auth.service';
 import { AlertService, MessageSeverity } from '../../../../services/alert.service';
@@ -17,7 +18,8 @@ import * as $ from 'jquery';
 	selector: 'app-ro-list',
 	templateUrl: './ro-list.component.html',
 	styleUrls: ['./ro-list.component.scss'],
-    animations: [fadeInOut]
+    animations: [fadeInOut],
+    providers: [DatePipe]
 })
 /** Rolist component*/
 export class RoListComponent implements OnInit {
@@ -62,6 +64,7 @@ export class RoListComponent implements OnInit {
     currentStatus: string = 'open';
     filterText: any = '';
     currentdate: any = new Date();
+    todayDate: any = this.datePipe.transform(new Date(), "yyyy-MM-dd");
 
     constructor(private _route: Router,
         private authService: AuthService,
@@ -69,7 +72,8 @@ export class RoListComponent implements OnInit {
         public vendorService: VendorService,
         private purchaseOrderService: PurchaseOrderService,
         private vendorCapesService: VendorCapabilitiesService,
-        private commonService: CommonService) {
+        private commonService: CommonService,
+        private datePipe: DatePipe) {
         // this.displayedColumns.push('Customer');
         // this.dataSource = new MatTableDataSource();
         // this.activeIndex = 0;
@@ -206,7 +210,7 @@ export class RoListComponent implements OnInit {
         this.pageSize = event.rows;
         event.first = pageIndex;
         this.lazyLoadEventDataInput = event;
-        this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'open', openDate: new Date() };
+        this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'open', openDate: this.todayDate };
         if(this.isEnableROList) {
             this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, vendorId: this.vendorId }
         }

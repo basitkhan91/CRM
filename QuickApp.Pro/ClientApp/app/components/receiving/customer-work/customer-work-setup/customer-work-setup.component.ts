@@ -151,7 +151,7 @@ export class CustomerWorkSetupComponent
         this.dataSource = new MatTableDataSource();
         this.customerList();
         this.loadManagementdata();
-        this.loadManagementdataForTree();
+        //this.loadManagementdataForTree();
         this.getAllCustomerContact(this.receivingCustomerWorkService.listCollection.customer.customerId);
         //if (this.receivingCustomerWorkService.listCollection == null) {
         //    this.receivingCustomerWorkService.listCollection = {};
@@ -163,6 +163,7 @@ export class CustomerWorkSetupComponent
             console.log(this.sourcereceving,'edit')
             this.sourcereceving.serialNumber = this.receivingCustomerWorkService.listCollection.serialNumber;
             this.sourcereceving.customerContactId = this.sourcereceving.contactId;// { contactId: this.receivingCustomerWorkService.listCollection.contactId, contactTitle: this.receivingCustomerWorkService.listCollection.contactTitle }
+            //this.sourcereceving.managementStructureId = this.receivingCustomerWorkService.listCollection.managementstructureId;// { contactId: this.receivingCustomerWorkService.listCollection.contactId, contactTitle: this.receivingCustomerWorkService.listCollection.contactTitle }
 
             //this.sourcereceving.customerContactId = { contactId: this.receivingCustomerWorkService.listCollection.contactId, contactTitle: this.receivingCustomerWorkService.listCollection.contactTitle }
             this.sourcereceving.workPhone = this.receivingCustomerWorkService.listCollection.workPhone;
@@ -307,8 +308,7 @@ export class CustomerWorkSetupComponent
 
             if (this.receivingCustomerWorkService.listCollection.managementStructureId != 'undefined') {
                 this.sourcereceving.companyId = this.getManagementStructureDetails(this.receivingCustomerWorkService.listCollection.managementStructureId);
-
-                    }
+                          }
              //this.sourcereceving = this.tempPOHeaderAddress;
         }
         
@@ -331,10 +331,11 @@ export class CustomerWorkSetupComponent
 
     });
     getManagementStructureDetails(id) {
-       
+        
         this.commonService.getManagementStructureDetails(id).subscribe(res => {
             if (res.Level1) {
                 this.sourcereceving.companyId = res.Level1;
+              
                 this.getBUList(res.Level1);
             } else
                 this.sourcereceving.companyId = 0;
@@ -411,7 +412,7 @@ export class CustomerWorkSetupComponent
 	}
     
     saveCustomerwork() {
-        
+        this.sourcereceving.isActive = true;
         if (!(this.sourcereceving.partNumber && this.sourcereceving.partDescription && this.sourcereceving.siteId && this.sourcereceving.customerId) ) {
             this.display = true;
             this.modelValue = true;
@@ -501,7 +502,9 @@ export class CustomerWorkSetupComponent
 	deleteItemAndCloseModel() {
         this.isSaving = true;
         this.sourcereceving.updatedBy = this.userName;
-        this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId).subscribe(
+        this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId, this.userName).subscribe(
+
+   //     this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId).subscribe(
 			response => this.saveCompleted(this.sourceAction),
 			error => this.saveFailedHelper(error));
 		this.modal.close();
@@ -993,7 +996,7 @@ export class CustomerWorkSetupComponent
 	binValueSelect(data) {
 		//All the data in structure
 	}
-
+   
 	private loadSiteData()  //retriving SIte Information
 	{
 		this.alertService.startLoadingMessage();
@@ -1033,6 +1036,7 @@ export class CustomerWorkSetupComponent
 
             }
         }
+      
     }
 
     customerNameId(event) {
@@ -1042,8 +1046,9 @@ export class CustomerWorkSetupComponent
                 if (event == this.allCustomer[i].name) {
                     this.sourcereceving.customerId = this.allCustomer[i].customerId;
                     //this.sourcereceving.customerCode = this.allCustomer[i].customerCode;
-                    this.sourcereceving.customerCode = getObjectById('customerId', this.sourcereceving.customerId, this.allCustomer[i]);
-                   
+                    //this.sourcereceving.customerCode = getObjectById('customerId', this.sourcereceving.customerId, this.allCustomer[i]);
+                    this.sourcereceving.customerCode = { customerId: this.sourcereceving.customerId, customerCode: this.allCustomer[i].customerCode }
+
                     this.selectedActionName = event;
                     this.getAllCustomerContact(this.allCustomer[i].customerId);
 
@@ -1159,6 +1164,7 @@ export class CustomerWorkSetupComponent
     }
 
     getBUList(companyId) {
+        
         this.sourcereceving.managementStructureId = companyId;
         this.bulist = [];
         this.divisionlist = [];
