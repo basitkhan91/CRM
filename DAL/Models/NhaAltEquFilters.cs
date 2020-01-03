@@ -11,5 +11,6 @@ namespace DAL.Models
         public string Description { get; set; }
         public long? ManufacturerId { get; set; }
         public int MappingType { get; set; }
+        public int? ItemClassificationId { get; set; }
     }
 }

@@ -183,7 +183,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<Manufacturer>))]
         public IActionResult GetParntnumberlist()
         {
-            var obj = _context.ItemMaster.Where(a => (a.IsActive == null || a.IsActive == true) && (a.IsDeleted == false || a.IsDeleted == null) && (a.PartDescription != null)&&(a.PartNumber !=null)).OrderByDescending(c => c.ItemMasterId).ToList();
+            var obj = _context.ItemMaster.Where(a => (a.IsActive == null || a.IsActive == true) && (a.IsDeleted == false || a.IsDeleted == null) && (a.PartDescription != null) && (a.PartNumber != null)).OrderByDescending(c => c.ItemMasterId).ToList();
             return Ok(obj);
         }
 
@@ -1110,39 +1110,39 @@ namespace QuickApp.Pro.Controllers
         {
             //var capabilityData = _unitOfWork.itemMaster.getCapabilityData(id); //.GetAllCustomersData();
             var capabilityData = (from iM in _context.ItemMasterCapes
-                        where iM.ItemMasterCapesId != id
+                                  where iM.ItemMasterCapesId != id
 
-                        select new
-                        {
-                            iM.ItemMasterCapesId,
-                            iM.ItemMasterId,
-                            iM.CapabilityId,
-                            iM.MasterCompanyId,
-                            iM.CreatedBy,
-                            iM.UpdatedBy,
-                            iM.CreatedDate,
-                            iM.UpdatedDate,
-                            iM.IsActive,
-                            iM.ManagementStructureId,
-                            iM.ManufacturerId,
-                            iM.AircraftTypeId,
-                            iM.AircraftModelId,
-                            iM.AircraftDashNumberId,
-                            iM.Description,
-                            iM.ATAChapterId,
-                            iM.ATASubChapterId,
-                            iM.EntryDate,
-                            iM.CMMId,
-                            //iM.isIntegrateWith,
-                            iM.IntegrateWith,
-                            iM.IsVerified,
-                            iM.VerifiedBy,
-                            iM.DateVerified,
-                            iM.ntehrs,
-                            iM.TAT,
-                            iM.Memo,
-                            iM.IsDelete
-                        }).ToList();
+                                  select new
+                                  {
+                                      iM.ItemMasterCapesId,
+                                      iM.ItemMasterId,
+                                      iM.CapabilityId,
+                                      iM.MasterCompanyId,
+                                      iM.CreatedBy,
+                                      iM.UpdatedBy,
+                                      iM.CreatedDate,
+                                      iM.UpdatedDate,
+                                      iM.IsActive,
+                                      iM.ManagementStructureId,
+                                      iM.ManufacturerId,
+                                      iM.AircraftTypeId,
+                                      iM.AircraftModelId,
+                                      iM.AircraftDashNumberId,
+                                      iM.Description,
+                                      iM.ATAChapterId,
+                                      iM.ATASubChapterId,
+                                      iM.EntryDate,
+                                      iM.CMMId,
+                                      //iM.isIntegrateWith,
+                                      iM.IntegrateWith,
+                                      iM.IsVerified,
+                                      iM.VerifiedBy,
+                                      iM.DateVerified,
+                                      iM.ntehrs,
+                                      iM.TAT,
+                                      iM.Memo,
+                                      iM.IsDelete
+                                  }).ToList();
             return Ok(capabilityData);
 
         }
@@ -1652,7 +1652,7 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
-        
+
         [HttpPost("createnhatlaaltequpart")]
         public IActionResult CreateNhaTlaAltEquPart([FromBody]Nha_Tla_Alt_Equ_ItemMapping model)
         {
@@ -1661,7 +1661,7 @@ namespace QuickApp.Pro.Controllers
                 if (model == null)
                     return BadRequest($"{nameof(model)} cannot be null");
 
-                var result=_unitOfWork.itemMaster.CreateNhaTlaAltEquPart(model);
+                var result = _unitOfWork.itemMaster.CreateNhaTlaAltEquPart(model);
                 return Ok(result);
             }
             return Ok(ModelState);
@@ -1680,7 +1680,7 @@ namespace QuickApp.Pro.Controllers
             }
             return Ok(ModelState);
         }
-        
+
         [HttpPost("nhatlaaltequpartlist")]
         public IActionResult NhaTlaAltEquPartList([FromBody]Filters<NhaAltEquFilters> filters)
         {
@@ -1705,11 +1705,75 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getalterqquparts")]
         public IActionResult GetAlterEquParts(long itemMasterId)
         {
-           var result= _unitOfWork.itemMaster.GetAlterEquParts(itemMasterId);
+            var result = _unitOfWork.itemMaster.GetAlterEquParts(itemMasterId);
             return Ok(result);
         }
 
+        [HttpPost("createequivalencypart")]
+        public IActionResult CreateEquivalencyPart()
+        {
+            Nha_Tla_Alt_Equ_ItemMapping model = new Nha_Tla_Alt_Equ_ItemMapping();
 
+            model.UpdatedBy = model.CreatedBy = Request.Form["CreatedBy"];
+            model.UpdatedDate = model.CreatedDate = DateTime.Now;
+            model.IsActive = true;
+            model.IsDeleted = false;
+            model.ItemMappingId = Convert.ToInt64(Request.Form["ItemMappingId"]);
+            model.ItemMasterId = Convert.ToInt64(Request.Form["ItemMasterId"]);
+            model.MappingItemMasterId = Convert.ToInt64(Request.Form["MappingItemMasterId"]);
+            model.MappingType = Convert.ToInt32(Request.Form["MappingType"]);
+            model.MasterCompanyId = Convert.ToInt32(Request.Form["MasterCompanyId"]);
+            model.Memo = string.Empty;
+
+
+            var result = _unitOfWork.itemMaster.CreateEquivalencyPart(model);
+
+            model.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, result.ItemMappingId, Convert.ToInt32(ModuleEnum.NhaTlaAltEquItemMapping), Convert.ToString(ModuleEnum.NhaTlaAltEquItemMapping), model.UpdatedBy, model.MasterCompanyId);
+
+            return Ok(result);
+        }
+
+        [HttpPost("updateequivalencypart")]
+        public IActionResult UpdateEquivalencyPart()
+        {
+            Nha_Tla_Alt_Equ_ItemMapping model = new Nha_Tla_Alt_Equ_ItemMapping();
+
+            model.UpdatedBy = model.CreatedBy = Request.Form["CreatedBy"];
+            model.UpdatedDate = model.CreatedDate = DateTime.Now;
+            model.IsActive = true;
+            model.IsDeleted = false;
+            model.ItemMappingId = Convert.ToInt64(Request.Form["ItemMappingId"]);
+            model.ItemMasterId = Convert.ToInt64(Request.Form["ItemMasterId"]);
+            model.MappingItemMasterId = Convert.ToInt64(Request.Form["MappingItemMasterId"]);
+            model.MappingType = Convert.ToInt32(Request.Form["MappingType"]);
+            model.MasterCompanyId = Convert.ToInt32(Request.Form["MasterCompanyId"]);
+            model.Memo = string.Empty;
+
+
+            var result = _unitOfWork.itemMaster.CreateEquivalencyPart(model);
+
+            var attachmentData = _context.Attachment.Where(p => p.ReferenceId == model.ItemMappingId && p.ModuleId == Convert.ToInt32(ModuleEnum.NhaTlaAltEquItemMapping)).FirstOrDefault();
+
+            if (attachmentData != null)
+            {
+                model.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, model.ItemMappingId,
+                                             Convert.ToInt32(ModuleEnum.NhaTlaAltEquItemMapping), Convert.ToString(ModuleEnum.NhaTlaAltEquItemMapping), model.UpdatedBy, model.MasterCompanyId, attachmentData.AttachmentId);
+            }
+            else
+            {
+                model.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, model.ItemMappingId,
+                                                           Convert.ToInt32(ModuleEnum.NhaTlaAltEquItemMapping), Convert.ToString(ModuleEnum.NhaTlaAltEquItemMapping), model.UpdatedBy, model.MasterCompanyId);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPost("equivalencypartlist")]
+        public IActionResult EquivalencyPartList([FromBody]Filters<NhaAltEquFilters> filters)
+        {
+            var result = _unitOfWork.itemMaster.EquivalencyPartList(filters);
+            return Ok(result);
+        }
 
 
         [HttpGet("GetpartdetailsWithid/{partsList}")]
@@ -1741,7 +1805,7 @@ namespace QuickApp.Pro.Controllers
                                 join P in _context.Priority on IM.PriorityId equals P.PriorityId into pir
                                 from P in pir.DefaultIfEmpty()
                                 where (
-                                IM.PartNumber.ToLower().Contains(partNo.ToLower()) && IM.IsActive==true && IM.IsDeleted==false
+                                IM.PartNumber.ToLower().Contains(partNo.ToLower()) && IM.IsActive == true && IM.IsDeleted == false
                                 )
                                 select new
                                 {
@@ -1825,14 +1889,14 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("searchpartnumber/{partNumber}")]
         public IActionResult SearchPartNumber(string partNumber)
         {
-            if(partNumber == null && partNumber.Trim() == string.Empty)
+            if (partNumber == null && partNumber.Trim() == string.Empty)
             {
                 return BadRequest(new Exception("Part Number cannot be empty."));
             }
 
             var partDetails = _context.ItemMaster
-                                .Where(a => 
-                                    (a.IsActive == null || a.IsActive == true) 
+                                .Where(a =>
+                                    (a.IsActive == null || a.IsActive == true)
                                     && (a.IsDeleted == false || a.IsDeleted == null)
                                     && a.PartNumber.Trim().ToLower().Contains(partNumber.Trim().ToLower()))
                                     .Select(x => new
@@ -1866,8 +1930,8 @@ namespace QuickApp.Pro.Controllers
             {
                 result = GetPartDetails(searchView);
             }
-            
-           
+
+
             var pageCount = (searchView.first / searchView.rows) + 1;
 
             var searchData = new GetSearchData<object>();
@@ -1882,81 +1946,81 @@ namespace QuickApp.Pro.Controllers
             var result = Enumerable.Empty<object>();
 
             var itemQuantityDetails = from item in _context.ItemMaster
-                                       join stock in _context.StockLine on item.ItemMasterId equals stock.ItemMasterId
-                                       join po in _context.PurchaseOrder on stock.PurchaseOrderId equals po.PurchaseOrderId into stockpo
-                                       from spo in stockpo.DefaultIfEmpty()
-                                       join pop in _context.PurchaseOrderPart
-                                        on new { poid = spo.PurchaseOrderId ?? 0, imid = item.ItemMasterId ?? 0  }
-                                        equals new { poid = pop.PurchaseOrderId, imid = pop.ItemMasterId}
-                                        into stockpop
-                                       from spop in stockpop.DefaultIfEmpty()
-                                       where (item.IsActive.HasValue && item.IsActive.Value == true)
-                                          && (item.IsDeleted.HasValue && !item.IsDeleted == true || !item.IsDeleted.HasValue)
-                                          && (item.MasterCompanyId.HasValue && item.MasterCompanyId.Value == 1)
-                                          && item.ItemMasterId == searchView.partSearchParamters.partId
-                                       select new
-                                       {
-                                           partNumber = item.PartNumber,
-                                           qtyOnHand = stock.QuantityOnHand,
-                                           qtyAvailable = stock.QuantityAvailable,
-                                           qtyOnOrder = spop.QuantityOrdered  
-                                       };
+                                      join stock in _context.StockLine on item.ItemMasterId equals stock.ItemMasterId
+                                      join po in _context.PurchaseOrder on stock.PurchaseOrderId equals po.PurchaseOrderId into stockpo
+                                      from spo in stockpo.DefaultIfEmpty()
+                                      join pop in _context.PurchaseOrderPart
+                                       on new { poid = spo.PurchaseOrderId ?? 0, imid = item.ItemMasterId ?? 0 }
+                                       equals new { poid = pop.PurchaseOrderId, imid = pop.ItemMasterId }
+                                       into stockpop
+                                      from spop in stockpop.DefaultIfEmpty()
+                                      where (item.IsActive.HasValue && item.IsActive.Value == true)
+                                         && (item.IsDeleted.HasValue && !item.IsDeleted == true || !item.IsDeleted.HasValue)
+                                         && (item.MasterCompanyId.HasValue && item.MasterCompanyId.Value == 1)
+                                         && item.ItemMasterId == searchView.partSearchParamters.partId
+                                      select new
+                                      {
+                                          partNumber = item.PartNumber,
+                                          qtyOnHand = stock.QuantityOnHand,
+                                          qtyAvailable = stock.QuantityAvailable,
+                                          qtyOnOrder = spop.QuantityOrdered
+                                      };
 
 
             var query = from iqd in itemQuantityDetails
                         group iqd by iqd.partNumber into g
-                         select new
-                         {
-                             partNumber = g.Key,
-                             qtyOnHand = g.Sum(qh => qh.qtyOnHand),
-                             qtyAvailable = g.Sum(qh => qh.qtyAvailable),
-                             qtyOnOrder = g.Sum(qh => qh.qtyOnOrder)
-                         };
+                        select new
+                        {
+                            partNumber = g.Key,
+                            qtyOnHand = g.Sum(qh => qh.qtyOnHand),
+                            qtyAvailable = g.Sum(qh => qh.qtyAvailable),
+                            qtyOnOrder = g.Sum(qh => qh.qtyOnOrder)
+                        };
 
             var itemQuantity = query.FirstOrDefault();
 
-            if (itemQuantity == null) return result;  
+            if (itemQuantity == null) return result;
 
             result = from item in _context.ItemMaster
-                         join uom in _context.UnitOfMeasure on item.ConsumeUnitOfMeasureId equals uom.UnitOfMeasureId into iuom
-                         from iu in iuom.DefaultIfEmpty()
-                         join currency in _context.Currency on item.CurrencyId equals currency.CurrencyId into itemcurrecy
-                         from ic in itemcurrecy.DefaultIfEmpty()
-                         where item.IsActive.HasValue && item.IsActive.Value == true
-                                && (item.IsDeleted.HasValue && !item.IsDeleted == true || !item.IsDeleted.HasValue)
-                                && (item.MasterCompanyId.HasValue && item.MasterCompanyId.Value == 1)
-                                && item.ItemMasterId == searchView.partSearchParamters.partId
+                     join uom in _context.UnitOfMeasure on item.ConsumeUnitOfMeasureId equals uom.UnitOfMeasureId into iuom
+                     from iu in iuom.DefaultIfEmpty()
+                     join currency in _context.Currency on item.CurrencyId equals currency.CurrencyId into itemcurrecy
+                     from ic in itemcurrecy.DefaultIfEmpty()
+                     where item.IsActive.HasValue && item.IsActive.Value == true
+                            && (item.IsDeleted.HasValue && !item.IsDeleted == true || !item.IsDeleted.HasValue)
+                            && (item.MasterCompanyId.HasValue && item.MasterCompanyId.Value == 1)
+                            && item.ItemMasterId == searchView.partSearchParamters.partId
 
-                         select new
-                         {
-                             method = "Item Master",
-                             itemId = item.ItemMasterId,
-                             partNumber = item.PartNumber,
-                             alternatePartId = item.PartAlternatePartId,
-                             alternateFor = string.Empty,
-                             description = item.PartDescription,
-                             conditionType = string.Empty,
-                             uomDescription = iu.Description,
-                             unitCost = item.UnitCost,
-                             unitListPrice = item.ListPrice,
-                             qtyOnHand = itemQuantity.qtyOnHand ?? 0,
-                             qtyToOrder = 0,
-                             qtyOnOrder = itemQuantity.qtyOnOrder ?? 0,
-                             itemClassification = item.ItemClassification,
-                             itemGroup = string.Empty,
-                             pma = item.PMA,
-                             der = item.DER,
-                             manufacturer = item.Manufacturer,
-                             customerRef = string.Empty,
-                             currency = item.Currency,
-                             coreUnitPrice = item.CoreValue,
-                             glAccount = item.GLAccount,
-                             itar = item.ITARNumber,
-                             eccn = item.ExportECCN,
-                             memo = item.Memo,
-                             currencyId = item.CurrencyId,
-                             currencyDescription = ic.DisplayName
-                         };
+                     select new
+                     {
+                         method = "Item Master",
+                         itemId = item.ItemMasterId,
+                         partNumber = item.PartNumber,
+                         alternatePartId = item.PartAlternatePartId,
+                         alternateFor = string.Empty,
+                         description = item.PartDescription,
+                         conditionType = string.Empty,
+                         uomDescription = iu.Description,
+                         unitCost = item.UnitCost,
+                         unitListPrice = item.ListPrice,
+                         qtyOnHand = itemQuantity.qtyOnHand ?? 0,
+                         qtyToOrder = 0,
+                         qtyOnOrder = itemQuantity.qtyOnOrder ?? 0,
+                         itemClassification = item.ItemClassification,
+                         itemGroup = string.Empty,
+                         pma = item.PMA,
+                         der = item.DER,
+                         manufacturer = item.Manufacturer,
+                         customerRef = string.Empty,
+                         currency = item.Currency,
+                         coreUnitPrice = item.CoreValue,
+                         glAccount = item.GLAccount,
+                         itar = item.ITARNumber,
+                         eccn = item.ExportECCN,
+                         memo = item.Memo,
+                         currencyId = item.CurrencyId,
+                         currencyDescription = ic.DisplayName
+                     };
 
 
             return result.ToList<object>();
