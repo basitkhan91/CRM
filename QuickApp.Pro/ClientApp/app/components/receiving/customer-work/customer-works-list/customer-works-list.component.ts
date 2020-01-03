@@ -236,7 +236,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     }
 
     openDelete(content, row) {
-
+     
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourcereceving = row;

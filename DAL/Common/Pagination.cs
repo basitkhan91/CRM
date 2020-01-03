@@ -21,8 +21,8 @@ namespace DAL.Common
 	{
 		public int first { get; set; }
 		public int rows { get; set; }
-		public string SortColumn { get; set; }
-		public string SortOrder { get; set; }
+		public string SortField { get; set; }
+		public int? SortOrder { get; set; }
 		public T filters { get; set; }
 	}
 }
