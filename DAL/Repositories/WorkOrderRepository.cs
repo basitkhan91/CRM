@@ -429,11 +429,11 @@ namespace DAL.Repositories
                           .Take(take)
                           .ToList();
 
-                if(!string.IsNullOrEmpty(woFilters.SortOrder) && !string.IsNullOrEmpty(woFilters.SortColumn))
+                if(!string.IsNullOrEmpty(woFilters.SortOrder) && !string.IsNullOrEmpty(woFilters.SortField))
                 {
-                    if(woFilters.SortOrder.ToLower() == "desc")
+                    if(woFilters.SortOrder == -1)
                     {
-                        switch(woFilters.SortColumn)
+                        switch(woFilters.SortField)
                         {
                             case "WorkOrderNum":
                                 return list.OrderByDescending(p => p.WorkOrderNum).ToList();
@@ -463,7 +463,7 @@ namespace DAL.Repositories
                     }
                     else
                     {
-                        switch (woFilters.SortColumn)
+                        switch (woFilters.SortField)
                         {
                             case "WorkOrderNum":
                                 return list.OrderBy(p => p.WorkOrderNum).ToList();
