@@ -303,7 +303,7 @@ export class CustomersListComponent implements OnInit {
     getList(data) {
         
         console.log(data.sortField);
-        data.sortColumn = data.sortField;
+        //data.sortColumn = data.sortField;
         // this.filterObjectCreate(data.filters);
         const PagingData = { ...data, filters: listSearchFilterObjectCreation(data.filters) }
         this.customerService.getCustomerAll(PagingData).subscribe(res => {

@@ -16,6 +16,7 @@ namespace DAL.Repositories.Interfaces
     {
         // IEnumerable<Customer> GetTopActiveCustomers(int count);
         IEnumerable<object> GetAllCustomersData();
+        IEnumerable<object> GetCustomersData();
 
         IEnumerable<object> GetCustomerWithid(long customerId);
 
