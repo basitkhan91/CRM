@@ -40,7 +40,6 @@ namespace DAL.Repositories
             var take = customerFilters.rows;
             var skip = take * (pageNumber - 1);
 
-
             var totalRecords = (from t in _appContext.Customer
                                 join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
                                 join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
@@ -115,6 +114,65 @@ namespace DAL.Repositories
                              .Take(take)
                              .ToList();
 
+            if (!string.IsNullOrEmpty(customerFilters.SortOrder) && !string.IsNullOrEmpty(customerFilters.SortColumn))
+            {
+                if (customerFilters.SortOrder.ToLower() == "-1")
+                {
+                    switch (customerFilters.SortColumn)
+                    {
+                        case "name":
+                            return data.OrderByDescending(p => p.Name).ToList();
+                        case "customerCode":
+                            return data.OrderByDescending(p => p.CustomerCode).ToList();
+                        case "accountType":
+                            return data.OrderByDescending(p => p.AccountType).ToList();
+                        case "customerType":
+                            return data.OrderByDescending(p => p.CustomerType).ToList();
+                        case "customerClassification":
+                            return data.OrderByDescending(p => p.CustomerClassification).ToList();
+                        case "email":
+                            return data.OrderByDescending(p => p.Email).ToList();
+                        case "city":
+                            return data.OrderByDescending(p => p.City).ToList();
+                        case "stateOrProvince":
+                            return data.OrderByDescending(p => p.StateOrProvince).ToList();
+                        case "contact":
+                            return data.OrderByDescending(p => p.Contact).ToList();
+                        case "salesPersonPrimary":
+                            return data.OrderByDescending(p => p.SalesPersonPrimary).ToList();
+
+
+                    }
+                }
+                else
+                {
+                    switch (customerFilters.SortColumn)
+                    {
+                        case "name":
+                            return data.OrderBy(p => p.Name).ToList();
+                        case "customerCode":
+                            return data.OrderBy(p => p.CustomerCode).ToList();
+                        case "accountType":
+                            return data.OrderBy(p => p.AccountType).ToList();
+                        case "customerType":
+                            return data.OrderBy(p => p.CustomerType).ToList();
+                        case "customerClassification":
+                            return data.OrderBy(p => p.CustomerClassification).ToList();
+                        case "email":
+                            return data.OrderBy(p => p.Email).ToList();
+                        case "city":
+                            return data.OrderBy(p => p.City).ToList();
+                        case "stateOrProvince":
+                            return data.OrderBy(p => p.StateOrProvince).ToList();
+                        case "contact":
+                            return data.OrderBy(p => p.Contact).ToList();
+                        case "salesPersonPrimary":
+                            return data.OrderBy(p => p.SalesPersonPrimary).ToList();
+
+
+                    }
+                }
+            }
 
 
             return (data);
