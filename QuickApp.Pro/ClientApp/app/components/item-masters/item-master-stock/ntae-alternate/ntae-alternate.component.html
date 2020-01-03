@@ -105,7 +105,7 @@
                 
                 <div class="col-md-1">
                     <div class="form-group">
-                        <button class="btn btn-primary mtop20" (click)="getNtaeData()">
+                        <button type="button" class="btn btn-primary mtop20" (click)="getNtaeData(false)">
                             <i class="pi pi-search pi-search"></i>
                         </button>
                     </div>
@@ -132,7 +132,7 @@
                     {{rowData[col.field]}}
                 </td>
                 <td>
-                    <button class="btn btn-danger nobg" (click)="deleteNTAERow(rowData.itemMappingId)">
+                    <button type="button" class="btn btn-danger nobg" (click)="deleteNTAERow(rowData.itemMappingId)">
                         <i class="fa fa-trash"></i>
                     </button>
                 </td>
@@ -198,7 +198,9 @@
                         <div class="form-group">
                             <label  class="popup-plusicon-cstm">
                                 Document         </label>
-                                <p-fileUpload name="gFileupload[]"  [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event)"></p-fileUpload> 
+                                <input type="file" name="gFileupload" id="gFileupload" (change)="fileUploadNtae($event)"   class="uploaddoc upload-file"  />
+               
+                                <!-- <p-fileUpload name="gFileupload"  [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (change)="fileUploadNtae($event)"></p-fileUpload>  -->
                                 <!-- <input type="text" class="ui-inputtext" disabled name="manufacturer"  [(ngModel)]="alternateData.manufacturer"  >  -->
                            
                         </div>
