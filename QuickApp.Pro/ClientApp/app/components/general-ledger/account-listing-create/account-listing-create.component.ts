@@ -120,7 +120,7 @@ export class AccountListingCreateComponent implements OnInit {
         });
         this.loadcurrencyData();
         this.loadGLAccountTypeData();
-        this.loadCompaniesData();
+       // this.loadCompaniesData();
         this.load1099Miscdata();
         this.loadGLCashFlowClassification();
         this.loadNodeSetup();
@@ -603,7 +603,18 @@ export class AccountListingCreateComponent implements OnInit {
     loadEntityByParentId(event) {       
         if (Object.keys(event).length) {            
             this.accountListingService.getEntitiesByParentId(event.id).subscribe(entitydata => {
-                console.log('entitydata :', entitydata)
+                if (entitydata) {
+                    var entityObj = {}
+                    var entityCollection = []
+                    const x = entitydata.filter((o, index) => {
+                        entityObj = {
+                            label: entitydata[index]['name'],
+                            value: entitydata[index]['legalEntityId']
+                        }
+                        entityCollection.push(entityObj)
+                    })
+                    this.entitiesObj = entityCollection
+                }
             });
         }        
     }
