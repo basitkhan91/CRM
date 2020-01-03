@@ -38,7 +38,7 @@
     <div class="col-1 column">
       <div class="form-group">
         <label>Cond Type<span class="clr-red">*</span></label>
-        <select>
+        <select name="conditionId" [(ngModel)]="query.partSearchParamters.conditionId" (change)="onConditionSelect()">
           <option>--select--</option>
           <option *ngFor="let condition of allConditionInfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
         </select>
@@ -47,13 +47,13 @@
     <div class="col-2 column">
       <div class="form-group">
         <label>Qty Requested</label>
-        <input type="number" pInputText name="qtyRequested" [(ngModel)]="query.partSearchParamters.quantityRequested" (change)="calculate()" />
+        <input type="text" pInputText name="qtyRequested" [(ngModel)]="query.partSearchParamters.quantityRequested" (change)="calculate()" />
       </div>
     </div>
     <div class="col-1 column">
       <div class="form-group">
         <label>Qty to Quote</label>
-        <input type="number" pInputText name="qtyToQuote" [(ngModel)]="query.partSearchParamters.quantityToQuote" />
+        <input type="text" pInputText name="qtyToQuote" [(ngModel)]="query.partSearchParamters.quantityToQuote" />
       </div>
     </div>
     <div class="col-2 column">
@@ -112,3 +112,15 @@
         [(ngModel)]="query.partSearchParamters.includeAlternatePartNumber" />&nbsp;Multiple PN's</label>
   </div>
 </div>
+<p-dialog header="Alert" [(visible)]="displayPartError" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
+          [width]="350" [minWidth]="200" [responsive]="true"
+          [minY]="1050" [baseZIndex]="1100000">
+    <h5 [ngStyle]="{'color':'red'}">
+        Please Enter (*) Mandatory Fields
+    </h5>
+    <p *ngFor="let error of errorMessages" [ngStyle]="{'color':'red'}"> {{ error }} </p>
+    <p-footer>
+        <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
+    </p-footer>
+
+</p-dialog>
