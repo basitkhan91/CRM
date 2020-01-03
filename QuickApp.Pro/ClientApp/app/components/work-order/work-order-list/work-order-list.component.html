@@ -66,6 +66,7 @@
              [resizableColumns]="true"
              [reorderableColumns]="true"
              [totalRecords]="totalRecords"
+
              [dataKey]="workOrderPartListDataKeys">
         <ng-template pTemplate="caption">
             <div style="text-align: right;margin-left:-6px !important;min-height: 30px;">
@@ -132,6 +133,7 @@
                 <th *ngFor="let col of columns" pResizableColumn pReorderableColumn
                 [pSortableColumn]="col.field" style="text-align:center;">
                     {{ col.header }}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
                 </th>
                 <th style="position:sticky" *ngIf="selectedColumns.length > 0">
                     Actions

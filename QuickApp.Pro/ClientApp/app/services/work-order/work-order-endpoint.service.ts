@@ -131,8 +131,17 @@ export class WorkOrderEndpointService extends EndpointFactory {
             });
     }
 
+    getWorkOrderStageAndStatus(){
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderstageandstatus`, this.getRequestHeaders())
+    }
+
+
     getWorkFlowByPNandScope(itemMasterId, workScopeId) {
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workflownos?partId=${itemMasterId}&workScopeId=${workScopeId}`)
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workflownos?partId=${itemMasterId}&workScopeId=${workScopeId}`, this.getRequestHeaders())
+    }
+
+    getNTEandSTDByItemMasterId(itemMasterId, workScopeName) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/ntestdvalues?itemMasterId=${itemMasterId}&workScope=${workScopeName}`, this.getRequestHeaders())
     }
 
     // get Part Number Bases on Repair Order and Purchase Orders

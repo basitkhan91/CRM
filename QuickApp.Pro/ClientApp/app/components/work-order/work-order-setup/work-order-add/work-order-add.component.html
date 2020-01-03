@@ -494,7 +494,7 @@
                                                disabled>
                                     </td>
                                     <td>
-                                        <p-dropdown placeholder="Select" [options]="getDynamicVariableData('conditionList',i)"
+                                        <p-dropdown placeholder="Select" [options]="conditionList"
                                                     name="condition{{i}}" #condition="ngModel"
                                                     (onChange)="getStockLineByItemMasterId(workOrderPartNumber.masterPartId,workOrderPartNumber.conditionId,  i);"
                                                     class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.conditionId" required>
@@ -536,7 +536,9 @@
                                     <td>
                                         <p-dropdown [options]="workOrderStagesList"
                                                     name="stage{{i}}" #stage="ngModel"
-                                                    placeholder="Select" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.workOrderStageId" required>
+                                                    placeholder="Select" class="p-dropdown-custom-md" 
+                                                    (onChange)="selectedStage(workOrderPartNumber)"
+                                                    [(ngModel)]="workOrderPartNumber.workOrderStageId" required>
                                         </p-dropdown>
                                     </td>
                                     <td>
