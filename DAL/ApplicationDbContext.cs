@@ -409,6 +409,7 @@ namespace DAL
         public DbSet<RestrictsBERList> RestrictsBERList { get; set; }
         public DbSet<MasterParts> MasterParts { get; set; }
         public DbSet<Nha_Tla_Alt_Equ_ItemMapping> Nha_Tla_Alt_Equ_ItemMapping { get; set; }
+        public DbSet<NhaTlaAltEquAudit> NhaTlaAltEquAudit { get; set; }
 
         public DbSet<WorkOrderWorkFlow> WorkOrderWorkFlow { get; set; }
         public DbSet<WorkOrderLaborHeader> WorkOrderLaborHeader { get; set; }
