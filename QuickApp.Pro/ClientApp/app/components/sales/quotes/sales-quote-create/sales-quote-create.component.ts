@@ -597,6 +597,7 @@ onSaveDescription() {
       partNumberObj.updatedBy=this.userName;
       partNumberObj.createdOn = new Date().toDateString();
       partNumberObj.updatedOn = new Date().toDateString();
+      partNumberObj.unitCost = selectedPart.unitCostPerUnit;
       partList.push(partNumberObj);  
     }
     this.salesQuoteView.parts = partList;

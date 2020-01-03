@@ -1,0 +1,4 @@
+IF EXISTS ( SELECT 1 FROM SYS.TABLES WHERE NAME = 'SalesOrderQuotePart' ) 
+BEGIN  
+	ALTER TABLE SalesOrderQuotePart ADD [UnitCost] [numeric](9,2) NOT NULL DEFAULT 0
+END
