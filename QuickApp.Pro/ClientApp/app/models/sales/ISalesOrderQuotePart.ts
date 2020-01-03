@@ -6,6 +6,7 @@ export interface ISalesOrderQuotePart {
     fxRate: number;
     qtyQuoted: number;
     unitSalePrice: number;
+    unitCost: number;
     markUpPercentage: number;
     salesBeforeDiscount: number;
     discount: number;
