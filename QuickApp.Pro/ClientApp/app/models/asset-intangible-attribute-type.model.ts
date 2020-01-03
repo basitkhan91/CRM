@@ -5,7 +5,7 @@ export class AssetIntangibleAttributeType {
     constructor(assetIntangibleAttributeTypeId?: number, assetIntangibleTypeId?: number, assetDepreciationMethodId?: number, intangibleLife?: number,
         amortizationFrequency?: string, assetAmortizationIntervalId?: number, intangibleGLAccountId?: number, amortExpenseGLAccountId?: number, accAmortDeprGLAccountId?: number, depreciationMethod?: number, intangibleWriteDownGLAccountId?: number,
         intangibleWriteOffGLAccountId?: number, amortizationMethod?: number, managementStructureId?: number, masterCompanyId?: number, intangibleLifeYears?: number, createdBy?: string, updatedBy?: string, createdDate?: Date, updatedDate?: Date,
-        isActive?: boolean, isDelete?: boolean) {
+        isActive?: boolean, isDelete?: boolean, isDeleted?: boolean) {
 
         this.assetIntangibleAttributeTypeId = assetIntangibleAttributeTypeId;
         this.assetIntangibleTypeId = assetIntangibleTypeId || 0;
@@ -29,6 +29,7 @@ export class AssetIntangibleAttributeType {
         this.updatedBy = updatedBy;
         this.isActive = isActive;
         this.isDelete = isDelete;
+        this.isDeleted = isDeleted;
     }
 
     assetIntangibleAttributeTypeId: number;
@@ -52,6 +53,7 @@ export class AssetIntangibleAttributeType {
     createdDate: Date;
     updatedDate: Date;
     isDelete: boolean = false;
+    isDeleted: boolean = false;
     isActive: boolean = false;
 }
 

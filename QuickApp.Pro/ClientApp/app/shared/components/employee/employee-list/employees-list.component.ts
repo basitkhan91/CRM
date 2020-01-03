@@ -81,7 +81,9 @@ export class EmployeesListComponent implements OnInit {
     allShiftData: any[] = [];
     selectedShiftData:any;
     currencyName: any;
-    
+    getAllAllStationInfodrpData;
+    stationName:any;
+        
 
     ngOnInit(): void {
 
@@ -96,6 +98,7 @@ export class EmployeesListComponent implements OnInit {
         this.empService.alertObj.next(this.empService.ShowPtab);
         this.getAllFrequencyTrainingData();
         this.loadCurrencyData();
+        this.getAllStationData();
         //this.loadShiftData();
 
     }
@@ -371,8 +374,15 @@ export class EmployeesListComponent implements OnInit {
             this.currencyName="";
         }
 
+        if(row.stationId > 0)
+        {           
+            this.stationName = getValueFromArrayOfObjectById('label', 'value', row.stationId, this.getAllAllStationInfodrpData);            
+        }
+        else{
+            this.stationName="";
+        }
 
-
+        
         if (row.empSupervisor != null) {
             this.supervisiorname = row.empSupervisor.firstName
         }
@@ -537,6 +547,13 @@ export class EmployeesListComponent implements OnInit {
     //             console.log(this.allShiftData);
     //         })
     // }
+
+    async getAllStationData() {
+        await this.commonService.smartDropDownList('EmployeeStation', 'EmployeeStationId', 'StationName').subscribe(res => {
+            this.getAllAllStationInfodrpData = res;          
+            
+        });        
+    }
 
 
 }
