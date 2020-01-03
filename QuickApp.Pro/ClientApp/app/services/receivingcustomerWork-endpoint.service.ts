@@ -94,6 +94,7 @@ export class ReceivingCustomerWorkEndpoint extends EndpointFactory {
             "traceableToVendorId": roleObject.traceableToVendorId,
             "traceableToOther": roleObject.traceableToOther,
             "manufacturingDate": roleObject.manufacturingDate,
+            "managementStructureId": roleObject.managementStructureId,
             "expirationDate": roleObject.expirationDate,
             "timeLifeDate": roleObject.timeLifeDate,
             "timeLifeOrigin": roleObject.timeLifeOrigin,
@@ -168,14 +169,14 @@ export class ReceivingCustomerWorkEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getUpdatestockLineTimeLifeEndpoint(roleObject, timeLifeCyclesId));
             });
     }
-    getUpdateActionforActive<T>(roleObject: any, receivingCustomerWorkId: number): Observable<T> {
-        let endpointUrl = `${this._updateActiveInactive}/${roleObject.receivingCustomerWorkId}`;
+    //getUpdateActionforActive<T>(roleObject: any, receivingCustomerWorkId: number): Observable<T> {
+    //    let endpointUrl = `${this._updateActiveInactive}/${roleObject.receivingCustomerWorkId}`;
 
-        return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getUpdateForActive(roleObject, receivingCustomerWorkId));
-            });
-    }
+    //    return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+    //        .catch(error => {
+    //            return this.handleError(error, () => this.getUpdateForActive(roleObject, receivingCustomerWorkId));
+    //        });
+    //}
     getUpdateForActive<T>(roleObject: any, receivingCustomerWorkId: number): Observable<T> {
         let endpointUrl = `${this._actionsUrlNew}/${roleObject.receivingCustomerWorkId}`;
 
@@ -187,7 +188,9 @@ export class ReceivingCustomerWorkEndpoint extends EndpointFactory {
     getAuditHistory(receivingCustomerWorkId) {
         return this.http.get(`${this.configurations.baseUrl}/${this._actionsUrlAudit}?receivingCustomerWorkId=${receivingCustomerWorkId}`)
     }
-
+    getUpdateActionforActive(receivingCustomerWorkId:number,status:string,updatedBy:string) {
+        return this.http.get(`${this.configurations.baseUrl}/${this._updateActiveInactive}?id=${receivingCustomerWorkId}&status=${status}&updatedBy=${updatedBy}`)
+    }
 }
 
 
