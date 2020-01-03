@@ -55,7 +55,7 @@ namespace DAL.Repositories.Interfaces
         Nha_Tla_Alt_Equ_ItemMapping CreateEquivalencyPart(Nha_Tla_Alt_Equ_ItemMapping part);
         Nha_Tla_Alt_Equ_ItemMapping UpdateEquivalencyPart(Nha_Tla_Alt_Equ_ItemMapping part);
         IEnumerable<object> EquivalencyPartList(Filters<NhaAltEquFilters> filters);
-
+        IEnumerable<object> NhaTlaAltEquPartHistory(long itemMappingId);
 
 
         IEnumerable<ItemMaster> SearchItemMaster(ItemMaster master);

@@ -977,12 +977,19 @@ namespace DAL.Repositories
                 model.UpdatedDate = DateTime.Now;
                 model.UpdatedBy = updatedBy;
 
-                _appContext.Nha_Tla_Alt_Equ_ItemMapping.Attach(model);
+                var count = _appContext.NhaTlaAltEquAudit.Where(p => p.ItemMappingId == mappingId).Count();
+                if (count > 1)
+                {
+                    _appContext.Nha_Tla_Alt_Equ_ItemMapping.Attach(model);
 
-                _appContext.Entry(model).Property(x => x.IsDeleted).IsModified = true;
-                _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
-                _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
-
+                    _appContext.Entry(model).Property(x => x.IsDeleted).IsModified = true;
+                    _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                    _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+                }
+                else
+                {
+                    _appContext.Nha_Tla_Alt_Equ_ItemMapping.Remove(model);
+                }
                 _appContext.SaveChanges();
             }
             catch (Exception ex)
@@ -1144,9 +1151,13 @@ namespace DAL.Repositories
                                 alt.MappingType,
                                 im.ItemClassificationId,
                                 ItemClassification = ic.Description,
-                                EquivalencyPartAttachmentDetails(alt.ItemMappingId).AttachmentId,
-                                EquivalencyPartAttachmentDetails(alt.ItemMappingId).FileName,
-                                EquivalencyPartAttachmentDetails(alt.ItemMappingId).Link,
+                                AttachmentDetails = (from at in _appContext.Attachment
+                                                     join ad in _appContext.AttachmentDetails on at.AttachmentId equals ad.AttachmentId
+                                                     where at.ReferenceId == alt.ItemMappingId && at.ModuleId == Convert.ToInt64(ModuleEnum.NhaTlaAltEquItemMapping)
+                                                     select new
+                                                     {
+                                                         ad
+                                                     }).OrderByDescending(p => p.ad.AttachmentDetailId).FirstOrDefault(),
                                 TotalRecords = totalRecords
                             }).Distinct()
                                   .ToList();
@@ -1159,16 +1170,45 @@ namespace DAL.Repositories
             }
         }
 
-        private AttachmentDetails EquivalencyPartAttachmentDetails(long referenceId)
+        public IEnumerable<object> NhaTlaAltEquPartHistory(long itemMappingId)
         {
-            AttachmentDetails attachmentDetails = new AttachmentDetails();
-            var attachment = _appContext.Attachment.Where(p => p.ReferenceId == referenceId && p.ModuleId == Convert.ToInt64(ModuleEnum.NhaTlaAltEquItemMapping)).FirstOrDefault();
-            if (attachment != null)
+            try
             {
-                attachmentDetails = _appContext.AttachmentDetails.Where(p => p.IsActive == true && p.IsDeleted == false && p.AttachmentId == attachment.AttachmentId).OrderByDescending(p => p.AttachmentDetailId).FirstOrDefault();
-            }
+                var list = (from alt in _appContext.NhaTlaAltEquAudit
+                            join im in _appContext.ItemMaster on alt.ItemMasterId equals im.ItemMasterId
+                            join im1 in _appContext.ItemMaster on alt.MappingItemMasterId equals im1.ItemMasterId
+                            join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
+                            join ic in _appContext.ItemClassification on im.ItemClassificationId equals ic.ItemClassificationId
+                            where alt.ItemMappingId == itemMappingId
+                            select new
+                            {
+                                im.PartNumber,
+                                im.PartDescription,
+                                Manufacturer = man.Name,
+                                AltPartNo = im1.PartNumber,
+                                AltPartDescription = im1.PartDescription,
+                                alt.IsActive,
+                                alt.IsDeleted,
+                                alt.CreatedBy,
+                                alt.CreatedDate,
+                                alt.UpdatedBy,
+                                alt.UpdatedDate,
+                                ItemClassification = ic.Description,
+                                AttachmentDetails = (from at in _appContext.Attachment
+                                                     join ad in _appContext.AttachmentDetails on at.AttachmentId equals ad.AttachmentId
+                                                     where at.ReferenceId == alt.ItemMappingId && at.ModuleId == Convert.ToInt64(ModuleEnum.NhaTlaAltEquItemMapping)
+                                                     select new
+                                                     {
+                                                         ad
+                                                     }).OrderByDescending(p => p.ad.AttachmentDetailId).FirstOrDefault(),
 
-            return attachmentDetails;
+                            }).ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
 
