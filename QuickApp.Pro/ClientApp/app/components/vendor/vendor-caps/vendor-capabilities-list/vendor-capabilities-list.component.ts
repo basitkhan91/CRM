@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit, Input } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, Input, EventEmitter, Output } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -56,6 +56,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
     vendorNameHist: any;
     @Input() isEnableVendor: boolean;
     @Input() vendorId: number = 0;
+    @Output() vendorCapabilityId = new EventEmitter<any>();
 
     constructor(private vendorService: VendorService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService, private vendorCapesService: VendorCapabilitiesService)
     {
@@ -175,11 +176,18 @@ export class VendorCapabilitiesListComponent implements OnInit{
     }
     openEdits(row)
     {
-        this.vendorService.isEditMode = true;
-        this.isSaving = true;
-        this.vendorService.listCollection = row; //Storing Row Data  and saving Data in Service that will used in StockLine Setup
-        const {vendorCapabilityId} = row
-        this._route.navigateByUrl(`/vendorsmodule/vendorpages/app-add-vendor-capabilities/edit/${vendorCapabilityId}`);
+        if(this.isEnableVendor) {
+            const {vendorCapabilityId} = row;
+            this.vendorCapabilityId.emit(vendorCapabilityId);
+        }
+        else {
+            this.vendorService.isEditMode = true;
+            this.isSaving = true;
+            this.vendorService.listCollection = row; //Storing Row Data  and saving Data in Service that will used in StockLine Setup
+            const {vendorCapabilityId} = row
+            this._route.navigateByUrl(`/vendorsmodule/vendorpages/app-add-vendor-capabilities/edit/${vendorCapabilityId}`);
+        }
+        
     }
 
     private saveCompleted(user?: any)

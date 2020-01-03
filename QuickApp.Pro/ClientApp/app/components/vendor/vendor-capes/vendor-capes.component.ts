@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, Input } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -20,6 +20,7 @@ import { Vendor } from '../../../models/vendor.model';
 import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
 import { Row } from 'primeng/components/common/shared';
 import { CustomerService } from '../../../services/customer.service';
+import * as $ from 'jquery';
 @Component({
     selector: 'app-vendor-capes',
     templateUrl: './vendor-capes.component.html',
@@ -34,14 +35,16 @@ export class VendorCapesComponent implements OnInit {
     local: any;
     isEnableVendor: boolean = true;
     vendorId: number;
+    loadList: boolean = false;
+    @Input() vendorCapabilityId: number = 0;
 
     constructor(public workFlowtService: VendorService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private alertService: AlertService) {
         if (this.local) {
             this.workFlowtService.capesCollection = this.local;
         }
-        // if (this.workFlowtService.generalCollection) {
-        //     this.local = this.workFlowtService.generalCollection;
-        // }
+        if (this.workFlowtService.generalCollection) {
+            this.local = this.workFlowtService.generalCollection;
+        }
         //this.dataSource = new MatTableDataSource();
         console.log(this.workFlowtService);        
         if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
@@ -78,6 +81,25 @@ export class VendorCapesComponent implements OnInit {
         // this.loadEmptyObject();
         this.router.queryParams.subscribe((params: Params) => {
         });
+    }
+
+    getVendorCapabilityId(id) {
+        console.log(id); 
+        this.vendorCapabilityId = id;
+        if(this.vendorCapabilityId) {
+            $('#addCapabilityInfo').modal('show');
+        }
+        this.loadList = false;
+    }
+
+    loadListData() {
+        this.loadList = !this.loadList;
+        this.vendorCapabilityId = 0;
+    }
+
+    onAddCapsInfo() {
+        this.loadList = !this.loadList;
+        this.vendorCapabilityId = null;
     }
 
     previousClick() {
