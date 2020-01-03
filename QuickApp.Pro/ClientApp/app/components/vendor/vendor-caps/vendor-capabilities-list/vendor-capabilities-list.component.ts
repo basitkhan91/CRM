@@ -65,7 +65,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
     ngOnInit()
     {
         this.loadData();
-        if(!this.vendorId) {
+         if(!this.vendorId) {
             this.activeIndex = 0;
             this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-capabilities-list';
     
@@ -73,7 +73,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
             this.vendorService.alertObj.next(this.vendorService.ShowPtab);
     
             this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
-        }
+         }
     }
 
     dataSource: MatTableDataSource<any>;
@@ -89,10 +89,12 @@ export class VendorCapabilitiesListComponent implements OnInit{
     {
         const status = 'active';
 
-        this.vendorService.getVendorCapabilityList(status, this.vendorId).subscribe(
-            results => this.onDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
+        if(this.vendorId != undefined) {
+            this.vendorService.getVendorCapabilityList(status, this.vendorId).subscribe(
+                results => this.onDataLoadSuccessful(results[0]),
+                error => this.onDataLoadFailed(error)
+            );
+        }
 
         // To display the values in header and column name values
         this.cols = [

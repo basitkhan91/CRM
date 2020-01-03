@@ -158,13 +158,13 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		this.matSpinner = false;
 		//this.workFlowtService.MatSpinner = true;//App Mat Spinner Testing
 		
-		if(!this.vendorId) {
+		 if(!this.vendorId) {
 			this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-add-vendor-capabilitiesn';
 			this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
 
 			this.vendorService.ShowPtab = false;
 			this.vendorService.alertObj.next(this.vendorService.ShowPtab);
-		}
+		 }
 
 		this.loadVendorData();
 		this.ptnumberlistdata();
@@ -1150,17 +1150,19 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	saveVendorCapsGeneralInfo() {
 	
 		console.log(this.sourceVendorCap);
-		this.sselectedVendorName=this.sourceVendorCap.vendorId.vendorName;
-		this.sselectedVendorCode=this.sourceVendorCap.vendorId.vendorCode;
+		this.sselectedVendorName = getValueFromObjectByKey('vendorName', this.sourceVendorCap.vendorId);
+		this.sselectedVendorCode = getValueFromObjectByKey('vendorCode', this.sourceVendorCap.vendorId);
+		// this.sselectedVendorName=this.sourceVendorCap.vendorId ? this.sourceVendorCap.vendorId.vendorName : '';
+		// this.sselectedVendorCode=this.sourceVendorCap.vendorId ? this.sourceVendorCap.vendorId.vendorCode : '';
 		this.sourceVendorCap.createdBy= this.userName,
 		this.sourceVendorCap.updatedBy= this.userName,
 	
 		this.selectedCapabilityName= getValueFromArrayOfObjectById('label' , 'value' , this.sourceVendorCap.capabilityId ,this.capabilityTypeList)
 	
-		let {vendorCode, partNumber, manufacturerName, ...res} = this.sourceVendorCap;		
+		let {vendorCode, partNumber, manufacturerName, ...res} = this.sourceVendorCap;
 		res = {
 			...res,
-			vendorId: editValueAssignByCondition('vendorId', res.vendorId),
+			vendorId: this.vendorId != 0 ? this.vendorId : editValueAssignByCondition('vendorId', res.vendorId),
 			partNumberId: editValueAssignByCondition('value', res.partNumberId)
 		}
 		this.vendorService.newVendorCapability(res).subscribe(data => {		

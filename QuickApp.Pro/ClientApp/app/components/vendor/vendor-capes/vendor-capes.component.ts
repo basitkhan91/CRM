@@ -29,19 +29,19 @@ import { CustomerService } from '../../../services/customer.service';
 /** anys component*/
 export class VendorCapesComponent implements OnInit {
 
-    activeIndex: any;
+    activeIndex = 10;
     matSpinner: boolean;
     local: any;
     isEnableVendor: boolean = true;
     vendorId: number;
 
-    constructor(public workFlowtService: VendorService, private router: ActivatedRoute, private authService: AuthService, private alertService: AlertService) {
+    constructor(public workFlowtService: VendorService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private alertService: AlertService) {
         if (this.local) {
             this.workFlowtService.capesCollection = this.local;
         }
-        if (this.workFlowtService.generalCollection) {
-            this.local = this.workFlowtService.generalCollection;
-        }
+        // if (this.workFlowtService.generalCollection) {
+        //     this.local = this.workFlowtService.generalCollection;
+        // }
         //this.dataSource = new MatTableDataSource();
         console.log(this.workFlowtService);        
         if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
@@ -57,9 +57,16 @@ export class VendorCapesComponent implements OnInit {
         if(this.local) {
             this.vendorId = this.local.vendorId;
         }
+        if (this.workFlowtService.generalCollection) {
+                this.vendorId = this.workFlowtService.generalCollection.vendorId;
+            }
+        console.log(this.workFlowtService.listCollection);
+        
     }
 
     ngOnInit() {
+
+
         //this.sourceVendor.isdefaultContact = true;
         this.matSpinner = true;
         this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-capes';
@@ -73,7 +80,17 @@ export class VendorCapesComponent implements OnInit {
         });
     }
 
-    get userName(): string {
-        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    previousClick() {
+        this.activeIndex = 0;
+        // this.vendorService.vendorgeneralcollection = this.local;
+        this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('General Information');
+        this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
+    }
+    nextClick() {
+        this.activeIndex = 2;
+        this.workFlowtService.indexObj.next(this.activeIndex);
+        this.workFlowtService.changeStep('Contacts');
+        this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
     }
 }

@@ -17,7 +17,8 @@ export class VendorStepsPrimeNgComponent implements OnInit {
 	generalcollection: any;
 	collection: any;
     currentUrl: any;
-    isDisabledSteps = true;
+	isDisabledSteps = false;
+
 	items: MenuItem[];
 
 	msgs: Message[] = [];
@@ -35,7 +36,9 @@ export class VendorStepsPrimeNgComponent implements OnInit {
     }
 
 
-    changeStep(value) {		
+    changeStep(value) {	
+		console.log(this.vendorService.listCollection);
+			
         if (value == 'General Information') {
             //	this.showComponentPTab = this.vendorService.ShowPtab;
             this.activeMenuItem = 1;
@@ -44,6 +47,7 @@ export class VendorStepsPrimeNgComponent implements OnInit {
 
 		else if (value == 'Capabilities') {
 
+		
             this.activeMenuItem = 2;
             this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-capes');
         }
@@ -68,6 +72,7 @@ export class VendorStepsPrimeNgComponent implements OnInit {
             this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
 		}
 		else if (value == 'Billing Information') {
+
 			this.activeMenuItem = 7;
             this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
 		}
@@ -95,7 +100,9 @@ export class VendorStepsPrimeNgComponent implements OnInit {
 
     ngOnInit() {
         if (this.vendorService.isEditMode) {
-            this.isDisabledSteps = false;
+
+				this.isDisabledSteps = true;
+		
         }
 		//alert('ngInit');
 		
