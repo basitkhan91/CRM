@@ -1,4 +1,5 @@
 ﻿import { Component, OnInit, AfterViewInit, ViewChild, Input, EventEmitter, Output } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { AuditHistory } from '../../../../models/audithistory.model';
 import { MatPaginator, MatSort, MatTableDataSource, MatDialog } from '@angular/material';
 import { FormGroup, FormBuilder } from '@angular/forms';
@@ -20,7 +21,8 @@ import * as $ from 'jquery';
 	selector: 'app-polist',
 	templateUrl: './polist.component.html',
 	styleUrls: ['./polist.component.scss'],
-	animations: [fadeInOut]
+    animations: [fadeInOut],
+    providers: [DatePipe]
 })
 
 export class PolistComponent implements OnInit {
@@ -67,7 +69,8 @@ export class PolistComponent implements OnInit {
     currentStatusPO: string = 'open';
     modal: NgbModalRef;
     filterText: any = '';
-    currentdate: any = new Date();
+    currentdate: any = new Date(); //this.datePipe.transform(new Date(), "MM/dd/yyyy");
+    todayDate: any = this.datePipe.transform(new Date(), "yyyy-MM-dd");
 
     constructor(private _route: Router,
         private authService: AuthService,
@@ -80,7 +83,8 @@ export class PolistComponent implements OnInit {
         private masterComapnyService: MasterComapnyService,
         private purchaseOrderService: PurchaseOrderService,
         private vendorCapesService: VendorCapabilitiesService,
-        private commonService: CommonService) {
+        private commonService: CommonService,
+        private datePipe: DatePipe) {
         // this.displayedColumns.push('Customer');
         // this.dataSource = new MatTableDataSource();
         // this.activeIndex = 0;
@@ -212,7 +216,7 @@ export class PolistComponent implements OnInit {
         this.pageSize = event.rows;
         event.first = pageIndex;
         this.lazyLoadEventDataInput = event;
-        this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'open', openDate: new Date() }
+        this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'open', openDate: this.todayDate }
         if(this.isEnablePOList) {
             this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, vendorId: this.vendorId }
         }

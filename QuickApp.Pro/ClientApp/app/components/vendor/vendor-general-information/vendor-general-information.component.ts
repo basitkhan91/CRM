@@ -716,7 +716,11 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
                 if (this.sourceVendor.parent == false || this.sourceVendor.parent == null) {
                     this.sourceVendor.vendorParentName = '';
                 }
-                this.vendorService.updateVendorDetails(this.sourceVendor).subscribe(
+         
+              
+            const {vendorContact,address, ...newSourceVendor} = this.sourceVendor;
+           
+                this.vendorService.updateVendorDetails(newSourceVendor).subscribe(
                     data => {                       
                         const vdata = {                           
                             vendorId: this.sourceVendor.vendorId,
@@ -737,6 +741,7 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
                         this.sourceVendor.updatedBy = this.userName;
                         this.localCollection = data;
                         this.sourceVendor = data;
+                       
                         this.sourceVendor.address1 = data.address.line1;
                         this.sourceVendor.address2 = data.address.line2;
                         this.sourceVendor.address3 = data.address.line3;
