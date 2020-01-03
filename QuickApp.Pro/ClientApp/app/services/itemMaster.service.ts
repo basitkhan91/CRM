@@ -390,4 +390,13 @@ export class ItemMasterService {
     deleteNTAERow(ItemMasterId: any, userId: any) {
         return this.itemMasterEndpoint.deleteNTAERow<any>(ItemMasterId,userId);
     }
+    
+    createNTAEFileUploadForEquivalency(file){
+        return this.itemMasterEndpoint.createNTAEFileUploadForEquivalency(file);
+    }
+
+    getequivalencypartlist(data: any) {
+        return this.itemMasterEndpoint.getequivalencypartlist<any>(data);
+    }
+
 }

@@ -914,12 +914,12 @@ namespace DAL.Repositories
                 var totalRecords = (from alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping
                                     join im in _appContext.ItemMaster on alt.ItemMasterId equals im.ItemMasterId
                                     join im1 in _appContext.ItemMaster on alt.MappingItemMasterId equals im1.ItemMasterId
-                                    join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
+                                    join man in _appContext.Manufacturer on im1.ManufacturerId equals man.ManufacturerId
                                     where alt.IsActive == true && alt.IsDeleted == false && alt.ItemMasterId == filters.filters.ItemMasterId
                                     && alt.MappingType == filters.filters.MappingType
                                     && alt.MappingItemMasterId == (filters.filters.MappingItemMasterId > 0 ? filters.filters.MappingItemMasterId : alt.MappingItemMasterId)
-                                    && im.PartDescription.Contains(!string.IsNullOrEmpty(filters.filters.Description) ? filters.filters.Description : im.PartDescription)
-                                    && im.ManufacturerId == (filters.filters.ManufacturerId > 0 ? filters.filters.ManufacturerId : im.ManufacturerId)
+                                    && im1.PartDescription.Contains(!string.IsNullOrEmpty(filters.filters.Description) ? filters.filters.Description : im1.PartDescription)
+                                    && im1.ManufacturerId == (filters.filters.ManufacturerId > 0 ? filters.filters.ManufacturerId : im1.ManufacturerId)
                                     select new
                                     {
                                         alt.ItemMappingId,
@@ -929,19 +929,19 @@ namespace DAL.Repositories
                 var list = (from alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping
                             join im in _appContext.ItemMaster on alt.ItemMasterId equals im.ItemMasterId
                             join im1 in _appContext.ItemMaster on alt.MappingItemMasterId equals im1.ItemMasterId
-                            join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
+                            join man in _appContext.Manufacturer on im1.ManufacturerId equals man.ManufacturerId
                             where alt.IsActive == true && alt.IsDeleted == false && alt.ItemMasterId == filters.filters.ItemMasterId
                             && alt.MappingType == filters.filters.MappingType
                             && alt.MappingItemMasterId == (filters.filters.MappingItemMasterId > 0 ? filters.filters.MappingItemMasterId : alt.MappingItemMasterId)
-                            && im.PartDescription.Contains(!string.IsNullOrEmpty(filters.filters.Description) ? filters.filters.Description : im.PartDescription)
-                            && im.ManufacturerId == (filters.filters.ManufacturerId > 0 ? filters.filters.ManufacturerId : im.ManufacturerId)
+                            && im1.PartDescription.Contains(!string.IsNullOrEmpty(filters.filters.Description) ? filters.filters.Description : im1.PartDescription)
+                            && im1.ManufacturerId == (filters.filters.ManufacturerId > 0 ? filters.filters.ManufacturerId : im1.ManufacturerId)
                             select new
                             {
                                 alt.ItemMappingId,
                                 im.PartNumber,
                                 im.PartDescription,
                                 Manufacturer = man.Name,
-                                im.ManufacturerId,
+                                im1.ManufacturerId,
                                 im.ItemMasterId,
                                 AltPartNo = im1.PartNumber,
                                 alt.MappingItemMasterId,
