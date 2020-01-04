@@ -97,6 +97,7 @@ export class WorkOrderQuoteComponent implements OnInit {
 }
 isQuote: boolean = true;
 editMatData: any[] = [];
+costPlusType: string = "Mark Up";
 
 
 
@@ -865,7 +866,7 @@ loadCurrency(){
 markupChanged(matData){
   try{
     this.markupList.forEach((markup)=>{
-      if(markup.value == matData.markup){
+      if(markup.value == matData.markupPercentageId){
         matData.materialCostPlus = (matData.quantity * matData.unitCost) + ( ((matData.quantity * matData.unitCost)/100) *  Number(markup.label))
       }
     })

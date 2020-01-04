@@ -375,6 +375,30 @@
       <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" >
         <thead>
           <tr>
+              <td colspan="10">&nbsp;</td>
+              <td colspan="3">
+                  <div class="form-group">
+                    <p-radioButton
+                      class="p-radiobutton-label-horizontal"
+                      name="costPlusType"
+                      label="Mark Up"
+                      value="Mark Up"
+                      [(ngModel)]="costPlusType"
+                      style="color: #fff;"
+                    ></p-radioButton>
+                    <p-radioButton
+                      class="p-radiobutton-label-horizontal col-width"
+                      name="costPlusType"
+                      value="Cost Plus"
+                      label="Cost Plus"
+                      [(ngModel)]="costPlusType"
+                      style="color: #fff;"
+                    ></p-radioButton>
+                  </div>
+              </td>
+              <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
             <th>MC PN</th>
             <th>MC Description</th>
             <th>QTE/WO/WF/SL/M</th>
@@ -385,7 +409,7 @@
             <th>OEM/PMA/DER</th>
             <th>UNIT COST</th>
             <th>TOTAL PART COST</th>
-            <th>MARKUP</th>
+            <th *ngIf="costPlusType == 'Mark Up'">MARKUP</th>
             <th>COST PLUS AMOUNT</th>
             <th>FIXED AMOUNT</th>
             <th></th>
@@ -405,8 +429,16 @@
               <td>{{matQuotation.isDeferred}}</td>
               <td>{{matQuotation.unitCost}}</td>
               <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
-              <td>{{matQuotation.markupPercentageId}}</td>
-              <td>{{matQuotation.materialCostPlus}}</td>
+              <td *ngIf="costPlusType == 'Mark Up'">
+                  <select class="form-control custom-select wf-pub-id" (change)="markupChanged(charge)" [(ngModel)]="matQuotation.markupPercentageId">
+                    <option value="">Select</option>
+                    <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+                  </select>
+              </td>
+              <td *ngIf="costPlusType == 'Mark Up'">{{ matQuotation.materialCostPlus }}</td>
+              <td *ngIf="costPlusType == 'Cost Plus'">
+                <input type="number" [(ngModel)]="matQuotation.materialCostPlus"/>
+              </td>
               <td>{{matQuotation.fixedAmount}}</td>
               <td>
                   <button
@@ -462,6 +494,28 @@
       <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" >
         <thead>
           <tr>
+              <td colspan="10">&nbsp;</td>
+              <td colspan="3">
+                  <div class="form-group">
+                    <p-radioButton
+                      class="p-radiobutton-label-horizontal"
+                      name="costPlusType"
+                      label="Mark Up"
+                      value="Mark Up"
+                      [(ngModel)]="costPlusType"
+                    ></p-radioButton>
+                    <p-radioButton
+                      class="p-radiobutton-label-horizontal col-width"
+                      name="costPlusType"
+                      value="Cost Plus"
+                      label="Cost Plus"
+                      [(ngModel)]="costPlusType"
+                    ></p-radioButton>
+                  </div>
+              </td>
+              <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
             <th>MC PN</th>
             <th>MC Description</th>
             <th>QTE/WO/WF/SL/M</th>
@@ -472,7 +526,7 @@
             <th>OEM/PMA/DER</th>
             <th>UNIT COST</th>
             <th>TOTAL PART COST</th>
-            <th>MARKUP</th>
+            <th *ngIf="costPlusType == 'Mark Up'">MARKUP</th>
             <th>COST PLUS AMOUNT</th>
             <th>FIXED AMOUNT</th>
             <th></th>
@@ -491,8 +545,16 @@
             <td>{{matQuotation.oem}}</td>
             <td>{{matQuotation.unitCost}}</td>
             <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
-            <td>{{matQuotation.markupPercentageId}}</td>
-            <td>{{matQuotation.materialCostPlus}}</td>
+            <td *ngIf="costPlusType == 'Mark Up'">
+                <select class="form-control custom-select wf-pub-id" (change)="markupChanged(matQuotation)" [(ngModel)]="matQuotation.markupPercentageId">
+                  <option value="">Select</option>
+                  <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+                </select>
+            </td>
+            <td *ngIf="costPlusType == 'Mark Up'">{{ matQuotation.materialCostPlus }}</td>
+            <td *ngIf="costPlusType == 'Cost Plus'">
+              <input type="number" [(ngModel)]="matQuotation.materialCostPlus"/>
+            </td>
             <td>{{matQuotation.fixedAmount}}</td>
             <td>
                 <button
