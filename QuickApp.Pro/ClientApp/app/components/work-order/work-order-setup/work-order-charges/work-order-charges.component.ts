@@ -8,6 +8,7 @@ import { AuthService } from '../../../../services/auth.service';
 @Component({
   selector: 'app-work-order-charges',
   templateUrl: './work-order-charges.component.html',
+  styleUrls: ['./work-order-charges.component.scss']
 
 })
 /** WorkOrderDocuments component*/
@@ -26,6 +27,7 @@ export class WorkOrderChargesComponent implements OnChanges {
   isEdit: boolean = false;
   editData: any;
   editingIndex: number;
+  costPlusType: string = "Mark Up";
 
   constructor(private workOrderService: WorkOrderService, private authService: AuthService,
     private alertService: AlertService, private cdRef: ChangeDetectorRef) {
@@ -96,7 +98,7 @@ export class WorkOrderChargesComponent implements OnChanges {
     try {
       this.markupList.forEach((markup) => {
         if (markup.value == matData.markupPercentageId) {
-          matData.chargesCostPlus = (matData.quantity * matData.extendedCost) + (((matData.quantity * matData.extendedCost) / 100) * Number(markup.label))
+          matData.chargesCostPlus = (matData.extendedPrice) + (((matData.extendedPrice) / 100) * Number(markup.label))
         }
       })
     }

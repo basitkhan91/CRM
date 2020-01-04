@@ -12,4 +12,5 @@ export class SalesSearchParameters implements ISalesSearchParameters {
     status: string;
     startDate: string;
     endDate: string;
+    columnFilters:{};
 }

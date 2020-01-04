@@ -20,6 +20,7 @@ import { CustomerService } from "../../../../services/customer.service";
 import { CommonService } from '../../../../services/common.service';
 import { AuthService } from '../../../../services/auth.service';
 import { PartDetail } from "../../shared/models/part-detail";
+import { listSearchFilterObjectCreation } from '../../../../generic/autocomplete';
 import { getValueFromObjectByKey, getObjectById, editValueAssignByCondition, getObjectByValue } from '../../../../generic/autocomplete';
 
 
@@ -153,11 +154,16 @@ export class SalesQuoteListComponent implements OnInit {
 
 loadData(event) {
    
-   // this.lazyLoadEventData = event;
-   // const pageIndex = parseInt(event.first) / event.rows;;
-   // this.pageIndex = pageIndex;
-   // this.pageSize = event.rows;
-   // event.first = pageIndex;
+    //this.lazyLoadEventData = event;
+    const pageIndex = parseInt(event.first) / event.rows;;
+    this.pageIndex = pageIndex;
+    this.pageSize = event.rows;
+    event.first = pageIndex;
+    this.searchParameters.first = pageIndex;
+    this.searchParameters.rows = event.rows;
+    this.searchParameters.sortOrder = event.sortOrder;
+    this.searchParameters.sortField = event.sortField;
+    this.searchParameters.columnFilters = listSearchFilterObjectCreation(event.filters)
       // this.getList(event)
       this.onSearch();
     
@@ -198,11 +204,17 @@ loadData(event) {
     this.salesQuoteService.search(searchParameters);
     */
 
+  
    this.alertService.startLoadingMessage();
    this.salesQuoteService
    .search(this.searchParameters)
-   .subscribe((data: any) => {
-     this.sales = data[0];
+   .subscribe((res: any) => {
+   /* this.sales = res;
+    if (res.length > 0) {
+        this.totalRecords = res[0].totalRecords;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    }*/
+     this.sales = res[0];
      console.log(this.sales);
      this.alertService.stopLoadingMessage();
    });
