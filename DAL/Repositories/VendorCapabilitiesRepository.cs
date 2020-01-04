@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DAL.Repositories
 {
@@ -23,9 +22,12 @@ namespace DAL.Repositories
         {
             var data = (from vc in _appContext.VendorCapabiliy
                         join v in _appContext.Vendor on vc.VendorId equals v.VendorId
-                        join im in _appContext.ItemMaster on vc.ItemMasterId equals im.ItemMasterId
-                        join vct in _appContext.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId
-                        join vcat in _appContext.capabilityType on vct.CapabilityTypeId equals vcat.CapabilityTypeId
+                        join im in _appContext.ItemMaster on vc.ItemMasterId equals im.ItemMasterId into imm
+                        from im in imm.DefaultIfEmpty()
+                        //join vct in _appContext.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId
+                        join vcat in _appContext.capabilityType on Convert.ToInt32(vc.CapabilityId) equals vcat.CapabilityTypeId into vcatt
+                        from vcat in vcatt.DefaultIfEmpty()
+
                         where vc.VendorId == vendorId
                         select new
                         {
@@ -54,7 +56,7 @@ namespace DAL.Repositories
                             vc.IsPMA,
                             vc.IsDER,
                             vc.CapabilityId
-                        }).OrderByDescending(p=>p.UpdatedDate).ToList();
+                        }).OrderByDescending(p=>p.CreatedDate).ToList();
             return data;
 
 

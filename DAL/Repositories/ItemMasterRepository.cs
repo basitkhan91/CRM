@@ -866,8 +866,6 @@ namespace DAL.Repositories
             return data;
         }
 
-
-
         public Nha_Tla_Alt_Equ_ItemMapping CreateNhaTlaAltEquPart(Nha_Tla_Alt_Equ_ItemMapping part)
         {
             try
@@ -914,13 +912,14 @@ namespace DAL.Repositories
                     filters.filters.ManufacturerId = 0;
 
                 var totalRecords = (from alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping
-                                    join im in _appContext.ItemMaster on alt.MappingItemMasterId equals im.ItemMasterId
-                                    join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
-                                    where alt.IsActive == true && alt.IsDeleted == false && alt.ItemMasterId==filters.filters.ItemMasterId
-                                    && alt.MappingType==filters.filters.MappingType
+                                    join im in _appContext.ItemMaster on alt.ItemMasterId equals im.ItemMasterId
+                                    join im1 in _appContext.ItemMaster on alt.MappingItemMasterId equals im1.ItemMasterId
+                                    join man in _appContext.Manufacturer on im1.ManufacturerId equals man.ManufacturerId
+                                    where alt.IsActive == true && alt.IsDeleted == false && alt.ItemMasterId == filters.filters.ItemMasterId
+                                    && alt.MappingType == filters.filters.MappingType
                                     && alt.MappingItemMasterId == (filters.filters.MappingItemMasterId > 0 ? filters.filters.MappingItemMasterId : alt.MappingItemMasterId)
-                                    && im.PartDescription.Contains(!string.IsNullOrEmpty(filters.filters.Description) ? filters.filters.Description : im.PartDescription)
-                                    && im.ManufacturerId == (filters.filters.ManufacturerId > 0 ? filters.filters.ManufacturerId : im.ManufacturerId)
+                                    && im1.PartDescription.Contains(!string.IsNullOrEmpty(filters.filters.Description) ? filters.filters.Description : im1.PartDescription)
+                                    && im1.ManufacturerId == (filters.filters.ManufacturerId > 0 ? filters.filters.ManufacturerId : im1.ManufacturerId)
                                     select new
                                     {
                                         alt.ItemMappingId,
@@ -929,20 +928,32 @@ namespace DAL.Repositories
 
                 var list = (from alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping
                             join im in _appContext.ItemMaster on alt.ItemMasterId equals im.ItemMasterId
-                            join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
+                            join im1 in _appContext.ItemMaster on alt.MappingItemMasterId equals im1.ItemMasterId
+                            join man in _appContext.Manufacturer on im1.ManufacturerId equals man.ManufacturerId
                             where alt.IsActive == true && alt.IsDeleted == false && alt.ItemMasterId == filters.filters.ItemMasterId
                             && alt.MappingType == filters.filters.MappingType
                             && alt.MappingItemMasterId == (filters.filters.MappingItemMasterId > 0 ? filters.filters.MappingItemMasterId : alt.MappingItemMasterId)
-                            && im.PartDescription.Contains(!string.IsNullOrEmpty(filters.filters.Description) ? filters.filters.Description : im.PartDescription)
-                            && im.ManufacturerId == (filters.filters.ManufacturerId > 0 ? filters.filters.ManufacturerId : im.ManufacturerId)
+                            && im1.PartDescription.Contains(!string.IsNullOrEmpty(filters.filters.Description) ? filters.filters.Description : im1.PartDescription)
+                            && im1.ManufacturerId == (filters.filters.ManufacturerId > 0 ? filters.filters.ManufacturerId : im1.ManufacturerId)
                             select new
                             {
                                 alt.ItemMappingId,
                                 im.PartNumber,
                                 im.PartDescription,
                                 Manufacturer = man.Name,
-                                im.ManufacturerId,
+                                im1.ManufacturerId,
                                 im.ItemMasterId,
+                                AltPartNo = im1.PartNumber,
+                                alt.MappingItemMasterId,
+                                AltPartDescription = im1.PartDescription,
+                                alt.IsActive,
+                                alt.IsDeleted,
+                                alt.CreatedBy,
+                                alt.CreatedDate,
+                                alt.MasterCompanyId,
+                                alt.UpdatedBy,
+                                alt.UpdatedDate,
+                                alt.MappingType,
                                 TotalRecords = totalRecords
                             }).Distinct()
                                   .ToList();
@@ -966,12 +977,19 @@ namespace DAL.Repositories
                 model.UpdatedDate = DateTime.Now;
                 model.UpdatedBy = updatedBy;
 
-                _appContext.Nha_Tla_Alt_Equ_ItemMapping.Attach(model);
+                var count = _appContext.NhaTlaAltEquAudit.Where(p => p.ItemMappingId == mappingId).Count();
+                if (count > 1)
+                {
+                    _appContext.Nha_Tla_Alt_Equ_ItemMapping.Attach(model);
 
-                _appContext.Entry(model).Property(x => x.IsDeleted).IsModified = true;
-                _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
-                _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
-
+                    _appContext.Entry(model).Property(x => x.IsDeleted).IsModified = true;
+                    _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                    _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+                }
+                else
+                {
+                    _appContext.Nha_Tla_Alt_Equ_ItemMapping.Remove(model);
+                }
                 _appContext.SaveChanges();
             }
             catch (Exception ex)
@@ -1010,6 +1028,7 @@ namespace DAL.Repositories
             try
             {
                 var list = (from im in _appContext.ItemMaster
+                            join ic in _appContext.ItemClassification on im.ItemClassificationId equals ic.ItemClassificationId
                             join alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping on im.ItemMasterId equals alt.MappingItemMasterId
                             into imalt
                             from alt in imalt.DefaultIfEmpty()
@@ -1022,7 +1041,9 @@ namespace DAL.Repositories
                                 im.PartNumber,
                                 im.PartDescription,
                                 im.ManufacturerId,
-                                Manufacturer = man.Name
+                                Manufacturer = man.Name,
+                                im.ItemClassificationId,
+                                ItemClassification = ic.Description
                             }).Distinct()
                           .ToList();
                 return list;
@@ -1034,8 +1055,161 @@ namespace DAL.Repositories
             }
         }
 
+        public Nha_Tla_Alt_Equ_ItemMapping CreateEquivalencyPart(Nha_Tla_Alt_Equ_ItemMapping part)
+        {
+            try
+            {
+                _appContext.Nha_Tla_Alt_Equ_ItemMapping.Add(part);
+                _appContext.SaveChanges();
+                return part;
+            }
+            catch (Exception)
+            {
 
+                throw;
+            }
+        }
 
+        public Nha_Tla_Alt_Equ_ItemMapping UpdateEquivalencyPart(Nha_Tla_Alt_Equ_ItemMapping part)
+        {
+            try
+            {
+                _appContext.Nha_Tla_Alt_Equ_ItemMapping.Update(part);
+                _appContext.SaveChanges();
+                return part;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> EquivalencyPartList(Filters<NhaAltEquFilters> filters)
+        {
+            try
+            {
+                if (filters.filters == null)
+                    filters.filters = new NhaAltEquFilters();
+                var pageNumber = filters.first + 1;
+                var take = filters.rows;
+                var skip = take * (pageNumber - 1);
+
+                if (filters.filters.MappingItemMasterId == null)
+                    filters.filters.MappingItemMasterId = 0;
+                if (filters.filters.ManufacturerId == null)
+                    filters.filters.ManufacturerId = 0;
+                if (filters.filters.ItemClassificationId == null)
+                    filters.filters.ItemClassificationId = 0;
+
+                var totalRecords = (from alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping
+                                    join im in _appContext.ItemMaster on alt.MappingItemMasterId equals im.ItemMasterId
+                                    join im1 in _appContext.ItemMaster on alt.MappingItemMasterId equals im1.ItemMasterId
+                                    join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
+                                    join ic in _appContext.ItemClassification on im.ItemClassificationId equals ic.ItemClassificationId
+                                    where alt.IsActive == true && alt.IsDeleted == false && alt.ItemMasterId == filters.filters.ItemMasterId
+                                    && alt.MappingType == filters.filters.MappingType
+                                    && alt.MappingItemMasterId == (filters.filters.MappingItemMasterId > 0 ? filters.filters.MappingItemMasterId : alt.MappingItemMasterId)
+                                    && im.PartDescription.Contains(!string.IsNullOrEmpty(filters.filters.Description) ? filters.filters.Description : im.PartDescription)
+                                    && im.ManufacturerId == (filters.filters.ManufacturerId > 0 ? filters.filters.ManufacturerId : im.ManufacturerId)
+                                    && im.ItemClassificationId == (filters.filters.ItemClassificationId > 0 ? filters.filters.ItemClassificationId : im.ItemClassificationId)
+                                    select new
+                                    {
+                                        alt.ItemMappingId,
+                                    }).Distinct()
+                                  .Count();
+
+                var list = (from alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping
+                            join im in _appContext.ItemMaster on alt.ItemMasterId equals im.ItemMasterId
+                            join im1 in _appContext.ItemMaster on alt.MappingItemMasterId equals im1.ItemMasterId
+                            join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
+                            join ic in _appContext.ItemClassification on im.ItemClassificationId equals ic.ItemClassificationId
+                            where alt.IsActive == true && alt.IsDeleted == false && alt.ItemMasterId == filters.filters.ItemMasterId
+                            && alt.MappingType == filters.filters.MappingType
+                            && alt.MappingItemMasterId == (filters.filters.MappingItemMasterId > 0 ? filters.filters.MappingItemMasterId : alt.MappingItemMasterId)
+                            && im.PartDescription.Contains(!string.IsNullOrEmpty(filters.filters.Description) ? filters.filters.Description : im.PartDescription)
+                            && im.ManufacturerId == (filters.filters.ManufacturerId > 0 ? filters.filters.ManufacturerId : im.ManufacturerId)
+                            && im.ItemClassificationId == (filters.filters.ItemClassificationId > 0 ? filters.filters.ItemClassificationId : im.ItemClassificationId)
+                            select new
+                            {
+                                alt.ItemMappingId,
+                                im.PartNumber,
+                                im.PartDescription,
+                                Manufacturer = man.Name,
+                                im.ManufacturerId,
+                                im.ItemMasterId,
+                                AltPartNo = im1.PartNumber,
+                                alt.MappingItemMasterId,
+                                AltPartDescription = im1.PartDescription,
+                                alt.IsActive,
+                                alt.IsDeleted,
+                                alt.CreatedBy,
+                                alt.CreatedDate,
+                                alt.MasterCompanyId,
+                                alt.UpdatedBy,
+                                alt.UpdatedDate,
+                                alt.MappingType,
+                                im.ItemClassificationId,
+                                ItemClassification = ic.Description,
+                                AttachmentDetails = (from at in _appContext.Attachment
+                                                     join ad in _appContext.AttachmentDetails on at.AttachmentId equals ad.AttachmentId
+                                                     where at.ReferenceId == alt.ItemMappingId && at.ModuleId == Convert.ToInt64(ModuleEnum.NhaTlaAltEquItemMapping)
+                                                     select new
+                                                     {
+                                                         ad
+                                                     }).OrderByDescending(p => p.ad.AttachmentDetailId).FirstOrDefault(),
+                                TotalRecords = totalRecords
+                            }).Distinct()
+                                  .ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> NhaTlaAltEquPartHistory(long itemMappingId)
+        {
+            try
+            {
+                var list = (from alt in _appContext.NhaTlaAltEquAudit
+                            join im in _appContext.ItemMaster on alt.ItemMasterId equals im.ItemMasterId
+                            join im1 in _appContext.ItemMaster on alt.MappingItemMasterId equals im1.ItemMasterId
+                            join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
+                            join ic in _appContext.ItemClassification on im.ItemClassificationId equals ic.ItemClassificationId
+                            where alt.ItemMappingId == itemMappingId
+                            select new
+                            {
+                                im.PartNumber,
+                                im.PartDescription,
+                                Manufacturer = man.Name,
+                                AltPartNo = im1.PartNumber,
+                                AltPartDescription = im1.PartDescription,
+                                alt.IsActive,
+                                alt.IsDeleted,
+                                alt.CreatedBy,
+                                alt.CreatedDate,
+                                alt.UpdatedBy,
+                                alt.UpdatedDate,
+                                ItemClassification = ic.Description,
+                                AttachmentDetails = (from at in _appContext.Attachment
+                                                     join ad in _appContext.AttachmentDetails on at.AttachmentId equals ad.AttachmentId
+                                                     where at.ReferenceId == alt.ItemMappingId && at.ModuleId == Convert.ToInt64(ModuleEnum.NhaTlaAltEquItemMapping)
+                                                     select new
+                                                     {
+                                                         ad
+                                                     }).OrderByDescending(p => p.ad.AttachmentDetailId).FirstOrDefault(),
+
+                            }).ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
 
 
@@ -1072,5 +1246,7 @@ namespace DAL.Repositories
             return predicate;
 
         }
+
+
     }
 }

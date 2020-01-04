@@ -12,12 +12,8 @@ import { MessageSeverity, AlertService } from '../../../../services/alert.servic
 
 /** item-master-stock component*/
 export class NTAEAlternateComponent implements OnInit {
-    itemMasterId: number;
-    itemMasterData: any = {
-        partNumber: String,
-        partDescription: String,
-        Manufacturer: String
-    };
+    itemMasterId: any;
+    itemMasterData: any = {};
     filterItemMaster: any = {
         MappingPNumber: "",
         Description: "",
@@ -28,23 +24,23 @@ export class NTAEAlternateComponent implements OnInit {
     pnData: any = [];
     partsData: any = [];
     alterTableColumns: any[] = [
-        { field: "partNumber", header: "PN" },
-        { field: "partDescription", header: "Description" },
+        { field: "altPartNo", header: "PN" },
+        { field: "altPartDescription", header: "Description" },
         { field: "manufacturer", header: "Manufacturer " }
     ];
     nhaTableColumns: any [] = [
-        { field: "partNumber", header: "PN" },
-        { field: "partDescription", header: "Description" },
+        { field: "altPartNo", header: "PN" },
+        { field: "altPartDescription", header: "Description" },
         { field: "manufacturer", header: "Manufacturer " }
     ];
     tlaTableColumns: any [] = [
-        { field: "partNumber", header: "PN" },
-        { field: "partDescription", header: "Description" },
+        { field: "altPartNo", header: "PN" },
+        { field: "altPartDescription", header: "Description" },
         { field: "manufacturer", header: "Manufacturer " }
     ];
     equivalencyTableColumns: any [] = [
-        { field: "partNumber", header: "PN" },
-        { field: "partDescription", header: "Description" },
+        { field: "altPartNo", header: "PN" },
+        { field: "altPartDescription", header: "Description" },
         { field: "manufacturer", header: "Manufacturer " },
         { field: "itemClassification", header: "ITEM CLASSIFICATION " },
         { field: "document", header: "Document " }
@@ -61,10 +57,10 @@ export class NTAEAlternateComponent implements OnInit {
     // selectedTab: any = "";
     @Input() selectedTab: string = "";
     ntaeTableColumns: any[];
-    selectedNTAETabId: number;
+    selectedNTAETabId: any;
     itenClassificationData: any = [];
     filterPartItemClassificationData: any = [];
-    formData = new FormData()
+    formDataNtae = new FormData()
 
 
 
@@ -77,7 +73,7 @@ export class NTAEAlternateComponent implements OnInit {
         if(this.itemMasterId !== undefined){
             this.getItemMasterDetailById();
             this.getalterqquparts();
-            this.getNtaeData();
+            this.getNtaeData(true);
             this.ptnumberlistdata();
             this.manufacturerdata();
 
@@ -109,7 +105,7 @@ export class NTAEAlternateComponent implements OnInit {
             this.ntaeTableColumns = this.equivalencyTableColumns
             this.selectedNTAETabId = 2
         }
-        this.getNtaeData();
+        this.getNtaeData(true);
         this.filterItemMaster = {};
     }
 
@@ -131,116 +127,152 @@ export class NTAEAlternateComponent implements OnInit {
             
         })
     }
-    getNtaeData(){
+    getNtaeData(status: boolean){
         let reqData = {  
-            first:0,
-            rows:10,
-            sortOrder:1,
-            filters:{
-                ItemMasterId:this.itemMasterId,
-                MappingType:this.selectedNTAETabId,
-                ManufacturerId:this.filterItemMaster.ManufacturerId || null,
-	            Description:this.filterItemMaster.Description,
-	            MappingItemMasterId: this.filterItemMaster.ManufacturerId
-            },
-            globalFilter:null
-         }
-        this.itemser.getnhatlaaltequpartlis(reqData).subscribe(res => {
-            console.log(res, "parnumbers");
-//             partNumber: "PN1234_17"
-// partDescription: "PN Description "
-// manufacturer: "111"
-// manufacturerId: 3
-            this.ntaeData = res;
-            for(let i = 0; i<this.ntaeData.length; i++){
-                // this.filterPNData.push({
-                //     label: this.ntaeData[i].partNumber, value : this.ntaeData[i].itemMasterId
-                // })
-                // this.filterPartDescriptionData.push({
-                    // label: this.ntaeData[i].partDescription, value :this.ntaeData[i].partDescription })
-                this.filterManufacturerData.push({
-                    label: this.ntaeData[i].manufacturer, value : this.ntaeData[i].manufacturerId
+                first:0,
+                rows:10,
+                sortOrder:1,
+                filters:{
+                    ItemMasterId:parseInt(this.itemMasterId),
+                    MappingType:this.selectedNTAETabId,
+                    ManufacturerId:this.filterItemMaster.ManufacturerId || null,
+                    Description:this.filterItemMaster.Description,
+                    MappingItemMasterId: this.filterItemMaster.MappingItemMasterId
+                },
+                globalFilter:null
+             }
+
+             if(this.selectedNTAETabId == 2){
+                this.itemser.getequivalencypartlist(reqData).subscribe(res => {
+
+                    this.ntaeData = res;
+                    for(let i = 0; i<this.ntaeData.length; i++){
+                       
+                        this.filterManufacturerData.push({
+                            label: this.ntaeData[i].manufacturer, value : this.ntaeData[i].manufacturerId
+                        })
+                        if(this.selectedNTAETabId == 2){
+                            this.filterPartItemClassificationData.push({
+                                label: this.ntaeData[i].itemClassification, value :this.ntaeData[i].itemClassificationId
+                            })
+                        }
+                    }
+                    
                 })
-                if(this.selectedNTAETabId == 2){
-                    this.filterPartItemClassificationData.push({
-                        label: this.ntaeData[i].itemClassification, value :this.ntaeData[i].itemClassificationId
-                    })
-                }
-            }
-            
-        })
+             } else {
+                this.itemser.getnhatlaaltequpartlis(reqData).subscribe(res => {
+
+                    this.ntaeData = res;
+                    for(let i = 0; i<this.ntaeData.length; i++){
+                       
+                        this.filterManufacturerData.push({
+                            label: this.ntaeData[i].manufacturer, value : this.ntaeData[i].manufacturerId
+                        })
+                        if(this.selectedNTAETabId == 2){
+                            this.filterPartItemClassificationData.push({
+                                label: this.ntaeData[i].itemClassification, value :this.ntaeData[i].itemClassificationId
+                            })
+                        }
+                    }
+                    
+                })
+             }
+        
+        
     }
-    fileUpload(event) {
-        console.log(event);
-        if (event.files.length === 0)
-          return;
-    
-        // const formData = new FormData();
-    
-        for (let file of event.files)
-          this.formData.append(file.name, file);
+    fileUploadNtae (event) {
+        const file = event.target.files;
+
+        console.log(file);
+        if (file.length > 0) {
+            this.formDataNtae.append('file', file[0])
+        }
+
+        console.log(this.formDataNtae, "this.formData.append++++")
       }
     bindPartDataInPopup(event){
         for(let i=0; i<this.partsData.length; i++){
             if(this.partsData[i].itemMasterId == this.alternateData.MappingItemMasterId){
                 this.alternateData.Description = this.partsData[i].partDescription;
                 this.alternateData.manufacturer = this.partsData[i].manufacturer;
+                if(this.selectedNTAETabId == 2){
+                    this.alternateData.itemClassificationId = this.partsData[i].itemClassification
+                }
             }
         }
     }
 
     saveAlternate(){
-        var reqData;
-        let reqDataJson = {  
-            ItemMappingId:0,
-            ItemMasterId:this.itemMasterId,
-            MappingItemMasterId: this.alternateData.MappingItemMasterId,
-            MappingType: this.selectedNTAETabId,
-            masterCompanyId:1,
-            CreatedBy:"admin",
-            UpdatedBy:"admin",
-            CreatedDate: new Date(),
-            UpdatedDate: new Date(),
-            IsActive:true,
-            IsDeleted:false                            
-         }
-         reqData = reqDataJson;
+   
+        
+       
          if(this.selectedNTAETabId == 2){
+             console.log(this.formDataNtae, "this.formData++++++++++")
             // Object.keys(reqDataJson).forEach(key => this.formData.append(key, JSON.stringify(reqDataJson[key])));
-            this.formData.append('ItemMappingId', "0");
-            this.formData.append('ItemMasterId', JSON.stringify(this.itemMasterId));
-            this.formData.append('MappingItemMasterId', JSON.stringify(this.alternateData.MappingItemMasterId));
-            this.formData.append('MappingType', JSON.stringify(this.selectedNTAETabId));
-            this.formData.append('masterCompanyId', JSON.stringify(1));
-            this.formData.append('CreatedBy', "admin");
-            this.formData.append('UpdatedBy', "admin");
-            this.formData.append('IsActive', "true");
-            this.formData.append('IsDeleted', "false");
+            this.formDataNtae.append('ItemMappingId', "0");
+            this.formDataNtae.append('ItemMasterId', this.itemMasterId);
+            this.formDataNtae.append('MappingItemMasterId', this.alternateData.MappingItemMasterId);
+            this.formDataNtae.append('MappingType', this.selectedNTAETabId);
+            this.formDataNtae.append('masterCompanyId', "1");
+            this.formDataNtae.append('CreatedBy', "admin");
+            this.formDataNtae.append('UpdatedBy', "admin");
+            this.formDataNtae.append('CreatedDate', "admin");
+            this.formDataNtae.append('UpdatedDate', "admin");
+            this.formDataNtae.append('IsActive', "true");
+            this.formDataNtae.append('IsDeleted', "false");
 
-            
-            reqData = this.formData
+            console.log(this.formDataNtae, "formDataNtae+++++")
+            // reqData = this.formDataNtae;
+            this.itemser.createNTAEFileUploadForEquivalency (this.formDataNtae).subscribe(datas => {
+                console.log(datas)
+               this.alertService.showMessage(
+                   'Success',
+                   'Alter Information Added Successfully',
+                   MessageSeverity.success
+               );
+               this.getNtaeData(true);
+               this.closeModal()
+   
+               // this.getAircraftMappedDataByItemMasterId();
+   
+           }, err => {
+               const errorLog = err;
+               this.errorMessageHandler(errorLog);
+              
+           })
+         } else {
+            let reqDataJson = {  
+                ItemMappingId:0,
+                ItemMasterId:this.itemMasterId,
+                MappingItemMasterId: this.alternateData.MappingItemMasterId,
+                MappingType: this.selectedNTAETabId,
+                masterCompanyId:1,
+                CreatedBy:"admin",
+                UpdatedBy:"admin",
+                CreatedDate: new Date(),
+                UpdatedDate: new Date(),
+                IsActive:true,
+                IsDeleted:false                            
+             }
+            this.itemser.createnhatlaaltequpart (reqDataJson).subscribe(datas => {
+                console.log(datas)
+               this.alertService.showMessage(
+                   'Success',
+                   'Alter Information Added Successfully',
+                   MessageSeverity.success
+               );
+               this.getNtaeData(true);
+               this.closeModal()
+   
+               // this.getAircraftMappedDataByItemMasterId();
+   
+           }, err => {
+               const errorLog = err;
+               this.errorMessageHandler(errorLog);
+              
+           })
          }
-console.log(reqData, "reqData++++++++")
-         
 
-         this.itemser.createnhatlaaltequpart (reqData).subscribe(datas => {
-             console.log(datas)
-            this.alertService.showMessage(
-                'Success',
-                'Alter Information Added Successfully',
-                MessageSeverity.success
-            );
-            this.getNtaeData();
-
-            // this.getAircraftMappedDataByItemMasterId();
-
-        }, err => {
-            const errorLog = err;
-            this.errorMessageHandler(errorLog);
-           
-        })
-
-         console.log(reqData, "reqData+++")
 
 
     }
@@ -259,33 +291,33 @@ console.log(reqData, "reqData++++++++")
 
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.allpnNumbers = allWorkFlows;
+        this.allpnNumbers = allWorkFlows;        
     }
 
     filetrDropdownValues(event, type){
-        this.filterPNData = this.allpnNumbers;
-
-        const oemFilterData = [...this.allpnNumbers.filter(x => {
+        this.filterPNData = this.ntaeData;
+        console.log(this.filterPNData);
+        const oemFilterData = [...this.ntaeData.filter(x => {
             return x.partNumber.toLowerCase().includes(event.query.toLowerCase())
         })]
         console.log(oemFilterData, "oemFilterData+++")
         this.filterPNData = oemFilterData;
 
         this.filterPNData = [];
-        if (this.allpnNumbers) {
-            if (this.allpnNumbers.length > 0) {
+        if (this.ntaeData) {
+            if (this.ntaeData.length > 0) {
 
-                for (let i = 0; i < this.allpnNumbers.length; i++) {
-                    let partName = this.allpnNumbers[i].partNumber;
+                for (let i = 0; i < this.ntaeData.length; i++) {
+                    let partName = this.ntaeData[i].altPartNo;
                     if (partName) {
                         if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                             this.itemclaColl.push([{
-                                "partId": this.allpnNumbers[i].itemMasterId,
+                                "partId": this.ntaeData[i].mappingItemMasterId,
                                 "partName": partName
                             }]),
 
                                 this.filterPNData.push(partName);
-                                this.filterDiscriptionData.push(this.allpnNumbers[i].partDescription)
+                                this.filterDiscriptionData.push(this.ntaeData[i].altPartDescription)
                         }
                     }
                 }
@@ -293,6 +325,37 @@ console.log(reqData, "reqData++++++++")
         }
         
     }
+    // filetrDropdownValues(event, type){
+    //     this.filterPNData = this.allpnNumbers;
+    //     console.log(this.filterPNData);
+    //     const oemFilterData = [...this.allpnNumbers.filter(x => {
+    //         return x.partNumber.toLowerCase().includes(event.query.toLowerCase())
+    //     })]
+    //     console.log(oemFilterData, "oemFilterData+++")
+    //     this.filterPNData = oemFilterData;
+
+    //     this.filterPNData = [];
+    //     if (this.allpnNumbers) {
+    //         if (this.allpnNumbers.length > 0) {
+
+    //             for (let i = 0; i < this.allpnNumbers.length; i++) {
+    //                 let partName = this.allpnNumbers[i].partNumber;
+    //                 if (partName) {
+    //                     if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+    //                         this.itemclaColl.push([{
+    //                             "partId": this.allpnNumbers[i].itemMasterId,
+    //                             "partName": partName
+    //                         }]),
+
+    //                             this.filterPNData.push(partName);
+    //                             this.filterDiscriptionData.push(this.allpnNumbers[i].partDescription)
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+        
+    // }
 
     private onpartnumberloadsuccessfull(allWorkFlows: any[]) {
 
@@ -321,24 +384,26 @@ console.log(reqData, "reqData++++++++")
 
     }
     partnmId(event) {
+        console.log(this.ntaeData, "this.ntaeData++++")
         console.log(event, "event++++")
         if (this.itemclaColl) {
-            for (let i = 0; i < this.itemclaColl.length; i++) {
-                if (event == this.itemclaColl[i][0].partName) {
-                    this.filterItemMaster.MappingItemMasterId = this.itemclaColl[i][0].partId;
+            for (let i = 0; i < this.ntaeData.length; i++) {
+                if (event == this.ntaeData[i].altPartNo) {
+                    this.filterItemMaster.MappingItemMasterId = this.ntaeData[i].mappingItemMasterId;
                     this.filterItemMaster.MappingPNumber = event;
+                    this.filterItemMaster.ManufacturerId = this.ntaeData[i].manufacturerId;
 
                     // this.disableSavepartNumber = true;
                     // this.selectedActionName = event;
                 }
             }
             console.log(this.filterItemMaster.MappingItemMasterId, "this.filterItemMaster.MappingItemMasterId++++")
-            for(let j=0; j < this.allpnNumbers.length; j++){
+            // for(let j=0; j < this.allpnNumbers.length; j++){
 
-                if(this.filterItemMaster.MappingItemMasterId === this.allpnNumbers[j].itemMasterId){
-                    this.filterItemMaster.ManufacturerId = this.allpnNumbers[j].manufacturerId;
-                }
-            }
+            //     if(this.filterItemMaster.MappingItemMasterId === this.allpnNumbers[j].itemMasterId){
+            //         this.filterItemMaster.ManufacturerId = this.allpnNumbers[j].manufacturerId;
+            //     }
+            // }
             console.log(this.filterItemMaster.ManufacturerId, "this.filterItemMaster.ManufacturerId+=");
 
             this.itemser.getDescriptionbypart(event).subscribe(
@@ -354,7 +419,7 @@ console.log(reqData, "reqData++++++++")
     deleteNTAERow(itemMasterId, index){        
         this.itemser.deleteNTAERow(itemMasterId, "admin").subscribe(res => {
             console.log(res, "response of itemMaster+++++++++++++");
-            this.getNtaeData()
+            this.getNtaeData(true)
             return false;
             // this.itemMasterData = res[0];
         }),
@@ -363,7 +428,10 @@ console.log(reqData, "reqData++++++++")
         }
     }
 
-    
+    closeModal(){
+        this.alternateData = {}
+        this.formDataNtae = new FormData()
+    }
 
     errorMessageHandler(log) {
         this.alertService.showMessage(
@@ -378,6 +446,7 @@ console.log(reqData, "reqData++++++++")
         this.loadingIndicator = false;
 
     }
+
 
 
 

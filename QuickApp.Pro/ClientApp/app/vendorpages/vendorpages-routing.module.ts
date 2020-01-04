@@ -35,6 +35,7 @@ import { EditVendorCapabilitiesComponent } from '../components/vendor/vendor-cap
 import { RolesGuardService } from '../services/roles-guard.service';
 import { CommonService } from '../services/common.service';
 import { VendorDocumentsComponent } from '../components/vendor/vendor-documents/vendor-documents.component';
+import { VendorCapesComponent } from '../components/vendor/vendor-capes/vendor-capes.component';
 
 
 const vendorPagesRoutes: Routes = [
@@ -45,6 +46,7 @@ const vendorPagesRoutes: Routes = [
 			{ path: "app-vendors-list", component: VendorsListComponent, canActivate: [RolesGuardService], data: { name: ['app-vendors-list'], title: "Vendor's List" } },
 			{ path: "app-vendor-general-information", component: VendorGeneralInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-general-information'], title: "Vendor's General Information" } },
 			{ path: "app-vendor-contacts", component: VendorContactsComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-contacts'], title: "Vendor's Contact" } },
+			{ path: "app-vendor-capes", component: VendorCapesComponent, data: { name: ['app-vendor-capes'], title: "Vendor Capabilities" } },
 			{ path: "app-vendor-financial-information", component: VendorFinancialInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-financial-information'], title: "Vendor's Financial Information" } },
 			{ path: "app-vendor-payment-information", component: VendorPaymentInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-payment-information'], title: "Vendor's Payment Information" } },
 			{ path: "app-vendor-billing-information", component: VendorBillingInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-billing-information'], title: "Vendor's Billing Information" } },

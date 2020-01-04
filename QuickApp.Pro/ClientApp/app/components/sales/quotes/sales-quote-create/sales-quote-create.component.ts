@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild,ElementRef } from "@angular/core";
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl,FormArray } from '@angular/forms';
 import { CustomerSearchQuery } from "../models/customer-search-query";
 import { CustomerService } from "../../../../services/customer.service";
@@ -42,6 +42,7 @@ export class SalesQuoteCreateComponent implements OnInit {
   customerId: number;
   salesQuote: ISalesQuote;
   salesOrderQuote: ISalesOrderQuote;
+  salesOrderQuoteObj: ISalesOrderQuote;
   salesQuoteView: ISalesQuoteView;
   creditTerms:any[];
   percents:any[];
@@ -56,6 +57,7 @@ export class SalesQuoteCreateComponent implements OnInit {
   accountTypes:any[];
   selectedParts:any[] = [];
   modal: NgbModalRef;
+  errorModal: NgbModalRef;
   tempMemo: any;
 	tempMemoLabel: any;
   customer: any = {
@@ -67,7 +69,8 @@ export class SalesQuoteCreateComponent implements OnInit {
   display: boolean = false;
   id:any;
   selectedApprovers:any[]=[];
-
+  errorMessages:any[]=[];
+  @ViewChild("errorMessagePop")  public errorMessagePop: ElementRef;
   @ViewChild("newSalesQuoteForm") public newSalesQuoteForm: NgForm;
   constructor(
     private customerService: CustomerService,
@@ -113,6 +116,7 @@ export class SalesQuoteCreateComponent implements OnInit {
     this.getPercents();
     this.getCurrencyData();
     this.getEmployeedata();
+    this.getCustomerList();
     this.getAllCustomerContact();
     this.getCustomerWarningsData();
     this.getAccountTypes();
@@ -221,17 +225,20 @@ private getCustomerList() {
       this.salesQuote.customerName = this.customerDetails.name;
       this.salesQuote.customerCode = this.customerDetails.customerCode;
 
-      this.salesQuote.creditLimit = this.customerDetails.creditLimit;
-      this.salesQuote.creditLimitTermsId = this.customerDetails.creditTermsId;
-      this.salesQuote.contractReferenceName = this.customerDetails.contractReference;
-      this.salesQuote.restrictPMA = this.customerDetails.restrictPMA;
-      this.salesQuote.restrictDER = this.customerDetails.restrictBER;
-      this.salesQuote.accountTypeId = this.customerDetails.customerTypeId;
-      this.salesQuote.salesPersonName =  getObjectById('employeeId', this.customerDetails.primarySalesPersonId, this.allEmployeeinfo);
-     // this.salesQuote.secondarySalesPersonId: getObjectById('employeeId', this.customerDetails.secondarySalesPersonId, this.employeeListOriginal),
-      this.salesQuote.customerServiceRepName = getObjectById('employeeId', this.customerDetails.csrId, this.allEmployeeinfo);
-      this.salesQuote.agentName = getObjectById('employeeId', this.customerDetails.saId, this.allEmployeeinfo);
-      this.salesQuote.employeeName = getObjectById('employeeId', this.userId, this.allEmployeeinfo);
+      if(!this.id){
+        this.salesQuote.creditLimit = this.customerDetails.creditLimit;
+        this.salesQuote.creditLimitTermsId = this.customerDetails.creditTermsId;
+        this.salesQuote.contractReferenceName = this.customerDetails.contractReference;
+        this.salesQuote.restrictPMA = this.customerDetails.restrictPMA;
+        this.salesQuote.restrictDER = this.customerDetails.restrictBER;
+        this.salesQuote.accountTypeId = this.customerDetails.customerTypeId;
+        this.salesQuote.salesPersonName =  getObjectById('employeeId', this.customerDetails.primarySalesPersonId, this.allEmployeeinfo);
+       // this.salesQuote.secondarySalesPersonId: getObjectById('employeeId', this.customerDetails.secondarySalesPersonId, this.employeeListOriginal),
+        this.salesQuote.customerServiceRepName = getObjectById('employeeId', this.customerDetails.csrId, this.allEmployeeinfo);
+        this.salesQuote.agentName = getObjectById('employeeId', this.customerDetails.saId, this.allEmployeeinfo);
+        this.salesQuote.employeeName = getObjectById('employeeId', this.userId, this.allEmployeeinfo);
+      }
+     
       this.alertService.stopLoadingMessage();
     })
     }
@@ -314,9 +321,10 @@ onWarningSelect(event) {
 getApproverList(approvers) {
 
   if (this.allEmployeeinfo) {
+
     for (let i = 0; i < this.allEmployeeinfo.length; i++) {
       for (let j = 0; j < approvers.length; j++) {
-        let employeeId = approvers[0].employeeId;
+        let employeeId = approvers[j].employeeId;
         if (employeeId == this.allEmployeeinfo[i].employeeId) {
           this.selectedApprovers.push(this.allEmployeeinfo[i]);
         }
@@ -331,7 +339,7 @@ getSalesQuoteInstance(salesQuoteId: number) {
     .getSalesQuote(salesQuoteId)
     .subscribe(data => {
       this.salesQuoteView = data && data.length ? data[0] : null;
-      this.salesOrderQuote = this.salesQuoteView.salesOrderQuote;
+      this.salesOrderQuoteObj = this.salesQuoteView.salesOrderQuote;
      // this.approvers = this.salesQuoteView.approverList;
      // this.salesQuoteService.updateApprovers(this.approvers);
      this.getApproverList(this.salesQuoteView.approverList);
@@ -358,6 +366,7 @@ getSalesQuoteInstance(salesQuoteId: number) {
         }
        // this.approvers[i].employeeId = this.salesQuoteView.approverList[i].employeeId;
        }
+       console.log(this.approvers);
      }
      
 
@@ -381,7 +390,7 @@ getSalesQuoteInstance(salesQuoteId: number) {
           partNumberObj.pmaStatus = 'PMA';
         if(selectedPart.isDER)
           partNumberObj.pmaStatus = 'DER';
-
+        partNumberObj.salesOrderQuotePartId = selectedPart.salesOrderQuotePartId;
         partNumberObj.salesPricePerUnit = selectedPart.unitSalePrice;
         partNumberObj.salesPriceExtended = selectedPart.salesBeforeDiscount;
         partNumberObj.salesDiscount = selectedPart.discount;
@@ -399,44 +408,70 @@ getSalesQuoteInstance(salesQuoteId: number) {
       this.salesQuote.priorities = this.salesQuoteView.priorities;
       this.salesQuote.leadSources = this.salesQuoteView.leadSources;
       this.salesQuote.salesQuoteTypes = this.salesQuoteView.salesQuoteTypes;
-      this.salesQuote.salesOrderQuoteId = this.salesOrderQuote.salesOrderQuoteId
-      this.salesQuote.quoteTypeId = this.salesOrderQuote.quoteTypeId;
-      this.salesQuote.openDate = new Date(this.salesOrderQuote.openDate);
-      this.salesQuote.customerRequestDate = new Date(this.salesOrderQuote.customerRequestDate);
-      this.salesQuote.customerPromisedDate = new Date(this.salesOrderQuote.promisedDate);
-      this.salesQuote.estimatedShipDate = new Date(this.salesOrderQuote.estimatedShipDate);
-      this.salesQuote.validForDays = this.salesOrderQuote.validForDays;
-      this.salesQuote.quoteExpiryDate = new Date(this.salesOrderQuote.quoteExpireDate);
-      this.salesQuote.priorityId = this.salesOrderQuote.priorityId;
-      this.salesQuote.accountTypeId = this.salesOrderQuote.accountTypeId;
-      this.salesQuote.customerId = this.salesOrderQuote.customerId;
-      this.salesQuote.customerContactId = this.salesOrderQuote.customerContactId;
-      this.salesQuote.customerReferenceName = this.salesOrderQuote.customerReference;
-      this.salesQuote.contractReferenceName = this.salesOrderQuote.contractReference;
+      this.salesQuote.salesOrderQuoteId = this.salesOrderQuoteObj.salesOrderQuoteId
+      this.salesQuote.quoteTypeId = this.salesOrderQuoteObj.quoteTypeId;
+      this.salesQuote.openDate = new Date(this.salesOrderQuoteObj.openDate);
+      this.salesQuote.customerRequestDate = new Date(this.salesOrderQuoteObj.customerRequestDate);
+      this.salesQuote.customerPromisedDate = new Date(this.salesOrderQuoteObj.promisedDate);
+      this.salesQuote.estimatedShipDate = new Date(this.salesOrderQuoteObj.estimatedShipDate);
+      this.salesQuote.validForDays = this.salesOrderQuoteObj.validForDays;
+      this.salesQuote.quoteExpiryDate = new Date(this.salesOrderQuoteObj.quoteExpireDate);
+      this.salesQuote.priorityId = this.salesOrderQuoteObj.priorityId;
+      this.salesQuote.accountTypeId = this.salesOrderQuoteObj.accountTypeId;
+      this.salesQuote.customerId = this.salesOrderQuoteObj.customerId;
+      this.salesQuote.customerContactId = this.salesOrderQuoteObj.customerContactId;
+      this.salesQuote.customerReferenceName = this.salesOrderQuoteObj.customerReference;
+      this.salesQuote.contractReferenceName = this.salesOrderQuoteObj.contractReference;
 
-      this.salesQuote.salesPersonName =  getObjectById('employeeId', this.salesOrderQuote.salesPersonId, this.allEmployeeinfo);
+      this.salesQuote.salesPersonName =  getObjectById('employeeId', this.salesOrderQuoteObj.salesPersonId, this.allEmployeeinfo);
       // this.salesQuote.secondarySalesPersonId: getObjectById('employeeId', this.customerDetails.secondarySalesPersonId, this.employeeListOriginal),
-       this.salesQuote.customerServiceRepName = getObjectById('employeeId', this.salesOrderQuote.customerSeviceRepId, this.allEmployeeinfo);
-       this.salesQuote.agentName = getObjectById('employeeId', this.salesOrderQuote.employeeId, this.allEmployeeinfo);
-       this.salesQuote.employeeName = getObjectById('employeeId', this.salesOrderQuote.employeeId, this.allEmployeeinfo);
+       this.salesQuote.customerServiceRepName = getObjectById('employeeId', this.salesOrderQuoteObj.customerSeviceRepId, this.allEmployeeinfo);
+       this.salesQuote.agentName = getObjectById('employeeId', this.salesOrderQuoteObj.employeeId, this.allEmployeeinfo);
+       this.salesQuote.employeeName = getObjectById('employeeId', this.salesOrderQuoteObj.employeeId, this.allEmployeeinfo);
 
-       this.salesOrderQuote.billToContactId = getObjectById('customerId', this.salesOrderQuote.billToContactId, this.allEmployeeinfo);
-       this.salesOrderQuote.shipToContactId = getObjectById('customerId', this.salesOrderQuote.shipToContactId, this.allEmployeeinfo);
+       this.salesOrderQuote.billToContactId = getObjectById('customerId', this.salesOrderQuoteObj.billToContactId, this.allCustomer);
+       this.salesOrderQuote.shipToContactId = getObjectById('customerId', this.salesOrderQuoteObj.shipToContactId, this.allCustomer);
+    
+
+       this.salesOrderQuote.shipToSiteName = this.salesOrderQuoteObj.shipToSiteName;
+       this.salesOrderQuote.shipToAddress1 = this.salesOrderQuoteObj.shipToAddress1;
+       this.salesOrderQuote.shipToAddress2 = this.salesOrderQuoteObj.shipToAddress2;
+       this.salesOrderQuote.shipToCity = this.salesOrderQuoteObj.shipToCity;
+       this.salesOrderQuote.shipToState = this.salesOrderQuoteObj.shipToState;
+       this.salesOrderQuote.shipToPostalCode = this.salesOrderQuoteObj.shipToPostalCode;
+       this.salesOrderQuote.shipToCountry = this.salesOrderQuoteObj.shipToCountry;
+       this.salesOrderQuote.shipViaName = this.salesOrderQuoteObj.shipViaName;
+       this.salesOrderQuote.shipViaShippingAccountInfo = this.salesOrderQuoteObj.shipViaShippingAccountInfo;
+       this.salesOrderQuote.shippingId = this.salesOrderQuoteObj.shippingId;
+       this.salesOrderQuote.shippingURL = this.salesOrderQuoteObj.shippingURL;
+       this.salesOrderQuote.shipViaMemo = this.salesOrderQuoteObj.shipViaMemo;
+       this.salesOrderQuote.shipViaShippingURL = this.salesOrderQuoteObj.shipViaShippingURL;
+       this.salesOrderQuote.billToSiteName = this.salesOrderQuoteObj.billToSiteName;
+       this.salesOrderQuote.billToAddress1 = this.salesOrderQuoteObj.billToAddress1;
+
+       this.salesOrderQuote.billToAddress2 = this.salesOrderQuoteObj.billToAddress2;
+       this.salesOrderQuote.billToCity = this.salesOrderQuoteObj.billToCity;
+       this.salesOrderQuote.billToState = this.salesOrderQuoteObj.billToState;
+       this.salesOrderQuote.billToPostalCode = this.salesOrderQuoteObj.billToPostalCode;
+       this.salesOrderQuote.billToCountry = this.salesOrderQuoteObj.billToCountry;
+       this.salesOrderQuote.billToMemo = this.salesOrderQuoteObj.billToMemo;
+
+       this.salesOrderQuote.salesOrderQuoteId = this.salesOrderQuoteObj.salesOrderQuoteId;
       
 
      
-      this.salesQuote.probabilityId = this.salesOrderQuote.probabilityId;
-      this.salesQuote.leadSourceId = this.salesOrderQuote.leadSourceId;
-      this.salesQuote.creditLimit = this.salesOrderQuote.creditLimit;
-      this.salesQuote.creditLimitTermsId = this.salesOrderQuote.creditTermId;
-       this.salesQuote.restrictPMA = this.salesOrderQuote.restrictPMA;
-      this.salesQuote.restrictDER = this.salesOrderQuote.restrictDER;
-      if(this.salesOrderQuote.approvedDate)
-        this.salesQuote.approvedDate = new Date(this.salesOrderQuote.approvedDate);
-      this.salesQuote.currencyId = this.salesOrderQuote.currencyId;
-      this.salesQuote.warningId = this.salesOrderQuote.customerWarningId;
-       this.salesQuote.memo = this.salesOrderQuote.memo;
-      this.salesQuote.notes = this.salesOrderQuote.notes;
+      this.salesQuote.probabilityId = this.salesOrderQuoteObj.probabilityId;
+      this.salesQuote.leadSourceId = this.salesOrderQuoteObj.leadSourceId;
+      this.salesQuote.creditLimit = this.salesOrderQuoteObj.creditLimit;
+      this.salesQuote.creditLimitTermsId = this.salesOrderQuoteObj.creditTermId;
+       this.salesQuote.restrictPMA = this.salesOrderQuoteObj.restrictPMA;
+      this.salesQuote.restrictDER = this.salesOrderQuoteObj.restrictDER;
+      if(this.salesOrderQuoteObj.approvedDate)
+        this.salesQuote.approvedDate = new Date(this.salesOrderQuoteObj.approvedDate);
+      this.salesQuote.currencyId = this.salesOrderQuoteObj.currencyId;
+      this.salesQuote.warningId = this.salesOrderQuoteObj.customerWarningId;
+       this.salesQuote.memo = this.salesOrderQuoteObj.memo;
+      this.salesQuote.notes = this.salesOrderQuoteObj.notes;
 
   
       this.getCustomerDetails();
@@ -521,18 +556,99 @@ onSaveDescription() {
 }
 
 
+closeErrorMessage() {
+  // this.isDeleteMode = false;
+ 
+   this.errorModal.close();
+ }
+
   onSubmit() {
     //##TODO call below service to create sales quote 
     //this.salesQuoteService.create
     //input parameter: ISalesQuoteView
     console.log(this.salesQuote);
-    console.log(this.salesQuote.quoteTypeId);
-    if (!(this.salesQuote.openDate && this.salesQuote.customerRequestDate
-      && this.salesQuote.customerPromisedDate && this.salesQuote.estimatedShipDate
-      && this.salesQuote.quoteExpiryDate
-      && this.salesQuote.customerReferenceName)) {
+    console.log(this.salesOrderQuote);
+    this.errorMessages=[];
+    let haveError =false;
+    if (this.salesQuote.quoteTypeId<0){
+      this.errorMessages.push("Please select Quote Type");
+      haveError=true;
+    }
+    if (!this.salesQuote.openDate){
+      this.errorMessages.push("Please select Open Date");
+      haveError=true;
+    }
+    if (!this.salesQuote.customerRequestDate){
+      this.errorMessages.push("Please select Customer Request Date");
+      haveError=true;
+    }
+    if (!this.salesQuote.customerPromisedDate){
+      this.errorMessages.push("Please select Customer Promised Date");
+      haveError=true;
+    }
+    if (!this.salesQuote.estimatedShipDate){
+      this.errorMessages.push("Please select Estimated ShipDate");
+      haveError=true;
+    }
+    if (this.salesQuote.validForDays<1){
+      this.errorMessages.push("Please enter Valid For (Days)");
+      haveError=true;
+    }
+    if (!this.salesQuote.quoteExpiryDate){
+      this.errorMessages.push("Please select Quote Expiry Date");
+      haveError=true;
+    }
+    if (this.salesQuote.priorityId<0){
+      this.errorMessages.push("Please select Priority Type");
+      haveError=true;
+    }
+    if (this.salesQuote.accountTypeId<0){
+      this.errorMessages.push("Please select Account Type");
+      haveError=true;
+    }
+    if (this.salesQuote.customerContactId<0){
+      this.errorMessages.push("Please select Customer Contact");
+      haveError=true;
+    }
+    if (!this.salesQuote.customerReferenceName){
+      this.errorMessages.push("Please enter Customer Reference Name");
+      haveError=true;
+    }
+    if (!this.salesQuote.employeeName){
+      this.errorMessages.push("Please select employee");
+      haveError=true;
+    }
+    if (this.salesQuote.currencyId<0){
+      this.errorMessages.push("Please select currency");
+      haveError=true;
+    }
+   
+    if (!this.salesOrderQuote.shipToSiteName){
+      this.errorMessages.push("Please select Ship To SiteName");
+      haveError=true;
+    }
+    if (!this.salesOrderQuote.shipToContactId){
+      this.errorMessages.push("Please select Ship To Contact");
+      haveError=true;
+    }
+    if (!this.salesOrderQuote.billToSiteName){
+      this.errorMessages.push("Please select Bill To SiteName");
+      haveError=true;
+    }
+    if (!this.salesOrderQuote.billToContactId){
+      this.errorMessages.push("Please select Bill To Contact");
+      haveError=true;
+    }
+
+   
+    if (haveError) {
+      let content = this.errorMessagePop;
+      this.errorModal = this.modalService.open(content, { size: 'sm' });
+      this.errorModal.result.then(() => {
+          console.log('When user closes');
+      }, () => { console.log('Backdrop click') });
       this.display = true;
-  }else{
+    }else{
     this.display = false;
     this.alertService.startLoadingMessage();
     this.salesOrderQuote.quoteTypeId = this.salesQuote.quoteTypeId;
@@ -553,7 +669,7 @@ onSaveDescription() {
      this.salesOrderQuote.customerSeviceRepId = editValueAssignByCondition('employeeId', this.salesQuote.customerServiceRepName);
 
     this.salesOrderQuote.probabilityId = this.salesQuote.probabilityId;
-    this.salesOrderQuote.employeeId = editValueAssignByCondition('employeeId', this.salesQuote.employeeId);
+    this.salesOrderQuote.employeeId = editValueAssignByCondition('employeeId', this.salesQuote.employeeName);
     this.salesOrderQuote.billToContactName = editValueAssignByCondition('name', this.salesOrderQuote.billToContactId);
     this.salesOrderQuote.billToContactId = editValueAssignByCondition('customerId', this.salesOrderQuote.billToContactId);
     this.salesOrderQuote.shipToContactName = editValueAssignByCondition('name', this.salesOrderQuote.shipToContactId);
@@ -576,6 +692,7 @@ onSaveDescription() {
     this.salesQuoteView = new SalesQuoteView();
     this.salesQuoteView.salesOrderQuote = this.salesOrderQuote;
     this.salesQuoteView.approverList = this.approvers;
+    console.log(this.approvers);
 
     let partList:any = [];
 
@@ -583,6 +700,8 @@ onSaveDescription() {
 
       let selectedPart  = this.selectedParts[0];
       let partNumberObj = new SalesOrderQuotePart();
+      partNumberObj.salesOrderQuotePartId = selectedPart.salesOrderQuotePartId;
+      partNumberObj.itemMasterId = selectedPart.itemMasterId;
       partNumberObj.itemMasterId = selectedPart.itemMasterId;
       partNumberObj.stockLineId = selectedPart.stockLineId;
       partNumberObj.fxRate = selectedPart.fixRate;
@@ -597,6 +716,7 @@ onSaveDescription() {
       partNumberObj.updatedBy=this.userName;
       partNumberObj.createdOn = new Date().toDateString();
       partNumberObj.updatedOn = new Date().toDateString();
+      partNumberObj.unitCost = selectedPart.unitCostPerUnit;
       partList.push(partNumberObj);  
     }
     this.salesQuoteView.parts = partList;

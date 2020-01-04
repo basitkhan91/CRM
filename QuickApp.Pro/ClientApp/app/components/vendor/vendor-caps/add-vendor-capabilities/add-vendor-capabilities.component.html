@@ -1,7 +1,7 @@
 ﻿
 <div class="x_content">
 	<div class="card">
-		<div class="card-header">
+		<div class="card-header" *ngIf="!isEnableVendor">
 			<nav aria-label="breadcrumb">
 				<ol class="breadcrumb rpo-bcrumb" style="background-color: transparent;">
 					<li class="breadcrumb-item" aria-current="page">{{isEditMode ? 'Edit' : 'Add'}} Vendor Capabilities</li>
@@ -12,10 +12,20 @@
 			<p-tabView class="pas-tabview">
 					<p-tabPanel header="General Info" [selected]="selectedGeneralInfo">
 						<h4 class="po-head">{{isEditMode ? 'Edit' : 'Create'}} General Information</h4>
+						<div class="row" style="padding: 0 5px;" *ngIf="isEnableVendor">
+                            <div class="col-md-4" *ngIf="vendorName">
+                                <label class="fs12" style="width: auto;">Vendor Name : </label>
+                                <span class="span-header-red"> {{ vendorName }}</span>
+                            </div>
+                            <div class="col-md-4" *ngIf="vendorCode">
+                                <label class="fs12" style="width: auto;">Vendor Code : </label>
+                                <span class="span-header-red"> {{ vendorCode }}</span>
+                            </div>
+                        </div>
 						<form #addVendorCapForm="ngForm" class="form-horizontal ro-grid-form mtop10">
 						<div class="form-row">
 							<div class="col-md-3">
-								<div class="form-group">
+								<div class="form-group" *ngIf="!isEnableVendor">
 									<label>Vendor Name <span class="clr-red">*</span>
 									</label>
 									<div class="inner-addon right-addon inline-block">
@@ -33,7 +43,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="form-group">
+								<div class="form-group" *ngIf="!isEnableVendor">
 									<label>Vendor Code <span class="clr-red">*</span></label>
 									<div class="inner-addon right-addon inline-block">
 										<p-autoComplete field="vendorCode" class="pautocomp-cstm" [(ngModel)]="sourceVendorCap.vendorCode" name="vendorCode" [suggestions]="vendorCodes" (completeMethod)="filterVendorCodes($event)"  [size]="30" [minLength]="1" [dropdown]="true" #vendorCode="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
@@ -266,10 +276,15 @@
 									</tr>
 								</ng-template>
 							</p-table>
-	
-						</div>
-					</p-tabPanel>
+							<div class="form-row pull-right" *ngIf="!isEnableVendor" style="display: block; margin-right: 0px;">
+								<button type="button" style="float: right; margin: 10px 6px;" class="btn btn-primary-cstm" [routerLink]="[
+								'/vendorsmodule/vendorpages/app-vendor-capabilities-list'
+							  ]">Save</button>
+							</div>
+						</div>						
+					</p-tabPanel>					
 			</p-tabView>
+			
 		</div>
 	</div>
 </div>
@@ -278,7 +293,7 @@
 			<div class="modal-dialog modal-sm" style="max-width: 400px !important;">
 				<div class="modal-content">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<button type="button" class="close" (click)="dismissMemoModel()">&times;</button>
 						<h4 class="modal-title">Edit {{tempMemoLabel}}</h4>
 					</div>
 					<div class="modal-body">
@@ -288,8 +303,8 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="onSaveDescription()">Save</button>
-						<button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary-cstm" (click)="onSaveDescription()">Save</button>
+						<button type="button" class="btn btn-danger-cstm" (click)="dismissMemoModel()">Close</button>
 					</div>
 				</div>
 			</div>
@@ -299,7 +314,7 @@
         <div class="modal-dialog modal-full">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <button type="button" class="close" (click)="dismissAircraftModel()">×</button>
                     <h4 class="modal-title">Add Aircraft Info</h4>
                 </div>
                 <div class="modal-body">
@@ -377,8 +392,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="saveAircraft()">Save</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary-cstm" (click)="saveAircraft(); dismissAircraftModel();">Save</button>
+                    <button type="button" class="btn btn-danger-cstm" (click)="dismissAircraftModel()">Close</button>
                 </div>
             </div>
         </div>

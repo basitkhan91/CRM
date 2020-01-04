@@ -20,6 +20,7 @@ import { CustomerGeneralInformation } from '../../../models/customer-general.mod
 import { getValueFromObjectByKey, getObjectByValue, validateRecordExistsOrNot, editValueAssignByCondition, getObjectById, selectedValueValidate } from '../../../generic/autocomplete';
 import { ItemMasterService } from '../../../services/itemMaster.service';
 import { CommonService } from '../../../services/common.service';
+import { emailPattern, urlPattern } from '../../../validations/validation-pattern';
 
 @Component({
     selector: 'app-customer-general-information',
@@ -33,6 +34,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     @Input() editCustomerId;
     @Input() editMode;
     @Input() customerListOriginal;
+    @Input() customerallListOriginal;
     @Output() tab = new EventEmitter<any>();
     @Output() saveGeneralInformationData = new EventEmitter<any>();
 
@@ -40,7 +42,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     generalInformation = new CustomerGeneralInformation();
     generalInformation1 = new CustomerGeneralInformation();
-
+    emailPattern = emailPattern();
+    urlPattern = urlPattern();
     customertypes: any[];
     customerNames: { customerId: any; name: any; }[];
     //customerListOriginal: { customerId: any; name: any; }[];
@@ -58,8 +61,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
     memoPopupValue: any;
     isCustomerNameAlreadyExists: boolean = false;
     isCustomerCodeAlreadyExists: boolean = false;
-    emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z0-9.-]{2,}[.]{1}[a-zA-Z0-9]{2,}";
-    urlPattern = "^((ht|f)tp(s?))\://([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(/\S*)?$";
+    //emailPattern = "[a-zA-Z0-9.-]{1,}@[a-zA-Z0-9.-]{2,}[.]{1}[a-zA-Z0-9]{2,}";
+    //urlPattern = "^((ht|f)tp(s?))\://([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(/\S*)?$";
 
     classificationNew = {
         description: '',
@@ -416,18 +419,18 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
                 this.generalInformation = {
                     ...this.editData,
-                    name: getObjectByValue('name', res.name, this.customerListOriginal),
+                    name: getObjectByValue('name', res.name, this.customerallListOriginal),
                     country: getObjectById('countries_id', res.country, this.countryListOriginal),
-                    customerParentName: getObjectByValue('name', res.customerParentName, this.customerListOriginal),
-                    customerCode: getObjectByValue('customerCode', res.customerCode, this.customerListOriginal)
+                    customerParentName: getObjectByValue('name', res.customerParentName, this.customerallListOriginal),
+                    customerCode: getObjectByValue('customerCode', res.customerCode, this.customerallListOriginal)
 
                 };
                 this.generalInformation1 = {
                     ...this.editData,
                   
                     country: getObjectById('countries_id', res.country, this.countryListOriginal),
-                    customerParentName: getObjectByValue('name', res.customerParentName, this.customerListOriginal),
-                    customerCode: getObjectByValue('customerCode', res.customerCode, this.customerListOriginal),
+                    customerParentName: getObjectByValue('name', res.customerParentName, this.customerallListOriginal),
+                    customerCode: getObjectByValue('customerCode', res.customerCode, this.customerallListOriginal),
 
                     
                 };
@@ -762,15 +765,15 @@ export class CustomerGeneralInformationComponent implements OnInit {
     filterCustomerNames(event) {
         // this.enteredTextForCustomerName = event.query.toLowerCase();
 
-        this.customerNames = this.customerListOriginal;
+        this.customerNames = this.customerallListOriginal;
 
-        this.customerNames = [...this.customerListOriginal.filter(x => {
+        this.customerNames = [...this.customerallListOriginal.filter(x => {
             return x.name.toLowerCase().includes(event.query.toLowerCase())
         })]
     }
     filterCustomerCode(event) {
-        this.customerCodes = this.customerListOriginal;
-        this.customerCodes = [...this.customerListOriginal.filter(x => {
+        this.customerCodes = this.customerallListOriginal;
+        this.customerCodes = [...this.customerallListOriginal.filter(x => {
             return x.customerCode.toLowerCase().includes(event.query.toLowerCase())
         })]
 
@@ -828,7 +831,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
 
     checkCustomerNameExists(field, value) {
-        const exists = validateRecordExistsOrNot(field, value, this.customerListOriginal)
+        const exists = validateRecordExistsOrNot(field, value, this.customerallListOriginal)
         if (exists.length > 0) {
             this.isCustomerNameAlreadyExists = true;
         } else {
@@ -842,9 +845,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.isCustomerNameAlreadyExists = false;
         this.disableSaveCustomerName = false;
         if (value != this.generalInformation1.name) {
-            for (let i = 0; i < this.customerListOriginal.length; i++) {
+            for (let i = 0; i < this.customerallListOriginal.length; i++) {
 
-                if (this.generalInformation.name == this.customerListOriginal[i].name || value == this.customerListOriginal[i].name) {
+                if (this.generalInformation.name == this.customerallListOriginal[i].name || value == this.customerallListOriginal[i].name) {
                     this.isCustomerNameAlreadyExists = true;
                     // this.disableSave = true;
                     this.disableSaveCustomerName = true;
@@ -899,8 +902,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
      
         this.isCustomerCodeAlreadyExists = false;
      
-        for (let i = 0; i < this.customerListOriginal.length; i++) {
-            if (this.generalInformation.customerCode == this.customerListOriginal[i].customerCode || value == this.customerListOriginal[i].customerCode) {
+        for (let i = 0; i < this.customerallListOriginal.length; i++) {
+            if (this.generalInformation.customerCode == this.customerallListOriginal[i].customerCode || value == this.customerallListOriginal[i].customerCode) {
                 this.isCustomerCodeAlreadyExists = true;
                 // this.disableSave = true;
             
@@ -926,7 +929,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
 
     checkCustomerCodeExists(field, value) {
-        const exists = validateRecordExistsOrNot(field, value, this.customerListOriginal)
+        const exists = validateRecordExistsOrNot(field, value, this.customerallListOriginal)
         if (exists.length > 0) {
 
             this.isCustomerCodeAlreadyExists = true;

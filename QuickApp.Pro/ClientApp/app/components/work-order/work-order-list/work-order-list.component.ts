@@ -8,7 +8,8 @@ import { AuthService } from '../../../services/auth.service';
 import { AlertService, MessageSeverity } from '../../../services/alert.service';
 import { Router } from '@angular/router';
 import { listSearchFilterObjectCreation } from '../../../generic/autocomplete';
-
+import { Subject } from 'rxjs'
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'app-work-order-list',
@@ -78,6 +79,7 @@ export class WorkOrderListComponent implements OnInit {
     otherOptionShow: boolean = false;
     currentStatus = 'open'
     isGlobalFilter: boolean = false;
+    private onDestroy$: Subject<void> = new Subject<void>();
     constructor(private workOrderService: WorkOrderService,
         private route: Router,
         private authService: AuthService,
@@ -91,6 +93,10 @@ export class WorkOrderListComponent implements OnInit {
         if (this.isWorkOrderMainView) {
             this.view({ workOrderId: this.workOrderId })
         }
+    }
+
+    ngOnDestroy(): void {
+        this.onDestroy$.next();
     }
 
     get userName(): string {
@@ -116,6 +122,7 @@ export class WorkOrderListComponent implements OnInit {
     }
 
     loadData(event) {
+        console.log(event)
         this.lazyLoadEventData = event;
         const pageIndex = parseInt(event.first) / event.rows;;
         this.pageIndex = pageIndex;
@@ -149,9 +156,8 @@ export class WorkOrderListComponent implements OnInit {
 
     getAllWorkOrderList(data) {
         console.log(data);
-
         const PagingData = { ...data, filters: listSearchFilterObjectCreation(data.filters) }
-        this.workOrderService.getWorkOrderList(PagingData).subscribe(res => {
+        this.workOrderService.getWorkOrderList(PagingData).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.workOrderData = res;
             if (res.length > 0) {
                 this.totalRecords = res[0].totalRecords;

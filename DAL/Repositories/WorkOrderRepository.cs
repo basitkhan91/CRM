@@ -429,11 +429,11 @@ namespace DAL.Repositories
                           .Take(take)
                           .ToList();
 
-                if(!string.IsNullOrEmpty(woFilters.SortOrder) && !string.IsNullOrEmpty(woFilters.SortColumn))
+                if(woFilters.SortOrder.HasValue && !string.IsNullOrEmpty(woFilters.SortField))
                 {
-                    if(woFilters.SortOrder.ToLower() == "desc")
+                    if(woFilters.SortOrder == -1)
                     {
-                        switch(woFilters.SortColumn)
+                        switch(woFilters.SortField)
                         {
                             case "WorkOrderNum":
                                 return list.OrderByDescending(p => p.WorkOrderNum).ToList();
@@ -463,7 +463,7 @@ namespace DAL.Repositories
                     }
                     else
                     {
-                        switch (woFilters.SortColumn)
+                        switch (woFilters.SortField)
                         {
                             case "WorkOrderNum":
                                 return list.OrderBy(p => p.WorkOrderNum).ToList();
@@ -699,16 +699,16 @@ namespace DAL.Repositories
                 {
                     workOrder.CustomerDetails = new CustomerDetails();
 
-                    var primarySalesPerson = (from cust in _appContext.Customer
-                                           join csr in _appContext.Employee on cust.PrimarySalesPersonId equals Convert.ToString(csr.EmployeeId) into custcsr
-                                           from csr in custcsr.DefaultIfEmpty()
-                                           where cust.CustomerId == workOrder.CustomerId
-                                           select new
-                                           {
-                                               csr
-                                           }).FirstOrDefault();
+                    //var primarySalesPerson = (from cust in _appContext.Customer
+                    //                       join csr in _appContext.Employee on cust.PrimarySalesPersonId equals Convert.ToString(csr.EmployeeId) into custcsr
+                    //                       from csr in custcsr.DefaultIfEmpty()
+                    //                       where cust.CustomerId == workOrder.CustomerId
+                    //                       select new
+                    //                       {
+                    //                           csr
+                    //                       }).FirstOrDefault();
 
-                    workOrder.CSR = workOrder.CustomerDetails.CSRName = primarySalesPerson!=null && primarySalesPerson.csr!=null ?primarySalesPerson.csr.FirstName:"";
+					workOrder.CSR = workOrder.CustomerDetails.CSRName = customer.PrimarySalesPersonId;
                     workOrder.CustomerDetails.CustomerRef = customer.ContractReference;
                     workOrder.CustomerDetails.CustomerName = customer.Name;
                     workOrder.CustomerDetails.CreditLimit = customer.CreditLimit;
@@ -4576,6 +4576,66 @@ namespace DAL.Repositories
             }
         }
 
+		public object GetNTESTDValues(long itemMasterId,string workScope)
+		{
+
+			string nteType = string.Empty;
+			string stdType = string.Empty;
+
+			if (workScope.ToLower().Contains("overhaul"))
+			{
+				nteType = "Overhaul";
+				stdType = "Overhaul";
+			}
+			else if(workScope.ToLower().Contains("repair"))
+			{
+				nteType = "Repair";
+				stdType = "Repair";
+			}
+			else if (workScope.ToLower().Contains("bench"))
+			{
+				nteType = "Bench";
+				stdType = "Bench";
+			}
+			else if (workScope.ToLower().Contains("mfg"))
+			{
+				nteType = "Mfg";
+				stdType = "Mfg";
+			}
+
+			try
+			{
+				var list = (from im in _appContext.ItemMaster
+							where im.IsActive == true && (im.IsDeleted == false || im.IsDeleted == null)
+							select new
+							{
+
+								NTEHours =
+								(
+									nteType == "Overhaul" ? (im.OverhaulHours == null ? 0 : im.OverhaulHours) :
+									nteType == "Repair" ? (im.RPHours == null ? 0 : im.RPHours) :
+									nteType == "Bench" ? (im.TestHours == null ? 0 : im.TestHours) :
+									nteType == "Mfg" ? (im.mfgHours == null ? 0 : im.mfgHours) : 0
+								),
+								STDHours =
+								(
+									stdType == "Overhaul" ? (im.TurnTimeOverhaulHours == null ? 0 : im.TurnTimeOverhaulHours) :
+									stdType == "Repair" ? (im.TurnTimeRepairHours == null ? 0 : im.TurnTimeRepairHours) :
+									stdType == "Bench" ? (im.turnTimeBenchTest == null ? 0 : im.turnTimeBenchTest) :
+									stdType == "Mfg" ? (im.turnTimeMfg == null ? 0 : im.turnTimeMfg) : 0
+								),
+
+							}).FirstOrDefault();
+							
+				return list;
+			}
+			catch (Exception)
+			{
+
+				throw;
+			}
+		}
+
         #endregion
 
         #region Private Methods
@@ -6838,7 +6898,7 @@ namespace DAL.Repositories
         {
             Customer customer = new Customer();
             customer.CustomerId = workOrder.CustomerId;
-            //customer.PrimarySalesPersonId = workOrder.CSR;
+            customer.PrimarySalesPersonId = workOrder.CSR;
             customer.ContractReference = workOrder.CustomerReference;
             customer.CreditTermsId = workOrder.CreditTermsId;
             customer.CreditLimit = workOrder.CreditLimit;

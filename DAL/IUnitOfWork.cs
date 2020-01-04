@@ -223,6 +223,7 @@ namespace DAL
 
         IAssetTypeRepository AssetTypeRepository { get; }
         IAssetIntangibleTypeRepository AssetIntangibleTypeRepository { get; }
+        IAssetIntangibleAttributeTypeRepository AssetIntangibleAttributeTypeRepository { get; }
         IStageCodeRepository StageCodeRepository { get; }
         IGLAccountCategoryRepository GLAccountCategoryRepository { get; }
         IExpenditureCategoryRepository ExpenditureCategoryRepository { get; }
@@ -252,7 +253,7 @@ namespace DAL
 
         IFileUploadRepository FileUploadRepository { get; }
 
-        IAssetIntangibleAttributeType AssetIntangibleAttributeType { get; }
+        //IAssetIntangibleAttributeType AssetIntangibleAttributeType { get; }
         IAssetDepreciationInterval AssetDepreciationInterval { get; }
 
         IAssetDepreciationMethod AssetDepreciationMethod { get; }
@@ -290,6 +291,7 @@ namespace DAL
         ISalesOrderQuotePartRepository SalesOrderQuotePart { get; }
 
         IMasterSalesOrderQuoteStatusRepository MasterSalesOrderQuoteStatusRepository { get; }
+        IEmployeeStationRepository employeeStationRepository { get; }
 
     }
 }

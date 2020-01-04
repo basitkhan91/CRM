@@ -195,7 +195,7 @@ namespace DAL
 
         IAssetCapes _assetCapes;
 
-        IAssetIntangibleAttributeType _assetIntangibleAttributeType;
+        IAssetIntangibleAttributeTypeRepository _assetIntangibleAttributeTypeRepository;
         IAssetDepreciationInterval _assetDepreciationInterval;
 
         IAssetDepreciationMethod _assetDepreciationMethod;
@@ -220,12 +220,15 @@ namespace DAL
         ISalesOrderQuotePartRepository _salesOrderQuotePartRepository;
 
         IMasterSalesOrderQuoteStatusRepository _masterSalesOrderQuoteStatusRepository;
+        IEmployeeStationRepository _employeeStationRepository;
+
+
         public UnitOfWork(ApplicationDbContext context, IOptions<AppSettings> appSettings)
         {
             _context = context;
             _appSettings = appSettings;
         }
-
+        
 
         IVendorWarning _vendorWarning;
 
@@ -1725,13 +1728,13 @@ namespace DAL
             }
         }
 
-        IAssetIntangibleAttributeType IUnitOfWork.AssetIntangibleAttributeType
+        IAssetIntangibleAttributeTypeRepository IUnitOfWork.AssetIntangibleAttributeTypeRepository
         {
             get
             {
-                if (_assetIntangibleAttributeType == null)
-                    _assetIntangibleAttributeType = new AssetIntangibleAttributeTypeRepository(_context, _appSettings);
-                return _assetIntangibleAttributeType;
+                if (_assetIntangibleAttributeTypeRepository == null)
+                    _assetIntangibleAttributeTypeRepository = new AssetIntangibleAttributeTypeRepository(_context, _appSettings);
+                return _assetIntangibleAttributeTypeRepository;
             }
         }
 
@@ -1968,6 +1971,17 @@ namespace DAL
                 if (_masterSalesOrderQuoteStatusRepository == null)
                     _masterSalesOrderQuoteStatusRepository = new MasterSalesOrderQuoteStatusRepository(_context);
                 return _masterSalesOrderQuoteStatusRepository;
+            }
+        }
+
+        public IEmployeeStationRepository employeeStationRepository
+        {
+            get
+            {
+                if (_employeeStationRepository == null)
+                    _employeeStationRepository = new EmployeeStationRepository(_context);
+
+                return _employeeStationRepository;
             }
         }
     }

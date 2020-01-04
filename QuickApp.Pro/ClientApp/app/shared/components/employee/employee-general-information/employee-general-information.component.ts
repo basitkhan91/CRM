@@ -44,6 +44,7 @@ import { User } from '../../../../models/user.model';
 import { CompanyService } from '../../../../services/company.service';
 import { CurrencyService } from '../../../../services/currency.service';
 import { getObjectById, editValueAssignByCondition } from '../../../../generic/autocomplete';
+import { CommonService } from '../../../../services/common.service';
 
 
 
@@ -173,6 +174,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     currencyList: any[];
     radioItems: Array<string>;
     model = { option: '' };
+    getAllAllStationInfodrpData;
 
 
     empCreationForm = new FormGroup({
@@ -188,14 +190,15 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     });
 
 
-    constructor(private fb: FormBuilder, private Actroute: ActivatedRoute, private translationService: AppTranslationService, private router: Router, public jobTypeService: JobTypeService, public jobTitleService: JobTitleService, private empservice: EmployeeExpertiseService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private route: Router, private alertService: AlertService, public employeeService: EmployeeService, public jobTitleService1: LegalEntityService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private localStorage: LocalStoreManager, private companyService: CompanyService, public currencyService: CurrencyService) {
+    constructor(private fb: FormBuilder, private Actroute: ActivatedRoute, private translationService: AppTranslationService, private router: Router, public jobTypeService: JobTypeService, public jobTitleService: JobTitleService, private empservice: EmployeeExpertiseService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private route: Router, private alertService: AlertService, public employeeService: EmployeeService, public jobTitleService1: LegalEntityService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private localStorage: LocalStoreManager, private companyService: CompanyService, public currencyService: CurrencyService, public commonService: CommonService) {
         this.displayedColumns.push('action');
         this.radioItems = ['Hourly', 'Monthly'];
         //new emp form
 
         // this.empCreationForm.controls['companyId'].patchValue('0');
 
-        this.loadCompanyData()
+        this.loadCompanyData();
+        
 
         let user = this.localStorage.getDataObject<User>(DBkeys.CURRENT_USER);
 
@@ -300,7 +303,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
                 this.model = { option: 'Monthly' };
 
-            }
+            }            
         }
         this.translationService.closeCmpny = false;
 
@@ -348,6 +351,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.EmployeeLeaveType();
         this.loadjobtypesData();
         this.loadLegalEntityData();
+        this.getAllStationData();
              
 
     }
@@ -2735,5 +2739,12 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
                 }
             }
         }
+    }
+
+    async getAllStationData() {
+        await this.commonService.smartDropDownList('EmployeeStation', 'EmployeeStationId', 'StationName').subscribe(res => {
+            this.getAllAllStationInfodrpData = res;          
+            
+        });        
     }
 }

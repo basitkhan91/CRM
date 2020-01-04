@@ -40,7 +40,6 @@ namespace DAL.Repositories
             var take = customerFilters.rows;
             var skip = take * (pageNumber - 1);
 
-
             var totalRecords = (from t in _appContext.Customer
                                 join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
                                 join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
@@ -115,6 +114,65 @@ namespace DAL.Repositories
                              .Take(take)
                              .ToList();
 
+            if (!string.IsNullOrEmpty(customerFilters.SortField) && !string.IsNullOrEmpty(customerFilters.SortField))
+            {
+                if (customerFilters.SortOrder == -1)
+                {
+                    switch (customerFilters.SortField)
+                    {
+                        case "name":
+                            return data.OrderByDescending(p => p.Name).ToList();
+                        case "customerCode":
+                            return data.OrderByDescending(p => p.CustomerCode).ToList();
+                        case "accountType":
+                            return data.OrderByDescending(p => p.AccountType).ToList();
+                        case "customerType":
+                            return data.OrderByDescending(p => p.CustomerType).ToList();
+                        case "customerClassification":
+                            return data.OrderByDescending(p => p.CustomerClassification).ToList();
+                        case "email":
+                            return data.OrderByDescending(p => p.Email).ToList();
+                        case "city":
+                            return data.OrderByDescending(p => p.City).ToList();
+                        case "stateOrProvince":
+                            return data.OrderByDescending(p => p.StateOrProvince).ToList();
+                        case "contact":
+                            return data.OrderByDescending(p => p.Contact).ToList();
+                        case "salesPersonPrimary":
+                            return data.OrderByDescending(p => p.SalesPersonPrimary).ToList();
+
+
+                    }
+                }
+                else
+                {
+                    switch (customerFilters.SortField)
+                    {
+                        case "name":
+                            return data.OrderBy(p => p.Name).ToList();
+                        case "customerCode":
+                            return data.OrderBy(p => p.CustomerCode).ToList();
+                        case "accountType":
+                            return data.OrderBy(p => p.AccountType).ToList();
+                        case "customerType":
+                            return data.OrderBy(p => p.CustomerType).ToList();
+                        case "customerClassification":
+                            return data.OrderBy(p => p.CustomerClassification).ToList();
+                        case "email":
+                            return data.OrderBy(p => p.Email).ToList();
+                        case "city":
+                            return data.OrderBy(p => p.City).ToList();
+                        case "stateOrProvince":
+                            return data.OrderBy(p => p.StateOrProvince).ToList();
+                        case "contact":
+                            return data.OrderBy(p => p.Contact).ToList();
+                        case "salesPersonPrimary":
+                            return data.OrderBy(p => p.SalesPersonPrimary).ToList();
+
+
+                    }
+                }
+            }
 
 
             return (data);
@@ -328,6 +386,66 @@ namespace DAL.Repositories
                         }).Where(t => t.IsActive == true).OrderByDescending(a => a.UpdatedDate).ToList();
             return data;
         }
+
+        public IEnumerable<object> GetCustomersData()
+        {
+            var data = (from t in _appContext.Customer
+                        join custType in _appContext.CustomerType on t.CustomerTypeId equals custType.CustomerTypeId into cust
+                        from custType in cust.DefaultIfEmpty()
+
+                        join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                        join vt in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals vt.CustomerAffiliationId
+                        join currency in _appContext.Currency on t.CurrencyId equals currency.CurrencyId into curr
+                        from currency in curr.DefaultIfEmpty()
+                        join creditTerms in _appContext.CreditTerms on t.CreditTermsId equals creditTerms.CreditTermsId into cre
+                        from creditTerms in cre.DefaultIfEmpty()
+                        join cc in _appContext.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
+                        where t.IsDeleted == false || t.IsDeleted == null
+                        // select new { t, ad, vt }).ToList();
+                        select new
+                        {
+                            t.CreditTermsId,
+                            t.CurrencyId,
+                            ad,
+                            t.PrimarySalesPersonFirstName,
+                            t.CustomerId,
+                            t,
+                            // cc,
+                            creditTerms,
+                            currency,
+                            currency.Symbol,
+                            //creditTerms.Name,
+                            t.Email,
+                            t.IsActive,
+                            Address1 = ad.Line1,
+                            Address2 = ad.Line2,
+                            Address3 = ad.Line3,
+                            t.CustomerCode,
+                            t.DoingBuinessAsName,
+                            t.Parent,
+                            t.RestrictPMAMemo,
+                            t.PBHCustomerMemo,
+                            t.ContractReference,
+                            t.CustomerURL,
+                            t.Name,
+                            ad.City,
+                            ad.StateOrProvince,
+                            vt.description,
+                            t.CreatedDate,
+                            t.CreatedBy,
+                            t.UpdatedBy,
+                            t.UpdatedDate,
+
+                            ad.AddressId,
+                            ad.Country,
+                            ad.PostalCode,
+                            vt.CustomerAffiliationId,
+                            cc.CustomerClassificationId,
+                            //cc.Description
+                        }).OrderByDescending(a => a.UpdatedDate).ToList();
+            return data;
+        }
+
         public IEnumerable<object> GetCustomerBynameList(string name)
         {
 

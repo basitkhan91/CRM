@@ -49,7 +49,13 @@ namespace QuickApp.Pro.Controllers
             var result = _unitOfWork.Customer.GetAllCustomersData(); //.GetAllCustomersData();
             return Ok(result);
         }
-
+        [HttpGet("GetAll")]
+        [Produces(typeof(List<CustomerViewModel>))]
+        public IActionResult GetAll()
+        {
+            var result = _unitOfWork.Customer.GetCustomersData(); //.GetAllCustomersData();
+            return Ok(result);
+        }
         [HttpGet("Getdiscount")]
         [Produces(typeof(List<DiscountViewModel>))]
         public IActionResult Getdiscount()

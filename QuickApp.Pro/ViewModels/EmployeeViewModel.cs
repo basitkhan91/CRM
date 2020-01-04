@@ -12,7 +12,7 @@ namespace QuickApp.Pro.ViewModels
         public string LastName { get; set; }
         public string MiddleName { get; set; }
         public string EmployeeIdAsPerPayroll { get; set; }
-        public string StationId { get; set; }
+        public long? StationId { get; set; }
         public Int16? JobTitleId { get; set; }
         public Int16? JobTypeId { get; set; }
 
