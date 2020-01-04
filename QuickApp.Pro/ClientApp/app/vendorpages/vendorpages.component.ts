@@ -76,13 +76,21 @@ export class VendorpagesComponent {
 				this.isVisible = true;
 			}
 
+			else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-capes') {
+				this.items = [
+					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list'},
+					{ label: 'Capabilities' }
+				];
+				this.isVisible = true;
+			}
+
 			else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-contacts') {
 				this.items = [
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list'},
 					{ label: 'Contacts' }
 				];
 				this.isVisible = true;
-			}
+			}			
 
 			else if (this.currentUrl == '/vendorsmodule/vendorpages/app-vendor-financial-information') {
 				this.items = [
@@ -205,6 +213,13 @@ export class VendorpagesComponent {
 				this.items = [
 					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list'},
 					{ label: 'Vendor' + "'s" + ' General Information' }
+				];
+			}
+
+			else if (this.otherurl == '/vendorsmodule/vendorpages/app-vendor-capes') {
+				this.items = [
+					{ label: 'Vendor', url: '/vendorsmodule/vendorpages/app-vendors-list' },
+					{ label: 'Capabilities' }
 				];
 			}
 

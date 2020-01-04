@@ -314,8 +314,8 @@ export class VendorEndpointService extends EndpointFactory {
 			});
 	}
 
-	getvendorCapabilityListEndpoint<T>(status): Observable<T> {
-		return this.http.get<T>(`${this.vendorCapabilityListsUrl}/?status=${status}`, this.getRequestHeaders())
+	getvendorCapabilityListEndpoint<T>(status, vendorId): Observable<T> {
+		return this.http.get<T>(`${this.vendorCapabilityListsUrl}/?status=${status}&vendorId=${vendorId}`, this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.getvendorEndpoint());
 			});
@@ -1673,10 +1673,12 @@ export class VendorEndpointService extends EndpointFactory {
 		return this.http.get<any>(`${this._updateVendorBillingAddressStatus}?billingAddressId=${billingAddressId}&status=${status}&updatedBy=${updatedBy}`, this.getRequestHeaders())
 	}
 	
+	getHistoryForVendor(vendorId) {
+	return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/GetVendorAuditHistory/${vendorId}`)
+	}
 
-
-	  getHistoryForVendor(vendorId) {
-		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/GetVendorAuditHistory/${vendorId}`)
-	  }
+	getVendorCapabilityByVendorId(vendorId) {
+	return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/getVendorCapabilityByVendorId?vendorId=${vendorId}`)
+	}
 
 }

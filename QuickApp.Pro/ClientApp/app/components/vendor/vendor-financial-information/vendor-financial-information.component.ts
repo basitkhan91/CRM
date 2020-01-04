@@ -125,6 +125,9 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     private isDeleteMode: boolean = false;
     
     constructor(private cdRef: ChangeDetectorRef, public CreditTermsService: CreditTermsService, public currencyService: CurrencyService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private commonservice: CommonService) {       
+        if(this.workFlowtService.listCollection !== undefined){
+            this.workFlowtService.isEditMode = true;
+        }
         if (this.workFlowtService.contactCollection) {
             this.local = this.workFlowtService.contactCollection;
             this.sourceVendor = this.local;           

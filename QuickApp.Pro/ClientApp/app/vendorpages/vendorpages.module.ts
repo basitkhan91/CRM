@@ -75,6 +75,7 @@ import { DashNumberService } from "../services/dash-number/dash-number.service";
 import { AircraftModelEndpointService } from "../services/aircraft-model/aircraft-model-endpoint.service";
 import { DashNumberEndpointService } from "../services/dash-number/dash-number-endpoint.service";
 import { DropdownModule } from "primeng/dropdown";
+import { VendorCapesComponent } from "../components/vendor/vendor-capes/vendor-capes.component";
 
 
 @NgModule({
@@ -111,6 +112,7 @@ import { DropdownModule } from "primeng/dropdown";
 	declarations: [
 		VendorpagesComponent,
 		VendorContactsComponent,
+		VendorCapesComponent,
 		VendorFinancialInformationComponent,
 		VendorGeneralInformationComponent,
 		VendorPaymentInformationComponent,
