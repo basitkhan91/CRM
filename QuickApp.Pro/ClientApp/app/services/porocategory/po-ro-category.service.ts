@@ -32,7 +32,7 @@ export class POROCategoryService {
         return this.POROCategoryEndpointService.addPOROCategory<POROCategory>(POROCategory);
     }
 
-    update(poroCategory: POROCategory) {
+    update(poroCategory) {
         return this.POROCategoryEndpointService.updatePOROCategory<POROCategory>(poroCategory);
     }
 

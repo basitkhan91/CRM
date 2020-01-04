@@ -113,7 +113,7 @@
                                     <div>
                                         <p-autoComplete id="partNumber" title="Part Number" [(ngModel)]="sourceItemMaster.partNumber"
                                                         (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event)"   
-                                                        [suggestions]="partCollection" [ngModelOptions]="{standalone: true}"
+                                                        [suggestions]="partCollection" name="partNumber" required
                                                         (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
                                                         [dropdown]="true" class="autocomplete-customer">
                                             <ng-template let-partName pTemplate="part">
@@ -128,8 +128,7 @@
                                     <div>
                                         <p-autoComplete id="partDescription" title="Part Description" (onKeyUp)=descriptionHandler($event)
                                                         (onSelect)="partdescriptionId($event)"
-                                                        [suggestions]="descriptionCollection"
-                                                        [ngModelOptions]="{standalone: true}"
+                                                        [suggestions]="descriptionCollection" name="partDescription" required
                                                         (completeMethod)="filterdescription($event)"
                                                         [(ngModel)]="sourceItemMaster.partDescription" [size]="30"
                                                         [minLength]="1" [dropdown]="true" class="autocomplete-customer">
@@ -1251,7 +1250,7 @@
                     </form>
                 </div>
                 <!-- NHA, TLA, Alternate, Equivalency OPEN-->
-                <div [ngClass]="{hideTab : currentTab !== 'NhaTlaAlternateTab'}">
+                <div class="ntae-section" [ngClass]="{hideTab : currentTab !== 'NhaTlaAlternateTab'}">
                     <div class="clear"></div>
                     <div class="md-stepper-horizontal orange">
                         <div class="md-step"

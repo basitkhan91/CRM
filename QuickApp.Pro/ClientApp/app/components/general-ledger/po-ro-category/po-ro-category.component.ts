@@ -6,8 +6,7 @@ import { SingleScreenAuditDetails } from "../../../models/single-screen-audit-de
 import { AuthService } from "../../../services/auth.service";
 import { POROCategoryService } from "../../../services/porocategory/po-ro-category.service";
 import { AlertService, MessageSeverity } from '../../../services/alert.service';
-import {  MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
-import { MenuItem } from 'primeng/api';//bread crumb
+import {  MatTableDataSource } from '@angular/material';
 
 @Component({
     selector: 'app-po-ro-category',
@@ -17,30 +16,50 @@ import { MenuItem } from 'primeng/api';//bread crumb
 })
 export class PoRoCategoryComponent implements OnInit, AfterViewInit {
 
-    currentporo: POROCategory;
+    currentporoCategory: POROCategory;
     poroCategoryToUpdate: POROCategory;
     poroCategoryToRemove: POROCategory;
     poroCategoryList: POROCategory[];
     modal: NgbModalRef;
-    poroTable: boolean;
     display: boolean = false;
-    modelValue: boolean = false;
     Active: string;
     AuditDetails: SingleScreenAuditDetails[];
     loadingIndicator: boolean;
     allPOROList: any[] = [];
-
     isDeleteMode: boolean = false;
-
-    dataSource: MatTableDataSource<any>;
-    selectedColumn: any[];
-    selectedColumns: any[];
     cols: any[];
     isEditMode: boolean;
     isSaving: boolean;
     public sourceAction: any = {};
     sourcePORPCategory: any;
-    selectedstockColumn: any;
+    pageSize: number = 10;
+    totalRecords: any;
+    totalPages: number;
+    selectedRowforDelete: any;
+    updateMode: boolean;
+
+    headers = [
+        { field: 'categoryName', header: 'Name' },
+        { field: 'isPO', header: 'PO' },
+        { field: 'isRO', header: 'RO' }
+    ]
+    selectedColumns = this.headers;
+
+    new = {
+        poroCategoryId: 1,
+        categoryName: "",
+        createdBy: "",
+        updatedBy: "",
+        isPO: false,
+        isRO: false,
+        masterCompanyId: 1,
+        isDelete: false,
+        isActive: true,
+    }
+
+    addNew = { ...this.new };
+    isEdit: boolean = false;
+    selectedRecordForEdit: any;
 
     constructor(private alertService: AlertService, private poroCategoryService: POROCategoryService, private modalService: NgbModal, private authService: AuthService) {
         this.poroCategoryService.currentUrl = '/generalledgermodule/generalledgerpage/app-po-ro-category';
@@ -50,31 +69,12 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.loadData();
-        /*this.poroCategoryService.getAll().subscribe(assets => {
-            this.poroCategoryList = assets[0];
-            this.poroCategoryList.forEach(function (poroCategory) {
-                poroCategory.isActive = poroCategory.isActive == false ? false : true;
-            });
-        });
-        this.currentporo = new POROCategory();*/
         this.poroCategoryService.currentUrl = '/generalledgermodule/generalledgerpage/app-po-ro-category';
         this.poroCategoryService.bredcrumbObj.next(this.poroCategoryService.currentUrl);
-        //this.poroCategoryService.ShowPtab = false;
-        //this.poroCategoryService.alertObj.next(this.poroCategoryService.ShowPtab);
-        //this.loadRolesData();
     }
 
     private loadData() {
-        //this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.poroCategoryService.getAll().subscribe(
-            results => this.onDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-
-        //this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-
         this.poroCategoryService.getAll().subscribe(
             results => this.onPORPSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
@@ -86,28 +86,78 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
         this.isEditMode = false;
         this.modal.close();
     }
-
-    //private loadRolesData() {
-    //    //this.alertService.startLoadingMessage();
-    //    this.loadingIndicator = true;
-
-    //    this.poroCategoryService.getRolesData().subscribe(
-    //        results => this.onRolesLoadSuccessfull(results[0]),
-    //        error => this.onDataLoadFailed(error)
-    //    );
-    //}
-
+    
     toggledbldisplay(content, row) {
         this.isEditMode = true;
         this.isSaving = true;
-
         this.sourceAction = row;
-        //this.itemName = this.sourceAction.itemClassificationCode;
-        //this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
+    }
+
+    changePage(event: { first: any; rows: number }) {
+        console.log(event);
+        this.pageSize = event.rows;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    }
+
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
+
+    save() {
+        const data = {
+            ...this.addNew, createdBy: this.userName, updatedBy: this.userName, createdDate: Date,updatedDate:Date
+
+        };
+        const { selectedCompanysData, ...rest }: any = data;
+        if (!this.isEdit) {
+            this.poroCategoryService.add(rest).subscribe(() => {
+                this.resetForm();
+                this.poroCategoryService.getAll().subscribe(nodes => {
+                    this.allPOROList = nodes[0];
+                    this.loadData();
+                });
+                this.alertService.showMessage(
+                    'Success',
+                    `Added  New PO-RO Category Successfully`,
+                    MessageSeverity.success
+                );
+            })
+
+        } else {
+            this.poroCategoryService.update(data).subscribe((response) => {
+                this.selectedRecordForEdit = undefined;
+                this.isEdit = false;
+                this.resetForm();
+                this.poroCategoryService.getAll().subscribe(nodes => {
+                    this.allPOROList = nodes[0];
+                    this.loadData();
+                    this.alertService.showMessage(
+                        'Success',
+                        `Updated Node Successfully`,
+                        MessageSeverity.success
+                    );
+                });
+
+            })
+            this.updatePOROCategory();
+        }
+
+    }
+
+    updatePOROCategory(): void {
+        this.currentporoCategory.updatedBy = this.userName;
+        this.poroCategoryService.update(this.currentporoCategory).subscribe(node => {
+            this.alertService.showMessage('Node Setup updated successfully.');
+            this.poroCategoryService.getAll().subscribe(nodes => {
+                this.allPOROList = nodes[0];
+            });
+            this.updateMode = false;
+
+        });
     }
 
     private saveCompleted(user?: any) {
@@ -122,43 +172,47 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
         }
     }
 
-    openDelete(content, row) {
-
+    open(content) {
         this.isEditMode = false;
-        this.isDeleteMode = true;
-        this.sourcePORPCategory = row;
+        this.isDeleteMode = false;
+        this.currentporoCategory = new POROCategory();
+        this.currentporoCategory.isActive = true;
         this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
 
-    private onDataLoadSuccessful(allWorkFlows: any[]) {
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        //this.dataSource.data = allWorkFlows;
-        this.allPOROList = allWorkFlows;
+    delete(rowData) {
+        this.selectedRowforDelete = rowData;
+    }
 
-        //this.selectedColumns = this.cols;
-        //this.loadingIndicator = false;
-        //this.allStockInfo = allWorkFlows;
+    deleteConformation(value) {
+        if (value === 'Yes') {
+            this.poroCategoryService.remove(this.selectedRowforDelete.poroCategoryId).subscribe(() => {
+                this.loadData();
+                this.alertService.showMessage(
+                    'Success',
+                    `Deleted Record Successfully  `,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            this.selectedRowforDelete = undefined;
+        }
     }
 
     private onPORPSuccessful(allWorkFlows: any[]) {
-        //debugger;
-
-        this.cols = [
-            { field: 'categoryName', header: 'Name' }
-            ,{ field: 'isPO', header: 'PO' },
-            { field: 'isRO', header: 'RO' }
-            //{ field: 'createdBy', header: 'Created By' },
-            //{ field: 'updatedBy', header: 'Updated By' },
-            //{ field: 'updatedDate', header: 'Updated Date' },
-            //{ field: 'createdDate', header: 'Created Date' }
-        ];
-            this.selectedColumns = this.cols;
             this.loadingIndicator = false;
-            this.allPOROList = allWorkFlows;
+        this.allPOROList = allWorkFlows;
+        this.totalRecords = this.allPOROList.length;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    }
+
+    resetForm() {
+        this.isEdit = false;
+        this.selectedRecordForEdit = undefined;
+        this.addNew = { ...this.new };
     }
 
     private onDataLoadFailed(error: any) {
@@ -168,28 +222,33 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() { }
 
-    get userName(): string {
-        return this.authService.currentUser ? this.authService.currentUser.userName : "";
-    }
-
     openHist() {
         alert("Functionality not yet done");
     }
 
     addporoCategory(): void {
-        if (!(this.currentporo.categoryName)) {
+        if (!(this.currentporoCategory.categoryName)) {
             this.display = true;
             return;
         }
-        this.currentporo.createdBy = this.userName;
-        this.currentporo.updatedBy = this.userName;
-        this.poroCategoryService.add(this.currentporo).subscribe(asset => {
+        this.currentporoCategory.createdBy = this.userName;
+        this.currentporoCategory.updatedBy = this.userName;
+        this.poroCategoryService.add(this.currentporoCategory).subscribe(asset => {
             this.alertService.showMessage(' PO-RO-Category Added successfully.');
             this.poroCategoryService.getAll().subscribe(assets => {
                 this.poroCategoryList = assets[0];
             });
             this.resetAddporoCategory();
         });
+
+    }
+
+    edit(rowData) {
+        this.isEdit = true;
+        this.addNew = {
+            ...rowData,
+        };
+        this.selectedRecordForEdit = { ...this.addNew }
 
     }
 
@@ -201,9 +260,8 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
     }
 
     updateporoCategory(): void {
-        this.currentporo.updatedBy = this.userName;
+        this.currentporoCategory.updatedBy = this.userName;
         this.poroCategoryService.update(this.poroCategoryToUpdate).subscribe(asset => {
-            //this.alertService.showMessage(' PO-RO-Category updated successfully.');
             this.alertService.showMessage("Success", "PO-RO-Category updated successfully.", MessageSeverity.success);
             this.poroCategoryService.getAll().subscribe(assets => {
                 this.poroCategoryList = assets[0];
@@ -225,18 +283,12 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
     }
 
     resetAddporoCategory(): void {
-        this.currentporo = new POROCategory();
+        this.currentporoCategory = new POROCategory();
     }
 
     resetUpdatePoro(): void {
         this.poroCategoryToUpdate = new POROCategory();
     }
-
-    //dismissModel(): void {
-    //    if (this.modal != undefined) {
-    //        this.modal.close();
-    //    }
-    //}
 
     confirmDelete(content, id): void {
         this.poroCategoryToRemove = Object.assign({}, this.poroCategoryList.filter(function (poroCategory) {
@@ -252,7 +304,6 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
     }
 
     handleChangeforPORPIsActive(rowData, e) {
-        //alert(rowData.poroCategoryId);
         if (e.checked == false) {
             this.sourceAction.poroCategoryId = rowData.poroCategoryId;
             this.sourceAction = rowData;
@@ -262,7 +313,6 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
             this.poroCategoryService.updateActionforActivePORO(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
-            //alert(e);
         }
         else {
             this.sourceAction = rowData;
@@ -273,7 +323,6 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
             this.poroCategoryService.updateActionforActivePORO(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
-            //alert(e);
         }
 
     }

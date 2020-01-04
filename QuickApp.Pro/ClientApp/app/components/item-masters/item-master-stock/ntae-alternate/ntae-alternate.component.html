@@ -103,9 +103,9 @@
                     </div>
                 </div>
                 
-                <div class="col-md-1 add-new-align">
+                <div class="col-md-1">
                     <div class="form-group">
-                        <button class="btn btn-primary mtop20" (click)="getNtaeData()">
+                        <button type="button" class="btn btn-primary mtop20" (click)="getNtaeData(false)">
                             <i class="pi pi-search pi-search"></i>
                         </button>
                     </div>
@@ -132,7 +132,7 @@
                     {{rowData[col.field]}}
                 </td>
                 <td>
-                    <button class="btn btn-danger nobg" (click)="deleteNTAERow(rowData.itemMappingId)">
+                    <button type="button" class="btn btn-danger nobg" (click)="deleteNTAERow(rowData.itemMappingId)">
                         <i class="fa fa-trash"></i>
                     </button>
                 </td>
@@ -149,7 +149,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeModal()">×</button>
                 <h4 class="modal-title">Add {{selectedTab}}</h4>
             </div>
             <div class="modal-body">
@@ -198,7 +198,9 @@
                         <div class="form-group">
                             <label  class="popup-plusicon-cstm">
                                 Document         </label>
-                                <p-fileUpload name="gFileupload[]"  [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event)"></p-fileUpload> 
+                                <input type="file" name="gFileupload" id="gFileupload" (change)="fileUploadNtae($event)"   class="uploaddoc upload-file"  />
+               
+                                <!-- <p-fileUpload name="gFileupload"  [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (change)="fileUploadNtae($event)"></p-fileUpload>  -->
                                 <!-- <input type="text" class="ui-inputtext" disabled name="manufacturer"  [(ngModel)]="alternateData.manufacturer"  >  -->
                            
                         </div>
@@ -207,7 +209,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="saveAlternate()">Save</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="closeModal()">Close</button>
             </div>
         </div>
     </div>

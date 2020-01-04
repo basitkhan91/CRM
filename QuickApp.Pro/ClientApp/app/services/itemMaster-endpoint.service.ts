@@ -91,7 +91,9 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly _getalterqquparts : string = "/api/itemmaster/getalterqquparts";
     private readonly _saveNtaeParts : string = "/api/itemmaster/createnhatlaaltequpart";
     private readonly _getnhatlaaltequpartlis : string = "/api/itemmaster/nhatlaaltequpartlist";
+    private readonly _getequivalencypartlist : string = "/api/itemmaster/equivalencypartlist";    
     private readonly _deleteNTAERow: string = "/api/itemmaster/deletenhatlaaltequpart";
+    private readonly _createequivalencypart: string = "/api/itemmaster/createequivalencypart";
     
 
 
@@ -130,7 +132,9 @@ export class ItemMasterEndpoint extends EndpointFactory {
     get getalterqqupartsUrl() { return this.configurations.baseUrl + this._getalterqquparts; }
     get saveNtaePartsUrl() {return this.configurations.baseUrl + this._saveNtaeParts; }
     get getnhatlaaltequpartlisUrl() {return this.configurations.baseUrl + this._getnhatlaaltequpartlis; } 
+    get getequivalencypartlistUrl() {return this.configurations.baseUrl + this._getequivalencypartlist; } 
     get deleteNTAERowUrl() { return this.configurations.baseUrl + this._deleteNTAERow; }
+    get createequivalencypartUrl() { return this.configurations.baseUrl + this._createequivalencypart; }
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
@@ -1064,6 +1068,15 @@ export class ItemMasterEndpoint extends EndpointFactory {
        
     }
 
+    getequivalencypartlist<T>(userObject: any): Observable<T> {
+
+        return this.http.post<T>(this.getequivalencypartlistUrl, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getequivalencypartlist(userObject));
+            })
+       
+    }
+
     
     deleteNTAERow<T>(itemMasterId: number, userId: string): Observable<T> {
         let endpointUrl = `${this.deleteNTAERowUrl}?mappingId=${itemMasterId}&updatedBy=${userId}`;
@@ -1073,5 +1086,13 @@ export class ItemMasterEndpoint extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.deleteNTAERow(itemMasterId, userId));
             });
+    }
+
+    // createequivalencypart
+    createNTAEFileUploadForEquivalency(file){
+        console.log(file, "filedataaaa")
+        console.log(`${this.createequivalencypartUrl}`, "YUUUUU")
+        return this.http.post( `${this.createequivalencypartUrl}`, file)
+        
     }
 }

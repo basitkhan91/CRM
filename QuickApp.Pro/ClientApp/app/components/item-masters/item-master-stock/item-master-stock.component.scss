@@ -381,7 +381,44 @@ td {
   cursor: pointer;
 }
 
+
+
 .dropdown-custm {
   height: 28px !important;
   border-color: #cccccc;
+}
+.ntae-section .md-step.active.editable{
+  background: #337ab7!important;
+  
+}
+.ntae-section .md-stepper-horizontal .md-step {
+  cursor: pointer;
+  background: #bcceff;
+}
+.ntae-section .md-step .md-step-title{
+  color: #333 !important;
+  margin-top: 0px !important;
+}
+.ntae-section .md-stepper-horizontal .md-step.active.editable .md-step-title{
+  color: #fff !important;
+  font-weight: 600 !important;
+}
+.ntae-section .md-step-bar-right, .ntae-section .md-step-bar-left{
+  display: none;
+}
+.ntae-section .md-stepper-horizontal .md-step {
+  cursor: pointer;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  margin-right: 2px;
+}
+.ntae-section .md-stepper-horizontal .md-step:active{
+  border-bottom-left-radius: 0px !important;
+  border-bottom-right-radius: 0px !important
+}
+
+
+.ntae-section .md-stepper-horizontal .md-step .md-step-title {
+
+    font-weight: 400;
 }

@@ -112,15 +112,4 @@
         [(ngModel)]="query.partSearchParamters.includeAlternatePartNumber" />&nbsp;Multiple PN's</label>
   </div>
 </div>
-<p-dialog header="Alert" [(visible)]="displayPartError" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
-          [width]="350" [minWidth]="200" [responsive]="true"
-          [minY]="1050" [baseZIndex]="1100000">
-    <h5 [ngStyle]="{'color':'red'}">
-        Please Enter (*) Mandatory Fields
-    </h5>
-    <p *ngFor="let error of errorMessages" [ngStyle]="{'color':'red'}"> {{ error }} </p>
-    <p-footer>
-        <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
-    </p-footer>
 
-</p-dialog>

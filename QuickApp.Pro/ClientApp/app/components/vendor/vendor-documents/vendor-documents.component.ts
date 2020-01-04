@@ -64,6 +64,10 @@ export class VendorDocumentsComponent implements OnInit {
     documentauditHisory: any[];
 	constructor(public workFlowtService: VendorService,private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService,
 		private dialog: MatDialog, private masterComapnyService: MasterComapnyService,private configurations: ConfigurationService) {
+			if(this.workFlowtService.listCollection !== undefined){
+				this.workFlowtService.isEditMode = true;
+			}
+			
 			if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
 			
 				this.local = this.workFlowtService.listCollection;

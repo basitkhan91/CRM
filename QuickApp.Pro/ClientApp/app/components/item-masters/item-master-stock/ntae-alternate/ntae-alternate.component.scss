@@ -1,6 +1,6 @@
 ﻿.modal-body input,
 .modal-body select {
-  width: 90px !important;
+  width: calc(100% - 150px)
 }
 .isDisabled {
   pointer-events: none;
