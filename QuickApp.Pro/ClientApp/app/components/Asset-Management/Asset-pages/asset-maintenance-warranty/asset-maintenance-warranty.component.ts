@@ -80,6 +80,9 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
     private onassetdataSuccessful(getAssetData: any[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
+        this.assetService.isEditMode = true;
+        this.activeIndex = 3;
+        this.assetService.indexObj.next(this.activeIndex);
         this.assetService.listCollection = getAssetData;
         if (this.assetService.listCollection != null) {
             this.showLable = true;

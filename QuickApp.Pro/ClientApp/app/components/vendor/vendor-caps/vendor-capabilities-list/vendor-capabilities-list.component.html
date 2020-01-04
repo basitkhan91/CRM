@@ -6,7 +6,7 @@
         <div class="x_content">
             <div class="card">
                 <div class="card-body">
-                    <div class="inline-block display-flex">
+                    <div class="inline-block display-flex" *ngIf="!isEnableVendor">
                         <h4 class="po-head" style="padding-right: 8px;"> Vendor Caps List </h4>
                         <a matTooltip="Add Vendor Capabilities" (click)="navigateTogeneralInfo()" class="plusicon-cstm ">
                             <i class="fa fa-plus-circle fa-lg"></i>

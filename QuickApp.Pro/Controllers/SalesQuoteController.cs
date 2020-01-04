@@ -50,17 +50,37 @@ namespace QuickApp.Pro.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             list = from q in this.Context.SalesOrderQuote
+                   join s in this.Context.MasterSalesOrderQuoteStatus
+                   on q.StatusId equals s.Id
                    join c in this.Context.Customer
                    on q.CustomerId equals c.CustomerId
+                   join p in this.Context.SalesOrderQuotePart
+                   on q.SalesOrderQuoteId equals p.SalesOrderQuoteId
                    where q.IsDeleted == false
+
+                   group p by new
+                   {
+                       SalesOrderQuoteId = p.SalesOrderQuoteId,
+                       OpenDate = q.OpenDate,
+                       CustomerId = c.CustomerId,  
+                       Name = c.Name,
+                       CustomerCode = c.CustomerCode,  
+                       Status = s.Name, 
+                       NetSales = p.NetSales, 
+                       UnitCost = p.UnitCost
+                   } into gp 
+                   
                    select new SalesQuoteListView
                    {
-                       SalesQuoteId = q.SalesOrderQuoteId,
-                       QuoteDate = q.OpenDate,
-                       CustomerId = c.CustomerId,
-                       CustomerName = c.Name,
-                       CustomerCode = c.CustomerCode,
-                       Status = "Open",  // Hardcoded for time being, will be removed in next version 
+                       SalesQuoteId = gp.Key.SalesOrderQuoteId,
+                       QuoteDate = gp.Key.OpenDate,
+                       CustomerId = gp.Key.CustomerId, 
+                       CustomerName = gp.Key.Name,
+                       CustomerCode = gp.Key.CustomerCode,
+                       Status = gp.Key.Status,  
+                       SalesPrice = gp.Sum ( s => s.NetSales), 
+                       Cost = gp.Sum( c=> c.UnitCost),
+                       NumberOfItems = gp.Count()
                    };
                    
             return Ok(list);

@@ -227,13 +227,25 @@
                                                     CSR
                                                     <span class="clr-red">*</span>
                                                 </label>
-                                                <input type="text" class="form-control wo-input" [(ngModel)]="workOrderGeneralInformation.csr" name="csr" #csr="ngModel" required />
+                                                <!-- <input type="text" class="form-control wo-input" [(ngModel)]="workOrderGeneralInformation.csr" name="csr" #csr="ngModel" required /> -->
 
-                                                <div *ngIf="csr.invalid && (csr.dirty || csr.touched)" class="alert alert-danger alert-danger-cstm">
+                                                <p-autoComplete field="label" [(ngModel)]="workOrderGeneralInformation.csr"
+                                                name="csr"
+                                                #csr="ngModel"
+                                                errorMessage="Records not found"
+                                                [forceSelection]="true"
+                                                [dropdown]="true"
+                                                [suggestions]="csrList"
+                                                (completeMethod)="filterCsr($event)"
+                                                (onClear)="clearautoCompleteInput(workOrderGeneralInformation, 'csr' )"
+                                                [size]="30" [minLength]="1"
+                                                [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                            </p-autoComplete>
+                                                <!-- <div *ngIf="csr.invalid && (csr.dirty || csr.touched)" class="alert alert-danger alert-danger-cstm">
                                                     <div *ngIf="csr.errors.required">
                                                         <small> CSR is required </small>
                                                     </div>
-                                                </div>
+                                                </div> -->
                                             </div>
                                         </div>
 
@@ -482,7 +494,7 @@
                                                disabled>
                                     </td>
                                     <td>
-                                        <p-dropdown placeholder="Select" [options]="getDynamicVariableData('conditionList',i)"
+                                        <p-dropdown placeholder="Select" [options]="conditionList"
                                                     name="condition{{i}}" #condition="ngModel"
                                                     (onChange)="getStockLineByItemMasterId(workOrderPartNumber.masterPartId,workOrderPartNumber.conditionId,  i);"
                                                     class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.conditionId" required>
@@ -524,7 +536,9 @@
                                     <td>
                                         <p-dropdown [options]="workOrderStagesList"
                                                     name="stage{{i}}" #stage="ngModel"
-                                                    placeholder="Select" class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.workOrderStageId" required>
+                                                    placeholder="Select" class="p-dropdown-custom-md" 
+                                                    (onChange)="selectedStage(workOrderPartNumber)"
+                                                    [(ngModel)]="workOrderPartNumber.workOrderStageId" required>
                                         </p-dropdown>
                                     </td>
                                     <td>

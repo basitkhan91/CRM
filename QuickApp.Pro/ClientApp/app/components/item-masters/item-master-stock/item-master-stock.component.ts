@@ -46,6 +46,7 @@ import { DashNumberService } from '../../../services/dash-number/dash-number.ser
 import { CommonService } from '../../../services/common.service';
 import { ItemMasterExchangeLoanComponent } from '../item-master-exch-loan/item-master-exch-loan.component';
 import { ConfigurationService } from '../../../services/configuration.service';
+import { pulloutRequiredFieldsOfForm } from '../../../validations/form.validator';
 
 @Component({
     selector: 'app-item-master-stock',
@@ -4708,40 +4709,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
     saveItemMasterGeneralInformation(addCustomerWorkForm) {
-        let errors;
-        this.listOfErrors = [];
-        
-        let emptyFields = []
-        for (let key of Object.keys(this.sourceItemMaster)) {
-            if(this.PDropdownDirectives.includes(key) &&this.sourceItemMaster[key] == ""){
-            emptyFields.push(key)
-            }  
-        }
-        if(addCustomerWorkForm.status === "INVALID" || emptyFields.length > 0){
-            Object.keys(addCustomerWorkForm.controls).map(key => {
-                errors = addCustomerWorkForm.controls[key].errors;
-               if (errors === null) { return null; }            
-               if (errors['required']) {  
-                 let titlevalue = key;
-                 if(document.getElementById(key)){
-                     titlevalue = document.getElementById(key).getAttribute('title');
-                 }
-                   this.listOfErrors.push(`${titlevalue} is required`); //test
-               } else {
-               this.listOfErrors.push(`${key} has an unknown error`);
-               }
-             });
-
-             for(let k = 0; k<emptyFields.length; k++){
-                let titlevalue = emptyFields[k];
-                if(document.getElementById(emptyFields[k])){
-                    titlevalue = document.getElementById(emptyFields[k]).getAttribute('title');
-                } 
-                this.listOfErrors.push(`${titlevalue} is required`); 
-             }
+        this.listOfErrors = pulloutRequiredFieldsOfForm(addCustomerWorkForm);         
+        if(this.listOfErrors.length > 0){
+           
             this.display = true;
             this.modelValue = true;
-             return false
+             return false;
 
         } else {
            

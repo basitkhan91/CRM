@@ -11,6 +11,8 @@ export class CustomerEndpoint extends EndpointFactory {
 
     private readonly _getContactHistroty: string = "/api/Customer/getContactHistroty";
     private readonly _customersUrl: string = "/api/Customer/Get";
+    private readonly _customersUrlAll: string = "/api/Customer/GetAll";
+
     private readonly _customerTypeUrl: string = "/api/Customer/CustomerTypeGet";
     private readonly _aircraftTypeUrl: string = "/api/Customer/aircraftTypeGet";
     private readonly _updateShipAddressDetails: string = "/api/Customer/updateShipAddress";
@@ -165,6 +167,7 @@ export class CustomerEndpoint extends EndpointFactory {
     get customerShipViaDetails() { return this.configurations.baseUrl + this._customerShipViaDetails; }
     get getContactHistory() { return this.configurations.baseUrl + this._getContactHistroty; }
     get customersUrl() { return this.configurations.baseUrl + this._customersUrl; }
+    get customersUrlAll() { return this.configurations.baseUrl + this._customersUrlAll; }
     get getCustomerTypeUrl() { return this.configurations.baseUrl + this._customerTypeUrl; }
     get getAircraftTypeUrl() { return this.configurations.baseUrl + this._aircraftTypeUrl; }
     get generalurl() { return this.configurations.baseUrl + this._generalurl; }
@@ -448,7 +451,13 @@ export class CustomerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getcustomerEndpoint());
             });
     }
+    getAllcustomerEndpoint<T>(): Observable<T> {
 
+        return this.http.get<T>(this.customersUrlAll, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAllcustomerEndpoint());
+            });
+    }
     getcountryListEndpoint<T>(): Observable<T> {
 
         return this.http.get<T>(this.countryUrl, this.getRequestHeaders())

@@ -104,7 +104,7 @@ export class EmployeeStepsPrimeNgComponent {
 			}
 		},
 		{
-			label: 'Management Structure',
+            label: 'Employee - Management Structure',
             step:4,
             index:3,
 			command: (event: any) => {

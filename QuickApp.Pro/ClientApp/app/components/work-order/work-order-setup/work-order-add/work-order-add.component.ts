@@ -32,7 +32,7 @@ import {
     AllTasks
 } from '../../../../models/work-order-labor.modal';
 import { CommonService } from '../../../../services/common.service';
-import { validateRecordExistsOrNot, selectedValueValidate, getValueFromObjectByKey, getObjectById, getObjectByValue, editValueAssignByCondition } from '../../../../generic/autocomplete';
+import { validateRecordExistsOrNot, selectedValueValidate, getValueFromObjectByKey, getObjectById, getObjectByValue, editValueAssignByCondition, getValueFromArrayOfObjectById } from '../../../../generic/autocomplete';
 import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { WorkFlowtService } from '../../../../services/workflow.service';
@@ -42,7 +42,8 @@ import { Billing } from '../../../../models/work-order-billing.model';
 import * as moment from 'moment';
 import { WorkOrderQuoteService } from '../../../../services/work-order/work-order-quote.service';
 import { CustomerViewComponent } from '../../../../shared/components/customer/customer-view/customer-view.component';
-
+import { Subject } from 'rxjs'
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'app-work-order-add',
@@ -62,6 +63,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     @Input() employeesOriginalData;
     @Input() workScopesList;
     @Input() workOrderStagesList;
+    @Input() workOrderOriginalStageList;
     @Input() priorityList;
     @Input() partNumberOriginalData;
     @Input() workOrderGeneralInformation;
@@ -71,6 +73,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     @Input() workOrderId;
     @Input() currencyList;
     @Input() legalEntityList;
+    @Input() conditionList;
     @Input() workFlowWorkOrderId = 0;
     @Input() showGridMenu = false;
 
@@ -199,7 +202,9 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         departmentId: null,
     }
     revisedPartId: any;
+    csrList: any;
 
+    private onDestroy$: Subject<void> = new Subject<void>();
 
 
     constructor(
@@ -264,7 +269,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 console.log(this.workOrderGeneralInformation);
                 this.getWorkOrderQuoteDetail(this.workOrderGeneralInformation.workOrderId, this.workOrderGeneralInformation.workFlowWorkOrderId);
                 const data = this.workOrderGeneralInformation;
-                this.commonService.getManagementStructureDetails(data.managementStructureId).subscribe(res => {
+                this.commonService.getManagementStructureDetails(data.managementStructureId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                     this.selectedLegalEntity(res.Level1);
                     this.selectedBusinessUnit(res.Level2);
                     this.selectedDivision(res.Level3);
@@ -281,7 +286,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                     ...data,
                     workOrderTypeId: String(data.workOrderTypeId),
                     customerReference: data.customerReference,
-                    csr: data.csr,
+                    csr: getObjectById('value', parseInt(data.csr), this.employeesOriginalData),
                     customerId: data.customerDetails,
                     employeeId: getObjectById('value', data.employeeId, this.employeesOriginalData),
                     salesPersonId: getObjectById('value', data.employeeId, this.employeesOriginalData),
@@ -290,11 +295,13 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
                         this.getRevisedpartNumberByItemMasterId(x.masterPartId, index);
                         this.getStockLineByItemMasterId(x.masterPartId, x.conditionId, index);
-                        this.getConditionByItemMasterId(x.masterPartId, index);
+                        // this.getConditionByItemMasterId(x.masterPartId, index);
+
                         this.getWorkFlowByPNandScope({ ...x, masterPartId: getObjectById('itemMasterId', x.masterPartId, this.partNumberOriginalData) });
                         this.getPartPublicationByItemMasterId(x.masterPartId);
                         return {
                             ...x,
+                            workOrderStageId: getObjectById('workOrderStageId', x.workOrderStageId, this.workOrderOriginalStageList),
                             technicianId: getObjectById('value', x.technicianId, this.employeesOriginalData),
                             masterPartId: getObjectById('itemMasterId', x.masterPartId, this.partNumberOriginalData),
                             mappingItemMasterId: getObjectById('mappingItemMasterId', x.mappingItemMasterId, x.revisedParts),
@@ -346,6 +353,10 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     }
 
+    ngOnDestroy(): void {
+        this.onDestroy$.next();
+    }
+
 
 
 
@@ -384,7 +395,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     filterCustomerName(event) {
         const value = event.query.toLowerCase()
-        this.commonService.getCustomerNameandCode(value).subscribe(res => {
+        this.commonService.getCustomerNameandCode(value).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.customerNamesList = res;
         })
     }
@@ -413,6 +424,16 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
 
+    filterCsr(event) {
+        this.csrList = this.employeesOriginalData;
+
+        if (event.query !== undefined && event.query !== null) {
+            const employee = [...this.employeesOriginalData.filter(x => {
+                return x.label.toLowerCase().includes(event.query.toLowerCase())
+            })]
+            this.csrList = employee;
+        }
+    }
 
     filterEmployee(event): void {
 
@@ -473,7 +494,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     selectedLegalEntity(legalEntityId) {
         if (legalEntityId) {
             this.workOrderGeneralInformation.managementStructureId = legalEntityId;
-            this.commonService.getBusinessUnitListByLegalEntityId(legalEntityId).subscribe(res => {
+            this.commonService.getBusinessUnitListByLegalEntityId(legalEntityId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                 this.businessUnitList = res;
             })
         }
@@ -482,7 +503,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     selectedBusinessUnit(businessUnitId) {
         if (businessUnitId) {
             this.workOrderGeneralInformation.managementStructureId = businessUnitId;
-            this.commonService.getDivisionListByBU(businessUnitId).subscribe(res => {
+            this.commonService.getDivisionListByBU(businessUnitId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                 this.divisionList = res;
             })
         }
@@ -491,7 +512,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     selectedDivision(divisionUnitId) {
         if (divisionUnitId) {
             this.workOrderGeneralInformation.managementStructureId = divisionUnitId;
-            this.commonService.getDepartmentListByDivisionId(divisionUnitId).subscribe(res => {
+            this.commonService.getDepartmentListByDivisionId(divisionUnitId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                 this.departmentList = res;
             })
         }
@@ -529,7 +550,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
         if (value === 'editworkFlow') {
             this.editWorkFlowData = undefined;
-            this.workFlowtService.getWorkFlowDataByIdForEdit(this.workFlowId).subscribe(res => {
+            this.workFlowtService.getWorkFlowDataByIdForEdit(this.workFlowId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                 console.log(res);
 
                 this.workFlowtService.listCollection = res[0];
@@ -560,9 +581,10 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         const generalInfo = this.workOrderGeneralInformation;
         const data = {
             ...generalInfo,
-            customerId: getValueFromObjectByKey('customerId', generalInfo.customerId),
-            employeeId: getValueFromObjectByKey('value', generalInfo.employeeId),
-            salesPersonId: getValueFromObjectByKey('value', generalInfo.salesPersonId),
+            customerId: editValueAssignByCondition('customerId', generalInfo.customerId),
+            employeeId: editValueAssignByCondition('value', generalInfo.employeeId),
+            salesPersonId: editValueAssignByCondition('value', generalInfo.salesPersonId),
+            csr: editValueAssignByCondition('value', generalInfo.csr),
             masterCompanyId: 1,
             customerContactId: 68,
             createdBy: this.userName,
@@ -572,11 +594,11 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
                 return {
                     ...x,
-
-                    masterPartId: getValueFromObjectByKey('itemMasterId', x.masterPartId),
+                    masterPartId: editValueAssignByCondition('itemMasterId', x.masterPartId),
+                    workOrderStageId: editValueAssignByCondition('workOrderStageId', x.workOrderStageId),
                     // mappingItemMasterId: getValueFromObjectByKey('itemMasterId', x.masterPartId),
-                    mappingItemMasterId: getValueFromObjectByKey('mappingItemMasterId', x.mappingItemMasterId),
-                    technicianId: getValueFromObjectByKey('value', x.technicianId),
+                    mappingItemMasterId: editValueAssignByCondition('mappingItemMasterId', x.mappingItemMasterId),
+                    technicianId: editValueAssignByCondition('value', x.technicianId),
                     createdBy: this.userName,
                     updatedBy: this.userName
                 }
@@ -584,7 +606,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         };
 
         if (this.isEdit) {
-            this.workOrderService.updateNewWorkOrder(data).subscribe(
+            this.workOrderService.updateNewWorkOrder(data).pipe(takeUntil(this.onDestroy$)).subscribe(
                 result => {
                     this.saveWorkOrderGridLogic(result, generalInfo)
                     // this.workOrder = result;
@@ -596,7 +618,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 }
             );
         } else {
-            this.workOrderService.createNewWorkOrder(data).subscribe(
+            this.workOrderService.createNewWorkOrder(data).pipe(takeUntil(this.onDestroy$)).subscribe(
                 result => {
                     this.isEdit = true;
                     this.saveWorkOrderGridLogic(result, generalInfo)
@@ -664,7 +686,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
         this.getRevisedpartNumberByItemMasterId(itemMasterId, index)
         // this.getStockLineByItemMasterId(itemMasterId)
-        this.getConditionByItemMasterId(itemMasterId, index)
+        // this.getConditionByItemMasterId(itemMasterId, index)
         this.getPartPublicationByItemMasterId(itemMasterId)
         currentRecord.description = object.partDescription
         currentRecord.nte = object.nte;
@@ -672,6 +694,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         currentRecord.isDER = object.der === null ? false : object.der;
         currentRecord.tatDaysStandard = object.tatDaysStandard === null ? '' : object.tatDaysStandard
         currentRecord.revisedPartNo = object.revisedPartNo;
+
         this.revisedPartId = object.revisedPartId;
     }
 
@@ -694,7 +717,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     async  getRevisedpartNumberByItemMasterId(itemMasterId, index) {
 
-        await this.workOrderService.getRevisedPartNumbers(itemMasterId).subscribe(res => {
+        await this.workOrderService.getRevisedPartNumbers(itemMasterId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this['revisedPartOriginalData' + index] = res;
 
 
@@ -710,7 +733,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         // const { conditionId } = workOrderPart;
         // const { itemMasterId } = workOrderPart.masterPartId;
         if (itemMasterId !== 0 && conditionId !== null) {
-            await this.workOrderService.getStockLineByItemMasterId(itemMasterId, conditionId).subscribe(res => {
+            await this.workOrderService.getStockLineByItemMasterId(itemMasterId, conditionId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                 this['stockLineList' + index] = res.map(x => {
                     return {
                         label: x.stockLineNumber,
@@ -724,32 +747,24 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
 
-    async getConditionByItemMasterId(itemMasterId, index) {
-        await this.workOrderService.getConditionByItemMasterId(itemMasterId).subscribe(res => {
-            this['conditionList' + index] = res.map(x => {
-                return {
-                    label: x.description,
-                    value: x.conditionId,
-                }
-            })
-        })
-    }
-    // getDynamicVariableData(variable, index) {
-    //   return this[variable + index];
+    // async getConditionByItemMasterId(itemMasterId, index) {
+    //     await this.workOrderService.getConditionByItemMasterId(itemMasterId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+    //         this['conditionList' + index] = res.map(x => {
+    //             return {
+    //                 label: x.description,
+    //                 value: x.conditionId,
+    //             }
+    //         })
+    //     })
     // }
-    // getConditionDyVariable(variable, index) {
-    //   return this[variable + index];
-    // }
-    // getRevisedPNDyVariable(variable, index) {
-    //   return this[variable + index]
-    // }
+
 
     getDynamicVariableData(variable, index) {
         return this[variable + index]
     }
 
     async getPartPublicationByItemMasterId(itemMasterId) {
-        await this.workOrderService.getPartPublicationByItemMaster(itemMasterId).subscribe(res => {
+        await this.workOrderService.getPartPublicationByItemMaster(itemMasterId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.cmmList = res.map(x => {
                 return {
                     value: x.publicationRecordId,
@@ -759,6 +774,12 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         })
     }
 
+    selectedStage(currentRecord) {
+        const object = currentRecord.workOrderStageId;
+        currentRecord.workOrderStatusId = object.workOrderStausId;
+        // // value will be object to update it we assigning the value in the workOrderStageID
+        // currentRecord.workOrderStageId = object.workOrderStageId.WorkOrderStageId;
+    }
 
 
 
@@ -788,7 +809,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         workOrderPart.serialNumber = '';
 
         if ((stockLineId !== null && stockLineId !== 0) && (conditionId !== null && conditionId !== 0)) {
-            this.workOrderService.getSerialNoByStockLineId(stockLineId, conditionId).subscribe(res => {
+            this.workOrderService.getSerialNoByStockLineId(stockLineId, conditionId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                 if (res) {
                     workOrderPart.serialNumber = res.serialNumber;
                 }
@@ -802,8 +823,11 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         const itemMasterId = getValueFromObjectByKey('itemMasterId', workOrderPart.masterPartId)
         const { workOrderScopeId } = workOrderPart;
 
+
+
         if ((itemMasterId !== 0 && itemMasterId !== null) && (workOrderScopeId !== null && workOrderScopeId !== 0)) {
-            this.workOrderService.getWorkFlowByPNandScope(itemMasterId, workOrderScopeId).subscribe(res => {
+            this.workOrderService.getWorkFlowByPNandScope(itemMasterId, workOrderScopeId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+
                 this.workFlowList = res.map(x => {
                     return {
                         label: x.workFlowNo,
@@ -812,15 +836,25 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 })
             })
         }
+        this.getNTEandSTDByItemMasterId(itemMasterId, workOrderPart);
 
     }
+
+    getNTEandSTDByItemMasterId(itemMasterId, currentRecord) {
+        const label = getValueFromArrayOfObjectById('label', 'value', currentRecord.workOrderScopeId, this.workScopesList);
+        this.workOrderService.getNTEandSTDByItemMasterId(itemMasterId, label).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+            currentRecord.nte = res.nteHours;
+            currentRecord.tatDaysStandard = res.stdHours;
+        })
+    }
+
 
 
     getWorkFlowData() {
         this.selectedWorkFlowId = this.savedWorkOrderData.partNumbers[0].workflowId;
         if (this.selectedWorkFlowId != 0) {
             this.workFlowtService.getWorkFlowDataByIdForEdit(this.selectedWorkFlowId)
-                .subscribe(
+                .pipe(takeUntil(this.onDestroy$)).subscribe(
                     (workFlowData) => {
                         this.employeeService.workFlowIdData = workFlowData;
                         console.log(this.employeeService.workFlowIdData);
@@ -864,7 +898,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     // getWorkOrderWorkFlowBywfwoId(workFlowWorkOrderId) {
 
-    //   this.workOrderService.getWorkOrderWorkFlowByWorkFlowWorkOrderId(workFlowWorkOrderId).subscribe(res => {
+    //   this.workOrderService.getWorkOrderWorkFlowByWorkFlowWorkOrderId(workFlowWorkOrderId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
 
     //   })
     // }
@@ -874,7 +908,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
 
     savedWorkFlowData(workFlowDataObject) {
-        this.workOrderService.createWorkFlowWorkOrder(workFlowDataObject).subscribe(res => {
+        this.workOrderService.createWorkFlowWorkOrder(workFlowDataObject).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.workFlowWorkOrderData = res;
             this.workFlowWorkOrderId = res.workFlowWorkOrderId;
 
@@ -898,7 +932,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     getWorkOrderWorkFlowNos() {
         console.log(this.workOrderId);
         if (this.workOrderId) {
-            this.workOrderService.getWorkOrderWorkFlowNumbers(this.workOrderId).subscribe(res => {
+            this.workOrderService.getWorkOrderWorkFlowNumbers(this.workOrderId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                 this.workOrderWorkFlowOriginalData = res;
 
                 if (this.isEdit && res.length === 1 && this.workOrderGeneralInformation.isSinglePN == true) {
@@ -937,7 +971,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             }
         })
         console.log(data);
-        this.workOrderService.createWorkOrderMaterialList(materialArr).subscribe(res => {
+        this.workOrderService.createWorkOrderMaterialList(materialArr).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.workFlowObject.materialList = [];
             this.alertService.showMessage(
                 this.moduleName,
@@ -960,7 +994,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             }
         })
         console.log(data);
-        this.workOrderService.updateWorkOrderMaterialList(materialArr).subscribe(res => {
+        this.workOrderService.updateWorkOrderMaterialList(materialArr).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.workFlowObject.materialList = [];
             this.alertService.showMessage(
                 this.moduleName,
@@ -980,12 +1014,12 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         this.labor.workOrderLaborList = [];
         this.labor.workOrderLaborList.push({})
         this.workOrderService.getAllTasks()
-            .subscribe(
+            .pipe(takeUntil(this.onDestroy$)).subscribe(
                 (taskList) => {
                     this.labor.workOrderLaborList[0] = {}
                     this.taskList = taskList;
                     this.taskList.forEach(task => {
-                        this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [new AllTasks()];
+                        this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [];
                     });
                 },
                 (error) => {
@@ -997,7 +1031,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
     saveworkOrderLabor(data) {
-        this.workOrderService.createWorkOrderLabor(this.formWorkerOrderLaborJson(data)).subscribe(res => {
+        this.workOrderService.createWorkOrderLabor(this.formWorkerOrderLaborJson(data)).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.alertService.showMessage(
                 this.moduleName,
                 'Saved Work Order Labor  Succesfully',
@@ -1016,10 +1050,6 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
 
-
-
-
-
     saveWorkOrderEquipmentList(data) {
         const equipmentArr = data.equipments.map(x => {
             return {
@@ -1030,7 +1060,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             }
         })
 
-        this.workOrderService.createWorkOrderEquipmentList(equipmentArr).subscribe(res => {
+        this.workOrderService.createWorkOrderEquipmentList(equipmentArr).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.workFlowObject.equipments = [];
             this.alertService.showMessage(
                 this.moduleName,
@@ -1052,7 +1082,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         })
 
 
-        this.workOrderService.updateWorkOrderEquipmentList(equipmentArr).subscribe(res => {
+        this.workOrderService.updateWorkOrderEquipmentList(equipmentArr).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.workFlowObject.equipments = [];
             this.alertService.showMessage(
                 this.moduleName,
@@ -1075,7 +1105,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             }
         })
         console.log(data);
-        this.workOrderService.createWorkOrderChargesList(chargesArr).subscribe(res => {
+        this.workOrderService.createWorkOrderChargesList(chargesArr).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.workFlowObject.charges = [];
             this.alertService.showMessage(
                 this.moduleName,
@@ -1098,7 +1128,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             }
         })
         console.log(data);
-        this.workOrderService.updateWorkOrderChargesList(chargesArr).subscribe(res => {
+        this.workOrderService.updateWorkOrderChargesList(chargesArr).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.workFlowObject.charges = [];
             this.alertService.showMessage(
                 this.moduleName,
@@ -1142,7 +1172,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
 
     saveReservedPartorIssue(alternatePartData) {
-        this.workOrderService.saveReservedPartorIssue(alternatePartData).subscribe(res => {
+        this.workOrderService.saveReservedPartorIssue(alternatePartData).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.alertService.showMessage(
                 this.moduleName,
                 'Updated Parts Data',
@@ -1158,7 +1188,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     getEquipmentByWorkOrderId(event?) {
         if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
             // this.workFlowWorkOrderId = this.workFlowWorkOrderData.workFlowWorkOrderId;
-            this.workOrderService.getWorkOrderAssetList(this.workFlowWorkOrderId, this.workOrderId).subscribe(
+            this.workOrderService.getWorkOrderAssetList(this.workFlowWorkOrderId, this.workOrderId).pipe(takeUntil(this.onDestroy$)).subscribe(
                 result => {
                     this.workOrderAssetList = result;
                 }
@@ -1171,7 +1201,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         // this.workFlowWorkOrderId, this.workOrderId
         // 89,102
         if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
-            this.workOrderService.getWorkOrderMaterialList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
+            this.workOrderService.getWorkOrderMaterialList(this.workFlowWorkOrderId, this.workOrderId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
 
 
                 this.workOrderMaterialList = res;
@@ -1192,7 +1222,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     clearLaborList() {
 
         for (let task of this.taskList) {
-            this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [new AllTasks()];
+            this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [];
         }
     }
 
@@ -1204,7 +1234,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         this.clearLaborList();
 
         if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
-            this.workOrderService.getWorkOrderLaborList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
+            this.workOrderService.getWorkOrderLaborList(this.workFlowWorkOrderId, this.workOrderId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                 this.data = {};
                 this.data = res;
                 if (res) {
@@ -1248,6 +1278,16 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 console.log(this.workOrderLaborList);
             })
         }
+        if(this.workOrderGeneralInformation.isSinglePN == true){
+            this.labor['employeeId'] = this.workOrderGeneralInformation.partNumbers[0]['technicianId'];
+        }
+        else{
+            this.workOrderGeneralInformation.partNumbers.forEach(pn=>{
+                if(pn['id'] == this.workOrderPartNumberId){
+                    this.labor['employeeId'] = pn['technicianId'];
+                }
+            })
+        }
     }
 
 
@@ -1270,7 +1310,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     getChargesListByWorkOrderId() {
         if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
-            this.workOrderService.getWorkOrderChargesList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
+            this.workOrderService.getWorkOrderChargesList(this.workFlowWorkOrderId, this.workOrderId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                 this.workOrderChargesList = res;
             })
 
@@ -1289,7 +1329,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 estimtPercentOccurranceId: x.estimtPercentOccurrance
             }
         });
-        this.workOrderService.createWorkOrderExclusionList(exclusionsArr).subscribe(res => {
+        this.workOrderService.createWorkOrderExclusionList(exclusionsArr).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.workFlowObject.charges = [];
             this.alertService.showMessage(
                 this.moduleName,
@@ -1309,7 +1349,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId
             }
         });
-        this.workOrderService.updateWorkOrderExclusionList(exclusionsArr).subscribe(res => {
+        this.workOrderService.updateWorkOrderExclusionList(exclusionsArr).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.workFlowObject.charges = [];
             this.alertService.showMessage(
                 this.moduleName,
@@ -1324,7 +1364,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     getExclusionListByWorkOrderId() {
 
         if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
-            this.workOrderService.getWorkOrderExclusionsList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
+            this.workOrderService.getWorkOrderExclusionsList(this.workFlowWorkOrderId, this.workOrderId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                 this.workOrderExclusionsList = res;
             })
 
@@ -1367,7 +1407,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         }
 
         if (this.isEditBilling) {
-            this.workOrderService.updateBillingByWorkOrderId(data).subscribe(res => {
+            this.workOrderService.updateBillingByWorkOrderId(data).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
 
                 // this.getQuoteIdByWfandWorkOrderId();
                 this.alertService.showMessage(
@@ -1377,7 +1417,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 );
             })
         } else {
-            this.workOrderService.createBillingByWorkOrderId(data).subscribe(res => {
+            this.workOrderService.createBillingByWorkOrderId(data).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                 // this.getQuoteIdByWfandWorkOrderId();
                 this.alertService.showMessage(
                     this.moduleName,
@@ -1391,7 +1431,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     billingCreateOrEdit() {
         this.getQuoteIdByWfandWorkOrderId();
-        this.workOrderService.getBillingEditData(this.workOrderId, this.workOrderPartNumberId).subscribe(res => {
+        this.workOrderService.getBillingEditData(this.workOrderId, this.workOrderPartNumberId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             // Edit
             this.billing = {
                 ...res,
@@ -1412,7 +1452,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
 
     getWorkOrderDetailsFromHeader() {
-        this.workOrderService.viewWorkOrderHeader(this.workOrderId).subscribe(res => {
+        this.workOrderService.viewWorkOrderHeader(this.workOrderId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             const data = res;
             // create
             this.billing = new Billing();
@@ -1432,7 +1472,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
     // getCustomerNameandCodeById(customerId, object, field) {
     //     if (customerId !== null || customerId !== undefined) {
-    //         this.commonService.getCustomerNameandCodeById(customerId).subscribe(res => {
+    //         this.commonService.getCustomerNameandCodeById(customerId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
     //             object[field] = res[0];
     //         })
     //     }
@@ -1441,7 +1481,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     getQuoteIdByWfandWorkOrderId() {
         // this.workFlowWorkOrderId, this.workOrderId
-        this.quoteService.getQuoteIdByWfandWorkOrderId(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
+        this.quoteService.getQuoteIdByWfandWorkOrderId(this.workFlowWorkOrderId, this.workOrderId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
 
             if (res) {
                 this.quoteData = res;
@@ -1471,31 +1511,31 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     // getQuoteExclusionListByWorkOrderQuoteId() {
 
-    //     this.quoteService.getQuoteExclusionList(this.workOrderQuoteId).subscribe(res => {
+    //     this.quoteService.getQuoteExclusionList(this.workOrderQuoteId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
     //         this.quoteExclusionList = res;
     //     })
     // }
 
     async getQuoteMaterialListByWorkOrderQuoteId() {
-        await this.quoteService.getQuoteMaterialList(this.workOrderQuoteId).subscribe(res => {
+        await this.quoteService.getQuoteMaterialList(this.workOrderQuoteId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.quoteMaterialList = res;
             this.sumOfMaterialList();
         })
     }
     async getQuoteFreightsListByWorkOrderQuoteId() {
-        await this.quoteService.getQuoteFreightsList(this.workOrderQuoteId).subscribe(res => {
+        await this.quoteService.getQuoteFreightsList(this.workOrderQuoteId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.quoteFreightsList = res;
 
         })
     }
     async getQuoteChargesListByWorkOrderQuoteId() {
-        await this.quoteService.getQuoteChargesList(this.workOrderQuoteId).subscribe(res => {
+        await this.quoteService.getQuoteChargesList(this.workOrderQuoteId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.quoteChargesList = res;
             this.sumofCharges();
         })
     }
     async getQuoteLaborListByWorkOrderQuoteId() {
-        await this.quoteService.getQuoteLaborList(this.workOrderQuoteId).subscribe(res => {
+        await this.quoteService.getQuoteLaborList(this.workOrderQuoteId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             if (res) {
                 this.quoteLaborList = res.laborList;
                 this.sumofLaborOverHead();
@@ -1532,7 +1572,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     getWorkOrderQuoteDetail(workOrderId, workFlowWorkOrderId) {
         this.quoteService.getWorkOrderQuoteDetail(workOrderId, workFlowWorkOrderId)
-            .subscribe(
+            .pipe(takeUntil(this.onDestroy$)).subscribe(
                 (res: any) => {
                     if (res) {
                         this.workOrderQuoteId = res.workOrderQuote.workOrderQuoteId;

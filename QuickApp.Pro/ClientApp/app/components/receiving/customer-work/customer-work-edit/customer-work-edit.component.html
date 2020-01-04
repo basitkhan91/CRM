@@ -606,7 +606,7 @@
                                         <div class="col-sm-6">
                                         </div>
                                         <div class="col-sm-6">
-                                            <button class="btn btn-primary-cstm float-right" pButton type="button" (click)="editItemAndCloseModel()"   [disabled]="!addcustomerwork.valid"  label="Save" style="padding: 0 !important;"></button>
+                                            <button class="btn btn-primary-cstm float-right" pButton type="button" (click)="editItemAndCloseModel(content)"   [disabled]="!addcustomerwork.valid"  label="Save" style="padding: 0 !important;"></button>
                                         </div>
                                     </div>
 
@@ -666,4 +666,18 @@
         </form>
     </div>
 
+</ng-template>
+<ng-template #content let-c="close" let-d="dismiss" data-backdrop="static">
+    <div class="modal-header">
+        <h4 class="modal-title">Customer Work is saved. Would you like to create Work Order ?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="CreateWorkOrderModel()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="GotoList()">No</button>
+    </div>
 </ng-template>

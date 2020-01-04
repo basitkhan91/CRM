@@ -148,6 +148,11 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	isEditPaymentInfo: boolean = false;
 
 	constructor(private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+
+		if(this.workFlowtService.listCollection !== undefined){
+            this.workFlowtService.isEditMode = true;
+		}
+		
 		if (this.workFlowtService.financeCollection) {
 			this.local = this.workFlowtService.financeCollection;
         }

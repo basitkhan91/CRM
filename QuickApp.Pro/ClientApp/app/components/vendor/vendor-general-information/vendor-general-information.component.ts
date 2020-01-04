@@ -143,6 +143,12 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
     constructor(public vendorclassificationService: VendorClassificationService, private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public customerser: CustomerService, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, public commonService: CommonService,public integrationService: IntegrationService,private configurations: ConfigurationService) {
         this.dataSource = new MatTableDataSource();
        
+       
+        if(this.vendorService.listCollection !== undefined){
+            this.vendorService.isEditMode = true;
+        }
+       
+
         if (this.local) {
             this.vendorService.contactCollection = this.local;
         }
@@ -150,6 +156,8 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
             this.local = this.vendorService.generalCollection; 
             this.toGetVendorGeneralDocumentsList(this.local.vendorId);       
         }        
+
+
 
         if (this.vendorService.listCollection != null && this.vendorService.isEditMode == true) {
            
@@ -263,6 +271,7 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
                 this.sourceVendor.isAddressForShipping = true;
             }            
         }
+        console.log(this.vendorService.listCollection);        
     }
     ngOnDestroy(): void {
         this.sourceVendor = {};
@@ -768,10 +777,14 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
 
     nextClick() {
         this.vendorService.vendorgeneralcollection = this.local;
-        this.activeIndex = 1;
+        // this.activeIndex = 1;
+        // this.vendorService.indexObj.next(this.activeIndex);
+        // this.vendorService.changeStep('Contacts');
+        // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
+        this.activeIndex = 10;
         this.vendorService.indexObj.next(this.activeIndex);
-        this.vendorService.changeStep('Contacts');
-        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
+        this.vendorService.changeStep('Capabilities');
+        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-capes');
     }
 
     CreateVendorOnClick() {

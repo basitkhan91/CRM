@@ -178,7 +178,7 @@ namespace QuickApp.Pro.Controllers
                 employeeobject.JobTitleId = employeeViewModel.JobTitleId;
                 employeeobject.JobTypeId = employeeViewModel.JobTypeId;
                 employeeobject.EmployeeIdAsPerPayroll = employeeViewModel.EmployeeIdAsPerPayroll;
-                employeeobject.StationId = employeeViewModel.StationId;
+                employeeobject.StationId =  employeeViewModel.StationId;
                 employeeobject.EmployeeExpertiseId = employeeViewModel.EmployeeExpertiseId;
 
 
@@ -698,7 +698,7 @@ namespace QuickApp.Pro.Controllers
 
                 employeeobject.MasterCompanyId = 1;
                 employeeobject.IsActive = true;
-                employeeobject.EmployeeId = employeeLicensureViewModel.EmployeeId;
+                //employeeobject.EmployeeId = employeeLicensureViewModel.EmployeeId;
                 employeeobject.CertificationDate = employeeLicensureViewModel.CertificationDate;
                 employeeobject.ExpirationDate = employeeLicensureViewModel.ExpirationDate;
                 employeeobject.IsExpirationDate = employeeLicensureViewModel.IsExpirationDate;

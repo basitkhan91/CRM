@@ -79,8 +79,8 @@ export class ReceivingCustomerWorkService {
         return this.receivingCustomerWorkEndpoint.getUpdatestockLineTimeLifeEndpoint<any>(sourceTimeLife, sourceTimeLife.timeLifeCyclesId);
     }
     
-    updateActionforActive(receivingCustomerWork: any) {
-        return this.receivingCustomerWorkEndpoint.getUpdateActionforActive(receivingCustomerWork, receivingCustomerWork.receivingCustomerWorkId);
+    updateActionforActive(receivingCustomerWorkId: number,status:string,updatedBy:string) {
+        return this.receivingCustomerWorkEndpoint.getUpdateActionforActive(receivingCustomerWorkId, status,updatedBy);
     }
     getAuditHistory(receivingCustomerWorkId: number) {
         return Observable.forkJoin(this.receivingCustomerWorkEndpoint.getAuditHistory(receivingCustomerWorkId));

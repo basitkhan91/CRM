@@ -182,6 +182,9 @@ export class CreateAssetComponent implements OnInit {
     private onassetdataSuccessful(getAssetData: any[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
+        this.assetService.isEditMode = true;
+        this.activeIndex = 0;
+        this.assetService.indexObj.next(this.activeIndex);
         this.assetService.listCollection = getAssetData;
         if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
             this.showLable = true;
@@ -630,7 +633,7 @@ export class CreateAssetComponent implements OnInit {
     private assetTypeData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.assetTypeService.getAll().subscribe(
+        this.assetTypeService.getAllActive().subscribe(
             results => this.onAssetTypeLoad(results[0]),
             error => this.onDataLoadFailed(error)
         );

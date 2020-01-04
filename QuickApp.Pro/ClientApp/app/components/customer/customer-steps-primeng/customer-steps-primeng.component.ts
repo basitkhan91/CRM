@@ -18,7 +18,9 @@ export class CustomerStepsPrimengComponent {
 	countryListOriginal: any[];
 	customerId: number;
 	editMode: boolean = false;
-	customerListOriginal: { customerId: any; name: any; }[];
+    customerListOriginal: { customerId: any; name: any; }[];
+
+    customerallListOriginal: { customerId: any; name: any; }[];
 	editGeneralInformationData: any;
 	employeeListOriginal: any[];
 	isDisabledSteps: boolean = false;
@@ -67,7 +69,8 @@ export class CustomerStepsPrimengComponent {
 		this.getAllCountries();
 		this.getAllCustomers();
 		this.getAllEmployees();
-		this.getAllATAChapter();
+        this.getAllATAChapter();
+        this.getAllCustomersData();
         
 		// 	this.showComponentPTab = this.customerService.ShowPtab;
 		// 	this.currentUrl = this.route.url;
@@ -263,7 +266,17 @@ export class CustomerStepsPrimengComponent {
 			this.customerListOriginal = res[0];
 			console.log(res[0]);
 		})
-	}
+    }
+
+    getAllCustomersData() {
+        this.customerService.getallCustomers().subscribe(res => {
+            this.customerallListOriginal = res[0];
+            console.log(res[0]);
+        })
+    }
+
+
+    getallCustomers
 	async getAllEmployees() {
 		await this.employeeService.getEmployeeList().subscribe(res => {
 			this.employeeListOriginal = res[0];

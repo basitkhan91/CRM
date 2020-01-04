@@ -23,7 +23,7 @@ import { NgbActiveModal, NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { getObjectById } from '../../../../generic/autocomplete';
-
+import { WorkOrderService } from '../../../../services/work-order/work-order.service';
 @Component({
     selector: 'app-customer-work-edit',
     templateUrl: './customer-work-edit.component.html',
@@ -92,7 +92,7 @@ export class CustomerWorkEditComponent {
     departmentList: any[] = [];
     partListData: any[] = [];
     custcodes: { customerId: any; name: any; }[];
-    constructor(private router: Router,private conditionService: ConditionService, public workFlowtService1: LegalEntityService, private siteService: SiteService, private binService: BinService, private vendorservice: VendorService, public employeeService: EmployeeService, private alertService: AlertService, public itemser: ItemMasterService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public receivingCustomerWorkService: ReceivingCustomerWorkService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerservices: CustomerService) {
+    constructor(private router: Router, private conditionService: ConditionService, public workFlowtService1: LegalEntityService, private siteService: SiteService, private binService: BinService, private vendorservice: VendorService, public employeeService: EmployeeService, private alertService: AlertService, public itemser: ItemMasterService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public receivingCustomerWorkService: ReceivingCustomerWorkService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerservices: CustomerService, private workOrderService: WorkOrderService) {
         this.dataSource = new MatTableDataSource();
 
         if (this.receivingCustomerWorkService.listCollection && this.receivingCustomerWorkService.isEditMode == true) {
@@ -189,6 +189,7 @@ export class CustomerWorkEditComponent {
     }
 
     sourcereceving: any = {};
+    sourcerecevingForWorkOrder: any = {};
     ngAfterViewInit() {
 
     }
@@ -360,9 +361,9 @@ export class CustomerWorkEditComponent {
         })]
 
     }
-    editItemAndCloseModel() {
+    editItemAndCloseModel(content) {
         this.isSaving = true;
-
+       
         if (!this.sourcereceving.receivingCustomerWorkId) {
           
             this.sourcereceving.createdBy = this.userName;
@@ -371,6 +372,8 @@ export class CustomerWorkEditComponent {
             this.sourceTimeLife.updatedBy = this.userName;
             this.sourcereceving.masterCompanyId = 1;
             this.sourcereceving.isActive = true;
+
+            this.sourcerecevingForWorkOrder = this.sourcereceving;
             console.log(this.sourcereceving);
             if ((this.sourceTimeLife != null) || (this.sourceTimeLife != "null")) {
                 if (this.sourceTimeLife.timeLife) {
@@ -415,7 +418,7 @@ export class CustomerWorkEditComponent {
                         }
                         console.log(this.sourcereceving);
                         this.receivingCustomerWorkService.newReason(this.sourcereceving).subscribe(
-                            role => this.saveSuccessHelper(role),
+                            role => this.saveSuccessHelper(role,content),
                             error => this.saveFailedHelper(error));
                         this.sourcereceving = {};
                        // this.router.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
@@ -426,7 +429,7 @@ export class CustomerWorkEditComponent {
                 }
                 else {
                     this.receivingCustomerWorkService.newReason(this.sourcereceving).subscribe(
-                        role => this.saveSuccessHelper(role),
+                        role => this.saveSuccessHelper(role,content),
                         error => this.saveFailedHelper(error));
                     this.sourcereceving = {};
                    // this.router.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
@@ -481,7 +484,7 @@ export class CustomerWorkEditComponent {
     dismissModel() {
         this.isDeleteMode = false;
         this.isEditMode = false;
-        //this.modal.close();
+        this.modal.close();
     }
 
     private saveCompleted(user?: any) {
@@ -499,15 +502,32 @@ export class CustomerWorkEditComponent {
         this.loadData();
     }
 
-    private saveSuccessHelper(role?: true) {
+    private saveSuccessHelper(role?: true,content?:any) {
         this.isSaving = false;
-        this.router.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
-        this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
 
-        this.loadData();
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+
+
+        //this.router.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
+        //this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+
+       // this.loadData();
 
     }
+    CreateWorkOrderModel() {
+       // this.workOrderService. = this.sourcerecevingForWorkOrder.partNumber; //Storing Row Data  and saving Data in Service that will used in StockLine Setup
+        this.modal.close();
+        this.router.navigateByUrl('/workordersmodule/workorderspages/app-work-order-add');
 
+    }
+    GotoList() {
+        this.modal.close();
+        this.router.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
+        this.loadData();
+    }
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }

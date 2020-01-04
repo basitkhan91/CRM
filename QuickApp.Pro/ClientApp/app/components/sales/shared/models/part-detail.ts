@@ -1,4 +1,5 @@
 export class PartDetail {
+    salesOrderQuotePartId:number;
     partNumber: string;
     stockLineNumber:string;
     description: string;

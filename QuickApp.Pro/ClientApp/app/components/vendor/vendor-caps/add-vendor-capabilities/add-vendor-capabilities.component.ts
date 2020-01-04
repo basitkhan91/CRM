@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef, Input } from '@angular/core';
 import { ConditionService } from '../../../../services/condition.service';
 import { Condition } from '../../../../models/condition.model';
 import { fadeInOut } from '../../../../services/animations';
@@ -23,6 +23,7 @@ import { AircraftModelService } from '../../../../services/aircraft-model/aircra
 import { DashNumberService } from '../../../../services/dash-number/dash-number.service';
 import { AuthService } from '../../../../services/auth.service';
 import { VendorCapabilitiesService } from '../../../../services/vendorcapabilities.service';
+import * as $ from 'jquery';
 @Component({
     selector: 'app-add-vendor-capabilities',
     templateUrl: './add-vendor-capabilities.component.html',
@@ -120,6 +121,9 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	sselectedVendorName: string = '';
 	sselectedVendorCode: number;
 	selectedVendorId: number;
+	@Input() isEnableVendor: boolean;
+	vendorName: string;
+	vendorCode: string;
 
 	colsaircraftLD: any[] = [
         { field: "aircraft", header: "Aircraft" },
@@ -145,6 +149,8 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	selectedGeneralInfo: boolean = true;
 	vendorCapabilityId: number;
 	rowDataToDelete: any = {};
+	@Input() vendorId: number = 0;
+	@Input() vendorCapsId: number;
 
 	/** add-vendor-capabilities ctor */
     constructor(private _route: Router,private modalService: NgbModal,public ataSubChapter1Service: AtaSubChapter1Service,public ataservice: AtaMainService,public vendorService: VendorService, private alertService: AlertService, public itemser: ItemMasterService, public commonService: CommonService, private aircraftModelService: AircraftModelService, private dashNumService: DashNumberService, private authService: AuthService, private _actRoute: ActivatedRoute, private vendorCapesService: VendorCapabilitiesService)
@@ -156,11 +162,13 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		this.matSpinner = false;
 		//this.workFlowtService.MatSpinner = true;//App Mat Spinner Testing
 		
-		this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-add-vendor-capabilitiesn';
-        this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+		 if(!this.vendorId) {
+			this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-add-vendor-capabilitiesn';
+			this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
 
-        this.vendorService.ShowPtab = false;
-        this.vendorService.alertObj.next(this.vendorService.ShowPtab);
+			this.vendorService.ShowPtab = false;
+			this.vendorService.alertObj.next(this.vendorService.ShowPtab);
+		 }
 
 		this.loadVendorData();
 		this.ptnumberlistdata();
@@ -172,13 +180,19 @@ export class AddVendorCapabilitiesComponent implements OnInit{
         this.getAllDashNumbers();
 		
 		//this.loadATASubchapterData();
+		
 		this.vendorCapabilityId = this._actRoute.snapshot.params['id'];
+		if(this.vendorCapsId != null && this.vendorCapsId != undefined) {
+			this.vendorCapabilityId = this.vendorCapsId;
+		}
 		if(this.vendorCapabilityId) {
 			this.isEditMode = true;
 			this.enableAircraftInfo = false;
 			this.getVendorCapabilitiesEdit(this.vendorCapabilityId);
 			this.getVendorCapesAircraftEdit(this.vendorCapabilityId);
 		}
+		console.log(this.vendorCapabilityId);		
+		
 	}
 
 	getVendorCapabilitiesEdit(vendorCapesId) {
@@ -442,6 +456,10 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		this.allVendors = allWorkFlows;
 		//this.vendorId = this.allVendors[0].vendorId;
 		//console.log(this.allActions);
+		if(this.vendorId) {
+			this.vendorName = getValueFromArrayOfObjectById('vendorName', 'vendorId', this.vendorId, this.allVendors);
+			this.vendorCode = getValueFromArrayOfObjectById('vendorName', 'vendorId', this.vendorId, this.allVendors);
+		}
 	}	
 
 	onVendorselected(event)
@@ -843,7 +861,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 
 	}
 
-	dismissAircraftModel() {
+	//dismissAircraftModel() {
 		//if (this.selectedModels.length > 0) {
 		//	this.manfacturerAircraftmodelsarray = [];
 		//	this.distributionAircraftmodelsarray = [];
@@ -864,9 +882,9 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		//		this.exchangeAircraftmodelsarray = JSON.parse(JSON.stringify(this.selectedModels));
 		//	}
 		//}
-		this.showInput = true;
-		this.modal.close();
-	}
+		//this.showInput = true;
+		//this.modal.close();
+	//}
 
 
 
@@ -1141,23 +1159,33 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		if (this.tempMemoLabel == 'Memo') {
 			this.sourceVendorCap.memo = this.tempMemo;
 		}		
+		$("#add-description").modal("hide");
 	}
 
 	saveVendorCapsGeneralInfo() {
 	
 		console.log(this.sourceVendorCap);
-		this.sselectedVendorName=this.sourceVendorCap.vendorId.vendorName;
-		this.sselectedVendorCode=this.sourceVendorCap.vendorId.vendorCode;
+		this.sselectedVendorName = getValueFromObjectByKey('vendorName', this.sourceVendorCap.vendorId);
+		this.sselectedVendorCode = getValueFromObjectByKey('vendorCode', this.sourceVendorCap.vendorId);
+		// this.sselectedVendorName=this.sourceVendorCap.vendorId ? this.sourceVendorCap.vendorId.vendorName : '';
+		// this.sselectedVendorCode=this.sourceVendorCap.vendorId ? this.sourceVendorCap.vendorId.vendorCode : '';
 		this.sourceVendorCap.createdBy= this.userName,
 		this.sourceVendorCap.updatedBy= this.userName,
 	
 		this.selectedCapabilityName= getValueFromArrayOfObjectById('label' , 'value' , this.sourceVendorCap.capabilityId ,this.capabilityTypeList)
 	
-		let {vendorCode, partNumber, manufacturerName, ...res} = this.sourceVendorCap;		
+		let {vendorCode, partNumber, manufacturerName, ...res} = this.sourceVendorCap;
+		console.log(res);		
+		console.log(this.vendorId);
+		
 		res = {
 			...res,
+			// vendorId: this.vendorId != 0 ? this.vendorId : editValueAssignByCondition('vendorId', res.vendorId),
 			vendorId: editValueAssignByCondition('vendorId', res.vendorId),
 			partNumberId: editValueAssignByCondition('value', res.partNumberId)
+		}
+		if(this.vendorId != 0 && this.vendorId != undefined) {
+			res = {...res, vendorId: this.vendorId}
 		}
 		this.vendorService.newVendorCapability(res).subscribe(data => {		
 			//debugger;
@@ -1507,7 +1535,8 @@ export class AddVendorCapabilitiesComponent implements OnInit{
             this.selectedDashnumber = undefined;
             this.dashNumberUnknown = false;
             this.modelUnknown = false;
-        })
+		})
+		$("#ModalDashNumber").modal("hide");
 	}
 	
 	errorMessageHandler(log) {
@@ -1516,5 +1545,13 @@ export class AddVendorCapabilitiesComponent implements OnInit{
             log.error.error,
             MessageSeverity.error
         );
-    }
+	}
+	
+	dismissMemoModel() {
+		$("#add-description").modal("hide");
+	}
+
+	dismissAircraftModel() {
+		$("#ModalDashNumber").modal("hide");
+	}
 }

@@ -16,6 +16,7 @@ import { CommonService } from '../../services/common.service';
 import { GlAccountService } from '../../services/glAccount/glAccount.service';
 import { GlAccount } from '../../models/GlAccount.model';
 import { LegalEntityService } from '../../services/legalentity.service';
+import { UploadTag } from "../../models/UploadTag.enum";
 
 @Component({
     selector: 'app-asset-intangible-attribute-type',
@@ -59,8 +60,8 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     private isDeleteMode: boolean = false;
     loadingIndicator: boolean;
     closeResult: string;
-    depreciationFreq: any[] = [];
-    depreciationMethod: any[] = [];
+    depreciationFreqList: any[] = [];
+    depreciationMethodList: any[] = [];
     percentageList: any[] = [];
     companyList: any[];
     buList: any[];
@@ -90,6 +91,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
 
     //Step E1: Open row up for editing
     addNewItem(): void {
+        this.disableSave = false;
         this.currentRow = this.newItem(0);
         this.currentModeOfOperation = ModeOfOperation.Add;
     }
@@ -186,14 +188,14 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
 
     getAllFrequency() {
         this.commonservice.smartDropDownList('[AssetDepreciationFrequency]', 'AssetDepreciationFrequencyId', 'Name').subscribe(res => {
-            this.depreciationFreq = res;
+            this.depreciationFreqList = res;
             this.loadSelectedNames();
         })
     }
 
     getAllDepreMthod() {
         this.commonservice.smartDropDownList('[AssetDepreciationMethod]', 'AssetDepreciationMethodId', 'AssetDepreciationMethodName').subscribe(res => {
-            this.depreciationMethod = res;
+            this.depreciationMethodList = res;
             this.loadSelectedNames();
         })
     }
@@ -232,20 +234,20 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     }
 
     getDeprMethodNameById(value) {
-        for (let i = 0; i < this.depreciationMethod.length; i++) {
-            let accId = this.depreciationMethod[i].value;
+        for (let i = 0; i < this.depreciationMethodList.length; i++) {
+            let accId = this.depreciationMethodList[i].value;
             if (accId == value) {
-                return this.depreciationMethod[i].label;
+                return this.depreciationMethodList[i].label;
             }
         }
         return "";
     }
 
     getAmortFrequencyById(value) {
-        for (let i = 0; i < this.depreciationFreq.length; i++) {
-            let accId = this.depreciationFreq[i].value;
+        for (let i = 0; i < this.depreciationFreqList.length; i++) {
+            let accId = this.depreciationFreqList[i].value;
             if (accId == value) {
-                return this.depreciationFreq[i].label;
+                return this.depreciationFreqList[i].label;
             }
         }
         return "";
@@ -460,6 +462,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
             item.createdBy = this.userName || defaultUserName;
             item.isActive = rowData.isActive || false;
             item.isDelete = rowData.isDelete || false;
+            item.isDeleted = rowData.isDeleted || false;
         }
         else {
             item.isActive = true;
@@ -492,9 +495,9 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
         const data = {
             ...this.currentRow, createdBy: this.userName, updatedBy: this.userName, IsActive: this.currentRow.isActive, IsDeleted: this.currentRow.isDelete,
             assetIntangibleTypeId: editValueAssignByCondition('assetIntangibleTypeId', this.currentRow.assetIntangibleTypeId),
-            assetDepreciationMethodId: editValueAssignByCondition('value', this.currentRow.depreciationMethod),
+            assetDepreciationMethodId: editValueAssignByCondition('value', this.currentRow.assetDepreciationMethodId),
             intangibleLifeYears: editValueAssignByCondition('IntangibleLifeYears', this.currentRow.intangibleLifeYears),
-            assetAmortizationIntervalId: editValueAssignByCondition('value', this.currentRow.amortizationFrequency),
+            assetAmortizationIntervalId: editValueAssignByCondition('value', this.currentRow.assetAmortizationIntervalId),
             intangibleGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.intangibleGLAccountId),
             amortExpenseGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.amortExpenseGLAccountId),
             accAmortDeprGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.accAmortDeprGLAccountId),
@@ -515,7 +518,21 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
         if (itemExists) {
             this.currentModeOfOperation = ModeOfOperation.Update;
             item.updatedBy = this.userName;
-            this.coreDataService.update(item).subscribe(response => {
+            const data = {
+                ...this.currentRow, updatedBy: this.userName,
+                IsActive: this.currentRow.isActive, IsDeleted: this.currentRow.isDelete,
+                assetIntangibleTypeId: editValueAssignByCondition('assetIntangibleTypeId', this.currentRow.assetIntangibleTypeId),
+                assetDepreciationMethodId: editValueAssignByCondition('value', this.currentRow.assetDepreciationMethodId),
+                intangibleLifeYears: editValueAssignByCondition('IntangibleLifeYears', this.currentRow.intangibleLifeYears),
+                assetAmortizationIntervalId: editValueAssignByCondition('value', this.currentRow.assetAmortizationIntervalId),
+                intangibleGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.intangibleGLAccountId),
+                amortExpenseGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.amortExpenseGLAccountId),
+                accAmortDeprGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.accAmortDeprGLAccountId),
+                intangibleWriteDownGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.intangibleWriteDownGLAccountId),
+                intangibleWriteOffGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.intangibleWriteOffGLAccountId),
+                managementStructureId: editValueAssignByCondition('managementStructureId', this.mgmtStructureId),
+            };
+            this.coreDataService.update(data).subscribe(response => {
                 this.alertService.showMessage('Success', this.rowName + " updated successfully.", MessageSeverity.success);
                 this.getItemList();
             });
@@ -537,13 +554,15 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     }
 
     showItemEdit(rowData): void {
-        console.log(rowData.assetIntangibleAttributeTypeId);
-        this.currentRow = this.newItem(rowData);
+        console.log(rowData);
+        this.disableSave = false;
+        //this.currentRow = this.newItem(rowData);
         this.currentRow = {
             ...rowData,
             assetIntangibleTypeId: getObjectById('assetIntangibleTypeId', rowData.assetIntangibleTypeId, this.allAssetIntangibleAttributeTypes),
-            assetDepreciationMethodId: getObjectById('value', rowData.assetDepreciationMethodId, this.depreciationMethod),
-            assetAmortizationIntervalId: getObjectById('depreciationFrequencyId', rowData.assetAmortizationIntervalId, this.depreciationFreq),
+            assetDepreciationMethodId: getObjectById('value', rowData.assetDepreciationMethodId, this.depreciationMethodList),
+            assetAmortizationIntervalId: getObjectById('value', rowData.assetAmortizationIntervalId, this.depreciationFreqList),
+            amortizationFrequency: rowData.assetAmortizationIntervalId,
             amortExpenseGLAccountId: getObjectById('glAccountId', rowData.amortExpenseGLAccountId, this.allGlInfo),
             accAmortDeprGLAccountId: getObjectById('glAccountId', rowData.accAmortDeprGLAccountId, this.allGlInfo),
             intangibleGLAccountId: getObjectById('glAccountId', rowData.intangibleGLAccountId, this.allGlInfo),
@@ -633,7 +652,9 @@ AssetIntangibleAttributeTypeModel
                 event.target.value = '';
 
                 this.formData = new FormData();
+                console.log(res);
                 this.existingRecordsResponse = res;
+                this.showBulkUploadResult(res);
                 this.getItemList();
                 this.alertService.showMessage(
                     'Success',
@@ -644,9 +665,19 @@ AssetIntangibleAttributeTypeModel
                 // $('#duplicateRecords').modal('show');
                 // document.getElementById('duplicateRecords').click();
 
-            })
+            });
+            console.log(this.existingRecordsResponse);
         }
 
+    }
+
+    showBulkUploadResult(items: any) {
+        let successCount = items.filter(item => item.UploadTag == UploadTag.Success);
+        let failedCount = items.filter(item => item.UploadTag == UploadTag.Failed);
+        let duplicateCount = items.filter(item => item.UploadTag == UploadTag.Duplicate);
+        this.alertService.showMessage('Success', `${successCount} ${this.rowName}${successCount > 1 ? 's' : ''} uploaded successfully.`, MessageSeverity.success);
+        this.alertService.showMessage('Error', `${failedCount} ${this.rowName}${failedCount > 1 ? 's' : ''} failed to upload.`, MessageSeverity.error);
+        this.alertService.showMessage('Info', `${duplicateCount} ${duplicateCount > 1 ? 'duplicates' : 'duplicate'} ignored.`, MessageSeverity.info);
     }
 
     eventHandler(event) {

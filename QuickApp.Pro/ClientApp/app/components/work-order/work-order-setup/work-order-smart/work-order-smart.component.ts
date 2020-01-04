@@ -12,6 +12,8 @@ import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { getObjectById } from '../../../../generic/autocomplete';
 import { workOrderGeneralInfo } from '../../../../models/work-order-generalInformation.model';
+import { Subject } from 'rxjs'
+import { takeUntil } from 'rxjs/operators';
 
 
 @Component({
@@ -41,6 +43,9 @@ export class WorkOrderSmartComponent implements OnInit {
     isEdit: boolean = false;
     currencyList: any;
     legalEntityList: any;
+    private onDestroy$: Subject<void> = new Subject<void>();
+    conditionList: any;
+    workOrderOriginalStageList: any;
     /** WorkOrderShipping ctor */
     constructor(private alertService: AlertService,
         private workOrderService: WorkOrderService,
@@ -69,6 +74,7 @@ export class WorkOrderSmartComponent implements OnInit {
         this.getAllPriority();
         this.getCurrency();
         this.getLegalEntity();
+        this.getConditionsList();
 
         if (this.isSubWorkOrder) {
             this.subWorkOrderId = this.subWorkOrderId;
@@ -81,7 +87,7 @@ export class WorkOrderSmartComponent implements OnInit {
         if (this.workOrderId) {
 
 
-            this.workOrderService.getWorkOrderById(this.workOrderId).subscribe(res => {
+            this.workOrderService.getWorkOrderById(this.workOrderId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                 this.isEdit = true;
                 const workOrderData = res;
                 const data = {
@@ -111,18 +117,23 @@ export class WorkOrderSmartComponent implements OnInit {
     }
 
 
+    ngOnDestroy(): void {
+        this.onDestroy$.next();
+    }
+
+
 
 
 
     getCustomerNameandCodeById(object) {
         const { customerId } = object;
-        this.commonService.getCustomerNameandCodeById(customerId).subscribe(res => {
+        this.commonService.getCustomerNameandCodeById(customerId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             object.customer = res;
         })
     }
 
     getAllWorkOrderTypes(): void {
-        this.workOrderService.getAllWorkOrderTypes().subscribe(
+        this.workOrderService.getAllWorkOrderTypes().pipe(takeUntil(this.onDestroy$)).subscribe(
             result => {
                 this.workOrderTypes = result;
             }
@@ -131,26 +142,26 @@ export class WorkOrderSmartComponent implements OnInit {
 
 
     getAllWorkOrderStatus(): void {
-        this.commonService.smartDropDownList('WorkOrderStatus', 'ID', 'Description').subscribe(res => {
+        this.commonService.smartDropDownList('WorkOrderStatus', 'ID', 'Description').pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.workOrderStatusList = res.sort(function (a, b) { return a.value - b.value; });
         })
     }
 
     getAllCreditTerms(): void {
-        this.commonService.smartDropDownList('CreditTerms', 'CreditTermsId', 'Name').subscribe(res => {
+        this.commonService.smartDropDownList('CreditTerms', 'CreditTermsId', 'Name').pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.creditTerms = res;
         })
     }
 
 
     async getAllEmployees() {
-        await this.commonService.smartDropDownList('Employee', 'EmployeeId', 'FirstName').subscribe(res => {
+        await this.commonService.smartDropDownList('Employee', 'EmployeeId', 'FirstName').pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.employeesOriginalData = res;
         })
     }
 
     getAllWorkScpoes(): void {
-        this.workOrderService.getAllWorkScopes().subscribe(
+        this.workOrderService.getAllWorkScopes().pipe(takeUntil(this.onDestroy$)).subscribe(
             result => {
                 this.workScopesList = result.map(x => {
                     return {
@@ -164,33 +175,49 @@ export class WorkOrderSmartComponent implements OnInit {
 
 
     getAllWorkOrderStages(): void {
-        this.commonService.smartDropDownList('WorkOrderStage', 'ID', 'Description').subscribe(res => {
-            this.workOrderStagesList = res;
+        this.workOrderService.getWorkOrderStageAndStatus().pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+            this.workOrderOriginalStageList = res;
+            this.workOrderStagesList = res.map(x => {
+                return {
+                    value: x,
+                    label: x.workOrderStage
+                }
+            });
+
         })
+
+
+
     }
 
     getAllPriority() {
-        this.commonService.smartDropDownList('Priority', 'PriorityId', 'Description').subscribe(res => {
+        this.commonService.smartDropDownList('Priority', 'PriorityId', 'Description').pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.priorityList = res;
         })
     }
 
 
     getMultiplePartsNumbers() {
-        this.workOrderService.getMultipleParts().subscribe(res => {
+        this.workOrderService.getMultipleParts().pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.partNumberOriginalData = res;
         })
     }
 
     getCurrency() {
-        this.commonService.smartDropDownList('Currency', 'CurrencyId', 'symbol').subscribe(res => {
+        this.commonService.smartDropDownList('Currency', 'CurrencyId', 'symbol').pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.currencyList = res;
         })
     }
 
     getLegalEntity() {
-        this.commonService.getLegalEntityList().subscribe(res => {
+        this.commonService.getLegalEntityList().pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.legalEntityList = res;
+        })
+    }
+
+    getConditionsList() {
+        this.commonService.smartDropDownList('Condition', 'ConditionId', 'Description').pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+            this.conditionList = res;
         })
     }
 

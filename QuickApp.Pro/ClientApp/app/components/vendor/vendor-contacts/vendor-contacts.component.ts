@@ -129,6 +129,13 @@ export class VendorContactsComponent implements OnInit {
 
     selectedColumns = this.vendorContactsColumns;
     constructor(private router: ActivatedRoute, private route: Router, private customerser: CustomerService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+
+        if(this.workFlowtService.listCollection !== undefined){
+            this.workFlowtService.isEditMode = true;
+        }
+        
+        console.log( this.workFlowtService);
+        
         if (this.local) {
             this.workFlowtService.contactCollection = this.local;
         }
@@ -496,10 +503,10 @@ export class VendorContactsComponent implements OnInit {
     }
 
     previousClick() {
-        this.activeIndex = 0;
+        this.activeIndex = 10;
         this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('General Information');
-        this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
+        this.workFlowtService.changeStep('Capabilities');
+        this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-capes');
     }
     nextClick() {
         this.activeIndex = 2;
