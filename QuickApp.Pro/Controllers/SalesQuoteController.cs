@@ -1,18 +1,16 @@
-﻿using DAL;
+﻿using AutoMapper;
+using DAL;
+using DAL.Models.Sales;
+using DAL.Models.Sales.SalesOrderQuote;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using QuickApp.Pro.Helpers;
 using QuickApp.Pro.ViewModels;
+using QuickApp.Pro.ViewModels.SalesViews;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using DAL.Models.Sales;
-using DAL.Models.Sales.SalesOrderQuote;
-using AutoMapper;
-using QuickApp.Pro.ViewModels.SalesViews;
-using System.Linq.Expressions;
-using DAL.Repositories;
-using DAL.Repositories.Interfaces;
+using QuickApp.Pro.Extensions;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -82,7 +80,27 @@ namespace QuickApp.Pro.Controllers
                        Cost = gp.Sum( c=> c.UnitCost),
                        NumberOfItems = gp.Count()
                    };
-                   
+            
+            
+            if(parameters.ColumnFilters != null)
+            {
+                list = Filter(list, parameters.ColumnFilters);    
+            }
+
+            if(parameters.sortOrder !=0   && !string.IsNullOrWhiteSpace(parameters.sortField))
+            {
+                var sortDirection = parameters.sortOrder == -1 ? "desc" : "asc";
+                list = list.Sort<SalesQuoteListView>(parameters.sortField, sortDirection);
+            }
+
+            if (parameters.rows > 0)
+            {
+                var pageListPerPage = parameters.rows;
+                var pageIndex = parameters.first;
+                var pageCount = (pageIndex / pageListPerPage) + 1;
+                list = DAL.Common.PaginatedList<SalesQuoteListView>.Create(list.AsQueryable(), pageCount, pageListPerPage);
+            }
+
             return Ok(list);
         }
 
@@ -260,6 +278,55 @@ namespace QuickApp.Pro.Controllers
 
             return partsView;
 
+        }
+
+        public IEnumerable<SalesQuoteListView> Filter(IEnumerable<SalesQuoteListView> list, SalesQuoteListView filters)
+        {
+            var DATE_FORMAT = "MM/dd/yyyy";
+
+            if (filters == null) return list;
+
+            if (filters.SalesQuoteId.HasValue)
+            {
+                list = list.Where(q => q.SalesQuoteId.HasValue && q.SalesQuoteId.Value.ToString().Contains(filters.SalesQuoteId.Value.ToString()));
+            }
+
+            if (filters.QuoteDate.HasValue)
+            {
+                list = list.Where(q => q.QuoteDate.Value.ToString(DATE_FORMAT) == filters.QuoteDate.Value.ToString(DATE_FORMAT));
+            }
+
+            if (!string.IsNullOrWhiteSpace(filters.VersionNumber))
+            {
+                list = list.Where(q => q.VersionNumber.Contains(filters.VersionNumber));
+            }
+
+            if (!string.IsNullOrWhiteSpace(filters.CustomerName))
+            {
+                list = list.Where(q => q.CustomerName.Contains(filters.CustomerName));
+            }
+
+            if (!string.IsNullOrWhiteSpace(filters.CustomerCode))
+            {
+                list = list.Where(q => q.CustomerCode.Contains(filters.CustomerCode));
+            }
+
+            if (filters.SalesPrice > 0)
+            {
+                list = list.Where(q => q.SalesPrice == filters.SalesPrice);
+            }
+
+            if (filters.Cost > 0)
+            {
+                list = list.Where(q => q.Cost == filters.Cost);
+            }
+
+            if (filters.NumberOfItems > 0)
+            {
+                list = list.Where(q => q.NumberOfItems == filters.NumberOfItems);
+            }
+
+            return list;  
         }
     }
 }
