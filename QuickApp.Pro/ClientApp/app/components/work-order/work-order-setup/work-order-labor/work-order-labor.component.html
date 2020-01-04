@@ -135,10 +135,42 @@
   >
     <table class="table table-bordered  table-sorting mpn-list-table">
       <thead>
+        <tr *ngIf="isQuote">
+          <td colspan="4" *ngIf="laborForm.hoursorClockorScan == 1">
+            &nbsp;
+          </td>
+          <td colspan="7" *ngIf="laborForm.hoursorClockorScan == 2">
+            &nbsp;
+          </td>
+          <td colspan="6" *ngIf="laborForm.hoursorClockorScan == 3">
+            &nbsp;
+          </td>
+          <td colspan="3">
+              <div class="form-group" style="color: #fff;">
+                <p-radioButton
+                  class="p-radiobutton-label-horizontal"
+                  name="costPlusType"
+                  label="Mark Up"
+                  value="Mark Up"
+                  [(ngModel)]="laborForm.costPlusType"
+                ></p-radioButton>
+                <p-radioButton
+                  class="p-radiobutton-label-horizontal col-width"
+                  name="costPlusType"
+                  value="Cost Plus"
+                  label="Cost Plus"
+                  [(ngModel)]="laborForm.costPlusType"
+                ></p-radioButton>
+              </div>
+          </td>
+          <td colspan="2">
+            &nbsp;
+          </td>
+        </tr>
         <tr>
           <th class="text-center padding-td">Tasks</th>
           <th class="text-center">Expertise</th>
-          <th class="text-center" style="padding: 8px 64px !important;">
+          <th class="text-center" style="padding: 8px 64px !important;" *ngIf="!isQuote">
             Employee
           </th>
           <th class="text-center">Billable /NonBillable</th>
@@ -170,7 +202,7 @@
             <th>
               Direct Labor OH Cost
             </th>
-            <th>MARKUP</th>
+            <th *ngIf="laborForm.costPlusType == 'Mark Up'">MARKUP</th>
             <th>Cost plus amount</th>
           </ng-container>
           <th class="text-center" style="padding: 7px 53px !important;">
@@ -243,7 +275,7 @@
                       </ng-container>
                     </select>
                 </td>
-                <td class="emp-labour-cstm">
+                <td class="emp-labour-cstm" *ngIf="!isQuote">
 
                     <!-- <p-autoComplete
                     class="p-autocomplete-ctsm-1 "
@@ -337,7 +369,7 @@
                   <td>
                     <input type="number" [(ngModel)]="rec.directLaborOHCost" />
                   </td>
-                  <td>
+                  <td *ngIf="laborForm.costPlusType == 'Mark Up'">
                       <!-- <input [(ngModel)]="matQuotation.markup" /> -->
                     <select class="form-control" (change)="markupChanged(rec)" [(ngModel)]="rec.markupPercentageId" style="width: 130px;">
                       <option value="">Select</option>
@@ -345,7 +377,7 @@
                     </select>
                   </td>
                   <td>
-                      <input type="number" [(ngModel)]="rec.labourCostPlus" readonly/>
+                      <input type="number" [(ngModel)]="rec.labourCostPlus" [readonly]="laborForm.costPlusType == 'Mark Up'"/>
                   </td>
                 </ng-container>
                 <td>
