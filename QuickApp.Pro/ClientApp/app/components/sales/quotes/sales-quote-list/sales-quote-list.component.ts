@@ -38,6 +38,9 @@ export class SalesQuoteListComponent implements OnInit {
   columns:any[];
   totalRecords: number = 0;
   totalPages: number = 0;
+  pageSize: number = 10;
+  pageIndex: number = 0;
+  first = 0;
 
   partColumns:any[];
 

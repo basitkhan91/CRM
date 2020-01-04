@@ -42,6 +42,7 @@ export class SalesQuoteCreateComponent implements OnInit {
   customerId: number;
   salesQuote: ISalesQuote;
   salesOrderQuote: ISalesOrderQuote;
+  salesOrderQuoteObj: ISalesOrderQuote;
   salesQuoteView: ISalesQuoteView;
   creditTerms:any[];
   percents:any[];
@@ -115,6 +116,7 @@ export class SalesQuoteCreateComponent implements OnInit {
     this.getPercents();
     this.getCurrencyData();
     this.getEmployeedata();
+    this.getCustomerList();
     this.getAllCustomerContact();
     this.getCustomerWarningsData();
     this.getAccountTypes();
@@ -337,7 +339,7 @@ getSalesQuoteInstance(salesQuoteId: number) {
     .getSalesQuote(salesQuoteId)
     .subscribe(data => {
       this.salesQuoteView = data && data.length ? data[0] : null;
-      this.salesOrderQuote = this.salesQuoteView.salesOrderQuote;
+      this.salesOrderQuoteObj = this.salesQuoteView.salesOrderQuote;
      // this.approvers = this.salesQuoteView.approverList;
      // this.salesQuoteService.updateApprovers(this.approvers);
      this.getApproverList(this.salesQuoteView.approverList);
@@ -406,44 +408,70 @@ getSalesQuoteInstance(salesQuoteId: number) {
       this.salesQuote.priorities = this.salesQuoteView.priorities;
       this.salesQuote.leadSources = this.salesQuoteView.leadSources;
       this.salesQuote.salesQuoteTypes = this.salesQuoteView.salesQuoteTypes;
-      this.salesQuote.salesOrderQuoteId = this.salesOrderQuote.salesOrderQuoteId
-      this.salesQuote.quoteTypeId = this.salesOrderQuote.quoteTypeId;
-      this.salesQuote.openDate = new Date(this.salesOrderQuote.openDate);
-      this.salesQuote.customerRequestDate = new Date(this.salesOrderQuote.customerRequestDate);
-      this.salesQuote.customerPromisedDate = new Date(this.salesOrderQuote.promisedDate);
-      this.salesQuote.estimatedShipDate = new Date(this.salesOrderQuote.estimatedShipDate);
-      this.salesQuote.validForDays = this.salesOrderQuote.validForDays;
-      this.salesQuote.quoteExpiryDate = new Date(this.salesOrderQuote.quoteExpireDate);
-      this.salesQuote.priorityId = this.salesOrderQuote.priorityId;
-      this.salesQuote.accountTypeId = this.salesOrderQuote.accountTypeId;
-      this.salesQuote.customerId = this.salesOrderQuote.customerId;
-      this.salesQuote.customerContactId = this.salesOrderQuote.customerContactId;
-      this.salesQuote.customerReferenceName = this.salesOrderQuote.customerReference;
-      this.salesQuote.contractReferenceName = this.salesOrderQuote.contractReference;
+      this.salesQuote.salesOrderQuoteId = this.salesOrderQuoteObj.salesOrderQuoteId
+      this.salesQuote.quoteTypeId = this.salesOrderQuoteObj.quoteTypeId;
+      this.salesQuote.openDate = new Date(this.salesOrderQuoteObj.openDate);
+      this.salesQuote.customerRequestDate = new Date(this.salesOrderQuoteObj.customerRequestDate);
+      this.salesQuote.customerPromisedDate = new Date(this.salesOrderQuoteObj.promisedDate);
+      this.salesQuote.estimatedShipDate = new Date(this.salesOrderQuoteObj.estimatedShipDate);
+      this.salesQuote.validForDays = this.salesOrderQuoteObj.validForDays;
+      this.salesQuote.quoteExpiryDate = new Date(this.salesOrderQuoteObj.quoteExpireDate);
+      this.salesQuote.priorityId = this.salesOrderQuoteObj.priorityId;
+      this.salesQuote.accountTypeId = this.salesOrderQuoteObj.accountTypeId;
+      this.salesQuote.customerId = this.salesOrderQuoteObj.customerId;
+      this.salesQuote.customerContactId = this.salesOrderQuoteObj.customerContactId;
+      this.salesQuote.customerReferenceName = this.salesOrderQuoteObj.customerReference;
+      this.salesQuote.contractReferenceName = this.salesOrderQuoteObj.contractReference;
 
-      this.salesQuote.salesPersonName =  getObjectById('employeeId', this.salesOrderQuote.salesPersonId, this.allEmployeeinfo);
+      this.salesQuote.salesPersonName =  getObjectById('employeeId', this.salesOrderQuoteObj.salesPersonId, this.allEmployeeinfo);
       // this.salesQuote.secondarySalesPersonId: getObjectById('employeeId', this.customerDetails.secondarySalesPersonId, this.employeeListOriginal),
-       this.salesQuote.customerServiceRepName = getObjectById('employeeId', this.salesOrderQuote.customerSeviceRepId, this.allEmployeeinfo);
-       this.salesQuote.agentName = getObjectById('employeeId', this.salesOrderQuote.employeeId, this.allEmployeeinfo);
-       this.salesQuote.employeeName = getObjectById('employeeId', this.salesOrderQuote.employeeId, this.allEmployeeinfo);
+       this.salesQuote.customerServiceRepName = getObjectById('employeeId', this.salesOrderQuoteObj.customerSeviceRepId, this.allEmployeeinfo);
+       this.salesQuote.agentName = getObjectById('employeeId', this.salesOrderQuoteObj.employeeId, this.allEmployeeinfo);
+       this.salesQuote.employeeName = getObjectById('employeeId', this.salesOrderQuoteObj.employeeId, this.allEmployeeinfo);
 
-       this.salesOrderQuote.billToContactId = getObjectById('customerId', this.salesOrderQuote.billToContactId, this.allEmployeeinfo);
-       this.salesOrderQuote.shipToContactId = getObjectById('customerId', this.salesOrderQuote.shipToContactId, this.allEmployeeinfo);
+       this.salesOrderQuote.billToContactId = getObjectById('customerId', this.salesOrderQuoteObj.billToContactId, this.allCustomer);
+       this.salesOrderQuote.shipToContactId = getObjectById('customerId', this.salesOrderQuoteObj.shipToContactId, this.allCustomer);
+    
+
+       this.salesOrderQuote.shipToSiteName = this.salesOrderQuoteObj.shipToSiteName;
+       this.salesOrderQuote.shipToAddress1 = this.salesOrderQuoteObj.shipToAddress1;
+       this.salesOrderQuote.shipToAddress2 = this.salesOrderQuoteObj.shipToAddress2;
+       this.salesOrderQuote.shipToCity = this.salesOrderQuoteObj.shipToCity;
+       this.salesOrderQuote.shipToState = this.salesOrderQuoteObj.shipToState;
+       this.salesOrderQuote.shipToPostalCode = this.salesOrderQuoteObj.shipToPostalCode;
+       this.salesOrderQuote.shipToCountry = this.salesOrderQuoteObj.shipToCountry;
+       this.salesOrderQuote.shipViaName = this.salesOrderQuoteObj.shipViaName;
+       this.salesOrderQuote.shipViaShippingAccountInfo = this.salesOrderQuoteObj.shipViaShippingAccountInfo;
+       this.salesOrderQuote.shippingId = this.salesOrderQuoteObj.shippingId;
+       this.salesOrderQuote.shippingURL = this.salesOrderQuoteObj.shippingURL;
+       this.salesOrderQuote.shipViaMemo = this.salesOrderQuoteObj.shipViaMemo;
+       this.salesOrderQuote.shipViaShippingURL = this.salesOrderQuoteObj.shipViaShippingURL;
+       this.salesOrderQuote.billToSiteName = this.salesOrderQuoteObj.billToSiteName;
+       this.salesOrderQuote.billToAddress1 = this.salesOrderQuoteObj.billToAddress1;
+
+       this.salesOrderQuote.billToAddress2 = this.salesOrderQuoteObj.billToAddress2;
+       this.salesOrderQuote.billToCity = this.salesOrderQuoteObj.billToCity;
+       this.salesOrderQuote.billToState = this.salesOrderQuoteObj.billToState;
+       this.salesOrderQuote.billToPostalCode = this.salesOrderQuoteObj.billToPostalCode;
+       this.salesOrderQuote.billToCountry = this.salesOrderQuoteObj.billToCountry;
+       this.salesOrderQuote.billToMemo = this.salesOrderQuoteObj.billToMemo;
+
+       this.salesOrderQuote.salesOrderQuoteId = this.salesOrderQuoteObj.salesOrderQuoteId;
       
 
      
-      this.salesQuote.probabilityId = this.salesOrderQuote.probabilityId;
-      this.salesQuote.leadSourceId = this.salesOrderQuote.leadSourceId;
-      this.salesQuote.creditLimit = this.salesOrderQuote.creditLimit;
-      this.salesQuote.creditLimitTermsId = this.salesOrderQuote.creditTermId;
-       this.salesQuote.restrictPMA = this.salesOrderQuote.restrictPMA;
-      this.salesQuote.restrictDER = this.salesOrderQuote.restrictDER;
-      if(this.salesOrderQuote.approvedDate)
-        this.salesQuote.approvedDate = new Date(this.salesOrderQuote.approvedDate);
-      this.salesQuote.currencyId = this.salesOrderQuote.currencyId;
-      this.salesQuote.warningId = this.salesOrderQuote.customerWarningId;
-       this.salesQuote.memo = this.salesOrderQuote.memo;
-      this.salesQuote.notes = this.salesOrderQuote.notes;
+      this.salesQuote.probabilityId = this.salesOrderQuoteObj.probabilityId;
+      this.salesQuote.leadSourceId = this.salesOrderQuoteObj.leadSourceId;
+      this.salesQuote.creditLimit = this.salesOrderQuoteObj.creditLimit;
+      this.salesQuote.creditLimitTermsId = this.salesOrderQuoteObj.creditTermId;
+       this.salesQuote.restrictPMA = this.salesOrderQuoteObj.restrictPMA;
+      this.salesQuote.restrictDER = this.salesOrderQuoteObj.restrictDER;
+      if(this.salesOrderQuoteObj.approvedDate)
+        this.salesQuote.approvedDate = new Date(this.salesOrderQuoteObj.approvedDate);
+      this.salesQuote.currencyId = this.salesOrderQuoteObj.currencyId;
+      this.salesQuote.warningId = this.salesOrderQuoteObj.customerWarningId;
+       this.salesQuote.memo = this.salesOrderQuoteObj.memo;
+      this.salesQuote.notes = this.salesOrderQuoteObj.notes;
 
   
       this.getCustomerDetails();
@@ -539,7 +567,7 @@ closeErrorMessage() {
     //this.salesQuoteService.create
     //input parameter: ISalesQuoteView
     console.log(this.salesQuote);
-    console.log(this.salesQuote.quoteTypeId);
+    console.log(this.salesOrderQuote);
     this.errorMessages=[];
     let haveError =false;
     if (this.salesQuote.quoteTypeId<0){
@@ -586,7 +614,7 @@ closeErrorMessage() {
       this.errorMessages.push("Please enter Customer Reference Name");
       haveError=true;
     }
-    if (!this.salesOrderQuote.employeeId){
+    if (!this.salesQuote.employeeName){
       this.errorMessages.push("Please select employee");
       haveError=true;
     }
@@ -641,7 +669,7 @@ closeErrorMessage() {
      this.salesOrderQuote.customerSeviceRepId = editValueAssignByCondition('employeeId', this.salesQuote.customerServiceRepName);
 
     this.salesOrderQuote.probabilityId = this.salesQuote.probabilityId;
-    this.salesOrderQuote.employeeId = editValueAssignByCondition('employeeId', this.salesQuote.employeeId);
+    this.salesOrderQuote.employeeId = editValueAssignByCondition('employeeId', this.salesQuote.employeeName);
     this.salesOrderQuote.billToContactName = editValueAssignByCondition('name', this.salesOrderQuote.billToContactId);
     this.salesOrderQuote.billToContactId = editValueAssignByCondition('customerId', this.salesOrderQuote.billToContactId);
     this.salesOrderQuote.shipToContactName = editValueAssignByCondition('name', this.salesOrderQuote.shipToContactId);
