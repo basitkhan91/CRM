@@ -16,6 +16,7 @@ export class AssetEndpoint extends EndpointFactory {
     private readonly _updateAssetUrl: string = "/api/AssetModule/updateAsset";
     private readonly _capabilityListUrl: string = "/api/AssetModule/GetCapes";
     private readonly _getCapabilityUrl: string = "/api/AssetModule/capabilityGet";
+    private readonly _getAssetCapabilityUrl: string = "/api/AssetModule/AssetcapabilityGet";
     private readonly getAuditById: string = "/api/AssetModule/audits";
     private readonly capesPost: string = "/api/AssetModule/Mancapespost";
     private readonly addassetcapes: string = "/api/AssetModule/addAssetCapes";
@@ -28,6 +29,7 @@ export class AssetEndpoint extends EndpointFactory {
     get removeCapesById() { return this.configurations.baseUrl + this.removeCapByIdURL; }
     get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
     get getCapabilityUrl() { return this.configurations.baseUrl + this._getCapabilityUrl; }
+    get getAsetCapabilityUrl() { return this.configurations.baseUrl + this._getAssetCapabilityUrl; }
     get getAssetUrl() { return this.configurations.baseUrl + this._getAssetUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -125,6 +127,14 @@ export class AssetEndpoint extends EndpointFactory {
         return this.http.get<T>(url, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getCapabilityDataEndpoint(assetRecordId));
+            });
+    }
+
+    getAssetCapabilityDataEndpoint<T>(assetCapesId: any): Observable<T> {
+        let url = `${this.getAsetCapabilityUrl}/${assetCapesId}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAssetCapabilityDataEndpoint(assetCapesId));
             });
     }
 

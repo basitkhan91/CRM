@@ -11,7 +11,7 @@ namespace DAL.Models
         [Key]
         public long AssetCapesId { get; set; }
         public long AssetRecordId { get; set; }
-        public long CapabilityId { get; set; }
+        public int CapabilityId { get; set; }
         public int MasterCompanyId { get; set; }
         public Nullable<bool> IsActive { get; set; }
         //public Nullable<bool> IsDeleted { get; set; }

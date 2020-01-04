@@ -14,6 +14,7 @@ import { ChartsModule } from 'ng2-charts';
 import { NgxCarouselModule } from 'ngx-carousel';
 import { AppRoutingModule } from './app-routing.module';
 import { AppErrorHandler } from './app-error.handler';
+import { DropdownModule } from 'primeng/dropdown';
 import { Globals } from './globals';
 import { SharedModule } from './shared/shared.module';
 import { AdminModule } from './admin/admin.module';
@@ -212,6 +213,10 @@ import { AssetIntangibleAttributeTypeService } from './services/asset-intangible
 import { AssetIntangibleAttributeTypeEndpointService } from './services/asset-intangible-attribute-type/asset-intangible-attribute-type-endpoint.service';
 import { DashNumberService } from './services/dash-number/dash-number.service';
 import { DashNumberEndpointService } from './services/dash-number/dash-number-endpoint.service';
+import { AircraftManufacturerEndpointService } from './services/aircraft-manufacturer/aircraftManufacturer-endpoint.service';
+import { AircraftManufacturerService } from './services/aircraft-manufacturer/aircraftManufacturer.service';
+import { AircraftModelEndpointService } from './services/aircraft-model/aircraft-model-endpoint.service' ;
+import { AircraftModelService } from './services/aircraft-model/aircraft-model.service';
 //import { AuditComponent } from "./components/Audit/audit.component";
 import { AccountListingService } from './services/account-listing/account-listing.service'
 import { CustomerViewComponent } from './shared/components/customer/customer-view/customer-view.component';
@@ -230,7 +235,7 @@ import { CommonModule } from '@angular/common';
         SettingsModule,
         AppRoutingModule,
         CommonModule,
-
+        DropdownModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -286,6 +291,10 @@ import { CommonModule } from '@angular/common';
         AccountEndpoint,
         DashNumberService,
         DashNumberEndpointService,
+        AircraftManufacturerService,
+        AircraftManufacturerEndpointService,
+        AircraftModelService,
+        AircraftModelEndpointService,
         LocalStoreManager,
         EndpointFactory,
         WorkFlowtService,
