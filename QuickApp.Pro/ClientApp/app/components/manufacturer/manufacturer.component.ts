@@ -611,6 +611,31 @@ export class ManufacturerComponent implements OnInit {
     }
 
 
+    onBlur(event) {
+        const value = event.target.value;
+        this.disableSaveForShortName = false;
+        for (let i = 0; i < this.ManufactureData.length; i++) {
+            let name = this.ManufactureData[i].name;
+            let ManufactureId = this.ManufactureData[i].ManufactureId;
+            if (name.toLowerCase() == value.toLowerCase()) {
+                if (!this.isEdit || this.isEdit) {
+                    this.disableSaveForUOM = true;
+                    this.disableSaveForShortName = true;
+                }
+                else if (ManufactureId != this.selectedRecordForEdit.ManufactureId) {
+                    this.disableSaveForUOM = false;
+                    this.disableSaveForShortName = true;
+                }
+                else {
+                    this.disableSaveForUOM = false;
+                    this.disableSaveForShortName = false;
+                }
+                break;
+            }
+        }
+
+    }
+
     getManufacturerList() {
         this.manufacturerService.getWorkFlows().subscribe(res => {
             console.log(res,'test1');
@@ -630,32 +655,44 @@ export class ManufacturerComponent implements OnInit {
 
 
     checkManufacturerExists(field, value) {
-     
-        const exists = validateRecordExistsOrNot(field, value, this.ManufactureData, this.selectedRecordForEdit);
+       const exists = validateRecordExistsOrNot(field, value, this.ManufactureData, this.selectedRecordForEdit);
    
         if (exists.length > 0) {
            
-            this.disableSaveForUOM = true;
+              this.disableSaveForUOM = true;
+            this.disableSaveForShortName = true;
         }
         else {
-            this.disableSaveForUOM = false;
+              this.disableSaveForUOM = false;
+            this.disableSaveForShortName = false;
         }
 
     }
     filterDescription(event) {
         this.ManufactList = this.ManufactureData;
 
-        const ManufacturerVAlue = [...this.ManufactureData.filter(x => {
-            return x.name.toLowerCase().includes(event.query.toLowerCase())
-        })]
+        const ManufacturerVAlue = [
+            ...this.ManufactureData.filter(x => {
+                return x.name.toLowerCase().includes(event.query.toLowerCase());
+            })
+        ];
         this.ManufactList = ManufacturerVAlue;
     }
     selectedManufcaturer(object) {
-  
-        const exists = selectedValueValidate('name', object, this.selectedRecordForEdit)
-      
-     
-        this.disableSaveForUOM = !exists;
+       const exists = selectedValueValidate('name', object, this.selectedRecordForEdit);
+            this.disableSaveForShortName = !exists
+    }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
     }
 
     
@@ -692,6 +729,7 @@ export class ManufacturerComponent implements OnInit {
 
     resetManufacuterForm() {
         this.isEdit = false;
+        this.disableSaveForShortName = false;
         this.selectedRecordForEdit = undefined;
         this.addnewManufacturer = { ...this.newManufacturer };
     }
@@ -705,7 +743,6 @@ export class ManufacturerComponent implements OnInit {
    
         this.disableSaveForUOM = true;
         this.disableSaveForShortName = false;
-        // this.addNewUOM = rowData;
 
         this.addnewManufacturer = {
             ...rowData, name: getObjectByValue('name', rowData.name, this.ManufactureData),
@@ -759,7 +796,7 @@ export class ManufacturerComponent implements OnInit {
         this.manufacturerService.getManufacturerAuditDetails(rowData.manufacturerId).subscribe(res => {
             console.log(res)
             this.auditHistory = res;
-        })
+        });
     }
     
 }
