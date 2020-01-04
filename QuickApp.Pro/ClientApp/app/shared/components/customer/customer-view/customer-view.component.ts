@@ -131,7 +131,10 @@ export class CustomerViewComponent implements OnInit {
             this.getCustomerRestrictedDERByCustomerId(customerId);
             this.getCustomerClassificationByCustomerId(customerId);
             this.viewDataGeneralInformation = res[0];
+           
+
         })
+       // this.openStep1();
 
 
     }
@@ -253,6 +256,9 @@ export class CustomerViewComponent implements OnInit {
         //this.isDeleteMode = false;
 
         this.activeModal.close();
+    }
+    openStep1() {
+        $('#step1').collapse('show');
     }
 
     ExpandAllCustomerDetailsModel() {
