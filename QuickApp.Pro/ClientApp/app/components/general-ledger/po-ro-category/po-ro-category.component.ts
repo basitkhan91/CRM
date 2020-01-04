@@ -50,6 +50,8 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
         categoryName: "",
         createdBy: "",
         updatedBy: "",
+        createdDate: Date,
+        updatedDate:Date,
         isPO: false,
         isRO: false,
         masterCompanyId: 1,
@@ -137,7 +139,7 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
                     this.loadData();
                     this.alertService.showMessage(
                         'Success',
-                        `Updated Node Successfully`,
+                        `Updated PO-RO Category Successfully`,
                         MessageSeverity.success
                     );
                 });
@@ -151,7 +153,7 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
     updatePOROCategory(): void {
         this.currentporoCategory.updatedBy = this.userName;
         this.poroCategoryService.update(this.currentporoCategory).subscribe(node => {
-            this.alertService.showMessage('Node Setup updated successfully.');
+            this.alertService.showMessage('PO-RO Category updated successfully.');
             this.poroCategoryService.getAll().subscribe(nodes => {
                 this.allPOROList = nodes[0];
             });

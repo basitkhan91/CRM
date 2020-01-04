@@ -50,11 +50,16 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    poroCategory.CreatedDate = DateTime.Now;
-                    poroCategory.UpdatedDate = DateTime.Now;
-                    poroCategory.IsActive = true;
-                    poroCategory.MasterCompanyId = 1;
-                    unitOfWork.Repository<POROCategory>().Add(poroCategory);
+                    POROCategory category = new POROCategory();
+                    category.CategoryName = poroCategory.CategoryName;
+                    category.IsPO = poroCategory.IsPO;
+                    category.IsRO = poroCategory.IsRO;
+                    category.CreatedDate = DateTime.Now;
+                    category.UpdatedDate = DateTime.Now;
+                    category.IsDelete = false;
+                    category.IsActive = true;
+                    category.MasterCompanyId = 1;
+                    unitOfWork.Repository<POROCategory>().Add(category);
                     unitOfWork.SaveChanges();
                     return Ok(poroCategory);
                 }
