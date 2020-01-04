@@ -128,7 +128,7 @@ export class CertificationTypeComponent implements OnInit {
 	disableSaveCertification: boolean = false;
 	certificationList: any;
 
-
+    disableSaveCertificationMsg:boolean = false;
 	new = {
 		description: "",
 		masterCompanyId: 1,
@@ -245,10 +245,12 @@ export class CertificationTypeComponent implements OnInit {
 		console.log(exists);
 		if (exists.length > 0) {
 			this.disableSaveCertification = true;
-		}
+            this.disableSaveCertificationMsg = true;
+        }
 		else {
 			this.disableSaveCertification = false;
-		}
+            this.disableSaveCertificationMsg = false;
+        }
 
 	}
 	filterCertificationName(event) {
@@ -260,11 +262,36 @@ export class CertificationTypeComponent implements OnInit {
 		this.certificationList = certificationData;
 	}
 	selectedCertificationName(object) {
-		const exists = selectedValueValidate('description', object, this.selectedRecordForEdit)
-
+        const exists = selectedValueValidate('description', object, this.selectedRecordForEdit);
 		this.disableSaveCertification = !exists;
-	}
+        this.disableSaveCertificationMsg = !exists;
+    }
 
+
+    onBlur(event) {
+        const value = event.target.value;
+		this.disableSaveCertificationMsg = false;
+        for (let i = 0; i < this.originalData.length; i++) {
+            let description = this.originalData[i].description;
+            let taxTypeId = this.originalData[i].taxTypeId;
+            if (description.toLowerCase() == value.toLowerCase()) {
+                if (!this.isEdit || this.isEdit) {
+					this.disableSaveCertification = true;
+					this.disableSaveCertificationMsg = true;
+                }
+                else if (taxTypeId != this.selectedRecordForEdit.taxTypeId) {
+					this.disableSaveCertification = false;
+					this.disableSaveCertificationMsg = true;
+                }
+                else {
+					this.disableSaveCertification = false;
+					this.disableSaveCertificationMsg = false;
+                }
+                console.log('description :', description);
+                break;
+            }
+        }
+    }
 
 
 	save() {
@@ -300,6 +327,7 @@ export class CertificationTypeComponent implements OnInit {
 
 	resetForm() {
 		this.isEdit = false;
+        this.disableSaveCertificationMsg = false;
 		this.selectedRecordForEdit = undefined;
 
 		this.addNew = { ...this.new };
@@ -310,10 +338,8 @@ export class CertificationTypeComponent implements OnInit {
 		console.log(rowData);
 		this.isEdit = true;
 		this.disableSaveCertification = true;
-
-
-
-		this.addNew = {
+        this.disableSaveCertificationMsg = false;
+        this.addNew = {
 			...rowData,
 			description: getObjectById('employeeLicenseTypeId', rowData.employeeLicenseTypeId, this.originalData),
 		};

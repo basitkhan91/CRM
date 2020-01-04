@@ -20,7 +20,7 @@
                             <ng-template pTemplate="caption">
                                 <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect [maxSelectedLabels]="2" [options]="headers" optionLabel="header"
-                                        [(ngModel)]="selectedColumns" [style]="{minWidth: '200px'}" style="float:left"
+                                        [(ngModel)]="selectedColumns" [style]="{minWidth: '200px'}" style="float:left" [resetFilterOnHide]="true" 
                                         (onChange)="columnsChanges()"></p-multiSelect>
                                     <button type="button" class="btn btn-primary-cstm" pTooltip="Download All Data" matTooltipPosition="above"
                                         tooltipPosition="top" pButton icon="fa-download" iconPos="left"
@@ -241,7 +241,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary-cstm" data-dismiss="modal"
-                    [disabled]="create.invalid || disableSaveGroupId && disableSaveForDescription" (click)="save();">
+                    [disabled]="create.invalid || disableSaveForDescription" (click)="save();">
                     {{isEdit ? 'Update' : 'Save' }}</button>
                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal"
                     (click)="resetForm()">Close</button>
@@ -314,7 +314,7 @@
                                 <th>ATA Chapter Name</th>
                                 <th>ATA Chapter Category</th>
                                 <th>Memo</th>
-                                <th>IsActive</th>
+                                <th>Is Active</th>
                                 <th>Updated By</th>
                                 <th>Updated Time</th>
                             </tr>
@@ -397,7 +397,7 @@
                     </p>
                     <p>
                         <span class="label ">
-                            <b class="view-Header">IsActive</b>
+                            <b class="view-Header">Is Active</b>
                         </span>
                         <span class="value">{{viewRowData.isActive === true ? 'Yes' : 'No'}}</span>
                     </p>

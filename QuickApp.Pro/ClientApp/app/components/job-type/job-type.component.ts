@@ -20,6 +20,7 @@ export class JobTypeComponent implements OnInit {
     jobTypeData: any;
     viewRowData: any;
     selectedRowforDelete: any;
+    disableSaveForJobTypeMSG : boolean = false;
     newJobType =
         {
             jobTypeName: "",
@@ -78,16 +79,11 @@ export class JobTypeComponent implements OnInit {
 
     customExcelUpload(event) {
         const file = event.target.files;
-
         console.log(file);
         if (file.length > 0) {
-
-            this.formData.append('ModuleName', 'JobType')
-            this.formData.append('file', file[0])
-            
-            
+            this.formData.append('ModuleName', 'JobType');
+            this.formData.append('file', file[0]);
             this.commonService.smartExcelFileUpload(this.formData).subscribe(res => {
-
                 this.formData = new FormData();
                 this.getJobTypeList();
                 this.alertService.showMessage(
@@ -95,15 +91,37 @@ export class JobTypeComponent implements OnInit {
                     `Successfully Uploaded  `,
                     MessageSeverity.success
                 );
-
-            })
+            });
         }
-
     }
 
     sampleExcelDownload() {
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=JobType&fileName=JobType.xlsx`;
         window.location.assign(url);
+    }
+
+    onBlur(event) {
+        const value = event.target.value;
+        this.disableSaveForJobTypeMSG = false;
+        for (let i = 0; i < this.jobTypeData.length; i++) {
+            let jobTypeName = this.jobTypeData[i].jobTypeName;
+            let JobTypeId = this.jobTypeData[i].JobTypeId;
+            if (jobTypeName.toLowerCase() == value.toLowerCase()) {
+                if (!this.isEdit || this.isEdit) {
+                    this.disableSaveForJobType = true;
+                    this.disableSaveForJobTypeMSG = true;
+                }
+                else if (JobTypeId != this.selectedRecordForEdit.JobTypeId) {
+                    this.disableSaveForJobType = false;
+                    this.disableSaveForJobTypeMSG = true;
+                }
+                else {
+                    this.disableSaveForJobType = false;
+                    this.disableSaveForJobTypeMSG = false;
+                }
+                break;
+            }
+        }
     }
 
     getJobTypeList() {
@@ -126,9 +144,11 @@ export class JobTypeComponent implements OnInit {
         const exists = validateRecordExistsOrNot(field, value, this.jobTypeData, this.selectedRecordForEdit);
         if (exists.length > 0) {
             this.disableSaveForJobType = true;
+            this.disableSaveForJobTypeMSG = true;
         }
         else {
             this.disableSaveForJobType = false;
+            this.disableSaveForJobTypeMSG = false;
         }
 
     }
@@ -144,6 +164,7 @@ export class JobTypeComponent implements OnInit {
     selectedJobType(object) {
         const exists = selectedValueValidate('jobTypeMemo', object, this.selectedRecordForEdit)
         this.disableSaveForJobType = !exists;
+        this.disableSaveForJobTypeMSG = !exists;
     }
 
     saveJobType() {
@@ -180,6 +201,7 @@ export class JobTypeComponent implements OnInit {
     resetJobTypeForm() {
         this.isEdit = false;
         this.disableSaveForJobType = false;
+        this.disableSaveForJobTypeMSG = false;
         this.selectedRecordForEdit = undefined;
         this.addNewJobType = { ...this.newJobType };
     }

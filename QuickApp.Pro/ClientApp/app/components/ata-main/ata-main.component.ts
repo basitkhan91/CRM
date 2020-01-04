@@ -193,9 +193,9 @@ export class AtaMainComponent implements OnInit {
         this.descriptionList = descriptionData;
     }
     selectedDescription(object) {
-        const exists = selectedValueValidate('ataChapterName', object, this.selectedRecordForEdit)
-
+        const exists = selectedValueValidate('ataChapterName', object, this.selectedRecordForEdit);
         this.disableSaveForDescription = !exists;
+        this.disableSaveForDescriptionMsg = !exists;
     }
 
     onBlur(event) {
@@ -257,6 +257,7 @@ export class AtaMainComponent implements OnInit {
 
     resetForm() {
         this.isEdit = false;
+        this.disableSaveForDescriptionMsg = false;
         this.selectedRecordForEdit = undefined;
         this.addNew = { ...this.new };
     }
@@ -265,7 +266,7 @@ export class AtaMainComponent implements OnInit {
     edit(rowData) {
         console.log(rowData);
         this.isEdit = true;
-        this.disableSaveGroupId = false;
+        this.disableSaveGroupId = true;
         this.disableSaveForDescription = true;
         this.disableSaveForDescriptionMsg = false;
         this.addNew = {

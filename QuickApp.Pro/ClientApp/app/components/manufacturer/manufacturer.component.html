@@ -23,10 +23,10 @@
                                                    optionLabel="header" [(ngModel)]="selectedColumns" [style]="{minWidth: '200px'}"
                                                     [resetFilterOnHide]="true" style="float:left" (onChange)="columnsChanges()"></p-multiSelect>                                   
 
-                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download All Data" matTooltipPosition="above"
+                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" matTooltipPosition="above"
                                             tooltipPosition="top" pButton icon="fa-download" iconPos="left"
                                             label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download Selected" matTooltipPosition="above"
+                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" matTooltipPosition="above"
                                             tooltipPosition="top" pButton icon="fa-download" iconPos="left"
                                             label="Export Selection Only"
                                             (click)="dt.exportCSV({selectionOnly:true})"></button>
@@ -36,12 +36,12 @@
                                                (change)="customExcelUpload($event)" class="uploaddoc upload-file"
                                                accept=".xlsx, .xls, .csv">
                                         <label for="upload">
-                                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
+                                            <span pTooltip="Upload Data (Excel)" matTooltipPosition="above"  tooltipPosition="top">
                                                 <i class="fa fa-upload"></i>
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" matTooltip="Download Sample file" matTooltipPosition="above" (click)="sampleExcelDownload()">
+                                        <button class="btn btn-primary-cstm" pTooltip="Download Sample file" matTooltipPosition="above"  tooltipPosition="top" (click)="sampleExcelDownload()">
                                             Sample File
                                             Download
                                         </button>
@@ -161,7 +161,7 @@
 </div>
 
 
-<div #addManufacturer id="addManufacturer" class="modal fade" role="dialog">
+<div #addManufacturer id="addManufacturer" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
 
         <!-- Modal content-->
@@ -181,13 +181,13 @@
                             </div>
                             <div class="col-sm-5">
                                 <p-autoComplete field="name" [(ngModel)]="addnewManufacturer.name"
-                                    (onSelect)="selectedManufcaturer($event)"
+                                    (onSelect)="selectedManufcaturer($event)" (onBlur)="onBlur($event)"
                                     (onKeyUp)="checkManufacturerExists('name', $event.target.value)" name="uom"
                                     [suggestions]="ManufactList" (completeMethod)="filterDescription($event)"
                                     [size]="30" [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
 
                                 </p-autoComplete>
-                                <div *ngIf="disableSaveForUOM" class="clr-red">Already Exists</div>
+                                <div *ngIf="disableSaveForShortName" class="clr-red">Already Exists</div>
                                 <div class="clear"></div>
                             </div>
                         </div>
@@ -298,13 +298,13 @@
                             <tr *ngFor="let audit of auditHistory; let i = index;">
                                
                                 <td
-                                    [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].name === audit.name ? 'black' : 'red'  }">
+                                    [ngStyle]="{'color': getColorCodeForHistory(i, 'name', audit.name)  ?  'black' : 'red'  }">
                                     {{audit.name}}</td>
                                 <td
-                                    [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].memo === audit.comments ? 'black' : 'red'  }">
+                                    [ngStyle]="{'color': getColorCodeForHistory(i, 'memo', audit.memo) ? 'black' : 'red'  }">
                                     {{audit.comments}}</td>
                                 <td
-                                    [ngStyle]="{'color': auditHistory[i>0 ? i-1 : i].isActive === audit.isActive ? 'black' : 'red'  }">
+                                    [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive) ? 'black' : 'red'  }">
                                     {{audit.isActive}}</td>
                                 <td>{{audit.updatedBy}}</td>
                                 <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>

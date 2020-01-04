@@ -121,6 +121,8 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
     selectedRowforDelete: any;
     auditHistory: any[] = [];
     existingRecordsResponse: Object;
+    disableSaveForItemCodeMsg: boolean = false;
+    disableSaveForItemDescMsg:boolean= false;
 
 	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public itemClassificationService: ItemClassificationService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
         this.displayedColumns.push('action');
@@ -144,7 +146,58 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
         this.selectedColumns = this.cols;
     }
 
+    onBlurcode(event) {
+        const value = event.target.value;
+        this.disableSaveForItemCodeMsg = false;
+        for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
+            let itemClassificationCode = this.allitemclassificationInfo[i].itemClassificationCode;
+            let itemClassificationId = this.allitemclassificationInfo[i].itemClassificationId;
+            if (itemClassificationCode.toLowerCase() == value.toLowerCase()) {
+                if (!this.isEditMode) {
+                    this.disableSaveForItemCodeMsg = true;
+                    this.disableSaveForItemCode= true;
+                }
+                else if (itemClassificationId != this.selectedRecordForEdit.conditionId) {
+                    this.disableSaveForItemCodeMsg = true;
+                    this.disableSaveForItemCode = false;
+                   
+                }
+                else {
+                    this.disableSaveForItemCodeMsg = false;
+                    this.disableSaveForItemCode = false;
+                }
+                break;
+            }
+        }
 
+    }
+
+
+    onBlurDesc(event) {
+        const value = event.target.value;
+        this.disableSaveForItemDescMsg = false;
+        for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
+            let description = this.allitemclassificationInfo[i].description;
+            let itemClassificationId = this.allitemclassificationInfo[i].itemClassificationId;
+            if (description.toLowerCase() == value.toLowerCase()) {
+                if (!this.isEditMode) {
+                    this.disableSaveForItemDescMsg = true;
+                    this.disableSaveForItemDesc = true;
+                }
+                else if (itemClassificationId != this.selectedRecordForEdit.conditionId) {
+                    this.disableSaveForItemDescMsg = true;
+                    this.disableSaveForItemDesc = false;
+
+                }
+                else {
+                    this.disableSaveForItemDescMsg = false;
+                    this.disableSaveForItemDesc = false;
+                }
+                break;
+            }
+        }
+
+    }
 
 
     ngAfterViewInit() {
@@ -167,30 +220,46 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
     selectedItemCode(object) {
-        const exists = selectedValueValidate( 'itemClassificationCode' , object , this.selectedRecordForEdit )
+        const exists = selectedValueValidate('itemClassificationCode', object, this.selectedRecordForEdit);
+        this.disableSaveForItemCodeMsg = !exists;
         this.disableSaveForItemCode = !exists;
     }
     selectedItemDesc(object) {
-        const exists = selectedValueValidate( 'description' , object , this.selectedRecordForEdit )
+        const exists = selectedValueValidate('description', object, this.selectedRecordForEdit);
+        this.disableSaveForItemDescMsg = !exists;
         this.disableSaveForItemDesc = !exists;
     }
 
     checkItemCodeExists(field, value) {
         const exists = validateRecordExistsOrNot(field, value, this.allitemclassificationInfo , this.selectedRecordForEdit);
         if (exists.length > 0) {
+          //  this.disableSaveForItemDescMsg = true;
+            this.disableSaveForItemCodeMsg = true;
             this.disableSaveForItemCode = true;
+           // this.disableSaveForItemDesc = true;
+
         }
         else {
+          //  this.disableSaveForItemDescMsg = false;
+            this.disableSaveForItemCodeMsg = false;
             this.disableSaveForItemCode = false;
+           // this.disableSaveForItemDesc = false;
         }
     }
 
     checkItemDescExists(field, value) {
         const exists = validateRecordExistsOrNot(field, value, this.allitemclassificationInfo , this.selectedRecordForEdit);
         if (exists.length > 0) {
+            this.disableSaveForItemDescMsg = true;
+         //   this.disableSaveForItemCodeMsg = true;
+          //  this.disableSaveForItemCode = true;
             this.disableSaveForItemDesc = true;
+
         }
         else {
+            this.disableSaveForItemDescMsg = false;
+          //  this.disableSaveForItemCodeMsg = false;
+          //  this.disableSaveForItemCode = false;
             this.disableSaveForItemDesc = false;
         }
     }
@@ -217,8 +286,10 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
     editItemClassification(rowData) {
         console.log(rowData);
         this.isEditMode = true;
-        this.disableSaveForItemCode = false;
-        this.disableSaveForItemDesc = false;
+        this.disableSaveForItemCode = true;
+        this.disableSaveForItemDesc = true;
+        this.disableSaveForItemCodeMsg = false;
+        this.disableSaveForItemDescMsg = false;
         // this.addNewUOM = rowData;
 
        this.addNewItemClassification = {
@@ -247,6 +318,8 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
 
     resetItemCForm() {
         this.isEditMode = false;
+        this.disableSaveForItemCodeMsg = false;
+        this.disableSaveForItemDescMsg = false;
         this.selectedRecordForEdit = undefined;
         this.addNewItemClassification = { ...this.newItemClassification };
     }
@@ -324,7 +397,7 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
 
             console.log(res);
             this.auditHistory = res;
-        })
+        });
     }
 
     getColorCodeForHistory(i, field, value) {
