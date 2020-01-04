@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using QuickApp.Pro.Extensions;
+using DAL.Common;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -47,6 +48,8 @@ namespace QuickApp.Pro.Controllers
 
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
+            var result = new GetSearchData<SalesQuoteListView>();
+            
             list = from q in this.Context.SalesOrderQuote
                    join s in this.Context.MasterSalesOrderQuoteStatus
                    on q.StatusId equals s.Id
@@ -93,15 +96,19 @@ namespace QuickApp.Pro.Controllers
                 list = list.Sort<SalesQuoteListView>(parameters.sortField, sortDirection);
             }
 
+            result.TotalRecordsCount = list.Count();
+
             if (parameters.rows > 0)
             {
                 var pageListPerPage = parameters.rows;
                 var pageIndex = parameters.first;
                 var pageCount = (pageIndex / pageListPerPage) + 1;
-                list = DAL.Common.PaginatedList<SalesQuoteListView>.Create(list.AsQueryable(), pageCount, pageListPerPage);
+                result.Data = DAL.Common.PaginatedList<SalesQuoteListView>.Create(list.AsQueryable(), pageCount, pageListPerPage);
             }
 
-            return Ok(list);
+            
+
+            return Ok(result);
         }
 
         // GET: api/SalesQuote/5
