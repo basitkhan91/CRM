@@ -47,11 +47,28 @@ namespace DAL.Repositories
         {
             {
                 var data = (from capability in _appContext.AssetCapes
+                            join im
+                            in _appContext.ItemMaster on capability.ItemMasterId equals im.ItemMasterId
+                            join captype in _appContext.capabilityType on capability.CapabilityId equals captype.CapabilityTypeId
+                            join act in _appContext.AircraftType on capability.AircraftTypeId equals act.AircraftTypeId
+                            join acm in _appContext.AircraftModel on capability.AircraftModelId equals acm.AircraftModelId
+                            join dn in _appContext.AircraftDashNumber on capability.AircraftDashNumberId equals dn.DashNumberId
                             where capability.AssetCapesId == id
 
                             select new
                             {
-                                capability
+                                assetCapesId = capability.AssetCapesId,
+                                itemMasterId = capability.ItemMasterId,
+                                aircraftModelId = capability.AircraftModelId,
+                                capability.AircraftDashNumberId,
+                                partNumber = im.PartNumber,
+                                im.PartDescription,
+                                captypedescription = captype.Description,
+                                manufacturer = act.Description,
+                                modelname = acm.ModelName,
+                                dashNumber = dn.DashNumber,
+                                capability.IsActive,
+                                aircraftTypeId = capability.AircraftTypeId
 
                             }).ToList();
                 return data;

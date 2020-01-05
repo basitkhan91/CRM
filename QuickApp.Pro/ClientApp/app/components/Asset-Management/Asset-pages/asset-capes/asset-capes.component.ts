@@ -1253,8 +1253,8 @@ export class AssetCapesComponent implements OnInit {
                 //this.capabilityEditCollection = getSelectedCollection;
                 //this.cunstructFormForEdit()
                 
-                if (data[0].capability.aircraftTypeId !== undefined && data[0].capability.aircraftModelId !== undefined && data[0].capability.aircraftDashNumberId !== undefined) {
-                    this.dashnumberservices.getAllDashModels(data[0].capability.aircraftModelId, data[0].capability.aircraftTypeId, data[0].capability.aircraftDashNumberId).subscribe(aircraftdata => {
+                if (data[0].aircraftTypeId !== undefined && data[0].aircraftModelId !== undefined && data[0].aircraftDashNumberId !== undefined) {
+                    this.dashnumberservices.getAllDashModels(data[0].aircraftModelId, data[0].aircraftTypeId, data[0].aircraftDashNumberId).subscribe(aircraftdata => {
                         const responseValue = aircraftdata;
                         this.aircraftData = responseValue.map(x => {
                             return {
@@ -1262,9 +1262,9 @@ export class AssetCapesComponent implements OnInit {
                                 AircraftModel: x.model,
                                 DashNumber: x.dashNumber,
                                 AircraftModelId: x.modelid,
-                                DashNumberId: x.dashNumberId
-                         //       CapibilityType: capdata.selectedCap,
-                         //       PartNumber: capdata.selectedPartId
+                                DashNumberId: x.dashNumberId,
+                                CapibilityType: data[0].captypedescription,
+                                PartNumber: data[0].partNumber
                             }
                         })
                     })
