@@ -1,4 +1,4 @@
-﻿import { OnInit, Component, AfterViewInit} from "@angular/core";
+﻿import { OnInit, Component, AfterViewInit } from "@angular/core";
 import { NgbModalRef, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { fadeInOut } from "../../../services/animations";
 import { POROCategory } from "../../../models/po-ro-category.model";
@@ -6,7 +6,6 @@ import { SingleScreenAuditDetails } from "../../../models/single-screen-audit-de
 import { AuthService } from "../../../services/auth.service";
 import { POROCategoryService } from "../../../services/porocategory/po-ro-category.service";
 import { AlertService, MessageSeverity } from '../../../services/alert.service';
-import {  MatTableDataSource } from '@angular/material';
 
 @Component({
     selector: 'app-po-ro-category',
@@ -37,6 +36,7 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
     totalPages: number;
     selectedRowforDelete: any;
     updateMode: boolean;
+    disableSave: boolean = false;
 
     headers = [
         { field: 'categoryName', header: 'Name' },
@@ -51,7 +51,7 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
         createdBy: "",
         updatedBy: "",
         createdDate: Date,
-        updatedDate:Date,
+        updatedDate: Date,
         isPO: false,
         isRO: false,
         masterCompanyId: 1,
@@ -88,7 +88,7 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
         this.isEditMode = false;
         this.modal.close();
     }
-    
+
     toggledbldisplay(content, row) {
         this.isEditMode = true;
         this.isSaving = true;
@@ -110,44 +110,50 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
     }
 
     save() {
+
         const data = {
-            ...this.addNew, createdBy: this.userName, updatedBy: this.userName, createdDate: Date,updatedDate:Date
+            ...this.addNew, createdBy: this.userName, updatedBy: this.userName, createdDate: Date, updatedDate: Date
 
         };
         const { selectedCompanysData, ...rest }: any = data;
-        if (!this.isEdit) {
-            this.poroCategoryService.add(rest).subscribe(() => {
-                this.resetForm();
-                this.poroCategoryService.getAll().subscribe(nodes => {
-                    this.allPOROList = nodes[0];
-                    this.loadData();
-                });
-                this.alertService.showMessage(
-                    'Success',
-                    `Added  New PO-RO Category Successfully`,
-                    MessageSeverity.success
-                );
-            })
 
-        } else {
-            this.poroCategoryService.update(data).subscribe((response) => {
-                this.selectedRecordForEdit = undefined;
-                this.isEdit = false;
-                this.resetForm();
-                this.poroCategoryService.getAll().subscribe(nodes => {
-                    this.allPOROList = nodes[0];
-                    this.loadData();
+        if (!data.categoryName) {
+            this.disableSave = false
+        }
+        else {
+            if (!this.isEdit) {
+                this.poroCategoryService.add(rest).subscribe(() => {
+                    this.resetForm();
+                    this.poroCategoryService.getAll().subscribe(nodes => {
+                        this.allPOROList = nodes[0];
+                        this.loadData();
+                    });
                     this.alertService.showMessage(
                         'Success',
-                        `Updated PO-RO Category Successfully`,
+                        `Added  New PO-RO Category Successfully`,
                         MessageSeverity.success
                     );
-                });
+                })
 
-            })
-            this.updatePOROCategory();
+            } else {
+                this.poroCategoryService.update(data).subscribe((response) => {
+                    this.selectedRecordForEdit = undefined;
+                    this.isEdit = false;
+                    this.resetForm();
+                    this.poroCategoryService.getAll().subscribe(nodes => {
+                        this.allPOROList = nodes[0];
+                        this.loadData();
+                        this.alertService.showMessage(
+                            'Success',
+                            `Updated PO-RO Category Successfully`,
+                            MessageSeverity.success
+                        );
+                    });
+
+                })
+                this.updatePOROCategory();
+            }
         }
-
     }
 
     updatePOROCategory(): void {
@@ -205,7 +211,7 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
     }
 
     private onPORPSuccessful(allWorkFlows: any[]) {
-            this.loadingIndicator = false;
+        this.loadingIndicator = false;
         this.allPOROList = allWorkFlows;
         this.totalRecords = this.allPOROList.length;
         this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
@@ -228,22 +234,6 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
         alert("Functionality not yet done");
     }
 
-    addporoCategory(): void {
-        if (!(this.currentporoCategory.categoryName)) {
-            this.display = true;
-            return;
-        }
-        this.currentporoCategory.createdBy = this.userName;
-        this.currentporoCategory.updatedBy = this.userName;
-        this.poroCategoryService.add(this.currentporoCategory).subscribe(asset => {
-            this.alertService.showMessage(' PO-RO-Category Added successfully.');
-            this.poroCategoryService.getAll().subscribe(assets => {
-                this.poroCategoryList = assets[0];
-            });
-            this.resetAddporoCategory();
-        });
-
-    }
 
     edit(rowData) {
         this.isEdit = true;
@@ -346,7 +336,7 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
         this.poroCategoryService.getAudit(poroCategoryId).subscribe(audits => {
             if (audits.length > 0) {
                 this.AuditDetails = audits;
-                this.AuditDetails[0].ColumnsToAvoid = ["poroCategoryAuditId", "poroCategoryId","masterCompanyId", "createdBy", "createdDate", "updatedDate"];
+                this.AuditDetails[0].ColumnsToAvoid = ["poroCategoryAuditId", "poroCategoryId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
             }
         });
     }
