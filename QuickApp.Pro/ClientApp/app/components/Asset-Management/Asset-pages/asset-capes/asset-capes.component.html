@@ -24,7 +24,7 @@
         <div class="clear"></div>
 
         <div action="#" method="post" id="" name="" class="form-horizontal ro-grid-form mtop10">
-
+           
             <ng-template #content let-c="close" let-d="dismiss">
                 <div class="modal-dialog modal-lg">
                     <!-- Modal content-->
@@ -32,6 +32,7 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" (click)="dismissModel()">×</button>
                             <h4 class="modal-title">Add Capability</h4>
+
                         </div>
                         <div class="modal-body">
                             <form [formGroup]="capabilitiesForm">
@@ -60,13 +61,19 @@
                                             </div>
                                         </div>
                                         <div class="col-md-3">
-                                            <div class="">
+                                            <div class="form-group">
                                                 <label class="popup-plusicon-cstm-caps text-left">Aircraft Manufacturer </label>
                                                 <p-multiSelect [options]="manufacturerData"
-                                                               [ngModelOptions]="{standalone: true}"
-                                                               [(ngModel)]="capabilityForm.selectedAircraftTypes" [panelStyle]="{minWidth:'12em'}"
-                                                               (onChange)="manufacturerChange($event,capabilityForm)">
-                                                </p-multiSelect>
+                   [ngModelOptions]="{standalone: true}"
+                   [(ngModel)]="capabilityForm.selectedAircraftTypes" [panelStyle]="{minWidth:'12em'}"
+                   (onChange)="manufacturerChange($event,capabilityForm)">
+    </p-multiSelect>
+                                                
+                                                <!--<select [(ngModel)]="capabilityForm.selectedAircraftTypes" (change)="manufacturerChange($event,capabilityForm)"
+                                                        [ngModelOptions]="{standalone: true}">
+                                                    <option>--Select--</option>
+                                                    <option *ngFor="let m of manufacturerData" [ngValue]="m.value">{{m.label}}</option>
+                                                </select>-->
                                             </div>
                                         </div>
                                         <div class="col-md-2">
@@ -85,41 +92,63 @@
                                                 <label class="popup-plusicon-cstm-caps text-left">Dash Number </label>
 
                                                 <p-multiSelect [options]="search_AircraftDashNumberList"
-                                                [ngModelOptions]="{standalone: true}"
-                                                [(ngModel)]="capabilityForm.selectedDashNumbers"
-                                                [panelStyle]="{minWidth:'12em'}"
-                                                (onChange)="dashNumberChange($event,capabilityForm)">
+                                                               [ngModelOptions]="{standalone: true}"
+                                                               [(ngModel)]="capabilityForm.selectedDashNumbers"
+                                                               [panelStyle]="{minWidth:'12em'}"
+                                                               (onChange)="dashNumberChange($event,capabilityForm)">
                                                 </p-multiSelect>
                                             </div>
                                         </div>
 
 
                                         <div class="col-md-1">
-                                            <button style="margin-top: 20px;" type="button" class="btn btn-primary-cstm" (click)="addModels(capabilityForm)">Add</button>
+                                            <button style="margin-top: 20px;" type="button" class="btn btn-primary-cstm" (click)="mapAircraftInformation(capabilityForm)">Add</button>
                                         </div>
                                     </div>
 
 
-                                    <ng-container *ngFor="let item of mfgFormArray.controls;let i=index" [formGroupName]="i">
+                                    <!--<ng-container *ngFor="let item of mfgFormArray.controls;let i=index" [formGroupName]="i">
 
-                                        <div class="form-row" *ngIf="mfgFormArray.controls[i].controls['isDelete'].value != true">
-                                            <div class="col-md-2">
-                                                 <input type="text" formControlName="capabilityTypeName" isabled="true" />
-                                            </div>
-                                            <div class="col-md-2">
-                                                <input type="text" formControlName="PartId" disabled="true" />
-                                            </div>
-                                            <div class="col-md-3">
-                                                <input type="text" formControlName="aircraftTypeName" disabled="true" />
-                                            </div>
-                                            <div class="col-md-2">
-                                                <input type="text" formControlName="aircraftModelName" disabled="true" />
-                                            </div>
-                                            <div class="col-md-2">
-                                                <input type="text" formControlName="DashNumber" disabled="true" />
-                                            </div>
-                                        </div>
-                                    </ng-container>
+                                <div class="form-row" *ngIf="mfgFormArray.controls[i].controls['isDelete'].value != true">
+                                    <div class="col-md-2">
+                                         <input type="text" formControlName="capabilityTypeName" isabled="true" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="text" formControlName="PartId" disabled="true" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="text" formControlName="aircraftTypeName" disabled="true" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="text" formControlName="aircraftModelName" disabled="true" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="text" formControlName="DashNumber" disabled="true" />
+                                    </div>
+                                </div>
+                            </ng-container>-->
+
+                                    <div class="card">
+                                        <p-table class="p-table-cstm" [value]="aircraftData" [rows]="6" [columns]="colaircraft" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+                                            <ng-template pTemplate="header" let-columns>
+                                                <tr>
+                                                    <th *ngFor="let col of columns">
+                                                        {{col.header}}
+                                                    </th>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                                                <tr>
+
+                                                    <!--<td><input type="checkbox" data-md-icheck (change)="onToggle(i)" /></td>-->
+
+                                                    <td *ngFor="let col of columns">
+                                                        {{rowData[col.field]}}
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </p-table>
+                                    </div>
 
 
                                 </div>
@@ -170,9 +199,9 @@
             <hr />
         </div>
 
-        <p-table #dt [value]="allCapesInfo" [metaKeySelection]="true" [rows]="20" 
-                 [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" 
-                 [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" 
+        <p-table #dt [value]="allCapesInfo" [metaKeySelection]="true" [rows]="20"
+                 [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]"
+                 [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn"
                  [resizableColumns]="true" [reorderableColumns]="true">
 
             <ng-template pTemplate="header" let-columns>
@@ -201,9 +230,9 @@
                     <td>{{assetCapes.dashnumber}}</td>
                     <td>
                         <!--
-    <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-    <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-    <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch> -->
+                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch> -->
                         <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on"
                                        offLabel="off" (onChange)="toggleActiveStatus(rowData)"
                                        [(ngModel)]="rowData['isActive']"></p-inputSwitch>
@@ -225,8 +254,8 @@
 
 
                         <!--<button class="btn-history" mat-icon-button matTooltip="History">
-        <mat-icon color="green">history</mat-icon>
-    </button>-->
+                            <mat-icon color="green">history</mat-icon>
+                        </button>-->
                     </td>
                 </tr>
             </ng-template>
