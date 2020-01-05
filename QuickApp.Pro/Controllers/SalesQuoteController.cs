@@ -49,7 +49,7 @@ namespace QuickApp.Pro.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var result = new GetSearchData<SalesQuoteListView>();
-            
+
             list = from q in this.Context.SalesOrderQuote
                    join s in this.Context.MasterSalesOrderQuoteStatus
                    on q.StatusId equals s.Id
@@ -63,34 +63,34 @@ namespace QuickApp.Pro.Controllers
                    {
                        SalesOrderQuoteId = p.SalesOrderQuoteId,
                        OpenDate = q.OpenDate,
-                       CustomerId = c.CustomerId,  
+                       CustomerId = c.CustomerId,
                        Name = c.Name,
-                       CustomerCode = c.CustomerCode,  
-                       Status = s.Name, 
-                       NetSales = p.NetSales, 
+                       CustomerCode = c.CustomerCode,
+                       Status = s.Name,
+                       NetSales = p.NetSales,
                        UnitCost = p.UnitCost
-                   } into gp 
-                   
+                   } into gp
+
                    select new SalesQuoteListView
                    {
                        SalesQuoteId = gp.Key.SalesOrderQuoteId,
                        QuoteDate = gp.Key.OpenDate,
-                       CustomerId = gp.Key.CustomerId, 
+                       CustomerId = gp.Key.CustomerId,
                        CustomerName = gp.Key.Name,
                        CustomerCode = gp.Key.CustomerCode,
-                       Status = gp.Key.Status,  
-                       SalesPrice = gp.Sum ( s => s.NetSales), 
-                       Cost = gp.Sum( c=> c.UnitCost),
+                       Status = gp.Key.Status,
+                       SalesPrice = gp.Sum(s => s.NetSales),
+                       Cost = gp.Sum(c => c.UnitCost),
                        NumberOfItems = gp.Count()
                    };
-            
-            
-            if(parameters.ColumnFilters != null)
+
+
+            if (parameters.ColumnFilters != null)
             {
-                list = Filter(list, parameters.ColumnFilters);    
+                list = Filter(list, parameters.ColumnFilters);
             }
 
-            if(parameters.sortOrder !=0   && !string.IsNullOrWhiteSpace(parameters.sortField))
+            if (parameters.sortOrder != 0 && !string.IsNullOrWhiteSpace(parameters.sortField))
             {
                 var sortDirection = parameters.sortOrder == -1 ? "desc" : "asc";
                 list = list.Sort<SalesQuoteListView>(parameters.sortField, sortDirection);
@@ -106,7 +106,7 @@ namespace QuickApp.Pro.Controllers
                 result.Data = DAL.Common.PaginatedList<SalesQuoteListView>.Create(list.AsQueryable(), pageCount, pageListPerPage);
             }
 
-            
+
 
             return Ok(result);
         }
@@ -117,7 +117,7 @@ namespace QuickApp.Pro.Controllers
         {
             var model = new SalesQuoteViewModel
             {
-                CustomerId = customerId, 
+                CustomerId = customerId,
                 StatusId = 1,
             };
 
@@ -136,10 +136,10 @@ namespace QuickApp.Pro.Controllers
 
             if (quote == null) return NotFound($"{id} doesnot exist.");
 
-            IEnumerable<SalesOrderQuoteApproverList> approverList =  this.UnitOfWork.SalesOrderQuoteApproverList.GetApproverList(id);
+            IEnumerable<SalesOrderQuoteApproverList> approverList = this.UnitOfWork.SalesOrderQuoteApproverList.GetApproverList(id);
 
             IEnumerable<SalesOrderQuotePartView> partsView = GetSalesOrderQuotePartsView(id);
-            
+
             //IEnumerable<SalesOrderQuotePart> parts = this.UnitOfWork.SalesOrderQuotePart.GetPartsBySalesQuoteId(id);
 
             var quoteView = Mapper.Map<SalesOrderQuote, SalesOrderQuoteView>(quote);
@@ -151,7 +151,7 @@ namespace QuickApp.Pro.Controllers
             var response = new SalesQuoteView
             {
                 SalesOrderQuote = quoteView,
-                ApproverList = approverListView.ToList(),  
+                ApproverList = approverListView.ToList(),
                 Parts = partsView.ToList()
             };
 
@@ -169,7 +169,7 @@ namespace QuickApp.Pro.Controllers
             quoteView.SalesOrderQuote.StatusId = 1;  // Defualt to "Open" 
 
             SalesOrderQuote quote = Mapper.Map<SalesOrderQuoteView, SalesOrderQuote>(quoteView.SalesOrderQuote);
-            
+
             IEnumerable<SalesOrderQuoteApproverList> approverList = Mapper.Map<List<SalesOrderQuoteApproverListView>, List<SalesOrderQuoteApproverList>>(quoteView.ApproverList);
 
             IEnumerable<SalesOrderQuotePart> parts = Mapper.Map<List<SalesOrderQuotePartView>, List<SalesOrderQuotePart>>(quoteView.Parts);
@@ -258,29 +258,41 @@ namespace QuickApp.Pro.Controllers
                                                              where part.SalesOrderQuoteId == salesQuoteId
                                                              select new SalesOrderQuotePartView
                                                              {
-                                                                  SalesOrderQuotePartId = part.SalesOrderQuotePartId, 
-                                                                  SalesOrderQuoteId = part.SalesOrderQuoteId, 
-                                                                  ItemMasterId = part.ItemMasterId, 
-                                                                  StockLineId = part.StockLineId,  
-                                                                  stockLineNumber = qs.StockLineNumber,  
-                                                                  FxRate = part.FxRate, 
-                                                                  QtyQuoted = part.QtyQuoted,  
-                                                                  UnitSalePrice = part.UnitSalePrice,  
-                                                                  MarkUpPercentage = part.MarkUpPercentage,  
-                                                                  SalesBeforeDiscount = part.SalesBeforeDiscount,  
-                                                                  Discount = part.Discount,  
-                                                                  DiscountAmount = part.DiscountAmount,  
-                                                                  NetSales = part.NetSales,  
-                                                                  MasterCompanyId = part.MasterCompanyId,  
-                                                                  CreatedBy = part.CreatedBy,  
-                                                                  CreatedOn = part.CreatedOn,  
-                                                                  UpdatedBy = part.UpdatedBy,  
-                                                                  UpdatedOn = part.UpdatedOn,  
-                                                                  partNumber = qs.PartNumber,  
-                                                                  partDescription = itemMaster.PartDescription,  
-                                                                  isOEM = qs.OEM.HasValue ? qs.OEM.Value : false,  
-                                                                  isPMA = itemMaster.PMA.HasValue ? itemMaster.PMA.Value : false, 
-                                                                  isDER = itemMaster.DER.HasValue ? itemMaster.DER.Value : false
+                                                                 SalesOrderQuotePartId = part.SalesOrderQuotePartId,
+                                                                 SalesOrderQuoteId = part.SalesOrderQuoteId,
+                                                                 ItemMasterId = part.ItemMasterId,
+                                                                 StockLineId = part.StockLineId,
+                                                                 stockLineNumber = qs.StockLineNumber,
+                                                                 FxRate = part.FxRate,
+                                                                 QtyQuoted = part.QtyQuoted,
+                                                                 UnitSalePrice = part.UnitSalePrice,
+                                                                 MarkUpPercentage = part.MarkUpPercentage,
+                                                                 SalesBeforeDiscount = part.SalesBeforeDiscount,
+                                                                 Discount = part.Discount,
+                                                                 DiscountAmount = part.DiscountAmount,
+                                                                 NetSales = part.NetSales,
+                                                                 MasterCompanyId = part.MasterCompanyId,
+                                                                 CreatedBy = part.CreatedBy,
+                                                                 CreatedOn = part.CreatedOn,
+                                                                 UpdatedBy = part.UpdatedBy,
+                                                                 UpdatedOn = part.UpdatedOn,
+                                                                 partNumber = qs.PartNumber,
+                                                                 partDescription = itemMaster.PartDescription,
+                                                                 isOEM = qs.OEM.HasValue ? qs.OEM.Value : false,
+                                                                 isPMA = itemMaster.PMA.HasValue ? itemMaster.PMA.Value : false,
+                                                                 isDER = itemMaster.DER.HasValue ? itemMaster.DER.Value : false,
+                                                                 MethodType = part.MethodType,
+                                                                 Method = part.Method,
+                                                                 SerialNumber = qs.SerialNumber ?? string.Empty,
+                                                                 UnitCost = part.UnitCost,
+                                                                 SalesPriceExtended = part.SalesPriceExtended,
+                                                                 MarkupExtended = part.MarkupExtended,
+                                                                 SalesDiscountExtended = part.SalesDiscountExtended,
+                                                                 NetSalePriceExtended = part.NetSalePriceExtended,
+                                                                 UnitCostExtended = part.UnitCostExtended,
+                                                                 MarginAmount = part.MarginAmount,
+                                                                 MarginAmountExtended = part.MarginAmountExtended,
+                                                                 MarginPercentage = part.MarginPercentage
                                                              };
 
             return partsView;
@@ -333,7 +345,7 @@ namespace QuickApp.Pro.Controllers
                 list = list.Where(q => q.NumberOfItems == filters.NumberOfItems);
             }
 
-            return list;  
+            return list;
         }
     }
 }

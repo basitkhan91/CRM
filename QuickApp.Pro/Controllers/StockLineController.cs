@@ -1113,6 +1113,7 @@ namespace QuickApp.Pro.Controllers
 
                      select new
                      {
+                         methodType = "S",
                          method = "Stock Line",
                          itemId = item.ItemMasterId,
                          partNumber = item.PartNumber,
