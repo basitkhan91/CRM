@@ -742,6 +742,11 @@
                                    (click)="gridTabChange('billorInvoice'); billingCreateOrEdit();">Billing/Invoicing</a>
                             </li>
                             <li class="nav-item">
+                                <a id="pills-contact-tab" role="tab"
+                                    [ngClass]="{active : gridActiveTab === 'quote'}"
+                                    (click)="gridTabChange('quote');">Quote</a>
+                            </li>
+                            <li class="nav-item">
                                 <a id="pills-contact-tab" role="tab" [ngClass]="{active : gridActiveTab === 'shipping'}"
                                    (click)="gridTabChange('shipping')">Shipping</a>
                             </li>
@@ -915,6 +920,14 @@
                     </div>
                     <div *ngIf="documents" [ngClass]="{hidedata: gridActiveTab !== 'documents'}">
                         <app-work-order-documents [documentForm]="documents"></app-work-order-documents>
+                    </div>
+                    <div *ngIf="gridActiveTab == 'quote'">
+                        <div *ngIf="!workOrderQuoteId" class="no-quote">
+                            Quote not yet created
+                        </div>
+                        <div *ngIf="workOrderQuoteId">
+                            <app-work-order-quote [workorderid]="workOrderId"></app-work-order-quote>
+                        </div>
                     </div>
 
 
