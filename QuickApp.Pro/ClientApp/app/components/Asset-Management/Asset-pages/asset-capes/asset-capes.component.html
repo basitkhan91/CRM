@@ -24,7 +24,7 @@
         <div class="clear"></div>
 
         <div action="#" method="post" id="" name="" class="form-horizontal ro-grid-form mtop10">
-           
+
             <ng-template #content let-c="close" let-d="dismiss">
                 <div class="modal-dialog modal-lg">
                     <!-- Modal content-->
@@ -60,26 +60,40 @@
                                                 </p-autoComplete>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
                                             <div class="form-group">
-                                                <label class="popup-plusicon-cstm-caps text-left">Aircraft Manufacturer </label>
-                                                <p-multiSelect [options]="manufacturerData"
-                   [ngModelOptions]="{standalone: true}"
-                   [(ngModel)]="capabilityForm.selectedAircraftTypes" [panelStyle]="{minWidth:'12em'}"
-                   (onChange)="manufacturerChange($event,capabilityForm)">
-    </p-multiSelect>
-                                                
-                                                <!--<select [(ngModel)]="capabilityForm.selectedAircraftTypes" (change)="manufacturerChange($event,capabilityForm)"
-                                                        [ngModelOptions]="{standalone: true}">
+                                                <label class="popup-plusicon-cstm-caps text-left">Aircraft Manufacturer <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
+                                                <!-- <p-multiSelect [options]="manufacturerData"
+                                                               [ngModelOptions]="{standalone: true}"
+                                                               [(ngModel)]="capabilityForm.selectedAircraftTypes"
+                                                               (onChange)="manufacturerChange($event,capabilityForm)">
+                                                </p-multiSelect> -->
+                                                <select [(ngModel)]="capabilityForm.selectedAircraftTypes"
+                                                        (change)="manufacturerChange($event,capabilityForm)"
+                                                        [ngModelOptions]="{standalone: true}"
+                                                        id="aircraftModelId"
+                                                        style="width: 150px !important;" 
+                                                        >
                                                     <option>--Select--</option>
                                                     <option *ngFor="let m of manufacturerData" [ngValue]="m.value">{{m.label}}</option>
-                                                </select>-->
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="">
-                                                <label class="popup-plusicon-cstm-caps text-left">Model </label>
-                                                <p-multiSelect [options]="capabilityForm.selectedAircraftDataModels"
+                                                <label class="popup-plusicon-cstm-caps text-left">
+                                                    Model
+                                                    <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-aircraft-model']">
+                                                        <i class="fa fa-plus-circle fa-lg"></i>
+                                                    </a>
+                                                    <input type="checkbox"  
+                                                           [(ngModel)]="modelUnknown" [ngModelOptions]="{standalone: true}"
+                                                           style="width: 20px !important;
+                                                           margin-left: 7px; " (change)="resetAircraftModelsorDashNumbers()"> Unknown
+                                                </label>
+                                                <p-multiSelect *ngIf="!modelUnknown" [maxSelectedLabels]="2" 
+                                                               [disabled]="!selectedAircraftId" class="imstock-pmselect"
+                                                               [options]="capabilityForm.selectedAircraftDataModels"
                                                                [ngModelOptions]="{standalone: true}"
                                                                [(ngModel)]="capabilityForm.selectedAircraftModelTypes"
                                                                [panelStyle]="{minWidth:'12em'}" (click)="openModelPopups(capabilityForm)"
@@ -87,11 +101,20 @@
                                                 </p-multiSelect>
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-3"  *ngIf="!modelUnknown">
                                             <div class="">
-                                                <label class="popup-plusicon-cstm-caps text-left">Dash Number </label>
+                                                <label class="popup-plusicon-cstm-caps text-left">
+                                                    Dash Number
+                                                    <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-dashnumber']"><i class="fa fa-plus-circle fa-lg"></i></a>
+                                                    <input type="checkbox" [(ngModel)]="dashNumberUnknown" style="width: 20px !important; margin-left: 7px; "
+                                                             [ngModelOptions]="{standalone: true}"
+                                                             (change)="resetAircraftModelsorDashNumbers()"> 
+                                                    Unknown
+                                                </label>
 
-                                                <p-multiSelect [options]="search_AircraftDashNumberList"
+                                                <p-multiSelect *ngIf=" !modelUnknown && !dashNumberUnknown" 
+                                                               [disabled]="!selectedAircraftId" 
+                                                               [options]="search_AircraftDashNumberList"
                                                                [ngModelOptions]="{standalone: true}"
                                                                [(ngModel)]="capabilityForm.selectedDashNumbers"
                                                                [panelStyle]="{minWidth:'12em'}"
@@ -109,41 +132,38 @@
 
                                     <!--<ng-container *ngFor="let item of mfgFormArray.controls;let i=index" [formGroupName]="i">
 
-                                <div class="form-row" *ngIf="mfgFormArray.controls[i].controls['isDelete'].value != true">
-                                    <div class="col-md-2">
-                                         <input type="text" formControlName="capabilityTypeName" isabled="true" />
-                                    </div>
-                                    <div class="col-md-2">
-                                        <input type="text" formControlName="PartId" disabled="true" />
-                                    </div>
-                                    <div class="col-md-3">
-                                        <input type="text" formControlName="aircraftTypeName" disabled="true" />
-                                    </div>
-                                    <div class="col-md-2">
-                                        <input type="text" formControlName="aircraftModelName" disabled="true" />
-                                    </div>
-                                    <div class="col-md-2">
-                                        <input type="text" formControlName="DashNumber" disabled="true" />
-                                    </div>
-                                </div>
-                            </ng-container>-->
+                                        <div class="form-row" *ngIf="mfgFormArray.controls[i].controls['isDelete'].value != true">
+                                            <div class="col-md-2">
+                                                 <input type="text" formControlName="capabilityTypeName" isabled="true" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="text" formControlName="PartId" disabled="true" />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" formControlName="aircraftTypeName" disabled="true" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="text" formControlName="aircraftModelName" disabled="true" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input type="text" formControlName="DashNumber" disabled="true" />
+                                            </div>
+                                        </div>
+                                    </ng-container>-->
 
                                     <div class="card">
                                         <p-table class="p-table-cstm" [value]="aircraftData" [rows]="6" [columns]="colaircraft" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
                                             <ng-template pTemplate="header" let-columns>
                                                 <tr>
-                                                    <th *ngFor="let col of columns">
+                                                    <th *ngFor="let col of columns" style="width:200px">
                                                         {{col.header}}
                                                     </th>
                                                 </tr>
                                             </ng-template>
                                             <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
                                                 <tr>
-
-                                                    <!--<td><input type="checkbox" data-md-icheck (change)="onToggle(i)" /></td>-->
-
                                                     <td *ngFor="let col of columns">
-                                                        {{rowData[col.field]}}
+                                                        {{col.field}} - {{rowData[col.field]}}
                                                     </td>
                                                 </tr>
                                             </ng-template>
