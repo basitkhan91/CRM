@@ -47,6 +47,7 @@ namespace DAL.Repositories.Interfaces
         object GetAssetCheckedInandOutDetails(long assetRecordId, long workOrderAssetId);
         object WorkOrderAssetView(long assetRecordId);
         void DeleteWorkOrderAsset(long workOrderAssetId, string updatedBy);
+        IEnumerable<object> WorkOrderAssetHistory(long workOrderAssetId);
 
 
         List<WorkOrderExclusions> CreateWorkOrderExclusions(List<WorkOrderExclusions> workOrderExclusions);
@@ -101,9 +102,10 @@ namespace DAL.Repositories.Interfaces
 
 
 
-        long CreateWorkOrderFreight(WorkOrderFreight workOrderFreight);
-        void UpdateWorkOrderFreight(WorkOrderFreight workOrderFreight);
+        List<WorkOrderFreight> CreateWorkOrderFreight(List<WorkOrderFreight> workOrderFreight);
+        List<WorkOrderFreight> UpdateWorkOrderFreight(List<WorkOrderFreight> workOrderFreight);
         IEnumerable<object> GetWorkFlowWorkOrderFreightList(long wfwoId = 0, long workOrderId = 0);
+        void DeleteWorkOrderFreight(long workOrderFreightId, string updatedBy);
 
         IEnumerable<object> GetWorkFlowNos(long partId, long workScopeId);
         IEnumerable<object> GetWorkOrderNos(long partId, long workScopeId);

@@ -415,6 +415,7 @@ namespace DAL
         public DbSet<WorkOrderLaborHeader> WorkOrderLaborHeader { get; set; }
         public DbSet<WorkOrderCharges> WorkOrderCharges { get; set; }
         public DbSet<WorkOrderAssets> WorkOrderAssets { get; set; }
+        public DbSet<WorkOrderAssetAudit> WorkOrderAssetAudit { get; set; }
         public DbSet<WorkOrderExclusions> WorkOrderExclusions { get; set; }
         public DbSet<WorkOrderMaterials> WorkOrderMaterials { get; set; }
         public DbSet<WorkOrderDocuments> WorkOrderDocuments { get; set; }
@@ -495,8 +496,9 @@ namespace DAL
         public DbSet<WorkOrderStageAndStatus> WorkOrderStageAndStatus { get; set; }
         public DbSet<EmployeeStation> EmployeeStation { get; set; }
         public DbSet<EmployeeStationAudit> EmployeeStationAudit { get; set; }
+        public DbSet<Carrier> Carrier { get; set; }
 
-
+        
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
