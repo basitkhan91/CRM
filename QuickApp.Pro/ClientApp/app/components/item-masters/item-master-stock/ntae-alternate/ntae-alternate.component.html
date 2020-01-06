@@ -99,7 +99,7 @@
                                 </option>
                             </ng-container>
                         </select> -->
-                        <p-dropdown class="imstock-pddowm" [options]="itenClassificationData" filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="filterItemMaster.itemClassificationId" id="itemClassificationId" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>
+                        <p-dropdown class="imstock-pddowm" [options]="filterPartItemClassificationData" filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="filterItemMaster.itemClassificationId" id="itemClassificationId" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>
                     </div>
                 </div>
                 
@@ -123,6 +123,7 @@
                 <th *ngFor="let col of columns">
                     {{col.header}}
                 </th>
+                <th *ngIf="selectedTab == 'Equivalency'">Attachment</th>
                 <th>Action</th>
             </tr>
         </ng-template>
@@ -130,6 +131,9 @@
             <tr>
                 <td *ngFor="let col of columns">
                     {{rowData[col.field]}}
+                </td>
+                <td  *ngIf="selectedTab == 'Equivalency'">
+                    <a class="btn btn-primary-cstm" (click)="downloadFileUpload(rowData)" target="_blank" download>Download</a>
                 </td>
                 <td>
                     <button type="button" class="btn btn-danger nobg" (click)="deleteNTAERow(rowData.itemMappingId)">
@@ -148,7 +152,8 @@
     <div class="modal-dialog modal-full">
         <!-- Modal content-->
         <div class="modal-content">
-            <div class="modal-header">
+                <form #saveNtaeTabForm="ngForm"  (submit)="saveAlternate(saveNtaeTabForm)"  id="add-customerwork" name="" class="form-horizontal add-custustomer">
+                        <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" (click)="closeModal()">×</button>
                 <h4 class="modal-title">Add {{selectedTab}}</h4>
             </div>
@@ -156,8 +161,8 @@
                 <div class="form-row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="popup-plusicon-cstm">PN </label>
-                            <p-dropdown class="imstock-pddowm" [options]="pnData" filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="alternateData.MappingItemMasterId" (onChange)="bindPartDataInPopup($event)" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>
+                            <label class="popup-plusicon-cstm">PN <strong class="clr-red">*</strong> </label>
+                            <p-dropdown class="imstock-pddowm" [options]="pnData" filter="true"  [(ngModel)]="alternateData.MappingItemMasterId" name="MappingItemMasterId" id="MappingItemMasterId" title="Part Number" required (onChange)="bindPartDataInPopup($event)" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>
                         </div>
                     </div>
                 </div>
@@ -197,8 +202,8 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label  class="popup-plusicon-cstm">
-                                Document         </label>
-                                <input type="file" name="gFileupload" id="gFileupload" (change)="fileUploadNtae($event)"   class="uploaddoc upload-file"  />
+                                Document      <strong class="clr-red">*</strong>    </label>
+                                <input type="file" name="gFileupload" id="gFileupload" required  title="Document" (change)="fileUploadNtae($event)"   class="uploaddoc upload-file"  />
                
                                 <!-- <p-fileUpload name="gFileupload"  [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (change)="fileUploadNtae($event)"></p-fileUpload>  -->
                                 <!-- <input type="text" class="ui-inputtext" disabled name="manufacturer"  [(ngModel)]="alternateData.manufacturer"  >  -->
@@ -208,9 +213,28 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="saveAlternate()">Save</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="closeModal()">Close</button>
+                <button type="button" class="btn btn-primary-cstm"  (click)="saveAlternate(saveNtaeTabForm)">Save</button>
+                <button #closeAddPopup type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="closeModal()">Close</button>
             </div>
+            </form>
         </div>
     </div>
 </div>
+
+<p-dialog header="Alert" [(visible)]="displayNtae" [modal]="true" [dismissableMask]="true" maximizedLeft="140px"
+          maximizedTop="140px" [width]="350" [minWidth]="200" [responsive]="true" [minY]="1050" [baseZIndex]="1100000">
+
+
+    <h5 [ngStyle]="{'color':'red'}">
+        Please Enter (*) Mandatory Fields
+        <!-- <pre>{{listOfErrors | json}}</pre> -->
+        
+    </h5>
+    <ul  [ngStyle]="{'color':'red'}">
+        <li *ngFor="let error of listOfErrors">{{error}}</li>
+    </ul>
+    <p-footer>
+        <button type="button" pButton icon="pi pi-check" (click)="displayNtae=false" label="Close"></button>
+    </p-footer>
+
+</p-dialog>
