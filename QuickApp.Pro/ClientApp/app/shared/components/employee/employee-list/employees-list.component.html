@@ -148,7 +148,7 @@
                                                             <p><span class="label"><b>Division: </b></span><span class="value">{{divsioname ? divsioname : '-'}}</span></p>   
                                                             <p><span class="label"><b>Dept: </b></span><span class="value">{{departname ? departname : '-'}}</span></p>    
                                                             <p><span class="label"><b>Job Title: </b></span><span class="value">{{jobTitleName ? jobTitleName : '-'}}</span></p>    
-                                                            <p><span class="label"><b>Job Type: </b></span><span class="value">{{jobTypeName ? jobTypeName : '-'}}</span></p>                                                                                       
+                                                            <!-- <p><span class="label"><b>Job Type: </b></span><span class="value">{{jobTypeName ? jobTypeName : '-'}}</span></p>                                                                                        -->
                                                         </div>
                                                         <div class="col-sm-4">
                                                             <p><span class="label"><b>Employee Expertise: </b></span><span class="value">{{empExpertisedescription ? empExpertisedescription : '-'}}</span></p>
@@ -312,7 +312,7 @@
                                     <th>EmpID</th>
                                     <th>Job Title</th>
                                     <th>Emp Expertise</th>
-                                    <th>Job Type</th>
+                                    <!-- <th>Job Type</th> -->
                                     <th>Start Date</th>
                                     <!-- <th>Company</th> -->
                                     <th>Pay Type</th>
@@ -329,7 +329,7 @@
                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'employeeId', audit.employeeId)  ? 'black' : 'red'  }">{{audit.employeeId}}</td>
                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'jobtitle', audit.jobtitle)  ? 'black' : 'red'  }">{{audit.jobtitle}}</td>
                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'employeeExpertise', audit.employeeExpertise)  ? 'black' : 'red'  }">{{audit.employeeExpertise}}</td>
-                                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'jobType', audit.jobType)  ? 'black' : 'red'  }">{{audit.jobType}}</td>
+                                            <!-- <td [ngStyle]="{'color': getColorCodeForHistory(i, 'jobType', audit.jobType)  ? 'black' : 'red'  }">{{audit.jobType}}</td> -->
                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'startDate', audit.startDate)  ? 'black' : 'red'  }">{{audit.startDate | date: 'dd-MM-yyyy'}}</td>
                                             <!-- <td [ngStyle]="{'color': getColorCodeForHistory(i, 'company', audit.company)  ? 'black' : 'red'  }">{{audit.company}}</td> -->
                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'payType', audit.payType)  ? 'black' : 'red'  }">{{audit.payType}}</td>
