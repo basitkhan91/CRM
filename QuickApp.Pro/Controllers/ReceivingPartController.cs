@@ -370,7 +370,7 @@ namespace QuickApp.Pro.Controllers
                             dbStockLine.ObtainFrom = stockLine.ObtainFrom;
                             dbStockLine.TraceableToType = stockLine.TraceableToType;
                             dbStockLine.TraceableTo = stockLine.TraceableTo;
-
+                            dbStockLine.IsDeleted = stockLine.IsDeleted;
                             dbStockLine.UpdatedDate = DateTime.Now;
                             receivePart.StockLines.Remove(stockLine);
                             unitOfWork.Repository<StockLine>().Update(dbStockLine);
