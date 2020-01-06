@@ -39,5 +39,20 @@ namespace QuickApp.Pro.ViewModels.SalesViews
         public bool isPMA { get; set; }
 
         public bool isDER { get; set; }
+
+        public string MethodType { get; set; }
+
+        public string Method { get; set; }
+
+        public string SerialNumber { get; set; }
+
+        public decimal SalesPriceExtended { get; set; }
+        public decimal MarkupExtended { get; set; }
+        public decimal SalesDiscountExtended { get; set; }
+        public decimal NetSalePriceExtended { get; set; }
+        public decimal UnitCostExtended { get; set; }
+        public decimal MarginAmount { get; set; }
+        public decimal MarginAmountExtended { get; set; }
+        public int MarginPercentage { get; set; }
     }
 }

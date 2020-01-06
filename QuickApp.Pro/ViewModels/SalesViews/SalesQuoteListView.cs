@@ -6,9 +6,9 @@ namespace QuickApp.Pro.ViewModels.SalesViews
     {
         public long? SalesQuoteId { get; set; }
 
-        public DateTime QuoteDate { get; set; }
+        public DateTime? QuoteDate { get; set; }
 
-        public string VersionNumber { get { return $"V-{this.SalesQuoteId.Value}"; } }
+        public string VersionNumber { get { return this.SalesQuoteId.HasValue ?  $"V-{this.SalesQuoteId.Value}" :  string.Empty; } }
 
         public long CustomerId { get; set; }
 

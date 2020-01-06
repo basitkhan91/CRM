@@ -16,7 +16,7 @@
                                  [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" [totalRecords]="totalRecords" scrollHeight="450px">
                             <ng-template pTemplate="caption">
                                 <div style="text-align: right;margin-left:-6px !important;">
-                                    <p-multiSelect [maxSelectedLabels]="2" [options]="uomHeaders" optionLabel="header" [(ngModel)]="selectedColumns"
+                                    <p-multiSelect [maxSelectedLabels]="2" [options]="uomHeaders" optionLabel="header" [(ngModel)]="selectedColumns" [resetFilterOnHide]="true" 
                                                    [style]="{minWidth: '200px'}" style="float:left" (onChange)="columnsChanges()"></p-multiSelect>
                                     <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
                                             iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
@@ -33,7 +33,7 @@
                     </span>-->
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()">Sample File Download</button>
+                                        <button class="btn btn-primary-cstm" pTooltip="Download Sample file" matTooltipPosition="above"  tooltipPosition="top" (click)="sampleExcelDownload()">Sample File Download</button>
                                     </div>
 
                                 </div>
@@ -64,10 +64,13 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                         }}
                                     </td>
                                     <td style="width:200px" *ngIf="selectedColumns.length> 0">
-                                        <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>
+                                        <!--<p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>-->
+                                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 
                                         <span data-toggle="modal" data-target="#view">
-                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" data-target="#view" data-toggle="modal">
+                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" matTooltip="View" (click)="viewSelectedRow(rowData)" data-target="#view" data-toggle="modal">
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         </span>
@@ -155,12 +158,12 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                             </div>
                             <div class="col-sm-5">
                                 <p-autoComplete field="jobTypeName" [(ngModel)]="addNewJobType.jobTypeName" 
-                                    (onSelect)="selectedJobType($event)" name="jobTypeName" 
+                                    (onSelect)="selectedJobType($event)" name="jobTypeName"  (onBlur)="onBlur($event)"
                                     (onKeyUp)="checkJobTypeExists('jobTypeName', $event.target.value)" 
                                     [suggestions]="jobTypeList" (completeMethod)="filterJobTypes($event)" 
                                     [size]="30" [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
                                 </p-autoComplete>
-                                <div *ngIf="disableSaveForJobType" class="clr-red">Already Exists</div>
+                                <div *ngIf="disableSaveForJobTypeMSG" class="clr-red">Already Exists</div>
                                 <div class="clear"></div>
                             </div>
                         </div>
@@ -257,7 +260,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                             <tr>
                                 <th>JobType</th>
                                 <th>Memo</th>
-                                <th>IsActive</th>
+                                <th>Is Active</th>
                                 <th>Updated By</th>
                                 <th>Updated Time</th>
                             </tr>
@@ -311,13 +314,13 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                     </p>
                     <p>
                         <span class="label ">
-                            <b class="view-Header">ShortName: </b>
+                            <b class="view-Header">Memo: </b>
                         </span>
                         <span class="value">{{ viewRowData.jobTypeMemo}}</span>
                     </p>
                     <p>
                         <span class="label ">
-                            <b class="view-Header">IsActive</b>
+                            <b class="view-Header">Is Active</b>
                         </span>
                         <span class="value">{{viewRowData.isActive === true ? 'Yes' : 'No'}}</span>
                     </p>

@@ -234,7 +234,7 @@ namespace QuickApp.Pro.Controllers
                     if (capabilities[i].CapabilityId > 0)
                     {
                         capabilities[i].UpdatedDate = DateTime.Now;
-                         
+
                         _unitOfWork.Repository<Capability>().Update(capabilities[i]);
                         _unitOfWork.SaveChanges();
 
@@ -247,7 +247,7 @@ namespace QuickApp.Pro.Controllers
                         _unitOfWork.SaveChanges();
 
                         assetcapes.AssetRecordId = capabilities[i].AssetRecordId;
-                        assetcapes.CapabilityId = capabilities[i].CapabilityId;
+                        assetcapes.CapabilityId = (int)capabilities[i].CapabilityTypeId;
                         assetcapes.MasterCompanyId = capabilities[i].MasterCompanyId;
                         assetcapes.CreatedBy = "1";
                         assetcapes.UpdatedBy = "1";
@@ -272,6 +272,14 @@ namespace QuickApp.Pro.Controllers
         public IActionResult capabilityGet(long id)
         {
             var capabilityData = _unitOfWork.Asset.getCapabilityData(id); //.GetAllCustomersData();
+            return Ok(capabilityData);
+
+        }
+
+        [HttpGet("AssetcapabilityGet/{id}")]
+        public IActionResult AssetcapabilityGet(long id)
+        {
+            var capabilityData = _unitOfWork.Asset.getAssetCapabilityData(id); //.GetAllCustomersData();
             return Ok(capabilityData);
 
         }

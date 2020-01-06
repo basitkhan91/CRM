@@ -43,6 +43,38 @@ namespace DAL.Repositories
             }
         }
 
+        public IEnumerable<object> getAssetCapabilityData(long id)
+        {
+            {
+                var data = (from capability in _appContext.AssetCapes
+                            join im
+                            in _appContext.ItemMaster on capability.ItemMasterId equals im.ItemMasterId
+                            join captype in _appContext.capabilityType on capability.CapabilityId equals captype.CapabilityTypeId
+                            join act in _appContext.AircraftType on capability.AircraftTypeId equals act.AircraftTypeId
+                            join acm in _appContext.AircraftModel on capability.AircraftModelId equals acm.AircraftModelId
+                            join dn in _appContext.AircraftDashNumber on capability.AircraftDashNumberId equals dn.DashNumberId
+                            where capability.AssetCapesId == id
+
+                            select new
+                            {
+                                assetCapesId = capability.AssetCapesId,
+                                itemMasterId = capability.ItemMasterId,
+                                aircraftModelId = capability.AircraftModelId,
+                                capability.AircraftDashNumberId,
+                                partNumber = im.PartNumber,
+                                im.PartDescription,
+                                captypedescription = captype.Description,
+                                manufacturer = act.Description,
+                                modelname = acm.ModelName,
+                                dashNumber = dn.DashNumber,
+                                capability.IsActive,
+                                aircraftTypeId = capability.AircraftTypeId
+
+                            }).ToList();
+                return data;
+            }
+        }
+
         public IEnumerable<object> GetAsset(string id)
         {
             {
@@ -152,8 +184,8 @@ namespace DAL.Repositories
 
                 var data = (from ac in _appContext.AssetCapes join im 
                             in _appContext.ItemMaster on ac.ItemMasterId equals im.ItemMasterId
-                            join cap in _appContext.Capability on ac.CapabilityId equals cap.CapabilityId
-                            join captype in _appContext.capabilityType on cap.CapabilityTypeId equals captype.CapabilityTypeId 
+                            //join cap in _appContext.Capability on ac.CapabilityId equals cap.CapabilityId
+                            join captype in _appContext.capabilityType on ac.CapabilityId equals captype.CapabilityTypeId 
                             join act in _appContext.AircraftType on ac.AircraftTypeId equals act.AircraftTypeId
                             join acm in _appContext.AircraftModel on ac.AircraftModelId equals acm.AircraftModelId
                             join dn in _appContext.AircraftDashNumber on ac.AircraftDashNumberId equals dn.DashNumberId

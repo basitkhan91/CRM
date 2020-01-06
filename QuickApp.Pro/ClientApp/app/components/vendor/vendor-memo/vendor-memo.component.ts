@@ -59,6 +59,9 @@ export class VendorMemoComponent implements OnInit{
 
     /** VendorMemo ctor */
 	constructor(public workFlowtService: VendorService, private router: Router,private alertService: AlertService,private authService: AuthService,) {
+		if(this.workFlowtService.listCollection !== undefined){
+            this.workFlowtService.isEditMode = true;
+        }
 		if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
 			
 			this.local = this.workFlowtService.listCollection;

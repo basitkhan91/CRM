@@ -127,7 +127,8 @@ export class CreateAssetComponent implements OnInit {
             this.currentAsset.entryDate = new Date(this.currentAsset.entryDate);
         }
         else {
-            this.currentAsset.entryDate = new Date();
+            console.log(new Date().getDate());
+            this.currentAsset.entryDate = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
         }
 
     }
@@ -300,57 +301,70 @@ export class CreateAssetComponent implements OnInit {
         if (this.currentAsset.isDepreciable == true) {
             this.loadDepricationMethod();
             this.currentRow = rowData as AssetAttributeType;
-            this.assetattrService1.getByAssetTypeId(rowData).subscribe(audits => {
-                this.currentSelectedAssetAttributeType.assetAttributeTypeId = audits[0].assetAttributeTypeId;
-                this.currentSelectedAssetAttributeType.assetAttributeTypeName = audits[0].assetAttributeTypeName;
-                this.currentSelectedAssetAttributeType.description = audits[0].description;
-                this.currentSelectedAssetAttributeType.conventionType = audits[0].conventionType;
-                this.currentSelectedAssetAttributeType.depreciationMethod = audits[0].depreciationMethod;
-                console.log(this.getDeprMethodName(audits[0].depreciationMethod));
-                //if(this.depriciationMethodList)
-                //    console.log(getObjectById('assetDepreciationMethodId', audits[0].depreciationMethod, this.depriciationMethodList));
-                this.currentSelectedAssetAttributeType.depreciationMethodObj = this.getDeprMethodName(audits[0].depreciationMethod);
-                this.currentSelectedAssetAttributeType.residualPercentage = audits[0].residualPercentage;
-                this.currentSelectedAssetAttributeType.residualValue = audits[0].residualValue;
-                this.currentSelectedAssetAttributeType.assetLife = audits[0].assetLife;
-                this.currentSelectedAssetAttributeType.depreciationFrequencyId = audits[0].depreciationFrequencyId;
-                this.currentSelectedAssetAttributeType.acquiredGLAccountId = audits[0].acquiredGLAccountId;
-                this.currentSelectedAssetAttributeType.deprExpenseGLAccountId = audits[0].deprExpenseGLAccountId;
-                this.currentSelectedAssetAttributeType.adDepsGLAccountId = audits[0].adDepsGLAccountId;
-                this.currentSelectedAssetAttributeType.assetSale = audits[0].assetSale;
-                this.currentSelectedAssetAttributeType.assetWriteOff = audits[0].assetWriteOff;
-                this.currentSelectedAssetAttributeType.assetWriteDown = audits[0].assetWriteDown;
-                this.currentSelectedAssetAttributeType.createdBy = audits[0].createdBy;
-                this.currentSelectedAssetAttributeType.updatedBy = audits[0].updatedBy;
-                this.currentSelectedAssetAttributeType.createdDate = audits[0].createdDate;
-                this.currentSelectedAssetAttributeType.updatedDate = audits[0].updatedDate;
-                this.currentSelectedAssetAttributeType.isDelete = audits[0].isDelete;
-                this.currentSelectedAssetAttributeType.isActive = audits[0].isActive;
-            });
+            this.assetattrService1.getByAssetTypeId(rowData).subscribe(
+                audits => this.onSuccessfulAssetType(audits)
+            );
         }
         else {
             this.currentIntangibleRow = rowData as AssetIntangibleAttributeType;
-            this.assetIntangibleService.getById(rowData).subscribe(audits => {
-                this.currentSelectedIntangibleAssetType.assetIntangibleTypeId = audits[0].assetIntangibleTypeId;
-                this.currentSelectedIntangibleAssetType.assetDepreciationMethodId = audits[0].assetDepreciationMethodId;
-                this.currentSelectedIntangibleAssetType.intangibleLife = audits[0].intangibleLife;
-                this.currentSelectedIntangibleAssetType.amortizationFrequency = audits[0].amortizationFrequency;
-                this.currentSelectedIntangibleAssetType.intangibleGLAccountId = audits[0].intangibleGLAccountId;
-                this.currentSelectedIntangibleAssetType.amortExpenseGLAccountId = audits[0].amortExpenseGLAccountId;
-                this.currentSelectedIntangibleAssetType.accAmortDeprGLAccountId = audits[0].accAmortDeprGLAccountId;
-                this.currentSelectedIntangibleAssetType.intangibleWriteDownGLAccountId = audits[0].intangibleWriteDownGLAccountId;
-                this.currentSelectedIntangibleAssetType.intangibleWriteOffGLAccountId = audits[0].intangibleWriteOffGLAccountId;
-                this.currentSelectedIntangibleAssetType.managementStructureId = audits[0].managementStructureId;
-                this.currentSelectedIntangibleAssetType.masterCompanyId = audits[0].masterCompanyId;
-                this.currentSelectedIntangibleAssetType.createdBy = audits[0].createdBy;
-                this.currentSelectedIntangibleAssetType.updatedBy = audits[0].updatedBy;
-                this.currentSelectedIntangibleAssetType.createdDate = audits[0].createdDate;
-                this.currentSelectedIntangibleAssetType.updatedDate = audits[0].updatedDate;
-                this.currentSelectedIntangibleAssetType.isDelete = audits[0].isDelete;
-                this.currentSelectedIntangibleAssetType.isActive = audits[0].isActive;
-            });
+            this.assetIntangibleService.getById(rowData).subscribe(
+                audits => this.onSuccessfulAssetIntanType(audits)
+            );
         }
     }
+
+    onSuccessfulAssetType(audits: any[]) {
+        if (audits && audits[0]) {
+            this.currentSelectedAssetAttributeType.assetAttributeTypeId = audits[0].assetAttributeTypeId;
+            this.currentSelectedAssetAttributeType.assetAttributeTypeName = audits[0].assetAttributeTypeName;
+            this.currentSelectedAssetAttributeType.description = audits[0].description;
+            this.currentSelectedAssetAttributeType.conventionType = audits[0].conventionType;
+            this.currentSelectedAssetAttributeType.depreciationMethod = audits[0].depreciationMethod;
+            console.log(this.getDeprMethodName(audits[0].depreciationMethod));
+            //if(this.depriciationMethodList)
+            //    console.log(getObjectById('assetDepreciationMethodId', audits[0].depreciationMethod, this.depriciationMethodList));
+            this.currentSelectedAssetAttributeType.depreciationMethodObj = this.getDeprMethodName(audits[0].depreciationMethod);
+            this.currentSelectedAssetAttributeType.residualPercentage = audits[0].residualPercentage;
+            this.currentSelectedAssetAttributeType.residualValue = audits[0].residualValue;
+            this.currentSelectedAssetAttributeType.assetLife = audits[0].assetLife;
+            this.currentSelectedAssetAttributeType.depreciationFrequencyId = audits[0].depreciationFrequencyId;
+            this.currentSelectedAssetAttributeType.acquiredGLAccountId = audits[0].acquiredGLAccountId;
+            this.currentSelectedAssetAttributeType.deprExpenseGLAccountId = audits[0].deprExpenseGLAccountId;
+            this.currentSelectedAssetAttributeType.adDepsGLAccountId = audits[0].adDepsGLAccountId;
+            this.currentSelectedAssetAttributeType.assetSale = audits[0].assetSale;
+            this.currentSelectedAssetAttributeType.assetWriteOff = audits[0].assetWriteOff;
+            this.currentSelectedAssetAttributeType.assetWriteDown = audits[0].assetWriteDown;
+            this.currentSelectedAssetAttributeType.createdBy = audits[0].createdBy;
+            this.currentSelectedAssetAttributeType.updatedBy = audits[0].updatedBy;
+            this.currentSelectedAssetAttributeType.createdDate = audits[0].createdDate;
+            this.currentSelectedAssetAttributeType.updatedDate = audits[0].updatedDate;
+            this.currentSelectedAssetAttributeType.isDelete = audits[0].isDelete;
+            this.currentSelectedAssetAttributeType.isActive = audits[0].isActive;
+        }
+    }
+
+    onSuccessfulAssetIntanType(audits: any[]) {
+        if (audits && audits.length > 0 && audits[0]) {
+            this.currentSelectedIntangibleAssetType.assetIntangibleTypeId = audits[0].assetIntangibleTypeId;
+            this.currentSelectedIntangibleAssetType.assetDepreciationMethodId = audits[0].assetDepreciationMethodId;
+            this.currentSelectedIntangibleAssetType.intangibleLife = audits[0].intangibleLife;
+            this.currentSelectedIntangibleAssetType.amortizationFrequency = audits[0].amortizationFrequency;
+            this.currentSelectedIntangibleAssetType.intangibleGLAccountId = audits[0].intangibleGLAccountId;
+            this.currentSelectedIntangibleAssetType.amortExpenseGLAccountId = audits[0].amortExpenseGLAccountId;
+            this.currentSelectedIntangibleAssetType.accAmortDeprGLAccountId = audits[0].accAmortDeprGLAccountId;
+            this.currentSelectedIntangibleAssetType.intangibleWriteDownGLAccountId = audits[0].intangibleWriteDownGLAccountId;
+            this.currentSelectedIntangibleAssetType.intangibleWriteOffGLAccountId = audits[0].intangibleWriteOffGLAccountId;
+            this.currentSelectedIntangibleAssetType.managementStructureId = audits[0].managementStructureId;
+            this.currentSelectedIntangibleAssetType.masterCompanyId = audits[0].masterCompanyId;
+            this.currentSelectedIntangibleAssetType.createdBy = audits[0].createdBy;
+            this.currentSelectedIntangibleAssetType.updatedBy = audits[0].updatedBy;
+            this.currentSelectedIntangibleAssetType.createdDate = audits[0].createdDate;
+            this.currentSelectedIntangibleAssetType.updatedDate = audits[0].updatedDate;
+            this.currentSelectedIntangibleAssetType.isDelete = audits[0].isDelete;
+            this.currentSelectedIntangibleAssetType.isActive = audits[0].isActive;
+        }
+    }
+
     assetIdHandler(event) {
         if (event) {
             if (event.target.value != "") {
@@ -720,31 +734,43 @@ export class CreateAssetComponent implements OnInit {
             this.alertService.showMessage("", `Asset Parent cannot be equal to Asset ID.`, MessageSeverity.error);
             return;
         }
-        if (this.currentAsset.manufacturedDate > this.currentAsset.expirationDate) {
+        if (this.currentAsset.alternateAssetId == this.currentAsset.assetParentId) {
             this.isSaving = false;
             this.alertService.stopLoadingMessage();
-            this.alertService.showMessage("", `Expiration date cannot be earlier than Manufacturer date.`, MessageSeverity.error);
+            this.alertService.showMessage("", `Asset Parent and Alternate Asset can't be same.`, MessageSeverity.error);
             return;
         }
-        if (this.currentAsset.expirationDate < this.currentAsset.entryDate) {
-            this.isSaving = false;
-            this.alertService.stopLoadingMessage();
-            this.alertService.showMessage("", `Expiration date cannot be later than entry date.`, MessageSeverity.error);
-            return;
+        if (this.currentAsset.manufacturedDate != null &&  this.currentAsset.expirationDate != null) {
+            if (this.currentAsset.manufacturedDate > this.currentAsset.expirationDate) {
+                this.isSaving = false;
+                this.alertService.stopLoadingMessage();
+                this.alertService.showMessage("", `Expiration date cannot be earlier than Manufacturerd Date.`, MessageSeverity.error);
+                return;
+            }
         }
-        if (this.currentAsset.manufacturedDate < this.currentAsset.entryDate) {
-            this.isSaving = false;
-            this.alertService.stopLoadingMessage();
-            this.alertService.showMessage("", `Manufactured date cannot be later than entry date.`, MessageSeverity.error);
-            return;
+        if (this.currentAsset.expirationDate != null && this.currentAsset.entryDate != null) {
+            console.log(this.currentAsset.expirationDate , this.currentAsset.entryDate);
+            if (this.currentAsset.expirationDate < this.currentAsset.entryDate) {
+                this.isSaving = false;
+                this.alertService.stopLoadingMessage();
+                this.alertService.showMessage("", `Expiration date cannot be later than entry date.`, MessageSeverity.error);
+                return;
+            }
+        }
+        if (this.currentAsset.manufacturedDate != null && this.currentAsset.entryDate != null) {
+            console.log(this.currentAsset.entryDate, this.currentAsset.manufacturedDate);
+            if (this.currentAsset.entryDate < this.currentAsset.manufacturedDate) {
+                this.isSaving = false;
+                this.alertService.stopLoadingMessage();
+                this.alertService.showMessage("", `Entry date cannot be later than Manufatured date.`, MessageSeverity.error);
+                return;
+            }
         }
         //&& this.currentAsset.buisinessUnitId && this.currentAsset.departmentId && this.currentAsset.divisionId
         if ((this.currentAsset.assetId && this.currentAsset.name && this.currentAsset.assetIntangibleTypeId)
             || (this.currentAsset.assetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
                 && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId
-                && this.currentAsset.companyId 
-                && this.currentAsset.assetId != this.currentAsset.assetParentId && this.currentAsset.manufacturedDate < this.currentAsset.expirationDate
-            && this.currentAsset.expirationDate > this.currentAsset.entryDate && this.currentAsset.manufacturedDate > this.currentAsset.entryDate)) {
+                && this.currentAsset.companyId)) {
             this.isSaving = true;
 
             if (!this.currentAsset.assetRecordId) {

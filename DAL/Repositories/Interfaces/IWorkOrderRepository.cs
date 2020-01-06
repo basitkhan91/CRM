@@ -151,5 +151,7 @@ namespace DAL.Repositories.Interfaces
 
         object GetWorkOrderPartDetailsById(long workOrderPartNoId);
         object GetWorkOrderStageandStatus();
-    }
+		object GetNTESTDValues(long itemMasterId, string workScope);
+
+	}
 }

@@ -92,7 +92,19 @@
               </div>
       
               <div style="margin-top:15px;">
-              <p-table [value]="sales" class="rpo-table-cstm rro-table-cstm" [resizableColumns]="true" [columns]="columns" [scrollable]="true" [style]="{ width: '100%' }">
+              <p-table #dt [value]="sales" class="rpo-table-cstm rro-table-cstm"
+                    [first]="0"
+                    [rows]="pageSize"
+                    [paginator]="showPaginator"
+                    [pageLinks]="3"
+                    [rowsPerPageOptions]="[10, 20, 50, 100]"
+                    [columns]="columns"
+                    [lazy]="true"
+                    (onLazyLoad)="loadData($event)"
+                    [resizableColumns]="true"
+                    [reorderableColumns]="true"
+                    [totalRecords]="totalRecords"
+                    [scrollable]="true"  [style]="{ width: '100%' }">
                   <ng-template pTemplate="colgroup" let-columns>
                             <colgroup>
                               <col *ngFor="let col of columns" style="width:200px" />
@@ -100,6 +112,15 @@
                   </ng-template> 
             <ng-template pTemplate="header">
               <tr>
+                <th
+                    *ngFor="let col of columns"
+                    pResizableColumn
+                    pReorderableColumn
+                    [pSortableColumn]="col.field">
+                    {{ col.header }}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+                <!--
                 <th pResizableColumn>Quote number</th>
                 <th pResizableColumn>Quote Date</th>
                 <th pResizableColumn>Version Number</th>
@@ -109,10 +130,17 @@
                 <th pResizableColumn>Sales Price</th>
                 <th pResizableColumn>Cost</th>
                 <th pResizableColumn>numberOfItems</th>
+                -->
                 <th>
                   &nbsp;
                 </th>
               </tr>
+              <tr>
+                    <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
+                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+                    </th>
+                    <th style="width:200px;position:sticky"></th>
+                </tr>
             </ng-template>
             <ng-template pTemplate="body" let-sale>
               <tr>
@@ -120,7 +148,7 @@
                     {{ sale.salesQuoteId }}
                 </td>
                 <td>
-                    {{ sale.quoteDate }}
+                    {{ sale.quoteDate| date: 'MM/dd/yyyy' }}
                 </td>
                 <td>
                     {{ sale.versionNumber }}
@@ -204,417 +232,147 @@
       </div>
 
       <div class="modal-body" *ngIf="salesQuote">
-        <div class="panel-group" id="accordion">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <div>
-                            <button type="button" class="btn btn-success" (click)="dblExpandAllCustomerDetailsModel()">Open All</button>
-                            <button type="button" class="btn btn-info" (click)="dblCloseAllCustomerDetailsModel()">Close All</button>
-
-                        </div>
-                        <br>
-                        <a class="collapsed" data-toggle="collapse" href="#step11">General Info</a>
-                    </h4>
-                </div>
-                <div id="step11" class="panel-collapse collapse in">
-                    <div class="panel-body">
-                        <div class="modal-content">
-                            <div class="table-responsive default-bg clear">
-                                <div class="col-sm-4">
-                                    <p>
-                                        <span class="label"><b>Quote Type: </b></span><span class="value">
-                                            <select name="quoteType" [(ngModel)]="salesQuote.quoteTypeId" required disabled>
-                                                <option *ngFor="let type of salesQuote.salesQuoteTypes" [ngValue]="type.id">{{ type.name }}</option>
-                                              </select>
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>Open Date: </b></span><span class="value">
-                                            {{
-              salesQuote.openDate
-                                            }}
-                                        </span>
-                                    </p>
-
-                                    <p>
-                                        <span class="label"><b>Cust Request Date: </b></span><span class="value">
-                                            {{
-              salesQuote.customerRequestDate
-                                            }}
-                                        </span>
-                                    </p>
-
-                                    <p>
-                                        <span class="label"><b>Promised Date : </b></span><span class="value">
-                                            {{
-              salesQuote.promisedDate
-                                            }}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>Estimated Ship Date : </b></span><span class="value">
-                                            {{
-              salesQuote.estimatedShipDate
-                                            }}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>Valid For (Days) : </b></span><span class="value">
-                                            {{
-              salesQuote.validForDays
-                                            }}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>Quote Exp Date : </b></span><span class="value">
-                                            {{
-              salesQuote.quoteExpireDate
-                                            }}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>Priority : </b></span><span class="value">
-                                            <select name="priority" [(ngModel)]="salesQuote.priorityId" disabled>
-                                                <option *ngFor="let p of salesQuote.priorities" [ngValue]="p.priorityId">{{ p.description }}</option>
-                                              </select>
-                                        </span>
-                                    </p>
-                                </div>
-                                <div class="col-sm-4">
-                                    <p>
-                                        <span class="label"><b>Account Type : </b></span><span class="value">
-                                            <select name="quoteType" required [(ngModel)]="salesQuote.accountTypeId" disabled>
-                                                <option *ngFor="let accountType of accountTypes" [ngValue]="accountType.customerTypeId">{{ accountType.description }}</option>
-                                            </select>
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>Customer Name: </b></span><span class="value">
-                                            {{
-              salesQuote.customerName
-                                            }}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>Customer Code: </b></span><span class="value">
-                                            {{
-              salesQuote.customerCode
-                                            }}
-                                        </span>
-                                    </p>
-
-
-                                    <p>
-                                        <span class="label"><b>Customer Reference : </b></span><span class="value">
-                                            {{
-              salesQuote.customerReferenceName
-                                            }}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>Contract Reference : </b></span><span class="value">
-                                            {{
-              salesQuote.contractReferenceName
-                                            }}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>Probibility : </b></span><span class="value">
-                                            <select name="probability" [(ngModel)]="salesQuote.probabilityId" disabled>
-                                                <option *ngFor="let p of percents" [ngValue]="p.value">{{ p.label }}</option> 
-                                              </select>
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>Lead Source : </b></span><span class="value">
-                                            <select name="leadSource" [(ngModel)]="salesQuote.leadSourceId" disabled>
-                                                <option *ngFor="let ls of salesQuote.leadSources" [ngValue]="ls.id">{{ ls.name }}</option>
-                                            </select>
-                                        </span>
-                                    </p>
-
-                                </div>
-                                    <div class="col-sm-4">
-                                    <p>
-                                        <span class="label"><b>Credit Limit &amp; terms: </b></span><span class="value">
-                                            <div class="col-md-5">
-                                                <input type="text" pInputText name="creditLimit" [(ngModel)]="salesQuote.creditLimit" disabled/>
-                                              </div>
-                                              <div class="col-md-7">
-                                                <select name="quoteType" [(ngModel)]="salesQuote.creditLimitTermsId" disabled>
-                                                  <option *ngFor="let ct of creditTerms" [ngValue]="ct.value">{{ ct.label }}</option>
-                                                </select>
-                                              </div>
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>Restrict PMA: </b></span><span class="value">
-                                            {{
-              salesQuote.restrictPMA
-                                            }}
-                                        </span>
-                                    </p>
-                                    <p>
-                                      <span class="label"><b>Restrict DER: </b></span><span class="value">
-                                          {{
-            salesQuote.restrictDER
-                                          }}
-                                      </span>
-                                  </p>
-
-                                    <p>
-                                        <span class="label"><b>Approved Date: </b></span><span class="value">
-                                            {{
-              salesQuote.approvedDate
-                                            }}
-                                        </span>
-                                    </p>
-
-                                    <p>
-                                        <span class="label"><b>Currency: </b></span><span class="value">
-                                            <select name="quoteType" required [(ngModel)]="salesQuote.currencyId" disabled>
-                                                <option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId" disabled>
-                                                  {{currencyName.symbol}}
-                                                  </option>
-                                              </select>
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>Warnings: </b></span><span class="value">
-                                            <select name="quoteType" required [(ngModel)]="salesQuote.warningId" disabled>
-                                                <option *ngFor="let customerWarning of customerWarningData" [ngValue]="customerWarning.customerWarningId">
-                                                  {{customerWarning.warningMessage}}
-                                                  </option>
-                                              </select>
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>memo: </b></span><span class="value">
-                                            {{
-              salesQuote.memo
-                                            }}
-                                        </span>
-                                    </p>
-                                    <p>
-                                      <span class="label"><b>Notes: </b></span><span class="value">
-                                          {{
-            salesQuote.notes
-                                          }}
-                                      </span>
-                                  </p>
-                                  
-                                   
-                                   
-                                </div>
-                             
+            <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive default-bg clear">
+                            <div class="col-sm-4">
+                                <p><span class="label"><b>Quote Num: </b></span><span class="value">{{salesQuote.salesQuoteId ? salesQuote.salesQuoteId : '-'}}</span></p>
+                                <p><span class="label"><b>Open Date: </b></span><span class="value">{{salesQuote.openDate | date: 'MM/dd/yyyy'}}</span></p>
+                                <p><span class="label"><b>Cust Request Date: </b></span><span class="value">{{salesQuote.customerRequestDate | date: 'MM/dd/yyyy'}}</span></p>
+                                <p><span class="label"><b>Promised Date: </b></span><span class="value">{{salesQuote.customerPromisedDate | date: 'MM/dd/yyyy'}}</span></p>
+                                <p><span class="label"><b>Estimated Ship Date: </b></span><span class="value">{{salesQuote.estimatedShipDate | date: 'MM/dd/yyyy'}}</span></p>
+                                <p><span class="label"><b>Valid For (Days): </b></span><span class="value">{{salesQuote.validForDays ? salesQuote.validForDays : '-'}}</span></p>                                
+                                <p><span class="label"><b>Quote Exp Date: </b></span><span class="value">{{salesQuote.quoteExpiryDate | date: 'MM/dd/yyyy'}}</span></p>
+                                <p> <span class="label"><b>Priority : </b></span><span class="value">
+                                        <select name="priority" [(ngModel)]="salesQuote.priorityId" disabled>
+                                            <option *ngFor="let p of salesQuote.priorities" [ngValue]="p.priorityId">{{ p.description }}</option>
+                                          </select>
+                                    </span></p>
+                               
+                                
                             </div>
+                            <div class="col-sm-4">
+                                    <p>
+                                            <span class="label"><b>Account Type : </b></span><span class="value">
+                                                <select name="quoteType" required [(ngModel)]="salesQuote.accountTypeId" disabled>
+                                                    <option *ngFor="let accountType of accountTypes" [ngValue]="accountType.customerTypeId">{{ accountType.description }}</option>
+                                                </select>
+                                            </span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Customer Name: </b></span><span class="value">
+                                                {{
+                  salesQuote.customerName
+                                                }}
+                                            </span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Customer Code: </b></span><span class="value">
+                                                {{
+                  salesQuote.customerCode
+                                                }}
+                                            </span>
+                                        </p>
+    
+    
+                                        <p>
+                                            <span class="label"><b>Customer Reference : </b></span><span class="value">
+                                                {{
+                  salesQuote.customerReferenceName
+                                                }}
+                                            </span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Contract Reference : </b></span><span class="value">
+                                                {{
+                  salesQuote.contractReferenceName
+                                                }}
+                                            </span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Probibility : </b></span><span class="value">
+                                                <select name="probability" [(ngModel)]="salesQuote.probabilityId" disabled>
+                                                    <option *ngFor="let p of percents" [ngValue]="p.value">{{ p.label }}</option> 
+                                                  </select>
+                                            </span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Lead Source : </b></span><span class="value">
+                                                <select name="leadSource" [(ngModel)]="salesQuote.leadSourceId" disabled>
+                                                    <option *ngFor="let ls of salesQuote.leadSources" [ngValue]="ls.id">{{ ls.name }}</option>
+                                                </select>
+                                            </span>
+                                        </p>
+                            </div>
+                            <div class="col-sm-4">
+                                    <p>
+                                            <span class="label"><b>Credit Limit &amp; terms: </b></span><span class="value">
+                                                <div class="col-md-5">
+                                                    <input type="text" pInputText name="creditLimit" [(ngModel)]="salesQuote.creditLimit" disabled/>
+                                                  </div>
+                                                  <div class="col-md-7">
+                                                    <select name="quoteType" [(ngModel)]="salesQuote.creditLimitTermsId" disabled>
+                                                      <option *ngFor="let ct of creditTerms" [ngValue]="ct.value">{{ ct.label }}</option>
+                                                    </select>
+                                                  </div>
+                                            </span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Restrict PMA: </b></span><span class="value">
+                                                {{
+                  salesQuote.restrictPMA
+                                                }}
+                                            </span>
+                                        </p>
+                                        <p>
+                                          <span class="label"><b>Restrict DER: </b></span><span class="value">
+                                              {{
+                salesQuote.restrictDER
+                                              }}
+                                          </span>
+                                      </p>
+                                      <p><span class="label"><b>Open Date: </b></span><span class="value">{{salesQuote.approvedDate | date: 'MM/dd/yyyy'}}</span></p>
+                                        
+                                        <p>
+                                            <span class="label"><b>Currency: </b></span><span class="value">
+                                                <select name="quoteType" required [(ngModel)]="salesQuote.currencyId" disabled>
+                                                    <option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId" disabled>
+                                                      {{currencyName.symbol}}
+                                                      </option>
+                                                  </select>
+                                            </span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Warnings: </b></span><span class="value">
+                                                <select name="quoteType" required [(ngModel)]="salesQuote.warningId" disabled>
+                                                    <option *ngFor="let customerWarning of customerWarningData" [ngValue]="customerWarning.customerWarningId">
+                                                      {{customerWarning.warningMessage}}
+                                                      </option>
+                                                  </select>
+                                            </span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>memo: </b></span><span class="value">
+                                                {{
+                  salesQuote.memo
+                                                }}
+                                            </span>
+                                        </p>
+                                        <p>
+                                          <span class="label"><b>Notes: </b></span><span class="value">
+                                              {{
+                salesQuote.notes
+                                              }}
+                                          </span>
+                                      </p>
+                            </div>
+                       
                         </div>
                     </div>
-                </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step12">Approvers</a> </h4>
-                    </div>
-                    <div id="step12" class="panel-collapse  collapse">
-                        <div class="panel-body">
-                            <div class="col-sm-12">
-                                <div class="row" *ngFor="let approver of approvers; let i = index">
-                                    <div class="col-md-1">
-                                      <label>Approver {{ i+1 }}</label>
-                                    </div>
-                                    <div class="col-md-2">
-                                      <select [(ngModel)]="approver.employeeId" name="shipToSiteName" disabled>
-                                          <option *ngFor="let employee of allEmployeeinfo" [ngValue]="employee.employeeId">
-                                            {{employee.firstName}}
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-8">
-                                      
-                                    </div>
-                                  </div>
-
-                              </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step13">Address</a> </h4>
-                    </div>
-                    <div id="step13" class="panel-collapse  collapse">
-                        <div class="panel-body">
-                            <div class="col-sm-12">
-                                <div class="col-sm-6">
-                                   
-                                    <p>
-                                        <span class="label"><b>shipToSiteName: </b></span><span class="value">
-                                            {{
-              salesOrderQuote.shipToSiteName
-                                            }}
-                                        </span>
-                                    </p>
-
-                                    <p>
-                                        <span class="label"><b>Address 1: </b></span><span class="value">
-                                            {{
-              salesOrderQuote.shipToAddress1
-                                            }}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>Address 2: </b></span><span class="value">
-                                            {{
-              salesOrderQuote.shipToAddress2
-                                            }}
-                                        </span>
-                                    </p>
-
-                                    <p>
-                                        <span class="label"><b>City: </b></span><span class="value">
-                                            {{
-              salesOrderQuote.shipToCity
-                                            }}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>State/Province: </b></span><span class="value">
-                                            {{
-              salesOrderQuote.shipToState
-                                            }}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>Postal: </b></span><span class="value">
-                                            {{
-              salesOrderQuote.shipToPostalCode
-                                            }}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>Country: </b></span><span class="value">
-                                            {{
-              salesOrderQuote.shipToCountry
-                                            }}
-                                        </span>
-                                    </p>
-
-                                    <p>
-                                        <span class="label"><b>shipVia: </b></span><span class="value">
-                                            {{
-              salesOrderQuote.shipViaName
-                                            }}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>Shipping ACCT INFO: </b></span><span class="value">
-                                            {{
-              salesOrderQuote.shipViaShippingAccountInfo
-                                            }}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>Shipping URL: </b></span><span class="value">
-                                            {{
-              salesOrderQuote.shipViaShippingURL
-                                            }}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>shippingId: </b></span><span class="value">
-                                            {{
-              salesOrderQuote.shippingId
-                                            }}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>Memo: </b></span><span class="value">
-                                            {{
-              salesOrderQuote.shipViaMemo
-                                            }}
-                                        </span>
-                                    </p>
-                                   
-                                   
-                                </div>
-                                <div class="col-sm-6">
-                                   
-                                    <p>
-                                        <span class="label"><b>billToSiteName: </b></span><span class="value">
-                                            {{
-              salesOrderQuote.billToSiteName
-                                            }}
-                                        </span>
-                                    </p>
-
-                                    <p>
-                                        <span class="label"><b>Address 1: </b></span><span class="value">
-                                            {{
-              salesOrderQuote.billToAddress1
-                                            }}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>Address 2: </b></span><span class="value">
-                                            {{
-              salesOrderQuote.billToAddress2
-                                            }}
-                                        </span>
-                                    </p>
-
-                                    <p>
-                                        <span class="label"><b>City: </b></span><span class="value">
-                                            {{
-              salesOrderQuote.billToCity
-                                            }}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>State/Province: </b></span><span class="value">
-                                            {{
-              salesOrderQuote.billToState
-                                            }}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>Postal: </b></span><span class="value">
-                                            {{
-              salesOrderQuote.billToPostalCode
-                                            }}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>Country: </b></span><span class="value">
-                                            {{
-              salesOrderQuote.billToCountry
-                                            }}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span class="label"><b>Memo: </b></span><span class="value">
-                                            {{
-              salesOrderQuote.billToMemo
-                                            }}
-                                        </span>
-                                    </p>
-                                   
-                                   
-                                </div>
-
-                              </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step14">Parts</a> </h4>
-                    </div>
-                    <div id="step14" class="panel-collapse  collapse">
-                        <div class="panel-body">
-                            <div class="col-sm-12">
-                                <p-table [value]="selectedParts" class="rpo-table-cstm rro-table-cstm" [columns]="partColumns" [scrollable]="true" [style]="{ width: '100%' }">
+            </div>
+            <p-tabView class="pas-tabview">
+                    <p-tabPanel header="Parts List">
+                            <p-table [value]="selectedParts" class="rpo-table-cstm rro-table-cstm" [columns]="partColumns" [scrollable]="true" [style]="{ width: '100%' }">
                                     <ng-template pTemplate="colgroup" let-columns>
                                         <colgroup>
                                           <col *ngFor="let col of partColumns" style="width:200px" />
@@ -724,16 +482,79 @@
                                         </tr>
                                       </ng-template>
                                      
-                                    </p-table>
-                              </div>
-                        </div>
-                    </div>
-                </div>
-                              
-      
-
-            </div>
-            </div>
+                                    </p-table>	
+                        </p-tabPanel>
+                        <p-tabPanel header="Approve">
+                                <div class="approver-tab-cstm">
+                                    <h5 class="po-head">Approvers List</h5>
+                                    <div class="form-row" *ngFor="let approver of approvers" style="margin-top: 15px;">
+                                        <div class="col-md-3">
+                                            <label>Approver {{approver.level}}</label>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="approver-details-cstm">
+                                                <p><b>Name: </b> <select [(ngModel)]="approver.employeeId" name="shipToSiteName" disabled>
+                                                        <option *ngFor="let employee of allEmployeeinfo" [ngValue]="employee.employeeId">
+                                                          {{employee.firstName}}
+                                                          </option>
+                                                      </select></p>
+                                                <p><b>Code: </b> <select [(ngModel)]="approver.employeeId" name="shipToSiteName" disabled>
+                                                        <option *ngFor="let employee of allEmployeeinfo" [ngValue]="employee.employeeId">
+                                                          {{employee.employeeCode}}
+                                                          </option>
+                                                      </select></p>
+                                                <p><b>Email: </b> <select [(ngModel)]="approver.employeeId" name="shipToSiteName" disabled>
+                                                        <option *ngFor="let employee of allEmployeeinfo" [ngValue]="employee.employeeId">
+                                                          {{employee.email}}
+                                                          </option>
+                                                      </select></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                        </p-tabPanel>
+                        <p-tabPanel header="Address">
+                                <div class="table-responsive default-bg clear">
+                                    <div class="col-sm-4">
+                                        <h5 class="po-head">Ship To</h5>
+                                        <p><span class="label"><b>User Type: </b></span><span class="value">{{salesOrderQuote.shipToUserType ? salesOrderQuote.shipToUserType : '-'}}</span></p>
+                                        <p><span class="label"><b>User: </b></span><span class="value">{{salesOrderQuote.shipToUser ? salesOrderQuote.shipToUser : '-'}}</span></p>
+                                        <p><span class="label"><b>Site Name: </b></span><span class="value">{{salesOrderQuote.shipToSiteName ? salesOrderQuote.shipToSiteName : '-'}}</span></p>
+                                        <p><span class="label"><b>Address1: </b></span><span class="value">{{salesOrderQuote.shipToAddress1 ? salesOrderQuote.shipToAddress1 : '-'}}</span></p>
+                                        <p><span class="label"><b>Address2: </b></span><span class="value">{{salesOrderQuote.shipToAddress2 ? salesOrderQuote.shipToAddress2 : '-'}}</span></p>
+                                        <p><span class="label"><b>Address3: </b></span><span class="value">{{salesOrderQuote.shipToAddress3 ? salesOrderQuote.shipToAddress3 : '-'}}</span></p>
+                                        <p><span class="label"><b>City: </b></span><span class="value">{{salesOrderQuote.shipToCity ? salesOrderQuote.shipToCity : '-'}}</span></p>
+                                        <p><span class="label"><b>Primary State/Province: </b></span><span class="value">{{salesOrderQuote.shipToState ? salesOrderQuote.shipToState : '-'}}</span></p>
+                                        <p><span class="label"><b>Postal: </b></span><span class="value">{{salesOrderQuote.shipToPostalCode ? salesOrderQuote.shipToPostalCode : '-'}}</span></p>
+                                        <p><span class="label"><b>Country: </b></span><span class="value">{{salesOrderQuote.shipToCountry ? salesOrderQuote.shipToCountry : '-'}}</span></p>
+                                        <p><span class="label"><b>Contact Name: </b></span><span class="value">{{salesOrderQuote.shipToContact ? salesOrderQuote.shipToContact : '-'}}</span></p>
+                                        <p><span class="label"><b>Memo: </b></span><span class="value">{{salesOrderQuote.shipToMemo ? salesOrderQuote.shipToMemo : '-'}}</span></p>
+                                        <p><span class="label"><b>Ship Via: </b></span><span class="value">{{salesOrderQuote.shipVia ? salesOrderQuote.shipVia : '-'}}</span></p>
+                                        <p><span class="label"><b>Shipping Cost: </b></span><span class="value">{{salesOrderQuote.shippingCost ? salesOrderQuote.shippingCost : '-'}}</span></p>
+                                        <p><span class="label"><b>Handling Cost: </b></span><span class="value">{{salesOrderQuote.handlingCost ? salesOrderQuote.handlingCost : '-'}}</span></p>
+                                        <p><span class="label"><b>Shipping Acct Num: </b></span><span class="value">{{salesOrderQuote.shippingAccountNo ? salesOrderQuote.shippingAccountNo : '-'}}</span></p>
+                                        <p><span class="label"><b>Shipping Id (AWB): </b></span><span class="value">{{salesOrderQuote.shippingId ? salesOrderQuote.shippingId : '-'}}</span></p>
+                                        <p><span class="label"><b>URL: </b></span><span class="value">{{salesOrderQuote.shippingURL ? salesOrderQuote.shippingURL : '-'}}</span></p>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <h5 class="po-head">Bill To</h5>
+                                        <p><span class="label"><b>User Type: </b></span><span class="value">{{salesOrderQuote.billToToUserType ? salesOrderQuote.billToToUserType : '-'}}</span></p>
+                                        <p><span class="label"><b>User: </b></span><span class="value">{{salesOrderQuote.billToUser ? salesOrderQuote.billToUser : '-'}}</span></p>
+                                        <p><span class="label"><b>Site Name: </b></span><span class="value">{{salesOrderQuote.billToSiteName ? salesOrderQuote.billToSiteName : '-'}}</span></p>
+                                        <p><span class="label"><b>Address1: </b></span><span class="value">{{salesOrderQuote.billToAddress1 ? salesOrderQuote.billToAddress1 : '-'}}</span></p>
+                                        <p><span class="label"><b>Address2: </b></span><span class="value">{{salesOrderQuote.billToAddress2 ? salesOrderQuote.billToAddress2 : '-'}}</span></p>
+                                        <p><span class="label"><b>Address3: </b></span><span class="value">{{salesOrderQuote.billToAddress3 ? salesOrderQuote.billToAddress3 : '-'}}</span></p>
+                                        <p><span class="label"><b>City: </b></span><span class="value">{{salesOrderQuote.billToCity ? salesOrderQuote.billToCity : '-'}}</span></p>
+                                        <p><span class="label"><b>Primary State/Province: </b></span><span class="value">{{salesOrderQuote.billToState ? salesOrderQuote.billToState : '-'}}</span></p>
+                                        <p><span class="label"><b>Postal: </b></span><span class="value">{{salesOrderQuote.billToPostalCode ? salesOrderQuote.billToPostalCode : '-'}}</span></p>
+                                        <p><span class="label"><b>Country: </b></span><span class="value">{{salesOrderQuote.billToCountry ? salesOrderQuote.billToCountry : '-'}}</span></p>
+                                        <p><span class="label"><b>Contact Name: </b></span><span class="value">{{salesOrderQuote.billToContact ? salesOrderQuote.billToContact : '-'}}</span></p>
+                                        <p><span class="label"><b>Memo: </b></span><span class="value">{{salesOrderQuote.billToMemo ? salesOrderQuote.billToMemo : '-'}}</span></p>
+                                    </div>
+                                </div>
+                            </p-tabPanel>
+            </p-tabView>
+  
       </div>
       
   

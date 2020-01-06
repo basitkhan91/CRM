@@ -42,6 +42,7 @@ export class VendorService {
     listCollection: any;
     generalCollection: any;
     contactCollection: any;
+    capesCollection: any;
     vendorForPoCollection: any;
     financeCollection: any;
     ShowPtab: boolean = true;
@@ -89,9 +90,9 @@ export class VendorService {
             this.actionEndpoint.getvendorEndpoint<any[]>());
     }
 
-    getVendorCapabilityList(status) {
+    getVendorCapabilityList(status, vendorId) {
         return Observable.forkJoin(
-            this.actionEndpoint.getvendorCapabilityListEndpoint<any[]>(status));
+            this.actionEndpoint.getvendorCapabilityListEndpoint<any[]>(status, vendorId));
     }
 
 
@@ -808,6 +809,10 @@ export class VendorService {
       GetUpdateVendorBillingAddressStatus(billingAddressId, status, updatedBy)
       {
         return this.actionEndpoint.GetUpdateVendorBillingAddressStatusEndpoint(billingAddressId,status, updatedBy);
+      }
+
+      getVendorCapabilityByVendorId(vendorId){
+        return this.actionEndpoint.getVendorCapabilityByVendorId(vendorId);
       }
 
       

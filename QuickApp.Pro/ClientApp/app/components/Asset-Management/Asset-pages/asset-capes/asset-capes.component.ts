@@ -1,11 +1,13 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef, Inject } from '@angular/core';
 import { ConditionService } from '../../../../services/condition.service';
 import { Condition } from '../../../../models/condition.model';
 import { fadeInOut } from '../../../../services/animations';
 import { MessageSeverity, AlertService } from '../../../../services/alert.service';
-import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
-import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
+import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog, SELECT_MULTIPLE_PANEL_PADDING_X } from '@angular/material';
+import { DOCUMENT } from '@angular/common';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { MenuItem } from 'primeng/api';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -14,12 +16,14 @@ import { LegalEntityService } from '../../../../services/legalentity.service';
 import { AtaMainService } from '../../../../services/atamain.service';
 import { ATAMain } from '../../../../models/atamain.model';
 import { ItemMasterCapabilitiesModel } from '../../../../models/itemMasterCapabilities.model';
-//import { Router } from '@angular/router';
 import { AssetService } from '../../../../services/asset/Assetservice';
 import { DashNumberService } from '../../../../services/dash-number/dash-number.service';
 import { AircraftModel } from "../../../../models/aircraft-model.model";
 import { CommonService } from '../../../../services/common.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AircraftModelService } from '../../../../services/aircraft-model/aircraft-model.service';
+import { AircraftManufacturerService } from '../../../../services/aircraft-manufacturer/aircraftManufacturer.service';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
     selector: 'app-asset-capes',
@@ -61,7 +65,8 @@ export class AssetCapesComponent implements OnInit {
     allATAMaininfo1: ATAMain[];
     assetRecordId: number = 0;
     selectedColumn: any;
-    selectedManufacturer: any = [];//To Store selected Aircraft Manufacturer Data
+    //selectedManufacturer: any = [];//To Store selected Aircraft Manufacturer Data
+    selectedManufacturer: any;
     selectedModel: any = [];//To Store selected Aircraft Modal Data
     capabilitiesForm: FormGroup;
     capabilityEditCollection: any[] = [];
@@ -87,9 +92,27 @@ export class AssetCapesComponent implements OnInit {
     currentRow: any;
     AssetId: any;
     static assetService;
+    aircraftData: any;
+    selectedDashnumber: any;
+    dashNumberList: any = [];
+    viewTable: boolean = false;
+    aircraftdata = [];
+    dashNumberUrl: any;
+    newDashnumValue: any = [];
+    selectAircraftManfacturer: any = [];
+    selectedAircraftModel: any = [];
+    selectedDashNumbers: any = [];
+    selectedATAchapter: any = [];
+    selectedAircraftId: any;
+    selectedModelId: any;
+    modelUnknown = false;
+    dashNumberUnknown = false;
+    newValue: any;
+    LoadValues: any[] = [];
 
-    constructor(private router: ActivatedRoute,private modalService: NgbModal, private alertService: AlertService, public itemMasterService: ItemMasterService, private route: Router,
-        private assetServices: AssetService, private dashnumberservices: DashNumberService, private formBuilder: FormBuilder,private commonservice: CommonService) {
+    constructor(private router: ActivatedRoute, private modalService: NgbModal, private alertService: AlertService, public itemMasterService: ItemMasterService, private route: Router,
+        private assetServices: AssetService, private dashnumberservices: DashNumberService, private formBuilder: FormBuilder, private commonservice: CommonService
+        , private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService) {
 
         this.AssetId = this.router.snapshot.params['id'];
         if (this.assetServices.listCollection == undefined) {
@@ -120,35 +143,36 @@ export class AssetCapesComponent implements OnInit {
 
     }
 
-    capabilityForm: any ={
-        selectedCap:"",CapabilityTypeId: 0, selectedPartId: [], selectedAircraftDataModels: [],
-        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: [],selectedDashNumbers2: []
+    capabilityForm: any = {
+        selectedCap: "", CapabilityTypeId: 0, selectedPartId: [], selectedAircraftDataModels: [],
+        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: [], selectedDashNumbers2: [],
+        modelUnknown: false
     };
 
-  /*  capabilityTypeData: any = [{
-        CapabilityTypeId: 1, Description: 'Manufacturing', formArrayName: 'mfgForm', selectedPartId: [], selectedAircraftDataModels: [],
-        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
-    },
-    {
-        CapabilityTypeId: 2, Description: 'Overhaul', formArrayName: 'overhaulForm', selectedPartId: [], selectedAircraftDataModels: []
-        , selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
-    },
-    {
-        CapabilityTypeId: 3, Description: 'Distribution', formArrayName: 'distributionForm', selectedPartId: [], selectedAircraftDataModels: [],
-        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
-    },
-    {
-        CapabilityTypeId: 4, Description: 'Certification', formArrayName: 'certificationForm', selectedPartId: [], selectedAircraftDataModels: [],
-        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
-    },
-    {
-        CapabilityTypeId: 5, Description: 'Repair', formArrayName: 'repairForm', selectedPartId: [], selectedAircraftDataModels: [],
-        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
-    },
-    {
-        CapabilityTypeId: 6, Description: 'Exchange', formArrayName: 'exchangeForm', selectedPartId: [], selectedAircraftDataModels: [],
-        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
-    }];*/
+    /*  capabilityTypeData: any = [{
+          CapabilityTypeId: 1, Description: 'Manufacturing', formArrayName: 'mfgForm', selectedPartId: [], selectedAircraftDataModels: [],
+          selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
+      },
+      {
+          CapabilityTypeId: 2, Description: 'Overhaul', formArrayName: 'overhaulForm', selectedPartId: [], selectedAircraftDataModels: []
+          , selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
+      },
+      {
+          CapabilityTypeId: 3, Description: 'Distribution', formArrayName: 'distributionForm', selectedPartId: [], selectedAircraftDataModels: [],
+          selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
+      },
+      {
+          CapabilityTypeId: 4, Description: 'Certification', formArrayName: 'certificationForm', selectedPartId: [], selectedAircraftDataModels: [],
+          selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
+      },
+      {
+          CapabilityTypeId: 5, Description: 'Repair', formArrayName: 'repairForm', selectedPartId: [], selectedAircraftDataModels: [],
+          selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
+      },
+      {
+          CapabilityTypeId: 6, Description: 'Exchange', formArrayName: 'exchangeForm', selectedPartId: [], selectedAircraftDataModels: [],
+          selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: []
+      }];*/
 
     ngOnInit(): void {
         this.capabilitiesForm = this.formBuilder.group({
@@ -159,9 +183,9 @@ export class AssetCapesComponent implements OnInit {
             repairForm: this.formBuilder.array([]),
             exchangeForm: this.formBuilder.array([])
         });
-       /* this.capabilityTypeData.forEach(element => {
-            this.resetFormArray(element);
-        });*/
+        /* this.capabilityTypeData.forEach(element => {
+             this.resetFormArray(element);
+         });*/
         this.AssetId = this.router.snapshot.params['id'];
         if (this.assetServices.listCollection == null) {
             this.GetAssetData(this.AssetId);
@@ -170,7 +194,7 @@ export class AssetCapesComponent implements OnInit {
         this.ptnumberlistdata();
         this.aircraftManfacturerData();
         this.loadCapesData();
-        this.manufacturerdata();
+        //this.manufacturerdata();
         this.getAllDashNumbers();
         this.getCapabilityTypeData();
     }
@@ -181,6 +205,13 @@ export class AssetCapesComponent implements OnInit {
 
         })
     }
+    colaircraft: any[] = [
+        { field: 'CapibilityType', header: 'Capability Type' },
+        { field: 'PartNumber', header: 'PN' },
+        { field: 'AircraftType', header: 'Aircraft Manufacturer' },
+        { field: 'AircraftModel', header: 'Models' },
+        { field: 'DashNumber', header: 'Dash Number' }
+    ];
     private GetAssetData(assetid) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -205,8 +236,6 @@ export class AssetCapesComponent implements OnInit {
                 this.local = this.assetServices.listCollection;
             }
             this.loadCapesData();
-            this.aircraftManfacturerData();
-            this.manufacturerdata();
         }
         else if (this.assetServices.generalCollection != null) {
             this.showLable = true;
@@ -216,13 +245,8 @@ export class AssetCapesComponent implements OnInit {
                 this.currentCapes = this.local;
             }
             this.loadCapesData();
-            this.aircraftManfacturerData();
-            this.manufacturerdata();
         }
         this.getAssetsList(); //calling for getting Asset List Data
-        this.ptnumberlistdata();
-        this.getAllDashNumbers();
-        this.getCapabilityTypeData();
     }
     private ptnumberlistdata() {
         this.alertService.startLoadingMessage();
@@ -338,12 +362,12 @@ export class AssetCapesComponent implements OnInit {
         if (this.capabilityTypeData) {
             for (let i = 0; i < this.capabilityTypeData.length; i++) {
                 if (event == this.capabilityTypeData[i].value) {
-                   this.capabilityForm.selectedCap = this.capabilityTypeData[i].label;
+                    this.capabilityForm.selectedCap = this.capabilityTypeData[i].label;
                 }
             }
         }
     }
-    
+
     partnmId(event) {
         //
         if (this.itemclaColl) {
@@ -454,6 +478,7 @@ export class AssetCapesComponent implements OnInit {
         this.completeAircraftManfacturerData = allWorkFlows;
 
         if (this.allaircraftInfo) {
+            this.manufacturerData = [];
             if (this.allaircraftInfo.length > 0) {
                 for (let i = 0; i < this.allaircraftInfo.length; i++)
                     this.manufacturerData.push(
@@ -465,14 +490,14 @@ export class AssetCapesComponent implements OnInit {
 
     }
     loadModalsForExistingRecords(capData) {
-        if (capData.selectedAircraftTypes.length > 0) {
+        if (capData.selectedAircraftTypes) {
 
-            let arr = [];
+            /*let arr = [];
             capData.selectedAircraftTypes.forEach(element => {
                 arr.push(element);
             });
-            var selectedvalues = arr.join(",");
-            this.itemMasterService.getAircraftTypes(selectedvalues).subscribe(
+            var selectedvalues = arr.join(",");*/
+            this.itemMasterService.getAircraftTypes(capData.selectedAircraftTypes).subscribe(
                 results => this.onDataLoadaircrafttypeSuccessfulForExisting(results[0], capData),
 
                 error => this.onDataLoadFailed(error)
@@ -537,10 +562,13 @@ export class AssetCapesComponent implements OnInit {
         if (this.itemMasterService.isEditMode == false) {
 
             //Adding for Aircraft manafacturer List Has empty then List Should be null
-            if (capData.selectedAircraftTypes.length > 0) {
-                var arr = capData.selectedAircraftTypes;
-                var selectedvalues = arr.join(",");
-                this.itemMasterService.getAircraftTypes(selectedvalues).subscribe(
+            console.log(capData.selectedAircraftTypes);
+            //if (capData.selectedAircraftTypes.length > 0) {
+            if (capData.selectedAircraftTypes) {
+                //var arr = capData.selectedAircraftTypes;
+                //var selectedvalues = arr.join(",");
+                //console.log(selectedvalues);
+                this.itemMasterService.getAircraftTypes(capData.selectedAircraftTypes).subscribe(
                     results => this.onDataLoadaircrafttypeSuccessful(results[0], capData),
                     error => this.onDataLoadFailed(error)
                 );
@@ -553,7 +581,7 @@ export class AssetCapesComponent implements OnInit {
 
     private onDataLoadaircrafttypeSuccessful(allWorkFlows: any[], capData) //getting Models Based on Manfacturer Selection
     {
-
+        //console.log(allWorkFlows);
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         capData.selectedAircraftDataModels = [];
@@ -608,7 +636,7 @@ export class AssetCapesComponent implements OnInit {
                 };
             });
             this.search_AircraftDashNumberList = dashNumberList;
-            
+
         });
     }
 
@@ -635,7 +663,7 @@ export class AssetCapesComponent implements OnInit {
                                 return {
                                     label: dashnumbers.dashNumber,
                                     value: dashnumbers.dashNumberId,
-                                    modelId:dashnumbers.aircraftModelId,
+                                    modelId: dashnumbers.aircraftModelId,
                                 };
                             });
                         });
@@ -819,7 +847,7 @@ export class AssetCapesComponent implements OnInit {
                 break;
         }
     }
-    checkIsExisted(capId,type, modal, myForm, capData) {
+    checkIsExisted(capId, type, modal, myForm, capData) {
         let itemExisted = false;
         myForm.controls.forEach(data => {
             if (data['controls']['capabilityTypeId'].value == capId && data['controls']['aircraftTypeId'].value == type && data['controls']['aircraftModelId'].value == modal) {
@@ -827,14 +855,15 @@ export class AssetCapesComponent implements OnInit {
                 data['controls']['isDelete'].setValue(false);
             } else {
                 let typeId = data['controls']['aircraftTypeId'].value;
-                let typeIndex = capData.selectedAircraftTypes.indexOf(typeId);
+                //let typeIndex = capData.selectedAircraftTypes.indexOf(typeId);
+                let typeIndex = capData.selectedAircraftTypes;
                 if (typeIndex == -1) {
-                  //  data['controls']['isDelete'].setValue(true);
+                    //  data['controls']['isDelete'].setValue(true);
                 }
                 let modaleId = data['controls']['aircraftModelId'].value;
                 let modalIndex = capData.selectedAircraftModelTypes.indexOf(modaleId);
                 if (modalIndex == -1) {
-                   // data['controls']['isDelete'].setValue(true);
+                    // data['controls']['isDelete'].setValue(true);
                 }
             }
 
@@ -849,11 +878,66 @@ export class AssetCapesComponent implements OnInit {
         this.modal.close();
     }
 
+    mapAircraftInformation(capdata) {
+        //console.log(this.selectedDashnumber)
+        this.viewTable = true;
+        // Selected All 
+        if (capdata.selectedAircraftTypes !== undefined && capdata.selectedAircraftModelTypes !== undefined && capdata.selectedDashNumbers !== undefined) {
+            this.dashnumberservices.getAllDashModels(capdata.selectedAircraftModelTypes, capdata.selectedAircraftTypes, capdata.selectedDashNumbers).subscribe(aircraftdata => {
+                const responseValue = aircraftdata;
+                this.aircraftData = responseValue.map(x => {
+                    return {
+                        AircraftType: x.aircraft,
+                        AircraftModel: x.model,
+                        DashNumber: x.dashNumber,
+                        AircraftModelId: x.modelid,
+                        DashNumberId: x.dashNumberId,
+                        CapibilityType: capdata.selectedCap,
+                        PartNumber: capdata.selectedPartId
+                    }
+                });
+                console.log(899, this.aircraftData);
+            })
+        }
+        this.addModels(capdata);
+        if (this.selectedAircraftId !== undefined && this.modelUnknown) {
+            this.aircraftData = [{
+                AircraftType: this.newValue,
+                AircraftModel: 'Unknown',
+                DashNumber: 'Unknown',
+                AircraftModelId: '',
+                DashNumberId: '',
+                Memo: '',
+                IsChecked: false
+            }]
+        }
+
+        if (this.selectedAircraftId !== undefined && this.selectedModelId !== undefined && this.dashNumberUnknown) {
+            console.log(915);
+            this.aircraftData = this.selectedModelId.map(x => {
+                return {
+                    AircraftType: this.newValue,
+                    AircraftModel: x.modelName,
+                    DashNumber: 'Unknown',
+                    AircraftModelId: x.aircraftModelId,
+                    DashNumberId: '',
+                    Memo: '',
+                    IsChecked: false
+                }
+            })
+        }
+
+
+
+        console.log(930, this.aircraftData);
+
+    }
+
 
     addModels(capData) {
         //this.capabilityTypeData.for
         let capbilitiesObj = new ItemMasterCapabilitiesModel;
-      // let selectedCap = capData.selectedCap;
+        // let selectedCap = capData.selectedCap;
         // this.resetFormArray(capData);
         capData.selectedManufacturer.forEach(element1 => {
             capbilitiesObj.assetRecordId = this.currentAsset.assetRecordId;
@@ -867,80 +951,94 @@ export class AssetCapesComponent implements OnInit {
             capbilitiesObj.AssetCapesId = this.AssetCapesId;
             capbilitiesObj.aircraftModelName = 'Undefined';
             capbilitiesObj.DashNumber = 'Undefined';
-           // capbilitiesObj.AircraftDashNumberId = capData.selectedDashNumbers;
+            // capbilitiesObj.AircraftDashNumberId = capData.selectedDashNumbers;
             console.log(capData);
 
-            if(capData.selectedModel.length==0){
+            if (capData.selectedModel.length == 0) {
                 let mfObj = this.formBuilder.group(capbilitiesObj);
                 this.mfgFormArray.push(mfObj);
-                    let mfgIndex = this.mfgFormArray.controls.length - 1;
-                    this.mfgFormArray.controls[mfgIndex]['buList'] = [];
-                    this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
-                    this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
+                let mfgIndex = this.mfgFormArray.controls.length - 1;
+                this.mfgFormArray.controls[mfgIndex]['buList'] = [];
+                this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
+                this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
             }
 
             capData.selectedModel.forEach(element2 => {
+                console.log(element2.aircraftTypeId, element1.value);
                 if (element2.aircraftTypeId == element1.value) {
                     capbilitiesObj.aircraftModelName = element2.label;
                     capbilitiesObj.aircraftModelId = element2.value;
 
-                    if(capData.selectedDashNumbers2.length==0){
+                    if (capData.selectedDashNumbers2.length == 0) {
                         let mfObj = this.formBuilder.group(capbilitiesObj);
-                        let mfgItemExisted = this.checkIsExisted(capData.CapabilityTypeId,element1.value, element2.value, this.mfgFormArray, capData);
+                        let mfgItemExisted = this.checkIsExisted(capData.CapabilityTypeId, element1.value, element2.value, this.mfgFormArray, capData);
                         if (mfgItemExisted == false) {
                             this.mfgFormArray.push(mfObj);
                             let mfgIndex = this.mfgFormArray.controls.length - 1;
                             this.mfgFormArray.controls[mfgIndex]['buList'] = [];
                             this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
                             this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
-    
+
                         }
                     }
-            
+
                     capData.selectedDashNumbers2.forEach(element3 => {
                         if (element3.modelId == element2.value) {
-        
+
                             capbilitiesObj.DashNumber = element3.label;
                             capbilitiesObj.AircraftDashNumberId = element3.value;
-                           
+
                             let index = capData.CapabilityTypeId - 1;
                             let mfObj = this.formBuilder.group(capbilitiesObj);
-                            let mfgItemExisted = this.checkIsExisted(capData.CapabilityTypeId,element1.value, element2.value, this.mfgFormArray, capData);
+                            let mfgItemExisted = this.checkIsExisted(capData.CapabilityTypeId, element1.value, element2.value, this.mfgFormArray, capData);
                             if (mfgItemExisted == false) {
                                 this.mfgFormArray.push(mfObj);
                                 let mfgIndex = this.mfgFormArray.controls.length - 1;
                                 this.mfgFormArray.controls[mfgIndex]['buList'] = [];
                                 this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
                                 this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
-        
+
                             }
-                           
-                        }else{
+
+                        } else {
                             let mfObj = this.formBuilder.group(capbilitiesObj);
-                            let mfgItemExisted = this.checkIsExisted(capData.CapabilityTypeId,element1.value, element2.value, this.mfgFormArray, capData);
+                            let mfgItemExisted = this.checkIsExisted(capData.CapabilityTypeId, element1.value, element2.value, this.mfgFormArray, capData);
                             if (mfgItemExisted == false) {
                                 this.mfgFormArray.push(mfObj);
                                 let mfgIndex = this.mfgFormArray.controls.length - 1;
                                 this.mfgFormArray.controls[mfgIndex]['buList'] = [];
                                 this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
                                 this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
-        
+
                             }
                         }
-        
+
                     });
-                   
+
                 }
 
             });
 
-           
+
 
         });
 
     }
 
-    
+    resetAircraftModelsorDashNumbers() {
+        if (this.modelUnknown) {
+            this.selectedModelId = undefined;
+            this.selectedDashnumber = undefined;
+
+        }
+        if (this.dashNumberUnknown) {
+
+            this.selectedDashnumber = undefined;
+
+        }
+
+    }
+
     openDelete(content2, row) {
 
         this.isEditMode = false;
@@ -951,7 +1049,7 @@ export class AssetCapesComponent implements OnInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-    
+
     removeAsset(): void {
         this.assetServices.removeCapesById(this.assetServices.CapeslistCollection.assetCapesId).subscribe(response => {
             this.alertService.showMessage("Success", `Asset Capes removed successfully.`, MessageSeverity.success);
@@ -985,17 +1083,51 @@ export class AssetCapesComponent implements OnInit {
                 break;
         }
     }
+    getAircraftModelByManfacturer(event) {
+        console.log(event.target.value);
+        this.newValue = event.target.value;
 
+        if (this.newValue) {
+            this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftId).subscribe(models => {
+
+                const responseValue = models[0];
+                this.LoadValues = responseValue.map(models => {
+                    return {
+                        label: models.modelName,
+                        value: models
+                    }
+                });
+
+            });
+            this.selectedModelId = undefined;
+            this.selectedDashnumber = undefined;
+        }
+    }
     manufacturerChange(event, capData) {
-        let selectedData = event.value;
+        //let selectedData = event.value;
+        console.log(event);
+        let selectedData = event.target.value;
+        console.log('selectedData', selectedData);
         capData.selectedManufacturer = [];
+        //this.loadModalsForExistingRecords(capData);
+        if (selectedData) {
+            selectedData = selectedData.split(":")[0];
+            this.selectedAircraftId = selectedData;
+        }
+        console.log('selectedData', selectedData);
+        this.manufacturerData.forEach(element2 => {
+            if (selectedData == element2.value) {
+                capData.selectedManufacturer.push(element2);
+            }
+        })
+        /*
         selectedData.forEach(element1 => {
             this.manufacturerData.forEach(element2 => {
                 if (element1 == element2.value) {
                     capData.selectedManufacturer.push(element2);
                 }
             })
-        })
+        })*/
     }
 
     saveCapabilities() {
@@ -1008,18 +1140,12 @@ export class AssetCapesComponent implements OnInit {
         let repairForm = capbilitiesForm.repairForm;
         let exchangeForm = capbilitiesForm.exchangeForm;
         mfgForm.forEach(element => {
-           // element.capabilityTypeId = 1;
-            element.ataChapterId = 0;
-            element.managementStructureId = 0;
-            element.manufacturerId = 0;
+            //element.capabilityTypeId = 1;
             element.assetRecordId = this.currentAsset.assetRecordId;
             capabilityCollection.push(element);
         });
         overhaulForm.forEach(element => {
             element.capabilityTypeId = 2;
-            element.ataChapterId = 0;
-            element.managementStructureId = 0;
-            element.manufacturerId = 0;
             element.assetRecordId = this.currentAsset.assetRecordId;
             capabilityCollection.push(element);
         });
@@ -1046,9 +1172,9 @@ export class AssetCapesComponent implements OnInit {
 
         this.assetServices.saveManfacturerinforcapes(capabilityCollection).subscribe(data11 => {
             this.alertService.showMessage("Success", `Asset capes saved successfully.`, MessageSeverity.success);
-            let data: any ={
-                selectedCap:"",CapabilityTypeId: 0, selectedPartId: [], selectedAircraftDataModels: [],
-                selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: [],selectedDashNumbers2: []
+            let data: any = {
+                selectedCap: "", CapabilityTypeId: 0, selectedPartId: [], selectedAircraftDataModels: [],
+                selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: [], selectedDashNumbers2: []
             };
             this.capabilityForm = data;
             this.loadCapesData();
@@ -1089,6 +1215,13 @@ export class AssetCapesComponent implements OnInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.mfgFormArray.controls = [];
+        this.aircraftData = [];
+        this.capabilityForm = {
+            selectedCap: "", CapabilityTypeId: 0, selectedPartId: [], selectedAircraftDataModels: [],
+            selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [],
+            selectedModel: [], selectedDashNumbers: [], selectedDashNumbers2: [],
+            modelUnknown: false
+        };
         this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -1137,16 +1270,33 @@ export class AssetCapesComponent implements OnInit {
         let getSelectedCollection = [];
         this.assetServices.isCapsEditMode = true;
         this.isSaving = true;
-        this.assetServices.getCapabilityData(row.assetCapesId).subscribe(data => {
+        this.assetServices.getAssetCapabilityData(row.assetCapesId).subscribe(data => {
             getSelectedCollection = data;
             if (getSelectedCollection) {
-                this.capabilityEditCollection = getSelectedCollection;
-                this.cunstructFormForEdit()
+                //this.capabilityEditCollection = getSelectedCollection;
+                //this.cunstructFormForEdit()
+
+                if (data[0].aircraftTypeId !== undefined && data[0].aircraftModelId !== undefined && data[0].aircraftDashNumberId !== undefined) {
+                    this.dashnumberservices.getAllDashModels(data[0].aircraftModelId, data[0].aircraftTypeId, data[0].aircraftDashNumberId).subscribe(aircraftdata => {
+                        const responseValue = aircraftdata;
+                        this.aircraftData = responseValue.map(x => {
+                            return {
+                                AircraftType: x.aircraft,
+                                AircraftModel: x.model,
+                                DashNumber: x.dashNumber,
+                                AircraftModelId: x.modelid,
+                                DashNumberId: x.dashNumberId,
+                                CapibilityType: data[0].captypedescription,
+                                PartNumber: data[0].partNumber
+                            }
+                        })
+                    })
+                }
             }
         });
 
         this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
-         this.modal.result.then(() => {
+        this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }

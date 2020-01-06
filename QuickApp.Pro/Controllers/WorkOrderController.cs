@@ -1299,7 +1299,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-        [HttpPost("updateworkorderworkFlow")]
+		[HttpGet("ntestdvalues")]
+		public IActionResult GetNTESTDValues(long itemMasterId, string workScope)
+		{
+			var result = unitOfWork.WorkOrderRepository.GetNTESTDValues(itemMasterId, workScope);
+			return Ok(result);
+		}
+
+		[HttpPost("updateworkorderworkFlow")]
         public IActionResult UpdateWorkOrderWorkFlow([FromBody] Workflow workFlow)
         {
              int masterCompanyId = 1;

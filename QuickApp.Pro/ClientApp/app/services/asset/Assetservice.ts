@@ -113,6 +113,10 @@ export class AssetService {
         return this.assetEndpoint.getCapabilityDataEndpoint<any>(assetRecordId);
     }
 
+    getAssetCapabilityData(assetCapesId?: number) {
+        return this.assetEndpoint.getAssetCapabilityDataEndpoint<any>(assetCapesId);
+    }
+
     getAssetsById(assetsRecordsId){
         return this.assetEndpoint.getAssetsById(assetsRecordsId);
     }

@@ -1,11 +1,13 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models.Sales
 {
     public class SalesOrderQuotePart
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long? SalesOrderQuotePartId { get; set; }
         public long SalesOrderQuoteId { get; set; }
         public long ItemMasterId { get; set; }
@@ -25,5 +27,20 @@ namespace DAL.Models.Sales
         public string UpdatedBy { get; set; }
         public DateTime UpdatedOn { get; set; }
         public bool IsDeleted { get; set; }
+
+        [Column(TypeName = "char(1)")]
+        public string MethodType { get; set; }
+
+        [NotMapped]
+        public string Method { get { return (!string.IsNullOrWhiteSpace(MethodType) && MethodType == "I") ? "Item Master" : "Stock Line"; }  }
+
+        public decimal SalesPriceExtended { get; set; }
+        public decimal MarkupExtended { get; set; }
+        public decimal SalesDiscountExtended { get; set; }
+        public decimal NetSalePriceExtended { get; set; }
+        public decimal UnitCostExtended { get; set; }
+        public decimal MarginAmount { get; set; }
+        public decimal MarginAmountExtended { get; set; }
+        public int MarginPercentage { get; set; }
     }
 }

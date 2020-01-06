@@ -34,6 +34,7 @@ import {
 /** WorkOrderQuote component*/
 export class WorkOrderQuoteComponent implements OnInit {
   @Input() quoteForm: WorkOrderQuote;
+  @Input() workorderid: number = 0;
   customerName: string;
   creditLimit: any;
   creditTerms: any;
@@ -97,6 +98,7 @@ export class WorkOrderQuoteComponent implements OnInit {
 }
 isQuote: boolean = true;
 editMatData: any[] = [];
+costPlusType: string = "Mark Up";
 
 
 
@@ -116,6 +118,13 @@ editMatData: any[] = [];
         this.loadCurrency();
       }
     });
+    if(this.workorderid != 0){
+      this.getEmployeeList(this.workorderid);
+      this.getTaskList();
+      this.getMarkup();
+      this.loadCurrency();
+    }
+    
   }
 
   calculateExpiryDate() {
@@ -865,7 +874,7 @@ loadCurrency(){
 markupChanged(matData){
   try{
     this.markupList.forEach((markup)=>{
-      if(markup.value == matData.markup){
+      if(markup.value == matData.markupPercentageId){
         matData.materialCostPlus = (matData.quantity * matData.unitCost) + ( ((matData.quantity * matData.unitCost)/100) *  Number(markup.label))
       }
     })

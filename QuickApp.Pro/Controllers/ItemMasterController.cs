@@ -1775,6 +1775,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("nhatlaaltequparthistory")]
+        public IActionResult NhaTlaAltEquPartHistory(long itemMappingId)
+        {
+            var result = _unitOfWork.itemMaster.NhaTlaAltEquPartHistory(itemMappingId);
+            return Ok(result);
+        }
+
+
 
         [HttpGet("GetpartdetailsWithid/{partsList}")]
         public Object getPartwithid(string partsList)
@@ -1993,6 +2001,7 @@ namespace QuickApp.Pro.Controllers
 
                      select new
                      {
+                         methodType = "I",
                          method = "Item Master",
                          itemId = item.ItemMasterId,
                          partNumber = item.PartNumber,

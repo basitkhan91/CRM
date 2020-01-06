@@ -49,6 +49,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
 
     
     this.workOrderWorkFlowList = this.workOrderWorkFlowOriginalData;
+    this.laborForm['costPlusType'] = 'Mark Up';
 console.log(this.workOrderLaborList);
     if(this.workOrderLaborList){
       this.laborForm.workFlowWorkOrderId = this.workOrderLaborList['workFlowWorkOrderId'];
@@ -64,6 +65,7 @@ console.log(this.workOrderLaborList);
 
   ngOnChanges(){
     this.getAllEmployees();
+    this.laborForm['costPlusType'] = 'Mark Up'
     this.workOrderWorkFlowList = this.workOrderWorkFlowOriginalData;
     if(this.laborForm['workOrderHoursType']){
       if(this.laborForm['workOrderHoursType'] == 1){

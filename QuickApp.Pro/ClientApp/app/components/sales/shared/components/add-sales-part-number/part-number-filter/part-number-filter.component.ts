@@ -22,6 +22,8 @@ export class PartNumberFilterComponent {
   searchDisabled: boolean;
   historicalDisabled: boolean;
   allConditionInfo: any[] = [];
+  displayPartError: boolean = false;
+  errorMessages:any[]=[];
 
   constructor(
     private itemMasterService: ItemMasterService,
@@ -68,8 +70,6 @@ this.salesQuoteService.getSearchPartObject()
 
   search($event) {
     $event.preventDefault();
-
-    console.log(this.query);
     switch (this.query.partSearchParamters.itemSearchType) {
       case ItemSearchType.StockLine:
         this.stockLineService.search(this.query)
@@ -87,7 +87,7 @@ this.salesQuoteService.getSearchPartObject()
           });
         break;
     }
-
+    console.log(this.query);
   }
   calculate() {
     this.query.partSearchParamters.quantityToQuote = this.query.partSearchParamters.quantityRequested - this.query.partSearchParamters.quantityAlreadyQuoted;
@@ -108,11 +108,18 @@ private onptnmbersSuccessful(allWorkFlows: any[]) {
 }
 
   onPartNumberSelect(part: any) {
+    console.log(this.query);
     this.resetActionButtons();
     this.query.partSearchParamters.partNumber = part.partNumber;
     this.query.partSearchParamters.partId = part.partId;
     this.query.partSearchParamters.partDescription = part.partDescription;
-    this.searchDisabled = false;
+    if (this.query.partSearchParamters.conditionId>0)
+          this.searchDisabled = false;
+  }
+  onConditionSelect() {
+    console.log(this.query);
+    if (this.query.partSearchParamters.conditionId>0 && this.query.partSearchParamters.partNumber)
+          this.searchDisabled = false;
   }
   
  /* onPartNumberSelect(event) {

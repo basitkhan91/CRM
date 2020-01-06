@@ -40,10 +40,24 @@ namespace QuickApp.Pro.Controllers
             _smtpConfig = smtpConfig;
         }
 
+
+        [HttpPost("vendorlist")]
+        public IActionResult GetVendorsList([FromBody]Filters<VendorFilters> vendorFilters)
+        {
+            var result = _unitOfWork.Vendor.GetVendorsList(vendorFilters);
+            return Ok(result);
+        }
+
+        //[HttpGet("vendorglobalsearch")]
+        //public IActionResult VendorGlobalSearch(string filterText, int pageNumber = 0, int pageSize = 10)
+        //{
+        //    var result = _unitOfWork.Vendor.VendorGlobalSearch(filterText, pageNumber, pageSize);
+        //    return Ok(result);
+        //}
+
         // GET: api/values
         [HttpGet("Get")]
         [Produces(typeof(List<VendorViewModel>))]
-
         public IActionResult Get()
         {
             var allActions = _unitOfWork.Vendor.GetVendors(); //.GetAllCustomersData();
@@ -324,53 +338,105 @@ namespace QuickApp.Pro.Controllers
 
         [HttpGet("getVendorCapabilityList")]
         [Produces(typeof(List<VendorCapabiliy>))]
-        public IActionResult GetvendorCapabilityList(string status = "all")
+        public IActionResult GetvendorCapabilityList(string status = "all", long vendorId = 0)
         {
             if (status.ToLower() == "all")
             {
-                var data = (from vc in _context.VendorCapabiliy
-                            join v in _context.Vendor on vc.VendorId equals v.VendorId
-                            join im in _context.ItemMaster on vc.ItemMasterId equals im.ItemMasterId into imm
-                            from im in imm.DefaultIfEmpty()
-                            join vct in _context.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId into vctt
-                            from vct in vctt.DefaultIfEmpty()
-                            join vcat in _context.capabilityType on Convert.ToInt32(vc.CapabilityId) equals vcat.CapabilityTypeId into vcatt
-                            from vcat in vcatt.DefaultIfEmpty()
-                            where vc.IsDeleted != true
-                            select new
-                            {
-                                v.VendorName,
-                                v.VendorCode,
-                                im.PartNumber,
-                                im.PartDescription,
-                                im.ManufacturerId,
-                                manufacturerName = im.Manufacturer.Name,
-                                vc.VendorCapabilityId,
-                                vc.VendorId,
-                                vc.VendorRanking,
-                                vc.PMA_DER,
-                                vc.ItemMasterId,
-                                vc.TAT,
-                                vc.Cost,
-                                vc.AlternatePartId,
-                                vc.ATAChapterId,
-                                vc.ATASubchapterId,
-                                vc.Memo,
-                                vc.CreatedDate,
-                                vc.UpdatedDate,
-                                vc.capabilityDescription,
-                                vc.IsActive,
-                                CapabilityType = vcat.Description,
-                                vc.CapabilityId,
-                                vc.IsPMA,
-                                vc.IsDER,
-                                //vct.CapabilityTypeId,
-                                //vcat.AircraftTypeId,
-                                //vcam.AircraftModelId
 
-                            }).OrderByDescending(p => p.CreatedDate).ToList();
+                if (vendorId > 0)
+                {
+                    var data = (from vc in _context.VendorCapabiliy
+                                join v in _context.Vendor on vc.VendorId equals v.VendorId
+                                join im in _context.ItemMaster on vc.ItemMasterId equals im.ItemMasterId into imm
+                                from im in imm.DefaultIfEmpty()
+                                join vct in _context.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId into vctt
+                                from vct in vctt.DefaultIfEmpty()
+                                join vcat in _context.capabilityType on Convert.ToInt32(vc.CapabilityId) equals vcat.CapabilityTypeId into vcatt
+                                from vcat in vcatt.DefaultIfEmpty()
+                                where vc.IsDeleted != true && vc.VendorId == vendorId
+                                select new
+                                {
+                                    v.VendorName,
+                                    v.VendorCode,
+                                    im.PartNumber,
+                                    im.PartDescription,
+                                    im.ManufacturerId,
+                                    manufacturerName = im.Manufacturer.Name,
+                                    vc.VendorCapabilityId,
+                                    vc.VendorId,
+                                    vc.VendorRanking,
+                                    vc.PMA_DER,
+                                    vc.ItemMasterId,
+                                    vc.TAT,
+                                    vc.Cost,
+                                    vc.AlternatePartId,
+                                    vc.ATAChapterId,
+                                    vc.ATASubchapterId,
+                                    vc.Memo,
+                                    vc.CreatedDate,
+                                    vc.UpdatedDate,
+                                    vc.capabilityDescription,
+                                    vc.IsActive,
+                                    CapabilityType = vcat.Description,
+                                    vc.CapabilityId,
+                                    vc.IsPMA,
+                                    vc.IsDER,
+                                    //vct.CapabilityTypeId,
+                                    //vcat.AircraftTypeId,
+                                    //vcam.AircraftModelId
 
-                return Ok(data);
+                                }).OrderByDescending(p => p.CreatedDate).ToList();
+
+                    return Ok(data);
+                }
+                else
+                {
+                    var data = (from vc in _context.VendorCapabiliy
+                                join v in _context.Vendor on vc.VendorId equals v.VendorId
+                                join im in _context.ItemMaster on vc.ItemMasterId equals im.ItemMasterId into imm
+                                from im in imm.DefaultIfEmpty()
+                                join vct in _context.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId into vctt
+                                from vct in vctt.DefaultIfEmpty()
+                                join vcat in _context.capabilityType on Convert.ToInt32(vc.CapabilityId) equals vcat.CapabilityTypeId into vcatt
+                                from vcat in vcatt.DefaultIfEmpty()
+                                where vc.IsDeleted != true
+                                select new
+                                {
+                                    v.VendorName,
+                                    v.VendorCode,
+                                    im.PartNumber,
+                                    im.PartDescription,
+                                    im.ManufacturerId,
+                                    manufacturerName = im.Manufacturer.Name,
+                                    vc.VendorCapabilityId,
+                                    vc.VendorId,
+                                    vc.VendorRanking,
+                                    vc.PMA_DER,
+                                    vc.ItemMasterId,
+                                    vc.TAT,
+                                    vc.Cost,
+                                    vc.AlternatePartId,
+                                    vc.ATAChapterId,
+                                    vc.ATASubchapterId,
+                                    vc.Memo,
+                                    vc.CreatedDate,
+                                    vc.UpdatedDate,
+                                    vc.capabilityDescription,
+                                    vc.IsActive,
+                                    CapabilityType = vcat.Description,
+                                    vc.CapabilityId,
+                                    vc.IsPMA,
+                                    vc.IsDER,
+                                    //vct.CapabilityTypeId,
+                                    //vcat.AircraftTypeId,
+                                    //vcam.AircraftModelId
+
+                                }).OrderByDescending(p => p.CreatedDate).ToList();
+
+                    return Ok(data);
+                }
+
+
             }
             else
             {
@@ -380,49 +446,99 @@ namespace QuickApp.Pro.Controllers
                     sStatus = true;
                 }
 
-                var data = (from vc in _context.VendorCapabiliy
-                            join v in _context.Vendor on vc.VendorId equals v.VendorId
-                            join im in _context.ItemMaster on vc.ItemMasterId equals im.ItemMasterId into imm
-                            from im in imm.DefaultIfEmpty()
-                            join vct in _context.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId into vctt
-                            from vct in vctt.DefaultIfEmpty()
-                            join vcat in _context.capabilityType on Convert.ToInt32(vc.CapabilityId) equals vcat.CapabilityTypeId into vcatt
-                            from vcat in vcatt.DefaultIfEmpty()
-                            where vc.IsDeleted != true && vc.IsActive == sStatus
-                            select new
-                            {
-                                v.VendorName,
-                                v.VendorCode,
-                                im.PartNumber,
-                                im.PartDescription,
-                                im.ManufacturerId,
-                                manufacturerName = im.Manufacturer.Name,
-                                vc.VendorCapabilityId,
-                                vc.VendorId,
-                                vc.VendorRanking,
-                                vc.PMA_DER,
-                                vc.ItemMasterId,
-                                vc.TAT,
-                                vc.Cost,
-                                vc.AlternatePartId,
-                                vc.ATAChapterId,
-                                vc.ATASubchapterId,
-                                vc.Memo,
-                                vc.CreatedDate,
-                                vc.UpdatedDate,
-                                vc.capabilityDescription,
-                                vc.IsActive,
-                                CapabilityType = vcat.Description,
-                                vc.CapabilityId,
-                                vc.IsPMA,
-                                vc.IsDER,
-                                //vct.CapabilityTypeId,
-                                //vcat.AircraftTypeId,
-                                //vcam.AircraftModelId
+                if (vendorId > 0)
+                {
+                    var data = (from vc in _context.VendorCapabiliy
+                                join v in _context.Vendor on vc.VendorId equals v.VendorId
+                                join im in _context.ItemMaster on vc.ItemMasterId equals im.ItemMasterId into imm
+                                from im in imm.DefaultIfEmpty()
+                                join vct in _context.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId into vctt
+                                from vct in vctt.DefaultIfEmpty()
+                                join vcat in _context.capabilityType on Convert.ToInt32(vc.CapabilityId) equals vcat.CapabilityTypeId into vcatt
+                                from vcat in vcatt.DefaultIfEmpty()
+                                where vc.IsDeleted != true && vc.IsActive == sStatus && vc.VendorId == vendorId
+                                select new
+                                {
+                                    v.VendorName,
+                                    v.VendorCode,
+                                    im.PartNumber,
+                                    im.PartDescription,
+                                    im.ManufacturerId,
+                                    manufacturerName = im.Manufacturer.Name,
+                                    vc.VendorCapabilityId,
+                                    vc.VendorId,
+                                    vc.VendorRanking,
+                                    vc.PMA_DER,
+                                    vc.ItemMasterId,
+                                    vc.TAT,
+                                    vc.Cost,
+                                    vc.AlternatePartId,
+                                    vc.ATAChapterId,
+                                    vc.ATASubchapterId,
+                                    vc.Memo,
+                                    vc.CreatedDate,
+                                    vc.UpdatedDate,
+                                    vc.capabilityDescription,
+                                    vc.IsActive,
+                                    CapabilityType = vcat.Description,
+                                    vc.CapabilityId,
+                                    vc.IsPMA,
+                                    vc.IsDER,
+                                    //vct.CapabilityTypeId,
+                                    //vcat.AircraftTypeId,
+                                    //vcam.AircraftModelId
 
-                            }).OrderByDescending(p => p.CreatedDate).ToList();
+                                }).OrderByDescending(p => p.CreatedDate).ToList();
 
-                return Ok(data);
+                    return Ok(data);
+                }
+                else
+                {
+                    var data = (from vc in _context.VendorCapabiliy
+                                join v in _context.Vendor on vc.VendorId equals v.VendorId
+                                join im in _context.ItemMaster on vc.ItemMasterId equals im.ItemMasterId into imm
+                                from im in imm.DefaultIfEmpty()
+                                join vct in _context.vendorCapabilityType on vc.VendorCapabilityId equals vct.VendorCapabilityId into vctt
+                                from vct in vctt.DefaultIfEmpty()
+                                join vcat in _context.capabilityType on Convert.ToInt32(vc.CapabilityId) equals vcat.CapabilityTypeId into vcatt
+                                from vcat in vcatt.DefaultIfEmpty()
+                                where vc.IsDeleted != true && vc.IsActive == sStatus
+                                select new
+                                {
+                                    v.VendorName,
+                                    v.VendorCode,
+                                    im.PartNumber,
+                                    im.PartDescription,
+                                    im.ManufacturerId,
+                                    manufacturerName = im.Manufacturer.Name,
+                                    vc.VendorCapabilityId,
+                                    vc.VendorId,
+                                    vc.VendorRanking,
+                                    vc.PMA_DER,
+                                    vc.ItemMasterId,
+                                    vc.TAT,
+                                    vc.Cost,
+                                    vc.AlternatePartId,
+                                    vc.ATAChapterId,
+                                    vc.ATASubchapterId,
+                                    vc.Memo,
+                                    vc.CreatedDate,
+                                    vc.UpdatedDate,
+                                    vc.capabilityDescription,
+                                    vc.IsActive,
+                                    CapabilityType = vcat.Description,
+                                    vc.CapabilityId,
+                                    vc.IsPMA,
+                                    vc.IsDER,
+                                    //vct.CapabilityTypeId,
+                                    //vcat.AircraftTypeId,
+                                    //vcam.AircraftModelId
+
+                                }).OrderByDescending(p => p.CreatedDate).ToList();
+
+                    return Ok(data);
+                }
+
 
 
             }
