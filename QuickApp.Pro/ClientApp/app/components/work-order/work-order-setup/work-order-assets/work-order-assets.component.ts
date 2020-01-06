@@ -26,7 +26,7 @@ export class WorkOrderAssetsComponent implements OnInit {
         description: '',
         assetIdNumber: null,
         employeeId: null,
-        date: null,
+        date: new Date(),
         assetId: null,
         assetStatus: null
     }
