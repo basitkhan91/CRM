@@ -3,6 +3,7 @@ export class PartDetail {
   partNumber: string;
   stockLineNumber: string;
   description: string;
+  conditionId: number;
   conditionType: string;
   classification: string;
   itemClassification: any;

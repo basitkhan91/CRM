@@ -612,15 +612,10 @@ export class SalesQuoteCreateComponent implements OnInit {
   }
 
   closeErrorMessage() {
-    // this.isDeleteMode = false;
-
     this.errorModal.close();
   }
 
   onSubmit() {
-    //##TODO call below service to create sales quote
-    //this.salesQuoteService.create
-    //input parameter: ISalesQuoteView
     console.log(this.salesQuote);
     console.log(this.salesOrderQuote);
     this.errorMessages = [];
@@ -811,6 +806,7 @@ export class SalesQuoteCreateComponent implements OnInit {
         partNumberObj.marginAmount = selectedPart.marginAmount;
         partNumberObj.marginAmountExtended = selectedPart.marginAmountExtended;
         partNumberObj.marginPercentage = selectedPart.marginPercentage;
+        partNumberObj.conditionId = selectedPart.conditionId;
       }
       this.salesQuoteView.parts = partList;
 
