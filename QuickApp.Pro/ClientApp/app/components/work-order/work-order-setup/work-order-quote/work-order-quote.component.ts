@@ -34,6 +34,7 @@ import {
 /** WorkOrderQuote component*/
 export class WorkOrderQuoteComponent implements OnInit {
   @Input() quoteForm: WorkOrderQuote;
+  @Input() workorderid: number = 0;
   customerName: string;
   creditLimit: any;
   creditTerms: any;
@@ -117,6 +118,13 @@ costPlusType: string = "Mark Up";
         this.loadCurrency();
       }
     });
+    if(this.workorderid != 0){
+      this.getEmployeeList(this.workorderid);
+      this.getTaskList();
+      this.getMarkup();
+      this.loadCurrency();
+    }
+    
   }
 
   calculateExpiryDate() {
