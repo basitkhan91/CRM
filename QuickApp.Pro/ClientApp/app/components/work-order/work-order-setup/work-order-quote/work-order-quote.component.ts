@@ -35,6 +35,7 @@ import {
 export class WorkOrderQuoteComponent implements OnInit {
   @Input() quoteForm: WorkOrderQuote;
   @Input() workorderid: number = 0;
+  @Input() isView: boolean = false;
   customerName: string;
   creditLimit: any;
   creditTerms: any;
@@ -105,6 +106,7 @@ costPlusType: string = "Mark Up";
 
   constructor(private router: ActivatedRoute,private workOrderService: WorkOrderQuoteService, private commonService: CommonService, private _workflowService: WorkFlowtService, private alertService:AlertService, private workorderMainService: WorkOrderService, private currencyService:CurrencyService) {}
   ngOnInit() {
+    console.log(this.isView);
     if(this.quoteForm == undefined){
       this.quoteForm = new WorkOrderQuote();
     }
