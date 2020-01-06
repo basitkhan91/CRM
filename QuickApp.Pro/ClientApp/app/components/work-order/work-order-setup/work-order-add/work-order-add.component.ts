@@ -44,6 +44,7 @@ import { WorkOrderQuoteService } from '../../../../services/work-order/work-orde
 import { CustomerViewComponent } from '../../../../shared/components/customer/customer-view/customer-view.component';
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators';
+import { Freight } from '../../../../models/work-order-freight.model';
 
 @Component({
     selector: 'app-work-order-add',
@@ -119,6 +120,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     quote: WorkOrderQuote;
     // labor Object Modal
     labor = new WorkOrderLabor();
+    freight = [];
     isWorkOrder: boolean = true;
     data: any;
 
@@ -1322,6 +1324,16 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
 
 
+    getExclusionListByWorkOrderId() {
+
+        if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
+            this.workOrderService.getWorkOrderExclusionsList(this.workFlowWorkOrderId, this.workOrderId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+                this.workOrderExclusionsList = res;
+            })
+
+        }
+
+    }
     saveWorkOrderExclusionsList(data) {
         const exclusionsArr = data.exclusions.map(x => {
             return {
@@ -1364,16 +1376,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
 
 
-    getExclusionListByWorkOrderId() {
 
-        if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
-            this.workOrderService.getWorkOrderExclusionsList(this.workFlowWorkOrderId, this.workOrderId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
-                this.workOrderExclusionsList = res;
-            })
 
-        }
-
-    }
 
     getFreightListByWorkOrderId(){
         if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
@@ -1384,6 +1388,26 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         }
     }
 
+    saveWorkOrderFreightsList(data){
+        const freightsArr = data.map(x => {
+            return {
+                ...x,
+                masterCompanyId: 1,
+                isActive: true,
+                workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId,
+                estimtPercentOccurranceId: x.estimtPercentOccurrance
+            }
+        });
+        this.workOrderService.createWorkOrderFreightList(freightsArr).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+          this.freight = [];
+            this.alertService.showMessage(
+                this.moduleName,
+                'Saved Work Order Freight  Succesfully',
+                MessageSeverity.success
+            );
+            this.getFreightListByWorkOrderId();
+        })
+    }
 
 
     filterPartNumber(event) {

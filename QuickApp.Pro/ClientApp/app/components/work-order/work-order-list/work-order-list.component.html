@@ -142,9 +142,17 @@
             <tr>
                 <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
                     <!-- <input type="text" style="width:100%;" pInputText   (keyup)="filterData($event)"> -->
-                    <input *ngIf="col.field !== 'openDate'" style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains'); fieldSearch($event.target.value, col.field , 'contains' )">
-                    <input type="date" class="hidePlaceHolder" *ngIf="col.field == 'openDate'" name="openDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
-
+                    <input *ngIf="col.field !== 'openDate' 
+                    && col.field !== 'customerRequestDate'
+                    && col.field !== 'promisedDate'
+                    && col.field !== 'estimatedShipDate'
+                    && col.field !== 'estimatedCompletionDate'" 
+                    style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains'); fieldSearch($event.target.value, col.field , 'contains' )">
+                    <input type="date" *ngIf="col.field == 'openDate'" name="openDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
+                    <input type="date"  *ngIf="col.field == 'customerRequestDate'" name="customerRequestDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
+                    <input type="date"  *ngIf="col.field == 'promisedDate'" name="promisedDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
+                    <input type="date" *ngIf="col.field == 'estimatedShipDate'" name="estimatedShipDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
+                    <input type="date"  *ngIf="col.field == 'estimatedCompletionDate'" name="estimatedCompletionDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
                 </th>
                 <th style="width:200px;position:sticky"></th>
             </tr>
@@ -975,7 +983,7 @@
     </div>
 </div>
 <div *ngIf="isSubWorkOrder">
-    <h4 class="modal-title">WorkOrder View</h4>
+    <h4 class="modal-title">Work Order View</h4>
     <div class="card-body" *ngIf="viewWorkOrderHeader">
         <div class="card">
             <div class="card-body">
@@ -997,7 +1005,7 @@
 
 
                             <p>
-                                <span class="label"><b> WorkOrder Type : </b></span><span class="value">
+                                <span class="label"><b> Work Order Type : </b></span><span class="value">
                                     {{
                       viewWorkOrderHeader.workOrderType
                                     }}

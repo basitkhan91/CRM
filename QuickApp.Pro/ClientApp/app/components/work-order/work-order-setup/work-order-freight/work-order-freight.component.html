@@ -21,6 +21,12 @@
         <h4 class="modal-title">Add New Freight</h4>
       </div>
       <div class="modal-body">
+        <div>
+          <span class="cat-heading cat4 ng-star-inserted">
+            Add New Freight
+            <i class="fa fa-plus" (click)="addNewRow()"></i>
+          </span>
+        </div>
         <div class="tab-content">
           <div class="table-responsive table-overflow">
             <table class="table table-bordered ">
@@ -37,52 +43,94 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td></td>
-                  <td></td>
+                <tr *ngFor="let f of freightForm; let i = index">
+                  <td>
+                    <p-dropdown
+                      placeholder="Select Carrier"
+                      name="carrier{{ i }}"
+                      #carrier="ngModel"
+                      [options]="carrierList"
+                      class="p-dropdown-custom-md"
+                      [(ngModel)]="f.carrierId"
+                    >
+                    </p-dropdown>
+                  </td>
+                  <td>
+                    <p-dropdown
+                      placeholder="Select Site Name"
+                      name="shipVia{{ i }}"
+                      #shipVia="ngModel"
+                      [options]="shipViaList"
+                      class="p-dropdown-custom-md"
+                      [(ngModel)]="f.shipViaId"
+                    >
+                    </p-dropdown>
+                  </td>
                   <td>
                     <input
-                      type="number"
-                      name="dlength"
+                      type="text"
+                      name="length{{ i }}"
+                      [(ngModel)]="f.length"
+                      #length="ngModel"
                       class="form-control w50"
                     />
                     L -
                     <input
-                      type="number"
-                      name="dweight"
+                      type="text"
+                      name="width{{ i }}"
+                      #width="ngModel"
+                      [(ngModel)]="f.width"
                       class="form-control w50"
                     />
                     W -
                     <input
-                      type="number"
-                      name="dheight"
+                      type="text"
+                      name="height{{ i }}"
+                      #height="ngModel"
+                      [(ngModel)]="f.height"
                       class="form-control w50"
                     />H
                   </td>
                   <td>
                     <input
-                      type="number"
-                      name="weight"
+                      type="text"
+                      name="weight{{ i }}"
+                      #weight="ngModel"
+                      [(ngModel)]="f.weight"
                       class="form-control w50"
                     />
                   </td>
                   <td>
-                    <textarea name="memo" cols="30" rows="4"></textarea>
+                    <textarea
+                      name="memo{{ i }}"
+                      cols="30"
+                      rows="4"
+                      [(ngModel)]="f.memo"
+                    ></textarea>
                   </td>
                   <td>
                     <input
-                      type="number"
-                      name="amount"
+                      type="text"
+                      name="amount{{ i }}"
+                      #amount="ngModel"
+                      [(ngModel)]="f.amount"
                       class="form-control w50"
                     />
                   </td>
                   <td>
-                    <input type="checkbox" name="fixed" />
+                    <input
+                      type="checkbox"
+                      name="fixed{{ i }}"
+                      #fixed="ngModel"
+                      [(ngModel)]="f.fixed"
+                    />
                   </td>
                   <td>
                     <input
                       type="number"
-                      name="amount"
+                      name="fixedAmount{{ i }}"
+                      #fixedAmount="ngModel"
+                      [(ngModel)]="f.fixedAmount"
                       class="form-control w50"
                     />
                   </td>
@@ -93,6 +141,12 @@
         </div>
       </div>
       <div class="modal-footer">
+            <button
+            class="btn btn-primary-cstm pull-right"
+            (click)="saveFreightList()"
+          >
+            Save
+          </button>
         <button type="button" class="btn btn-default" data-dismiss="modal">
           Close
         </button>

@@ -8,7 +8,7 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item" aria-current="page">Work Order</li>
-                                <li class="breadcrumb-item active" aria-current="page">Work Order Setup</li>
+                                <li class="breadcrumb-item active" aria-current="page">Create WorkOrder</li>
                                 <li *ngIf="isSubWorkOrder" class="breadcrumb-item active" aria-current="page">Sub WOrkOrder </li>
                             </ol>
                         </nav>
@@ -710,7 +710,7 @@
                             <li class="nav-item">
                                 <a id="pills-home-tab" role="tab" aria-controls="pills-home" aria-selected="true"
                                    [ngClass]="{active : gridActiveTab === 'labor'}"
-                                   (click)="gridTabChange('labor'); getWorkFlowLaborList(); ">labor</a>
+                                   (click)="gridTabChange('labor'); getWorkFlowLaborList(); ">Labor</a>
                             </li>
                             <li class="nav-item">
                                 <a id="pills-profile-tab" role="tab" aria-controls="pills-profile"
@@ -950,7 +950,11 @@
                                                    (refreshData)="getExclusionListByWorkOrderId()"></app-work-order-exclusions>
                     </div>
                     <div *ngIf="workOrderId" class="wf-label-cstm" [ngClass]="{hidedataOthers :  subTabOtherOptions !== 'freight'} ">
-                        <app-work-order-freight [workOrderFreightList]="workOrderFreightList" ></app-work-order-freight>
+                        <app-work-order-freight [freightForm]="freight" 
+                        [workOrderFreightList]="workOrderFreightList" 
+                        [savedWorkOrderData]="savedWorkOrderData"
+                        (saveFreightListForWO)="saveWorkOrderFreightsList($event)"
+                        ></app-work-order-freight>
                     </div>
 
 

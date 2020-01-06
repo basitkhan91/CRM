@@ -164,6 +164,11 @@ export class WorkOrderService {
     updateWorkOrderExclusionList(data) {
         return this.workOrderEndpointService.updateWorkOrderExclusionList(data);
     }
+
+    createWorkOrderFreightList(data){
+        return this.workOrderEndpointService.createWorkOrderFreightList(data);
+    }
+
     getAllTasks() {
         return this.workOrderEndpointService.getTasks();
     }
