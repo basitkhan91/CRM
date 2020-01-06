@@ -2001,6 +2001,7 @@ namespace QuickApp.Pro.Controllers
 
                      select new
                      {
+                         methodType = "I",
                          method = "Item Master",
                          itemId = item.ItemMasterId,
                          partNumber = item.PartNumber,
