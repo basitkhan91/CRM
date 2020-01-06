@@ -445,13 +445,6 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
-        [HttpGet("woassethistory")]
-        public IActionResult WorkOrderAssetHistory(long workOrderAssetId)
-        {
-           var result= unitOfWork.WorkOrderRepository.WorkOrderAssetHistory(workOrderAssetId);
-            return Ok(result);
-        }
-
         #endregion
 
         #region Work Order Exclusions
@@ -896,12 +889,12 @@ namespace QuickApp.Pro.Controllers
         #region Work Order Freight
 
         [HttpPost("createworkorderfreight")]
-        public IActionResult CreateWorkOrderFreight([FromBody]List<WorkOrderFreight> workOrderFreight)
+        public IActionResult CreateWorkOrderFreight([FromBody]WorkOrderFreight workOrderFreight)
         {
             if (ModelState.IsValid)
             {
-                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderFreight(workOrderFreight);
-                return Ok(result);
+                workOrderFreight.WorkOrderFreightId = unitOfWork.WorkOrderRepository.CreateWorkOrderFreight(workOrderFreight);
+                return Ok(workOrderFreight);
             }
             else
             {
@@ -911,12 +904,12 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("updateworkorderfreight")]
-        public IActionResult UpdateWorkOrderFreight([FromBody]List<WorkOrderFreight> workOrderFreight)
+        public IActionResult UpdateWorkOrderFreight([FromBody]WorkOrderFreight workOrderFreight)
         {
             if (ModelState.IsValid)
             {
-                var result=unitOfWork.WorkOrderRepository.UpdateWorkOrderFreight(workOrderFreight);
-                return Ok(result);
+                unitOfWork.WorkOrderRepository.UpdateWorkOrderFreight(workOrderFreight);
+                return Ok(workOrderFreight);
             }
             else
             {
@@ -930,13 +923,6 @@ namespace QuickApp.Pro.Controllers
         {
             var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderFreightList(wfwoId, workOrderId);
             return Ok(result);
-        }
-
-        [HttpGet("deleteworkorderfreight")]
-        public IActionResult DeleteWorkOrderFreight(long workOrderFreightId, string updatedBy)
-        {
-            unitOfWork.WorkOrderRepository.DeleteWorkOrderFreight(workOrderFreightId, updatedBy);
-            return Ok();
         }
 
         #endregion
