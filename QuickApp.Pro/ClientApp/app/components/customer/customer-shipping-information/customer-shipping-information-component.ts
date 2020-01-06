@@ -47,9 +47,11 @@ export class CustomerShippingInformationComponent implements OnInit {
     interShippingauditHisory: any[];
     domesticShippingHeaders = [
         { field: 'siteName', header: 'Site Name' },
+
         { field: 'address1', header: 'Address1' },
         { field: 'address2', header: 'Address2' },
-      
+        { field: 'isPrimary', header: 'Is Primary' },
+
         { field: 'city', header: 'City' },
         { field: 'stateOrProvince', header: 'State Or Province' },
         { field: 'postalCode', header: 'Postal Code' },
@@ -222,9 +224,11 @@ export class CustomerShippingInformationComponent implements OnInit {
     //    })
     //}
     addDomesticShipping() {
+        this.isEditDomestic = false;
         this.domesticShippingInfo = new CustomerShippingModel();
     }
     addInternationalShipping() {
+        this.isEditInternational = false;
         this.internationalShippingInfo = new CustomerInternationalShippingModel();
     }
     //deleteDomesticShipping(rowData) {
@@ -472,6 +476,7 @@ export class CustomerShippingInformationComponent implements OnInit {
             this.customerService.updateInternationalShipping(data).subscribe(res => {
                 this.shipViaInternational = new CustomerInternationalShipVia();
                 this.getInternationalShippingByCustomerId()
+                this.isEditInternational = false;
                 this.alertService.showMessage(
                     'Success',
                     `Saved International Shipping Information Sucessfully `,

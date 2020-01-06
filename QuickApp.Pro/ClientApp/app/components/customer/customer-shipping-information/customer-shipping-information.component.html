@@ -79,7 +79,7 @@
                     </ng-template>
 
                     <ng-template pTemplate="body" let-rowData let-columns="columns">
-                        <tr [pSelectableRow]="rowData">
+                        <tr [pSelectableRow]="rowData" [ngStyle]="{'background-color' : rowData.isPrimary === true ? '#79ffe3'  : 'white'  }">
                             <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                 {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                             </td>
@@ -178,10 +178,11 @@
                         </ng-template>
 
                         <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                            <tr [pSelectableRow]="rowData">
+                            <tr [pSelectableRow]="rowData" [ngStyle]="{'background-color' : rowData.isPrimary === true ? '#79ffe3'  : 'white'  }">
                                 <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                    {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                    {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'expirationDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'startDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                 </td>
+                               
                                 <td>
                                     <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActiveIS{{rowIndex}}" (onChange)="updateActiveorInActiveForIS(rowData)"></p-inputSwitch>
                                     <span data-toggle="modal" data-target="#viewInter"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openInterShippingView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>

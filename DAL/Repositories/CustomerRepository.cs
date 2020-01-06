@@ -926,7 +926,23 @@ namespace DAL.Repositories
                 model.CreatedDate = model.UpdatedDate = DateTime.Now;
                 model.IsActive = true;
                 model.IsDeleted = false;
-                _appContext.CustomerInternationalShipping.Add(model);
+                if (model.IsPrimary == true)
+                {
+                    var customershipping = _appContext.CustomerInternationalShipping.Where(p => p.CustomerId == model.CustomerId).ToList();
+
+                    if (customershipping != null && customershipping.Count > 0)
+                    {
+                        foreach (var item in customershipping)
+                        {
+                            item.IsPrimary = false;
+                            _appContext.CustomerInternationalShipping.Update(item);
+                            _appContext.SaveChanges();
+                        }
+                    }
+                }
+                    model.IsPrimary = model.IsPrimary;
+
+                    _appContext.CustomerInternationalShipping.Add(model);
                 _appContext.SaveChanges();
 
             }
@@ -940,8 +956,42 @@ namespace DAL.Repositories
         {
             try
             {
-                model.UpdatedDate = DateTime.Now;
-                _appContext.CustomerInternationalShipping.Update(model);
+                // model.UpdatedDate = DateTime.Now;
+                //var customershipping = _appContext.CustomerInternationalShipping.AsNoTracking().Where(p => p.CustomerId == model.CustomerId).ToList();
+                var customershipping = _appContext.CustomerInternationalShipping.AsNoTracking().Where(p => p.CustomerId == model.CustomerId).ToList();
+
+                if (model.IsPrimary == true)
+                {
+                  
+                    //var shipping = _appContext.CustomerInternationalShipping.Where(p => p.CustomerId == model.CustomerId).ToList();
+
+                    if (customershipping != null && customershipping.Count > 0)
+                    {
+                        foreach (var item in customershipping)
+                        {
+                            item.IsPrimary = false;
+                            _appContext.CustomerInternationalShipping.Update(item);
+                            _appContext.SaveChanges();
+                        }
+                    }
+                }
+
+                var shipping = customershipping.Where(p => p.InternationalShippingId == model.InternationalShippingId).FirstOrDefault();
+
+                shipping.IsPrimary = model.IsPrimary;
+                shipping.ExpirationDate = model.ExpirationDate;
+                shipping.ExportLicense = model.ExportLicense;
+                shipping.IsActive = model.IsActive;
+                shipping.IsDeleted = model.IsDeleted;
+                shipping.MasterCompanyId = model.MasterCompanyId;
+                shipping.UpdatedBy = model.UpdatedBy;
+                shipping.UpdatedDate = DateTime.Now;
+                shipping.ShipToCountryId = model.ShipToCountryId;
+                shipping.StartDate = model.StartDate;
+                shipping.Amount = model.Amount;
+                shipping.Description = model.Description;
+                shipping.CustomerId = model.CustomerId;
+                    _appContext.CustomerInternationalShipping.Update(shipping);
                 _appContext.SaveChanges();
 
             }
