@@ -159,6 +159,7 @@ export class PurchaseOrderPart {
     businessUnitText: string;
     divisionText: string;
     departmentText: string;
+    isDeleted: boolean;
 
     CompanyList: DropDownData[];
     BusinessUnitList: DropDownData[];
@@ -285,6 +286,7 @@ export class StockLine {
     createdDate: Date;
     purchaseOrderPartRecordId: number;
     timeLifeDetailsNotProvided: boolean;
+    isDeleted: boolean;
 
     //View Properties
 
