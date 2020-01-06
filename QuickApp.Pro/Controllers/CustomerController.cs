@@ -1270,8 +1270,22 @@ namespace QuickApp.Pro.Controllers
                 CustomerShippingAddressObj.UpdatedDate = DateTime.Now;
                 CustomerShippingAddressObj.CreatedBy = Customershipping.CreatedBy;
                 CustomerShippingAddressObj.UpdatedBy = Customershipping.UpdatedBy;
-                //CustomerShippingAddressObj.IsPrimary = Customershipping.IsPrimary;
-                CustomerShippingAddressObj.IsPrimary = false;
+                if (Customershipping.IsPrimary == true)
+                {
+                    var shippingAddress = _context.CustomerShippingAddress.Where(p => p.CustomerId == Customershipping.CustomerId).ToList();
+                    if (shippingAddress != null && shippingAddress.Count > 0)
+                    {
+                        foreach (var item in shippingAddress)
+                        {
+                            item.IsPrimary = false;
+                            _context.CustomerShippingAddress.Update(item);
+                            _context.SaveChanges();
+                        }
+                    }
+                }
+
+                CustomerShippingAddressObj.IsPrimary = Customershipping.IsPrimary;
+                //CustomerShippingAddressObj.IsPrimary = false;
 
                 if (Customershipping.CustomerShippingAddressId > 0)
                 {
@@ -1787,8 +1801,7 @@ namespace QuickApp.Pro.Controllers
                 checkBillingObj.ExpirationDate = customerBillingAddressViewModel.ExpirationDate;
                 checkBillingObj.Amount = customerBillingAddressViewModel.Amount;
                 checkBillingObj.MasterCompanyId = 1;
-                checkBillingObj.IsPrimary = customerBillingAddressViewModel.IsPrimary;
-                addressObj.Line1 = customerBillingAddressViewModel.Address1;
+                 addressObj.Line1 = customerBillingAddressViewModel.Address1;
                 addressObj.Line2 = customerBillingAddressViewModel.Address2;
                 addressObj.Line3 = customerBillingAddressViewModel.Address3;
                 addressObj.PostalCode = customerBillingAddressViewModel.PostalCode;
@@ -1796,10 +1809,27 @@ namespace QuickApp.Pro.Controllers
                 addressObj.City = customerBillingAddressViewModel.City;
                 addressObj.Country = customerBillingAddressViewModel.Country;
                 addressObj.MasterCompanyId = 1;
+
+
+
+                if (customerBillingAddressViewModel.IsPrimary == true)
+                {
+                    var shippingAddress = _context.CustomerShippingAddress.Where(p => p.CustomerId == customerBillingAddressViewModel.CustomerId).ToList();
+                    if (shippingAddress != null && shippingAddress.Count > 0)
+                    {
+                        foreach (var item in shippingAddress)
+                        {
+                            item.IsPrimary = false;
+                            _context.CustomerShippingAddress.Update(item);
+                            _context.SaveChanges();
+                        }
+                    }
+                }
                 // addressObj.RecordCreateDate = DateTime.Now;
 
                 //created by is not needed as the record is already created and the viewmodel returns null
                 //addressObj.CreatedBy = customerBillingAddressViewModel.CreatedBy;
+                checkBillingObj.IsPrimary = customerBillingAddressViewModel.IsPrimary;
 
                 addressObj.UpdatedBy = customerBillingAddressViewModel.UpdatedBy;
                 //addressObj.CreatedDate = DateTime.Now;

@@ -384,7 +384,7 @@ namespace DAL.Repositories
 
                                 CustomerName = cust.Name,
                                 CustomerType = ca.description,
-                                OpenDate=wo.OpenDate.Date,
+                                OpenDate = wo.OpenDate.Date,
 
                                 CustomerRequestDate = string.Join(",", _appContext.WorkOrderPartNumber
                                                           .Where(p => p.WorkOrderId == wo.WorkOrderId)
@@ -413,7 +413,7 @@ namespace DAL.Repositories
                                 wo.CreatedDate,
                                 TotalRecords = totalRecords,
                             }
-                            
+
                           ).Distinct()
                           .OrderByDescending(p => p.CreatedDate)
                           .Skip(skip)
@@ -426,33 +426,33 @@ namespace DAL.Repositories
                     {
                         switch (woFilters.SortField)
                         {
-                            case "WorkOrderNum":
+                            case "workOrderNum":
                                 return list.OrderByDescending(p => p.WorkOrderNum).ToList();
-                            case "PartNos":
+                            case "partNos":
                                 return list.OrderByDescending(p => p.PartNos).ToList();
-                            case "PNDescription":
+                            case "pnDescription":
                                 return list.OrderByDescending(p => p.PNDescription).ToList();
-                            case "WorkScope":
+                            case "workScope":
                                 return list.OrderByDescending(p => p.WorkScope).ToList();
-                            case "Priority":
+                            case "priority":
                                 return list.OrderByDescending(p => p.Priority).ToList();
-                            case "CustomerName":
+                            case "customerName":
                                 return list.OrderByDescending(p => p.CustomerName).ToList();
-                            case "CustomerType":
+                            case "customerType":
                                 return list.OrderByDescending(p => p.CustomerType).ToList();
-                            case "OpenDate":
+                            case "openDate":
                                 return list.OrderByDescending(p => p.OpenDate).ToList();
-                            case "CustomerRequestDate":
+                            case "customerRequestDate":
                                 return list.OrderByDescending(p => p.CustomerRequestDate).ToList();
-                            case "PromisedDate":
+                            case "promisedDate":
                                 return list.OrderByDescending(p => p.PromisedDate).ToList();
-                            case "EstimatedShipDate":
+                            case "estimatedShipDate":
                                 return list.OrderByDescending(p => p.EstimatedShipDate).ToList();
-                            case "EstimatedCompletionDate":
+                            case "estimatedCompletionDate":
                                 return list.OrderByDescending(p => p.EstimatedCompletionDate).ToList();
-                            case "Stage":
+                            case "stage":
                                 return list.OrderByDescending(p => p.Stage).ToList();
-                            case "WorkOrderStatus":
+                            case "workOrderStatus":
                                 return list.OrderByDescending(p => p.WorkOrderStatus).ToList();
                         }
                     }
@@ -460,33 +460,33 @@ namespace DAL.Repositories
                     {
                         switch (woFilters.SortField)
                         {
-                            case "WorkOrderNum":
+                            case "workOrderNum":
                                 return list.OrderBy(p => p.WorkOrderNum).ToList();
-                            case "PartNos":
+                            case "partNos":
                                 return list.OrderBy(p => p.PartNos).ToList();
-                            case "PNDescription":
+                            case "pnDescription":
                                 return list.OrderBy(p => p.PNDescription).ToList();
-                            case "WorkScope":
+                            case "workScope":
                                 return list.OrderBy(p => p.WorkScope).ToList();
-                            case "Priority":
+                            case "priority":
                                 return list.OrderBy(p => p.Priority).ToList();
-                            case "CustomerName":
+                            case "customerName":
                                 return list.OrderBy(p => p.CustomerName).ToList();
-                            case "CustomerType":
+                            case "customerType":
                                 return list.OrderBy(p => p.CustomerType).ToList();
-                            case "OpenDate":
+                            case "openDate":
                                 return list.OrderBy(p => p.OpenDate).ToList();
-                            case "CustomerRequestDate":
+                            case "customerRequestDate":
                                 return list.OrderBy(p => p.CustomerRequestDate).ToList();
-                            case "PromisedDate":
+                            case "promisedDate":
                                 return list.OrderBy(p => p.PromisedDate).ToList();
-                            case "EstimatedShipDate":
+                            case "estimatedShipDate":
                                 return list.OrderBy(p => p.EstimatedShipDate).ToList();
-                            case "EstimatedCompletionDate":
+                            case "estimatedCompletionDate":
                                 return list.OrderBy(p => p.EstimatedCompletionDate).ToList();
-                            case "Stage":
+                            case "stage":
                                 return list.OrderBy(p => p.Stage).ToList();
-                            case "WorkOrderStatus":
+                            case "workOrderStatus":
                                 return list.OrderBy(p => p.WorkOrderStatus).ToList();
                         }
                     }
@@ -2012,6 +2012,43 @@ namespace DAL.Repositories
             return data;
         }
 
+        public IEnumerable<object> WorkOrderAssetHistory(long workOrderAssetId)
+        {
+            try
+            {
+                var workOrderAssetsList = (from wa in _appContext.WorkOrderAssetAudit
+                                           join a in _appContext.Asset on wa.AssetRecordId equals a.AssetRecordId
+                                           join at in _appContext.AssetType on a.AssetTypeId equals at.AssetTypeId
+                                           where wa.WorkOrderAssetId == workOrderAssetId
+                                           select new
+                                           {
+                                               wa.AssetRecordId,
+                                               wa.WorkOrderAssetId,
+                                               a.AssetId,
+                                               a.Description,
+                                               at.AssetTypeName,
+                                               at.AssetTypeId,
+                                               wa.Quantity,
+                                               wa.MinQuantity,
+                                               wa.MaxQuantity,
+                                               wa.ExpectedQuantity,
+                                               wa.Findings,
+                                               wa.CheckedInById,
+                                               wa.CheckedInDate,
+                                               wa.CheckedOutById,
+                                               wa.CheckedOutDate,
+                                               wa.CheckInOutStatus
+                                           }).Distinct().ToList();
+
+                return workOrderAssetsList;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         #endregion
 
         #region Work Order Exclusions
@@ -3394,8 +3431,8 @@ namespace DAL.Repositories
             {
                 var workOrderFreightList = (from wf in _appContext.WorkOrderQuoteFreight
                                             join wq in _appContext.WorkOrderQuoteDetails on wf.WorkOrderQuoteDetailsId equals wq.WorkOrderQuoteDetailsId
-                                            join car in _appContext.ShippingVia on wf.CarrierId equals car.ShippingViaId
-                                            join sv in _appContext.ShippingVia on wf.ShipViaId equals sv.ShippingViaId
+                                            join car in _appContext.Carrier on wf.CarrierId equals car.CarrierId
+                                            join sv in _appContext.CustomerShipping on wf.ShipViaId equals sv.CustomerShippingId
                                             where wf.IsDeleted == false && wq.WorkOrderQuoteId == WorkOrderQuoteId
                                             select new
                                             {
@@ -3418,8 +3455,8 @@ namespace DAL.Repositories
                                                 wf.Width,
                                                 wf.WorkOrderQuoteDetailsId,
                                                 wf.WorkOrderQuoteFreightId,
-                                                ShipViaName = sv.Name,
-                                                CarrierName = car.Name,
+                                                ShipViaName = sv.ShipVia,
+                                                CarrierName = car.Description,
                                                 wf.MarkupPercentageId,
                                                 wf.FreightCostPlus
                                             }).Distinct().ToList();
@@ -3845,17 +3882,13 @@ namespace DAL.Repositories
 
         #region Work Order Freight
 
-        public long CreateWorkOrderFreight(WorkOrderFreight workOrderFreight)
+        public List<WorkOrderFreight> CreateWorkOrderFreight(List<WorkOrderFreight> workOrderFreight)
         {
             try
             {
-                workOrderFreight.CreatedDate = workOrderFreight.UpdatedDate = DateTime.Now;
-                workOrderFreight.IsActive = true;
-                workOrderFreight.IsDeleted = false;
-
-                _appContext.WorkOrderFreight.Add(workOrderFreight);
+                _appContext.WorkOrderFreight.AddRange(workOrderFreight);
                 _appContext.SaveChanges();
-                return workOrderFreight.WorkOrderFreightId;
+                return workOrderFreight;
             }
             catch (Exception)
             {
@@ -3864,16 +3897,35 @@ namespace DAL.Repositories
             }
         }
 
-        public void UpdateWorkOrderFreight(WorkOrderFreight workOrderFreight)
+        public List<WorkOrderFreight> UpdateWorkOrderFreight(List<WorkOrderFreight> workOrderFreight)
         {
             try
             {
-                workOrderFreight.UpdatedDate = DateTime.Now;
-                workOrderFreight.IsActive = true;
-                workOrderFreight.IsDeleted = false;
+                try
+                {
+                    if (workOrderFreight != null && workOrderFreight.Count > 0)
+                    {
+                        foreach (var freight in workOrderFreight)
+                        {
+                            if (freight.WorkOrderFreightId > 0)
+                            {
+                                _appContext.WorkOrderFreight.Update(freight);
+                            }
+                            else
+                            {
+                                _appContext.WorkOrderFreight.Add(freight);
+                            }
+                            _appContext.SaveChanges();
 
-                _appContext.WorkOrderFreight.Update(workOrderFreight);
-                _appContext.SaveChanges();
+                        }
+                    }
+                    return workOrderFreight;
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
             }
             catch (Exception)
             {
@@ -3887,8 +3939,8 @@ namespace DAL.Repositories
             try
             {
                 var workOrderFreightList = (from wf in _appContext.WorkOrderFreight
-                                            join car in _appContext.ShippingVia on wf.CarrierId equals car.ShippingViaId
-                                            join sv in _appContext.ShippingVia on wf.ShipViaId equals sv.ShippingViaId
+                                            join car in _appContext.Carrier on wf.CarrierId equals car.CarrierId
+                                            join sv in _appContext.CustomerShipping on wf.ShipViaId equals sv.CustomerShippingId
                                             where wf.IsDeleted == false && wf.WorkFlowWorkOrderId == wfwoId
                                             select new
                                             {
@@ -3912,8 +3964,8 @@ namespace DAL.Repositories
                                                 wf.WorkFlowWorkOrderId,
                                                 wf.WorkOrderFreightId,
                                                 wf.WorkOrderId,
-                                                ShipViaName = sv.Name,
-                                                CarrierName = car.Name
+                                                sv.ShipVia,
+                                                CarrierName = car.Description
                                             }).Distinct().ToList();
 
                 return workOrderFreightList;
@@ -3925,7 +3977,28 @@ namespace DAL.Repositories
             }
         }
 
+        public void DeleteWorkOrderFreight(long workOrderFreightId, string updatedBy)
+        {
+            WorkOrderFreight workOrderFreight = new WorkOrderFreight();
+            try
+            {
+                workOrderFreight.WorkOrderFreightId = workOrderFreightId;
+                workOrderFreight.IsDeleted = true;
+                workOrderFreight.UpdatedBy = updatedBy;
+                workOrderFreight.UpdatedDate = DateTime.Now;
+                _appContext.WorkOrderFreight.Attach(workOrderFreight);
 
+                _appContext.Entry(workOrderFreight).Property(p => p.IsDeleted).IsModified = true;
+                _appContext.Entry(workOrderFreight).Property(p => p.UpdatedBy).IsModified = true;
+                _appContext.Entry(workOrderFreight).Property(p => p.UpdatedDate).IsModified = true;
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
         #endregion
 
         #region Work Order Publications
