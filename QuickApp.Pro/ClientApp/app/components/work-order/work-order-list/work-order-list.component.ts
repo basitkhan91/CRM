@@ -33,17 +33,19 @@ export class WorkOrderListComponent implements OnInit {
     lazyLoadEventData: any;
     headers = [
         { field: 'workOrderNum', header: 'WO NO' },
+        { field: 'partNos', header: 'MPN' },
+        { field: 'pnDescription', header: 'MPN Description' },
+        { field: 'workScope', header: 'Work Scope' },
+        { field: 'priority', header: 'Priority' },
         { field: 'customerName', header: 'Customer Name' },
-        { field: 'customerCode', header: 'Customer Code' },
-        { field: 'partNos', header: 'Part No(s)' },
-        { field: 'pnDescription', header: 'PN Description(s)' },
-        { field: 'revisedPN', header: 'Revised PN(s)' },
-        { field: 'workScope', header: 'Work Scope(s)' },
-        { field: 'priority', header: 'Priority(s)' },
-        { field: 'stage', header: 'Stage(s)' },
-        { field: 'workOrderType', header: 'WO Type' },
+        { field: 'customerType', header: 'Customer Type' },
         { field: 'openDate', header: 'Open Date' },
-        { field: 'workOrderStatus', header: 'WO Status' },
+        { field: 'customerRequestDate', header: 'Cust Req Date' },
+        { field: 'promisedDate', header: 'Promise Date' },
+        { field: 'estimatedShipDate', header: 'Est. Ship Date' },
+        { field: 'estimatedCompletionDate', header: 'Shipped Date' },
+        { field: 'stage', header: 'Stage Code' },
+        { field: 'workOrderStatus', header: 'Status' },
     ]
     selectedColumns = this.headers;
     pageIndex: number = 0;

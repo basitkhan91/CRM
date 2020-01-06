@@ -1015,7 +1015,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 this.id = res.customerId;
                 this.editData = res;
 
-                // this.isEdit = true;
+                 this.isEdit = true;
             })
         }
 
