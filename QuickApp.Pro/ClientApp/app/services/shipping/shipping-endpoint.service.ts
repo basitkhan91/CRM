@@ -111,6 +111,7 @@ export class ShippingEndpoint extends EndpointFactory {
                 stockLine.locationId = SL.locationId;
                 stockLine.shelfId = SL.shelfId;
                 stockLine.binId = SL.binId;
+                stockLine.isDeleted = SL.isDeleted;
 
                 stockLines.push(stockLine);
             });
