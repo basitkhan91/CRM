@@ -192,6 +192,9 @@ export class WorkOrderService {
     deleteWorkOrderExclusionByExclusionId(workOrderExclusionsId, updatedBy) {
         return this.workOrderEndpointService.deleteWorkOrderExclusionByExclusionId(workOrderExclusionsId, updatedBy)
     }
+    getWorkOrderFrieghtsList(workFlowWorkOrderId, workOrderId){
+        return this.workOrderEndpointService.getWorkOrderFrieghtsList(workFlowWorkOrderId, workOrderId)
+    }
     getWorkOrderLaborList(workFlowWorkOrderId, workOrderId) {
         return this.workOrderEndpointService.getWorkOrderLaborList(workFlowWorkOrderId, workOrderId)
     }

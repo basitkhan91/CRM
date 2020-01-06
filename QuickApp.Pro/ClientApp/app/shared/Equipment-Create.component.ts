@@ -17,7 +17,7 @@ export class EquipmentCreateComponent implements OnInit {
     partCollection: any[];
     @Input() workFlowObject;
     //@Input() isWorkOrder = false;
-    @Input() isWorkOrder: boolean;
+    @Input() isWorkOrder: boolean = false;
     @Input() workFlow: IWorkFlow;
     @Input() isEdit = false;
     @Input() editData;

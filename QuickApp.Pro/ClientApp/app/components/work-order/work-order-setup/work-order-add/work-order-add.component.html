@@ -949,6 +949,9 @@
                                                    (updateExclusionsListForWO)="updateWorkOrderExclusionsList($event)"
                                                    (refreshData)="getExclusionListByWorkOrderId()"></app-work-order-exclusions>
                     </div>
+                    <div *ngIf="workOrderId" class="wf-label-cstm" [ngClass]="{hidedataOthers :  subTabOtherOptions !== 'freight'} ">
+                        <app-work-order-freight [workOrderFreightList]="workOrderFreightList" ></app-work-order-freight>
+                    </div>
 
 
                 </div>

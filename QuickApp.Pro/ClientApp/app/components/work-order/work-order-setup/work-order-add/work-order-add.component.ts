@@ -205,6 +205,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     csrList: any;
 
     private onDestroy$: Subject<void> = new Subject<void>();
+    workOrderFreightList: Object;
 
 
     constructor(
@@ -1299,6 +1300,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             this.getChargesListByWorkOrderId();
         } else if (value === 'exclusions') {
             this.getExclusionListByWorkOrderId();
+        } else if(value === 'freight'){
+            this.getFreightListByWorkOrderId();
         }
     }
 
@@ -1370,6 +1373,15 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
         }
 
+    }
+
+    getFreightListByWorkOrderId(){
+        if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
+            this.workOrderService.getWorkOrderFrieghtsList(this.workFlowWorkOrderId, this.workOrderId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+                this.workOrderFreightList = res;
+            })
+
+        }
     }
 
 
