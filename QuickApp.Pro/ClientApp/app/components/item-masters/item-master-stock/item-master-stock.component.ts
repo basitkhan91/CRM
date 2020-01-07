@@ -48,6 +48,11 @@ import { ItemMasterExchangeLoanComponent } from '../item-master-exch-loan/item-m
 import { ConfigurationService } from '../../../services/configuration.service';
 import { pulloutRequiredFieldsOfForm } from '../../../validations/form.validator';
 
+import { SiteService } from '../../../services/site.service';
+import { Site } from '../../../models/site.model';
+import { StocklineService } from '../../../services/stockline.service';
+
+
 @Component({
     selector: 'app-item-master-stock',
     templateUrl: './item-master-stock.component.html',
@@ -404,6 +409,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     formData = new FormData();
     allUploadedDocumentsList: any = [];
     documentDeleted: boolean;
+    allSites: any[] = [];
+    wareHouseData: any[] = [];
+    locationData: any[] = [];
+    shelfData: any[] = []; 
+    binData: any[] = [];
 
     // errorLogForPS: string = '';
 
@@ -414,7 +424,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         public priority: PriorityService, public inteService: IntegrationService,
         public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService,
         public proService: ProvisionService, private dialog: MatDialog,
-        private masterComapnyService: MasterComapnyService, public commonService: CommonService, @Inject(DOCUMENT) document,private configurations: ConfigurationService) {
+        private masterComapnyService: MasterComapnyService, public commonService: CommonService, @Inject(DOCUMENT) document,private configurations: ConfigurationService, public siteService: SiteService, public stockLineService: StocklineService) {
         this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-stock';
         this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
         this.displayedColumns.push('action');
@@ -668,6 +678,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.getAllSubChapters();
         this.getCapabilityType();
         this.getConditionsList();
+        this.loadSiteData();
 
 
 
@@ -703,7 +714,73 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     }
 
+    private loadSiteData()  //retriving Information
+	{
+		this.alertService.startLoadingMessage();
+		this.loadingIndicator = true;
 
+		this.siteService.getSiteList().subscribe(   //Getting Site List Hear
+			results => this.onSiteDataLoadSuccessful(results[0]), //Pasing first Array and calling Method
+			error => this.onDataLoadFailed(error)
+		);
+
+    }
+    private onSiteDataLoadSuccessful(getSiteList: Site[]) {
+
+		this.alertService.stopLoadingMessage();
+		this.loadingIndicator = false;
+		this.allSites = getSiteList; //Contain first array of Loaded table Data will put in Html as [value]
+
+		//console.log(this.allSites);
+    }
+    siteValueChange(siteId) //Site Valu Selection in Form
+	{
+        this.stockLineService.getWareHouseDataBySiteId(siteId).subscribe(
+            result => {
+                this.alertService.stopLoadingMessage();
+                this.loadingIndicator = false;
+                this.wareHouseData = result[0];
+            },
+            error => this.onDataLoadFailed(error)
+        )
+		
+    }
+    wareHouseValueChange(wareHouseId) //Site Valu Selection in Form
+	{
+        this.stockLineService.getLocationDataByWarehouseId(wareHouseId).subscribe(
+            result => {
+                this.alertService.stopLoadingMessage();
+                this.loadingIndicator = false;
+                this.locationData = result[0];
+            },
+            error => this.onDataLoadFailed(error)
+        )
+		
+    }
+    locationValueChange(lcoationId) //Site Valu Selection in Form
+	{
+        this.stockLineService.getShelfDataByLocationId(lcoationId).subscribe(
+            result => {
+                this.alertService.stopLoadingMessage();
+                this.loadingIndicator = false;
+                this.shelfData = result[0];
+            },
+            error => this.onDataLoadFailed(error)
+        )
+		
+    }
+    shelfValueChange(shelfId) //Site Valu Selection in Form
+	{
+        this.stockLineService.getBinDataByShelfId(shelfId).subscribe(
+            result => {
+                this.alertService.stopLoadingMessage();
+                this.loadingIndicator = false;
+                this.binData = result[0];
+            },
+            error => this.onDataLoadFailed(error)
+        )
+		
+	}
     errorMessageHandler(log) {
         this.alertService.showMessage(
             'Error',

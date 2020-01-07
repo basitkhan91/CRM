@@ -213,5 +213,19 @@ export class StocklineService {
 
 	getStockLineDetailsByStockLineId(stockLineId) {
         return this.stocklineEndpoint.getStockLineDetailsByStockLineId(stockLineId);
-    }
+	}
+	getWareHouseDataBySiteId(siteId){
+		return this.stocklineEndpoint.getWareHouseDataBySiteId(siteId);
+	}
+	getLocationDataByWarehouseId(warehouseId){
+		return this.stocklineEndpoint.getLocationDataByWarehouseId(warehouseId);
+	}
+	getShelfDataByLocationId(locationId){
+		return this.stocklineEndpoint.getShelfDataByLocationId(locationId);
+	}
+	getBinDataByShelfId(shelfId){
+		return this.stocklineEndpoint.getBinDataByShelfId(shelfId);
+	}
+	
+
 }
