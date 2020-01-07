@@ -89,8 +89,12 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
 
         this.cols = [
             
-            { field: 'partNumber', header: 'PN' },
+         
             { field: 'receivingCustomerNumber', header: 'Recev.No.' },
+            { field: 'workOrderNum', header: 'WorkOrderNum' },
+            { field: 'partNumber', header: 'PN' },
+            { field: 'partDescription', header: 'PN Description' },
+
             { field: 'changePartNumber', header: 'Change Part Number' },
             { field: 'firstName', header: 'Employee Name' },
             { field: 'name', header: 'Customer Name' },
@@ -103,8 +107,9 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     private onDataLoadSuccessful(allWorkFlows: any[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
+
         this.allRecevinginfo = allWorkFlows;
-        console.log(allWorkFlows);
+        console.log(allWorkFlows,'work');
     }
     openEdits(row) {
         this.receivingCustomerWorkService.isEditMode = true;
@@ -114,6 +119,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     }
   
     openView(content, row) {
+        debugger;
 
         this.sourceAction = row;
         if (row.customer) {
