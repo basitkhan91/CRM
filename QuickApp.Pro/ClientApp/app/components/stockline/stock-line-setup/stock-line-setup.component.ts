@@ -43,8 +43,8 @@ import { EmployeeService } from '../../../services/employee.service';
 /** stock-line-setup component*/
 export class StockLineSetupComponent implements OnInit, AfterViewInit {
     ngAfterViewInit(): void {
-        throw new Error("Method not implemented.");
-    }
+	}
+
 	allSites: Site[]
 	public sourceBin: any = {};
     allWareHouses: any;
