@@ -58,10 +58,11 @@ export class WorkOrderFreightComponent implements OnInit {
     }
 
     createNew() { }
-    addNewRow(){
+    addNewRow() {
         this.freightForm = [...this.freightForm, new Freight()];
     }
-    saveFreightList(){
+    saveFreightList() {
         this.saveFreightListForWO.emit(this.freightForm);
+        $('#addNewFreight').modal('hide');
     }
 }
