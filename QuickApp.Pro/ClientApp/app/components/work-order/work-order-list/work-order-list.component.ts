@@ -82,6 +82,7 @@ export class WorkOrderListComponent implements OnInit {
     currentStatus = 'open'
     isGlobalFilter: boolean = false;
     private onDestroy$: Subject<void> = new Subject<void>();
+    viewType: any = 'mpn';
     constructor(private workOrderService: WorkOrderService,
         private route: Router,
         private authService: AuthService,
@@ -138,11 +139,16 @@ export class WorkOrderListComponent implements OnInit {
         }
     }
 
-    changeOfStatus(value) {
+    changeOfStatus(status, viewType ) {
         const lazyEvent = this.lazyLoadEventData;
-        this.currentStatus = value;
+        this.currentStatus = status === '' ? this.currentStatus : status;
+        this.viewType = viewType === '' ? this.viewType : viewType;
 
-        this.getAllWorkOrderList({ ...lazyEvent, filters: { ...lazyEvent.filters, workOrderStatus: this.currentStatus } })
+        this.getAllWorkOrderList({ ...lazyEvent, 
+            filters: { ...lazyEvent.filters,
+                 workOrderStatus: this.currentStatus,
+                 viewType : this.viewType
+                 } })
 
     }
     fieldSearch(value, field) {

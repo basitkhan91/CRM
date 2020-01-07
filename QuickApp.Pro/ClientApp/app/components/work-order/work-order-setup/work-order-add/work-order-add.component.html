@@ -8,13 +8,13 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item" aria-current="page">Work Order</li>
-                                <li class="breadcrumb-item active" aria-current="page">Create WorkOrder</li>
+                                <li class="breadcrumb-item active" aria-current="page">Create Work Order</li>
                                 <li *ngIf="isSubWorkOrder" class="breadcrumb-item active" aria-current="page">Sub WOrkOrder </li>
                             </ol>
                         </nav>
                         <div class="pheading">
-                            <h4 *ngIf="!isSubWorkOrder" class="page-heading">Work Order Setup</h4>
-                            <h4 *ngIf="isSubWorkOrder" class="page-heading">Sub Work Order Setup</h4>
+                            <h4 *ngIf="!isSubWorkOrder" class="page-heading">Work Order Create</h4>
+                            <h4 *ngIf="isSubWorkOrder" class="page-heading">Sub Work Order Create</h4>
                         </div>
                         <div class="clear"></div>
                         <div class="card">
@@ -179,7 +179,8 @@
                                                                 [size]="30" [minLength]="1"
                                                                 #customerName="ngModel"
                                                                 required
-                                                                [dropdown]="false" class="p-autoComplete-ctsm">
+
+                                                                [dropdown]="true" class="p-autoComplete-ctsm">
 
                                                 </p-autoComplete>
 
@@ -954,6 +955,8 @@
                         [workOrderFreightList]="workOrderFreightList" 
                         [savedWorkOrderData]="savedWorkOrderData"
                         (saveFreightListForWO)="saveWorkOrderFreightsList($event)"
+                        (updateFreightListForWo)="updateWorkOrderFreightsList($event)"
+                        (refreshData)="getFreightListByWorkOrderId()"
                         ></app-work-order-freight>
                     </div>
 

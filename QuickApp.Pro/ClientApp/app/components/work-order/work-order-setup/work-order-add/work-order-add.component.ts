@@ -1399,7 +1399,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 updatedDate: new Date(),
                 createdBy: this.userName,
                 updatedBy: this.userName,
-                workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId,
+                workOrderId: this.workOrderId,
+                workFlowWorkOrderId: this.workFlowWorkOrderId,
                 estimtPercentOccurranceId: x.estimtPercentOccurrance
             }
         });
@@ -1412,6 +1413,32 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             );
             this.getFreightListByWorkOrderId();
         })
+    }
+
+    updateWorkOrderFreightsList(data) {
+        const freightsArr = data.map(x => {
+            return {
+                ...x,
+                masterCompanyId: 1,
+                isActive: true,
+                isDeleted: false,
+
+                createdBy: this.userName,
+                updatedBy: this.userName,
+                workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId,
+                estimtPercentOccurranceId: x.estimtPercentOccurrance
+            }
+        });
+        this.workOrderService.updateWorkOrderFreightList(freightsArr).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+            this.freight = [];
+            this.alertService.showMessage(
+                this.moduleName,
+                'Updated Work Order Freight  Succesfully',
+                MessageSeverity.success
+            );
+            this.getFreightListByWorkOrderId();
+        })
+
     }
 
 

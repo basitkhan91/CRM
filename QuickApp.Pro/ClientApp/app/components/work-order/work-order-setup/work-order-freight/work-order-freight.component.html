@@ -10,6 +10,53 @@
   </button>
 </div>
 
+<div>
+  <p-table
+    [columns]="cols"
+    [value]="workOrderFreightList"
+    [lazy]="false"
+    [paginator]="true"
+    [rows]="10"
+    [paginator]="true"
+  >
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns">
+          {{ col.header }}
+        </th>
+        <th>Action</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr>
+        <td *ngFor="let col of columns">
+          {{ rowData[col.field] }}
+        </td>
+        <td>
+          <button
+            class="btn-edit ptable-wo-btns"
+            mat-icon-button
+            data-target="#addNewFreight"
+            data-toggle="modal"
+            (click)="edit(rowData)"
+            matTooltip="Edit"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            class="btn-delete ptable-wo-btns"
+            mat-icon-button
+            matTooltip="Delete"
+            (click)="delete(rowData)"
+          >
+            <mat-icon color="warn">delete</mat-icon>
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
 <div id="addNewFreight" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
     <!-- Modal content-->
@@ -21,7 +68,7 @@
         <h4 class="modal-title">Add New Freight</h4>
       </div>
       <div class="modal-body">
-        <div>
+        <div *ngIf="!isEdit">
           <span class="cat-heading cat4 ng-star-inserted">
             Add New Freight
             <i class="fa fa-plus" (click)="addNewRow()"></i>
@@ -145,7 +192,7 @@
           class="btn btn-primary-cstm pull-right"
           (click)="saveFreightList()"
         >
-          Save
+          {{ isEdit ? 'Update' : 'Save' }}
         </button>
         <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">
           Close

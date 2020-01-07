@@ -55,8 +55,59 @@
       
         </div>
       </div>
+
+      <div >
+            <p-table class="rpo-table-cstm rro-table-cstm pub-ptable-cstm" [columns]="cols" [value]="workOrderMaterialList" [paginator]="true" [rows]="10">
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th *ngFor="let col of columns">
+                                {{col.header}}
+                            </th>
+                            <th>Actions </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr>
+                            <td *ngFor="let col of columns">
+                                {{rowData[col.field]}}
+                            </td>
+                            <td class="btn-spaces">
+                                    <button
+                                      class="btn-edit ptable-wo-btns"
+                                      mat-icon-button
+                                      data-target="#addNewMaterials" 
+                                      data-toggle="modal"
+                                      (click)="edit(rowData)"
+                                      matTooltip="Edit"
+                                    >
+                                      <mat-icon>edit</mat-icon>
+                                    </button>
+
+
+                                    <button
+                                    class="btn-edit ptable-wo-btns"
+                                    mat-icon-button
+                                    (click)="createNewPoWorkOrder(rowData)"
+                                    matTooltip="Create PO"
+                                  >
+                                    <mat-icon>add</mat-icon>
+                                  </button>
+                                    <button
+                                    class="btn-delete ptable-wo-btns"
+                                    mat-icon-button
+                                    matTooltip="Delete"
+                                    (click)="delete(rowData)"
+                                  >
+                                    <mat-icon color="warn">delete</mat-icon>
+                                  </button>
+                                  </td>
+
+                        </tr>
+                    </ng-template>
+                </p-table>
+      </div>
     
-<div class="equipment-tab-content">
+<!-- <div class="equipment-tab-content">
         <div class="x_panel">
             <div class="tab-content">
                 <div class="table-responsive table-overflow" id="workflow-attributes-block">
@@ -178,7 +229,7 @@
             <br />
             <br />
         </div>
-</div>
+</div> -->
 
 <div id="reserve" class="modal fade" role="dialog" data-backdrop="static">
         <div class="modal-dialog modal-lg">

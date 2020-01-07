@@ -72,6 +72,43 @@ export class WorkOrderCompleteMaterialListComponent {
     eqPartData: any[] = [];
 
 
+    cols = [
+        {field: 'partNumber' , header:'Part Number'},
+        {field: 'partDescription' , header:'Part Description'},
+        {field: 'altPartNumber' , header:'Alternate PN'},
+        {field: 'serialNumber' , header:'SerialNumber'},
+        {field : 'provision', header: 'Provision'},
+        {field : 'oem', header: 'OEM'},
+        {field : 'control', header: 'Control'},
+        {field : 'condition', header: 'Condition'},
+        {field : 'itemType', header: 'Item Type'},
+        {field : 'qunatityRequried', header: 'Quantity Requried'},
+        {field : 'quantityReserved', header: 'Quantity Reserved'},
+        {field : 'quantityTurnIn', header: 'Quantity TurnIn'},
+        {field : 'quantityIssued', header: 'Quantity Issued'},
+        {field : 'quantityBackOrder', header: 'Quantity BackOrder'},
+        {field : 'qunatityRemaining', header: 'Quantity Remaining'},
+        {field : 'unitCost', header: 'Unit Cost'},
+        {field : 'extendedCost', header: 'Extended Cost'},
+        {field : 'currency', header: 'Currency'},
+        {field : 'purchaseOrderNumber', header: 'Purchase OrderNumber'},
+        {field : 'repairOrderNumber', header: 'Repair OrderNumber'},
+        {field : 'partQuantityOnHand', header: 'Part Quantity OnHand'},
+        {field : 'partQuantityAvailable', header: 'Part Quantity Available'},
+        {field : 'partQuantityOnOrder', header: 'Part Quantity OnOrder'},
+        {field : 'receiver' , header: 'Receiver'},
+        {field : 'workOrderNumber', header: 'WorkOrder Number'},
+        {field : 'subWorkOrder', header: 'Sub WorkOrder'},
+        {field : 'salesOrder', header: 'SalesOrder'},
+        {field : 'condition', header: 'Condition'},
+        {field : 'timeLife', header: 'TimeLife'},
+        {field : 'wareHouse', header: 'Ware House'},
+        {field : 'location', header: 'Location'},
+        {field : 'shelf', header: 'Shelf'},
+        {field : 'bin', header: 'Bin'},
+    ]
+
+
 
     /** WorkOrderCompleteMaterialList ctor */
     constructor(private actionService: ActionService, private itemser: ItemMasterService,
