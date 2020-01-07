@@ -13950,6 +13950,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .roview-table-cstm .child-header {
     background: #fafafa !important;
 }
+.ui-fileupload-choose input[type=file] {
+    width: 100%;
+}
 
 .multi-general p-multiselect {
     width: 207px;

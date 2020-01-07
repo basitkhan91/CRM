@@ -159,7 +159,7 @@
 							<div class="col-md-3">
 								<div class="form-group">
 									<label>TAT (Days) <span class="clr-red">*</span></label>
-									<input class="form-control" type="number" name="tat" pKeyFilter="pint" maxlength="5" [(ngModel)]="sourceVendorCap.tat" #tat="ngModel" required>
+									<input class="form-control" type="text" name="tat" pKeyFilter="pint" maxlength="5" [(ngModel)]="sourceVendorCap.tat" #tat="ngModel" required>
 									<div *ngIf="tat.invalid && (tat.dirty || tat.touched)" class="alert alert-danger alert-danger-cstm">
 											<div *ngIf="tat.errors.required">
 												<small> TAT is required </small>
