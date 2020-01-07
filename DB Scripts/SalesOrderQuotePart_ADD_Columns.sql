@@ -128,3 +128,16 @@ ELSE
 BEGIN
 	print 'column [MarginAmountExtended] for table [SalesOrderQuotePart] already exist'
 END 
+
+IF NOT EXISTS ( SELECT 1 FROM sys.tables t with(nolock)
+	INNER JOIN sys.columns c WITH(NOLOCK) ON c.[object_id] = t.[object_id]
+	WHERE t.[name] = 'SalesOrderQuotePart' AND c.[name] = 'ConditionId'
+ ) 
+BEGIN  
+	print 'column [ConditionId] created for table [SalesOrderQuotePart] successfully'
+	ALTER TABLE SalesOrderQuotePart ADD [ConditionId] [bigint] NOT NULL DEFAULT 0
+END
+ELSE 
+BEGIN
+	print 'column [ConditionId] for table [SalesOrderQuotePart] already exist'
+END 

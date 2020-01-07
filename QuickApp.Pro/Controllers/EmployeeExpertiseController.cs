@@ -77,6 +77,15 @@ namespace QuickApp.Pro.Controllers
                 employeeexpertiseobject.UpdatedDate = DateTime.Now;
                 employeeexpertiseobject.CreatedBy = employeeexpertiseViewModel.CreatedBy;
                 employeeexpertiseobject.UpdatedBy = employeeexpertiseViewModel.UpdatedBy;
+                if(employeeexpertiseViewModel.IsWorksInShop != null)
+                {
+                    employeeexpertiseobject.IsWorksInShop = employeeexpertiseViewModel.IsWorksInShop;
+                }
+                else
+                {
+                    employeeexpertiseobject.IsWorksInShop = false;
+                }
+                
                 _unitOfWork.EmployeeExpertise.Add(employeeexpertiseobject);
                 _unitOfWork.SaveChanges();
             }
@@ -98,7 +107,15 @@ namespace QuickApp.Pro.Controllers
                 existingResult.IsActive = EmployeeExpertiseViewModel.IsActive;
 				existingResult.IsDelete = EmployeeExpertiseViewModel.IsDelete;
 				existingResult.MasterCompanyId = EmployeeExpertiseViewModel.MasterCompanyId;
-               _unitOfWork.EmployeeExpertise.Update(existingResult);
+                if (EmployeeExpertiseViewModel.IsWorksInShop != null)
+                {
+                    existingResult.IsWorksInShop = EmployeeExpertiseViewModel.IsWorksInShop;
+                }
+                else
+                {
+                    existingResult.IsWorksInShop = false;
+                }
+                _unitOfWork.EmployeeExpertise.Update(existingResult);
                _unitOfWork.SaveChanges();
 
             }

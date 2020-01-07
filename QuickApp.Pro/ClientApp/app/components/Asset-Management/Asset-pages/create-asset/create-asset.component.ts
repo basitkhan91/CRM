@@ -728,17 +728,21 @@ export class CreateAssetComponent implements OnInit {
                     this.modelValue = true;
                 }
             }
-        if (this.currentAsset.assetId == this.currentAsset.assetParentId) {
-            this.isSaving = false;
-            this.alertService.stopLoadingMessage();
-            this.alertService.showMessage("", `Asset Parent cannot be equal to Asset ID.`, MessageSeverity.error);
-            return;
+        if (this.currentAsset.assetId != null && this.currentAsset.assetParentId != null) {
+            if (this.currentAsset.assetId == this.currentAsset.assetParentId) {
+                this.isSaving = false;
+                this.alertService.stopLoadingMessage();
+                this.alertService.showMessage("", `Asset Parent cannot be equal to Asset ID.`, MessageSeverity.error);
+                return;
+            }
         }
-        if (this.currentAsset.alternateAssetId == this.currentAsset.assetParentId) {
-            this.isSaving = false;
-            this.alertService.stopLoadingMessage();
-            this.alertService.showMessage("", `Asset Parent and Alternate Asset can't be same.`, MessageSeverity.error);
-            return;
+        if (this.currentAsset.alternateAssetId != null && this.currentAsset.assetParentId != null) {
+            if (this.currentAsset.alternateAssetId == this.currentAsset.assetParentId) {
+                this.isSaving = false;
+                this.alertService.stopLoadingMessage();
+                this.alertService.showMessage("", `Asset Parent and Alternate Asset can't be same.`, MessageSeverity.error);
+                return;
+            }
         }
         if (this.currentAsset.manufacturedDate != null &&  this.currentAsset.expirationDate != null) {
             if (this.currentAsset.manufacturedDate > this.currentAsset.expirationDate) {

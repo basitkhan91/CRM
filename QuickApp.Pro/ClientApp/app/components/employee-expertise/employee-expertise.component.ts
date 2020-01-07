@@ -31,6 +31,8 @@ export class EmployeeExpertiseComponent implements OnInit {
     headers = [
         { field: 'description', header: ' Employee Expertise ' },
         { field: 'memo', header: 'Memo' },
+        { field: 'isWorksInShop', header: 'Shop Employee' },
+        
     ]
     selectedColumns = this.headers;
     formData = new FormData()
@@ -47,6 +49,7 @@ export class EmployeeExpertiseComponent implements OnInit {
         masterCompanyId: 1,
         isActive: true,
         memo: "",
+        isWorksInShop:false
     }
     addNew = { ...this.new };
     selectedRecordForEdit: any;

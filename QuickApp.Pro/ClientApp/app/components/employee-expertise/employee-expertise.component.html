@@ -179,6 +179,19 @@
                     <div class="col-sm-6">
                         <div class="checkbox-cstm">
                             <label>
+                                <input type="checkbox" name="isWorksInShop"  [(ngModel)]="addNew.isWorksInShop">
+                                <span class="cr">
+                                    <i class="cr-icon pi pi-check"></i>
+                                </span>
+                                Shop Employee
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-6">
+                        <div class="checkbox-cstm">
+                            <label>
                                 <input type="checkbox" name="isActive"  [(ngModel)]="addNew.isActive">
                                 <span class="cr">
                                     <i class="cr-icon pi pi-check"></i>
@@ -324,6 +337,12 @@
                         <b class="view-Header">Memo: </b>
                     </span>
                     <span class="value">{{viewRowData.memo}}</span>
+                </p>
+                <p>
+                    <span class="label ">
+                        <b class="view-Header">Shop Employee</b>
+                    </span>
+                    <span class="value">{{viewRowData.isWorksInShop === true ? 'Yes' : 'No'}}</span>
                 </p>
                 <p>
                     <span class="label ">

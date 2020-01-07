@@ -37,3 +37,6 @@ table.table-bordered tr td {
 .padding-td {
   padding: 8px 51px !important;
 }
+select:disabled{
+  background-color: #e9ecef !important;
+}

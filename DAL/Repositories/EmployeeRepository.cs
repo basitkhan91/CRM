@@ -94,7 +94,7 @@ namespace DAL.Repositories
 
                                // empSupervisor,
                                jobtitle,
-                               jobtype,
+                               //jobtype,
                                t.Fax,
                                t.Email,
                                t.SSN,

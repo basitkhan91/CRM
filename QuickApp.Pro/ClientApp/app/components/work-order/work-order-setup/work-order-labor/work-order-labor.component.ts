@@ -23,6 +23,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   @Input() taskList: any;
   @Input() isQuote = false;
   @Input() markupList;
+  @Input() isView: boolean = false;
 
     totalHours: number;
   workOrderWorkFlowList: any;

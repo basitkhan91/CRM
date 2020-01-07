@@ -73,7 +73,7 @@
                             <div class="form-group col-sm-12">
                                 <label class="control-label col-sm-4">Dafault Cost</label>
                                 <div class="col-sm-7">
-                                    <input class="form-control w70 amount" type="text" [ngModelOptions]="{standalone: true}"
+                                    <input class="form-control w70 amount" type="number" [ngModelOptions]="{standalone: true}"
                                         [(ngModel)]="currentCalibration.calibrationDefaultCost">
                                     <select class="w70 form-control" [ngModelOptions]="{standalone: true}"
                                         [(ngModel)]="currentCalibration.calibrationCurrencyId">
@@ -150,7 +150,7 @@
                             <label class="control-label col-sm-4">Dafault Cost</label>
                             <div class="col-sm-7">
                                 <input class="form-control w70 amount" [ngModelOptions]="{standalone: true}"
-                                    [(ngModel)]="currentCalibration.certificationDefaultCost" type="text">
+                                    [(ngModel)]="currentCalibration.certificationDefaultCost" type="number">
                                 <select class="w70 form-control" [ngModelOptions]="{standalone: true}"
                                     [(ngModel)]="currentCalibration.certificationCurrencyId">
                                     <option>--Select--</option>
@@ -225,7 +225,7 @@
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Dafault Cost</label>
                             <div class="col-sm-7">
-                                <input class="form-control w70 amount" type="text" [ngModelOptions]="{standalone: true}"
+                                <input class="form-control w70 amount" type="number" [ngModelOptions]="{standalone: true}"
                                     [(ngModel)]="currentCalibration.inspectionDefaultCost">
                                 <select class="w70 form-control" [ngModelOptions]="{standalone: true}"
                                     [(ngModel)]="currentCalibration.inspectionCurrencyId">
@@ -302,7 +302,7 @@
                             <label class="control-label col-sm-4">Dafault Cost</label>
                             <div class="col-sm-7">
                                 <input class="form-control w70 amount" [ngModelOptions]="{standalone: true}"
-                                    [(ngModel)]="currentCalibration.verificationDefaultCost" type="text">
+                                    [(ngModel)]="currentCalibration.verificationDefaultCost" type="number">
                                 <select class="w70 form-control" [ngModelOptions]="{standalone: true}"
                                     [(ngModel)]="currentCalibration.verificationCurrencyId">
                                     <option>--Select--</option>
