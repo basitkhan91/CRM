@@ -3,15 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Models
 {
-    public class WorkOrderStage 
+    public class Carrier
     {
         [Key]
-        public Int64 WorkOrderStageId { get; set; }
-        public string Code { get; set; }
-        public string Stage { get; set; }
-        public int Sequence { get; set; }
-        public long StatusId { get; set; }
-        public long ManagementStructureId { get; set; }
+        public byte CarrierId { get; set; }
         public string Description { get; set; }
         public string Memo { get; set; }
         public int MasterCompanyId { get; set; }

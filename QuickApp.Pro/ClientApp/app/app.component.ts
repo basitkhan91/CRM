@@ -674,7 +674,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     {
                         label: 'Employees', items: [
                             { label: 'Job Titles', routerLink: '/singlepages/singlepages/app-job-title' },
-                            { label: 'Job Type', routerLink: '/singlepages/singlepages/app-job-type' },
+                            // { label: 'Job Type', routerLink: '/singlepages/singlepages/app-job-type' },
                             { label: 'Employee Expertise', routerLink: '/singlepages/singlepages/app-employee-expertise' },
                             { label: 'Certification Type', routerLink: '/singlepages/singlepages/app-certification-type' },
                         ]

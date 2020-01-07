@@ -134,11 +134,14 @@ namespace QuickApp.Pro.Controllers
 
             SalesOrderQuote quote = this.UnitOfWork.SalesOrderQuote.Get(id);
 
+            DAL.Models.Currency currency = this.UnitOfWork.Currencys.Get(quote.CurrencyId);
+
             if (quote == null) return NotFound($"{id} doesnot exist.");
 
             IEnumerable<SalesOrderQuoteApproverList> approverList = this.UnitOfWork.SalesOrderQuoteApproverList.GetApproverList(id);
 
-            IEnumerable<SalesOrderQuotePartView> partsView = GetSalesOrderQuotePartsView(id);
+
+            IEnumerable<SalesOrderQuotePartView> partsView = GetSalesOrderQuotePartsView(id, currency);
 
             //IEnumerable<SalesOrderQuotePart> parts = this.UnitOfWork.SalesOrderQuotePart.GetPartsBySalesQuoteId(id);
 
@@ -249,12 +252,17 @@ namespace QuickApp.Pro.Controllers
             return Ok(true);
         }
 
-        private IEnumerable<SalesOrderQuotePartView> GetSalesOrderQuotePartsView(long salesQuoteId)
+        private IEnumerable<SalesOrderQuotePartView> GetSalesOrderQuotePartsView(long salesQuoteId, DAL.Models.Currency currency)
         {
+
+            var currencyDisplayName = currency != null ? currency.DisplayName : string.Empty;
+
             IEnumerable<SalesOrderQuotePartView> partsView = from part in Context.SalesOrderQuotePart
                                                              join stockLine in Context.StockLine on part.StockLineId equals stockLine.StockLineId into quoteToSl
                                                              from qs in quoteToSl.DefaultIfEmpty()
                                                              join itemMaster in Context.ItemMaster on part.ItemMasterId equals itemMaster.ItemMasterId
+                                                             join condition in Context.Condition on part.ConditionId equals condition.ConditionId into conditionParts
+                                                             from cp in conditionParts.DefaultIfEmpty()
                                                              where part.SalesOrderQuoteId == salesQuoteId
                                                              select new SalesOrderQuotePartView
                                                              {
@@ -276,7 +284,7 @@ namespace QuickApp.Pro.Controllers
                                                                  CreatedOn = part.CreatedOn,
                                                                  UpdatedBy = part.UpdatedBy,
                                                                  UpdatedOn = part.UpdatedOn,
-                                                                 partNumber = qs.PartNumber,
+                                                                 partNumber = itemMaster.PartNumber,
                                                                  partDescription = itemMaster.PartDescription,
                                                                  isOEM = qs.OEM.HasValue ? qs.OEM.Value : false,
                                                                  isPMA = itemMaster.PMA.HasValue ? itemMaster.PMA.Value : false,
@@ -292,7 +300,9 @@ namespace QuickApp.Pro.Controllers
                                                                  UnitCostExtended = part.UnitCostExtended,
                                                                  MarginAmount = part.MarginAmount,
                                                                  MarginAmountExtended = part.MarginAmountExtended,
-                                                                 MarginPercentage = part.MarginPercentage
+                                                                 MarginPercentage = part.MarginPercentage,
+                                                                 CurrencyDescription = currencyDisplayName,
+                                                                 ConditionDescription = cp.Description
                                                              };
 
             return partsView;

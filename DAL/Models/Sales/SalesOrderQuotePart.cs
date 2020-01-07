@@ -42,5 +42,6 @@ namespace DAL.Models.Sales
         public decimal MarginAmount { get; set; }
         public decimal MarginAmountExtended { get; set; }
         public int MarginPercentage { get; set; }
+        public long ConditionId { get; set; }
     }
 }

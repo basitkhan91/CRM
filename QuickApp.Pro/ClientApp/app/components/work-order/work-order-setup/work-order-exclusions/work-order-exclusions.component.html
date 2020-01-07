@@ -4,7 +4,7 @@
 
 
 
-<div>
+<div *ngIf="!isView">
     <button
       
       data-target="#addNewExclusions"
@@ -75,7 +75,7 @@
                                                                         <th class="text-center">Unit Cost</th>
                                                                         <th class="text-center">Extended Cost</th>
                                                                         <th class="text-center">Memo</th>
-                                                                        <th colspan="4" class="text-center"></th>
+                                                                        <th colspan="4" class="text-center" *ngIf="!isView"></th>
                                                                     </tr> 
                                                                 </thead>
                                                             
@@ -89,7 +89,7 @@
                                                                       <td>{{w.extendedCost}}</td>
                                                                       <td>{{w.memo}}</td>
 
-                                                                      <td>
+                                                                      <td *ngIf="!isView">
                                                                         <button
                                                                           class="btn-edit ptable-wo-btns"
                                                                           mat-icon-button
@@ -101,7 +101,7 @@
                                                                           <mat-icon>edit</mat-icon>
                                                                         </button>
                                                                       </td>
-                                                                      <td>
+                                                                      <td *ngIf="!isView">
                                                                         <button
                                                                           class="btn-delete ptable-wo-btns"
                                                                           mat-icon-button
@@ -119,7 +119,7 @@
                                                             <button
                                                               class="btn btn-primary-cstm pull-right"
                                                               (click)="saveQuotation()"
-                                                              *ngIf = "isQuote"
+                                                              *ngIf = "isQuote && !isView"
                                                             >
                                                               Save
                                                             </button>
