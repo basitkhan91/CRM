@@ -164,6 +164,11 @@ export class WorkOrderService {
     updateWorkOrderExclusionList(data) {
         return this.workOrderEndpointService.updateWorkOrderExclusionList(data);
     }
+
+    createWorkOrderFreightList(data){
+        return this.workOrderEndpointService.createWorkOrderFreightList(data);
+    }
+
     getAllTasks() {
         return this.workOrderEndpointService.getTasks();
     }
@@ -191,6 +196,9 @@ export class WorkOrderService {
     }
     deleteWorkOrderExclusionByExclusionId(workOrderExclusionsId, updatedBy) {
         return this.workOrderEndpointService.deleteWorkOrderExclusionByExclusionId(workOrderExclusionsId, updatedBy)
+    }
+    getWorkOrderFrieghtsList(workFlowWorkOrderId, workOrderId){
+        return this.workOrderEndpointService.getWorkOrderFrieghtsList(workFlowWorkOrderId, workOrderId)
     }
     getWorkOrderLaborList(workFlowWorkOrderId, workOrderId) {
         return this.workOrderEndpointService.getWorkOrderLaborList(workFlowWorkOrderId, workOrderId)

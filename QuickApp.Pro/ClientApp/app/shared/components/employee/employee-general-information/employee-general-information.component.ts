@@ -175,6 +175,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     radioItems: Array<string>;
     model = { option: '' };
     getAllAllStationInfodrpData;
+    isWorksInShop:boolean=false;
 
 
     empCreationForm = new FormGroup({
@@ -1896,6 +1897,10 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.sourceAction.updatedBy = this.userName;
         this.sourceAction.description = this.employeeName;
         this.sourceAction.masterCompanyId = 1;
+        this.sourceAction.isWorksInShop=this.isWorksInShop;
+        
+        console.log(this.sourceAction);
+        debugger
         this.empservice.newAction(this.sourceAction).subscribe(data => {
 
             this.showTitle = 'Employee Expertise Added Sucessfully';

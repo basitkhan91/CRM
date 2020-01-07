@@ -45,8 +45,8 @@ namespace QuickApp.Pro.Controllers
                 if (ModelState.IsValid)
                 {
                     unitOfWork.WorkOrderRepository.CreateWorkOrder(workOrder);
-                   return Ok(workOrder);
-                }    
+                    return Ok(workOrder);
+                }
                 else
                 {
                     return BadRequest(ModelState.Values.FirstOrDefault().Errors);
@@ -72,7 +72,8 @@ namespace QuickApp.Pro.Controllers
                 {
                     return BadRequest(ModelState.Values.FirstOrDefault().Errors);
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -86,7 +87,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("updateworkorderstatus")]
-        public IActionResult WorkOrderStatus(long workOrderId,bool status,string updatedBy)
+        public IActionResult WorkOrderStatus(long workOrderId, bool status, string updatedBy)
         {
             unitOfWork.WorkOrderRepository.WorkOrderStatus(workOrderId, status, updatedBy);
             return Ok(ModelState);
@@ -101,7 +102,7 @@ namespace QuickApp.Pro.Controllers
 
 
         [HttpGet("woglobalsearch")]
-        public IActionResult WorkOrdersGlobalSearch(string filterText, int pageNumber=0, int pageSize=10)
+        public IActionResult WorkOrdersGlobalSearch(string filterText, int pageNumber = 0, int pageSize = 10)
         {
             var result = unitOfWork.WorkOrderRepository.WorkOrdersGlobalSearch(filterText, pageNumber, pageSize);
             return Ok(result);
@@ -193,14 +194,15 @@ namespace QuickApp.Pro.Controllers
         public IActionResult SubWorkOrderDetails(long subWorkOrderId)
         {
             var result = unitOfWork.WorkOrderRepository.SubWorkOrderDetails(subWorkOrderId);
-			if(result != null)
-			{
-				return Ok(result);
-			}else
-			{
-				return NotFound();
-			}
-           
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NotFound();
+            }
+
         }
 
         [HttpGet("subworkorderlist")]
@@ -214,14 +216,15 @@ namespace QuickApp.Pro.Controllers
         public IActionResult SubWorkOrderHeaderDetails(long workOrderId, long workOrderPartNumberId)
         {
             var result = unitOfWork.WorkOrderRepository.SubWorkOrderHeaderDetails(workOrderId, workOrderPartNumberId);
-			if(result != null)
-			{
-				return Ok(result);
-			}else
-			{
-				return NotFound();
-			}
-        
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NotFound();
+            }
+
         }
 
         #endregion
@@ -240,14 +243,14 @@ namespace QuickApp.Pro.Controllers
             {
                 return BadRequest(ModelState.Values.FirstOrDefault().Errors);
             }
-            
+
         }
 
         [HttpGet("workflowworkorderbyid")]
         public IActionResult GetWorkFlowWorkOrderById(long workFlowWorkOrderId)
         {
-                var result=unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderById(workFlowWorkOrderId);
-                return Ok(result);
+            var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderById(workFlowWorkOrderId);
+            return Ok(result);
         }
 
         [HttpGet("workorderworkflownos")]
@@ -344,7 +347,7 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                var reult=unitOfWork.WorkOrderRepository.UpdateWorkOrderCharges(workOrderCharges);
+                var reult = unitOfWork.WorkOrderRepository.UpdateWorkOrderCharges(workOrderCharges);
                 return Ok(reult);
             }
             else
@@ -393,7 +396,7 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result=unitOfWork.WorkOrderRepository.UpdateWorkOrderAssets(workOrderAssets);
+                var result = unitOfWork.WorkOrderRepository.UpdateWorkOrderAssets(workOrderAssets);
                 return Ok(result);
             }
             else
@@ -413,7 +416,7 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("saveassetcheckedin")]
         public IActionResult SaveAssetCheckedIn([FromBody]WorkOrderAssetCheckInOut workOrderAssetCheckInOut)
         {
-             unitOfWork.WorkOrderRepository.SaveAssetCheckedIn(workOrderAssetCheckInOut);
+            unitOfWork.WorkOrderRepository.SaveAssetCheckedIn(workOrderAssetCheckInOut);
             return Ok();
         }
 
@@ -425,7 +428,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("assetcheckedinandoutdetails")]
-        public IActionResult GetAssetCheckedInandOutDetails(long assetRecordId=0, long workOrderAssetId=0)
+        public IActionResult GetAssetCheckedInandOutDetails(long assetRecordId = 0, long workOrderAssetId = 0)
         {
             var result = unitOfWork.WorkOrderRepository.GetAssetCheckedInandOutDetails(assetRecordId, workOrderAssetId);
             return Ok(result);
@@ -443,6 +446,13 @@ namespace QuickApp.Pro.Controllers
         {
             unitOfWork.WorkOrderRepository.DeleteWorkOrderAsset(workOrderAssetId, updatedBy);
             return Ok();
+        }
+
+        [HttpGet("woassethistory")]
+        public IActionResult WorkOrderAssetHistory(long workOrderAssetId)
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrderAssetHistory(workOrderAssetId);
+            return Ok(result);
         }
 
         #endregion
@@ -469,7 +479,7 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result=unitOfWork.WorkOrderRepository.UpdateWorkOrderExclusions(workOrderExclusions);
+                var result = unitOfWork.WorkOrderRepository.UpdateWorkOrderExclusions(workOrderExclusions);
                 return Ok(result);
             }
             else
@@ -493,7 +503,7 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
-        
+
 
         #endregion
 
@@ -601,7 +611,7 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-               var result= unitOfWork.WorkOrderRepository.UpdateWorkOrderQuote(workOrderQuote);
+                var result = unitOfWork.WorkOrderRepository.UpdateWorkOrderQuote(workOrderQuote);
                 return Ok(result);
             }
             else
@@ -695,7 +705,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("deletequoteexclusions")]
         public IActionResult DeleteWorkOrderQuoteExclusion(long exclusionId, string updatedBy)
         {
-             unitOfWork.WorkOrderRepository.DeleteWorkOrderQuoteExclusion(exclusionId, updatedBy);
+            unitOfWork.WorkOrderRepository.DeleteWorkOrderQuoteExclusion(exclusionId, updatedBy);
             return Ok();
         }
 
@@ -883,18 +893,18 @@ namespace QuickApp.Pro.Controllers
         }
 
 
-        
+
         #endregion
 
         #region Work Order Freight
 
         [HttpPost("createworkorderfreight")]
-        public IActionResult CreateWorkOrderFreight([FromBody]WorkOrderFreight workOrderFreight)
+        public IActionResult CreateWorkOrderFreight([FromBody]List<WorkOrderFreight> workOrderFreight)
         {
             if (ModelState.IsValid)
             {
-                workOrderFreight.WorkOrderFreightId = unitOfWork.WorkOrderRepository.CreateWorkOrderFreight(workOrderFreight);
-                return Ok(workOrderFreight);
+                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderFreight(workOrderFreight);
+                return Ok(result);
             }
             else
             {
@@ -904,12 +914,12 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("updateworkorderfreight")]
-        public IActionResult UpdateWorkOrderFreight([FromBody]WorkOrderFreight workOrderFreight)
+        public IActionResult UpdateWorkOrderFreight([FromBody]List<WorkOrderFreight> workOrderFreight)
         {
             if (ModelState.IsValid)
             {
-                unitOfWork.WorkOrderRepository.UpdateWorkOrderFreight(workOrderFreight);
-                return Ok(workOrderFreight);
+                var result = unitOfWork.WorkOrderRepository.UpdateWorkOrderFreight(workOrderFreight);
+                return Ok(result);
             }
             else
             {
@@ -925,6 +935,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("deleteworkorderfreight")]
+        public IActionResult DeleteWorkOrderFreight(long workOrderFreightId, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.DeleteWorkOrderFreight(workOrderFreightId, updatedBy);
+            return Ok();
+        }
+
         #endregion
 
         #region Work Order Publications
@@ -934,7 +951,7 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result=unitOfWork.WorkOrderRepository.CreateWorkOrderPublications(workOrderPublications);
+                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderPublications(workOrderPublications);
                 return Ok(result);
             }
             else
@@ -949,7 +966,7 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-               var result= unitOfWork.WorkOrderRepository.UpdateWorkOrderPublications(workOrderPublications);
+                var result = unitOfWork.WorkOrderRepository.UpdateWorkOrderPublications(workOrderPublications);
                 return Ok(result);
             }
             else
@@ -976,7 +993,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getworkorderpublications")]
         public IActionResult GetWorkOrderPublications(long wfwoId = 0, long workOrderId = 0)
         {
-           var result= unitOfWork.WorkOrderRepository.GetWorkOrderPublications(wfwoId, workOrderId);
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderPublications(wfwoId, workOrderId);
             return Ok(result);
         }
 
@@ -989,7 +1006,7 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-               var result= unitOfWork.WorkOrderRepository.CreateWorkOrderMaterials(workOrderMaterials);
+                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderMaterials(workOrderMaterials);
                 return Ok(result);
             }
             else
@@ -1029,7 +1046,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("getreservedissuesparts")]
-        public IActionResult GetReservedIssuesParts(long WorkFlowWorkOrderId=0,long workOrderId=0, int statusId=0)
+        public IActionResult GetReservedIssuesParts(long WorkFlowWorkOrderId = 0, long workOrderId = 0, int statusId = 0)
         {
             var result = unitOfWork.WorkOrderRepository.GetReservedIssuedParts(WorkFlowWorkOrderId, workOrderId, statusId);
             return Ok(result);
@@ -1051,7 +1068,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("getreservedparts")]
-        public IActionResult GetReservedParts(long workFlowWorkOrderId=0, long workOrderId=0)
+        public IActionResult GetReservedParts(long workFlowWorkOrderId = 0, long workOrderId = 0)
         {
             var result = unitOfWork.WorkOrderRepository.GetReservedParts(workFlowWorkOrderId, workOrderId);
             return Ok(result);
@@ -1126,16 +1143,17 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("billinginvoicingdetails")]
-        public IActionResult GetBillingInvoicingDetails(long workOrderId,long workOrderPartNoId)
+        public IActionResult GetBillingInvoicingDetails(long workOrderId, long workOrderPartNoId)
         {
             var result = unitOfWork.WorkOrderRepository.GetBillingInvoicingDetails(workOrderId, workOrderPartNoId);
-			if(result != null) {
-				return Ok(result);
-			}
-			else
-			{
-				return NotFound();
-			}
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         #endregion
@@ -1237,7 +1255,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("stocklinedetailsbypartno")]
-        public IActionResult GetStockLineDetailsByPartNo(long itemMasterId,long conditionId)
+        public IActionResult GetStockLineDetailsByPartNo(long itemMasterId, long conditionId)
         {
             var result = unitOfWork.WorkOrderRepository.GetStockLineDetailsByPartNo(itemMasterId, conditionId);
             return Ok(result);
@@ -1299,33 +1317,33 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-		[HttpGet("ntestdvalues")]
-		public IActionResult GetNTESTDValues(long itemMasterId, string workScope)
-		{
-			var result = unitOfWork.WorkOrderRepository.GetNTESTDValues(itemMasterId, workScope);
-			return Ok(result);
-		}
+        [HttpGet("ntestdvalues")]
+        public IActionResult GetNTESTDValues(long itemMasterId, string workScope)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetNTESTDValues(itemMasterId, workScope);
+            return Ok(result);
+        }
 
-		[HttpPost("updateworkorderworkFlow")]
+        [HttpPost("updateworkorderworkFlow")]
         public IActionResult UpdateWorkOrderWorkFlow([FromBody] Workflow workFlow)
         {
-             int masterCompanyId = 1;
-             string userName = "admin";
+            int masterCompanyId = 1;
+            string userName = "admin";
 
             if (ModelState.IsValid)
             {
-                if(workFlow.IsSaveToWorkFlow)
+                if (workFlow.IsSaveToWorkFlow)
                 {
                     workFlow.WorkflowId = 0;
                     workFlow.Customer = null;
                     workFlow.ItemMaster = null;
                     workFlow.WorkScope = null;
                     workFlow.ChangedPartNumber = null;
-                    if(workFlow.Publication!=null && workFlow.Publication.Count>0)
+                    if (workFlow.Publication != null && workFlow.Publication.Count > 0)
                     {
-                        foreach(var pub in workFlow.Publication)
+                        foreach (var pub in workFlow.Publication)
                         {
-                            if(pub.WorkflowPublicationDashNumbers!=null && pub.WorkflowPublicationDashNumbers.Count>0)
+                            if (pub.WorkflowPublicationDashNumbers != null && pub.WorkflowPublicationDashNumbers.Count > 0)
                             {
                                 pub.WorkflowPublicationDashNumbers.ForEach(p => p.WorkflowPublicationDashNumberId = 0);
                             }

@@ -20,6 +20,7 @@ export class WorkOrderExclusionsComponent implements OnInit {
   @Output() updateExclusionsListForWO = new EventEmitter();
   @Output() refreshData = new EventEmitter();
   @Input() isQuote = false;
+  @Input() isView: boolean = false;
   isEdit: boolean = false;
   editData: any;
   editingIndex: number;

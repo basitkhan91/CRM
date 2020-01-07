@@ -22,7 +22,7 @@ export class WorkOrderChargesComponent implements OnChanges {
   @Output() updateChargesListForWO = new EventEmitter();
   @Output() refreshData = new EventEmitter();
   @Output() createQuote = new EventEmitter();
-
+  @Input() isView: boolean = false;
 
   isEdit: boolean = false;
   editData: any;

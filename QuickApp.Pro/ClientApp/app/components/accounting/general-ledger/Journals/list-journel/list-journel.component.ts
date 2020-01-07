@@ -200,4 +200,8 @@ export class ListJournelComponent implements OnInit {
     private onDataLoadFailed(error: any) {
 
     }
+
+    private openCreateJournalPage(){
+        this.router.navigate(['accountmodule/accountpages/app-create-journel']);
+    }
 }
