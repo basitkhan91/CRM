@@ -13788,9 +13788,12 @@ button {
 .ptable-custom th {
     padding: 8px 5px !important;
 }
-.wfl-table-cstm tr th:nth-child(2) {
+/*.wfl-table-cstm tr th {
+    width: auto !important;
+}*/
+/*.wfl-table-cstm tr th:nth-child(2) {
     width: 90px !important;
-}
+}*/
 .wfl-table-cstm tr th:nth-child(10) {
     width: 136px !important;
 }
