@@ -14165,6 +14165,14 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .vcapes-multi .ui-multiselect-items-wrapper {
     overflow-x: hidden !important;
 }
+.vcapes-multi .ui-multiselect {
+    margin-left: 1px;
+    margin-top: -1px;
+    padding-bottom: 3px;
+}
+.modal-content .vcapes-multi .ui-multiselect {
+    padding-bottom: 0 !important;
+}
 input[type="date"]::-webkit-inner-spin-button {
     display: none;
     -webkit-appearance: none;
