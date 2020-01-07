@@ -55,130 +55,60 @@
       
         </div>
       </div>
-    
-<div class="equipment-tab-content">
-        <div class="x_panel">
-            <div class="tab-content">
-                <div class="table-responsive table-overflow" id="workflow-attributes-block">
-                    <table class="table table-bordered ">
-                        <thead>
-                            <tr>
 
-                                <th class="text-center">Part Number </th>
-                                <th class="text-center">Part Description</th>
-                                <th class="text-center">Alternate PN</th>
-                                <th class="text-center">SerialNumber</th>
-                                <th class="text-center">Provision</th>
-                                <th class="text-center">OEM</th>
-                                <th class="text-center">Control</th>
-                                <th class="text-center">Condition</th>
-                                <th class="text-center">Item Type</th>
-                                <th class="text-center">Quantity Requried</th>
-                                <th class="text-center">Quantity Reserved</th>
-                                <th class="text-center">Quantity TurnIn</th>
-                                <th class="text-center">Quantity Issued</th>
-                                <th class="text-center">Quantity BackOrder</th>
-                                <th class="text-center">Quantity Remaining</th>
-                                <th class="text-center">Unit Cost</th>
-                                <th class="text-center">Extended Cost</th>
-                                <th class="text-center">Currency</th>
-                                <th class="text-center">Purchase OrderNumber</th>
-                                <th class="text-center">Repair OrderNumber</th>
-                                <th class="text-center">Part Quantity OnHand</th>
-                                <th class="text-center">Part Quantity Available</th>
-                                <th class="text-center">Part Quantity OnOrder</th>
-                                <th class="text-center">WorkOrder Number</th>
-                                <th class="text-center">Sub WorkOrder</th>
-                                <th class="text-center">SalesOrder</th>
-                                <th class="text-center">Condition</th>
-                                <th class="text-center">TimeLife</th>
-                                <th class="text-center">Ware House</th>
-                                <th class="text-center">Location</th>
-                                <th class="text-center">Shelf</th>
-                                <th class="text-center">Bin</th>
-                                <th colspan="4" class="text-center"></th>
-
-                            </tr>
-                        </thead>
-                     
-                        <tbody>
-                            <tr *ngFor="let m  of workOrderMaterialList; let i=index;">
-                                <td>{{m.partNumber}}</td>
-                                <td>{{m.partDescription}}</td>
-                                <td>{{m.altPartNumber}}</td>
-                                <td>{{m.serialNumber}}</td>
-                                <td>{{m.provision}}</td>
-                                <td>{{m.oem}}</td>
-                                <td>{{m.control}}</td>
-                                <td>{{m.condition}}</td>
-                                <td>{{m.itemType}}</td>
-                                <td>{{m.qunatityRequried}}</td>
-                                <td>{{m.quantityReserved}}</td>
-                                <td>{{m.quantityTurnIn}}</td>
-                                <td>{{m.quantityIssued}}</td>
-                                <td>{{m.quantityBackOrder}}</td>
-                                <td>{{m.qunatityRemaining}}</td>
-                                <td>{{m.unitCost}}</td>
-                                <td>{{m.extendedCost}}</td>
-                                <td>{{m.currency}}</td>
-                                <td>{{m.purchaseOrderNumber}}</td>
-                                <td>{{m.repairOrderNumber}}</td>
-                                <td>{{m.partQuantityOnHand}}</td>
-                                <td>{{m.partQuantityAvailable}}</td>
-                                <td>{{m.partQuantityOnOrder}}</td>
-                                <td>{{m.receiver}}</td>
-                                <td>{{m.workOrderNumber}}</td>
-                                <td>{{m.subWorkOrder}}</td>
-                                <td>{{m.salesOrder}}</td>
-                                <td>{{m.timeLife}}</td>
-                                <td>{{m.wareHouse}}</td>
-                                <td>{{m.location}}</td>
-                                <td>{{m.shelf}}</td>
-                                <td>{{m.bin}}</td>
-                                <td>
+      <div >
+            <p-table class="rpo-table-cstm rro-table-cstm pub-ptable-cstm" [columns]="cols" [value]="workOrderMaterialList" [paginator]="true" [rows]="10">
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th *ngFor="let col of columns">
+                                {{col.header}}
+                            </th>
+                            <th>Actions </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-columns="columns">
+                        <tr>
+                            <td *ngFor="let col of columns">
+                                {{rowData[col.field]}}
+                            </td>
+                            <td class="btn-spaces">
                                     <button
                                       class="btn-edit ptable-wo-btns"
                                       mat-icon-button
                                       data-target="#addNewMaterials" 
                                       data-toggle="modal"
-                                      (click)="edit(m)"
+                                      (click)="edit(rowData)"
                                       matTooltip="Edit"
                                     >
                                       <mat-icon>edit</mat-icon>
                                     </button>
-                                  </td>
-                                  <td>
-                                        <a
-                                        (click)="createNewPoWorkOrder(m)"
-                                        matTooltip="Create PO"
-                                        class="btn btn-success nobg btn-cstm"
-                                      >
-                                        <span><i class="fa fa-plus"></i></span
-                                      ></a>
-                                  </td>
-                                  <td>
+
+
                                     <button
-                                      class="btn-delete ptable-wo-btns"
-                                      mat-icon-button
-                                      matTooltip="Delete"
-                                      (click)="delete(m)"
-                                    >
-                                      <mat-icon color="warn">delete</mat-icon>
-                                    </button>
+                                    class="btn-edit ptable-wo-btns"
+                                    mat-icon-button
+                                    (click)="createNewPoWorkOrder(rowData)"
+                                    matTooltip="Create PO"
+                                  >
+                                    <mat-icon>add</mat-icon>
+                                  </button>
+                                    <button
+                                    class="btn-delete ptable-wo-btns"
+                                    mat-icon-button
+                                    matTooltip="Delete"
+                                    (click)="delete(rowData)"
+                                  >
+                                    <mat-icon color="warn">delete</mat-icon>
+                                  </button>
                                   </td>
-                           
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="clear"></div>
-            <br />
-            <br />
-            <br />
-            <br />
-        </div>
-</div>
+
+                        </tr>
+                    </ng-template>
+                </p-table>
+      </div>
+    
+
+
 
 <div id="reserve" class="modal fade" role="dialog" data-backdrop="static">
         <div class="modal-dialog modal-lg">
