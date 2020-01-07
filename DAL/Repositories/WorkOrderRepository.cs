@@ -189,7 +189,7 @@ namespace DAL.Repositories
                                     from rp in woprp.DefaultIfEmpty()
                                     join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId into rpim1
                                     from im1 in rpim1.DefaultIfEmpty()
-                                    join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.ID
+                                    join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.WorkOrderStageId
                                     join wost in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals wost.Id
                                     where wo.WorkOrderId == workOrderId
                                     select new
@@ -209,7 +209,7 @@ namespace DAL.Repositories
                             from rp in woprp.DefaultIfEmpty()
                             join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId into rpim1
                             from im1 in rpim1.DefaultIfEmpty()
-                            join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.ID
+                            join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.WorkOrderStageId
                             join wost in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals wost.Id
                             where wo.WorkOrderId == workOrderId
                             select new
@@ -290,7 +290,7 @@ namespace DAL.Repositories
                                     join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
                                     join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                                     join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
-                                    join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
+                                    join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId
                                     join rp in _appContext.ItemMaster on wop.RevisedPartId equals rp.ItemMasterId into woprp
                                     from rp in woprp.DefaultIfEmpty()
 
@@ -330,7 +330,7 @@ namespace DAL.Repositories
                             join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
                             join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                             join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
-                            join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
+                            join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId
                             join rp in _appContext.ItemMaster on wop.RevisedPartId equals rp.ItemMasterId into woprp
                             from rp in woprp.DefaultIfEmpty()
 
@@ -404,7 +404,7 @@ namespace DAL.Repositories
 
                                 Stage = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.WorkOrderStage,
                                 wp => wp.WorkOrderStageId,
-                                ws => ws.ID,
+                                ws => ws.WorkOrderStageId,
                                 (wp, ws) => new { wp, ws }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
                                 .Select(p => p.ws.Description)),
 
@@ -541,7 +541,7 @@ namespace DAL.Repositories
                                         join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
                                         join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                                         join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
-                                        join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
+                                        join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId
                                         join rp in _appContext.ItemMaster on wop.RevisedPartId equals rp.ItemMasterId into woprp
                                         from rp in woprp.DefaultIfEmpty()
 
@@ -573,7 +573,7 @@ namespace DAL.Repositories
                                 join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
                                 join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                                 join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
-                                join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
+                                join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId
                                 join rp in _appContext.ItemMaster on wop.RevisedPartId equals rp.ItemMasterId into woprp
                                 from rp in woprp.DefaultIfEmpty()
 
@@ -639,7 +639,7 @@ namespace DAL.Repositories
 
                                     Stage = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.WorkOrderStage,
                                 wp => wp.WorkOrderStageId,
-                                ws => ws.ID,
+                                ws => ws.WorkOrderStageId,
                                 (wp, ws) => new { wp, ws }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
                                 .Select(p => p.ws.Description)),
 
@@ -856,7 +856,7 @@ namespace DAL.Repositories
                             from rp in woprp.DefaultIfEmpty()
                             join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId into rpim1
                             from im1 in rpim1.DefaultIfEmpty()
-                            join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.ID
+                            join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.WorkOrderStageId
                             join wost in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals wost.Id
                             join con in _appContext.Condition on wop.ConditionId equals con.ConditionId into wopcon
                             from con in wopcon.DefaultIfEmpty()
@@ -987,7 +987,7 @@ namespace DAL.Repositories
                             from wf in wopwf.DefaultIfEmpty()
                             join pub in _appContext.Publication on swo.CMMId equals pub.PublicationRecordId into woppub
                             from pub in woppub.DefaultIfEmpty()
-                            join stage in _appContext.WorkOrderStage on swo.StageId equals stage.ID
+                            join stage in _appContext.WorkOrderStage on swo.StageId equals stage.WorkOrderStageId
                             join status in _appContext.WorkOrderStatus on swo.StatusId equals status.Id
 
                             where swo.SubWorkOrderId == subWorkOrderId
@@ -1037,7 +1037,7 @@ namespace DAL.Repositories
                             join wowf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wowf.WorkOrderId
                             join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
                             join wos in _appContext.WorkScope on swo.StatusId equals wos.WorkScopeId
-                            join stage in _appContext.WorkOrderStage on swo.StageId equals stage.ID
+                            join stage in _appContext.WorkOrderStage on swo.StageId equals stage.WorkOrderStageId
                             join rp in _appContext.Nha_Tla_Alt_Equ_ItemMapping on wop.MappingItemMasterId equals rp.MappingItemMasterId into woprp
                             from rp in woprp.DefaultIfEmpty()
                             join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId into rpim1
@@ -1085,7 +1085,7 @@ namespace DAL.Repositories
                             from wf in wopwf.DefaultIfEmpty()
                             join pub in _appContext.Publication on wop.CMMId equals pub.PublicationRecordId into woppub
                             from pub in woppub.DefaultIfEmpty()
-                            join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
+                            join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId
                             join status in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals status.Id
                             join wowf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wowf.WorkOrderId
 
@@ -1376,7 +1376,7 @@ namespace DAL.Repositories
                             join wf in _appContext.Workflow on w.WorkflowId equals wf.WorkflowId into wwf
                             from wf in wwf.DefaultIfEmpty()
                             join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
-                            join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
+                            join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId
                             join pri in _appContext.Priority on wop.WorkOrderPriorityId equals pri.PriorityId
 
                             where w.IsDeleted == false && w.IsActive == true && w.WorkOrderId == workOrderId && wop.WorkOrderId == workOrderId
@@ -4672,14 +4672,14 @@ namespace DAL.Repositories
         {
             try
             {
-                var data = (from ss in _appContext.WorkOrderStageAndStatus
-                            join stage in _appContext.WorkOrderStage on ss.WOStageId equals stage.ID
-                            join ws in _appContext.WorkOrderStatus on ss.WOStatusId equals ws.Id
-                            where ss.IsActive == true && ss.IsDeleted == false
+                var data = (
+                            from stage in _appContext.WorkOrderStage 
+                            join ws in _appContext.WorkOrderStatus on stage.StatusId equals ws.Id
+                            where stage.IsActive == true && stage.IsDeleted == false
                             select new
                             {
                                 WorkOrderStage = stage.Description,
-                                WorkOrderStageId = stage.ID,
+                                WorkOrderStageId = stage.WorkOrderStageId,
                                 WorkOrderStaus = ws.Description,
                                 WorkOrderStausId = ws.Id
                             }).Distinct().ToList();
