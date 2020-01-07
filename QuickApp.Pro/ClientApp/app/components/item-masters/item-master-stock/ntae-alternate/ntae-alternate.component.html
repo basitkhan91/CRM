@@ -23,7 +23,7 @@
                 <div class="col-md-2">
                     <div class="form-group ">
                         <label class="fs12">PN</label>
-                        <p-autoComplete id="MappingPNumber" title="Part Number" [(ngModel)]="filterItemMaster.MappingPNumber"
+                        <p-autoComplete id="MappingPNumber" placeholder="Select Part Number" title="Part Number" [(ngModel)]="filterItemMaster.MappingPNumber"
                         [suggestions]="filterPNData" (completeMethod)="filetrDropdownValues($event, 'PN')" 
                          (onSelect)="partnmId($event)"
                                                          [ngModelOptions]="{standalone: true}"
@@ -38,9 +38,11 @@
                 <div class="col-md-2">
                     <div class="form-group">
                         <label class="fs12">
-                            PN DESCRIPTION
+                            PN DESCRIPTION 
                         </label>
-                        <input type="text" class="ui-inputtext"  name="description" [(ngModel)]="filterItemMaster.Description" > 
+                        <p-dropdown class="imstock-pddowm" [options]="filterDiscriptionData" filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="filterItemMaster.Description" id="Description" placeholder="Select Description" [showClear]="true"></p-dropdown>
+
+                        <!-- <input type="text" class="ui-inputtext"  name="description" [(ngModel)]="filterItemMaster.Description" >  -->
                         <!-- <p-autoComplete id="partDescription" title="PN Description" [(ngModel)]="filterItemMaster.Description"
                         [suggestions]="filterDiscriptionData" (completeMethod)="filetrDropdownValues($event, 'Description')"
                         
@@ -70,6 +72,7 @@
                         <select  required name="ManufacturerId"
                                 [(ngModel)]="filterItemMaster.ManufacturerId" id="manufacturerId" title="Manufacturer Id" >
                             <ng-container *ngFor="let manufacturer of allManufacturerInfo">
+                                    <option value="" >Select</option>
                                 <option [ngValue]="manufacturer.manufacturerId" *ngIf="manufacturer.isActive">
                                     {{manufacturer.name}}
                                 </option>
@@ -123,7 +126,7 @@
                 <th *ngFor="let col of columns">
                     {{col.header}}
                 </th>
-                <th *ngIf="selectedTab == 'Equivalency'">Attachment</th>
+                <th *ngIf="selectedTab == 'Equivalency'">Download</th>
                 <th>Action</th>
             </tr>
         </ng-template>
@@ -132,8 +135,9 @@
                 <td *ngFor="let col of columns">
                     {{rowData[col.field]}}
                 </td>
+
                 <td  *ngIf="selectedTab == 'Equivalency'">
-                    <a class="btn btn-primary-cstm" (click)="downloadFileUpload(rowData)" target="_blank" download>Download</a>
+                    <a class="btn btn-primary-cstm" (click)="downloadFileUpload(rowData)" target="_blank" download>{{rowData["fileName"]}}</a>
                 </td>
                 <td>
                     <button type="button" class="btn btn-danger nobg" (click)="deleteNTAERow(rowData.itemMappingId)">
