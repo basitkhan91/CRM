@@ -146,6 +146,12 @@ namespace DAL.Repositories
                                 iM.IsExportMilitary,
                                 iM.IsExportDual,
                                 iM.RevisedPartId,
+                                iM.SiteId,
+                                iM.WarehouseId,
+                                iM.LocationId,
+                                iM.ShelfId,
+                                iM.BinId,
+
                                 ManufacturerName = mfgs == null ? "" : mfgs.Name,
                                 CountryData = countryID.ToList(),
                                 //CountryName = ct == null ? "" : ct.countries_name,
