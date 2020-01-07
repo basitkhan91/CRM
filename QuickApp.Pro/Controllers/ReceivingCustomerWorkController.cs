@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DAL;
+using DAL.Common;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -40,6 +41,13 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpPost("List")]
+        public IActionResult GetList([FromBody] Filters<ReceivingCustomerWorkFilter> customerFilters)
+        {
+            var result = _unitOfWork.receivingCustomerWork.GetList(customerFilters);
+            return Ok(result);
+
+        }
         [HttpGet("GetAudit")]
         [Produces(typeof(List<ReceivingCustomerWorkViewModel>))]
         public IActionResult GetAudit(long receivingCustomerWorkId)
@@ -328,6 +336,15 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.Repository<TimeLife>().Update(timelife);
             _unitOfWork.SaveChanges();
             return Ok();
+        }
+
+        [HttpGet("ReceivingCustomerByIdForWorkOrder")]
+        [Produces(typeof(List<ReceivingCustomerWorkViewModel>))]
+
+        private IActionResult GetReceivingCustomerWorkData(long id)
+        {
+            var result = _unitOfWork.receivingCustomerWork.GetReceivingCustomerWorkData(id); //GetAllSite Information
+            return Ok(result);
         }
 
     }

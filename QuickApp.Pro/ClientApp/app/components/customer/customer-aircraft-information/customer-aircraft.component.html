@@ -109,12 +109,14 @@
       let-rowData
       let-columns="columns"
     >
-      <tr>
+      <tr  [pSelectableRow]="rowData"  [pSelectableRowDblClick]="rowData" (dblclick)="viewAircraftdbldisplay(rowData)" >
         <td>{{ i + 1 }}</td>
         <td *ngFor="let col of columns">
           {{ rowData[col.field] }}
         </td>
         <td>
+            <span data-toggle="modal" data-target="#viewAircraft"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openAircraftView(rowData)" title="View"><i class="fa fa-eye"></i></a> </span>
+
             <button class="btn-edit" mat-icon-button (click)="editAirCraft(rowData)" matTooltip="edit" data-toggle="modal" data-target="#editAirCraftDetails">
                 <mat-icon>edit</mat-icon>
             </button>
@@ -386,6 +388,45 @@
             </form>
         </div>
 
+    </div>
+</div>
+
+
+
+
+
+<div id="viewAircraft" class="modal" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Details of CustomerAircraft Information</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body" *ngIf="viewAircraftData">
+                <div class="col-sm-12">
+                    <p><span class="label"><b>Aircraft: </b></span><span class="value">{{viewAircraftData.aircraftType}}</span></p>
+
+                    <p><span class="label"><b>Model: </b></span><span class="value">{{viewAircraftData.aircraftModel}}</span></p>
+                    <p><span class="label"><b>Dash Numbers: </b></span><span class="value">{{viewAircraftData.dashNumber}}</span></p>
+                    <p style="display:none"><span class="label"><b>Inventory: </b></span><span class="value">{{viewAircraftData.inventory}}</span></p>
+
+                    <p><span class="label"><b>Memo: </b></span><span class="value">{{viewAircraftData.memo}}</span></p>
+
+                  
+                    <div class="clear"></div>
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
     </div>
 </div>
 <ng-template #deleteContent let-c="close" let-d="dismiss" data-backdrop="static">
