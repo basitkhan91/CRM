@@ -159,16 +159,16 @@
                 <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
                     <!-- <input type="text" style="width:100%;" pInputText   (keyup)="filterData($event)"> -->
                     <input *ngIf="col.field !== 'openDate' 
-                    && col.field !== 'customerRequestDate'
-                    && col.field !== 'promisedDate'
-                    && col.field !== 'estimatedShipDate'
-                    && col.field !== 'estimatedCompletionDate'" 
+                    && col.field !== 'customerRequestDateType'
+                    && col.field !== 'promisedDateType'
+                    && col.field !== 'estimatedShipDateType'
+                    && col.field !== 'estimatedCompletionDateType'" 
                     style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains'); fieldSearch($event.target.value, col.field , 'contains' )">
                     <input type="date" *ngIf="col.field == 'openDate'" name="openDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
-                    <input type="date"  *ngIf="col.field == 'customerRequestDate'" name="customerRequestDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
-                    <input type="date"  *ngIf="col.field == 'promisedDate'" name="promisedDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
-                    <input type="date" *ngIf="col.field == 'estimatedShipDate'" name="estimatedShipDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
-                    <input type="date"  *ngIf="col.field == 'estimatedCompletionDate'" name="estimatedCompletionDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
+                    <input type="date"  *ngIf="col.field == 'customerRequestDateType'" name="customerRequestDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
+                    <input type="date"  *ngIf="col.field == 'promisedDateType'" name="promisedDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
+                    <input type="date" *ngIf="col.field == 'estimatedShipDateType'" name="estimatedShipDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
+                    <input type="date"  *ngIf="col.field == 'estimatedCompletionDateType'" name="estimatedCompletionDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
                 </th>
                 <th style="width:200px;position:sticky"></th>
             </tr>
@@ -193,20 +193,12 @@
                    </a>
 
                  </td> -->
-                <td *ngFor="let col of columns" style="text-overflow: ellipsis; " pTooltip={{rowData[col.field]}}>
-                    {{
-          col.field == 'openDate'
-            ? (rowData[col.field] | date: 'MM/dd/yyyy')
-            : rowData[col.field] && col.field == 'customerRequestDate'
-            ? (rowData[col.field] | date: 'MM/dd/yyyy')
-            : rowData[col.field] && col.field == 'promisedDate'
-            ? (rowData[col.field] | date: 'MM/dd/yyyy')
-            : rowData[col.field] && col.field == 'estimatedShipDate'
-            ? (rowData[col.field] | date: 'MM/dd/yyyy')
-            : rowData[col.field] && col.field == 'estimatedCompletionDate'
-            ? (rowData[col.field] | date: 'MM/dd/yyyy')
-            : rowData[col.field]
-                    }}
+                 <!-- [ngStyle]="{'color': {{convertDate(col.field , rowData) !== 'Multiple' ? 'black' : 'red' }}   }" -->
+                <td *ngFor="let col of columns" style="text-overflow: ellipsis; " [pTooltip]="mouseOverData(col.field,  rowData)" 
+      
+                > 
+                {{convertDate(col.field , rowData)}}
+                    
                 </td>
 
                 <td style="width:200px" *ngIf="selectedColumns.length > 0">
