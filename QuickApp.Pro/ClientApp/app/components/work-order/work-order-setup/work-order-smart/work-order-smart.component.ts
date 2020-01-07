@@ -46,6 +46,7 @@ export class WorkOrderSmartComponent implements OnInit {
     private onDestroy$: Subject<void> = new Subject<void>();
     conditionList: any;
     workOrderOriginalStageList: any;
+    conditionId: any;
     /** WorkOrderShipping ctor */
     constructor(private alertService: AlertService,
         private workOrderService: WorkOrderService,
@@ -63,6 +64,7 @@ export class WorkOrderSmartComponent implements OnInit {
 
     ngOnInit() {
 
+        this.getConditionsList();
         this.getAllWorkOrderTypes();
         this.getAllWorkOrderStatus();
         this.getAllCreditTerms();
@@ -74,19 +76,17 @@ export class WorkOrderSmartComponent implements OnInit {
         this.getAllPriority();
         this.getCurrency();
         this.getLegalEntity();
-        this.getConditionsList();
 
         if (this.isSubWorkOrder) {
             this.subWorkOrderId = this.subWorkOrderId;
             // this.workOrderId = this.acRouter.snapshot.params['id'];
             // this.workOrderId = this.paramsData.workorderid;
         } else {
+            // get the workOrderId on Edit Mode
             this.workOrderId = this.acRouter.snapshot.params['id'];
         }
 
         if (this.workOrderId) {
-
-
             this.workOrderService.getWorkOrderById(this.workOrderId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                 this.isEdit = true;
                 const workOrderData = res;
@@ -110,9 +110,10 @@ export class WorkOrderSmartComponent implements OnInit {
                     })
                 }
                 this.editWorkOrderGeneralInformation = data;
-                console.log(this.editWorkOrderGeneralInformation);
             })
         }
+
+
 
     }
 
@@ -218,6 +219,18 @@ export class WorkOrderSmartComponent implements OnInit {
     getConditionsList() {
         this.commonService.smartDropDownList('Condition', 'ConditionId', 'Description').pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.conditionList = res;
+            console.log(res);
+
+            const conditionId = res.find(x => x.label.includes('As Removed'));
+            this.workOrderGeneralInformation = {
+                ...this.workOrderGeneralInformation,
+                partNumbers: this.workOrderGeneralInformation.partNumbers.map(x => {
+                    return {
+                        ...x,
+                        conditionId: conditionId !== undefined ? conditionId.value : null
+                    }
+                })
+            }
         })
     }
 

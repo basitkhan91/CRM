@@ -169,6 +169,13 @@ export class WorkOrderService {
         return this.workOrderEndpointService.createWorkOrderFreightList(data);
     }
 
+    updateWorkOrderFreightList(data){
+        return this.workOrderEndpointService.updateWorkOrderFreightList(data);
+    }
+    deleteWorkOrderFreightList(workOrderFreightId , updatedBy){
+        return this.workOrderEndpointService. deleteWorkOrderFreightList(workOrderFreightId , updatedBy);
+    }
+
     getAllTasks() {
         return this.workOrderEndpointService.getTasks();
     }

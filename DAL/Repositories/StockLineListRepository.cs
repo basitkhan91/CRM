@@ -978,7 +978,7 @@ namespace DAL.Repositories
             {
                 var result = (from w in _appContext.Warehouse
                               join s in _appContext.Site on w.SiteId equals s.SiteId
-                              where (w.IsDelete == false || w.IsDelete == true) && w.IsActive == true && w.SiteId == siteId
+                              where (w.IsDelete == false || w.IsDelete == null) && w.IsActive == true && w.SiteId == siteId
                               select new
                               {
                                   Warehouse = w.Name,

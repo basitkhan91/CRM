@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { listSearchFilterObjectCreation } from '../../../generic/autocomplete';
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-work-order-list',
@@ -82,6 +83,7 @@ export class WorkOrderListComponent implements OnInit {
     currentStatus = 'open'
     isGlobalFilter: boolean = false;
     private onDestroy$: Subject<void> = new Subject<void>();
+    viewType: any = 'mpn';
     constructor(private workOrderService: WorkOrderService,
         private route: Router,
         private authService: AuthService,
@@ -105,9 +107,72 @@ export class WorkOrderListComponent implements OnInit {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
+    // { field: 'partNoType', header: 'MPN' },
+    // { field: 'pnDescriptionType', header: 'MPN Description' },
+    // { field: 'workScopeType', header: 'Work Scope' },
+    // { field: 'priorityType', header: 'Priority' },
+    // { field: 'customerName', header: 'Customer Name' },
+    // { field: 'customerType', header: 'Customer Type' },
+    // { field: 'openDate', header: 'Open Date' },
+    // { field: 'customerRequestDateType', header: 'Cust Req Date' },
+    // { field: 'promisedDateType', header: 'Promise Date' },
+    // { field: 'estimatedShipDateType', header: 'Est. Ship Date' },
+    // { field: 'estimatedCompletionDateType', header: 'Shipped Date' },
+    // { field: 'stageType', header: 'Stage Code' },
+    // { field: 'workOrderStatus', header: 'Status' },
+
+    mouseOverData(key, data) {
+        if (key === 'partNoType') {
+            return data['partNos']
+        } else if (key === 'pnDescriptionType') {
+            return data['pnDescription']
+        } else if (key === 'workScopeType') {
+            return data['workScope']
+        } else if (key === 'priorityType') {
+            return data['priority']
+        } else if (key === 'customerType') {
+            return data['customer']
+        }
+        else if (key === 'openDate') {
+            return moment(data['openDate']).format('MM-DD-YYYY');
+        }
+        else if (key === 'customerRequestDateType') {
+            return data['customerRequestDate'] !== 'Multiple' ? moment(data['customerRequestDateType']).format('MM-DD-YYYY') : data['customerRequestDateType'];
+        }
+        else if (key === 'promisedDateType') {
+            return data['promisedDate'] !== 'Multiple' ? moment(data['promisedDateType']).format('MM-DD-YYYY') : data['promisedDateType'];
+        } else if (key === 'estimatedShipDateType') {
+            return data['estimatedShipDate'] !== 'Multiple' ? moment(data['estimatedShipDateType']).format('MM-DD-YYYY') : data['estimatedShipDateType'];
+        } else if (key === 'stageType') {
+            return data['stage']
+        } else if(key ==='estimatedCompletionDateType'){
+            return data['estimatedCompletionDateType'] !== 'Multiple' ? moment(data['estimatedCompletionDateType']).format('MM-DD-YYYY') : data['estimatedCompletionDateType'];
+        } else {
+            return data[key]
+        }
+
+    }
+
+    convertDate(key, data) {
+        if (key === 'openDate') {
+            return moment(data['openDate']).format('MM-DD-YYYY');
+        }
+        else if (key === 'customerRequestDateType') {
+            return data['customerRequestDateType'] !== 'Multiple' ? moment(data['customerRequestDateType']).format('MM-DD-YYYY') : data['customerRequestDateType'];
+        }
+        else if (key === 'promisedDateType') {
+            return data['promisedDateType'] !== 'Multiple' ? moment(data['promisedDateType']).format('MM-DD-YYYY') : data['promisedDateType'];
+        }
+        else if (key === 'estimatedShipDateType') {
+            return data['estimatedShipDateType'] !== 'Multiple' ? moment(data['estimatedShipDateType']).format('MM-DD-YYYY') : data['estimatedShipDateType'];
+        } else if(key ==='estimatedCompletionDateType'){
+            return data['estimatedCompletionDateType'] !== 'Multiple' ? moment(data['estimatedCompletionDateType']).format('MM-DD-YYYY') : data['estimatedCompletionDateType'];  
+        } else {
+            return data[key];
+        }
 
 
-
+    }
 
 
 
@@ -138,11 +203,19 @@ export class WorkOrderListComponent implements OnInit {
         }
     }
 
-    changeOfStatus(value) {
+    changeOfStatus(status, viewType) {
         const lazyEvent = this.lazyLoadEventData;
-        this.currentStatus = value;
+        this.currentStatus = status === '' ? this.currentStatus : status;
+        this.viewType = viewType === '' ? this.viewType : viewType;
 
-        this.getAllWorkOrderList({ ...lazyEvent, filters: { ...lazyEvent.filters, workOrderStatus: this.currentStatus } })
+        this.getAllWorkOrderList({
+            ...lazyEvent,
+            filters: {
+                ...lazyEvent.filters,
+                workOrderStatus: this.currentStatus,
+                viewType: this.viewType
+            }
+        })
 
     }
     fieldSearch(value, field) {
