@@ -542,6 +542,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
             
 
             this.restictPMAtempList = res.map(x => x.rescrictedPartId);
+            this.partListForPMA = this.generalInformation.restrictedPMAParts.reduce((acc, obj) => {
+                return acc.filter(x => x.value.masterPartId !== obj.masterPartId)
+            }, this.partListOriginal) 
             // this.generalInformation.restrictedPMAParts = res.map(x => {
             //     return  { 
             //          masterPartId: x.itemMasterId,
@@ -681,7 +684,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 }
             }
             this.generalInformation.restrictedPMAParts=this.generalInformation.restrictedPMAParts.slice();
-            this.partListForDER = this.generalInformation.restrictedPMAParts.reduce((acc, obj) => {
+            this.partListForPMA = this.generalInformation.restrictedPMAParts.reduce((acc, obj) => {
                 return acc.filter(x => x.value.masterPartId !== obj.masterPartId)
             }, this.partListOriginal)                
         this.restictPMAtempList = [];                            

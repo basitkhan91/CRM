@@ -682,7 +682,7 @@
                                         </label>
                                     </div>
                                     <div>
-                                        <select [(ngModel)]="sourceItemMaster.siteId" [ngModelOptions]="{standalone: true}" (change)="siteValueChange($event.target.value)">
+                                        <select [(ngModel)]="sourceItemMaster.siteId" [ngModelOptions]="{standalone: true}" (ngModelChange)="siteValueChange()">
                                             <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option>
                                         </select>
                                     </div>
@@ -695,8 +695,8 @@
                                         </label>
                                     </div>
                                     <div>
-                                        <select [(ngModel)]="sourceItemMaster.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange($event.target.value)">
-                                            <option *ngFor="let warehouse of wareHouseData" [ngValue]="warehouse.warehouseId">{{warehouse.name}}</option>
+                                        <select [(ngModel)]="sourceItemMaster.warehouseId" [ngModelOptions]="{standalone: true}" (ngModelChange)="wareHouseValueChange()">
+                                            <option *ngFor="let warehouse of wareHouseData" [ngValue]="warehouse.warehouseId">{{warehouse.warehouse}}</option>
                                         </select>
                                     </div>
                                     <!-- /Warehouse-->
@@ -708,8 +708,8 @@
                                         </label>
                                     </div>
                                     <div>
-                                        <select [(ngModel)]="sourceItemMaster.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange($event.target.value)">
-                                            <option *ngFor="let location of locationData" [ngValue]="location.locationId">{{location.name}}</option>
+                                        <select [(ngModel)]="sourceItemMaster.locationId" [ngModelOptions]="{standalone: true}" (ngModelChange)="locationValueChange()">
+                                            <option *ngFor="let location of locationData" [ngValue]="location.locationId">{{location.location}}</option>
                                         </select>
                                     </div>
                                     <!-- /Location-->
@@ -721,8 +721,8 @@
                                         </label>
                                     </div>
                                     <div>
-                                        <select [(ngModel)]="sourceItemMaster.shelfId" [ngModelOptions]="{standalone: true}" (change)="shelfValueChange($event.target.value)">
-                                            <option *ngFor="let shelf of shelfData" [ngValue]="shelf.shelfId">{{shelf.name}}</option>
+                                        <select [(ngModel)]="sourceItemMaster.shelfId" [ngModelOptions]="{standalone: true}" (ngModelChange)="shelfValueChange()">
+                                            <option *ngFor="let shelf of shelfData" [ngValue]="shelf.shelfId">{{shelf.shelf}}</option>
                                         </select>
                                     </div>
                                     <!-- /Shelf-->
@@ -734,8 +734,8 @@
                                         </label>
                                     </div>
                                     <div>
-                                        <select [(ngModel)]="sourceItemMaster.bindId" [ngModelOptions]="{standalone: true}" >
-                                            <option *ngFor="let bin of binData" [ngValue]="bin.binId">{{bin.name}}</option>
+                                        <select [(ngModel)]="sourceItemMaster.binId" [ngModelOptions]="{standalone: true}" >
+                                            <option *ngFor="let bin of binData" [ngValue]="bin.binId">{{bin.bin}}</option>
                                         </select>
                                     </div>
                                     <!-- /Bin-->

@@ -448,6 +448,18 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 const responseDataOfEdit = res;
                 this.isDisabledSteps = true;
                 this.sourceItemMaster = responseDataOfEdit[0];
+                if(this.sourceItemMaster.siteId){
+                    this.siteValueChange()
+                }
+                if(this.sourceItemMaster.warehouseId){
+                    this.wareHouseValueChange()
+                }
+                if(this.sourceItemMaster.locationId){
+                    this.locationValueChange()
+                }
+                if(this.sourceItemMaster.shelfId){
+                    this.shelfValueChange()
+                }
                 this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
                 this.Integration();
                 this.sourceItemMaster.oemPNId = this.sourceItemMaster.oemPNData[0]
@@ -733,49 +745,49 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 		//console.log(this.allSites);
     }
-    siteValueChange(siteId) //Site Valu Selection in Form
+    siteValueChange() //Site Valu Selection in Form
 	{
-        this.stockLineService.getWareHouseDataBySiteId(siteId).subscribe(
+        this.stockLineService.getWareHouseDataBySiteId(this.sourceItemMaster.siteId).subscribe(
             result => {
                 this.alertService.stopLoadingMessage();
                 this.loadingIndicator = false;
-                this.wareHouseData = result[0];
+                this.wareHouseData = result;
             },
             error => this.onDataLoadFailed(error)
         )
 		
     }
-    wareHouseValueChange(wareHouseId) //Site Valu Selection in Form
+    wareHouseValueChange() //Site Valu Selection in Form
 	{
-        this.stockLineService.getLocationDataByWarehouseId(wareHouseId).subscribe(
+        this.stockLineService.getLocationDataByWarehouseId(this.sourceItemMaster.warehouseId).subscribe(
             result => {
                 this.alertService.stopLoadingMessage();
                 this.loadingIndicator = false;
-                this.locationData = result[0];
+                this.locationData = result;
             },
             error => this.onDataLoadFailed(error)
         )
 		
     }
-    locationValueChange(lcoationId) //Site Valu Selection in Form
+    locationValueChange() //Site Valu Selection in Form
 	{
-        this.stockLineService.getShelfDataByLocationId(lcoationId).subscribe(
+        this.stockLineService.getShelfDataByLocationId(this.sourceItemMaster.locationId).subscribe(
             result => {
                 this.alertService.stopLoadingMessage();
                 this.loadingIndicator = false;
-                this.shelfData = result[0];
+                this.shelfData = result;
             },
             error => this.onDataLoadFailed(error)
         )
 		
     }
-    shelfValueChange(shelfId) //Site Valu Selection in Form
+    shelfValueChange() //Site Valu Selection in Form
 	{
-        this.stockLineService.getBinDataByShelfId(shelfId).subscribe(
+        this.stockLineService.getBinDataByShelfId(this.sourceItemMaster.shelfId).subscribe(
             result => {
                 this.alertService.stopLoadingMessage();
                 this.loadingIndicator = false;
-                this.binData = result[0];
+                this.binData = result;
             },
             error => this.onDataLoadFailed(error)
         )
@@ -4816,6 +4828,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 if (this.sourceItemMaster.isPma) {
                     this.sourceItemMaster.oemPNId = this.tempOEMpartNumberId;
                 }
+                console.log(this.sourceItemMaster, "this.sourceItemMaster+++++")
                 this.itemser.newItemMaster(this.sourceItemMaster).subscribe(data => {
 
                     this.sourceItemMaster.oemPNId = this.oemPnData;
