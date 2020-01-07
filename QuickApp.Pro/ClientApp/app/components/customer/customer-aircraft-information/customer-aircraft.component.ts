@@ -12,6 +12,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { NgbModal, NgbActiveModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { error } from '@angular/compiler/src/util';
 import { HttpErrorResponse } from '@angular/common/http';
+import * as $ from 'jquery';
 @Component({
     selector: 'app-customer-aircraft',
     templateUrl: './customer-aircraft.component.html',
@@ -36,7 +37,7 @@ export class CustomerAircraftComponent implements OnInit {
     selectedAircraftModel = [];
     selectedDashNumbers = [];
     selectedmemo:any =[];
-
+    viewAircraftData: any;
     modal: NgbModalRef;
     // add craft inventory variables 
     add_SelectedAircraftId: any;
@@ -147,7 +148,14 @@ export class CustomerAircraftComponent implements OnInit {
             this.add_AircraftModelList = aircraftModelList;
         });
     }
+    viewAircraftdbldisplay(data) {
+        this.viewAircraftData = data;
 
+        $('#viewAircraft').modal('show');
+
+
+
+    }
 
     // get all dashnumber
     getAllDashNumbers() {
@@ -579,7 +587,12 @@ export class CustomerAircraftComponent implements OnInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
+    openAircraftView(data) {
+        console.log(data);
+        this.viewAircraftData = data;
 
+        // this.isViewModel = false;
+    }
     getColorCodeForHistory(i, field, value) {
         const data = this.aircraftauditHisory;
         const dataLength = data.length;

@@ -201,7 +201,7 @@ export class ListJournelComponent implements OnInit {
 
     }
 
-    private openCreateJournalPage(){
+    openCreateJournalPage(){
         this.router.navigate(['accountmodule/accountpages/app-create-journel']);
     }
 }

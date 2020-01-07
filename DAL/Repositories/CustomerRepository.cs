@@ -1702,6 +1702,8 @@ namespace DAL.Repositories
         {
             try
             {
+                if (value == null)
+                    value = "";
                 var list = (from cust in _appContext.Customer
 
                             join cc in _appContext.CustomerContact.Where(p=>p.IsDefaultContact==true) on cust.CustomerId equals cc.CustomerId into custcc

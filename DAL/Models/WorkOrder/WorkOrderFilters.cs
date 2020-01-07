@@ -21,5 +21,6 @@ namespace DAL.Models
         public DateTime? PromisedDate { get; set; }
         public DateTime? EstimatedShipDate { get; set; }
         public DateTime? EstimatedCompletionDate { get; set; }
+        public string ViewType { get; set; }
     }
 }
