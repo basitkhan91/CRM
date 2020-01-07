@@ -45,7 +45,7 @@ namespace DAL.Repositories
             var totalRecords = (from t in _appContext.Vendor
                                 join ad in _appContext.Address on t.AddressId equals ad.AddressId
                                 join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
-                                from vt in vtt.DefaultIfEmpty()                                 
+                                from vt in vtt.DefaultIfEmpty()
                                 join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
                                 from vc in vcd.DefaultIfEmpty()
                                 join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
@@ -71,7 +71,7 @@ namespace DAL.Repositories
             var list = (from t in _appContext.Vendor
                         join ad in _appContext.Address on t.AddressId equals ad.AddressId
                         join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
-                        from vt in vtt.DefaultIfEmpty()                           
+                        from vt in vtt.DefaultIfEmpty()
                         join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
                         from vc in vcd.DefaultIfEmpty()
                         join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
@@ -203,7 +203,7 @@ namespace DAL.Repositories
                                     join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                     from vca in vcad.DefaultIfEmpty()
                                     where (t.IsDelete == false || t.IsDelete == null)
-                                      &&( t.VendorName.Contains(filterText)
+                                      && (t.VendorName.Contains(filterText)
                                       || t.VendorCode.Contains(filterText)
                                       || t.VendorEmail.Contains(filterText)
                                       //|| t.IsActive == (statusId == 2 ? t.IsActive : (statusId == 0 ? false : true))
@@ -227,9 +227,9 @@ namespace DAL.Repositories
                             join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
                             from vc in vcd.DefaultIfEmpty()
                             join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
-                            from vca in vcad.DefaultIfEmpty()                            
+                            from vca in vcad.DefaultIfEmpty()
                             where (t.IsDelete == false || t.IsDelete == null)
-                                    &&( t.VendorName.Contains(filterText)
+                                    && (t.VendorName.Contains(filterText)
                                     || t.VendorCode.Contains(filterText)
                                     || t.VendorEmail.Contains(filterText)
                                     //|| t.IsActive == (statusId == 2 ? t.IsActive : (statusId == 0 ? false : true))
@@ -273,7 +273,7 @@ namespace DAL.Repositories
                                     from vc in vcd.DefaultIfEmpty()
                                     join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                     from vca in vcad.DefaultIfEmpty()
-                                    where (t.IsDelete == false || t.IsDelete == null)                                    
+                                    where (t.IsDelete == false || t.IsDelete == null)
                                     select new
                                     {
                                         t.VendorId,
@@ -289,7 +289,7 @@ namespace DAL.Repositories
                             from vc in vcd.DefaultIfEmpty()
                             join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                             from vca in vcad.DefaultIfEmpty()
-                            where (t.IsDelete == false || t.IsDelete == null)                                   
+                            where (t.IsDelete == false || t.IsDelete == null)
                             select new
                             {
                                 t.VendorId,
@@ -311,8 +311,142 @@ namespace DAL.Repositories
                               .Take(take)
                               .ToList();
                 return list;
-            }            
-            
+            }
+
+        }
+
+        public object GetVendorDataById(long vendorId)
+        {
+            var result = (from t in _appContext.Vendor
+                          join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                          join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
+                          from vt in vtt.DefaultIfEmpty()
+                          join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
+                          from vc in vcd.DefaultIfEmpty()
+                          join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
+                          from vca in vcad.DefaultIfEmpty()
+                              //join inte in _appContext.IntegrationPortalMapping on t.VendorId equals inte.ReferenceId into intee 
+                              //from inte in intee.DefaultIfEmpty()
+
+
+                          where (t.IsDelete == false || t.IsDelete == null) && t.VendorId == vendorId
+                          select new
+                          {
+                              t.VendorId,
+                              t.VendorName,
+                              t.VendorCode,
+                              t.VendorTypeId,
+                              t.DoingBusinessAsName,
+                              t.VendorClassificationId,
+                              t.Parent,
+                              t.VendorContractReference,
+                              t.AddressId,
+                              t.IsVendorAlsoCustomer,
+                              t.RelatedCustomerId,
+                              t.VendorEmail,
+                              t.IsPreferredVendor,
+                              t.LicenseNumber,
+                              t.VendorURL,
+                              t.IsCertified,
+                              t.CertificationFile,
+                              t.VendorAudit,
+                              t.VendorAuditFile,
+                              t.EDI,
+                              t.EDIDescription,
+                              t.AeroExchange,
+                              t.AeroExchangeDescription,
+                              t.CreditLimit,
+                              t.CurrencyId,
+                              t.DiscountLevel,
+                              t.Is1099Required,
+                              t.CreditTermsId,
+                              t.MasterCompanyId,
+                              t.CreatedBy,
+                              t.UpdatedBy,
+                              t.CreatedDate,
+                              t.UpdatedDate,
+                              t.IsActive,
+                              t.VendorPhone,
+                              t.IsDelete,
+                              t.DiscountId,
+                              t.capabilityId,
+                              t.VendorParentName,
+                              t.ManagementStructureId,
+                              t.DefaultPaymentTypeId,
+                              t.VendorPhoneExt,
+                              t.IsAddressForBilling,
+                              t.IsAddressForShipping,
+                              t.IsAllowNettingAPAR,
+                              vt.Description,
+                              Address1 = ad.Line1,
+                              Address2 = ad.Line2,
+                              ad.City,
+                              ad.StateOrProvince,
+                              ad.PostalCode,
+                              ad.Country,
+
+                              //vc.ClassificationName,
+                              VendorCapabilityName = vca.capabilityDescription,
+                              VendorClassifications = (_appContext.Vendor
+                                .Join(_appContext.ClassificationMapping,
+                                v => v.VendorId,
+                                mp => mp.ReferenceId,
+                                (v, mp) => new { v, mp })
+                                 .Join(_appContext.VendorClassification,
+                                  mp1 => mp1.mp.ClasificationId,
+                                  vc => vc.VendorClassificationId,
+                                (mp1, vc) => new { mp1, vc })
+                                .Where(p => p.mp1.v.VendorId == t.VendorId)
+                                .Select(p => p.vc.VendorClassificationId)),
+                              VendorClassificationName = string.Join(",", _appContext.Vendor
+                                .Join(_appContext.ClassificationMapping,
+                                v => v.VendorId,
+                                mp => mp.ReferenceId,
+                                (v, mp) => new { v, mp })
+                                 .Join(_appContext.VendorClassification,
+                                  mp1 => mp1.mp.ClasificationId,
+                                  vc => vc.VendorClassificationId,
+                                (mp1, vc) => new { mp1, vc })
+                                .Where(p => p.mp1.v.VendorId == t.VendorId)
+                                .Select(p => p.vc.ClassificationName)),
+
+                              IntegrationPortalIds = _appContext.Vendor
+                                .Join(_appContext.IntegrationPortalMapping,
+                                v => v.VendorId,
+                                mp => mp.ReferenceId,
+                                (v, mp) => new { v, mp })
+                               .Join(_appContext.IntegrationPortal,
+                                mp1 => mp1.mp.ReferenceId,
+                                inte => Convert.ToInt64(inte.IntegrationPortalId),
+                              (mp1, inte) => new { mp1, inte })
+                              .Where(p => p.mp1.v.VendorId == t.VendorId)
+                               .Select(p => p.inte.IntegrationPortalId),
+                              IntegrationPortalNames = string.Join(",", _appContext.Vendor
+                                .Join(_appContext.IntegrationPortalMapping,
+                                v => v.VendorId,
+                                mp => mp.ReferenceId,
+                                (v, mp) => new { v, mp })
+                               .Join(_appContext.IntegrationPortal,
+                                mp1 => mp1.mp.ReferenceId,
+                                inte => Convert.ToInt64(inte.IntegrationPortalId),
+                              (mp1, inte) => new { mp1, inte })
+                              .Where(p => p.mp1.v.VendorId == t.VendorId)
+                               .Select(p => p.inte.Description)),
+
+                              //IntegrationPortalIds1 = (from v in _appContext.Vendor
+                              //                        join ipm in _appContext.IntegrationPortalMapping on v.VendorId equals ipm.ReferenceId into vipm
+                              //                        from ipm in vipm.DefaultIfEmpty()
+                              //                        join ip in _appContext.IntegrationPortal on ipm.ReferenceId equals Convert.ToInt64(ip.IntegrationPortalId) into ipmip
+                              //                        from ip in ipmip.DefaultIfEmpty()
+                              //                        where ipm.ReferenceId == t.VendorId && ipm.ModuleId == Convert.ToInt32(ModuleEnum.Vendor)
+                              //                        select new
+                              //                        {
+                              //                            IntegrationPortalId = ip == null ? 0 : ip.IntegrationPortalId
+                              //                        }).ToList()
+
+
+                          }).FirstOrDefault();
+            return result;
         }
 
 

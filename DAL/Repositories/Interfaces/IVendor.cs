@@ -11,6 +11,7 @@ namespace DAL.Repositories.Interfaces
 
         IEnumerable<object> GetVendorsList(Filters<VendorFilters> vendorFilters);
         IEnumerable<object> VendorGlobalSearch(string filterText, int pageNumber, int pageSize);
+        object GetVendorDataById(long vendorId);
         IEnumerable<Vendor> GetVendors();
         IEnumerable<object> GetVendorsAuditHistory(long vendorId);
 

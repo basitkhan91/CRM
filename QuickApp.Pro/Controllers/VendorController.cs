@@ -55,6 +55,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("getvendordatabyid/{vendorId}")]
+        public IActionResult GetVendorDataById(long vendorId)
+        {
+            var allVendorlistDetails = _unitOfWork.Vendor.GetVendorDataById(vendorId);
+            return Ok(allVendorlistDetails);
+
+        }
+
         // GET: api/values
         [HttpGet("Get")]
         [Produces(typeof(List<VendorViewModel>))]
