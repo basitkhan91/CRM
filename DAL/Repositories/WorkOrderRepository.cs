@@ -259,6 +259,9 @@ namespace DAL.Repositories
             var closed = "closed";
             var all = "all";
 
+            if (woFilters.filters.ViewType == null)
+                woFilters.filters.ViewType = "mp";
+
             if (!string.IsNullOrEmpty(woFilters.filters.WorkOrderStatus))
             {
                 if (open.Contains(woFilters.filters.WorkOrderStatus.ToLower()))
@@ -280,7 +283,6 @@ namespace DAL.Repositories
                 }
             }
 
-            // IEnumerable<object> list =new List<object>();
             int totalRecords = 0;
 
             try
@@ -294,8 +296,6 @@ namespace DAL.Repositories
                                 join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                                 join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
                                 join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId
-                                join rp in _appContext.ItemMaster on wop.RevisedPartId equals rp.ItemMasterId into woprp
-                                from rp in woprp.DefaultIfEmpty()
                                 where wo.IsDeleted == false
                                 && wo.WorkOrderNum.Contains(!String.IsNullOrEmpty(woFilters.filters.WorkOrderNum) ? woFilters.filters.WorkOrderNum : wo.WorkOrderNum)
                                 && im.PartNumber.Contains(!String.IsNullOrEmpty(woFilters.filters.PartNos) ? woFilters.filters.PartNos : im.PartNumber)
@@ -351,17 +351,26 @@ namespace DAL.Repositories
                                     wo.WorkOrderId,
                                     wo.WorkOrderNum,
                                     PartNos = im.PartNumber,
+                                    PartNoType=im.PartNumber,
                                     PNDescription = im.PartDescription,
+                                    PNDescriptionType=im.PartDescription,
                                     WorkScope = ws.Description,
+                                    WorkScopeType=ws.Description,
                                     Priority = pr.Description,
+                                    PriorityType=pr.Description,
                                     CustomerName = cust.Name,
                                     CustomerType = ca.description,
                                     OpenDate = wo.OpenDate.Date,
                                     wop.CustomerRequestDate,
+                                    CustomerRequestDateType = wop.CustomerRequestDate,
                                     wop.PromisedDate,
+                                    PromisedDateType=wop.PromisedDate,
                                     wop.EstimatedShipDate,
+                                    EstimatedShipDateType=wop.EstimatedShipDate,
                                     wop.EstimatedCompletionDate,
+                                    EstimatedCompletionDateType=wop.EstimatedCompletionDate,
                                     stage.Stage,
+                                    StageType=stage.Stage,
                                     WorkOrderStatus = wost.Description,
                                     wo.IsActive,
                                     wo.CreatedDate,
@@ -501,8 +510,7 @@ namespace DAL.Repositories
                                     (wp, ws) => new { wp, ws }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
                                     .Select(p => p.ws.Description)),
 
-                                    WorkScopeType = string.Empty,
-
+                                    WorkScopeType = _appContext.WorkOrderPartNumber.Where(p => p.WorkOrderId == wo.WorkOrderId).Count() > 1 ? "Multiple" :ws.Description,
 
 
                                     Priority = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.Priority,
@@ -511,7 +519,7 @@ namespace DAL.Repositories
                                     (wp, pr) => new { wp, pr }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
                                     .Select(p => p.pr.Description)),
 
-                                    PriorityType = string.Empty,
+                                    PriorityType = _appContext.WorkOrderPartNumber.Where(p => p.WorkOrderId == wo.WorkOrderId).Count() > 1 ? "Multiple" : pr.Description,
 
                                     CustomerName = cust.Name,
                                     CustomerType = ca.description,
@@ -521,25 +529,25 @@ namespace DAL.Repositories
                                                               .Where(p => p.WorkOrderId == wo.WorkOrderId)
                                                               .Select(p => p.CustomerRequestDate.Date)),
 
-                                    CustomerRequestDateType = string.Empty,
+                                    CustomerRequestDateType = _appContext.WorkOrderPartNumber.Where(p => p.WorkOrderId == wo.WorkOrderId).Count() > 1 ? "Multiple" : wop.CustomerRequestDate.ToString(),
 
                                     PromisedDate = string.Join(",", _appContext.WorkOrderPartNumber
                                                               .Where(p => p.WorkOrderId == wo.WorkOrderId)
                                                               .Select(p => p.PromisedDate.Date)),
 
-                                    PromisedDateType = string.Empty,
+                                    PromisedDateType = _appContext.WorkOrderPartNumber.Where(p => p.WorkOrderId == wo.WorkOrderId).Count() > 1 ? "Multiple" : wop.PromisedDate.ToString(),
 
                                     EstimatedShipDate = string.Join(",", _appContext.WorkOrderPartNumber
                                                               .Where(p => p.WorkOrderId == wo.WorkOrderId)
                                                               .Select(p => p.EstimatedShipDate.Date)),
 
-                                    EstimatedShipDateType = string.Empty,
+                                    EstimatedShipDateType = _appContext.WorkOrderPartNumber.Where(p => p.WorkOrderId == wo.WorkOrderId).Count() > 1 ? "Multiple" : wop.EstimatedShipDate.ToString(),
 
                                     EstimatedCompletionDate = string.Join(",", _appContext.WorkOrderPartNumber
                                                               .Where(p => p.WorkOrderId == wo.WorkOrderId)
                                                               .Select(p => p.EstimatedCompletionDate.Date)),
 
-                                    EstimatedCompletionDateType = string.Empty,
+                                    EstimatedCompletionDateType = _appContext.WorkOrderPartNumber.Where(p => p.WorkOrderId == wo.WorkOrderId).Count() > 1 ? "Multiple" : wop.EstimatedCompletionDate.ToString(),
 
                                     Stage = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.WorkOrderStage,
                                     wp => wp.WorkOrderStageId,
@@ -547,7 +555,7 @@ namespace DAL.Repositories
                                     (wp, ws) => new { wp, ws }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
                                     .Select(p => p.ws.Description)),
 
-                                    StageType = string.Empty,
+                                    StageType = _appContext.WorkOrderPartNumber.Where(p => p.WorkOrderId == wo.WorkOrderId).Count() > 1 ? "Multiple" : stage.Description,
 
                                     WorkOrderStatus = wost.Description,
                                     wo.IsActive,
@@ -673,9 +681,10 @@ namespace DAL.Repositories
                     statusId = 2;
                 }
 
+                int totalRecords = 0;
                 try
                 {
-                    var totalRecords = (from wo in _appContext.WorkOrder
+                     totalRecords = (from wo in _appContext.WorkOrder
                                         join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
                                         join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
                                         join ca in _appContext.CustomerAffiliation on cust.CustomerAffiliationId equals ca.CustomerAffiliationId
@@ -684,10 +693,6 @@ namespace DAL.Repositories
                                         join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                                         join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
                                         join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId
-                                        join rp in _appContext.ItemMaster on wop.RevisedPartId equals rp.ItemMasterId into woprp
-                                        from rp in woprp.DefaultIfEmpty()
-
-
                                         where wo.IsDeleted == false
                                         && (wo.WorkOrderNum.Contains(filterText)
                                         || im.PartNumber.Contains(filterText)
@@ -698,9 +703,6 @@ namespace DAL.Repositories
                                         || ca.description.Contains(filterText)
                                         || stage.Description.Contains(filterText)
                                         || wo.WorkOrderStatusId == statusId)
-                                        //&& rp != null && !string.IsNullOrEmpty(rp.PartNumber) && rp.PartNumber.Contains(!String.IsNullOrEmpty(woFilters.filters.RevisedPN) ? woFilters.filters.RevisedPN : rp.PartNumber)
-                                        //&& woFilters.filters.RevisedPN == null ? string.IsNullOrEmpty(rp.PartNumber) || rp.PartNumber != null :
-                                        //             rp.PartNumber.Contains(woFilters.filters.RevisedPN)
                                         select new
                                         {
                                             wo.WorkOrderId,
