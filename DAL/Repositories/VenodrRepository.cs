@@ -45,13 +45,7 @@ namespace DAL.Repositories
             var totalRecords = (from t in _appContext.Vendor
                                 join ad in _appContext.Address on t.AddressId equals ad.AddressId
                                 join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
-                                from vt in vtt.DefaultIfEmpty()
-                                    //join ct in _appContext.CreditTerms on t.CreditTermsId equals ct.CreditTermsId into crd
-                                    //from ct in crd.DefaultIfEmpty()
-                                    //join cu in _appContext.Currency on t.CurrencyId equals cu.CurrencyId into curr
-                                    //from cu in curr.DefaultIfEmpty()
-                                    //join di in _appContext.Discount on t.DiscountId equals di.DiscountId into dis
-                                    //from di in dis.DefaultIfEmpty()
+                                from vt in vtt.DefaultIfEmpty()                                 
                                 join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
                                 from vc in vcd.DefaultIfEmpty()
                                 join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
@@ -60,14 +54,13 @@ namespace DAL.Repositories
                                   && t.VendorName.Contains(!String.IsNullOrEmpty(vendorFilters.filters.VendorName) ? vendorFilters.filters.VendorName : t.VendorName)
                                   && t.VendorCode.Contains(!String.IsNullOrEmpty(vendorFilters.filters.VendorCode) ? vendorFilters.filters.VendorCode : t.VendorCode)
                                   && t.VendorEmail.Contains(!String.IsNullOrEmpty(vendorFilters.filters.VendorEmail) ? vendorFilters.filters.VendorEmail : t.VendorEmail)
-                                  //&& t.IsActive == (statusId != 2 ? Convert.ToBoolean(statusId) : t.IsActive)
-                                  && t.IsActive == (statusId == 2 ? t.IsActive : (statusId == 0 ? false :  true))
+                                  && t.IsActive == (statusId == 2 ? t.IsActive : (statusId == 0 ? false : true))
                                   && ad.City.Contains(!String.IsNullOrEmpty(vendorFilters.filters.City) ? vendorFilters.filters.City : ad.City)
                                   && ad.StateOrProvince.Contains(!String.IsNullOrEmpty(vendorFilters.filters.StateOrProvince) ? vendorFilters.filters.StateOrProvince : ad.StateOrProvince)
-                                  //&& vc.ClassificationName.Contains(!String.IsNullOrEmpty(vendorFilters.filters.ClassificationName) ? vendorFilters.filters.ClassificationName : vc.ClassificationName)
-                                  //&& vca.capabilityDescription.Contains(!String.IsNullOrEmpty(vendorFilters.filters.VendorCapabilityName) ? vendorFilters.filters.VendorCapabilityName : vca.capabilityDescription)
+                                  && vc.ClassificationName.Contains(!String.IsNullOrEmpty(vendorFilters.filters.ClassificationName) ? vendorFilters.filters.ClassificationName : vc.ClassificationName)
+                                  && vca.capabilityDescription.Contains(!String.IsNullOrEmpty(vendorFilters.filters.VendorCapabilityName) ? vendorFilters.filters.VendorCapabilityName : vca.capabilityDescription)
                                   && t.VendorPhone.Contains(!String.IsNullOrEmpty(vendorFilters.filters.VendorPhoneContact) ? vendorFilters.filters.VendorPhoneContact : t.VendorPhone)
-                                 // && vt.Description.Contains(!String.IsNullOrEmpty(vendorFilters.filters.Description) ? vendorFilters.filters.Description : vt.Description)
+                                // && vt.Description.Contains(!String.IsNullOrEmpty(vendorFilters.filters.Description) ? vendorFilters.filters.Description : vt.Description)
                                 select new
                                 {
                                     t.VendorId,
@@ -78,13 +71,7 @@ namespace DAL.Repositories
             var list = (from t in _appContext.Vendor
                         join ad in _appContext.Address on t.AddressId equals ad.AddressId
                         join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
-                        from vt in vtt.DefaultIfEmpty()
-                            //join ct in _appContext.CreditTerms on t.CreditTermsId equals ct.CreditTermsId into crd
-                            //from ct in crd.DefaultIfEmpty()
-                            //join cu in _appContext.Currency on t.CurrencyId equals cu.CurrencyId into curr
-                            //from cu in curr.DefaultIfEmpty()
-                            //join di in _appContext.Discount on t.DiscountId equals di.DiscountId into dis
-                            //from di in dis.DefaultIfEmpty()
+                        from vt in vtt.DefaultIfEmpty()                           
                         join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
                         from vc in vcd.DefaultIfEmpty()
                         join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
@@ -93,13 +80,13 @@ namespace DAL.Repositories
                           && t.VendorName.Contains(!String.IsNullOrEmpty(vendorFilters.filters.VendorName) ? vendorFilters.filters.VendorName : t.VendorName)
                           && t.VendorCode.Contains(!String.IsNullOrEmpty(vendorFilters.filters.VendorCode) ? vendorFilters.filters.VendorCode : t.VendorCode)
                           && t.VendorEmail.Contains(!String.IsNullOrEmpty(vendorFilters.filters.VendorEmail) ? vendorFilters.filters.VendorEmail : t.VendorEmail)
-                           && t.IsActive == (statusId == 2 ? t.IsActive : (statusId == 0 ? false : true))
+                          && t.IsActive == (statusId == 2 ? t.IsActive : (statusId == 0 ? false : true))
                           && ad.City.Contains(!String.IsNullOrEmpty(vendorFilters.filters.City) ? vendorFilters.filters.City : ad.City)
                           && ad.StateOrProvince.Contains(!String.IsNullOrEmpty(vendorFilters.filters.StateOrProvince) ? vendorFilters.filters.StateOrProvince : ad.StateOrProvince)
-                          //&& vc.ClassificationName.Contains(!String.IsNullOrEmpty(vendorFilters.filters.ClassificationName) ? vendorFilters.filters.ClassificationName : vc.ClassificationName)
-                          //&& vca.capabilityDescription.Contains(!String.IsNullOrEmpty(vendorFilters.filters.VendorCapabilityName) ? vendorFilters.filters.VendorCapabilityName : vca.capabilityDescription)
+                          && vc.ClassificationName.Contains(!String.IsNullOrEmpty(vendorFilters.filters.ClassificationName) ? vendorFilters.filters.ClassificationName : vc.ClassificationName)
+                          && vca.capabilityDescription.Contains(!String.IsNullOrEmpty(vendorFilters.filters.VendorCapabilityName) ? vendorFilters.filters.VendorCapabilityName : vca.capabilityDescription)
                           && t.VendorPhone.Contains(!String.IsNullOrEmpty(vendorFilters.filters.VendorPhoneContact) ? vendorFilters.filters.VendorPhoneContact : t.VendorPhone)
-                          //&& vt.Description.Contains(!String.IsNullOrEmpty(vendorFilters.filters.Description) ? vendorFilters.filters.Description : vt.Description)
+                          && vt.Description.Contains(!String.IsNullOrEmpty(vendorFilters.filters.Description) ? vendorFilters.filters.Description : vt.Description)
                         select new
                         {
                             t.VendorId,
@@ -120,6 +107,7 @@ namespace DAL.Repositories
                           .Skip(skip)
                           .Take(take)
                           .ToList();
+
 
             if (vendorFilters.SortOrder.HasValue && !string.IsNullOrEmpty(vendorFilters.SortField))
             {
@@ -183,6 +171,148 @@ namespace DAL.Repositories
 
 
             // return null;
+        }
+
+        public IEnumerable<object> VendorGlobalSearch(string filterText, int pageNumber, int pageSize)
+        {
+            var take = pageSize;
+            var skip = take * (pageNumber);
+            //short statusId = 2;                                  
+
+            if (!string.IsNullOrEmpty(filterText))
+            {
+                //if (filterText.ToLower() == "inactive")
+                //{
+                //    statusId = 0;
+                //}
+                //else if (filterText.ToLower() == "active")
+                //{
+                //    statusId = 1;
+                //}
+                //else
+                //{
+                //    statusId = 2;
+                //}
+
+                var totalRecords = (from t in _appContext.Vendor
+                                    join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                                    join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
+                                    from vt in vtt.DefaultIfEmpty()
+                                    join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
+                                    from vc in vcd.DefaultIfEmpty()
+                                    join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
+                                    from vca in vcad.DefaultIfEmpty()
+                                    where (t.IsDelete == false || t.IsDelete == null)
+                                      &&( t.VendorName.Contains(filterText)
+                                      || t.VendorCode.Contains(filterText)
+                                      || t.VendorEmail.Contains(filterText)
+                                      //|| t.IsActive == (statusId == 2 ? t.IsActive : (statusId == 0 ? false : true))
+                                      || ad.City.Contains(filterText)
+                                      || ad.StateOrProvince.Contains(filterText)
+                                      || vc.ClassificationName.Contains(filterText)
+                                      || vca.capabilityDescription.Contains(filterText)
+                                      || t.VendorPhone.Contains(filterText)
+                                      || vt.Description.Contains(filterText))
+                                    select new
+                                    {
+                                        t.VendorId,
+
+                                    }
+                        ).Distinct().Count();
+
+                var list = (from t in _appContext.Vendor
+                            join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                            join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
+                            from vt in vtt.DefaultIfEmpty()
+                            join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
+                            from vc in vcd.DefaultIfEmpty()
+                            join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
+                            from vca in vcad.DefaultIfEmpty()                            
+                            where (t.IsDelete == false || t.IsDelete == null)
+                                    &&( t.VendorName.Contains(filterText)
+                                    || t.VendorCode.Contains(filterText)
+                                    || t.VendorEmail.Contains(filterText)
+                                    //|| t.IsActive == (statusId == 2 ? t.IsActive : (statusId == 0 ? false : true))
+                                    || ad.City.Contains(filterText)
+                                    || ad.StateOrProvince.Contains(filterText)
+                                    || vc.ClassificationName.Contains(filterText)
+                                    || vca.capabilityDescription.Contains(filterText)
+                                    || t.VendorPhone.Contains(filterText)
+                                    || vt.Description.Contains(filterText))
+                            select new
+                            {
+                                t.VendorId,
+                                t.VendorName,
+                                t.VendorCode,
+                                t.VendorEmail,
+                                t.IsActive,
+                                vt.Description,
+                                ad.City,
+                                ad.StateOrProvince,
+                                vc.ClassificationName,
+                                VendorCapabilityName = vca.capabilityDescription,
+                                VendorPhoneContact = t.VendorPhone + " - " + t.VendorPhoneExt,
+                                t.CreatedDate,
+                                TotalRecords = totalRecords,
+                            }).Distinct()
+                              .OrderByDescending(p => p.CreatedDate)
+                              .Skip(skip)
+                              .Take(take)
+                              .ToList();
+
+                return list;
+
+            }
+            else
+            {
+                var totalRecords = (from t in _appContext.Vendor
+                                    join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                                    join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
+                                    from vt in vtt.DefaultIfEmpty()
+                                    join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
+                                    from vc in vcd.DefaultIfEmpty()
+                                    join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
+                                    from vca in vcad.DefaultIfEmpty()
+                                    where (t.IsDelete == false || t.IsDelete == null)                                    
+                                    select new
+                                    {
+                                        t.VendorId,
+
+                                    }
+                       ).Distinct().Count();
+
+                var list = (from t in _appContext.Vendor
+                            join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                            join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
+                            from vt in vtt.DefaultIfEmpty()
+                            join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
+                            from vc in vcd.DefaultIfEmpty()
+                            join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
+                            from vca in vcad.DefaultIfEmpty()
+                            where (t.IsDelete == false || t.IsDelete == null)                                   
+                            select new
+                            {
+                                t.VendorId,
+                                t.VendorName,
+                                t.VendorCode,
+                                t.VendorEmail,
+                                t.IsActive,
+                                vt.Description,
+                                ad.City,
+                                ad.StateOrProvince,
+                                vc.ClassificationName,
+                                VendorCapabilityName = vca.capabilityDescription,
+                                VendorPhoneContact = t.VendorPhone + " - " + t.VendorPhoneExt,
+                                t.CreatedDate,
+                                TotalRecords = totalRecords,
+                            }).Distinct()
+                              .OrderByDescending(p => p.CreatedDate)
+                              .Skip(skip)
+                              .Take(take)
+                              .ToList();
+                return list;
+            }            
+            
         }
 
 
