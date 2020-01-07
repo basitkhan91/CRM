@@ -1116,6 +1116,7 @@ namespace QuickApp.Pro.Controllers
                          methodType = "S",
                          method = "Stock Line",
                          itemId = item.ItemMasterId,
+                         stockLineId = sl.StockLineId,
                          partNumber = item.PartNumber,
                          alternatePartId = item.PartAlternatePartId,
                          alternateFor = string.Empty,

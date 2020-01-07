@@ -402,7 +402,7 @@ export class SalesQuoteCreateComponent implements OnInit {
       let partList: any[] = this.salesQuoteView.parts;
 
       for (let i = 0; i < partList.length; i++) {
-        let selectedPart = partList[0];
+        let selectedPart = partList[i];
         let partNumberObj = new PartDetail();
         partNumberObj.itemMasterId = selectedPart.itemMasterId;
         partNumberObj.stockLineId = selectedPart.stockLineId;
@@ -425,11 +425,20 @@ export class SalesQuoteCreateComponent implements OnInit {
         partNumberObj.masterCompanyId = selectedPart.masterCompanyId;
         partNumberObj.quantityFromThis = selectedPart.qtyQuoted;
         partNumberObj.markUpPercentage = selectedPart.markUpPercentage;
-        partNumberObj.unitCostExtended =
-          selectedPart.unitSalePrice * selectedPart.qtyQuoted;
+        
+        partNumberObj.markupExtended = selectedPart.markupExtended;
+        partNumberObj.method = selectedPart.method;
+        partNumberObj.methodType = selectedPart.methodType;
+        partNumberObj.serialNumber = selectedPart.serialNumber;
+        partNumberObj.marginAmountExtended = selectedPart.marginAmountExtended;
+        partNumberObj.marginPercentagePerUnit = selectedPart.marginPercentage;
+        partNumberObj.markupExtended = selectedPart.markupExtended;
+        partNumberObj.unitCostPerUnit = selectedPart.unitCost;
+        partNumberObj.unitCostExtended = selectedPart.unitCostExtended;
+
         this.selectedParts.push(partNumberObj);
       }
-      console.log(this.salesQuoteView);
+      console.log(this.selectedParts);
 
       this.salesQuote.priorities = this.salesQuoteView.priorities;
       this.salesQuote.leadSources = this.salesQuoteView.leadSources;
@@ -620,7 +629,7 @@ export class SalesQuoteCreateComponent implements OnInit {
     console.log(this.salesOrderQuote);
     this.errorMessages = [];
     let haveError = false;
-    if (this.salesQuote.quoteTypeId < 0) {
+    if (this.salesQuote.quoteTypeId <= 0) {
       this.errorMessages.push("Please select Quote Type");
       haveError = true;
     }
@@ -648,11 +657,11 @@ export class SalesQuoteCreateComponent implements OnInit {
       this.errorMessages.push("Please select Quote Expiry Date");
       haveError = true;
     }
-    if (this.salesQuote.priorityId < 0) {
+    if (this.salesQuote.priorityId <= 0) {
       this.errorMessages.push("Please select Priority Type");
       haveError = true;
     }
-    if (this.salesQuote.accountTypeId < 0) {
+    if (this.salesQuote.accountTypeId <= 0) {
       this.errorMessages.push("Please select Account Type");
       haveError = true;
     }
@@ -779,9 +788,10 @@ export class SalesQuoteCreateComponent implements OnInit {
         let partNumberObj = new SalesOrderQuotePart();
         partNumberObj.salesOrderQuotePartId =
           selectedPart.salesOrderQuotePartId;
+        if(selectedPart.method === "Stock Line"){
+            partNumberObj.stockLineId = selectedPart.stockLineId;
+        }             
         partNumberObj.itemMasterId = selectedPart.itemMasterId;
-        partNumberObj.itemMasterId = selectedPart.itemMasterId;
-        partNumberObj.stockLineId = selectedPart.stockLineId;
         partNumberObj.fxRate = selectedPart.fixRate;
         partNumberObj.qtyQuoted = selectedPart.quantityFromThis;
         partNumberObj.unitSalePrice = selectedPart.salesPricePerUnit;
@@ -797,16 +807,20 @@ export class SalesQuoteCreateComponent implements OnInit {
         partNumberObj.unitCost = selectedPart.unitCostPerUnit;
         partNumberObj.methodType =
           selectedPart.method === "Stock Line" ? "S" : "I";
-        partList.push(partNumberObj);
+       
         partNumberObj.salesPriceExtended = selectedPart.salesPriceExtended;
         partNumberObj.markupExtended = selectedPart.markupExtended;
+        partNumberObj.markUpPercentage = selectedPart.markUpPercentage;
+        
         partNumberObj.salesDiscountExtended = selectedPart.salesDiscount;
         partNumberObj.netSalePriceExtended = selectedPart.netSalePriceExtended;
         partNumberObj.unitCostExtended = selectedPart.unitCostExtended;
         partNumberObj.marginAmount = selectedPart.marginAmount;
         partNumberObj.marginAmountExtended = selectedPart.marginAmountExtended;
-        partNumberObj.marginPercentage = selectedPart.marginPercentage;
+        partNumberObj.marginPercentage = selectedPart.marginPercentagePerUnit;
         partNumberObj.conditionId = selectedPart.conditionId;
+
+        partList.push(partNumberObj);
       }
       this.salesQuoteView.parts = partList;
 
