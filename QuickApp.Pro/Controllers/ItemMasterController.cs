@@ -543,6 +543,14 @@ namespace QuickApp.Pro.Controllers
                     itemmaserObj.PartNumber = itemMasterViewModel.PartNumber;
                     itemmaserObj.RevisedPartId = itemMasterViewModel.RevisedPartId;
 
+                    itemmaserObj.SiteId = itemMasterViewModel.SiteId;
+                    itemmaserObj.WarehouseId = itemMasterViewModel.WarehouseId;
+                    itemmaserObj.LocationId = itemMasterViewModel.LocationId;
+                    itemmaserObj.ShelfId = itemMasterViewModel.ShelfId;
+                    itemmaserObj.BinId = itemMasterViewModel.BinId;
+
+
+
                     itemmaserObj.oemPNId = itemMasterViewModel.oemPNId;
                     itemmaserObj.PartDescription = itemMasterViewModel.Partdescription;
                     itemmaserObj.ItemTypeId = itemMasterViewModel.ItemTypeId;

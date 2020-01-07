@@ -585,7 +585,12 @@ export class ItemMasterEndpoint extends EndpointFactory {
             'soldUnitOfMeasureId': roleObject.soldUnitOfMeasureId,
             'isTimeLife': roleObject.isTimeLife,
             'itemTypeId': roleObject.itemTypeId,
-            'revisedPartId': roleObject.revisedPartId
+            'revisedPartId': roleObject.revisedPartId,
+            'siteId': roleObject.siteId,
+            'warehouseId': roleObject.warehouseId,
+            'locationId': roleObject.locationId,
+            'shelfId': roleObject.shelfId,
+            'binId': roleObject.binId,
 
 
 
