@@ -189,7 +189,7 @@ namespace DAL.Repositories
                                     from rp in woprp.DefaultIfEmpty()
                                     join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId into rpim1
                                     from im1 in rpim1.DefaultIfEmpty()
-                                    join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.ID
+                                    join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.WorkOrderStageId
                                     join wost in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals wost.Id
                                     where wo.WorkOrderId == workOrderId
                                     select new
@@ -209,7 +209,7 @@ namespace DAL.Repositories
                             from rp in woprp.DefaultIfEmpty()
                             join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId into rpim1
                             from im1 in rpim1.DefaultIfEmpty()
-                            join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.ID
+                            join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.WorkOrderStageId
                             join wost in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals wost.Id
                             where wo.WorkOrderId == workOrderId
                             select new
@@ -290,7 +290,7 @@ namespace DAL.Repositories
                                     join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
                                     join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                                     join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
-                                    join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
+                                    join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId
                                     join rp in _appContext.ItemMaster on wop.RevisedPartId equals rp.ItemMasterId into woprp
                                     from rp in woprp.DefaultIfEmpty()
 
@@ -330,7 +330,7 @@ namespace DAL.Repositories
                             join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
                             join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                             join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
-                            join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
+                            join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId
                             join rp in _appContext.ItemMaster on wop.RevisedPartId equals rp.ItemMasterId into woprp
                             from rp in woprp.DefaultIfEmpty()
 
@@ -358,55 +358,74 @@ namespace DAL.Repositories
                                 wo.WorkOrderId,
                                 wo.WorkOrderNum,
 
-                                PartNos = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.ItemMaster,
-                                wp => wp.MasterPartId,
-                                im => im.ItemMasterId,
-                                (wp, im) => new { wp, im }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
-                                .Select(p => p.im.PartNumber)),
+                                //PartNos = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.ItemMaster,
+                                //wp => wp.MasterPartId,
+                                //im => im.ItemMasterId,
+                                //(wp, im) => new { wp, im }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                //.Select(p => p.im.PartNumber)),
 
-                                PNDescription = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.ItemMaster,
-                                wp => wp.MasterPartId,
-                                im => im.ItemMasterId,
-                                (wp, im) => new { wp, im }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
-                                .Select(p => p.im.PartDescription)),
+                                PartNos=im.PartNumber,
 
-                                WorkScope = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.WorkScope,
-                                wp => wp.WorkOrderScopeId,
-                                ws => ws.WorkScopeId,
-                                (wp, ws) => new { wp, ws }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
-                                .Select(p => p.ws.Description)),
+                                //PNDescription = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.ItemMaster,
+                                //wp => wp.MasterPartId,
+                                //im => im.ItemMasterId,
+                                //(wp, im) => new { wp, im }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                //.Select(p => p.im.PartDescription)),
 
-                                Priority = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.Priority,
-                                wp => wp.WorkOrderPriorityId,
-                                pr => pr.PriorityId,
-                                (wp, pr) => new { wp, pr }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
-                                .Select(p => p.pr.Description)),
+                                PNDescription=im.PartDescription,
+
+                                //WorkScope = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.WorkScope,
+                                //wp => wp.WorkOrderScopeId,
+                                //ws => ws.WorkScopeId,
+                                //(wp, ws) => new { wp, ws }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                //.Select(p => p.ws.Description)),
+
+                                WorkScope=ws.Description,
+
+
+
+                                //Priority = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.Priority,
+                                //wp => wp.WorkOrderPriorityId,
+                                //pr => pr.PriorityId,
+                                //(wp, pr) => new { wp, pr }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                //.Select(p => p.pr.Description)),
+
+                                Priority=pr.Description,
 
                                 CustomerName = cust.Name,
                                 CustomerType = ca.description,
                                 OpenDate = wo.OpenDate.Date,
 
-                                CustomerRequestDate = string.Join(",", _appContext.WorkOrderPartNumber
-                                                          .Where(p => p.WorkOrderId == wo.WorkOrderId)
-                                                          .Select(p => p.CustomerRequestDate.Date)),
+                                //CustomerRequestDate = string.Join(",", _appContext.WorkOrderPartNumber
+                                //                          .Where(p => p.WorkOrderId == wo.WorkOrderId)
+                                //                          .Select(p => p.CustomerRequestDate.Date)),
 
-                                PromisedDate = string.Join(",", _appContext.WorkOrderPartNumber
-                                                          .Where(p => p.WorkOrderId == wo.WorkOrderId)
-                                                          .Select(p => p.PromisedDate.Date)),
+                                CustomerRequestDate=wop.CustomerRequestDate,
 
-                                EstimatedShipDate = string.Join(",", _appContext.WorkOrderPartNumber
-                                                          .Where(p => p.WorkOrderId == wo.WorkOrderId)
-                                                          .Select(p => p.EstimatedShipDate.Date)),
+                                //PromisedDate = string.Join(",", _appContext.WorkOrderPartNumber
+                                //                          .Where(p => p.WorkOrderId == wo.WorkOrderId)
+                                //                          .Select(p => p.PromisedDate.Date)),
 
-                                EstimatedCompletionDate = string.Join(",", _appContext.WorkOrderPartNumber
-                                                          .Where(p => p.WorkOrderId == wo.WorkOrderId)
-                                                          .Select(p => p.EstimatedCompletionDate.Date)),
+                                PromisedDate=wop.PromisedDate,
 
-                                Stage = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.WorkOrderStage,
-                                wp => wp.WorkOrderStageId,
-                                ws => ws.ID,
-                                (wp, ws) => new { wp, ws }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
-                                .Select(p => p.ws.Description)),
+                                //EstimatedShipDate = string.Join(",", _appContext.WorkOrderPartNumber
+                                //                          .Where(p => p.WorkOrderId == wo.WorkOrderId)
+                                //                          .Select(p => p.EstimatedShipDate.Date)),
+
+                                EstimatedShipDate=wop.EstimatedShipDate,
+                                //EstimatedCompletionDate = string.Join(",", _appContext.WorkOrderPartNumber
+                                //                          .Where(p => p.WorkOrderId == wo.WorkOrderId)
+                                //                          .Select(p => p.EstimatedCompletionDate.Date)),
+
+                                EstimatedCompletionDate=wop.EstimatedCompletionDate,
+
+                                //Stage = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.WorkOrderStage,
+                                //wp => wp.WorkOrderStageId,
+                                //ws => ws.WorkOrderStageId,
+                                //(wp, ws) => new { wp, ws }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                //.Select(p => p.ws.Description)),
+
+                                Stage=stage.Stage,
 
                                 WorkOrderStatus = wost.Description,
                                 wo.IsActive,
@@ -541,7 +560,7 @@ namespace DAL.Repositories
                                         join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
                                         join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                                         join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
-                                        join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
+                                        join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId
                                         join rp in _appContext.ItemMaster on wop.RevisedPartId equals rp.ItemMasterId into woprp
                                         from rp in woprp.DefaultIfEmpty()
 
@@ -573,7 +592,7 @@ namespace DAL.Repositories
                                 join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
                                 join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                                 join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
-                                join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
+                                join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId
                                 join rp in _appContext.ItemMaster on wop.RevisedPartId equals rp.ItemMasterId into woprp
                                 from rp in woprp.DefaultIfEmpty()
 
@@ -593,55 +612,74 @@ namespace DAL.Repositories
                                     wo.WorkOrderId,
                                     wo.WorkOrderNum,
 
-                                    PartNos = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.ItemMaster,
-                                wp => wp.MasterPartId,
-                                im => im.ItemMasterId,
-                                (wp, im) => new { wp, im }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
-                                .Select(p => p.im.PartNumber)),
+                                    //PartNos = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.ItemMaster,
+                                    //wp => wp.MasterPartId,
+                                    //im => im.ItemMasterId,
+                                    //(wp, im) => new { wp, im }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                    //.Select(p => p.im.PartNumber)),
 
-                                    PNDescription = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.ItemMaster,
-                                wp => wp.MasterPartId,
-                                im => im.ItemMasterId,
-                                (wp, im) => new { wp, im }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
-                                .Select(p => p.im.PartDescription)),
+                                    PartNos = im.PartNumber,
 
-                                    WorkScope = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.WorkScope,
-                                wp => wp.WorkOrderScopeId,
-                                ws => ws.WorkScopeId,
-                                (wp, ws) => new { wp, ws }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
-                                .Select(p => p.ws.Description)),
+                                    //PNDescription = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.ItemMaster,
+                                    //wp => wp.MasterPartId,
+                                    //im => im.ItemMasterId,
+                                    //(wp, im) => new { wp, im }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                    //.Select(p => p.im.PartDescription)),
 
-                                    Priority = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.Priority,
-                                wp => wp.WorkOrderPriorityId,
-                                pr => pr.PriorityId,
-                                (wp, pr) => new { wp, pr }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
-                                .Select(p => p.pr.Description)),
+                                    PNDescription = im.PartDescription,
+
+                                    //WorkScope = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.WorkScope,
+                                    //wp => wp.WorkOrderScopeId,
+                                    //ws => ws.WorkScopeId,
+                                    //(wp, ws) => new { wp, ws }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                    //.Select(p => p.ws.Description)),
+
+                                    WorkScope = ws.Description,
+
+
+
+                                    //Priority = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.Priority,
+                                    //wp => wp.WorkOrderPriorityId,
+                                    //pr => pr.PriorityId,
+                                    //(wp, pr) => new { wp, pr }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                    //.Select(p => p.pr.Description)),
+
+                                    Priority = pr.Description,
 
                                     CustomerName = cust.Name,
                                     CustomerType = ca.description,
-                                    wo.OpenDate.Date,
+                                    OpenDate = wo.OpenDate.Date,
 
-                                    CustomerRequestDate = string.Join(",", _appContext.WorkOrderPartNumber
-                                                          .Where(p => p.WorkOrderId == wo.WorkOrderId)
-                                                          .Select(p => p.CustomerRequestDate.Date)),
+                                    //CustomerRequestDate = string.Join(",", _appContext.WorkOrderPartNumber
+                                    //                          .Where(p => p.WorkOrderId == wo.WorkOrderId)
+                                    //                          .Select(p => p.CustomerRequestDate.Date)),
 
-                                    PromisedDate = string.Join(",", _appContext.WorkOrderPartNumber
-                                                          .Where(p => p.WorkOrderId == wo.WorkOrderId)
-                                                          .Select(p => p.PromisedDate.Date)),
+                                    CustomerRequestDate = wop.CustomerRequestDate,
 
-                                    EstimatedShipDate = string.Join(",", _appContext.WorkOrderPartNumber
-                                                          .Where(p => p.WorkOrderId == wo.WorkOrderId)
-                                                          .Select(p => p.EstimatedShipDate.Date)),
+                                    //PromisedDate = string.Join(",", _appContext.WorkOrderPartNumber
+                                    //                          .Where(p => p.WorkOrderId == wo.WorkOrderId)
+                                    //                          .Select(p => p.PromisedDate.Date)),
 
-                                    EstimatedCompletionDate = string.Join(",", _appContext.WorkOrderPartNumber
-                                                          .Where(p => p.WorkOrderId == wo.WorkOrderId)
-                                                          .Select(p => p.EstimatedCompletionDate.Date)),
+                                    PromisedDate = wop.PromisedDate,
 
-                                    Stage = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.WorkOrderStage,
-                                wp => wp.WorkOrderStageId,
-                                ws => ws.ID,
-                                (wp, ws) => new { wp, ws }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
-                                .Select(p => p.ws.Description)),
+                                    //EstimatedShipDate = string.Join(",", _appContext.WorkOrderPartNumber
+                                    //                          .Where(p => p.WorkOrderId == wo.WorkOrderId)
+                                    //                          .Select(p => p.EstimatedShipDate.Date)),
+
+                                    EstimatedShipDate = wop.EstimatedShipDate,
+                                    //EstimatedCompletionDate = string.Join(",", _appContext.WorkOrderPartNumber
+                                    //                          .Where(p => p.WorkOrderId == wo.WorkOrderId)
+                                    //                          .Select(p => p.EstimatedCompletionDate.Date)),
+
+                                    EstimatedCompletionDate = wop.EstimatedCompletionDate,
+
+                                    //Stage = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.WorkOrderStage,
+                                    //wp => wp.WorkOrderStageId,
+                                    //ws => ws.WorkOrderStageId,
+                                    //(wp, ws) => new { wp, ws }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                    //.Select(p => p.ws.Description)),
+
+                                    Stage = stage.Stage,
 
                                     WorkOrderStatus = wost.Description,
                                     wo.IsActive,
@@ -668,7 +706,14 @@ namespace DAL.Repositories
                     var totalRecords = (from wo in _appContext.WorkOrder
                                         join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
                                         join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
+                                        join ca in _appContext.CustomerAffiliation on cust.CustomerAffiliationId equals ca.CustomerAffiliationId
                                         join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
+                                        join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
+                                        join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
+                                        join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
+                                        join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId
+                                        join rp in _appContext.ItemMaster on wop.RevisedPartId equals rp.ItemMasterId into woprp
+                                        from rp in woprp.DefaultIfEmpty()
                                         where wo.IsDeleted == false
                                         select new
                                         {
@@ -679,24 +724,92 @@ namespace DAL.Repositories
                     var list = (from wo in _appContext.WorkOrder
                                 join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
                                 join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
+                                join ca in _appContext.CustomerAffiliation on cust.CustomerAffiliationId equals ca.CustomerAffiliationId
                                 join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
+                                join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
+                                join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
+                                join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
+                                join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId
+                                join rp in _appContext.ItemMaster on wop.RevisedPartId equals rp.ItemMasterId into woprp
+                                from rp in woprp.DefaultIfEmpty()
                                 where wo.IsDeleted == false
                                 select new
                                 {
                                     wo.WorkOrderId,
                                     wo.WorkOrderNum,
-                                    wo.OpenDate,
+
+                                    //PartNos = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.ItemMaster,
+                                    //wp => wp.MasterPartId,
+                                    //im => im.ItemMasterId,
+                                    //(wp, im) => new { wp, im }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                    //.Select(p => p.im.PartNumber)),
+
+                                    PartNos = im.PartNumber,
+
+                                    //PNDescription = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.ItemMaster,
+                                    //wp => wp.MasterPartId,
+                                    //im => im.ItemMasterId,
+                                    //(wp, im) => new { wp, im }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                    //.Select(p => p.im.PartDescription)),
+
+                                    PNDescription = im.PartDescription,
+
+                                    //WorkScope = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.WorkScope,
+                                    //wp => wp.WorkOrderScopeId,
+                                    //ws => ws.WorkScopeId,
+                                    //(wp, ws) => new { wp, ws }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                    //.Select(p => p.ws.Description)),
+
+                                    WorkScope = ws.Description,
+
+
+
+                                    //Priority = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.Priority,
+                                    //wp => wp.WorkOrderPriorityId,
+                                    //pr => pr.PriorityId,
+                                    //(wp, pr) => new { wp, pr }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                    //.Select(p => p.pr.Description)),
+
+                                    Priority = pr.Description,
+
                                     CustomerName = cust.Name,
-                                    cust.CustomerCode,
-                                    WorkOrderType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Internal" : (wo.WorkOrderTypeId == 3 ? "Tear Down" : "Shop Services")),
+                                    CustomerType = ca.description,
+                                    OpenDate = wo.OpenDate.Date,
+
+                                    //CustomerRequestDate = string.Join(",", _appContext.WorkOrderPartNumber
+                                    //                          .Where(p => p.WorkOrderId == wo.WorkOrderId)
+                                    //                          .Select(p => p.CustomerRequestDate.Date)),
+
+                                    CustomerRequestDate = wop.CustomerRequestDate,
+
+                                    //PromisedDate = string.Join(",", _appContext.WorkOrderPartNumber
+                                    //                          .Where(p => p.WorkOrderId == wo.WorkOrderId)
+                                    //                          .Select(p => p.PromisedDate.Date)),
+
+                                    PromisedDate = wop.PromisedDate,
+
+                                    //EstimatedShipDate = string.Join(",", _appContext.WorkOrderPartNumber
+                                    //                          .Where(p => p.WorkOrderId == wo.WorkOrderId)
+                                    //                          .Select(p => p.EstimatedShipDate.Date)),
+
+                                    EstimatedShipDate = wop.EstimatedShipDate,
+                                    //EstimatedCompletionDate = string.Join(",", _appContext.WorkOrderPartNumber
+                                    //                          .Where(p => p.WorkOrderId == wo.WorkOrderId)
+                                    //                          .Select(p => p.EstimatedCompletionDate.Date)),
+
+                                    EstimatedCompletionDate = wop.EstimatedCompletionDate,
+
+                                    //Stage = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.WorkOrderStage,
+                                    //wp => wp.WorkOrderStageId,
+                                    //ws => ws.WorkOrderStageId,
+                                    //(wp, ws) => new { wp, ws }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                    //.Select(p => p.ws.Description)),
+
+                                    Stage = stage.Stage,
+
+                                    WorkOrderStatus = wost.Description,
                                     wo.IsActive,
                                     wo.CreatedDate,
-                                    WorkOrderStatus = wost.Description,
-                                    PartNos = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.ItemMaster,
-                                wp => wp.MasterPartId,
-                                im => im.ItemMasterId,
-                                (wp, im) => new { wp, im }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
-                                .Select(p => p.im.PartNumber)),
                                     TotalRecords = totalRecords
                                 }
                               ).Distinct()
@@ -856,7 +969,7 @@ namespace DAL.Repositories
                             from rp in woprp.DefaultIfEmpty()
                             join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId into rpim1
                             from im1 in rpim1.DefaultIfEmpty()
-                            join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.ID
+                            join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.WorkOrderStageId
                             join wost in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals wost.Id
                             join con in _appContext.Condition on wop.ConditionId equals con.ConditionId into wopcon
                             from con in wopcon.DefaultIfEmpty()
@@ -987,7 +1100,7 @@ namespace DAL.Repositories
                             from wf in wopwf.DefaultIfEmpty()
                             join pub in _appContext.Publication on swo.CMMId equals pub.PublicationRecordId into woppub
                             from pub in woppub.DefaultIfEmpty()
-                            join stage in _appContext.WorkOrderStage on swo.StageId equals stage.ID
+                            join stage in _appContext.WorkOrderStage on swo.StageId equals stage.WorkOrderStageId
                             join status in _appContext.WorkOrderStatus on swo.StatusId equals status.Id
 
                             where swo.SubWorkOrderId == subWorkOrderId
@@ -1037,7 +1150,7 @@ namespace DAL.Repositories
                             join wowf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wowf.WorkOrderId
                             join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
                             join wos in _appContext.WorkScope on swo.StatusId equals wos.WorkScopeId
-                            join stage in _appContext.WorkOrderStage on swo.StageId equals stage.ID
+                            join stage in _appContext.WorkOrderStage on swo.StageId equals stage.WorkOrderStageId
                             join rp in _appContext.Nha_Tla_Alt_Equ_ItemMapping on wop.MappingItemMasterId equals rp.MappingItemMasterId into woprp
                             from rp in woprp.DefaultIfEmpty()
                             join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId into rpim1
@@ -1085,7 +1198,7 @@ namespace DAL.Repositories
                             from wf in wopwf.DefaultIfEmpty()
                             join pub in _appContext.Publication on wop.CMMId equals pub.PublicationRecordId into woppub
                             from pub in woppub.DefaultIfEmpty()
-                            join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
+                            join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId
                             join status in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals status.Id
                             join wowf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wowf.WorkOrderId
 
@@ -1376,7 +1489,7 @@ namespace DAL.Repositories
                             join wf in _appContext.Workflow on w.WorkflowId equals wf.WorkflowId into wwf
                             from wf in wwf.DefaultIfEmpty()
                             join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
-                            join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.ID
+                            join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId
                             join pri in _appContext.Priority on wop.WorkOrderPriorityId equals pri.PriorityId
 
                             where w.IsDeleted == false && w.IsActive == true && w.WorkOrderId == workOrderId && wop.WorkOrderId == workOrderId
@@ -2417,7 +2530,9 @@ namespace DAL.Repositories
                                                   wom.WorkOrderId,
                                                   im.ItemMasterId,
                                                   im.ItemClassificationId,
-                                                  im.PurchaseUnitOfMeasureId
+                                                  im.PurchaseUnitOfMeasureId,
+                                                  wom.Memo,
+                                                  wom.IsDeferred
                                               }).Distinct().ToList();
 
                 return workOrderMaterialsList;
@@ -4442,7 +4557,9 @@ namespace DAL.Repositories
                                     join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                                     join wowf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wowf.WorkOrderId
 
-                                    where wo.IsDeleted == false && wo.IsActive == true && wop.MasterPartId == partId && wop.WorkOrderScopeId == workScopeId
+                                    where wo.IsDeleted == false && wo.IsActive == true 
+                                          && wop.MasterPartId == partId && wop.WorkOrderScopeId == workScopeId
+                                          &&wo.WorkOrderStatusId==2 //Closed
                                     select new
                                     {
                                         wo.WorkOrderNum,
@@ -4672,14 +4789,14 @@ namespace DAL.Repositories
         {
             try
             {
-                var data = (from ss in _appContext.WorkOrderStageAndStatus
-                            join stage in _appContext.WorkOrderStage on ss.WOStageId equals stage.ID
-                            join ws in _appContext.WorkOrderStatus on ss.WOStatusId equals ws.Id
-                            where ss.IsActive == true && ss.IsDeleted == false
+                var data = (
+                            from stage in _appContext.WorkOrderStage 
+                            join ws in _appContext.WorkOrderStatus on stage.StatusId equals ws.Id
+                            where stage.IsActive == true && stage.IsDeleted == false
                             select new
                             {
-                                WorkOrderStage = stage.Description,
-                                WorkOrderStageId = stage.ID,
+                                WorkOrderStage = stage.Stage,
+                                WorkOrderStageId = stage.WorkOrderStageId,
                                 WorkOrderStaus = ws.Description,
                                 WorkOrderStausId = ws.Id
                             }).Distinct().ToList();
@@ -5123,7 +5240,7 @@ namespace DAL.Repositories
                     workOrderMaterial.Price = item.Price;
                     workOrderMaterial.ExtendedPrice = item.ExtendedPrice;
                     workOrderMaterial.Memo = item.Memo;
-                    workOrderMaterial.IsDefered = item.IsDeferred;
+                    workOrderMaterial.IsDeferred = item.IsDeferred;
 
                     WorkOrderMaterialList.Add(workOrderMaterial);
                 }
@@ -6457,7 +6574,7 @@ namespace DAL.Repositories
                 workOrderMaterial.CreatedDate = DateTime.Now;
                 workOrderMaterial.IsActive = true;
                 workOrderMaterial.IsAltPart = part.IsAltPart;
-                workOrderMaterial.IsDefered = false;
+                workOrderMaterial.IsDeferred = false;
                 workOrderMaterial.IsDeleted = false;
                 workOrderMaterial.IssuedById = part.IssuedById;
                 workOrderMaterial.IssuedDate = part.IssuedDate;
@@ -6679,7 +6796,7 @@ namespace DAL.Repositories
                 workOrderMaterial.CreatedDate = DateTime.Now;
                 workOrderMaterial.IsActive = true;
                 workOrderMaterial.IsAltPart = part.IsAltPart;
-                workOrderMaterial.IsDefered = false;
+                workOrderMaterial.IsDeferred = false;
                 workOrderMaterial.IsDeleted = false;
                 workOrderMaterial.IssuedById = part.IssuedById;
                 workOrderMaterial.IssuedDate = part.IssuedDate;

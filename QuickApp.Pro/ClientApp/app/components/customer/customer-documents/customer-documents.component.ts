@@ -12,7 +12,7 @@ import { CustomerContactModel } from '../../../models/customer-contact.model';
 import { MatDialog } from '@angular/material';
 import { getObjectByValue, getObjectById, getValueFromObjectByKey } from '../../../generic/autocomplete';
 import { ConfigurationService } from '../../../services/configuration.service';
-
+import * as $ from 'jquery';
 @Component({
 	selector: 'app-customer-documents',
 	templateUrl: './customer-documents.component.html',
@@ -99,14 +99,18 @@ export class CustomerDocumentsComponent implements OnInit {
             this.sourceViewforDocument = row;
 
         })
-
+        
        
-       
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+        //this.modal = this.modalService.open(content, { size: 'sm' });
+        //this.modal.result.then(() => {
+        //    console.log('When user closes');
+        //}, () => { console.log('Backdrop click') })
     
+
+    }
+    docviewdblclick(data) {
+        this.sourceViewforDocument = data;
+        $('#docView').modal('show');
 
     }
     toGetUploadDocumentsList(attachmentId, customerId, moduleId) {

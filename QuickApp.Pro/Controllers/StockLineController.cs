@@ -1096,6 +1096,36 @@ namespace QuickApp.Pro.Controllers
             return Ok(searchData);
         }
 
+        [HttpGet("warehousedata")]
+        public IActionResult GetAllWarehouseData(long siteId)
+        {
+            var result = _unitOfWork.stockLineList.GetAllWarehouseData(siteId);
+            return Ok(result);
+        }
+
+        [HttpGet("locationdata")]
+        public IActionResult GetAllLocationData(long warehouseId)
+        {
+            var result = _unitOfWork.stockLineList.GetAllLocationData(warehouseId);
+            return Ok(result);
+        }
+
+        [HttpGet("shelfdata")]
+        public IActionResult GetAllShelfData(long locationId)
+        {
+            var result = _unitOfWork.stockLineList.GetAllShelfData(locationId);
+            return Ok(result);
+        }
+
+        [HttpGet("bindata")]
+        public IActionResult GetAllBinData(long shelfId)
+        {
+            var result = _unitOfWork.stockLineList.GetAllBinData(shelfId);
+            return Ok(result);
+        }
+
+
+
         private IEnumerable<object> GetPartDetails(ItemMasterSearchViewModel searchView)
         {
             var result = Enumerable.Empty<object>();
@@ -1137,5 +1167,7 @@ namespace QuickApp.Pro.Controllers
 
             return result.ToList<object>();
         }
+
+
     }
 }

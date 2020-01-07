@@ -132,7 +132,7 @@ export class EmployeesListComponent implements OnInit {
 
     }
     private onemployeeDataLoadSuccessful(allWorkFlows: any) {
-        console.log(allWorkFlows);
+       
         if (allWorkFlows[0].employeeLeaveTypeMapping != null) {
             this.employeeLeaveType = allWorkFlows[0].employeeLeaveTypeMapping.employeeLeaveTypeId;
             this.shiftId = allWorkFlows[0].employeeShiftMapping.shiftId;
@@ -153,7 +153,7 @@ export class EmployeesListComponent implements OnInit {
   
 
         }
-        //debugger;
+       
         //this.alertService.stopLoadingMessage();
         //this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
@@ -358,10 +358,7 @@ export class EmployeesListComponent implements OnInit {
             //console.log("no Info Presnts")
         }
       
-        debugger
-        console.log(row)
-        console.log(row.employeetraingInfo)
-        debugger
+      
         if(row.employeetraingInfo != null && row.employeetraingInfo.frequencyOfTrainingId > 0)
         {
             this.frequencyOfTrainingData = getValueFromArrayOfObjectById('label', 'value', row.employeetraingInfo.frequencyOfTrainingId, this.getAllFrequencyTrainingInfodrpData);
