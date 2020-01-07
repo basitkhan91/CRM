@@ -46,6 +46,6 @@ namespace QuickApp.Pro.ViewModels.SalesViews
         public string CurrencyDescription { get; set; }
         public long ConditionId { get; set; }
         public string ConditionDescription { get; set; }
-
+        public string IdNumber { get; set; }
     }
 }
