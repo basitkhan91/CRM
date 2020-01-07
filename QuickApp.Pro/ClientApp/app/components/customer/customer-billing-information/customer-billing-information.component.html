@@ -47,8 +47,8 @@
                                     <i class="fa fa-search"></i>
                                     <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Filter" style="height: 28px !important;">
                                 </div>
-                                <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-                                <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only"  (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                <button type="button" class="btn btn-primary-cstm" matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
+                                <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only"  (click)="dt.exportCSV({selectionOnly:true})"></button>
 
                                 <div class="excel-upload excel-upload-cstm">
                                     <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
@@ -77,7 +77,7 @@
                         </ng-template>
 
                         <ng-template pTemplate="body" let-rowData let-columns="columns">
-                            <tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)"  [ngStyle]="{'background-color' : rowData.isPrimary === true ? '#79ffe3'  : 'white'  }">
+                            <tr [pSelectableRow]="rowData"  [pSelectableRowDblClick]="rowData" (dblclick)="toggledbldisplay(rowData)"  [ngStyle]="{'background-color' : rowData.isPrimary === true ? '#79ffe3'  : 'white'  }">
 
 
                                 <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
@@ -329,7 +329,7 @@
 </div>
 
 
-<div  *ngIf="viewData" class="modal"id="view" data-backdrop="static">
+<div   id="view" class="modal" data-backdrop="static">
         <div class="modal-dialog">
           <div class="modal-content">
       
@@ -340,7 +340,7 @@
             </div>
       
             <!-- Modal body -->
-            <div class="modal-body">
+            <div class="modal-body" *ngIf="viewData">
                 <div class="col-sm-12">
                     <p><span class="label"><b>Site Name: </b></span><span class="value">{{viewData.siteName}}</span></p>
                     <p><span class="label"><b> Primary: </b></span><span class="value">{{viewData.isPrimary === true ? 'Yes' : 'No'}}</span></p>

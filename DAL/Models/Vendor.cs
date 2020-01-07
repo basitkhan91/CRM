@@ -74,6 +74,8 @@ namespace DAL.Models
         public Nullable<bool> v1099GrossProceedsPaidToAttorney { get; set; }
         public Nullable<bool> v1099GrossProceedsPaidToAttorneyDefault { get; set; }
         public long? capabilityId { get; set; }
+        public long? ManagementStructureId { get; set; }
+        public Int16? DefaultPaymentTypeId { get; set; }
         //[ForeignKey("MasterCompanyId")]
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
