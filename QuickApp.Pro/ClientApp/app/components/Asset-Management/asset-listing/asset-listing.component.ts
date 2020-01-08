@@ -10,6 +10,7 @@ import { GlAccountService } from '../../../services/glAccount/glAccount.service'
 import { VendorEndpointService } from '../../../services/vendor-endpoint.service';
 import { Vendor } from '../../../models/vendor.model';
 import { GlAccount } from '../../../models/GlAccount.model';
+import { LegalEntityService } from '../../../services/legalentity.service';
 
 @Component({
     selector: 'app-asset-listing',
@@ -25,6 +26,7 @@ export class AssetListingComponent implements OnInit {
     isSaving: boolean;
     activeIndex: number;
     assetViewList: any = {};
+    currentAsset: any = {};
     modal: NgbModalRef;
     private isDeleteMode: boolean = false;
     private isEditMode: boolean = false;
@@ -40,6 +42,14 @@ export class AssetListingComponent implements OnInit {
     pageIndex: number = 0;
     pageSize: number = 10;
     totalPages: number;
+    updateMode: boolean = false;
+    allManagemtninfo: any[] = [];
+    bulist: any[] = [];
+    departmentList: any[] = [];
+    divisionlist: any[] = [];
+    maincompanylist: any[] = [];
+    allManufacturerInfo: any[] = [];
+    managementStructureData: any = [];
 
     // comented for asset audit
     //AuditDetails: SingleScreenAuditDetails[];
@@ -61,11 +71,13 @@ export class AssetListingComponent implements OnInit {
     /** Asset-listing ctor */
     loadingIndicator: boolean;
     allAssetInfo: any[] = [];
+    allAssetInfoNew: any[] = [];
     cols: { field: string; header: string; }[];
     selectedColumns: { field: string; header: string; }[];
     constructor(private alertService: AlertService, private assetService: AssetService, private _route: Router,
         private modalService: NgbModal, private glAccountService: GlAccountService,
-        private vendorEndpointService: VendorEndpointService
+        private vendorEndpointService: VendorEndpointService,
+        private legalEntityServices: LegalEntityService
     ) {
         this.assetService.isEditMode = false;
         this.assetService.listCollection = null;
@@ -84,8 +96,10 @@ export class AssetListingComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allAssetInfo = allWorkFlows;
+        console.log(this.allAssetInfo);
         this.totalRecords = this.allAssetInfo.length;
         this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+        this.loadManagementdata();
     }
 
     private loadData() {
@@ -104,7 +118,14 @@ export class AssetListingComponent implements OnInit {
             { field: 'name', header: 'Asset Name' },
             { field: 'alternateAssetId', header: 'Alt Asset Id' },
             { field: 'manufacturedId', header: 'Manufacturer' },
-            { field: 'currencyId', header: 'Currency ' },
+            { field: 'isSerialized', header: 'Serial Num' },
+            { field: 'calibrationRequired', header: 'Calibrated' },
+            { field: 'company', header: 'Company' },
+            { field: 'company', header: 'BU' },
+            { field: 'company', header: 'Div.' },
+            { field: 'company', header: 'Dept.' },
+            { field: 'isDepreciable', header: 'Asset Type' },
+            { field: 'company', header: 'Asset Class' },
         ];
 
         this.selectedColumns = this.cols;
@@ -179,7 +200,10 @@ export class AssetListingComponent implements OnInit {
             this.alertService.showMessage("Success", `Asset removed successfully.`, MessageSeverity.success);
             this.assetService.getAssetList().subscribe(asset => {
                 this.allAssetInfo = asset[0];
+                this.totalRecords = this.allAssetInfo.length;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
                 this.modal.close();
+                this.loadManagementdata();
             });
         });
 
@@ -195,6 +219,7 @@ export class AssetListingComponent implements OnInit {
                 this.alertService.showMessage("Success", `Asset Type updated successfully.`, MessageSeverity.success);
                 this.assetService.getAssetList().subscribe(assets => {
                     this.allAssetInfo = assets[0];
+                    this.loadManagementdata();
                 });
 
             })
@@ -208,6 +233,7 @@ export class AssetListingComponent implements OnInit {
                 this.alertService.showMessage("Success", `Asset Type updated successfully.`, MessageSeverity.success);
                 this.assetService.getAssetList().subscribe(assets => {
                     this.allAssetInfo = assets[0];
+                    this.loadManagementdata();
                 });
             })
         }
@@ -311,6 +337,189 @@ export class AssetListingComponent implements OnInit {
         }
     }
 
+    private loadManagementdata() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+
+        this.legalEntityServices.getManagemententity().subscribe(
+            results => this.onManagemtntdataLoad(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private onManagemtntdataLoad(getAtaMainList: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allManagemtninfo = getAtaMainList;
+
+        for (let i = 0; i < this.allManagemtninfo.length; i++) {
+
+            if (this.allManagemtninfo[i].parentId == null) {
+                this.maincompanylist.push(this.allManagemtninfo[i]);
+            }
+        }
+
+        for (let i = 0; i < this.allAssetInfo.length; i++) {
+            this.currentAsset = { ...this.allAssetInfo[i] };
+            let companyName = '';
+            let buName = '';
+            let deptName = '';
+            let divName = '';
+            this.setManagementStrucureData(this.currentAsset);
+            if (this.currentAsset.companyId) {
+                companyName = this.getNameById(this.currentAsset.companyId);
+            }
+            if (this.currentAsset.buisinessUnitId) {
+                buName = this.getNameById(this.currentAsset.buisinessUnitId);
+            }
+            if (this.currentAsset.departmentId) {
+                deptName = this.getNameById(this.currentAsset.departmentId);
+            }
+            if (this.currentAsset.divisionId) {
+                divName = this.getNameById(this.currentAsset.divisionId);
+            }
+
+            this.currentAsset = {
+                ...this.currentAsset,
+                companyName: companyName,
+                buName: buName,
+                deptName: deptName,
+                divName: divName,
+            };
+            this.allAssetInfoNew.push(this.currentAsset);
+        }
+        console.log(this.allManagemtninfo);
+        console.log(this.allAssetInfoNew);
+
+        //this.allAssetInfo = { ...this.allAssetInfoNew}
+    }
+
+    checkMSParents(msId) {
+        this.managementStructureData.push(msId);
+        for (let a = 0; a < this.allManagemtninfo.length; a++) {
+            if (this.allManagemtninfo[a].managementStructureId == msId) {
+                if (this.allManagemtninfo[a].parentId) {
+                    this.checkMSParents(this.allManagemtninfo[a].parentId);
+                    break;
+                }
+            }
+        }
+
+    }
+
+    setManagementStrucureData(obj) {
+        this.managementStructureData = [];
+        this.checkMSParents(obj.managementStructureId);
+        if (this.managementStructureData.length == 4) {
+            this.currentAsset.companyId = this.managementStructureData[3];
+            this.currentAsset.buisinessUnitId = this.managementStructureData[2];
+            this.currentAsset.departmentId = this.managementStructureData[1];
+            this.currentAsset.divisionId = this.managementStructureData[0];
+            this.getBUList(this.currentAsset.companyId);
+            this.getDepartmentlist(this.currentAsset.buisinessUnitId);
+            this.getDivisionlist(this.currentAsset.departmentId);
+        }
+        if (this.managementStructureData.length == 3) {
+            this.currentAsset.companyId = this.managementStructureData[2];
+            this.currentAsset.buisinessUnitId = this.managementStructureData[1];
+            this.currentAsset.departmentId = this.managementStructureData[0];
+            this.getBUList(this.currentAsset.companyId);
+            this.getDepartmentlist(this.currentAsset.buisinessUnitId);
+        }
+        if (this.managementStructureData.length == 2) {
+            this.currentAsset.companyId = this.managementStructureData[1];
+            this.currentAsset.buisinessUnitId = this.managementStructureData[0];
+            this.getBUList(this.currentAsset.companyId);
+        }
+        if (this.managementStructureData.length == 1) {
+            this.currentAsset.companyId = this.managementStructureData[0];
+        }
+
+    }
+
+    getBUList(companyId) {
+        if (this.updateMode == false) {
+            this.currentAsset.buisinessUnitId = "";
+            this.currentAsset.departmentId = "";
+            this.currentAsset.divisionId = "";
+            this.currentAsset.managementStructureId = companyId;
+            this.departmentList = [];
+            this.divisionlist = [];
+            this.bulist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == companyId) {
+                    this.bulist.push(this.allManagemtninfo[i])
+                }
+            }
+
+        }
+        else {
+            this.departmentList = [];
+            this.divisionlist = [];
+            this.bulist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == companyId) {
+                    this.bulist.push(this.allManagemtninfo[i])
+                }
+            }
+        }
+    }
+
+    getDepartmentlist(businessUnitId) {
+        if (this.updateMode == false) {
+            this.currentAsset.departmentId = "";
+            this.currentAsset.divisionId = "";
+            this.currentAsset.managementStructureId = businessUnitId;
+            this.departmentList = [];
+            this.divisionlist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == businessUnitId) {
+                    this.departmentList.push(this.allManagemtninfo[i]);
+                }
+            }
+
+        }
+        else {
+            this.departmentList = [];
+            this.divisionlist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == businessUnitId) {
+                    this.departmentList.push(this.allManagemtninfo[i]);
+                }
+            }
+        }
+    }
+
+    getDivisionlist(departmentId) {
+        if (this.updateMode == false) {
+            this.currentAsset.divisionId = "";
+            this.currentAsset.managementStructureId = departmentId;
+            this.divisionlist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == departmentId) {
+                    this.divisionlist.push(this.allManagemtninfo[i]);
+                }
+            }
+        }
+        else {
+            this.divisionlist = [];
+            for (let i = 0; i < this.allManagemtninfo.length; i++) {
+                if (this.allManagemtninfo[i].parentId == departmentId) {
+                    this.divisionlist.push(this.allManagemtninfo[i]);
+                }
+            }
+        }
+    }
+
+    getNameById(id) {
+        for (let i = 0; i < this.allManagemtninfo.length; i++) {
+
+            if (this.allManagemtninfo[i].managementStructureId == id) {
+                return this.allManagemtninfo[i].code;
+            }
+        }
+        return '';
+    }
     // AssetCreation Audit please check
     //showAuditPopup(template, assetRecordId): void {
     //    this.audit(assetRecordId);

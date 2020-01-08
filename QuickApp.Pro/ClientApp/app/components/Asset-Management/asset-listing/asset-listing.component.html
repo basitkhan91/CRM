@@ -14,7 +14,7 @@
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
-                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="allAssetInfo"
+                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="allAssetInfoNew"
                                  [metaKeySelection]="true"
                                  [first]="pageIndex"
                                  [rows]="pageSize"
@@ -78,7 +78,14 @@
                                     <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.name}}</td>
                                     <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.alternateAssetId}}</td>
                                     <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.manufacturer?.name}}</td>
-                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.currency?.symbol}}</td>
+                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.isSerialized ? 'Yes' : 'No'}}</td>
+                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.calibrationRequired ? 'Yes' : 'No'}}</td>
+                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.companyName}}</td>
+                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.buName}}</td>
+                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.deptName}}</td>
+                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.divName}}</td>
+                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.isDepreciable ? 'Depreciable' : 'Intangible'}}</td>
+                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.assetType?.assetTypeName}}</td>
 
                                     <td style="width:200px" *ngIf="selectedColumns.length> 0">
 
