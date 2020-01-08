@@ -173,6 +173,15 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
     }
 
 
+    getmemo($event) {
+        if (this.addNewItemClassification.memo.trim() !== $event.trim()) {
+            this.disableSaveForItemDescMsg = false;
+            this.disableSaveForItemDesc = false;
+            this.disableSaveForItemCode = false;
+        }
+    }
+
+
     onBlurDesc(event) {
         const value = event.target.value;
         this.disableSaveForItemDescMsg = false;

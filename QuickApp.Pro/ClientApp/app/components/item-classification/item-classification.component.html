@@ -14,8 +14,8 @@
                                 <div style="text-align: right">
                                     <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" [resetFilterOnHide]="true" 
                                                    selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm"  pTooltip="Download All Data"  tooltipPosition="top" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export All Data" style="padding: 5px 12px !important" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm" pTooltip="Download Selected" matTooltipPosition="above"
+                                    <button type="button" class="btn btn-primary-cstm"  matTooltip="Download All Data"  tooltipPosition="top" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export All Data" style="padding: 5px 12px !important" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected" matTooltipPosition="above"
                                             tooltipPosition="top" pButton icon="fa-download" iconPos="left" label="Export Selection Only" style="padding: 5px 12px !important" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
 
@@ -23,12 +23,12 @@
                                                class="uploaddoc upload-file"
                                                accept=".xlsx, .xls, .csv">
                                         <label for="upload">
-                                            <span pTooltip="Upload Data (Excel)" matTooltipPosition="above" tooltipPosition="top">
+                                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above" tooltipPosition="top">
                                                 <i class="fa fa-upload"></i>
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" pTooltip="Download Sample file" matTooltipPosition="above"  tooltipPosition="top" (click)="sampleExcelDownload()">Sample File Download</button>
+                                        <button class="btn btn-primary-cstm" matTooltip="Download Sample file" matTooltipPosition="above"  tooltipPosition="top" (click)="sampleExcelDownload()">Sample File Download</button>
                                     </div>
                                 </div>
                             </ng-template>
@@ -48,7 +48,7 @@
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                                <tr [pSelectableRow]="rowData">
+                                <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
                                     <td style="width:200px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                         {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
                                     </td>
@@ -144,7 +144,7 @@
                                 <label class="control-label control-item">Item Type <span class="clr-red">*</span></label>
                             </div>
                             <div class="col-sm-5">
-                                <select class="form-control" name="itemType" [(ngModel)]="addNewItemClassification.itemType">
+                                <select class="form-control" name="itemType" [(ngModel)]="addNewItemClassification.itemType" (ngModelChange)="getmemo($event)">
                                     <option value="Stock">Stock</option>
                                     <option value="Non Stock">Non Stock</option>
                                 </select>
@@ -155,7 +155,7 @@
                                 <label for="description" class="control-label control-item">Memo</label>
                             </div>
                             <div class="col-sm-5">
-                                <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription"
+                                <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription" (ngModelChange)="getmemo($event)"
                                           [(ngModel)]="addNewItemClassification.memo" minlength="2"></textarea>
                             </div>
                         </div>

@@ -13777,17 +13777,19 @@ button {
 .p-table-cstm .ui-table .ui-table-tbody > tr > td, .rpo-table-cstm .ui-table .ui-table-tbody > tr > td, .wf-table-cstm .ui-table .ui-table-tbody > tr > td, .ptable-custom .ui-table .ui-table-tbody > tr > td {
     padding: 5px 2px !important;
 }
-.p-table-cstm .ui-table .ui-table-tbody > tr.ui-state-highlight, 
-.rpo-table-cstm .ui-table .ui-table-tbody > tr.ui-state-highlight, 
+.p-table-cstm .ui-table .ui-table-tbody > tr.ui-state-highlight,
+.rpo-table-cstm .ui-table .ui-table-tbody > tr.ui-state-highlight,
 .wf-table-cstm .ui-table .ui-table-tbody > tr.ui-state-highlight,
 .ptable-custom .ui-table .ui-table-tbody > tr.ui-state-highlight {
-    background-color: #f1f1f1 !important;
+    /*background-color: #f1f1f1 !important;*/
+    background-color: #ccc !important;
 }
 .p-table-cstm .ui-paginator, .p-table-cstm .ui-table-caption,
 .rpo-table-cstm .ui-paginator, .rpo-table-cstm .ui-table-caption,
 .wf-table-cstm .ui-paginator, .wf-table-cstm .ui-table-caption,
 .ptable-custom .ui-paginator, .ptable-custom .ui-table-caption {
     background-color: transparent !important;
+
 }
 .ptable-custom th {
     padding: 8px 5px !important;
