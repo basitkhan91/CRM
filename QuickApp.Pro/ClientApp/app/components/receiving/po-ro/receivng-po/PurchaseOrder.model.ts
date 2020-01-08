@@ -50,7 +50,7 @@ export class PurchaseOrder {
 
     purchaseOderPart: PurchaseOrderPart[];
     vendor: Vendor;
-    stockLine: StockLine[];
+    stockLine: StockLine[];    
 }
 
 export class PartStockLineMapper {
@@ -160,6 +160,7 @@ export class PurchaseOrderPart {
     divisionText: string;
     departmentText: string;
     isDeleted: boolean;
+    purchaseOrder: any;
 
     CompanyList: DropDownData[];
     BusinessUnitList: DropDownData[];

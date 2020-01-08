@@ -146,12 +146,13 @@
                             <label>Credit Limit &amp; Terms</label>
                             <div class="form-row">
                                 <div class="col-sm-5">
-                                    <input class="form-control" type="text" disabled placeholder="limit" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.terms" required>
+                                    <input class="form-control" type="text" disabled [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.creditLimit">
                                 </div>
                                 <div class="col-sm-7">
-                                    <select class="form-control" disabled #selects="ngModel" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.creditLimit" required>
+                                    <input class="form-control" type="text" disabled [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.terms">
+                                    <!-- <select class="form-control" disabled #selects="ngModel" [ngModelOptions]="{standalone: true}" [(ngModel)]="purchaseOrderData.terms" required>
                                         <option *ngFor="let creditTerm of poCreditTermInfo" [value]="creditTerm.Key">{{creditTerm.Value}}</option>
-                                    </select>
+                                    </select> -->
                                 </div>
                             </div>
                         </div>
