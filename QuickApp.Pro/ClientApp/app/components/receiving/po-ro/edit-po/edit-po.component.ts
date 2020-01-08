@@ -1095,7 +1095,6 @@ export class EditPoComponent implements OnInit {
     editStockLine(stockLine: StockLine) {
         stockLine.isEnabled = !stockLine.isEnabled;
         stockLine.quantityRejected = 0;
-        stockLine.isDeleted = true;
     }
 
     updateStockLine() {
