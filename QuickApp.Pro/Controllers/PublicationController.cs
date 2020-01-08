@@ -529,7 +529,15 @@ namespace QuickApp.Pro.Controllers
         public IActionResult PublicationView(long publicationRecordId)
         {
             var allpublicationinfo = _unitOfWork.Publication.PublicationView(publicationRecordId);
-            return Ok((allpublicationinfo));
+
+			if (allpublicationinfo != null)
+			{
+				return Ok((allpublicationinfo));
+			}else
+			{
+				return NotFound();
+			}
+          
 
         }
 
