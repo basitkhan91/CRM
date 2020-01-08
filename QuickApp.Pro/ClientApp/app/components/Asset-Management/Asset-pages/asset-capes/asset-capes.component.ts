@@ -187,6 +187,7 @@ export class AssetCapesComponent implements OnInit {
              this.resetFormArray(element);
          });*/
         this.AssetId = this.router.snapshot.params['id'];
+        console.log('190',this.AssetId);
         if (this.assetServices.listCollection == null) {
             this.GetAssetData(this.AssetId);
         }

@@ -351,26 +351,26 @@ namespace DAL.Repositories
                                     wo.WorkOrderId,
                                     wo.WorkOrderNum,
                                     PartNos = im.PartNumber,
-                                    PartNoType=im.PartNumber,
+                                    PartNoType = im.PartNumber,
                                     PNDescription = im.PartDescription,
-                                    PNDescriptionType=im.PartDescription,
+                                    PNDescriptionType = im.PartDescription,
                                     WorkScope = ws.Description,
-                                    WorkScopeType=ws.Description,
+                                    WorkScopeType = ws.Description,
                                     Priority = pr.Description,
-                                    PriorityType=pr.Description,
+                                    PriorityType = pr.Description,
                                     CustomerName = cust.Name,
                                     CustomerType = ca.description,
                                     OpenDate = wo.OpenDate.Date,
                                     wop.CustomerRequestDate,
                                     CustomerRequestDateType = wop.CustomerRequestDate,
                                     wop.PromisedDate,
-                                    PromisedDateType=wop.PromisedDate,
+                                    PromisedDateType = wop.PromisedDate,
                                     wop.EstimatedShipDate,
-                                    EstimatedShipDateType=wop.EstimatedShipDate,
+                                    EstimatedShipDateType = wop.EstimatedShipDate,
                                     wop.EstimatedCompletionDate,
-                                    EstimatedCompletionDateType=wop.EstimatedCompletionDate,
+                                    EstimatedCompletionDateType = wop.EstimatedCompletionDate,
                                     stage.Stage,
-                                    StageType=stage.Stage,
+                                    StageType = stage.Stage,
                                     WorkOrderStatus = wost.Description,
                                     wo.IsActive,
                                     wo.CreatedDate,
@@ -510,7 +510,7 @@ namespace DAL.Repositories
                                     (wp, ws) => new { wp, ws }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
                                     .Select(p => p.ws.Description)),
 
-                                    WorkScopeType = _appContext.WorkOrderPartNumber.Where(p => p.WorkOrderId == wo.WorkOrderId).Count() > 1 ? "Multiple" :ws.Description,
+                                    WorkScopeType = _appContext.WorkOrderPartNumber.Where(p => p.WorkOrderId == wo.WorkOrderId).Count() > 1 ? "Multiple" : ws.Description,
 
 
                                     Priority = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.Priority,
@@ -684,30 +684,30 @@ namespace DAL.Repositories
                 int totalRecords = 0;
                 try
                 {
-                     totalRecords = (from wo in _appContext.WorkOrder
-                                        join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
-                                        join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
-                                        join ca in _appContext.CustomerAffiliation on cust.CustomerAffiliationId equals ca.CustomerAffiliationId
-                                        join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
-                                        join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
-                                        join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
-                                        join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
-                                        join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId
-                                        where wo.IsDeleted == false
-                                        && (wo.WorkOrderNum.Contains(filterText)
-                                        || im.PartNumber.Contains(filterText)
-                                        || im.PartDescription.Contains(filterText)
-                                        || ws.Description.Contains(filterText)
-                                        || pr.Description.Contains(filterText)
-                                        || cust.Name.Contains(filterText)
-                                        || ca.description.Contains(filterText)
-                                        || stage.Stage.Contains(filterText)
-                                        || wo.WorkOrderStatusId == statusId)
-                                        select new
-                                        {
-                                            wo.WorkOrderId,
-                                        }
-                              ).Distinct().Count();
+                    totalRecords = (from wo in _appContext.WorkOrder
+                                    join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
+                                    join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
+                                    join ca in _appContext.CustomerAffiliation on cust.CustomerAffiliationId equals ca.CustomerAffiliationId
+                                    join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
+                                    join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
+                                    join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
+                                    join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
+                                    join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId
+                                    where wo.IsDeleted == false
+                                    && (wo.WorkOrderNum.Contains(filterText)
+                                    || im.PartNumber.Contains(filterText)
+                                    || im.PartDescription.Contains(filterText)
+                                    || ws.Description.Contains(filterText)
+                                    || pr.Description.Contains(filterText)
+                                    || cust.Name.Contains(filterText)
+                                    || ca.description.Contains(filterText)
+                                    || stage.Stage.Contains(filterText)
+                                    || wo.WorkOrderStatusId == statusId)
+                                    select new
+                                    {
+                                        wo.WorkOrderId,
+                                    }
+                             ).Distinct().Count();
 
                     var list = (from wo in _appContext.WorkOrder
                                 join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
@@ -3480,8 +3480,6 @@ namespace DAL.Repositories
             }
         }
 
-
-
         public WorkOrderQuoteDetails CreateWorkOrderQuoteDetails(WorkOrderQuoteDetails workOrderQuoteDetails)
         {
             try
@@ -3512,6 +3510,25 @@ namespace DAL.Repositories
             }
         }
 
+        public object GetWorkOrderQuoteDetails(long workOrderId)
+        {
+            try
+            {
+                var data = (from wo in _appContext.WorkOrder
+                            join woq in _appContext.WorkOrderQuote on wo.WorkOrderId equals woq.WorkOrderId
+                            join wqd in _appContext.WorkOrderQuoteDetails on woq.WorkOrderQuoteId equals wqd.WorkOrderQuoteId
+                            select new
+                            {
+                                wqd
+                            }).FirstOrDefault();
+                return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
 
         public WorkOrderQuoteDetails CreateWorkOrderQuoteExclusions(WorkOrderQuoteDetails quoteExclusions)
@@ -3520,6 +3537,11 @@ namespace DAL.Repositories
             {
                 if (quoteExclusions.WorkOrderQuoteDetailsId > 0)
                 {
+                    var exeExclusions = _appContext.WorkOrderQuoteExclusions.Where(p => p.WorkOrderQuoteDetailsId == quoteExclusions.WorkOrderQuoteDetailsId).AsNoTracking().ToList();
+                    _appContext.WorkOrderQuoteExclusions.RemoveRange(exeExclusions);
+
+                    quoteExclusions.WorkOrderQuoteExclusions.ForEach(p => p.WorkOrderQuoteExclusionsId = 0);
+
                     _appContext.WorkOrderQuoteDetails.Update(quoteExclusions);
                 }
                 else
@@ -3626,13 +3648,16 @@ namespace DAL.Repositories
         }
 
 
-
         public WorkOrderQuoteDetails CreateWorkOrderQuoteFreight(WorkOrderQuoteDetails quoteFreight)
         {
             try
             {
                 if (quoteFreight.WorkOrderQuoteDetailsId > 0)
                 {
+                    var exeCharges = _appContext.WorkOrderQuoteFreight.Where(p => p.WorkOrderQuoteDetailsId == quoteFreight.WorkOrderQuoteDetailsId).AsNoTracking().ToList();
+                    _appContext.WorkOrderQuoteFreight.RemoveRange(exeCharges);
+
+                    quoteFreight.WorkOrderQuoteFreight.ForEach(p => p.WorkOrderQuoteFreightId = 0);
                     _appContext.WorkOrderQuoteDetails.Update(quoteFreight);
                 }
                 else
@@ -3741,6 +3766,10 @@ namespace DAL.Repositories
             {
                 if (quoteCharges.WorkOrderQuoteDetailsId > 0)
                 {
+                    var exeCharges = _appContext.WorkOrderQuoteCharges.Where(p => p.WorkOrderQuoteDetailsId == quoteCharges.WorkOrderQuoteDetailsId).AsNoTracking().ToList();
+                    _appContext.WorkOrderQuoteCharges.RemoveRange(exeCharges);
+
+                    quoteCharges.WorkOrderQuoteCharges.ForEach(p => p.WorkOrderQuoteChargesId = 0);
                     _appContext.WorkOrderQuoteDetails.Update(quoteCharges);
                 }
                 else
@@ -3852,12 +3881,17 @@ namespace DAL.Repositories
             {
                 if (quoteMaterials.WorkOrderQuoteDetailsId > 0)
                 {
+                    var exeMaterials = _appContext.WorkOrderQuoteMaterial.Where(p => p.WorkOrderQuoteDetailsId == quoteMaterials.WorkOrderQuoteDetailsId).AsNoTracking().ToList();
+                    _appContext.WorkOrderQuoteMaterial.RemoveRange(exeMaterials);
+
+                    quoteMaterials.WorkOrderQuoteMaterial.ForEach(p => p.WorkOrderQuoteMaterialId = 0);
                     _appContext.WorkOrderQuoteDetails.Update(quoteMaterials);
                 }
                 else
                 {
                     _appContext.WorkOrderQuoteDetails.Add(quoteMaterials);
                 }
+
                 _appContext.SaveChanges();
                 return quoteMaterials;
             }
@@ -3961,6 +3995,23 @@ namespace DAL.Repositories
             {
                 if (quoteLabor.WorkOrderQuoteDetailsId > 0)
                 {
+                    if (quoteLabor.WorkOrderQuoteDetailsId > 0)
+                    {
+                        var exelabour = _appContext.WorkOrderQuoteLabor.Where(p => p.WorkOrderQuoteLaborHeaderId == quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLaborHeaderId).AsNoTracking().ToList();
+                        _appContext.WorkOrderQuoteLabor.RemoveRange(exelabour);
+
+                        var exelabourHeader = _appContext.WorkOrderQuoteLaborHeader.Where(p => p.WorkOrderQuoteDetailsId == quoteLabor.WorkOrderQuoteDetailsId).AsNoTracking().FirstOrDefault();
+                        if (exelabourHeader != null)
+                            _appContext.WorkOrderQuoteLaborHeader.Remove(exelabourHeader);
+
+                        if (quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLabor != null)
+                        {
+                            quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLabor.ForEach(p => p.WorkOrderQuoteLaborId = 0);
+                        }
+
+                        quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLaborHeaderId = 0;
+                    }
+
                     _appContext.WorkOrderQuoteDetails.Update(quoteLabor);
                 }
                 else
@@ -4098,25 +4149,9 @@ namespace DAL.Repositories
             }
         }
 
-        public object GetWorkOrderQuoteDetails(long workOrderId)
-        {
-            try
-            {
-                var data = (from wo in _appContext.WorkOrder
-                            join woq in _appContext.WorkOrderQuote on wo.WorkOrderId equals woq.WorkOrderId
-                            join wqd in _appContext.WorkOrderQuoteDetails on woq.WorkOrderQuoteId equals wqd.WorkOrderQuoteId
-                            select new
-                            {
-                                wqd
-                            }).FirstOrDefault();
-                return data;
-            }
-            catch (Exception)
-            {
 
-                throw;
-            }
-        }
+
+       
 
         #endregion
 
@@ -4684,7 +4719,7 @@ namespace DAL.Repositories
 
                                     where wo.IsDeleted == false && wo.IsActive == true
                                           && wop.MasterPartId == partId && wop.WorkOrderScopeId == workScopeId
-                                         // && wo.WorkOrderStatusId == 2 //Closed
+                                    // && wo.WorkOrderStatusId == 2 //Closed
                                     select new
                                     {
                                         wo.WorkOrderNum,
