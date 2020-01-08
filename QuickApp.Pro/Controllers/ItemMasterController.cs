@@ -2047,5 +2047,16 @@ namespace QuickApp.Pro.Controllers
 
             return result.ToList<object>();
         }
+
+        [HttpGet("GetParntnumberlistwithManufacturer")]
+        [Produces(typeof(List<Manufacturer>))]
+        public IActionResult GetParntnumberlistwithManufacturer()
+        {
+            // var obj = _context.ItemMaster.Where(a => (a.IsActive == null || a.IsActive == true) && (a.IsDeleted == false || a.IsDeleted == null) && (a.PartDescription != null) && (a.PartNumber != null)).OrderByDescending(c => c.ItemMasterId).ToList();
+
+            var parDetails = _unitOfWork.itemMaster.GetPartnumberList(); //.GetAllCustomersData();
+
+            return Ok(parDetails);
+        }
     }
 }

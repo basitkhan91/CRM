@@ -465,24 +465,23 @@ export class CustomerWorkSetupComponent
             }
 
             else {
-                console.log(this.sourcereceving,'edit');
+                console.log(this.sourcereceving, 'edit');
                 this.sourcereceving.contactId = this.sourcereceving.customerContactId;
 
                 if ((this.sourcereceving.isTimeLife) && (this.sourcereceving.timeLifeCyclesId == null || this.sourcereceving.timeLifeCyclesId == undefined)) {
-                 
+
                     this.receivingCustomerWorkService.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
                         this.collectionofstockLine = data;
                         this.sourcereceving.timeLifeCyclesId = data.timeLifeCyclesId;
-                         this.value = 1;
-                       
+                        this.value = 1;
+                        this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
+                            response => this.saveCompleted(this.sourcereceving),
+                            error => this.saveFailedHelper(error));
+
+
                     })
-
-
-                    this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
-                        response => this.saveCompleted(this.sourcereceving),
-                        error => this.saveFailedHelper(error));
-
                 }
+
                 else {
                    
                     this.sourcereceving.contactId = this.sourcereceving.customerContactId;

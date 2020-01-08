@@ -102,6 +102,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     restrictHeaders = [
         { field: 'partNumber', header: 'PN' },
         { field: 'partDescription', header: 'Description' },
+        { field: 'manufacturerName', header: 'Manufacturer' },
 
     ];
     selectedClassificationRecordForEdit: any;
@@ -598,12 +599,12 @@ export class CustomerGeneralInformationComponent implements OnInit {
     // }
 
     getAllPartList() {
-        this.itemService.getPrtnumberslistList().subscribe(res => {
+        this.itemService.getPrtnumberslistListwithManufacturer().subscribe(res => {
             const data = res[0];
 
             this.partListOriginal = data.map(x => {
                 return {
-                    label: x.partNumber, value: { masterPartId: x.itemMasterId, partNumber: x.partNumber, memo: x.memo, createdBy: this.userName, updatedBy: this.userName, partDescription: x.partDescription }
+                    label: x.partNumber, value: { masterPartId: x.itemMasterId, partNumber: x.partNumber, memo: x.memo, createdBy: this.userName, updatedBy: this.userName, partDescription: x.partDescription, manufacturerName: x.manufacturerName }
                 }
             })
             this.partListForPMA = [...this.partListOriginal];
