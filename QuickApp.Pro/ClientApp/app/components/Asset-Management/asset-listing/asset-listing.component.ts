@@ -101,8 +101,8 @@ export class AssetListingComponent implements OnInit {
         this.cols = [
 
             { field: 'assetId', header: 'Asset Id' },
-            { field: 'alternateAssetId', header: 'Alt Asset Id' },
             { field: 'name', header: 'Asset Name' },
+            { field: 'alternateAssetId', header: 'Alt Asset Id' },
             { field: 'manufacturedId', header: 'Manufacturer' },
             { field: 'currencyId', header: 'Currency ' },
         ];
