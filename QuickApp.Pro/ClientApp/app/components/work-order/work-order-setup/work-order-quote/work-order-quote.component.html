@@ -280,12 +280,6 @@
             </select>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="form-group ">
-            <label class="fs12">PN Description
-            </label> IDG
-          </div>
-        </div>
       </div>
     </div>
 
@@ -430,7 +424,7 @@
               <td>{{matQuotation.unitCost}}</td>
               <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
               <td *ngIf="costPlusType == 'Mark Up'">
-                  <select class="form-control custom-select wf-pub-id" (change)="markupChanged(charge)" [(ngModel)]="matQuotation.markupPercentageId" [disabled]="isView">
+                  <select class="form-control wf-pub-id" (change)="markupChanged(matQuotation)" [(ngModel)]="matQuotation.markupPercentageId" [disabled]="isView">
                     <option value="">Select</option>
                     <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                   </select>
@@ -548,7 +542,7 @@
             <td>{{matQuotation.unitCost}}</td>
             <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
             <td *ngIf="costPlusType == 'Mark Up'">
-                <select class="form-control custom-select wf-pub-id" (change)="markupChanged(matQuotation)" [(ngModel)]="matQuotation.markupPercentageId" [disabled]="isView">
+                <select class="form-control wf-pub-id" (change)="markupChanged(matQuotation)" [(ngModel)]="matQuotation.markupPercentageId" [disabled]="isView">
                   <option value="">Select</option>
                   <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                 </select>

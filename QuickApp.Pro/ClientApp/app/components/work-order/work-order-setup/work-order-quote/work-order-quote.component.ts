@@ -100,6 +100,12 @@ export class WorkOrderQuoteComponent implements OnInit {
 isQuote: boolean = true;
 editMatData: any[] = [];
 costPlusType: string = "Mark Up";
+tabQuoteCreated: Object = {
+  'materialList': false,
+  'charges': false,
+  'exclusions': false,
+  'labor': false
+}
 
 
 
@@ -359,6 +365,12 @@ costPlusType: string = "Mark Up";
     this.selectedWorkFlowOrWorkOrder = undefined;
     var partId;
     var workScopeId;
+    if(buildType == 'use work flow'){
+      this.labor.workFloworSpecificTaskorWorkOrder = 'workFlow';
+    }
+    else if(buildType == 'use historical wos'){
+      this.labor.workFloworSpecificTaskorWorkOrder = 'specificTasks';
+    }
     this.mpnPartNumbersList.forEach(element => {
       if(element['label'] == this.selectedPartNumber){
         partId = element['value']['masterPartId'];
@@ -387,83 +399,84 @@ costPlusType: string = "Mark Up";
   }
   gridTabChange(value) {
     this.gridActiveTab = value;
-    if(this.isEdit){
-      switch(value){
-        case 'materialList': {
-          this.getQuoteMaterialListByWorkOrderQuoteId();
-          break;
-        }
-        case 'labor': {
-          for(let task in this.labor.workOrderLaborList[0]){
-            this.labor.workOrderLaborList[0][task] = [];
-          }
-          this.getQuoteLaborListByWorkOrderQuoteId();
-          break;
-        }
-        case 'charges': {
-          this.getQuoteChargesListByWorkOrderQuoteId();
-          break;
-        }
-        case 'exclusions': {
-          this.getQuoteExclusionListByWorkOrderQuoteId();
-          break;
-        }
-      }
+    if(this.isEdit || this.tabQuoteCreated['materialList']){
+      this.getQuoteMaterialListByWorkOrderQuoteId();
     }
-    if(this.selectedBuildMethod == 'use historical wos' && this.selectedWorkFlowOrWorkOrder){
-        this.clearQuoteData();
-        if(value == 'materialList') {
-          this.workOrderService.getWorkOrderMaterialListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
-          .subscribe(
-            (res: any[]) =>{
-              this.materialListQuotation = res;
-              this.workOrderMaterialList = res;
-            }
-          )
-        }
-        if(value ==  'labor') {
-          this.savedWorkOrderData.workFlowWorkOrderId = 0;
-          this.workOrderService.getWorkOrderLaborListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
-          .subscribe(
-            (res: any) =>{
-              if(res){
-                let laborList = this.labor.workOrderLaborList;
-                this.labor = {...res, workOrderLaborList: laborList};
-                this.taskList.forEach((tl)=>{
-                  res.laborList.forEach((rt)=>{
-                    if(rt['taskId'] == tl['taskId']){
-                      if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
-                        this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
-                      }
-                      let labor = {}
-                      labor = {...rt, employeeId: {'label':rt.employeeName, 'value': rt.employeeId}}
-                      this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(labor);
-                    }
-                  })
-                })
+    else if(this.isEdit || this.tabQuoteCreated['charges']){
+      this.getQuoteChargesListByWorkOrderQuoteId();
+    }
+    else if(this.isEdit || this.tabQuoteCreated['exclusions']){
+      this.getQuoteExclusionListByWorkOrderQuoteId();
+    }
+    else if(this.isEdit || this.tabQuoteCreated['labor']){
+      for(let task in this.labor.workOrderLaborList[0]){
+        this.labor.workOrderLaborList[0][task] = [];
+      }
+      this.getQuoteLaborListByWorkOrderQuoteId();
+    }
+    else{
+      if(this.selectedBuildMethod == 'use historical wos' && this.selectedWorkFlowOrWorkOrder){
+          this.clearQuoteData();
+          if(value == 'materialList') {
+            this.workOrderService.getWorkOrderMaterialListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
+            .subscribe(
+              (res: any[]) =>{
+                this.materialListQuotation = res;
+                this.workOrderMaterialList = res;
               }
-              this.laborQuotation = res;
-            }
-          )
-        }
-        if(value == 'charges') {
-          this.workOrderService.getWorkOrderChargesListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
-          .subscribe(
-            (res: any[]) =>{
-              this.chargesQuotation = res;
-              this.workOrderChargesList = res;
-            }
-          )
-        }
-        if(value == 'exclusions') {
-          this.workOrderService.getWorkOrderExclutionsListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
-          .subscribe(
-            (res: any[]) =>{
-              this.exclusionsQuotation = res;
-              this.workOrderExclusionsList = res;
-            }
-          )
-        }
+            )
+          }
+          if(value ==  'labor') {
+            this.savedWorkOrderData.workFlowWorkOrderId = 0;
+            this.workOrderService.getWorkOrderLaborListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
+            .subscribe(
+              (res: any) =>{
+                if(res){
+                  let laborList = this.labor.workOrderLaborList;
+                  this.labor = {...res, workOrderLaborList: laborList};
+                  if(this.selectedBuildMethod == 'use work flow'){
+                    this.labor.workFloworSpecificTaskorWorkOrder = 'workFlow';
+                  }
+                  else if(this.selectedBuildMethod == 'use historical wos'){
+                    this.labor.workFloworSpecificTaskorWorkOrder = 'specificTasks';
+                  }
+                  this.taskList.forEach((tl)=>{
+                    this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
+                    res.laborList.forEach((rt)=>{
+                      if(rt['taskId'] == tl['taskId']){
+                        if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0] && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
+                          this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
+                        }
+                        let labor = {}
+                        labor = {...rt, employeeId: {'label':rt.employeeName, 'value': rt.employeeId}}
+                        this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(labor);
+                      }
+                    })
+                  })
+                }
+                this.laborQuotation = res;
+              }
+            )
+          }
+          if(value == 'charges') {
+            this.workOrderService.getWorkOrderChargesListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
+            .subscribe(
+              (res: any[]) =>{
+                this.chargesQuotation = res;
+                this.workOrderChargesList = res;
+              }
+            )
+          }
+          if(value == 'exclusions') {
+            this.workOrderService.getWorkOrderExclutionsListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
+            .subscribe(
+              (res: any[]) =>{
+                this.exclusionsQuotation = res;
+                this.workOrderExclusionsList = res;
+              }
+            )
+          }
+      }
     }
   }
   getQuoteInfo(data) {
@@ -496,7 +509,7 @@ costPlusType: string = "Mark Up";
           this.taskList.forEach((tl)=>{
             res['expertise'].forEach((rt)=>{
               if(rt['taskId'] == tl['taskId']){
-                if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
+                if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0] && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
                   this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
                 }
                 let labor = {}
@@ -558,6 +571,7 @@ costPlusType: string = "Mark Up";
     this.workOrderService.saveMaterialListQuote(this.materialListPayload)
     .subscribe(
       res => {
+        this.tabQuoteCreated['materialList'] = true;
         this.materialListQuotation = res.workOrderQuoteMaterial;
         this.getQuoteMaterialListByWorkOrderQuoteId();
         this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId);
@@ -575,6 +589,7 @@ costPlusType: string = "Mark Up";
     .subscribe(
       res => {
         if(res){
+          this.tabQuoteCreated['labor'] = true;
           let laborList = this.labor.workOrderLaborList;
           this.labor = {...res.workOrderQuoteLaborHeader, workOrderLaborList: laborList};
           this.mpnPartNumbersList.forEach((mpn)=>{
@@ -639,6 +654,7 @@ costPlusType: string = "Mark Up";
     this.workOrderService.saveChargesQuote(this.chargesPayload)
     .subscribe(
       res => {
+        this.tabQuoteCreated['charges'] = true;
         this.workOrderChargesList = res.workOrderQuoteCharges;
         this.getQuoteChargesListByWorkOrderQuoteId();
         this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId);
@@ -654,6 +670,7 @@ costPlusType: string = "Mark Up";
     this.workOrderService.saveExclusionsQuote(this.exclusionsQuotation)
     .subscribe(
       res => {
+        this.tabQuoteCreated['exclusions'] = true;
         this.workOrderExclusionsList = res.workOrderQuoteExclusions;
         this.getExclusionListByWorkOrderId();
         this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId);

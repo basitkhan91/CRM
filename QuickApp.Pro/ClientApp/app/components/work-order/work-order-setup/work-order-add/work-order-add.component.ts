@@ -1256,7 +1256,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                         for (let task of this.taskList) {
 
                             if (task.taskId == labList['taskId']) {
-                                if (this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == undefined || this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == null) {
+                                if (this.labor.workOrderLaborList[0][task.description.toLowerCase()][0] && (this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == undefined || this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == null)) {
                                     this.labor.workOrderLaborList[0][task.description.toLowerCase()].splice(0, 1);
                                 }
                                 let taskData = new AllTasks()

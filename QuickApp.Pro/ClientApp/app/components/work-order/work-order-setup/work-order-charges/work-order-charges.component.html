@@ -114,7 +114,7 @@
                 <td>{{ w.vendorName }}</td>
                 <ng-container *ngIf="isQuote">
                     <td *ngIf="costPlusType == 'Mark Up'">
-                        <select class="form-control custom-select wf-pub-id" (change)="markupChanged(w)" [(ngModel)]="w.markupPercentageId" [disabled]="isView">
+                        <select class="form-control wf-pub-id" (change)="markupChanged(w)" [(ngModel)]="w.markupPercentageId" [disabled]="isView">
                           <option value="">Select</option>
                           <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                         </select>

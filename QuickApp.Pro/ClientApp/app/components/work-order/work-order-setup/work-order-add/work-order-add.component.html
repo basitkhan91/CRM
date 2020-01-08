@@ -867,9 +867,9 @@
 
                     </div>
 
-                    <div *ngIf="quote" [ngClass]="{hidedata : gridActiveTab !== 'quote' }">
+                    <!-- <div *ngIf="quote" [ngClass]="{hidedata : gridActiveTab !== 'quote' }">
                         <app-work-order-quote [quoteForm]="quote"></app-work-order-quote>
-                    </div>
+                    </div> -->
 
 
 
@@ -923,10 +923,10 @@
                         <app-work-order-documents [documentForm]="documents"></app-work-order-documents>
                     </div>
                     <div *ngIf="gridActiveTab == 'quote'">
-                        <div *ngIf="!workOrderQuoteId" class="no-quote">
+                        <div *ngIf="workOrderQuoteId == undefined" class="no-quote">
                             Quote not yet created
                         </div>
-                        <div *ngIf="workOrderQuoteId">
+                        <div *ngIf="workOrderQuoteId != undefined">
                             <app-work-order-quote [workorderid]="workOrderId" isView="true"></app-work-order-quote>
                         </div>
                     </div>
