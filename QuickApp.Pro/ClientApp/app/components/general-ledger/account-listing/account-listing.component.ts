@@ -29,9 +29,9 @@ import { AccountListingService } from '../../../services/account-listing/account
     templateUrl: './account-listing.component.html',
     styleUrls: ['./account-listing.component.scss']
 })
+
 /** Account List component*/
-export class AccountListingComponent implements OnInit {
-  
+export class AccountListingComponent implements OnInit {  
 
     totalRecords: number = 0;
     totalPages: number = 0;
@@ -39,11 +39,9 @@ export class AccountListingComponent implements OnInit {
         { field: 'ledgerName', header: 'Ledger Name' },
         { field: 'oldAccountCode', header: 'Old GL Account Code' },
         { field: 'accountCode', header: 'GL Account Code' },
-        { field: 'accountName', header: 'Account Name' },
-        //{ field: 'entities', header: 'Share With Entities' },
+        { field: 'accountName', header: 'Account Name' },        
         { field: 'leafleafNodeNameName', header: 'Leaf Node Name' },
         { field: 'isActive', header: 'Active' },
-
     ]
     selectedColumns = this.headers;
     data: any;
@@ -52,10 +50,8 @@ export class AccountListingComponent implements OnInit {
     first = 0;
     @ViewChild('dt')
     private table: Table;
-    lazyLoadEventData: any;    
-   
+    lazyLoadEventData: any;   
     filterKeysByValue: object = {};
-
 
     constructor(private _route: Router,
         private authService: AuthService,
@@ -74,9 +70,8 @@ export class AccountListingComponent implements OnInit {
     }
 
     getList(data) {
-        // this.filterObjectCreate(data.filters);
-        const PagingData = { ...data, filters: listSearchFilterObjectCreation(data.filters) }       
-      
+       
+        const PagingData = { ...data, filters: listSearchFilterObjectCreation(data.filters) }    
         this.accountListingService.getAll().subscribe(
             datalist=> {
                 this.data = datalist;
@@ -90,7 +85,6 @@ export class AccountListingComponent implements OnInit {
                 console.log('error in getting information')
             }
         );
-
 
     }
 
@@ -119,12 +113,14 @@ export class AccountListingComponent implements OnInit {
     filterData(data) {
         console.log(data);
     }
+
     changeStatus(rowData) {
         this.customerService.updateActionforActive(rowData, this.userName).subscribe(res => {
             this.alertService.showMessage("Success", `Successfully Updated Status`, MessageSeverity.success);
         })
 
     }
+
     edit(rowData) {        
         this._route.navigateByUrl(`generalledgermodule/generalledgerpage/app-account-listing-create/${rowData.glAccountId}`);
     }
@@ -132,71 +128,6 @@ export class AccountListingComponent implements OnInit {
         console.log('rowData dele :', rowData)      
     }
 
-    /*
-    viewSelectedRow(rowData) {
-        const { customerId } = rowData;
-        this.customerService.getCustomerdataById(customerId).subscribe(res => {
-            this.viewDataGeneralInformation = res[0];
-        })
-        this.getAllCustomerContact(customerId);
-        this.getAircraftMappedDataByCustomerId(customerId);
-        this.getMappedATAByCustomerId(customerId);
-        this.getBillingDataById(customerId);
-        this.getDomesticShippingByCustomerId(customerId);
-        this.getInternationalShippingByCustomerId(customerId);
-
-    }
-
-    getAllCustomerContact(customerId) {
-        // get Customer Contatcs 
-        this.customerService.getContacts(customerId).subscribe(res => {
-            this.customerContacts = res[0]
-        })
-    }
-
-    getAircraftMappedDataByCustomerId(customerId) {
-        // const id = this.savedGeneralInformationData.customerId;
-        this.customerService.getMappedAirCraftDetails(customerId).subscribe(res => {
-            this.aircraftListDataValues = res;
-        })
-    }
-    getMappedATAByCustomerId(customerId) {
-        // const id = this.savedGeneralInformationData.customerId;
-        this.customerService.getATAMappedByCustomerId(customerId).subscribe(res => {
-            this.ataListDataValues = res;
-            console.log(res);
-
-        })
-    }
-    getBillingDataById(customerId) {
-        this.customerService.getCustomerBillViaDetails(customerId).subscribe(res => {
-            this.billingInfoList = res[0]
-        })
-    }
-
-
-    // get domestic shipping by customer Id 
-    getDomesticShippingByCustomerId(customerId) {
-        // const id = this.savedGeneralInformationData.customerId;
-        this.customerService.getCustomerShipAddressGet(customerId).subscribe(res => {
-            console.log(res);
-            this.domesticShippingData = res[0];
-        })
-    }
-
-    getInternationalShippingByCustomerId(customerId) {
-
-        // const id = this.savedGeneralInformationData.customerId;
-
-        this.customerService.getInternationalShippingByCustomerId(customerId, 0, 20).subscribe(res => {
-            console.log(res);
-            this.internationalShippingData = res.paginationList;
-            // this.totalRecordsForInternationalShipping = res.totalRecordsCount;
-        })
-
-
-
-    }*/
     globalSearch(value) {
         this.pageIndex = 0;
         this.customerService.getGlobalSearch(value, this.pageIndex, this.pageSize).subscribe(res => {
