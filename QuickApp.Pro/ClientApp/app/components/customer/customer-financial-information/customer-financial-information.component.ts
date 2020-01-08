@@ -17,7 +17,7 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { NgbModal, NgbActiveModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { ConfigurationService } from '../../../services/configuration.service';
 import { getValueFromObjectByKey, getObjectByValue, getObjectById, selectedValueValidate } from '../../../generic/autocomplete';
-
+import { Pipe, PipeTransform } from '@angular/core';
 @Component({
     selector: 'app-customer-financial-information',
     templateUrl: './customer-financial-information.component.html',
@@ -102,7 +102,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     allCurrencyInfo: any;
     customerCode: any;
     customerName: any;
-    selectedTaxRates = [];
+    selectedTaxRates: any;
 
     selectedTaxType: any;
     taxTypeRateMapping: any = [];
@@ -580,25 +580,29 @@ export class CustomerFinancialInformationComponent implements OnInit {
         })
     }
     mapTaxTypeandRate() {
-        // let i = 0;
-        
-        if ( this.selectedTaxType > 0 ) {
-
-        //const    taxType= getObjectByValue('value', this.selectedTaxType, this.taxTypeList)
-
-            const data = this.selectedTaxRates.map(x => {
-                // i++;
+        if(this.selectedTaxRates && this.selectedTaxType){ 
+            const index = this.taxTypeRateMapping.findIndex(item=> item.taxType === getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList) && item.taxRate === this.selectedTaxRates);
+            if(index > -1){
+                this.alertService.showMessage(
+                    'Duplicate',
+                    `Already Exists `,
+                    MessageSeverity.warn
+                );
+                this.selectedTaxRates = null;
+                this.selectedTaxType = null;
+            } else {
                 this.taxTypeRateMapping.push({
-                    // id: i,
                     customerId: this.id,
-                    //taxType: this.selectedTaxType,
                     taxType: getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList),
-                    taxRate: x
+                    taxRate: this.selectedTaxRates
                 })
-            })
-            this.selectedTaxRates = [];
-            this.selectedTaxType = undefined;
+                this.selectedTaxRates = null;
+                this.selectedTaxType = null;
+            }
+            
+            
         }
+        console.log(this.taxTypeRateMapping, "this.taxTypeRateMapping+++")
     }
     fileUpload(event, fileType) {
         if (event.files.length === 0)
@@ -1917,4 +1921,4 @@ export class CustomerFinancialInformationComponent implements OnInit {
     //     }
     //     this.modal.close();
     // }
-}
+} 
