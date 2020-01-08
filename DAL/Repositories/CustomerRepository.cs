@@ -43,7 +43,7 @@ namespace DAL.Repositories
             var totalRecords = (from t in _appContext.Customer
                                 join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
                                 join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
-                                join ad in _appContext.Address on t.AddressId equals ad.AddressId 
+                                join ad in _appContext.Address on t.AddressId equals ad.AddressId
                                 join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
                                 from custContacts in custinfo.DefaultIfEmpty()
                                 join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
