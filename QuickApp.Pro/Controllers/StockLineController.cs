@@ -1130,22 +1130,27 @@ namespace QuickApp.Pro.Controllers
         {
             var result = Enumerable.Empty<object>();
 
+            var condition = _context.Condition.Where(c => c.ConditionId == searchView.partSearchParamters.conditionId).FirstOrDefault();
+
             result = from item in _context.ItemMaster
                      join sl in _context.StockLine on item.ItemMasterId equals sl.ItemMasterId
                      join uom in _context.UnitOfMeasure on item.ConsumeUnitOfMeasureId equals uom.UnitOfMeasureId into iuom
                      from iu in iuom.DefaultIfEmpty()
                      join currency in _context.Currency on item.CurrencyId equals currency.CurrencyId into itemcurrecy
                      from ic in itemcurrecy.DefaultIfEmpty()
+                     join cndn in _context.Condition on sl.ConditionId equals cndn.ConditionId into conditionParts
+                     from cp in conditionParts.DefaultIfEmpty()
                      where item.IsActive.HasValue && item.IsActive.Value == true
                             && (item.IsDeleted.HasValue && !item.IsDeleted == true || !item.IsDeleted.HasValue)
                             && (item.MasterCompanyId.HasValue && item.MasterCompanyId.Value == 1)
                             && item.ItemMasterId == searchView.partSearchParamters.partId
-
+                            && sl.ConditionId == searchView.partSearchParamters.conditionId
                      select new
                      {
                          methodType = "S",
                          method = "Stock Line",
                          itemId = item.ItemMasterId,
+                         stockLineId = sl.StockLineId,
                          partNumber = item.PartNumber,
                          alternatePartId = item.PartAlternatePartId,
                          alternateFor = string.Empty,
@@ -1162,6 +1167,11 @@ namespace QuickApp.Pro.Controllers
                          controlNumber = sl.ControlNumber,
                          idNumber = sl.IdNumber,
                          serialNumber = sl.SerialNumber,
+                         conditionId = cp != null ? cp.ConditionId : -1,
+                         conditionDescription = cp != null ? cp.Description : string.Empty,
+                         currencyId = ic != null ? ic.CurrencyId : -1,
+                         currencyDescription = ic != null ? ic.DisplayName : string.Empty,
+                         unitCost = item.UnitCost
                      };
 
 

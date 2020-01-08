@@ -1961,6 +1961,8 @@ namespace QuickApp.Pro.Controllers
         {
             var result = Enumerable.Empty<object>();
 
+            var condition = _context.Condition.Where(c => c.ConditionId == searchView.partSearchParamters.conditionId).FirstOrDefault();
+
             var itemQuantityDetails = from item in _context.ItemMaster
                                       join stock in _context.StockLine on item.ItemMasterId equals stock.ItemMasterId
                                       join po in _context.PurchaseOrder on stock.PurchaseOrderId equals po.PurchaseOrderId into stockpo
@@ -1974,6 +1976,7 @@ namespace QuickApp.Pro.Controllers
                                          && (item.IsDeleted.HasValue && !item.IsDeleted == true || !item.IsDeleted.HasValue)
                                          && (item.MasterCompanyId.HasValue && item.MasterCompanyId.Value == 1)
                                          && item.ItemMasterId == searchView.partSearchParamters.partId
+                                         && stock.ConditionId  == searchView.partSearchParamters.conditionId
                                       select new
                                       {
                                           partNumber = item.PartNumber,
@@ -2035,8 +2038,10 @@ namespace QuickApp.Pro.Controllers
                          itar = item.ITARNumber,
                          eccn = item.ExportECCN,
                          memo = item.Memo,
-                         currencyId = item.CurrencyId,
-                         currencyDescription = ic.DisplayName
+                         conditionId = condition != null ? condition.ConditionId : -1,
+                         conditionDescription = condition != null ? condition.Description : string.Empty,
+                         currencyId = ic != null ? ic.CurrencyId : -1,
+                         currencyDescription = ic != null ? ic.DisplayName : string.Empty
                      };
 
 
