@@ -322,8 +322,16 @@ export class SalesQuoteListComponent implements OnInit {
         partNumberObj.masterCompanyId = selectedPart.masterCompanyId;
         partNumberObj.quantityFromThis = selectedPart.qtyQuoted;
         partNumberObj.markUpPercentage = selectedPart.markUpPercentage;
-        partNumberObj.unitCostExtended =
-          selectedPart.unitSalePrice * selectedPart.qtyQuoted;
+        
+        partNumberObj.markupExtended = selectedPart.markupExtended;
+        partNumberObj.method = selectedPart.method;
+        partNumberObj.methodType = selectedPart.methodType;
+        partNumberObj.serialNumber = selectedPart.serialNumber;
+        partNumberObj.marginAmountExtended = selectedPart.marginAmountExtended;
+        partNumberObj.marginPercentagePerUnit = selectedPart.marginPercentage;
+        partNumberObj.markupExtended = selectedPart.markupExtended;
+        partNumberObj.unitCostPerUnit = selectedPart.unitCost;
+        partNumberObj.unitCostExtended = selectedPart.unitCostExtended;
         this.selectedParts.push(partNumberObj);
       }
       console.log(this.salesQuoteView);
