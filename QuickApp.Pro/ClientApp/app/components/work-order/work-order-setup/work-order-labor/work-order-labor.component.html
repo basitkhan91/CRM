@@ -419,7 +419,7 @@
                 <td>
                     
                 </td>
-                <td></td>
+                
                 <td
                   *ngIf="laborForm.hoursorClockorScan !== 1 && laborForm.hoursorClockorScan !== 3"
                 >
@@ -435,8 +435,9 @@
                 <td>
                     <input type="text" [(ngModel)]="laborForm.totalWorkHours" [disabled]="laborForm.workFloworSpecificTaskorWorkOrder == 'specificTasks'"/>
                 </td>
+                <td>{{getTotalLaborOHCost()}}</td>
                 <td></td>
-                <td></td>
+                <td>{{getTotalCostPlus()}}</td>
                 <td></td>
                 <td *ngIf="!isView">
                 </td>
