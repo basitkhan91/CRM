@@ -12,6 +12,7 @@ import { getModuleIdByName } from '../../../../generic/enums';
 @Component({
     selector: 'app-work-order-freight',
     templateUrl: './work-order-freight.component.html',
+    styleUrls: ['./work-order-freight.component.css'],
 
 })
 /** WorkOrderDocuments component*/
@@ -75,7 +76,7 @@ export class WorkOrderFreightComponent implements OnInit {
         })
     }
 
-    createNew() { 
+    createNew() {
         this.isEdit = false;
         this.freightForm = [new Freight()];
     }
@@ -87,11 +88,11 @@ export class WorkOrderFreightComponent implements OnInit {
         this.freightForm = [rowData];
     }
     saveFreightList() {
-        if(this.isEdit){
+        if (this.isEdit) {
             this.updateFreightListForWo.emit(this.freightForm);
             $('#addNewFreight').modal('hide');
             this.isEdit = false;
-        }else{
+        } else {
 
             this.saveFreightListForWO.emit(this.freightForm);
             $('#addNewFreight').modal('hide');
