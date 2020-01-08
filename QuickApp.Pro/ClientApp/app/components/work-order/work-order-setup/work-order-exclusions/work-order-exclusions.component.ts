@@ -24,13 +24,21 @@ export class WorkOrderExclusionsComponent implements OnInit {
   isEdit: boolean = false;
   editData: any;
   editingIndex: number;
+  cols = [
+    { field: 'epn', header: 'EPN' },
+    { field: 'epnDescription', header: 'EPN Description' },
+    { field: 'quantity', header: 'Quantity' },
+    { field: 'unitCost', header: 'Unit Cost' },
+    { field: 'extendedCost', header: 'Extended Cost' },
+    { field: 'memo', header: 'Memo' }
+  ]
   constructor(private workOrderService: WorkOrderService, private authService: AuthService,
     private alertService: AlertService, private cdRef: ChangeDetectorRef) {
 
 
   }
 
-  ngOnInit(){
+  ngOnInit() {
     console.log(this.workOrderExclusionsList);
   }
 
@@ -58,10 +66,10 @@ export class WorkOrderExclusionsComponent implements OnInit {
 
   }
   delete(rowData, i) {
-    if(this.isQuote){
+    if (this.isQuote) {
       this.workOrderExclusionsList[i].isDeleted = true;
     }
-    else{
+    else {
       const { workOrderExclusionsId } = rowData;
       this.workOrderService.deleteWorkOrderExclusionByExclusionId(workOrderExclusionsId, this.userName).subscribe(res => {
         this.refreshData.emit();
@@ -70,17 +78,17 @@ export class WorkOrderExclusionsComponent implements OnInit {
           'Deleted WorkOrder Exclusion Successfully',
           MessageSeverity.success
         );
-  
+
       })
     }
   }
 
   saveExclusionsList(event) {
-    if(this.isQuote){
-      this.workOrderExclusionsList = [...this.workOrderExclusionsList, ...event['exclusions'].map(x=>{return {...x, epn: x.partNumber, epnDescription: x.partDescription}})];
+    if (this.isQuote) {
+      this.workOrderExclusionsList = [...this.workOrderExclusionsList, ...event['exclusions'].map(x => { return { ...x, epn: x.partNumber, epnDescription: x.partDescription } })];
       $('#addNewExclusions').modal('hide');
     }
-    else{
+    else {
       this.saveExclusionsListForWO.emit(event);
       $('#addNewExclusions').modal('hide');
     }
@@ -89,19 +97,19 @@ export class WorkOrderExclusionsComponent implements OnInit {
 
 
   updateExclusionsList(event) {
-    if(this.isQuote && this.isEdit){
+    if (this.isQuote && this.isEdit) {
       this.workOrderExclusionsList[this.editingIndex] = event.exclusions[0];
       $('#addNewExclusions').modal('hide');
       this.isEdit = false;
     }
-    else{
+    else {
       this.updateExclusionsListForWO.emit(event);
       $('#addNewExclusions').modal('hide');
       this.isEdit = false;
     }
   }
 
-  saveQuotation(){
+  saveQuotation() {
     this.saveExclusionsListForWO.emit(this.workOrderExclusionsList);
   }
 
