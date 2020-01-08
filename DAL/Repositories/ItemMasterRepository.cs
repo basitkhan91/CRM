@@ -1253,6 +1253,29 @@ namespace DAL.Repositories
 
         }
 
+         public IEnumerable<object> GetPartnumberList()
+            {
+                var result = (from at in _appContext.ItemMaster
+                              join atd in _appContext.Manufacturer on at.ManufacturerId equals atd.ManufacturerId
+                              where (at.IsActive == true || at.IsActive == null) && (at.IsDeleted == false || at.IsDeleted == null)
+                              select new {
+                              at.ItemMasterId,
+                              at.ItemGroupId,
+                              at.ItemTypeId,
+                              at.PartDescription,
+                              at.PartNumber,
+                              at.RevisedPartId,
+                              at.Memo,
+                              at.CreatedBy,
+                              at.UpdatedBy,
+                             ManufacturerName= atd.Name
+                              }
+                              
+                              
+                              ).ToList();
 
+                return result;
+            }
+        
     }
 }

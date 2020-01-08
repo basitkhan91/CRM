@@ -16,6 +16,8 @@ export class VendorCapabilitiesEndpoint extends EndpointFactory {
     private readonly _vendorcapabilitiesUrlNew: string = "/api/VendorCapabilities/vendorcapabilitypost";
     private readonly _vendorcapabilitiesUrlAuditHistory: string = "/api/ActionAttribute/auditHistoryById";
     private readonly _auditUrl: string = '/api/VendorCapabilities/audits'
+    private readonly _vendorItemMasterAircraftMappedDelete: string = "/api/Vendor/vendorAircrafDelete";
+    private readonly _VendorMasterAircraftPostUrlNew: string = "/api/Vendor/VendorAircraftPost";
     
 
     get vendorcapabilitiesUrl() { return this.configurations.baseUrl + this._vendorcapabilitiesUrl; }
@@ -104,6 +106,19 @@ export class VendorCapabilitiesEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.searchAirMappedByMultiTypeIDModelIDDashID(vendorCapesId, searchUrl));
             });
     }
-   
+
+    deleteAirCraftEndpoint<T>(id: any, updatedBy: any): Observable<T> {
+        return this.http.put<T>(`${this._vendorItemMasterAircraftMappedDelete}/?id=${id}&updatedBy=${updatedBy}`, JSON.stringify({}), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.deleteAirCraftEndpoint(id, updatedBy));
+            });
+    }
+
+    getNewitemVendorAircraftEndpoint<T>(userObject: any): Observable<T> {
+        return this.http.post<T>(this._VendorMasterAircraftPostUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getNewitemVendorAircraftEndpoint(userObject));
+            })
+    }   
 
 }

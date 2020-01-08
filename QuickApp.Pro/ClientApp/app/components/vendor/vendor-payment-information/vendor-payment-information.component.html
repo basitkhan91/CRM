@@ -158,10 +158,10 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Bank Country</label>
-                                            <p-autoComplete class="pautocomp-cstm" (onSelect)="onBankCountrieselected($event)" (onKeyUp)=eventBankCountryHandler($event) [(ngModel)]="domesticSaveObj.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30" [minLength]="1" [dropdown]="true">
-                                                <ng-template let-nice_name pTemplate="item">
+                                            <p-autoComplete field="nice_name" class="pautocomp-cstm" (onSelect)="onBankCountrieselected($event)" (onKeyUp)=eventBankCountryHandler($event) [(ngModel)]="domesticSaveObj.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30" [minLength]="1" [dropdown]="true">
+                                                <!-- <ng-template let-nice_name pTemplate="item">
                                                     <div class="ui-helper-clearfix">{{nice_name}}</div>
-                                                </ng-template>
+                                                </ng-template> -->
                                             </p-autoComplete>
                                         </div>
                                     </div>
@@ -220,10 +220,10 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Bank Country</label>
-                                            <p-autoComplete class="pautocomp-cstm" (onSelect)="onInternalBankCountrieselected($event)" (onKeyUp)=eventInternalBankCountryHandler($event) [(ngModel)]="internationalSaveObj.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30" [minLength]="1" [dropdown]="true">
-                                                <ng-template let-nice_name pTemplate="item">
+                                            <p-autoComplete field="nice_name" class="pautocomp-cstm" (onSelect)="onInternalBankCountrieselected($event)" (onKeyUp)=eventInternalBankCountryHandler($event) [(ngModel)]="internationalSaveObj.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30" [minLength]="1" [dropdown]="true">
+                                                <!-- <ng-template let-nice_name pTemplate="item">
                                                     <div class="ui-helper-clearfix">{{nice_name}}</div>
-                                                </ng-template>
+                                                </ng-template> -->
                                             </p-autoComplete>
                                             <div *ngIf="disablesavefoInternalrCountry" style="color:red">Please Select from DropDown</div>
                                         </div>
@@ -441,11 +441,11 @@
                                         <div class="form-group">
                                             <label>Country <span class="clr-red">*</span></label>
                                             <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                                <p-autoComplete class="pautocomp-cstm" (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event) [(ngModel)]="sourceVendor.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
+                                                <p-autoComplete field="nice_name" class="pautocomp-cstm" (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event) [(ngModel)]="sourceVendor.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
                                                 [minLength]="1" [dropdown]="true" required>
-                                                    <ng-template let-nice_name pTemplate="item">
+                                                    <!-- <ng-template let-nice_name pTemplate="item">
                                                         <div class="ui-helper-clearfix">{{nice_name}}</div>
-                                                    </ng-template>
+                                                    </ng-template> -->
                                                 </p-autoComplete>
                                             </div>
                                             <!-- <div *ngIf="disablesave" style="color:red">Please Select Country</div> -->

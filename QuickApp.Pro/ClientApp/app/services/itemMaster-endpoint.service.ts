@@ -94,6 +94,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly _getequivalencypartlist: string = "/api/itemmaster/equivalencypartlist";
     private readonly _deleteNTAERow: string = "/api/itemmaster/deletenhatlaaltequpart";
     private readonly _createequivalencypart: string = "/api/itemmaster/createequivalencypart";
+    private readonly _partManufacturer: string = "/api/ItemMaster/GetParntnumberlistwithManufacturer";
 
 
 
@@ -135,6 +136,9 @@ export class ItemMasterEndpoint extends EndpointFactory {
     get getequivalencypartlistUrl() { return this.configurations.baseUrl + this._getequivalencypartlist; }
     get deleteNTAERowUrl() { return this.configurations.baseUrl + this._deleteNTAERow; }
     get createequivalencypartUrl() { return this.configurations.baseUrl + this._createequivalencypart; }
+    get partManufacturerUrl() { return this.configurations.baseUrl + this._partManufacturer; }
+
+
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
@@ -820,14 +824,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getNewitemAircraftEndpoint(userObject));
             })
 
-    }
-    getNewitemVendorAircraftEndpoint<T>(userObject: any): Observable<T> {
-
-        return this.http.post<T>(this._VendorMasterAircraftPostUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getNewitemAircraftEndpoint(userObject));
-            })
-    }
+    }    
 
 
     getNewitemATAEndpoint<T>(userObject: any): Observable<T> {
@@ -964,13 +961,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
         //     });
     }
 
-    deleteAirCraftEndpoint<T>(id: any, updatedBy: any): Observable<T> {
-        return this.http.put<T>(`${this._vendorItemMasterAircraftMappedDelete}/?id=${id}&updatedBy=${updatedBy}`, JSON.stringify({}), this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.deleteAirCraftEndpoint(id, updatedBy));
-            });
-
-    }
+    
 
     deleteitemMasterMappedPurcSaleEndpoint<T>(userObject: any): Observable<T> {
         return this.http.post<T>(this._ItemMasterPurcSaleMappedDelete, JSON.stringify(userObject), this.getRequestHeaders())
@@ -1099,5 +1090,13 @@ export class ItemMasterEndpoint extends EndpointFactory {
         console.log(`${this.createequivalencypartUrl}`, "YUUUUU")
         return this.http.post(`${this.createequivalencypartUrl}`, file)
 
+    }
+
+    getPartnumberswithManufacturerEndpoint<T>(): Observable<T> {
+
+        return this.http.get<T>(this.partManufacturerUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getPartnumberswithManufacturerEndpoint());
+            });
     }
 }

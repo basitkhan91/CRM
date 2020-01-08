@@ -98,7 +98,19 @@
                                                 <input style="width:100%;" name="descriptionInput" pInputText type="text" (keyup)="onChangeInputField($event.target.value, 'description')">
                                             </th> -->
                                         <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
-                                            <input style="width:100%;" pInputText type="text" (keyup)="onChangeInputField($event.target.value, col.field)">
+
+
+                                            <input  *ngIf="col.field !== 'revisionDate' 
+                                            && col.field !== 'nextReviewDate'
+                                            && col.field !== 'expirationDate'
+                                            && col.field !== 'verifiedDate'
+                                            " 
+                                             style="width:100%;" pInputText type="text" (keyup)="onChangeInputField($event.target.value, col.field)">
+
+                                            <input type="date" *ngIf="col.field == 'revisionDate'" name="revisionDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
+                                            <input type="date" *ngIf="col.field == 'nextReviewDate'" name="nextReviewDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
+                                            <input type="date" *ngIf="col.field == 'expirationDate'" name="expirationDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
+                                            <input type="date" *ngIf="col.field == 'verifiedDate'" name="verifiedDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
                                         </th>
                                         <!-- <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
                                             <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
@@ -111,7 +123,18 @@
                                     <tr [pSelectableRow]="rowData">
                         
                                         <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                            {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
+                                            {{col.field == 'revisionDate'?  
+                                            (rowData[col.field] | date: 'MM/dd/yyyy')
+                                            :rowData[col.field] && col.field == 'nextReviewDate'?  
+                                            (rowData[col.field] | date: 'MM/dd/yyyy ')
+                                            :rowData[col.field] && col.field == 'nextReviewDate'?  
+                                            (rowData[col.field] | date: 'MM/dd/yyyy ')
+                                            :rowData[col.field] && col.field == 'expirationDate'?  
+                                            (rowData[col.field] | date: 'MM/dd/yyyy ')
+                                            :rowData[col.field] && col.field == 'verifiedDate'?  
+                                            (rowData[col.field] | date: 'MM/dd/yyyy ')
+                                            :rowData[col.field]
+                                        }}
                                         </td>
             
                                         <td>
@@ -185,8 +208,9 @@
                 <div class="table-responsive rro-table-cstm">
                     <table class="table table-bordered" *ngIf="auditHistory.length> 0 else noDatavailable">
                         <thead>
-                            <tr>
-                                <th>Publication ID</th>
+                            <tr *ngFor="let x of cols" >
+                                <th>{{x.header}}</th>
+                                <!-- <th>Publication ID</th>
                                 <th>Description</th>
                                 <th>Publication Type</th>
                                 <th>Published By</th>
@@ -194,7 +218,7 @@
                                 <th>Location</th>
                                 <th>IsActive</th>
                                 <th>Updated By</th>
-                                <th>Updated Time</th>
+                                <th>Updated Time</th> -->
                             </tr>
                         </thead>
                         <tbody class="audithistory-cstm"> <!--*ngIf="auditHistory.length> 0"-->
@@ -281,7 +305,7 @@
                                                             
                                                         </div>
                                                     </div>
-                                                    <div>
+                                                     <div>
                                                         <h4 class="panel-title" style="padding-left: 10px;">Attachment Details:</h4>
                                                         <p-table
                                                             class="rpo-table-cstm"
@@ -311,12 +335,12 @@
                                                                 <td *ngFor="let col of columns">
                                                                 {{ rowData[col.field] }}
                                                                 </td>
-                                                                <td><a class="btn btn-primary-cstm" (click)="downloadFileUpload(rowData)" download>Download</a></td> <!--routerLink="/{{rowData.link}}"-->
+                                                                <td><a class="btn btn-primary-cstm" (click)="downloadFileUpload(rowData)" download>Download</a></td> 
                                                             </tr>
                                                             
                                                             </ng-template>
                                                         </p-table>
-                                                        </div>
+                                                        </div> 
                                                     </div>
                                                 </div>
                                             </div>

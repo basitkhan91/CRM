@@ -173,7 +173,7 @@ export class CustomerSalesPersonComponent implements OnInit {
         this.employeeList = this.employeeListOriginal;
 
         const employeeTypeList = [...this.employeeListOriginal.filter(x => {
-            return x.jobTypeName.includes(type)
+            return x.jobTitle.includes(type)
         })]
 
         this.employeeTypeList = employeeTypeList;

@@ -319,6 +319,8 @@ namespace DAL.Repositories
         {
             var result = (from t in _appContext.Vendor
                           join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                          join cont in _appContext.Countries on Convert.ToInt32(ad.Country) equals cont.countries_id into country
+                          from cont in country.DefaultIfEmpty()
                           join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
                           from vt in vtt.DefaultIfEmpty()
                           join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
@@ -383,7 +385,7 @@ namespace DAL.Repositories
                               ad.City,
                               ad.StateOrProvince,
                               ad.PostalCode,
-                              ad.Country,
+                              Country= cont.countries_name,
 
                               //vc.ClassificationName,
                               VendorCapabilityName = vca.capabilityDescription,
@@ -520,6 +522,8 @@ namespace DAL.Repositories
             {
                 var data = (from t in _appContext.Vendor
                             join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                            join cont in _appContext.Countries on Convert.ToInt32(ad.Country) equals cont.countries_id into contr
+                            from cont in contr.DefaultIfEmpty()
                             join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
                             from vt in vtt.DefaultIfEmpty()
                             join ct in _appContext.CreditTerms on t.CreditTermsId equals ct.CreditTermsId into crd
@@ -553,7 +557,7 @@ namespace DAL.Repositories
                                 t.UpdatedBy,
                                 t.UpdatedDate,
                                 ad.AddressId,
-                                ad.Country,
+                                Country= cont.countries_name,
                                 ad.PostalCode,
                                 t.EDI,
                                 t.EDIDescription,
@@ -1510,6 +1514,8 @@ namespace DAL.Repositories
         {
             var data = (from v in _appContext.VendorBillingAddress
                         join ad in _appContext.Address on v.AddressId equals ad.AddressId
+                        join cont in _appContext.Countries on Convert.ToInt32(ad.Country) equals cont.countries_id into country
+                        from cont in country.DefaultIfEmpty()
                         where (v.IsDeleted == false && (v.VendorId == id))
                         select new
                         {
@@ -1517,7 +1523,7 @@ namespace DAL.Repositories
                             Address2 = ad.Line2,
                             Address3 = ad.Line3,
                             ad.AddressId,
-                            ad.Country,
+                            Country=cont.countries_name,
                             ad.PostalCode,
                             ad.City,
                             ad.StateOrProvince,

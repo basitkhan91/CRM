@@ -277,7 +277,7 @@
                                                             <p-table class="table-responsive ptable-cus-pma" [value]="generalInformation.restrictedPMAParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
                                                                 <ng-template pTemplate="header" let-columns>
                                                                     <tr>
-                                                                        <th *ngFor="let col of columns">
+                                                                        <th *ngFor="let col of columns"  pTooltip={{col.header}}>
                                                                             {{col.header}}
                                                                         </th>
                                                                         <th>Actions</th>
@@ -285,7 +285,7 @@
                                                                 </ng-template>
                                                                 <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
                                                                     <tr>
-                                                                        <td *ngFor="let col of columns">
+                                                                        <td *ngFor="let col of columns"  pTooltip={{part[col.field]}}>
                                                                             {{part[col.field]}}
                                                                         </td>
                                                                         <td>
@@ -330,10 +330,10 @@
                                                             </div>
                                                         </div>
                                                         <div *ngIf="disableRestrictedDER">
-                                                            <p-table class="table-responsive ptable-cus-pma" [value]="generalInformation.restrictedDERParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
+                                                            <p-table class="table-responsive ptable-cus-pma overlap" [value]="generalInformation.restrictedDERParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
                                                                 <ng-template pTemplate="header" let-columns>
                                                                     <tr>
-                                                                        <th *ngFor="let col of columns">
+                                                                        <th *ngFor="let col of columns"   pTooltip={{col.header}}>
                                                                             {{col.header}}
                                                                         </th>
                                                                         <th>Actions</th>
@@ -341,7 +341,7 @@
                                                                 </ng-template>
                                                                 <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
                                                                     <tr>
-                                                                        <td *ngFor="let col of columns" style="text-overflow:ellipsis;" pTooltip={{part[col.field]}}>
+                                                                        <td *ngFor="let col of columns"  pTooltip={{part[col.field]}}>
                                                                             {{part[col.field]}}
                                                                         </td>
                                                                         <td>

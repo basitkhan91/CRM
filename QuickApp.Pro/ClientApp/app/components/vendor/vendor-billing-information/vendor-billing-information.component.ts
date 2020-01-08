@@ -22,6 +22,7 @@ import { HttpClient } from '@angular/common/http';
 import { GMapModule } from 'primeng/gmap';
 import { Router } from '@angular/router';
 import * as $ from 'jquery';
+import { getObjectById, editValueAssignByCondition } from '../../../generic/autocomplete';
 declare const google: any;
 @Component({
     selector: 'app-vendor-billing-information',
@@ -366,7 +367,8 @@ export class VendorBillingInformationComponent {
         this.isEditMode = true;
         this.isEditBillingInfo = true;
         this.isSaving = true;
-        this.sourceVendor = {...row};
+        //this.sourceVendor = {...row};
+        this.sourceVendor = {...row, country: getObjectById('countries_id', row.country, this.allCountryinfo)};
         this.loadMasterCompanies();
     }
     openView(content, row) {
@@ -442,6 +444,7 @@ export class VendorBillingInformationComponent {
                 this.sourceVendor.updatedBy = this.userName;
                 this.sourceVendor.masterCompanyId = 1;
                 this.sourceVendor.vendorId = this.local.vendorId;
+                this.sourceVendor.country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
                 //this.workFlowtService.newBillingAdd(this.sourceVendor).subscribe(data => {
                 //    this.localCollection = data;
                 //    this.loadData();
@@ -458,7 +461,7 @@ export class VendorBillingInformationComponent {
             else {
                 this.sourceVendor.isActive = true;
                 this.sourceVendor.updatedBy = this.userName;
-
+                this.sourceVendor.country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
                 this.sourceVendor.masterCompanyId = 1;
                 this.workFlowtService.updateBillAddressdetails(this.sourceVendor).subscribe(data => {
                     this.updatedCollection = data;
@@ -709,15 +712,22 @@ export class VendorBillingInformationComponent {
         }
     }
     filtercountry(event) {
-        this.countrycollection = [];
-        if (this.allCountryinfo) {
-            for (let i = 0; i < this.allCountryinfo.length; i++) {
-                let countryName = this.allCountryinfo[i].nice_name;
-                if (countryName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                    this.countrycollection.push(countryName);
-                }
-            }
-        }
+        // this.countrycollection = [];
+        // if (this.allCountryinfo) {
+        //     for (let i = 0; i < this.allCountryinfo.length; i++) {
+        //         let countryName = this.allCountryinfo[i].nice_name;
+        //         if (countryName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        //             this.countrycollection.push(countryName);
+        //         }
+        //     }
+        // }
+        this.countrycollection = this.allCountryinfo;
+		if (event.query !== undefined && event.query !== null) {
+			const countries = [...this.allCountryinfo.filter(x => {
+				return x.nice_name.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.countrycollection = countries;
+		}
     }
     onShipVia(event) {
         if (this.allShipViaDetails) {

@@ -255,7 +255,7 @@
                 <button type="button" class="close" data-dismiss="modal" (click)="closeView.emit(false)">
                     &times;
                 </button>
-                <h4 class="modal-title">WorkOrder View</h4>
+                <h4 class="modal-title">Work Order View</h4>
             </div>
 
             <div class="card-body" *ngIf="viewWorkOrderHeader">
@@ -344,8 +344,8 @@
                                 </div>
                                 <div class="col-sm-3">
                                     <p>
-                                        <span class="label"><b>Credit Terms & Limit: </b></span><span class="value">
-                                                {{ viewWorkOrderHeader.creditTerm }}  & {{ viewWorkOrderHeader.creditLimit }} 
+                                        <span class="label"><b> Credit Limit &amp; Term: </b></span><span class="value">
+                                                 {{ viewWorkOrderHeader.creditLimit }}  & {{ viewWorkOrderHeader.creditTerm }}  
                                          
                                         </span>
                                     </p>
