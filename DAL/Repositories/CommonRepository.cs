@@ -345,6 +345,9 @@ namespace DAL.Repositories
 
 
                 var data = (from t in _appContext.ItemMaster
+
+                            join atd in _appContext.Manufacturer on t.ManufacturerId equals atd.ManufacturerId
+
                             join rp in _appContext.RestrictedParts on t.ItemMasterId equals rp.MasterPartId
 
                             where rp.IsDeleted == false && rp.ModuleId == moduleId && rp.ReferenceId == referenceId && rp.PartType == partType && rp.PartNumber != null
@@ -364,7 +367,8 @@ namespace DAL.Repositories
                                 rp.UpdatedBy,
                                 rp.IsActive,
                                 rp.IsDeleted,
-                                t.PartDescription
+                                t.PartDescription,
+                                ManufacturerName=atd.Name
                             }).ToList();
                 
                 return data;

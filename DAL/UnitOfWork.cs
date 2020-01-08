@@ -185,6 +185,7 @@ namespace DAL
 
         IDashNumberRepository dashNumberRepository;
         IWorkOrderRepository workOrderRepository;
+        IWorkOrderStageRepository workOrderStageRepository;
         //IPurchaseOrderPartRepository _purchaseOrderPartRepository;
 
         ICommonRepository _commonRepository;
@@ -1716,6 +1717,16 @@ namespace DAL
                 if (workOrderRepository == null)
                     workOrderRepository = new WorkOrderRepository(_context);
                 return workOrderRepository;
+            }
+        }
+
+        public IWorkOrderStageRepository WorkOrderStageRepository
+        {
+            get
+            {
+                if (workOrderStageRepository == null)
+                    workOrderStageRepository = new WorkOrderStageRepository(_context);
+                return workOrderStageRepository;
             }
         }
         IAssetCapes IUnitOfWork.AssetCapes

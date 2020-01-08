@@ -410,10 +410,10 @@
                                 <div class="form-group">
                                     <label>Ship To Country <span class="clr-red">*</span></label>
                                     <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                        <p-autoComplete class="pautocomp-cstm" name="shiptocountry" (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event) [(ngModel)]="sourceVendor.country" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30" [minLength]="1" [dropdown]="true" [forceSelection]="true" required>
-                                            <ng-template let-nice_name pTemplate="item">
+                                        <p-autoComplete field="nice_name" class="pautocomp-cstm" name="shiptocountry" (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event) [(ngModel)]="sourceVendor.country" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30" [minLength]="1" [dropdown]="true" [forceSelection]="true" required>
+                                            <!-- <ng-template let-nice_name pTemplate="item">
                                                 <div class="ui-helper-clearfix">{{nice_name}}</div>
-                                            </ng-template>
+                                            </ng-template> -->
                                         </p-autoComplete>
                                     </div>
                                     <!-- <div *ngIf="disablesave" style="color:red">Please Select Country</div> -->

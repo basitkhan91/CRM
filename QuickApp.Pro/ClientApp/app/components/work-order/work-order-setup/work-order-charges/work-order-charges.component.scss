@@ -1,3 +1,7 @@
 ﻿.ui-radiobutton-label{
   color: white;
 }
+
+select:disabled{
+  background-color: #e9ecef !important;
+}

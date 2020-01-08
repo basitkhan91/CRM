@@ -1080,6 +1080,18 @@ export class EditPoComponent implements OnInit {
         }
     }
 
+    deleteStockLine(stockLine: StockLine) {               
+        if (stockLine) {
+            var OkCancel = confirm("Stock Line will be deleted after save/update. Do you still want to continue?");
+            if (OkCancel == true) {
+                stockLine.isEnabled = true;
+                stockLine.isDeleted = true;
+                this.alertService.showMessage(this.pageTitle, 'Stock Line removed from the list.', MessageSeverity.success);
+                return;
+            }
+        }
+    }
+    
     editStockLine(stockLine: StockLine) {
         stockLine.isEnabled = !stockLine.isEnabled;
         stockLine.quantityRejected = 0;

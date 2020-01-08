@@ -101,7 +101,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
         this.cols = [
             { field: 'vendorCode', header: 'Vendor Code' },
             { field: 'vendorName', header: 'Vendor Name' },
-            { field: 'capabilityDescription', header: 'Vendor Caps' },
+            { field: 'capabilityType', header: 'Vendor Caps' },
             { field: 'partNumber', header: 'PN' },
             { field: 'partDescription', header: 'PN Description' },
             { field: 'capabilityType', header: 'Caps Type' },            

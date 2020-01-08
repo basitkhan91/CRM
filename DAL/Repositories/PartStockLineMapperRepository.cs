@@ -38,7 +38,7 @@ namespace DAL.Repositories
                 {
                     part.ItemMaster = _appContext.ItemMaster.Find(part.ItemMasterId);
 
-                    var stockLines = _appContext.StockLine.Where(x => x.PurchaseOrderPartRecordId != null && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId).ToList();
+                    var stockLines = _appContext.StockLine.Where(x => x.PurchaseOrderPartRecordId != null && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId && !x.IsDeleted).ToList();
                     if (stockLines != null && stockLines.Count > 0)
                     {
                         part.StockLineCount = (long)stockLines.Sum(x => x.Quantity);
@@ -106,9 +106,9 @@ namespace DAL.Repositories
                              PartNumber = itm.PartNumber,
                              PartDescription = itm.PartDescription,
                              QuantityOrdered = part.QuantityOrdered,
-                             StockLineCount = _appContext.StockLine.Count(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId),
+                             StockLineCount = _appContext.StockLine.Count(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId && !x.IsDeleted),
                              PoPartSplitUserName = emp != null ? emp.FirstName + " " + emp.LastName : "",
-                             StockLine = _appContext.StockLine.Where(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId).Select(SL => new
+                             StockLine = _appContext.StockLine.Where(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId && !x.IsDeleted).Select(SL => new
                              {
                                  PurchaseOrderId = SL.PurchaseOrderId,
                                  PurchaseOrderPartRecordId = SL.PurchaseOrderPartRecordId,
@@ -160,7 +160,8 @@ namespace DAL.Repositories
                                  BinText = GetBinText(SL.BinId),
                                  ObtainFrom = SL.ObtainFrom,
                                  Owner = SL.Owner,
-                                 TraceableTo = SL.TraceableTo
+                                 TraceableTo = SL.TraceableTo,
+                                 IsDeleted = SL.IsDeleted
                              }),
                              TimeLife = _appContext.TimeLife.Where(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId),
                              ItemMaster = new
@@ -206,13 +207,10 @@ namespace DAL.Repositories
 
                     if (part.StockLine != null && part.StockLine.Count > 0)
                     {
-                        part.StockLine = part.StockLine.OrderBy(x => x.StockLineId).ToList();
+                        part.StockLine = part.StockLine.Where(x => !x.IsDeleted).OrderBy(x => x.StockLineId).ToList();
                         part.TimeLife = part.TimeLife.OrderBy(x => x.StockLineId).ToList();
                         part.StockLineCount = (long)part.StockLine.Sum(x => x.Quantity);
-
                     }
-
-
 
                     if (!part.isParent)
                     {
@@ -398,7 +396,7 @@ namespace DAL.Repositories
                              ExtendedCost = part.ExtendedCost,
                              UnitCost = part.UnitCost,
                              QuantityRejected = part.QuantityRejected,
-                             StockLine = _appContext.StockLine.Where(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId).Select(SL => new
+                             StockLine = _appContext.StockLine.Where(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId && !x.IsDeleted).Select(SL => new
                              {
                                  StockLineId = SL.StockLineId,
                                  StockLineNumber = SL.StockLineNumber,

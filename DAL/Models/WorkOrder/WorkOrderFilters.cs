@@ -9,16 +9,18 @@ namespace DAL.Models
         public long WorkOrderId { get; set; }
         public string WorkOrderNum { get; set; }
         public string CustomerName { get; set; }
-        public string CustomerCode { get; set; }
-        public string WorkOrderType { get; set; }
         public DateTime? OpenDate { get; set; }
         public string WorkOrderStatus { get; set; }
-        public string PartNos { get; set; }
-        public string WorkScope { get; set; }
-        public string Priority { get; set; }
-        public string RevisedPN { get; set; }
-        public string PNDescription { get; set; }
-        public string Stage { get; set; }
-        
+        public string PartNoType { get; set; }
+        public string WorkScopeType { get; set; }
+        public string PriorityType { get; set; }
+        public string PNDescriptionType { get; set; }
+        public string StageType { get; set; }
+        public string CustomerType { get; set; }
+        public DateTime? CustomerRequestDateType { get;set;}
+        public DateTime? PromisedDateType { get; set; }
+        public DateTime? EstimatedShipDateType { get; set; }
+        public DateTime? EstimatedCompletionDateType { get; set; }
+        public string ViewType { get; set; }
     }
 }

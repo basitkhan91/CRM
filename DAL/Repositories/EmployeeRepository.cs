@@ -94,7 +94,7 @@ namespace DAL.Repositories
 
                                // empSupervisor,
                                jobtitle,
-                               jobtype,
+                               //jobtype,
                                t.Fax,
                                t.Email,
                                t.SSN,
@@ -129,7 +129,8 @@ namespace DAL.Repositories
                                JobTypeName=jobtype.JobTypeName,
                                t.CurrencyId,
                                t.IsHeWorksInShop,
-                               t.Memo
+                               t.Memo,
+                               JobTitle = jobtitle.Description
                                //cc.Description
                            }).Distinct().OrderByDescending(p=>p.UpdatedDate).ToList();
 

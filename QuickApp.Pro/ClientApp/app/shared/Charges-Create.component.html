@@ -21,7 +21,7 @@
       <ng-container *ngIf="isQuote">
         <th>Fixed Amount</th>
       </ng-container>
-      <th><label style="text-align: left;">Actions </label></th>
+      <th *ngIf="!isQuote || !isEdit"><label style="text-align: left;">Actions </label></th>
     </tr>
     <tr
       class="charge-tr"
@@ -132,7 +132,7 @@
       <ng-container *ngIf="isQuote">
           <td><input [(ngModel)]="charge.fixedAmount" /></td>
       </ng-container>
-      <td>
+      <td *ngIf="!isQuote || !isEdit">
         <button class="btn btn-danger nobg" (click)="deleteRow(i)">
           <i class="fa fa-trash"></i>
         </button>
@@ -153,7 +153,7 @@
       <ng-container *ngIf="isQuote">
         <td>{{getTotalFixedAmount()}}</td>
       </ng-container>
-      <td>&nbsp;</td>
+      <td *ngIf="!isQuote || !isEdit">&nbsp;</td>
     </tr>
   </table>
 

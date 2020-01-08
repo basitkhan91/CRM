@@ -158,12 +158,17 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         this.employeedata();
 
         this.cols = [
-            { field: 'publicationId', header: 'Publication ID' },
-            { field: 'description', header: 'Description' },
-            { field: 'publicationType', header: 'Publication Type' },
+            { field: 'publicationId', header: 'Pub ID' },
+            { field: 'description', header: 'Pub Description' },
+            { field: 'publicationType', header: 'Pub Type' },
             { field: 'publishby', header: 'Published By' },
-            { field: 'employeeName', header: 'Employee' },
+            { field: 'revisionDate', header: 'Revision Date' },
+            { field: 'revisionNum', header: 'Revision Num' },
+            { field: 'nextReviewDate', header: 'Next Revision Date' },
+            { field: 'expirationDate', header: 'ExpirationDate' },
             { field: 'location', header: 'Location' },
+            { field: 'verifiedBy', header: 'VerifiedBy' },
+            { field: 'verifiedDate', header: 'VerifiedDate' },
             //{ field: 'aircraftModel', header: 'Aircraft Model' },
             //{ field: 'aircraftType', header: 'Aircraft Type' },
             //{ field: 'ataChapterName', header: 'ATAChapter Name' },
@@ -192,7 +197,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = true;
         this.publicationService.getWorkFlows(this.pageIndex, this.pagesize).subscribe(
             results => {
-                console.log(results);                
+                console.log(results);
                 //this.onDataLoadSuccessful(results[0]['paginationList']);
                 this.onDataLoadSuccessful(results[0]);
                 //console.log(results[0]['totalRecordsCount']);
@@ -378,6 +383,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
         //get general info
         this.publicationService.getpublicationbyIdView(row.publicationRecordId).subscribe(res => {
             this.generalInfo = res[0];
+
             this.attachmentList = res[0].attachmentDetails.map(x => {
                 return {
                     ...x,
@@ -881,7 +887,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
 
     getAuditHistoryById(rowData) {
         this.publicationService.getPublicationAuditDetails(rowData.publicationRecordId).subscribe(res => {
-            console.log(res);            
+            console.log(res);
             this.auditHistory = res;
         })
     }
@@ -899,32 +905,32 @@ export class PublicationComponent implements OnInit, AfterViewInit {
 
     onChangeInputField(value, field) {
         //let value = "";
-       // value = event.target.value;
+        // value = event.target.value;
         console.log(value, field);
-        
-        if(field == "publicationId") {
+
+        if (field == "publicationId") {
             this.publicationIdInput = value;
         }
-        if(field == "description") {
+        if (field == "description") {
             this.descriptionInput = value;
         }
-        if(field == "publicationType") {
+        if (field == "publicationType") {
             this.publicationTypeInput = value;
         }
-        if(field == "publishby") {
+        if (field == "publishby") {
             this.publishbyInput = value;
         }
-        if(field == "employeeName") {
+        if (field == "employeeName") {
             this.employeeNameInput = value;
         }
-        if(field == "location") {
+        if (field == "location") {
             this.locationInput = value;
         }
         this.publicationService.getpublicationListBySearchEndpoint(this.pageIndex, this.pagesize, this.publicationIdInput, this.descriptionInput, this.publicationTypeInput, this.publishbyInput, this.employeeNameInput, this.locationInput).subscribe(
             results => {
                 this.onDataLoadSuccessful(results[0]);
                 this.totalRecords = results[0][0]['totalRecords'];
-                this.totalPages = Math.ceil(this.totalRecords / this.pagesize);                
+                this.totalPages = Math.ceil(this.totalRecords / this.pagesize);
             },
             error => this.onDataLoadFailed(error)
         );

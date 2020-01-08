@@ -109,6 +109,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	aircraftManfacturerIdsUrl: any = '';
     aircraftModelsIdUrl: any = '';
 	dashNumberIdUrl: any = '';
+	memoUrl: any = '';
 	selectedAircraftModel: any = [];
     selectedDashNumbers: any = [];
 	selectedATAchapter: any = [];
@@ -119,7 +120,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	selectedCapabilityName: string = '';
 	selectedCapabilityId: number;
 	sselectedVendorName: string = '';
-	sselectedVendorCode: number;
+	sselectedVendorCode: string;
 	selectedVendorId: number;
 	@Input() isEnableVendor: boolean;
 	vendorName: string;
@@ -188,7 +189,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		if(this.vendorCapabilityId) {
 			this.isEditMode = true;
 			this.enableAircraftInfo = false;
-			this.getVendorCapabilitiesEdit(this.vendorCapabilityId);
+			//this.getVendorCapabilitiesEdit(this.vendorCapabilityId);
 			this.getVendorCapesAircraftEdit(this.vendorCapabilityId);
 		}
 		console.log(this.vendorCapabilityId);		
@@ -201,6 +202,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 			this.itemMasterId = res.itemMasterId;
 			this.sselectedVendorName = res.vendorName;
 			this.sselectedVendorCode = res.vendorCode;
+			this.selectedVendorId = res.vendorId;
 			this.sourceVendorCap = {
 				...res,
 				vendorId: getObjectById('vendorId', res.vendorId, this.allVendors),
@@ -625,6 +627,9 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		this.loadingIndicator = true;
 		this.commonService.smartDropDownList('ItemMaster', 'ItemMasterId', 'partnumber').subscribe(response => {
 			this.allPartnumbersInfo = response;
+			if(this.vendorCapabilityId) {
+				this.getVendorCapabilitiesEdit(this.vendorCapabilityId);
+			}
 		});
 
 		// this.itemser.getPrtnumberslistList().subscribe(
@@ -1167,6 +1172,10 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		console.log(this.sourceVendorCap);
 		this.sselectedVendorName = getValueFromObjectByKey('vendorName', this.sourceVendorCap.vendorId);
 		this.sselectedVendorCode = getValueFromObjectByKey('vendorCode', this.sourceVendorCap.vendorId);
+		if(this.vendorId != 0 && this.vendorId != undefined && this.vendorId != null) {
+			this.sselectedVendorName = this.vendorName ? this.vendorName : '';
+			this.sselectedVendorCode = this.vendorCode ? this.vendorCode : '';
+		}
 		// this.sselectedVendorName=this.sourceVendorCap.vendorId ? this.sourceVendorCap.vendorId.vendorName : '';
 		// this.sselectedVendorCode=this.sourceVendorCap.vendorId ? this.sourceVendorCap.vendorId.vendorCode : '';
 		this.sourceVendorCap.createdBy= this.userName,
@@ -1310,31 +1319,54 @@ export class AddVendorCapabilitiesComponent implements OnInit{
         await this.searchByFieldUrlCreateforAircraftInformation();
         this.searchAircraftParams = '';
 
-        // checks where multi select is empty or not and calls the service
-        if (
+        // checks where multi select is empty or not and calls the service		
+		if (
             this.aircraftManfacturerIdsUrl !== '' &&
             this.aircraftModelsIdUrl !== '' &&
-            this.dashNumberIdUrl !== ''
+            this.dashNumberIdUrl !== '' &&
+            this.memoUrl !== ''
+        ) {
+            this.searchAircraftParams = `aircraftTypeID=${this.aircraftManfacturerIdsUrl}&aircraftModelID=${this.aircraftModelsIdUrl}&dashNumberId=${this.dashNumberIdUrl}&memo=${this.memoUrl}`;
+        }
+		else if (
+            this.aircraftManfacturerIdsUrl !== '' &&
+            this.aircraftModelsIdUrl !== '' &&
+            this.memoUrl !== ''
+        ) {
+            this.searchAircraftParams = `aircraftTypeID=${this.aircraftManfacturerIdsUrl}&aircraftModelID=${this.aircraftModelsIdUrl}&memo=${this.memoUrl}`;
+		}	
+		else if (
+            this.aircraftManfacturerIdsUrl !== '' &&
+            this.memoUrl !== ''
+        ) {
+            this.searchAircraftParams = `aircraftTypeID=${this.aircraftManfacturerIdsUrl}&memo=${this.memoUrl}`;
+		}	
+		else if (
+            this.aircraftManfacturerIdsUrl !== '' &&
+			this.aircraftModelsIdUrl !== '' && 
+			this.dashNumberIdUrl !== ''
         ) {
             this.searchAircraftParams = `aircraftTypeID=${this.aircraftManfacturerIdsUrl}&aircraftModelID=${this.aircraftModelsIdUrl}&dashNumberId=${this.dashNumberIdUrl}`;
-        }
-        // search only by manfacturer and Model and  publicationId
-        else if (
+		}
+		else if (
             this.aircraftManfacturerIdsUrl !== '' &&
             this.aircraftModelsIdUrl !== ''
         ) {
             this.searchAircraftParams = `aircraftTypeID=${this.aircraftManfacturerIdsUrl}&aircraftModelID=${this.aircraftModelsIdUrl}`;
-        } else if (this.aircraftManfacturerIdsUrl !== '') {
+		}
+		else if (this.aircraftManfacturerIdsUrl !== '') {
             this.searchAircraftParams = `aircraftTypeID=${this.aircraftManfacturerIdsUrl}`;
         }
-        // search only by model and publicationId
         else if (this.aircraftModelsIdUrl !== '') {
             this.searchAircraftParams = `aircraftModelID=${this.aircraftModelsIdUrl}`;
         }
-        // search only by dashNumber and publicationId
         else if (this.dashNumberIdUrl !== '') {
             this.searchAircraftParams = `dashNumberId=${this.dashNumberIdUrl}`;
-        }
+		}
+		else if (this.memoUrl !== '') {
+            this.searchAircraftParams = `memo=${this.memoUrl}`;
+		}
+		 
 
 		// const ItemMasterID = this.isEditMode === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
 		 console.log(this.vendorCapabilityId);		 
@@ -1382,7 +1414,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
         // check whether edit or create and send and passes ItemMasterId
         // const id = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
         //this.itemser.getMappedAirCraftDetails(this.itemMasterId).subscribe(data => {
-			this.itemser.getMappedAirCraftDetails(this.sourceVendorCap.vendorCapabilityId).subscribe(data => {
+			this.vendorCapesService.getVendorAircraftGetDataByCapsId(this.sourceVendorCap.vendorCapabilityId).subscribe(data => {
 			const responseData = data;
 			//debugger;
             this.aircraftListDataValues = responseData.map(x => { //aircraftListData
@@ -1404,14 +1436,15 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	deleteAircraftMapped() {
 		const { vendorCapabilityAirCraftId } = this.rowDataToDelete;
         //this.itemser.deleteItemMasterAir(data.vendorCapabilityAirCraftId).subscribe(res => {
-			this.itemser.deleteAirCraft(vendorCapabilityAirCraftId,this.userName).subscribe(res => {
+			this.vendorCapesService.deleteAirCraft(vendorCapabilityAirCraftId,this.userName).subscribe(res => {
             this.getAircraftMappedDataByItemMasterId();
             this.alertService.showMessage(
                 'Success',
                 `Deleted Successfully`,
                 MessageSeverity.success
             );
-        })
+		})
+		$("#aircraftDelete").modal("hide");
 	}
 	
 	resetAircraftModelsorDashNumbers() {
@@ -1450,8 +1483,8 @@ export class AddVendorCapabilitiesComponent implements OnInit{
                 AircraftType: this.newValue,
                 AircraftModel: 'Unknown',
                 DashNumber: 'Unknown',
-                AircraftModelId: '',
-                DashNumberId: '',
+                AircraftModelId: 0,
+                DashNumberId: 0,
                 Memo: '',
                 IsChecked: false
             }]
@@ -1464,7 +1497,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
                     AircraftModel: x.modelName,
                     DashNumber: 'Unknown',
                     AircraftModelId: x.aircraftModelId,
-                    DashNumberId: '',
+                    DashNumberId: 0,
                     Memo: '',
                     IsChecked: false
                 }
@@ -1485,8 +1518,8 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 
             return {
                 ...obj,
-                DashNumberId: obj.DashNumber === 'Unknown' ? null : obj.DashNumberId,
-                AircraftModelId: obj.AircraftModel === 'Unknown' ? null : obj.AircraftModelId,
+                DashNumberId: obj.DashNumber === 'Unknown' ? 0 : obj.DashNumberId,
+                AircraftModelId: obj.AircraftModel === 'Unknown' ? 0 : obj.AircraftModelId,
                 ItemMasterId: this.itemMasterId,
                 PartNumber: this.sourceVendorCap.partNumber,
                 MasterCompanyId: 1,
@@ -1496,7 +1529,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
                 UpdatedDate: new Date(),
 				AircraftTypeId: this.selectedAircraftId,
 				VendorCapabilityId:this.sourceVendorCap.vendorCapabilityId,
-				VendorId:this.selectedVendorId,
+				VendorId:this.selectedVendorId ? this.selectedVendorId : this.vendorId,
 				CapabilityId:this.sourceVendorCap.capabilityId,
                 IsActive: true,
                 IsDeleted: false
@@ -1506,7 +1539,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
         // posting the DashNumber Mapped data from Popup
         // Used to get the Data Posted in the Popup
        // this.itemser.newItemMasterAircarftClass(data).subscribe(datas => {
-		this.itemser.newIVendorAircarftClass(data).subscribe(datas => {
+		this.vendorCapesService.newIVendorAircarftClass(data).subscribe(datas => {
 			//debugger
 
             this.alertService.showMessage(
@@ -1526,7 +1559,9 @@ export class AddVendorCapabilitiesComponent implements OnInit{
             this.getAircraftMappedDataByItemMasterId();
 
         }, err => {
-            const errorLog = err;
+			const errorLog = err;
+			console.log(err);
+			
             this.errorMessageHandler(errorLog);
             // reset poupup aircraft information
             this.aircraftData = undefined;
@@ -1542,9 +1577,18 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	errorMessageHandler(log) {
         this.alertService.showMessage(
             'Error',
-            log.error.error,
+            log.error,
             MessageSeverity.error
         );
+	}
+
+	onAddAircraftInfo() {
+		this.aircraftData = undefined;
+		this.selectedAircraftId = undefined;
+		this.selectedModelId = undefined;
+		this.selectedDashnumber = undefined;
+		this.dashNumberUnknown = false;
+		this.modelUnknown = false;
 	}
 	
 	dismissMemoModel() {
@@ -1553,5 +1597,9 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 
 	dismissAircraftModel() {
 		$("#ModalDashNumber").modal("hide");
+	}
+
+	dismissDeleteModel() {
+		$("#aircraftDelete").modal("hide");
 	}
 }

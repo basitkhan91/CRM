@@ -192,11 +192,13 @@ export class AccountListingCreateComponent implements OnInit {
         }
 
         const formValue = {
-          ...this.accountListCreateForm.value,
-          BalanceTypeActual: this.accountListCreateForm.value.balanceTypeCheckBox[0],
-          BalanceTypeBudget: this.accountListCreateForm.value.balanceTypeCheckBox[1],
-          BalanceTypeForecast: this.accountListCreateForm.value.balanceTypeCheckBox[2]
+            ...this.accountListCreateForm.value,
+            ParentId: this.accountListCreateForm.value.ledgerName['id'],
+            BalanceTypeActual: this.accountListCreateForm.value.balanceTypeCheckBox[0],
+            BalanceTypeBudget: this.accountListCreateForm.value.balanceTypeCheckBox[1],
+            BalanceTypeForecast: this.accountListCreateForm.value.balanceTypeCheckBox[2]
         }
+        console.log('formValue :', formValue)
         this.submittedValue = formValue;
 
         if(this.editMode){

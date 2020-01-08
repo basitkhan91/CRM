@@ -1,8 +1,11 @@
-﻿import { OnInit, OnChanges, SimpleChanges, AfterViewInit, Component, ViewChild, ChangeDetectorRef, Inject, Input } from '@angular/core';
+﻿import { OnInit, OnChanges, SimpleChanges, AfterViewInit, Component, ViewChild, ChangeDetectorRef, Inject, Input, ElementRef } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog, SELECT_MULTIPLE_PANEL_PADDING_X } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ItemMasterService } from '../../../../services/itemMaster.service';
 import { MessageSeverity, AlertService } from '../../../../services/alert.service';
+import { ConfigurationService } from '../../../../services/configuration.service';
+import { pulloutRequiredFieldsOfForm } from '../../../../validations/form.validator';
+declare var $ : any;
 
 @Component({
     selector: 'app-ntae-alternate',
@@ -20,6 +23,7 @@ export class NTAEAlternateComponent implements OnInit {
         ManufacturerId: null,
         itemClassificationId: null
     };
+    modalName: any = "";
     alternateData: any = {};
     pnData: any = [];
     partsData: any = [];
@@ -43,7 +47,6 @@ export class NTAEAlternateComponent implements OnInit {
         { field: "altPartDescription", header: "Description" },
         { field: "manufacturer", header: "Manufacturer " },
         { field: "itemClassification", header: "ITEM CLASSIFICATION " },
-        { field: "document", header: "Document " }
     ];
     ntaeData: any = [];
     filterPNData: any = [];
@@ -61,29 +64,34 @@ export class NTAEAlternateComponent implements OnInit {
     itenClassificationData: any = [];
     filterPartItemClassificationData: any = [];
     formDataNtae = new FormData()
+    listOfErrors: any;
+    displayNtae: boolean = false;
+    modelValue: boolean = false;
+    @ViewChild('closeAddPopup') closeAddPopup : ElementRef 
 
 
+    constructor(public itemser: ItemMasterService, private _actRoute: ActivatedRoute, private alertService: AlertService,  private configurations: ConfigurationService){
+        this.itemMasterId = this._actRoute.snapshot.params['id'];
 
-    constructor(public itemser: ItemMasterService, private _actRoute: ActivatedRoute, private alertService: AlertService){
-             
     }
    
     ngOnInit(){
-        this.itemMasterId = this._actRoute.snapshot.params['id'];
-        if(this.itemMasterId !== undefined){
-            this.getItemMasterDetailById();
-            this.getalterqquparts();
-            this.getNtaeData(true);
-            this.ptnumberlistdata();
-            this.manufacturerdata();
-
-        }   
+         
     }
     ngOnChanges(changes: SimpleChanges) {
         for (let property in changes) {
             if (property == 'selectedTab') {
+                this.filterItemMaster = {};
                 this.selectedTab = changes[property].currentValue
-                this.checkTheCurrentTab(this.selectedTab)
+                this.checkTheCurrentTab(this.selectedTab);
+                if(this.itemMasterId !== undefined){
+                    this.getItemMasterDetailById();
+                    this.getalterqquparts();
+                    // this.getNtaeData(true);
+                    this.ptnumberlistdata();
+                    this.manufacturerdata();
+        
+                }  
             //   console.log('Current: ', changes[property].currentValue);
             }
           }
@@ -105,7 +113,10 @@ export class NTAEAlternateComponent implements OnInit {
             this.ntaeTableColumns = this.equivalencyTableColumns
             this.selectedNTAETabId = 2
         }
-        this.getNtaeData(true);
+        if(this.itemMasterId !== undefined){
+            this.getNtaeData(true);
+        }
+        
         this.filterItemMaster = {};
     }
 
@@ -116,6 +127,8 @@ export class NTAEAlternateComponent implements OnInit {
         })
     }
     getalterqquparts(){
+        this.partsData = [];
+        this.pnData = [];
         this.itemser.getalterqquparts(this.itemMasterId).subscribe(res => {
             console.log(res, "parnumbers");          
             this.partsData = res[0];
@@ -128,6 +141,9 @@ export class NTAEAlternateComponent implements OnInit {
         })
     }
     getNtaeData(status: boolean){
+        this.filterManufacturerData = [];
+        this.filterDiscriptionData = [];
+        this.filterPartItemClassificationData = [];
         let reqData = {  
                 first:0,
                 rows:10,
@@ -147,18 +163,24 @@ export class NTAEAlternateComponent implements OnInit {
 
                     this.ntaeData = res;
                     for(let i = 0; i<this.ntaeData.length; i++){
+
+                        if(this.ntaeData[i].attachmentDetails){
+                            this.ntaeData[i]["fileName"]= this.ntaeData[i].attachmentDetails.ad.fileName
+                        }
                        
                         this.filterManufacturerData.push({
                             label: this.ntaeData[i].manufacturer, value : this.ntaeData[i].manufacturerId
                         })
-                        if(this.selectedNTAETabId == 2){
-                            this.filterPartItemClassificationData.push({
-                                label: this.ntaeData[i].itemClassification, value :this.ntaeData[i].itemClassificationId
-                            })
-                        }
+                        this.filterDiscriptionData.push({
+                            label: this.ntaeData[i].altPartDescription, value : this.ntaeData[i].altPartDescription
+                        })
+                        this.filterPartItemClassificationData.push({
+                            label: this.ntaeData[i].itemClassification, value :this.ntaeData[i].itemClassificationId
+                        })
+
                     }
-                    
                 })
+               
              } else {
                 this.itemser.getnhatlaaltequpartlis(reqData).subscribe(res => {
 
@@ -168,11 +190,10 @@ export class NTAEAlternateComponent implements OnInit {
                         this.filterManufacturerData.push({
                             label: this.ntaeData[i].manufacturer, value : this.ntaeData[i].manufacturerId
                         })
-                        if(this.selectedNTAETabId == 2){
-                            this.filterPartItemClassificationData.push({
-                                label: this.ntaeData[i].itemClassification, value :this.ntaeData[i].itemClassificationId
-                            })
-                        }
+                        this.filterDiscriptionData.push({
+                            label: this.ntaeData[i].altPartDescription, value : this.ntaeData[i].altPartDescription
+                        })
+ 
                     }
                     
                 })
@@ -202,8 +223,16 @@ export class NTAEAlternateComponent implements OnInit {
         }
     }
 
-    saveAlternate(){
-   
+    saveAlternate(saveNtaeTabForm){
+        console.log(saveNtaeTabForm, "saveNtaeTabForm++++")
+        this.listOfErrors = pulloutRequiredFieldsOfForm(saveNtaeTabForm);         
+        if(this.listOfErrors.length > 0){
+           
+            this.displayNtae = true;
+            this.modelValue = true;
+             return false;
+
+        } else {
         
        
          if(this.selectedNTAETabId == 2){
@@ -230,8 +259,11 @@ export class NTAEAlternateComponent implements OnInit {
                    'Alter Information Added Successfully',
                    MessageSeverity.success
                );
+               
                this.getNtaeData(true);
+               this.getalterqquparts();
                this.closeModal()
+               
    
                // this.getAircraftMappedDataByItemMasterId();
    
@@ -262,7 +294,8 @@ export class NTAEAlternateComponent implements OnInit {
                    MessageSeverity.success
                );
                this.getNtaeData(true);
-               this.closeModal()
+               this.closeModal();
+               this.getalterqquparts();
    
                // this.getAircraftMappedDataByItemMasterId();
    
@@ -274,7 +307,7 @@ export class NTAEAlternateComponent implements OnInit {
          }
 
 
-
+        }
     }
 
     private ptnumberlistdata() {
@@ -373,7 +406,10 @@ export class NTAEAlternateComponent implements OnInit {
             error => this.onDataLoadFailed(error)
         );
     }
-
+    downloadFileUpload(rowData) {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.attachmentDetails.ad.link}`;
+        window.location.assign(url);       
+    }
 
     private onmanufacturerSuccessful(allWorkFlows: any[]) {
 
@@ -392,11 +428,16 @@ export class NTAEAlternateComponent implements OnInit {
                     this.filterItemMaster.MappingItemMasterId = this.ntaeData[i].mappingItemMasterId;
                     this.filterItemMaster.MappingPNumber = event;
                     this.filterItemMaster.ManufacturerId = this.ntaeData[i].manufacturerId;
+                    if(this.selectedNTAETabId == 2){
+                        this.filterItemMaster.itemClassificationId = this.ntaeData[i].itemClassificationId
+                    }
+                    
 
                     // this.disableSavepartNumber = true;
                     // this.selectedActionName = event;
                 }
             }
+
             console.log(this.filterItemMaster.MappingItemMasterId, "this.filterItemMaster.MappingItemMasterId++++")
             // for(let j=0; j < this.allpnNumbers.length; j++){
 
@@ -429,6 +470,7 @@ export class NTAEAlternateComponent implements OnInit {
     }
 
     closeModal(){
+        this.closeAddPopup.nativeElement.click();
         this.alternateData = {}
         this.formDataNtae = new FormData()
     }

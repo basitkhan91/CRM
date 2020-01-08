@@ -7,6 +7,7 @@ import { getValueFromObjectByKey, getObjectByValue, editValueAssignByCondition }
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { NgbModal, NgbActiveModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { AuditHistory } from '../../../models/audithistory.model';
+import * as $ from 'jquery';
 @Component({
 	selector: 'app-customer-billing-information',
 	templateUrl: './customer-billing-information.component.html',
@@ -266,7 +267,15 @@ export class CustomerBillingInformationComponent {
         this.viewData = data;
 
 		// this.isViewModel = false;
-	}
+    }
+    toggledbldisplay(data) {
+        this.viewData = data;
+
+            $('#view').modal('show');
+   
+
+
+    }
 	nextClick() {
 		this.tab.emit('Shipping');
 	}
@@ -587,9 +596,7 @@ export class CustomerBillingInformationComponent {
 	// 		this.allComapnies = allComapnies;
 
 	// 	}
-	// 	toggledbldisplay(data) {
-	// 		this.sourceCustomer = data;
-	// 	}
+ 
 
 	// 	open(content) {
 	// 		this.isEditMode = false;

@@ -1,137 +1,163 @@
-﻿<div *ngIf="!isWorkOrder" >
-<div [@fadeInOut] class="page-content">
-    <div class="right_col" role="main">
-        <div class="x_panel">
-            <div class="x_content">
-                <h4 class="page-heading clr-green">Asset List</h4>
-                <span class="help-icon" data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info"
-                        data-toggle="modal" data-target="#help-popup"></i></span>
-                <p-table #dt [value]="allAssetInfo" [metaKeySelection]="true" [rows]="10" [paginator]="true"
-                         [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns"
-                         selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true"
-                         [reorderableColumns]="true">
-                    <ng-template pTemplate="caption">
-                        <div style="text-align: right">
-                            <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
-                                           selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}"
-                                           defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-                            <div class="inner-addon right-addon w200 inline-block">
-                                <i class="fa fa-search"></i>
-                                <input type="text" pInputText size="50" class="form-control ui-autocomplete-input"
-                                       (input)="dt.filterGlobal($event.target.value, 'contains')"
-                                       placeholder="Filter">
-                            </div>
-                            <button type="button" pButton icon="fa-download" iconPos="left" label="Export Data" matTooltip="Download Data" matTooltipPosition="above" (click)="dt.exportCSV()"></button>
-                            <button type="button" pButton icon="fa-download" iconPos="left"
-                                    label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
-                            <a matTooltip="Add Asset" matTooltipPosition="above" class="btn btn-success nobg"
-                               (click)="navigateTogeneralInfo()"><span><i class="fa fa-plus"></i></span></a>
-                            <!-- <div class="excel-upload">
-                <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file"
-                    data-multiple-caption="{count} files selected"
-                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                <label for="upload">
-                    <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-                </label>
-            </div> -->
+﻿<div *ngIf="!isWorkOrder">
+    <div [@fadeInOut] class="page-content">
+        <div class="right_col" role="main">
+            <div class="x_panel">
+                <div class="card">
+                    <div class="card-body">
+                        <!--header-->
+                        <div class="inline-block display-flex">
+                            <!--Set Title-->
+                            <h3 class="po-head lead">Asset List</h3>
+                            &nbsp;&nbsp;
+                            <!--Step x: Customize the data-target-->
+                            <a class="plusicon-cstm new-margin" pTooltip="Add Asset" tooltipPosition="right" (click)="navigateTogeneralInfo()">
+                                <i class="fa fa-plus-circle fa-lg"></i>
+                            </a>
                         </div>
-                    </ng-template>
-                    <ng-template pTemplate="header" let-columns>
-                        <tr>
-                            <th *ngFor="let col of columns" pResizableColumn pReorderableColumn
-                                [pSortableColumn]="col.field">
-                                {{col.header}}
-                                <p-sortIcon [field]="col.field"></p-sortIcon>
-                            </th>
-                            <th>Actions</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-rowData let-columns="columns" let-asset>
-                        <tr [pSelectableRow]="rowData" (dblclick)="openAssetToEdit(rowData)">
+                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="allAssetInfo"
+                                 [metaKeySelection]="true"
+                                 [first]="pageIndex"
+                                 [rows]="pageSize"
+                                 [paginator]="true"
+                                 [pageLinks]="3"
+                                 [rowsPerPageOptions]="[10,20,50,100]"
+                                 [columns]="selectedColumns"
+                                 selectionMode="multiple"
+                                 [resizableColumns]="true"
+                                 [reorderableColumns]="true"
+                                 [scrollable]="true"
+                                 [totalRecords]="totalRecords"
+                                 scrollHeight="450px">
+                            <ng-template pTemplate="caption">
+                                <div style="text-align: right; margin-left: -6px !important;">
+                                    <!--column names dropdown taking selectedColumns-->
+                                    <!--Step x: Update the dropdown with options-->
+                                    <!--(onChange)="reorderValues($event)"-->
+                                    <!--to-do:add (change)=>-->
+                                    <p-multiSelect [maxSelectedLabels]="2"
+                                                   [options]="cols"
+                                                   optionLabel="header"
+                                                   [(ngModel)]="selectedColumns"
+                                                   [style]="{minWidth: '200px'}" style="float:left"
+                                                   selectedItemsLabel="{0} columns selected"
+                                                   defaultLabel="Choose Columns">
+                                    </p-multiSelect>
+                                    <div class="inner-addon right-addon w200 inline-block">
+                                        <i class="fa fa-search"></i>
+                                        <input type="text" pInputText size="50" class="form-control ui-autocomplete-input"
+                                               (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                               placeholder="Filter">
+                                    </div>
+                                    <button type="button" class="btn btn-primary-cstm" pTooltip="Download All Data" tooltipPosition="top"
+                                            pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary-cstm" pTooltip="Download Selected" tooltipPosition="top"
+                                            pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                </div>
+                                <div style="padding-bottom: 1%"><br></div>
+                            </ng-template>
+                            <ng-template pTemplate="header" let-columns style="padding-top: 1% !important">
+                                <tr>
+                                    <th style="width:120px" *ngFor="let col of columns" pResizableColumn pReorderableColumn 
+                                        [pSortableColumn]="col.field">
+                                        {{col.header}}
+                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                    </th>
+                                    <th style="width:200px;position: sticky" *ngIf="selectedColumns.length> 0">Actions</th>
+                                </tr>
+                                <tr>
+                                    <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
+                                    </th>
+                                    <th style="width:200px;position: sticky"></th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns" let-asset>
+                                <tr [pSelectableRow]="rowData" (dblclick)="openAssetToEdit(rowData)">
 
-                            <td>{{asset.assetId}}</td>
-                            <td>{{asset.alternateAssetId}}</td>
-                            <td>{{asset.name}}</td>
-                            <td>{{asset.manufacturer?.name}}</td>
-                            <td>{{asset.currency?.symbol}}</td>
+                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.assetId}}</td>
+                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.name}}</td>
+                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.alternateAssetId}}</td>
+                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.manufacturer?.name}}</td>
+                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.currency?.symbol}}</td>
 
-                            <td style="width:150px">
+                                    <td style="width:200px" *ngIf="selectedColumns.length> 0">
 
-                                <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on"
-                                               offLabel="off" (onChange)="toggleIsActive(rowData,$event)"
-                                               [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on"
-                                               offLabel="off" (onChange)="toggleIsActive(rowData,$event)"
-                                               [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on"
-                                               offLabel="off" (onChange)="toggleIsActive(rowData,$event)"
-                                               [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on"
+                                                       offLabel="off" (onChange)="toggleIsActive(rowData,$event)"
+                                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on"
+                                                       offLabel="off" (onChange)="toggleIsActive(rowData,$event)"
+                                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on"
+                                                       offLabel="off" (onChange)="toggleIsActive(rowData,$event)"
+                                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 
-                                <span data-toggle="modal" data-target="#view">
-                                    <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip"
-                                       (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a>
-                                </span>
-                                <button class="btn-edit" mat-icon-button (click)="openAssetToEdit(rowData)"
-                                        matTooltip="edit">
-                                    <mat-icon>edit</mat-icon>
-                                </button>
-                                <!--Audit method for Asset creation
-                <span (click)="showAuditPopup(auditContent,rowData.assetRecordId)" matTooltip="History" data-toggle="modal" data-target="#history">
-                    <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
-                        <i class="fa fa-history"></i>
-                    </a>
-                </span>-->
+                                        <span data-toggle="modal" data-target="#view">
+                                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip"
+                                               (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a>
+                                        </span>
+                                        <button class="btn-edit" mat-icon-button (click)="openAssetToEdit(rowData)"
+                                                matTooltip="edit">
+                                            <mat-icon>edit</mat-icon>
+                                        </button>
+                                        <!--Audit method for Asset creation
+        <span (click)="showAuditPopup(auditContent,rowData.assetRecordId)" matTooltip="History" data-toggle="modal" data-target="#history">
+            <a data-toggle="tooltip" title="" class="btn btn-success nobg" data-original-title="History">
+                <i class="fa fa-history"></i>
+            </a>
+        </span>-->
 
-                                <button class="btn-delete" mat-icon-button matTooltip="Delete"
-                                        (click)="openDelete(content,rowData)">
-                                    <mat-icon color="warn">delete</mat-icon>
-                                </button>
-                            </td>
+                                        <button class="btn-delete" mat-icon-button matTooltip="Delete"
+                                                (click)="openDelete(content,rowData)">
+                                            <mat-icon color="warn">delete</mat-icon>
+                                        </button>
+                                    </td>
 
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="summary" id="footer">
-                        <div style="text-align: right;">
-                            <label id="footer" class="footer">No. of records:</label>
-                            <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-                            <label id="footer" class="footer1">Pages Count:</label>
-                            <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
-                        </div>
-                    </ng-template>
-                </p-table>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="summary" id="footer">
+                                <div style="text-align: right;">
+                                    <label id="footer" class="footer">No. of records:</label>
+                                    <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                                    <label id="footer" class="footer1">Pages Count:</label>
+                                    <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
+                                </div>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<ng-template #view class="modal fade " id="view" role="dialog">
-    <div class="modal-content">
+    <ng-template #view class="modal fade " id="view" role="dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" (click)="dismissModel()">×</button>
+                <h4 class="modal-title">Details of Asset {{assetViewList.assetId}}</h4>
+            </div>
+            <div class="modal-body viewform">
+                <app-view-asset [assetViewList]="assetViewList"></app-view-asset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" data-dismiss="modal" (click)="dismissModel()">Close</button>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #content let-c="close" let-d="dismiss">
         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" (click)="dismissModel()">×</button>
-            <h4 class="modal-title">Details of Asset {{assetViewList.assetId}}</h4>
+            <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+            <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
-        <div class="modal-body viewform">
-            <app-view-asset [assetViewList]="assetViewList"></app-view-asset>
-        </div>
+
         <div class="modal-footer">
-            <button type="button" class="btn btn-info" data-dismiss="modal" (click)="dismissModel()">Close</button>
+            <button type="button" class="btn btn-success" (click)="removeAsset()">Yes</button>
+            <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
         </div>
-    </div>
-</ng-template>
 
-<ng-template #content let-c="close" let-d="dismiss">
-    <div class="modal-header">
-        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-
-    <div class="modal-footer">
-        <button type="button" class="btn btn-success" (click)="removeAsset()">Yes</button>
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
-    </div>
-
-</ng-template>
+    </ng-template>
 
 </div>
 

@@ -31,6 +31,10 @@ export class PartDetailsComponent implements OnChanges {
     this.salesQuoteService.getSearchPartResult()
     .subscribe(data => {
       this.parts = data;
+      this.totalRecords=this.parts.length;
+      this.pageLinks = Math.ceil(
+        this.totalRecords / 10
+      );
       console.log(this.parts);
     });
        

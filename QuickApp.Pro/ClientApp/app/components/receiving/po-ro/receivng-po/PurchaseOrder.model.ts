@@ -50,7 +50,7 @@ export class PurchaseOrder {
 
     purchaseOderPart: PurchaseOrderPart[];
     vendor: Vendor;
-    stockLine: StockLine[];
+    stockLine: StockLine[];    
 }
 
 export class PartStockLineMapper {
@@ -159,6 +159,8 @@ export class PurchaseOrderPart {
     businessUnitText: string;
     divisionText: string;
     departmentText: string;
+    isDeleted: boolean;
+    purchaseOrder: any;
 
     CompanyList: DropDownData[];
     BusinessUnitList: DropDownData[];
@@ -285,6 +287,7 @@ export class StockLine {
     createdDate: Date;
     purchaseOrderPartRecordId: number;
     timeLifeDetailsNotProvided: boolean;
+    isDeleted: boolean;
 
     //View Properties
 

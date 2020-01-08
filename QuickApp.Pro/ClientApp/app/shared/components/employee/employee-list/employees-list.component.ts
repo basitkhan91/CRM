@@ -132,7 +132,7 @@ export class EmployeesListComponent implements OnInit {
 
     }
     private onemployeeDataLoadSuccessful(allWorkFlows: any) {
-        console.log(allWorkFlows);
+       
         if (allWorkFlows[0].employeeLeaveTypeMapping != null) {
             this.employeeLeaveType = allWorkFlows[0].employeeLeaveTypeMapping.employeeLeaveTypeId;
             this.shiftId = allWorkFlows[0].employeeShiftMapping.shiftId;
@@ -153,7 +153,7 @@ export class EmployeesListComponent implements OnInit {
   
 
         }
-        //debugger;
+       
         //this.alertService.stopLoadingMessage();
         //this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
@@ -227,7 +227,7 @@ export class EmployeesListComponent implements OnInit {
             //{ field: 'departmentId', header: 'Department' },
             { field: 'jobtitle', header: 'Job Title' },
             { field: 'employeeExpertise', header: 'Emp Expertise'},
-            { field: 'jobtype', header: 'Job Type'},
+            //{ field: 'jobtype', header: 'Job Type'},
             { field: 'startDate', header: 'Start Date'},
             { field: 'company', header: 'Company' },
             { field: 'paytype', header: 'Pay Type'}
@@ -244,7 +244,7 @@ export class EmployeesListComponent implements OnInit {
 
     getData(rowData, field) {
          if (field === 'jobtitle') return rowData['jobtitle'] ? rowData['jobtitle']['description'] : 'NA';
-        if (field === 'jobtype') return rowData['jobtype'] ? rowData['jobtype']['jobTypeName'] : 'NA';
+        //if (field === 'jobtype') return rowData['jobtype'] ? rowData['jobtype']['jobTypeName'] : 'NA';
         else if (field === 'company') {
            // return rowData['masterCompany'] ? rowData['masterCompany']['companyName'] : 'NA';
 
@@ -358,7 +358,8 @@ export class EmployeesListComponent implements OnInit {
             //console.log("no Info Presnts")
         }
       
-        if(row.employeetraingInfo.frequencyOfTrainingId > 0)
+      
+        if(row.employeetraingInfo != null && row.employeetraingInfo.frequencyOfTrainingId > 0)
         {
             this.frequencyOfTrainingData = getValueFromArrayOfObjectById('label', 'value', row.employeetraingInfo.frequencyOfTrainingId, this.getAllFrequencyTrainingInfodrpData);
         }
@@ -393,9 +394,9 @@ export class EmployeesListComponent implements OnInit {
             this.empExpertisedescription = row.employeeExpertise.description
         }
 
-        if (row.jobtype != null) {
-            this.jobTypeName = row.jobtype.jobTypeName
-        }
+        // if (row.jobtype != null) {
+        //     this.jobTypeName = row.jobtype.jobTypeName
+        // }
 
         if (row.jobtitle != null) {
             this.jobTitleName = row.jobtitle.description
@@ -424,7 +425,7 @@ export class EmployeesListComponent implements OnInit {
         }
 
 
-        this.jobTypeName = row.jobtype.jobTypeName;
+        //this.jobTypeName = row.jobtype.jobTypeName;
 
 
         this.viewGeneralDetails = row;

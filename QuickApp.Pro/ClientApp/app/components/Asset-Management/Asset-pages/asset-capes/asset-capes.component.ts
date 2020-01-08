@@ -187,6 +187,7 @@ export class AssetCapesComponent implements OnInit {
              this.resetFormArray(element);
          });*/
         this.AssetId = this.router.snapshot.params['id'];
+        console.log('190',this.AssetId);
         if (this.assetServices.listCollection == null) {
             this.GetAssetData(this.AssetId);
         }
@@ -999,7 +1000,10 @@ export class AssetCapesComponent implements OnInit {
                                 this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
 
                             }
-
+                            else {
+                                this.mfgFormArray.push(mfObj);
+                                let mfgIndex = this.mfgFormArray.controls.length - 1;
+                            }
                         } else {
                             let mfObj = this.formBuilder.group(capbilitiesObj);
                             let mfgItemExisted = this.checkIsExisted(capData.CapabilityTypeId, element1.value, element2.value, this.mfgFormArray, capData);
@@ -1010,6 +1014,10 @@ export class AssetCapesComponent implements OnInit {
                                 this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
                                 this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
 
+                            }
+                            else {
+                                this.mfgFormArray.push(mfObj);
+                                let mfgIndex = this.mfgFormArray.controls.length - 1;
                             }
                         }
 

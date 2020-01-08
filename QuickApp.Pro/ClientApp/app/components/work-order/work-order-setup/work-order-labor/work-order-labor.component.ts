@@ -23,6 +23,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   @Input() taskList: any;
   @Input() isQuote = false;
   @Input() markupList;
+  @Input() isView: boolean = false;
 
     totalHours: number;
   workOrderWorkFlowList: any;
@@ -442,6 +443,34 @@ console.log(this.workOrderLaborList);
       }
     )
     return total;
+  }
+
+  getTotalLaborOHCost(){
+    let total = 0;
+    if(this.laborForm.workOrderLaborList){
+    for(let task in this.laborForm.workOrderLaborList[0]){
+      for(let labor of this.laborForm.workOrderLaborList[0][task]){
+        if(labor.directLaborOHCost){
+          total += labor.directLaborOHCost;
+        }
+      }
+    }
+    return total;
+    }
+  }
+
+  getTotalCostPlus(){
+    let total = 0;
+    if(this.laborForm.workOrderLaborList){
+      for(let task in this.laborForm.workOrderLaborList[0]){
+        for(let labor of this.laborForm.workOrderLaborList[0][task]){
+          if(labor.labourCostPlus){
+            total += labor.labourCostPlus;
+          }
+        }
+      }
+      return total;
+    }
   }
 
   // tasks : this.laborForm.tasks[0][keysArray[i]].map(x => {

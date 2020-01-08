@@ -22,7 +22,17 @@ export class WorkOrderChargesComponent implements OnChanges {
   @Output() updateChargesListForWO = new EventEmitter();
   @Output() refreshData = new EventEmitter();
   @Output() createQuote = new EventEmitter();
-
+  @Input() isView: boolean = false;
+  cols = [
+    { field: 'chargeType', header: 'Charge Type' },
+    { field: 'description', header: 'Description' },
+    { field: 'quantity', header: 'Quantity' },
+    { field: 'unitCost', header: 'Unit Cost' },
+    { field: 'extendedCost', header: 'Extented Cost' },
+    { field: 'unitPrice', header: 'Unit Price' },
+    { field: 'extendedPrice', header: 'Extended Price' },
+    { field: 'vendorName', header: 'vendorName' },
+  ]
 
   isEdit: boolean = false;
   editData: any;
@@ -107,47 +117,47 @@ export class WorkOrderChargesComponent implements OnChanges {
     }
   }
 
-  getTotalQuantity(){
+  getTotalQuantity() {
     let totalQuantity = 0;
     this.workOrderChargesList.forEach(
-      (material)=>{
-        if(material.quantity){
+      (material) => {
+        if (material.quantity) {
           totalQuantity += material.quantity;
         }
       }
     )
     return totalQuantity;
   }
-  
-  getTotalUnitCost(){
+
+  getTotalUnitCost() {
     let total = 0;
     this.workOrderChargesList.forEach(
-      (material)=>{
-        if(material.unitCost){
+      (material) => {
+        if (material.unitCost) {
           total += Number(material.unitCost);
         }
       }
     )
     return total;
   }
-  
-  getChargesCostPlus(){
+
+  getChargesCostPlus() {
     let total = 0;
     this.workOrderChargesList.forEach(
-      (material)=>{
-        if(material.chargesCostPlus){
+      (material) => {
+        if (material.chargesCostPlus) {
           total += material.chargesCostPlus;
         }
       }
     )
     return total;
   }
-  
-  getTotalFixedAmount(){
+
+  getTotalFixedAmount() {
     let total = 0;
     this.workOrderChargesList.forEach(
-      (material)=>{
-        if(material.fixedAmount){
+      (material) => {
+        if (material.fixedAmount) {
           total += Number(material.fixedAmount);
         }
       }

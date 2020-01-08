@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="!isView">
   <button
     data-target="#addNewCharges"
     data-toggle="modal"
@@ -50,7 +50,111 @@
   </div>
 </div>
 
-<div class="equipment-tab-content">
+<div>
+  <p-table
+    class="rpo-table-cstm rro-table-cstm pub-ptable-cstm"
+    [columns]="cols"
+    [value]="workOrderChargesList"
+    [paginator]="true"
+    [rows]="10"
+  >
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns">
+          {{ col.header }}
+        </th>
+        <ng-container *ngIf="isQuote">
+          <th *ngIf="costPlusType == 'Mark Up'">MARKUP</th>
+          <th>Cost plus amount</th>
+          <th>Fixed Amount</th>
+        </ng-container>
+        <!-- <th colspan="4" class="text-center" *ngIf="!isView"></th> -->
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr>
+        <td *ngFor="let col of columns">
+          {{ rowData[col.field] }}
+        </td>
+        <ng-container *ngIf="isQuote">
+          <td *ngIf="costPlusType == 'Mark Up'">
+            <select
+              class="form-control wf-pub-id"
+              (change)="markupChanged(rowData)"
+              [(ngModel)]="rowData.markupPercentageId"
+              [disabled]="isView"
+            >
+              <option value="">Select</option>
+              <option
+                *ngFor="let markUp of markupList"
+                [value]="markUp.value"
+                >{{ markUp.label }}</option
+              >
+            </select>
+          </td>
+          <td *ngIf="costPlusType == 'Mark Up'">
+            {{ rowData.chargesCostPlus }}
+          </td>
+          <td *ngIf="costPlusType == 'Cost Plus'">
+            <input
+              type="number"
+              [(ngModel)]="w.chargesCostPlus"
+              [disabled]="isView"
+            />
+          </td>
+          <td>{{ rowData.fixedAmount }}</td>
+          <td *ngIf="!isView">
+            <button
+              class="btn-edit ptable-wo-btns"
+              mat-icon-button
+              data-target="#addNewCharges"
+              data-toggle="modal"
+              (click)="edit(w, i)"
+              matTooltip="Edit"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+          <td *ngIf="!isView">
+            <button
+              class="btn-delete ptable-wo-btns"
+              mat-icon-button
+              matTooltip="Delete"
+              (click)="delete(w, i)"
+            >
+              <mat-icon color="warn">delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+      </tr>
+    </ng-template>
+    <tfoot *ngIf="isQuote">
+      <tr>
+        <td>Total Charges</td>
+        <td>&nbsp;</td>
+        <td>{{ getTotalQuantity() }}</td>
+        <td>{{ getTotalUnitCost() }}</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>{{ getChargesCostPlus() }}</td>
+        <td>{{ getTotalFixedAmount() }}</td>
+        <td *ngIf="!isView">&nbsp;</td>
+      </tr>
+    </tfoot>
+  </p-table>
+  <button
+    class="btn btn-primary-cstm pull-right"
+    (click)="createChargeQuote()"
+    *ngIf="!isView"
+  >
+    Save
+  </button>
+</div>
+
+<!-- <div class="equipment-tab-content">
   <div class="x_panel" *ngIf="workOrderChargesList">
     <div class="tab-content">
       <div
@@ -69,6 +173,7 @@
                       label="Mark Up"
                       value="Mark Up"
                       [(ngModel)]="costPlusType"
+                      [disabled]="isView"
                     ></p-radioButton>
                     <p-radioButton
                       class="p-radiobutton-label-horizontal col-width"
@@ -76,10 +181,11 @@
                       value="Cost Plus"
                       label="Cost Plus"
                       [(ngModel)]="costPlusType"
+                      [disabled]="isView"
                     ></p-radioButton>
                   </div>
               </td>
-              <td colspan="2">&nbsp;</td>
+              <td colspan="2" *ngIf="!isView">&nbsp;</td>
             </tr>
             <tr>
               <th class="text-center">Charge Type</th>
@@ -95,9 +201,11 @@
                 <th>Cost plus amount</th>
                 <th>Fixed Amount</th>
               </ng-container>
-              <th colspan="4" class="text-center"></th>
+              <th colspan="4" class="text-center" *ngIf="!isView"></th>
             </tr>
           </thead>
+
+
 
           <tbody>
             <ng-container *ngFor="let w of workOrderChargesList; let i = index">
@@ -112,18 +220,18 @@
                 <td>{{ w.vendorName }}</td>
                 <ng-container *ngIf="isQuote">
                     <td *ngIf="costPlusType == 'Mark Up'">
-                        <select class="form-control custom-select wf-pub-id" (change)="markupChanged(w)" [(ngModel)]="w.markupPercentageId">
+                        <select class="form-control wf-pub-id" (change)="markupChanged(w)" [(ngModel)]="w.markupPercentageId" [disabled]="isView">
                           <option value="">Select</option>
                           <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                         </select>
                     </td>
                     <td *ngIf="costPlusType == 'Mark Up'">{{ w.chargesCostPlus }}</td>
                     <td *ngIf="costPlusType == 'Cost Plus'">
-                      <input type="number" [(ngModel)]="w.chargesCostPlus"/>
+                      <input type="number" [(ngModel)]="w.chargesCostPlus" [disabled]="isView"/>
                     </td>
                     <td>{{ w.fixedAmount }}</td>
                 </ng-container>
-                <td>
+                <td *ngIf="!isView">
                   <button
                     class="btn-edit ptable-wo-btns"
                     mat-icon-button
@@ -135,7 +243,7 @@
                     <mat-icon>edit</mat-icon>
                   </button>
                 </td>
-                <td>
+                <td *ngIf="!isView">
                   <button
                     class="btn-delete ptable-wo-btns"
                     mat-icon-button
@@ -161,11 +269,11 @@
                 <td>&nbsp;</td>
                 <td>{{getChargesCostPlus()}}</td>
                 <td>{{getTotalFixedAmount()}}</td>
-                <td>&nbsp;</td>
+                <td *ngIf="!isView">&nbsp;</td>
             </tr>
           </tfoot>
         </table>
-        <button class="btn btn-primary-cstm pull-right" (click)="createChargeQuote()">Save</button>
+        <button class="btn btn-primary-cstm pull-right" (click)="createChargeQuote()" *ngIf="!isView">Save</button>
       </div>
     </div>
     <div class="clear"></div>
@@ -174,4 +282,4 @@
     <br />
     <br />
   </div>
-</div>
+</div> -->

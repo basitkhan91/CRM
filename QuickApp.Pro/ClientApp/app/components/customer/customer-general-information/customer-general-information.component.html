@@ -262,7 +262,7 @@
                                                         <div><span style="margin-left:5px;">Except for</span></div>
                                                         <div class="col-sm-12">
                                                             <div class="col-sm-9">
-                                                                <p-multiSelect name="isRestrict"
+                                                                <p-multiSelect name="isRestrictPMA"
                                                                                [(ngModel)]="restictPMAtempList"
                                                                                [options]="partListForPMA"
                                                                                [filter]="true"
@@ -274,18 +274,18 @@
                                                             </div>
                                                         </div>
                                                         <div *ngIf="disableRestrictedPMA">
-                                                            <p-table class="rpo-table-cstm rro-table-cstm" [value]="generalInformation.restrictedPMAParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
+                                                            <p-table class="table-responsive ptable-cus-pma" [value]="generalInformation.restrictedPMAParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
                                                                 <ng-template pTemplate="header" let-columns>
                                                                     <tr>
-                                                                        <th *ngFor="let col of columns">
+                                                                        <th *ngFor="let col of columns"  pTooltip={{col.header}}>
                                                                             {{col.header}}
                                                                         </th>
                                                                         <th>Actions</th>
                                                                     </tr>
                                                                 </ng-template>
-                                                                <ng-template pTemplate="body" let-part let-rowData   let-expanded="expanded" let-columns="columns" let-i="rowIndex">
-                                                                    <tr class="ui-widget-header">
-                                                                        <td *ngFor="let col of columns" style="text-overflow:ellipsis;" pTooltip={{part[col.field]}}>
+                                                                <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                                                    <tr>
+                                                                        <td *ngFor="let col of columns"  pTooltip={{part[col.field]}}>
                                                                             {{part[col.field]}}
                                                                         </td>
                                                                         <td>
@@ -318,7 +318,7 @@
                                                         <div><span style="margin-left:5px;">Except for</span></div>
                                                         <div class="col-sm-12">
                                                             <div class="col-sm-9">
-                                                                <p-multiSelect name="isRestrict"
+                                                                <p-multiSelect name="isRestrictDER"
                                                                                [(ngModel)]="restictDERtempList"
                                                                                [options]="partListForDER"
                                                                                [filter]="true"
@@ -330,10 +330,10 @@
                                                             </div>
                                                         </div>
                                                         <div *ngIf="disableRestrictedDER">
-                                                            <p-table class="rpo-table-cstm rro-table-cstm" [value]="generalInformation.restrictedDERParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
+                                                            <p-table class="table-responsive ptable-cus-pma overlap" [value]="generalInformation.restrictedDERParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
                                                                 <ng-template pTemplate="header" let-columns>
                                                                     <tr>
-                                                                        <th *ngFor="let col of columns">
+                                                                        <th *ngFor="let col of columns"   pTooltip={{col.header}}>
                                                                             {{col.header}}
                                                                         </th>
                                                                         <th>Actions</th>
@@ -341,7 +341,7 @@
                                                                 </ng-template>
                                                                 <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
                                                                     <tr>
-                                                                        <td *ngFor="let col of columns" style="text-overflow:ellipsis;" pTooltip={{part[col.field]}}>
+                                                                        <td *ngFor="let col of columns"  pTooltip={{part[col.field]}}>
                                                                             {{part[col.field]}}
                                                                         </td>
                                                                         <td>

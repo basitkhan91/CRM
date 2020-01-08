@@ -172,9 +172,9 @@
             <table class="table table-bordered " id="po-table">
                 <thead>
                     <tr>
-                        <th>
+                        <th colspan="2">
                             <a href="javascript:void(0);" data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit" style="padding-bottom:0; color:#fff;"><i class="fa fa-edit" (click)="editPart(part)"></i></a>
-                        </th>
+                        </th>                       
                         <th>Item Num</th>
                         <th>PN</th>
                         <th>Alt PN</th>
@@ -202,8 +202,8 @@
                 </thead>
                 <tbody *ngIf="purchaseOrderData != undefined && purchaseOrderData.purchaseOderPart != undefined">
                     <ng-container *ngFor="let part of purchaseOrderData.purchaseOderPart;let row_index=index">
-                        <tr *ngIf="part.stockLine != null && part.stockLine.length > 0" class="parent-data">
-                            <td><a data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit" (click)="editPart(part)"></i></a></td>
+                        <tr *ngIf="part.stockLine != null && part.stockLine.length > 0" class="parent-data">                            
+                            <td colspan="2"><a data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit" (click)="editPart(part)"></i></a></td>                            
                             <td>{{row_index + 1}}</td>
                             <td>{{part.itemMaster.partNumber}}</td>
                             <td>#######</td>
@@ -354,7 +354,7 @@
 
                         <ng-container>
                             <tr *ngIf="part.stockLine != null">
-                                <th></th>
+                                <th colspan="2"></th>
                                 <th>Stock Line</th>
                                 <th>PN</th>
                                 <th>PN Description</th>
@@ -405,443 +405,452 @@
                                 <th colspan="5">Time</th>
                                 <th colspan="5">Last</th>
                             </tr>
-                            <tr *ngFor="let SL of part.stockLine;let stockline_row_index=index">
-                                <td><a href="javascript:void(0);" data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit" (click)="editStockLine(SL)"></i></a></td>
-                                <td>{{SL.stockLineNumber}}</td>
-                                <td>{{part.itemMaster.partNumber}}</td>
-                                <td>{{part.itemMaster.partDescription}}</td>
-                                <td>{{SL.controlNumber}}</td>
-                                <td>{{SL.idNumber}}</td>
-                                <td>
-                                    <select class="form-control"
-                                            [(ngModel)]="SL.conditionId"
-                                            #selects="ngModel"
-                                            [ngModelOptions]="{standalone: true}"
-                                            [disabled]="!SL.isEnabled">
-                                        <option value="0">Select</option>
-                                        <option *ngFor="let condition of ConditionList" [value]="condition.Key">{{condition.Value}}</option>
-                                    </select>
-                                </td>
-                                <td colspan="2">{{SL.serialNumber}}</td>
-                                <td>{{SL.quantity}}</td>
-                                <td>{{part.quantityOrdered -  SL.quantity}}</td>
-                                <td>{{SL.ReceiverNumber}}</td>
-                                <td>
-                                    <input type="text" class="form-control" pInputText pKeyFilter="pnum"
-                                           (focusout)="calculateExtendedCost(part, SL)"
-                                           [disabled]="!SL.isEnabled"
-                                           [(ngModel)]="SL.purchaseOrderUnitCost" />
-                                </td>
-                                <td>
-                                    <input class="form-control" type="text" pInputText pKeyFilter="pnum"
-                                           [(ngModel)]="SL.purchaseOrderExtendedCost"
-                                           disabled="disabled" />
-                                </td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>
-                                    <label style="width:90px;">Company:</label>
-                                    <select class="form-control"
-                                            [(ngModel)]="SL.companyId"
-                                            #selects="ngModel"
-                                            [ngModelOptions]="{standalone: true}"
-                                            (change)="getStockLineBusinessUnitList(SL)"
-                                            [disabled]="!SL.isEnabled">
-                                        <option value="0">Select</option>
-                                        <option *ngFor="let company of SL.CompanyList" [value]="company.Key">{{company.Value}}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <label style="width:90px;">BU:</label>
-                                    <select class="form-control"
-                                            [(ngModel)]="SL.businessUnitId"
-                                            #selects="ngModel"
-                                            [ngModelOptions]="{standalone: true}"
-                                            [disabled]="!SL.isEnabled"
-                                            (change)="getStockLineDivision(SL)">
-                                        <option value="0">Select</option>
-                                        <option *ngFor="let businessUnit of SL.BusinessUnitList" [value]="businessUnit.Key">{{businessUnit.Value}}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <label style="width:90px;">Division:</label>
-                                    <select class="form-control"
-                                            [(ngModel)]="SL.divisionId"
-                                            #selects="ngModel"
-                                            [ngModelOptions]="{standalone: true}"
-                                            [disabled]="!SL.isEnabled"
-                                            (change)="getStockLineDepartment(SL)">
-                                        <option value="0">Select</option>
-                                        <option *ngFor="let division of SL.DivisionList" [value]="division.Key">{{division.Value}}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <label style="width:90px;">Dept:</label>
-                                    <select class="form-control"
-                                            [(ngModel)]="SL.departmentId"
-                                            #selects="ngModel"
-                                            [ngModelOptions]="{standalone: true}"
-                                            [disabled]="!SL.isEnabled"
-                                            (change)="setStockLineDepartmentManagementStructureId(SL)">
-                                        <option value="0">Select</option>
-                                        <option *ngFor="let department of SL.DepartmentList" [value]="department.Key">{{department.Value}}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select class="form-control" [disabled]="!SL.isEnabled" (change)="onOwnerChange($event, SL)" [(ngModel)]="SL.ownerType">
-                                        <option value="0">Select</option>
-                                        <option value="1">Customer</option>
-                                        <option value="2">Other </option>
-                                        <option value="3">Vendor</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <div class="form-group" *ngIf="SL.ownerType != undefined && SL.ownerType > 0">
-                                        <div class="form-row">
-                                            <div class="col-sm-11">
+                            <ng-container *ngFor="let SL of part.stockLine;let stockline_row_index=index">
+                                <tr *ngIf="!SL.isDeleted">
+                                    <td><a href="javascript:void(0);" data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit" (click)="editStockLine(SL)"></i></a></td>
+                                    <td><button class="btn btn-danger nobg" (click)="deleteStockLine(SL)"><i class="fa fa-trash"></i></button></td>
+                                    <td>{{SL.stockLineNumber}}</td>
+                                    <td>{{part.itemMaster.partNumber}}</td>
+                                    <td>{{part.itemMaster.partDescription}}</td>
+                                    <td>{{SL.controlNumber}}</td>
+                                    <td>{{SL.idNumber}}</td>
+                                    <td>
+                                        <select class="form-control"
+                                                [(ngModel)]="SL.conditionId"
+                                                #selects="ngModel"
+                                                [ngModelOptions]="{standalone: true}"
+                                                [disabled]="!SL.isEnabled">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let condition of ConditionList" [value]="condition.Key">{{condition.Value}}</option>
+                                        </select>
+                                    </td>
+                                    <td colspan="2">{{SL.serialNumber}}</td>
+                                    <td>{{SL.quantity}}</td>
+                                    <td>{{part.quantityOrdered -  SL.quantity}}</td>
+                                    <td>{{SL.ReceiverNumber}}</td>
+                                    <td>
+                                        <input type="text" class="form-control" pInputText pKeyFilter="pnum"
+                                               (focusout)="calculateExtendedCost(part, SL)"
+                                               [disabled]="!SL.isEnabled"
+                                               [(ngModel)]="SL.purchaseOrderUnitCost" />
+                                    </td>
+                                    <td>
+                                        <input class="form-control" type="text" pInputText pKeyFilter="pnum"
+                                               [(ngModel)]="SL.purchaseOrderExtendedCost"
+                                               disabled="disabled" />
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <label style="width:90px;">Company:</label>
+                                        <select class="form-control"
+                                                [(ngModel)]="SL.companyId"
+                                                #selects="ngModel"
+                                                [ngModelOptions]="{standalone: true}"
+                                                (change)="getStockLineBusinessUnitList(SL)"
+                                                [disabled]="!SL.isEnabled">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let company of SL.CompanyList" [value]="company.Key">{{company.Value}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <label style="width:90px;">BU:</label>
+                                        <select class="form-control"
+                                                [(ngModel)]="SL.businessUnitId"
+                                                #selects="ngModel"
+                                                [ngModelOptions]="{standalone: true}"
+                                                [disabled]="!SL.isEnabled"
+                                                (change)="getStockLineDivision(SL)">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let businessUnit of SL.BusinessUnitList" [value]="businessUnit.Key">{{businessUnit.Value}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <label style="width:90px;">Division:</label>
+                                        <select class="form-control"
+                                                [(ngModel)]="SL.divisionId"
+                                                #selects="ngModel"
+                                                [ngModelOptions]="{standalone: true}"
+                                                [disabled]="!SL.isEnabled"
+                                                (change)="getStockLineDepartment(SL)">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let division of SL.DivisionList" [value]="division.Key">{{division.Value}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <label style="width:90px;">Dept:</label>
+                                        <select class="form-control"
+                                                [(ngModel)]="SL.departmentId"
+                                                #selects="ngModel"
+                                                [ngModelOptions]="{standalone: true}"
+                                                [disabled]="!SL.isEnabled"
+                                                (change)="setStockLineDepartmentManagementStructureId(SL)">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let department of SL.DepartmentList" [value]="department.Key">{{department.Value}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" [disabled]="!SL.isEnabled" (change)="onOwnerChange($event, SL)" [(ngModel)]="SL.ownerType">
+                                            <option value="0">Select</option>
+                                            <option value="1">Customer</option>
+                                            <option value="2">Other </option>
+                                            <option value="3">Vendor</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div class="form-group" *ngIf="SL.ownerType != undefined && SL.ownerType > 0">
+                                            <div class="form-row">
+                                                <div class="col-sm-11">
 
-                                                <p-autoComplete *ngIf="SL.ownerType == 1"
-                                                                [(ngModel)]="SL.ownerObject"
-                                                                [suggestions]="SL.filteredRecords"
-                                                                (completeMethod)="onFilter($event, SL, SL.ownerType)"
-                                                                (onSelect)="onOwnerSelect(SL)"
-                                                                [disabled]="!SL.isEnabled"
-                                                                [dropdown]="true" [size]="32" [minLength]="1"
-                                                                field="Value" class="rpo-acomp">
+                                                    <p-autoComplete *ngIf="SL.ownerType == 1"
+                                                                    [(ngModel)]="SL.ownerObject"
+                                                                    [suggestions]="SL.filteredRecords"
+                                                                    (completeMethod)="onFilter($event, SL, SL.ownerType)"
+                                                                    (onSelect)="onOwnerSelect(SL)"
+                                                                    [disabled]="!SL.isEnabled"
+                                                                    [dropdown]="true" [size]="32" [minLength]="1"
+                                                                    field="Value" class="rpo-acomp">
 
-                                                </p-autoComplete>
+                                                    </p-autoComplete>
 
-                                                <input *ngIf="SL.ownerType == 2"
-                                                       class="form-control"
-                                                       type="text"
-                                                       [ngModelOptions]="{standalone: true}"
-                                                       [disabled]="!SL.isEnabled"
-                                                       [(ngModel)]="SL.owner"
-                                                       pInputText>
+                                                    <input *ngIf="SL.ownerType == 2"
+                                                           class="form-control"
+                                                           type="text"
+                                                           [ngModelOptions]="{standalone: true}"
+                                                           [disabled]="!SL.isEnabled"
+                                                           [(ngModel)]="SL.owner"
+                                                           pInputText>
 
-                                                <p-autoComplete *ngIf="SL.ownerType == 3"
-                                                                [(ngModel)]="SL.ownerObject"
-                                                                [suggestions]="SL.filteredRecords"
-                                                                (completeMethod)="onFilter($event, SL, SL.ownerType)"
-                                                                (onSelect)="onOwnerSelect(SL)"
-                                                                [disabled]="!SL.isEnabled"
-                                                                [dropdown]="true" [size]="32" [minLength]="1"
-                                                                field="Value" class="rpo-acomp">
-                                                </p-autoComplete>
+                                                    <p-autoComplete *ngIf="SL.ownerType == 3"
+                                                                    [(ngModel)]="SL.ownerObject"
+                                                                    [suggestions]="SL.filteredRecords"
+                                                                    (completeMethod)="onFilter($event, SL, SL.ownerType)"
+                                                                    (onSelect)="onOwnerSelect(SL)"
+                                                                    [disabled]="!SL.isEnabled"
+                                                                    [dropdown]="true" [size]="32" [minLength]="1"
+                                                                    field="Value" class="rpo-acomp">
+                                                    </p-autoComplete>
 
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <select class="form-control"
-                                            [(ngModel)]="SL.obtainFromType"
-                                            #selects="ngModel"
-                                            [disabled]="!SL.isEnabled"
-                                            [ngModelOptions]="{standalone: true}"
-                                            (change)="onObtainFromChange($event, SL)">
-                                        <option value="0">Select</option>
-                                        <option value="1">Customer</option>
-                                        <option value="2">Other </option>
-                                        <option value="3">Vendor</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <div class="form-group" *ngIf="SL.obtainFromType != undefined && SL.obtainFromType > 0">
-                                        <div class="form-row">
-                                            <div class="col-sm-11">
+                                    </td>
+                                    <td>
+                                        <select class="form-control"
+                                                [(ngModel)]="SL.obtainFromType"
+                                                #selects="ngModel"
+                                                [disabled]="!SL.isEnabled"
+                                                [ngModelOptions]="{standalone: true}"
+                                                (change)="onObtainFromChange($event, SL)">
+                                            <option value="0">Select</option>
+                                            <option value="1">Customer</option>
+                                            <option value="2">Other </option>
+                                            <option value="3">Vendor</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div class="form-group" *ngIf="SL.obtainFromType != undefined && SL.obtainFromType > 0">
+                                            <div class="form-row">
+                                                <div class="col-sm-11">
 
-                                                <p-autoComplete *ngIf="SL.obtainFromType == 1"
-                                                                [(ngModel)]="SL.obtainFromObject"
-                                                                [suggestions]="SL.filteredRecords"
-                                                                [disabled]="!SL.isEnabled"
-                                                                (completeMethod)="onFilter($event, SL, SL.obtainFromType)"
-                                                                (onSelect)="onObtainSelect(SL)"
-                                                                [dropdown]="true" [size]="32" [minLength]="1"
-                                                                field="Value" class="rpo-acomp">
+                                                    <p-autoComplete *ngIf="SL.obtainFromType == 1"
+                                                                    [(ngModel)]="SL.obtainFromObject"
+                                                                    [suggestions]="SL.filteredRecords"
+                                                                    [disabled]="!SL.isEnabled"
+                                                                    (completeMethod)="onFilter($event, SL, SL.obtainFromType)"
+                                                                    (onSelect)="onObtainSelect(SL)"
+                                                                    [dropdown]="true" [size]="32" [minLength]="1"
+                                                                    field="Value" class="rpo-acomp">
 
-                                                </p-autoComplete>
+                                                    </p-autoComplete>
 
-                                                <input *ngIf="SL.obtainFromType == 2"
-                                                       class="form-control"
-                                                       type="text"
-                                                       [disabled]="!SL.isEnabled"
-                                                       [ngModelOptions]="{standalone: true}"
-                                                       [(ngModel)]="SL.obtainFrom"
-                                                       pInputText>
+                                                    <input *ngIf="SL.obtainFromType == 2"
+                                                           class="form-control"
+                                                           type="text"
+                                                           [disabled]="!SL.isEnabled"
+                                                           [ngModelOptions]="{standalone: true}"
+                                                           [(ngModel)]="SL.obtainFrom"
+                                                           pInputText>
 
-                                                <p-autoComplete *ngIf="SL.obtainFromType == 3"
-                                                                [(ngModel)]="SL.obtainFromObject"
-                                                                [suggestions]="SL.filteredRecords"
-                                                                [disabled]="!SL.isEnabled"
-                                                                (completeMethod)="onFilter($event, SL, SL.obtainFromType)"
-                                                                (onSelect)="onObtainSelect(SL)"
-                                                                [dropdown]="true" [size]="32" [minLength]="1"
-                                                                field="Value" class="rpo-acomp">
-                                                </p-autoComplete>
+                                                    <p-autoComplete *ngIf="SL.obtainFromType == 3"
+                                                                    [(ngModel)]="SL.obtainFromObject"
+                                                                    [suggestions]="SL.filteredRecords"
+                                                                    [disabled]="!SL.isEnabled"
+                                                                    (completeMethod)="onFilter($event, SL, SL.obtainFromType)"
+                                                                    (onSelect)="onObtainSelect(SL)"
+                                                                    [dropdown]="true" [size]="32" [minLength]="1"
+                                                                    field="Value" class="rpo-acomp">
+                                                    </p-autoComplete>
 
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <select class="form-control" [disabled]="!SL.isEnabled" (change)="onTraceableToChange($event, SL)" [(ngModel)]="SL.traceableToType">
-                                        <option value="0">Select</option>
-                                        <option value="1">Customer</option>
-                                        <option value="2">Other </option>
-                                        <option value="3">Vendor</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <div class="form-group" *ngIf="SL.traceableToType != undefined && SL.traceableToType > 0">
-                                        <div class="form-row">
-                                            <div class="col-sm-11">
+                                    </td>
+                                    <td>
+                                        <select class="form-control" [disabled]="!SL.isEnabled" (change)="onTraceableToChange($event, SL)" [(ngModel)]="SL.traceableToType">
+                                            <option value="0">Select</option>
+                                            <option value="1">Customer</option>
+                                            <option value="2">Other </option>
+                                            <option value="3">Vendor</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div class="form-group" *ngIf="SL.traceableToType != undefined && SL.traceableToType > 0">
+                                            <div class="form-row">
+                                                <div class="col-sm-11">
 
-                                                <p-autoComplete *ngIf="SL.traceableToType == 1"
-                                                                [(ngModel)]="SL.traceableToObject"
-                                                                [suggestions]="SL.filteredRecords"
-                                                                [disabled]="!SL.isEnabled"
-                                                                (completeMethod)="onFilter($event, SL, SL.traceableToType)"
-                                                                (onSelect)="onTraceableToSelect(SL)"
-                                                                [dropdown]="true" [size]="32" [minLength]="1"
-                                                                field="Value" class="rpo-acomp">
+                                                    <p-autoComplete *ngIf="SL.traceableToType == 1"
+                                                                    [(ngModel)]="SL.traceableToObject"
+                                                                    [suggestions]="SL.filteredRecords"
+                                                                    [disabled]="!SL.isEnabled"
+                                                                    (completeMethod)="onFilter($event, SL, SL.traceableToType)"
+                                                                    (onSelect)="onTraceableToSelect(SL)"
+                                                                    [dropdown]="true" [size]="32" [minLength]="1"
+                                                                    field="Value" class="rpo-acomp">
 
-                                                </p-autoComplete>
+                                                    </p-autoComplete>
 
-                                                <input *ngIf="SL.traceableToType == 2"
-                                                       class="form-control"
-                                                       type="text"
-                                                       [disabled]="!SL.isEnabled"
-                                                       [ngModelOptions]="{standalone: true}"
-                                                       [(ngModel)]="SL.traceableTo"
-                                                       pInputText>
+                                                    <input *ngIf="SL.traceableToType == 2"
+                                                           class="form-control"
+                                                           type="text"
+                                                           [disabled]="!SL.isEnabled"
+                                                           [ngModelOptions]="{standalone: true}"
+                                                           [(ngModel)]="SL.traceableTo"
+                                                           pInputText>
 
-                                                <p-autoComplete *ngIf="SL.traceableToType == 3"
-                                                                [(ngModel)]="SL.traceableToObject"
-                                                                [suggestions]="SL.filteredRecords"
-                                                                [disabled]="!SL.isEnabled"
-                                                                (completeMethod)="onFilter($event, SL, SL.traceableToType)"
-                                                                (onSelect)="onTraceableToSelect(SL)"
-                                                                [dropdown]="true" [size]="32" [minLength]="1"
-                                                                field="Value" class="rpo-acomp">
-                                                </p-autoComplete>
+                                                    <p-autoComplete *ngIf="SL.traceableToType == 3"
+                                                                    [(ngModel)]="SL.traceableToObject"
+                                                                    [suggestions]="SL.filteredRecords"
+                                                                    [disabled]="!SL.isEnabled"
+                                                                    (completeMethod)="onFilter($event, SL, SL.traceableToType)"
+                                                                    (onSelect)="onTraceableToSelect(SL)"
+                                                                    [dropdown]="true" [size]="32" [minLength]="1"
+                                                                    field="Value" class="rpo-acomp">
+                                                    </p-autoComplete>
 
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <select class="form-control"
-                                            [(ngModel)]="SL.siteId"
-                                            #selects="ngModel"
-                                            [ngModelOptions]="{standalone: true}"
-                                            [disabled]="!SL.isEnabled"
-                                            (change)="getStockLineWareHouse(SL)">
-                                        <option value="0">Select</option>
-                                        <option *ngFor="let site of SL.SiteList" [value]="site.Key">{{site.Value}}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select class="form-control"
-                                            [(ngModel)]="SL.warehouseId"
-                                            #selects="ngModel"
-                                            [ngModelOptions]="{standalone: true}"
-                                            [disabled]="!SL.isEnabled"
-                                            (change)="getStockLineLocation(SL)">
-                                        <option value="0">Select</option>
-                                        <option *ngFor="let warehouse of SL.WareHouseList" [value]="warehouse.Key">{{warehouse.Value}}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select class="form-control"
-                                            [(ngModel)]="SL.locationId"
-                                            #selects="ngModel"
-                                            [disabled]="!SL.isEnabled"
-                                            [ngModelOptions]="{standalone: true}"
-                                            (change)="getStockLineShelf(SL)">
-                                        <option value="0">Select</option>
-                                        <option *ngFor="let loc of SL.LocationList" [value]="loc.Key">{{loc.Value}}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select class="form-control"
-                                            [(ngModel)]="SL.shelfId"
-                                            #selects="ngModel"
-                                            [disabled]="!SL.isEnabled"
-                                            [ngModelOptions]="{standalone: true}"
-                                            (change)="getStockLineBin(SL)">
-                                        <option value="0">Select</option>
-                                        <option *ngFor="let shelf of SL.ShelfList" [value]="shelf.Key">{{shelf.Value}}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select class="form-control"
-                                            [(ngModel)]="SL.binId"
-                                            #selects="ngModel"
-                                            [disabled]="!SL.isEnabled"
-                                            [ngModelOptions]="{standalone: true}">
-                                        <option value="0">Select</option>
-                                        <option *ngFor="let bin of SL.BinList" [value]="bin.Key">{{bin.Value}}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <input class="form-control" type="text"
-                                           [disabled]="!SL.isEnabled"
-                                           [(ngModel)]="SL.manufacturingTrace"
-                                           pInputText [maxLength]="200">
-                                </td>
-                                <td>
-                                    <select class="form-control"
-                                            [(ngModel)]="SL.manufacturerId"
-                                            disabled>
-                                        <option [value]="0">Select</option>
-                                        <option [value]="manufacturer.Key" *ngFor="let manufacturer of ManufacturerList">{{manufacturer.Value}}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <input class="form-control"
-                                           [(ngModel)]="SL.manufacturerLotNumber"
-                                           type="text"
-                                           [disabled]="!SL.isEnabled"
-                                           pInputText [maxLength]="200">
-                                </td>
-                                <td>
-                                    <p-calendar class="pas-clder pas-clder-po-table"
-                                                [disabled]="!SL.isEnabled"
-                                                [(ngModel)]="SL.manufacturingDate"
-                                                [showIcon]="true"></p-calendar>
-
-                                </td>
-                                <td>
-                                    <input class="form-control"
-                                           [disabled]="!SL.isEnabled"
-                                           [(ngModel)]="SL.manufacturingBatchNumber"
-                                           type="text" pInputText
-                                           [maxLength]="200">
-                                </td>
-                                <td>
-                                    <input class="form-control"
-                                           type="text" pInputText
-                                           [disabled]="!SL.isEnabled"
-                                           [(ngModel)]="SL.partCertificationNumber"
-                                           [maxLength]="200">
-                                </td>
-                                <td>
-                                    <p-calendar class="pas-clder pas-clder-po-table"
-                                                [maxDate]="currentDate"
-                                                [disabled]="!SL.isEnabled"
-                                                [showIcon]="true"
+                                    </td>
+                                    <td>
+                                        <select class="form-control"
+                                                [(ngModel)]="SL.siteId"
+                                                #selects="ngModel"
                                                 [ngModelOptions]="{standalone: true}"
-                                                [(ngModel)]="SL.certifiedDate"></p-calendar>
-                                </td>
-                                <td>
-                                    <p-calendar class="pas-clder pas-clder-po-table"
-                                                [maxDate]="currentDate"
                                                 [disabled]="!SL.isEnabled"
-                                                [showIcon]="true"
+                                                (change)="getStockLineWareHouse(SL)">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let site of SL.SiteList" [value]="site.Key">{{site.Value}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control"
+                                                [(ngModel)]="SL.warehouseId"
+                                                #selects="ngModel"
                                                 [ngModelOptions]="{standalone: true}"
-                                                [(ngModel)]="SL.certifiedDueDate"></p-calendar>
-                                </td>
-                                <td>
-                                    <input class="form-control"
-                                           [(ngModel)]="SL.certifiedBy"
-                                           type="text" pInputText
-                                           [disabled]="!SL.isEnabled"
-                                           [maxLength]="200">
-                                </td>
-                                <td>
-                                    <p-calendar class="pas-clder pas-clder-po-table"
-                                                [maxDate]="currentDate"
                                                 [disabled]="!SL.isEnabled"
-                                                [showIcon]="true"
-                                                [ngModelOptions]="{standalone: true}"
-                                                [(ngModel)]="SL.tagDate"></p-calendar>
-                                </td>
-                                <td>
-                                    <p-calendar class="pas-clder pas-clder-po-table"
-                                                [showIcon]="true"
+                                                (change)="getStockLineLocation(SL)">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let warehouse of SL.WareHouseList" [value]="warehouse.Key">{{warehouse.Value}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control"
+                                                [(ngModel)]="SL.locationId"
+                                                #selects="ngModel"
                                                 [disabled]="!SL.isEnabled"
                                                 [ngModelOptions]="{standalone: true}"
-                                                [(ngModel)]="SL.expirationDate"></p-calendar>
-                                </td>
-                                <td>
-                                    <input class="form-control" type="text" [disabled]="!SL.isEnabled" [(ngModel)]="SL.shippingReference" pInputText [maxLength]="200">
-                                </td>
-                                <td>
-                                    <select class="form-control" required [(ngModel)]="SL.shippingViaId" [disabled]="!SL.isEnabled">
-                                        <option value="0">Select</option>
-                                        <option *ngFor="let shippingVia of ShippingViaList" [value]="shippingVia.Key">{{shippingVia.Value}}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <input class="form-control" type="text" [disabled]="!SL.isEnabled" [(ngModel)]="SL.shippingAccount" pInputText [maxLength]="200">
-                                </td>
-                                <td>
-                                    <input class="form-control" type="text" [disabled]="!SL.isEnabled" [(ngModel)]="SL.engineSerialNumber" pInputText [maxLength]="200">
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" disabled value="unknown field" />
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" disabled value="unknown field" />
-                                </td>
-                                <td>{{SL.glAccountText}}</td>
-                                <td>
-                                    <input type="checkbox" disabled [checked]="part.itemMaster.isTimeLife != false" />
-                                </td>
-                                <td>
-                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesRemaining">
-                                </td>
-                                <td>
-                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesSinceNew">
-                                </td>
-                                <td>
-                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesSinceOVH">
-                                </td>
-                                <td>
-                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesSinceInspection">
-                                </td>
-                                <td>
-                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesSinceRepair">
-                                </td>
+                                                (change)="getStockLineShelf(SL)">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let loc of SL.LocationList" [value]="loc.Key">{{loc.Value}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control"
+                                                [(ngModel)]="SL.shelfId"
+                                                #selects="ngModel"
+                                                [disabled]="!SL.isEnabled"
+                                                [ngModelOptions]="{standalone: true}"
+                                                (change)="getStockLineBin(SL)">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let shelf of SL.ShelfList" [value]="shelf.Key">{{shelf.Value}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-control"
+                                                [(ngModel)]="SL.binId"
+                                                #selects="ngModel"
+                                                [disabled]="!SL.isEnabled"
+                                                [ngModelOptions]="{standalone: true}">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let bin of SL.BinList" [value]="bin.Key">{{bin.Value}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input class="form-control" type="text"
+                                               [disabled]="!SL.isEnabled"
+                                               [(ngModel)]="SL.manufacturingTrace"
+                                               pInputText [maxLength]="200">
+                                    </td>
+                                    <td>
+                                        <select class="form-control"
+                                                [(ngModel)]="SL.manufacturerId"
+                                                disabled>
+                                            <option [value]="0">Select</option>
+                                            <option [value]="manufacturer.Key" *ngFor="let manufacturer of ManufacturerList">{{manufacturer.Value}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input class="form-control"
+                                               [(ngModel)]="SL.manufacturerLotNumber"
+                                               type="text"
+                                               [disabled]="!SL.isEnabled"
+                                               pInputText [maxLength]="200">
+                                    </td>
+                                    <td>
+                                        <p-calendar class="pas-clder pas-clder-po-table"
+                                                    [disabled]="!SL.isEnabled"
+                                                    [(ngModel)]="SL.manufacturingDate"
+                                                    [showIcon]="true"></p-calendar>
 
-                                <td>
-                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeRemaining">
-                                </td>
+                                    </td>
+                                    <td>
+                                        <input class="form-control"
+                                               [disabled]="!SL.isEnabled"
+                                               [(ngModel)]="SL.manufacturingBatchNumber"
+                                               type="text" pInputText
+                                               [maxLength]="200">
+                                    </td>
+                                    <td>
+                                        <input class="form-control"
+                                               type="text" pInputText
+                                               [disabled]="!SL.isEnabled"
+                                               [(ngModel)]="SL.partCertificationNumber"
+                                               [maxLength]="200">
+                                    </td>
+                                    <td>
+                                        <p-calendar class="pas-clder pas-clder-po-table"
+                                                    [maxDate]="currentDate"
+                                                    [disabled]="!SL.isEnabled"
+                                                    [showIcon]="true"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    [(ngModel)]="SL.certifiedDate"></p-calendar>
+                                    </td>
+                                    <td>
+                                        <p-calendar class="pas-clder pas-clder-po-table"
+                                                    [maxDate]="currentDate"
+                                                    [disabled]="!SL.isEnabled"
+                                                    [showIcon]="true"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    [(ngModel)]="SL.certifiedDueDate"></p-calendar>
+                                    </td>
+                                    <td>
+                                        <input class="form-control"
+                                               [(ngModel)]="SL.certifiedBy"
+                                               type="text" pInputText
+                                               [disabled]="!SL.isEnabled"
+                                               [maxLength]="200">
+                                    </td>
+                                    <td>
+                                        <p-calendar class="pas-clder pas-clder-po-table"
+                                                    [maxDate]="currentDate"
+                                                    [disabled]="!SL.isEnabled"
+                                                    [showIcon]="true"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    [(ngModel)]="SL.tagDate"></p-calendar>
+                                    </td>
+                                    <td>
+                                        <p-calendar class="pas-clder pas-clder-po-table"
+                                                    [showIcon]="true"
+                                                    [disabled]="!SL.isEnabled"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    [(ngModel)]="SL.expirationDate"></p-calendar>
+                                    </td>
+                                    <td>
+                                        <input class="form-control" type="text" [disabled]="!SL.isEnabled" [(ngModel)]="SL.shippingReference" pInputText [maxLength]="200">
+                                    </td>
+                                    <td>
+                                        <select class="form-control" required [(ngModel)]="SL.shippingViaId" [disabled]="!SL.isEnabled">
+                                            <option value="0">Select</option>
+                                            <option *ngFor="let shippingVia of ShippingViaList" [value]="shippingVia.Key">{{shippingVia.Value}}</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input class="form-control" type="text" [disabled]="!SL.isEnabled" [(ngModel)]="SL.shippingAccount" pInputText [maxLength]="200">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" type="text" [disabled]="!SL.isEnabled" [(ngModel)]="SL.engineSerialNumber" pInputText [maxLength]="200">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" disabled value="unknown field" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" disabled value="unknown field" />
+                                    </td>
+                                    <td>{{SL.glAccountText}}</td>
+                                    <td>
+                                        <input type="checkbox" disabled [checked]="part.itemMaster.isTimeLife != false" />
+                                    </td>
+                                    <td colspan="13" *ngIf="part.itemMaster.isTimeLife == false">
 
-                                <td>
-                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeSinceNew">
-                                </td>
+                                    </td>
+                                    <ng-container *ngIf="part.itemMaster.isTimeLife == true">
+                                        <td>
+                                            <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesRemaining">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesSinceNew">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesSinceOVH">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesSinceInspection">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Cycle" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].cyclesSinceRepair">
+                                        </td>
 
-                                <td>
-                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeSinceOVH">
-                                </td>
+                                        <td>
+                                            <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeRemaining">
+                                        </td>
 
-                                <td>
-                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeSinceInspection">
-                                </td>
+                                        <td>
+                                            <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeSinceNew">
+                                        </td>
 
-                                <td>
-                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeSinceRepair">
-                                </td>
+                                        <td>
+                                            <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeSinceOVH">
+                                        </td>
 
-                                <td>
-                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].lastSinceNew">
-                                </td>
+                                        <td>
+                                            <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeSinceInspection">
+                                        </td>
 
-                                <td>
-                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].lastSinceOVH">
-                                </td>
+                                        <td>
+                                            <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].timeSinceRepair">
+                                        </td>
 
-                                <td>
-                                    <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].lastSinceInspection">
-                                </td>
+                                        <td>
+                                            <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].lastSinceNew">
+                                        </td>
 
-                            </tr>
+                                        <td>
+                                            <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].lastSinceOVH">
+                                        </td>
+
+                                        <td>
+                                            <input class="form-control" [disabled]="!SL.isEnabled" placeholder="Hours" type="text" pInputText pKeyFilter="pnum" [(ngModel)]="part.timeLife[stockline_row_index].lastSinceInspection">
+                                        </td>
+                                    </ng-container>
+                                    
+
+                                </tr>
+
+                            </ng-container>
                         </ng-container>
-                    </ng-container>
+                        </ng-container>
 
                 </tbody>
             </table>

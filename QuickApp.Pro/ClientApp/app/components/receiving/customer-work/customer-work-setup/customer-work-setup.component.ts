@@ -413,12 +413,13 @@ export class CustomerWorkSetupComponent
     
     saveCustomerwork() {
         this.sourcereceving.isActive = true;
+        console.log(this.sourcereceving);
         if (!(this.sourcereceving.partNumber && this.sourcereceving.partDescription && this.sourcereceving.siteId && this.sourcereceving.customerId) ) {
             this.display = true;
             this.modelValue = true;
         }
         if ((this.sourcereceving.partNumber && this.sourcereceving.partDescription && this.sourcereceving.siteId && this.sourcereceving.customerId)) {
-
+            debugger
             this.isSaving = true;
 
             if (!this.sourcereceving.receivingCustomerWorkId) {
@@ -464,21 +465,23 @@ export class CustomerWorkSetupComponent
             }
 
             else {
-               
+                console.log(this.sourcereceving, 'edit');
+                this.sourcereceving.contactId = this.sourcereceving.customerContactId;
+
                 if ((this.sourcereceving.isTimeLife) && (this.sourcereceving.timeLifeCyclesId == null || this.sourcereceving.timeLifeCyclesId == undefined)) {
-                 
+
                     this.receivingCustomerWorkService.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
                         this.collectionofstockLine = data;
                         this.sourcereceving.timeLifeCyclesId = data.timeLifeCyclesId;
-                        this.sourcereceving.contactId = this.sourcereceving.customerContactId;
                         this.value = 1;
-                        if (data != null) {
-                            this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
-                                response => this.saveCompleted(this.sourcereceving),
-                                error => this.saveFailedHelper(error));
-                        }
+                        this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
+                            response => this.saveCompleted(this.sourcereceving),
+                            error => this.saveFailedHelper(error));
+
+
                     })
                 }
+
                 else {
                    
                     this.sourcereceving.contactId = this.sourcereceving.customerContactId;
@@ -494,7 +497,7 @@ export class CustomerWorkSetupComponent
 
               
                 //this._route.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
-                this.sourcereceving = {};
+                //this.sourcereceving = {};
             }
         }
     }

@@ -889,6 +889,7 @@
                         <th>Customer State</th>
                         <th>Postal Code</th>
                         <th>Country</th>
+                        <th>Is Active</th>
                         <th>Updated By</th>
                         <th>Last Updated Time</th>
                         <th>Created By</th>
@@ -909,6 +910,7 @@
                     <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'stateOrProvince', audit.stateOrProvince)  ? 'black' : 'red'  }">{{audit.stateOrProvince}}</td>
                     <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'postalCode', audit.postalCode)  ? 'black' : 'red'  }">{{audit.postalCode}}</td>
                     <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'countryName', audit.countryName)  ? 'black' : 'red'  }">{{audit.countryName}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
 
                     <td>{{audit.updatedBy}}</td>
                     <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>

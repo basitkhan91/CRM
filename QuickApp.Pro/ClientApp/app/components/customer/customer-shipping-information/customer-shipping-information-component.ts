@@ -9,6 +9,7 @@ import { CustomerInternationalShippingModel, CustomerInternationalShipVia } from
 import { getValueFromObjectByKey, getObjectById, editValueAssignByCondition } from '../../../generic/autocomplete';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { NgbModal, NgbActiveModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import * as $ from 'jquery';
 @Component({
     selector: 'app-customer-shipping-information',
     templateUrl: './customer-shipping-information.component.html',
@@ -47,9 +48,11 @@ export class CustomerShippingInformationComponent implements OnInit {
     interShippingauditHisory: any[];
     domesticShippingHeaders = [
         { field: 'siteName', header: 'Site Name' },
+
         { field: 'address1', header: 'Address1' },
         { field: 'address2', header: 'Address2' },
-      
+        { field: 'isPrimary', header: 'Is Primary' },
+
         { field: 'city', header: 'City' },
         { field: 'stateOrProvince', header: 'State Or Province' },
         { field: 'postalCode', header: 'Postal Code' },
@@ -222,9 +225,11 @@ export class CustomerShippingInformationComponent implements OnInit {
     //    })
     //}
     addDomesticShipping() {
+        this.isEditDomestic = false;
         this.domesticShippingInfo = new CustomerShippingModel();
     }
     addInternationalShipping() {
+        this.isEditInternational = false;
         this.internationalShippingInfo = new CustomerInternationalShippingModel();
     }
     //deleteDomesticShipping(rowData) {
@@ -472,6 +477,7 @@ export class CustomerShippingInformationComponent implements OnInit {
             this.customerService.updateInternationalShipping(data).subscribe(res => {
                 this.shipViaInternational = new CustomerInternationalShipVia();
                 this.getInternationalShippingByCustomerId()
+                this.isEditInternational = false;
                 this.alertService.showMessage(
                     'Success',
                     `Saved International Shipping Information Sucessfully `,
@@ -552,7 +558,28 @@ export class CustomerShippingInformationComponent implements OnInit {
         // this.getShipViaDataByInternationalShippingId();
 
     }
+    viewSelectedRowdbl(data) {
+        this.sourceViewforShipping = data;
+        $('#viewShipping').modal('show');
+    }
 
+    viewInterShipping(data) {
+        this.sourceViewforInterShipping = data;
+        $('#viewInter').modal('show');
+
+    }
+
+    toggledbldisplay(data) {
+        this.sourceViewforDomesticShippingVia = data;
+        $('#viewDomesticVia').modal('show');
+
+    }
+    toggledbldisplayShipVia(data) {
+        this.sourceViewforInterShippingVia = data;
+        $('#viewInterVia').modal('show');
+
+    }
+    
     async getInternationalShippingById(rowData) {
         
         await this.customerService.getInternationalShippingById(rowData.internationalShippingId).subscribe(res => {

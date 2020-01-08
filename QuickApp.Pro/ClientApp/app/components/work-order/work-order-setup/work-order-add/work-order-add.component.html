@@ -8,13 +8,13 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item" aria-current="page">Work Order</li>
-                                <li class="breadcrumb-item active" aria-current="page">Work Order Setup</li>
+                                <li class="breadcrumb-item active" aria-current="page">Create Work Order</li>
                                 <li *ngIf="isSubWorkOrder" class="breadcrumb-item active" aria-current="page">Sub WOrkOrder </li>
                             </ol>
                         </nav>
                         <div class="pheading">
-                            <h4 *ngIf="!isSubWorkOrder" class="page-heading">Work Order Setup</h4>
-                            <h4 *ngIf="isSubWorkOrder" class="page-heading">Sub Work Order Setup</h4>
+                            <h4 *ngIf="!isSubWorkOrder" class="page-heading">Work Order Create</h4>
+                            <h4 *ngIf="isSubWorkOrder" class="page-heading">Sub Work Order Create</h4>
                         </div>
                         <div class="clear"></div>
                         <div class="card">
@@ -179,7 +179,8 @@
                                                                 [size]="30" [minLength]="1"
                                                                 #customerName="ngModel"
                                                                 required
-                                                                [dropdown]="false" class="p-autoComplete-ctsm">
+
+                                                                [dropdown]="true" class="p-autoComplete-ctsm">
 
                                                 </p-autoComplete>
 
@@ -253,7 +254,7 @@
                                             <div class="form-group">
 
                                                 <label for="credit">
-                                                    Credit Terms &amp; Limit
+                                                    Credit Limit &amp; Term
                                                     <span class="clr-red">*</span>
                                                 </label>
                                                 <div class="col-md-12">
@@ -710,7 +711,7 @@
                             <li class="nav-item">
                                 <a id="pills-home-tab" role="tab" aria-controls="pills-home" aria-selected="true"
                                    [ngClass]="{active : gridActiveTab === 'labor'}"
-                                   (click)="gridTabChange('labor'); getWorkFlowLaborList(); ">labor</a>
+                                   (click)="gridTabChange('labor'); getWorkFlowLaborList(); ">Labor</a>
                             </li>
                             <li class="nav-item">
                                 <a id="pills-profile-tab" role="tab" aria-controls="pills-profile"
@@ -740,6 +741,11 @@
                                 <a id="pills-contact-tab" role="tab"
                                    [ngClass]="{active : gridActiveTab === 'billorInvoice'}"
                                    (click)="gridTabChange('billorInvoice'); billingCreateOrEdit();">Billing/Invoicing</a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="pills-contact-tab" role="tab"
+                                    [ngClass]="{active : gridActiveTab === 'quote'}"
+                                    (click)="gridTabChange('quote');">Quote</a>
                             </li>
                             <li class="nav-item">
                                 <a id="pills-contact-tab" role="tab" [ngClass]="{active : gridActiveTab === 'shipping'}"
@@ -861,9 +867,9 @@
 
                     </div>
 
-                    <div *ngIf="quote" [ngClass]="{hidedata : gridActiveTab !== 'quote' }">
+                    <!-- <div *ngIf="quote" [ngClass]="{hidedata : gridActiveTab !== 'quote' }">
                         <app-work-order-quote [quoteForm]="quote"></app-work-order-quote>
-                    </div>
+                    </div> -->
 
 
 
@@ -916,6 +922,14 @@
                     <div *ngIf="documents" [ngClass]="{hidedata: gridActiveTab !== 'documents'}">
                         <app-work-order-documents [documentForm]="documents"></app-work-order-documents>
                     </div>
+                    <div *ngIf="gridActiveTab == 'quote'">
+                        <div *ngIf="workOrderQuoteId == undefined" class="no-quote">
+                            Quote not yet created
+                        </div>
+                        <div *ngIf="workOrderQuoteId != undefined">
+                            <app-work-order-quote [workorderid]="workOrderId" isView="true"></app-work-order-quote>
+                        </div>
+                    </div>
 
 
                     <div *ngIf="workOrderId" class="wf-label-cstm" [ngClass]="{hidedataOthers :  subTabOtherOptions !== 'charges'} ">
@@ -935,6 +949,15 @@
                                                    (saveExclusionsListForWO)="saveWorkOrderExclusionsList($event)"
                                                    (updateExclusionsListForWO)="updateWorkOrderExclusionsList($event)"
                                                    (refreshData)="getExclusionListByWorkOrderId()"></app-work-order-exclusions>
+                    </div>
+                    <div *ngIf="workOrderId" class="wf-label-cstm" [ngClass]="{hidedataOthers :  subTabOtherOptions !== 'freight'} ">
+                        <app-work-order-freight [freightForm]="freight" 
+                        [workOrderFreightList]="workOrderFreightList" 
+                        [savedWorkOrderData]="savedWorkOrderData"
+                        (saveFreightListForWO)="saveWorkOrderFreightsList($event)"
+                        (updateFreightListForWo)="updateWorkOrderFreightsList($event)"
+                        (refreshData)="getFreightListByWorkOrderId()"
+                        ></app-work-order-freight>
                     </div>
 
 

@@ -44,6 +44,7 @@ import { WorkOrderQuoteService } from '../../../../services/work-order/work-orde
 import { CustomerViewComponent } from '../../../../shared/components/customer/customer-view/customer-view.component';
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators';
+// import { Freight } from '../../../../models/work-order-freight.model';
 
 @Component({
     selector: 'app-work-order-add',
@@ -119,6 +120,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     quote: WorkOrderQuote;
     // labor Object Modal
     labor = new WorkOrderLabor();
+    freight = [];
     isWorkOrder: boolean = true;
     data: any;
 
@@ -205,6 +207,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     csrList: any;
 
     private onDestroy$: Subject<void> = new Subject<void>();
+    workOrderFreightList: Object;
 
 
     constructor(
@@ -1253,7 +1256,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                         for (let task of this.taskList) {
 
                             if (task.taskId == labList['taskId']) {
-                                if (this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == undefined || this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == null) {
+                                if (this.labor.workOrderLaborList[0][task.description.toLowerCase()][0] && (this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == undefined || this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == null)) {
                                     this.labor.workOrderLaborList[0][task.description.toLowerCase()].splice(0, 1);
                                 }
                                 let taskData = new AllTasks()
@@ -1278,12 +1281,12 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 console.log(this.workOrderLaborList);
             })
         }
-        if(this.workOrderGeneralInformation.isSinglePN == true){
+        if (this.workOrderGeneralInformation.isSinglePN == true) {
             this.labor['employeeId'] = this.workOrderGeneralInformation.partNumbers[0]['technicianId'];
         }
-        else{
-            this.workOrderGeneralInformation.partNumbers.forEach(pn=>{
-                if(pn['id'] == this.workOrderPartNumberId){
+        else {
+            this.workOrderGeneralInformation.partNumbers.forEach(pn => {
+                if (pn['id'] == this.workOrderPartNumberId) {
                     this.labor['employeeId'] = pn['technicianId'];
                 }
             })
@@ -1299,6 +1302,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             this.getChargesListByWorkOrderId();
         } else if (value === 'exclusions') {
             this.getExclusionListByWorkOrderId();
+        } else if (value === 'freight') {
+            this.getFreightListByWorkOrderId();
         }
     }
 
@@ -1319,6 +1324,16 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
 
 
+    getExclusionListByWorkOrderId() {
+
+        if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
+            this.workOrderService.getWorkOrderExclusionsList(this.workFlowWorkOrderId, this.workOrderId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+                this.workOrderExclusionsList = res;
+            })
+
+        }
+
+    }
     saveWorkOrderExclusionsList(data) {
         const exclusionsArr = data.exclusions.map(x => {
             return {
@@ -1361,17 +1376,70 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
 
 
-    getExclusionListByWorkOrderId() {
 
+
+
+    getFreightListByWorkOrderId() {
         if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
-            this.workOrderService.getWorkOrderExclusionsList(this.workFlowWorkOrderId, this.workOrderId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
-                this.workOrderExclusionsList = res;
+            this.workOrderService.getWorkOrderFrieghtsList(this.workFlowWorkOrderId, this.workOrderId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+                this.workOrderFreightList = res;
             })
 
         }
-
     }
 
+    saveWorkOrderFreightsList(data) {
+        const freightsArr = data.map(x => {
+            return {
+                ...x,
+                masterCompanyId: 1,
+                isActive: true,
+                isDeleted: false,
+                createdDate: new Date(),
+                updatedDate: new Date(),
+                createdBy: this.userName,
+                updatedBy: this.userName,
+                workOrderId: this.workOrderId,
+                workFlowWorkOrderId: this.workFlowWorkOrderId,
+                estimtPercentOccurranceId: x.estimtPercentOccurrance
+            }
+        });
+        this.workOrderService.createWorkOrderFreightList(freightsArr).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+            this.freight = [];
+            this.alertService.showMessage(
+                this.moduleName,
+                'Saved Work Order Freight  Succesfully',
+                MessageSeverity.success
+            );
+            this.getFreightListByWorkOrderId();
+        })
+    }
+
+    updateWorkOrderFreightsList(data) {
+        const freightsArr = data.map(x => {
+            return {
+                ...x,
+                masterCompanyId: 1,
+                isActive: true,
+                isDeleted: false,
+
+                createdBy: this.userName,
+                updatedBy: this.userName,
+                workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId,
+                estimtPercentOccurranceId: x.estimtPercentOccurrance
+            }
+        });
+        this.workOrderService.updateWorkOrderFreightList(freightsArr).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+            this.freight = [];
+            this.alertService.showMessage(
+                this.moduleName,
+                'Updated Work Order Freight  Succesfully',
+                MessageSeverity.success
+            );
+            this.getFreightListByWorkOrderId();
+        })
+
+    }
 
 
     filterPartNumber(event) {

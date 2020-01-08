@@ -175,6 +175,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     radioItems: Array<string>;
     model = { option: '' };
     getAllAllStationInfodrpData;
+    isWorksInShop:boolean=false;
+    empIsWorksInShop:boolean=false;
 
 
     empCreationForm = new FormGroup({
@@ -1896,6 +1898,9 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         this.sourceAction.updatedBy = this.userName;
         this.sourceAction.description = this.employeeName;
         this.sourceAction.masterCompanyId = 1;
+        this.sourceAction.isWorksInShop=this.isWorksInShop;
+        
+       
         this.empservice.newAction(this.sourceAction).subscribe(data => {
 
             this.showTitle = 'Employee Expertise Added Sucessfully';
@@ -2746,5 +2751,37 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
             this.getAllAllStationInfodrpData = res;          
             
         });        
+    }
+
+    onChangeemployeeExpertiseId(event)
+    {       
+        if (event.target.value != "") {
+            let value = event.target.value;
+            value = value.split(":");
+            if (this.allEmployeeExpertiseInfo) {
+                for (let i = 0; i < this.allEmployeeExpertiseInfo.length; i++) {
+                    if (value[1] == this.allEmployeeExpertiseInfo[i].employeeExpertiseId) {
+                        this.empIsWorksInShop = this.allEmployeeExpertiseInfo[i].isWorksInShop;     
+                       
+                        if(this.empIsWorksInShop===true)
+                        {
+                            this.yearly = false;
+                            this.hourly = true;
+                            this.model = { option: 'Hourly' };
+                        }
+                        else{
+                            this.hourly = false;
+                            this.yearly = true;
+                            this.model = { option: 'Monthly' };
+                        }
+                    }
+                }
+            }
+            
+            //alert(this.employeeExpertiseId)
+
+        }
+      
+
     }
 }

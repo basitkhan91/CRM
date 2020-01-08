@@ -34,7 +34,7 @@
 
             <div class="table-responsive">
                 <!--<p class="lead"></p>-->
-                <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="domesticShippingData"
+                <p-table #dt class="rpo-table-cstm" [value]="domesticShippingData"
                          [(selection)]="selectedrowsFromDomestic"
                          [metaKeySelection]="true"
                          [rows]="10"
@@ -79,7 +79,7 @@
                     </ng-template>
 
                     <ng-template pTemplate="body" let-rowData let-columns="columns">
-                        <tr [pSelectableRow]="rowData">
+                        <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="viewSelectedRowdbl(rowData)" [ngStyle]="{'background-color' : rowData.isPrimary === true ? '#79ffe3'  : 'white'  }">
                             <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                 {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                             </td>
@@ -87,7 +87,7 @@
                                 <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForShipping(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                 <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForShipping(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                 <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForShipping(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openShippinggView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                                <span data-toggle="modal" data-target="#viewShipping"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openShippinggView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
 
                                 <button class="btn-edit" mat-icon-button (click)="openEditDomestic(rowData)" matTooltip="edit" data-toggle="modal" data-target="#addShippingInfo">
                                     <mat-icon>edit</mat-icon>
@@ -129,7 +129,7 @@
                 <div class="clear"></div>
 
                 <div class="table-responsive">
-                    <p-table #dt class="rpo-table-cstm rro-table-cstm"
+                    <p-table #dt class="rro-table-cstm"
                              name="internationalTable"
                              [metaKeySelection]="true"
                              [lazy]="true"
@@ -178,10 +178,11 @@
                         </ng-template>
 
                         <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                            <tr [pSelectableRow]="rowData">
+                            <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="viewInterShipping(rowData)" [ngStyle]="{'background-color' : rowData.isPrimary === true ? '#79ffe3'  : 'white'  }">
                                 <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                    {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                    {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'expirationDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'startDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                 </td>
+                               
                                 <td>
                                     <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActiveIS{{rowIndex}}" (onChange)="updateActiveorInActiveForIS(rowData)"></p-inputSwitch>
                                     <span data-toggle="modal" data-target="#viewInter"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openInterShippingView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
@@ -445,7 +446,7 @@
 </ng-template>
 
 <!-- The Modal -->
-<div *ngIf="sourceViewforShipping" class="modal" id="view" #view data-backdrop="static">
+<div  class="modal" id="viewShipping"  data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -456,7 +457,7 @@
             </div>
 
             <!-- Modal body -->
-            <div class="modal-body">
+            <div class="modal-body" *ngIf="sourceViewforShipping">
                 <div class="col-sm-12">
                     <p><span class="label"><b>Site Name: </b></span><span class="value">{{sourceViewforShipping.siteName}}</span></p>
                     <p><span class="label"><b>Ship To Address 1: </b></span><span class="value">{{sourceViewforShipping.address1}}</span></p>
@@ -670,7 +671,7 @@
     </div>
 </div>
 
-<div *ngIf="sourceViewforInterShipping" class="modal" id="viewInter" data-backdrop="static">
+<div  class="modal" id="viewInter" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -681,7 +682,7 @@
             </div>
 
             <!-- Modal body -->
-            <div class="modal-body">
+            <div class="modal-body" *ngIf="sourceViewforInterShipping">
                 <div class="col-sm-12">
                     <p><span class="label"><b>Export License#: </b></span><span class="value">{{sourceViewforInterShipping.exportLicense}}</span></p>
                     <p><span class="label"><b>Description: </b></span><span class="value">{{sourceViewforInterShipping.description}}</span></p>
@@ -781,7 +782,7 @@
                     </ng-template>
 
                     <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                        <tr [pSelectableRow]="rowData">
+                        <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="toggledbldisplay(rowData)">
                             <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                 {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                             </td>
@@ -944,8 +945,8 @@
                                 <label>Shipping Url <span class="clr-red"></span></label>
                                 <input class="form-control" type="text" name="shippingURL" [(ngModel)]="shipViaInternational.shippingURL">
                             </div>
-                        </div>-->
-                        <!--<div class="col-md-2" style="display:none">
+                        </div>
+                        <div class="col-md-2" style="display:none">
                             <div class="form-group">
                                 <label>Shipping ID <span class="clr-red">*</span></label>
                                 <input class="form-control" type="text" name="shippingId" [(ngModel)]="shipViaInternational.shippingId" required>
@@ -1000,7 +1001,7 @@
                     </ng-template>
 
                     <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                        <tr [pSelectableRow]="rowData">
+                        <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="toggledbldisplayShipVia(rowData)">
                             <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                 {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                             </td>
@@ -1086,7 +1087,7 @@
     </div>
 </div>
 
-<div *ngIf="sourceViewforInterShippingVia" class="modal" id="viewInterVia" data-backdrop="static">
+<div  class="modal" id="viewInterVia" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -1097,16 +1098,16 @@
             </div>
 
             <!-- Modal body -->
-            <div class="modal-body">
+            <div class="modal-body" *ngIf="sourceViewforInterShippingVia">
                 <div class="col-sm-12">
 
                     <p><span class="label"><b>Ship Via: </b></span><span class="value">{{sourceViewforInterShippingVia.shipVia}}</span></p>
                     <p><span class="label"><b>Shipping Account Info: </b></span><span class="value">{{sourceViewforInterShippingVia.shippingAccountInfo}}</span></p>
 
-                    <p><span class="label"><b>Shipping URL: </b></span><span class="value">{{sourceViewforInterShippingVia.shippingURL}}</span></p>
+                    <!--<p><span class="label"><b>Shipping URL: </b></span><span class="value">{{sourceViewforInterShippingVia.shippingURL}}</span></p>
 
 
-                    <p><span class="label"><b>ShippingId: </b></span><span class="value">{{sourceViewforInterShippingVia.shippingId}}</span></p>
+                    <p><span class="label"><b>ShippingId: </b></span><span class="value">{{sourceViewforInterShippingVia.shippingId}}</span></p>-->
                     <p><span class="label"><b>Memo: </b></span><span class="value">{{sourceViewforInterShippingVia.memo}}</span></p>
 
                     <div class="clear"></div>
@@ -1122,7 +1123,7 @@
     </div>
 </div>
 
-<div *ngIf="sourceViewforDomesticShippingVia" class="modal" id="viewDomesticVia" data-backdrop="static">
+<div class="modal" id="viewDomesticVia" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -1134,7 +1135,7 @@
 
             <!-- Modal body -->
             <div class="modal-body">
-                <div class="col-sm-12">
+                <div class="col-sm-12"  *ngIf="sourceViewforDomesticShippingVia">
 
                     <p><span class="label"><b>Ship Via: </b></span><span class="value">{{sourceViewforDomesticShippingVia.shipVia}}</span></p>
                     <p><span class="label"><b>Shipping Account Info: </b></span><span class="value">{{sourceViewforDomesticShippingVia.shippingAccountInfo}}</span></p>
