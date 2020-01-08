@@ -321,7 +321,11 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 
 				this.sourceLegalEntity.masterCompanyId = 1;
 				this.workFlowtService.newAddEntity(this.sourceLegalEntity).subscribe(data => {
-					this.alertService.showMessage('Legal Entity added successfully.');
+					this.alertService.showMessage(
+						'Success',
+						'Legal Entity added successfully.',
+						MessageSeverity.success
+						);
 					this.loadData();
 
 				});
@@ -332,7 +336,11 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 				this.sourceLegalEntity.updatedBy = this.userName;
 				this.sourceLegalEntity.masterCompanyId = 1;
 				this.workFlowtService.updateEntity(this.sourceLegalEntity).subscribe(data => {
-					this.alertService.showMessage('Legal Entity updated successfully.');
+					this.alertService.showMessage(
+						'Success',
+						'Legal Entity updated successfully.',
+						MessageSeverity.success
+						);
 					this.loadData();
 				});
 			}
