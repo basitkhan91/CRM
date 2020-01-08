@@ -515,11 +515,11 @@
                                 <div class="form-group">
                                     <label>Bill To Country <span class="clr-red">*</span></label>
                                     <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                        <p-autoComplete class="pautocomp-cstm" (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event) [(ngModel)]="sourceVendor.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
+                                        <p-autoComplete field="nice_name" class="pautocomp-cstm" (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event) [(ngModel)]="sourceVendor.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
                                             [minLength]="1" [dropdown]="true">
-                                            <ng-template let-nice_name pTemplate="item">
+                                            <!-- <ng-template let-nice_name pTemplate="item">
                                                 <div class="ui-helper-clearfix">{{nice_name}}</div>
-                                            </ng-template>
+                                            </ng-template> -->
                                         </p-autoComplete>
                                     </div>
                                     <!-- <div *ngIf="disablesave" style="color:red">Please Select From DropDown</div> -->
