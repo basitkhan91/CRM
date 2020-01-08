@@ -156,72 +156,76 @@
                                     </div>
 
                                     <div class="col-md-7">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label class="fs12">
-                                                    Tax Type
-                                                </label>
-                                                <span style="margin-left:3px;cursor:pointer;">
+                                        <div class="card">
+                                            <div class="form-row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label class="fs12">
+                                                            Tax Type
+                                                        </label>
+                                                        <span style="margin-left:3px;cursor:pointer;">
 
-                                                    <a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addTaxType"></a>
+                                                            <a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addTaxType"></a>
 
-                                                </span>
-                                                <select name="taxType" [(ngModel)]="selectedTaxType">
-                                                    <option value="0">select</option>
-                                                    <option *ngFor="let Percentlist of taxTypeList" [ngValue]="Percentlist.value">{{Percentlist.label}}</option>
-                                                </select>
-                                                <!--<p-dropdown class="p-dropdown-custom" [options]="taxTypeList" placeholder="Select TaxType" name="taxType" [(ngModel)]="selectedTaxType"></p-dropdown>-->
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label class="fs12">
-                                                    Tax Rate
-                                                </label>
-                                                <span style="margin-left:3px;cursor:pointer;">
+                                                        </span>
+                                                        <select name="taxType" [(ngModel)]="selectedTaxType">
+                                                            <option value="">select</option>
+                                                            <option *ngFor="let Percentlist of taxTypeList" [ngValue]="Percentlist.value">{{Percentlist.label}}</option>
+                                                        </select>
+                                                        <!--<p-dropdown class="p-dropdown-custom" [options]="taxTypeList" placeholder="Select TaxType" name="taxType" [(ngModel)]="selectedTaxType"></p-dropdown>-->
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label class="fs12">
+                                                            Tax Rate
+                                                        </label>
+                                                        <span style="margin-left:3px;cursor:pointer;">
 
-                                                    <a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addTaxRate"></a>
+                                                            <a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addTaxRate"></a>
 
-                                                </span>
-                                                <!--<select name="selectedTaxRates" [(ngModel)]="selectedTaxRates">
-                                                    <option value="">select</option>
-                                                    <option *ngFor="let Percentlist of taxRatesList" [ngValue]="Percentlist.value">{{Percentlist.label}}</option>
-                                                </select>-->
-                                                <p-multiSelect class="autocomp-customer-cstm" [options]="taxRatesList" name="taxRates" [(ngModel)]="selectedTaxRates"></p-multiSelect>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="form-group">
-                                            <button class="btn btn-primary mtop20" (click)="mapTaxTypeandRate()">
-                                                Add
-                                            </button>
-                                        </div>
-
-                                        <p-table [value]="taxTypeRateMapping" [paginator]="true" [rows]="3" *ngIf="taxTypeRateMapping.length>0">
-                                            <ng-template pTemplate="header">
-                                                <tr>
-                                                    <!-- <th>S.No</th> -->
-                                                    <th>TaxType</th>
-                                                    <th>TaxRate</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </ng-template>
-                                            <ng-template pTemplate="body" let-t>
-                                                <tr>
-                                                    <!-- {{($index + 1) + (currentPage - 1) * itemsPerPage}} -->
-                                                    <!-- <td>  {{(0 + 1) + (1 - 1) * 3}} </td> -->
-
-                                                    <td>{{t.taxType}}</td>
-                                                    <td>{{t.taxRate}}</td>
-                                                    <td>
-                                                        <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="deleteTaxTypeRate(deleteContent1,t);">
-                                                            <mat-icon color="warn">delete</mat-icon>
+                                                        </span>
+                                                        <select name="taxRates" [(ngModel)]="selectedTaxRates">
+                                                            <option value="">select</option>
+                                                            <option *ngFor="let Percentlist of taxRatesList" [ngValue]="Percentlist.value">{{Percentlist.label}}</option>
+                                                        </select>
+                                                        <!-- <p-multiSelect class="autocomp-customer-cstm" [options]="taxRatesList" name="taxRates" [(ngModel)]="selectedTaxRates"></p-multiSelect> -->
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <button class="btn btn-primary mtop20" (click)="mapTaxTypeandRate()">
+                                                            Add
                                                         </button>
-                                                    </td>
-                                                </tr>
-                                            </ng-template>
-                                        </p-table>
+                                                    </div>
+                                                </div>
+                                            </div><!--/Form-row for Add Tax Info-->                                           
+                                            
+                                            <p-table [value]="taxTypeRateMapping" [paginator]="true" [rows]="3" *ngIf="taxTypeRateMapping.length>0">
+                                                <ng-template pTemplate="header">
+                                                    <tr>
+                                                        <!-- <th>S.No</th> -->
+                                                        <th>TaxType</th>
+                                                        <th>TaxRate</th>
+                                                        <th width="20%">Action</th>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body" let-t>
+                                                    <tr>
+                                                        <!-- {{($index + 1) + (currentPage - 1) * itemsPerPage}} -->
+                                                        <!-- <td>  {{(0 + 1) + (1 - 1) * 3}} </td> -->
+
+                                                        <td>{{t.taxType}}</td>
+                                                        <td>{{t.taxRate}}</td>
+                                                        <td>
+                                                            <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="deleteTaxTypeRate(deleteContent1,t);">
+                                                                <mat-icon color="warn">delete</mat-icon>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </div><!--Card of Tax Types-->
                                     </div>
                                 </div>
                             </div>
