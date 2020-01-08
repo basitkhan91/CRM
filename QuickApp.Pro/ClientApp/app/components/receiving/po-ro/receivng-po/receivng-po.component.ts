@@ -773,7 +773,7 @@ export class ReceivngPoComponent implements OnInit {
                 stockLine.purchaseOrderUnitCost = 0;
                 stockLine.purchaseOrderExtendedCost = part.unitCost;
                 stockLine.currentDate = new Date();
-                stockLine.obtainFromType = 3;
+                stockLine.obtainFromType = 3; // default is vendor and set the value from purchase order.
                 stockLine.obtainFrom = this.purchaseOrderData.vendor.vendorId.toString();
                 stockLine.obtainFromObject = this.VendorList.find(x => x.Key == this.purchaseOrderData.vendor.vendorId.toString());
 
@@ -824,6 +824,12 @@ export class ReceivngPoComponent implements OnInit {
             stockLine.obtainFromType = 3;
             stockLine.obtainFrom = this.purchaseOrderData.vendor.vendorId.toString();
             stockLine.obtainFromObject = this.VendorList.find(x => x.Key == this.purchaseOrderData.vendor.vendorId.toString());
+            if (this.purchaseOrderData.billToUserType == 1 || this.purchaseOrderData.billToUserType == 2) {
+                stockLine.ownerType = this.purchaseOrderData.billToUserType == 2 ? 3 : this.purchaseOrderData.billToUserType;
+                stockLine.owner = this.purchaseOrderData.billToUserId.toString();
+                stockLine.ownerObject = stockLine.ownerType == 1 ? this.CustomerList.find(x => x.Key == this.purchaseOrderData.billToUserId.toString())
+                    : this.VendorList.find(x => x.Key == this.purchaseOrderData.billToUserId.toString());
+            }
 
             if (part.itemMaster != undefined) {
                 stockLine.purchaseOrderUnitCost = part.unitCost;
