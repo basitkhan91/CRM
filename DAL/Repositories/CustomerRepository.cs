@@ -42,8 +42,10 @@ namespace DAL.Repositories
 
             var totalRecords = (from t in _appContext.Customer
                                 join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
-                                join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
-                                join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                                join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId into ctt
+                                from ct in ctt.DefaultIfEmpty()
+                                join ad in _appContext.Address on t.AddressId equals ad.AddressId into add 
+                                from ad in add.DefaultIfEmpty()
                                 join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
                                 from custContacts in custinfo.DefaultIfEmpty()
                                 join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
@@ -73,8 +75,10 @@ namespace DAL.Repositories
                         join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
                         join AccountTyp in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals AccountTyp.CustomerAffiliationId
 
-                        join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
-                        join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                        join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId into ctt
+                        from ct in ctt.DefaultIfEmpty()
+                        join ad in _appContext.Address on t.AddressId equals ad.AddressId into add
+                        from ad in add.DefaultIfEmpty()
                         join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
                         from custContacts in custinfo.DefaultIfEmpty()
                         join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
