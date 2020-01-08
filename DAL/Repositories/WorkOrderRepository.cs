@@ -298,18 +298,18 @@ namespace DAL.Repositories
                                 join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId
                                 where wo.IsDeleted == false
                                 && wo.WorkOrderNum.Contains(!String.IsNullOrEmpty(woFilters.filters.WorkOrderNum) ? woFilters.filters.WorkOrderNum : wo.WorkOrderNum)
-                                && im.PartNumber.Contains(!String.IsNullOrEmpty(woFilters.filters.PartNos) ? woFilters.filters.PartNos : im.PartNumber)
-                                && im.PartDescription.Contains(!String.IsNullOrEmpty(woFilters.filters.PNDescription) ? woFilters.filters.PNDescription : im.PartDescription)
-                                && ws.Description.Contains(!String.IsNullOrEmpty(woFilters.filters.WorkScope) ? woFilters.filters.WorkScope : ws.Description)
-                                && pr.Description.Contains(!String.IsNullOrEmpty(woFilters.filters.Priority) ? woFilters.filters.Priority : pr.Description)
+                                && im.PartNumber.Contains(!String.IsNullOrEmpty(woFilters.filters.PartNoType) ? woFilters.filters.PartNoType : im.PartNumber)
+                                && im.PartDescription.Contains(!String.IsNullOrEmpty(woFilters.filters.PNDescriptionType) ? woFilters.filters.PNDescriptionType : im.PartDescription)
+                                && ws.Description.Contains(!String.IsNullOrEmpty(woFilters.filters.WorkScopeType) ? woFilters.filters.WorkScopeType : ws.Description)
+                                && pr.Description.Contains(!String.IsNullOrEmpty(woFilters.filters.PriorityType) ? woFilters.filters.PriorityType : pr.Description)
                                 && cust.Name.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerName) ? woFilters.filters.CustomerName : cust.Name)
                                 && ca.description.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerType) ? woFilters.filters.CustomerType : ca.description)
                                 && wo.OpenDate.Date == (woFilters.filters.OpenDate != null ? woFilters.filters.OpenDate : wo.OpenDate.Date)
-                                && wop.CustomerRequestDate.Date == (woFilters.filters.CustomerRequestDate != null ? woFilters.filters.CustomerRequestDate : wop.CustomerRequestDate.Date)
-                                && wop.PromisedDate.Date == (woFilters.filters.PromisedDate != null ? woFilters.filters.PromisedDate : wop.PromisedDate.Date)
-                                && wop.EstimatedShipDate.Date == (woFilters.filters.EstimatedShipDate != null ? woFilters.filters.EstimatedShipDate : wop.EstimatedShipDate.Date)
-                                && wop.EstimatedCompletionDate.Date == (woFilters.filters.EstimatedCompletionDate != null ? woFilters.filters.EstimatedCompletionDate : wop.EstimatedCompletionDate.Date)
-                                && stage.Description.Contains(!String.IsNullOrEmpty(woFilters.filters.Stage) ? woFilters.filters.Stage : stage.Description)
+                                && wop.CustomerRequestDate.Date == (woFilters.filters.CustomerRequestDateType != null ? woFilters.filters.CustomerRequestDateType : wop.CustomerRequestDate.Date)
+                                && wop.PromisedDate.Date == (woFilters.filters.PromisedDateType != null ? woFilters.filters.PromisedDateType : wop.PromisedDate.Date)
+                                && wop.EstimatedShipDate.Date == (woFilters.filters.EstimatedShipDateType != null ? woFilters.filters.EstimatedShipDateType : wop.EstimatedShipDate.Date)
+                                && wop.EstimatedCompletionDate.Date == (woFilters.filters.EstimatedCompletionDateType != null ? woFilters.filters.EstimatedCompletionDateType : wop.EstimatedCompletionDate.Date)
+                                && stage.Stage.Contains(!String.IsNullOrEmpty(woFilters.filters.StageType) ? woFilters.filters.StageType : stage.Stage)
                                 && wo.WorkOrderStatusId == (statusId > 0 ? statusId : wo.WorkOrderStatusId)
                                 select new
                                 {
@@ -333,18 +333,18 @@ namespace DAL.Repositories
 
                                 where wo.IsDeleted == false
                                 && wo.WorkOrderNum.Contains(!String.IsNullOrEmpty(woFilters.filters.WorkOrderNum) ? woFilters.filters.WorkOrderNum : wo.WorkOrderNum)
-                                && im.PartNumber.Contains(!String.IsNullOrEmpty(woFilters.filters.PartNos) ? woFilters.filters.PartNos : im.PartNumber)
-                                && im.PartDescription.Contains(!String.IsNullOrEmpty(woFilters.filters.PNDescription) ? woFilters.filters.PNDescription : im.PartDescription)
-                                && ws.Description.Contains(!String.IsNullOrEmpty(woFilters.filters.WorkScope) ? woFilters.filters.WorkScope : ws.Description)
-                                && pr.Description.Contains(!String.IsNullOrEmpty(woFilters.filters.Priority) ? woFilters.filters.Priority : pr.Description)
+                                && im.PartNumber.Contains(!String.IsNullOrEmpty(woFilters.filters.PartNoType) ? woFilters.filters.PartNoType : im.PartNumber)
+                                && im.PartDescription.Contains(!String.IsNullOrEmpty(woFilters.filters.PNDescriptionType) ? woFilters.filters.PNDescriptionType : im.PartDescription)
+                                && ws.Description.Contains(!String.IsNullOrEmpty(woFilters.filters.WorkScopeType) ? woFilters.filters.WorkScopeType : ws.Description)
+                                && pr.Description.Contains(!String.IsNullOrEmpty(woFilters.filters.PriorityType) ? woFilters.filters.PriorityType : pr.Description)
                                 && cust.Name.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerName) ? woFilters.filters.CustomerName : cust.Name)
                                 && ca.description.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerType) ? woFilters.filters.CustomerType : ca.description)
                                 && wo.OpenDate.Date == (woFilters.filters.OpenDate != null ? woFilters.filters.OpenDate : wo.OpenDate.Date)
-                                && wop.CustomerRequestDate.Date == (woFilters.filters.CustomerRequestDate != null ? woFilters.filters.CustomerRequestDate : wop.CustomerRequestDate.Date)
-                                && wop.PromisedDate.Date == (woFilters.filters.PromisedDate != null ? woFilters.filters.PromisedDate : wop.PromisedDate.Date)
-                                && wop.EstimatedShipDate.Date == (woFilters.filters.EstimatedShipDate != null ? woFilters.filters.EstimatedShipDate : wop.EstimatedShipDate.Date)
-                                && wop.EstimatedCompletionDate.Date == (woFilters.filters.EstimatedCompletionDate != null ? woFilters.filters.EstimatedCompletionDate : wop.EstimatedCompletionDate.Date)
-                                && stage.Description.Contains(!String.IsNullOrEmpty(woFilters.filters.Stage) ? woFilters.filters.Stage : stage.Description)
+                                && wop.CustomerRequestDate.Date == (woFilters.filters.CustomerRequestDateType != null ? woFilters.filters.CustomerRequestDateType : wop.CustomerRequestDate.Date)
+                                && wop.PromisedDate.Date == (woFilters.filters.PromisedDateType != null ? woFilters.filters.PromisedDateType : wop.PromisedDate.Date)
+                                && wop.EstimatedShipDate.Date == (woFilters.filters.EstimatedShipDateType != null ? woFilters.filters.EstimatedShipDateType : wop.EstimatedShipDate.Date)
+                                && wop.EstimatedCompletionDate.Date == (woFilters.filters.EstimatedCompletionDateType != null ? woFilters.filters.EstimatedCompletionDateType : wop.EstimatedCompletionDate.Date)
+                                && stage.Stage.Contains(!String.IsNullOrEmpty(woFilters.filters.StageType) ? woFilters.filters.StageType : stage.Stage)
                                 && wo.WorkOrderStatusId == (statusId > 0 ? statusId : wo.WorkOrderStatusId)
                                 select new
                                 {
@@ -470,18 +470,18 @@ namespace DAL.Repositories
 
                                 where wo.IsDeleted == false
                                 && wo.WorkOrderNum.Contains(!String.IsNullOrEmpty(woFilters.filters.WorkOrderNum) ? woFilters.filters.WorkOrderNum : wo.WorkOrderNum)
-                                && im.PartNumber.Contains(!String.IsNullOrEmpty(woFilters.filters.PartNos) ? woFilters.filters.PartNos : im.PartNumber)
-                                && im.PartDescription.Contains(!String.IsNullOrEmpty(woFilters.filters.PNDescription) ? woFilters.filters.PNDescription : im.PartDescription)
-                                && ws.Description.Contains(!String.IsNullOrEmpty(woFilters.filters.WorkScope) ? woFilters.filters.WorkScope : ws.Description)
-                                && pr.Description.Contains(!String.IsNullOrEmpty(woFilters.filters.Priority) ? woFilters.filters.Priority : pr.Description)
+                                && im.PartNumber.Contains(!String.IsNullOrEmpty(woFilters.filters.PartNoType) ? woFilters.filters.PartNoType : im.PartNumber)
+                                && im.PartDescription.Contains(!String.IsNullOrEmpty(woFilters.filters.PNDescriptionType) ? woFilters.filters.PNDescriptionType : im.PartDescription)
+                                && ws.Description.Contains(!String.IsNullOrEmpty(woFilters.filters.WorkScopeType) ? woFilters.filters.WorkScopeType : ws.Description)
+                                && pr.Description.Contains(!String.IsNullOrEmpty(woFilters.filters.PriorityType) ? woFilters.filters.PriorityType : pr.Description)
                                 && cust.Name.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerName) ? woFilters.filters.CustomerName : cust.Name)
                                 && ca.description.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerType) ? woFilters.filters.CustomerType : ca.description)
                                 && wo.OpenDate.Date == (woFilters.filters.OpenDate != null ? woFilters.filters.OpenDate : wo.OpenDate.Date)
-                                && wop.CustomerRequestDate.Date == (woFilters.filters.CustomerRequestDate != null ? woFilters.filters.CustomerRequestDate : wop.CustomerRequestDate.Date)
-                                && wop.PromisedDate.Date == (woFilters.filters.PromisedDate != null ? woFilters.filters.PromisedDate : wop.PromisedDate.Date)
-                                && wop.EstimatedShipDate.Date == (woFilters.filters.EstimatedShipDate != null ? woFilters.filters.EstimatedShipDate : wop.EstimatedShipDate.Date)
-                                && wop.EstimatedCompletionDate.Date == (woFilters.filters.EstimatedCompletionDate != null ? woFilters.filters.EstimatedCompletionDate : wop.EstimatedCompletionDate.Date)
-                                && stage.Description.Contains(!String.IsNullOrEmpty(woFilters.filters.Stage) ? woFilters.filters.Stage : stage.Description)
+                                && wop.CustomerRequestDate.Date == (woFilters.filters.CustomerRequestDateType != null ? woFilters.filters.CustomerRequestDateType : wop.CustomerRequestDate.Date)
+                                && wop.PromisedDate.Date == (woFilters.filters.PromisedDateType != null ? woFilters.filters.PromisedDateType : wop.PromisedDate.Date)
+                                && wop.EstimatedShipDate.Date == (woFilters.filters.EstimatedShipDateType != null ? woFilters.filters.EstimatedShipDateType : wop.EstimatedShipDate.Date)
+                                && wop.EstimatedCompletionDate.Date == (woFilters.filters.EstimatedCompletionDateType != null ? woFilters.filters.EstimatedCompletionDateType : wop.EstimatedCompletionDate.Date)
+                                && stage.Stage.Contains(!String.IsNullOrEmpty(woFilters.filters.StageType) ? woFilters.filters.StageType : stage.Stage)
                                 && wo.WorkOrderStatusId == (statusId > 0 ? statusId : wo.WorkOrderStatusId)
                                 select new
                                 {
@@ -701,7 +701,7 @@ namespace DAL.Repositories
                                         || pr.Description.Contains(filterText)
                                         || cust.Name.Contains(filterText)
                                         || ca.description.Contains(filterText)
-                                        || stage.Description.Contains(filterText)
+                                        || stage.Stage.Contains(filterText)
                                         || wo.WorkOrderStatusId == statusId)
                                         select new
                                         {
@@ -730,7 +730,7 @@ namespace DAL.Repositories
                                 || pr.Description.Contains(filterText)
                                 || cust.Name.Contains(filterText)
                                 || ca.description.Contains(filterText)
-                                || stage.Description.Contains(filterText)
+                                || stage.Stage.Contains(filterText)
                                 || wo.WorkOrderStatusId == statusId)
                                 select new
                                 {
@@ -1247,7 +1247,7 @@ namespace DAL.Repositories
                                 swo.OpenDate,
                                 swo.EstCompDate,
                                 swo.StageId,
-                                WorkOrderStage = stage.Description,
+                                WorkOrderStage = stage.Stage,
                                 swo.StatusId,
                                 WorkOrderStatus = status.Description,
                                 swo.CMMId,
@@ -1291,7 +1291,7 @@ namespace DAL.Repositories
                                 MasterPartDescription = im.PartDescription,
                                 wo.OpenDate,
                                 swo.NeedDate,
-                                Stage = stage.Description,
+                                Stage = stage.Stage,
                                 swo.WorkOrderId,
                                 swo.SubWorkOrderId,
                                 wowf.WorkFlowWorkOrderId
@@ -1346,7 +1346,7 @@ namespace DAL.Repositories
                                 wo.OpenDate,
                                 wop.EstimatedCompletionDate,
                                 StageId = wop.WorkOrderStageId,
-                                WorkOrderStage = stage.Description,
+                                WorkOrderStage = stage.Stage,
                                 StatusId = wop.WorkOrderStatusId,
                                 WorkOrderStatus = status.Description,
                                 CMMId = wop.CMMId,
