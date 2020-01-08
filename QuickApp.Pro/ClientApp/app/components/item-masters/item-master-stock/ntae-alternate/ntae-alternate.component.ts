@@ -71,19 +71,12 @@ export class NTAEAlternateComponent implements OnInit {
 
 
     constructor(public itemser: ItemMasterService, private _actRoute: ActivatedRoute, private alertService: AlertService,  private configurations: ConfigurationService){
-             
+        this.itemMasterId = this._actRoute.snapshot.params['id'];
+
     }
    
     ngOnInit(){
-        this.itemMasterId = this._actRoute.snapshot.params['id'];
-        if(this.itemMasterId !== undefined){
-            this.getItemMasterDetailById();
-            this.getalterqquparts();
-            this.getNtaeData(true);
-            this.ptnumberlistdata();
-            this.manufacturerdata();
-
-        }   
+         
     }
     ngOnChanges(changes: SimpleChanges) {
         for (let property in changes) {
@@ -91,6 +84,14 @@ export class NTAEAlternateComponent implements OnInit {
                 this.filterItemMaster = {};
                 this.selectedTab = changes[property].currentValue
                 this.checkTheCurrentTab(this.selectedTab);
+                if(this.itemMasterId !== undefined){
+                    this.getItemMasterDetailById();
+                    this.getalterqquparts();
+                    // this.getNtaeData(true);
+                    this.ptnumberlistdata();
+                    this.manufacturerdata();
+        
+                }  
             //   console.log('Current: ', changes[property].currentValue);
             }
           }
@@ -112,7 +113,10 @@ export class NTAEAlternateComponent implements OnInit {
             this.ntaeTableColumns = this.equivalencyTableColumns
             this.selectedNTAETabId = 2
         }
-        this.getNtaeData(true);
+        if(this.itemMasterId !== undefined){
+            this.getNtaeData(true);
+        }
+        
         this.filterItemMaster = {};
     }
 
@@ -138,6 +142,8 @@ export class NTAEAlternateComponent implements OnInit {
     }
     getNtaeData(status: boolean){
         this.filterManufacturerData = [];
+        this.filterDiscriptionData = [];
+        this.filterPartItemClassificationData = [];
         let reqData = {  
                 first:0,
                 rows:10,
@@ -157,18 +163,24 @@ export class NTAEAlternateComponent implements OnInit {
 
                     this.ntaeData = res;
                     for(let i = 0; i<this.ntaeData.length; i++){
+
+                        if(this.ntaeData[i].attachmentDetails){
+                            this.ntaeData[i]["fileName"]= this.ntaeData[i].attachmentDetails.ad.fileName
+                        }
                        
                         this.filterManufacturerData.push({
                             label: this.ntaeData[i].manufacturer, value : this.ntaeData[i].manufacturerId
                         })
-                        if(this.selectedNTAETabId == 2){
-                            this.filterPartItemClassificationData.push({
-                                label: this.ntaeData[i].itemClassification, value :this.ntaeData[i].itemClassificationId
-                            })
-                        }
+                        this.filterDiscriptionData.push({
+                            label: this.ntaeData[i].altPartDescription, value : this.ntaeData[i].altPartDescription
+                        })
+                        this.filterPartItemClassificationData.push({
+                            label: this.ntaeData[i].itemClassification, value :this.ntaeData[i].itemClassificationId
+                        })
+
                     }
-                    
                 })
+               
              } else {
                 this.itemser.getnhatlaaltequpartlis(reqData).subscribe(res => {
 
@@ -178,11 +190,10 @@ export class NTAEAlternateComponent implements OnInit {
                         this.filterManufacturerData.push({
                             label: this.ntaeData[i].manufacturer, value : this.ntaeData[i].manufacturerId
                         })
-                        if(this.selectedNTAETabId == 2){
-                            this.filterPartItemClassificationData.push({
-                                label: this.ntaeData[i].itemClassification, value :this.ntaeData[i].itemClassificationId
-                            })
-                        }
+                        this.filterDiscriptionData.push({
+                            label: this.ntaeData[i].altPartDescription, value : this.ntaeData[i].altPartDescription
+                        })
+ 
                     }
                     
                 })
@@ -418,7 +429,7 @@ export class NTAEAlternateComponent implements OnInit {
                     this.filterItemMaster.MappingPNumber = event;
                     this.filterItemMaster.ManufacturerId = this.ntaeData[i].manufacturerId;
                     if(this.selectedNTAETabId == 2){
-                        this.alternateData.itemClassificationId = this.ntaeData[i].itemClassificationId
+                        this.filterItemMaster.itemClassificationId = this.ntaeData[i].itemClassificationId
                     }
                     
 

@@ -147,24 +147,24 @@
 									</div>
 								</div>
 								<div class="form-group" style="margin-top: 15px;">
-									<label>Cost <span class="clr-red">*</span></label>
-									<input class="form-control" type="number" name="cost" pKeyFilter="pint" [(ngModel)]="sourceVendorCap.cost" #cost="ngModel" required>
-									<div *ngIf="cost.invalid && (cost.dirty || cost.touched)" class="alert alert-danger alert-danger-cstm">
+									<label>Cost</label>
+									<input class="form-control" type="number" name="cost" pKeyFilter="pint" [(ngModel)]="sourceVendorCap.cost">
+									<!-- <div *ngIf="cost.invalid && (cost.dirty || cost.touched)" class="alert alert-danger alert-danger-cstm">
 											<div *ngIf="cost.errors.required">
 												<small> Cost is required </small>
 											</div>
-									</div> 
+									</div>  -->
 								</div>
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<label>TAT (Days) <span class="clr-red">*</span></label>
-									<input class="form-control" type="number" name="tat" pKeyFilter="pint" maxlength="5" [(ngModel)]="sourceVendorCap.tat" #tat="ngModel" required>
-									<div *ngIf="tat.invalid && (tat.dirty || tat.touched)" class="alert alert-danger alert-danger-cstm">
+									<label>TAT (Days)</label>
+									<input class="form-control" type="text" name="tat" pKeyFilter="pint" maxlength="5" [(ngModel)]="sourceVendorCap.tat">
+									<!-- <div *ngIf="tat.invalid && (tat.dirty || tat.touched)" class="alert alert-danger alert-danger-cstm">
 											<div *ngIf="tat.errors.required">
 												<small> TAT is required </small>
 											</div>
-									</div> 
+									</div>  -->
 								</div>
 								<div class="form-group memo-popup-cstm" style="margin-top: 12px;">
 									<label>Cap Description</label>
@@ -310,7 +310,7 @@
 			</div>
 		</div>
 
-		<div id="ModalDashNumber" class="modal fade custom-popup" role="dialog" data-backdrop="static" data-keyboard="false">
+		<div id="ModalDashNumber" class="modal fade custom-popup aircraft-info-popup" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-full">
             <div class="modal-content">
                 <div class="modal-header">

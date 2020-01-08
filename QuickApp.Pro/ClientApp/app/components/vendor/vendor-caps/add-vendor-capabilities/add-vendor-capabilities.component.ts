@@ -119,7 +119,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	selectedCapabilityName: string = '';
 	selectedCapabilityId: number;
 	sselectedVendorName: string = '';
-	sselectedVendorCode: number;
+	sselectedVendorCode: string;
 	selectedVendorId: number;
 	@Input() isEnableVendor: boolean;
 	vendorName: string;
@@ -1167,6 +1167,10 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 		console.log(this.sourceVendorCap);
 		this.sselectedVendorName = getValueFromObjectByKey('vendorName', this.sourceVendorCap.vendorId);
 		this.sselectedVendorCode = getValueFromObjectByKey('vendorCode', this.sourceVendorCap.vendorId);
+		if(this.vendorId != 0 && this.vendorId != undefined && this.vendorId != null) {
+			this.sselectedVendorName = this.vendorName ? this.vendorName : '';
+			this.sselectedVendorCode = this.vendorCode ? this.vendorCode : '';
+		}
 		// this.sselectedVendorName=this.sourceVendorCap.vendorId ? this.sourceVendorCap.vendorId.vendorName : '';
 		// this.sselectedVendorCode=this.sourceVendorCap.vendorId ? this.sourceVendorCap.vendorId.vendorCode : '';
 		this.sourceVendorCap.createdBy= this.userName,
@@ -1450,8 +1454,8 @@ export class AddVendorCapabilitiesComponent implements OnInit{
                 AircraftType: this.newValue,
                 AircraftModel: 'Unknown',
                 DashNumber: 'Unknown',
-                AircraftModelId: '',
-                DashNumberId: '',
+                AircraftModelId: 0,
+                DashNumberId: 0,
                 Memo: '',
                 IsChecked: false
             }]
@@ -1464,7 +1468,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
                     AircraftModel: x.modelName,
                     DashNumber: 'Unknown',
                     AircraftModelId: x.aircraftModelId,
-                    DashNumberId: '',
+                    DashNumberId: 0,
                     Memo: '',
                     IsChecked: false
                 }
@@ -1485,8 +1489,8 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 
             return {
                 ...obj,
-                DashNumberId: obj.DashNumber === 'Unknown' ? null : obj.DashNumberId,
-                AircraftModelId: obj.AircraftModel === 'Unknown' ? null : obj.AircraftModelId,
+                DashNumberId: obj.DashNumber === 'Unknown' ? 0 : obj.DashNumberId,
+                AircraftModelId: obj.AircraftModel === 'Unknown' ? 0 : obj.AircraftModelId,
                 ItemMasterId: this.itemMasterId,
                 PartNumber: this.sourceVendorCap.partNumber,
                 MasterCompanyId: 1,
@@ -1526,7 +1530,9 @@ export class AddVendorCapabilitiesComponent implements OnInit{
             this.getAircraftMappedDataByItemMasterId();
 
         }, err => {
-            const errorLog = err;
+			const errorLog = err;
+			console.log(err);
+			
             this.errorMessageHandler(errorLog);
             // reset poupup aircraft information
             this.aircraftData = undefined;
@@ -1542,7 +1548,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	errorMessageHandler(log) {
         this.alertService.showMessage(
             'Error',
-            log.error.error,
+            log.error,
             MessageSeverity.error
         );
 	}

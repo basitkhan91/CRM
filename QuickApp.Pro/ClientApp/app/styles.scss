@@ -13788,9 +13788,12 @@ button {
 .ptable-custom th {
     padding: 8px 5px !important;
 }
-.wfl-table-cstm tr th:nth-child(2) {
+/*.wfl-table-cstm tr th {
+    width: auto !important;
+}*/
+/*.wfl-table-cstm tr th:nth-child(2) {
     width: 90px !important;
-}
+}*/
 .wfl-table-cstm tr th:nth-child(10) {
     width: 136px !important;
 }
@@ -13946,6 +13949,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 }
 .roview-table-cstm .child-header {
     background: #fafafa !important;
+}
+.ui-fileupload-choose input[type=file] {
+    width: 100%;
 }
 
 .multi-general p-multiselect {
@@ -14158,6 +14164,14 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 }
 .vcapes-multi .ui-multiselect-items-wrapper {
     overflow-x: hidden !important;
+}
+.vcapes-multi .ui-multiselect {
+    margin-left: 1px;
+    margin-top: -1px;
+    padding-bottom: 3px;
+}
+.modal-content .vcapes-multi .ui-multiselect {
+    padding-bottom: 0 !important;
 }
 input[type="date"]::-webkit-inner-spin-button {
     display: none;

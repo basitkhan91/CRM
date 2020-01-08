@@ -20,9 +20,23 @@ export class WorkOrderFreightComponent implements OnInit {
     @Input() freightForm;
     @Input() savedWorkOrderData;
     @Output() saveFreightListForWO = new EventEmitter();
+    @Output() updateFreightListForWo = new EventEmitter();
+    @Output() refreshData = new EventEmitter();
     customerId: any;
     shipViaList: any;
     carrierList: any;
+    cols = [
+        { field: 'carrierName', header: 'Carrier' },
+        { field: 'shipVia', header: 'Ship Via' },
+        { field: 'length', header: 'Length' },
+        { field: 'width', header: 'Width' },
+        { field: 'weight', header: 'Weight' },
+        { field: 'memo', header: 'Memo' },
+        { field: 'fixedAmount', header: 'FixedAmount' },
+        { field: 'isFixedFreight', header: 'Fixed' },
+        { field: 'amount', header: 'Amount' },
+    ]
+    isEdit: boolean = false;
     constructor(private workOrderService: WorkOrderService,
         private authService: AuthService,
         private alertService: AlertService,
@@ -34,6 +48,10 @@ export class WorkOrderFreightComponent implements OnInit {
         this.customerId = editValueAssignByCondition('customerId', this.savedWorkOrderData.customerId);
         this.getShipViaByCustomerId();
         this.getCarrierList();
+    }
+
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
 
@@ -57,11 +75,41 @@ export class WorkOrderFreightComponent implements OnInit {
         })
     }
 
-    createNew() { }
-    addNewRow(){
+    createNew() { 
+        this.isEdit = false;
+        this.freightForm = [new Freight()];
+    }
+    addNewRow() {
         this.freightForm = [...this.freightForm, new Freight()];
     }
-    saveFreightList(){
-        this.saveFreightListForWO.emit(this.freightForm);
+    edit(rowData) {
+        this.isEdit = true;
+        this.freightForm = [rowData];
     }
+    saveFreightList() {
+        if(this.isEdit){
+            this.updateFreightListForWo.emit(this.freightForm);
+            $('#addNewFreight').modal('hide');
+            this.isEdit = false;
+        }else{
+
+            this.saveFreightListForWO.emit(this.freightForm);
+            $('#addNewFreight').modal('hide');
+        }
+    }
+
+    delete(rowData) {
+        const { workOrderFreightId } = rowData;
+
+        this.workOrderService.deleteWorkOrderFreightList(workOrderFreightId, this.userName).subscribe(res => {
+            this.refreshData.emit();
+            this.alertService.showMessage(
+                '',
+                'Deleted WorkOrder Freight Successfully',
+                MessageSeverity.success
+            );
+        })
+
+    }
+
 }

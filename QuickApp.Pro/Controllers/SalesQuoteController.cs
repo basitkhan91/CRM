@@ -302,7 +302,8 @@ namespace QuickApp.Pro.Controllers
                                                                  MarginAmountExtended = part.MarginAmountExtended,
                                                                  MarginPercentage = part.MarginPercentage,
                                                                  CurrencyDescription = currencyDisplayName,
-                                                                 ConditionDescription = cp.Description
+                                                                 ConditionDescription = cp.Description,
+                                                                 IdNumber = qs.IdNumber ?? string.Empty
                                                              };
 
             return partsView;

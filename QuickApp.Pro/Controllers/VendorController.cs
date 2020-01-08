@@ -48,12 +48,20 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-        //[HttpGet("vendorglobalsearch")]
-        //public IActionResult VendorGlobalSearch(string filterText, int pageNumber = 0, int pageSize = 10)
-        //{
-        //    var result = _unitOfWork.Vendor.VendorGlobalSearch(filterText, pageNumber, pageSize);
-        //    return Ok(result);
-        //}
+        [HttpGet("vendorglobalsearch")]
+        public IActionResult VendorGlobalSearch(string filterText, int pageNumber = 0, int pageSize = 10)
+        {
+            var result = _unitOfWork.Vendor.VendorGlobalSearch(filterText, pageNumber, pageSize);
+            return Ok(result);
+        }
+
+        [HttpGet("getvendordatabyid/{vendorId}")]
+        public IActionResult GetVendorDataById(long vendorId)
+        {
+            var allVendorlistDetails = _unitOfWork.Vendor.GetVendorDataById(vendorId);
+            return Ok(allVendorlistDetails);
+
+        }
 
         // GET: api/values
         [HttpGet("Get")]

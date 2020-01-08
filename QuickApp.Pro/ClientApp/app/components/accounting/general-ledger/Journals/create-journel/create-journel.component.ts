@@ -175,7 +175,7 @@ export class CreateJournelComponent implements OnInit
 
     private loadGeneralLedgerList(){
         this.generalLedgerList = [];
-        this.accountListingService.getAll().subscribe(
+        this.accountListingService.getLedgerData().subscribe(
             datalist=> {
                 this.generalLedgerList = datalist;                
             },

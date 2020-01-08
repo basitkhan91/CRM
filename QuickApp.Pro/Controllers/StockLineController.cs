@@ -1096,9 +1096,41 @@ namespace QuickApp.Pro.Controllers
             return Ok(searchData);
         }
 
+        [HttpGet("warehousedata")]
+        public IActionResult GetAllWarehouseData(long siteId)
+        {
+            var result = _unitOfWork.stockLineList.GetAllWarehouseData(siteId);
+            return Ok(result);
+        }
+
+        [HttpGet("locationdata")]
+        public IActionResult GetAllLocationData(long warehouseId)
+        {
+            var result = _unitOfWork.stockLineList.GetAllLocationData(warehouseId);
+            return Ok(result);
+        }
+
+        [HttpGet("shelfdata")]
+        public IActionResult GetAllShelfData(long locationId)
+        {
+            var result = _unitOfWork.stockLineList.GetAllShelfData(locationId);
+            return Ok(result);
+        }
+
+        [HttpGet("bindata")]
+        public IActionResult GetAllBinData(long shelfId)
+        {
+            var result = _unitOfWork.stockLineList.GetAllBinData(shelfId);
+            return Ok(result);
+        }
+
+
+
         private IEnumerable<object> GetPartDetails(ItemMasterSearchViewModel searchView)
         {
             var result = Enumerable.Empty<object>();
+
+            var condition = _context.Condition.Where(c => c.ConditionId == searchView.partSearchParamters.conditionId).FirstOrDefault();
 
             result = from item in _context.ItemMaster
                      join sl in _context.StockLine on item.ItemMasterId equals sl.ItemMasterId
@@ -1106,16 +1138,19 @@ namespace QuickApp.Pro.Controllers
                      from iu in iuom.DefaultIfEmpty()
                      join currency in _context.Currency on item.CurrencyId equals currency.CurrencyId into itemcurrecy
                      from ic in itemcurrecy.DefaultIfEmpty()
+                     join cndn in _context.Condition on sl.ConditionId equals cndn.ConditionId into conditionParts
+                     from cp in conditionParts.DefaultIfEmpty()
                      where item.IsActive.HasValue && item.IsActive.Value == true
                             && (item.IsDeleted.HasValue && !item.IsDeleted == true || !item.IsDeleted.HasValue)
                             && (item.MasterCompanyId.HasValue && item.MasterCompanyId.Value == 1)
                             && item.ItemMasterId == searchView.partSearchParamters.partId
-
+                            && sl.ConditionId == searchView.partSearchParamters.conditionId
                      select new
                      {
                          methodType = "S",
                          method = "Stock Line",
                          itemId = item.ItemMasterId,
+                         stockLineId = sl.StockLineId,
                          partNumber = item.PartNumber,
                          alternatePartId = item.PartAlternatePartId,
                          alternateFor = string.Empty,
@@ -1132,10 +1167,17 @@ namespace QuickApp.Pro.Controllers
                          controlNumber = sl.ControlNumber,
                          idNumber = sl.IdNumber,
                          serialNumber = sl.SerialNumber,
+                         conditionId = cp != null ? cp.ConditionId : -1,
+                         conditionDescription = cp != null ? cp.Description : string.Empty,
+                         currencyId = ic != null ? ic.CurrencyId : -1,
+                         currencyDescription = ic != null ? ic.DisplayName : string.Empty,
+                         unitCost = item.UnitCost
                      };
 
 
             return result.ToList<object>();
         }
+
+
     }
 }

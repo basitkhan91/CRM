@@ -141,15 +141,15 @@ export class StockLineListComponent implements OnInit {
         // To display the values in header and column name values
     headers = [
     { field: 'partNumber', header: 'PN' },
-    { field: 'partDescription', header: 'PN DESCRIPTION' },
-    { field: 'itemCategory', header: 'ITEM CATEGORY' },
-    { field: 'itemGroup', header: 'ITEM GROUP' },
-    { field: 'stockLineNumber', header: 'SL NUM' },
-    { field: 'serialNumber', header: 'SERIAL NUM' },
-    { field: 'condition', header: 'COND' },
-    { field: 'quantityOnHand', header: 'QTY ON HAND' },
-    { field: 'quantityAvailable', header: 'QTY AVAIL' },
-    { field: 'glAccountName', header: 'GL ACCT' }
+    { field: 'partDescription', header: 'PN Desc' },
+    { field: 'itemCategory', header: 'Item Category' },
+    { field: 'itemGroup', header: 'Item Group' },
+    { field: 'stockLineNumber', header: 'SL Num' },
+    { field: 'serialNumber', header: 'Serial Num' },
+    { field: 'condition', header: 'Cond' },
+    { field: 'quantityOnHand', header: 'Qty On Hand' },
+    { field: 'quantityAvailable', header: 'Qty Avail' },
+    { field: 'glAccountName', header: 'GL Acct' }
     ]
     selectedColumns = this.headers;
 

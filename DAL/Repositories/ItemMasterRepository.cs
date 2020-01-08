@@ -146,6 +146,12 @@ namespace DAL.Repositories
                                 iM.IsExportMilitary,
                                 iM.IsExportDual,
                                 iM.RevisedPartId,
+                                iM.SiteId,
+                                iM.WarehouseId,
+                                iM.LocationId,
+                                iM.ShelfId,
+                                iM.BinId,
+
                                 ManufacturerName = mfgs == null ? "" : mfgs.Name,
                                 CountryData = countryID.ToList(),
                                 //CountryName = ct == null ? "" : ct.countries_name,
@@ -1122,21 +1128,21 @@ namespace DAL.Repositories
                 var list = (from alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping
                             join im in _appContext.ItemMaster on alt.ItemMasterId equals im.ItemMasterId
                             join im1 in _appContext.ItemMaster on alt.MappingItemMasterId equals im1.ItemMasterId
-                            join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
-                            join ic in _appContext.ItemClassification on im.ItemClassificationId equals ic.ItemClassificationId
+                            join man in _appContext.Manufacturer on im1.ManufacturerId equals man.ManufacturerId
+                            join ic in _appContext.ItemClassification on im1.ItemClassificationId equals ic.ItemClassificationId
                             where alt.IsActive == true && alt.IsDeleted == false && alt.ItemMasterId == filters.filters.ItemMasterId
                             && alt.MappingType == filters.filters.MappingType
                             && alt.MappingItemMasterId == (filters.filters.MappingItemMasterId > 0 ? filters.filters.MappingItemMasterId : alt.MappingItemMasterId)
-                            && im.PartDescription.Contains(!string.IsNullOrEmpty(filters.filters.Description) ? filters.filters.Description : im.PartDescription)
-                            && im.ManufacturerId == (filters.filters.ManufacturerId > 0 ? filters.filters.ManufacturerId : im.ManufacturerId)
-                            && im.ItemClassificationId == (filters.filters.ItemClassificationId > 0 ? filters.filters.ItemClassificationId : im.ItemClassificationId)
+                            && im1.PartDescription.Contains(!string.IsNullOrEmpty(filters.filters.Description) ? filters.filters.Description : im1.PartDescription)
+                            && im1.ManufacturerId == (filters.filters.ManufacturerId > 0 ? filters.filters.ManufacturerId : im1.ManufacturerId)
+                            && im1.ItemClassificationId == (filters.filters.ItemClassificationId > 0 ? filters.filters.ItemClassificationId : im1.ItemClassificationId)
                             select new
                             {
                                 alt.ItemMappingId,
                                 im.PartNumber,
                                 im.PartDescription,
                                 Manufacturer = man.Name,
-                                im.ManufacturerId,
+                                im1.ManufacturerId,
                                 im.ItemMasterId,
                                 AltPartNo = im1.PartNumber,
                                 alt.MappingItemMasterId,
@@ -1149,7 +1155,7 @@ namespace DAL.Repositories
                                 alt.UpdatedBy,
                                 alt.UpdatedDate,
                                 alt.MappingType,
-                                im.ItemClassificationId,
+                                im1.ItemClassificationId,
                                 ItemClassification = ic.Description,
                                 AttachmentDetails = (from at in _appContext.Attachment
                                                      join ad in _appContext.AttachmentDetails on at.AttachmentId equals ad.AttachmentId

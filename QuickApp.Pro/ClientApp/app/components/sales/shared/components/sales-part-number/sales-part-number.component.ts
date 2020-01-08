@@ -138,7 +138,7 @@ export class SalesPartNumberComponent {
           this.part.itemClassification = this.selectedPart.itemClassification;
           this.part.description = this.selectedPart.description;
           this.part.itemMasterId = this.selectedPart.itemId;
-          this.part.stockLineId = this.selectedPart.itemId;
+          this.part.stockLineId = this.selectedPart.stockLineId;
           this.part.idNumber = this.selectedPart.idNumber;
           this.part.method = this.selectedPart.method;
           this.part.serialNumber = this.selectedPart.serialNumber;
@@ -149,6 +149,9 @@ export class SalesPartNumberComponent {
           this.part.salesDiscount = 0;
           this.part.unitCostPerUnit = 0;
           this.part.markupPerUnit = 0;
+          this.part.salesPricePerUnit = 0;
+          this.part.markUpPercentage = 0;
+          this.part.salesDiscount = 0;
           this.part.quantityRequested = this.query.partSearchParamters.quantityRequested;
           this.part.quantityToBeQuoted = this.query.partSearchParamters.quantityToQuote;
           this.part.quantityFromThis = this.query.partSearchParamters.quantityToQuote;
