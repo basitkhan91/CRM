@@ -42,8 +42,10 @@ namespace DAL.Repositories
 
             var totalRecords = (from t in _appContext.Customer
                                 join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
-                                join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
-                                join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                                join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId into ctt
+                                from ct in ctt.DefaultIfEmpty()
+                                join ad in _appContext.Address on t.AddressId equals ad.AddressId into add
+                                from ad in add.DefaultIfEmpty()
                                 join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
                                 from custContacts in custinfo.DefaultIfEmpty()
                                 join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
@@ -72,9 +74,10 @@ namespace DAL.Repositories
             var data = (from t in _appContext.Customer
                         join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
                         join AccountTyp in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals AccountTyp.CustomerAffiliationId
-
-                        join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
-                        join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                        join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId into ctt
+                        from ct in ctt.DefaultIfEmpty()
+                        join ad in _appContext.Address on t.AddressId equals ad.AddressId into add
+                        from ad in add.DefaultIfEmpty()
                         join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
                         from custContacts in custinfo.DefaultIfEmpty()
                         join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
@@ -1978,7 +1981,156 @@ namespace DAL.Repositories
                 // return objCustomerShippingAddress;
             }
         }
+        public void AddVendorShippingAddress(Customer objCustomer, long vendorId, long addressId)
+        {
 
+            VendorShippingAddress data = _appContext.VendorShippingAddress.AsNoTracking().Where(p => p.AddressId == addressId && p.VendorId == vendorId).FirstOrDefault();
+            if (data != null)
+            {
+                if (data.VendorShippingAddressId > 0)
+                {
+                    data.VendorId = vendorId;
+                    data.AddressId = addressId;
+                    data.MasterCompanyId = objCustomer.MasterCompanyId;
+                    data.SiteName = objCustomer.CustomerCode;
+                    data.CreatedDate = DateTime.Now;
+                    data.UpdatedDate = DateTime.Now;
+                    data.CreatedBy = objCustomer.CreatedBy;
+                    data.UpdatedBy = objCustomer.UpdatedBy;
+                    data.IsActive = objCustomer.IsActive;
+                    data.IsPrimary = true;
+                    data.IsDelete = false;
+                    _appContext.VendorShippingAddress.Update(data);
+                }
+            }
+            else
+            {
+                VendorShippingAddress objCustomerShippingAddress = new VendorShippingAddress();
+
+                objCustomerShippingAddress.VendorId = vendorId;
+                objCustomerShippingAddress.AddressId = addressId;
+                objCustomerShippingAddress.MasterCompanyId = objCustomer.MasterCompanyId;
+                objCustomerShippingAddress.SiteName = objCustomer.CustomerCode;
+                objCustomerShippingAddress.CreatedDate = DateTime.Now;
+                objCustomerShippingAddress.UpdatedDate = DateTime.Now;
+                objCustomerShippingAddress.CreatedBy = objCustomer.CreatedBy;
+                objCustomerShippingAddress.UpdatedBy = objCustomer.UpdatedBy;
+                objCustomerShippingAddress.IsActive = objCustomer.IsActive;
+                objCustomerShippingAddress.IsPrimary = true;
+                objCustomerShippingAddress.IsDelete = false;
+
+                _appContext.VendorShippingAddress.Add(objCustomerShippingAddress);
+            }
+
+            _appContext.SaveChanges();
+
+            // return objCustomerShippingAddress;
+        }
+        public void AddVendorBillingAddress(Customer objCustomer, long vendorId, long addressId)
+        {
+            VendorBillingAddress data = _appContext.VendorBillingAddress.AsNoTracking().Where(p => p.AddressId == addressId && p.VendorId == vendorId).FirstOrDefault();
+
+            if (data != null)
+            {
+                if (data.VendorBillingAddressId > 0)
+                {
+                    data.VendorId = vendorId;
+                    data.MasterCompanyId = Convert.ToInt32(objCustomer.MasterCompanyId);
+                    data.AddressId = addressId;
+                    data.SiteName = objCustomer.CustomerCode;
+                    data.CreatedDate = DateTime.Now;
+                    data.UpdatedDate = DateTime.Now;
+                    data.CreatedBy = objCustomer.CreatedBy;
+                    data.UpdatedBy = objCustomer.UpdatedBy;
+                    data.IsPrimary = true;
+                    data.IsActive = true;
+                    data.IsDeleted = false;
+                    _appContext.VendorBillingAddress.Update(data);
+                }
+            }
+            else
+            {
+                VendorBillingAddress objCustomerBillingAddress = new VendorBillingAddress();
+
+                objCustomerBillingAddress.VendorId = vendorId;
+                objCustomerBillingAddress.MasterCompanyId = Convert.ToInt32(objCustomer.MasterCompanyId);
+                objCustomerBillingAddress.AddressId = addressId;
+                objCustomerBillingAddress.SiteName = objCustomer.CustomerCode;
+                objCustomerBillingAddress.CreatedDate = DateTime.Now;
+                objCustomerBillingAddress.UpdatedDate = DateTime.Now;
+                objCustomerBillingAddress.CreatedBy = objCustomer.CreatedBy;
+                objCustomerBillingAddress.UpdatedBy = objCustomer.UpdatedBy;
+                objCustomerBillingAddress.IsPrimary = true;
+                objCustomerBillingAddress.IsActive = true;
+                objCustomerBillingAddress.IsDeleted = false;
+
+                _appContext.VendorBillingAddress.Add(objCustomerBillingAddress);
+            }
+
+            _appContext.SaveChanges();
+
+
+        }
+        public void AddVendorContact(Customer objCustomer, long vendorId)
+        {
+            VendorContact data = _appContext.VendorContact.AsNoTracking().Where(p => p.VendorId == vendorId).FirstOrDefault();
+            if (data == null)
+            {
+
+                Contact contactObj = new Contact();
+                objCustomer.MasterCompanyId = 1;
+
+                //contactObj.ContactTitle = objCustomer.ContactTitle;
+                //contactObj.AlternatePhone = objCustomer.AlternatePhone;
+                contactObj.Email = objCustomer.Email;
+                //contactObj.Fax = objCustomer.Fax;
+                //contactObj.Tag = objCustomer.Tag;
+                contactObj.FirstName = objCustomer.Name;
+                contactObj.LastName = "NA";
+                contactObj.Tag = "NA";
+
+                //contactObj.MiddleName = objCustomer.MiddleName;
+                //contactObj.ContactTitle = objCustomer.ContactTitle;
+                //contactObj.MobilePhone = objCustomer.MobilePhone;
+                //contactObj.Notes = objCustomer.Notes;
+                contactObj.WorkPhone = objCustomer.CustomerPhone;
+                //contactObj.WebsiteURL = objCustomer.WebsiteURL;
+                contactObj.MasterCompanyId = 1;
+                contactObj.WorkPhoneExtn = objCustomer.CustomerPhoneExt;
+                contactObj.IsActive = true;
+                contactObj.CreatedDate = DateTime.Now;
+                contactObj.UpdatedDate = DateTime.Now;
+                contactObj.CreatedBy = objCustomer.CreatedBy;
+                contactObj.UpdatedBy = objCustomer.UpdatedBy;
+                contactObj.WorkPhoneExtn = contactObj.WorkPhoneExtn;
+                _appContext.Contact.Add(contactObj);
+
+                _appContext.SaveChanges();
+                long? contactId = contactObj.ContactId;
+
+                if (contactId != null)
+                {
+                    VendorContact customercontactObj = new VendorContact();
+
+                    customercontactObj.ContactId = contactId;
+                    customercontactObj.VendorId = vendorId;
+                    customercontactObj.IsDefaultContact = true;
+                    customercontactObj.MasterCompanyId = 1;
+                    customercontactObj.IsActive = objCustomer.IsActive;
+                    customercontactObj.CreatedDate = DateTime.Now;
+                    customercontactObj.UpdatedDate = DateTime.Now;
+                    customercontactObj.CreatedBy = objCustomer.CreatedBy;
+                    customercontactObj.UpdatedBy = objCustomer.UpdatedBy;
+
+
+                    _appContext.VendorContact.Add(customercontactObj);
+
+
+                    _appContext.SaveChanges();
+                }
+                // return objCustomerShippingAddress;
+            }
+        }
         public void DeleteRestrictedParts(long id, string updatedBy)
         {
             try
@@ -2388,6 +2540,7 @@ namespace DAL.Repositories
                 throw ex;
             }
         }
+       
 
     }
 }

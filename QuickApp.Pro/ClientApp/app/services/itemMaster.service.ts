@@ -398,5 +398,8 @@ export class ItemMasterService {
     getequivalencypartlist(data: any) {
         return this.itemMasterEndpoint.getequivalencypartlist<any>(data);
     }
-
+    getPrtnumberslistListwithManufacturer() {
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getPartnumberswithManufacturerEndpoint<any>());
+    }
 }
