@@ -72,10 +72,10 @@ export class CreateAssetComponent implements OnInit {
     depriciationMethodList: DepriciationMethod[] = [];
     allAssets: any[] = [];
     auditHistory: any[];
-    amortizationFrequencyList: any[];
-    depreciationFrequencyList: any[];
-    assetAcquisitionTypeList: any[];
-    GLAccountList: any[];
+    amortizationFrequencyList: any[] = [];
+    depreciationFrequencyList: any[] = [];
+    assetAcquisitionTypeList: any[] = [];
+    GLAccountList: any[] = [];
     AssetId: any;
     static assetService;
     constructor(private router: ActivatedRoute, private glAccountService: GlAccountService, private intangibleTypeService: AssetIntangibleTypeService, private route: Router, private assetService: AssetService, private legalEntityServices: LegalEntityService, private alertService: AlertService, public itemMasterservice: ItemMasterService,
