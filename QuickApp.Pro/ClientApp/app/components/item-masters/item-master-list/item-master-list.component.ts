@@ -18,7 +18,7 @@ import { CommonService } from '../../../services/common.service';
 })
 /** item-master-list component*/
 export class ItemMasterListComponent implements OnInit, AfterViewInit {
-	viewItemMaster: any;
+	viewItemMaster: any = {};
 	EquipmentDelete: boolean = false;
 	isDeleteMode: boolean = false;
 	allitemstockinfo: any[] = [];
@@ -662,9 +662,10 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
 	}
 	openView(content, row) {
-
+		
 		this.toGetAllDocumentsList(row.itemMasterId);
-        this.viewItemMaster = row;
+		this.getItemMasterById(row.itemMasterId);
+        // this.viewItemMaster = row;
 		this.partNumber = row.partNumber;
 		this.description = row.partDescription;
 		if (row.isAlternatePartChecked) {
@@ -799,6 +800,11 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
+	}
+	getItemMasterById(itemMasterId){
+		this.itemMasterService.getItemMasterDetailById(itemMasterId).subscribe(res => {
+			this.viewItemMaster = res[0];
+		})
 	}
 	openViewforNonstock(content, row) {
 
