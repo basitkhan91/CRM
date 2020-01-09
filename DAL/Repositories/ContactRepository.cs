@@ -59,7 +59,7 @@ namespace DAL.Repositories
         {
             var data = (from c in _appContext.Contact
                         join vc in _appContext.CustomerContact on c.ContactId equals vc.ContactId
-                        where vc.CustomerId == id
+                        where vc.CustomerId == id && vc.IsDeleted !=true
                         // select new { t, ad, vt }).ToList();
                         select new
                         {

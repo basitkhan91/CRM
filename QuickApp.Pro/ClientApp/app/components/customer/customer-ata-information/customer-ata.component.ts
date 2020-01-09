@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, AfterViewInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, ViewChild, OnInit, SimpleChanges, AfterViewInit, Input, EventEmitter, Output } from '@angular/core';
 import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service';
 import { AtaMainService } from '../../../services/atamain.service';
 import { getValueFromObjectByKey, getObjectByValue, getValueFromArrayOfObjectById } from '../../../generic/autocomplete';
@@ -41,7 +41,7 @@ export class CustomerATAInformationComponent implements OnInit {
         { field: 'firstName', header: 'Contact' },
         { field: 'ataChapterName', header: 'ATA Chapter' },
         { field: 'ataSubChapterDescription', header: 'ATA Sub-Chapter' }
-        
+
     ]
     // ataListDataValues: any;
     ataChapterIdUrl: string;
@@ -59,6 +59,7 @@ export class CustomerATAInformationComponent implements OnInit {
     public sourceCustomer: any = {}
     customerContactATAMappingId: number;
     selectedRowForDelete: any;
+    @Input() selectedTab: string = "";
     //contactList: any;
     constructor(
         private atasubchapter1service: AtaSubChapter1Service,
@@ -68,12 +69,13 @@ export class CustomerATAInformationComponent implements OnInit {
         private alertService: AlertService,
         private modalService: NgbModal,
         private activeModal: NgbActiveModal,
-    ) { }
+    ) {
+    }
 
     ngOnInit() {
         if (this.editMode) {
             this.id = this.editGeneralInformationData.customerId;
-           
+
 
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
@@ -90,6 +92,15 @@ export class CustomerATAInformationComponent implements OnInit {
         // this.ataChapter = this.LoadAtachapter;
 
     }
+    //ngOnChanges(changes: SimpleChanges) {
+    //    for (let property in changes) {
+    //        if (property == 'selectedTab') {
+
+
+    //        }
+    //        //   console.log('Current: ', changes[property].currentValue);
+    //    }
+    //}
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
@@ -132,6 +143,9 @@ export class CustomerATAInformationComponent implements OnInit {
 
 
     }
+
+
+    
 
     // // get subchapter by Id in the add ATA Mapping
     // getATASubChapterByATAChapter() {
@@ -243,6 +257,7 @@ export class CustomerATAInformationComponent implements OnInit {
     }
 
     getContactsByCustomerId() {
+        //this.contactList = this.contactList;
         this.customerService.getContactsByCustomerId(this.id).subscribe(res => {
             const responseData: any = res;
                 this.contactList = responseData.map(x => {

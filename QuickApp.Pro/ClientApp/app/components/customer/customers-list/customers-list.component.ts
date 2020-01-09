@@ -24,7 +24,7 @@ import { LazyLoadEvent, SortEvent } from 'primeng/api';
 import { listSearchFilterObjectCreation } from '../../../generic/autocomplete';
 import { CommonService } from '../../../services/common.service';
 import { CustomerViewComponent } from '../../../shared/components/customer/customer-view/customer-view.component';
-
+import { ConfigurationService } from '../../../services/configuration.service';
 
 
 
@@ -143,6 +143,7 @@ export class CustomersListComponent implements OnInit {
     totalRecords: number = 0;
     totalPages: number = 0;
     isDeleteMode: boolean = false;
+    allCustomerFinanceDocumentsList: any = [];
     customerId: number = 0;
     headers = [
         { field: 'name', header: 'Customer Name' },
@@ -164,6 +165,7 @@ export class CustomersListComponent implements OnInit {
     pageSize: number = 10;
     pageIndex: number = 0;
     first = 0;
+    tax: boolean = false;
     @ViewChild('dt')
     private table: Table;
     lazyLoadEventData: any;
@@ -171,6 +173,7 @@ export class CustomersListComponent implements OnInit {
     modal: NgbModalRef;
     viewDataGeneralInformation: any[];
     viewDataclassification: any[];
+    viewDataIntegration: any[];
     customerContacts: any;
     selectedRow: any;
     contactcols: any[];
@@ -200,8 +203,11 @@ export class CustomersListComponent implements OnInit {
     ]
 
     ataHeaders = [
+        { field: 'firstName', header: 'Contact' },
+
         { field: 'ataChapterName', header: 'ATA Chapter' },
         { field: 'ataSubChapterDescription', header: 'ATA Sub-Chapter' }
+
     ]
     billingInfoTableHeaders = [
         { field: 'siteName', header: 'Site Name' },
@@ -247,11 +253,16 @@ export class CustomersListComponent implements OnInit {
     ];
     customerPMAColumns = [
         { field: 'partNumber', header: 'Part Number' },
-        { field: 'memo', header: 'Memo' },
+        { field: 'partDescription', header: 'Description' },
+        {field:'manufacturerName',header:'Manufacturer'}
     ];
     customerDERColumns = [
         { field: 'partNumber', header: 'Part Number' },
-        { field: 'memo', header: 'Memo' },
+        //{ field: 'memo', header: 'Memo' },
+        { field: 'partDescription', header: 'Description' },
+        { field: 'manufacturerName', header: 'Manufacturer' }
+
+
     ];
     aircraftListDataValues: any;
     ataListDataValues: any;
@@ -287,13 +298,15 @@ export class CustomersListComponent implements OnInit {
         public customerService: CustomerService,
         private dialog: MatDialog,
         private masterComapnyService: MasterComapnyService,
-        private commonService: CommonService) {
+        private commonService: CommonService,
+        private configurations: ConfigurationService) {
         // this.displayedColumns.push('Customer');
         // this.dataSource = new MatTableDataSource();
         // this.activeIndex = 0;
         // this.workFlowtService.listCollection = null;
         //this.sourceCustomer = new Customer();
         this.dataSource = new MatTableDataSource();
+
 
     }
     ngOnInit() {
@@ -419,8 +432,7 @@ export class CustomersListComponent implements OnInit {
         const { customerId } = rowData;
         this.modal = this.modalService.open(CustomerViewComponent, { size: 'lg' });
         this.modal.componentInstance.customerId = customerId;
-       
-        this.modal.result.then(() => {
+         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
 
@@ -432,6 +444,8 @@ export class CustomersListComponent implements OnInit {
         const { customerId } = rowData;
         this.customerService.getCustomerdataById(customerId).subscribe(res => {
             this.viewDataGeneralInformation = res[0];
+            
+           
         })
         this.getAllCustomerContact(customerId);
         this.getAircraftMappedDataByCustomerId(customerId);
@@ -444,7 +458,10 @@ export class CustomersListComponent implements OnInit {
         this.getMappedTaxTypeRateDetails(customerId);
         this.getCustomerRestrictedPMAByCustomerId(customerId);
         this.getCustomerRestrictedDERByCustomerId(customerId);
-        this.getCustomerClassificationByCustomerId(customerId)
+        this.getCustomerClassificationByCustomerId(customerId);
+        this.getCustomerIntegrationTypesByCustomerId(customerId);
+        this.toGetCustomerFinanceDocumentsList(customerId);
+
         this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -535,7 +552,7 @@ export class CustomersListComponent implements OnInit {
 
     getCustomerRestrictedPMAByCustomerId(customerId) {
 
-        this.commonService.getRestrictedParts(1, customerId, 'PMA').subscribe(res => {
+        this.commonService.getRestrictedPartsWithDesc(1, customerId, 'PMA').subscribe(res => {
 
             this.restrictedPMAParts = res;
 
@@ -546,7 +563,7 @@ export class CustomersListComponent implements OnInit {
 
     getCustomerRestrictedDERByCustomerId(customerId) {
 
-        this.commonService.getRestrictedParts(1, customerId, 'DER').subscribe(res => {
+        this.commonService.getRestrictedPartsWithDesc(1, customerId, 'DER').subscribe(res => {
 
             this.restrictedDERParts = res;
 
@@ -561,6 +578,22 @@ export class CustomersListComponent implements OnInit {
 
             // console.log(this.generalInformation.customerClassificationIds);
         });
+    }
+      getCustomerIntegrationTypesByCustomerId(customerId) {
+       
+             this.commonService.getIntegrationMapping(customerId, 1).subscribe(res => {
+                 this.viewDataIntegration = res.map(x => x.description);
+
+            });
+        
+
+    }
+    toGetCustomerFinanceDocumentsList(customerId) {
+        var moduleId = 1;
+        this.customerService.GetCustomerFinanceDocumentsList(customerId, moduleId).subscribe(res => {
+            this.allCustomerFinanceDocumentsList = res;
+            
+        })
     }
     // changePage(event: { first: any; rows: number }) {
     //     console.log(event);
@@ -763,6 +796,11 @@ export class CustomersListComponent implements OnInit {
                 return data[i + 1][field] === value
             }
         }
+    }
+    downloadFileUpload(rowData) {
+
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
+        window.location.assign(url);
     }
 
     // ngAfterViewInit() {

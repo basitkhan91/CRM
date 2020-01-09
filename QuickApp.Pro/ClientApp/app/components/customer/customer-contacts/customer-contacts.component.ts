@@ -50,7 +50,7 @@ export class CustomerContactsComponent implements OnInit {
 	@Output() refreshCustomerATAMapped = new EventEmitter();
 	@Output() refreshCustomerATAByCustomerId = new EventEmitter();
 	@Output() refreshCustomerContactMapped = new EventEmitter();
-
+   
 
 
 
@@ -88,7 +88,8 @@ export class CustomerContactsComponent implements OnInit {
 	ediData: any;
 	isEditButton: boolean = false;
 	id: number;
-	contactId: number;
+    contactId: number;
+    customerContactId: number;
 	contactATAId: number;
 	customerCode: any;
 	customerName: any;
@@ -145,6 +146,7 @@ export class CustomerContactsComponent implements OnInit {
 
 		this.getAllContacts();
 		// this.getATACustomerContactMapped();
+
 	}
 
 
@@ -214,7 +216,9 @@ export class CustomerContactsComponent implements OnInit {
 					// get all contacts
 					this.getAllContacts();
 					// get Customer Contatcs 
-					this.getAllCustomerContact();
+                    this.getAllCustomerContact();
+                    this.refreshCustomerContactMapped.emit(this.id);
+
 					this.alertService.showMessage(
 						'Success',
 						`Sucessfully Created Contact`,
@@ -345,20 +349,25 @@ export class CustomerContactsComponent implements OnInit {
 		this.sourceViewforContact = '';
 		this.isDeleteMode = true;
 
-		this.contactId = rowData.contactId;
+        this.contactId = rowData.contactId;
+        this.customerContactId = rowData.customerContactId
 		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
 	}
 	deleteItemAndCloseModel() {
-		let contactId = this.contactId;
+        let contactId = this.contactId;
+        let customerContactId = this.customerContactId;
 		if (contactId > 0) {
 
-			this.customerService.deleteContact(contactId).subscribe(
+            this.customerService.deleteContact(customerContactId, this.userName).subscribe(
 				response => {
 					this.saveCompleted(this.sourceCustomer);
-					this.refreshCustomerATAByCustomerId.emit(this.id)
+                    this.refreshCustomerATAByCustomerId.emit(this.id)
+                    this.refreshCustomerContactMapped.emit(this.id);
+
+
 				},
 				error => this.saveFailedHelper(error));
 
