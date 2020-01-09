@@ -302,6 +302,23 @@
                                         <p>
                                             <span class="label"><b>Country: </b></span><span class="value">{{country}}</span>
                                         </p>
+                                        <p>
+                                            <span class="label"><b>Is this Address For Billing: </b></span><span class="value"><input type="checkbox" name="isIsBillingAddress" [(ngModel)]="isIsBillingAddress" disabled></span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Is this Address For Shipping: </b></span><span class="value">  <input type="checkbox" name="isIsShippingAddress" [(ngModel)]="isIsShippingAddress" disabled> </span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Created By: </b></span><span class="value">{{vendorcreatedBy}}</span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Created Date: </b></span><span class="value">{{vendorCreatedDate | date: 'dd-MM-yyyy' }}</span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Status: </b></span><span class="value">{{vendorStatus ? 'Active':'In ACtive'}}</span>
+                                        </p>
+
+
                                     </div>
                                     <div class="col-sm-6">
                                             <p>
@@ -318,7 +335,10 @@
                                             <span class="label"><b>Contract Reference: </b></span><span class="value">{{vendorContractReference}}</span>
                                         </p>
                                         <p>
-                                            <span class="label"><b>Preferred Vendor: </b></span><span class="value">{{isPreferredVendor}}</span>
+                                            <span class="label"><b>Preferred Vendor: </b></span><span class="value"> <input type="checkbox" name="isPreferredVendor" [(ngModel)]="isPreferredVendor" disabled> </span>
+                                        </p>
+                                        <p>
+                                            <span class="label"><b>Integration With: </b></span><span class="value">{{vendorIntegration}}</span>
                                         </p>
                                         <p>
                                             <span class="label"><b>License #:</b></span><span class="value">{{licenseNumber ? licenseNumber : '-'}}</span>
@@ -334,10 +354,10 @@
                                     <div class="col-sm-6">
                                             
                                             <p>
-                                                    <span class="label"><b>Certified: </b></span><span class="value">{{isCertified}}</span>
+                                                    <span class="label"><b>Certified: </b></span><span class="value" ><input type="checkbox" name="isCertified" [(ngModel)]="isCertified" disabled> </span>
                                                 </p>
                                             <div *ngIf="isCertified" class="table-responsive table-overflow">
-                                                    <h5 class="panel-title">Attachment Details:</h5>
+                                                    <h6 class="panel-title">Certified Attachment Details:</h6>
                                                     <table class="table table-bordered ">
                                                         <thead>                                                          
                                                                 <tr>
@@ -358,10 +378,10 @@
                                     </div>
                                     <div class="col-sm-6">
                                             <p>
-                                                    <span class="label"><b>Vendor Audit: </b></span><span class="value">{{isVendorAudit}}</span>
+                                                    <span class="label"><b>Vendor Audit: </b></span><span class="value"><input type="checkbox" name="isVendorAudit" [(ngModel)]="isVendorAudit" disabled> </span>
                                                 </p>
                                             <div *ngIf="isVendorAudit" class="table-responsive table-overflow">
-                                                    <h5 class="panel-title" >Attachment Details:</h5>
+                                                    <h6 class="panel-title" >Vendor Audit Attachment Details:</h6>
                                                     <table class="table table-bordered ">
                                                             <thead>                                                          
                                                                     <tr>
@@ -390,11 +410,11 @@
                                     </div>
                                     <div class="col-sm-6">
                                             <p>
-                                                    <span class="label"><b>Is this Vendor also a Customer: </b></span><span class="value">{{isVendorCustomer}}</span>
+                                                    <span class="label"><b>Is this Vendor also a Customer: </b></span><span class="value"> <input type="checkbox" name="isVendorCustomer" [(ngModel)]="isVendorCustomer" disabled> </span>
                                                 </p>
 
                                                 <p>
-                                                    <span class="label"><b>Allow Netting of AP/AR: </b></span><span class="value">{{isAllowNettingAPAR}}</span>
+                                                    <span class="label"><b>Allow Netting of AP/AR: </b></span><span class="value"> <input type="checkbox" name="isAllowNettingAPAR" [(ngModel)]="isAllowNettingAPAR" disabled> </span>
                                                 </p>
                                                 
                                     </div>
@@ -472,6 +492,19 @@
                             <div class="col-sm-6">
                                 <div class="=col-sm-12">
                                     <p>
+                                        <span class="label"><b>Edi: </b></span><span class="value"> <input type="checkbox" name="edi" [(ngModel)]="edi" disabled> </span>
+                                    </p>
+                                    <p>
+                                        <span class="label"><b> </b></span><span class="value">{{ediDescription}}</span>
+                                    </p>
+                                    <p>
+                                        <span class="label"><b>Aeroxchange: </b></span><span class="value"><input type="checkbox" name="aeroExchange" [(ngModel)]="aeroExchange" disabled></span>
+                                    </p>
+                                    <p>
+                                        <span class="label"><b> </b></span><span class="value">{{aeroExchangeDesc}}</span>
+                                    </p>
+                                   
+                                    <p>
                                         <span class="label"><b>Credit Limit: </b></span><span class="value">{{creditlimit}}</span>
                                     </p>
                                     <p>
@@ -483,9 +516,38 @@
                                     <p>
                                         <span class="label"><b>Discount Level: </b></span><span class="value">{{discountLevel}}</span>
                                     </p>
+                                   
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="=col-sm-12">
                                     <p>
-                                        <span class="label"><b>1099 Required: </b></span><span class="value">{{is1099Required}}</span>
+                                        <span class="label"><b>1099 Required: </b></span><span class="value"> <input type="checkbox" name="is1099Required" [(ngModel)]="is1099Required" disabled> </span>
                                     </p>
+                                    <div class="finc-info form-group col-sm-12" *ngIf="is1099Required">
+                                        <div class="col-sm-12 table-responsive">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>&nbsp;</th>
+                                                        <th>&nbsp;</th>
+                                                        <th>Default</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let proces of vendorProcess1099Data; let i = index;">
+                                                        <td><input type="checkbox" class="form-control" [value]="proces.description"  [ngModelOptions]="{standalone: true}" [(ngModel)]="proces.isDefaultCheck"  (change)="changeCheck1099Required($event, i)"></td>
+                                                      
+                                                        <td>{{proces.description}} </td>
+                                                        <td><input type="radio" name="isDefaultRadio"  [attr.disabled]="proces.isDefaultCheck == false ||  null" [ngModelOptions]="{standalone: true}" [value]="proces.description" [(ngModel)]="proces.isDefaultRadio"  (change)="changevalue($event, i)"  class="radio-inline" ></td>
+        
+                                                    </tr>
+                     
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="clear"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
