@@ -31,9 +31,9 @@ export class ExpertiseCreateComponent implements OnInit, OnChanges {
             this.row = {};
         }
         this.row.taskId = this.workFlow.taskId;
-        this.actionService.GetExpertiseType().subscribe(
-            expertiseTypes => {
-                this.expertiseTypes = expertiseTypes;
+        this.actionService.GetEmployeeExpertiseType().subscribe(
+            employeeExpertiseTypes => {
+                this.expertiseTypes = employeeExpertiseTypes;
             },
             error => this.errorMessage = <any>error
         );
