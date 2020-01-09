@@ -29,6 +29,16 @@ namespace DAL.Repositories
                             from ct in countryID.DefaultIfEmpty()
                             join mfg in _appContext.Manufacturer on iM.ManufacturerId equals mfg.ManufacturerId into mfgID
                             from mfgs in mfgID.DefaultIfEmpty()
+                            join site in _appContext.Site on iM.SiteId equals site.SiteId into siteID
+                            from sites in siteID.DefaultIfEmpty()
+                            join warehouse in _appContext.Warehouse on iM.WarehouseId equals warehouse.WarehouseId into warehouseID
+                            from warehouses in warehouseID.DefaultIfEmpty()
+                            join location in _appContext.Location on iM.LocationId equals location.LocationId into locationID
+                            from locations in locationID.DefaultIfEmpty()
+                            join shelf in _appContext.Shelf on iM.ShelfId equals shelf.ShelfId into shelfID
+                            from shelfs in shelfID.DefaultIfEmpty()
+                            join bin in _appContext.Bin on iM.BinId equals bin.BinId into binID
+                            from bins in binID.DefaultIfEmpty()
                             join imst in _appContext.ItemMaster on iM.oemPNId equals imst.ItemMasterId into Imast
                             from oemid in Imast.DefaultIfEmpty()
                             where iM.ItemMasterId == itemMasterId
@@ -153,6 +163,11 @@ namespace DAL.Repositories
                                 iM.BinId,
 
                                 ManufacturerName = mfgs == null ? "" : mfgs.Name,
+                                SiteName = sites == null ? "" : sites.Name,
+                                WarehouseName = warehouses == null ? "" : warehouses.Name,
+                                LocationName = locations == null ? "" : locations.Name,
+                                ShelfName = shelfs == null ? "" : shelfs.Name,
+                                BinName = bins == null ? "" : bins.Name,
                                 CountryData = countryID.ToList(),
                                 //CountryName = ct == null ? "" : ct.countries_name,
                                 //IPortalIDS = iPortalIds.Select(e => e.IntegrationPortalId).ToList(),
@@ -1035,7 +1050,7 @@ namespace DAL.Repositories
             {
                 var list = (from im in _appContext.ItemMaster
                             join ic in _appContext.ItemClassification on im.ItemClassificationId equals ic.ItemClassificationId
-                            join alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping on im.ItemMasterId equals alt.MappingItemMasterId
+                            join alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping on im.ItemMasterId equals alt.ItemMasterId
                             into imalt
                             from alt in imalt.DefaultIfEmpty()
                             join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId

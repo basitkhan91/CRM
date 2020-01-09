@@ -66,6 +66,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(expertiseType);
         }
 
+        [HttpGet("EmployeeExpertiseType")]
+        public IActionResult EmployeeExpertiseType()
+        {
+            var employeeExpertiseType = UnitOfWork.Repository<EmployeeExpertise>().Find(x =>(x.IsDelete != null && x.IsDelete == false) && (x.IsActive != null && x.IsActive == true)).ToList();
+            return Ok(employeeExpertiseType);
+        }
+
         [HttpGet("MaterialCondition")]
         public IActionResult GetMaterialCondition()
         {

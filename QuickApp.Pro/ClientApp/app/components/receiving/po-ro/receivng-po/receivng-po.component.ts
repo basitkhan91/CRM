@@ -359,7 +359,9 @@ export class ReceivngPoComponent implements OnInit {
             priorityId: getValueFromObjectByKey('priorityId', purchaseOrder.purchaseOderPart[0].purchaseOrder),
             dateApproved: new Date(purchaseOrder.dateApproved).toLocaleDateString()
         };
-        this.purchaseOrderData.terms = getValueFromArrayOfObjectById('name', 'creditTermsId', this.purchaseOrderData.terms, this.creditTermsList)
+        if (this.purchaseOrderData.terms) {
+            this.purchaseOrderData.terms = getValueFromArrayOfObjectById('name', 'creditTermsId', this.purchaseOrderData.terms, this.creditTermsList)
+        }
         this.getManagementStructure().subscribe(
             results => {
                 this.managementStructureSuccess(this.purchaseOrderData.managementStructureId, results[0]);
@@ -1433,8 +1435,10 @@ export class ReceivngPoComponent implements OnInit {
 
         this.itemmaster.updateItemMasterSerialized(part.itemMasterId, part.itemMaster.isSerialized).subscribe(
             result => {
+                var obj = part.stocklineListObj[this.currentSLIndex];
                 part.stocklineListObj = [];
                 this.createStockLineItems(part);
+                part.stocklineListObj[0] = obj;
                 var childParts = this.purchaseOrderData.purchaseOderPart.filter(x => x.itemMaster.partNumber == part.itemMaster.partNumber && !x.itemMaster.isParent);
                 for (let childPart of childParts) {
                     childPart.itemMaster.isSerialized = part.itemMaster.isSerialized;

@@ -191,17 +191,19 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
             var itemMasterId = this.itemclaColl.find(x => x[0].partName == event)[0].partId;
 
             if (materialObj != undefined) {
-                var isPartExcluded = this.workFlow.exclusions.find(x => x.itemMasterId != '' && x.itemMasterId == itemMasterId && x.taskId == this.workFlow.taskId)
-                if (isPartExcluded != undefined) {
-                    material.itemMasterId = '';
-                    material.partDescription = '';
-                    material.partNumber = '';
-                    material.itemClassificationId = '';
-                    material.partName = '';
-                    event = '';
-                    this.alertService.showMessage("Workflow", "Part Number already exist in Exclusion List.", MessageSeverity.error);
-                    return;
-                }
+                if (this.workFlow.exclusions) {
+                    var isPartExcluded = this.workFlow.exclusions.find(x => x.itemMasterId != '' && x.itemMasterId == itemMasterId && x.taskId == this.workFlow.taskId)
+                    if (isPartExcluded != undefined) {
+                        material.itemMasterId = '';
+                        material.partDescription = '';
+                        material.partNumber = '';
+                        material.itemClassificationId = '';
+                        material.partName = '';
+                        event = '';
+                        this.alertService.showMessage("Workflow", "Part Number already exist in Exclusion List.", MessageSeverity.error);
+                        return;
+                    }
+                }                
             }
 
             for (let i = 0; i < this.itemclaColl.length; i++) {

@@ -1636,7 +1636,7 @@
                                 <tr>
 
                                     <!--<td><input type="checkbox" data-md-icheck (change)="onToggle(i)" /></td>-->
-                                    <td>
+                                    <!-- <td>
                                         <span class="checkbox-cstm">
                                             <label style="width: 10px;">
                                                 <input type="checkbox" [(ngModel)]="rowData.IsChecked">
@@ -1644,13 +1644,13 @@
                                                 <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                             </label>
                                         </span>
-                                    </td>
+                                    </td> -->
 
                                     <td *ngFor="let col of columns">
                                         {{rowData[col.field]}}
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control input-value" [(ngModel)]="rowData.Memo" name="Memo" [disabled]="!rowData.IsChecked" />
+                                        <input type="text" class="form-control input-value" [(ngModel)]="rowData.Memo" name="Memo"  />
                                     </td>
                                 </tr>
                             </ng-template>

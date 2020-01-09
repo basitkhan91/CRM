@@ -7,6 +7,7 @@ using AutoMapper;
 using DAL.Common;
 using DAL.Models;
 using DAL.Repositories.Interfaces;
+using EntityFrameworkPaginate;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -244,7 +245,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrdersList(Filters<WorkOrderFilters> woFilters)
+        public IEnumerable<object> GetWorkOrdersList(Common.Filters<WorkOrderFilters> woFilters)
         {
             if (woFilters.filters == null)
                 woFilters.filters = new WorkOrderFilters();
@@ -252,6 +253,7 @@ namespace DAL.Repositories
             var take = woFilters.rows;
             var skip = take * (pageNumber - 1);
 
+            string sortColumn = string.Empty;
             short statusId = 0;
 
             var open = "open";
@@ -284,6 +286,118 @@ namespace DAL.Repositories
             }
 
             int totalRecords = 0;
+            var sorts = new Sorts<WorkOrderFilters>();
+
+
+            if (string.IsNullOrEmpty(woFilters.SortField))
+            {
+                sortColumn = "CreatedDate";
+                woFilters.SortOrder = -1;
+                sorts.Add(sortColumn == "CreatedDate", x => x.CreatedDate, true);
+            }
+            else
+            {
+                sortColumn = woFilters.SortField;
+            }
+
+            if (woFilters.SortOrder==-1)
+            {
+                switch (woFilters.SortField)
+                {
+                    case "workOrderNum":
+                        sorts.Add(sortColumn == "workOrderNum", x => x.WorkOrderNum, true);
+                        break;
+                    case "partNoType":
+                        sorts.Add(sortColumn == "partNoType", x => x.PartNos, true);
+                        break;
+
+                    case "pnDescriptionType":
+                        sorts.Add(sortColumn == "pnDescriptionType", x => x.PNDescription, true);
+                        break;
+                    case "workScopeType":
+                        sorts.Add(sortColumn == "workScopeType", x => x.WorkScope, true);
+                        break;
+                    case "priorityType":
+                        sorts.Add(sortColumn == "priorityType", x => x.Priority, true);
+                        break;
+                    case "customerName":
+                        sorts.Add(sortColumn == "customerName", x => x.CustomerName, true);
+                        break;
+                    case "customerType":
+                        sorts.Add(sortColumn == "customerType", x => x.CustomerType, true);
+                        break;
+                    case "openDate":
+                        sorts.Add(sortColumn == "openDate", x => x.OpenDate, true);
+                        break;
+                    case "customerRequestDateType":
+                        sorts.Add(sortColumn == "customerRequestDateType", x => x.CustomerRequestDate, true);
+                        break;
+                    case "promisedDateType":
+                        sorts.Add(sortColumn == "promisedDateType", x => x.PromisedDate, true);
+                        break;
+                    case "estimatedShipDateType":
+                        sorts.Add(sortColumn == "estimatedShipDateType", x => x.EstimatedShipDate, true);
+                        break;
+                    case "estimatedCompletionDateType":
+                        sorts.Add(sortColumn == "estimatedCompletionDateType", x => x.EstimatedCompletionDate, true);
+                        break;
+                    case "stageType":
+                        sorts.Add(sortColumn == "stageType", x => x.Stage, true);
+                        break;
+                    case "workOrderStatus":
+                        sorts.Add(sortColumn == "workOrderStatus", x => x.WorkOrderStatus, true);
+                        break;
+                }
+            }
+            else
+            {
+                switch (woFilters.SortField)
+                {
+                    case "workOrderNum":
+                        sorts.Add(sortColumn == "workOrderNum", x => x.WorkOrderNum);
+                        break;
+                    case "partNoType":
+                        sorts.Add(sortColumn == "partNoType", x => x.PartNos);
+                        break;
+                        
+                    case "pnDescriptionType":
+                        sorts.Add(sortColumn == "pnDescriptionType", x => x.PNDescription);
+                        break;
+                    case "workScopeType":
+                        sorts.Add(sortColumn == "workScopeType", x => x.WorkScope);
+                        break;
+                    case "priorityType":
+                        sorts.Add(sortColumn == "priorityType", x => x.Priority);
+                        break;
+                    case "customerName":
+                        sorts.Add(sortColumn == "customerName", x => x.CustomerName);
+                        break;
+                    case "customerType":
+                        sorts.Add(sortColumn == "customerType", x => x.CustomerType);
+                        break;
+                    case "openDate":
+                        sorts.Add(sortColumn == "openDate", x => x.OpenDate);
+                        break;
+                    case "customerRequestDateType":
+                        sorts.Add(sortColumn == "customerRequestDateType", x => x.CustomerRequestDate);
+                        break;
+                    case "promisedDateType":
+                        sorts.Add(sortColumn == "promisedDateType", x => x.PromisedDate);
+                        break;
+                    case "estimatedShipDateType":
+                        sorts.Add(sortColumn == "estimatedShipDateType", x => x.EstimatedShipDate);
+                        break;
+                    case "estimatedCompletionDateType":
+                        sorts.Add(sortColumn == "estimatedCompletionDateType", x => x.EstimatedCompletionDate);
+                        break;
+                    case "stageType":
+                        sorts.Add(sortColumn == "stageType", x => x.Stage);
+                        break;
+                    case "workOrderStatus":
+                        sorts.Add(sortColumn == "workOrderStatus", x => x.WorkOrderStatus);
+                        break;
+                }
+            }
 
             try
             {
@@ -305,10 +419,10 @@ namespace DAL.Repositories
                                 && cust.Name.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerName) ? woFilters.filters.CustomerName : cust.Name)
                                 && ca.description.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerType) ? woFilters.filters.CustomerType : ca.description)
                                 && wo.OpenDate.Date == (woFilters.filters.OpenDate != null ? woFilters.filters.OpenDate : wo.OpenDate.Date)
-                                && wop.CustomerRequestDate.Date == (woFilters.filters.CustomerRequestDateType != null ? woFilters.filters.CustomerRequestDateType : wop.CustomerRequestDate.Date)
-                                && wop.PromisedDate.Date == (woFilters.filters.PromisedDateType != null ? woFilters.filters.PromisedDateType : wop.PromisedDate.Date)
-                                && wop.EstimatedShipDate.Date == (woFilters.filters.EstimatedShipDateType != null ? woFilters.filters.EstimatedShipDateType : wop.EstimatedShipDate.Date)
-                                && wop.EstimatedCompletionDate.Date == (woFilters.filters.EstimatedCompletionDateType != null ? woFilters.filters.EstimatedCompletionDateType : wop.EstimatedCompletionDate.Date)
+                                && wop.CustomerRequestDate.Date.ToString() == (woFilters.filters.CustomerRequestDateType != null ? woFilters.filters.CustomerRequestDateType : wop.CustomerRequestDate.Date.ToString())
+                                && wop.PromisedDate.Date.ToString() == (woFilters.filters.PromisedDateType != null ? woFilters.filters.PromisedDateType : wop.PromisedDate.Date.ToString())
+                                && wop.EstimatedShipDate.Date.ToString() == (woFilters.filters.EstimatedShipDateType != null ? woFilters.filters.EstimatedShipDateType : wop.EstimatedShipDate.Date.ToString())
+                                && wop.EstimatedCompletionDate.Date.ToString() == (woFilters.filters.EstimatedCompletionDateType != null ? woFilters.filters.EstimatedCompletionDateType : wop.EstimatedCompletionDate.Date.ToString())
                                 && stage.Stage.Contains(!String.IsNullOrEmpty(woFilters.filters.StageType) ? woFilters.filters.StageType : stage.Stage)
                                 && wo.WorkOrderStatusId == (statusId > 0 ? statusId : wo.WorkOrderStatusId)
                                 select new
@@ -320,7 +434,6 @@ namespace DAL.Repositories
 
                 if (woFilters.filters.ViewType.ToLower() == "mpn")
                 {
-
                     var list = (from wo in _appContext.WorkOrder
                                 join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
                                 join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
@@ -340,16 +453,16 @@ namespace DAL.Repositories
                                 && cust.Name.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerName) ? woFilters.filters.CustomerName : cust.Name)
                                 && ca.description.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerType) ? woFilters.filters.CustomerType : ca.description)
                                 && wo.OpenDate.Date == (woFilters.filters.OpenDate != null ? woFilters.filters.OpenDate : wo.OpenDate.Date)
-                                && wop.CustomerRequestDate.Date == (woFilters.filters.CustomerRequestDateType != null ? woFilters.filters.CustomerRequestDateType : wop.CustomerRequestDate.Date)
-                                && wop.PromisedDate.Date == (woFilters.filters.PromisedDateType != null ? woFilters.filters.PromisedDateType : wop.PromisedDate.Date)
-                                && wop.EstimatedShipDate.Date == (woFilters.filters.EstimatedShipDateType != null ? woFilters.filters.EstimatedShipDateType : wop.EstimatedShipDate.Date)
-                                && wop.EstimatedCompletionDate.Date == (woFilters.filters.EstimatedCompletionDateType != null ? woFilters.filters.EstimatedCompletionDateType : wop.EstimatedCompletionDate.Date)
+                                && wop.CustomerRequestDate.Date.ToString() == (woFilters.filters.CustomerRequestDateType != null ? woFilters.filters.CustomerRequestDateType : wop.CustomerRequestDate.Date.ToString())
+                                && wop.PromisedDate.Date.ToString() == (woFilters.filters.PromisedDateType != null ? woFilters.filters.PromisedDateType : wop.PromisedDate.Date.ToString())
+                                && wop.EstimatedShipDate.Date.ToString() == (woFilters.filters.EstimatedShipDateType != null ? woFilters.filters.EstimatedShipDateType : wop.EstimatedShipDate.Date.ToString())
+                                && wop.EstimatedCompletionDate.Date.ToString() == (woFilters.filters.EstimatedCompletionDateType != null ? woFilters.filters.EstimatedCompletionDateType : wop.EstimatedCompletionDate.Date.ToString())
                                 && stage.Stage.Contains(!String.IsNullOrEmpty(woFilters.filters.StageType) ? woFilters.filters.StageType : stage.Stage)
                                 && wo.WorkOrderStatusId == (statusId > 0 ? statusId : wo.WorkOrderStatusId)
-                                select new
+                                select new WorkOrderFilters()
                                 {
-                                    wo.WorkOrderId,
-                                    wo.WorkOrderNum,
+                                    WorkOrderId = wo.WorkOrderId,
+                                    WorkOrderNum = wo.WorkOrderNum,
                                     PartNos = im.PartNumber,
                                     PartNoType = im.PartNumber,
                                     PNDescription = im.PartDescription,
@@ -361,98 +474,23 @@ namespace DAL.Repositories
                                     CustomerName = cust.Name,
                                     CustomerType = ca.description,
                                     OpenDate = wo.OpenDate.Date,
-                                    wop.CustomerRequestDate,
-                                    CustomerRequestDateType = wop.CustomerRequestDate,
-                                    wop.PromisedDate,
-                                    PromisedDateType = wop.PromisedDate,
-                                    wop.EstimatedShipDate,
-                                    EstimatedShipDateType = wop.EstimatedShipDate,
-                                    wop.EstimatedCompletionDate,
-                                    EstimatedCompletionDateType = wop.EstimatedCompletionDate,
-                                    stage.Stage,
+                                    CustomerRequestDate = wop.CustomerRequestDate.ToString(),
+                                    CustomerRequestDateType = wop.CustomerRequestDate.ToString(),
+                                    PromisedDate = wop.PromisedDate.ToString(),
+                                    PromisedDateType = wop.PromisedDate.ToString(),
+                                    EstimatedShipDate = wop.EstimatedShipDate.ToString(),
+                                    EstimatedShipDateType = wop.EstimatedShipDate.ToString(),
+                                    EstimatedCompletionDate = wop.EstimatedCompletionDate.ToString(),
+                                    EstimatedCompletionDateType = wop.EstimatedCompletionDate.ToString(),
+                                    Stage = stage.Stage,
                                     StageType = stage.Stage,
                                     WorkOrderStatus = wost.Description,
-                                    wo.IsActive,
-                                    wo.CreatedDate,
+                                    IsActive = wo.IsActive,
+                                    CreatedDate = wo.CreatedDate,
                                     TotalRecords = totalRecords,
                                 }
-                              ).Distinct()
-                              .OrderByDescending(p => p.CreatedDate)
-                              .Skip(skip)
-                              .Take(take)
-                              .ToList();
-
-                    if (woFilters.SortOrder.HasValue && !string.IsNullOrEmpty(woFilters.SortField))
-                    {
-                        if (woFilters.SortOrder == -1)
-                        {
-                            switch (woFilters.SortField)
-                            {
-                                case "workOrderNum":
-                                    return list.OrderByDescending(p => p.WorkOrderNum).ToList();
-                                case "partNoType":
-                                    return list.OrderByDescending(p => p.PartNos).ToList();
-                                case "pnDescriptionType":
-                                    return list.OrderByDescending(p => p.PNDescription).ToList();
-                                case "workScopeType":
-                                    return list.OrderByDescending(p => p.WorkScope).ToList();
-                                case "priorityType":
-                                    return list.OrderByDescending(p => p.Priority).ToList();
-                                case "customerName":
-                                    return list.OrderByDescending(p => p.CustomerName).ToList();
-                                case "customerType":
-                                    return list.OrderByDescending(p => p.CustomerType).ToList();
-                                case "openDate":
-                                    return list.OrderByDescending(p => p.OpenDate).ToList();
-                                case "customerRequestDateType":
-                                    return list.OrderByDescending(p => p.CustomerRequestDate).ToList();
-                                case "promisedDateType":
-                                    return list.OrderByDescending(p => p.PromisedDate).ToList();
-                                case "estimatedShipDateType":
-                                    return list.OrderByDescending(p => p.EstimatedShipDate).ToList();
-                                case "estimatedCompletionDateType":
-                                    return list.OrderByDescending(p => p.EstimatedCompletionDate).ToList();
-                                case "stageType":
-                                    return list.OrderByDescending(p => p.Stage).ToList();
-                                case "workOrderStatus":
-                                    return list.OrderByDescending(p => p.WorkOrderStatus).ToList();
-                            }
-                        }
-                        else
-                        {
-                            switch (woFilters.SortField)
-                            {
-                                case "workOrderNum":
-                                    return list.OrderBy(p => p.WorkOrderNum).ToList();
-                                case "partNoType":
-                                    return list.OrderBy(p => p.PartNos).ToList();
-                                case "pnDescriptionType":
-                                    return list.OrderBy(p => p.PNDescription).ToList();
-                                case "workScopeType":
-                                    return list.OrderBy(p => p.WorkScope).ToList();
-                                case "priorityType":
-                                    return list.OrderBy(p => p.Priority).ToList();
-                                case "customerName":
-                                    return list.OrderBy(p => p.CustomerName).ToList();
-                                case "customerType":
-                                    return list.OrderBy(p => p.CustomerType).ToList();
-                                case "openDate":
-                                    return list.OrderBy(p => p.OpenDate).ToList();
-                                case "customerRequestDateType":
-                                    return list.OrderBy(p => p.CustomerRequestDate).ToList();
-                                case "promisedDateType":
-                                    return list.OrderBy(p => p.PromisedDate).ToList();
-                                case "estimatedShipDateType":
-                                    return list.OrderBy(p => p.EstimatedShipDate).ToList();
-                                case "estimatedCompletionDateType":
-                                    return list.OrderBy(p => p.EstimatedCompletionDate).ToList();
-                                case "stageType":
-                                    return list.OrderBy(p => p.Stage).ToList();
-                                case "workOrderStatus":
-                                    return list.OrderBy(p => p.WorkOrderStatus).ToList();
-                            }
-                        }
-                    }
+                          ).Distinct()
+                          .Paginate(pageNumber, woFilters.rows, sorts).Results;
                     return list;
                 }
                 else
@@ -477,16 +515,16 @@ namespace DAL.Repositories
                                 && cust.Name.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerName) ? woFilters.filters.CustomerName : cust.Name)
                                 && ca.description.Contains(!String.IsNullOrEmpty(woFilters.filters.CustomerType) ? woFilters.filters.CustomerType : ca.description)
                                 && wo.OpenDate.Date == (woFilters.filters.OpenDate != null ? woFilters.filters.OpenDate : wo.OpenDate.Date)
-                                && wop.CustomerRequestDate.Date == (woFilters.filters.CustomerRequestDateType != null ? woFilters.filters.CustomerRequestDateType : wop.CustomerRequestDate.Date)
-                                && wop.PromisedDate.Date == (woFilters.filters.PromisedDateType != null ? woFilters.filters.PromisedDateType : wop.PromisedDate.Date)
-                                && wop.EstimatedShipDate.Date == (woFilters.filters.EstimatedShipDateType != null ? woFilters.filters.EstimatedShipDateType : wop.EstimatedShipDate.Date)
-                                && wop.EstimatedCompletionDate.Date == (woFilters.filters.EstimatedCompletionDateType != null ? woFilters.filters.EstimatedCompletionDateType : wop.EstimatedCompletionDate.Date)
+                                && wop.CustomerRequestDate.Date.ToString() == (woFilters.filters.CustomerRequestDateType != null ? woFilters.filters.CustomerRequestDateType : wop.CustomerRequestDate.Date.ToString())
+                                && wop.PromisedDate.Date.ToString() == (woFilters.filters.PromisedDateType != null ? woFilters.filters.PromisedDateType : wop.PromisedDate.Date.ToString())
+                                && wop.EstimatedShipDate.Date.ToString() == (woFilters.filters.EstimatedShipDateType != null ? woFilters.filters.EstimatedShipDateType : wop.EstimatedShipDate.Date.ToString())
+                                && wop.EstimatedCompletionDate.Date.ToString() == (woFilters.filters.EstimatedCompletionDateType != null ? woFilters.filters.EstimatedCompletionDateType : wop.EstimatedCompletionDate.Date.ToString())
                                 && stage.Stage.Contains(!String.IsNullOrEmpty(woFilters.filters.StageType) ? woFilters.filters.StageType : stage.Stage)
                                 && wo.WorkOrderStatusId == (statusId > 0 ? statusId : wo.WorkOrderStatusId)
-                                select new
+                                select new WorkOrderFilters()
                                 {
-                                    wo.WorkOrderId,
-                                    wo.WorkOrderNum,
+                                   WorkOrderId= wo.WorkOrderId,
+                                    WorkOrderNum= wo.WorkOrderNum,
 
                                     PartNos = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.ItemMaster,
                                     wp => wp.MasterPartId,
@@ -558,91 +596,17 @@ namespace DAL.Repositories
                                     StageType = _appContext.WorkOrderPartNumber.Where(p => p.WorkOrderId == wo.WorkOrderId).Count() > 1 ? "Multiple" : stage.Stage,
 
                                     WorkOrderStatus = wost.Description,
-                                    wo.IsActive,
-                                    wo.CreatedDate,
+                                    IsActive=wo.IsActive,
+                                    CreatedDate=wo.CreatedDate,
                                     TotalRecords = totalRecords,
                                 }
 
                            ).Distinct()
-                           .OrderByDescending(p => p.CreatedDate)
-                           .Skip(skip)
-                           .Take(take)
-                           .ToList();
+                           .Paginate(pageNumber, woFilters.rows, sorts).Results;
 
-                    if (woFilters.SortOrder.HasValue && !string.IsNullOrEmpty(woFilters.SortField))
-                    {
-                        if (woFilters.SortOrder == -1)
-                        {
-                            switch (woFilters.SortField)
-                            {
-                                case "workOrderNum":
-                                    return list.OrderByDescending(p => p.WorkOrderNum).ToList();
-                                case "partNoType":
-                                    return list.OrderByDescending(p => p.PartNos).ToList();
-                                case "pnDescriptionType":
-                                    return list.OrderByDescending(p => p.PNDescription).ToList();
-                                case "workScopeType":
-                                    return list.OrderByDescending(p => p.WorkScope).ToList();
-                                case "priorityType":
-                                    return list.OrderByDescending(p => p.Priority).ToList();
-                                case "customerName":
-                                    return list.OrderByDescending(p => p.CustomerName).ToList();
-                                case "customerType":
-                                    return list.OrderByDescending(p => p.CustomerType).ToList();
-                                case "openDate":
-                                    return list.OrderByDescending(p => p.OpenDate).ToList();
-                                case "customerRequestDateType":
-                                    return list.OrderByDescending(p => p.CustomerRequestDate).ToList();
-                                case "promisedDateType":
-                                    return list.OrderByDescending(p => p.PromisedDate).ToList();
-                                case "estimatedShipDateType":
-                                    return list.OrderByDescending(p => p.EstimatedShipDate).ToList();
-                                case "estimatedCompletionDateType":
-                                    return list.OrderByDescending(p => p.EstimatedCompletionDate).ToList();
-                                case "stageType":
-                                    return list.OrderByDescending(p => p.Stage).ToList();
-                                case "workOrderStatus":
-                                    return list.OrderByDescending(p => p.WorkOrderStatus).ToList();
-                            }
-                            return list;
-                        }
-                        else
-                        {
-                            switch (woFilters.SortField)
-                            {
-                                case "workOrderNum":
-                                    return list.OrderBy(p => p.WorkOrderNum).ToList();
-                                case "partNoType":
-                                    return list.OrderBy(p => p.PartNos).ToList();
-                                case "pnDescriptionType":
-                                    return list.OrderBy(p => p.PNDescription).ToList();
-                                case "workScopeType":
-                                    return list.OrderBy(p => p.WorkScope).ToList();
-                                case "priorityType":
-                                    return list.OrderBy(p => p.Priority).ToList();
-                                case "customerName":
-                                    return list.OrderBy(p => p.CustomerName).ToList();
-                                case "customerType":
-                                    return list.OrderBy(p => p.CustomerType).ToList();
-                                case "openDate":
-                                    return list.OrderBy(p => p.OpenDate).ToList();
-                                case "customerRequestDateType":
-                                    return list.OrderBy(p => p.CustomerRequestDate).ToList();
-                                case "promisedDateType":
-                                    return list.OrderBy(p => p.PromisedDate).ToList();
-                                case "estimatedShipDateType":
-                                    return list.OrderBy(p => p.EstimatedShipDate).ToList();
-                                case "estimatedCompletionDateType":
-                                    return list.OrderBy(p => p.EstimatedCompletionDate).ToList();
-                                case "stageType":
-                                    return list.OrderBy(p => p.Stage).ToList();
-                                case "workOrderStatus":
-                                    return list.OrderBy(p => p.WorkOrderStatus).ToList();
-                            }
-                        }
-                    }
                     return list;
                 }
+                    
             }
             catch (Exception)
             {

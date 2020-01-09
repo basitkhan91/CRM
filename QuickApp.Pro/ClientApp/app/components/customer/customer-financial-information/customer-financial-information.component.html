@@ -201,24 +201,38 @@
                                                 </div>
                                             </div><!--/Form-row for Add Tax Info-->                                           
                                             
-                                            <p-table [value]="taxTypeRateMapping" [paginator]="true" [rows]="3" *ngIf="taxTypeRateMapping.length>0">
-                                                <ng-template pTemplate="header">
+                                            <p-table #taxInfoTable [value]="taxTypeRateMapping" [paginator]="true" [rows]="3" [columns]="taxInfoTableColumns" *ngIf="taxTypeRateMapping.length>0">
+                                                <ng-template pTemplate="header" let-columns>
                                                     <tr>
                                                         <!-- <th>S.No</th> -->
-                                                        <th>TaxType</th>
-                                                        <th>TaxRate</th>
+                                                        <!-- <th>TaxType</th>
+                                                        <th>TaxRate</th> -->
+                                                        <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                                            {{col.header}}
+                                                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                                                        </th>
                                                         <th width="20%">Action</th>
                                                     </tr>
-                                                </ng-template>
-                                                <ng-template pTemplate="body" let-t>
                                                     <tr>
+                                                        <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                            <input style="width:100%;" pInputText type="text" (input)="taxInfoTable.filter($event.target.value, col.field, col.filterMatchMode)">
+                                
+                                                        </th>
+                                                        <th></th>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                                                    <tr >
                                                         <!-- {{($index + 1) + (currentPage - 1) * itemsPerPage}} -->
                                                         <!-- <td>  {{(0 + 1) + (1 - 1) * 3}} </td> -->
 
-                                                        <td>{{t.taxType}}</td>
-                                                        <td>{{t.taxRate}}</td>
+                                                        <!-- <td>{{t.taxType}}</td>
+                                                        <td>{{t.taxRate}}</td> -->
+                                                        <td *ngFor="let col of columns">
+                                                            {{rowData[col.field]}}
+                                                        </td>
                                                         <td>
-                                                            <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="deleteTaxTypeRate(deleteContent1,t);">
+                                                            <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="deleteTaxTypeRate(deleteContent1,rowData);">
                                                                 <mat-icon color="warn">delete</mat-icon>
                                                             </button>
                                                         </td>

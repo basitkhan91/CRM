@@ -4277,12 +4277,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     saveAircraft() {
 
         const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-        const aircraftData = this.aircraftData.filter(x => {
-            if (x.IsChecked) {
-                return x;
-            }
-        })
-        const data = aircraftData.map(obj => {
+        // const aircraftData = this.aircraftData.filter(x => {
+        //     if (x.IsChecked) {
+        //         return x;
+        //     }
+        // })
+        const data = this.aircraftData.map(obj => {
             console.log(obj);
 
             return {
