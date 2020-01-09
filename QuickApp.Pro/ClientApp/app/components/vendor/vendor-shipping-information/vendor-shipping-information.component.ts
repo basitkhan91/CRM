@@ -224,7 +224,7 @@ export class VendorShippingInformationComponent {
             { field: 'city', header: 'City' },
             { field: 'stateOrProvince', header: 'State/Prov' },
             { field: 'postalCode', header: 'Postal Code' },
-            { field: 'country', header: 'Country' }
+            { field: 'countryName', header: 'Country' }
         ];  
         this.selectedColumns = this.cols;            
     }
@@ -388,7 +388,7 @@ export class VendorShippingInformationComponent {
         this.city = row.city;
         this.stateOrProvince = row.stateOrProvince;
         this.postalCode = row.postalCode;
-        this.country = row.country;
+        this.country = row.countryName;
         this.address2 = row.address2;
         // this.address3 = row.address3;
         this.createdBy = row.createdBy;

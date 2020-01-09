@@ -1607,7 +1607,7 @@ namespace QuickApp.Pro.Controllers
                                 data.CreatedBy = actionobject.CreatedBy;
                                 data.UpdatedBy = actionobject.UpdatedBy;
                                 data.IsActive = actionobject.IsActive;
-                                //data.IsPrimary = true;
+                                data.IsPrimary = true;
                                 data.IsDelete = false;
                                 _unitOfWork.VendorShippingAddress.Update(data);
                             }
@@ -1625,7 +1625,7 @@ namespace QuickApp.Pro.Controllers
                             objVendorrShippingAddress.CreatedBy = actionobject.CreatedBy;
                             objVendorrShippingAddress.UpdatedBy = actionobject.UpdatedBy;
                             objVendorrShippingAddress.IsActive = actionobject.IsActive;
-                            //objVendorrShippingAddress.IsPrimary = true;
+                            objVendorrShippingAddress.IsPrimary = true;
                             objVendorrShippingAddress.IsDelete = false;
 
                             _context.VendorShippingAddress.Add(objVendorrShippingAddress);
