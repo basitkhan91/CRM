@@ -23,10 +23,10 @@
                                                    optionLabel="header" [(ngModel)]="selectedColumns" [style]="{minWidth: '200px'}"
                                                     [resetFilterOnHide]="true" style="float:left" (onChange)="columnsChanges()"></p-multiSelect>                                   
 
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" matTooltipPosition="above"
+                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download All Data" matTooltipPosition="above"
                                             tooltipPosition="top" pButton icon="fa-download" iconPos="left"
                                             label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" matTooltipPosition="above"
+                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download Selected" matTooltipPosition="above"
                                             tooltipPosition="top" pButton icon="fa-download" iconPos="left"
                                             label="Export Selection Only"
                                             (click)="dt.exportCSV({selectionOnly:true})"></button>
@@ -36,12 +36,12 @@
                                                (change)="customExcelUpload($event)" class="uploaddoc upload-file"
                                                accept=".xlsx, .xls, .csv">
                                         <label for="upload">
-                                            <span pTooltip="Upload Data (Excel)" matTooltipPosition="above"  tooltipPosition="top">
+                                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above"  tooltipPosition="top">
                                                 <i class="fa fa-upload"></i>
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" pTooltip="Download Sample file" matTooltipPosition="above"  tooltipPosition="top" (click)="sampleExcelDownload()">
+                                        <button class="btn btn-primary-cstm" matTooltip="Download Sample file" matTooltipPosition="above"  tooltipPosition="top" (click)="sampleExcelDownload()">
                                             Sample File
                                             Download
                                         </button>
@@ -68,8 +68,8 @@
                                     <th style="width:200px;position:sticky"></th>
                                 </tr>
                             </ng-template>
-                            <ng-template pTemplate="body" let-rowData let-columns="columns">
-                                <tr [pSelectableRow]="rowData" pReorderableRowHandle>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns"  let-rowIndex="rowIndex">
+                                <tr [pSelectableRow]="rowData" pReorderableRowHandle  [pSelectableRowIndex]="rowIndex">
                                     <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column"
                                         pReorderableRowHandle data-toggle="modal" data-target="#view"
                                         (dblclick)="viewSelectedRow(rowData)">
@@ -194,7 +194,7 @@
                                 <label for="description" class="control-label">Memo</label>
                             </div>
                             <div class="col-sm-5">
-                                <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription"
+                                <textarea class="text-item" #memo="ngModel" id="memo"   (ngModelChange)="getmemo($event)" name="memodescription"
                                     [(ngModel)]="addnewManufacturer.comments" minlength="2"></textarea>
                             </div>
                         </div>
