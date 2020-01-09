@@ -410,38 +410,38 @@
                 </td>
             </tr>
           </ng-container>
+          <tr *ngIf="laborForm.workOrderLaborList[0][task.description | lowercase].length != 0">
+
+            <td>Total</td>
+            <td></td>
+            <td>
+                
+            </td>
+            
+            <td
+              *ngIf="laborForm.hoursorClockorScan !== 1 && laborForm.hoursorClockorScan !== 3"
+            >
+            </td>
+            <td
+              *ngIf="laborForm.hoursorClockorScan !== 1"
+            >
+            </td>
+            <td
+              *ngIf="laborForm.hoursorClockorScan !== 1"
+            >
+            </td>
+            <td>
+                <input type="text" [(ngModel)]="laborForm.totalWorkHours" [disabled]="laborForm.workFloworSpecificTaskorWorkOrder == 'specificTasks'"/>
+            </td>
+            <td>{{getTotalLaborOHCost(laborForm.workOrderLaborList[0][task.description | lowercase])}}</td>
+            <td></td>
+            <td>{{getTotalCostPlus(laborForm.workOrderLaborList[0][task.description | lowercase])}}</td>
+            <td></td>
+            <td *ngIf="!isView">
+            </td>
+          </tr>
           <!-- </ng-container> -->
           </ng-container>
-              <tr>
-
-                <td>Total Working Hours - ALL Tasks</td>
-                <td></td>
-                <td>
-                    
-                </td>
-                
-                <td
-                  *ngIf="laborForm.hoursorClockorScan !== 1 && laborForm.hoursorClockorScan !== 3"
-                >
-                </td>
-                <td
-                  *ngIf="laborForm.hoursorClockorScan !== 1"
-                >
-                </td>
-                <td
-                  *ngIf="laborForm.hoursorClockorScan !== 1"
-                >
-                </td>
-                <td>
-                    <input type="text" [(ngModel)]="laborForm.totalWorkHours" [disabled]="laborForm.workFloworSpecificTaskorWorkOrder == 'specificTasks'"/>
-                </td>
-                <td>{{getTotalLaborOHCost()}}</td>
-                <td></td>
-                <td>{{getTotalCostPlus()}}</td>
-                <td></td>
-                <td *ngIf="!isView">
-                </td>
-              </tr>
       </tbody>
     </table>
   </div>

@@ -445,32 +445,24 @@ console.log(this.workOrderLaborList);
     return total;
   }
 
-  getTotalLaborOHCost(){
+  getTotalLaborOHCost(taskList){
     let total = 0;
-    if(this.laborForm.workOrderLaborList){
-    for(let task in this.laborForm.workOrderLaborList[0]){
-      for(let labor of this.laborForm.workOrderLaborList[0][task]){
-        if(labor.directLaborOHCost){
-          total += labor.directLaborOHCost;
-        }
+    for(let labor of taskList){
+      if(labor.directLaborOHCost){
+        total += labor.directLaborOHCost;
       }
     }
     return total;
-    }
   }
 
-  getTotalCostPlus(){
+  getTotalCostPlus(taskList){
     let total = 0;
-    if(this.laborForm.workOrderLaborList){
-      for(let task in this.laborForm.workOrderLaborList[0]){
-        for(let labor of this.laborForm.workOrderLaborList[0][task]){
-          if(labor.labourCostPlus){
-            total += labor.labourCostPlus;
-          }
-        }
+    for(let labor of taskList){
+      if(labor.labourCostPlus){
+        total += labor.labourCostPlus;
       }
-      return total;
     }
+    return total;
   }
 
   // tasks : this.laborForm.tasks[0][keysArray[i]].map(x => {
