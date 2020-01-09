@@ -50,7 +50,7 @@ namespace DAL.Repositories
             var q =
 
              from c in _appContext.Capability
-             join imc in _appContext.ItemMasterCapes on c.CapabilityId equals imc.CapabilityId
+             join imc in _appContext.ItemMasterCapes on c.CapabilityId equals imc.CapabilityTypeId
              join am in _appContext.AircraftModel on c.AircraftModelId equals am.AircraftModelId
              join at in  _appContext.AircraftType  on c.AircraftTypeId equals at.AircraftTypeId
              join ata in _appContext.ATAChapter  on c.ATAChapterId equals ata.ATAChapterId

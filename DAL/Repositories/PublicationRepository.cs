@@ -639,15 +639,20 @@ namespace DAL.Repositories
 
                 var totalRecords = (from p in _appContext.Publication
                                     join pt in _appContext.PublicationType on p.PublicationTypeId equals pt.PublicationTypeId
-                                    join e in _appContext.Employee on p.VerifiedBy equals e.EmployeeId into emp
+                                    join e in _appContext.Employee on p.EmployeeId equals e.EmployeeId into emp
                                     from e in emp.DefaultIfEmpty()
                                     where p.IsDeleted == false
-                                    && p.PublicationId.Contains(!String.IsNullOrEmpty(pubFilters.filters.PublicationId) ? pubFilters.filters.PublicationId : p.PublicationId)
-                                    && p.Description.Contains(!String.IsNullOrEmpty(pubFilters.filters.Description) ? pubFilters.filters.Description : p.Description)
-                                    && pt.Name.Contains(!string.IsNullOrEmpty(pubFilters.filters.PublicationType) ? pubFilters.filters.PublicationType : pt.Name)
-                                    && p.Publishby.Contains(!String.IsNullOrEmpty(pubFilters.filters.PublishedBy) ? pubFilters.filters.PublishedBy : p.Publishby)
-                                    && (e.FirstName == null || e.FirstName.Contains(!string.IsNullOrEmpty(pubFilters.filters.VerifiedBy) ? pubFilters.filters.VerifiedBy : e.FirstName))
-                                    && p.Location == (!String.IsNullOrEmpty(pubFilters.filters.Location) ? pubFilters.filters.Location : p.Location)
+                                            && p.PublicationId.Contains(!String.IsNullOrEmpty(pubFilters.filters.PublicationId) ? pubFilters.filters.PublicationId : p.PublicationId)
+                                            && p.Description.Contains(!String.IsNullOrEmpty(pubFilters.filters.Description) ? pubFilters.filters.Description : p.Description)
+                                            && pt.Name.Contains(!string.IsNullOrEmpty(pubFilters.filters.PublicationType) ? pubFilters.filters.PublicationType : pt.Name)
+                                            && p.Publishby.Contains(!String.IsNullOrEmpty(pubFilters.filters.PublishedBy) ? pubFilters.filters.PublishedBy : p.Publishby)
+                                            && p.RevisionDate == (pubFilters.filters.RevisionDate != null ? pubFilters.filters.RevisionDate : p.RevisionDate)
+                                            && p.RevisionNum == (revisionNo > 0 ? revisionNo : p.RevisionNum)
+                                            && p.NextReviewDate == (pubFilters.filters.NextReviewDate != null ? pubFilters.filters.NextReviewDate : p.NextReviewDate)
+                                            && p.ExpirationDate == (pubFilters.filters.ExpirationDate != null ? pubFilters.filters.ExpirationDate : p.ExpirationDate)
+                                            && p.Location.Contains(!String.IsNullOrEmpty(pubFilters.filters.Location) ? pubFilters.filters.Location : p.Location)
+                                            && (e.FirstName == null || e.FirstName.Contains(!string.IsNullOrEmpty(pubFilters.filters.VerifiedBy) ? pubFilters.filters.VerifiedBy : e.FirstName))
+                                            && p.VerifiedDate == (pubFilters.filters.VerifiedDate != null ? pubFilters.filters.VerifiedDate : p.VerifiedDate)
                                     select new
                                     {
                                         p.PublicationRecordId
@@ -668,7 +673,7 @@ namespace DAL.Repositories
                                     && p.RevisionNum == (revisionNo > 0 ? revisionNo : p.RevisionNum)
                                     && p.NextReviewDate == (pubFilters.filters.NextReviewDate != null ? pubFilters.filters.NextReviewDate : p.NextReviewDate)
                                     && p.ExpirationDate == (pubFilters.filters.ExpirationDate != null ? pubFilters.filters.ExpirationDate : p.ExpirationDate)
-                                    && p.Location == (!String.IsNullOrEmpty(pubFilters.filters.Location) ? pubFilters.filters.Location : p.Location)
+                                    && p.Location.Contains(!String.IsNullOrEmpty(pubFilters.filters.Location) ? pubFilters.filters.Location : p.Location)
                                     && (e.FirstName == null || e.FirstName.Contains(!string.IsNullOrEmpty(pubFilters.filters.VerifiedBy) ? pubFilters.filters.VerifiedBy : e.FirstName))
                                     && p.VerifiedDate == (pubFilters.filters.VerifiedDate != null ? pubFilters.filters.VerifiedDate : p.VerifiedDate)
                             select new PublicationFilters()
