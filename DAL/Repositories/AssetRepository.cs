@@ -6,11 +6,11 @@ using System.Linq;
 
 namespace DAL.Repositories
 {
-   public  class AssetRepository : Repository<DAL.Models.Asset>, IAssetRepository
+    public class AssetRepository : Repository<DAL.Models.Asset>, IAssetRepository
     {
         public AssetRepository(ApplicationDbContext context) : base(context)
         { }
-       
+
         IEnumerable<object> IAssetRepository.getAllAssetList()
         {
             var data = _appContext.Asset.Where(c => (c.IsDelete == false || c.IsDelete == null) && (c.IsActive == true));
@@ -19,11 +19,12 @@ namespace DAL.Repositories
             var temp2 = temp1.Include("Currency");
             var temp3 = temp2.Include("UnitOfMeasure");
             var temp4 = temp3.Include("AssetType");
-            var temp5= temp4.OrderByDescending(c => c.AssetRecordId).ToList();
+            var temp5 = temp4.OrderByDescending(c => c.AssetRecordId).ToList();
             return data;
         }
 
-        public IEnumerable<Asset> getAllAsset() {
+        public IEnumerable<Asset> getAllAsset()
+        {
             var asset = _appContext.Asset.Where(c => (c.IsDelete == false || c.IsDelete == null) && (c.IsActive == true));
             return asset.Include("AssetType").ToList();
         }
@@ -31,12 +32,32 @@ namespace DAL.Repositories
         public IEnumerable<object> getCapabilityData(long id)
         {
             {
-                var data = (from capability in _appContext.Capability
+                var data = (from capability in _appContext.AssetCapes
+                            join im
+                            in _appContext.ItemMaster on capability.ItemMasterId equals im.ItemMasterId
+                            //join cap in _appContext.Capability on ac.CapabilityId equals cap.CapabilityId
+                            join captype in _appContext.capabilityType on capability.CapabilityId equals captype.CapabilityTypeId
+                            join act in _appContext.AircraftType on capability.AircraftTypeId equals act.AircraftTypeId
+                            join acm in _appContext.AircraftModel on capability.AircraftModelId equals acm.AircraftModelId into airmodel
+                            from acm in airmodel.DefaultIfEmpty()
+                            join dn in _appContext.AircraftDashNumber on capability.AircraftDashNumberId equals dn.DashNumberId into dashnum
+                            from dn in dashnum.DefaultIfEmpty()
                             where capability.AssetRecordId == id
 
                             select new
                             {
-                               capability
+                                assetCapesId = capability.AssetCapesId,
+                                itemMasterId = capability.ItemMasterId,
+                                aircraftModelId = capability.AircraftModelId,
+                                capability.AircraftDashNumberId,
+                                partNumber = im.PartNumber,
+                                im.PartDescription,
+                                captypedescription = captype.Description,
+                                manufacturer = act.Description,
+                                modelname = acm.ModelName,
+                                dashNumber = dn.DashNumber,
+                                capability.IsActive,
+                                aircraftTypeId = capability.AircraftTypeId
 
                             }).ToList();
                 return data;
@@ -49,10 +70,13 @@ namespace DAL.Repositories
                 var data = (from capability in _appContext.AssetCapes
                             join im
                             in _appContext.ItemMaster on capability.ItemMasterId equals im.ItemMasterId
+                            //join cap in _appContext.Capability on ac.CapabilityId equals cap.CapabilityId
                             join captype in _appContext.capabilityType on capability.CapabilityId equals captype.CapabilityTypeId
                             join act in _appContext.AircraftType on capability.AircraftTypeId equals act.AircraftTypeId
-                            join acm in _appContext.AircraftModel on capability.AircraftModelId equals acm.AircraftModelId
-                            join dn in _appContext.AircraftDashNumber on capability.AircraftDashNumberId equals dn.DashNumberId
+                            join acm in _appContext.AircraftModel on capability.AircraftModelId equals acm.AircraftModelId into airmodel
+                            from acm in airmodel.DefaultIfEmpty()
+                            join dn in _appContext.AircraftDashNumber on capability.AircraftDashNumberId equals dn.DashNumberId into dashnum
+                            from dn in dashnum.DefaultIfEmpty()
                             where capability.AssetCapesId == id
 
                             select new
@@ -182,19 +206,30 @@ namespace DAL.Repositories
             {
                 //var data = _appContext.AssetCapes.Where(a => a.AssetRecordId == id).ToList();
 
-                var data = (from ac in _appContext.AssetCapes join im 
-                            in _appContext.ItemMaster on ac.ItemMasterId equals im.ItemMasterId
+                var data = (from ac in _appContext.AssetCapes
+                            join im
+in _appContext.ItemMaster on ac.ItemMasterId equals im.ItemMasterId
                             //join cap in _appContext.Capability on ac.CapabilityId equals cap.CapabilityId
-                            join captype in _appContext.capabilityType on ac.CapabilityId equals captype.CapabilityTypeId 
+                            join captype in _appContext.capabilityType on ac.CapabilityId equals captype.CapabilityTypeId
                             join act in _appContext.AircraftType on ac.AircraftTypeId equals act.AircraftTypeId
-                            join acm in _appContext.AircraftModel on ac.AircraftModelId equals acm.AircraftModelId
-                            join dn in _appContext.AircraftDashNumber on ac.AircraftDashNumberId equals dn.DashNumberId
+                            join acm in _appContext.AircraftModel on ac.AircraftModelId equals acm.AircraftModelId into airmodel
+                            from acm in airmodel.DefaultIfEmpty()
+                            join dn in _appContext.AircraftDashNumber on ac.AircraftDashNumberId equals dn.DashNumberId into dashnum
+                            from dn in dashnum.DefaultIfEmpty()
                             where ac.AssetRecordId == id && (ac.IsDelete == false || ac.IsDelete == null)
 
                             select new
                             {
-                                ac.AssetCapesId,ac.ItemMasterId,im.PartNumber,im.PartDescription,captypedescription = captype.Description,
-                                manufacturer = act.Description,modelname = acm.ModelName,dashnumber= dn.DashNumber, ac.IsActive, ac.AircraftTypeId
+                                ac.AssetCapesId,
+                                ac.ItemMasterId,
+                                im.PartNumber,
+                                im.PartDescription,
+                                captypedescription = captype.Description,
+                                manufacturer = act.Description,
+                                modelname = acm.ModelName,
+                                dashnumber = dn.DashNumber,
+                                ac.IsActive,
+                                ac.AircraftTypeId
 
                             }).ToList();
                 return data;
@@ -203,5 +238,5 @@ namespace DAL.Repositories
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }
-   
+
 }
