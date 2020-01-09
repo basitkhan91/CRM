@@ -50,7 +50,7 @@
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
                     </div>
-                    <!-- <div class="md-step"
+                    <div class="md-step"
                             [ngClass]="{ active: activeMenuItem >= 4 , editable : activeMenuItem === 4 }"
                             (click)="changeOfTab('Capes')"
                             [class.isDisabled]="!isDisabledSteps">
@@ -58,7 +58,7 @@
                         <div class="md-step-title">Capes</div>
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
-                    </div> -->
+                    </div>
                     <div class="md-step"
                          [ngClass]="{ active: activeMenuItem >= 5 , editable : activeMenuItem === 5}"
                          (click)="changeOfTab('PurchaseSales')"
@@ -1083,7 +1083,7 @@
                                 Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <!-- <div class="col-md-12">
                             <div class="col-md-12 ">
                                 <div class="shadow-Box">
                                     <div class="col-sm-12">
@@ -1097,10 +1097,14 @@
                                     <div class="clear"></div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <br />
-                    <div class="card">
+
+                    <div> 
+                        <app-item-master-capabilities-list></app-item-master-capabilities-list>
+                    </div>
+                    <!-- <div class="card">
                         <p-table [value]="capesListDataValues" [rows]="6" [columns]="capesColumns" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
@@ -1141,7 +1145,7 @@
                             </div>
                         </div>
 
-                    </div>
+                    </div> -->
                 </div>
                 <div [ngClass]="{hideTab : currentTab !== 'PurchaseSales'}">
                     <!--New Changes in Purchase and Sales page-->
@@ -1831,7 +1835,7 @@
             <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <h4 class="modal-title">Add Export UOM</h4>
+            <h4 class="modal-title" title="Add Export UOM" >Add Export UOM</h4>
         </div>
         <div class="modal-body">
             <form #userForm="ngForm" (ngSubmit)="saveConsumeunitofmeasure()" class="form-horizontal">
