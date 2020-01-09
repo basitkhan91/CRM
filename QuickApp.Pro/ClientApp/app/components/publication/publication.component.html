@@ -49,7 +49,7 @@
                                 </div>
                             </div>            
             
-                            <p-table #dt class="rpo-table-cstm rro-table-cstm pub-ptable-cstm" [first]="0" [rows]="pagesize" [value]="allpublicationInfo"  [metaKeySelection]="true" [paginator]="true"  [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [resizableColumns]="true" [reorderableColumns]="true"  [totalRecords]="totalRecords" (onLazyLoad)="publicationPagination($event)" [lazy]="true"> <!--onPage-->
+                            <p-table #dt class="rpo-table-cstm rro-table-cstm pub-ptable-cstm" [first]="0" [rows]="pagesize" [value]="allpublicationInfo"  [metaKeySelection]="true" [paginator]="true"  [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [resizableColumns]="true" [reorderableColumns]="true"  [totalRecords]="totalRecords" (onLazyLoad)="publicationPagination($event)" [lazy]="true" scrollHeight="450px">
                                 <ng-template pTemplate="caption">
             
                                     <div style="text-align: right;min-height: 30px;">
@@ -82,6 +82,12 @@
                                     </div>                        
                                 </ng-template>
 
+                                <ng-template pTemplate="colgroup" let-columns>
+                                    <colgroup>
+                                        <col *ngFor="let col of columns">
+                                    </colgroup>
+                                </ng-template>
+
                                 <ng-template pTemplate="header" let-columns>
                                     <tr>
                                         <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
@@ -105,12 +111,12 @@
                                             && col.field !== 'expirationDate'
                                             && col.field !== 'verifiedDate'
                                             " 
-                                             style="width:100%;" pInputText type="text" (keyup)="onChangeInputField($event.target.value, col.field)">
+                                             style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains');" [ngModel]="inputValue">
 
-                                            <input type="date" *ngIf="col.field == 'revisionDate'" name="revisionDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
-                                            <input type="date" *ngIf="col.field == 'nextReviewDate'" name="nextReviewDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
-                                            <input type="date" *ngIf="col.field == 'expirationDate'" name="expirationDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
-                                            <input type="date" *ngIf="col.field == 'verifiedDate'" name="verifiedDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
+                                            <input type="date" *ngIf="col.field == 'revisionDate'" name="revisionDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')" [ngModel]="inputValue">
+                                            <input type="date" *ngIf="col.field == 'nextReviewDate'" name="nextReviewDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')" [ngModel]="inputValue">
+                                            <input type="date" *ngIf="col.field == 'expirationDate'" name="expirationDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')" [ngModel]="inputValue">
+                                            <input type="date" *ngIf="col.field == 'verifiedDate'" name="verifiedDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')" [ngModel]="inputValue">
                                         </th>
                                         <!-- <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
                                             <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
@@ -120,7 +126,7 @@
                                 </ng-template>
             
                                 <ng-template pTemplate="body" let-rowData let-columns="columns">
-                                    <tr [pSelectableRow]="rowData">
+                                    <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" pReorderableRowHandle (dblclick)="viewSelectedRowdbl(rowData)">
                         
                                         <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                             {{col.field == 'revisionDate'?  
@@ -187,6 +193,11 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
+    <div class="modal-body">
+        <strong>Pub ID:
+          <span class="new-label">{{selectedRowforDelete.publicationId}}</span>
+      </strong>
+      </div>
 
     <div class="modal-footer">
         <button type="button" class="btn btn-primary-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
@@ -205,20 +216,14 @@
               <h4 class="modal-title">History of Publication</h4>
             </div>
             <div class="modal-body" *ngIf="auditHistory">
-                <div class="table-responsive rro-table-cstm">
-                    <table class="table table-bordered" *ngIf="auditHistory.length> 0 else noDatavailable">
+                <div class="table-responsive">
+                    <table class="table table-bordered pubHistory-table" *ngIf="auditHistory.length> 0 else noDatavailable">
                         <thead>
-                            <tr *ngFor="let x of cols" >
-                                <th>{{x.header}}</th>
-                                <!-- <th>Publication ID</th>
-                                <th>Description</th>
-                                <th>Publication Type</th>
-                                <th>Published By</th>
-                                <th>Employee</th>
-                                <th>Location</th>
+                            <tr>
+                                <th *ngFor="let x of cols">{{x.header}}</th>
                                 <th>IsActive</th>
                                 <th>Updated By</th>
-                                <th>Updated Time</th> -->
+                                <th>Updated Date</th>
                             </tr>
                         </thead>
                         <tbody class="audithistory-cstm"> <!--*ngIf="auditHistory.length> 0"-->
@@ -228,11 +233,17 @@
                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'publicationType', audit.publicationType)  ? 'black' : 'red'  }">{{audit.publicationType}}</td>
                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'publishby', audit.publishby)  ? 'black' : 'red'  }">{{audit.publishby}}</td>
-                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'employeeName', audit.employeeName)  ? 'black' : 'red'  }">{{audit.employeeName}}</td>
+                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'revisionDate', audit.revisionDate)  ? 'black' : 'red'  }">{{audit.revisionDate  | date: 'MM/dd/yyyy'}}</td>
+                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'revisionNum', audit.revisionNum)  ? 'black' : 'red'  }">{{audit.revisionNum}}</td>
+                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'nextReviewDate', audit.nextReviewDate)  ? 'black' : 
+                                        'red'  }">{{audit.nextReviewDate  | date: 'MM/dd/yyyy'}}</td>
+                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'expirationDate', audit.expirationDate)  ? 'black' : 'red'  }">{{audit.expirationDate  | date: 'MM/dd/yyyy'}}</td>
                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'location', audit.location)  ? 'black' : 'red'  }">{{audit.location}}</td>
+                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'verifiedBy', audit.verifiedBy)  ? 'black' : 'red'  }">{{audit.verifiedBy}}</td>
+                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'verifiedDate', audit.verifiedDate)  ? 'black' : 'red'  }">{{audit.verifiedDate  | date: 'MM/dd/yyyy'}}</td>
                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
                                     <td >{{audit.updatedBy}}</td>
-                                    <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                                    <td>{{audit.updatedDate  | date: 'MM/dd/yyyy'}}</td>
                                 </tr>
                         </tbody>                        
                     </table>

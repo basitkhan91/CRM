@@ -42,9 +42,9 @@ export class PublicationService {
     private publicationEndpoint: PublicationEndpointService
   ) {}
 
-  getWorkFlows(pageIndex, pageSize) {
+  getWorkFlows(data) {
     return Observable.forkJoin(
-      this.publicationEndpoint.getpublicationListEndpoint<Publication[]>(pageIndex, pageSize)
+      this.publicationEndpoint.getpublicationListEndpoint<Publication[]>(data)
     );
   }
 
