@@ -40,6 +40,10 @@ namespace DAL.Repositories
             var take = customerFilters.rows;
             var skip = take * (pageNumber - 1);
 
+             
+
+
+
             var totalRecords = (from t in _appContext.Customer
                                 join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
                                 join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId into ctt
@@ -117,6 +121,7 @@ namespace DAL.Repositories
                              .Take(take)
                              .ToList();
 
+
             if (!string.IsNullOrEmpty(customerFilters.SortField) && !string.IsNullOrEmpty(customerFilters.SortField))
             {
                 if (customerFilters.SortOrder == -1)
@@ -176,7 +181,6 @@ namespace DAL.Repositories
                     }
                 }
             }
-
 
             return (data);
         }
@@ -810,7 +814,7 @@ namespace DAL.Repositories
                             join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
                             from contt in conttt.DefaultIfEmpty()
 
-                            where ca.CustomerId == customerId && ca.IsDeleted == false
+                            where ca.CustomerId == customerId && ca.IsDeleted == false && cont.IsDeleted !=true
                             select new
                             {
                                 ca.CustomerContactATAMappingId,
@@ -1972,7 +1976,7 @@ namespace DAL.Repositories
                     customercontactObj.CreatedBy = objCustomer.CreatedBy;
                     customercontactObj.UpdatedBy = objCustomer.UpdatedBy;
 
-
+                    customercontactObj.IsDeleted = false;
                     _appContext.CustomerContact.Add(customercontactObj);
 
 
@@ -2328,7 +2332,7 @@ namespace DAL.Repositories
             {
                 var result = (from c in _appContext.Contact
                               join cc in _appContext.CustomerContact on c.ContactId equals cc.ContactId
-                              where cc.CustomerId == id
+                              where cc.CustomerId == id && cc.IsDeleted != true
                               select new
                               {
                                   c.ContactId,

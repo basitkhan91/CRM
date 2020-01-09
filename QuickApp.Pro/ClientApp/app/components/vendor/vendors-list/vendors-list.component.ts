@@ -114,6 +114,19 @@ export class VendorsListComponent implements OnInit {
     selectedPOColumns: any[];
     selectedPOColumn: any[];
     isAllowNettingAPAR: boolean = false;
+    vendorStatus: boolean = false;
+    isIsBillingAddress: boolean = false;
+    isIsShippingAddress: boolean = false;
+    vendorcreatedBy:any;
+    vendorCreatedDate:any;
+    vendorIntegration:any;
+    edi: boolean = false;
+    aeroExchange: boolean = false;
+    ediDescription:any;
+    aeroExchangeDesc:any;
+    vendorProcess1099Data: any;
+    checkedCheckboxesList : any = [];
+
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -448,7 +461,7 @@ export class VendorsListComponent implements OnInit {
             { field: 'city', header: 'City' },
             { field: 'stateOrProvince', header: 'State/Prov' },
             { field: 'postalCode', header: 'Postal Code' },
-            { field: 'country', header: 'Country' }
+            { field: 'countryName', header: 'Country' }
         ];
 
         this.selectedShippingColumns = this.shippingCol;
@@ -470,7 +483,7 @@ export class VendorsListComponent implements OnInit {
             { field: 'city', header: 'City' },
             { field: 'stateOrProvince', header: 'State/Prov' },
             { field: 'postalCode', header: 'Postal Code' },
-            { field: 'country', header: 'Country' }
+            { field: 'countryName', header: 'Country' }
         ];
 
         this.selectedBillingColumns = this.billingCol;
@@ -571,7 +584,7 @@ export class VendorsListComponent implements OnInit {
             { field: 'city', header: 'City' },
             { field: 'stateOrProvince', header: 'State/Prov' },
             { field: 'postalCode', header: 'Postal Code' },
-            { field: 'country', header: 'Country' }
+            { field: 'countryName', header: 'Country' }
         ];
         this.selectedPaymentColumns = this.paymentcols;
     }
@@ -583,7 +596,8 @@ export class VendorsListComponent implements OnInit {
     }
 
     openView(content, row) {     
-        this.toGetVendorGeneralDocumentsList(row.vendorId)  
+        this.toGetVendorGeneralDocumentsList(row.vendorId);
+        this.getVendorProcess1099FromTransaction(row.vendorId);
         this.vendorCode = row.vendorCode;
         this.vendorName = row.vendorName;
         this.vendorTypeId = row.t.vendorTypeId;
@@ -615,7 +629,7 @@ export class VendorsListComponent implements OnInit {
         this.city = row.city;
         this.stateOrProvince = row.stateOrProvince;
         this.postalCode = row.postalCode;
-        this.country = row.country;
+        this.country = row.countryName;
         this.vendorPhoneNo = row.t.vendorPhone;
         this.vendorPhoneExt = row.t.vendorPhoneExt;
         this.vendorEmail = row.vendorEmail;
@@ -627,9 +641,21 @@ export class VendorsListComponent implements OnInit {
         this.capabilityId = row.capabilityId;
         this.vendorCapabilityName=row.vendorCapabilityName;
         this.vendorURL = row.t.vendorURL;
-        this.creditlimit = row.t.creditLimit;        
+        this.creditlimit = row.t.creditLimit;
         this.discountLevel = row.discountLevel;
-        this.is1099Required = row.t.is1099Required;
+        this.is1099Required = row.t.is1099Required;       
+        this.vendorStatus= row.t.isActive;
+        this.edi = row.t.edi;
+        this.aeroExchange = row.t.aeroExchange;
+        this.ediDescription = row.t.ediDescription;
+        this.aeroExchangeDesc = row.t.aeroExchangeDescription;
+        
+        this.isIsBillingAddress= row.t.isAddressForBilling;
+        this.isIsShippingAddress= row.t.isAddressForShipping;	
+        this.vendorcreatedBy= row.t.createdBy;
+        this.vendorCreatedDate= row.t.createdDate;
+        this.vendorIntegration= row.integrationPortalNames; 	
+			
 
         this.isCertified= row.t.isCertified;
         this.isVendorAudit= row.t.vendorAudit;
@@ -878,6 +904,35 @@ export class VendorsListComponent implements OnInit {
 
     resetVendorId() {
         this.vendorId = null;
+    }
+
+    public getVendorProcess1099FromTransaction(vendorId) {
+        
+       // this.alertService.startLoadingMessage();
+        //this.loadingIndicator = true;
+        this.workFlowtService.getVendorProcess1099DataFromTransaction(vendorId).subscribe(res => {
+            if(res[0].length != 0) {
+                this.vendorProcess1099Data = res[0].map(x => {
+                    return {
+                        ...x                       
+                        
+                    }
+                });
+               
+                for(let j=0; j<this.vendorProcess1099Data.length; j++){
+                    if(this.vendorProcess1099Data[j].isDefaultRadio == true || this.vendorProcess1099Data[j].isDefaultRadio == "true"){
+                        this.vendorProcess1099Data[j].isDefaultRadio = this.vendorProcess1099Data[j].description
+                    }
+                    if(this.vendorProcess1099Data[j].isDefaultCheck == true){
+                        this.checkedCheckboxesList.push(j);
+                    }
+                }
+              
+            } 
+            
+        })
+
+
     }
 
 

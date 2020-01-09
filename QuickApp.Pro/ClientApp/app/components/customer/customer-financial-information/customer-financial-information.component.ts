@@ -114,6 +114,10 @@ export class CustomerFinancialInformationComponent implements OnInit {
     localcollection: any;
     formData = new FormData();
     allCustomerFinanceDocumentsList: any = [];
+    taxInfoTableColumns: any [] = [
+        { field: "taxType", header: "Tax Type" },
+        { field: "taxRate", header: "Tax Rate" },
+    ];
     // discountNew = {
 
 
@@ -591,11 +595,16 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 this.selectedTaxRates = null;
                 this.selectedTaxType = null;
             } else {
-                this.taxTypeRateMapping.push({
+                this.taxTypeRateMapping = [...this.taxTypeRateMapping, {
                     customerId: this.id,
                     taxType: getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList),
                     taxRate: this.selectedTaxRates
-                })
+                }];
+                // this.taxTypeRateMapping.push({
+                //     customerId: this.id,
+                //     taxType: getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList),
+                //     taxRate: this.selectedTaxRates
+                // })
                 this.selectedTaxRates = null;
                 this.selectedTaxType = null;
             }

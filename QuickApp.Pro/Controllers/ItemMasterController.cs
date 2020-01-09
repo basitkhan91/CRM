@@ -470,44 +470,6 @@ namespace QuickApp.Pro.Controllers
             {
                 for (var i = 0; i < capability.Count(); i++)
                 {
-                    ItemMasterCapes imc = new ItemMasterCapes();
-                    imc.ItemMasterId = capability[i].ItemMasterId;
-                    imc.CapabilityId = capability[i].CapabilityId;
-                    imc.MasterCompanyId = 1;
-                    imc.CreatedBy = "admin";
-                    imc.UpdatedBy = "admin";
-                    imc.IsActive = true;
-                    imc.IsDelete = false;
-                    imc.ManagementStructureId = capability[i].ManagementStructureId;
-                    imc.ManufacturerId = capability[i].ManufacturerId;
-                    imc.AircraftTypeId = capability[i].AircraftTypeId;
-                    imc.AircraftModelId = capability[i].AircraftModelId;
-                    imc.AircraftDashNumberId = capability[i].AircraftDashNumberId;
-                    imc.Description = capability[i].Description;
-                    imc.ATAChapterId = capability[i].ATAChapterId;
-                    imc.ATASubChapterId = capability[i].ATASubChapterId;
-                    imc.EntryDate = capability[i].EntryDate;
-                    imc.CMMId = capability[i].CMMId;
-                    //imc.isIntegrateWith = capability[i].isIntegrateWith;
-                    imc.IntegrateWith = capability[i].IntegrateWith;
-                    imc.VerifiedBy = capability[i].VerifiedBy;
-                    imc.DateVerified = capability[i].DateVerified;
-                    imc.ntehrs = capability[i].ntehrs;
-                    imc.TAT = capability[i].TAT;
-                    imc.CreatedDate = DateTime.Now;
-                    imc.UpdatedDate = DateTime.Now;
-                    capability[i].MasterCompanyId = 1;
-                    capability[i].CreatedDate = DateTime.Now;
-                    if (capability[i].ItemMasterCapesId > 0)
-                    {
-                        _unitOfWork.Repository<ItemMasterCapes>().Update(imc);
-                    }
-                    else
-                    {
-                        _unitOfWork.Repository<ItemMasterCapes>().Add(imc);
-                    }
-                    _unitOfWork.SaveChanges();
-                    capability[i].ItemMasterCapesId = imc.ItemMasterCapesId;
                 }
             }
             return Ok(capability);
@@ -517,7 +479,7 @@ namespace QuickApp.Pro.Controllers
         {
             ItemMasterCapes imc = new ItemMasterCapes();
 
-            imc.CapabilityId = returnid;
+            //imc.CapabilityId = returnid;
             imc.ItemMasterId = itemid;
             imc.MasterCompanyId = 1;
             imc.CreatedDate = DateTime.Now;
@@ -1076,13 +1038,13 @@ namespace QuickApp.Pro.Controllers
         {
             //var allTaxrateInfo = _context.ItemMaster.Include("Manufacturer").Include("Provision").Include("Priority").Include("ItemClassification").Include("Currency").Include("ExportClassification").Where(a => a.ItemTypeId == 1 && (a.IsDeleted == true || a.IsDeleted == null) || a.ItemTypeId == 3 && (a.IsDeleted == true || a.IsDeleted == null)).ToList(); //.GetAllCustomersData();
             var data = (from iM in _context.ItemMasterCapes
-                        where iM.IsDelete != true
+                        where iM.IsDeleted != true
 
                         select new
                         {
                             iM.ItemMasterCapesId,
                             iM.ItemMasterId,
-                            iM.CapabilityId,
+                            //iM.CapabilityId,
                             iM.MasterCompanyId,
                             iM.CreatedBy,
                             iM.UpdatedBy,
@@ -1090,7 +1052,7 @@ namespace QuickApp.Pro.Controllers
                             iM.UpdatedDate,
                             iM.IsActive,
                             iM.ManagementStructureId,
-                            iM.ManufacturerId,
+                            //iM.ManufacturerId,
                             iM.AircraftTypeId,
                             iM.AircraftModelId,
                             iM.AircraftDashNumberId,
@@ -1099,15 +1061,15 @@ namespace QuickApp.Pro.Controllers
                             iM.ATASubChapterId,
                             iM.EntryDate,
                             iM.CMMId,
-							//iM.isIntegrateWith,
-							// iM.IntegrateWith,
-							iM.IsVerified,
-                            iM.VerifiedBy,
-                            iM.DateVerified,
-                            iM.ntehrs,
-                            iM.TAT,
+                            //iM.isIntegrateWith,
+                           // iM.IntegrateWith,
+                            iM.IsVerified,
+                           // iM.VerifiedBy,
+                          //  iM.DateVerified,
+                         //   iM.ntehrs,
+                          //  iM.TAT,
                             iM.Memo,
-                            iM.IsDelete
+                            iM.IsDeleted
                         }).ToList();
             return Ok(data);
 
@@ -1124,7 +1086,7 @@ namespace QuickApp.Pro.Controllers
                                   {
                                       iM.ItemMasterCapesId,
                                       iM.ItemMasterId,
-                                      iM.CapabilityId,
+                                     // iM.CapabilityId,
                                       iM.MasterCompanyId,
                                       iM.CreatedBy,
                                       iM.UpdatedBy,
@@ -1132,7 +1094,7 @@ namespace QuickApp.Pro.Controllers
                                       iM.UpdatedDate,
                                       iM.IsActive,
                                       iM.ManagementStructureId,
-                                      iM.ManufacturerId,
+                                     // iM.ManufacturerId,
                                       iM.AircraftTypeId,
                                       iM.AircraftModelId,
                                       iM.AircraftDashNumberId,
@@ -1142,14 +1104,14 @@ namespace QuickApp.Pro.Controllers
                                       iM.EntryDate,
                                       iM.CMMId,
                                       //iM.isIntegrateWith,
-                                      iM.IntegrateWith,
+                                      //iM.IntegrateWith,
                                       iM.IsVerified,
-                                      iM.VerifiedBy,
-                                      iM.DateVerified,
-                                      iM.ntehrs,
-                                      iM.TAT,
+                                     // iM.VerifiedBy,
+                                     // iM.DateVerified,
+                                     // iM.ntehrs,
+                                      //iM.TAT,
                                       iM.Memo,
-                                      iM.IsDelete
+                                      iM.IsDeleted
                                   }).ToList();
             return Ok(capabilityData);
 
@@ -2057,6 +2019,31 @@ namespace QuickApp.Pro.Controllers
             var parDetails = _unitOfWork.itemMaster.GetPartnumberList(); //.GetAllCustomersData();
 
             return Ok(parDetails);
+        }
+
+        [HttpPost("createitemmastercapes")]
+        public IActionResult CreateItemMasterCapes([FromBody]List<ItemMasterCapes> itemMasterCapes)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = _unitOfWork.itemMaster.CreateItemMasterCapes(itemMasterCapes);
+                return Ok(result);
+            }
+            return Ok(ModelState);
+        }
+
+        [HttpGet("deleteitemmastercapes")]
+        public IActionResult DeleteItemMasterCapes(long itemMasterCapesId, string updatedBy)
+        {
+            _unitOfWork.itemMaster.DeleteItemMasterCapes(itemMasterCapesId, updatedBy);
+            return Ok();
+        }
+
+        [HttpPost("getitemmastercapes")]
+        public IActionResult GetItemMasterCapes([FromBody]Filters<ItemMasterCapesFilters> capesFilters)
+        {
+                var result = _unitOfWork.itemMaster.GetItemMasterCapes(capesFilters);
+                return Ok(result);
         }
     }
 }

@@ -61,5 +61,9 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<ItemMaster> SearchItemMaster(ItemMaster master);
 
         IEnumerable<object> GetPartnumberList();
+
+        List<ItemMasterCapes> CreateItemMasterCapes(List<ItemMasterCapes> itemMasterCapes);
+        void DeleteItemMasterCapes(long itemMasterCapesId, string updatedBy);
+        IEnumerable<object> GetItemMasterCapes(Common.Filters<ItemMasterCapesFilters> capesFilters);
     }
 }

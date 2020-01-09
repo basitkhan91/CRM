@@ -17,7 +17,7 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 import { zip } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
-import { getObjectById, getValueFromArrayOfObjectById } from '../../generic/autocomplete';
+import { getObjectById, getValueFromArrayOfObjectById, listSearchFilterObjectCreation } from '../../generic/autocomplete';
 import { EmployeeService } from '../../services/employee.service';
 import { AircraftManufacturerService } from '../../services/aircraft-manufacturer/aircraftManufacturer.service';
 import { AircraftModelService } from '../../services/aircraft-model/aircraft-model.service';
@@ -97,6 +97,8 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     publishbyInput: string = "";
     employeeNameInput: string = "";
     locationInput: string = "";
+    lazyLoadEventDataInput: any;
+    inputValue: any;
 
     headersforPNMapping = [
         { field: 'partNumber', header: 'PN ID/Code' },
@@ -143,6 +145,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     ataSubChapterList = [
         { label: 'Select ATA SubChapter', value: null }
     ];
+    selectedRowforDelete: any;
 
     constructor(private breadCrumb: SingleScreenBreadcrumbService,
         private configurations: ConfigurationService,
@@ -161,14 +164,14 @@ export class PublicationComponent implements OnInit, AfterViewInit {
             { field: 'publicationId', header: 'Pub ID' },
             { field: 'description', header: 'Pub Description' },
             { field: 'publicationType', header: 'Pub Type' },
-            { field: 'publishby', header: 'Published By' },
+            { field: 'publishedBy', header: 'Published By' },
             { field: 'revisionDate', header: 'Revision Date' },
             { field: 'revisionNum', header: 'Revision Num' },
-            { field: 'nextReviewDate', header: 'Next Revision Date' },
-            { field: 'expirationDate', header: 'ExpirationDate' },
+            { field: 'nextReviewDate', header: 'Next Review Date' },
+            { field: 'expirationDate', header: 'Expiration Date' },
             { field: 'location', header: 'Location' },
-            { field: 'verifiedBy', header: 'VerifiedBy' },
-            { field: 'verifiedDate', header: 'VerifiedDate' },
+            { field: 'verifiedBy', header: 'Verified By' },
+            { field: 'verifiedDate', header: 'Verified Date' },
             //{ field: 'aircraftModel', header: 'Aircraft Model' },
             //{ field: 'aircraftType', header: 'Aircraft Type' },
             //{ field: 'ataChapterName', header: 'ATAChapter Name' },
@@ -192,10 +195,12 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     }
     public allWorkFlows: Publication[] = [];
 
-    private loadData() {
+    private loadData(data) {
+        this.lazyLoadEventDataInput = data;
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.publicationService.getWorkFlows(this.pageIndex, this.pagesize).subscribe(
+        const PagingData = { ...data, filters: listSearchFilterObjectCreation(data.filters) }
+        this.publicationService.getWorkFlows(PagingData).subscribe(
             results => {
                 console.log(results);
                 //this.onDataLoadSuccessful(results[0]['paginationList']);
@@ -331,7 +336,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
 
 
     openDelete(content, row) {
-
+        this.selectedRowforDelete = row;
         this.isEditMode = false;
         this.isDeleteMode = true;
         this.sourceAction = row;
@@ -440,6 +445,12 @@ export class PublicationComponent implements OnInit, AfterViewInit {
                 });
             });
     }
+
+    viewSelectedRowdbl(rowData) {
+        this.openView(rowData);
+        $('#view').modal('show');
+    }
+
     // openHelpText(content) {
     //     this.modal = this.modalService.open(content, { size: 'sm' });
     //     this.modal.result.then(() => {
@@ -567,7 +578,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
 
         }
 
-        this.loadData();
+        //this.loadData();
     }
 
     handleChange(rowData, e) {
@@ -659,10 +670,10 @@ export class PublicationComponent implements OnInit, AfterViewInit {
 
     publicationPagination(event: { first: any; rows: number }) {
         console.log(event);
-        const pageIndex = (event.first / event.rows);
+        const pageIndex = parseInt(event.first) / event.rows;
         this.pageIndex = pageIndex;
         this.pagesize = event.rows; //10
-        this.loadData();
+        this.loadData(event);
     }
 
     // get All AircraftManufacturer
@@ -828,19 +839,32 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     }
 
     onReset() {
-        this.publicationService.getWorkFlows(this.pageIndex, this.pagesize).subscribe(
-            results => {
-                this.onDataLoadSuccessful(results[0]['paginationList']);
-                console.log(results[0]['totalRecordsCount']);
-                this.totalRecords = results[0]['totalRecordsCount'];
-            },
-            error => this.onDataLoadFailed(error)
-        );
+        //this.loadData(this.lazyLoadEventDataInput);
         this.selectAircraftManfacturer = null;
         this.selectedAircraftModel = null;
         this.selectedDashNumbers = null;
         this.selectedATAchapter = null;
         this.selectedATASubChapter = null;
+        this.inputValue = '';
+        this.lazyLoadEventDataInput.filters = {};
+        console.log(this.lazyLoadEventDataInput);        
+        this.publicationService.getWorkFlows(this.lazyLoadEventDataInput).subscribe(
+            results => {
+                console.log(results);
+                this.onDataLoadSuccessful(results[0]);
+                this.totalRecords = results[0][0]['totalRecords'];
+                this.totalPages = Math.ceil(this.totalRecords / this.pagesize);
+            },
+            error => this.onDataLoadFailed(error)
+        );
+        // this.publicationService.getWorkFlows(this.pageIndex, this.pagesize).subscribe(
+        //     results => {
+        //         this.onDataLoadSuccessful(results[0]['paginationList']);
+        //         console.log(results[0]['totalRecordsCount']);
+        //         this.totalRecords = results[0]['totalRecordsCount'];
+        //     },
+        //     error => this.onDataLoadFailed(error)
+        // );        
     }
 
     downloadFileUpload(rowData) {
@@ -875,7 +899,7 @@ export class PublicationComponent implements OnInit, AfterViewInit {
                 event.target.value = '';
 
                 this.formData = new FormData();
-                this.loadData();
+                this.loadData(this.lazyLoadEventDataInput);
                 this.alertService.showMessage(
                     'Success',
                     `Successfully Uploaded  `,
@@ -904,35 +928,48 @@ export class PublicationComponent implements OnInit, AfterViewInit {
     }
 
     onChangeInputField(value, field) {
-        //let value = "";
-        // value = event.target.value;
-        console.log(value, field);
-
-        if (field == "publicationId") {
-            this.publicationIdInput = value;
-        }
-        if (field == "description") {
-            this.descriptionInput = value;
-        }
-        if (field == "publicationType") {
-            this.publicationTypeInput = value;
-        }
-        if (field == "publishby") {
-            this.publishbyInput = value;
-        }
-        if (field == "employeeName") {
-            this.employeeNameInput = value;
-        }
-        if (field == "location") {
-            this.locationInput = value;
-        }
-        this.publicationService.getpublicationListBySearchEndpoint(this.pageIndex, this.pagesize, this.publicationIdInput, this.descriptionInput, this.publicationTypeInput, this.publishbyInput, this.employeeNameInput, this.locationInput).subscribe(
+        console.log(this.lazyLoadEventDataInput);
+        const PagingData = { ...this.lazyLoadEventDataInput, filters: listSearchFilterObjectCreation(this.lazyLoadEventDataInput.filters) }
+        this.publicationService.getWorkFlows(PagingData).subscribe(
             results => {
+                console.log(results);
+                //this.onDataLoadSuccessful(results[0]['paginationList']);
                 this.onDataLoadSuccessful(results[0]);
+                //console.log(results[0]['totalRecordsCount']);
                 this.totalRecords = results[0][0]['totalRecords'];
                 this.totalPages = Math.ceil(this.totalRecords / this.pagesize);
             },
             error => this.onDataLoadFailed(error)
         );
+        //let value = "";
+        // value = event.target.value;
+        // console.log(value, field);
+
+        // if (field == "publicationId") {
+        //     this.publicationIdInput = value;
+        // }
+        // if (field == "description") {
+        //     this.descriptionInput = value;
+        // }
+        // if (field == "publicationType") {
+        //     this.publicationTypeInput = value;
+        // }
+        // if (field == "publishby") {
+        //     this.publishbyInput = value;
+        // }
+        // if (field == "employeeName") {
+        //     this.employeeNameInput = value;
+        // }
+        // if (field == "location") {
+        //     this.locationInput = value;
+        // }
+        // this.publicationService.getpublicationListBySearchEndpoint(this.pageIndex, this.pagesize, this.publicationIdInput, this.descriptionInput, this.publicationTypeInput, this.publishbyInput, this.employeeNameInput, this.locationInput).subscribe(
+        //     results => {
+        //         this.onDataLoadSuccessful(results[0]);
+        //         this.totalRecords = results[0][0]['totalRecords'];
+        //         this.totalPages = Math.ceil(this.totalRecords / this.pagesize);
+        //     },
+        //     error => this.onDataLoadFailed(error)
+        // );
     }
 }

@@ -32,7 +32,8 @@ namespace DAL.Repositories
                             Address2 = ad.Line2,
                             Address3 = ad.Line3,
                             ad.AddressId,
-                            Country= cont.countries_name,
+                            ad.Country,
+                            CountryName = cont.countries_name,
                             ad.PostalCode,
                             ad.City,
                             ad.StateOrProvince,
@@ -81,14 +82,17 @@ namespace DAL.Repositories
         {
             var data = (from v in _appContext.VendorShippingAddressAudit
                         join ad in _appContext.Address on v.AddressId equals ad.AddressId
+                        join cont in _appContext.Countries on Convert.ToInt32(ad.Country) equals cont.countries_id into country
+                        from cont in country.DefaultIfEmpty()
                         where (v.VendorId == vendorId && v.VendorShippingAddressId== vendirShippingAddressId)                        
                         select new
                         {
                             Address1 = ad.Line1,
                             Address2 = ad.Line2,
                             Address3 = ad.Line3,
-                            ad.AddressId,
+                            ad.AddressId,                           
                             ad.Country,
+                            CountryName = cont.countries_name,
                             ad.PostalCode,
                             ad.City,
                             ad.StateOrProvince,

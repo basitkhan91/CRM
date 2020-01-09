@@ -557,7 +557,8 @@ namespace DAL.Repositories
                                 t.UpdatedBy,
                                 t.UpdatedDate,
                                 ad.AddressId,
-                                Country= cont.countries_name,
+                                ad.Country,
+                                CountryName= cont.countries_name,
                                 ad.PostalCode,
                                 t.EDI,
                                 t.EDIDescription,
@@ -579,6 +580,17 @@ namespace DAL.Repositories
                                 (mp1, vc) => new { mp1, vc })
                                 .Where(p => p.mp1.v.VendorId == t.VendorId)
                                 .Select(p => p.vc.ClassificationName)),
+                                IntegrationPortalNames = string.Join(",", _appContext.Vendor
+                                .Join(_appContext.IntegrationPortalMapping,
+                                v => v.VendorId,
+                                mp => mp.ReferenceId,
+                                (v, mp) => new { v, mp })
+                               .Join(_appContext.IntegrationPortal,
+                                mp1 => mp1.mp.ReferenceId,
+                                inte => Convert.ToInt64(inte.IntegrationPortalId),
+                              (mp1, inte) => new { mp1, inte })
+                              .Where(p => p.mp1.v.VendorId == t.VendorId)
+                               .Select(p => p.inte.Description)),
 
                             })/*.Where(t => t.IsActive == true)*/.OrderByDescending(c => c.CreatedDate).ToList();
                 return data;
@@ -1319,6 +1331,8 @@ namespace DAL.Repositories
             {
                 var list = (from vba in _appContext.VendorBillingAddressAudit
                             join ad in _appContext.Address on vba.AddressId equals ad.AddressId
+                            join cont in _appContext.Countries on Convert.ToInt32(ad.Country) equals cont.countries_id into country
+                            from cont in country.DefaultIfEmpty()
                             where vba.VendorId == vendorId && vba.VendorBillingAddressId == vendorBillingaddressId
                             select new
                             {
@@ -1331,7 +1345,8 @@ namespace DAL.Repositories
                                 ad.City,
                                 ad.StateOrProvince,
                                 ad.PostalCode,
-                                ad.Country,
+                                ad.Country,                                
+                                CountryName = cont.countries_name,
                                 vba.CreatedDate,
                                 vba.UpdatedBy,
                                 vba.UpdatedDate,
@@ -1523,7 +1538,8 @@ namespace DAL.Repositories
                             Address2 = ad.Line2,
                             Address3 = ad.Line3,
                             ad.AddressId,
-                            Country=cont.countries_name,
+                            ad.Country,
+                            CountryName = cont.countries_name,
                             ad.PostalCode,
                             ad.City,
                             ad.StateOrProvince,
