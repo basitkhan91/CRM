@@ -1029,6 +1029,7 @@ namespace QuickApp.Pro.Controllers
                 contactObj.IsActive = CustomerContactViewModel.IsActive;
                 contactObj.CreatedDate = DateTime.Now;
                 contactObj.UpdatedDate = DateTime.Now;
+                contactObj.IsDeleted = false;
                 contactObj.CreatedBy = CustomerContactViewModel.CreatedBy;
                 contactObj.UpdatedBy = CustomerContactViewModel.UpdatedBy;
 
@@ -1080,6 +1081,7 @@ namespace QuickApp.Pro.Controllers
                 //contactObj.IsDefaultContact = contactViewModel.IsDefaultContact;
                 contactObj.CreatedBy = contactViewModel.CreatedBy;
                 contactObj.UpdatedBy = contactViewModel.UpdatedBy;
+                
                 _unitOfWork.ContactRepository.Update(contactObj);
                 _unitOfWork.SaveChanges();
                 /*Update Customer Contacts*/
@@ -1184,20 +1186,43 @@ namespace QuickApp.Pro.Controllers
         //}
 
 
+        //[HttpDelete("CustomerContact/{id}")]
+        //[Produces(typeof(CustomercontactViewModel))]
+        //public IActionResult DeleteAction(long id)
+        //{
+        //    var existingResult = _unitOfWork.ContactRepository.GetSingleOrDefault(c => c.ContactId == id);
+        //    var existingResultofcustomerContact = _unitOfWork.CustomerContact.GetSingleOrDefault(c => c.ContactId == id);
+        //    _unitOfWork.CustomerContact.Remove(existingResultofcustomerContact);
+        //    _unitOfWork.SaveChanges();
+        //    _unitOfWork.ContactRepository.Remove(existingResult);
+        //    _unitOfWork.SaveChanges();
+
+        //    return Ok(id);
+        //}
+
+
         [HttpDelete("CustomerContact/{id}")]
         [Produces(typeof(CustomercontactViewModel))]
-        public IActionResult DeleteAction(long id)
+        public IActionResult DeleteAction(long id,string updatedBy)
         {
-            var existingResult = _unitOfWork.ContactRepository.GetSingleOrDefault(c => c.ContactId == id);
-            var existingResultofcustomerContact = _unitOfWork.CustomerContact.GetSingleOrDefault(c => c.ContactId == id);
-            _unitOfWork.CustomerContact.Remove(existingResultofcustomerContact);
-            _unitOfWork.SaveChanges();
-            _unitOfWork.ContactRepository.Remove(existingResult);
-            _unitOfWork.SaveChanges();
+                    
+            CustomerContact model = new CustomerContact();
+            model.CustomerContactId = id;
+            model.UpdatedDate = DateTime.Now;
+            model.IsDeleted = true;
+            model.UpdatedBy = updatedBy;
 
-            return Ok(id);
+            _context.CustomerContact.Attach(model);
+
+            _context.Entry(model).Property(x => x.IsDeleted).IsModified = true;
+            _context.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+            _context.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+            _context.SaveChanges();
+            return Ok();
+
+
         }
-
         [HttpPost("CustomerShippingPost")]
         public IActionResult CreateShipping([FromBody] CustomerShippingViewModel Customershipping, Address address, long? CustomerAddressid, CustomerShippingAdressViewModel customerShippingAdressViewModel)
         {

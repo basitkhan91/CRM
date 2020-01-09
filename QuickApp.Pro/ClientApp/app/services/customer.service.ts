@@ -276,9 +276,9 @@ export class CustomerService {
         return this.customerEndpoint.getDeletecustomerEndpoint(CustomerId);
 
     }
-    deleteContact(CustomerId: any) {
+    deleteContact(CustomerId: any, updatedBy: string) {
 
-        return this.customerEndpoint.deleteContact(CustomerId);
+        return this.customerEndpoint.deleteContact(CustomerId, updatedBy);
     }
 
     getCustomerShipAddressGet(customerId: any) {
