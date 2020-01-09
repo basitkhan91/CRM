@@ -38,6 +38,7 @@ export class AssetAttributeTypeComponent implements OnInit {
     rowName: string;
     header: string;
     disableSave: boolean = false;
+    recordExists: boolean = false;
     loadingIndicator: boolean;
     totalRecords: any;
     pageIndex: number = 0;
@@ -184,6 +185,7 @@ export class AssetAttributeTypeComponent implements OnInit {
 
     loadHierarchy(mgmtStructureData) {
         this.allmgmtData = mgmtStructureData;
+        this.companyListData = [];
         this.companyList = this.allmgmtData.filter(c => c.parentId == null);
         if (this.companyList.length > 0) {
             for (let i = 0; i < this.companyList.length; i++ ) {
@@ -218,18 +220,18 @@ export class AssetAttributeTypeComponent implements OnInit {
         console.log(`Company Id :${this.selectedCompanyID}`);
 
         if (this.selectedCompanyID != undefined && this.selectedCompanyID.toString() !== "0") {
-            this.mgmtStructureId = this.selectedCompanyID;
+            //this.mgmtStructureId = this.selectedCompanyID;
             this.disableForMgmtStructure = false;
         }
         else {
             this.disableForMgmtStructure = true;
         }
-        this.divisionList = [];
+        /*this.divisionList = [];
         this.departmentList = [];
         this.selectedBUId = 0;
         this.selectedDeptID = 0;
         this.selectedDivisionID = 0;
-        this.buList = this.allmgmtData.filter(c => c.parentId === this.selectedCompanyID);
+        this.buList = this.allmgmtData.filter(c => c.parentId === this.selectedCompanyID);*/
     }
 
     buSelected(): void {
@@ -593,12 +595,26 @@ export class AssetAttributeTypeComponent implements OnInit {
     selectedAssetType(object) {
         //console.log('selectedAssetType.assetTypeName', this.currentRow.assetTypeId);
         //console.log('selectedAssetType.memo', object.assetTypeMemo);
+        
+        console.log(object.assetTypeId);
+        for (let i = 0; i < this.itemList.length; i++) {
+            if ((this.itemList[i].assetTypeId === object.assetTypeId && this.currentModeOfOperation == 2)
+                || (this.itemList[i].assetTypeId === object.assetTypeId && this.currentModeOfOperation == 3 &&
+                this.currentRow.assetAttributeTypeId != this.itemList[i].assetAttributeTypeId)
+            ) {
+                this.recordExists = true;
+                this.disableSave = true;
+                return;
+            }
+        }
+        this.disableSave = false;
+        this.recordExists = false;
         this.currentRow.description = object.assetTypeMemo;
     }
 
     showItemEdit(rowData): void {
         this.currentModeOfOperation = ModeOfOperation.Update;
-        this.disableSave = true;
+        //this.disableSave = true;
         //console.log('currentModeOfOperation', this.currentModeOfOperation);
         this.currentRowData = rowData;
         this.currentRow = {
@@ -617,7 +633,7 @@ export class AssetAttributeTypeComponent implements OnInit {
         };
         this.currentRow = { ...this.currentRow };
         this.mgmtStructureId = this.currentRow.managementStructureId;
-        this.populateMgmtStructure(this.currentRow.managementStructureId);
+        //this.populateMgmtStructure(this.currentRow.managementStructureId);
         //console.log("conventionType = " + this.currentRow);
     }
 
@@ -747,7 +763,7 @@ export class AssetAttributeTypeComponent implements OnInit {
     }
 
     resetFromData() {
-        this.selectedCompanyID = 0;
+        this.selectedCompanyID = [];
         this.selectedBUId = 0;
         this.selectedDivisionID = 0;
         this.selectedDeptID = 0;
@@ -755,6 +771,7 @@ export class AssetAttributeTypeComponent implements OnInit {
     }
 
     onChangeSelectField(object, field) {
+        /*
         if (this.currentModeOfOperation = ModeOfOperation.Update) {
             if (this.currentRowData[field] == object[field]) {
                 this.disableSave = true;
@@ -763,6 +780,7 @@ export class AssetAttributeTypeComponent implements OnInit {
                 this.disableSave = false;
             }
         }
+        */
     }
 
     viewItemDetailsClick(content, row) {
