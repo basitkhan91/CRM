@@ -37,7 +37,7 @@ namespace DAL.Repositories.Interfaces
         
         IEnumerable<object> searchGetATAMappingDataByMultiATAIdSUBATAID(long PublicationId, string ATAChapterID, string SubATAChapterID);
 
-        IEnumerable<object> GetPublicationsList(string publicationId, string description, string publicationType, string publishedBy, string employee, string location, int pageNumber, int pageSize);
+        IEnumerable<object> GetPublicationsList(Filters<PublicationFilters> pubFilters);
 
 
         GetData<PublicationsList> PublicationsGlobalSearch(long? ataChapterId, long? ataSubChapterId, long? airCraftId, long? modelId, long? dashNumberId, int pageNumber, int pageSize);

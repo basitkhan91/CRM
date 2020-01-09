@@ -331,7 +331,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
             { field: 'city', header: 'City' },
             { field: 'stateOrProvince', header: 'State/Prov' },
 			{ field: 'postalCode', header: 'Postal Code' },
-            { field: 'country', header: 'Country' }
+            { field: 'countryName', header: 'Country' }
         ];
         this.selectedColumns = this.cols;
 	}
@@ -544,7 +544,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.city = row.city;
 		this.stateOrProvince = row.stateOrProvince;
 		this.postalCode = row.postalCode;
-		this.country = row.country;
+		this.country = row.countryName;
         this.createdBy = row.createdBy;
         this.updatedBy = row.updatedBy;
         this.createddate = row.createdDate;

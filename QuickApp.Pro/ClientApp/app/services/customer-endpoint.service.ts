@@ -886,12 +886,16 @@ export class CustomerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getCustomerShipViaDetails(roleObject));
             });
     }
-    deleteContact<T>(contactId: any): Observable<T> {
-        let endpointUrl = `${this._deleteContactUrl}/${contactId}`;
-        return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getDeleteCustomerEndpoint(contactId));
-            });
+    //deleteContact<T>(contactId: any,updatedBy:string): Observable<T> {
+    //    let endpointUrl = `${this._deleteContactUrl}/${contactId}`;
+    //    return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
+    //        .catch(error => {
+    //            return this.handleError(error, () => this.deleteContact(contactId,updatedBy));
+    //        });
+    //}
+
+    deleteContact(id, updatedBy) {
+        return this.http.delete(`${this._deleteContactUrl}/${id}?updatedBy=${updatedBy}`, this.getRequestHeaders())
     }
 
     updateBillingViainfo<T>(roleObject: any, customerId: any): Observable<T> {

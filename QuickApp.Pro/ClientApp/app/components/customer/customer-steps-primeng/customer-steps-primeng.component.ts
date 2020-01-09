@@ -345,7 +345,14 @@ export class CustomerStepsPrimengComponent {
     
         // const id = this.savedGeneralInformationData.customerId;
         this.customerService.getContactsByCustomerId(customerId).subscribe(res => {
-            this.contactList = res;
+            //this.contactList = res;
+
+            const responseData: any = res;
+            this.contactList = responseData.map(x => {
+                return {
+                    label: x.firstName, value: x.contactId
+                }
+            })
             console.log(res);
 
         })

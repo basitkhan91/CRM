@@ -156,7 +156,7 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         if (this.vendorService.generalCollection) {
             this.local = this.vendorService.generalCollection; 
             this.toGetVendorGeneralDocumentsList(this.local.vendorId);       
-        }        
+        }       
 
 
 

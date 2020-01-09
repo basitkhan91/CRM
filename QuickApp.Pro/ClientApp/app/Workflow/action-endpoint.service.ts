@@ -23,7 +23,8 @@ export class ActionEndpoint extends EndpointFactory {
 	private getChargesTypeURL: string = 'api/mastertest/ChargesType';
 	private getChargesCurrencyURL: string = 'api/mastertest/ChargesCurrency';
 	private getEquipmentAssetTypesURL: string = 'api/mastertest/EquipmentAssetType';
-	private getExpertiseTypeURL: string = 'api/mastertest/ExpertiseType';
+    private getExpertiseTypeURL: string = 'api/mastertest/ExpertiseType';
+    private getEmployeeExpertiseTypeURL: string = 'api/mastertest/EmployeeExpertiseType';    
 	private getMaterialConditionURL: string = 'api/mastertest/MaterialCondition';
 	private getMaterialUOMURL: string = 'api/mastertest/MaterialUOM';
 	private getMaterialMandatoryURL: string = 'api/mastertest/MaterialMandatory';
@@ -451,6 +452,15 @@ export class ActionEndpoint extends EndpointFactory {
 				return this.handleError(error, () => this.GetExpertiseType());
 			});
     }
+
+    getEmployeeExpertiseType<T>(): Observable<T> {
+
+        return this.http.get<T>(this.getEmployeeExpertiseTypeURL, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getEmployeeExpertiseType());
+            });
+    }
+    
 
 	getEquipmentAssetType<T>(): Observable<T> {
 
