@@ -1035,7 +1035,7 @@ namespace DAL.Repositories
             {
                 var list = (from im in _appContext.ItemMaster
                             join ic in _appContext.ItemClassification on im.ItemClassificationId equals ic.ItemClassificationId
-                            join alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping on im.ItemMasterId equals alt.MappingItemMasterId
+                            join alt in _appContext.Nha_Tla_Alt_Equ_ItemMapping on im.ItemMasterId equals alt.ItemMasterId
                             into imalt
                             from alt in imalt.DefaultIfEmpty()
                             join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
