@@ -84,6 +84,7 @@ export class WorkOrderListComponent implements OnInit {
     isGlobalFilter: boolean = false;
     private onDestroy$: Subject<void> = new Subject<void>();
     viewType: any = 'mpn';
+
     constructor(private workOrderService: WorkOrderService,
         private route: Router,
         private authService: AuthService,
@@ -121,6 +122,10 @@ export class WorkOrderListComponent implements OnInit {
     // { field: 'stageType', header: 'Stage Code' },
     // { field: 'workOrderStatus', header: 'Status' },
 
+    getColorCodeForMultiple(data) {
+        return data['partNoType'] === 'Multiple' ? 'green' : 'black';
+    }
+
     mouseOverData(key, data) {
         if (key === 'partNoType') {
             return data['partNos']
@@ -137,20 +142,31 @@ export class WorkOrderListComponent implements OnInit {
             return moment(data['openDate']).format('MM-DD-YYYY');
         }
         else if (key === 'customerRequestDateType') {
-            return data['customerRequestDate'] !== 'Multiple' ? moment(data['customerRequestDateType']).format('MM-DD-YYYY') : data['customerRequestDateType'];
+
+            return this.convertmultipleDates(data['customerRequestDate']);
         }
         else if (key === 'promisedDateType') {
-            return data['promisedDate'] !== 'Multiple' ? moment(data['promisedDateType']).format('MM-DD-YYYY') : data['promisedDateType'];
+            return this.convertmultipleDates(data['promisedDate']);
         } else if (key === 'estimatedShipDateType') {
-            return data['estimatedShipDate'] !== 'Multiple' ? moment(data['estimatedShipDateType']).format('MM-DD-YYYY') : data['estimatedShipDateType'];
+            return this.convertmultipleDates(data['estimatedShipDate']);
         } else if (key === 'stageType') {
             return data['stage']
-        } else if(key ==='estimatedCompletionDateType'){
-            return data['estimatedCompletionDateType'] !== 'Multiple' ? moment(data['estimatedCompletionDateType']).format('MM-DD-YYYY') : data['estimatedCompletionDateType'];
+        } else if (key === 'estimatedCompletionDateType') {
+            return this.convertmultipleDates(data['estimatedCompletionDate']);
+            // return data['estimatedCompletionDateType'] !== 'Multiple' ? moment(data['estimatedCompletionDate']).format('MM-DD-YYYY') : data['estimatedCompletionDate'];
         } else {
             return data[key]
         }
 
+    }
+
+    convertmultipleDates(value) {
+        const arrDates = [];
+        const arr = value.split(',');
+        for (var i = 0; i < arr.length; i++) {
+            arrDates.push(moment(arr[i]).format('MM-DD-YYYY'));
+        }
+        return arrDates;
     }
 
     convertDate(key, data) {
@@ -158,15 +174,15 @@ export class WorkOrderListComponent implements OnInit {
             return moment(data['openDate']).format('MM-DD-YYYY');
         }
         else if (key === 'customerRequestDateType') {
-            return data['customerRequestDateType'] !== 'Multiple' ? moment(data['customerRequestDateType']).format('MM-DD-YYYY') : data['customerRequestDateType'];
+            return data['customerRequestDateType'] !== 'Multiple' ? moment(data['customerRequestDate']).format('MM-DD-YYYY') : data['customerRequestDateType'];
         }
         else if (key === 'promisedDateType') {
-            return data['promisedDateType'] !== 'Multiple' ? moment(data['promisedDateType']).format('MM-DD-YYYY') : data['promisedDateType'];
+            return data['promisedDateType'] !== 'Multiple' ? moment(data['promisedDate']).format('MM-DD-YYYY') : data['promisedDateType'];
         }
         else if (key === 'estimatedShipDateType') {
-            return data['estimatedShipDateType'] !== 'Multiple' ? moment(data['estimatedShipDateType']).format('MM-DD-YYYY') : data['estimatedShipDateType'];
-        } else if(key ==='estimatedCompletionDateType'){
-            return data['estimatedCompletionDateType'] !== 'Multiple' ? moment(data['estimatedCompletionDateType']).format('MM-DD-YYYY') : data['estimatedCompletionDateType'];  
+            return data['estimatedShipDateType'] !== 'Multiple' ? moment(data['estimatedShipDate']).format('MM-DD-YYYY') : data['estimatedShipDateType'];
+        } else if (key === 'estimatedCompletionDateType') {
+            return data['estimatedCompletionDateType'] !== 'Multiple' ? moment(data['estimatedCompletionDate']).format('MM-DD-YYYY') : data['estimatedCompletionDateType'];
         } else {
             return data[key];
         }
@@ -195,7 +211,11 @@ export class WorkOrderListComponent implements OnInit {
         this.pageIndex = pageIndex;
         this.pageSize = event.rows;
         event.first = pageIndex;
-        this.lazyLoadEventData.filters = { ...this.lazyLoadEventData.filters, workOrderStatus: 'open' }
+        this.lazyLoadEventData.filters = {
+            ...this.lazyLoadEventData.filters,
+            workOrderStatus: 'open',
+            viewType: this.viewType
+        }
         if (!this.isGlobalFilter) {
             this.getAllWorkOrderList(event);
         } else {
