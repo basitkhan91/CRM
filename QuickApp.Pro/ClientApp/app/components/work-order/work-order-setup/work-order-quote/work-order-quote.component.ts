@@ -136,8 +136,6 @@ tabQuoteCreated: Object = {
   }
 
   calculateExpiryDate() {
-    console.log(this.validFor);
-    console.log(this.quoteDueDate);
     if(this.validFor && this.quoteDueDate){
       this.expirationDate = new Date();
       this.expirationDate.setDate(this.quoteDueDate.getDate() + this.validFor);
@@ -252,6 +250,7 @@ tabQuoteCreated: Object = {
             this.warnings = res.warnings;
             this.memo = res.memo;
             this.getQuoteTabData();
+            this.setBuildMethod(res.buildMethodId);
 
           }
         }
@@ -316,7 +315,11 @@ tabQuoteCreated: Object = {
           },
           label: x.partNumber
         }
-      })
+      });
+      if(this.savedWorkOrderData.isSinglePN){
+        this.selectedPartNumber = this.mpnPartNumbersList[0].label;
+        this.partNumberSelected();
+      }
     })
   }
 
@@ -399,16 +402,16 @@ tabQuoteCreated: Object = {
   }
   gridTabChange(value) {
     this.gridActiveTab = value;
-    if(this.isEdit || this.tabQuoteCreated['materialList']){
+    if((this.isEdit || this.tabQuoteCreated['materialList']) && value == 'materialList'){
       this.getQuoteMaterialListByWorkOrderQuoteId();
     }
-    else if(this.isEdit || this.tabQuoteCreated['charges']){
+    else if((this.isEdit || this.tabQuoteCreated['charges']) && value == 'charges'){
       this.getQuoteChargesListByWorkOrderQuoteId();
     }
-    else if(this.isEdit || this.tabQuoteCreated['exclusions']){
+    else if((this.isEdit || this.tabQuoteCreated['exclusions']) && value == 'exclusions'){
       this.getQuoteExclusionListByWorkOrderQuoteId();
     }
-    else if(this.isEdit || this.tabQuoteCreated['labor']){
+    else if((this.isEdit || this.tabQuoteCreated['labor']) && value == 'labor'){
       for(let task in this.labor.workOrderLaborList[0]){
         this.labor.workOrderLaborList[0][task] = [];
       }
@@ -787,6 +790,26 @@ getBuildMethodId(){
   else if(this.selectedBuildMethod === 'use historical wos') return 2;
   else if(this.selectedBuildMethod === 'build from scratch') return 3;
   else if(this.selectedBuildMethod === 'display 3rd party') return 4;
+}
+
+setBuildMethod(id){
+  if(id === 1) 
+  {
+    this.selectedBuildMethod='use work flow';
+    // this.buildMethodSelected('use work flow');
+  }
+  else if(id === 2) {
+    this.selectedBuildMethod='use historical wos';
+    // this.buildMethodSelected('use historical wos');
+  }
+  else if(id === 3) {
+    this.selectedBuildMethod='build from scratch';
+    // this.buildMethodSelected('build from scratch');
+  }
+  else if(id === 4) {
+    this.selectedBuildMethod='display 3rd party';
+    // this.buildMethodSelected('display 3rd party');
+  }
 }
 
 saveWorkOrderExclusionsList(data) {

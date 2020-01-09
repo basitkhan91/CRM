@@ -274,7 +274,12 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             actionAttributes => {
                 this.actionAttributes = [];
                 for (let attr of actionAttributes) {
-                    this.actionAttributes.push({ Id: attr.actionAttributeId, Name: attr.description })
+                    if(this.isQuote && (attr.description == 'Material List' || attr.description == 'Charges' || attr.description == 'Exclusions' || attr.description == 'Expertise')) {
+                        this.actionAttributes.push({ Id: attr.actionAttributeId, Name: attr.description });
+                    }
+                    else if(!this.isQuote){
+                        this.actionAttributes.push({ Id: attr.actionAttributeId, Name: attr.description });
+                    }
                 }
             },
             error => this.errorMessage = <any>error
