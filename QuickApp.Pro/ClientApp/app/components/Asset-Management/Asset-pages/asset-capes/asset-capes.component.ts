@@ -187,7 +187,7 @@ export class AssetCapesComponent implements OnInit {
              this.resetFormArray(element);
          });*/
         this.AssetId = this.router.snapshot.params['id'];
-        console.log('190',this.AssetId);
+        console.log('190', this.AssetId);
         if (this.assetServices.listCollection == null) {
             this.GetAssetData(this.AssetId);
         }
@@ -654,7 +654,7 @@ export class AssetCapesComponent implements OnInit {
                     // checks where multi select is empty or not and calls the service
 
                     if (capData.selectedAircraftTypes !== '' && capData.selectedAircraftModelTypes !== '') {
-                        this.dashnumberservices.getDashNumberByModelTypeId(
+                        this.dashnumberservices.getCapesDashNumberByModelTypeId(
                             capData.selectedAircraftModelTypes,
                             capData.selectedAircraftTypes
                         ).subscribe(dashnumbers => {
@@ -900,7 +900,6 @@ export class AssetCapesComponent implements OnInit {
                 console.log(899, this.aircraftData);
             })
         }
-        this.addModels(capdata);
         if (this.selectedAircraftId !== undefined && this.modelUnknown) {
             this.aircraftData = [{
                 AircraftType: this.newValue,
@@ -908,8 +907,8 @@ export class AssetCapesComponent implements OnInit {
                 DashNumber: 'Unknown',
                 AircraftModelId: '',
                 DashNumberId: '',
-                Memo: '',
-                IsChecked: false
+                CapibilityType: capdata.selectedCap,
+                PartNumber: capdata.selectedPartId
             }]
         }
 
@@ -917,17 +916,17 @@ export class AssetCapesComponent implements OnInit {
             console.log(915);
             this.aircraftData = this.selectedModelId.map(x => {
                 return {
-                    AircraftType: this.newValue,
+                    AircraftType: x.aircraft,
                     AircraftModel: x.modelName,
                     DashNumber: 'Unknown',
                     AircraftModelId: x.aircraftModelId,
                     DashNumberId: '',
-                    Memo: '',
-                    IsChecked: false
+                    CapibilityType: capdata.selectedCap,
+                    PartNumber: capdata.selectedPartId
                 }
             })
         }
-
+        this.addModels(capdata);
 
 
         console.log(930, this.aircraftData);
@@ -1115,17 +1114,20 @@ export class AssetCapesComponent implements OnInit {
         //let selectedData = event.value;
         console.log(event);
         let selectedData = event.target.value;
+
         console.log('selectedData', selectedData);
         capData.selectedManufacturer = [];
         //this.loadModalsForExistingRecords(capData);
         if (selectedData) {
-            selectedData = selectedData.split(":")[0];
+            selectedData = selectedData.split(":")[1];
             this.selectedAircraftId = selectedData;
+
         }
         console.log('selectedData', selectedData);
         this.manufacturerData.forEach(element2 => {
             if (selectedData == element2.value) {
                 capData.selectedManufacturer.push(element2);
+                this.newValue = element2.label;
             }
         })
         /*
@@ -1284,24 +1286,18 @@ export class AssetCapesComponent implements OnInit {
                 //this.capabilityEditCollection = getSelectedCollection;
                 //this.cunstructFormForEdit()
 
-                if (data[0].aircraftTypeId !== undefined && data[0].aircraftModelId !== undefined && data[0].aircraftDashNumberId !== undefined) {
-                    this.dashnumberservices.getAllDashModels(data[0].aircraftModelId, data[0].aircraftTypeId, data[0].aircraftDashNumberId).subscribe(aircraftdata => {
-                        const responseValue = aircraftdata;
-                        this.aircraftData = responseValue.map(x => {
-                            return {
-                                AircraftType: x.aircraft,
-                                AircraftModel: x.model,
-                                DashNumber: x.dashNumber,
-                                AircraftModelId: x.modelid,
-                                DashNumberId: x.dashNumberId,
-                                CapibilityType: data[0].captypedescription,
-                                PartNumber: data[0].partNumber
-                            }
-                        })
-                    })
-                }
+                this.aircraftData = [{
+                    AircraftType: data[0].manufacturer,
+                    AircraftModel: data[0].modelname,
+                    DashNumber: data[0].dashNumber,
+                    AircraftModelId: data[0].aircraftModelId,
+                    DashNumberId: data[0].aircraftDashNumberId,
+                    CapibilityType: data[0].captypedescription,
+                    PartNumber: data[0].partNumber
+                }]
             }
-        });
+        }
+        );
 
         this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
