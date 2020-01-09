@@ -1,4 +1,5 @@
 ﻿import { Component } from '@angular/core';
+import { Location } from "@angular/common";
 import { Router, ActivatedRoute } from '@angular/router';
 import { CustomerService } from '../../../services/customer.service';
 import { EmployeeService } from '../../../services/employee.service';
@@ -46,7 +47,8 @@ export class CustomerStepsPrimengComponent {
 		public employeeService: EmployeeService,
 		private atamain: AtaMainService,
         private alertService: AlertService,
-        private route: Router
+		private route: Router,
+		location: Location
 	) {
 		// let currentUrl = this.route.url;
 		// this.customerService.alertChangeObject$.subscribe(value => {
@@ -57,6 +59,7 @@ export class CustomerStepsPrimengComponent {
 		// 	this.activeIndex = value;
 
 		// });
+		console.log(location.path());
 	}
 
 	ngOnInit() {

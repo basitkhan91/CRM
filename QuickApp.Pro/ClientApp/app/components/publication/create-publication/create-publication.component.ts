@@ -83,9 +83,10 @@ export class CreatePublicationComponent implements OnInit {
   employeeList:any = [];
   ataList = [];
   headersforPNMapping = [
-    { field: 'partNumber', header: 'PN ID/Code' },
+    { field: 'partNumber', header: 'PN' },
     { field: 'partDescription', header: 'PN Description' },
-    { field: 'itemClassification', header: 'Item Classification' }
+    { field: 'itemClassification', header: 'Item Classification' },
+    {field: 'manufacturer' , header: 'Manufacturer'}
   ];
 
   aircraftManufacturerList: { label: string; value: number }[];
@@ -536,6 +537,7 @@ export class CreatePublicationComponent implements OnInit {
         ItemClassification:
           obj.itemClassification === null ? '-' : obj.itemClassification,
         ItemClassificationId: obj.itemClassificationId,
+        manufacturer: obj.manufacturer === null ? '-' : obj.manufacturer,
         ItemGroupId: obj.itemGroupId == null ? 1 : obj.itemGroupId,
         CreatedBy: this.userName,
         UpdatedBy: this.userName,
@@ -561,7 +563,8 @@ export class CreatePublicationComponent implements OnInit {
               ...x,
               partNumber: x.partNumber,
               partDescription: x.partDescription,
-              itemClassification: x.itemClassification
+              itemClassification: x.itemClassification,
+              manufacturer: x.manufacturer
             };
           });
           this.alertService.showMessage("Success", `PN Mapping Done Successfully`, MessageSeverity.success);

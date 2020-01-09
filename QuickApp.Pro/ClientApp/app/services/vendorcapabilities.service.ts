@@ -81,5 +81,12 @@ export class VendorCapabilitiesService {
     searchAirMappedByMultiTypeIdModelIDDashID(vendorCapesId: number, searchUrl: string) {
         return this.vendorCapabilitiesEndpoint.searchAirMappedByMultiTypeIDModelIDDashID<any>(vendorCapesId, searchUrl);
     }
+
+    newIVendorAircarftClass(action: any) {
+        return this.vendorCapabilitiesEndpoint.getNewitemVendorAircraftEndpoint<any>(action);
+    }
     
+    deleteAirCraft(ItemMasterAirMappingId: number,updatedBy:string) {        
+        return this.vendorCapabilitiesEndpoint.deleteAirCraftEndpoint<any>(ItemMasterAirMappingId,updatedBy);
+    }
 }

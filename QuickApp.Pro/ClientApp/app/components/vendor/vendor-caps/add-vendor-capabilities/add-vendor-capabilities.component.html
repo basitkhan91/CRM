@@ -207,7 +207,7 @@
 											<h4 class="float-left">Search Aircraft Information</h4>
 											<h4 class="float-right">
 												Add Aircraft Information
-												<a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ModalDashNumber"><i class="fa fa-plus-circle fa-lg"></i></a>
+												<a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ModalDashNumber"><i class="fa fa-plus-circle fa-lg" (click)="onAddAircraftInfo()"></i></a>
 											</h4>
 										</div>
 										<div class="col-md-3">
@@ -235,7 +235,7 @@
 										<div class="col-md-2">
 											<div class="form-group">
 												<label class="fs12">Memo </label>
-												<input type="text" style="height: 27px !important" pInputText />
+												<input type="text" style="height: 27px !important" [(ngModel)]="memoUrl" [ngModelOptions]="{standalone: true}" pInputText />
 											</div>
 										</div>
 										<div class="col-md-1 add-new-align">
@@ -289,7 +289,7 @@
 	</div>
 </div>
 
-	<div class="modal fade" id="add-description" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal fade aircraft-info-popup" id="add-description" role="dialog" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-sm" style="max-width: 400px !important;">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -399,16 +399,16 @@
         </div>
 		</div>
 		
-		<div class="modal fade" id="aircraftDelete" role="dialog" data-backdrop="static" data-keyboard="false">
+		<div class="modal fade aircraft-info-popup" id="aircraftDelete" role="dialog" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-sm">
 				<div class="modal-content">
 				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<button type="button" class="close" (click)="dismissDeleteModel();">&times;</button>
 					<h4 class="modal-title">Are You Sure Want to Delete?</h4>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteAircraftMapped();">Yes</button>
-					<button type="button" class="btn btn-danger-cstm" data-dismiss="modal">No</button>
+					<button type="button" class="btn btn-primary-cstm" (click)="deleteAircraftMapped();">Yes</button>
+					<button type="button" class="btn btn-danger-cstm" (click)="dismissDeleteModel();">No</button>
 				</div>
 				</div>
 			</div>

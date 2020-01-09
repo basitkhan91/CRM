@@ -59,5 +59,7 @@ namespace DAL.Repositories.Interfaces
 
 
         IEnumerable<ItemMaster> SearchItemMaster(ItemMaster master);
+
+        IEnumerable<object> GetPartnumberList();
     }
 }

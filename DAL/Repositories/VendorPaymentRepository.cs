@@ -62,6 +62,9 @@ namespace DAL.Repositories
                 var data = (from t in _appContext.DomesticWirePayment
                             join ad in _appContext.VendorDomesticWirePayment on t.DomesticWirePaymentId equals ad.DomesticWirePaymentId
                             join add in _appContext.Address on t.BankAddressId equals add.AddressId
+                            join cont in _appContext.Countries on Convert.ToInt32(add.Country) equals cont.countries_id into country
+                            from cont in country.DefaultIfEmpty()
+
                             where ad.VendorId==vendorId
 
                            
@@ -83,7 +86,7 @@ namespace DAL.Repositories
                                 t.UpdatedBy,
                                 t.UpdatedDate,
                                 add.AddressId,
-                                add.Country,
+                                Country= cont.countries_name,
                                 add.PostalCode,
                                 ad.VendorDomesticWirePaymentId,
                                 t.DomesticWirePaymentId,
@@ -104,6 +107,9 @@ namespace DAL.Repositories
                 var data = (from t in _appContext.InternationalWirePayment
                             join ad in _appContext.VendorInternationlWirePayment on t.InternationalWirePaymentId equals ad.InternationalWirePaymentId
                             join add in _appContext.Address on t.BankAddressId equals add.AddressId
+                            join cont in _appContext.Countries on Convert.ToInt32(add.Country) equals cont.countries_id into country
+                            from cont in country.DefaultIfEmpty()
+
                             where ad.VendorId == vendorId
 
 
@@ -126,7 +132,7 @@ namespace DAL.Repositories
                                 t.UpdatedBy,
                                 t.UpdatedDate,
                                 add.AddressId,
-                                add.Country,
+                                Country= cont.countries_name,
                                 add.PostalCode,
                                 ad.VendorInternationalWirePaymentId,
                                 t.InternationalWirePaymentId

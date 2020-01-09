@@ -38,6 +38,7 @@ import { Console } from '@angular/core/src/console';
 import { ShippingService } from '../../../../services/shipping/shipping-service';
 import { forEach } from '@angular/router/src/utils/collection';
 import { TagTypeService } from '../../../../services/tagtype.service';
+import { getValueFromObjectByKey, getValueFromArrayOfObjectById } from '../../../../generic/autocomplete';
 @Component({
     selector: 'app-receivng-po',
     templateUrl: './receivng-po.component.html',
@@ -98,6 +99,7 @@ export class ReceivngPoComponent implements OnInit {
     traceabletocustomer: boolean = false;
     traceabletoother: boolean = false;
     traceabletovendor: boolean = false;
+    creditTermsList: any = [];
     //showGrid: boolean;
     //userName: any;
     //collectionofstockLine: any;
@@ -192,6 +194,7 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.getAllCreditTerms();
         this.receivingService.purchaseOrderId = this._actRoute.snapshot.queryParams['purchaseorderid'];
         this.receivingService.getPurchaseOrderDataById(this.receivingService.purchaseOrderId).subscribe(
             results => {
@@ -206,7 +209,6 @@ export class ReceivngPoComponent implements OnInit {
 
         this.poStatus = [];
 
-        this.getAllCreditTerms();
         this.getAllPriority();
         this.getStatus();
     }
@@ -350,8 +352,14 @@ export class ReceivngPoComponent implements OnInit {
     private loadPurchaseOrderData(purchaseOrder: PurchaseOrder) {
         //if (this.receivingService.selectedPurchaseorderCollection != undefined) {
         //this.purchaseOrderData = this.receivingService.selectedPurchaseorderCollection;
-
-        this.purchaseOrderData = purchaseOrder;
+        this.purchaseOrderData = {
+            ...purchaseOrder,
+            creditLimit: getValueFromObjectByKey('creditLimit', purchaseOrder.vendor),
+            terms: getValueFromObjectByKey('creditTermsId', purchaseOrder.vendor),
+            priorityId: getValueFromObjectByKey('priorityId', purchaseOrder.purchaseOderPart[0].purchaseOrder),
+            dateApproved: new Date(purchaseOrder.dateApproved).toLocaleDateString()
+        };
+        this.purchaseOrderData.terms = getValueFromArrayOfObjectById('name', 'creditTermsId', this.purchaseOrderData.terms, this.creditTermsList)
         this.getManagementStructure().subscribe(
             results => {
                 this.managementStructureSuccess(this.purchaseOrderData.managementStructureId, results[0]);
@@ -623,6 +631,7 @@ export class ReceivngPoComponent implements OnInit {
     private getAllCreditTerms() {
         this.creditTermsService.getCreditTermsList().subscribe(
             results => {
+                this.creditTermsList = results[0].columnData;                
                 this.poCreditTermInfo = [];
                 for (let creditTerm of results[0]) {
                     var dropdown = new DropDownData();
@@ -773,7 +782,7 @@ export class ReceivngPoComponent implements OnInit {
                 stockLine.purchaseOrderUnitCost = 0;
                 stockLine.purchaseOrderExtendedCost = part.unitCost;
                 stockLine.currentDate = new Date();
-                stockLine.obtainFromType = 3;
+                stockLine.obtainFromType = 3; // default is vendor and set the value from purchase order.
                 stockLine.obtainFrom = this.purchaseOrderData.vendor.vendorId.toString();
                 stockLine.obtainFromObject = this.VendorList.find(x => x.Key == this.purchaseOrderData.vendor.vendorId.toString());
 
@@ -824,6 +833,12 @@ export class ReceivngPoComponent implements OnInit {
             stockLine.obtainFromType = 3;
             stockLine.obtainFrom = this.purchaseOrderData.vendor.vendorId.toString();
             stockLine.obtainFromObject = this.VendorList.find(x => x.Key == this.purchaseOrderData.vendor.vendorId.toString());
+            if (this.purchaseOrderData.billToUserType == 1 || this.purchaseOrderData.billToUserType == 2) {
+                stockLine.ownerType = this.purchaseOrderData.billToUserType == 2 ? 3 : this.purchaseOrderData.billToUserType;
+                stockLine.owner = this.purchaseOrderData.billToUserId.toString();
+                stockLine.ownerObject = stockLine.ownerType == 1 ? this.CustomerList.find(x => x.Key == this.purchaseOrderData.billToUserId.toString())
+                    : this.VendorList.find(x => x.Key == this.purchaseOrderData.billToUserId.toString());
+            }
 
             if (part.itemMaster != undefined) {
                 stockLine.purchaseOrderUnitCost = part.unitCost;

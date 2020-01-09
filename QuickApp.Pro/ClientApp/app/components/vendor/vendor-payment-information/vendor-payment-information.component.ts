@@ -22,6 +22,7 @@ import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
 import { GMapModule } from 'primeng/gmap';
 import * as $ from 'jquery';
+import { getObjectById, editValueAssignByCondition } from '../../../generic/autocomplete';
 declare const google: any;
 
 @Component({
@@ -529,7 +530,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
     openEdit(row) {
         this.isEditMode = true;
         this.isSaving = true;
-        this.sourceVendor = {...row};
+        this.sourceVendor = {...row, country: getObjectById('countries_id', row.country, this.allCountryinfo)};
 		this.loadMasterCompanies();
 		this.isEditPaymentInfo = true;
     }
@@ -650,6 +651,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 				this.sourceVendor.masterCompanyId = 1;
 				this.sourceVendor.isActive = true;
 				this.sourceVendor.vendorId = this.local.vendorId;
+				this.sourceVendor.country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
 				this.workFlowtService.addCheckinfo(this.sourceVendor).subscribe(data => {
 					this.loadData();
 					this.localCollection = data;
@@ -664,6 +666,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 				this.sourceVendor.updatedBy = this.userName;
 				this.sourceVendor.updatedBy = this.userName;
 				this.sourceVendor.masterCompanyId = 1;
+				this.sourceVendor.country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
 				this.workFlowtService.updateCheckPaymentInfo(this.sourceVendor).subscribe(data => {
 					if (data) { this.sourceVendor = new Object(); }
 					this.updatedCollection = data;
@@ -693,8 +696,8 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 				this.sourceVendor.updatedBy = this.userName;
 				this.sourceVendor.masterCompanyId = 1;
 				this.sourceVendor.isActive = true;
-                this.sourceVendor.vendorId = this.local.vendorId;
-                
+				this.sourceVendor.vendorId = this.local.vendorId;
+				this.domesticSaveObj.country = editValueAssignByCondition('countries_id', this.domesticSaveObj.country);
 				this.workFlowtService.addDomesticinfo(this.domesticSaveObj).subscribe(data => {
 					this.loadData();
 					this.localCollection = data;
@@ -706,6 +709,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			else {
 				this.sourceVendor.updatedBy = this.userName;
 				this.sourceVendor.masterCompanyId = 1;
+				this.domesticSaveObj.country = editValueAssignByCondition('countries_id', this.domesticSaveObj.country);
 				this.workFlowtService.updateDomesticBankPaymentinfo(this.domesticSaveObj).subscribe(
 					response => this.saveCompleted(this.sourceVendor),
 					error => this.saveFailedHelper(error));
@@ -729,6 +733,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 				this.sourceVendor.createdBy = this.userName;
 				this.sourceVendor.updatedBy = this.userName;
 				this.sourceVendor.masterCompanyId = 1;
+				this.internationalSaveObj.country = editValueAssignByCondition('countries_id', this.internationalSaveObj.country);
 				this.workFlowtService.addInternationalinfo(this.internationalSaveObj).subscribe(data => {
 					this.localCollection = data;
 					this.workFlowtService.paymentCollection = this.local;
@@ -742,6 +747,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 
 				this.sourceVendor.updatedBy = this.userName;
 				this.sourceVendor.masterCompanyId = 1;
+				this.internationalSaveObj.country = editValueAssignByCondition('countries_id', this.internationalSaveObj.country);
 				this.workFlowtService.vendorInternationalUpdate(this.internationalSaveObj).subscribe(
 					data => {
 						this.workFlowtService.paymentCollection = this.local;
@@ -972,14 +978,21 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	}
 	filtercountry(event) {
 
-		this.countrycollection = [];
-		if (this.allCountryinfo) {
-			for (let i = 0; i < this.allCountryinfo.length; i++) {
-				let countryName = this.allCountryinfo[i].nice_name;
-				if (countryName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-					this.countrycollection.push(countryName);
-				}
-			}
+		// this.countrycollection = [];
+		// if (this.allCountryinfo) {
+		// 	for (let i = 0; i < this.allCountryinfo.length; i++) {
+		// 		let countryName = this.allCountryinfo[i].nice_name;
+		// 		if (countryName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+		// 			this.countrycollection.push(countryName);
+		// 		}
+		// 	}
+		// }
+		this.countrycollection = this.allCountryinfo;
+		if (event.query !== undefined && event.query !== null) {
+			const countries = [...this.allCountryinfo.filter(x => {
+				return x.nice_name.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.countrycollection = countries;
 		}
     }
 

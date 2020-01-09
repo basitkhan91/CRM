@@ -20,6 +20,8 @@ namespace DAL.Repositories
         {
             var data = (from v in _appContext.VendorShippingAddress
                         join ad in _appContext.Address on v.AddressId equals ad.AddressId
+                        join cont in _appContext.Countries on Convert.ToInt32(ad.Country) equals cont.countries_id into country
+                        from cont in country.DefaultIfEmpty()
 
                         where ((v.IsDelete == false || v.IsDelete == null) && (v.VendorId==id))
 
@@ -30,7 +32,7 @@ namespace DAL.Repositories
                             Address2 = ad.Line2,
                             Address3 = ad.Line3,
                             ad.AddressId,
-                            ad.Country,
+                            Country= cont.countries_name,
                             ad.PostalCode,
                             ad.City,
                             ad.StateOrProvince,

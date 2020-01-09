@@ -50,3 +50,15 @@ a.fa.fa-plus-circle {
     border: 1px transparent;
 }
 
+    td {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+th {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
