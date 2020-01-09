@@ -88,7 +88,7 @@ export class CustomerATAInformationComponent implements OnInit {
 
         // this.getAllATAChapter();
         this.getAllATASubChapter();
-        this.getContactsByCustomerId();
+       // this.getContactsByCustomerId();
         // this.ataChapter = this.LoadAtachapter;
 
     }
