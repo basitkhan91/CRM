@@ -11,6 +11,7 @@ using DAL.Core;
 using DAL.Models;
 using DAL.Common;
 using System.Linq.Expressions;
+using EntityFrameworkPaginate;
 
 namespace DAL.Repositories
 {
@@ -917,7 +918,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> NhaTlaAltEquPartList(Filters<NhaAltEquFilters> filters)
+        public IEnumerable<object> NhaTlaAltEquPartList(Common.Filters<NhaAltEquFilters> filters)
         {
             try
             {
@@ -1106,7 +1107,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> EquivalencyPartList(Filters<NhaAltEquFilters> filters)
+        public IEnumerable<object> EquivalencyPartList(Common.Filters<NhaAltEquFilters> filters)
         {
             try
             {
@@ -1268,12 +1269,13 @@ namespace DAL.Repositories
 
         }
 
-         public IEnumerable<object> GetPartnumberList()
-            {
-                var result = (from at in _appContext.ItemMaster
-                              join atd in _appContext.Manufacturer on at.ManufacturerId equals atd.ManufacturerId
-                              where (at.IsActive == true || at.IsActive == null) && (at.IsDeleted == false || at.IsDeleted == null)
-                              select new {
+        public IEnumerable<object> GetPartnumberList()
+        {
+            var result = (from at in _appContext.ItemMaster
+                          join atd in _appContext.Manufacturer on at.ManufacturerId equals atd.ManufacturerId
+                          where (at.IsActive == true || at.IsActive == null) && (at.IsDeleted == false || at.IsDeleted == null)
+                          select new
+                          {
                               at.ItemMasterId,
                               at.ItemGroupId,
                               at.ItemTypeId,
@@ -1283,14 +1285,285 @@ namespace DAL.Repositories
                               at.Memo,
                               at.CreatedBy,
                               at.UpdatedBy,
-                             ManufacturerName= atd.Name
-                              }
-                              
-                              
-                              ).ToList();
+                              ManufacturerName = atd.Name
+                          }
 
-                return result;
+
+                          ).ToList();
+
+            return result;
+        }
+
+        public List<ItemMasterCapes> CreateItemMasterCapes(List<ItemMasterCapes> itemMasterCapes)
+        {
+            try
+            {
+                itemMasterCapes.ForEach(p => { p.IsActive = true; p.IsDeleted = false; p.CreatedDate = DateTime.Now; p.UpdatedDate = DateTime.Now; });
+                _appContext.ItemMasterCapes.AddRange(itemMasterCapes);
+                _appContext.SaveChanges();
+                return itemMasterCapes;
             }
-        
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public void DeleteItemMasterCapes(long itemMasterCapesId, string updatedBy)
+        {
+            ItemMasterCapes itemMasterCapes = new ItemMasterCapes();
+            try
+            {
+                itemMasterCapes.ItemMasterCapesId = itemMasterCapesId;
+                itemMasterCapes.UpdatedDate = DateTime.Now;
+                itemMasterCapes.UpdatedBy = updatedBy;
+                itemMasterCapes.IsDeleted = true;
+
+                _appContext.ItemMasterCapes.Attach(itemMasterCapes);
+                _appContext.Entry(itemMasterCapes).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(itemMasterCapes).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(itemMasterCapes).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetItemMasterCapes(Common.Filters<ItemMasterCapesFilters> capesFilters)
+        {
+
+            if (capesFilters.filters == null)
+                capesFilters.filters = new ItemMasterCapesFilters();
+            var pageNumber = capesFilters.first + 1;
+            var pageSize = capesFilters.rows;
+
+            string sortColumn = string.Empty;
+
+            try
+            {
+
+                var sorts = new Sorts<ItemMasterCapesFilters>();
+
+
+                if (string.IsNullOrEmpty(capesFilters.SortField))
+                {
+                    sortColumn = "createdDate";
+                    capesFilters.SortOrder = -1;
+                    sorts.Add(sortColumn == "createdDate", x => x.createdDate, true);
+                }
+                else
+                {
+                    sortColumn = capesFilters.SortField;
+                }
+
+
+                if (capesFilters.SortOrder == -1)
+                {
+                    switch (capesFilters.SortField)
+                    {
+                        case "partNo":
+                            sorts.Add(sortColumn == "partNo", x => x.partNo, true);
+                            break;
+                        case "capabilityType":
+                            sorts.Add(sortColumn == "capabilityType", x => x.capabilityType, true);
+                            break;
+                        case "aircraftType":
+                            sorts.Add(sortColumn == "aircraftType", x => x.aircraftType, true);
+                            break;
+                        case "aircraftModel":
+                            sorts.Add(sortColumn == "aircraftModel", x => x.aircraftModel, true);
+                            break;
+                        case "aircraftDashNumber":
+                            sorts.Add(sortColumn == "aircraftDashNumber", x => x.aircraftDashNumber, true);
+                            break;
+                        case "description":
+                            sorts.Add(sortColumn == "description", x => x.description, true);
+                            break;
+                        case "aTAChapter":
+                            sorts.Add(sortColumn == "aTAChapter", x => x.aTAChapter, true);
+                            break;
+                        case "aTASubChapter":
+                            sorts.Add(sortColumn == "aTASubChapter", x => x.aTASubChapter, true);
+                            break;
+                        case "entryDate":
+                            sorts.Add(sortColumn == "entryDate", x => x.entryDate, true);
+                            break;
+                        case "cMM":
+                            sorts.Add(sortColumn == "cMM", x => x.cMM, true);
+                            break;
+                        case "integrateWith":
+                            sorts.Add(sortColumn == "integrateWith", x => x.integrateWith, true);
+                            break;
+                        case "isVerified":
+                            sorts.Add(sortColumn == "isVerified", x => x.isVerified, true);
+                            break;
+                        case "verifiedBy":
+                            sorts.Add(sortColumn == "verifiedBy", x => x.verifiedBy, true);
+                            break;
+                        case "verifiedDate":
+                            sorts.Add(sortColumn == "verifiedDate", x => x.verifiedDate, true);
+                            break;
+                        case "memo":
+                            sorts.Add(sortColumn == "memo", x => x.memo, true);
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (capesFilters.SortField)
+                    {
+                        case "partNo":
+                            sorts.Add(sortColumn == "partNo", x => x.partNo);
+                            break;
+                        case "capabilityType":
+                            sorts.Add(sortColumn == "capabilityType", x => x.capabilityType);
+                            break;
+                        case "aircraftType":
+                            sorts.Add(sortColumn == "aircraftType", x => x.aircraftType);
+                            break;
+                        case "aircraftModel":
+                            sorts.Add(sortColumn == "aircraftModel", x => x.aircraftModel);
+                            break;
+                        case "aircraftDashNumber":
+                            sorts.Add(sortColumn == "aircraftDashNumber", x => x.aircraftDashNumber);
+                            break;
+                        case "description":
+                            sorts.Add(sortColumn == "description", x => x.description);
+                            break;
+                        case "aTAChapter":
+                            sorts.Add(sortColumn == "aTAChapter", x => x.aTAChapter);
+                            break;
+                        case "aTASubChapter":
+                            sorts.Add(sortColumn == "aTASubChapter", x => x.aTASubChapter);
+                            break;
+                        case "entryDate":
+                            sorts.Add(sortColumn == "entryDate", x => x.entryDate);
+                            break;
+                        case "cMM":
+                            sorts.Add(sortColumn == "cMM", x => x.cMM);
+                            break;
+                        case "integrateWith":
+                            sorts.Add(sortColumn == "integrateWith", x => x.integrateWith);
+                            break;
+                        case "isVerified":
+                            sorts.Add(sortColumn == "isVerified", x => x.isVerified);
+                            break;
+                        case "verifiedBy":
+                            sorts.Add(sortColumn == "verifiedBy", x => x.verifiedBy);
+                            break;
+                        case "verifiedDate":
+                            sorts.Add(sortColumn == "verifiedDate", x => x.verifiedDate);
+                            break;
+                        case "memo":
+                            sorts.Add(sortColumn == "memo", x => x.memo);
+                            break;
+                    }
+                }
+
+                var totalRecords = (from imc in _appContext.ItemMasterCapes
+                                    join im in _appContext.ItemMaster on imc.ItemMasterId equals im.ItemMasterId
+                                    join ct in _appContext.capabilityType on imc.CapabilityTypeId equals ct.CapabilityTypeId
+                                    join act in _appContext.AircraftType on imc.AircraftTypeId equals act.AircraftTypeId
+                                    join acm in _appContext.AircraftModel on imc.AircraftModelId equals acm.AircraftModelId
+                                    join acd in _appContext.AircraftDashNumber on imc.AircraftDashNumberId equals acd.DashNumberId
+                                    join atc in _appContext.ATAChapter on imc.ATAChapterId equals atc.ATAChapterId into imcatc
+                                    from atc in imcatc.DefaultIfEmpty()
+                                    join ats in _appContext.ATASubChapter on imc.ATASubChapterId equals ats.ATASubChapterId into imcats
+                                    from ats in imcats.DefaultIfEmpty()
+                                    join pub in _appContext.Publication on imc.CMMId equals pub.PublicationRecordId into imcpub
+                                    from pub in imcpub.DefaultIfEmpty()
+                                    join ip in _appContext.IntegrationPortal on imc.IntegrateWithId equals ip.IntegrationPortalId into imcip
+                                    from ip in imcip.DefaultIfEmpty()
+                                    join ver in _appContext.Employee on imc.VerifiedById equals ver.EmployeeId into imcver
+                                    from ver in imcver.DefaultIfEmpty()
+                                    where imc.IsDeleted == false
+                                    && im.PartNumber.Contains(!String.IsNullOrEmpty(capesFilters.filters.partNo) ? capesFilters.filters.partNo : im.PartNumber)
+                                    && ct.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.capabilityType) ? capesFilters.filters.capabilityType : ct.Description)
+                                    && act.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.aircraftType) ? capesFilters.filters.aircraftType : act.Description)
+                                    && acm.ModelName.Contains(!String.IsNullOrEmpty(capesFilters.filters.aircraftModel) ? capesFilters.filters.aircraftModel : acm.ModelName)
+                                    && imc.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.description) ? capesFilters.filters.description : imc.Description)
+                                    && atc.ATAChapterName.Contains(!String.IsNullOrEmpty(capesFilters.filters.aTAChapter) ? capesFilters.filters.aTAChapter : atc.ATAChapterName)
+                                    && ats.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.aTASubChapter) ? capesFilters.filters.aTASubChapter : ats.Description)
+                                    && imc.EntryDate == (capesFilters.filters.entryDate != null ? capesFilters.filters.entryDate : imc.EntryDate)
+                                    && pub.PublicationId.Contains(!String.IsNullOrEmpty(capesFilters.filters.cMM) ? capesFilters.filters.cMM : pub.PublicationId)
+                                    && ip.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.integrateWith) ? capesFilters.filters.integrateWith : ip.Description)
+                                    && imc.IsVerified == (capesFilters.filters.isVerified != null ? capesFilters.filters.isVerified : imc.IsVerified)
+                                    && ver.FirstName.Contains(!String.IsNullOrEmpty(capesFilters.filters.verifiedBy) ? capesFilters.filters.verifiedBy : ver.FirstName)
+                                    && imc.VerifiedDate == (capesFilters.filters.verifiedDate != null ? capesFilters.filters.verifiedDate : imc.VerifiedDate)
+                                    && imc.Memo.Contains(!String.IsNullOrEmpty(capesFilters.filters.memo) ? capesFilters.filters.memo : imc.Memo)
+                                    select new
+                                    {
+                                        imc.ItemMasterCapesId
+                                    }).Distinct().Count();
+
+                var list = (from imc in _appContext.ItemMasterCapes
+                            join im in _appContext.ItemMaster on imc.ItemMasterId equals im.ItemMasterId
+                            join ct in _appContext.capabilityType on imc.CapabilityTypeId equals ct.CapabilityTypeId
+                            join act in _appContext.AircraftType on imc.AircraftTypeId equals act.AircraftTypeId
+                            join acm in _appContext.AircraftModel on imc.AircraftModelId equals acm.AircraftModelId
+                            join acd in _appContext.AircraftDashNumber on imc.AircraftDashNumberId equals acd.DashNumberId
+                            join atc in _appContext.ATAChapter on imc.ATAChapterId equals atc.ATAChapterId into imcatc
+                            from atc in imcatc.DefaultIfEmpty()
+                            join ats in _appContext.ATASubChapter on imc.ATASubChapterId equals ats.ATASubChapterId into imcats
+                            from ats in imcats.DefaultIfEmpty()
+                            join pub in _appContext.Publication on imc.CMMId equals pub.PublicationRecordId into imcpub
+                            from pub in imcpub.DefaultIfEmpty()
+                            join ip in _appContext.IntegrationPortal on imc.IntegrateWithId equals ip.IntegrationPortalId into imcip
+                            from ip in imcip.DefaultIfEmpty()
+                            join ver in _appContext.Employee on imc.VerifiedById equals ver.EmployeeId into imcver
+                            from ver in imcver.DefaultIfEmpty()
+                            where imc.IsDeleted == false
+                            && im.PartNumber.Contains(!String.IsNullOrEmpty(capesFilters.filters.partNo) ? capesFilters.filters.partNo : im.PartNumber)
+                            && ct.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.capabilityType) ? capesFilters.filters.capabilityType : ct.Description)
+                            && act.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.aircraftType) ? capesFilters.filters.aircraftType : act.Description)
+                            && acm.ModelName.Contains(!String.IsNullOrEmpty(capesFilters.filters.aircraftModel) ? capesFilters.filters.aircraftModel : acm.ModelName)
+                            && imc.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.description) ? capesFilters.filters.description : imc.Description)
+                            && atc.ATAChapterName.Contains(!String.IsNullOrEmpty(capesFilters.filters.aTAChapter) ? capesFilters.filters.aTAChapter : atc.ATAChapterName)
+                            && ats.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.aTASubChapter) ? capesFilters.filters.aTASubChapter : ats.Description)
+                            && imc.EntryDate == (capesFilters.filters.entryDate != null ? capesFilters.filters.entryDate : imc.EntryDate)
+                            && pub.PublicationId.Contains(!String.IsNullOrEmpty(capesFilters.filters.cMM) ? capesFilters.filters.cMM : pub.PublicationId)
+                            && ip.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.integrateWith) ? capesFilters.filters.integrateWith : ip.Description)
+                            && imc.IsVerified == (capesFilters.filters.isVerified != null ? capesFilters.filters.isVerified : imc.IsVerified)
+                            && ver.FirstName.Contains(!String.IsNullOrEmpty(capesFilters.filters.verifiedBy) ? capesFilters.filters.verifiedBy : ver.FirstName)
+                            && imc.VerifiedDate == (capesFilters.filters.verifiedDate != null ? capesFilters.filters.verifiedDate : imc.VerifiedDate)
+                            && imc.Memo.Contains(!String.IsNullOrEmpty(capesFilters.filters.memo) ? capesFilters.filters.memo : imc.Memo)
+
+                            select new ItemMasterCapesFilters()
+                            {
+                                ItemMasterCapesId = imc.ItemMasterCapesId,
+                                partNo = im.PartNumber,
+                                capabilityType = ct.Description,
+                                aircraftType = act.Description,
+                                aircraftModel = acm.ModelName,
+                                aircraftDashNumber = acd.DashNumber,
+                                description = imc.Description,
+                                aTAChapter = atc == null ? "" : atc.ATAChapterName,
+                                aTASubChapter = ats == null ? "" : ats.Description,
+                                entryDate = imc.EntryDate,
+                                cMM = pub.PublicationId,
+                                integrateWith = ip.Description,
+                                isVerified = imc.IsVerified,
+                                verifiedBy = ver == null ? "" : ver.FirstName,
+                                verifiedDate = imc.VerifiedDate,
+                                memo = imc.Memo,
+                                createdDate = imc.CreatedDate,
+                                isActive = imc.IsActive,
+                                TotalRecords=totalRecords
+                            }
+                          ).Distinct()
+                          .Paginate(pageNumber, pageSize, sorts).Results;
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
     }
 }
