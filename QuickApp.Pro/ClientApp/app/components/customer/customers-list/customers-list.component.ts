@@ -20,7 +20,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { Router } from '@angular/router';
 import { Globals } from '../../../globals'
-import { LazyLoadEvent, SortEvent } from 'primeng/api';
+import { LazyLoadEvent, SortEvent, MenuItem } from 'primeng/api';
 import { listSearchFilterObjectCreation } from '../../../generic/autocomplete';
 import { CommonService } from '../../../services/common.service';
 import { CustomerViewComponent } from '../../../shared/components/customer/customer-view/customer-view.component';
@@ -280,6 +280,7 @@ export class CustomersListComponent implements OnInit {
     classificationIds: any[];
     filteredText: string;
     dataSource: MatTableDataSource<any>;
+    breadcrumbs: MenuItem[];
     //     NameInput:any;
     //     customerCodeInput:any;
     //     customerClassificationInput:any;
@@ -311,6 +312,10 @@ export class CustomersListComponent implements OnInit {
     }
     ngOnInit() {
         // this.getList();
+        this.breadcrumbs = [
+            {label:'Customers'},
+            {label:'Customers List'},
+        ];
     }
 
     getList(data) {
