@@ -37,6 +37,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     filteredAssetWriteDownList: any[] = [];
     columnHeaders: any[];
     itemDetails: any;
+    companyListData: any[] = [];
     currentRow: AssetIntangibleAttributeType;
     currentModeOfOperation: ModeOfOperation;
     rowName: string;
@@ -67,7 +68,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     buList: any[];
     divisionList: any[];
     departmentList: any[];
-    selectedCompanyID: number = 0;
+    selectedCompanyID: any = [];
     selectedBUId: number = 0;
     selectedDivisionID: number = 0;
     selectedDeptID: number = 0;
@@ -93,6 +94,8 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     addNewItem(): void {
         this.disableSave = false;
         this.currentRow = this.newItem(0);
+        let selectedCompanyIDs: any[] = [115, 118];
+        this.selectedCompanyID = [];
         this.currentModeOfOperation = ModeOfOperation.Add;
     }
 
@@ -257,18 +260,18 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
         ////console.log(`Company Id :${this.selectedCompanyID}`);
 
         if (this.selectedCompanyID != undefined && this.selectedCompanyID.toString() !== "0") {
-            this.mgmtStructureId = this.selectedCompanyID;
+            //this.mgmtStructureId = this.selectedCompanyID;
             this.disableForMgmtStructure = false;
         }
         else {
             this.disableForMgmtStructure = true;
         }
-        this.divisionList = [];
-        this.departmentList = [];
-        this.selectedBUId = 0;
-        this.selectedDeptID = 0;
-        this.selectedDivisionID = 0;
-        this.buList = this.allmgmtData.filter(c => c.parentId === this.selectedCompanyID);
+        //this.divisionList = [];
+        //this.departmentList = [];
+        //this.selectedBUId = 0;
+        //this.selectedDeptID = 0;
+        //this.selectedDivisionID = 0;
+        //this.buList = this.allmgmtData.filter(c => c.parentId === this.selectedCompanyID);
     }
 
     buSelected(): void {
@@ -504,6 +507,8 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
             intangibleWriteDownGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.intangibleWriteDownGLAccountId),
             intangibleWriteOffGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.intangibleWriteOffGLAccountId),
             managementStructureId: editValueAssignByCondition('managementStructureId', this.mgmtStructureId),
+            MasterCompanyId: 1,
+            selectedCompanyIds: this.selectedCompanyID.join(", "),
         };
         this.coreDataService.add(data).subscribe(response => {
             this.alertService.showMessage('Success', this.rowName + " added successfully.", MessageSeverity.success);
@@ -531,6 +536,8 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
                 intangibleWriteDownGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.intangibleWriteDownGLAccountId),
                 intangibleWriteOffGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.intangibleWriteOffGLAccountId),
                 managementStructureId: editValueAssignByCondition('managementStructureId', this.mgmtStructureId),
+                MasterCompanyId: 1,
+                selectedCompanyIds: this.selectedCompanyID.join(", "),
             };
             this.coreDataService.update(data).subscribe(response => {
                 this.alertService.showMessage('Success', this.rowName + " updated successfully.", MessageSeverity.success);
@@ -599,7 +606,26 @@ AssetIntangibleAttributeTypeModel
 
     loadHierarchy(mgmtStructureData) {
         this.allmgmtData = mgmtStructureData;
+        this.companyListData = [];
         this.companyList = this.allmgmtData.filter(c => c.parentId == null);
+        if (this.companyList.length > 0) {
+            for (let i = 0; i < this.companyList.length; i++) {
+                this.companyListData.push(
+                    { value: this.companyList[i].managementStructureId, label: this.companyList[i].code },
+                );
+            }
+        }
+    }
+
+    getCompanyName(managementStructureId) {
+        let label = "";
+        for (let i = 0; i < this.companyListData.length; i++) {
+            if (this.companyListData[i].value == managementStructureId) {
+                label = this.companyListData[i].label
+                break;
+            }
+        }
+        return label;
     }
 
     //Step x: load all the required data for the page to function

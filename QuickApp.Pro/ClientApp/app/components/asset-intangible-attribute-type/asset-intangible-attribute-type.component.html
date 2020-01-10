@@ -70,7 +70,7 @@
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()"  pTooltip="Download Sample File"  tooltipPosition="top">Sample File Download</button>
+                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()" pTooltip="Download Sample File" tooltipPosition="top">Sample File Download</button>
                                     </div>
                                 </div>
 
@@ -389,7 +389,7 @@
                                     </p-autoComplete>
                                 </div>
                             </div>
-                            <div class="col-sm-12">
+                            <!--<div class="col-sm-12">
                                 <div class="col-sm-5">
                                     <label for="managementStructure" class="control-label">Management Structure <span class="clr-red">*</span></label>
                                 </div>
@@ -420,7 +420,22 @@
                                         </select>
                                     </div>
                                 </div>
+                            </div>-->
+                            <div class="col-sm-12">
+                                <div class="col-sm-5">
+                                    <label for="managementStructure" class="control-label">Legal Entity <span class="clr-red">*</span></label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div style="margin: 2px 0">
+                                        <p-multiSelect [options]="companyListData"
+                                                       [ngModelOptions]="{standalone: true}"
+                                                       [(ngModel)]="selectedCompanyID" [panelStyle]="{minWidth:'12em'}"
+                                                       (onChange)="companySelected()">
+                                        </p-multiSelect>
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
                         <div class="form-group">
                             <div class="col-sm-6">
@@ -440,7 +455,7 @@
                 <div class="modal-footer">
                     <button class="btn btn-primary-cstm" data-dismiss="modal"
                             [disabled]="IntangibleAttrType.invalid || disableSave "
-                            (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();" >
+                            (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();">
                         {{currentModeOfOperation == 3 ? 'Update' : 'Save' }}
                     </button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>

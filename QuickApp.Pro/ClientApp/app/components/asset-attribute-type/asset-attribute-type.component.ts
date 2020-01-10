@@ -535,9 +535,10 @@ export class AssetAttributeTypeComponent implements OnInit {
             assetSale: editValueAssignByCondition('glAccountId', this.currentRow.assetSale),
             assetWriteOff: editValueAssignByCondition('glAccountId', this.currentRow.assetWriteOff),
             assetWriteDown: editValueAssignByCondition('glAccountId', this.currentRow.assetWriteDown),
-            //managementStructureId: editValueAssignByCondition('managementStructureId', this.mgmtStructureId),
-            managementStructureId: 115,
-            selectedCompanyIds: this.selectedCompanyID ,
+            managementStructureId: editValueAssignByCondition('managementStructureId', this.mgmtStructureId),
+            //managementStructureId: 115,
+            MasterCompanyId: 1,
+            selectedCompanyIds: this.selectedCompanyID.join(", "),
         };
         this.coreDataService.add(data).subscribe(response => {
             this.alertService.showMessage('Success', this.rowName + " added successfully.", MessageSeverity.success);
@@ -565,9 +566,10 @@ export class AssetAttributeTypeComponent implements OnInit {
                 assetSale: editValueAssignByCondition('glAccountId', this.currentRow.assetSale),
                 assetWriteOff: editValueAssignByCondition('glAccountId', this.currentRow.assetWriteOff),
                 assetWriteDown: editValueAssignByCondition('glAccountId', this.currentRow.assetWriteDown),
-                //managementStructureId: editValueAssignByCondition('managementStructureId', this.mgmtStructureId),
-                managementStructureId: 115,
-                selectedCompanyIds: this.selectedCompanyID,
+                managementStructureId: editValueAssignByCondition('managementStructureId', this.mgmtStructureId),
+                //managementStructureId: 115,
+                MasterCompanyId: 1,
+                selectedCompanyIds: this.selectedCompanyID.join(", "),
             };
             //console.log('saveExistingItem:', data);
             this.coreDataService.update(data).subscribe(response => {
@@ -630,6 +632,7 @@ export class AssetAttributeTypeComponent implements OnInit {
             assetSale: getObjectById('glAccountId', rowData.assetSale, this.allGlInfo),
             assetWriteOff: getObjectById('glAccountId', rowData.assetWriteOff, this.allGlInfo),
             assetWriteDown: getObjectById('glAccountId', rowData.assetWriteDown, this.allGlInfo),
+            selectedCompanyIds: this.selectedCompanyID.join(", "),
         };
         this.currentRow = { ...this.currentRow };
         this.mgmtStructureId = this.currentRow.managementStructureId;
@@ -667,7 +670,7 @@ export class AssetAttributeTypeComponent implements OnInit {
             this.itemList[i].assetWriteDownName = this.getAccCodeById(this.itemList[i].assetWriteDown);
         }
     }
-
+ 
     getAccNameById(value) {
         for (let i = 0; i < this.allGlInfo.length; i++) {
             let accId = this.allGlInfo[i].glAccountId;
