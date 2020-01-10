@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef, Input } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef, Input, Output, EventEmitter } from '@angular/core';
 import { ConditionService } from '../../../../services/condition.service';
 import { Condition } from '../../../../models/condition.model';
 import { fadeInOut } from '../../../../services/animations';
@@ -98,6 +98,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
     legalEntityList: any = [];
     pnData: any = [];
     itemMasterIDFromPartNumberSelection: any;
+    @Output() loadCapesList = new EventEmitter<any>();
 
     constructor(public itemser: ItemMasterService,
         private aircraftModelService: AircraftModelService,
@@ -279,7 +280,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                 Memo: '',
                 IsChecked: false,
                 // ...this.capes
-                capailityTypeId:  this.capabilityTypeId,
+                capabilityTypeId:  this.capabilityTypeId,
                 capailityTypeName:  getValueFromArrayOfObjectById ('label','value', this.capabilityTypeId ,this.capabalityTypeList),
                 managementStructureId: null,
                 description: '',
@@ -311,7 +312,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                     Memo: '',
                     IsChecked: false,
                     // ...this.capes,
-                    capailityTypeId:  this.capabilityTypeId,
+                    capabilityTypeId:  this.capabilityTypeId,
                     capailityTypeName: getValueFromArrayOfObjectById ('label','value', this.capabilityTypeId ,this.capabalityTypeList),
                     managementStructureId: null,
                     description: '',
@@ -383,6 +384,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
 
 
     selectedLegalEntity(legalEntityId, index) {
+        console.log(index);        
         if (legalEntityId) {
             this.aircraftData[index].managementStructureId = legalEntityId;
             this.commonService.getBusinessUnitListByLegalEntityId(legalEntityId).subscribe(res => {
@@ -466,6 +468,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         ]
         this.itemser.saveItemMasterCapes(capesData).subscribe(res => {
             this.aircraftData = [];
+            this.loadCapesList.emit(true);
             this.alertService.showMessage(
                 this.moduleName,
                 'Saved Capes Details Successfully',

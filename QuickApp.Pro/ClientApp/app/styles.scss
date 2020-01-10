@@ -14430,7 +14430,8 @@ p-dropdown .accountdropdown.ui-widget{
 p-table .ui-table-summary {
     background: #fff !important;
     margin-top: -30px;
-    text-align: right;
+    text-align: right !important;
+    margin-right: -12px;
 }
 p-table .ui-table-summary label.footer {
     margin-left: 58%;

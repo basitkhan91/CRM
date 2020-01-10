@@ -168,22 +168,22 @@
     </ng-template>
     <ng-template
       pTemplate="body"
-      let-i="rowIndex"
+      let-row_no="rowIndex"
       let-rowData
       let-columns="columns"
     >
-      <tr>
-        <ng-container *ngFor="let x of aircraftData; let i = index;">        
-        <td style="width: 130px;">{{ x.capailityTypeName }}</td>
+    <ng-container> <!--*ngFor="let rowData of aircraftData; let row_no = index;"-->
+      <tr>            
+        <td style="width: 130px;">{{ rowData.capailityTypeName }}</td>
         <td style="width: 130px;">
           <p-dropdown
           placeholder="Select"
-          name="company{{i}}"
+          name="company{{row_no}}"
           #companyId="ngModel"
           [options]="legalEntityList"
           class="p-dropdown-custom-sm"
-          (onChange)="selectedLegalEntity($event.value, i)"
-          [(ngModel)]="x.companyId"
+          (onChange)="selectedLegalEntity($event.value, row_no)"
+          [(ngModel)]="rowData.companyId"
           [required]="true"
         >
         </p-dropdown>
@@ -191,69 +191,69 @@
         <td style="width: 130px;">
           <p-dropdown
           placeholder="Select"
-          name="bu{{i}}"
+          name="bu{{row_no}}"
           #bu="ngModel"
-          [options]="getDynamicVariableData('businessUnitList',i)"
+          [options]="getDynamicVariableData('businessUnitList',row_no)"
           class="p-dropdown-custom-sm"
-          (onChange)="selectedBusinessUnit($event.value, i)"
-          [(ngModel)]="x.buId"
+          (onChange)="selectedBusinessUnit($event.value, row_no)"
+          [(ngModel)]="rowData.buId"
         >
         </p-dropdown>
         </td>
         <td style="width: 130px;">
           <p-dropdown
           placeholder="Select"
-          name="division{{i}}"
+          name="division{{row_no}}"
           #division="ngModel"
-          [options]="getDynamicVariableData('divisionList',i)"
+          [options]="getDynamicVariableData('divisionList',row_no)"
           class="p-dropdown-custom-sm"
-          (onChange)="selectedDivision($event.value, i)"
-          [(ngModel)]="x.divisionId"
+          (onChange)="selectedDivision($event.value, row_no)"
+          [(ngModel)]="rowData.divisionId"
         >
         </p-dropdown>
         </td>
         <td style="width: 130px;">
           <p-dropdown
           placeholder="Select"
-          name="department{{i}}"
+          name="department{{row_no}}"
           #department="ngModel"
-          [options]="getDynamicVariableData('departmentList',i)"
+          [options]="getDynamicVariableData('departmentList',row_no)"
           class="p-dropdown-custom-sm"
-          (onChange)="selectedDepartment($event.value, i)"
-          [(ngModel)]="x.departmentId"
+          (onChange)="selectedDepartment($event.value, row_no)"
+          [(ngModel)]="rowData.departmentId"
         >
       </p-dropdown>
         </td>
-        <td style="width: 130px;">{{ x.AircraftType }}</td>
-        <td style="width: 130px;">{{ x.AircraftModel }}</td>
-        <td style="width: 130px;">{{ x.DashNumber }}</td>
+        <td style="width: 130px;">{{ rowData.AircraftType }}</td>
+        <td style="width: 130px;">{{ rowData.AircraftModel }}</td>
+        <td style="width: 130px;">{{ rowData.DashNumber }}</td>
         <td style="width: 130px;">
-          <input type="text" name="description{{i}}" [(ngModel)]="x.description" />
+          <input type="text" name="description{{row_no}}" [(ngModel)]="rowData.description" />
         </td>
         <td style="width: 130px;">
           <p-dropdown
             class="p-dropdown-custom-sm"
             [options]="ataChapters"
-            name="atachapter{{i}}"
-            [(ngModel)]="x.ataChapterId"
+            name="atachapter{{row_no}}"
+            [(ngModel)]="rowData.ataChapterId"
             placeholder="Select"
-            (onChange)="getATASubChapterByATAChapter($event.value, i)"
+            (onChange)="getATASubChapterByATAChapter($event.value, row_no)"
           ></p-dropdown>
         </td>
         <td style="width: 130px;">
           <p-dropdown
             class="p-dropdown-custom-sm"
-            [options]="getDynamicVariableData('ataSubChapaters',i)"
-            name="subChapter{{i}}"
+            [options]="getDynamicVariableData('ataSubChapaters',row_no)"
+            name="subChapter{{row_no}}"
             placeholder="Select"
-            [(ngModel)]="x.ataSubChapterId"
+            [(ngModel)]="rowData.ataSubChapterId"
           ></p-dropdown>
         </td>
         <td style="width: 130px;">
           <p-calendar
             class="p-dropdown-custom-sm"
-            [(ngModel)]="x.entryDate"
-            name="entryDate{{i}}"
+            [(ngModel)]="rowData.entryDate"
+            name="entryDate{{row_no}}"
             [showIcon]="true"
           ></p-calendar>
         </td>
@@ -262,8 +262,8 @@
             class="p-dropdown-custom-sm"
             [options]="cmmList"
             placeholder="Select"
-            name="cmm{{i}}"
-            [(ngModel)]="x.cmmId"
+            name="cmm{{row_no}}"
+            [(ngModel)]="rowData.cmmId"
           ></p-dropdown>
         </td>
         <td style="width: 130px;">
@@ -272,14 +272,14 @@
             [options]="intergationList"
             name="intergationList"
             placeholder="Select"
-            [(ngModel)]="x.integrateWithId"
+            [(ngModel)]="rowData.integrateWithId"
           ></p-dropdown>
         </td>
         <td style="width: 130px;">
           <p-checkbox
-            name="isverified{{i}}"
+            name="isverified{{row_no}}"
             binary="false"
-            [(ngModel)]="x.isVerified"
+            [(ngModel)]="rowData.isVerified"
           ></p-checkbox>
         </td>
         <td style="width: 130px;">
@@ -287,14 +287,14 @@
             class="p-dropdown-custom-sm"
             [options]="employeeList"
             placeholder="Select"
-            name="employeeList{{i}}"
-            [(ngModel)]="x.verifiedById"
+            name="employeeList{{row_no}}"
+            [(ngModel)]="rowData.verifiedById"
           ></p-dropdown>
         </td>
         <td style="width: 130px;">
           <p-calendar
-            [(ngModel)]="x.verifiedDate"
-            name="entryDate{{i}}"
+            [(ngModel)]="rowData.verifiedDate"
+            name="entryDate{{row_no}}"
             [showIcon]="true"
           ></p-calendar>
         </td>
@@ -306,12 +306,12 @@
           <input
             type="text"
             class="form-control input-value"
-            [(ngModel)]="x.Memo"
-            name="Memo{{i}}"
+            [(ngModel)]="rowData.Memo"
+            name="Memo{{row_no}}"
           />
         </td>
-      </ng-container>
-      </tr>
+      
+      </tr></ng-container>
     </ng-template>
   </p-table>
   
