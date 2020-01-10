@@ -3,3 +3,9 @@
     border: 1px solid #e61610;
     border-radius: 8px;
   }
+  @media (min-width: 768px) {
+    .col-md-3 {
+        max-width: 22%;
+        margin-right: 15px;
+    }
+}
