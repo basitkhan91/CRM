@@ -28,6 +28,7 @@ namespace DAL.Models
         public string pnDiscription { get; set; }
         public DateTime createdDate { get; set; }
         public bool isActive { get; set; }
+        public long ManagementStrId { get; set; }
         public int TotalRecords { get; set; }
     }
 }
