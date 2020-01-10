@@ -250,7 +250,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
     // get all dashnumber
     getAllDashNumbers() {
         this.dashNumService.getAll().subscribe(dashnumbers => {
-            const responseData = dashnumbers[0];
+			const responseData = dashnumbers[0];			
             this.dashNumberList = responseData.map(dashnumbers => {
                 return {
                     label: dashnumbers.dashNumber,
@@ -1305,7 +1305,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
                 this.dashNumberList = responseData.map(dashnumbers => {
 
                     return {
-                        label: dashnumbers.dashNumber,
+                        label: dashnumbers.modelName +' - ' + dashnumbers.dashNumber,
                         value: dashnumbers.dashNumberId
                     };
                 });
@@ -1391,17 +1391,19 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 
 	// get dashNumbers by Type and Model 
     getDashNumberByTypeandModel(value) {
-        this.newModelValue = value.originalEvent.target.textContent;
+		
+		this.newModelValue = value.originalEvent.target.textContent;	
         this.dashNumberUrl = this.selectedModelId.reduce((acc, obj) => {
 
             return `${acc},${obj.aircraftModelId}`
         }, '')
-        this.dashNumberUrl = this.dashNumberUrl.substr(1);
+		this.dashNumberUrl = this.dashNumberUrl.substr(1);
+			
         this.dashNumService.getDashNumberByModelTypeId(this.dashNumberUrl, this.selectedAircraftId).subscribe(dashnumbers => {
-            const responseData = dashnumbers;
+			const responseData = dashnumbers;			
             this.loadDashnumber = responseData.map(dashnumbers => {
                 return {
-                    label: dashnumbers.dashNumber,
+                    label: dashnumbers.modelName + ' - ' +dashnumbers.dashNumber,
                     value: dashnumbers.dashNumberId
                 }
             });
@@ -1508,12 +1510,12 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	saveAircraft() {
 
         // const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-        const aircraftData = this.aircraftData.filter(x => {
-            if (x.IsChecked) {
-                return x;
-            }
-        })
-        const data = aircraftData.map(obj => {
+        // const aircraftData = this.aircraftData.filter(x => {
+        //     if (x.IsChecked) {
+        //         return x;
+        //     }
+        // })
+        const data = this.aircraftData.map(obj => {
             console.log(obj);
 
             return {
@@ -1560,8 +1562,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 
         }, err => {
 			const errorLog = err;
-			console.log(err);
-			
+		
             this.errorMessageHandler(errorLog);
             // reset poupup aircraft information
             this.aircraftData = undefined;

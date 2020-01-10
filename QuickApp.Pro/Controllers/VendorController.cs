@@ -3611,8 +3611,25 @@ namespace QuickApp.Pro.Controllers
             {
                 try
                 {
+                    for (int i = 0; i < vendorAircraftMapping.Length; i++)
+                    {
+                        var aircraftData = _unitOfWork.Repository<VendorCapabilityAircraft>().GetSingleOrDefault(c => c.AircraftTypeId == Convert.ToInt32(vendorAircraftMapping[i].AircraftTypeId) && (c.AircraftModelId == vendorAircraftMapping[i].AircraftModelId) && (c.DashNumberId == vendorAircraftMapping[i].DashNumberId) && (c.CapabilityId == vendorAircraftMapping[i].CapabilityId) && (c.VendorId == vendorAircraftMapping[i].VendorId));
+                        if (aircraftData == null)
+                        {
+                            
+                            var aircraft = _unitOfWork.Vendor.VendorAircraft(vendorAircraftMapping[i]);
+                            //_unitOfWork.VendorCapabilityAircraft.Add(vendorAircraftMapping[i]);
+                            //        _appContext.SaveChanges();
 
-                    var aircraft = _unitOfWork.Vendor.VendorAircraft(vendorAircraftMapping);
+                        }
+                        else
+                        {
+                            return BadRequest("Record already exist with these details");
+                        }
+                    }
+                   
+
+                    //var aircraft = _unitOfWork.Vendor.VendorAircraft(vendorAircraftMapping);
                 }
                 catch (Exception ex)
                 {
