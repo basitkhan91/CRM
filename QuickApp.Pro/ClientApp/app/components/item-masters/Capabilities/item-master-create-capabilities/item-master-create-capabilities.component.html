@@ -19,7 +19,7 @@
       <label>Capability</label>
       <p-dropdown
         class="imstock-pddowm"
-        [options]="capabalityType"
+        [options]="capabalityTypeList"
         [ngModelOptions]="{ standalone: true }"
         [(ngModel)]="capabilityTypeId"
         placeholder="Select Capability"
@@ -161,31 +161,78 @@
       let-rowData
       let-columns="columns"
     >
-      <tr *ngFor="let x of aircraftData">
+      <tr *ngFor="let x of aircraftData; let i = index;">
         <td style="width: 130px;">{{ x.capailityTypeName }}</td>
-        <td style="width: 130px;"></td>
-        <td style="width: 130px;"></td>
-        <td style="width: 130px;"></td>
-        <td style="width: 130px;"></td>
+        <td style="width: 130px;">
+          <p-dropdown
+          placeholder="Select"
+          name="company{{i}}"
+          #companyId="ngModel"
+          [options]="legalEntityList"
+          class="p-dropdown-custom-sm"
+          (onChange)="selectedLegalEntity($event.value, i)"
+          [(ngModel)]="x.companyId"
+        >
+        </p-dropdown>
+        </td>
+        <td style="width: 130px;">
+          <p-dropdown
+          placeholder="Select"
+          name="bu{{i}}"
+          #bu="ngModel"
+          [options]="getDynamicVariableData('businessUnitList',i)"
+          class="p-dropdown-custom-sm"
+          (onChange)="selectedBusinessUnit($event.value, i)"
+          [(ngModel)]="x.buId"
+        >
+        </p-dropdown>
+        </td>
+        <td style="width: 130px;">
+          <p-dropdown
+          placeholder="Select"
+          name="division{{i}}"
+          #division="ngModel"
+          [options]="getDynamicVariableData('divisionList',i)"
+          class="p-dropdown-custom-sm"
+          (onChange)="selectedDivision($event.value, i)"
+          [(ngModel)]="x.divisionId"
+        >
+        </p-dropdown>
+        </td>
+        <td style="width: 130px;">
+          <p-dropdown
+          placeholder="Select"
+          name="department{{i}}"
+          #department="ngModel"
+          [options]="getDynamicVariableData('departmentList',i)"
+          class="p-dropdown-custom-sm"
+          (onChange)="selectedDepartment($event.value, i)"
+          [(ngModel)]="x.departmentId"
+        >
+      </p-dropdown>
+        </td>
         <td style="width: 130px;">{{ x.AircraftType }}</td>
         <td style="width: 130px;">{{ x.AircraftModel }}</td>
         <td style="width: 130px;">{{ x.DashNumber }}</td>
         <td style="width: 130px;">
-          <input type="text" name="description" [(ngModel)]="x.description" />
+          <input type="text" name="description{{i}}" [(ngModel)]="x.description" />
         </td>
         <td style="width: 130px;">
           <p-dropdown
             class="p-dropdown-custom-sm"
             [options]="ataChapters"
-            name="atachapter"
+            name="atachapter{{i}}"
             [(ngModel)]="x.ataChapterId"
+            placeholder="Select"
+            (onChange)="getATASubChapterByATAChapter($event.value)"
           ></p-dropdown>
         </td>
         <td style="width: 130px;">
           <p-dropdown
             class="p-dropdown-custom-sm"
-            [options]="ataSubChapaters"
-            name="subChapter"
+            [options]="getDynamicVariableData('ataSubChapaters',i)"
+            name="subChapter{{i}}"
+            placeholder="Select"
             [(ngModel)]="x.ataSubChapterId"
           ></p-dropdown>
         </td>
@@ -193,7 +240,7 @@
           <p-calendar
             class="p-dropdown-custom-sm"
             [(ngModel)]="x.entryDate"
-            name="entryDate"
+            name="entryDate{{i}}"
             [showIcon]="true"
           ></p-calendar>
         </td>
@@ -201,7 +248,8 @@
           <p-dropdown
             class="p-dropdown-custom-sm"
             [options]="cmmList"
-            name="cmm"
+            placeholder="Select"
+            name="cmm{{i}}"
             [(ngModel)]="x.cmmId"
           ></p-dropdown>
         </td>
@@ -210,12 +258,13 @@
             class="p-dropdown-custom-sm"
             [options]="intergationList"
             name="intergationList"
-            [(ngModel)]="x.intergationWithId"
+            placeholder="Select"
+            [(ngModel)]="x.integrateWithId"
           ></p-dropdown>
         </td>
         <td style="width: 130px;">
           <p-checkbox
-            name="isverified"
+            name="isverified{{i}}"
             binary="false"
             [(ngModel)]="x.isVerified"
           ></p-checkbox>
@@ -224,14 +273,15 @@
           <p-dropdown
             class="p-dropdown-custom-sm"
             [options]="employeeList"
-            name="employeeList"
+            placeholder="Select"
+            name="employeeList{{i}}"
             [(ngModel)]="x.verifiedById"
           ></p-dropdown>
         </td>
         <td style="width: 130px;">
           <p-calendar
             [(ngModel)]="x.verifiedDate"
-            name="entryDate"
+            name="entryDate{{i}}"
             [showIcon]="true"
           ></p-calendar>
         </td>
@@ -244,12 +294,23 @@
             type="text"
             class="form-control input-value"
             [(ngModel)]="x.Memo"
-            name="Memo"
+            name="Memo{{i}}"
           />
         </td>
       </tr>
     </ng-template>
   </p-table>
+  
+</div>
+<div class="pull-right">
+  <button
+  type="button"
+  class="btn btn-primary-cstm"
+  data-dismiss="modal"
+  (click)="saveCapability()"
+>
+  Save
+</button>
 </div>
 
 <!-- </div>

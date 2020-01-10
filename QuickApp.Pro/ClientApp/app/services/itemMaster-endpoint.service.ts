@@ -1099,4 +1099,10 @@ export class ItemMasterEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getPartnumberswithManufacturerEndpoint());
             });
     }
+
+
+    saveItemMasterCapes(data){
+        const url = `${this.configurations.baseUrl}/api/itemMaster/createitemmastercapes`;
+        return this.http.post(url, JSON.stringify(data), this.getRequestHeaders() );
+    }
 }
