@@ -137,10 +137,8 @@ export class VendorsListComponent implements OnInit {
     allComapnies: MasterCompany[] = [];
     private isSaving: boolean;
     public sourceVendor: any = {};
-    public domesticSaveObj: Object = {
-    }
-    public internationalSaveObj: Object = {
-    }
+    public domesticSaveObj: any= {};
+    public internationalSaveObj: any= {};
     public sourceAction: any = [];
     public auditHisory: AuditHistory[] = [];
     private bodyText: string;
@@ -175,6 +173,11 @@ export class VendorsListComponent implements OnInit {
     isEnableROList: boolean = true;
     vendorId: number;
     isActive: boolean = true;
+    defaultPaymentData:any = {};
+    internationalwithVendor: any[];
+	defaultwithVendor: any[];
+    domesticWithVedor: any[];
+    paymentTypeName:any;
     // purchaseOrderData: any;
     // poPageSize: number = 10;
     // poPageIndex: number = 0;
@@ -598,6 +601,9 @@ export class VendorsListComponent implements OnInit {
     openView(content, row) {     
         this.toGetVendorGeneralDocumentsList(row.vendorId);
         this.getVendorProcess1099FromTransaction(row.vendorId);
+        this.getDomesticWithVendorId(row.vendorId);
+        this.InternatioalWithVendorId(row.vendorId);
+        this.DefaultWithVendorId(row.vendorId);
         this.vendorCode = row.vendorCode;
         this.vendorName = row.vendorName;
         this.vendorTypeId = row.t.vendorTypeId;
@@ -860,6 +866,7 @@ export class VendorsListComponent implements OnInit {
 
         $('#step9').collapse('show');
         $('#step10').collapse('show');
+        //$('#step11').collapse('show');
     }
     CloseAllVenodrDetailsModel()
     {
@@ -873,6 +880,7 @@ export class VendorsListComponent implements OnInit {
 
         $('#step9').collapse('hide');
         $('#step10').collapse('hide');
+        //$('#step11').collapse('hide');
     }
 
     gotoCreatePO(rowData) {
@@ -934,6 +942,72 @@ export class VendorsListComponent implements OnInit {
 
 
     }
+
+
+
+    public getDomesticWithVendorId(vendorId) {
+	
+		this.workFlowtService.getDomesticvedor(vendorId).subscribe(          
+            // res => {
+            //     if(res[0].length>0)
+            //     {
+            //         this.domesticSaveObj = res[0][0];
+            //         console.log(this.domesticSaveObj);
+            //         console.log(this.domesticSaveObj.aba);
+            //     }             
+               
+            // }    
+            results => this.onDomestciLoad(results[0]),
+			error => this.onDataLoadFailed(error)      
+           
+		);
+    }
+    private onDomestciLoad(allWorkFlows: any) {			
+        debugger
+        this.domesticWithVedor = allWorkFlows;
+		if (this.domesticWithVedor.length > 0) {
+            this.domesticSaveObj = allWorkFlows[0];		
+            console.log(this.domesticSaveObj);	
+			console.log(this.domesticSaveObj.aba);
+		}
+	}
+    
+    
+	public InternatioalWithVendorId(vendorId) {
+	
+		this.workFlowtService.getInternationalWire(vendorId).subscribe(
+			// res => {
+            //     if(res[0].length>0)
+            //     {
+            //     this.internationalSaveObj = res[0][0];
+            //     console.log(this.internationalSaveObj);
+            //     }
+            // }
+            results => this.onInternatioalLoad(results[0]),
+			error => this.onDataLoadFailed(error)      
+		);
+    }
+    
+    public onInternatioalLoad(allWorkFlows: any) {
+  
+    this.internationalwithVendor = allWorkFlows;
+		if (this.internationalwithVendor.length > 0) {
+
+            this.internationalSaveObj = allWorkFlows[0];
+            console.log(this.internationalSaveObj);
+		}
+	}
+
+	public DefaultWithVendorId(vendorId) {
+		
+		this.workFlowtService.getDefaultlist(vendorId).subscribe(
+			res => {
+                this.defaultPaymentData = res[0];
+                this.paymentTypeName=this.defaultPaymentData.paymentType;
+                console.log(this.defaultPaymentData);
+            }
+		);
+	}
 
 
 }
