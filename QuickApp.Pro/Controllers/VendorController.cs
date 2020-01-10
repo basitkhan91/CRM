@@ -277,7 +277,30 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<VendorViewModel>))]
         public IActionResult GetVendorDefault(long vendorId)
         {
-            var vendorDtails = _context.VendorPayment.Where(a => a.VendorId == vendorId).FirstOrDefault(); //.GetAllCustomersData();
+            var vendorDtails = (from vp in _context.VendorPayment
+                                join vpm in _context.VendorPaymentMethod on vp.DefaultPaymentMethod equals vpm.VendorPaymentMethodId into vpmm
+                                from vpm in vpmm.DefaultIfEmpty()
+                                where (vp.VendorId == vendorId)
+                                select new
+                                {
+                                    vp.BankAddressId,
+                                    vp.BankName,
+                                    vp.CreatedBy,
+                                    vp.CreatedDate,
+                                    vp.DefaultPaymentMethod,
+                                    vp.IsActive,
+                                    vp.MasterCompanyId,
+                                    vp.UpdatedBy,
+                                    vp.UpdatedDate,
+                                    vp.Vendor,
+                                    vp.VendorId,
+                                    vp.VendorPaymentId,
+                                    PaymentType = vpm.Description
+                                }).FirstOrDefault();
+
+
+
+            //var vendorDtails = _context.VendorPayment.Where(a => a.VendorId == vendorId).FirstOrDefault(); //.GetAllCustomersData();
             return Ok(vendorDtails);
 
         }
@@ -1678,10 +1701,10 @@ namespace QuickApp.Pro.Controllers
                         _context.SaveChanges();
                     }
 
-                    if(Convert.ToBoolean(actionobject.IsVendorAlsoCustomer))
+                    if (Convert.ToBoolean(actionobject.IsVendorAlsoCustomer))
                     {
                         DAL.Models.Customer customerObject = new DAL.Models.Customer();
-                                               
+
                         customerObject.CustomerAffiliationId = vendorViewModel.VendorTypeId;
                         customerObject.CurrencyId = vendorViewModel.CurrencyId;
                         customerObject.CreditTermsId = vendorViewModel.CreditTermsId;
@@ -1702,7 +1725,7 @@ namespace QuickApp.Pro.Controllers
                         //customerObject.IsAeroExchange = vendorViewModel.IsAeroExchange;
                         customerObject.AeroExchangeDescription = vendorViewModel.AeroExchangeDescription;
                         customerObject.EDIDescription = vendorViewModel.EDIDescription;
-                        if(vendorViewModel.IsAllowNettingAPAR!= null)
+                        if (vendorViewModel.IsAllowNettingAPAR != null)
                         {
                             customerObject.AllowNettingOfAPAR = vendorViewModel.IsAllowNettingAPAR;
                         }
@@ -1713,9 +1736,9 @@ namespace QuickApp.Pro.Controllers
 
                         //customerObject.CustomerClassificationId = 0;
                         //customerObject.RestrictBERMemo = vendorViewModel.RestrictBERMemo;
-                        var CustClassficationData = _context.CustomerClassification.Where(p => p.IsActive == true).OrderBy(p=>p.CustomerClassificationId).FirstOrDefault();
+                        var CustClassficationData = _context.CustomerClassification.Where(p => p.IsActive == true).OrderBy(p => p.CustomerClassificationId).FirstOrDefault();
 
-                        if(CustClassficationData != null)
+                        if (CustClassficationData != null)
                         {
                             customerObject.CustomerClassificationId = CustClassficationData.CustomerClassificationId;
                         }
@@ -1740,7 +1763,7 @@ namespace QuickApp.Pro.Controllers
                         //customerObject.CustomerBillingAddress = vendorViewModel.CustomerBillingAddress;
                         //customerObject.RestrictPMAMemo = vendorViewModel.RestrictPMAMemo;
                         customerObject.MasterCompanyId = vendorViewModel.MasterCompanyId;
-                       
+
                         //customerObject.ATAChapterId = vendorViewModel.ATAChapterId;
                         //customerObject.GeneralCurrencyId = vendorViewModel.CurrencyId;
                         //customerObject.ataSubChapterId = vendorViewModel.ataSubChapterId;
@@ -3583,9 +3606,9 @@ namespace QuickApp.Pro.Controllers
 
         [HttpPost("VendorAircraftPost")]
         public IActionResult VendorAircraft([FromBody] VendorCapabilityAircraft[] vendorAircraftMapping)
-        {           
+        {
             if (ModelState.IsValid)
-            {                 
+            {
                 try
                 {
 
@@ -3595,7 +3618,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     throw;
                 }
-               
+
 
             }
             else
