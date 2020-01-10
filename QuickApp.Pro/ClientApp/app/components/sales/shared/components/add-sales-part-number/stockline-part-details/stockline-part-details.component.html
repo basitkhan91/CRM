@@ -27,6 +27,7 @@
           <th>Control Num</th>
           <th>Id Num</th>
           <th>Serial Num</th>
+          <th>Actions</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-part>
@@ -53,6 +54,24 @@
           <td>{{ part.controlNumber }}</td>
           <td>{{ part.idNumber }}</td>
           <td>{{ part.serialNumber }}</td>
+          <td> 
+            <span>
+            <a class="btn btn-info boxed-float-btn nobg"
+               data-toggle="tooltip"
+               (click)="viewSelectedRow(part)"
+               
+               matTooltip="View">
+                <i class="fa fa-eye"></i>
+            </a>
+            <a class="btn btn-info boxed-float-btn nobg"
+            data-toggle="tooltip"
+            (click)="viewStockLineHistory(part)"
+            
+            matTooltip="History">
+             <i class="fa fa-history"></i>
+         </a>
+        </span>
+      </td>
 
         </tr>
       </ng-template>
