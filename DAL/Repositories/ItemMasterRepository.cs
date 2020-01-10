@@ -1348,7 +1348,6 @@ namespace DAL.Repositories
 
                 var sorts = new Sorts<ItemMasterCapesFilters>();
 
-
                 if (string.IsNullOrEmpty(capesFilters.SortField))
                 {
                     sortColumn = "createdDate";
@@ -1360,108 +1359,15 @@ namespace DAL.Repositories
                     sortColumn = capesFilters.SortField;
                 }
 
+                var propertyInfo = typeof(ItemMasterCapesFilters).GetProperty(sortColumn);
 
                 if (capesFilters.SortOrder == -1)
                 {
-                    switch (capesFilters.SortField)
-                    {
-                        case "partNo":
-                            sorts.Add(sortColumn == "partNo", x => x.partNo, true);
-                            break;
-                        case "capabilityType":
-                            sorts.Add(sortColumn == "capabilityType", x => x.capabilityType, true);
-                            break;
-                        case "aircraftType":
-                            sorts.Add(sortColumn == "aircraftType", x => x.aircraftType, true);
-                            break;
-                        case "aircraftModel":
-                            sorts.Add(sortColumn == "aircraftModel", x => x.aircraftModel, true);
-                            break;
-                        case "aircraftDashNumber":
-                            sorts.Add(sortColumn == "aircraftDashNumber", x => x.aircraftDashNumber, true);
-                            break;
-                        case "description":
-                            sorts.Add(sortColumn == "description", x => x.description, true);
-                            break;
-                        case "aTAChapter":
-                            sorts.Add(sortColumn == "aTAChapter", x => x.aTAChapter, true);
-                            break;
-                        case "aTASubChapter":
-                            sorts.Add(sortColumn == "aTASubChapter", x => x.aTASubChapter, true);
-                            break;
-                        case "entryDate":
-                            sorts.Add(sortColumn == "entryDate", x => x.entryDate, true);
-                            break;
-                        case "cMM":
-                            sorts.Add(sortColumn == "cMM", x => x.cMM, true);
-                            break;
-                        case "integrateWith":
-                            sorts.Add(sortColumn == "integrateWith", x => x.integrateWith, true);
-                            break;
-                        case "isVerified":
-                            sorts.Add(sortColumn == "isVerified", x => x.isVerified, true);
-                            break;
-                        case "verifiedBy":
-                            sorts.Add(sortColumn == "verifiedBy", x => x.verifiedBy, true);
-                            break;
-                        case "verifiedDate":
-                            sorts.Add(sortColumn == "verifiedDate", x => x.verifiedDate, true);
-                            break;
-                        case "memo":
-                            sorts.Add(sortColumn == "memo", x => x.memo, true);
-                            break;
-                    }
+                    sorts.Add(true, x => propertyInfo.GetValue(x, null), true);
                 }
                 else
                 {
-                    switch (capesFilters.SortField)
-                    {
-                        case "partNo":
-                            sorts.Add(sortColumn == "partNo", x => x.partNo);
-                            break;
-                        case "capabilityType":
-                            sorts.Add(sortColumn == "capabilityType", x => x.capabilityType);
-                            break;
-                        case "aircraftType":
-                            sorts.Add(sortColumn == "aircraftType", x => x.aircraftType);
-                            break;
-                        case "aircraftModel":
-                            sorts.Add(sortColumn == "aircraftModel", x => x.aircraftModel);
-                            break;
-                        case "aircraftDashNumber":
-                            sorts.Add(sortColumn == "aircraftDashNumber", x => x.aircraftDashNumber);
-                            break;
-                        case "description":
-                            sorts.Add(sortColumn == "description", x => x.description);
-                            break;
-                        case "aTAChapter":
-                            sorts.Add(sortColumn == "aTAChapter", x => x.aTAChapter);
-                            break;
-                        case "aTASubChapter":
-                            sorts.Add(sortColumn == "aTASubChapter", x => x.aTASubChapter);
-                            break;
-                        case "entryDate":
-                            sorts.Add(sortColumn == "entryDate", x => x.entryDate);
-                            break;
-                        case "cMM":
-                            sorts.Add(sortColumn == "cMM", x => x.cMM);
-                            break;
-                        case "integrateWith":
-                            sorts.Add(sortColumn == "integrateWith", x => x.integrateWith);
-                            break;
-                        case "isVerified":
-                            sorts.Add(sortColumn == "isVerified", x => x.isVerified);
-                            break;
-                        case "verifiedBy":
-                            sorts.Add(sortColumn == "verifiedBy", x => x.verifiedBy);
-                            break;
-                        case "verifiedDate":
-                            sorts.Add(sortColumn == "verifiedDate", x => x.verifiedDate);
-                            break;
-                        case "memo":
-                            sorts.Add(sortColumn == "memo", x => x.memo);
-                            break;
-                    }
+                    sorts.Add(true, x => propertyInfo.GetValue(x, null));
                 }
 
                 var totalRecords = (from imc in _appContext.ItemMasterCapes
