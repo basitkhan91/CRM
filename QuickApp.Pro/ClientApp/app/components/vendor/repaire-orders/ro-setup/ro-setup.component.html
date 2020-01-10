@@ -699,12 +699,13 @@
 								{{col.header}}
 								<p-sortIcon [field]="col.field"></p-sortIcon>
 							</th>
+							<th>Action</th>
 						</tr>
-						<tr>
+						<!-- <tr>
 							<th *ngFor="let col of columns" [ngSwitch]="col.field">
 								<input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, col.filterMatchMode)">
 							</th>
-						</tr>
+						</tr> -->
 					</ng-template>
 		
 					<ng-template pTemplate="body" let-rowData let-columns="columns">
@@ -712,6 +713,11 @@
 							<td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
 								{{rowData[col.field]}}
 							</td>
+							<td><span>
+								<a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedCapsRow(rowData)" data-target="#vendorCapesView" data-toggle="modal" matTooltip="View" >
+									<i class="fa fa-eye"></i>
+								</a>
+								</span></td>
 						</tr>
 					</ng-template>
 				</p-table>
@@ -1231,6 +1237,70 @@
 			<button class="btn btn-primary-cstm pull-right" (click)="saveRepairOrder()" style="margin-top: 10px;margin-bottom: 20px;">{{isEditMode ? 'Update' : 'Save'}}</button> <!--[disabled]="!createPOForm.valid"-->
 		</div>
 	</form>
+	<div class="modal fade" id="vendorCapesView" role="dialog" data-backdrop="static" data-keyboard="false" style="z-index: 10000;">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header" *ngIf="vendorCapesGeneralInfo">
+              <button type="button" class="close" data-dismiss="modal">&times;</button> <!--data-dismiss="modal"-->
+              <h4 class="modal-title">Capability Details of Vendor: <span>"{{vendorCapesGeneralInfo.vendorName}}"</span></h4>
+            </div>
+            <div class="modal-body">
+              <div>
+                <div class="card">
+                    <div class="card-body" *ngIf="vendorCapesGeneralInfo">
+                        <h4 class="po-head">General Information:</h4>
+                        <div class="table-responsive default-bg clear vendorCapes-generalInfo">
+                            <div class="col-sm-3">
+                                <p><span class="label"><b>Vendor Name: </b></span><span class="value">{{vendorCapesGeneralInfo.vendorName ? vendorCapesGeneralInfo.vendorName : '-'}}</span></p>
+                                <p><span class="label"><b>Vendor Code: </b></span><span class="value">{{vendorCapesGeneralInfo.vendorCode ? vendorCapesGeneralInfo.vendorCode : '-'}}</span></p>
+                                <p><span class="label"><b>PN: </b></span><span class="value">{{vendorCapesGeneralInfo.partNumber ? vendorCapesGeneralInfo.partNumber : '-'}}</span></p>
+                                <p><span class="label"><b>PN Description: </b></span><span class="value">{{vendorCapesGeneralInfo.partDescription ? vendorCapesGeneralInfo.partDescription : '-'}}</span></p>
+                            </div>
+                            <div class="col-sm-3">
+                                <p><span class="label"><b>PN Mfg: </b></span><span class="value">{{vendorCapesGeneralInfo.manufacturerName ? vendorCapesGeneralInfo.manufacturerName : '-'}}</span></p>
+                                <p><span class="label"><b>Capability Type: </b></span><span class="value">{{vendorCapesGeneralInfo.capabilityType ? vendorCapesGeneralInfo.capabilityType : '-'}}</span></p>
+                                <p><span class="label"><b>Vendor Ranking: </b></span><span class="value">{{vendorCapesGeneralInfo.vendorRanking ? vendorCapesGeneralInfo.vendorRanking : '-'}}</span></p>
+                            </div>
+                            <div class="col-sm-3">
+                                <p><span class="label"><b>PMA: </b></span><span class="value">{{vendorCapesGeneralInfo.isPMA ? vendorCapesGeneralInfo.isPMA : '-'}}</span></p>
+                                <p><span class="label"><b>DER: </b></span><span class="value">{{vendorCapesGeneralInfo.isDER ? vendorCapesGeneralInfo.isDER : '-'}}</span></p>
+                                <p><span class="label"><b>Cost: </b></span><span class="value">{{vendorCapesGeneralInfo.cost ? vendorCapesGeneralInfo.cost : '-'}}</span></p>
+                            </div>
+                            <div class="col-sm-3">
+                                <p><span class="label"><b>TAT (Days): </b></span><span class="value">{{vendorCapesGeneralInfo.tat ? vendorCapesGeneralInfo.tat : '-'}}</span></p>
+                                <p><span class="label"><b>Cap Description: </b></span><span class="value">{{vendorCapesGeneralInfo.capabilityDescription ? vendorCapesGeneralInfo.capabilityDescription : '-'}}</span></p>
+                                <p><span class="label"><b>Memo: </b></span><span class="value">{{vendorCapesGeneralInfo.memo ? vendorCapesGeneralInfo.memo : '-'}}</span></p>
+                            </div>
+                        </div>
+                        <h4 class="po-head">Aircraft Information:</h4>
+                        <p-table class="ptable-custom" [value]="aircraftListDataValues" [rows]="6" [columns]="colsaircraftLD" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <!-- <th>Id</th> -->
+                                    <th *ngFor="let col of columns">
+                                        {{col.header}}
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                                <tr>
+                                    <!-- <td>{{i+1}}</td> -->
+                                    <td *ngFor="let col of columns">
+                                        {{rowData[col.field]}}
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
 		
 		<div class="modal fade" id="cpo-memo" role="dialog" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-sm" style="max-width: 400px !important;">

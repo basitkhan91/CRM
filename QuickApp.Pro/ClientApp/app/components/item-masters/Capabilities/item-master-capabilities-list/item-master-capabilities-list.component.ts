@@ -29,6 +29,7 @@ import { WorkOrderService } from '../../../../services/work-order/work-order.ser
 import { CommonService } from '../../../../services/common.service';
 
 
+
 @Component({
     selector: 'app-item-master-capabilities-list',
     templateUrl: './item-master-capabilities-list.component.html',
@@ -103,8 +104,12 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
     cmmList: any[];
     capabilityTypeData: any[];
     managementStructureData: any = [];
+    isDeleteCapabilityPopupOpened: boolean = false;
+    selectedForDeleteCapabilityId: any;
+    selectedForDeleteContent: any;
+
     /** item-master-capabilities-list ctor */
-    constructor(private itemMasterService: ItemMasterService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService,private dashnumberservices: DashNumberService,private formBuilder: FormBuilder,public workFlowtService: LegalEntityService,private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService,public inteService: IntegrationService,private workOrderService: WorkOrderService,private commonservice: CommonService)
+    constructor(private itemMasterService: ItemMasterService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService,private dashnumberservices: DashNumberService,private formBuilder: FormBuilder,public workFlowtService: LegalEntityService,private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService,public inteService: IntegrationService,private workOrderService: WorkOrderService,private commonservice: CommonService, private activatedRoute: ActivatedRoute)
     {
         this.dataSource = new MatTableDataSource();
         this.itemMasterService.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list';
@@ -147,6 +152,8 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
 
     ngOnInit()
     {
+        console.log(this.itemMasterId, "itemMasterIdInList")
+       
         this.capabilitiesForm = this.formBuilder.group({
             mfgForm: this.formBuilder.array([])
         });
@@ -189,32 +196,45 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
     }
 
      private loadData()
+     
+
      {
-         this.itemMasterService.getItemMasterCapsList().subscribe(
+        let iMid = this.activatedRoute.snapshot.paramMap.get('id');
+        if(!iMid){
+            iMid = "0"
+        }
+        
+        let reqData = { 
+            first:0,
+            rows:10,
+            sortOrder:-1,
+            sortField:"integrateWith",
+            filters:{ 
+                partNo:"",
+                itemMasterId: iMid
+            },
+            globalFilter:null
+        }
+         this.itemMasterService.getItemMasterCapsList(reqData).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
 
         // To display the values in header and column name values
         this.cols = [
-            //{ field: 'actionId', header: 'Action Id' },
-            { field: 'capabilityId', header: 'Capability' },
-            { field: 'partNumber', header: 'PN' },
-            { field: 'partDescription', header: 'Description' },
-            { field: 'manufacturerId', header: 'Manufacturer' },
-            { field: 'aircraftTypeId', header: 'aircraftType' },
-            { field: 'aircraftModelId', header: 'aircraftModel' },
-            { field: 'aircraftDashNumberId', header: 'aircraftDashNumber' },
-            {field: 'description', header: 'description' },
-            { field: 'ataChapterId', header: 'ataChapter' },
-            { field: 'ataSubChapterId', header: 'ataSubChapterId' },
-           
-            //{ field: 'partCertificationNumber', header: 'Part Certification Num' }
-            //{ field: 'createdBy', header: 'Created By' },
-            //{ field: 'updatedBy', header: 'Updated By' },
-            //{ field: 'updatedDate', header: 'Updated Date' },
-            //{ field: 'createdDate', header: 'Created Date' }
-
+            { field: 'capabilityType', header: 'Cap Type' },
+            { field: 'partNo', header: 'PN' },
+            { field: 'pnDiscription', header: 'PN Description' },  
+            { field: 'aircraftType', header: 'Airtcraft' },
+            { field: 'aircraftModel', header: 'Model' },
+            { field: 'aircraftDashNumber', header: 'Dash Num' },
+            { field: 'aTAChapter', header: 'ATA Chapter' },
+            { field: 'entryDate', header: 'Entry Date' },
+            { field: 'cMM', header: 'CMM ID' },
+            { field: 'isVerified', header: 'Verified' }, 
+            { field: 'verifiedBy', header: 'Verified By' }, 
+            { field: 'verifiedDate', header: 'Date Verified' },
+            { field: 'company', header: 'Company' }            
         ];
 
         this.selectedColumns = this.cols;
@@ -251,6 +271,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
         this.isDeleteMode = false;
         this.isEditMode = false;
         this.modal.close();
+        this.isDeleteCapabilityPopupOpened = false;
     }
 
     openHelpText(content) {
@@ -1233,6 +1254,33 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
     }
 
     onAddCapes() {
+        
+    }
+    deleteCapability(content, capabilityId)
+    {
+        this.selectedForDeleteCapabilityId = capabilityId;
+        this.selectedForDeleteContent = content;
+        if(this.isDeleteCapabilityPopupOpened == true){
+            this.itemMasterService.deleteCapabilityById(capabilityId, "admin").subscribe(res => {
+                console.log(res, "response of itemMaster+++++++++++++");
+                this.loadData()
+                this.dismissModel()
+                this.isDeleteCapabilityPopupOpened = false;
+
+                // return false;
+                // this.itemMasterData = res[0];
+            }),
+            error=>{
+                console.log( "ERROR:" + error );
+            }
+        }
+        else {
+            this.isDeleteCapabilityPopupOpened = true
+            this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+            this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+        }
         
     }
 

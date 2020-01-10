@@ -208,6 +208,15 @@ export class PurchaseSetupComponent implements OnInit {
 	shipViaValidCheck: boolean;
 	billToUserTypeValidCheck: boolean;
 	billToSiteNameValidCheck: boolean;
+	vendorCapesGeneralInfo: any = {};
+    aircraftListDataValues: any;
+    colsaircraftLD: any[] = [
+        { field: "aircraft", header: "Aircraft" },
+        { field: "model", header: "Model" },
+        { field: "dashNumber", header: "Dash Numbers" },
+        { field: "memo", header: "Memo" }
+    ];
+	
 
 	constructor(private route: Router,
 		public legalEntityService: LegalEntityService,
@@ -263,13 +272,13 @@ export class PurchaseSetupComponent implements OnInit {
 
 		this.vendorCapesCols = [
 			//{ field: 'vcId', header: 'VCID' },
-			{ field: 'ranking', header: 'Ranking' },
+			{ field: 'vendorRanking', header: 'Ranking' },
 			{ field: 'partNumber', header: 'PN' },
 			{ field: 'partDescription', header: 'PN Description' },
 			{ field: 'capabilityType', header: 'Capability Type' },
 			{ field: 'cost', header: 'Cost' },
 			{ field: 'tat', header: 'TAT' },
-			{ field: 'name', header: 'PN Mfg' },
+			{ field: 'manufacturerName', header: 'PN Mfg' },
 		];
 
 		this.sourcePoApproval.statusId = 1;
@@ -2462,10 +2471,28 @@ export class PurchaseSetupComponent implements OnInit {
 	}
 
 	getVendorCapesByID(vendorId) {
-		this.vendorCapesService.getVendorCapesById(vendorId).subscribe(res => {
-			this.vendorCapesInfo = res;
-		})
+
+		const status = 'active';
+
+        if(vendorId != undefined) {
+            this.vendorService.getVendorCapabilityList(status, vendorId).subscribe(                
+               
+                results => this.onDataLoadVendorCapsSuccessful(results[0]),
+                error => this.onDataLoadFailed(error)
+            );
+        }
+
+		// this.vendorCapesService.getVendorCapesById(vendorId).subscribe(res => {
+		// 	this.vendorCapesInfo = res;
+		// })
 	}
+	public onDataLoadVendorCapsSuccessful(allWorkFlows: any[]) {
+       
+      
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;      
+        this.vendorCapesInfo = allWorkFlows;       
+    }
 
 	filterVendorContacts(event) {
 		this.vendorContactsHeader = this.vendorContactList;
@@ -3711,4 +3738,30 @@ export class PurchaseSetupComponent implements OnInit {
 	// 		this.shipToAddress = getObjectById('vendorShippingAddressId', id, this.vendorSelected);
 	// 	}
 	// }
+
+	viewSelectedCapsRow(rowData) {       
+        const {vendorCapabilityId} = rowData;
+        this.getVendorCapabilitiesView(vendorCapabilityId);     
+        this.getVendorCapesAircraftView(vendorCapabilityId);     
+    }
+    getVendorCapabilitiesView(vendorCapesId) {
+		this.vendorCapesService.getVendorCapabilitybyId(vendorCapesId).subscribe(res => {			
+			this.vendorCapesGeneralInfo = res;
+		})
+	}
+
+	getVendorCapesAircraftView(vendorCapesId) {
+		this.vendorCapesService.getVendorAircraftGetDataByCapsId(vendorCapesId).subscribe(res => {          
+            this.aircraftListDataValues = res.map(x => {
+                return {
+                    ...x,
+                    aircraft: x.aircraftType,
+                    model: x.aircraftModel,
+                    dashNumber: x.dashNumber,
+                    memo: x.memo,
+                }
+            })
+		})
+	}
+
 }

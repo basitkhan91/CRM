@@ -14,7 +14,7 @@ import { LegalEntityService } from '../../../../services/legalentity.service';
 import { AtaMainService } from '../../../../services/atamain.service';
 import { ATAMain } from '../../../../models/atamain.model';
 import { ItemMasterCapabilitiesModel } from '../../../../models/itemMasterCapabilities.model';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AircraftModelService } from '../../../../services/aircraft-model/aircraft-model.service';
 import { DashNumberService } from '../../../../services/dash-number/dash-number.service';
 import { CommonService } from '../../../../services/common.service';
@@ -96,6 +96,9 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
     ];
     capabalityTypeList: any;
     legalEntityList: any = [];
+    pnData: any = [];
+    itemMasterIDFromPartNumberSelection: any;
+
     constructor(public itemser: ItemMasterService,
         private aircraftModelService: AircraftModelService,
         private Dashnumservice: DashNumberService,
@@ -105,14 +108,34 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         private authService: AuthService,
         public vendorser: VendorService,
         private atasubchapter1service: AtaSubChapter1Service,
+        private activatedRoute: ActivatedRoute
     ) { }
     ngOnInit() {
+        console.log(this.itemMasterId, "itemMasterId")
         this.getCapabilityTypesList();
         this.getAircraftTypesList();
         // this.getAtAChapters();
         // this.getIntergationWithList();
         // this.getAllEmployees();
+        this.getItemMasterList();
+
     }
+    getItemMasterList() {
+		
+
+		this.itemser.getItemStockList("Stock").subscribe(res => {
+            console.log(res);
+            let resData = res[0]
+            if(resData){
+                for(let i=0; i<resData.length; i++){
+                    this.pnData.push({
+                        label: resData[i].partNumber, value : resData[i].itemMasterId
+                    }) 
+                } 
+            }
+             
+        })
+	}
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
@@ -223,7 +246,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                         IsChecked: false,
                         // ...this.capes
                        
-                        capailityTypeId:  this.capabilityTypeId,
+                        capabilityTypeId:  this.capabilityTypeId,
                         capailityTypeName:  getValueFromArrayOfObjectById ('label','value', this.capabilityTypeId ,this.capabalityTypeList),
                         managementStructureId: null,
                         description: '',
@@ -251,8 +274,8 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                 aircraftTypeId: this.selectedAircraftId,
                 AircraftModel: 'Unknown',
                 DashNumber: 'Unknown',
-                AircraftModelId: '',
-                DashNumberId: '',
+                AircraftModelId: 0,
+                DashNumberId: 0,
                 Memo: '',
                 IsChecked: false,
                 // ...this.capes
@@ -284,7 +307,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                     AircraftModel: x.modelName,
                     DashNumber: 'Unknown',
                     AircraftModelId: x.aircraftModelId,
-                    DashNumberId: '',
+                    DashNumberId: 0,
                     Memo: '',
                     IsChecked: false,
                     // ...this.capes,
@@ -309,7 +332,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
             })
         }
 
-        this.getPartPublicationByItemMasterId();
+        this.getPartPublicationByItemMasterId(this.itemMasterId);
         this.getAtAChapters();
         this.getIntergationWithList();
         this.getAllEmployees();
@@ -324,8 +347,8 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
 
 
 
-    async getPartPublicationByItemMasterId() {
-        await this.workOrderService.getPartPublicationByItemMaster(this.itemMasterId).subscribe(res => {
+    async getPartPublicationByItemMasterId(itemMasterId) {
+        await this.workOrderService.getPartPublicationByItemMaster(itemMasterId).subscribe(res => {
             this.cmmList = res.map(x => {
                 return {
                     value: x.publicationRecordId,
@@ -416,12 +439,20 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
 	}
 
     saveCapability(){
+        let iMid = this.activatedRoute.snapshot.paramMap.get('id');
+        if(!iMid){
+            iMid = this.itemMasterIDFromPartNumberSelection;
+        } 
+        // else if(!this.itemMasterIDFromPartNumberSelection){
+        //     iMid = 
+        // }
+
         const capesData = [
             ...this.aircraftData.map(x => { 
                 return {
                     ...x,
                     aircraftDashNumberId : x.DashNumberId,
-                    itemMasterId : 19,
+                    itemMasterId: iMid,
                     masterCompanyId:1,
                     createdBy: this.userName,
                     updatedBy: this.userName,
