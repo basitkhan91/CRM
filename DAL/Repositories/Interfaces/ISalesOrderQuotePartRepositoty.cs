@@ -12,5 +12,7 @@ namespace DAL.Repositories.Interfaces
 
         IEnumerable<SalesOrderQuotePart> BulkMege(IEnumerable<SalesOrderQuotePart> parts);
 
+        bool Delete(long salesOrderQuotePartId);
+
     }
 }
