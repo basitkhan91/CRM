@@ -89,9 +89,9 @@ export class ItemMasterService {
             this.itemMasterEndpoint.getitemMasterEndpoint<any[]>());
     }
 
-    getItemMasterCapsList() {
+    getItemMasterCapsList(data) {
         return Observable.forkJoin(
-            this.itemMasterEndpoint.getitemMasterCapsDataEndpoint<any[]>());
+            this.itemMasterEndpoint.getitemMasterCapsDataEndpoint<any[]>(data));
     }
 
     getAircaftManafacturerList(itemid: any) {
@@ -399,5 +399,8 @@ export class ItemMasterService {
 
     saveItemMasterCapes(data){
         return this.itemMasterEndpoint.saveItemMasterCapes(data)
+    }
+    deleteCapabilityById(capabilityId, user) {
+        return this.itemMasterEndpoint.deleteCapabilityById<any>(capabilityId, user);
     }
 }
