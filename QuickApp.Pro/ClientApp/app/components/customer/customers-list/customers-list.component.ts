@@ -145,6 +145,20 @@ export class CustomersListComponent implements OnInit {
     isDeleteMode: boolean = false;
     allCustomerFinanceDocumentsList: any = [];
     customerId: number = 0;
+    sourceViewforShippingInfo: any;
+    sourceViewInterforShippingInfo: any;
+    demosticShippingViaDataInfo: any;
+    demosticInterShippingViaDataInfo: any;
+    selectedColumnsForInternationShipViaTable = [
+        { field: 'shipVia', header: 'Ship Via' },
+        { field: 'shippingAccountInfo', header: 'Shipping AccountInfo' },
+        //{ field: 'shippingURL', header: 'Shipping URL' },
+        //{ field: 'shippingId', header: 'shipping Id' },
+        { field: 'memo', header: 'Memo' }
+
+    ];
+    selectedColumnsForDomesticShipVia = this.selectedColumnsForInternationShipViaTable;
+
     headers = [
         { field: 'name', header: 'Customer Name' },
         { field: 'customerCode', header: 'Customer Code' },
@@ -181,6 +195,8 @@ export class CustomersListComponent implements OnInit {
     allContacts: any[] = [];
     customerauditHisory: any[];
     selectedRowforDelete: any;
+    pageIndexForInternationalShipVia: number = 0;
+    pageSizeForInternationalShipVia: number = 10;
     customerContactsColumns = [
         { field: 'tag', header: 'Tag' },
         { field: 'firstName', header: 'First Name' },
@@ -790,7 +806,7 @@ export class CustomersListComponent implements OnInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-
+  
     getColorCodeForHistory(i, field, value) {
         const data = this.customerauditHisory;
         const dataLength = data.length;
@@ -807,7 +823,7 @@ export class CustomersListComponent implements OnInit {
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
         window.location.assign(url);
     }
-
+   
     // ngAfterViewInit() {
     //     this.dataSource.paginator = this.paginator;
     //     this.dataSource.sort = this.sort;
