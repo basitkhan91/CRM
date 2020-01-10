@@ -14210,6 +14210,9 @@ input[type="date"]::-webkit-inner-spin-button {
     top: 43% !important;
     left: 36% !important;
 }
+.imcapes-pddowm .ui-dropdown {
+    width: 100% !important;
+}
 
 .new-margin {
     margin-top: 10px;
@@ -14432,6 +14435,9 @@ p-table .ui-table-summary input {
 }
 p-table tr th input[type="text"], p-table tr th input[type="date"] {
     height: 22px !important;
+}
+.itemcapes-ptable .ui-table-scrollable-body {
+    min-height: 200px;
 }
 
 .accountdropdown.ui-dropdown .ui-dropdown-trigger {

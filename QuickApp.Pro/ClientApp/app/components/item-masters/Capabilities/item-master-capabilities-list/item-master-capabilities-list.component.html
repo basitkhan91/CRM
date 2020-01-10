@@ -10,15 +10,15 @@
                             <div class="col-md-12" style="margin-bottom: -10px;">
                                 <h4 class="float-right">
                                         Add Capability
-                                        <button data-toggle="modal" data-target="#capes1">
+                                        <a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#capes1" (click)="onAddCapes()"><i class="fa fa-plus-circle fa-lg"></i></a>
+                                        <!-- <button data-toggle="modal" data-target="#capes1">
                                              Add
-                                        </button>
+                                        </button> -->
                                         <!-- <button  
-                                        
-                                          class="plusicon-cstm"
+                                          type="button"
+                                          class="plusicon-cstm" data-toggle="modal" data-target="#capes1"
                                           ><i class="fa fa-plus-circle fa-lg" ></i
                                         ></button> -->
-                
                                       </h4>
                             </div>
                             <div class="clear"></div>
@@ -45,19 +45,19 @@
                         <div style="text-align: right">
                             <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
                                            selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-                            <div class="inner-addon right-addon w200 inline-block">
+                            <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
                                 <i class="fa fa-search"></i>
                                 <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter">
                             </div>
-                            <button type="button" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                            <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                            <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Data" matTooltip="Download Data" matTooltipPosition="above" style="padding: 5px 12px !important;" (click)="dt.exportCSV()"></button>
+                            <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" style="padding: 5px 12px !important;" (click)="dt.exportCSV({selectionOnly:true})"></button>
                             <!-- <a matTooltip="Add Stock Line" class="btn btn-success nobg" (click)="navigateTogeneralInfo()"><span><i class="fa fa-plus"></i></span></a> -->
-                            <div class="excel-upload">
+                            <!-- <div class="excel-upload">
                                 <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                 <label for="upload">
                                     <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
                                 </label>
-                            </div>
+                            </div> -->
                         </div>
 
                         <div class="clear"></div>
@@ -72,7 +72,7 @@
                     <ng-template pTemplate="header" let-columns>
                         <tr>
 
-                            <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                            <th class="text-center" *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                 {{col.header}}
                                 <p-sortIcon [field]="col.field"></p-sortIcon>
                             </th>
@@ -182,7 +182,7 @@
 
 
 
-<div id="capes1" class="modal fade" role="dialog">
+<div id="capes1" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-lg">
       
           <!-- Modal content-->
@@ -196,7 +196,7 @@
 
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
             </div>
           </div>
       

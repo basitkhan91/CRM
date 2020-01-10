@@ -242,6 +242,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                         departmentId: null,
                     }
                 })
+                console.log(this.aircraftData);                
             })
         }
         if (this.selectedAircraftId !== undefined && this.modelUnknown) {
@@ -404,13 +405,14 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
 		this.atasubchapter1service.getATASubChapterListByATAChapterId(value).subscribe(atasubchapter => {
             const responseData = atasubchapter[0];
             console.log(atasubchapter[0]);
-            this['ataSubChapaters' + index] = responseData.map(x => {
+            this["ataSubChapaters" + index] = responseData.map(x => {
 				return {
 					label: x.description,
 					value: x.ataChapterId
 				}
-			})
-		})
+            })
+            console.log(this["ataSubChapaters" + index]);            
+        })
 	}
 
     saveCapability(){

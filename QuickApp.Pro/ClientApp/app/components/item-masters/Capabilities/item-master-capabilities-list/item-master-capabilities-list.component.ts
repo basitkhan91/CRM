@@ -1232,4 +1232,8 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
         this.modal.close();
     }
 
+    onAddCapes() {
+        
+    }
+
 }
