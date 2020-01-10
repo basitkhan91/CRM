@@ -199,7 +199,7 @@ export class SalesQuoteListComponent implements OnInit {
       this.modal.close();
       this.alertService.showMessage(
         "Success",
-        `Asset removed successfully.`,
+        `Quote removed successfully.`,
         MessageSeverity.success
       );
       this.onSearch();
@@ -435,28 +435,5 @@ export class SalesQuoteListComponent implements OnInit {
     });
   }
 
-  dblExpandAllCustomerDetailsModel() {
-    $("#step11").collapse("show");
-    $("#step12").collapse("show");
-    $("#step13").collapse("show");
-    $("#step14").collapse("show");
-    $("#step15").collapse("show");
-    $("#step16").collapse("show");
-    $("#step17").collapse("show");
-    $("#step18").collapse("show");
-    $("#step19").collapse("show");
-    $("#step20").collapse("show");
-  }
-  dblCloseAllCustomerDetailsModel() {
-    $("#step11").collapse("hide");
-    $("#step12").collapse("hide");
-    $("#step13").collapse("hide");
-    $("#step14").collapse("hide");
-    $("#step15").collapse("hide");
-    $("#step16").collapse("hide");
-    $("#step17").collapse("hide");
-    $("#step18").collapse("hide");
-    $("#step19").collapse("hide");
-    $("#step20").collapse("hide");
-  }
+
 }
