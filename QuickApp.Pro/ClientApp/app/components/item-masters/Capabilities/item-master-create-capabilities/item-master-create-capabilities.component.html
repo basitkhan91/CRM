@@ -16,7 +16,13 @@
 
 <form #addCapesForm="ngForm">        
 <div class="form-row">
-  <div class="col-md-3">
+  <div class="col-md-2" *ngIf="itemMasterId == undefined">
+    <div class="form-group">
+        <label class="popup-plusicon-cstm">Part Number <strong class="clr-red">*</strong> </label>
+        <p-dropdown class="imstock-pddowm imcapes-pddowm" [options]="pnData" filter="true"  [(ngModel)]="itemMasterIDFromPartNumberSelection" name="itemMasterIDFromPartNumberSelection" id="partNumber" title="Part Number" required  placeholder="Select Part Number" [showClear]="true" (onChange)="getPartPublicationByItemMasterId(itemMasterIDFromPartNumberSelection)"></p-dropdown>
+    </div>
+  </div>
+  <div class="col-md-2">
     <div class="form-group">
       <label>Capability <span class="clr-red">*</span></label>
       <p-dropdown
@@ -30,7 +36,7 @@
     </div>
   </div>
 
-  <div class="col-md-3">
+  <div class="col-md-2">
     <div class="form-group">
       <label class="popup-plusicon-cstm"
         >Aircraft Type <span class="clr-red">*</span>
@@ -52,7 +58,7 @@
     </div>
   </div>
 
-  <div class="col-md-3">
+  <div class="col-md-2">
     <div class="form-group">
       <label class="popup-plusicon-cstm" style="width: 150px !important">
         Model <span class="clr-red">*</span>
@@ -84,7 +90,7 @@
       ></p-multiSelect>
     </div>
   </div>
-  <div class="col-md-3" *ngIf="!modelUnknown">
+  <div class="col-md-2" *ngIf="!modelUnknown">
     <div class="form-group">
       <label class="popup-plusicon-cstm" style="width: 190px !important">
         DashNumber <span class="clr-red">*</span>
@@ -118,7 +124,7 @@
   </div>
   <div class="col-md-2">
     <button
-      style="margin-top: 7px; margin-bottom: 20px;"
+      style="margin-top: 20px;margin-left: 30px;"
       type="button"
       class="btn btn-primary-cstm"
       [disabled]="!addCapesForm.valid"
@@ -310,7 +316,7 @@
   </p-table>
   
 </div>
-<div class="pull-right">
+<div class="pull-right" *ngIf="viewTable">
   <button
   type="button"
   class="btn btn-primary-cstm" [disabled]="!capesForm.valid"
