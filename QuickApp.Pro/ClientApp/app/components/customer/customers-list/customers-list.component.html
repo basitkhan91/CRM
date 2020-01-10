@@ -1,4 +1,6 @@
-﻿﻿<div class="card">
+﻿﻿<p-breadcrumb [model]="breadcrumbs" [home]="home"></p-breadcrumb>
+
+<div class="card">
     <div class="card-body">
         <div class="inline-block display-flex">
             <h3 class="po-head lead">Customer List</h3>
@@ -85,7 +87,7 @@
             <ng-template pTemplate="header" let-columns>
                 <tr>
 
-                    <th style="width:120px"
+                    <th style="width:auto"
                         *ngFor="let col of columns"
                         pResizableColumn
                         pReorderableColumn
@@ -93,13 +95,13 @@
                         {{ col.header }}
                         <p-sortIcon [field]="col.field"></p-sortIcon>
                     </th>
-                    <th style="width:200px;position:sticky"
+                    <th style="width:150px;position:sticky"
                         *ngIf="selectedColumns.length > 0">
                         Actions
                     </th>
                 </tr>
                 <tr>
-                    <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
+                    <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
                         <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
                     </th>
                     <th style="width:200px;position:sticky"></th>
@@ -107,7 +109,7 @@
             </ng-template>
             <ng-template pTemplate="body" let-rowData let-columns="columns">
                 <tr [pSelectableRowDblClick]="rowData" [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="viewSelectedRowdbl(viewdbl,rowData)">
-                    <td style="width:120px"
+                    <td style="width:auto"
                         *ngFor="let col of columns"
                         class="ui-resizable-column"
                         pReorderableRowHandle>
@@ -119,46 +121,51 @@
                 : rowData[col.field]
                         }}
                     </td>
-                    <td style="width:200px" *ngIf="selectedColumns.length > 0">
-
+                    <td class="action-icons-cstm" style="width:150px" *ngIf="selectedColumns.length > 0">
+                        <div>
                         <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                         <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                         <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-
-                        <span>
-                            <a class="btn btn-info boxed-float-btn nobg"
+                        <!-- <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span> -->
+                        <span><a class="btn nobg" (click)="viewSelectedRowdbl(viewdbl,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                        <span><a class="btn nobg" (click)="edit(rowData)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
+                        <span><a class="btn nobg" (click)="openContactList(contentcontact,rowData)" matTooltip="Contacts"><i class="fa fa-users"></i></a> </span>
+                        <span data-toggle="modal" data-target="#delete"><a class="btn nobg" (click)="delete(content1,rowData)" matTooltip="Delete"><i class="fa fa-trash"></i></a> </span>
+                        <span data-toggle="modal" data-target="#contentAuditHist"><a class="btn nobg" (click)="getAuditHistoryById(contentAuditHist,rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
+                        <!-- <span>
+                            <a class="btn  boxed-float-btn nobg"
                                data-toggle="tooltip"
                                (click)="viewSelectedRowdbl(viewdbl,rowData)"
                                matTooltip="View">
                                 <i class="fa fa-eye"></i>
                             </a>
-                        </span>
-                        <button class="btn-edit"
+                        </span> -->
+                        <!-- <button class="btn-edit"
                                 mat-icon-button
                                 (click)="edit(rowData)"
                                 matTooltip="Edit">
                             <mat-icon>edit</mat-icon>
-                        </button>
-                        <i class="fa fa-users" mat-icon-button matTooltip="Contacts"
+                        </button> -->
+                        <!-- <i class="fa fa-users" mat-icon-button matTooltip="Contacts"
                            (click)="openContactList(contentcontact,rowData)">
-
-                        </i>
-                        <button class="btn-delete"
+                        </i> -->
+                        <!-- <button class="btn-delete"
                                 mat-icon-button
                                 matTooltip="Delete"
                                 data-target="#delete"
                                 data-toggle="modal"
                                 (click)="delete(content1,rowData)">
                             <mat-icon color="warn">delete</mat-icon>
-                        </button>
-                        <button class="btn-history"
+                        </button> -->
+                        <!-- <button class="btn-history"
                                 mat-icon-button
                                 matTooltip="History"
                                 data-target="#contentAuditHist"
                                 data-toggle="modal"
                                 (click)="getAuditHistoryById(contentAuditHist,rowData)">
                             <mat-icon color="green">history</mat-icon>
-                        </button>
+                        </button> -->
+                        </div>                        
                     </td>
                 </tr>
             </ng-template>

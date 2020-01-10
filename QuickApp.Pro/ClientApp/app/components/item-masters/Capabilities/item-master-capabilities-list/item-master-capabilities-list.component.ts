@@ -1284,4 +1284,9 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
         
     }
 
+    loadCapesList(data) {
+        console.log(data);   
+        this.loadData();
+    }
+
 }

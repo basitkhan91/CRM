@@ -39,7 +39,7 @@
             <span class="help-icon" (click)="openHelpText(helpText)" data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span>-->
 
             <div class="right_col" role="main">
-                <p-table #capabilityListTable [value]="allItemMasterCapsList" [rows]="20" [metaKeySelection]="true" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
+                <p-table class="ptable-custom" #capabilityListTable [value]="allItemMasterCapsList" [rows]="20" [metaKeySelection]="true" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
                     <ng-template pTemplate="caption">
 
                         <div style="text-align: right">
@@ -150,7 +150,14 @@
                                         </select>
                                     </ng-container> -->
                                     <ng-container *ngIf="col.field!='isVerified'">
-                                            {{rowData[col.field]}}    
+                                            <!-- {{rowData[col.field]}}  -->
+                                            {{
+                                                col.field == 'entryDate'
+                                                  ? (rowData[col.field] | date: 'MM/dd/yyyy')
+                                                  : rowData[col.field] && col.field == 'verifiedDate'
+                                                  ? (rowData[col.field] | date: 'MM/dd/yyyy')
+                                                  : rowData[col.field]
+                                                          }}   
                                     </ng-container>    
                                     <ng-container *ngIf="col.field =='isVerified'">
                                             <input type="checkbox" disabled [checked]="rowData[col.field] == true" style="margin: 0px auto; display: block;" />   
@@ -160,7 +167,7 @@
 
                             <td style="width:50px">
 
-                                <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="deleteCapability(deleteCapabilityContent, rowData.itemMasterCapesId)">
+                                <button class="btn-delete" type="button" mat-icon-button matTooltip="Delete" (click)="deleteCapability(deleteCapabilityContent, rowData.itemMasterCapesId)">
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
                                 <!-- <span> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(viewContent,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>
@@ -208,12 +215,15 @@
               <h4 class="modal-title">Add Capes</h4>
             </div>
             <div class="modal-body">
-           <app-item-master-create-capabilities [itemMasterId] ="itemMasterId"></app-item-master-create-capabilities>
+           <app-item-master-create-capabilities 
+           [itemMasterId] ="itemMasterId"
+           (loadCapesList)="loadCapesList($event)"
+           ></app-item-master-create-capabilities>
 
             </div>
-            <div class="modal-footer">
+            <!-- <div class="modal-footer">
               <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
-            </div>
+            </div> -->
           </div>
       
         </div>

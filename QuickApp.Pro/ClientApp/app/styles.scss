@@ -13775,14 +13775,15 @@ button {
     width: 130px;
 }
 .p-table-cstm .ui-table .ui-table-tbody > tr > td, .rpo-table-cstm .ui-table .ui-table-tbody > tr > td, .wf-table-cstm .ui-table .ui-table-tbody > tr > td, .ptable-custom .ui-table .ui-table-tbody > tr > td {
-    padding: 4px 2px !important;
+    padding: 5px 2px !important; //4px 2px
 }
 .p-table-cstm .ui-table .ui-table-tbody > tr.ui-state-highlight,
 .rpo-table-cstm .ui-table .ui-table-tbody > tr.ui-state-highlight,
 .wf-table-cstm .ui-table .ui-table-tbody > tr.ui-state-highlight,
 .ptable-custom .ui-table .ui-table-tbody > tr.ui-state-highlight {
     /*background-color: #f1f1f1 !important;*/
-    background-color: #ccc !important;
+    // background-color: #ccc !important;
+    background-color: #e8e6e6 !important;
 }
 .p-table-cstm .ui-paginator, .p-table-cstm .ui-table-caption,
 .rpo-table-cstm .ui-paginator, .rpo-table-cstm .ui-table-caption,
@@ -14213,6 +14214,9 @@ input[type="date"]::-webkit-inner-spin-button {
 .imcapes-pddowm .ui-dropdown {
     width: 100% !important;
 }
+body .ui-autocomplete .ui-autocomplete-dropdown .ui-button-icon-left:before {
+    content: "\E942";
+}
 
 .new-margin {
     margin-top: 10px;
@@ -14426,6 +14430,8 @@ p-dropdown .accountdropdown.ui-widget{
 p-table .ui-table-summary {
     background: #fff !important;
     margin-top: -30px;
+    text-align: right !important;
+    margin-right: -12px;
 }
 p-table .ui-table-summary label.footer {
     margin-left: 58%;
@@ -14433,11 +14439,20 @@ p-table .ui-table-summary label.footer {
 p-table .ui-table-summary input {
     opacity: 0.8 !important;
 }
+p-table tr th {
+    text-align: center !important;
+}
 p-table tr th input[type="text"], p-table tr th input[type="date"] {
     height: 22px !important;
 }
+p-table tr td .btn i.fa-pencil {
+    color: #0252b1;
+}
 .itemcapes-ptable .ui-table-scrollable-body {
     min-height: 200px;
+}
+.action-icons-cstm .btn {
+    font-size: 14px;
 }
 
 .accountdropdown.ui-dropdown .ui-dropdown-trigger {
