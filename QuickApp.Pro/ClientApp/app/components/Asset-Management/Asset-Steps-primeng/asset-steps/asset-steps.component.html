@@ -3,12 +3,8 @@
 
         <div class="md-stepper-horizontal orange" *ngIf="showComponentPTab">
             <ng-container *ngFor="let item of items">
-                <div
-                    class="md-step"
-                    [ngClass]="{
-                      active: activeIndex >= item.index,
-                      editable: activeIndex === item.index
-                    }"
+                <div class="md-step"
+                    [ngClass]="{active: activeIndex >= item.index, editable: activeIndex === item.index}"
                     [class.isDisabled]="!isDisabledSteps"
                     (click)="item.command(item)"
                   >

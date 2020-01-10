@@ -396,4 +396,8 @@ export class ItemMasterService {
         return Observable.forkJoin(
             this.itemMasterEndpoint.getPartnumberswithManufacturerEndpoint<any>());
     }
+
+    saveItemMasterCapes(data){
+        return this.itemMasterEndpoint.saveItemMasterCapes(data)
+    }
 }

@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, Input } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl,FormArray } from '@angular/forms';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -39,6 +39,7 @@ import { CommonService } from '../../../../services/common.service';
 /** item-master-capabilities-list component*/
 export class ItemMasterCapabilitiesListComponent implements OnInit
 {
+    @Input() itemMasterId;
     activeIndex: number;
     selectedColumns: any[];
     isDeleteMode: boolean;
@@ -89,7 +90,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
     search_AircraftDashNumberList: any;
     capabilitiesForm: FormGroup;
     onSelectedId: any;
-    itemMasterId: number;
+    // itemMasterId: number;
 
     parentManagementInfo: any[] = [];
     childManagementInfo: any[] = [];
@@ -431,15 +432,15 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
 
     }
 
-    openCapes(content) {
+    // openCapes(content) {
 
-        this.isEditMode = false;
-        this.isDeleteMode = true;
-        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
+    //     this.isEditMode = false;
+    //     this.isDeleteMode = true;
+    //     this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+    //     this.modal.result.then(() => {
+    //         console.log('When user closes');
+    //     }, () => { console.log('Backdrop click') })
+    // }
 
     private ptnumberlistdata() {
         this.alertService.startLoadingMessage();
