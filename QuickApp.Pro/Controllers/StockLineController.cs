@@ -31,9 +31,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("List")]
-        public IActionResult GetList([FromBody] Filters<StockLineListFilters> stockLineFilters)
+        public IActionResult GetList([FromBody] Filters<StockListFilters> stockLineFilters)
         {
-            var result = _unitOfWork.stockLineList.GetList(stockLineFilters);
+            var result = _unitOfWork.stockLineList.GetAllStockLinelistData(stockLineFilters);
             return Ok(result);
         }
 

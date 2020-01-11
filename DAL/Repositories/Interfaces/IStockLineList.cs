@@ -13,7 +13,6 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetAllCompanyData();
         IEnumerable<object> GetAllStockLineAdjustmentlistData(long id);
         IEnumerable<object> GetBinByShelfIdAdjustmentBeforeChange(long id);
-        IEnumerable<Object> GetList(Filters<StockLineListFilters> stockLineFilters);
         IEnumerable<Object> GetListGlobalFilter(string value, int pageNumber, int pageSize);
 
         IEnumerable<object>  GetAllStockLineIntegrationPortalData(long id);
