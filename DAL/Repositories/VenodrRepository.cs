@@ -385,7 +385,7 @@ namespace DAL.Repositories
                               ad.City,
                               ad.StateOrProvince,
                               ad.PostalCode,
-                              Country= cont.countries_name,
+                              Country = cont.countries_name,
 
                               //vc.ClassificationName,
                               VendorCapabilityName = vca.capabilityDescription,
@@ -558,7 +558,7 @@ namespace DAL.Repositories
                                 t.UpdatedDate,
                                 ad.AddressId,
                                 ad.Country,
-                                CountryName= cont.countries_name,
+                                CountryName = cont.countries_name,
                                 ad.PostalCode,
                                 t.EDI,
                                 t.EDIDescription,
@@ -1345,7 +1345,7 @@ namespace DAL.Repositories
                                 ad.City,
                                 ad.StateOrProvince,
                                 ad.PostalCode,
-                                ad.Country,                                
+                                ad.Country,
                                 CountryName = cont.countries_name,
                                 vba.CreatedDate,
                                 vba.UpdatedBy,
@@ -1685,23 +1685,16 @@ namespace DAL.Repositories
             return list;
 
         }
-        public IEnumerable<VendorCapabilityAircraft> VendorAircraft(VendorCapabilityAircraft[] vendorAircraftMapping)
+        public VendorCapabilityAircraft VendorAircraft(VendorCapabilityAircraft vendorAircraftMapping)
         {
-
-            if (vendorAircraftMapping != null && vendorAircraftMapping.Length > 0)
-            {
-                foreach (var airData in vendorAircraftMapping)
-                {
-                    airData.CreatedDate = DateTime.Now;
-                    airData.UpdatedDate = DateTime.Now;
-                    airData.IsActive = true;
-                    airData.IsDeleted = false;
-                    _appContext.VendorCapabilityAircraft.Add(airData);
-                    _appContext.SaveChanges();
-                }
-            }
-
+            vendorAircraftMapping.CreatedDate = DateTime.Now;
+            vendorAircraftMapping.UpdatedDate = DateTime.Now;
+            vendorAircraftMapping.IsActive = true;
+            vendorAircraftMapping.IsDeleted = false;
+            _appContext.VendorCapabilityAircraft.Add(vendorAircraftMapping);
+            _appContext.SaveChanges();
             return vendorAircraftMapping;
+
         }
 
         public IEnumerable<object> VendorAircraftDataByCapsId(long vendorCapabilityId)

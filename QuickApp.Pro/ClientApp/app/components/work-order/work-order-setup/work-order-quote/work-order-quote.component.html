@@ -270,7 +270,7 @@
     <div class="col-md-12">
 
       <div>
-        <div class="col-md-3">
+        <div class="col-md-3" *ngIf="!savedWorkOrderData.isSinglePN">
           <div class="form-group ">
             <label class="fs12">MPN
             </label>
@@ -283,7 +283,7 @@
       </div>
     </div>
 
-    <div class="col-md-12" *ngIf="selectedPartNumber != '' && !isEdit">
+    <div class="col-md-12" *ngIf="selectedPartNumber != ''">
       <div class="form-group ">
         <label class="fs12">Build Method:
         </label>
@@ -299,7 +299,7 @@
       </div>
 
     </div>
-    <div class="table-responsive" *ngIf="selectedBuildMethod == 'use work flow'">
+    <div class="table-responsive" *ngIf="selectedBuildMethod == 'use work flow' && !isEdit">
       <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled">
         <thead>
           <tr>
@@ -326,7 +326,7 @@
       </table>
 
     </div>
-    <div class="table-responsive" *ngIf="selectedBuildMethod == 'use historical wos'">
+    <div class="table-responsive" *ngIf="selectedBuildMethod == 'use historical wos' && !isEdit">
       <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled">
         <thead>
           <tr>
@@ -619,7 +619,7 @@
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'labor'">
       <app-work-order-labor [taskList]="taskList" [laborForm]="labor" [workOrderLaborList]="workOrderLaborList" [workOrderWorkFlowOriginalData]="workOrderWorkFlowOriginalData" [savedWorkOrderData]="savedWorkOrderData" 
-      (saveworkOrderLabor)="saveworkOrderLabor($event)" [isQuote]="isQuote" [markupList]="markupList" [isView]="isView"
+      (saveworkOrderLabor)="saveworkOrderLabor($event)" [isQuote]="isQuote" [markupList]="markupList" [isView]="isView" [isEdit]="isEdit"
       ></app-work-order-labor>
 
   </div>

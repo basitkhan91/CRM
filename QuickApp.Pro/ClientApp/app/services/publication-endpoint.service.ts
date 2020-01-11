@@ -480,12 +480,11 @@ export class PublicationEndpointService extends EndpointFactory {
         });
 }
 
-getpublicationListEndpoint<T>(pageIndex, pageSize): Observable<T> {
-  return this.http
-    .get<T>(`${this.getCodeUrl}?pageNumber=${pageIndex}&pageSize=${pageSize}`, this.getRequestHeaders())
-    .catch(error => {
-      return this.handleError(error, () => this.getpublicationListEndpoint(pageIndex, pageSize));
-    });
+getpublicationListEndpoint<T>(data): Observable<T> {
+  return this.http.post(this.getCodeUrl, JSON.stringify(data), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getpublicationListEndpoint(data));
+      });
   }
 
   getpublicationGlobalSearchEndpoint<T>(ataChapterId, ataSubChapterId, airCraftId, modelId, dashNumberId, pageNumber, pageSize): Observable<T> {

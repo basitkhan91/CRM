@@ -370,7 +370,7 @@
                   {{ rec.hours }}
                 </td>
                 <td *ngIf="laborForm.hoursorClockorScan === 1"> 
-                  <input type="number" (blur)="calculateHoursDifference(rec)" [(ngModel)]="rec.hours" name="hours" [disabled]="checkDisability(rec, task.taskId) || isView"> 
+                  <input type="number" (blur)="calculateHoursDifference(rec); calculateTaskHours(task);" [(ngModel)]="rec.hours" name="hours" [disabled]="checkDisability(rec, task.taskId) || isView"> 
                 </td>
                 <ng-container *ngIf="!isQuote">
                   <td>
@@ -431,7 +431,7 @@
             >
             </td>
             <td>
-                <input type="text" [(ngModel)]="laborForm.totalWorkHours" [disabled]="laborForm.workFloworSpecificTaskorWorkOrder == 'specificTasks'"/>
+                <input type="number" [(ngModel)]="task.totalWorkHours" (change)="calculateTotalHours()" [disabled]="laborForm.workFloworSpecificTaskorWorkOrder == 'specificTasks'"/>
             </td>
             <td>{{getTotalLaborOHCost(laborForm.workOrderLaborList[0][task.description | lowercase])}}</td>
             <td></td>

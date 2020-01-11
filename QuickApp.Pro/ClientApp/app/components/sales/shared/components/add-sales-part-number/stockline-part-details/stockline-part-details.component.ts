@@ -3,6 +3,9 @@ import { ISalesQuote } from "../../../../../../models/sales/ISalesQuote.model";
 import { DataTable } from "primeng/datatable";
 import { SalesQuoteService } from "../../../../../../services/salesquote.service";
 import { IPartJson } from "../../../models/ipart-json";
+import { NgbModal, NgbActiveModal, NgbModalRef, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { StocklineViewComponent } from '../../../../../../shared/components/stockline/stockline-view/stockline-view.component';
+import { StocklineHistoryComponent } from '../../../../../../shared/components/stockline/stockline-history/stockline-history.component';
 
 @Component({
   selector: "app-stockline-part-details",
@@ -19,7 +22,8 @@ export class StocklinePartDetailsComponent implements OnChanges {
   pageLinks: any;
 
   columns: any[];
-  constructor(private salesQuoteService: SalesQuoteService) {
+  modal: NgbModalRef;
+  constructor(private salesQuoteService: SalesQuoteService,private modalService: NgbModal,) {
     this.parts = [];
     this.columns = [];
     this.initColumns();
@@ -60,6 +64,7 @@ export class StocklinePartDetailsComponent implements OnChanges {
       { field: 'controlName', header: 'Control Name', width: '200px' },
       { field: 'idNumber', header: 'Id Num', width: '200px' },
       { field: 'serialNumber', header: 'Serial Num', width: '200px' },
+      { field: '', header: 'Actions', width: '100px' },
     ]
   }
 
@@ -70,4 +75,26 @@ export class StocklinePartDetailsComponent implements OnChanges {
     let checked: boolean = event.srcElement.checked;
     this.select.emit({ checked: checked, part: part,salesMargin:salesMargin });
   }
+
+  viewSelectedRow(rowData) {
+   
+    console.log(rowData);
+    this.modal = this.modalService.open(StocklineViewComponent, { size: 'lg', backdrop: 'static', keyboard: false });
+    this.modal.componentInstance.stockLineId = rowData.stockLineId;
+    this.modal.result.then(() => {
+        console.log('When user closes');
+    }, () => { console.log('Backdrop click') })
+
+}
+viewStockLineHistory(rowData) {
+   
+  console.log(rowData);
+  this.modal = this.modalService.open(StocklineHistoryComponent, { size: 'lg', backdrop: 'static', keyboard: false });
+  this.modal.componentInstance.stockLineId = rowData.stockLineId;
+  this.modal.result.then(() => {
+      console.log('When user closes');
+  }, () => { console.log('Backdrop click') })
+
+}
+
 }

@@ -36,6 +36,7 @@
               <th>EXTENDED COST</th>
               <th>MARGIN ($)</th>
               <th>MARGIN (%)</th>
+              <th>Actions</th>
             </tr>
           </ng-template>
         
@@ -112,6 +113,17 @@
               <td>
                   {{ part.marginPercentagePerUnit }}
               </td>
+              <td>
+                  <a class="btn-edit" mat-icon-button (click)="openPartToEdit(part)"
+                       matTooltip="edit">
+                  <mat-icon>edit</mat-icon>
+              </a>
+                  <a class="btn-delete" mat-icon-button matTooltip="Delete"
+                  (click)="openPartDelete(deleteContent,part)">
+                  <mat-icon color="warn">delete</mat-icon>
+            </a>
+               
+              </td>
             </tr>
           </ng-template>
          
@@ -125,4 +137,19 @@
 
 <ng-template #salesMargin let-c="close" let-d="dismiss" tabindex="-1">
     <app-sales-margin tabindex="-1" [part]="part" (save)="openSalesMarginSave($event)" (close)="onCloseMargin($event)"></app-sales-margin>
+</ng-template>
+
+<ng-template #deleteContent let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="onClosePartDelete()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="deletePart()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="onClosePartDelete()">No</button>
+    </div>
+
 </ng-template>

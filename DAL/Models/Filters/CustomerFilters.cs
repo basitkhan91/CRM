@@ -10,20 +10,26 @@ namespace DAL.Models
 	{
 		[Key]
 		public long CustomerId { get; set; }
-		public string Name { get; set; }
-		public string CustomerCode { get; set; }
-		public string Email { get; set; }
-		public string CustomerType { get; set; }
-		public string CustomerClassification { get; set; }
-		public string City { get; set; }
-		public string StateOrProvince { get; set; }
-		public string Contact { get; set; }
-		public string SalesPersonPrimary { get; set; }
-		public int Rows { get; set; }
-		public int First { get; set; }
+		public string name { get; set; }
+		public string customerCode { get; set; }
+		public string email { get; set; }
+		public string customerType { get; set; }
+		public string customerClassification { get; set; }
+		public string city { get; set; }
+		public string stateOrProvince { get; set; }
+		public string contact { get; set; }
+        public string accountType { get; set; }
+
+        public string salesPersonPrimary { get; set; }
+		public int rows { get; set; }
+		public int first { get; set; }
+        public bool? isActive { get; set; }
+        public bool? isDeleted { get; set; }
+
+        public DateTime createdDate { get; set; }
+
+        public int totalRecords { get; set; }
 
 
-
-
-	}
+    }
 }

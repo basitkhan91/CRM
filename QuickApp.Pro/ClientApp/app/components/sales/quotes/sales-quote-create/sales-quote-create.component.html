@@ -288,7 +288,8 @@
               &nbsp;
             </div>
             <div class="col-md-11 col-sm-11 col-11">
-              <button type="submit" class="btn btn-success pull-right submit-btn btn btn-primary-cstm">Submit</button>
+              <button type="submit" *ngIf="!isEdit" class="btn btn-success pull-right submit-btn btn btn-primary-cstm">Submit</button>
+              <button type="submit" *ngIf="isEdit" class="btn btn-success pull-right submit-btn btn btn-primary-cstm">Update</button>
             </div>
           </div>
         </form>

@@ -88,6 +88,7 @@ export class SalesQuoteCreateComponent implements OnInit {
   id: any;
   selectedApprovers: any[] = [];
   errorMessages: any[] = [];
+  isEdit:boolean = false;
   @ViewChild("errorMessagePop") public errorMessagePop: ElementRef;
   @ViewChild("newSalesQuoteForm") public newSalesQuoteForm: NgForm;
   constructor(
@@ -132,8 +133,13 @@ export class SalesQuoteCreateComponent implements OnInit {
     this.getCustomerWarningsData();
     this.getAccountTypes();
 
-    if (this.id) this.getSalesQuoteInstance(this.id);
-    else this.getNewSalesQuoteInstance(this.customerId);
+    if (this.id) {
+      this.getSalesQuoteInstance(this.id);
+      this.isEdit = true;
+    }else{
+      this.getNewSalesQuoteInstance(this.customerId);
+      this.isEdit = false;
+    } 
   }
   get userName(): string {
     return this.authService.currentUser
@@ -364,6 +370,18 @@ export class SalesQuoteCreateComponent implements OnInit {
       }
     }
   }
+  updateApproverDetails(approver) {
+    if (this.allEmployeeinfo) {
+      for (let i = 0; i < this.allEmployeeinfo.length; i++) {
+          let employeeId = approver.employeeId;
+          if (employeeId == this.allEmployeeinfo[i].employeeId) {
+            approver.firstName = this.allEmployeeinfo[i].firstName;
+            approver.employeeCode = this.allEmployeeinfo[i].employeeCode;
+            approver.email = this.allEmployeeinfo[i].email;
+          }
+      }
+    }
+  }
 
   getSalesQuoteInstance(salesQuoteId: number) {
     this.alertService.startLoadingMessage();
@@ -380,18 +398,23 @@ export class SalesQuoteCreateComponent implements OnInit {
           switch (level) {
             case 1:
               this.approvers[0] = this.salesQuoteView.approverList[i];
+              this.updateApproverDetails(this.approvers[0]);
               break;
             case 2:
               this.approvers[1] = this.salesQuoteView.approverList[i];
+              this.updateApproverDetails(this.approvers[1]);
               break;
             case 3:
               this.approvers[2] = this.salesQuoteView.approverList[i];
+              this.updateApproverDetails(this.approvers[2]);
               break;
             case 4:
               this.approvers[3] = this.salesQuoteView.approverList[i];
+              this.updateApproverDetails(this.approvers[3]);
               break;
             case 5:
               this.approvers[4] = this.salesQuoteView.approverList[i];
+              this.updateApproverDetails(this.approvers[4]);
               break;
           }
           // this.approvers[i].employeeId = this.salesQuoteView.approverList[i].employeeId;

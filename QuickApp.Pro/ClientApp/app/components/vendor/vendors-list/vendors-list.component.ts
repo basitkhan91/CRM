@@ -20,6 +20,7 @@ import { Vendor } from '../../../models/vendor.model';
 import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
 import $ from "jquery";
 import { ConfigurationService } from '../../../services/configuration.service';
+import { VendorCapabilitiesService } from '../../../services/vendorcapabilities.service';
 
 @Component({
     selector: 'app-vendors-list',
@@ -137,10 +138,8 @@ export class VendorsListComponent implements OnInit {
     allComapnies: MasterCompany[] = [];
     private isSaving: boolean;
     public sourceVendor: any = {};
-    public domesticSaveObj: Object = {
-    }
-    public internationalSaveObj: Object = {
-    }
+    public domesticSaveObj: any= {};
+    public internationalSaveObj: any= {};
     public sourceAction: any = [];
     public auditHisory: AuditHistory[] = [];
     private bodyText: string;
@@ -175,11 +174,28 @@ export class VendorsListComponent implements OnInit {
     isEnableROList: boolean = true;
     vendorId: number;
     isActive: boolean = true;
+    defaultPaymentData:any = {};
+    internationalwithVendor: any[];
+	defaultwithVendor: any[];
+    domesticWithVedor: any[];
+    paymentTypeName:any;
+    allvendorCapsList: any[] = [];
+    selectedCapsColumns:any[];
+    capsCols:any[];
+    vendorCapesGeneralInfo: any = {};
+    aircraftListDataValues: any;
+    colsaircraftLD: any[] = [
+        { field: "aircraft", header: "Aircraft" },
+        { field: "model", header: "Model" },
+        { field: "dashNumber", header: "Dash Numbers" },
+        { field: "memo", header: "Memo" }
+    ];
+	
     // purchaseOrderData: any;
     // poPageSize: number = 10;
     // poPageIndex: number = 0;
 
-    constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService,private configurations: ConfigurationService) {
+    constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService,private configurations: ConfigurationService,private vendorCapesService: VendorCapabilitiesService) {
         this.local = this.workFlowtService.financeCollection;
         this.dataSource = new MatTableDataSource();
         this.workFlowtService.listCollection = null;
@@ -596,8 +612,12 @@ export class VendorsListComponent implements OnInit {
     }
 
     openView(content, row) {     
+        this.loadVendorCapsData(row.vendorId);  
         this.toGetVendorGeneralDocumentsList(row.vendorId);
         this.getVendorProcess1099FromTransaction(row.vendorId);
+        this.getDomesticWithVendorId(row.vendorId);
+        this.InternatioalWithVendorId(row.vendorId);
+        this.DefaultWithVendorId(row.vendorId);
         this.vendorCode = row.vendorCode;
         this.vendorName = row.vendorName;
         this.vendorTypeId = row.t.vendorTypeId;
@@ -860,6 +880,7 @@ export class VendorsListComponent implements OnInit {
 
         $('#step9').collapse('show');
         $('#step10').collapse('show');
+        //$('#step11').collapse('show');
     }
     CloseAllVenodrDetailsModel()
     {
@@ -873,6 +894,7 @@ export class VendorsListComponent implements OnInit {
 
         $('#step9').collapse('hide');
         $('#step10').collapse('hide');
+        //$('#step11').collapse('hide');
     }
 
     gotoCreatePO(rowData) {
@@ -934,6 +956,137 @@ export class VendorsListComponent implements OnInit {
 
 
     }
+
+
+
+    public getDomesticWithVendorId(vendorId) {
+	
+		this.workFlowtService.getDomesticvedor(vendorId).subscribe(          
+            // res => {
+            //     if(res[0].length>0)
+            //     {
+            //         this.domesticSaveObj = res[0][0];
+            //         console.log(this.domesticSaveObj);
+            //         console.log(this.domesticSaveObj.aba);
+            //     }             
+               
+            // }    
+            results => this.onDomestciLoad(results[0]),
+			error => this.onDataLoadFailed(error)      
+           
+		);
+    }
+    private onDomestciLoad(allWorkFlows: any) {			
+       
+        this.domesticWithVedor = allWorkFlows;
+		if (this.domesticWithVedor.length > 0) {
+            this.domesticSaveObj = allWorkFlows[0];
+		}
+	}
+    
+    
+	public InternatioalWithVendorId(vendorId) {
+	
+		this.workFlowtService.getInternationalWire(vendorId).subscribe(
+			// res => {
+            //     if(res[0].length>0)
+            //     {
+            //     this.internationalSaveObj = res[0][0];
+            //     console.log(this.internationalSaveObj);
+            //     }
+            // }
+            results => this.onInternatioalLoad(results[0]),
+			error => this.onDataLoadFailed(error)      
+		);
+    }
+    
+    public onInternatioalLoad(allWorkFlows: any) {
+  
+    this.internationalwithVendor = allWorkFlows;
+		if (this.internationalwithVendor.length > 0) {
+            this.internationalSaveObj = allWorkFlows[0];           
+		}
+	}
+
+	public DefaultWithVendorId(vendorId) {
+		
+		this.workFlowtService.getDefaultlist(vendorId).subscribe(
+			res => {
+                this.defaultPaymentData = res[0];
+                this.paymentTypeName=this.defaultPaymentData.paymentType;               
+            }
+		);
+    }
+    
+    public loadVendorCapsData(vendorId)
+    {
+       
+        const status = 'active';
+
+        if(vendorId != undefined) {
+            this.workFlowtService.getVendorCapabilityList(status, vendorId).subscribe(
+                
+                // res => {
+                //     this.allvendorCapsList = res[0];
+                //     console.log(this.allvendorCapsList);        
+                // }
+                results => this.onDataLoadVendorCapsSuccessful(results[0]),
+                error => this.onDataLoadFailed(error)
+            );
+        }
+
+        // To display the values in header and column name values
+        this.capsCols = [
+            { field: 'vendorCode', header: 'Vendor Code' },
+            { field: 'vendorName', header: 'Vendor Name' },
+            { field: 'capabilityType', header: 'Caps Type' },      
+            //{ field: 'capabilityType', header: 'Vendor Caps' },
+            { field: 'partNumber', header: 'PN' },
+            { field: 'partDescription', header: 'PN Description' },                
+            { field: 'vendorRanking', header: ' Vendor Ranking' },
+            { field: 'tat', header: 'TAT' },
+        ];
+
+        this.selectedCapsColumns = this.capsCols;
+
+    }
+
+    public onDataLoadVendorCapsSuccessful(allWorkFlows: any[]) {
+       
+        // alert('success');
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.allvendorCapsList = allWorkFlows;
+        console.log(this.allvendorCapsList);
+    }
+
+    viewSelectedCapsRow(rowData) {       
+        const {vendorCapabilityId} = rowData;
+        this.getVendorCapabilitiesView(vendorCapabilityId);     
+        this.getVendorCapesAircraftView(vendorCapabilityId);     
+    }
+    getVendorCapabilitiesView(vendorCapesId) {
+		this.vendorCapesService.getVendorCapabilitybyId(vendorCapesId).subscribe(res => {			
+			this.vendorCapesGeneralInfo = res;
+		})
+	}
+
+	getVendorCapesAircraftView(vendorCapesId) {
+		this.vendorCapesService.getVendorAircraftGetDataByCapsId(vendorCapesId).subscribe(res => {          
+            this.aircraftListDataValues = res.map(x => {
+                return {
+                    ...x,
+                    aircraft: x.aircraftType,
+                    model: x.aircraftModel,
+                    dashNumber: x.dashNumber,
+                    memo: x.memo,
+                }
+            })
+		})
+	}
+
+
 
 
 }

@@ -13,7 +13,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
 
 
     private readonly _actionsUrl: string = "/api/ItemMaster/Get";
-    private readonly _actionsCapsUrl: string = "/api/ItemMaster/GetListforCapes";
+    private readonly _actionsCapsUrl: string = "/api/itemmaster/getitemmastercapes";
     private readonly _aircraftmodelsurl: string = "/api/ItemMaster/GetAircarftmodelsdata";
     private readonly _aircraftmanafacturerurl: string = "/api/ItemMaster/aircraftManufacturerGet";
     private readonly _capesdata: string = "/api/ItemMaster/GetCapesDatawithMasterId";
@@ -95,6 +95,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly _deleteNTAERow: string = "/api/itemmaster/deletenhatlaaltequpart";
     private readonly _createequivalencypart: string = "/api/itemmaster/createequivalencypart";
     private readonly _partManufacturer: string = "/api/ItemMaster/GetParntnumberlistwithManufacturer";
+    private readonly _deleteCapabilityRow: string = "/api/itemmaster/deleteitemmastercapes";
 
 
 
@@ -137,6 +138,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     get deleteNTAERowUrl() { return this.configurations.baseUrl + this._deleteNTAERow; }
     get createequivalencypartUrl() { return this.configurations.baseUrl + this._createequivalencypart; }
     get partManufacturerUrl() { return this.configurations.baseUrl + this._partManufacturer; }
+    get deleteCapabilityUrl() { return this.configurations.baseUrl + this._deleteCapabilityRow; }
 
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -189,11 +191,11 @@ export class ItemMasterEndpoint extends EndpointFactory {
             });
     }
 
-    getitemMasterCapsDataEndpoint<T>(): Observable<T> {
+    getitemMasterCapsDataEndpoint<T>(data): Observable<T> {
 
-        return this.http.get<T>(this.actionsUrlCaps, this.getRequestHeaders())
+        return this.http.post<T>(this.actionsUrlCaps, JSON.stringify(data), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getitemMasterCapsDataEndpoint());
+                return this.handleError(error, () => this.getitemMasterCapsDataEndpoint(data));
             });
     }
 
@@ -1099,4 +1101,21 @@ export class ItemMasterEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getPartnumberswithManufacturerEndpoint());
             });
     }
+
+
+    saveItemMasterCapes(data){
+        const url = `${this.configurations.baseUrl}/api/itemMaster/createitemmastercapes`;
+        return this.http.post(url, JSON.stringify(data), this.getRequestHeaders() );
+    }
+
+    //deleteCapabilityById
+    deleteCapabilityById<T>(capabilityId: number, user): Observable<T> {
+        let endpointUrl = `${this.deleteCapabilityUrl}?itemMasterCapesId=${capabilityId}&updatedBy=${user}`
+
+        return this.http
+            .get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.deleteCapabilityById(capabilityId, user));
+            });
+        }
 }

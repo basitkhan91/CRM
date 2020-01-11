@@ -44,7 +44,15 @@ export class ReceivingCustomerWorkService {
 	getReceiveCustomerList() {
 		return Observable.forkJoin(
             this.receivingCustomerWorkEndpoint.getReasonEndpoint<any[]>());
-	}
+    }
+
+    getCustomerWorkdataById(customerId: any) {
+
+        return this.receivingCustomerWorkEndpoint.getCustomerWorkListByid<any>(customerId);
+    }
+    getCustomerWorkAll(data) {
+        return this.receivingCustomerWorkEndpoint.getCustomerWorkAll(data);
+    }
 	newReason(receivingCustomerWork: any) {
 		return this.receivingCustomerWorkEndpoint.getNewReasonEndpoint<any>(receivingCustomerWork);
 	}
@@ -85,6 +93,9 @@ export class ReceivingCustomerWorkService {
     getAuditHistory(receivingCustomerWorkId: number) {
         return Observable.forkJoin(this.receivingCustomerWorkEndpoint.getAuditHistory(receivingCustomerWorkId));
     }
+    getGlobalSearch(value, pageIndex, pageSize) {
 
+        return this.receivingCustomerWorkEndpoint.getGlobalCustomerRecords<any>(value, pageIndex, pageSize);
+    }
 }
 

@@ -124,7 +124,7 @@ namespace DAL.Repositories
                                 {
                                     if (count > 0 && reader.GetValue(0) != null && reader.GetValue(1) != null && reader.GetValue(3) != null)
                                     {
-                                        var flag = _appContext.ATAChapter.Any(p => p.IsDelete == false && (p.ATAChapterCode == Convert.ToInt32(reader.GetValue(0))));
+                                        var flag = _appContext.ATAChapter.Any(p => p.IsDeleted == false && (p.ATAChapterCode == Convert.ToInt32(reader.GetValue(0))));
                                         if (!flag)
                                         {
                                             ataChapter = new DAL.Models.ATAChapter();
@@ -141,7 +141,7 @@ namespace DAL.Repositories
                                                 memo = ataChapter.Memo = Convert.ToString(reader.GetValue(3));
                                             ataChapter.MasterCompanyId = 1;
                                             ataChapter.IsActive = true;
-                                            ataChapter.IsDelete = false;
+                                            ataChapter.IsDeleted = false;
                                             ataChapter.CreatedBy = ataChapter.UpdatedBy = "System";
                                             ataChapter.UpdatedDate = ataChapter.CreatedDate = DateTime.Now;
 
