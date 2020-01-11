@@ -7,11 +7,6 @@
 	<form action="#" method="post" id="" name="" class="form-horizontal ro-grid-form mtop10">
 		<div class="col-sm-6">
             <div class="col-sm-9">
-                <div class="col-sm-6 w400">
-                    <label class="form-group control-label col-sm-4" style="margin-left: 40%;"><span style="font-size:11px">Management Structure </span> </label>
-                    <br>
-                    <label class="form-group control-label col-sm-4" style="margin-left: 10%">Entity<span style="color:red">*</span></label>
-
                     <div class="form-group col-sm-12">
                         <label class="form-group control-label col-sm-4"></label>
                         <div class="col-sm-7">
@@ -20,7 +15,6 @@
                                 <option *ngFor="let managementStructure of maincompanylist" [ngValue]="managementStructure.managementStructureId">{{managementStructure.name}}</option>
                             </select>
                         </div>
-                    </div>
                     <div class="form-group col-sm-12">
                         <label class="form-group control-label col-sm-4"></label>
                         <div class="col-sm-7">
@@ -63,7 +57,7 @@
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">PN DESCRIPTION<strong style="color:red">*</strong></label>
+                    <label class="control-label col-sm-4">PN Description<strong style="color:red">*</strong></label>
 
                     <div class="col-sm-7">
                         <input [disabled]="true" class="form-control" type="text" id="" id="" name="" autocomplete="off" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.partDescription">
@@ -71,37 +65,36 @@
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">STOCK LINE NUM<strong class="clr-red">*</strong></label>
+                    <label class="control-label col-sm-4">Stock Line Num<strong class="clr-red">*</strong></label>
                     <div class="col-sm-7">
                         <input class="form-control" [disabled]=true type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.stockLineNumber">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">CONTROL NUM<strong class="clr-red">*</strong></label>
+                    <label class="control-label col-sm-4">Control Num<strong class="clr-red">*</strong></label>
                     <div class="col-sm-7">
                         <input class="form-control" [disabled]=true type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.controlNumber">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">ID NUMBER<strong class="clr-red">*</strong></label>
+                    <label class="control-label col-sm-4">Id Number<strong class="clr-red">*</strong></label>
                     <div class="col-sm-7">
                         <input class="form-control" [disabled]=true type="text" id="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.idNumber">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">IS SERIALIZED</label>
+                    <label class="control-label col-sm-4">Is Serialized</label>
                     <div class="col-sm-7">
                         <input class="form-control is-serialized-checkbox" [disabled]="true" type="checkbox" [ngModelOptions]="{standalone: true}" (change)="triggerSomeEvent()" [(ngModel)]="sourceStockLineSetup.isSerialized">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">QTY ON HAND<strong style="color:red">*</strong></label>
+                    <label class="control-label col-sm-4">Qty On Hand<strong style="color:red">*</strong></label>
                     <div class="col-sm-7">
-                        <!--<input class="form-control qty-input" type="number" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantity">-->
                         <input class="form-control qty-input" *ngIf="showNormalQuantity" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityOnHand">
                         <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityOnHand">
                         <input class="form-control qty-input" *ngIf="showFreeQuantity" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityOnHand">
@@ -109,28 +102,28 @@
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">QTY RESERVED<strong style="color:red">*</strong></label>
+                    <label class="control-label col-sm-4">Qty Reserved<strong style="color:red">*</strong></label>
                     <div class="col-sm-7">
                         <input class="form-control qty-input" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityReserved">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">QTY ISSUED<strong style="color:red">*</strong></label>
+                    <label class="control-label col-sm-4">Qty Issued<strong style="color:red">*</strong></label>
                     <div class="col-sm-7">
                         <input class="form-control qty-input" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityIssued">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">QTY AVAILABLE<strong style="color:red">*</strong></label>
+                    <label class="control-label col-sm-4">Qty Available<strong style="color:red">*</strong></label>
                     <div class="col-sm-7">
                         <input class="form-control qty-input" type="number" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityAvailable">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">COND TYPE <strong style="color:red">*</strong> </label>
+                    <label class="control-label col-sm-4">Cond Type <strong style="color:red">*</strong> </label>
                     <div class="col-sm-7">
                         <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.conditionId">
                             <option *ngFor="let condition of allConditionInfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
@@ -139,48 +132,46 @@
                 </div>
 
                 <div class="form-group col-sm-12 is-serialized-content" *ngIf="hideSerialNumber">
-                    <label class="control-label col-sm-4">SERIAL NUM</label>
+                    <label class="control-label col-sm-4">Serial Num</label>
                     <div class="col-sm-7">
                         <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.serialNumber">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">SHELF LIFE</label>
+                    <label class="control-label col-sm-4">Shelf Life</label>
                     <div class="col-sm-7">
                         <input class="form-control" type="checkbox" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.shelfLife">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">SHELF LIFE EXP DATE</label>
+                    <label class="control-label col-sm-4">Shelf Life Exp Date</label>
                     <div class="col-sm-7">
                         <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.shelfLifeExpirationDate"></p-calendar>
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">SITE <strong style="color:red">*</strong> </label>
+                    <label class="control-label col-sm-4">Site <strong style="color:red">*</strong> </label>
                     <div class="col-sm-7">
                         <select [(ngModel)]="sourceStockLineSetup.siteId" [disabled]=true [ngModelOptions]="{standalone: true}" (change)="siteValueChange($event.target.value)">
                             <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                         </select>
-                        <!--<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLine.site">-->
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">WAREHOUSE</label>
+                    <label class="control-label col-sm-4">Warehouse</label>
                     <div class="col-sm-7">
                         <select [(ngModel)]="sourceStockLineSetup.warehouseId" [disabled]=true [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(sourceStockLineSetup.warehouseId)">
                             <option *ngFor="let site of allWareHouses" [ngValue]="site.warehouseId">{{site.warehouseName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                         </select>
-                        <!--<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLine.warehouse">-->
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">LOCATION</label>
+                    <label class="control-label col-sm-4">Location</label>
                     <div class="col-sm-7">
                         <select [(ngModel)]="sourceStockLineSetup.locationId" [disabled]=true [ngModelOptions]="{standalone: true}" (change)="locationValueChange(sourceStockLineSetup.locationId)">
                             <option *ngFor="let site of allLocations" [ngValue]="site.locationId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
@@ -189,27 +180,25 @@
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">SHELF</label>
+                    <label class="control-label col-sm-4">Shelf</label>
                     <div class="col-sm-7">
                         <select [(ngModel)]="sourceStockLineSetup.shelfId" [disabled]=true [ngModelOptions]="{standalone: true}" (change)="shelfValueChange(sourceStockLineSetup.shelfId)">
                             <option *ngFor="let site of allShelfs" [ngValue]="site.shelfId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                         </select>
-                        <!--<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLine.shelf">-->
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">BIN</label>
+                    <label class="control-label col-sm-4">Bin</label>
                     <div class="col-sm-7">
                         <select [(ngModel)]="sourceStockLineSetup.binId" [disabled]=true [ngModelOptions]="{standalone: true}" (change)="binValueSelect(sourceStockLineSetup.binId)">
                             <option *ngFor="let site of allBins" [ngValue]="site.binId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                         </select>
-                        <!--<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLine.bin">-->
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">OBTAIN FROM</label>
+                    <label class="control-label col-sm-4">Obtain From</label>
                     <div class="col-sm-7">
                         <select [(ngModel)]="sourceStockLineSetup.obtainFromType" [ngModelOptions]="{standalone: true}" class="form-control" (change)="ChnageValue(sourceStockLineSetup.obtainFromType)">
 
@@ -237,7 +226,7 @@
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4" for="obtainFrom">OWNER</label>
+                    <label class="control-label col-sm-4" for="obtainFrom">Owner</label>
                     <div class="col-sm-7">
                         <select id="obtainFrom" [(ngModel)]="sourceStockLineSetup.ownerType" [ngModelOptions]="{standalone: true}" class="form-control" (change)="ChnageOwnerValue(sourceStockLineSetup.ownerType)">
                             <option value="1">Customer</option>
@@ -275,7 +264,7 @@
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4" for="obtainFrom">TRACABLE TO</label>
+                    <label class="control-label col-sm-4" for="obtainFrom">Tracable To</label>
                     <div class="col-sm-7">
                         <select id="obtainFrom" [(ngModel)]="sourceStockLineSetup.traceableToType" [ngModelOptions]="{standalone: true}" class="form-control" (click)="ChnageTracebleValue(sourceStockLineSetup.traceableToType)">
 
@@ -311,32 +300,31 @@
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">MFG</label>
+                    <label class="control-label col-sm-4">Mfg</label>
                     <div class="col-sm-7">
 
                         <select [(ngModel)]="sourceStockLineSetup.manufacturerId" [ngModelOptions]="{standalone: true}">
                             <option *ngFor="let manufacturer of allManufacturerInfo" [ngValue]="manufacturer.manufacturerId">{{manufacturer.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                         </select>
-                        <!--<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.manufacturer">-->
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">MFG LOT NUM</label>
+                    <label class="control-label col-sm-4">Mfg Lot Num</label>
                     <div class="col-sm-7">
                         <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.manufacturerLotNumber">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">MFG DATE</label>
+                    <label class="control-label col-sm-4">Mfg Date</label>
                     <div class="col-sm-7">
                         <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.manufacturingDate"></p-calendar>
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">MFG BATCH NUM</label>
+                    <label class="control-label col-sm-4">Mfg Batch Num</label>
                     <div class="col-sm-7">
                         <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.manufacturingBatchNumber">
                     </div>
@@ -357,7 +345,7 @@
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4" matTooltip="International Traffic in Arms Regulations Number" matTooltipPosition="above">ITAR NUM</label>
+                    <label class="control-label col-sm-4" matTooltip="International Traffic in Arms Regulations Number" matTooltipPosition="above">Itar Num</label>
                     <div class="col-sm-7">
                         <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.ITARNumber">
                     </div>
@@ -385,7 +373,7 @@
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">AIRCRAFT TAIL NUM</label>
+                    <label class="control-label col-sm-4">Aircraft Tail Num</label>
                     <div class="col-sm-7">
                         <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.aircraftTailNumber">
                     </div>
@@ -395,14 +383,14 @@
 		<div class="col-sm-6">
             <div class="col-sm-9">
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">PART CERT NUM</label>
+                    <label class="control-label col-sm-4">Part Cert Num</label>
                     <div class="col-sm-7">
                         <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.partCertificationNumber">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">CERTIFY BY</label>
+                    <label class="control-label col-sm-4">Certify By</label>
                     <div class="inner-addon col-sm-7 display-flex">
                         <!--<input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.certifiedBy">-->
                         <select [(ngModel)]="sourceStockLineSetup.certifiedBy" [ngModelOptions]="{standalone: true}">
@@ -413,7 +401,7 @@
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">CERTIFIED DATE</label>
+                    <label class="control-label col-sm-4">Certified DDateATE</label>
                     <div class="col-sm-7">
 
                         <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.certifiedDate"></p-calendar>
@@ -422,14 +410,14 @@
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">TAG DATE</label>
+                    <label class="control-label col-sm-4">Tag Date</label>
                     <div class="col-sm-7">
                         <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.tagDate"></p-calendar>
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">TAG TYPE</label>
+                    <label class="control-label col-sm-4">Tag Type</label>
                     <div class="col-sm-7">
                         <select [(ngModel)]="sourceStockLineSetup.tagType" [ngModelOptions]="{standalone: true}">
                             <option *ngFor="let tag of allTagTypes" [ngValue]="tag.tagTypeId">{{tag.name}}</option>
@@ -438,56 +426,56 @@
                 </div>
 
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">CERTIFIED DUE DATE</label>
+                        <label class="control-label col-sm-4">Certified Due Date</label>
                         <div class="col-sm-7">
                             <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.certifiedDueDate"></p-calendar>
                         </div>
                     </div>
 
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">ORDER DATE</label>
+                        <label class="control-label col-sm-4">Order Date</label>
                         <div class="col-sm-7">
                             <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.orderDate"></p-calendar>
                         </div>
                     </div>
 
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">OPEN DATE</label>
+                        <label class="control-label col-sm-4">Open Date</label>
                         <div class="col-sm-7">
                             <input [disabled]="true" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.openDate">
                         </div>
                     </div>
 
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">DAYS SINCE RECIEVED</label>
+                        <label class="control-label col-sm-4">Days Since Received</label>
                         <div class="col-sm-7">
                             <input [disabled]="true" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.daysReceived">
                         </div>
                     </div>
 
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">DAYS SINCE MFG</label>
+                        <label class="control-label col-sm-4">Days Since Mfg</label>
                         <div class="col-sm-7">
                             <input [disabled]="true" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.manufacturingDays">
                         </div>
                     </div>
 
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">DAYS SINCE TAGGED</label>
+                        <label class="control-label col-sm-4">Days Since Tagged</label>
                         <div class="col-sm-7">
                             <input [disabled]="true" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.tagDays">
                         </div>
                     </div>
 
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">DAYS SINCE OPEN</label>
+                        <label class="control-label col-sm-4">Days Since Open</label>
                         <div class="col-sm-7">
                             <input [disabled]="true" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.openDays">
                         </div>
                     </div>
 
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">BLACKLISTED</label>
+                        <label class="control-label col-sm-4">Blacklisted</label>
                         <div class="col-sm-7">
                             <input class="form-control" type="checkbox" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.blackListed">
                         </div>
@@ -501,7 +489,7 @@
                     </div>
 
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">INCIDENT</label>
+                        <label class="control-label col-sm-4">Incident</label>
                         <div class="col-sm-7">
                             <input class="form-control" type="checkbox" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.incident">
                         </div>
@@ -515,7 +503,7 @@
                     </div>
 
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">ACCIDENT</label>
+                        <label class="control-label col-sm-4">Accident</label>
                         <div class="col-sm-7">
                             <input class="form-control" type="checkbox" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.accident">
                         </div>
@@ -528,7 +516,7 @@
                     </div>
 
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">PO NUM </label>
+                        <label class="control-label col-sm-4">PO Num </label>
                         <div class="col-sm-7">
                             <select [(ngModel)]="sourceStockLineSetup.PurchaseOrderId" [disabled]=true [ngModelOptions]="{standalone: true}" (onchange)="POValueChange(sourceStockLineSetup.PurchaseOrderId)">
                                 <option *ngFor="let po of allPolistInfo" [ngValue]="po.purchaseOrderId">{{po.purchaseOrderNumber}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
@@ -537,7 +525,7 @@
                     </div>
 
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">PO UNIT COST</label>
+                        <label class="control-label col-sm-4">PO Unit Cost</label>
                         <div class="col-sm-7">
                             <input class="form-control" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.purchaseOrderUnitCost">
                         </div>
@@ -545,56 +533,49 @@
 
 
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">RO UNIT COST</label>
+                        <label class="control-label col-sm-4">RO Unit Cost</label>
                         <div class="col-sm-7">
                             <input class="form-control" type="text" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.repairOrderUnitCost">
                         </div>
                     </div>
 
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">RECEIVED DATE<strong class="clr-red">*</strong></label>
+                        <label class="control-label col-sm-4">Received Date<strong class="clr-red">*</strong></label>
                         <div class="col-sm-7">
                             <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.receivedDate"></p-calendar>
                         </div>
                     </div>
 
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">RECEIVER NUM<strong style="color:red">*</strong> </label>
+                        <label class="control-label col-sm-4">Receiver Num<strong style="color:red">*</strong> </label>
                         <div class="col-sm-7">
                             <input class="form-control" type="text" [disabled]=true [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.receiverNumber">
                         </div>
                     </div>
 
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">RECONCILIATION NUM</label>
-                        <div class="col-sm-7">
-                            <input class="form-control" type="text" [disabled]=true [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.reconciliationNumber">
-                        </div>
-                    </div>
-
-                    <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">RECONCILIATION NUM</label>
+                        <label class="control-label col-sm-4">Reconciliation Num</label>
                         <div class="col-sm-7">
                             <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.reconciliationNumber">
                         </div>
                     </div>
 
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">UNIT SALE PRICE</label>
+                        <label class="control-label col-sm-4">Unit Sale Price</label>
                         <div class="col-sm-7">
                             <input class="form-control" type="text" [disabled]=true [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.unitSalesPrice">
                         </div>
                     </div>
 
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">CORE UNIT COST</label>
+                        <label class="control-label col-sm-4">Core Unit Cost</label>
                         <div class="col-sm-7">
                             <input class="form-control" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.coreUnitCost">
                         </div>
                     </div>
 
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">LOT COST</label>
+                        <label class="control-label col-sm-4">Lot Cost</label>
                         <div class="col-sm-7">
                             <input class="form-control" type="text" [disabled]="true">
                         </div>
@@ -644,9 +625,9 @@
                                 <table class="table table-bordered table-striped table-sorting">
                                     <thead>
                                         <tr align="center">
-                                            <th>SERVICES</th>
-                                            <th>LISTED</th>
-                                            <th>INTEGRATE WITH</th>
+                                            <th>Services</th>
+                                            <th>Listed</th>
+                                            <th>Integrate With</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -683,16 +664,16 @@
 						<table class="table table-bordered table-striped timelife-table">
 							<thead>
 								<tr>
-									<th colspan="15" class="text-center"><strong>TIME LIFE ADJUSTMENTS</strong></th>
+									<th colspan="15" class="text-center"><strong>Time Life Adjustments</strong></th>
 								</tr>
 							</thead>
 							<tbody class="text-center">
 								<tr>
 									
 									<td>&nbsp;</td>
-									<td colspan="4" class="text-center clr1"><strong>CYCLES</strong></td>
-									<td colspan="4" class="text-center clr2"><strong>TIMES</strong></td>
-									<td colspan="4" class="text-center clr3"><strong>LAST</strong></td>
+									<td colspan="4" class="text-center clr1"><strong>Cycles</strong></td>
+									<td colspan="4" class="text-center clr2"><strong>Times</strong></td>
+									<td colspan="4" class="text-center clr3"><strong>Last</strong></td>
 								</tr>
 								<tr>
 									
@@ -734,12 +715,8 @@
 		<hr>
 		<button type="submit" class="btn btn-success pull-right submit-btn" (click)="savestockLineclose()">Save</button>
 		<div class="clear"></div>
-		<!--</div>-->
-		<!--</div>-->
 		<div class="clearfix"></div>
-		<!--</div>-->
 	</form>
-	<div class="pull-right"> © 2018 <a href="#">PAS</a> </div>
 </div>
 
 
