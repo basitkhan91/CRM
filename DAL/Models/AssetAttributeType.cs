@@ -46,6 +46,8 @@ namespace DAL.Models
 
         public long? ManagementStructureId { get; set; }
 
+        public string selectedCompanyIds { get; set; }
+
         public Int32? MasterCompanyId { get; set; }
 
         public bool? IsActive { get; set; }

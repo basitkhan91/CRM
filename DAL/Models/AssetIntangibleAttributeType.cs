@@ -21,6 +21,7 @@ namespace DAL.Models
         public long IntangibleWriteDownGLAccountId { get; set; }
         public long IntangibleWriteOffGLAccountId { get; set; }
         public long ManagementStructureId { get; set; }
+        public string selectedCompanyIds { get; set; }
         public int MasterCompanyId { get; set; }
         public bool? IsActive { get; set; }
 
