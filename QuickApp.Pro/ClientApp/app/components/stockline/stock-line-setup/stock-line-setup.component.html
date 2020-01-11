@@ -421,7 +421,9 @@
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Tag Type</label>
                             <div class="col-sm-7">
-                                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.tagType">
+                                <select [(ngModel)]="sourceStockLineSetup.tagType" [ngModelOptions]="{standalone: true}" >
+                                    <option *ngFor="let tag of allTagTypes" [ngValue]="tag.tagTypeId">{{tag.name}}</option>
+                                </select>
                             </div>
                         </div>
 

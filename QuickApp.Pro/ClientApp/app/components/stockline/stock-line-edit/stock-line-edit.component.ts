@@ -1,22 +1,15 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+﻿import { Component, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { ConditionService } from '../../../services/condition.service';
 import { Condition } from '../../../models/condition.model';
 import { fadeInOut } from '../../../services/animations';
-import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
+import { MatTableDataSource, MatDialog } from '@angular/material';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Integration } from '../../../models/integration.model';
 import { IntegrationService } from '../../../services/integration-service';
 import { HttpClient } from '@angular/common/http';
-import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { AtaMainService } from '../../../services/atamain.service';
-import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { SelectButtonModule } from 'primeng/selectbutton';
-import { InputTextModule } from 'primeng/inputtext';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { AutoCompleteModule } from 'primeng/autocomplete';
-import { MenuItem } from 'primeng/api';
 import { StocklineService } from '../../../services/stockline.service';
 import { MessageSeverity, AlertService } from '../../../services/alert.service';
 import { AuthService } from '../../../services/auth.service';
@@ -29,8 +22,7 @@ import { CustomerService } from '../../../services/customer.service';
 import { VendorService } from '../../../services/vendor.service';
 import { GLAccountClassService } from '../../../services/glaccountclass.service';
 import { ItemMasterService } from '../../../services/itemMaster.service';
-import { TreeNode, MessageService } from 'primeng/api';
-import { DialogModule } from 'primeng/dialog';//Error Validation Pop Up
+import { TreeNode } from 'primeng/api';
 import { ManufacturerService } from '../../../services/manufacturer.service';
 import { EmployeeService } from '../../../services/employee.service';
 
@@ -51,6 +43,7 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 	allShelfs: any;
 	wareHouseId: any;
 	allBins: any;
+	allTagTypes: any;
 	bulist: any[];
 	departmentList: any[];
 	divisionlist: any[];
@@ -126,6 +119,7 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 		this.ptnumberlistdata();
 		this.filterpartItems(this.sourceStockLineSetup.PartNumber);
 		this.partnmId(this.sourceStockLineSetup.PartNumber);
+		this.loadTagTypes();
 	}
 	selectedObtainFromValue: string = '';
 	selectedTracableToValue: string = '';
@@ -156,27 +150,21 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
     /** stock-line-edit ctor */
     constructor(private fb: FormBuilder, private empService: EmployeeService,public integrationService: IntegrationService,public vendorservice: VendorService, public manufacturerService: ManufacturerService, public itemser: ItemMasterService, public glAccountService: GLAccountClassService, public vendorService: VendorService, public customerService: CustomerService, public inteService: IntegrationService, public workFlowtService1: LegalEntityService, public workFlowtService: BinService, public siteService: SiteService, public integration: IntegrationService, public stocklineser: StocklineService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public conditionService: ConditionService, private dialog: MatDialog) {
 		this.dataSource = new MatTableDataSource();
-
-
         if (this.stocklineser.listCollection && this.stocklineser.isEditMode == true)
         {
-
             this.stocklineEditForm = fb.group({
                 'companyId': [0, Validators.compose([Validators.required, Validators.minLength(1)])],
                 'BusinessUnitId': [0],
                 'divisionId': [0],
                 'departmentId': [0],
             });
-
 			this.showLable = true;
 			this.sourceStockLine = this.stocklineser.listCollection; // Storing List Collection into this
 			this.sourceStockLineSetup.managementStructureEntityId = this.sourceStockLine.managementStructureEntityId;
 			this.sourceStockLineSetup.itemMasterId = this.sourceStockLine.im.itemMasterId;
-			//this.sourceStockLineSetup.repairOrderId = this.sourceStockLine.ro.repairOrderId;
-			//this.sourceStockLineSetup.purchaseOrderId = this.sourceStockLine.po.purchaseOrderId;
 			this.sourceStockLineSetup.stockLineId = this.sourceStockLine.stl.stockLineId;
 			this.sourceStockLineSetup.PartNumber = this.sourceStockLine.partNumber;
-						this.sourceStockLineSetup.partId = this.sourceStockLine.partId;
+			this.sourceStockLineSetup.partId = this.sourceStockLine.partId;
 			this.selectedPartId = this.sourceStockLineSetup.partId //By Default Value
 			this.sourceStockLineSetup.partNumber = this.sourceStockLine.partNumber;
 			this.sourceStockLineSetup.partDescription = this.sourceStockLine.partDescription;
@@ -213,12 +201,8 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 			this.sourceStockLineSetup.unitCostAdjustmentReasonTypeId = this.sourceStockLine.unitCostAdjustmentReasonTypeId;
 			this.sourceStockLineSetup.unitSalePriceAdjustmentReasonTypeId = this.sourceStockLine.unitSalePriceAdjustmentReasonTypeId;
 			this.sourceStockLineSetup.idNumber = this.sourceStockLine.idNumber;
-
-
 			this.sourceStockLineSetup.owner = this.sourceStockLine.owner;
-
 			this.sourceStockLineSetup.traceableTo = this.sourceStockLine.traceableTo;
-
 			this.sourceStockLineSetup.manufacturer = this.sourceStockLine.manufacturer;
 			this.sourceStockLineSetup.manufacturerLotNumber = this.sourceStockLine.manufacturerLotNumber;
 			this.sourceStockLineSetup.manufacturingDate = this.sourceStockLine.manufacturingDate;
@@ -257,11 +241,9 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 			this.sourceTimeLife.timeLife = this.sourceStockLine.timeLife;
 			this.sourceStockLineSetup.timeLifeCyclesId = this.sourceStockLine.timeLifeCyclesId  //TimeLifeId
 			this.sourceStockLineSetup.managementCode = this.sourceStockLine.code
-
             this.sourceStockLineSetup.itemTypeId = this.sourceStockLine.itemTypeId
             if (this.sourceStockLine.po != null) {
                 this.sourceStockLineSetup.PurchaseOrderId = this.sourceStockLine.po.purchaseOrderId
-
             }
             if (this.sourceStockLine.ro != null) {
                 this.sourceStockLineSetup.RepairOrderId = this.sourceStockLine.ro.repairOrderId
@@ -279,8 +261,6 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
             this.sourceStockLineSetup.quantityReserved = this.sourceStockLine.quantityReserved
             this.sourceStockLineSetup.quantityIssued = this.sourceStockLine.quantityIssued
             this.sourceStockLineSetup.quantityAvailable = this.sourceStockLine.quantityAvailable;
-
-
 			//TimeLife
 			this.sourceTimeLife.timeLifeCyclesId = this.sourceStockLine.timeLifeCyclesId
 			this.sourceTimeLife.cyclesSinceNew = this.sourceStockLine.cyclesSinceNew;
@@ -294,8 +274,6 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 			this.sourceTimeLife.lastSinceNew = this.sourceStockLine.lastSinceNew;
 			this.sourceTimeLife.lastSinceOVH = this.sourceStockLine.lastSinceOVH;
 			this.sourceTimeLife.lastSinceInspection = this.sourceStockLine.lastSinceInspection;
-
-
 			//Loading Site,WareHouse,Location Values Based on Dependencies
 			if (this.sourceStockLineSetup.siteId) {
 				this.workFlowtService.getWareHouseDate(this.sourceStockLineSetup.siteId).subscribe( //calling and Subscribing for WareHouse Data
@@ -315,14 +293,11 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 					error => this.onDataLoadFailed(error)
 				);
 			}
-
 			if (this.sourceStockLineSetup.shelfId) {
 				this.workFlowtService.getBinDataById(this.sourceStockLineSetup.shelfId).subscribe(
 					results => this.onDataLoadBin(results), //sending Location
 					error => this.onDataLoadFailed(error));
 			}
-
-
 			if (this.sourceStockLine.certifiedDate == "0001-01-01T00:00:00" || this.sourceStockLine.certifiedDate == undefined || this.sourceStockLine.certifiedDate == "undefined") {
 				this.sourceStockLineSetup.certifiedDate = new Date();
 			}
@@ -368,11 +343,6 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 		}
     }
 
-    bindEditData()
-    {
-
-    }
-
     loadLegalEntityData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -401,7 +371,6 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 			error => this.onDataLoadFailed(error)
 		);
 	}
-
 
 	private glAccountlistdata() {
 		 this.alertService.startLoadingMessage();
@@ -455,7 +424,6 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 		if (this.allglAccountInfo) {
 			for (let i = 0; i < this.allglAccountInfo.length; i++) {
 				let glAccountId = this.allglAccountInfo[i].glAccountId;
-
 				if (glAccountId) {
 					this.glAccountCollection.push(glAccountId);
 				}
@@ -563,13 +531,26 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 		}
 	}
 
-	filterpartItems(event) {
+	private loadTagTypes() {
+		this.alertService.startLoadingMessage();
+		this.loadingIndicator = true;
+		this.stocklineser.getAllTagTypes().subscribe(
+			results => this.onLoadloadTagTypesSuccessful(results),
+			error => this.onDataLoadFailed(error)
+		);
+	}
 
+	private onLoadloadTagTypesSuccessful(allWorkFlows: any) {
+		this.alertService.stopLoadingMessage();
+		this.loadingIndicator = false;
+		this.allTagTypes = allWorkFlows;
+	}
+
+	filterpartItems(event) {
 		this.partCollection = [];
 		this.itemclaColl = [];
 		if (this.allPartnumbersInfo) {
 			if (this.allPartnumbersInfo.length > 0) {
-
 				for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
 					let partName = this.allPartnumbersInfo[i].partNumber;
 					if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
@@ -749,11 +730,9 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 	}
 
 	private onDataLoadGlAccountSuccessful(allWorkFlows: any[]) {
-
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.allGLAccountClassData = allWorkFlows;
-
 	}
 
 	private loadSiteData()  //retriving SIte Information
@@ -773,8 +752,6 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.allWareHouses = getWarehousList; //chaallIntegrationInfo
-		//this.warehouseId = this.allWareHouses.warehouseId;
-
 	}
 
 
@@ -783,8 +760,6 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.allLocations = getLocationList; //cha
-		//this.locationId = this.allWareHouses.locationId;
-
 	}
 
 	private onDataLoadShelf(getShelfList: any) {
@@ -806,7 +781,6 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 
 	siteValueChange(data) //Site Valu Selection in Form
 	{
-
 		this.allWareHouses = [];
 		this.allLocations = [];
 		this.allShelfs = [];
