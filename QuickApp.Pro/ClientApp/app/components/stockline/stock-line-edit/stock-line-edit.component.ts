@@ -212,6 +212,7 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 			this.sourceStockLineSetup.certifiedDate = this.sourceStockLine.certifiedDate;
 			this.sourceStockLineSetup.tagDate = this.sourceStockLine.tagDate;
 			this.sourceStockLineSetup.tagType = this.sourceStockLine.tagType;
+			this.sourceStockLineSetup.tagTypeId = this.sourceStockLine.tagType;
 			this.sourceStockLineSetup.certifiedDueDate = this.sourceStockLine.certifiedDueDate;
 			this.sourceStockLineSetup.calibrationMemo = this.sourceStockLine.calibrationMemo;
 			this.sourceStockLineSetup.orderDate = this.sourceStockLine.orderDate;
