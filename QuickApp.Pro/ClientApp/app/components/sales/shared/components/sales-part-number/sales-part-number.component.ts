@@ -157,7 +157,10 @@ export class SalesPartNumberComponent {
           this.part.serialNumber = this.selectedPart.serialNumber;
           this.part.pmaStatus = "OEM";
           this.part.masterCompanyId = this.selectedPart.itemClassification.masterCompanyId;
-          this.part.conditionType = this.selectedPart.conditionType;
+          this.part.conditionId = this.selectedPart.conditionId;
+          this.part.conditionDescription = this.selectedPart.conditionDescription;
+          this.part.currencyId = this.selectedPart.currencyId;
+          this.part.currencyDescription = this.selectedPart.currencyDescription;
           this.part.currency = this.selectedPart.currency;
           this.part.salesDiscount = 0;
           this.part.unitCostPerUnit = 0;
@@ -205,12 +208,12 @@ export class SalesPartNumberComponent {
    
     
     if(!this.isEdit){
-      this.salesMarginModal.close();
-    }else{
+      this.openPartNumber();
       this.selectedParts.push(partObj);
     }
+    this.salesMarginModal.close();
    
-    this.openPartNumber();
+   
     console.log(this.query);
     console.log(this.selectedParts);
     // }
@@ -218,8 +221,8 @@ export class SalesPartNumberComponent {
   openPartToEdit(part) {
     this.isEdit = true;
     let contentPartEdit = this.salesMargin;
-    this.selectedPart = part;
-    if (this.selectedPart) {
+    this.part = part;
+    if (this.part) {
       this.salesQuoteService.getSearchPartObject().subscribe(data => {
         this.query = data;
         this.part = part;
@@ -241,7 +244,7 @@ export class SalesPartNumberComponent {
     }
   }
   openPartDelete(contentPartDelete, part) {
-    this.selectedPart = part;
+    this.part = part;
     this.deletePartModal = this.modalService.open(contentPartDelete, { size: "sm" });
     this.deletePartModal.result.then(
       () => {
@@ -253,13 +256,29 @@ export class SalesPartNumberComponent {
     );
   }
   deletePart(): void {
-    this.removePartNamber(this.selectedPart);
-    this.deletePartModal.close();
-    this.alertService.showMessage(
-      "Success",
-      `Part removed successfully.`,
-      MessageSeverity.success
-    );
+
+
+    if(this.part.salesOrderQuotePartId){
+      this.salesQuoteService.deletePart(this.part.salesOrderQuotePartId).subscribe(response => {
+        this.removePartNamber(this.part);
+        this.deletePartModal.close();
+        this.alertService.showMessage(
+          "Success",
+          `Part removed successfully.`,
+          MessageSeverity.success
+        );
+       
+      });
+    }else{
+      this.removePartNamber(this.part);
+      this.deletePartModal.close();
+      this.alertService.showMessage(
+        "Success",
+        `Part removed successfully.`,
+        MessageSeverity.success
+      );
+    }
+
   }
 
   checkForDuplicates(selectedPart) {
