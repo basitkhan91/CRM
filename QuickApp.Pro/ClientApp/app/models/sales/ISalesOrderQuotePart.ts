@@ -29,4 +29,7 @@ export interface ISalesOrderQuotePart {
   marginAmountExtended: number;
   marginPercentage: number;
   conditionId: number;
+  conditionDescription: string;
+  currencyId: string;
+  currencyDescription: string;
 }
