@@ -579,10 +579,9 @@ export class ManufacturerComponent implements OnInit {
     }
 
     getmemo($event) {
-        if (this.addnewManufacturer.comments.trim() !== $event.trim()) {
+         
             this.disableSaveForShortName = false;
             this.disableSaveForUOM = false;
-        }
     }
 
     customExcelUpload(event) {

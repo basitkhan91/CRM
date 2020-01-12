@@ -14,7 +14,7 @@
                                 <div style="text-align: right">
                                     <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" [resetFilterOnHide]="true" 
                                                    selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm"  matTooltip="Download All Data"  tooltipPosition="top" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export All Data" style="padding: 5px 12px !important" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary-cstm"  matTooltip="Download Data"  tooltipPosition="top" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Data" style="padding: 5px 12px !important" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected" matTooltipPosition="above"
                                             tooltipPosition="top" pButton icon="fa-download" iconPos="left" label="Export Selection Only" style="padding: 5px 12px !important" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">

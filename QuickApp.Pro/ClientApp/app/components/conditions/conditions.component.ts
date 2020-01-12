@@ -185,11 +185,10 @@ export class ConditionsComponent implements OnInit {
 
 
     getmemo($event) {
-       if (this.addNewCondition.memo.trim() !== $event.trim()) {
-            this.disableSaveForConditionMsg = false;
-            this.disableSaveForCondition = false;
-        }
-    }
+        this.disableSaveForConditionMsg = false;
+        this.disableSaveForCondition = false;
+    };
+
     checkConditionExists(field, value) {
         for (var i = 0; i < this.conditionData.length; i++) {
             if (value.toLowerCase() == this.conditionData[i].description.toLowerCase()) {
