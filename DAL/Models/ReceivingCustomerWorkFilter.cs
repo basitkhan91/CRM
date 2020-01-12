@@ -9,18 +9,25 @@ namespace DAL.Models
     public class ReceivingCustomerWorkFilter
     {
         [Key]
-        public long CustomerId { get; set; }
-        public string PartNumber { get; set; }
-        public string ReceivingCustomerNumber { get; set; }
-        public string ChangePartNumber { get; set; }
-        public string FirstName { get; set; }
-        public string Name { get; set; }
-        public string CustomerReference { get; set; }
-        public string WorkOrderNum { get; set; }
-        public string PartDescription { get; set; }
+        public long ReceivingCustomerWorkId { get; set; }
+        public string partNumber { get; set; }
+        public string receivingCustomerNumber { get; set; }
+        public string changePartNumber { get; set; }
+        public string firstName { get; set; }
+        public string name { get; set; }
+        public string customerReference { get; set; }
+        public string workOrderNum { get; set; }
+        public string partDescription { get; set; }
 
-        public int Rows { get; set; }
-        public int First { get; set; }
+        public int rows { get; set; }
+        public int first { get; set; }
+        public bool? isActive { get; set; }
+        public bool? isDeleted { get; set; }
+
+        public DateTime? createdDate { get; set; }
+
+        public int totalRecords { get; set; }
+
 
 
 

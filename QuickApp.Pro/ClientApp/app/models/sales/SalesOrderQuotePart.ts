@@ -30,4 +30,7 @@ export class SalesOrderQuotePart implements ISalesOrderQuotePart {
   marginAmountExtended: number;
   marginPercentage: number;
   conditionId: number;
+  conditionDescription: string;
+  currencyId: string;
+  currencyDescription: string;
 }

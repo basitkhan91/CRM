@@ -219,7 +219,7 @@ namespace DAL
         ISalesOrderQuoteApproverList _salesOrderQuoteApproverListRepository;
 
         ISalesOrderQuotePartRepository _salesOrderQuotePartRepository;
-
+        ITagType _tagTypeRepository;
         IMasterSalesOrderQuoteStatusRepository _masterSalesOrderQuoteStatusRepository;
         IEmployeeStationRepository _employeeStationRepository;
 
@@ -1975,6 +1975,16 @@ namespace DAL
             }
         }
 
+        public ITagType tagType
+        {
+            get
+            {
+                if (_tagTypeRepository == null)
+                    _tagTypeRepository = new TagTypeRepository(_context);
+                return _tagTypeRepository;
+            }
+        }
+
         public IMasterSalesOrderQuoteStatusRepository MasterSalesOrderQuoteStatusRepository
         {
             get
@@ -1995,6 +2005,8 @@ namespace DAL
                 return _employeeStationRepository;
             }
         }
+
+        
     }
 }
 

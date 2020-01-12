@@ -16,6 +16,7 @@ using DAL.Common;
 using DAL.Models.Enums;
 
 using System.Linq.Dynamic.Core;
+using EntityFrameworkPaginate;
 
 namespace DAL.Repositories
 {
@@ -32,20 +33,45 @@ namespace DAL.Repositories
         //}
 
 
-        public IEnumerable<object> GetList(Filters<CustomerFilters> customerFilters)
+        public IEnumerable<object> GetList(Common.Filters<CustomerFilters> customerFilters)
         {
             if (customerFilters.filters == null)
                 customerFilters.filters = new CustomerFilters();
             var pageNumber = customerFilters.first + 1;
-            var take = customerFilters.rows;
-            var skip = take * (pageNumber - 1);
+            var pageSize = customerFilters.rows;
 
-             
+            string sortColumn = string.Empty;
+
+            var sorts = new Sorts<CustomerFilters>();
+
+            if (string.IsNullOrEmpty(customerFilters.SortField))
+            {
+                sortColumn = "createdDate";
+                customerFilters.SortOrder = -1;
+                sorts.Add(sortColumn == "createdDate", x => x.createdDate, true);
+            }
+            else
+            {
+                sortColumn = customerFilters.SortField;
+            }
+
+            var propertyInfo = typeof(CustomerFilters).GetProperty(sortColumn);
+
+            if (customerFilters.SortOrder == -1)
+            {
+                sorts.Add(true, x => propertyInfo.GetValue(x, null), true);
+            }
+            else
+            {
+                sorts.Add(true, x => propertyInfo.GetValue(x, null));
+            }
 
 
 
             var totalRecords = (from t in _appContext.Customer
                                 join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
+                                join AccountTyp in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals AccountTyp.CustomerAffiliationId
+
                                 join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId into ctt
                                 from ct in ctt.DefaultIfEmpty()
                                 join ad in _appContext.Address on t.AddressId equals ad.AddressId into add
@@ -55,23 +81,27 @@ namespace DAL.Repositories
                                 join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
                                 from contacts in contactInfo.DefaultIfEmpty()
                                 where (t.IsDeleted == false || t.IsDeleted == null)
-                                && t.Name.Contains((!String.IsNullOrEmpty(customerFilters.filters.Name) ? customerFilters.filters.Name : t.Name))
-                                && t.CustomerCode.Contains((!String.IsNullOrEmpty(customerFilters.filters.CustomerCode) ? customerFilters.filters.CustomerCode : t.CustomerCode))
-                                && t.Email.Contains((!String.IsNullOrEmpty(customerFilters.filters.Email) ? customerFilters.filters.Email : t.Email))
-                                && type.Description.Contains((!String.IsNullOrEmpty(customerFilters.filters.CustomerType) ? customerFilters.filters.CustomerType : type.Description))
-                                && ct.Description.Contains((!String.IsNullOrEmpty(customerFilters.filters.CustomerClassification) ? customerFilters.filters.CustomerClassification : ct.Description))
-                                && ad.City.Contains((!String.IsNullOrEmpty(customerFilters.filters.City) ? customerFilters.filters.City : ad.City))
-                                && ad.StateOrProvince.Contains((!String.IsNullOrEmpty(customerFilters.filters.StateOrProvince) ? customerFilters.filters.StateOrProvince : ad.StateOrProvince))
+                                && t.Name.Contains((!String.IsNullOrEmpty(customerFilters.filters.name) ? customerFilters.filters.name : t.Name))
+                                && t.CustomerCode.Contains((!String.IsNullOrEmpty(customerFilters.filters.customerCode) ? customerFilters.filters.customerCode : t.CustomerCode))
+                                && t.Email.Contains((!String.IsNullOrEmpty(customerFilters.filters.email) ? customerFilters.filters.email : t.Email))
+                                && type.Description.Contains((!String.IsNullOrEmpty(customerFilters.filters.accountType) ? customerFilters.filters.accountType : type.Description))
+                                && AccountTyp.description.Contains((!String.IsNullOrEmpty(customerFilters.filters.customerType) ? customerFilters.filters.customerType : AccountTyp.description))
 
-                                 && customerFilters.filters.Contact == null ? string.IsNullOrEmpty(contacts.WorkPhone) || contacts.WorkPhone != null :
-                                         contacts.WorkPhone.Contains(customerFilters.filters.Contact)
+                                && ct.Description.Contains((!String.IsNullOrEmpty(customerFilters.filters.customerClassification) ? customerFilters.filters.customerClassification : ct.Description))
+                                && ad.City.Contains((!String.IsNullOrEmpty(customerFilters.filters.city) ? customerFilters.filters.city : ad.City))
+                                && ad.StateOrProvince.Contains((!String.IsNullOrEmpty(customerFilters.filters.stateOrProvince) ? customerFilters.filters.stateOrProvince : ad.StateOrProvince))
+                                  && t.CustomerPhone.Contains((!String.IsNullOrEmpty(customerFilters.filters.contact) ? customerFilters.filters.contact : t.CustomerPhone))
+                                // && t.PrimarySalesPersonFirstName.Contains((!String.IsNullOrEmpty(customerFilters.filters.salesPersonPrimary) ? customerFilters.filters.salesPersonPrimary : t.PrimarySalesPersonFirstName))
 
-                                && customerFilters.filters.SalesPersonPrimary == null ? string.IsNullOrEmpty(t.PrimarySalesPersonFirstName) || t.PrimarySalesPersonFirstName != null :
-                                         t.PrimarySalesPersonFirstName.Contains(customerFilters.filters.SalesPersonPrimary)
+                                //&& customerFilters.filters.contact == null ? string.IsNullOrEmpty(contacts.WorkPhone) || contacts.WorkPhone != null :
+                                //        contacts.WorkPhone.Contains(customerFilters.filters.contact)
+
+                                && customerFilters.filters.salesPersonPrimary == null ? string.IsNullOrEmpty(t.PrimarySalesPersonFirstName) || t.PrimarySalesPersonFirstName != null :
+                                         t.PrimarySalesPersonFirstName.Contains(customerFilters.filters.salesPersonPrimary)
                                 select new
                                 {
                                     t.CustomerId,
-                                    Contact = contacts.WorkPhone == null ? "-" : contacts.WorkPhone,
+                                    Contact = t.CustomerPhone == null ? "-" : t.CustomerPhone,
 
                                 }).Distinct().Count();
 
@@ -87,100 +117,45 @@ namespace DAL.Repositories
                         join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
                         from contacts in contactInfo.DefaultIfEmpty()
                         where (t.IsDeleted == false || t.IsDeleted == null)
-                        && t.Name.Contains((!String.IsNullOrEmpty(customerFilters.filters.Name) ? customerFilters.filters.Name : t.Name))
-                        && t.CustomerCode.Contains((!String.IsNullOrEmpty(customerFilters.filters.CustomerCode) ? customerFilters.filters.CustomerCode : t.CustomerCode))
-                        && t.Email.Contains((!String.IsNullOrEmpty(customerFilters.filters.Email) ? customerFilters.filters.Email : t.Email))
-                        && type.Description.Contains((!String.IsNullOrEmpty(customerFilters.filters.CustomerType) ? customerFilters.filters.CustomerType : type.Description))
-                        && ct.Description.Contains((!String.IsNullOrEmpty(customerFilters.filters.CustomerClassification) ? customerFilters.filters.CustomerClassification : ct.Description))
-                        && ad.City.Contains((!String.IsNullOrEmpty(customerFilters.filters.City) ? customerFilters.filters.City : ad.City))
-                        && ad.StateOrProvince.Contains((!String.IsNullOrEmpty(customerFilters.filters.StateOrProvince) ? customerFilters.filters.StateOrProvince : ad.StateOrProvince))
-                         && customerFilters.filters.Contact == null ? string.IsNullOrEmpty(contacts.WorkPhone) || contacts.WorkPhone != null :
-                                 contacts.WorkPhone.Contains(customerFilters.filters.Contact)
+                        && t.Name.Contains((!String.IsNullOrEmpty(customerFilters.filters.name) ? customerFilters.filters.name : t.Name))
+                        && t.CustomerCode.Contains((!String.IsNullOrEmpty(customerFilters.filters.customerCode) ? customerFilters.filters.customerCode : t.CustomerCode))
+                        && t.Email.Contains((!String.IsNullOrEmpty(customerFilters.filters.email) ? customerFilters.filters.email : t.Email))
+                        && type.Description.Contains((!String.IsNullOrEmpty(customerFilters.filters.accountType) ? customerFilters.filters.accountType : type.Description))
+                        && AccountTyp.description.Contains((!String.IsNullOrEmpty(customerFilters.filters.customerType) ? customerFilters.filters.customerType : AccountTyp.description))
 
-                        && customerFilters.filters.SalesPersonPrimary == null ? string.IsNullOrEmpty(t.PrimarySalesPersonFirstName) || t.PrimarySalesPersonFirstName != null :
-                                 t.PrimarySalesPersonFirstName.Contains(customerFilters.filters.SalesPersonPrimary)
-                        select new
+                        && ct.Description.Contains((!String.IsNullOrEmpty(customerFilters.filters.customerClassification) ? customerFilters.filters.customerClassification : ct.Description))
+                        && ad.City.Contains((!String.IsNullOrEmpty(customerFilters.filters.city) ? customerFilters.filters.city : ad.City))
+                        && ad.StateOrProvince.Contains((!String.IsNullOrEmpty(customerFilters.filters.stateOrProvince) ? customerFilters.filters.stateOrProvince : ad.StateOrProvince))
+                          && t.CustomerPhone.Contains((!String.IsNullOrEmpty(customerFilters.filters.contact) ? customerFilters.filters.contact : t.CustomerPhone))
+                        //  && t.PrimarySalesPersonFirstName.Contains((!String.IsNullOrEmpty(customerFilters.filters.salesPersonPrimary) ? customerFilters.filters.salesPersonPrimary : t.PrimarySalesPersonFirstName))
+
+                        // && customerFilters.filters.contact == null ? string.IsNullOrEmpty(contacts.WorkPhone) || contacts.WorkPhone != null :
+                        //         contacts.WorkPhone.Contains(customerFilters.filters.contact)
+
+                        && customerFilters.filters.salesPersonPrimary == null ? string.IsNullOrEmpty(t.PrimarySalesPersonFirstName) || t.PrimarySalesPersonFirstName != null :
+                                 t.PrimarySalesPersonFirstName.Contains(customerFilters.filters.salesPersonPrimary)
+                        select new CustomerFilters()
                         {
-                            t.CustomerId,
-                            t.Name,
-                            t.CustomerCode,
-                            t.Email,
-                            AccountType = type.Description,
-                            CustomerClassification = ct.Description,
-                            City = ad.City,
-                            StateOrProvince = ad.StateOrProvince,
-                            Contact = contacts.WorkPhone == null ? "-" : contacts.WorkPhone,
-                            SalesPersonPrimary = t.PrimarySalesPersonFirstName == null ? "-" : t.PrimarySalesPersonFirstName,
-                            t.CreatedDate,
-                            t.IsActive,
-                            t.IsDeleted,
-                            CustomerType = AccountTyp.description,
-                            TotalRecords = totalRecords
-                        }).Distinct().OrderByDescending(p => p.CreatedDate)
-                             .Skip(skip)
-                             .Take(take)
-                             .ToList();
+                           CustomerId= t.CustomerId,
+                            name=t.Name,
+                            customerCode=t.CustomerCode,
+                            email=t.Email,
+                            accountType = type.Description,
+                            customerClassification = ct.Description,
+                            city = ad.City,
+                            stateOrProvince = ad.StateOrProvince,
+                            contact = t.CustomerPhone == null ? "-" : t.CustomerPhone,
+                            salesPersonPrimary = t.PrimarySalesPersonFirstName == null ? "-" : t.PrimarySalesPersonFirstName,
+                            createdDate=t.CreatedDate,
+                           isActive= t.IsActive,
+                           isDeleted= t.IsDeleted,
+                            customerType = AccountTyp.description,
+                            totalRecords = totalRecords
+                        }).Distinct()
+                        .Paginate(pageNumber, pageSize, sorts).Results;
 
 
-            if (!string.IsNullOrEmpty(customerFilters.SortField) && !string.IsNullOrEmpty(customerFilters.SortField))
-            {
-                if (customerFilters.SortOrder == -1)
-                {
-                    switch (customerFilters.SortField)
-                    {
-                        case "name":
-                            return data.OrderByDescending(p => p.Name).ToList();
-                        case "customerCode":
-                            return data.OrderByDescending(p => p.CustomerCode).ToList();
-                        case "accountType":
-                            return data.OrderByDescending(p => p.AccountType).ToList();
-                        case "customerType":
-                            return data.OrderByDescending(p => p.CustomerType).ToList();
-                        case "customerClassification":
-                            return data.OrderByDescending(p => p.CustomerClassification).ToList();
-                        case "email":
-                            return data.OrderByDescending(p => p.Email).ToList();
-                        case "city":
-                            return data.OrderByDescending(p => p.City).ToList();
-                        case "stateOrProvince":
-                            return data.OrderByDescending(p => p.StateOrProvince).ToList();
-                        case "contact":
-                            return data.OrderByDescending(p => p.Contact).ToList();
-                        case "salesPersonPrimary":
-                            return data.OrderByDescending(p => p.SalesPersonPrimary).ToList();
-
-
-                    }
-                }
-                else
-                {
-                    switch (customerFilters.SortField)
-                    {
-                        case "name":
-                            return data.OrderBy(p => p.Name).ToList();
-                        case "customerCode":
-                            return data.OrderBy(p => p.CustomerCode).ToList();
-                        case "accountType":
-                            return data.OrderBy(p => p.AccountType).ToList();
-                        case "customerType":
-                            return data.OrderBy(p => p.CustomerType).ToList();
-                        case "customerClassification":
-                            return data.OrderBy(p => p.CustomerClassification).ToList();
-                        case "email":
-                            return data.OrderBy(p => p.Email).ToList();
-                        case "city":
-                            return data.OrderBy(p => p.City).ToList();
-                        case "stateOrProvince":
-                            return data.OrderBy(p => p.StateOrProvince).ToList();
-                        case "contact":
-                            return data.OrderBy(p => p.Contact).ToList();
-                        case "salesPersonPrimary":
-                            return data.OrderBy(p => p.SalesPersonPrimary).ToList();
-
-
-                    }
-                }
-            }
+           
 
             return (data);
         }
@@ -216,6 +191,8 @@ namespace DAL.Repositories
                 var data = (from t in _appContext.Customer
                             join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
                             join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
+                            join ctype in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals ctype.CustomerAffiliationId
+
                             join ad in _appContext.Address on t.AddressId equals ad.AddressId
                             join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
                             from custContacts in custinfo.DefaultIfEmpty()
@@ -232,7 +209,9 @@ namespace DAL.Repositories
                                 t.Name,
                                 t.CustomerCode,
                                 t.Email,
-                                CustomerType = type.Description,
+                                AccountType = type.Description,
+                                CustomerType = ctype.description,
+
                                 CustomerClassification = ct.Description,
                                 City = ad.City,
                                 StateOrProvince = ad.StateOrProvince,
@@ -271,6 +250,8 @@ namespace DAL.Repositories
                 var data = (from t in _appContext.Customer
                             join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
                             join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
+                            join ctype in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals ctype.CustomerAffiliationId
+
                             join ad in _appContext.Address on t.AddressId equals ad.AddressId
                             join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
                             from custContacts in custinfo.DefaultIfEmpty()
@@ -283,7 +264,8 @@ namespace DAL.Repositories
                                 t.Name,
                                 t.CustomerCode,
                                 t.Email,
-                                CustomerType = type.Description,
+                                AccountType = type.Description,
+                                CustomerType=ctype.description,
                                 CustomerClassification = ct.Description,
                                 City = ad.City,
                                 StateOrProvince = ad.StateOrProvince,

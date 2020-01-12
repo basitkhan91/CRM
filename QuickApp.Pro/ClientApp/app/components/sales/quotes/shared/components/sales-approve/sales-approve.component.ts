@@ -70,6 +70,9 @@ export class SalesApproveComponent {
               //approver.level = this.allEmployeeinfo[i].managementStructureId;
               approver.level = index+1;
               approver.masterCompanyId = this.allEmployeeinfo[i].masterCompanyId;
+              approver.firstName = this.allEmployeeinfo[i].firstName;
+              approver.employeeCode = this.allEmployeeinfo[i].employeeCode;
+              approver.email = this.allEmployeeinfo[i].email;
               approver.statusId = 1;
               approver.createdBy=this.userName;
               approver.updatedBy=this.userName;

@@ -220,6 +220,8 @@ import { AircraftModelService } from './services/aircraft-model/aircraft-model.s
 //import { AuditComponent } from "./components/Audit/audit.component";
 import { AccountListingService } from './services/account-listing/account-listing.service'
 import { CustomerViewComponent } from './shared/components/customer/customer-view/customer-view.component';
+import { StocklineViewComponent } from './shared/components/stockline/stockline-view/stockline-view.component';
+import { StocklineHistoryComponent } from './shared/components/stockline/stockline-history/stockline-history.component';
 import { CommonService } from "./services/common.service";
 import { CommonModule } from '@angular/common';
 
@@ -272,7 +274,9 @@ import { CommonModule } from '@angular/common';
         UnauthorizedAccessComponent,
         LoginComponent,
         SpinnerComponent,
-        CustomerViewComponent
+        CustomerViewComponent,
+        StocklineViewComponent,
+        StocklineHistoryComponent
     ],
     providers: [
         { provide: 'BASE_URL', useFactory: getBaseUrl },
@@ -449,7 +453,7 @@ import { CommonModule } from '@angular/common';
         AccountListingService,
         CommonService
     ],
-    entryComponents: [LoginDialogComponent, AddTaskDialogComponent, CustomerViewComponent],
+    entryComponents: [LoginDialogComponent, AddTaskDialogComponent, CustomerViewComponent,StocklineViewComponent,StocklineHistoryComponent],
     bootstrap: [AppComponent],
     exports: [CommonModule],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

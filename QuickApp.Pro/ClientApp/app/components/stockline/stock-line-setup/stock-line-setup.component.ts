@@ -1,22 +1,15 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+﻿import { Component,  OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { ConditionService } from '../../../services/condition.service';
 import { Condition } from '../../../models/condition.model';
 import { fadeInOut } from '../../../services/animations';
-import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
+import { MatTableDataSource, MatDialog } from '@angular/material';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Integration } from '../../../models/integration.model';
 import { IntegrationService } from '../../../services/integration-service';
 import { HttpClient } from '@angular/common/http';
-import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal,  NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { AtaMainService } from '../../../services/atamain.service';
-import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { SelectButtonModule } from 'primeng/selectbutton';
-import { InputTextModule } from 'primeng/inputtext';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { AutoCompleteModule } from 'primeng/autocomplete';
-import { MenuItem } from 'primeng/api';
 import { StocklineService } from '../../../services/stockline.service';
 import { MessageSeverity, AlertService } from '../../../services/alert.service';
 import { AuthService } from '../../../services/auth.service';
@@ -29,8 +22,7 @@ import { CustomerService } from '../../../services/customer.service';
 import { VendorService } from '../../../services/vendor.service';
 import { GLAccountClassService } from '../../../services/glaccountclass.service';
 import { ItemMasterService } from '../../../services/itemMaster.service';
-import { TreeNode, MessageService } from 'primeng/api';
-import { DialogModule } from 'primeng/dialog';//Error Validation Pop Up
+import { TreeNode, } from 'primeng/api';
 import { ManufacturerService } from '../../../services/manufacturer.service';
 import { EmployeeService } from '../../../services/employee.service';
 
@@ -49,7 +41,8 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	public sourceBin: any = {};
     allWareHouses: any;
     allLocations: any;
-    allShelfs: any;
+	allShelfs: any;
+	allTagTypes: any;
     wareHouseId: any;
     allBins: any;
     bulist: any[];
@@ -120,9 +113,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
     hasSerialized: boolean;
     showSerialNumberError: boolean;
     disableSavepartNumber: boolean;
-
     alllegalEntityInfo: any[] = [];
-    //sourceEmployee: any = {};
     managementStructureData: any[];
     updateMode: boolean = false;
     quantityAvailable: any;
@@ -145,7 +136,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
         this.vendorList();
         this.loadGlAccountData();
         this.ptnumberlistdata();
-
+		this.loadTagTypes();
         this.minDateValue = new Date();
         this.sourceStockLineSetup.oem = true;
     }
@@ -541,12 +532,24 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	onDataLoadEmployeeSuccessful(allWorkFlows: any[])
 	{
         this.dataSource.data = allWorkFlows;
-       // this.sourceEmployee = allWorkFlows;
         this.allEmployeeList = allWorkFlows;
         this.loadCompanyData();
-
 	}
 
+	private loadTagTypes() {
+		this.alertService.startLoadingMessage();
+		this.loadingIndicator = true;
+		this.stocklineser.getAllTagTypes().subscribe(
+			results => this.onLoadloadTagTypesSuccessful(results),
+			error => this.onDataLoadFailed(error)
+		);
+	}
+
+	private onLoadloadTagTypesSuccessful(allWorkFlows: any) {
+		this.alertService.stopLoadingMessage();
+		this.loadingIndicator = false;
+		this.allTagTypes = allWorkFlows;
+	}
 
 	private loadGlAccountData() {
 		this.alertService.startLoadingMessage();

@@ -47,18 +47,15 @@
                         </div>
 
                         <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">PN <strong class="clr-red">*</strong>
-                            </label>
-                            <div class="col-sm-6 display-flex">
+                            <label class="control-label col-sm-4">PN <strong class="clr-red">*</strong></label>
+                            <div class="inner-addon col-sm-7  display-flex">
                                 <p-autoComplete [(ngModel)]="sourceStockLineSetup.partNumber" (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
                                                 [minLength]="1" [dropdown]="true">
                                     <ng-template let-partName pTemplate="part">
                                         <div class="ui-helper-clearfix">{{partName}}</div>
                                     </ng-template>
                                 </p-autoComplete>
-                            </div>
-                            <div class="col-md-2 inner-addon">
-                                <a routerLink="/itemmastersmodule/itemmasterpages/app-item-master-stock" class="add-icon"><i class="fa fa-plus"></i></a>
+                                <a style="margin-top:6px" routerLink="/itemmastersmodule/itemmasterpages/app-item-master-stock" class="add-icon"><i class="fa fa-plus"></i></a>
                             </div>
                         </div>
 
@@ -421,7 +418,9 @@
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Tag Type</label>
                             <div class="col-sm-7">
-                                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.tagType">
+                                <select [(ngModel)]="sourceStockLineSetup.tagType" [ngModelOptions]="{standalone: true}" >
+                                    <option *ngFor="let tag of allTagTypes" [ngValue]="tag.tagTypeId">{{tag.name}}</option>
+                                </select>
                             </div>
                         </div>
 

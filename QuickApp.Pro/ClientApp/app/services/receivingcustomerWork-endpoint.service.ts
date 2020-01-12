@@ -20,9 +20,11 @@ export class ReceivingCustomerWorkEndpoint extends EndpointFactory {
     private readonly _TimeLifeUpdate: string = "/api/ReceivingCustomerWork/timeLifeUpdate";
     private readonly _updateActiveInactive: string = "/api/ReceivingCustomerWork/updateForActive";
     private readonly _actionsUrlAudit: string = "/api/ReceivingCustomerWork/GetAudit";
-
+    private readonly _customerList: string = '/api/ReceivingCustomerWork/List';
+    private readonly _customerWorkRowBySearchId: string = '/api/ReceivingCustomerWork/receivingCustomerWorkById';
+    private readonly _customerGlobalSearch: string = '/api/ReceivingCustomerWork/ListGlobalSearch'
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
-   
+    get customerWorkRowById() { return this.configurations.baseUrl + this._customerWorkRowBySearchId; }
 
 	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -35,7 +37,23 @@ export class ReceivingCustomerWorkEndpoint extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getReasonEndpoint());
 			});
-	}
+    }
+
+    getCustomerWorkListByid<T>(receivingCustomerWorkId: any): Observable<T> {
+        let endpointurl = `${this.customerWorkRowById}/${receivingCustomerWorkId}`;
+        return this.http.get<T>(endpointurl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getCustomerWorkListByid(receivingCustomerWorkId));
+            });
+    }
+
+    
+    getCustomerWorkAll(data) {
+        return this.http.post(this._customerList, JSON.stringify(data), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getCustomerWorkAll(data));
+            });
+    }
 	getNewReasonEndpoint<T>(userObject: any): Observable<T> {
 
 		return this.http.post<T>(this._actionsUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
@@ -190,6 +208,13 @@ export class ReceivingCustomerWorkEndpoint extends EndpointFactory {
     }
     getUpdateActionforActive(receivingCustomerWorkId:number,status:string,updatedBy:string) {
         return this.http.get(`${this.configurations.baseUrl}/${this._updateActiveInactive}?id=${receivingCustomerWorkId}&status=${status}&updatedBy=${updatedBy}`)
+    }
+    getGlobalCustomerRecords<T>(value, pageIndex, pageSize): Observable<T> {
+        // let endpointUrl = this.globalSearch;
+        return this.http.get<T>(`${this.configurations.baseUrl}${this._customerGlobalSearch}?value=${value}&pageNumber=${pageIndex}&pageSize=${pageSize}`, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getGlobalCustomerRecords(value, pageIndex, pageSize));
+            });
     }
 }
 

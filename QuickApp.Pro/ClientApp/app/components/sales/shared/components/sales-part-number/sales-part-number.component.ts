@@ -6,6 +6,11 @@ import { PartDetail } from "../../models/part-detail";
 import { AddSalesPartNumberComponent } from "../add-sales-part-number/add-sales-part-number.component";
 import { SalesQuoteService } from "../../../../../services/salesquote.service";
 import { ItemMasterSearchQuery } from "../../../quotes/models/item-master-search-query";
+import {
+  AlertService,
+  DialogType,
+  MessageSeverity
+} from "../../../../../services/alert.service";
 @Component({
   selector: "app-sales-part-number",
   templateUrl: "./sales-part-number.component.html",
@@ -14,6 +19,7 @@ import { ItemMasterSearchQuery } from "../../../quotes/models/item-master-search
 export class SalesPartNumberComponent {
   show: boolean;
   addPartModal: NgbModalRef;
+  deletePartModal: NgbModalRef;
   salesMarginModal: NgbModalRef;
   part: PartDetail;
   selectedPart: IPartJson;
@@ -24,9 +30,11 @@ export class SalesPartNumberComponent {
   @Input() customer: any;
   @Input() salesQuote: ISalesQuote;
   query: ItemMasterSearchQuery;
+  isEdit:boolean=false;
   constructor(
     private modalService: NgbModal,
-    private salesQuoteService: SalesQuoteService
+    private salesQuoteService: SalesQuoteService,
+    private alertService: AlertService
   ) {
     this.show = false;
     this.part = new PartDetail();
@@ -71,11 +79,8 @@ export class SalesPartNumberComponent {
       { field: "unitCostPerUnit", header: "UNIT COST", width: "200px" },
       { field: "unitCostExtended", header: "EXTENDED COST", width: "200px" },
       { field: "marginAmountExtended", header: "MARGIN ($)", width: "200px" },
-      {
-        field: "marginPercentageExtended",
-        header: "MARGIN (%)",
-        width: "200px"
-      }
+      { field: "marginPercentageExtended", header: "MARGIN (%)", width: "200px" },
+      { field: "", header: "Actions", width: "100px" }
     ];
   }
 
@@ -90,7 +95,14 @@ export class SalesPartNumberComponent {
     this.selectedPart.selected = false;
     this.salesMarginModal.close();
     console.log("close event");
-    this.openPartNumber();
+    if(!this.isEdit){
+      this.openPartNumber();
+    }
+  }
+  onClosePartDelete(event) {
+   
+    this.deletePartModal.close();
+   
   }
 
   addPartNumber() {
@@ -100,8 +112,8 @@ export class SalesPartNumberComponent {
   }
   openPartNumber() {
     console.log(this.salesQuote);
-    let content = this.addPart;
-    this.addPartModal = this.modalService.open(content, { size: "lg" });
+    let contentPart = this.addPart;
+    this.addPartModal = this.modalService.open(contentPart, { size: "lg" });
     // this.addPartModal.componentInstance.salesQuote = this.salesQuote;
     // this.addPartModal.componentInstance.display = this.show;
     /* this.addPartModal.componentInstance.close.subscribe(($e) => {
@@ -124,7 +136,8 @@ export class SalesPartNumberComponent {
   openSalesMargin(event) {
     console.log(event);
     console.log(this.salesQuote);
-    let content = this.salesMargin;
+    this.isEdit = false;
+    let contentMargin = this.salesMargin;
     this.selectedPart = event.part;
     let checked = event.checked;
     if (this.selectedPart) {
@@ -144,7 +157,10 @@ export class SalesPartNumberComponent {
           this.part.serialNumber = this.selectedPart.serialNumber;
           this.part.pmaStatus = "OEM";
           this.part.masterCompanyId = this.selectedPart.itemClassification.masterCompanyId;
-          this.part.conditionType = this.selectedPart.conditionType;
+          this.part.conditionId = this.selectedPart.conditionId;
+          this.part.conditionDescription = this.selectedPart.conditionDescription;
+          this.part.currencyId = this.selectedPart.currencyId;
+          this.part.currencyDescription = this.selectedPart.currencyDescription;
           this.part.currency = this.selectedPart.currency;
           this.part.salesDiscount = 0;
           this.part.unitCostPerUnit = 0;
@@ -158,7 +174,7 @@ export class SalesPartNumberComponent {
           this.part.quantityAlreadyQuoted = this.query.partSearchParamters.quantityAlreadyQuoted;
         });
         this.addPartModal.close();
-        this.salesMarginModal = this.modalService.open(content, { size: "lg" });
+        this.salesMarginModal = this.modalService.open(contentMargin, { size: "lg" });
         this.salesMarginModal.result.then(
           () => {
             console.log("When user closes");
@@ -189,12 +205,80 @@ export class SalesPartNumberComponent {
 
     let partObj = { ...this.part };
 
-    this.selectedParts.push(partObj);
+   
+    
+    if(!this.isEdit){
+      this.openPartNumber();
+      this.selectedParts.push(partObj);
+    }
     this.salesMarginModal.close();
-    this.openPartNumber();
+   
+   
     console.log(this.query);
     console.log(this.selectedParts);
     // }
+  }
+  openPartToEdit(part) {
+    this.isEdit = true;
+    let contentPartEdit = this.salesMargin;
+    this.part = part;
+    if (this.part) {
+      this.salesQuoteService.getSearchPartObject().subscribe(data => {
+        this.query = data;
+        this.part = part;
+        this.part.quantityRequested = this.query.partSearchParamters.quantityRequested;
+        this.part.quantityToBeQuoted = this.query.partSearchParamters.quantityToQuote;
+        this.part.quantityAlreadyQuoted = this.query.partSearchParamters.quantityAlreadyQuoted;
+      });
+     // this.addPartModal.close();
+      this.salesMarginModal = this.modalService.open(contentPartEdit, { size: "lg" });
+      this.salesMarginModal.result.then(
+        () => {
+          console.log("When user closes");
+        },
+        () => {
+          console.log("Backdrop click");
+         // this.selectedPart.selected = false;
+        }
+      );
+    }
+  }
+  openPartDelete(contentPartDelete, part) {
+    this.part = part;
+    this.deletePartModal = this.modalService.open(contentPartDelete, { size: "sm" });
+    this.deletePartModal.result.then(
+      () => {
+        console.log("When user closes");
+      },
+      () => {
+        console.log("Backdrop click");
+      }
+    );
+  }
+  deletePart(): void {
+
+
+    if(this.part.salesOrderQuotePartId){
+      this.salesQuoteService.deletePart(this.part.salesOrderQuotePartId).subscribe(response => {
+        this.removePartNamber(this.part);
+        this.deletePartModal.close();
+        this.alertService.showMessage(
+          "Success",
+          `Part removed successfully.`,
+          MessageSeverity.success
+        );
+       
+      });
+    }else{
+      this.removePartNamber(this.part);
+      this.deletePartModal.close();
+      this.alertService.showMessage(
+        "Success",
+        `Part removed successfully.`,
+        MessageSeverity.success
+      );
+    }
+
   }
 
   checkForDuplicates(selectedPart) {

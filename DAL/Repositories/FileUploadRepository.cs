@@ -699,7 +699,7 @@ namespace DAL.Repositories
             foreach (var item in ataChapterList)
             {
 
-                var flag = _appContext.ATAChapter.Any(p => p.IsDelete == false && p.ATAChapterName.ToLower() == item.ATAChapterName.Trim().ToLower());
+                var flag = _appContext.ATAChapter.Any(p => p.IsDeleted == false && p.ATAChapterName.ToLower() == item.ATAChapterName.Trim().ToLower());
                 if (!flag)
                 {
                     _appContext.ATAChapter.Add(item);
@@ -848,7 +848,7 @@ namespace DAL.Repositories
             foreach (var item in IntegrationList)
             {
 
-                var flag = _appContext.IntegrationPortal.Any(p => p.IsDelete == false && !string.IsNullOrEmpty(p.Description)
+                var flag = _appContext.IntegrationPortal.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.Description)
                 && !string.IsNullOrEmpty(p.Description) &&
                 p.Description.ToLower() == item.Description.Trim().ToLower());
                 if (!flag)

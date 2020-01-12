@@ -13,49 +13,57 @@
         <h4 class="modal-title">Add Aircraft Info</h4>
       </div> 
       <div class="modal-body">-->
+
+<form #addCapesForm="ngForm">        
 <div class="form-row">
-  <div class="col-md-3">
+  <div class="col-md-2" *ngIf="itemMasterId == undefined">
     <div class="form-group">
-      <label>Capability</label>
+        <label class="popup-plusicon-cstm">Part Number <strong class="clr-red">*</strong> </label>
+        <p-dropdown class="imstock-pddowm imcapes-pddowm" [options]="pnData" filter="true"  [(ngModel)]="itemMasterIDFromPartNumberSelection" name="itemMasterIDFromPartNumberSelection" id="partNumber" title="Part Number" required  placeholder="Select Part Number" [showClear]="true" (onChange)="getPartPublicationByItemMasterId(itemMasterIDFromPartNumberSelection)"></p-dropdown>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="form-group">
+      <label>Capability <span class="clr-red">*</span></label>
       <p-dropdown
-        class="imstock-pddowm"
-        [options]="capabalityType"
-        [ngModelOptions]="{ standalone: true }"
+        class="imstock-pddowm imcapes-pddowm"
+        name="capabilityTypeId"
+        [options]="capabalityTypeList"
         [(ngModel)]="capabilityTypeId"
         placeholder="Select Capability"
-        [showClear]="true"
+        [showClear]="true" [required]="true"
       ></p-dropdown>
     </div>
   </div>
 
-  <div class="col-md-3">
+  <div class="col-md-2">
     <div class="form-group">
       <label class="popup-plusicon-cstm"
-        >Aircraft Type
+        >Aircraft Type <span class="clr-red">*</span>
         <a
-          data-dismiss="modal"
+          data-dismiss="modal" style="margin-left: 3px;"
           [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']"
           ><i class="fa fa-plus-circle fa-lg"></i></a
       ></label>
       <p-dropdown
-        class="imstock-pddowm"
+        class="imstock-pddowm imcapes-pddowm"
         [options]="manufacturerData"
         filter="true"
-        [ngModelOptions]="{ standalone: true }"
+        name="selectedAircraftId"
         [(ngModel)]="selectedAircraftId"
         (onChange)="getAircraftModelByManfacturer($event)"
         placeholder="Select Aircraft"
-        [showClear]="true"
+        [showClear]="true" [required]="true"
       ></p-dropdown>
     </div>
   </div>
 
-  <div class="col-md-3">
+  <div class="col-md-2">
     <div class="form-group">
       <label class="popup-plusicon-cstm" style="width: 150px !important">
-        Model
+        Model <span class="clr-red">*</span>
         <a
-          data-dismiss="modal"
+          data-dismiss="modal" style="margin-left: 3px;"
           [routerLink]="['/singlepages/singlepages/app-aircraft-model']"
           ><i class="fa fa-plus-circle fa-lg"></i
         ></a>
@@ -77,17 +85,17 @@
         class="imstock-pmselect"
         [options]="LoadValues"
         [(ngModel)]="selectedModelId"
-        [ngModelOptions]="{ standalone: true }"
-        (onChange)="getDashNumberByTypeandModel($event)"
+        name="selectedModelId"
+        (onChange)="getDashNumberByTypeandModel($event)" [required]="true"
       ></p-multiSelect>
     </div>
   </div>
-  <div class="col-md-3" *ngIf="!modelUnknown">
+  <div class="col-md-2" *ngIf="!modelUnknown">
     <div class="form-group">
       <label class="popup-plusicon-cstm" style="width: 190px !important">
-        DashNumber
+        DashNumber <span class="clr-red">*</span>
         <a
-          data-dismiss="modal"
+          data-dismiss="modal" style="margin-left: 3px;"
           [routerLink]="['/singlepages/singlepages/app-dashnumber']"
           ><i class="fa fa-plus-circle fa-lg"></i
         ></a>
@@ -109,26 +117,29 @@
         class="imstock-pmselect"
         [options]="LoadDashnumber"
         [(ngModel)]="selectedDashnumber"
-        [ngModelOptions]="{ standalone: true }"
-        (onChange)="selectedDashnumbervalue($event)"
+        name="selectedDashnumber"
+        (onChange)="selectedDashnumbervalue($event)" [required]="true"
       ></p-multiSelect>
     </div>
   </div>
   <div class="col-md-2">
     <button
-      style="margin-top: 20px;"
+      style="margin-top: 20px;margin-left: 30px;"
       type="button"
       class="btn btn-primary-cstm"
+      [disabled]="!addCapesForm.valid"
       (click)="mapAircraftInformation()"
     >
       Add
     </button>
   </div>
 </div>
+</form>
 
+<form #capesForm="ngForm">
 <div class="card" *ngIf="viewTable">
   <p-table
-    class="rpo-table-cstm pub-ptable-cstm"
+    class="rpo-table-cstm pub-ptable-cstm itemcapes-ptable"
     [value]="aircraftData"
     [rows]="6"
     [columns]="colaircraft"
@@ -138,62 +149,111 @@
   >
     <ng-template pTemplate="header" let-columns>
       <tr>
-        <th style="width: 130px;">Capaility Type</th>
-        <th style="width: 520px;" colspan="4">Managment Structure</th>
-        <th style="width: 130px;" *ngFor="let col of columns">
+        <th style="width: 130px;text-align: center;">Capaility Type</th>
+        <th style="width: 520px;text-align: center;" colspan="4">Managment Structure <span class="clr-red">*</span></th>
+        <th style="width: 130px;text-align: center;" *ngFor="let col of columns">
           {{ col.header }}
         </th>
-        <th style="width: 130px;">Description</th>
-        <th style="width: 130px;">ATA Chapter</th>
-        <th style="width: 130px;">ATA SubChapter</th>
-        <th style="width: 130px;">EntryDate</th>
-        <th style="width: 130px;">CMM</th>
-        <th style="width: 130px;">Integrate With</th>
-        <th style="width: 130px;">Verified</th>
-        <th style="width: 130px;">VerifiedBy</th>
-        <th style="width: 130px;">VerifiedDate</th>
-        <th style="width: 130px;">Memo</th>
+        <th style="width: 130px;text-align: center;">Description</th>
+        <th style="width: 130px;text-align: center;">ATA Chapter</th>
+        <th style="width: 130px;text-align: center;">ATA SubChapter</th>
+        <th style="width: 130px;text-align: center;">EntryDate</th>
+        <th style="width: 130px;text-align: center;">CMM</th>
+        <th style="width: 130px;text-align: center;">Integrate With</th>
+        <th style="width: 130px;text-align: center;">Verified</th>
+        <th style="width: 130px;text-align: center;">VerifiedBy</th>
+        <th style="width: 130px;text-align: center;">VerifiedDate</th>
+        <th style="width: 130px;text-align: center;">Memo</th>
       </tr>
     </ng-template>
     <ng-template
       pTemplate="body"
-      let-i="rowIndex"
+      let-row_no="rowIndex"
       let-rowData
       let-columns="columns"
     >
-      <tr *ngFor="let x of aircraftData">
-        <td style="width: 130px;">{{ x.capailityTypeName }}</td>
-        <td style="width: 130px;"></td>
-        <td style="width: 130px;"></td>
-        <td style="width: 130px;"></td>
-        <td style="width: 130px;"></td>
-        <td style="width: 130px;">{{ x.AircraftType }}</td>
-        <td style="width: 130px;">{{ x.AircraftModel }}</td>
-        <td style="width: 130px;">{{ x.DashNumber }}</td>
+    <ng-container> <!--*ngFor="let rowData of aircraftData; let row_no = index;"-->
+      <tr>            
+        <td style="width: 130px;">{{ rowData.capailityTypeName }}</td>
         <td style="width: 130px;">
-          <input type="text" name="description" [(ngModel)]="x.description" />
+          <p-dropdown
+          placeholder="Select"
+          name="company{{row_no}}"
+          #companyId="ngModel"
+          [options]="legalEntityList"
+          class="p-dropdown-custom-sm"
+          (onChange)="selectedLegalEntity($event.value, row_no)"
+          [(ngModel)]="rowData.companyId"
+          [required]="true"
+        >
+        </p-dropdown>
+        </td>
+        <td style="width: 130px;">
+          <p-dropdown
+          placeholder="Select"
+          name="bu{{row_no}}"
+          #bu="ngModel"
+          [options]="getDynamicVariableData('businessUnitList',row_no)"
+          class="p-dropdown-custom-sm"
+          (onChange)="selectedBusinessUnit($event.value, row_no)"
+          [(ngModel)]="rowData.buId"
+        >
+        </p-dropdown>
+        </td>
+        <td style="width: 130px;">
+          <p-dropdown
+          placeholder="Select"
+          name="division{{row_no}}"
+          #division="ngModel"
+          [options]="getDynamicVariableData('divisionList',row_no)"
+          class="p-dropdown-custom-sm"
+          (onChange)="selectedDivision($event.value, row_no)"
+          [(ngModel)]="rowData.divisionId"
+        >
+        </p-dropdown>
+        </td>
+        <td style="width: 130px;">
+          <p-dropdown
+          placeholder="Select"
+          name="department{{row_no}}"
+          #department="ngModel"
+          [options]="getDynamicVariableData('departmentList',row_no)"
+          class="p-dropdown-custom-sm"
+          (onChange)="selectedDepartment($event.value, row_no)"
+          [(ngModel)]="rowData.departmentId"
+        >
+      </p-dropdown>
+        </td>
+        <td style="width: 130px;">{{ rowData.AircraftType }}</td>
+        <td style="width: 130px;">{{ rowData.AircraftModel }}</td>
+        <td style="width: 130px;">{{ rowData.DashNumber }}</td>
+        <td style="width: 130px;">
+          <input type="text" name="description{{row_no}}" [(ngModel)]="rowData.description" />
         </td>
         <td style="width: 130px;">
           <p-dropdown
             class="p-dropdown-custom-sm"
             [options]="ataChapters"
-            name="atachapter"
-            [(ngModel)]="x.ataChapterId"
+            name="atachapter{{row_no}}"
+            [(ngModel)]="rowData.ataChapterId"
+            placeholder="Select"
+            (onChange)="getATASubChapterByATAChapter($event.value, row_no)"
           ></p-dropdown>
         </td>
         <td style="width: 130px;">
           <p-dropdown
             class="p-dropdown-custom-sm"
-            [options]="ataSubChapaters"
-            name="subChapter"
-            [(ngModel)]="x.ataSubChapterId"
+            [options]="getDynamicVariableData('ataSubChapaters',row_no)"
+            name="subChapter{{row_no}}"
+            placeholder="Select"
+            [(ngModel)]="rowData.ataSubChapterId"
           ></p-dropdown>
         </td>
         <td style="width: 130px;">
           <p-calendar
             class="p-dropdown-custom-sm"
-            [(ngModel)]="x.entryDate"
-            name="entryDate"
+            [(ngModel)]="rowData.entryDate"
+            name="entryDate{{row_no}}"
             [showIcon]="true"
           ></p-calendar>
         </td>
@@ -201,8 +261,9 @@
           <p-dropdown
             class="p-dropdown-custom-sm"
             [options]="cmmList"
-            name="cmm"
-            [(ngModel)]="x.cmmId"
+            placeholder="Select"
+            name="cmm{{row_no}}"
+            [(ngModel)]="rowData.cmmId"
           ></p-dropdown>
         </td>
         <td style="width: 130px;">
@@ -210,28 +271,30 @@
             class="p-dropdown-custom-sm"
             [options]="intergationList"
             name="intergationList"
-            [(ngModel)]="x.intergationWithId"
+            placeholder="Select"
+            [(ngModel)]="rowData.integrateWithId"
           ></p-dropdown>
         </td>
         <td style="width: 130px;">
           <p-checkbox
-            name="isverified"
+            name="isverified{{row_no}}"
             binary="false"
-            [(ngModel)]="x.isVerified"
+            [(ngModel)]="rowData.isVerified"
           ></p-checkbox>
         </td>
         <td style="width: 130px;">
           <p-dropdown
             class="p-dropdown-custom-sm"
             [options]="employeeList"
-            name="employeeList"
-            [(ngModel)]="x.verifiedById"
+            placeholder="Select"
+            name="employeeList{{row_no}}"
+            [(ngModel)]="rowData.verifiedById"
           ></p-dropdown>
         </td>
         <td style="width: 130px;">
           <p-calendar
-            [(ngModel)]="x.verifiedDate"
-            name="entryDate"
+            [(ngModel)]="rowData.verifiedDate"
+            name="entryDate{{row_no}}"
             [showIcon]="true"
           ></p-calendar>
         </td>
@@ -243,15 +306,27 @@
           <input
             type="text"
             class="form-control input-value"
-            [(ngModel)]="x.Memo"
-            name="Memo"
+            [(ngModel)]="rowData.Memo"
+            name="Memo{{row_no}}"
           />
         </td>
-      </tr>
+      
+      </tr></ng-container>
     </ng-template>
   </p-table>
+  
 </div>
-
+<div class="pull-right" *ngIf="viewTable">
+  <button
+  type="button"
+  class="btn btn-primary-cstm" [disabled]="!capesForm.valid"
+  data-dismiss="modal" style="margin-top: 10px;"
+  (click)="saveCapability()"
+>
+  Save
+</button>
+</div>
+</form>
 <!-- </div>
       <div class="modal-footer">
         <button

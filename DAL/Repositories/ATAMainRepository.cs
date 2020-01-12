@@ -27,7 +27,7 @@ namespace DAL.Repositories
         {
             try
             {
-                var result = _appContext.ATAChapter.Include("MasterCompany").Where(c => c.IsDelete == false || c.IsDelete == null).OrderByDescending(c => c.ATAChapterId).ToList();
+                var result = _appContext.ATAChapter.Include("MasterCompany").Where(c => c.IsDeleted == false || c.IsDeleted == null).OrderByDescending(c => c.ATAChapterId).ToList();
                 return result;
             }
             catch (Exception)

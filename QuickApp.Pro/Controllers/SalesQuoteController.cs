@@ -57,7 +57,7 @@ namespace QuickApp.Pro.Controllers
                    on q.CustomerId equals c.CustomerId
                    join p in this.Context.SalesOrderQuotePart
                    on q.SalesOrderQuoteId equals p.SalesOrderQuoteId
-                   where q.IsDeleted == false
+                   where q.IsDeleted == false && p.IsDeleted == false
 
                    group p by new
                    {
@@ -143,13 +143,9 @@ namespace QuickApp.Pro.Controllers
 
             IEnumerable<SalesOrderQuotePartView> partsView = GetSalesOrderQuotePartsView(id, currency);
 
-            //IEnumerable<SalesOrderQuotePart> parts = this.UnitOfWork.SalesOrderQuotePart.GetPartsBySalesQuoteId(id);
-
             var quoteView = Mapper.Map<SalesOrderQuote, SalesOrderQuoteView>(quote);
 
             var approverListView = Mapper.Map<IEnumerable<SalesOrderQuoteApproverList>, IEnumerable<SalesOrderQuoteApproverListView>>(approverList);
-
-            //var partsView = Mapper.Map<IEnumerable<SalesOrderQuotePart>, IEnumerable<SalesOrderQuotePartView>>(parts);
 
             var response = new SalesQuoteView
             {
@@ -252,6 +248,17 @@ namespace QuickApp.Pro.Controllers
             return Ok(true);
         }
 
+        // DELETE: api/deletepart/5
+        [HttpDelete("deletepart/{id}")]
+        public IActionResult DeletePart(int id)
+        {
+
+            this.UnitOfWork.SalesOrderQuotePart.Delete(id);
+
+            return Ok(true);
+        }
+
+
         private IEnumerable<SalesOrderQuotePartView> GetSalesOrderQuotePartsView(long salesQuoteId, DAL.Models.Currency currency)
         {
 
@@ -264,6 +271,7 @@ namespace QuickApp.Pro.Controllers
                                                              join condition in Context.Condition on part.ConditionId equals condition.ConditionId into conditionParts
                                                              from cp in conditionParts.DefaultIfEmpty()
                                                              where part.SalesOrderQuoteId == salesQuoteId
+                                                                    && part.IsDeleted == false
                                                              select new SalesOrderQuotePartView
                                                              {
                                                                  SalesOrderQuotePartId = part.SalesOrderQuotePartId,

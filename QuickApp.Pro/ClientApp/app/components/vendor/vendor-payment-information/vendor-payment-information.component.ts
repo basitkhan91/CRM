@@ -93,15 +93,18 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-payment-information';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
 		this.defaultSaveObj.defaultPaymentMethod=1;
+		this.countrylist();
 		if (this.local) {
+		
 			this.loadData();
 			this.defaultPaymentValue = true;
 			this.getDomesticWithVendorId();
 			this.InternatioalWithVendorId();
 			this.DefaultWithVendorId();
 			this.showDefault();
+			
 		}
-		this.countrylist();
+		//this.countrylist();
 		this.options = {
 			center: { lat: 36.890257, lng: 30.707417 },
 			zoom: 12
@@ -163,7 +166,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
         if (this.defaultPaymentMethod == 2) {
             this.showDomesticWire();
         }
-
+		this.countrylist();
 		this.dataSource = new MatTableDataSource();
 		if (this.local) {
 			this.workFlowtService.contactCollection = this.local;
@@ -175,6 +178,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			this.viewName = "Edit";
 			this.local = this.workFlowtService.listCollection;
 			this.loadData();
+			
 		}
 		if (this.workFlowtService.generalCollection) {
 			this.local = this.workFlowtService.generalCollection;
@@ -409,6 +413,10 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.domesticWithVedor = allWorkFlows;
 		if (this.domesticWithVedor.length > 0) {
 			this.domesticSaveObj = allWorkFlows[0];
+			
+			if(this.domesticSaveObj.country != null) {				
+				this.domesticSaveObj.country = getObjectById('countries_id', this.domesticSaveObj.country, this.allCountryinfo);
+			}
 		}
 	}
 	private onInternatioalLoad(allWorkFlows: any) {
@@ -417,8 +425,16 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.dataSource.data = allWorkFlows;
 		this.internationalwithVendor = allWorkFlows;
 		if (this.internationalwithVendor.length > 0) {
+
 			this.internationalSaveObj = allWorkFlows[0];
+			     
+        if(this.internationalSaveObj.country != null) {
+            this.internationalSaveObj.country = getObjectById('countries_id', this.internationalSaveObj.country, this.allCountryinfo);
 		}
+		
+		
+		
+	}
 	}
 
 	private onDefaultLoad(allWorkFlows: any) {
