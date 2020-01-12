@@ -401,11 +401,12 @@ export class AssetAttributeTypeComponent implements OnInit {
         this.currentRow.residualPercentage = 0;
         this.currentRow.isActive = true;
         //this.currentRow.managementStructureId= 1;
-        let selectedCompanyIDs: any[] = [115, 118];
+        let selectedCompanyIDs: any[] = [];
         this.selectedCompanyID = [];
         this.selectedBUId = 0;
         this.selectedDivisionID = 0;
         this.selectedDeptID = 0;
+        this.recordExists = false;
         ////console.log(new AssetAttributeType().assetAttributeTypeName);
         ////console.log(this.currentRow.assetAttributeTypeName);
         this.currentModeOfOperation = ModeOfOperation.Add;
@@ -503,6 +504,7 @@ export class AssetAttributeTypeComponent implements OnInit {
             rowData.assetAttributeTypeName, rowData.conventionType, rowData.depreciationMethod, rowData.residualPercentage,
             rowData.residualValue, rowData.assetLife, rowData.depreciationFrequencyId, rowData.acquiredGLAccountId,
             rowData.deprExpenseGLAccountId, rowData.adDepsGLAccountId, rowData.assetSale, rowData.assetWriteOff, rowData.assetWriteDown,
+            rowData.selectedCompanyIds,
             rowData.createdBy, rowData.createdDate, rowData.updatedDate, rowData.updatedBy, rowData.isActive, rowData.isDelete);
         debugger;
         return item;
@@ -617,7 +619,8 @@ export class AssetAttributeTypeComponent implements OnInit {
     showItemEdit(rowData): void {
         this.currentModeOfOperation = ModeOfOperation.Update;
         //this.disableSave = true;
-        //console.log('currentModeOfOperation', this.currentModeOfOperation);
+        this.recordExists = false;
+        console.log('rowData', rowData);
         this.currentRowData = rowData;
         this.currentRow = {
             ...rowData,
@@ -632,10 +635,12 @@ export class AssetAttributeTypeComponent implements OnInit {
             assetSale: getObjectById('glAccountId', rowData.assetSale, this.allGlInfo),
             assetWriteOff: getObjectById('glAccountId', rowData.assetWriteOff, this.allGlInfo),
             assetWriteDown: getObjectById('glAccountId', rowData.assetWriteDown, this.allGlInfo),
-            selectedCompanyIds: this.selectedCompanyID.join(", "),
+            selectedCompanyID: (rowData.selectedCompanyIds != null && rowData.selectedCompanyIds != undefined) ? rowData.selectedCompanyIds.split(",") : "",
         };
         this.currentRow = { ...this.currentRow };
         this.mgmtStructureId = this.currentRow.managementStructureId;
+        this.selectedCompanyID = (rowData.selectedCompanyIds != null && rowData.selectedCompanyIds != undefined) ? rowData.selectedCompanyIds.split(",") : "";
+        console.log('rowData', rowData);
         //this.populateMgmtStructure(this.currentRow.managementStructureId);
         //console.log("conventionType = " + this.currentRow);
     }
@@ -657,6 +662,7 @@ export class AssetAttributeTypeComponent implements OnInit {
     loadSelectedNames() {
         //console.log('loadSelectedNames', this.itemList.length);
         for (let i = 0; i < this.itemList.length; i++) {
+            let companies = "";
             this.itemList[i].assetTypeName = this.getAssetTypeNameById(this.itemList[i].assetTypeId);
             //console.log(this.itemList[i].assetTypeName);
             this.itemList[i].conventionTypeName = this.getConvNameById(this.itemList[i].conventionType);
@@ -668,6 +674,17 @@ export class AssetAttributeTypeComponent implements OnInit {
             this.itemList[i].assetSaleName = this.getAccCodeById(this.itemList[i].assetSale);
             this.itemList[i].assetWriteOffName = this.getAccCodeById(this.itemList[i].assetWriteOff);
             this.itemList[i].assetWriteDownName = this.getAccCodeById(this.itemList[i].assetWriteDown);
+            if (this.itemList[i].selectedCompanyIds != null && this.itemList[i].selectedCompanyIds != undefined) {
+                let arr = this.itemList[i].selectedCompanyIds.split(",");
+                for (let i = 0; i < arr.length; i++) {
+                    if (companies == "")
+                        companies = companies + this.getCompanyName(arr[i]);
+                    else
+                        companies = companies + ", " + this.getCompanyName(arr[i]);
+                }
+            }
+            //console.log('companies', companies);
+            this.itemList[i].selectedCompanyNames = companies;
         }
     }
  
@@ -756,7 +773,8 @@ export class AssetAttributeTypeComponent implements OnInit {
             { field: 'adDepsGLAccountName', header: 'AdDepsGLAccountId', index: 1, showByDefault: true },
             { field: 'assetSaleName', header: 'Asset Sale', index: 1, showByDefault: true },
             { field: 'assetWriteOffName', header: 'Asset Write Off', index: 1, showByDefault: true },
-            { field: 'assetWriteDownName', header: 'Asset Write Down', index: 1, showByDefault: true }
+            { field: 'assetWriteDownName', header: 'Asset Write Down', index: 1, showByDefault: true },
+            { field: 'selectedCompanyNames', header: 'Legal Entity', index: 1, showByDefault: true },
         ];
         this.currentModeOfOperation = ModeOfOperation.None;
         this.selectedColumns = this.columnHeaders;
