@@ -209,7 +209,7 @@
                             </div>
 
                             <label class="control-label col-sm-4"></label>
-                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourceStockLineSetup.obtainFromType == 1">
+                            <div class="col-sm-7 inline-block" *ngIf="sourceStockLineSetup.obtainFromType == 1">
                                 <select [(ngModel)]="sourceStockLineSetup.obtainFrom" [ngModelOptions]="{standalone: true}">
                                     <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
                                 </select>
@@ -218,7 +218,7 @@
                             <div class="col-sm-7" *ngIf="sourceStockLineSetup.obtainFromType == 2">
                                 <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.obtainFrom">
                             </div>
-                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourceStockLineSetup.obtainFromType == 3">
+                            <div class="col-sm-7 inline-block" *ngIf="sourceStockLineSetup.obtainFromType == 3">
                                 <select [(ngModel)]="sourceStockLineSetup.obtainFrom" [ngModelOptions]="{standalone: true}">
                                     <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                                 </select>
@@ -240,7 +240,7 @@
 
                         <div class="form-group col-sm-12" *ngIf="sourceStockLineSetup.ownerType == 1">
                             <label class="control-label col-sm-4"></label>
-                            <div class="inner-addon col-sm-7 inline-block display-flex">
+                            <div class="inner-addon col-sm-7 inline-block">
                                 <select [(ngModel)]="sourceStockLineSetup.owner" [ngModelOptions]="{standalone: true}">
                                     <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
                                 </select>
@@ -257,7 +257,7 @@
 
                         <div class="form-group col-sm-12" *ngIf="sourceStockLineSetup.ownerType == 3">
                             <label class="control-label col-sm-4"></label>
-                            <div class="inner-addon col-sm-7 inline-block display-flex">
+                            <div class="inner-addon col-sm-7 inline-block">
                                 <select [(ngModel)]="sourceStockLineSetup.owner" [ngModelOptions]="{standalone: true}">
                                     <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                                 </select>
@@ -276,7 +276,7 @@
                             </div>
                             <div class="form-group col-sm-12">
                                 <label class="control-label col-sm-4"></label>
-                                <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourceStockLineSetup.traceableToType == 1">
+                                <div class="inner-addon col-sm-7 inline-block" *ngIf="sourceStockLineSetup.traceableToType == 1">
                                     <select [(ngModel)]="sourceStockLineSetup.traceableTo" [ngModelOptions]="{standalone: true}">
                                         <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
                                     </select>
@@ -291,7 +291,7 @@
                             </div>
                             <div class="form-group col-sm-12">
                                 <label class="control-label col-sm-4"></label>
-                                <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourceStockLineSetup.traceableToType == 3">
+                                <div class="inner-addon col-sm-7 inline-block" *ngIf="sourceStockLineSetup.traceableToType == 3">
                                     <select [(ngModel)]="sourceStockLineSetup.traceableTo" [ngModelOptions]="{standalone: true}">
                                         <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                                     </select>
@@ -393,7 +393,7 @@
 
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Certify By</label>
-                            <div class="inner-addon col-sm-7 display-flex">
+                            <div class="inner-addon col-sm-7">
                                 <select [(ngModel)]="sourceStockLineSetup.certifiedBy" [ngModelOptions]="{standalone: true}">
                                     <option *ngFor="let employee of allEmployeeList" [ngValue]="employee.firstName">{{employee.firstName}}{{ employee.lastName}}</option>
                                 </select>
@@ -481,7 +481,7 @@
                         </div>
 
                         <label class="control-label col-sm-4"></label>
-                        <div class="inner-addon col-sm-7 display-flex" *ngIf="sourceStockLineSetup.blackListed == 1">
+                        <div class="inner-addon col-sm-7" *ngIf="sourceStockLineSetup.blackListed == 1">
                             <div class="col-sm-7">
                                 <textarea style="height: 100px;" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.blackListedReason"></textarea>
                             </div>
@@ -495,7 +495,7 @@
                         </div>
 
                         <label class="control-label col-sm-4"></label>
-                        <div class="inner-addon col-sm-7  display-flex" *ngIf="sourceStockLineSetup.incident == 1">
+                        <div class="inner-addon col-sm-7" *ngIf="sourceStockLineSetup.incident == 1">
                             <div class="col-sm-7">
                                 <textarea style="height: 100px;" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.incidentReason"></textarea>
                             </div>
@@ -509,7 +509,7 @@
                         </div>
 
                         <label class="control-label col-sm-4"></label>
-                        <div class="inner-addon col-sm-7 display-flex" *ngIf="sourceStockLineSetup.accident == 1">
+                        <div class="inner-addon col-sm-7" *ngIf="sourceStockLineSetup.accident == 1">
                             <div class="col-sm-7">
                                 <textarea style="height: 100px;" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.accidentReason"></textarea>
                             </div>
