@@ -6,7 +6,8 @@ export interface IPartJson {
     partNumber: string;
     alternatePartId:number;
     description: string;
-    conditionType: string;
+    conditionId: number;
+    conditionDescription: string;
     stockLineNumber:string;
     uomDescription:string;
     qtyAvailable:number;

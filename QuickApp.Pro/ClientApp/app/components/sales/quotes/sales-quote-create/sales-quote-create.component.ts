@@ -431,6 +431,10 @@ export class SalesQuoteCreateComponent implements OnInit {
         partNumberObj.stockLineId = selectedPart.stockLineId;
         partNumberObj.fixRate = selectedPart.fxRate;
         partNumberObj.quantityFromThis = selectedPart.qtyQuoted;
+        partNumberObj.conditionId = selectedPart.conditionId;
+        partNumberObj.conditionDescription = selectedPart.conditionDescription;
+        partNumberObj.currencyId = selectedPart.currencyId;
+        partNumberObj.currencyDescription = selectedPart.currencyDescription;
 
         partNumberObj.partNumber = selectedPart.partNumber;
         partNumberObj.description = selectedPart.partDescription;
@@ -842,6 +846,8 @@ export class SalesQuoteCreateComponent implements OnInit {
         partNumberObj.marginAmountExtended = selectedPart.marginAmountExtended;
         partNumberObj.marginPercentage = selectedPart.marginPercentagePerUnit;
         partNumberObj.conditionId = selectedPart.conditionId;
+        partNumberObj.currencyId = selectedPart.currencyId;
+       
 
         partList.push(partNumberObj);
       }

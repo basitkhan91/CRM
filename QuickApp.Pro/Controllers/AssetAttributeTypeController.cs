@@ -148,7 +148,7 @@ namespace QuickApp.Pro.Controllers
                 existingItem.AssetSale = item.AssetSale;
                 existingItem.AssetWriteOff = item.AssetWriteOff;
                 existingItem.AssetWriteDown = item.AssetWriteDown;
-
+                existingItem.selectedCompanyIds = item.selectedCompanyIds;
                 existingItem.UpdatedDate = DateTime.Now;
                 existingItem.UpdatedBy = item.UpdatedBy;
                 existingItem.IsActive = item.IsActive;
