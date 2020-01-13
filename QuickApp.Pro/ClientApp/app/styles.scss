@@ -13809,7 +13809,8 @@ button {
 }
 .rro-table-cstm th {
     width: 110px;
-    padding: 8px 5px !important;
+    padding: 10px 5px !important;
+    //padding: 8px 5px !important;
 }
 .rro-table-cstm .ui-table {
     padding-bottom: 60px;
@@ -13878,7 +13879,8 @@ input[type=number]::-webkit-outer-spin-button {
     position: -webkit-sticky;
     position: sticky;
     right: 0;
-    background: #fafafa !important;
+    //background: #fafafa !important;
+    background: #f1efef !important;
     border-right: 1px solid #CCC;
     padding-left: 5px;
     text-align: center;
@@ -14453,6 +14455,26 @@ p-table tr td .btn i.fa-pencil {
 }
 .action-icons-cstm .btn {
     font-size: 14px;
+}
+.radiobtn-label {
+    float:left; 
+    width:auto; 
+    margin-right:20px; 
+    padding-top:3px;
+    font-weight: bold;
+}
+// .action-icons-cstm {
+//     padding: 0 !important;
+// }
+// .action-icons-cstm div {
+//     padding: 5px;
+//     border-left: 1px solid #c8c8c8;
+// }
+.btn-po-cstm {
+    color: #ff5663 !important;
+}
+.btn-ro-cstm {
+    color: #259e08 !important;
 }
 
 .accountdropdown.ui-dropdown .ui-dropdown-trigger {

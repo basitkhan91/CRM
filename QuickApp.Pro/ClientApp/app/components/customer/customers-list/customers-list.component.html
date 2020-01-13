@@ -1,4 +1,4 @@
-﻿﻿<p-breadcrumb [model]="breadcrumbs" [home]="home"></p-breadcrumb>
+﻿﻿<p-breadcrumb [model]="breadcrumbs"></p-breadcrumb>
 
 <div class="card">
     <div class="card-body">
@@ -80,7 +80,16 @@
             </ng-template>
             <ng-template pTemplate="colgroup" let-columns>
                 <colgroup>
-                    <col *ngFor="let col of columns" style="width:130px">
+                    <!-- <col *ngFor="let col of columns" style="width:180px"> -->
+                    <col style="width:150px">
+                    <col style="width:150px">
+                    <col style="width:150px">
+                    <col style="width:150px">
+                    <col style="width:180px">
+                    <col style="width:150px">
+                    <col style="width:150px">
+                    <col style="width:150px">
+                    <col style="width:150px">
                 </colgroup>
             </ng-template>
 
@@ -121,17 +130,17 @@
                 : rowData[col.field]
                         }}
                     </td>
-                    <td class="action-icons-cstm" style="width:150px" *ngIf="selectedColumns.length > 0">
+                    <td class="action-icons-cstm" style="width:150px;" *ngIf="selectedColumns.length > 0">
                         <div>
                         <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                         <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                         <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                         <!-- <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span> -->
-                        <span><a class="btn nobg" (click)="viewSelectedRowdbl(viewdbl,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-                        <span><a class="btn nobg" (click)="edit(rowData)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
-                        <span><a class="btn nobg" (click)="openContactList(contentcontact,rowData)" matTooltip="Contacts"><i class="fa fa-users"></i></a> </span>
-                        <span data-toggle="modal" data-target="#delete"><a class="btn nobg" (click)="delete(content1,rowData)" matTooltip="Delete"><i class="fa fa-trash"></i></a> </span>
-                        <span data-toggle="modal" data-target="#contentAuditHist"><a class="btn nobg" (click)="getAuditHistoryById(contentAuditHist,rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
+                        <span><a class="btn nobg btn-view-cstm" (click)="viewSelectedRowdbl(viewdbl,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                        <span><a class="btn nobg btn-edit-cstm" (click)="edit(rowData)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
+                        <span><a class="btn nobg btn-users-cstm" (click)="openContactList(contentcontact,rowData)" matTooltip="Contacts"><i class="fa fa-users"></i></a> </span>
+                        <span data-toggle="modal" data-target="#delete"><a class="btn nobg btn-delete-cstm" (click)="delete(content1,rowData)" matTooltip="Delete"><i class="fa fa-trash"></i></a> </span>
+                        <span data-toggle="modal" data-target="#contentAuditHist"><a class="btn nobg btn-hist-cstm" (click)="getAuditHistoryById(contentAuditHist,rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
                         <!-- <span>
                             <a class="btn  boxed-float-btn nobg"
                                data-toggle="tooltip"

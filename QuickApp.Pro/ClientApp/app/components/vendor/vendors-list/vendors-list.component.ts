@@ -21,6 +21,7 @@ import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/route
 import $ from "jquery";
 import { ConfigurationService } from '../../../services/configuration.service';
 import { VendorCapabilitiesService } from '../../../services/vendorcapabilities.service';
+import { MenuItem } from 'primeng/api';
 
 @Component({
     selector: 'app-vendors-list',
@@ -190,6 +191,7 @@ export class VendorsListComponent implements OnInit {
         { field: "dashNumber", header: "Dash Numbers" },
         { field: "memo", header: "Memo" }
     ];
+    breadcrumbs: MenuItem[];
 	
     // purchaseOrderData: any;
     // poPageSize: number = 10;
@@ -208,6 +210,11 @@ export class VendorsListComponent implements OnInit {
         this.workFlowtService.ShowPtab = false;
         this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab);
         this.isVendorList = true;
+
+        this.breadcrumbs = [
+            {label:'Vendors'},
+            {label:'Vendors List'},
+        ];
 
         // this.poCols = [
         //     { field: 'purchaseOrderNumber', header: 'PO Num' },
