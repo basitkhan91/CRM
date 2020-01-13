@@ -292,7 +292,7 @@ $theme: mat-light-theme($primary, $accent);
     background: none !important;
     color: rgb(217, 217, 235);
 }
-.ui-state-active, .ui-widget-content .ui-state-active,{
+.ui-state-active, .ui-widget-content .ui-state-active{
     background: none !important;
 }
 .ui-panelmenu .ui-panelmenu-header.ui-state-active a {
@@ -14534,5 +14534,6 @@ margin-left: -6px;
 
 .ui-panelmenu .ui-submenu-list .ui-submenu-list{
     margin-left: 10px;
+}
 }
 
