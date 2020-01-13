@@ -1347,7 +1347,9 @@ namespace DAL.Repositories
             {
 
                 var sorts = new Sorts<ItemMasterCapesFilters>();
+                var filters = new EntityFrameworkPaginate.Filters<ItemMasterCapesFilters>();
 
+                filters.Add(!string.IsNullOrEmpty(capesFilters.filters.company), x => x.company.Contains(capesFilters.filters.company));
 
                 if (string.IsNullOrEmpty(capesFilters.SortField))
                 {
@@ -1360,116 +1362,25 @@ namespace DAL.Repositories
                     sortColumn = capesFilters.SortField;
                 }
 
+                var propertyInfo = typeof(ItemMasterCapesFilters).GetProperty(sortColumn);
 
                 if (capesFilters.SortOrder == -1)
                 {
-                    switch (capesFilters.SortField)
-                    {
-                        case "partNo":
-                            sorts.Add(sortColumn == "partNo", x => x.partNo, true);
-                            break;
-                        case "capabilityType":
-                            sorts.Add(sortColumn == "capabilityType", x => x.capabilityType, true);
-                            break;
-                        case "aircraftType":
-                            sorts.Add(sortColumn == "aircraftType", x => x.aircraftType, true);
-                            break;
-                        case "aircraftModel":
-                            sorts.Add(sortColumn == "aircraftModel", x => x.aircraftModel, true);
-                            break;
-                        case "aircraftDashNumber":
-                            sorts.Add(sortColumn == "aircraftDashNumber", x => x.aircraftDashNumber, true);
-                            break;
-                        case "description":
-                            sorts.Add(sortColumn == "description", x => x.description, true);
-                            break;
-                        case "aTAChapter":
-                            sorts.Add(sortColumn == "aTAChapter", x => x.aTAChapter, true);
-                            break;
-                        case "aTASubChapter":
-                            sorts.Add(sortColumn == "aTASubChapter", x => x.aTASubChapter, true);
-                            break;
-                        case "entryDate":
-                            sorts.Add(sortColumn == "entryDate", x => x.entryDate, true);
-                            break;
-                        case "cMM":
-                            sorts.Add(sortColumn == "cMM", x => x.cMM, true);
-                            break;
-                        case "integrateWith":
-                            sorts.Add(sortColumn == "integrateWith", x => x.integrateWith, true);
-                            break;
-                        case "isVerified":
-                            sorts.Add(sortColumn == "isVerified", x => x.isVerified, true);
-                            break;
-                        case "verifiedBy":
-                            sorts.Add(sortColumn == "verifiedBy", x => x.verifiedBy, true);
-                            break;
-                        case "verifiedDate":
-                            sorts.Add(sortColumn == "verifiedDate", x => x.verifiedDate, true);
-                            break;
-                        case "memo":
-                            sorts.Add(sortColumn == "memo", x => x.memo, true);
-                            break;
-                    }
+                    sorts.Add(true, x => propertyInfo.GetValue(x, null), true);
                 }
                 else
                 {
-                    switch (capesFilters.SortField)
-                    {
-                        case "partNo":
-                            sorts.Add(sortColumn == "partNo", x => x.partNo);
-                            break;
-                        case "capabilityType":
-                            sorts.Add(sortColumn == "capabilityType", x => x.capabilityType);
-                            break;
-                        case "aircraftType":
-                            sorts.Add(sortColumn == "aircraftType", x => x.aircraftType);
-                            break;
-                        case "aircraftModel":
-                            sorts.Add(sortColumn == "aircraftModel", x => x.aircraftModel);
-                            break;
-                        case "aircraftDashNumber":
-                            sorts.Add(sortColumn == "aircraftDashNumber", x => x.aircraftDashNumber);
-                            break;
-                        case "description":
-                            sorts.Add(sortColumn == "description", x => x.description);
-                            break;
-                        case "aTAChapter":
-                            sorts.Add(sortColumn == "aTAChapter", x => x.aTAChapter);
-                            break;
-                        case "aTASubChapter":
-                            sorts.Add(sortColumn == "aTASubChapter", x => x.aTASubChapter);
-                            break;
-                        case "entryDate":
-                            sorts.Add(sortColumn == "entryDate", x => x.entryDate);
-                            break;
-                        case "cMM":
-                            sorts.Add(sortColumn == "cMM", x => x.cMM);
-                            break;
-                        case "integrateWith":
-                            sorts.Add(sortColumn == "integrateWith", x => x.integrateWith);
-                            break;
-                        case "isVerified":
-                            sorts.Add(sortColumn == "isVerified", x => x.isVerified);
-                            break;
-                        case "verifiedBy":
-                            sorts.Add(sortColumn == "verifiedBy", x => x.verifiedBy);
-                            break;
-                        case "verifiedDate":
-                            sorts.Add(sortColumn == "verifiedDate", x => x.verifiedDate);
-                            break;
-                        case "memo":
-                            sorts.Add(sortColumn == "memo", x => x.memo);
-                            break;
-                    }
+                    sorts.Add(true, x => propertyInfo.GetValue(x, null));
                 }
 
                 var totalRecords = (from imc in _appContext.ItemMasterCapes
                                     join im in _appContext.ItemMaster on imc.ItemMasterId equals im.ItemMasterId
                                     join ct in _appContext.capabilityType on imc.CapabilityTypeId equals ct.CapabilityTypeId
                                     join act in _appContext.AircraftType on imc.AircraftTypeId equals act.AircraftTypeId
-                                    join acm in _appContext.AircraftModel on imc.AircraftModelId equals acm.AircraftModelId
-                                    join acd in _appContext.AircraftDashNumber on imc.AircraftDashNumberId equals acd.DashNumberId
+                                    join acm in _appContext.AircraftModel on imc.AircraftModelId equals acm.AircraftModelId into imcacm
+                                    from acm in imcacm.DefaultIfEmpty()
+                                    join acd in _appContext.AircraftDashNumber on imc.AircraftDashNumberId equals acd.DashNumberId into imcacd
+                                    from acd in imcacd.DefaultIfEmpty()
                                     join atc in _appContext.ATAChapter on imc.ATAChapterId equals atc.ATAChapterId into imcatc
                                     from atc in imcatc.DefaultIfEmpty()
                                     join ats in _appContext.ATASubChapter on imc.ATASubChapterId equals ats.ATASubChapterId into imcats
@@ -1481,20 +1392,24 @@ namespace DAL.Repositories
                                     join ver in _appContext.Employee on imc.VerifiedById equals ver.EmployeeId into imcver
                                     from ver in imcver.DefaultIfEmpty()
                                     where imc.IsDeleted == false
+                                    && imc.ItemMasterId == (capesFilters.filters.ItemMasterId > 0 ? capesFilters.filters.ItemMasterId : imc.ItemMasterId)
                                     && im.PartNumber.Contains(!String.IsNullOrEmpty(capesFilters.filters.partNo) ? capesFilters.filters.partNo : im.PartNumber)
                                     && ct.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.capabilityType) ? capesFilters.filters.capabilityType : ct.Description)
                                     && act.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.aircraftType) ? capesFilters.filters.aircraftType : act.Description)
-                                    && acm.ModelName.Contains(!String.IsNullOrEmpty(capesFilters.filters.aircraftModel) ? capesFilters.filters.aircraftModel : acm.ModelName)
+                                    //&& acm.ModelName.Contains(!String.IsNullOrEmpty(capesFilters.filters.aircraftModel) ? capesFilters.filters.aircraftModel : acm.ModelName)
+                                    && (acm.ModelName == null || acm.ModelName.Contains(!string.IsNullOrEmpty(capesFilters.filters.aircraftModel) ? capesFilters.filters.aircraftModel : acm.ModelName))
+                                    && (acd.DashNumber == null || acd.DashNumber.Contains(!string.IsNullOrEmpty(capesFilters.filters.aircraftDashNumber) ? capesFilters.filters.aircraftDashNumber : acd.DashNumber))
                                     && imc.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.description) ? capesFilters.filters.description : imc.Description)
-                                    && atc.ATAChapterName.Contains(!String.IsNullOrEmpty(capesFilters.filters.aTAChapter) ? capesFilters.filters.aTAChapter : atc.ATAChapterName)
-                                    && ats.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.aTASubChapter) ? capesFilters.filters.aTASubChapter : ats.Description)
+                                    && (atc.ATAChapterName == null || atc.ATAChapterName.Contains(!string.IsNullOrEmpty(capesFilters.filters.aTAChapter) ? capesFilters.filters.aTAChapter : atc.ATAChapterName))
+                                    && (ats.Description == null || ats.Description.Contains(!string.IsNullOrEmpty(capesFilters.filters.aTASubChapter) ? capesFilters.filters.aTASubChapter : ats.Description))
                                     && imc.EntryDate == (capesFilters.filters.entryDate != null ? capesFilters.filters.entryDate : imc.EntryDate)
-                                    && pub.PublicationId.Contains(!String.IsNullOrEmpty(capesFilters.filters.cMM) ? capesFilters.filters.cMM : pub.PublicationId)
-                                    && ip.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.integrateWith) ? capesFilters.filters.integrateWith : ip.Description)
+                                    && (pub.PublicationId == null || pub.PublicationId.Contains(!string.IsNullOrEmpty(capesFilters.filters.cMM) ? capesFilters.filters.cMM : pub.PublicationId))
+                                    && (ip.Description == null || ip.Description.Contains(!string.IsNullOrEmpty(capesFilters.filters.integrateWith) ? capesFilters.filters.integrateWith : ip.Description))
                                     && imc.IsVerified == (capesFilters.filters.isVerified != null ? capesFilters.filters.isVerified : imc.IsVerified)
-                                    && ver.FirstName.Contains(!String.IsNullOrEmpty(capesFilters.filters.verifiedBy) ? capesFilters.filters.verifiedBy : ver.FirstName)
+                                    && (ver.FirstName == null || ver.FirstName.Contains(!string.IsNullOrEmpty(capesFilters.filters.verifiedBy) ? capesFilters.filters.verifiedBy : ver.FirstName))
                                     && imc.VerifiedDate == (capesFilters.filters.verifiedDate != null ? capesFilters.filters.verifiedDate : imc.VerifiedDate)
                                     && imc.Memo.Contains(!String.IsNullOrEmpty(capesFilters.filters.memo) ? capesFilters.filters.memo : imc.Memo)
+                                    && im.PartDescription.Contains(!String.IsNullOrEmpty(capesFilters.filters.pnDiscription) ? capesFilters.filters.pnDiscription : im.PartDescription)
                                     select new
                                     {
                                         imc.ItemMasterCapesId
@@ -1503,9 +1418,11 @@ namespace DAL.Repositories
                 var list = (from imc in _appContext.ItemMasterCapes
                             join im in _appContext.ItemMaster on imc.ItemMasterId equals im.ItemMasterId
                             join ct in _appContext.capabilityType on imc.CapabilityTypeId equals ct.CapabilityTypeId
-                            join act in _appContext.AircraftType on imc.AircraftTypeId equals act.AircraftTypeId
-                            join acm in _appContext.AircraftModel on imc.AircraftModelId equals acm.AircraftModelId
-                            join acd in _appContext.AircraftDashNumber on imc.AircraftDashNumberId equals acd.DashNumberId
+                            join act in _appContext.AircraftType on imc.AircraftTypeId equals act.AircraftTypeId 
+                            join acm in _appContext.AircraftModel on imc.AircraftModelId equals acm.AircraftModelId into imcacm
+                            from acm in imcacm.DefaultIfEmpty()
+                            join acd in _appContext.AircraftDashNumber on imc.AircraftDashNumberId equals acd.DashNumberId into imcacd
+                            from acd in imcacd.DefaultIfEmpty()
                             join atc in _appContext.ATAChapter on imc.ATAChapterId equals atc.ATAChapterId into imcatc
                             from atc in imcatc.DefaultIfEmpty()
                             join ats in _appContext.ATASubChapter on imc.ATASubChapterId equals ats.ATASubChapterId into imcats
@@ -1517,29 +1434,33 @@ namespace DAL.Repositories
                             join ver in _appContext.Employee on imc.VerifiedById equals ver.EmployeeId into imcver
                             from ver in imcver.DefaultIfEmpty()
                             where imc.IsDeleted == false
+                            && imc.ItemMasterId == (capesFilters.filters.ItemMasterId > 0 ? capesFilters.filters.ItemMasterId : imc.ItemMasterId)
                             && im.PartNumber.Contains(!String.IsNullOrEmpty(capesFilters.filters.partNo) ? capesFilters.filters.partNo : im.PartNumber)
                             && ct.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.capabilityType) ? capesFilters.filters.capabilityType : ct.Description)
                             && act.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.aircraftType) ? capesFilters.filters.aircraftType : act.Description)
-                            && acm.ModelName.Contains(!String.IsNullOrEmpty(capesFilters.filters.aircraftModel) ? capesFilters.filters.aircraftModel : acm.ModelName)
+                            //&& acm.ModelName.Contains(!String.IsNullOrEmpty(capesFilters.filters.aircraftModel) ? capesFilters.filters.aircraftModel : acm.ModelName)
+                            && (acm.ModelName == null || acm.ModelName.Contains(!string.IsNullOrEmpty(capesFilters.filters.aircraftModel) ? capesFilters.filters.aircraftModel : acm.ModelName))
+                            && (acd.DashNumber == null || acd.DashNumber.Contains(!string.IsNullOrEmpty(capesFilters.filters.aircraftDashNumber) ? capesFilters.filters.aircraftDashNumber : acd.DashNumber))
                             && imc.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.description) ? capesFilters.filters.description : imc.Description)
-                            && atc.ATAChapterName.Contains(!String.IsNullOrEmpty(capesFilters.filters.aTAChapter) ? capesFilters.filters.aTAChapter : atc.ATAChapterName)
-                            && ats.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.aTASubChapter) ? capesFilters.filters.aTASubChapter : ats.Description)
+                            && (atc.ATAChapterName == null || atc.ATAChapterName.Contains(!string.IsNullOrEmpty(capesFilters.filters.aTAChapter) ? capesFilters.filters.aTAChapter : atc.ATAChapterName))
+                            && (ats.Description == null || ats.Description.Contains(!string.IsNullOrEmpty(capesFilters.filters.aTASubChapter) ? capesFilters.filters.aTASubChapter : ats.Description))
                             && imc.EntryDate == (capesFilters.filters.entryDate != null ? capesFilters.filters.entryDate : imc.EntryDate)
-                            && pub.PublicationId.Contains(!String.IsNullOrEmpty(capesFilters.filters.cMM) ? capesFilters.filters.cMM : pub.PublicationId)
-                            && ip.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.integrateWith) ? capesFilters.filters.integrateWith : ip.Description)
+                            && (pub.PublicationId == null || pub.PublicationId.Contains(!string.IsNullOrEmpty(capesFilters.filters.cMM) ? capesFilters.filters.cMM : pub.PublicationId))
+                            && (ip.Description == null || ip.Description.Contains(!string.IsNullOrEmpty(capesFilters.filters.integrateWith) ? capesFilters.filters.integrateWith : ip.Description))
                             && imc.IsVerified == (capesFilters.filters.isVerified != null ? capesFilters.filters.isVerified : imc.IsVerified)
-                            && ver.FirstName.Contains(!String.IsNullOrEmpty(capesFilters.filters.verifiedBy) ? capesFilters.filters.verifiedBy : ver.FirstName)
+                            && (ver.FirstName == null || ver.FirstName.Contains(!string.IsNullOrEmpty(capesFilters.filters.verifiedBy) ? capesFilters.filters.verifiedBy : ver.FirstName))
                             && imc.VerifiedDate == (capesFilters.filters.verifiedDate != null ? capesFilters.filters.verifiedDate : imc.VerifiedDate)
                             && imc.Memo.Contains(!String.IsNullOrEmpty(capesFilters.filters.memo) ? capesFilters.filters.memo : imc.Memo)
-
+                            && im.PartDescription.Contains(!String.IsNullOrEmpty(capesFilters.filters.pnDiscription) ? capesFilters.filters.pnDiscription : im.PartDescription)
                             select new ItemMasterCapesFilters()
                             {
                                 ItemMasterCapesId = imc.ItemMasterCapesId,
                                 partNo = im.PartNumber,
+                                pnDiscription = im.PartDescription,
                                 capabilityType = ct.Description,
                                 aircraftType = act.Description,
-                                aircraftModel = acm.ModelName,
-                                aircraftDashNumber = acd.DashNumber,
+                                aircraftModel =imc.AircraftModelId==0?"Unknown": acm.ModelName,
+                                aircraftDashNumber = imc.AircraftDashNumberId==0?"Unknown":acd.DashNumber,
                                 description = imc.Description,
                                 aTAChapter = atc == null ? "" : atc.ATAChapterName,
                                 aTASubChapter = ats == null ? "" : ats.Description,
@@ -1552,16 +1473,84 @@ namespace DAL.Repositories
                                 memo = imc.Memo,
                                 createdDate = imc.CreatedDate,
                                 isActive = imc.IsActive,
-                                TotalRecords=totalRecords
+                                ManagementStrId=imc.ManagementStructureId,
+                                TotalRecords = totalRecords
                             }
                           ).Distinct()
-                          .Paginate(pageNumber, pageSize, sorts).Results;
+                          .Paginate(pageNumber, pageSize, sorts, filters).Results;
+
+                foreach(var item in list)
+                {
+                    item.company = GetManagementStructureCodes(item.ManagementStrId);
+                }
+
                 return list;
             }
             catch (Exception)
             {
 
                 throw;
+            }
+        }
+
+        private string GetManagementStructureCodes(long manmgStrucId)
+        {
+            Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
+            ManagementStructure level4 = null;
+            ManagementStructure level3 = null;
+            ManagementStructure level2 = null;
+            ManagementStructure level1 = null;
+            string level1Code = string.Empty;
+            try
+            {
+                level4 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == manmgStrucId).AsNoTracking().FirstOrDefault();
+                if (level4 != null && level4.ParentId > 0)
+                {
+                    level3 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == level4.ParentId).AsNoTracking().FirstOrDefault();
+                }
+                if (level3 != null && level3.ParentId > 0)
+                {
+                    level2 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == level3.ParentId).AsNoTracking().FirstOrDefault();
+                }
+                if (level2 != null && level2.ParentId > 0)
+                {
+                    level1 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == level2.ParentId).AsNoTracking().FirstOrDefault();
+                }
+
+
+                if (level4 != null && level3 != null && level2 != null && level1 != null)
+                {
+                    keyValuePairs.Add("Level4", level4.Code);
+                    keyValuePairs.Add("Level3", level3.Code);
+                    keyValuePairs.Add("Level2", level2.Code);
+                    keyValuePairs.Add("Level1", level1.Code);
+                }
+                else if (level4 != null && level2 != null && level3 != null)
+                {
+                    keyValuePairs.Add("Level3", level4.Code);
+                    keyValuePairs.Add("Level2", level3.Code);
+                    keyValuePairs.Add("Level1", level2.Code);
+                }
+                else if (level4 != null && level3 != null)
+                {
+                    keyValuePairs.Add("Level2", level4.Code);
+                    keyValuePairs.Add("Level1", level3.Code);
+                }
+                else if (level4 != null)
+                {
+                    keyValuePairs.Add("Level1", level4.Code);
+                }
+
+                if (keyValuePairs != null && keyValuePairs.Count > 0)
+                {
+                    level1Code = keyValuePairs["Level1"];
+                }
+
+                return level1Code;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 

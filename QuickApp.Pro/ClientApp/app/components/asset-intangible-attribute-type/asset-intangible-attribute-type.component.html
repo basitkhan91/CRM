@@ -10,7 +10,7 @@
                             <h3 class="po-head lead">{{header}}</h3>
                             &nbsp;&nbsp;
                             <!--Step x: Customize the data-target-->
-                            <a class="plusicon-cstm new-margin" pTooltip="Add {{rowName}}" tooltipPosition="right" data-target="#editItem"
+                            <a class="plusicon-cstm new-margin" matTooltip="Add {{rowName}}" matTooltipPosition="right" data-target="#editItem"
                                data-toggle="modal" (click)="addNewItem()">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
@@ -47,10 +47,10 @@
                                                    selectedItemsLabel="{0} columns selected"
                                                    defaultLabel="Choose Columns">
                                     </p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm" pTooltip="Download All Data" tooltipPosition="top"
-                                            pButton icon="fa-download" iconPos="left" label="Export Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm" pTooltip="Download Selected" tooltipPosition="top"
-                                            pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Data" matTooltipPosition="above"
+                                            pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected Data" matTooltipPosition="above"
+                                            pButton icon="fa-download" iconPos="left" label="Export Selected Data" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <!--
                                     <div class="excel-upload excel-upload-cstm">
                                         <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
@@ -65,12 +65,12 @@
                                         <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
                                                accept=".xlsx, .xls, .csv">
                                         <label for="upload">
-                                            <span matTooltip="Upload Data (Excel)">
+                                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
                                                 <i class="fa fa-upload"></i>
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()"  pTooltip="Download Sample File"  tooltipPosition="top">Sample File Download</button>
+                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()" matTooltip="Download Sample File" matTooltipPosition="above">Sample File Download</button>
                                     </div>
                                 </div>
 
@@ -95,7 +95,7 @@
 
                             <!--body-->
                             <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                                <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="viewItemDetails(rowData)">
+                                <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="viewItemDetailsClick(viewClick, rowData)">
                                     <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                         {{rowData[col.field]}}
                                     </td>
@@ -207,6 +207,12 @@
                         </p>
                         <p>
                             <span class="label">
+                                <b>Legal Entity: </b>
+                            </span>
+                            <span class="value">{{itemDetails.selectedCompanyNames}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
                                 <b>Created By: </b>
                             </span>
                             <span class="value">{{itemDetails.createdBy}}</span>
@@ -261,13 +267,24 @@
 
                                 </div>
                                 <div class="col-sm-5">
-                                    <p-autoComplete field="assetIntangibleName"
+                                    <!--<p-autoComplete field="assetIntangibleName"
                                                     [(ngModel)]="currentRow.assetIntangibleTypeId"
                                                     name="assetIntangibleTypeId"
-                                                    [suggestions]="filteredAssetIntangibleTypes" (completeMethod)="filterIntangibleType($event)"
+                                                    [suggestions]="filteredAssetIntangibleTypes"
+                                                    (completeMethod)="filterIntangibleType($event)"
                                                     [size]="30" [minLength]="1"
+                                                    (onSelect)="selectedIntangibleType($event)"
                                                     [dropdown]="true" class="p-autoComplete-ctsm" required>
-                                    </p-autoComplete>
+                                    </p-autoComplete>-->
+                                    <select name="assetTypeId" [(ngModel)]="currentRow.assetIntangibleTypeId" 
+                                            (ngModelChange)="selectedIntangibleType($event)" required>
+                                        <option *ngFor="let intangibleType of allAssetIntangibleTypes"
+                                                [ngValue]="intangibleType">
+                                            {{intangibleType.assetIntangibleName}}
+                                        </option>
+                                    </select>
+                                    <div *ngIf="recordExists && currentRow.assetIntangibleTypeId" class="clr-red">Already Exists</div>
+                                    <div class="clear"></div>
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -389,36 +406,18 @@
                                     </p-autoComplete>
                                 </div>
                             </div>
-                            <div class="col-sm-12">
-                                <div class="col-sm-5">
-                                    <label for="managementStructure" class="control-label">Management Structure <span class="clr-red">*</span></label>
-                                </div>
-                                <div class="col-sm-5">
-                                    <div style="margin: 2px 0">
-                                        <select name="primaryCompany"
-                                                (change)="companySelected()" [(ngModel)]="selectedCompanyID" required>
-                                            <option value="0">Select Company</option>
-                                            <option *ngFor="let name of companyList" [ngValue]="name.managementStructureId">{{name.code}}</option>
-                                        </select>
-                                    </div>
-                                    <div style="margin: 2px 0">
-                                        <select name="primaryBU" [(ngModel)]="selectedBUId" (change)="buSelected()" [disabled]="selectedCompanyID == 0">
-                                            <option value="0">Select BU</option>
-                                            <option *ngFor="let name of buList" [ngValue]="name.managementStructureId">{{name.code}}</option>
-                                        </select>
-                                    </div>
-                                    <div style="margin: 2px 0">
-                                        <select name="primaryDivision" (change)="divisionSelected()" [(ngModel)]="selectedDivisionID" [disabled]="selectedBUId == 0">
-                                            <option value="0">Select Division</option>
-                                            <option *ngFor="let name of divisionList" [ngValue]="name.managementStructureId">{{name.code}}</option>
-                                        </select>
-                                    </div>
-                                    <div style="margin: 2px 0">
-                                        <select name="primaryDept" [(ngModel)]="selectedDeptID" (change)="departmentSelected()" [disabled]="selectedDivisionID == 0">
-                                            <option value="0">Select Dept</option>
-                                            <option *ngFor="let name of departmentList" [ngValue]="name.managementStructureId">{{name.code}}</option>
-                                        </select>
-                                    </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="col-sm-5">
+                                <label for="managementStructure" class="control-label">Legal Entity <span class="clr-red">*</span></label>
+                            </div>
+                            <div class="col-sm-5">
+                                <div style="margin: 2px 0">
+                                    <p-multiSelect [options]="companyListData"
+                                                   [ngModelOptions]="{standalone: true}"
+                                                   [(ngModel)]="selectedCompanyID" [panelStyle]="{minWidth:'12em'}"
+                                                   (onChange)="companySelected()">
+                                    </p-multiSelect>
                                 </div>
                             </div>
                         </div>
@@ -440,7 +439,7 @@
                 <div class="modal-footer">
                     <button class="btn btn-primary-cstm" data-dismiss="modal"
                             [disabled]="IntangibleAttrType.invalid || disableSave "
-                            (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();" >
+                            (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();">
                         {{currentModeOfOperation == 3 ? 'Update' : 'Save' }}
                     </button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
@@ -527,4 +526,105 @@
         </div>
     </div>
 
+    <ng-template #viewClick class="modal fade " id="viewClick" role="dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" (click)="dismissModel()">×</button>
+                    <h4 class="modal-title">{{rowName}} Details</h4>
+                </div>
+                <div class="modal-body viewform">
+                    <div class="col-sm-12">
+                        <p>
+                            <span class="label">
+                                <b>Intangible Class: </b>
+                            </span>
+                            <span class="value">{{itemDetails.assetIntangibleName}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Amortization Method: </b>
+                            </span>
+                            <span class="value">{{itemDetails.depreciationMethodName}}</span>
+                        </p>
+
+                        <p>
+                            <span class="label">
+                                <b>Intangible Life: </b>
+                            </span>
+                            <span class="value">{{itemDetails.intangibleLifeYears}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Amort Expense GL: </b>
+                            </span>
+                            <span class="value">{{itemDetails.amortExpenseGL}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Acc Amort Depr GL: </b>
+                            </span>
+                            <span class="value">{{itemDetails.accAmortdeprGL}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Intangible GL: </b>
+                            </span>
+                            <span class="value">{{itemDetails.intangibleGL}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Intangible Write Down: </b>
+                            </span>
+                            <span class="value">{{itemDetails.intangiblewritedDownGL}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Intangible Write Off: </b>
+                            </span>
+                            <span class="value">{{itemDetails.intangiblewritedoffGL}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Active: </b>
+                            </span>
+                            <span class="value">{{itemDetails.isActive ? 'true' : 'false'}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Legal Entity: </b>
+                            </span>
+                            <span class="value">{{itemDetails.selectedCompanyNames}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Created By: </b>
+                            </span>
+                            <span class="value">{{itemDetails.createdBy}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Created Date: </b>
+                            </span>
+                            <span class="value">{{itemDetails.createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Last Updated By: </b>
+                            </span>
+                            <span class="value">{{itemDetails.updatedBy}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
+                                <b>Last Updated Date: </b>
+                            </span>
+                            <span class="value">{{itemDetails.updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
+                        </p>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
+                </div>
+            </div>
+    </ng-template>
 </div>

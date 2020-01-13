@@ -129,10 +129,11 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+      
+
         [HttpGet("receivingCustomerWorkById/{receivingCustomerWorkId}")]
         [Produces(typeof(List<ReceivingCustomerWorkViewModel>))]
-
-        private IActionResult GetReceivingCustomerWorkById(long receivingCustomerWorkId)
+        public IActionResult GetReceivingCustomerWorkById(long receivingCustomerWorkId)
         {
                  var result = _unitOfWork.receivingCustomerWork.GetreceivingCustomerWorkById(receivingCustomerWorkId); //GetAllSite Information
             return Ok(result);
@@ -341,12 +342,20 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("ReceivingCustomerByIdForWorkOrder")]
         [Produces(typeof(List<ReceivingCustomerWorkViewModel>))]
 
-        private IActionResult GetReceivingCustomerWorkData(long id)
+        public IActionResult GetReceivingCustomerWorkData(long id)
         {
             var result = _unitOfWork.receivingCustomerWork.GetReceivingCustomerWorkData(id); //GetAllSite Information
             return Ok(result);
         }
 
+
+        [HttpGet("ListGlobalSearch")]
+
+        public IActionResult GetListGlobalFilter(string value, int pageNumber, int pageSize)
+        {
+            var result = _unitOfWork.receivingCustomerWork.GetListGlobalFilter(value, pageNumber, pageSize);
+            return Ok(result);
+        }
     }
 
 }

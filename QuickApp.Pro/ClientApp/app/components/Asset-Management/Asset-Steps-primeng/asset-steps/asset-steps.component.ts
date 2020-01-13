@@ -19,7 +19,7 @@ export class AssetStepsComponent implements OnInit {
     readonly = true;
     read = false;
     msgs: Message[] = [];
-    activeIndex: number;
+    activeIndex: number = 0;
     showComponentPTab: boolean;
     isDisabledSteps: boolean = false;
     isEditMode: boolean = false;
@@ -41,6 +41,7 @@ export class AssetStepsComponent implements OnInit {
     } 
     ngOnInit() {
         this.AssetId = this.router.snapshot.params['id'];
+        console.log(this.AssetId);
 		if (this.AssetId) {
 			this.isDisabledSteps = false;
             this.isEditMode = true;
@@ -157,5 +158,28 @@ export class AssetStepsComponent implements OnInit {
             }
         },
         ];
+    }
+
+    changeTab(item) {
+        console.log(item)
+        this.AssetId = this.router.snapshot.params['id'];
+        //const { assetId } = this.AssetId;
+        if (item.index = 0) {
+            this.activeIndex = 0;
+            this.route.navigateByUrl(`/assetmodule/assetpages/app-edit-asset/as220`);
+        }
+        else if (item.index = 1) {
+            this.activeIndex = 1;
+            this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-capes/as220`);
+        }
+        else if (item.index = 2) {
+            this.activeIndex = 2;
+            this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-calibration/as220`);
+        }
+        else if (item.index = 3) {
+            this.activeIndex = 3;
+            this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-maintenance-warranty/as220`);
+        }
+        
     }
 }

@@ -31,7 +31,9 @@ const receivingPagesRoutes: Routes = [
 
 
 			{ path: "app-customer-works-list", component: CustomerWorksListComponent, data: { title: "Customer Work List" } },
-			{ path: "app-customer-work-setup", component: CustomerWorkSetupComponent, data: { title: "Customer Work Setup" } },
+            { path: "app-customer-work-setup", component: CustomerWorkSetupComponent, data: { title: "Customer Work Setup" } },
+            { path: "app-customer-work-setup/edit/:id", component: CustomerWorkSetupComponent, data: { title: "Customer Work Setup" } },
+
 			{ path: "app-customer-work-edit", component: CustomerWorkEditComponent, data: { title: "Customer Work Edit" } },
             { path: "app-edit-po", component: EditPoComponent, data: { title: "Edit PO" } },
 			{ path: "app-view-po", component: ViewPoComponent, data: { title: "View PO" } },

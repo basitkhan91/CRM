@@ -1,17 +1,9 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
-import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
-import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { SelectButtonModule } from 'primeng/selectbutton';
-import { InputTextModule } from 'primeng/inputtext';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { AlertService, DialogType, MessageSeverity } from '../../../services/alert.service';
-import { MenuItem } from 'primeng/api';
+﻿import { Component,  OnInit } from '@angular/core';
+import { MatPaginator, MatSort, MatTableDataSource, MatDialog } from '@angular/material';
+import { FormBuilder } from '@angular/forms';
+import { NgbModal,  NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { AlertService,  MessageSeverity } from '../../../services/alert.service';
 import { Router } from '@angular/router';
-
 import { StocklineService } from '../../../services/stockline.service';
 import { fadeInOut } from '../../../services/animations';
 import { AuthService } from '../../../services/auth.service';
@@ -28,11 +20,9 @@ import { Table } from 'primeng/table';
     styleUrls: ['./stock-line-list.component.scss'],
     animations: [fadeInOut]
 })
-/** stock-line-list component*/
 export class StockLineListComponent implements OnInit {
     activeIndex: number;
     modal: any;
-    //sourceAction: any;
     public sourceAction: Stockline;
     isSaving: boolean;
     isDeleteMode: boolean;
@@ -246,17 +236,6 @@ export class StockLineListComponent implements OnInit {
         // Causes the filter to refresh there by updating with recently added data.
         this.applyFilter(this.dataSource.filter);
     }
-    private onDataLoadSuccessful(allWorkFlows: any[]) {
-        // alert('success');
-        this.totalRecords = allWorkFlows[0].totalRecords;
-        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
-
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
-        this.allStockInfo = allWorkFlows;
-        console.log(allWorkFlows);
-    }
 
     dismissModel() {
         this.isDeleteMode = false;
@@ -431,17 +410,6 @@ export class StockLineListComponent implements OnInit {
         this.workFlowtService.adjustmentCollection = row;
         this._route.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-adjustment');
     }
-    //deleteItemAndCloseModel(rowData) {
-    //	this.isSaving = true;
-    //	this.sourceAction = rowData;
-    //	this.sourceAction.updatedBy = this.userName;
-    //	this.sourceAction.isActive = false;
-    //	this.sourceAction.sourceStockLine = rowData.sourceStockLine;
-    //	this.stocklineser.deleteStockLineAction(this.sourceAction).subscribe(
-    //		response => this.saveCompleted(this.sourceAction),
-    //		error => this.saveFailedHelper(error));
-    //	//  this.modal.close();
-    //}
 
     private saveCompleted(user?: any) {
         this.isSaving = false;
@@ -453,7 +421,6 @@ export class StockLineListComponent implements OnInit {
             this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
         }
 
-        //this.itemclass();
     }
     private saveFailedHelper(error: any) {
         this.isSaving = false;
@@ -462,33 +429,9 @@ export class StockLineListComponent implements OnInit {
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
 
-    private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-
-        // debugger;
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-
-        this.auditHisory = auditHistory;
-
-
-        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
-
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-
-
-    }
-
     public navigateTogeneralInfo() {
-        //this.workFlowtService.listCollection = [];
         this.workFlowtService.isEditMode = false;
         this.workFlowtService.enableExternal = false;
         this._route.navigateByUrl('stocklinemodule/stocklinepages/app-stock-line-setup');
-
     }
 }
-
-
-
-

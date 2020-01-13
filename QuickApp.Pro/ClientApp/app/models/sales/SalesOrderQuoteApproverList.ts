@@ -4,6 +4,9 @@ export class SalesOrderQuoteApproverList implements ISalesOrderQuoteApproverList
     salesOrderQuoteApproverListId: number;
     salesOrderQuoteId: number;
     employeeId: number;
+    firstName: string;
+    employeeCode: string;
+    email: string;
     level: number;
     statusId: number;
     masterCompanyId: number;
@@ -11,4 +14,5 @@ export class SalesOrderQuoteApproverList implements ISalesOrderQuoteApproverList
     updatedBy: string;
     createdDate: number;
     updatedDate: number;
+    
 }

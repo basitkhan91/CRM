@@ -65,6 +65,13 @@
                             label="Export Selected Data"
                             style="left:-10px;"
                             (click)="dt.exportCSV({ selectionOnly: true })"></button>
+
+                    <div class="excel-upload  excel-upload-cstm">
+                        <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                        <label for="upload">
+                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above"><i class="fa fa-upload"></i></span>
+                        </label>
+                    </div>
                 </div>
             </ng-template>
             <ng-template pTemplate="colgroup" let-columns>
@@ -200,7 +207,7 @@
                     <p><span class="label"><b>Condition: </b></span><span class="value">{{condition}}</span></p>
                     <p><span class="label"><b>Serial Num: </b></span><span class="value">{{serialNumber}}</span></p>
                     <!--<p><span class="label"><b>Shelf Life: </b></span><span class="value">{{shelfLife}}</span></p>-->
-                    <p><span class="label"><b>Shelf Life Exp Date: </b></span><span class="value">{{shelfLifeExpirationDate}}</span></p>
+                    <p><span class="label"><b>Shelf Life Exp Date: </b></span><span class="value">{{shelfLifeExpirationDate | date: 'dd-MM-yyyy h:mm a '}}</span></p>
                     <p><span class="label"><b>Site: </b></span><span class="value">{{site}}</span></p>
                     <p><span class="label"><b>Warehouse: </b></span><span class="value">{{warehouse}}</span></p>
                     <p><span class="label"><b>Location: </b></span><span class="value">{{location}}</span></p>
@@ -214,16 +221,16 @@
                     <p><span class="label"><b>Tracable to: </b></span><span class="value">{{traceableTo}}</span></p>
                     <p><span class="label"><b>MFG: </b></span><span class="value">{{manufacturerId}}</span></p>
                     <p><span class="label"><b>MFG Lot Num: </b></span><span class="value">{{manufacturerLotNumber}}</span></p>
-                    <p><span class="label"><b>MFG Date: </b></span><span class="value">{{manufacturingDate}}</span></p>
+                    <p><span class="label"><b>MFG Date: </b></span><span class="value">{{manufacturingDate | date: 'dd-MM-yyyy h:mm a '}}</span></p>
                     <p><span class="label"><b>MFG Batch Num: </b></span><span class="value">{{manufacturingBatchNumber}}</span></p>
                     <p><span class="label"><b>Part Cert Num: </b></span><span class="value">{{partCertificationNumber}}</span></p>
                     <p><span class="label"><b>Certify By: </b></span><span class="value">{{certifiedBy}}</span></p>
-                    <p><span class="label"><b>Cert Date: </b></span><span class="value">{{certifiedDate}}</span></p>
-                    <p><span class="label"><b>Tag Date: </b></span><span class="value">{{tagdate}}</span></p>
+                    <p><span class="label"><b>Cert Date: </b></span><span class="value">{{certifiedDate| date: 'dd-MM-yyyy h:mm a '}}</span></p>
+                    <p><span class="label"><b>Tag Date: </b></span><span class="value">{{tagdate | date: 'dd-MM-yyyy h:mm a '}}</span></p>
                     <p><span class="label"><b>Tag Type: </b></span><span class="value">{{tagType}}</span></p>
-                    <p><span class="label"><b>Cert Due Date: </b></span><span class="value">{{certifiedDueDate}}</span></p>
+                    <p><span class="label"><b>Cert Due Date: </b></span><span class="value">{{certifiedDueDate | date: 'dd-MM-yyyy h:mm a '}}</span></p>
                     <p><span class="label"><b>Calibration Notes: </b></span><span class="value">{{calibrationMemo}}</span></p>
-                    <p><span class="label"><b>Order Date: </b></span><span class="value">{{orderDate}}</span></p>
+                    <p><span class="label"><b>Order Date: </b></span><span class="value">{{orderDate | date: 'dd-MM-yyyy h:mm a '}}</span></p>
                     <p><span class="label"><b>PO Num: </b></span><span class="value">{{purchaseOrderNumber}}</span></p>
                     <p><span class="label"><b>PO Unit Cost: </b></span><span class="value">{{purchaseOrderUnitCost}}</span></p>
                     <p><span class="label"><b>RO Num: </b></span><span class="value">{{repairOrderNumber}}</span></p>
@@ -231,7 +238,7 @@
                 </div>
 
                 <div class="col-sm-4">
-                    <p><span class="label"><b>Received Date: </b></span><span class="value">{{receivedDate}}</span></p>
+                    <p><span class="label"><b>Received Date: </b></span><span class="value">{{receivedDate | date: 'dd-MM-yyyy h:mm a '}}</span></p>
                     <p><span class="label"><b>Receiver Num: </b></span><span class="value">{{receiverNumber}}</span></p>
                     <p><span class="label"><b>Reconiliation Num: </b></span><span class="value">{{reconciliationNumber}}</span></p>
                     <p><span class="label"><b>Unit Sale Price: </b></span><span class="value">{{unitSalesPrice}}</span></p>

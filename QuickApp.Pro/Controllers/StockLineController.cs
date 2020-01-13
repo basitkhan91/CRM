@@ -31,9 +31,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("List")]
-        public IActionResult GetList([FromBody] Filters<StockLineListFilters> stockLineFilters)
+        public IActionResult GetList([FromBody] Filters<StockListFilters> stockLineFilters)
         {
-            var result = _unitOfWork.stockLineList.GetList(stockLineFilters);
+            var result = _unitOfWork.stockLineList.GetAllStockLinelistData(stockLineFilters);
             return Ok(result);
         }
 
@@ -1124,6 +1124,12 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("tagType")]
+        public IActionResult GetAllTagTypeData()
+        {
+            var result = _unitOfWork.tagType.GetAllTagTypeData().Where(x=>x.IsDeleted==false && x.IsActive==true);
+            return Ok(result);
+        }
 
 
         private IEnumerable<object> GetPartDetails(ItemMasterSearchViewModel searchView)

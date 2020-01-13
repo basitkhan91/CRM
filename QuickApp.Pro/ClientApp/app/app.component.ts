@@ -646,6 +646,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             {
                                 label: 'Asset Attributes', items: [
                                     { label: 'Asset Attribute Type', routerLink: '/singlepages/singlepages/app-asset-attribute-type' },
+                                    { label: 'Intangible Attribute Type', routerLink: '/singlepages/singlepages/app-asset-intangible-attribute-type' },
                                     { label: 'Depreciation - Book', routerLink: '/#' },
                                     { label: 'Depreciation - Tax', routerLink: '/#' },
                                     { label: 'Depreciation Date', routerLink: '/#' },
@@ -658,7 +659,6 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Depreciation Intervals', routerLink: '/singlepages/singlepages/app-depreciation-intervals' },
                             { label: 'Asset Disposal Type', routerLink: '/singlepages/singlepages/app-disposal-type' },
                             { label: 'Asset Intangible Type', routerLink: '/singlepages/singlepages/app-asset-intangible-type' },
-                            { label: 'Intangible Attribute Type', routerLink: '/singlepages/singlepages/app-asset-intangible-attribute-type' },
                             ]
                     },
 

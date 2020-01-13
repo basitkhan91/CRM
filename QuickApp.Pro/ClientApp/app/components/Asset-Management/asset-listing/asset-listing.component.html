@@ -42,16 +42,16 @@
                                                    selectedItemsLabel="{0} columns selected"
                                                    defaultLabel="Choose Columns">
                                     </p-multiSelect>
-                                    <div class="inner-addon right-addon w200 inline-block">
+                                    <div class="inner-addon right-addon w50 inline-block  g-filter-search-cstm">
                                         <i class="fa fa-search"></i>
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input"
                                                (input)="dt.filterGlobal($event.target.value, 'contains')"
                                                placeholder="Filter">
                                     </div>
-                                    <button type="button" class="btn btn-primary-cstm" pTooltip="Download All Data" tooltipPosition="top"
+                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Data" pTooltip="Download Data" matTooltipPosition="above"
                                             pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm" pTooltip="Download Selected" tooltipPosition="top"
-                                            pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected Data" pTooltip="Download Selected Data" matTooltipPosition="above"
+                                            pButton icon="fa-download" iconPos="left" label="Export Selected Data" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                 </div>
                                 <div style="padding-bottom: 1%"><br></div>
                             </ng-template>
@@ -72,21 +72,11 @@
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-rowData let-columns="columns" let-asset>
-                                <tr [pSelectableRow]="rowData" (dblclick)="openAssetToEdit(rowData)">
+                                <tr [pSelectableRow]="rowData" (dblclick)="openView(view,rowData)">
 
-                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.assetId}}</td>
-                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.name}}</td>
-                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.alternateAssetId}}</td>
-                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.manufacturer?.name}}</td>
-                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.isSerialized ? 'Yes' : 'No'}}</td>
-                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.calibrationRequired ? 'Yes' : 'No'}}</td>
-                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.companyName}}</td>
-                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.buName}}</td>
-                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.deptName}}</td>
-                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.divName}}</td>
-                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.isDepreciable ? 'Depreciable' : 'Intangible'}}</td>
-                                    <td style="width:120px" class="ui-resizable-column" pReorderableRowHandle>{{asset.assetType?.assetTypeName}}</td>
-
+                                    <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                                        {{rowData[col.field]}}
+                                    </td>
                                     <td style="width:200px" *ngIf="selectedColumns.length> 0">
 
                                         <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on"

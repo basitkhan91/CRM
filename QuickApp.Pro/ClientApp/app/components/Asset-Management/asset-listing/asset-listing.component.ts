@@ -117,15 +117,15 @@ export class AssetListingComponent implements OnInit {
             { field: 'assetId', header: 'Asset Id' },
             { field: 'name', header: 'Asset Name' },
             { field: 'alternateAssetId', header: 'Alt Asset Id' },
-            { field: 'manufacturedId', header: 'Manufacturer' },
+            { field: 'manufacturerName', header: 'Manufacturer' },
             { field: 'isSerialized', header: 'Serial Num' },
             { field: 'calibrationRequired', header: 'Calibrated' },
-            { field: 'company', header: 'Company' },
-            { field: 'company', header: 'BU' },
-            { field: 'company', header: 'Div.' },
-            { field: 'company', header: 'Dept.' },
-            { field: 'isDepreciable', header: 'Asset Type' },
-            { field: 'company', header: 'Asset Class' },
+            { field: 'companyName', header: 'Company' },
+            { field: 'buName', header: 'BU' },
+            { field: 'deptName', header: 'Div.' },
+            { field: 'divName', header: 'Dept.' },
+            { field: 'assetClass', header: 'Asset Type' },
+            { field: 'assetType', header: 'Asset Class' },
         ];
 
         this.selectedColumns = this.cols;
@@ -154,7 +154,7 @@ export class AssetListingComponent implements OnInit {
     private onGlAccountLoad(getGl: GlAccount) {
         //console.log(getGl);
         //console.log(getGl[0]);
-        if (getGl) {
+        if (getGl && getGl[0] != undefined) {
             this.alertService.stopLoadingMessage();
             this.loadingIndicator = false;
             this.assetViewList.inspectionGlaAccountName = getGl[0].accountName;
@@ -365,6 +365,7 @@ export class AssetListingComponent implements OnInit {
             let buName = '';
             let deptName = '';
             let divName = '';
+            let manufacturerName = '';
             this.setManagementStrucureData(this.currentAsset);
             if (this.currentAsset.companyId) {
                 companyName = this.getNameById(this.currentAsset.companyId);
@@ -378,6 +379,13 @@ export class AssetListingComponent implements OnInit {
             if (this.currentAsset.divisionId) {
                 divName = this.getNameById(this.currentAsset.divisionId);
             }
+            if (this.currentAsset.manufacturer) {
+                manufacturerName = this.currentAsset.manufacturer.name
+            }
+
+            if (this.currentAsset.isDepreciable) {
+
+            }
 
             this.currentAsset = {
                 ...this.currentAsset,
@@ -385,7 +393,13 @@ export class AssetListingComponent implements OnInit {
                 buName: buName,
                 deptName: deptName,
                 divName: divName,
+                manufacturerName: manufacturerName,
+                isSerialized: this.currentAsset.isSerialized == true ? 'Yes' : 'No',
+                calibrationRequired: this.currentAsset.calibrationRequired == true ? 'Yes' : 'No',
+                assetClass: this.currentAsset.isDepreciable == true ? 'Depreciable' : 'Intangible',
+                assetType: this.currentAsset.assetType.assetTypeName,
             };
+            
             this.allAssetInfoNew.push(this.currentAsset);
         }
         console.log(this.allManagemtninfo);
@@ -410,14 +424,15 @@ export class AssetListingComponent implements OnInit {
     setManagementStrucureData(obj) {
         this.managementStructureData = [];
         this.checkMSParents(obj.managementStructureId);
+        console.log(this.managementStructureData.length);
         if (this.managementStructureData.length == 4) {
             this.currentAsset.companyId = this.managementStructureData[3];
             this.currentAsset.buisinessUnitId = this.managementStructureData[2];
             this.currentAsset.departmentId = this.managementStructureData[1];
             this.currentAsset.divisionId = this.managementStructureData[0];
-            this.getBUList(this.currentAsset.companyId);
-            this.getDepartmentlist(this.currentAsset.buisinessUnitId);
-            this.getDivisionlist(this.currentAsset.departmentId);
+            //this.getBUList(this.currentAsset.companyId);
+            //this.getDepartmentlist(this.currentAsset.buisinessUnitId);
+            //this.getDivisionlist(this.currentAsset.departmentId);
         }
         if (this.managementStructureData.length == 3) {
             this.currentAsset.companyId = this.managementStructureData[2];

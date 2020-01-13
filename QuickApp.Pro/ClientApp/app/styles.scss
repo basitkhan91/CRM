@@ -352,9 +352,13 @@ p {
     margin: 0;
     top: 0;
 }
-input[type="text"] {
+input[type="text"], input[type="date"] {
     background-color: white !important;
     border-radius: 5px !important;
+}
+input[type="date"] {
+    border: 1px solid #c5c5c5 !important;
+    padding: 2px !important !important;
 }
 .ui-autocomplete .ui-autocomplete-dropdown {    
     height: 24px;
@@ -13771,14 +13775,15 @@ button {
     width: 130px;
 }
 .p-table-cstm .ui-table .ui-table-tbody > tr > td, .rpo-table-cstm .ui-table .ui-table-tbody > tr > td, .wf-table-cstm .ui-table .ui-table-tbody > tr > td, .ptable-custom .ui-table .ui-table-tbody > tr > td {
-    padding: 5px 2px !important;
+    padding: 5px 2px !important; //4px 2px
 }
 .p-table-cstm .ui-table .ui-table-tbody > tr.ui-state-highlight,
 .rpo-table-cstm .ui-table .ui-table-tbody > tr.ui-state-highlight,
 .wf-table-cstm .ui-table .ui-table-tbody > tr.ui-state-highlight,
 .ptable-custom .ui-table .ui-table-tbody > tr.ui-state-highlight {
     /*background-color: #f1f1f1 !important;*/
-    background-color: #ccc !important;
+    // background-color: #ccc !important;
+    background-color: #e8e6e6 !important;
 }
 .p-table-cstm .ui-paginator, .p-table-cstm .ui-table-caption,
 .rpo-table-cstm .ui-paginator, .rpo-table-cstm .ui-table-caption,
@@ -13912,6 +13917,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .p-dropdown-custom-md-Header-table .ui-dropdown {
     width: 136px !important;
 }
+.p-dropdown-custom-sm .ui-dropdown {
+    width: 122px !important;
+}
 
 .pas-table-cstm tr th {
     padding: 8px 4px !important;
@@ -14005,6 +14013,7 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .autocomplete-customer1 .ui-autocomplete .ui-button-icon-only, .ui-autocomplete {
     border-radius: 0px 5px 5px 0px !important;
 }
+
 .radio-cstm {
     display: block;
     position: relative;
@@ -14028,11 +14037,13 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     left: 0;
     height: 15px;
     width: 15px;
-    background-color: #eee;
+    background-color: #fff; //eee
     border-radius: 50%;
+    border: 1px solid #337ab7;
 }
 .radio-cstm input:checked ~ .checkmark {
     background-color: #337ab7;
+    border: none;
 }
 .radio-cstm input:checked:disabled ~ .checkmark {
     background-color: rgba(51, 122, 183, 0.7);
@@ -14199,6 +14210,12 @@ input[type="date"]::-webkit-inner-spin-button {
     font-size: 16px !important;
     top: 43% !important;
     left: 36% !important;
+}
+.imcapes-pddowm .ui-dropdown {
+    width: 100% !important;
+}
+body .ui-autocomplete .ui-autocomplete-dropdown .ui-button-icon-left:before {
+    content: "\E942";
 }
 
 .new-margin {
@@ -14409,8 +14426,34 @@ p-dropdown .accountdropdown.ui-widget{
 .labels-ctsm-align label {
     width: 142px !important;
     text-align: left;
-  }
-
+}
+p-table .ui-table-summary {
+    background: #fff !important;
+    margin-top: -30px;
+    text-align: right !important;
+    margin-right: -12px;
+}
+p-table .ui-table-summary label.footer {
+    margin-left: 58%;
+}
+p-table .ui-table-summary input {
+    opacity: 0.8 !important;
+}
+p-table tr th {
+    text-align: center !important;
+}
+p-table tr th input[type="text"], p-table tr th input[type="date"] {
+    height: 22px !important;
+}
+p-table tr td .btn i.fa-pencil {
+    color: #0252b1;
+}
+.itemcapes-ptable .ui-table-scrollable-body {
+    min-height: 200px;
+}
+.action-icons-cstm .btn {
+    font-size: 14px;
+}
 
 .accountdropdown.ui-dropdown .ui-dropdown-trigger {
     background-color: #337ab7 !important;

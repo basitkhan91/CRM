@@ -1,4 +1,4 @@
-﻿import { Component, Input, OnInit } from '@angular/core';
+﻿import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Params, ActivatedRoute } from '@angular/router';
 import {
   WorkOrderQuote,
@@ -81,7 +81,7 @@ export class WorkOrderQuoteComponent implements OnInit {
   materialListPayload = new QuoteMaterialList();
   workFlowWorkOrderId: number = 0;
   workOrderId: number = 0;
-  workOrderExclusionsList: Object;
+  workOrderExclusionsList: Object[];
   workOrderMaterialList: any;
   workOrderChargesList: any;
   accountsReceivableBalance: any;
@@ -106,11 +106,13 @@ tabQuoteCreated: Object = {
   'exclusions': false,
   'labor': false
 }
+editData: any;
+editingIndex: number;
 
 
 
 
-  constructor(private router: ActivatedRoute,private workOrderService: WorkOrderQuoteService, private commonService: CommonService, private _workflowService: WorkFlowtService, private alertService:AlertService, private workorderMainService: WorkOrderService, private currencyService:CurrencyService) {}
+  constructor(private router: ActivatedRoute,private workOrderService: WorkOrderQuoteService, private commonService: CommonService, private _workflowService: WorkFlowtService, private alertService:AlertService, private workorderMainService: WorkOrderService, private currencyService:CurrencyService, private cdRef: ChangeDetectorRef) {}
   ngOnInit() {
     console.log(this.isView);
     if(this.quoteForm == undefined){
@@ -136,8 +138,6 @@ tabQuoteCreated: Object = {
   }
 
   calculateExpiryDate() {
-    console.log(this.validFor);
-    console.log(this.quoteDueDate);
     if(this.validFor && this.quoteDueDate){
       this.expirationDate = new Date();
       this.expirationDate.setDate(this.quoteDueDate.getDate() + this.validFor);
@@ -252,6 +252,7 @@ tabQuoteCreated: Object = {
             this.warnings = res.warnings;
             this.memo = res.memo;
             this.getQuoteTabData();
+            this.setBuildMethod(res.buildMethodId);
 
           }
         }
@@ -316,7 +317,11 @@ tabQuoteCreated: Object = {
           },
           label: x.partNumber
         }
-      })
+      });
+      if(this.savedWorkOrderData.isSinglePN){
+        this.selectedPartNumber = this.mpnPartNumbersList[0].label;
+        this.partNumberSelected();
+      }
     })
   }
 
@@ -399,16 +404,16 @@ tabQuoteCreated: Object = {
   }
   gridTabChange(value) {
     this.gridActiveTab = value;
-    if(this.isEdit || this.tabQuoteCreated['materialList']){
+    if((this.isEdit || this.tabQuoteCreated['materialList']) && value == 'materialList'){
       this.getQuoteMaterialListByWorkOrderQuoteId();
     }
-    else if(this.isEdit || this.tabQuoteCreated['charges']){
+    else if((this.isEdit || this.tabQuoteCreated['charges']) && value == 'charges'){
       this.getQuoteChargesListByWorkOrderQuoteId();
     }
-    else if(this.isEdit || this.tabQuoteCreated['exclusions']){
+    else if((this.isEdit || this.tabQuoteCreated['exclusions']) && value == 'exclusions'){
       this.getQuoteExclusionListByWorkOrderQuoteId();
     }
-    else if(this.isEdit || this.tabQuoteCreated['labor']){
+    else if((this.isEdit || this.tabQuoteCreated['labor']) && value == 'labor'){
       for(let task in this.labor.workOrderLaborList[0]){
         this.labor.workOrderLaborList[0][task] = [];
       }
@@ -698,6 +703,18 @@ tabQuoteCreated: Object = {
         )
 }
 
+createNew(){
+  // this.isEdit = false;
+  this.editData = undefined;
+}
+edit(rowData, i) {
+  this.editingIndex = i;
+  this.createNew();
+  this.cdRef.detectChanges();
+  this.isEdit = true;
+  this.editData = rowData;
+}
+
 formTaskList(){
   this.taskList.forEach(task => {
       this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [];
@@ -789,6 +806,26 @@ getBuildMethodId(){
   else if(this.selectedBuildMethod === 'display 3rd party') return 4;
 }
 
+setBuildMethod(id){
+  if(id === 1) 
+  {
+    this.selectedBuildMethod='use work flow';
+    // this.buildMethodSelected('use work flow');
+  }
+  else if(id === 2) {
+    this.selectedBuildMethod='use historical wos';
+    // this.buildMethodSelected('use historical wos');
+  }
+  else if(id === 3) {
+    this.selectedBuildMethod='build from scratch';
+    // this.buildMethodSelected('build from scratch');
+  }
+  else if(id === 4) {
+    this.selectedBuildMethod='display 3rd party';
+    // this.buildMethodSelected('display 3rd party');
+  }
+}
+
 saveWorkOrderExclusionsList(data) {
   this.exclusionPayload.BuildMethodId = this.getBuildMethodId();
   this.exclusionPayload.WorkOrderQuoteExclusions = data.map(ex=>{
@@ -851,7 +888,7 @@ updateWorkOrderExclusionsList(data) {
 
 getExclusionListByWorkOrderId(){
   if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
-    this.workorderMainService.getWorkOrderExclusionsList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
+    this.workorderMainService.getWorkOrderExclusionsList(this.workFlowWorkOrderId, this.workOrderId).subscribe((res: any[]) => {
         this.workFlowObject.materialList = [];
         this.workOrderExclusionsList = res;
     })
@@ -1066,5 +1103,22 @@ getEmpData(empId): object{
     }
   )
   return result;
+}
+
+saveExclusionsList(event) {
+  if (this.isQuote) {
+    this.workOrderExclusionsList = [...this.workOrderExclusionsList, ...event['exclusions'].map(x => { return { ...x, epn: x.partNumber, epnDescription: x.partDescription } })];
+    $('#addNewExclusions').modal('hide');
+  }
+}
+
+
+
+updateExclusionsList(event) {
+  if (this.isQuote && this.isEdit) {
+    this.workOrderExclusionsList[this.editingIndex] = event.exclusions[0];
+    $('#addNewExclusions').modal('hide');
+    this.isEdit = false;
+  }
 }
 }

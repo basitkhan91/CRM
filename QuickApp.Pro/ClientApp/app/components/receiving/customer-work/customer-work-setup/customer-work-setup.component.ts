@@ -29,7 +29,7 @@ import { BinService } from '../../../../services/bin.service';
 import { SiteService } from '../../../../services/site.service';
 import { Site } from '../../../../models/site.model';
 import { LegalEntityService } from '../../../../services/legalentity.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { getValueFromObjectByKey, getObjectByValue, getValueFromArrayOfObjectById, getObjectById, editValueAssignByCondition } from '../../../../generic/autocomplete';
 import { CommonService } from '../../../../services/common.service';
 
@@ -125,8 +125,8 @@ export class CustomerWorkSetupComponent
     customerContactList: any[];
     tempPOHeaderAddress: any = {};
     sourcePoApproval: any = {};
-	ngOnInit(): void {
-		this.sourcereceving.isCustomerStock = true;
+    ngOnInit(): void {
+       this.sourcereceving.isCustomerStock = true;
 
 		this.employeedata();
 		this.loadData();
@@ -147,16 +147,24 @@ export class CustomerWorkSetupComponent
 
 	}
 
-    constructor(private _route: Router, public workFlowtService: CustomerService, private conditionService: ConditionService, public workFlowtService1: LegalEntityService, private siteService: SiteService, private binService: BinService, private vendorservice: VendorService, public employeeService: EmployeeService, private alertService: AlertService, public itemser: ItemMasterService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public receivingCustomerWorkService: ReceivingCustomerWorkService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerservices: CustomerService, private commonService: CommonService,) {
+    constructor(private _route: Router, public workFlowtService: CustomerService, private conditionService: ConditionService, public workFlowtService1: LegalEntityService, private siteService: SiteService, private binService: BinService, private vendorservice: VendorService, public employeeService: EmployeeService, private alertService: AlertService, public itemser: ItemMasterService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public receivingCustomerWorkService: ReceivingCustomerWorkService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerservices: CustomerService, private commonService: CommonService, private _actRoute: ActivatedRoute, ) {
         this.dataSource = new MatTableDataSource();
         this.customerList();
         this.loadManagementdata();
         //this.loadManagementdataForTree();
-        this.getAllCustomerContact(this.receivingCustomerWorkService.listCollection.customer.customerId);
-        //if (this.receivingCustomerWorkService.listCollection == null) {
+        this.sourcereceving.receivingCustomerWorkId = this._actRoute.snapshot.params['id'];
+
+         //if (this.receivingCustomerWorkService.listCollection == null) {
         //    this.receivingCustomerWorkService.listCollection = {};
         //}
-        if (this.receivingCustomerWorkService.listCollection != null && this.receivingCustomerWorkService.isEditMode == true) {
+      
+        this.receivingCustomerWorkService.getCustomerWorkdataById(this.sourcereceving.receivingCustomerWorkId).subscribe(response => {
+          
+            this.receivingCustomerWorkService.listCollection = response[0];
+        
+            this.getAllCustomerContact(this.receivingCustomerWorkService.listCollection.customer.customerId);
+
+        if (this.receivingCustomerWorkService.listCollection != null) {
 
             this.showLable = true;
             this.sourcereceving = this.receivingCustomerWorkService.listCollection;
@@ -311,7 +319,7 @@ export class CustomerWorkSetupComponent
                           }
              //this.sourcereceving = this.tempPOHeaderAddress;
         }
-        
+        }); 
 	}
 
 	sourcereceving: any = {};
@@ -419,7 +427,7 @@ export class CustomerWorkSetupComponent
             this.modelValue = true;
         }
         if ((this.sourcereceving.partNumber && this.sourcereceving.partDescription && this.sourcereceving.siteId && this.sourcereceving.customerId)) {
-            debugger
+           
             this.isSaving = true;
 
             if (!this.sourcereceving.receivingCustomerWorkId) {

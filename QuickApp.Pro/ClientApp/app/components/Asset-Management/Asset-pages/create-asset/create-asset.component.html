@@ -154,7 +154,7 @@
                 </div>
                 <div *ngIf="currentAsset.isIntangible" class="intangible-block">
                     <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-4">Intangible Type <span class="clr-red">*</span></label>
+                        <label class="control-label col-sm-4">Intangible Class <span class="clr-red">*</span></label>
                         <div class="col-sm-7">
                             <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.assetIntangibleTypeId" (change)="showItemEdit(currentAsset.assetIntangibleTypeId)">
                                 <option>--Select--</option>

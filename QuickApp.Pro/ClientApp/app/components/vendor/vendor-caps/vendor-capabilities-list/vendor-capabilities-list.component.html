@@ -236,7 +236,7 @@
                         <p-table class="ptable-custom" [value]="aircraftListDataValues" [rows]="6" [columns]="colsaircraftLD" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
-                                    <th>Id</th>
+                                    <!-- <th>Id</th> -->
                                     <th *ngFor="let col of columns">
                                         {{col.header}}
                                     </th>
@@ -244,7 +244,7 @@
                             </ng-template>
                             <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
                                 <tr>
-                                    <td>{{i+1}}</td>
+                                    <!-- <td>{{i+1}}</td> -->
                                     <td *ngFor="let col of columns">
                                         {{rowData[col.field]}}
                                     </td>

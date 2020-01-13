@@ -18,6 +18,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetAllTimeLifeData(long id);
         void DeleteReceivingCustomer(long id, string updatedBy);
         IEnumerable<object> GetReceivingCustomerWorkData(long receivingCustomerWorkId);
+        IEnumerable<Object> GetListGlobalFilter(string value, int pageNumber, int pageSize);
         //  void CreateAction(DAL.Models.Action action);
 
     }

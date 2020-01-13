@@ -11,15 +11,13 @@ import { ISalesOrderQuote } from "../models/sales/ISalesOrderQuote";
 import { ISalesSearchParameters } from "../models/sales/ISalesSearchParameters";
 import { ISalesQuoteListView } from "../models/sales/ISalesQuoteListView";
 
-
 @Injectable()
 export class SalesQuoteEndpointService extends EndpointFactory {
   private readonly getNewSalesQuoteInstanceUrl: string = "/api/salesquote/new";
   private readonly saleQuote: string = "/api/salesquote";
   private readonly searchSalesQuote: string = "/api/salesquote/search";
   private readonly getSalesQuoteDetails: string = "/api/salesquote/get";
-
-
+  private readonly saleQuoteDeletePart: string = "/api/salesquote/deletepart";
 
   constructor(
     http: HttpClient,
@@ -42,20 +40,22 @@ export class SalesQuoteEndpointService extends EndpointFactory {
       });
   }
 
-  create(
-    salesQuote: ISalesQuoteView
-  ): Observable<ISalesOrderQuote> {
-    return this.http.post(this.saleQuote, JSON.stringify(salesQuote), this.getRequestHeaders())
+  create(salesQuote: ISalesQuoteView): Observable<ISalesOrderQuote> {
+    return this.http
+      .post(
+        this.saleQuote,
+        JSON.stringify(salesQuote),
+        this.getRequestHeaders()
+      )
       .catch(error => {
         return this.handleError(error, () => this.create(salesQuote));
       });
   }
 
-  update(
-    salesQuote: ISalesQuoteView
-  ): Observable<ISalesOrderQuote> {
+  update(salesQuote: ISalesQuoteView): Observable<ISalesOrderQuote> {
     let url: string = `${this.saleQuote}/${salesQuote.salesOrderQuote.salesOrderQuoteId}`;
-    return this.http.put(url, JSON.stringify(salesQuote), this.getRequestHeaders())
+    return this.http
+      .put(url, JSON.stringify(salesQuote), this.getRequestHeaders())
       .catch(error => {
         return this.handleError(error, () => this.create(salesQuote));
       });
@@ -64,9 +64,16 @@ export class SalesQuoteEndpointService extends EndpointFactory {
   search(
     salesQuoteSearchParameters: ISalesSearchParameters
   ): Observable<ISalesQuoteListView> {
-    return this.http.post(this.searchSalesQuote, JSON.stringify(salesQuoteSearchParameters), this.getRequestHeaders())
+    return this.http
+      .post(
+        this.searchSalesQuote,
+        JSON.stringify(salesQuoteSearchParameters),
+        this.getRequestHeaders()
+      )
       .catch(error => {
-        return this.handleError(error, () => this.search(salesQuoteSearchParameters));
+        return this.handleError(error, () =>
+          this.search(salesQuoteSearchParameters)
+        );
       });
   }
 
@@ -75,23 +82,25 @@ export class SalesQuoteEndpointService extends EndpointFactory {
     return this.http
       .delete<boolean>(endpointUrl, this.getRequestHeaders())
       .catch(error => {
-        return this.handleError(error, () =>
-          this.delete(salesQuoteId)
-        );
+        return this.handleError(error, () => this.delete(salesQuoteId));
       });
   }
 
-  getSalesQuote(
-    salesQuoteId: number
-  ): Observable<ISalesQuoteView> {
+  deletePart(salesQuotePartId: number): Observable<boolean> {
+    let endpointUrl = `${this.saleQuoteDeletePart}/${salesQuotePartId}`;
+    return this.http
+      .delete<boolean>(endpointUrl, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () => this.deletePart(salesQuotePartId));
+      });
+  }
+
+  getSalesQuote(salesQuoteId: number): Observable<ISalesQuoteView> {
     const URL = `${this.getSalesQuoteDetails}/${salesQuoteId}`;
     return this.http
       .get<ISalesQuote>(URL, this.getRequestHeaders())
       .catch(error => {
-        return this.handleError(error, () =>
-          this.getSalesQuote(salesQuoteId)
-        );
+        return this.handleError(error, () => this.getSalesQuote(salesQuoteId));
       });
   }
 }
-

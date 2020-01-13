@@ -199,6 +199,10 @@ export class StocklineService {
 		return this.stocklineEndpoint.getPurchaseOrderUnitCostEndpoint(POId);
 	}
 
+	getAllTagTypes() {
+		return this.stocklineEndpoint.getAllTagTypes();
+	}
+
 	getRepairOrderUnitCost(ROId: any) {
 		return this.stocklineEndpoint.getRepairOrderUnitCostEndpoint(ROId);
 	}

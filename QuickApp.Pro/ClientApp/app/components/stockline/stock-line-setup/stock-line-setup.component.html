@@ -47,18 +47,15 @@
                         </div>
 
                         <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">PN <strong class="clr-red">*</strong>
-                            </label>
-                            <div class="col-sm-6 display-flex">
+                            <label class="control-label col-sm-4">PN <strong class="clr-red">*</strong></label>
+                            <div class="inner-addon col-sm-7  display-flex">
                                 <p-autoComplete [(ngModel)]="sourceStockLineSetup.partNumber" (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
                                                 [minLength]="1" [dropdown]="true">
                                     <ng-template let-partName pTemplate="part">
                                         <div class="ui-helper-clearfix">{{partName}}</div>
                                     </ng-template>
                                 </p-autoComplete>
-                            </div>
-                            <div class="col-md-2 inner-addon">
-                                <a routerLink="/itemmastersmodule/itemmasterpages/app-item-master-stock" class="add-icon"><i class="fa fa-plus"></i></a>
+                                <a style="margin-top:6px" routerLink="/itemmastersmodule/itemmasterpages/app-item-master-stock" class="add-icon"><i class="fa fa-plus"></i></a>
                             </div>
                         </div>
 
@@ -129,7 +126,7 @@
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Cond Type <strong class="clr-red">*</strong></label>
                             <div class="col-sm-7">
-                                <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.conditionId">
+                                <select [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.conditionId">
                                     <option *ngFor="let condition of allConditionInfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
                                 </select>
                             </div>
@@ -204,24 +201,34 @@
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Obtain From</label>
                             <div class="col-sm-7">
-                                <select [(ngModel)]="sourceStockLineSetup.obtainFromType" [ngModelOptions]="{standalone: true}" class="form-control">
+                                <select [(ngModel)]="sourceStockLineSetup.obtainFromType" [ngModelOptions]="{standalone: true}">
                                     <option value="1">Customer</option>
                                     <option value="2">Other </option>
                                     <option value="3">Vendor</option>
                                 </select>
                             </div>
+                        </div>
 
+                        <div class="form-group col-sm-12" *ngIf="sourceStockLineSetup.obtainFromType == 1">
                             <label class="control-label col-sm-4"></label>
-                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourceStockLineSetup.obtainFromType == 1">
+                            <div class="inner-addon col-sm-7 inline-block display-flex" >
                                 <select [(ngModel)]="sourceStockLineSetup.obtainFrom" [ngModelOptions]="{standalone: true}">
                                     <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
                                 </select>
                                 <a routerLink="/customersmodule/customerpages/app-customer-create" class="add-icon"><i class="fa fa-plus"></i></a>
                             </div>
-                            <div class="col-sm-7" *ngIf="sourceStockLineSetup.obtainFromType == 2">
+                        </div>
+
+                        <div class="form-group col-sm-12" *ngIf="sourceStockLineSetup.obtainFromType == 2">
+                            <label class="control-label col-sm-4"></label>
+                            <div class="col-sm-7" >
                                 <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.obtainFrom">
                             </div>
-                            <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourceStockLineSetup.obtainFromType == 3">
+                        </div>
+
+                        <div class="form-group col-sm-12" *ngIf="sourceStockLineSetup.obtainFromType == 3">
+                            <label class="control-label col-sm-4"></label>
+                            <div class="inner-addon col-sm-7 inline-block display-flex">
                                 <select [(ngModel)]="sourceStockLineSetup.obtainFrom" [ngModelOptions]="{standalone: true}">
                                     <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                                 </select>
@@ -230,10 +237,9 @@
                         </div>
 
                         <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4" for="obtainFrom">Owner</label>
+                            <label class="control-label col-sm-4" for="owner">Owner</label>
                             <div class="col-sm-7">
-                                <select id="obtainFrom" [(ngModel)]="sourceStockLineSetup.ownerType" [ngModelOptions]="{standalone: true}" class="form-control">
-
+                                <select id="owner" [(ngModel)]="sourceStockLineSetup.ownerType" [ngModelOptions]="{standalone: true}">
                                     <option value="1">Customer</option>
                                     <option value="2">Other </option>
                                     <option value="3">Vendor</option>
@@ -269,37 +275,40 @@
                         </div>
 
                         <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4" for="obtainFrom">Traceble To</label>
+                            <label class="control-label col-sm-4" for="tracebleTo">Traceble To</label>
                             <div class="col-sm-7">
-                                <select id="obtainFrom" [(ngModel)]="sourceStockLineSetup.traceableToType" [ngModelOptions]="{standalone: true}" class="form-control">
+                                <select id="tracebleTo" [(ngModel)]="sourceStockLineSetup.traceableToType" [ngModelOptions]="{standalone: true}">
                                     <option [value]="1">Customer</option>
                                     <option [value]="2">Other </option>
                                     <option [value]="3">Vendor</option>
                                 </select>
                             </div>
-                            <div class="form-group col-sm-12">
-                                <label class="control-label col-sm-4"></label>
-                                <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourceStockLineSetup.traceableToType == 1">
-                                    <select [(ngModel)]="sourceStockLineSetup.traceableTo" [ngModelOptions]="{standalone: true}">
-                                        <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
-                                    </select>
-                                    <a routerLink="/customersmodule/customerpages/app-customer-create" class="add-icon"><i class="fa fa-plus"></i></a>
-                                </div>
+                        </div>
+
+                        <div class="form-group col-sm-12" *ngIf="sourceStockLineSetup.traceableToType == 1">
+                            <label class="control-label col-sm-4"></label>
+                            <div class="inner-addon col-sm-7 inline-block display-flex" >
+                                <select [(ngModel)]="sourceStockLineSetup.traceableTo" [ngModelOptions]="{standalone: true}">
+                                    <option *ngFor="let customer of allCustomer" [ngValue]="customer.name">{{customer.name}}</option>
+                                </select>
+                                <a routerLink="/customersmodule/customerpages/app-customer-create" class="add-icon"><i class="fa fa-plus"></i></a>
                             </div>
-                            <div class="form-group col-sm-12">
-                                <label class="control-label col-sm-4"></label>
-                                <div class="col-sm-7" *ngIf="sourceStockLineSetup.traceableToType == 2">
-                                    <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.traceableTo">
-                                </div>
+                        </div>
+
+                        <div class="form-group col-sm-12" *ngIf="sourceStockLineSetup.traceableToType == 2">
+                            <label class="control-label col-sm-4"></label>
+                            <div class="col-sm-7" >
+                                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.traceableTo">
                             </div>
-                            <div class="form-group col-sm-12">
-                                <label class="control-label col-sm-4"></label>
-                                <div class="inner-addon col-sm-7 inline-block display-flex" *ngIf="sourceStockLineSetup.traceableToType == 3">
-                                    <select [(ngModel)]="sourceStockLineSetup.traceableTo" [ngModelOptions]="{standalone: true}">
-                                        <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
-                                    </select>
-                                    <a routerLink="/vendorsmodule/vendorpages/app-vendor-setup" class="add-icon"><i class="fa fa-plus"></i></a>
-                                </div>
+                        </div>
+
+                        <div class="form-group col-sm-12" *ngIf="sourceStockLineSetup.traceableToType == 3">
+                            <label class="control-label col-sm-4"></label>
+                            <div class="inner-addon col-sm-7 inline-block display-flex" >
+                                <select [(ngModel)]="sourceStockLineSetup.traceableTo" [ngModelOptions]="{standalone: true}">
+                                    <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                </select>
+                                <a routerLink="/vendorsmodule/vendorpages/app-vendor-setup" class="add-icon"><i class="fa fa-plus"></i></a>
                             </div>
                         </div>
 
@@ -421,7 +430,9 @@
                         <div class="form-group col-sm-12">
                             <label class="control-label col-sm-4">Tag Type</label>
                             <div class="col-sm-7">
-                                <input class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.tagType">
+                                <select [(ngModel)]="sourceStockLineSetup.tagType" [ngModelOptions]="{standalone: true}">
+                                    <option *ngFor="let tag of allTagTypes" [ngValue]="tag.tagTypeId">{{tag.name}}</option>
+                                </select>
                             </div>
                         </div>
 
@@ -697,7 +708,6 @@
                                             <td class="clr3">Since Insp</td>
                                         </tr>
                                         <tr>
-                                            <!--<td><input type="checkbox" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="timeLifeEditAllow" (change)="isTimeLifeEdit(timeLifeEditAllow)"></td>-->
                                             <td>{{sourceStockLineSetup.controlNumber}}</td>
                                             <td class="clr1"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceNew"></td>
                                             <td class="clr1"><input type="number" class="w60 form-control" placeholder="hours" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceTimeLife.cyclesSinceOVH"></td>

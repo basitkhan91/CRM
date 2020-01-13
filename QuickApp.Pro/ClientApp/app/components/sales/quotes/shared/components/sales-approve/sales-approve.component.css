@@ -9,3 +9,16 @@
   padding: 5px 8px;
   margin-bottom: 5px;
 }
+.sales-quote-approver-info{
+	display: flex;
+    width: 85%;
+    margin-left: 20px;
+    align-items: center;
+}
+.sales-quote-approver-info p{
+  flex: 30%;
+  padding: 0;
+}
+.sales-quote-approver-info p .label{
+  color: #ff5663 !important;
+}

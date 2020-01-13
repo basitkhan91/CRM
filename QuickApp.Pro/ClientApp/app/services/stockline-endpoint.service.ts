@@ -9,90 +9,47 @@ import { ConfigurationService } from './configuration.service';
 @Injectable()
 export class StocklineEndpoint extends EndpointFactory {
 	private readonly _actionsUrlNew1: string = "/api/StockLine/stockLine";
-
 	private readonly _deleteStockUrl: string = "/api/StockLine/deleteIntegration";
-
 	private readonly _actionsUrlNew: string = "/api/StockLine/stockLinepost";//which will be specified in the Controller
-
 	private readonly _actionsCompanyUrl: string = "/api/StockLine/GetCompanyData";//which will be specified in the Controller
-
 	private readonly _actionsLegalEntityUrl: string = "/api/ManagementStrcture/ManagementGetView";
-
 	private readonly _actionsAdjustmentToListEdit: string = "/api/StockLine/stockLineAdjustmentToListpost";//which will be specified in the Controller
-
 	private readonly _actionsAdjustmentToListIfExist: string = "/api/StockLine/stockLineAdjustmentToListpostIfExist";//which will be specified in the Controller
-
 	private readonly _actionsUrl: string = "/api/StockLine/Get";//which will be specified in the Controller
-
 	private readonly _updateActionsUrl: string = "/api/StockLine/stockLineUpdateforActive";//which will be specified in the Controller
-
 	private readonly _stockLineListUrl: string = "/api/StockLine/Get";//which will be specified in the Controller
-
 	private readonly _actionsUrl1: string = "/api/StocklineAdjustment/Get";//which will be specified in the Controller
-
 	private readonly _integrationPortalById: string = "/api/StockLine/IntegrationPortalGet";
-
 	private readonly _timeLifeGetById: string = "/api/StockLine/timeLifeGetById";
-
 	private readonly _stocklineGetById: string = "/api/StockLine/StocklineGetById";//which will be specified in the Controller
-
 	private readonly _adjustmentUrl: string = "/api/StockLine/AdjustmentGet";//which will be specified in the Controller
-
 	private readonly _adjustmentUrlNew: string = "/api/StockLine/stockLineAdjustmentpost";//which will be specified in the Controller 
-
 	private readonly _actionsTimeUrlNew: string = "/api/StockLine/stockLineTimeLifeAdjustment"; // Which will be specified in the Controller
-
 	private readonly _actionsStocklineIntegrationUrlNew: string = "/api/StockLine/stockLineIntegration"; // Which will be specified in the Controller
-
 	private readonly _stockLineItemMasterPart: string = "/api/StockLine/itemMasterPartUpdate"; // Which will be specified in the Controller
-
-	private readonly _actionsStocklineItemMasterUpdate: string = "/api/StockLine/updateItemMasterStockline";
-
 	private readonly _stockLineTimeLifeUpdate: string = "/api/StockLine/timeLifeUpdate"; // Which will be specified in the Controller
-
 	private readonly _stockLineAdjustmentBinBeforeChange: string = "/api/StockLine/GetBinByShelfIdAdjustmentBeforeChange"; // for Stockline Adjustemnet Show Data before Select Site
-
 	private readonly _adjustmentReasonUrlNew: string = "/api/StockLine/stockLineAdjustmentReasonpost";//which will be specified in the Controller
-
 	private readonly _adjustmentReasonUrl: string = "/api/StockLine/GetAdjustmentReason";
-
 	private readonly _stockLineAdjustmentUpdate: string = "/api/StockLine/stockLineAdjustmentReasonPut";
-
 	private readonly _stockLinePOUnitCost: string = "/api/StockLine/stockLinePOUnitCostGet";
-
 	private readonly _POUnitCost: string = "/api/StockLine/PurchaseOrderUnitCost";
-
 	private readonly _ROUnitCost: string = "/api/StockLine/RepairOrderUnitCost";
-
 	private readonly _stockLineROUnitCost: string = "/api/StockLine/stockLineROUnitCostGet";
-
 	private readonly _stockLineAdjustmentDelete: string = "/api/StockLine/stockLineAdjustmentReasonDelete";
-
 	private readonly _searchStockLine: string = "/api/StockLine/search";
-
 	private readonly _stocklineGlobalSearch: string = '/api/StockLine/ListGlobalSearch'
+	private readonly _tagTypeUrl: string = '/api/StockLine/tagType'
 
-  //get stocklineGetByIdUrl() { return this.configurations.baseUrl + this._stocklineGetById; }
-
-	//get stocklineGetByIdUrl() { return this.configurations.baseUrl + this._stocklineGetById; }
-
+	get tagTypeUrl() { return this.configurations.baseUrl + this._tagTypeUrl; }
 	get adjustmentReasonUrl() { return this.configurations.baseUrl + this._adjustmentReasonUrl; }
-
 	get stocklineUrl() { return this.configurations.baseUrl + this._actionsUrl; }
-
 	get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
-
 	get updateActiveInactive() { return this.configurations.baseUrl + this._updateActionsUrl; }
-
 	get stockListUrl() { return this.configurations.baseUrl + this._stockLineListUrl; }
-	//get adjustmentWarehouseUrl() { return this.configurations.baseUrl + this._stockLineAdjustmentWarehouseBeforeChange; }
-
 	get adjustmentUrl() { return this.configurations.baseUrl + this._actionsUrl1; }
-
 	get companyUrl() { return this.configurations.baseUrl + this._actionsCompanyUrl; }
-
 	get legalEntityUrl() { return this.configurations.baseUrl + this._actionsLegalEntityUrl; }
-
 	get getSearchUrl() { return this.configurations.baseUrl + this._searchStockLine };
 
 	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -339,8 +296,15 @@ export class StocklineEndpoint extends EndpointFactory {
 			});
 	}
 
-	getNewstockLineAdjustmentReasonEndpoint<T>(userObject: any): Observable<T> {
+	getAllTagTypes<T>(): Observable<T> {
+		return this.http.get<T>(this.tagTypeUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getAllTagTypes());
+			});
+	}
 
+
+	getNewstockLineAdjustmentReasonEndpoint<T>(userObject: any): Observable<T> {
 		return this.http.post<T>(this._adjustmentReasonUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.getNewstockLineAdjustmentReasonEndpoint(userObject));
@@ -374,6 +338,7 @@ export class StocklineEndpoint extends EndpointFactory {
 			});
 	}
 
+	
 	getRepairOrderUnitCostEndpoint<T>(ROId: any): Observable<T> {
 		let endpointUrl = `${this._ROUnitCost}/${ROId}`;
 		return this.http.post<T>(endpointUrl, this.getRequestHeaders())

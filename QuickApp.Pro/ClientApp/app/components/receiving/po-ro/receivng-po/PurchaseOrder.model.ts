@@ -113,8 +113,8 @@ export class PurchaseOrderPart {
     visible: boolean;
     conditionId: number;
 
-    public stocklineListObj: StockLine[];
-    public timeLifeList: TimeLife[];
+    public stocklineListObj: StockLineDraft[];
+    public timeLifeList: TimeLifeDraft[];
     poPartSplitAddress: AddressModel;
     // UI Properties
     // below properties does not play role on the server side and are being used to show the data on UI and should be limited to UI only.
@@ -178,6 +178,34 @@ export class PurchaseOrderPart {
 export class TimeLife {
 
     timeLifeCyclesId: number;
+    purchaseOrderId: number;
+    purchaseOrderPartRecordId: number;
+    cyclesRemaining: string;
+    cyclesSinceNew: string;
+    cyclesSinceOVH: string;
+    cyclesSinceInspection: string;
+    cyclesSinceRepair: string;
+
+    timeRemaining: string;
+    timeSinceNew: string;
+    timeSinceOVH: string;
+    timeSinceInspection: string;
+    timeSinceRepair: string;
+
+    lastSinceNew: string;
+    lastSinceOVH: string;
+    lastSinceInspection: string;
+
+    masterCompanyId: number;
+    isActive: boolean;
+
+    detailsNotProvided: boolean;
+    stockLineId: number;
+}
+
+export class TimeLifeDraft {
+
+    timeLifeDraftCyclesId: number;
     purchaseOrderId: number;
     purchaseOrderPartRecordId: number;
     cyclesRemaining: string;
@@ -324,10 +352,131 @@ export class StockLine {
     traceableToObject: DropDownData;
 }
 
+export class StockLineDraft {
+    stockLineDraftId: number;
+    partNumber: string;
+    stockLineNumber: string;
+    stocklineMatchKey: string;
+    controlNumber: string;
+    itemMasterId: number;
+    quantity: number;
+    quantityRejected: number;
+    conditionId: number;
+    serialNumber: string;
+    shelfLife: boolean;
+    shelfLifeExpirationDate: Date;
+    siteId: number;
+    shelfId: number;
+    binId: number;
+    warehouseId: number;
+    locationId: number;
+    obtainFrom: string;
+    owner: string;
+    traceableTo: string;
+    manufacturerId: number;
+    manufacturer: string;
+    manufacturerLotNumber: string;
+    manufacturingDate: Date;
+    expirationDate: Date;
+    manufacturingBatchNumber: string;
+    manufacturingTrace: string;
+    partCertificationNumber: string;
+    certifiedBy: string;
+    certifiedDate: Date;
+    tagDate: Date;
+    tagType: string;
+    certifiedDueDate: Date;
+    calibrationMemo: string;
+    orderDate: Date;
+    purchaseOrderId: number;
+    purchaseOrderUnitCost: number;
+    purchaseOrderExtendedCost: number;
+    inventoryUnitCost: number;
+    repairOrderId: number;
+    repairOrderUnitCost: number;
+    receivedDate: Date;
+    receiverNumber: string;
+    reconciliationNumber: string;
+    unitSalesPrice: number;
+    coreUnitCost: number;
+    gLAccountId: number;
+    glAccountId: number;
+    assetId: number;
+    isHazardousMaterial: boolean;
+    isPMA: boolean;
+    isDER: boolean;
+    oEM: boolean;
+    memo: string;
+    managementStructureEntityId: number;
+    managementStructureId: number;
+    timeLifeCyclesId: number;
+    site: string;
+    shelf: string;
+    bin: string;
+    obtainFromType: number;
+    ownerType: number;
+    traceableToType: number;
+    timeLife: boolean;
+    timeLifeId: number;
+    unitCostAdjustmentReasonTypeId: number;
+    unitSalePriceAdjustmentReasonTypeId: number;
+    masterCompanyId: number;
+    companyId: number;
+    businessUnitId: number;
+    divisionId: number;
+    departmentId: number;
+    quantityToReceive: number;
+    isSerialized: boolean;
+    idNumber: number;
+    aircraftTailNumber: string;
+    shippingReference: string;
+    shippingViaId: number;
+    shippingAccount: string;
+    engineSerialNumber: string;
+    createdDate: Date;
+    purchaseOrderPartRecordId: number;
+    timeLifeDetailsNotProvided: boolean;
+    isDeleted: boolean;
+
+    //View Properties
+
+    companyText: string;
+    businessUnitText: string;
+    divisionText: string;
+    departmentText: string;
+    siteText: string;
+    wareHouseText: string;
+    locationText: string;
+    shelfText: string;
+    binText: string;
+
+    isEnabled: boolean;
+    CompanyList: DropDownData[];
+    BusinessUnitList: DropDownData[];
+    DivisionList: DropDownData[];
+    DepartmentList: DropDownData[];
+
+    SiteList: DropDownData[];
+    WareHouseList: DropDownData[];
+    LocationList: DropDownData[];
+    ShelfList: DropDownData[];
+    BinList: DropDownData[];
+    CustomerList: DropDownData[];
+    VendorList: DropDownData[];
+    visible: boolean;
+    serialNumberNotProvided: boolean;
+    isDisabledSNboxes: boolean;
+    currentDate: Date;
+    glAccountText: string;
+    obtainFromObject: DropDownData;
+    ownerObject: DropDownData;
+    traceableToObject: DropDownData;
+}
+
 export class ReceiveParts {
     purchaseOrderPartRecordId: number;
-    stockLines: StockLine[];
-    timeLife: TimeLife[];
+    stockLines: StockLineDraft[];
+    timeLife: TimeLifeDraft[];
     quantityRejected: number;
 }
 

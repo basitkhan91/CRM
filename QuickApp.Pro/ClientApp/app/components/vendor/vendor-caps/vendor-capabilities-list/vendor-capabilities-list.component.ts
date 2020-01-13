@@ -47,6 +47,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
     capabilityauditHisory: any[];
     vendorCapesGeneralInfo: any = {};
     aircraftListDataValues: any;
+    status:string = "active";
     colsaircraftLD: any[] = [
         { field: "aircraft", header: "Aircraft" },
         { field: "model", header: "Model" },
@@ -65,7 +66,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
 
     ngOnInit()
     {
-        this.loadData();
+        this.loadData(this.status);
          if(!this.vendorId) {
             this.activeIndex = 0;
             this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-capabilities-list';
@@ -86,9 +87,9 @@ export class VendorCapabilitiesListComponent implements OnInit{
     {
     }
 
-    private loadData()
+    private loadData(status)
     {
-        const status = 'active';
+        //const status = 'active';
 
         if(this.vendorId != undefined) {
             this.vendorService.getVendorCapabilityList(status, this.vendorId).subscribe(
@@ -123,6 +124,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
     }
 
     getVenCapesListByStatus(status) {
+        this.status=status;
         this.vendorService.getVendorCapabilityList(status, this.vendorId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
@@ -202,7 +204,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
             this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
         }
 
-        this.loadData();
+        this.loadData(this.status);
         //this.itemclass();
     }
     private saveFailedHelper(error: any) {

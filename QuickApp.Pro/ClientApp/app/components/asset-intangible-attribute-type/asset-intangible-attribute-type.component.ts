@@ -37,6 +37,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     filteredAssetWriteDownList: any[] = [];
     columnHeaders: any[];
     itemDetails: any;
+    companyListData: any[] = [];
     currentRow: AssetIntangibleAttributeType;
     currentModeOfOperation: ModeOfOperation;
     rowName: string;
@@ -67,7 +68,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     buList: any[];
     divisionList: any[];
     departmentList: any[];
-    selectedCompanyID: number = 0;
+    selectedCompanyID: any = [];
     selectedBUId: number = 0;
     selectedDivisionID: number = 0;
     selectedDeptID: number = 0;
@@ -75,6 +76,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     mgmtStructureId: any;
     disableForMgmtStructure: boolean;
     filteredDepriciationMethod: any[] = [];
+    recordExists: boolean = false;
 
     constructor(private breadCrumb: SingleScreenBreadcrumbService, private commonservice: CommonService, private glAccountService: GlAccountService, public legalEntityService: LegalEntityService, private configurations: ConfigurationService, private alertService: AlertService, private coreDataService: AssetIntangibleAttributeTypeService, private modalService: NgbModal, private authService: AuthService, private assetIntangibleTypeService: AssetIntangibleTypeService) {
     }
@@ -93,6 +95,8 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     addNewItem(): void {
         this.disableSave = false;
         this.currentRow = this.newItem(0);
+        let selectedCompanyIDs: any[] = [];
+        this.selectedCompanyID = [];
         this.currentModeOfOperation = ModeOfOperation.Add;
     }
 
@@ -202,6 +206,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     loadSelectedNames() {
         //console.log('loadSelectedNames', this.itemList.length);
         for (let i = 0; i < this.itemList.length; i++) {
+            let companies = "";
             this.itemList[i].depreciationMethodName = this.getDeprMethodNameById(this.itemList[i].assetDepreciationMethodId);
             this.itemList[i].assetIntangibleName = this.itemId(this.itemList[i].assetIntangibleTypeId);
             this.itemList[i].Name = this.getAmortFrequencyById(this.itemList[i].assetAmortizationIntervalId);
@@ -210,6 +215,18 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
             this.itemList[i].intangibleGL = this.getAccNameById(this.itemList[i].intangibleGLAccountId);
             this.itemList[i].intangiblewritedoffGL = this.getAccCodeById(this.itemList[i].intangibleWriteOffGLAccountId);
             this.itemList[i].intangiblewritedDownGL = this.getAccCodeById(this.itemList[i].intangibleWriteDownGLAccountId);
+
+            if (this.itemList[i].selectedCompanyIds != null && this.itemList[i].selectedCompanyIds != undefined) {
+                let arr = this.itemList[i].selectedCompanyIds.split(",");
+                for (let i = 0; i < arr.length; i++) {
+                    if (companies == "")
+                        companies = companies + this.getCompanyName(arr[i]);
+                    else
+                        companies = companies + ", " + this.getCompanyName(arr[i]);
+                }
+            }
+            //console.log('companies', companies);
+            this.itemList[i].selectedCompanyNames = companies;
         }
     }
 
@@ -253,22 +270,41 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
         return "";
     }
 
+    selectedIntangibleType(object) {
+        //console.log('selectedAssetType.assetTypeName', this.currentRow.assetTypeId);
+        //console.log('selectedAssetType.memo', object.assetTypeMemo);
+
+        console.log(object.assetIntangibleTypeId);
+        for (let i = 0; i < this.itemList.length; i++) {
+            if ((this.itemList[i].assetIntangibleTypeId === object.assetIntangibleTypeId && this.currentModeOfOperation == 2)
+                || (this.itemList[i].assetIntangibleTypeId === object.assetIntangibleTypeId && this.currentModeOfOperation == 3 &&
+                this.currentRow.assetIntangibleAttributeTypeId != this.itemList[i].assetIntangibleAttributeTypeId)
+            ) {
+                this.recordExists = true;
+                this.disableSave = true;
+                return;
+            }
+        }
+        this.disableSave = false;
+        this.recordExists = false;
+    }
+
     companySelected(): void {
         ////console.log(`Company Id :${this.selectedCompanyID}`);
 
         if (this.selectedCompanyID != undefined && this.selectedCompanyID.toString() !== "0") {
-            this.mgmtStructureId = this.selectedCompanyID;
+            //this.mgmtStructureId = this.selectedCompanyID;
             this.disableForMgmtStructure = false;
         }
         else {
             this.disableForMgmtStructure = true;
         }
-        this.divisionList = [];
-        this.departmentList = [];
-        this.selectedBUId = 0;
-        this.selectedDeptID = 0;
-        this.selectedDivisionID = 0;
-        this.buList = this.allmgmtData.filter(c => c.parentId === this.selectedCompanyID);
+        //this.divisionList = [];
+        //this.departmentList = [];
+        //this.selectedBUId = 0;
+        //this.selectedDeptID = 0;
+        //this.selectedDivisionID = 0;
+        //this.buList = this.allmgmtData.filter(c => c.parentId === this.selectedCompanyID);
     }
 
     buSelected(): void {
@@ -471,12 +507,14 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
             this.selectedDivisionID = 0;
             this.selectedDivisionID = 0;
         }
+        this.recordExists = false;
         return item;
     }
 
     openItemForEdit(rowData): void {
         console.log(rowData.assetIntangibleAttributeTypeId);
         this.currentRow = this.newItem(rowData);
+        this.recordExists = false;
         this.currentRow = {
             ...rowData,
             assetIntangibleAttributeName: getObjectById('assetIntangibleAttributeTypeId', rowData.assetIntangibleAttributeTypeId, this.itemList)
@@ -503,7 +541,10 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
             accAmortDeprGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.accAmortDeprGLAccountId),
             intangibleWriteDownGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.intangibleWriteDownGLAccountId),
             intangibleWriteOffGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.intangibleWriteOffGLAccountId),
-            managementStructureId: editValueAssignByCondition('managementStructureId', this.mgmtStructureId),
+            //managementStructureId: editValueAssignByCondition('managementStructureId', this.mgmtStructureId),
+            managementStructureId: this.companyListData[0].value,
+            MasterCompanyId: 1,
+            selectedCompanyIds: this.selectedCompanyID.join(", "),
         };
         this.coreDataService.add(data).subscribe(response => {
             this.alertService.showMessage('Success', this.rowName + " added successfully.", MessageSeverity.success);
@@ -530,7 +571,10 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
                 accAmortDeprGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.accAmortDeprGLAccountId),
                 intangibleWriteDownGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.intangibleWriteDownGLAccountId),
                 intangibleWriteOffGLAccountId: editValueAssignByCondition('glAccountId', this.currentRow.intangibleWriteOffGLAccountId),
-                managementStructureId: editValueAssignByCondition('managementStructureId', this.mgmtStructureId),
+                //managementStructureId: editValueAssignByCondition('managementStructureId', this.mgmtStructureId),
+                managementStructureId: this.companyListData[0].value,
+                MasterCompanyId: 1,
+                selectedCompanyIds: this.selectedCompanyID.join(","),
             };
             this.coreDataService.update(data).subscribe(response => {
                 this.alertService.showMessage('Success', this.rowName + " updated successfully.", MessageSeverity.success);
@@ -556,6 +600,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     showItemEdit(rowData): void {
         console.log(rowData);
         this.disableSave = false;
+        this.recordExists = false;
         //this.currentRow = this.newItem(rowData);
         this.currentRow = {
             ...rowData,
@@ -573,6 +618,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
         this.currentRow = { ...this.currentRow };
         this.mgmtStructureId = this.currentRow.managementStructureId;
         this.populateMgmtStructure(this.currentRow.managementStructureId);
+        this.selectedCompanyID = (rowData.selectedCompanyIds != null && rowData.selectedCompanyIds != undefined) ? rowData.selectedCompanyIds.split(",") : "";
         this.currentModeOfOperation = ModeOfOperation.Update;
     }
 
@@ -599,7 +645,26 @@ AssetIntangibleAttributeTypeModel
 
     loadHierarchy(mgmtStructureData) {
         this.allmgmtData = mgmtStructureData;
+        this.companyListData = [];
         this.companyList = this.allmgmtData.filter(c => c.parentId == null);
+        if (this.companyList.length > 0) {
+            for (let i = 0; i < this.companyList.length; i++) {
+                this.companyListData.push(
+                    { value: this.companyList[i].managementStructureId, label: this.companyList[i].code },
+                );
+            }
+        }
+    }
+
+    getCompanyName(managementStructureId) {
+        let label = "";
+        for (let i = 0; i < this.companyListData.length; i++) {
+            if (this.companyListData[i].value == managementStructureId) {
+                label = this.companyListData[i].label
+                break;
+            }
+        }
+        return label;
     }
 
     //Step x: load all the required data for the page to function
@@ -626,6 +691,7 @@ AssetIntangibleAttributeTypeModel
             { field: 'intangibleGL', header: 'Intangible GL', index: 1, showByDefault: true },
             { field: 'intangiblewritedDownGL', header: 'Intangible Write Down GL', index: 1, showByDefault: true },
             { field: 'intangiblewritedoffGL', header: 'Intangible Write Off GL', index: 1, showByDefault: true },
+            { field: 'selectedCompanyNames', header: 'Legal Entity', index: 1, showByDefault: true },
         ];
         this.currentModeOfOperation = ModeOfOperation.None;
         this.selectedColumns = this.columnHeaders;
@@ -741,5 +807,21 @@ AssetIntangibleAttributeTypeModel
         }
 
     }
+
+    viewItemDetailsClick(content, row) {
+        //console.log(content);
+        this.itemDetails = row;
+        //this.loadMasterCompanies();
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    dismissModel() {
+        this.currentModeOfOperation = ModeOfOperation.None;
+        this.modal.close();
+    }
+
 
 }

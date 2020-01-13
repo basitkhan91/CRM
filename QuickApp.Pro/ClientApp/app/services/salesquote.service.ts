@@ -23,8 +23,8 @@ import { SalesOrderQuote } from "../models/sales/SalesOrderQuote";
 import { ItemMasterSearchQuery } from "../components/sales/quotes/models/item-master-search-query";
 import { IPartJson } from "../components/sales/shared/models/ipart-json";
 import { PartDetail } from "../components/sales/shared/models/part-detail";
-import { ISalesOrderQuoteApproverList } from '../models/sales/ISalesOrderQuoteApproverList';
-import { SalesOrderQuoteApproverList } from '../models/sales/SalesOrderQuoteApproverList';
+import { ISalesOrderQuoteApproverList } from "../models/sales/ISalesOrderQuoteApproverList";
+import { SalesOrderQuoteApproverList } from "../models/sales/SalesOrderQuoteApproverList";
 
 export type RolesChangedOperation = "add" | "delete" | "modify";
 export type RolesChangedEventArg = {
@@ -42,14 +42,15 @@ export class SalesQuoteService {
   constructor(private salesQuoteEndPointSevice: SalesQuoteEndpointService) {
     this.salesOrderQuote = new SalesOrderQuote();
     this.approvers = [];
-   
+
     console.log(this.approvers);
     this.parts = [];
     this.selectedParts = [];
     this.query = new ItemMasterSearchQuery();
     this.query.partSearchParamters.quantityAlreadyQuoted = 0;
   }
-  initializeApprovals(){
+
+  initializeApprovals() {
     this.approvers.push(new SalesOrderQuoteApproverList());
     this.approvers.push(new SalesOrderQuoteApproverList());
     this.approvers.push(new SalesOrderQuoteApproverList());
@@ -70,7 +71,6 @@ export class SalesQuoteService {
     return Observable.create(observer => {
       observer.next(this.salesOrderQuote);
       observer.complete();
-
     });
   }
 
@@ -78,10 +78,10 @@ export class SalesQuoteService {
     return Observable.create(observer => {
       observer.next(this.salesOrderQuote);
       observer.complete();
-
     });
   }
-  resetSalesOrderQuote(){
+
+  resetSalesOrderQuote() {
     this.approvers = [];
     this.initializeApprovals();
     this.selectedParts = [];
@@ -92,82 +92,80 @@ export class SalesQuoteService {
     return Observable.create(observer => {
       observer.next(this.selectedParts);
       observer.complete();
-
     });
   }
+
   getSalesOrderQuteApprovers() {
     return Observable.create(observer => {
-      if(this.approvers.length<1)
-          this.initializeApprovals();
+      if (this.approvers.length < 1) this.initializeApprovals();
       observer.next(this.approvers);
       observer.complete();
-
     });
   }
+
   getSearchPartResult() {
     return Observable.create(observer => {
       observer.next(this.parts);
       observer.complete();
-
     });
   }
+
   getSearchPartObject() {
     return Observable.create(observer => {
       observer.next(this.query);
       observer.complete();
-
     });
   }
+
   resetSearchPart() {
     this.parts = [];
     this.query = new ItemMasterSearchQuery();
     this.query.partSearchParamters.quantityAlreadyQuoted = 0;
   }
+
   updateSearchPartResult(parts) {
     this.parts = parts;
   }
+
   updateSearchPartObject(query) {
     this.query = query;
   }
 
-
   create(salesquote: ISalesQuoteView): Observable<ISalesOrderQuote[]> {
     return Observable.forkJoin(
-      this.salesQuoteEndPointSevice.create(
-        salesquote
-      )
+      this.salesQuoteEndPointSevice.create(salesquote)
     );
   }
 
   update(salesquote: ISalesQuoteView): Observable<ISalesOrderQuote[]> {
     return Observable.forkJoin(
-      this.salesQuoteEndPointSevice.update(
-        salesquote
-      )
+      this.salesQuoteEndPointSevice.update(salesquote)
     );
   }
 
-  search(salesQuoteSearchParameters: ISalesSearchParameters): Observable<ISalesQuoteListView[]> {
+  search(
+    salesQuoteSearchParameters: ISalesSearchParameters
+  ): Observable<ISalesQuoteListView[]> {
     return Observable.forkJoin(
-      this.salesQuoteEndPointSevice.search(
-        salesQuoteSearchParameters
-      )
+      this.salesQuoteEndPointSevice.search(salesQuoteSearchParameters)
     );
   }
 
   delete(salesQuoteId: number): Observable<boolean[]> {
     return Observable.forkJoin(
-      this.salesQuoteEndPointSevice.delete(
-        salesQuoteId
-      )
-    )
+      this.salesQuoteEndPointSevice.delete(salesQuoteId)
+    );
+  }
+
+  deletePart(salesQuotePartId: number): Observable<boolean[]> {
+    return Observable.forkJoin(
+      this.salesQuoteEndPointSevice.deletePart(salesQuotePartId)
+    );
   }
 
   getSalesQuote(salesQuoteId: number): Observable<ISalesQuoteView[]> {
     return Observable.forkJoin(
-      this.salesQuoteEndPointSevice.getSalesQuote(
-        salesQuoteId
-      )
+      this.salesQuoteEndPointSevice.getSalesQuote(salesQuoteId)
     );
   }
 }

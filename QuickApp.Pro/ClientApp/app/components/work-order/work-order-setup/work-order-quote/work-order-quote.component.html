@@ -270,7 +270,7 @@
     <div class="col-md-12">
 
       <div>
-        <div class="col-md-3">
+        <div class="col-md-3" *ngIf="!savedWorkOrderData.isSinglePN">
           <div class="form-group ">
             <label class="fs12">MPN
             </label>
@@ -283,7 +283,7 @@
       </div>
     </div>
 
-    <div class="col-md-12" *ngIf="selectedPartNumber != '' && !isEdit">
+    <div class="col-md-12" *ngIf="selectedPartNumber != ''">
       <div class="form-group ">
         <label class="fs12">Build Method:
         </label>
@@ -299,7 +299,7 @@
       </div>
 
     </div>
-    <div class="table-responsive" *ngIf="selectedBuildMethod == 'use work flow'">
+    <div class="table-responsive" *ngIf="selectedBuildMethod == 'use work flow' && !isEdit">
       <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled">
         <thead>
           <tr>
@@ -326,7 +326,7 @@
       </table>
 
     </div>
-    <div class="table-responsive" *ngIf="selectedBuildMethod == 'use historical wos'">
+    <div class="table-responsive" *ngIf="selectedBuildMethod == 'use historical wos' && !isEdit">
       <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled">
         <thead>
           <tr>
@@ -604,6 +604,17 @@
   </div>
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'exclusions'">
+      <div *ngIf="!isView">
+        <button
+          data-target="#addNewExclusions"
+          data-toggle="modal"
+          (click)="createNew()"
+          class="btn btn-primary btn-primary-cstm"
+          style="padding: 6px 12px !important;"
+        >
+          Add Exclusions
+        </button>
+      </div>
       <app-work-order-exclusions [workFlowObject]="workFlowObject" 
       [isWorkOrder]="isWorkOrder"
        [workOrderExclusionsList]="workOrderExclusionsList" 
@@ -619,12 +630,23 @@
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'labor'">
       <app-work-order-labor [taskList]="taskList" [laborForm]="labor" [workOrderLaborList]="workOrderLaborList" [workOrderWorkFlowOriginalData]="workOrderWorkFlowOriginalData" [savedWorkOrderData]="savedWorkOrderData" 
-      (saveworkOrderLabor)="saveworkOrderLabor($event)" [isQuote]="isQuote" [markupList]="markupList" [isView]="isView"
+      (saveworkOrderLabor)="saveworkOrderLabor($event)" [isQuote]="isQuote" [markupList]="markupList" [isView]="isView" [isEdit]="isEdit"
       ></app-work-order-labor>
 
   </div>
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'charges'">
+      <div *ngIf="!isView">
+        <button
+          data-target="#addNewCharges"
+          data-toggle="modal"
+          (click)="createNew()"
+          class="btn btn-primary btn-primary-cstm"
+          style="padding: 6px 12px !important;"
+        >
+          Add Charges
+        </button>
+      </div>
     <app-work-order-charges [workFlowObject]="workFlowObject" 
                           isWorkOrder="false"
                            [workOrderChargesList]="workOrderChargesList" 
@@ -1001,30 +1023,117 @@
     </div>
   </div> 
   <div id="addNewMaterials" class="modal fade" role="dialog" data-backdrop="static">
-      <div class="modal-dialog modal-lg">
-    
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Add Material</h4>
-          </div>
-          <div class="modal-body">
-              <grd-material 
-              [isEdit]="editMatData.length>0"
-              [editData]="editMatData"
-              [isWorkOrder]="isWorkOrder" 
-              [workFlow]="workFlowObject" 
-              [markupList]="markupList"
-              [isQuote]="isQuote"
-              (saveMaterialListForWO)="saveMaterialListForWO($event)" ></grd-material>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
+    <div class="modal-dialog modal-lg">
+  
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Add Material</h4>
         </div>
-    
+        <div class="modal-body">
+            <grd-material 
+            [isEdit]="editMatData.length>0"
+            [editData]="editMatData"
+            [isWorkOrder]="isWorkOrder" 
+            [workFlow]="workFlowObject" 
+            [markupList]="markupList"
+            [isQuote]="isQuote"
+            (saveMaterialListForWO)="saveMaterialListForWO($event)" ></grd-material>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+  
+    </div>
+  </div>
+
+  <div id="addNewCharges" class="modal fade" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+          <h4 class="modal-title">Charges</h4>
+        </div>
+        <div class="modal-body">
+          <grd-charges
+            *ngIf="!isEdit"
+            [workFlow]="workFlowObject"
+            [isWorkOrder]="isWorkOrder"
+            [isQuote]="isQuote"
+            [markupList]="markupList"
+            (saveChargesListForWO)="saveWorkOrderChargesList($event)"
+          ></grd-charges>
+  
+          <grd-charges
+            *ngIf="isEdit && editData"
+            [isEdit]="isEdit"
+            [editData]="editData"
+            [workFlow]="workFlowObject"
+            [isWorkOrder]="isWorkOrder"
+            [markupList]="markupList"
+            [isQuote]="isQuote"
+            (updateChargesListForWO)="updateWorkOrderChargesList($event)"
+          ></grd-charges>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">
+            Close
+          </button>
+        </div>
       </div>
     </div>
+  </div>
+
+  <div
+  id="addNewExclusions"
+  class="modal fade"
+  role="dialog"
+  data-backdrop="static"
+>
+    <div class="modal-dialog modal-lg">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+          <h4 class="modal-title">Exclusions</h4>
+        </div>
+        <div class="modal-body">
+          <grd-exclusions
+            *ngIf="!isEdit"
+            [isQuote]="isQuote"
+            [workFlow]="workFlowObject"
+            [isWorkOrder]="isWorkOrder"
+            [markupList]="markupList"
+            (saveExclusionsListForWO)="saveExclusionsList($event)"
+          >
+          </grd-exclusions>
+
+          <grd-exclusions
+            *ngIf="isEdit && editData"
+            [isQuote]="isQuote"
+            [isEdit]="isEdit"
+            [editData]="editData"
+            [workFlow]="workFlowObject"
+            [isWorkOrder]="isWorkOrder"
+            [markupList]="markupList"
+            (updateExclusionsListForWO)="updateExclusionsList($event)"
+          >
+          </grd-exclusions>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 

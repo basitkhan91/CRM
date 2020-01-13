@@ -71,5 +71,28 @@ namespace DAL.Repositories
             return parts;
 
         }
+
+        /*
+        * Don't delete the data which is already saved in the system
+        * We may need it for auditing purpose 
+        * Just mark IsDeleted column to true ( 1 ) 
+        */
+        public bool Delete(long salesOrderQuotePartId)
+        {
+            var part = this.Context.SalesOrderQuotePart.Where(q => q.SalesOrderQuotePartId == salesOrderQuotePartId).FirstOrDefault();
+
+            if (part != null)
+            {
+
+                part.IsDeleted = true;
+
+                this.Context.SalesOrderQuotePart.Update(part);
+
+                this.Context.SaveChanges();
+
+            }
+            return true;
+        }
+
     }
 }

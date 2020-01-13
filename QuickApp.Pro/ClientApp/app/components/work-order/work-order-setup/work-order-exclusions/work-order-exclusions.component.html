@@ -1,4 +1,4 @@
-<div *ngIf="!isView">
+<div *ngIf="!isView && !isQuote">
   <button
     data-target="#addNewExclusions"
     data-toggle="modal"
@@ -84,7 +84,7 @@
             mat-icon-button
             data-target="#addNewExclusions"
             data-toggle="modal"
-            (click)="edit(w, i)"
+            (click)="edit(rowData, i)"
             matTooltip="Edit"
           >
             <mat-icon>edit</mat-icon>
@@ -95,7 +95,7 @@
             class="btn-delete ptable-wo-btns"
             mat-icon-button
             matTooltip="Delete"
-            (click)="delete(w, i)"
+            (click)="delete(rowData, i)"
           >
             <mat-icon color="warn">delete</mat-icon>
           </button>

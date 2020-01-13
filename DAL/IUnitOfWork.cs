@@ -172,6 +172,7 @@ namespace DAL
 
         IStockLineList stockLineList { get; }
 
+        ITagType tagType { get; }
         //IStockListAdjustment StockListAdjustment { get; }
 
         ITimeLife timeLife { get; }

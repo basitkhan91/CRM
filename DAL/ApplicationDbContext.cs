@@ -193,10 +193,13 @@ namespace DAL
         public DbSet<CustomerAffiliation> CustomerAffiliation { get; set; }
 
         public DbSet<StockLine> StockLine { get; set; }
+        public DbSet<StockLineDraft> StockLineDraft { get; set; }
+        public DbSet<TimeLife> TimeLife { get; set; }
+        public DbSet<TimeLifeDraft> TimeLifeDraft { get; set; }
 
         public DbSet<LaborOverloadCost> LaborOverloadCost { get; set; }
         public DbSet<LaborOverloadCostAudit> LaborOverloadCostAudit { get; set; }
-        public DbSet<TimeLife> TimeLife { get; set; }
+
 
         public DbSet<LegalEntity> LegalEntity { get; set; }
 
@@ -317,7 +320,7 @@ namespace DAL
 
         public DbSet<GLAccountClassAudit> GLAccountClassAudit { get; set; }
 
-       
+
         public DbSet<POROCategory> POROCategory { get; set; }
         public DbSet<POROCategoryAudit> POROCategoryAudit { get; set; }
 
@@ -438,7 +441,7 @@ namespace DAL
         public DbSet<Percentage> Percent { get; set; }
         public DbSet<PercentageAudit> PercentAudit { get; set; }
         public DbSet<AssetIntangibleAttributeType> AssetIntangibleAttributeType { get; set; }
-       // public DbSet<Percent> Percent { get; set; }
+        // public DbSet<Percent> Percent { get; set; }
         public DbSet<PurchaseOrderApprover> PurchaseOrderApprover { get; set; }
         public DbSet<PurchaseOrderApproverList> PurchaseOrderApproverList { get; set; }
         public DbSet<POBillingShippingAddress> POBillingShippingAddress { get; set; }
@@ -446,7 +449,7 @@ namespace DAL
         public DbSet<VendorBillingAddress> VendorBillingAddress { get; set; }
         public DbSet<VendorBillingAddressAudit> VendorBillingAddressAudit { get; set; }
         public DbSet<VendorDocumentDetails> VendorDocumentDetails { get; set; }
-        public DbSet<VendorDocumentDetailsAudit> VendorDocumentDetailsAudit { get; set; }        
+        public DbSet<VendorDocumentDetailsAudit> VendorDocumentDetailsAudit { get; set; }
         public DbSet<PurchaseOrderShipVia> PurchaseOrderShipVia { get; set; }
         public DbSet<LegalEntityBillingAddress> LegalEntityBillingAddress { get; set; }
         public DbSet<LegalEntityShippingAddress> LegalEntityShippingAddress { get; set; }
@@ -471,7 +474,7 @@ namespace DAL
         public DbSet<Master1099> Master1099 { get; set; }
         public DbSet<VendorProcess1099> VendorProcess1099 { get; set; }
         public DbSet<VendorCapabilityAircraft> VendorCapabilityAircraft { get; set; }
-        
+
 
 
         public DbSet<WorkOrderQuoteExclusions> WorkOrderQuoteExclusions { get; set; }
@@ -489,7 +492,7 @@ namespace DAL
         public DbSet<Master1099Audit> Master1099Audit { get; set; }
         public DbSet<TagType> TagType { get; set; }
         public DbSet<CustomerAircraftMappingAudit> CustomerAircraftMappingAudit { get; set; }
-        
+
         public DbSet<Models.Sales.MasterSalesOrderQuoteStatus> MasterSalesOrderQuoteStatus { get; set; }
         public DbSet<AuditCustomerContact> AuditCustomerContact { get; set; }
         public DbSet<WorkOrderSettings> WorkOrderSettings { get; set; }
