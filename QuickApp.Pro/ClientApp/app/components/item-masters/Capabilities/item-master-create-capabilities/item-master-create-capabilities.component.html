@@ -224,7 +224,10 @@
         >
       </p-dropdown>
         </td>
-        <td style="width: 130px;">{{ rowData.AircraftType }}</td>
+
+        <!--Swamy Code - 01/13/2020-->
+        <td style="width: 130px;">{{ selectedAircraftName }}</td>
+        <!--Swamy Code - 01/13/2020-->
         <td style="width: 130px;">{{ rowData.AircraftModel }}</td>
         <td style="width: 130px;">{{ rowData.DashNumber }}</td>
         <td style="width: 130px;">
@@ -282,11 +285,13 @@
             [(ngModel)]="rowData.isVerified"
           ></p-checkbox>
         </td>
+        <!--Swamy Code - 01/13/2020-->
         <td style="width: 130px;">
           <p-dropdown
             class="p-dropdown-custom-sm"
             [options]="employeeList"
             placeholder="Select"
+            [disabled]="rowData.isVerified == false"
             name="employeeList{{row_no}}"
             [(ngModel)]="rowData.verifiedById"
           ></p-dropdown>
@@ -294,10 +299,12 @@
         <td style="width: 130px;">
           <p-calendar
             [(ngModel)]="rowData.verifiedDate"
-            name="entryDate{{row_no}}"
+            disabled="{{rowData.isVerified == false}}"
+            name="verifiedDate{{row_no}}"
             [showIcon]="true"
           ></p-calendar>
         </td>
+        <!--/Swamy Code - 01/13/2020-->
 
         <!-- <td *ngFor="let col of columns">
           {{ rowData[col.field] }}
