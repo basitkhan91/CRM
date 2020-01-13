@@ -225,7 +225,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit
             { field: 'capabilityType', header: 'Cap Type' },
             { field: 'partNo', header: 'PN' },
             { field: 'pnDiscription', header: 'PN Description' },  
-            { field: 'aircraftType', header: 'Airtcraft' },
+            { field: 'aircraftType', header: 'Aircraft' },
             { field: 'aircraftModel', header: 'Model' },
             { field: 'aircraftDashNumber', header: 'Dash Num' },
             { field: 'aTAChapter', header: 'ATA Chapter' },

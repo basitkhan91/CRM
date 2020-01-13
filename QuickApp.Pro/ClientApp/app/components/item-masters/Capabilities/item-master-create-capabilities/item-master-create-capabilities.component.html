@@ -174,182 +174,158 @@
       [style]="{ width: '100%' }"
       [paginator]="true"
     >
-      <ng-template pTemplate="header" let-columns>
+      <ng-container>
+        <!--*ngFor="let rowData of aircraftData; let row_no = index;"-->
         <tr>
-          <th style="width: 130px;text-align: center;">Capaility Type</th>
-          <th style="width: 520px;text-align: center;" colspan="4">
-            Managment Structure <span class="clr-red">*</span>
-          </th>
-          <th
-            style="width: 130px;text-align: center;"
-            *ngFor="let col of columns"
-          >
-            {{ col.header }}
-          </th>
-          <th style="width: 130px;text-align: center;">Description</th>
-          <th style="width: 130px;text-align: center;">ATA Chapter</th>
-          <th style="width: 130px;text-align: center;">ATA SubChapter</th>
-          <th style="width: 130px;text-align: center;">EntryDate</th>
-          <th style="width: 130px;text-align: center;">CMM</th>
-          <th style="width: 130px;text-align: center;">Integrate With</th>
-          <th style="width: 130px;text-align: center;">Verified</th>
-          <th style="width: 130px;text-align: center;">VerifiedBy</th>
-          <th style="width: 130px;text-align: center;">VerifiedDate</th>
-          <th style="width: 130px;text-align: center;">Memo</th>
-        </tr>
-      </ng-template>
-      <ng-template
-        pTemplate="body"
-        let-row_no="rowIndex"
-        let-rowData
-        let-columns="columns"
-      >
-        <ng-container>
-          <!--*ngFor="let rowData of aircraftData; let row_no = index;"-->
-          <tr>
-            <td style="width: 130px;">{{ rowData.capailityTypeName }}</td>
-            <td style="width: 130px;">
-              <p-dropdown
-                placeholder="Select"
-                name="company{{ row_no }}"
-                #companyId="ngModel"
-                [options]="legalEntityList"
-                class="p-dropdown-custom-sm"
-                (onChange)="selectedLegalEntity($event.value, row_no)"
-                [(ngModel)]="rowData.companyId"
-                [required]="true"
-              >
-              </p-dropdown>
-            </td>
-            <td style="width: 130px;">
-              <p-dropdown
-                placeholder="Select"
-                name="bu{{ row_no }}"
-                #bu="ngModel"
-                [options]="getDynamicVariableData('businessUnitList', row_no)"
-                class="p-dropdown-custom-sm"
-                (onChange)="selectedBusinessUnit($event.value, row_no)"
-                [(ngModel)]="rowData.buId"
-              >
-              </p-dropdown>
-            </td>
-            <td style="width: 130px;">
-              <p-dropdown
-                placeholder="Select"
-                name="division{{ row_no }}"
-                #division="ngModel"
-                [options]="getDynamicVariableData('divisionList', row_no)"
-                class="p-dropdown-custom-sm"
-                (onChange)="selectedDivision($event.value, row_no)"
-                [(ngModel)]="rowData.divisionId"
-              >
-              </p-dropdown>
-            </td>
-            <td style="width: 130px;">
-              <p-dropdown
-                placeholder="Select"
-                name="department{{ row_no }}"
-                #department="ngModel"
-                [options]="getDynamicVariableData('departmentList', row_no)"
-                class="p-dropdown-custom-sm"
-                (onChange)="selectedDepartment($event.value, row_no)"
-                [(ngModel)]="rowData.departmentId"
-              >
-              </p-dropdown>
-            </td>
-            <td style="width: 130px;">{{ rowData.AircraftType }}</td>
-            <td style="width: 130px;">{{ rowData.AircraftModel }}</td>
-            <td style="width: 130px;">{{ rowData.DashNumber }}</td>
-            <td style="width: 130px;">
-              <input
-                type="text"
-                name="description{{ row_no }}"
-                [(ngModel)]="rowData.description"
-              />
-            </td>
-            <td style="width: 130px;">
-              <p-dropdown
-                class="p-dropdown-custom-sm"
-                [options]="ataChapters"
-                name="atachapter{{ row_no }}"
-                [(ngModel)]="rowData.ataChapterId"
-                placeholder="Select"
-                (onChange)="getATASubChapterByATAChapter($event.value, row_no)"
-              ></p-dropdown>
-            </td>
-            <td style="width: 130px;">
-              <p-dropdown
-                class="p-dropdown-custom-sm"
-                [options]="getDynamicVariableData('ataSubChapaters', row_no)"
-                name="subChapter{{ row_no }}"
-                placeholder="Select"
-                [(ngModel)]="rowData.ataSubChapterId"
-              ></p-dropdown>
-            </td>
-            <td style="width: 130px;">
-              <p-calendar
-                class="p-dropdown-custom-sm"
-                [(ngModel)]="rowData.entryDate"
-                name="entryDate{{ row_no }}"
-                [showIcon]="true"
-              ></p-calendar>
-            </td>
-            <td style="width: 130px;">
-              <p-dropdown
-                class="p-dropdown-custom-sm"
-                [options]="cmmList"
-                placeholder="Select"
-                name="cmm{{ row_no }}"
-                [(ngModel)]="rowData.cmmId"
-              ></p-dropdown>
-            </td>
-            <td style="width: 130px;">
-              <p-dropdown
-                class="p-dropdown-custom-sm"
-                [options]="intergationList"
-                name="intergationList"
-                placeholder="Select"
-                [(ngModel)]="rowData.integrateWithId"
-              ></p-dropdown>
-            </td>
-            <td style="width: 130px;">
-              <p-checkbox
-                name="isverified{{ row_no }}"
-                binary="false"
-                [(ngModel)]="rowData.isVerified"
-              ></p-checkbox>
-            </td>
-            <td style="width: 130px;">
-              <p-dropdown
-                class="p-dropdown-custom-sm"
-                [options]="employeeList"
-                placeholder="Select"
-                [required]="rowData.isVerified"
-                name="employeeList{{ row_no }}"
-                [(ngModel)]="rowData.verifiedById"
-              ></p-dropdown>
-            </td>
-            <td style="width: 130px;">
-              <p-calendar
-                [(ngModel)]="rowData.verifiedDate"
-                name="entryDate{{ row_no }}"
-                [showIcon]="true"
-              ></p-calendar>
-            </td>
+          <td style="width: 130px;">{{ rowData.capailityTypeName }}</td>
+          <td style="width: 130px;">
+            <p-dropdown
+              placeholder="Select"
+              name="company{{ row_no }}"
+              #companyId="ngModel"
+              [options]="legalEntityList"
+              class="p-dropdown-custom-sm"
+              (onChange)="selectedLegalEntity($event.value, row_no)"
+              [(ngModel)]="rowData.companyId"
+              [required]="true"
+            >
+            </p-dropdown>
+          </td>
+          <td style="width: 130px;">
+            <p-dropdown
+              placeholder="Select"
+              name="bu{{ row_no }}"
+              #bu="ngModel"
+              [options]="getDynamicVariableData('businessUnitList', row_no)"
+              class="p-dropdown-custom-sm"
+              (onChange)="selectedBusinessUnit($event.value, row_no)"
+              [(ngModel)]="rowData.buId"
+            >
+            </p-dropdown>
+          </td>
+          <td style="width: 130px;">
+            <p-dropdown
+              placeholder="Select"
+              name="division{{ row_no }}"
+              #division="ngModel"
+              [options]="getDynamicVariableData('divisionList', row_no)"
+              class="p-dropdown-custom-sm"
+              (onChange)="selectedDivision($event.value, row_no)"
+              [(ngModel)]="rowData.divisionId"
+            >
+            </p-dropdown>
+          </td>
+          <td style="width: 130px;">
+            <p-dropdown
+              placeholder="Select"
+              name="department{{ row_no }}"
+              #department="ngModel"
+              [options]="getDynamicVariableData('departmentList', row_no)"
+              class="p-dropdown-custom-sm"
+              (onChange)="selectedDepartment($event.value, row_no)"
+              [(ngModel)]="rowData.departmentId"
+            >
+            </p-dropdown>
+          </td>
 
-            <!-- <td *ngFor="let col of columns">
+          <!--Swamy Code - 01/13/2020-->
+          <td style="width: 130px;">{{ selectedAircraftName }}</td>
+          <!--Swamy Code - 01/13/2020-->
+          <td style="width: 130px;">{{ rowData.AircraftModel }}</td>
+          <td style="width: 130px;">{{ rowData.DashNumber }}</td>
+          <td style="width: 130px;">
+            <input
+              type="text"
+              name="description{{ row_no }}"
+              [(ngModel)]="rowData.description"
+            />
+          </td>
+          <td style="width: 130px;">
+            <p-dropdown
+              class="p-dropdown-custom-sm"
+              [options]="ataChapters"
+              name="atachapter{{ row_no }}"
+              [(ngModel)]="rowData.ataChapterId"
+              placeholder="Select"
+              (onChange)="getATASubChapterByATAChapter($event.value, row_no)"
+            ></p-dropdown>
+          </td>
+          <td style="width: 130px;">
+            <p-dropdown
+              class="p-dropdown-custom-sm"
+              [options]="getDynamicVariableData('ataSubChapaters', row_no)"
+              name="subChapter{{ row_no }}"
+              placeholder="Select"
+              [(ngModel)]="rowData.ataSubChapterId"
+            ></p-dropdown>
+          </td>
+          <td style="width: 130px;">
+            <p-calendar
+              class="p-dropdown-custom-sm"
+              [(ngModel)]="rowData.entryDate"
+              name="entryDate{{ row_no }}"
+              [showIcon]="true"
+            ></p-calendar>
+          </td>
+          <td style="width: 130px;">
+            <p-dropdown
+              class="p-dropdown-custom-sm"
+              [options]="cmmList"
+              placeholder="Select"
+              name="cmm{{ row_no }}"
+              [(ngModel)]="rowData.cmmId"
+            ></p-dropdown>
+          </td>
+          <td style="width: 130px;">
+            <p-dropdown
+              class="p-dropdown-custom-sm"
+              [options]="intergationList"
+              name="intergationList"
+              placeholder="Select"
+              [(ngModel)]="rowData.integrateWithId"
+            ></p-dropdown>
+          </td>
+          <td style="width: 130px;">
+            <p-checkbox
+              name="isverified{{ row_no }}"
+              binary="false"
+              [(ngModel)]="rowData.isVerified"
+            ></p-checkbox>
+          </td>
+          <!--Swamy Code - 01/13/2020-->
+          <td style="width: 130px;">
+            <p-dropdown
+              class="p-dropdown-custom-sm"
+              [options]="employeeList"
+              placeholder="Select"
+              [disabled]="rowData.isVerified == false"
+              name="employeeList{{ row_no }}"
+              [(ngModel)]="rowData.verifiedById"
+            ></p-dropdown>
+          </td>
+          <td style="width: 130px;">
+            <p-calendar
+              [(ngModel)]="rowData.verifiedDate"
+              disabled="{{ rowData.isVerified == false }}"
+              name="verifiedDate{{ row_no }}"
+              [showIcon]="true"
+            ></p-calendar>
+          </td>
+          <!--/Swamy Code - 01/13/2020-->
+
+          <!-- <td *ngFor="let col of columns">
           {{ rowData[col.field] }}
         </td> -->
-            <td style="width: 130px;">
-              <input
-                type="text"
-                class="form-control input-value"
-                [(ngModel)]="rowData.Memo"
-                name="Memo{{ row_no }}"
-              />
-            </td></tr
-        ></ng-container>
-      </ng-template>
+          <td style="width: 130px;">
+            <input
+              type="text"
+              class="form-control input-value"
+              [(ngModel)]="rowData.Memo"
+              name="Memo{{ row_no }}"
+            />
+          </td>
+        </tr>
+      </ng-container>
     </p-table>
   </div>
   <div class="pull-right" *ngIf="viewTable">
