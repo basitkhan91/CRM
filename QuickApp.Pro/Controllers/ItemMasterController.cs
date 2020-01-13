@@ -121,6 +121,31 @@ namespace QuickApp.Pro.Controllers
         }
 
 
+        [HttpGet("GetitemDatabyId/{value}/{id}")]
+        [Produces(typeof(ItemMasterViewModel))]
+        public IActionResult itemById(string value, long id)
+        {
+            if (value == "Stock")
+            {
+                var stockData = _unitOfWork.itemMaster.getAllItemMasterStockdataById(id);
+                return Ok(stockData);
+            }
+            else if (value == "Non-stock")
+            {
+                var nonstockData = _unitOfWork.itemMaster.getAllItemMasterNonstockdataById(id);
+                return Ok(nonstockData);
+            }
+            else if (value == "Equipment")
+            {
+                var equipmentData = _unitOfWork.itemMaster.getAllItemMasterequipmentdataById(id);
+                return Ok(equipmentData);
+            }
+            
+            return Ok(ModelState);
+
+        }
+
+
         [HttpGet("GetRolesDatayRoleId/{value}")]
         [Produces(typeof(List<ItemMasterViewModel>))]
         public IActionResult GetRolesByRoleId(long value)

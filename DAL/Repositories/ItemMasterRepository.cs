@@ -557,6 +557,29 @@ namespace DAL.Repositories
 
         }
 
+        public object getAllItemMasterStockdataById(long id)
+        {
+            var data = _appContext.ItemMaster.Include("Manufacturer").Include("Provision").Include("GLAccount").
+               Include("Priority").Include("ItemClassification").Include("Currency").Include("ExportClassification")
+
+                  .Where(a => a.ItemTypeId == 1 && a.ItemMasterId == id && (a.IsDeleted == false || a.IsDeleted == null)).FirstOrDefault();
+
+            return data;
+        }
+        public object getAllItemMasterNonstockdataById(long id)
+        {
+            var data = _appContext.ItemMaster.Include("Manufacturer").Include("ItemClassification").Include("Currency")
+                .Where(a => a.ItemTypeId == 2 && a.ItemMasterId == id && (a.IsDeleted == false || a.IsDeleted == null)).FirstOrDefault();
+            return data;
+        }
+        public object getAllItemMasterequipmentdataById(long id)
+        {
+            var data = _appContext.ItemMaster.Include("Equipment").Include("EquipmentValidationType").Include("Manufacturer")
+
+                .Where(a => a.ItemTypeId == 3 && a.ItemMasterId == id && (a.IsDeleted == false || a.IsDeleted == null)).FirstOrDefault();
+            return data;
+        }
+
 
         public IEnumerable<object> Getdescriptionbypart(long partNumber)
         {
@@ -1418,7 +1441,7 @@ namespace DAL.Repositories
                 var list = (from imc in _appContext.ItemMasterCapes
                             join im in _appContext.ItemMaster on imc.ItemMasterId equals im.ItemMasterId
                             join ct in _appContext.capabilityType on imc.CapabilityTypeId equals ct.CapabilityTypeId
-                            join act in _appContext.AircraftType on imc.AircraftTypeId equals act.AircraftTypeId 
+                            join act in _appContext.AircraftType on imc.AircraftTypeId equals act.AircraftTypeId
                             join acm in _appContext.AircraftModel on imc.AircraftModelId equals acm.AircraftModelId into imcacm
                             from acm in imcacm.DefaultIfEmpty()
                             join acd in _appContext.AircraftDashNumber on imc.AircraftDashNumberId equals acd.DashNumberId into imcacd
@@ -1459,8 +1482,8 @@ namespace DAL.Repositories
                                 pnDiscription = im.PartDescription,
                                 capabilityType = ct.Description,
                                 aircraftType = act.Description,
-                                aircraftModel =imc.AircraftModelId==0?"Unknown": acm.ModelName,
-                                aircraftDashNumber = imc.AircraftDashNumberId==0?"Unknown":acd.DashNumber,
+                                aircraftModel = imc.AircraftModelId == 0 ? "Unknown" : acm.ModelName,
+                                aircraftDashNumber = imc.AircraftDashNumberId == 0 ? "Unknown" : acd.DashNumber,
                                 description = imc.Description,
                                 aTAChapter = atc == null ? "" : atc.ATAChapterName,
                                 aTASubChapter = ats == null ? "" : ats.Description,
@@ -1473,13 +1496,13 @@ namespace DAL.Repositories
                                 memo = imc.Memo,
                                 createdDate = imc.CreatedDate,
                                 isActive = imc.IsActive,
-                                ManagementStrId=imc.ManagementStructureId,
+                                ManagementStrId = imc.ManagementStructureId,
                                 TotalRecords = totalRecords
                             }
                           ).Distinct()
                           .Paginate(pageNumber, pageSize, sorts, filters).Results;
 
-                foreach(var item in list)
+                foreach (var item in list)
                 {
                     item.company = GetManagementStructureCodes(item.ManagementStrId);
                 }

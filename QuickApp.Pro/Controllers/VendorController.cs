@@ -3549,10 +3549,19 @@ namespace QuickApp.Pro.Controllers
                 vendorCapability.MasterCompanyId = 1;
                 vendorCapability.IsActive = true;
                 vendorCapability.CreatedDate = DateTime.Now;
-
-                _unitOfWork.Repository<VendorCapabiliy>().Add(vendorCapability);
-                updateRanking(Convert.ToInt32(vendorCapability.VendorRanking));
-                _unitOfWork.SaveChanges();
+                if(vendorCapability.VendorCapabilityId >0)
+                {
+                    _unitOfWork.Repository<VendorCapabiliy>().Update(vendorCapability);
+                    updateRanking(Convert.ToInt32(vendorCapability.VendorRanking));
+                    _unitOfWork.SaveChanges();
+                }
+                else
+                {
+                    _unitOfWork.Repository<VendorCapabiliy>().Add(vendorCapability);
+                    updateRanking(Convert.ToInt32(vendorCapability.VendorRanking));
+                    _unitOfWork.SaveChanges();
+                }
+             
                 //_context.VendorCapabiliy.Add(caps);
 
                 //_context.SaveChanges();
