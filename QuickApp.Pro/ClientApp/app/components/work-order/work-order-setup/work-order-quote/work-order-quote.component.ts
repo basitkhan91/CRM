@@ -1,4 +1,4 @@
-﻿import { Component, Input, OnInit } from '@angular/core';
+﻿import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Params, ActivatedRoute } from '@angular/router';
 import {
   WorkOrderQuote,
@@ -81,7 +81,7 @@ export class WorkOrderQuoteComponent implements OnInit {
   materialListPayload = new QuoteMaterialList();
   workFlowWorkOrderId: number = 0;
   workOrderId: number = 0;
-  workOrderExclusionsList: Object;
+  workOrderExclusionsList: Object[];
   workOrderMaterialList: any;
   workOrderChargesList: any;
   accountsReceivableBalance: any;
@@ -106,11 +106,13 @@ tabQuoteCreated: Object = {
   'exclusions': false,
   'labor': false
 }
+editData: any;
+editingIndex: number;
 
 
 
 
-  constructor(private router: ActivatedRoute,private workOrderService: WorkOrderQuoteService, private commonService: CommonService, private _workflowService: WorkFlowtService, private alertService:AlertService, private workorderMainService: WorkOrderService, private currencyService:CurrencyService) {}
+  constructor(private router: ActivatedRoute,private workOrderService: WorkOrderQuoteService, private commonService: CommonService, private _workflowService: WorkFlowtService, private alertService:AlertService, private workorderMainService: WorkOrderService, private currencyService:CurrencyService, private cdRef: ChangeDetectorRef) {}
   ngOnInit() {
     console.log(this.isView);
     if(this.quoteForm == undefined){
@@ -701,6 +703,18 @@ tabQuoteCreated: Object = {
         )
 }
 
+createNew(){
+  // this.isEdit = false;
+  this.editData = undefined;
+}
+edit(rowData, i) {
+  this.editingIndex = i;
+  this.createNew();
+  this.cdRef.detectChanges();
+  this.isEdit = true;
+  this.editData = rowData;
+}
+
 formTaskList(){
   this.taskList.forEach(task => {
       this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [];
@@ -874,7 +888,7 @@ updateWorkOrderExclusionsList(data) {
 
 getExclusionListByWorkOrderId(){
   if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
-    this.workorderMainService.getWorkOrderExclusionsList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
+    this.workorderMainService.getWorkOrderExclusionsList(this.workFlowWorkOrderId, this.workOrderId).subscribe((res: any[]) => {
         this.workFlowObject.materialList = [];
         this.workOrderExclusionsList = res;
     })
@@ -1089,5 +1103,22 @@ getEmpData(empId): object{
     }
   )
   return result;
+}
+
+saveExclusionsList(event) {
+  if (this.isQuote) {
+    this.workOrderExclusionsList = [...this.workOrderExclusionsList, ...event['exclusions'].map(x => { return { ...x, epn: x.partNumber, epnDescription: x.partDescription } })];
+    $('#addNewExclusions').modal('hide');
+  }
+}
+
+
+
+updateExclusionsList(event) {
+  if (this.isQuote && this.isEdit) {
+    this.workOrderExclusionsList[this.editingIndex] = event.exclusions[0];
+    $('#addNewExclusions').modal('hide');
+    this.isEdit = false;
+  }
 }
 }
