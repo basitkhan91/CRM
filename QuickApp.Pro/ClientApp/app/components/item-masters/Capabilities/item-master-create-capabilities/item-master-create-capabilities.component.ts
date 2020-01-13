@@ -122,6 +122,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         // this.getIntergationWithList();
         // this.getAllEmployees();
         this.getItemMasterList();
+        this.resetFormData();
 
     }
     getItemMasterList() {
@@ -173,11 +174,8 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
 
     getAircraftModelByManfacturer(value) {
         // this.newValue = value.originalEvent.target.textContent;
-        //Swamy Code 01/13/2020
         let airtCraftObject = this.manufacturerData.find(element => element.value == this.selectedAircraftId);
         this.selectedAircraftName = airtCraftObject.label;
-        //Swamy Code 01/13/2020
-
         // if (this.newValue) {
         this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftId).subscribe(models => {
 
