@@ -27,7 +27,7 @@ import { AtaMainService } from '../../../../services/atamain.service';
 import { AtaSubChapter1Service } from '../../../../services/atasubchapter1.service';
 import { WorkOrderService } from '../../../../services/work-order/work-order.service';
 import { CommonService } from '../../../../services/common.service';
-
+import * as $ from 'jquery';
 
 
 @Component({
@@ -107,6 +107,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
     selectedForDeleteCapabilityId: any;
     selectedForDeleteContent: any;
     showCapes: boolean = false;
+    isEnableCapesList: boolean = true;
 
     /** item-master-capabilities-list ctor */
     constructor(private itemMasterService: ItemMasterService,
@@ -1249,6 +1250,10 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
     }
     closeCapes() {
         this.showCapes = false;
+        $('#capes1').modal('hide');
+    }
+    closeCapesPopup(data) {
+        this.closeCapes();
     }
     deleteCapability(content, capabilityId) {
         this.selectedForDeleteCapabilityId = capabilityId;
