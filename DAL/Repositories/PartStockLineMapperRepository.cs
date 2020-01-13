@@ -106,13 +106,13 @@ namespace DAL.Repositories
                              PartNumber = itm.PartNumber,
                              PartDescription = itm.PartDescription,
                              QuantityOrdered = part.QuantityOrdered,
-                             StockLineCount = _appContext.StockLine.Count(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId && !x.IsDeleted),
+                             StockLineCount = _appContext.StockLineDraft.Count(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId && !x.IsDeleted),
                              PoPartSplitUserName = emp != null ? emp.FirstName + " " + emp.LastName : "",
-                             StockLine = _appContext.StockLine.Where(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId && !x.IsDeleted).Select(SL => new
+                             StockLine = _appContext.StockLineDraft.Where(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId && !x.IsDeleted).Select(SL => new
                              {
                                  PurchaseOrderId = SL.PurchaseOrderId,
                                  PurchaseOrderPartRecordId = SL.PurchaseOrderPartRecordId,
-                                 StockLineId = SL.StockLineId,
+                                 StockLineDraftId = SL.StockLineDraftId,
                                  StockLineNumber = SL.StockLineNumber,
                                  ControlNumber = SL.ControlNumber,
                                  IdNumber = SL.IdNumber,
@@ -163,7 +163,7 @@ namespace DAL.Repositories
                                  TraceableTo = SL.TraceableTo,
                                  IsDeleted = SL.IsDeleted
                              }),
-                             TimeLife = _appContext.TimeLife.Where(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId),
+                             TimeLife = _appContext.TimeLifeDraft.Where(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId),
                              ItemMaster = new
                              {
                                  PartNumber = itm.PartNumber,
@@ -396,9 +396,9 @@ namespace DAL.Repositories
                              ExtendedCost = part.ExtendedCost,
                              UnitCost = part.UnitCost,
                              QuantityRejected = part.QuantityRejected,
-                             StockLine = _appContext.StockLine.Where(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId && !x.IsDeleted).Select(SL => new
+                             StockLine = _appContext.StockLineDraft.Where(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId && !x.IsDeleted).Select(SL => new
                              {
-                                 StockLineId = SL.StockLineId,
+                                 StockLineDraftId = SL.StockLineDraftId,
                                  StockLineNumber = SL.StockLineNumber,
                                  ControlNumber = SL.ControlNumber,
                                  IdNumber = SL.IdNumber,
@@ -457,7 +457,7 @@ namespace DAL.Repositories
                                  DivisionText = GetManagementStrucreCodeByName(SL.ManagementStructureEntityId, "Level3"),
                                  DepartmentText = GetManagementStrucreCodeByName(SL.ManagementStructureEntityId, "Level4"),
                              }),
-                             TimeLife = _appContext.TimeLife.Where(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId),
+                             TimeLife = _appContext.TimeLifeDraft.Where(x => x.PurchaseOrderId == purchaseOrderId && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId),
                              ItemMaster = new
                              {
                                  PartNumber = itm.PartNumber,

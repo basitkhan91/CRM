@@ -234,7 +234,7 @@ namespace QuickApp.Pro.Controllers
 
                             if (!string.IsNullOrEmpty(stockLine.SerialNumber))
                             {
-                                var isSerialExist = unitOfWork.Repository<StockLine>().Find(x => x.ItemMasterId == stockLine.ItemMasterId && x.ManufacturerId == stockLine.ManufacturerId && x.SerialNumber == stockLine.SerialNumber).FirstOrDefault();
+                                var isSerialExist = unitOfWork.Repository<StockLineDraft>().Find(x => x.ItemMasterId == stockLine.ItemMasterId && x.ManufacturerId == stockLine.ManufacturerId && x.SerialNumber == stockLine.SerialNumber).FirstOrDefault();
                                 if (isSerialExist != null)
                                 {
                                     return BadRequest(new Exception("Serial Number - " + stockLine.SerialNumber + " at page - " + (index + 1) + " already exists."));
@@ -257,7 +257,7 @@ namespace QuickApp.Pro.Controllers
                         purchaseOrderPart.QuantityRejected = receivePart.QuantityRejected;
                         unitOfWork.Repository<PurchaseOrderPart>().Update(purchaseOrderPart);
 
-                        unitOfWork.Repository<StockLine>().AddRange(receivePart.StockLines);
+                        unitOfWork.Repository<StockLineDraft>().AddRange(receivePart.StockLines);
 
                         unitOfWork.SaveChanges();
 
@@ -266,13 +266,13 @@ namespace QuickApp.Pro.Controllers
                         {
                             if (receivePart.StockLines.Count == 1)
                             {
-                                timeLife.StockLineId = (receivePart.StockLines.Where(x => x.PurchaseOrderPartRecordId == timeLife.PurchaseOrderPartRecordId))
-                                .ToArray()[0].StockLineId;
+                                timeLife.StockLineDraftId = (receivePart.StockLines.Where(x => x.PurchaseOrderPartRecordId == timeLife.PurchaseOrderPartRecordId))
+                                .ToArray()[0].StockLineDraftId;
                             }
                             else
                             {
-                                timeLife.StockLineId = (receivePart.StockLines.Where(x => x.PurchaseOrderPartRecordId == timeLife.PurchaseOrderPartRecordId))
-                                .ToArray()[stockLineIndex].StockLineId;
+                                timeLife.StockLineDraftId = (receivePart.StockLines.Where(x => x.PurchaseOrderPartRecordId == timeLife.PurchaseOrderPartRecordId))
+                                .ToArray()[stockLineIndex].StockLineDraftId;
                             }
 
                             timeLife.CreatedDate = DateTime.UtcNow;
@@ -283,7 +283,7 @@ namespace QuickApp.Pro.Controllers
                             stockLineIndex++;
                         }
 
-                        unitOfWork.Repository<TimeLife>().AddRange(receivePart.TimeLife);
+                        unitOfWork.Repository<TimeLifeDraft>().AddRange(receivePart.TimeLife);
 
                         purchaseOrderId = (long)receivePart.StockLines.FirstOrDefault().PurchaseOrderId;
 
@@ -293,14 +293,15 @@ namespace QuickApp.Pro.Controllers
                     {
                         foreach (var stockLine in receivePart.StockLines)
                         {
-                            stockLine.StockLineNumber = "STL-" + stockLine.StockLineId.ToString();
-                            stockLine.ControlNumber = "CNT-" + stockLine.StockLineId.ToString();
-                            unitOfWork.Repository<StockLine>().Update(stockLine);
+                            stockLine.StockLineNumber = "STL-" + stockLine.StockLineDraftId.ToString();
+                            stockLine.ControlNumber = "CNT-" + stockLine.StockLineDraftId.ToString();
+                            unitOfWork.Repository<StockLineDraft>().Update(stockLine);
                         }
                     }
                     unitOfWork.SaveChanges();
 
-                    setPurchaseOrderStatus(purchaseOrderId);
+                    //TODO : this needs to be called when the final screen summary page save is clicked.
+                    //setPurchaseOrderStatus(purchaseOrderId);
                 }
                 else
                 {
@@ -323,8 +324,8 @@ namespace QuickApp.Pro.Controllers
                 {
                     foreach (var receivePart in receiveParts)
                     {
-                        var stockLineIds = receivePart.StockLines.Select(s => s.StockLineId).ToArray();
-                        var stockLines = unitOfWork.stockLineList.getStockLinesByIds(stockLineIds);
+                        var StockLineDraftIds = receivePart.StockLines.Select(s => s.StockLineDraftId).ToArray();
+                        var stockLines = unitOfWork.stockLineList.getStockLinesByIds(StockLineDraftIds);
 
                         foreach (var timeLife in receivePart.TimeLife)
                         {
@@ -333,12 +334,12 @@ namespace QuickApp.Pro.Controllers
 
                         if (receivePart.TimeLife != null && receivePart.TimeLife.Count > 0)
                         {
-                            unitOfWork.Repository<TimeLife>().UpdateRange(receivePart.TimeLife);
+                            unitOfWork.Repository<TimeLifeDraft>().UpdateRange(receivePart.TimeLife);
                         }
 
                         foreach (var dbStockLine in stockLines)
                         {
-                            var stockLine = receivePart.StockLines.Where(x => x.StockLineId == dbStockLine.StockLineId).FirstOrDefault();
+                            var stockLine = receivePart.StockLines.Where(x => x.StockLineDraftId == dbStockLine.StockLineDraftId).FirstOrDefault();
                             dbStockLine.ManagementStructureEntityId = stockLine.ManagementStructureEntityId;
                             dbStockLine.SiteId = stockLine.SiteId != null ? stockLine.SiteId : 0;
                             dbStockLine.WarehouseId = stockLine.WarehouseId != null ? stockLine.WarehouseId : 0;
@@ -373,7 +374,7 @@ namespace QuickApp.Pro.Controllers
                             dbStockLine.IsDeleted = stockLine.IsDeleted;
                             dbStockLine.UpdatedDate = DateTime.Now;
                             receivePart.StockLines.Remove(stockLine);
-                            unitOfWork.Repository<StockLine>().Update(dbStockLine);
+                            unitOfWork.Repository<StockLineDraft>().Update(dbStockLine);
                         }
                     }
 
