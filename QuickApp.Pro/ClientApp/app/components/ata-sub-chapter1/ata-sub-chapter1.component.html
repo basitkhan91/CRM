@@ -56,8 +56,8 @@
                                     <th style="width:200px;position:sticky"></th>
                                 </tr>
                             </ng-template>
-                            <ng-template pTemplate="body" let-rowData let-columns="columns">
-                                <tr [pSelectableRow]="rowData" pReorderableRowHandle>
+                            <ng-template pTemplate="body" let-rowData let-columns="columns"  let-rowIndex="rowIndex">
+                                <tr [pSelectableRow]="rowData" pReorderableRowHandle [pSelectableRowIndex]="rowIndex">
                                     <td style="width:150px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle data-toggle="modal"
                                         data-target="#view" (dblclick)="viewSelectedRow(rowData)">
                                         {{col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?
@@ -155,7 +155,7 @@
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <input type="text" [(ngModel)]="addNew.ataSubChapterCode" pInputText name="code" class="form-control">
+                                <input type="text" [(ngModel)]="addNew.ataSubChapterCode" pInputText name="code" (ngModelChange)="getmemo($event)" class="form-control">
                             </div>
                         </div>
                         <div class="col-sm-12">
@@ -166,10 +166,10 @@
                             </div>
                             <div class="col-sm-5">
                                 <p-autoComplete field="description" [(ngModel)]="addNew.description" (onSelect)="selectedDescription($event)" (onKeyUp)="checkGroupDescriptionExists('description', $event.target.value)"
-                                    name="description" [suggestions]="descriptionList" (completeMethod)="filterDescription($event)"
+                                    name="description" [suggestions]="descriptionList" (completeMethod)="filterDescription($event)" (onBlur)="onBlur($event)"
                                     [size]="30" [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
                                 </p-autoComplete>
-                                <div *ngIf="disableSaveForDescription" class="clr-red">Already Exists</div>
+                                <div *ngIf="disableSaveForDescriptionMsg" class="clr-red">Already Exists</div>
                                 <div class="clear"></div>
                             </div>
                         </div>
@@ -180,7 +180,7 @@
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <select name="chapterName" [(ngModel)]="addNew.ataChapterId" #ataChapterId="ngModel" required>
+                                <select name="chapterName" [(ngModel)]="addNew.ataChapterId" (ngModelChange)="getmemo($event)" #ataChapterId="ngModel" required>
                                     <option>-- Select --</option>
                                     <option *ngFor="let object of ataList" [ngValue]="object.ataChapterId">{{object.ataChapterName}}</option>
                                 </select>
@@ -193,7 +193,7 @@
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <select name="chapterCategory" [(ngModel)]="addNew.ataChapterCategory" #ataChapterCategory="ngModel" required>
+                                <select name="chapterCategory" [(ngModel)]="addNew.ataChapterCategory" (ngModelChange)="getmemo($event)" #ataChapterCategory="ngModel" required>
                                     <option>-- Select --</option>
                                     <option *ngFor="let object of ataList" [ngValue]="object.ataChapterCategory">{{object.ataChapterCategory}}</option>
                                 </select>
@@ -206,7 +206,7 @@
                                 <label for="description" class="control-label">Memo</label>
                             </div>
                             <div class="col-sm-5">
-                                <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription" [(ngModel)]="addNew.memo" minlength="2"></textarea>
+                                <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription" (ngModelChange)="getmemo($event)" [(ngModel)]="addNew.memo" minlength="2"></textarea>
                             </div>
                         </div>
                     </div>
@@ -227,7 +227,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="create.invalid || disableSaveGroupId && disableSaveForDescription "
+                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="create.invalid || disableSaveForDescription"
                     (click)="save();">
                     {{isEdit ? 'Update' : 'Save' }}</button>
                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetForm()">Close</button>

@@ -177,10 +177,10 @@ export class CertificationTypeComponent implements OnInit {
 	}
 
     getmemo($event) {
-		if (this.addNew.memo.trim() !== $event.trim()) {
+		
 			this.disableSaveCertificationMsg = false;
             this.disableSaveCertification = false;
-        }
+        
     }
 
 	get userName(): string {
@@ -323,7 +323,7 @@ export class CertificationTypeComponent implements OnInit {
 				this.getList();
 				this.alertService.showMessage(
 					'Success',
-					`Added  Updated New Certification Successfully  `,
+					`Updated  Certification Successfully  `,
 					MessageSeverity.success
 				);
 			})
