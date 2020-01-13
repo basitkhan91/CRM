@@ -156,8 +156,6 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
 
     getAircraftTypesList() {
         this.itemser.getAircraft().subscribe(res => {
-            console.log(res);
-
             const allaircraftInfo = res[0];
 
 
