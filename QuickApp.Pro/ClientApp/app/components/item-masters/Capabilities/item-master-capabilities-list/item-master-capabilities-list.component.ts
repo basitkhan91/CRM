@@ -108,6 +108,15 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
     selectedForDeleteContent: any;
     showCapes: boolean = false;
     isEnableCapesList: boolean = true;
+    globalSearchData: any = {};
+    pnData: any;
+    capabalityTypeList: any;
+    aircraftModelData: any;
+    ataChapterData: any;
+    entityList: any;
+    buData: any;
+    divisionData: any;
+    departmentData: any;
 
     /** item-master-capabilities-list ctor */
     constructor(private itemMasterService: ItemMasterService,
@@ -1260,11 +1269,10 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
         this.selectedForDeleteContent = content;
         if (this.isDeleteCapabilityPopupOpened == true) {
             this.itemMasterService.deleteCapabilityById(capabilityId, "admin").subscribe(res => {
-                console.log(res, "response of itemMaster+++++++++++++");
                 this.loadData()
                 this.dismissModel()
                 this.isDeleteCapabilityPopupOpened = false;
-
+                this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
                 // return false;
                 // this.itemMasterData = res[0];
             }),
@@ -1285,6 +1293,9 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
     loadCapesList(data) {
         console.log(data);
         this.loadData();
+    }
+    searchCaps(){
+
     }
 
 }

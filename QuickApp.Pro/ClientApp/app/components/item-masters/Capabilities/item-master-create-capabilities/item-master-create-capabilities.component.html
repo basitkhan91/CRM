@@ -13,6 +13,22 @@
         <h4 class="modal-title">Add Aircraft Info</h4>
       </div> 
       <div class="modal-body">-->
+				<div class="card mb-3">
+					<div class="col-sm-12  font-padding">
+							<div class="col-sm-2">
+									PN: <span style="color:red">{{partData.partNumber}}</span>
+							</div>
+							<div class="col-sm-4">
+									PN Description: <span style="color:red">{{partData.partDescription}}</span>
+							</div>
+							<!-- <div class="col-sm-3">
+									Alternate PN: <span style="color:red">{{alternatePn}}</span>
+							</div> -->
+							<div class="col-sm-3">
+									Manufacturer: <span style="color:red">{{partData.manufacturerName}}</span>
+							</div>
+					</div>
+				</div>
 
 		<form #addCapesForm="ngForm">        
 			<div class="form-row">
@@ -24,7 +40,12 @@
 			  </div>
 			  <div class="col-md-2">
 				<div class="form-group">
-				  <label>Capability <span class="clr-red">*</span></label>
+					<label>Capability <span class="clr-red">*</span>
+						<a
+					  data-dismiss="modal" style="margin-left: 3px;"
+					  [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']"
+					  ><i class="fa fa-plus-circle fa-lg"></i></a>
+					</label>
 				  <p-dropdown
 					class="imstock-pddowm imcapes-pddowm"
 					name="capabilityTypeId"
@@ -140,11 +161,11 @@
 			  <p-table
 				class="rpo-table-cstm pub-ptable-cstm itemcapes-ptable"
 				[value]="aircraftData"
-				[rows]="6"
+				
 				[columns]="colaircraft"
 				[scrollable]="true"
 				[style]="{ width: '100%' }"
-				[paginator]="true"
+				[paginator]="false"
 			  >
 				<ng-template pTemplate="header" let-columns>
 				  <tr>
@@ -224,9 +245,7 @@
 				  </p-dropdown>
 					</td>
 			
-					<!--Swamy Code - 01/13/2020-->
 					<td style="width: 130px;">{{ selectedAircraftName }}</td>
-					<!--Swamy Code - 01/13/2020-->
 					<td style="width: 130px;">{{ rowData.AircraftModel }}</td>
 					<td style="width: 130px;">{{ rowData.DashNumber }}</td>
 					<td style="width: 130px;">
@@ -287,7 +306,6 @@
 					
 					  ></p-checkbox>
 					</td>
-					<!--Swamy Code - 01/13/2020-->
 					<td style="width: 130px;">
 					  <p-dropdown
 						class="p-dropdown-custom-sm"
@@ -309,7 +327,6 @@
 						[showIcon]="true"
 					  ></p-calendar>
 					</td>
-					<!--/Swamy Code - 01/13/2020-->
 			
 					<!-- <td *ngFor="let col of columns">
 					  {{ rowData[col.field] }}
